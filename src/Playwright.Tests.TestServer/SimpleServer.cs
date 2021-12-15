@@ -56,7 +56,6 @@ namespace Microsoft.Playwright.Tests.TestServer
         public string Prefix { get; }
         public string CrossProcessPrefix { get; }
         public string EmptyPage { get; internal set; }
-        public HttpRequest LastRequest { get; internal set; }
 
         internal IList<string> GzipRoutes { get; }
 
@@ -102,8 +101,6 @@ namespace Microsoft.Playwright.Tests.TestServer
                     .Use(async (context, next) =>
                     {
                         RequestReceived?.Invoke(this, new() { Request = context.Request });
-
-                        LastRequest = context.Request;
 
                         if (context.Request.Path == "/ws")
                         {
@@ -230,7 +227,7 @@ namespace Microsoft.Playwright.Tests.TestServer
 
         public void SetRedirect(string from, string to) => SetRoute(from, context =>
         {
-            context.Response.Redirect(to, false);
+            context.Response.Redirect(to);
             return Task.CompletedTask;
         });
 
