@@ -126,6 +126,7 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("browsertype-connect.spec.ts", "should timeout in connect while connecting")]
+        [Skip(SkipAttribute.Targets.Windows)]
         public async Task ShouldTimeoutInConnectWhileConnecting()
         {
             var exception = await PlaywrightAssert.ThrowsAsync<PlaywrightException>(async () => await BrowserType.ConnectAsync(_browserServer.WSEndpoint, new BrowserTypeConnectOptions { Timeout = 1 }));
