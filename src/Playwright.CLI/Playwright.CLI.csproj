@@ -22,7 +22,7 @@
     <RollForward>Major</RollForward>
   </PropertyGroup>
   <PropertyGroup>
-    <AssemblyVersion>1.2.1</AssemblyVersion>
+    <AssemblyVersion>1.2.2</AssemblyVersion>
     <PackageVersion>$(AssemblyVersion)-next-2</PackageVersion>
     <ReleaseVersion>$(AssemblyVersion)</ReleaseVersion>
     <FileVersion>$(AssemblyVersion)</FileVersion>
