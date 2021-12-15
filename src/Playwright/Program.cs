@@ -102,7 +102,7 @@ namespace Microsoft.Playwright
             pwProcess.WaitForExit();
             outputWaitHandle.WaitOne(5000);
             errorWaitHandle.WaitOne(5000);
-            return 0;
+            return pwProcess.ExitCode;
         }
 
         private static int PrintError(string error)

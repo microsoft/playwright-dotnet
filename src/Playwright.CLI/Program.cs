@@ -78,9 +78,8 @@ namespace Microsoft.Playwright.CLI
             // delegate to it.
             var dll = Assembly.LoadFile(file);
             dynamic c = dll.CreateInstance("Microsoft.Playwright.Program");
-            c.Run(args);
 
-            return 0;
+            return c.Run(args);
         }
 
         private static string Traverse(DirectoryInfo root)
