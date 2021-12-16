@@ -27,15 +27,39 @@ jobs:
         run: |
           ./build.sh --download-driver
           ./build.sh --setup-dotnet-deps
-      - name: Install Playwright CLI
-        run: dotnet tool install --global Microsoft.Playwright.CLI
-      - name: Build NUnit Package
-        run: dotnet build -c Debug ./src/Playwright.NUnit/Playwright.NUnit.csproj
-      - name: Generate NuGet packages 
+      # .NET internally has two sources when we install a tool with --add-source
+      # so our local version needs to be higher that it gets priority over the remote one.
+      # Also it should not include any pre-release versions (include next).
+      - name: Bump Playwright versions
+        shell: bash
         run: |
-          dotnet pack ./src/Playwright/Playwright.csproj -c Debug -o ./src/Playwright.LocalNugetTest/nupkg
-          dotnet pack ./src/Playwright.NUnit/Playwright.NUnit.csproj -c Debug -o ./src/Playwright.LocalNugetTest/nupkg
-      - name: Build LocalNugetTest 
+          xml_file_path="./src/Playwright.CLI/Playwright.CLI.csproj"
+          xml_file_contents=$(cat "${xml_file_path}")
+          xml_file_contents=$(echo "${xml_file_contents}" | sed "s|<AssemblyVersion>.*</AssemblyVersion>|<AssemblyVersion>99.99.99</AssemblyVersion>|")
+          xml_file_contents=$(echo "${xml_file_contents}" | sed "s|<PackageVersion>.*</PackageVersion>|<PackageVersion>99.99.99-next-1</PackageVersion>|")
+          echo "${xml_file_contents}" > "${xml_file_path}"
+
+          xml_file_path="./src/Common/Version.props"
+          xml_file_contents=$(cat "${xml_file_path}")
+          xml_file_contents=$(echo "${xml_file_contents}" | sed "s|<AssemblyVersion>.*</AssemblyVersion>|<AssemblyVersion>1.99.99</AssemblyVersion>|")
+          xml_file_contents=$(echo "${xml_file_contents}" | sed "s|<PackageVersion>.*</PackageVersion>|<PackageVersion>1.99.99</PackageVersion>|")
+          echo "${xml_file_contents}" > "${xml_file_path}"
+      - name: Build Playwright.CLI
+        run: |
+          dotnet build src/Playwright.CLI/
+          dotnet pack src/Playwright.CLI/ -o ./src/Playwright.LocalNugetTest/nupkg
+      - name: Install Playwright CLI
+        run: dotnet tool install --global --version "*-next*" Microsoft.Playwright.CLI
+        working-directory: ./src/Playwright.LocalNugetTest/
+      - name: Build Playwright
+        run: |
+          dotnet build ./src/Playwright/
+          dotnet pack ./src/Playwright/ -o ./src/Playwright.LocalNugetTest/nupkg
+      - name: Build Playwright.NUnit
+        run: |
+          dotnet build ./src/Playwright.NUnit/
+          dotnet pack ./src/Playwright.NUnit/ -o ./src/Playwright.LocalNugetTest/nupkg
+      - name: Build Playwright.LocalNugetTest 
         run: dotnet build
         working-directory: ./src/Playwright.LocalNugetTest/
       - name: Install browsers and dependencies
