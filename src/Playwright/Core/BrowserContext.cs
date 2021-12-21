@@ -100,7 +100,7 @@ namespace Microsoft.Playwright.Core
 
         public event EventHandler<IResponse> Response;
 
-        public bool IsClosed { get; private set; }
+        public bool IsClosedOrClosing { get; private set; }
 
         public ITracing Tracing
         {
@@ -168,11 +168,10 @@ namespace Microsoft.Playwright.Core
         {
             try
             {
-                if (IsClosed)
+                if (IsClosedOrClosing)
                 {
                     return;
                 }
-                IsClosed = true;
                 if (Options.RecordHarPath != null)
                 {
                     Artifact artifact = await Channel.HarExportAsync().ConfigureAwait(false);
@@ -424,7 +423,7 @@ namespace Microsoft.Playwright.Core
             {
                 ((Browser)Browser).BrowserContextsList.Remove(this);
             }
-
+            IsClosedOrClosing = true;
             Close?.Invoke(this, this);
             _closeTcs.TrySetResult(true);
         }

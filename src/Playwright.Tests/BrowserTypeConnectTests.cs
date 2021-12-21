@@ -31,6 +31,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Playwright.NUnit;
 using NUnit.Framework;
+using System.IO.Compression;
 
 namespace Microsoft.Playwright.Tests
 {
@@ -137,12 +138,11 @@ namespace Microsoft.Playwright.Tests
         public async Task ShouldSupportSlowMo()
         {
             var browser = await BrowserType.ConnectAsync(_browserServer.WSEndpoint, new BrowserTypeConnectOptions { SlowMo = 200 });
-            var context = await browser.NewContextAsync();
             var time1 = DateTime.Now;
-            var page = await context.NewPageAsync();
-            await page.GotoAsync(Server.EmptyPage);
+            var context = await browser.NewContextAsync();
+            await context.NewPageAsync();
+            await browser.CloseAsync();
             var time2 = DateTime.Now;
-            Assert.AreEqual(Server.EmptyPage, page.Url);
             Assert.Greater((time2 - time1).TotalMilliseconds, 200);
         }
 
@@ -177,6 +177,13 @@ namespace Microsoft.Playwright.Tests
             browser.Disconnected += (_, e) => disconneced = e;
             await browser.CloseAsync();
             Assert.AreEqual(browser, disconneced);
+        }
+
+        [PlaywrightTest("browsertype-connect.spec.ts", "should handle exceptions during connect")]
+        [Ignore("SKIP WIRE")]
+        public void ShouldHandleExceptionsDuringConnect()
+        {
+            // An implementational detail test
         }
 
         [PlaywrightTest("browsertype-connect.spec.ts", "should set the browser connected state")]
@@ -214,13 +221,21 @@ namespace Microsoft.Playwright.Tests
         [PlaywrightTest("browsertype-connect.spec.ts", "should reject navigation when browser closes")]
         public async Task ShouldRejectNavigationWhenBrowserCloses()
         {
+            Server.SetRoute("/one-style.css", context =>
+            {
+                context.Response.Redirect("/one-style.css");
+                return Task.CompletedTask;
+            });
+
             var browser = await BrowserType.ConnectAsync(_browserServer.WSEndpoint);
             var page = await browser.NewPageAsync();
+            var PageGoto = page.GotoAsync(Server.Prefix + "/one-style.html", new PageGotoOptions { Timeout = 60000 });
+            await Server.WaitForRequest("/one-style.css");
             await browser.CloseAsync();
 
             Assert.AreEqual(browser.IsConnected, false);
-            var exception = await PlaywrightAssert.ThrowsAsync<PlaywrightException>(async () => await page.GotoAsync(Server.EmptyPage));
-            StringAssert.Contains("Connection closed (Browser closed)", exception.Message);
+            var exception = await PlaywrightAssert.ThrowsAsync<PlaywrightException>(async () => await PageGoto);
+            StringAssert.Contains("Navigation failed because page was closed", exception.Message);
         }
 
         [PlaywrightTest("browsertype-connect.spec.ts", "should reject waitForSelector when browser closes")]
@@ -266,11 +281,10 @@ namespace Microsoft.Playwright.Tests
             }
             catch (Exception)
             {
-                foreach (var exception in task.Exception.InnerExceptions)
-                {
-                    Console.WriteLine(exception.Message);
-                    StringAssert.Contains("Page closed", exception.Message);
-                }
+            }
+            foreach (var exception in task.Exception.InnerExceptions)
+            {
+                StringAssert.Contains("Page closed", exception.Message);
             }
         }
 
@@ -280,8 +294,7 @@ namespace Microsoft.Playwright.Tests
             var browser = await BrowserType.ConnectAsync(_browserServer.WSEndpoint);
             var page = await browser.NewPageAsync();
 
-            _browserServer.Process.Kill();
-            await browser.CloseAsync();
+            await KillServerAndCloseBrowser(browser);
             while (browser.IsConnected)
             {
                 try
@@ -304,8 +317,7 @@ namespace Microsoft.Playwright.Tests
             var context = await browser.NewContextAsync();
             var page = await context.NewPageAsync();
 
-            _browserServer.Process.Kill();
-            await browser.CloseAsync();
+            await KillServerAndCloseBrowser(browser);
             while (browser.IsConnected)
             {
                 try
@@ -327,8 +339,7 @@ namespace Microsoft.Playwright.Tests
             var context = await browser.NewContextAsync();
             var page = await context.NewPageAsync();
 
-            _browserServer.Process.Kill();
-            await browser.CloseAsync();
+            await KillServerAndCloseBrowser(browser);
             while (browser.IsConnected)
             {
                 try
@@ -473,10 +484,39 @@ namespace Microsoft.Playwright.Tests
             StringAssert.Contains(Server.EmptyPage, logString);
         }
 
+        [PlaywrightTest("browsertype-connect.spec.ts", "should record trace with sources")]
+        public async Task ShouldRecordContextTraces()
+        {
+            using var tempDirectory = new TempDirectory();
+            var tracePath = tempDirectory.Path + "/trace.zip";
+            var browser = await BrowserType.ConnectAsync(_browserServer.WSEndpoint);
+            var context = await browser.NewContextAsync();
+            var page = await context.NewPageAsync();
+
+            await context.Tracing.StartAsync(new TracingStartOptions {  });
+            await page.GotoAsync(Server.EmptyPage);
+            await page.SetContentAsync("<button>Click</button>");
+            await page.ClickAsync("button");
+            await context.Tracing.StopAsync(new TracingStopOptions { Path = tracePath });
+
+            await browser.CloseAsync();
+
+            Assert.That(tracePath, Does.Exist);
+            ZipFile.ExtractToDirectory(tracePath, tempDirectory.Path);
+            Assert.That(tempDirectory.Path + "/trace.trace", Does.Exist);
+            Assert.That(tempDirectory.Path + "/trace.network", Does.Exist);
+        }
+
         private class BrowserServer
         {
             public Process Process { get; set; }
             public string WSEndpoint { get; set; }
+        }
+
+        private async Task KillServerAndCloseBrowser(IBrowser browser)
+        {
+            _browserServer.Process.Kill();
+            await browser.CloseAsync();
         }
 
         private static string GetExecutablePath()

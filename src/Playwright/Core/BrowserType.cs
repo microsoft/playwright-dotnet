@@ -152,11 +152,11 @@ namespace Microsoft.Playwright.Core
             var browser = playwright.PreLaunchedBrowser;
             browser.IsRemote = true;
             browser.IsConnectedOverWebSocket = true;
-            browser.Disconnected += (_, e) => CloseBrowser(transport, browser);
+            browser.Disconnected += (_, e) => CloseRemoteBrowser(transport, browser);
             return browser;
         }
 
-        private void CloseBrowser(WebSocketTransport transport, Browser browser)
+        private void CloseRemoteBrowser(WebSocketTransport transport, Browser browser)
         {
             try
             {
