@@ -26,12 +26,12 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
+using System.IO.Compression;
 using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Playwright.NUnit;
 using NUnit.Framework;
-using System.IO.Compression;
 
 namespace Microsoft.Playwright.Tests
 {
@@ -493,7 +493,7 @@ namespace Microsoft.Playwright.Tests
             var context = await browser.NewContextAsync();
             var page = await context.NewPageAsync();
 
-            await context.Tracing.StartAsync(new TracingStartOptions {  });
+            await context.Tracing.StartAsync();
             await page.GotoAsync(Server.EmptyPage);
             await page.SetContentAsync("<button>Click</button>");
             await page.ClickAsync("button");
