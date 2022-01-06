@@ -149,23 +149,8 @@ namespace Microsoft.Playwright.Core
                 transport.Close("Disconnected");
                 throw new PlaywrightException("Malformed endpoint. Did you use launchServer method?");
             }
-            var browser = playwright.PreLaunchedBrowser;
-            browser.IsRemote = true;
-            browser.IsConnectedOverWebSocket = true;
-            browser.Disconnected += (_, e) => CloseRemoteBrowser(transport, browser);
-            return browser;
-        }
 
-        private void CloseRemoteBrowser(WebSocketTransport transport, Browser browser)
-        {
-            try
-            {
-                transport.Close("Browser closed");
-            }
-            catch (Exception)
-            {
-                throw new PlaywrightException("Unable to close transport");
-            }
+            return playwright.PreLaunchedBrowser;
         }
 
         public async Task<IBrowser> ConnectOverCDPAsync(string endpointURL, BrowserTypeConnectOverCDPOptions options = null)

@@ -449,10 +449,6 @@ namespace Microsoft.Playwright.Core
         {
             try
             {
-                if (IsClosed)
-                {
-                    return;
-                }
                 await _channel.CloseAsync(options?.RunBeforeUnload ?? false).ConfigureAwait(false);
                 if (OwnedContext != null)
                 {

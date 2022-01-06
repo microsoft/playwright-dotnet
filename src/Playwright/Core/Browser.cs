@@ -55,10 +55,6 @@ namespace Microsoft.Playwright.Core
 
         public bool IsConnected { get; private set; }
 
-        public bool IsRemote { get; set; }
-
-        public bool IsConnectedOverWebSocket { get; set; }
-
         public string Version => _initializer.Version;
 
         internal BrowserChannel Channel { get; }
@@ -72,11 +68,7 @@ namespace Microsoft.Playwright.Core
                 _isClosedOrClosing = true;
                 await Channel.CloseAsync().ConfigureAwait(false);
             }
-            if (IsConnectedOverWebSocket)
-            {
-                await NotifyBrowserClosedAsync().ConfigureAwait(false);
-                return;
-            }
+
             await _closedTcs.Task.ConfigureAwait(false);
         }
 
@@ -190,19 +182,6 @@ namespace Microsoft.Playwright.Core
             }
 
             return recordVideoArgs;
-        }
-
-        public async Task NotifyBrowserClosedAsync()
-        {
-            foreach (BrowserContext context in BrowserContextsList.ToArray())
-            {
-                foreach (Page page in context.PagesList.ToArray())
-                {
-                    await page.CloseAsync().ConfigureAwait(false);
-                }
-                await context.CloseAsync().ConfigureAwait(false);
-            }
-            DidClose();
         }
 
         private void DidClose()
