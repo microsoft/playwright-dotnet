@@ -48,6 +48,8 @@ namespace Microsoft.Playwright.Tests.TestServer
         private readonly IDictionary<string, RequestDelegate> _routes;
         private readonly IDictionary<string, (string username, string password)> _auths;
         private readonly IDictionary<string, string> _csp;
+
+        private ArraySegment<byte> _onWebSocketConnectionData;
         private readonly IWebHost _webHost;
         private static int _counter;
         private readonly Dictionary<int, WebSocket> _clients = new();
@@ -107,7 +109,10 @@ namespace Microsoft.Playwright.Tests.TestServer
                             if (context.WebSockets.IsWebSocketRequest)
                             {
                                 var webSocket = await context.WebSockets.AcceptWebSocketAsync();
-                                await webSocket.SendAsync(new(Encoding.UTF8.GetBytes("incoming")), WebSocketMessageType.Text, true, CancellationToken.None);
+                                if (_onWebSocketConnectionData != null)
+                                {
+                                    await webSocket.SendAsync(_onWebSocketConnectionData, WebSocketMessageType.Text, true, CancellationToken.None);
+                                }
                                 await ReceiveLoopAsync(webSocket, context.Request.Headers["User-Agent"].ToString().Contains("Firefox"), CancellationToken.None);
                             }
                             else if (!context.Response.HasStarted)
@@ -214,6 +219,7 @@ namespace Microsoft.Playwright.Tests.TestServer
             _subscribers.Clear();
             _requestWaits.Clear();
             GzipRoutes.Clear();
+            _onWebSocketConnectionData = null;
             foreach (var subscriber in _subscribers.Values)
             {
                 subscriber(null);
@@ -224,6 +230,8 @@ namespace Microsoft.Playwright.Tests.TestServer
         public void EnableGzip(string path) => GzipRoutes.Add(path);
 
         public void SetRoute(string path, RequestDelegate handler) => _routes[path] = handler;
+
+        public void SendOnWebSocketConnection(string data) => _onWebSocketConnectionData = Encoding.UTF8.GetBytes(data);
 
         public void SetRedirect(string from, string to) => SetRoute(from, context =>
         {

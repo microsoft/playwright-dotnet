@@ -83,6 +83,7 @@ namespace Microsoft.Playwright.Tests
         [PlaywrightTest("ignorehttpserrors.spec.ts", "should work with WebSocket")]
         public async Task ShouldWorkWithWebSocket()
         {
+            HttpsServer.SendOnWebSocketConnection("incoming");
             await using var context = await Browser.NewContextAsync(new() { IgnoreHTTPSErrors = true });
             var page = await context.NewPageAsync();
             string value = await page.EvaluateAsync<string>(@"endpoint => {

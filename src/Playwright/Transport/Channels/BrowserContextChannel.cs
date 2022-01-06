@@ -165,15 +165,6 @@ namespace Microsoft.Playwright.Transport.Channels
                     ["enabled"] = enabled,
                 });
 
-        internal Task SetHttpCredentialsAsync(HttpCredentials credentials)
-            => Connection.SendMessageToServerAsync<PageChannel>(
-                Guid,
-                "setHTTPCredentials",
-                new Dictionary<string, object>
-                {
-                    ["httpCredentials"] = credentials,
-                });
-
         internal Task SetOfflineAsync(bool offline)
             => Connection.SendMessageToServerAsync<PageChannel>(
                 Guid,

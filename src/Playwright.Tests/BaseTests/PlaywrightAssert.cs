@@ -39,7 +39,7 @@ namespace Microsoft.Playwright.Tests
             try
             {
                 await action();
-                Assert.Fail();
+                Assert.Fail($"Expected exception of type '{typeof(T).Name}' which was not thrown");
                 return null;
             }
             catch (T t)
