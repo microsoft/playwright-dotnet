@@ -1,13 +1,16 @@
 ---
 name: Bug Report
-description: Something doesn't work like it should? Tell us!
+about: Something doesn't work like it should? Tell us!
 title: "[BUG]"
+labels: ''
+assignees: ''
+
 ---
 
 **Context:**
 - Playwright Version: [what Playwright version do you use?]
 - Operating System: [e.g. Windows, Linux or Mac]
-- .NET version: [e.g. 5, 6]
+- Node.js version: [e.g. 12.22, 14.6]
 - Browser: [e.g. All, Chromium, Firefox, WebKit]
 - Extra: [any specific details about your environment]
 
