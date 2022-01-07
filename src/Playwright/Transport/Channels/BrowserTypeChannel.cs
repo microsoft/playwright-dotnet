@@ -25,6 +25,7 @@
 using System.Collections.Generic;
 using System.Text.Json;
 using System.Threading.Tasks;
+using Microsoft.Playwright.Core;
 using Microsoft.Playwright.Helpers;
 
 namespace Microsoft.Playwright.Transport.Channels
@@ -209,6 +210,18 @@ namespace Microsoft.Playwright.Transport.Channels
                 { "timeout", timeout },
             };
             return Connection.SendMessageToServerAsync<JsonElement>(Guid, "connectOverCDP", channelArgs);
+        }
+
+        internal Task<JsonPipeChannel> ConnectAsync(string wsEndpoint = default, IEnumerable<KeyValuePair<string, string>> headers = default, float? slowMo = default, float? timeout = default)
+        {
+            var channelArgs = new Dictionary<string, object>
+            {
+                { "wsEndpoint", wsEndpoint },
+                { "headers", headers.Remap() },
+                { "slowMo", slowMo },
+                { "timeout", timeout },
+            };
+            return Connection.SendMessageToServerAsync<JsonPipeChannel>(Guid, "connect", channelArgs);
         }
     }
 }

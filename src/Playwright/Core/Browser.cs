@@ -35,7 +35,6 @@ namespace Microsoft.Playwright.Core
     {
         private readonly BrowserInitializer _initializer;
         private readonly TaskCompletionSource<bool> _closedTcs = new();
-        private bool _isClosedOrClosing;
 
         internal Browser(IChannelOwner parent, string guid, BrowserInitializer initializer) : base(parent, guid)
         {
@@ -55,6 +54,8 @@ namespace Microsoft.Playwright.Core
 
         public bool IsConnected { get; private set; }
 
+        internal bool ShouldCloseConnectionOnClose { get; set; }
+
         public string Version => _initializer.Version;
 
         internal BrowserChannel Channel { get; }
@@ -63,13 +64,22 @@ namespace Microsoft.Playwright.Core
 
         public async Task CloseAsync()
         {
-            if (!_isClosedOrClosing)
+            try
             {
-                _isClosedOrClosing = true;
-                await Channel.CloseAsync().ConfigureAwait(false);
+                if (ShouldCloseConnectionOnClose)
+                {
+                    Channel.Connection.DoClose(DriverMessages.BrowserClosedExceptionMessage);
+                }
+                else
+                {
+                    await Channel.CloseAsync().ConfigureAwait(false);
+                }
+                await _closedTcs.Task.ConfigureAwait(false);
             }
-
-            await _closedTcs.Task.ConfigureAwait(false);
+            catch (Exception e) when (DriverMessages.IsSafeCloseError(e))
+            {
+                // Swallow exception
+            }
         }
 
         public async Task<IBrowserContext> NewContextAsync(BrowserNewContextOptions options = default)
@@ -184,10 +194,9 @@ namespace Microsoft.Playwright.Core
             return recordVideoArgs;
         }
 
-        private void DidClose()
+        internal void DidClose()
         {
             IsConnected = false;
-            _isClosedOrClosing = true;
             Disconnected?.Invoke(this, this);
             _closedTcs.TrySetResult(true);
         }

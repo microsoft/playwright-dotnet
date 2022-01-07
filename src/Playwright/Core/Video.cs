@@ -23,15 +23,18 @@
  */
 
 using System.Threading.Tasks;
+using Microsoft.Playwright.Transport;
 
 namespace Microsoft.Playwright.Core
 {
     internal class Video : IVideo
     {
         private readonly TaskCompletionSource<Artifact> _artifactTcs = new();
+        private readonly bool _isRemote;
 
-        public Video(Page page)
+        public Video(Page page, Connection connection)
         {
+            _isRemote = connection.IsRemote;
             page.Close += (_, _) => _artifactTcs.TrySetCanceled();
             page.Crash += (_, _) => _artifactTcs.TrySetCanceled();
         }
@@ -44,6 +47,10 @@ namespace Microsoft.Playwright.Core
 
         public async Task<string> PathAsync()
         {
+            if (_isRemote)
+            {
+                throw new PlaywrightException("Path is not available when connecting remotely. Use SaveAsAsync() to save a local copy.");
+            }
             var artifact = await _artifactTcs.Task.ConfigureAwait(false);
             return artifact.AbsolutePath;
         }

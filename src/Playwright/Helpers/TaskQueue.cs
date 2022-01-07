@@ -31,16 +31,22 @@ namespace Microsoft.Playwright.Helpers
     internal class TaskQueue : IDisposable
     {
         private readonly SemaphoreSlim _semaphore;
+        private bool _disposed;
 
         internal TaskQueue() => _semaphore = new(1, 1);
 
         public void Dispose()
         {
+            _disposed = true;
             _semaphore.Dispose();
         }
 
         internal async Task EnqueueAsync(Func<Task> taskGenerator)
         {
+            if (_disposed)
+            {
+                return;
+            }
             await _semaphore.WaitAsync().ConfigureAwait(false);
             try
             {
@@ -48,7 +54,10 @@ namespace Microsoft.Playwright.Helpers
             }
             finally
             {
-                _semaphore.Release();
+                if (!_disposed)
+                {
+                    _semaphore.Release();
+                }
             }
         }
     }

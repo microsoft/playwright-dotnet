@@ -22,14 +22,44 @@
  * SOFTWARE.
  */
 
-using System;
-
-namespace Microsoft.Playwright.Transport
+namespace Microsoft.Playwright.Transport.Channels
 {
-    internal class LogReceivedEventArgs : EventArgs
+    internal class SerializedError
     {
-        public LogReceivedEventArgs(string message) => Message = message;
+        private string _message;
 
-        public string Message { get; }
+        /// <summary>
+        /// Error name.
+        /// </summary>
+        public string Name { get; set; }
+
+        /// <summary>
+        /// Error Message.
+        /// </summary>
+        public string Message
+        {
+            get => _message ?? Value;
+            set => _message = value;
+        }
+
+        /// <summary>
+        /// Error Value.
+        /// </summary>
+        public string Value { get; set; }
+
+        /// <summary>
+        /// Error stack.
+        /// </summary>
+        public string Stack { get; set; }
+
+        public override string ToString()
+        {
+            if (!string.IsNullOrEmpty(Stack))
+            {
+                return $"{Stack}";
+            }
+
+            return $"{Name}: {Message}";
+        }
     }
 }

@@ -136,21 +136,85 @@ namespace Microsoft.Playwright.Core
         public async Task<IBrowser> ConnectAsync(string wsEndpoint, BrowserTypeConnectOptions options = null)
         {
             options ??= new BrowserTypeConnectOptions();
-#pragma warning disable CA2000 // Dispose objects before losing scope
-            WebSocketTransport transport = new(wsEndpoint, options);
-            await transport.ConnectAsync().ConfigureAwait(false);
-#pragma warning restore CA2000
-            var connection = new Connection(transport);
-            var playwright = await connection.InitializePlaywrightAsync().ConfigureAwait(false);
-            playwright.Connection = connection;
+            JsonPipe pipe = (await _channel.ConnectAsync(wsEndpoint: wsEndpoint, headers: options.Headers, slowMo: options.SlowMo, timeout: options.Timeout).ConfigureAwait(false)).Object;
 
-            if (playwright.PreLaunchedBrowser == null)
+            void ClosePipe()
             {
-                transport.Close("Disconnected");
-                throw new PlaywrightException("Malformed endpoint. Did you use launchServer method?");
+                try
+                {
+                    pipe.CloseAsync().ConfigureAwait(false);
+                }
+#pragma warning disable RCS1075 // Avoid empty catch clause that catches System.Exception.
+                catch (Exception)
+#pragma warning restore RCS1075 // Avoid empty catch clause that catches System.Exception.
+                {
+                }
             }
+#pragma warning disable CA2000 // Dispose objects before losing scope
+            Connection connection = new Connection();
+#pragma warning restore CA2000
+            connection.MarkAsRemote();
+            connection.Close += (_, _) => ClosePipe();
 
-            return playwright.PreLaunchedBrowser;
+            Browser browser = null;
+            void OnPipeClosed()
+            {
+                // Emulate all pages, contexts and the browser closing upon disconnect.
+                foreach (BrowserContext context in browser.BrowserContextsList.ToArray())
+                {
+                    foreach (Page page in context.PagesList.ToArray())
+                    {
+                        page.OnClose();
+                    }
+                    context.OnClose();
+                }
+                browser.DidClose();
+                connection.DoClose(DriverMessages.BrowserClosedExceptionMessage);
+            }
+            pipe.Closed += (_, _) => OnPipeClosed();
+            connection.OnMessage = async (object message) =>
+            {
+                try
+                {
+                    await pipe.SendAsync(message).ConfigureAwait(false);
+                }
+                catch
+                {
+                    OnPipeClosed();
+                }
+            };
+
+            pipe.Message += (_, message) =>
+            {
+                try
+                {
+                    connection.Dispatch(message);
+                }
+                catch (Exception ex)
+                {
+                    Console.Error.WriteLine("Playwright: Connection dispatch error");
+                    Console.Error.Write(ex);
+                    ClosePipe();
+                }
+            };
+
+            async Task<IBrowser> CreateBrowserTask()
+            {
+                var playwright = await connection.InitializePlaywrightAsync().ConfigureAwait(false);
+                playwright.Connection = connection;
+                if (playwright.PreLaunchedBrowser == null)
+                {
+                    ClosePipe();
+                    throw new ArgumentException("Malformed endpoint. Did you use launchServer method?");
+                }
+                browser = playwright.PreLaunchedBrowser;
+                browser.ShouldCloseConnectionOnClose = true;
+                browser.Disconnected += (_, _) => ClosePipe();
+                return playwright.PreLaunchedBrowser;
+            }
+            var task = CreateBrowserTask();
+            var timeout = options?.Timeout != null ? (int)options.Timeout : 30_000;
+            return await task.WithTimeout(timeout, _ => throw new TimeoutException($"BrowserType.ConnectAsync: Timeout {options.Timeout}ms exceeded")).ConfigureAwait(false);
         }
 
         public async Task<IBrowser> ConnectOverCDPAsync(string endpointURL, BrowserTypeConnectOverCDPOptions options = null)

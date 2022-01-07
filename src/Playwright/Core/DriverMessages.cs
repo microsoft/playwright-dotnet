@@ -22,6 +22,8 @@
  * SOFTWARE.
  */
 
+using System;
+
 namespace Microsoft.Playwright.Core
 {
     /// <summary>
@@ -38,5 +40,9 @@ namespace Microsoft.Playwright.Core
         /// Message used when the browser or the context get closed.
         /// </summary>
         public const string BrowserOrContextClosedExceptionMessage = "Target page, context or browser has been closed";
+
+        public static bool IsSafeCloseError(Exception e)
+        => e.Message.Contains(BrowserClosedExceptionMessage) ||
+                e.Message.Contains(BrowserOrContextClosedExceptionMessage);
     }
 }

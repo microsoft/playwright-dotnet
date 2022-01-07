@@ -46,27 +46,27 @@ namespace Microsoft.Playwright.Transport
         private readonly ConcurrentDictionary<string, TaskCompletionSource<IChannelOwner>> _waitingForObject = new();
         private readonly ConcurrentDictionary<int, ConnectionCallback> _callbacks = new();
         private readonly Root _rootObject;
-        private readonly IConnectionTransport _transport;
         private readonly TaskQueue _queue = new();
         private int _lastId;
         private string _reason = string.Empty;
 
-        public Connection(IConnectionTransport connectionTransport)
+        public Connection()
         {
             _rootObject = new(null, this, string.Empty);
-
-            _transport = connectionTransport;
-            _transport.MessageReceived += Transport_MessageReceived;
-            _transport.LogReceived += (_, e) => Console.Error.WriteLine(e.Message);
-            _transport.TransportClosed += (_, e) => Close(e.CloseReason);
         }
 
         /// <inheritdoc cref="IDisposable.Dispose"/>
         ~Connection() => Dispose(false);
 
+        internal event EventHandler<string> Close;
+
         public ConcurrentDictionary<string, IChannelOwner> Objects { get; } = new();
 
         public bool IsClosed { get; private set; }
+
+        internal bool IsRemote { get; set; }
+
+        internal Func<object, Task> OnMessage { get; set; }
 
         public void Dispose()
         {
@@ -154,10 +154,9 @@ namespace Microsoft.Playwright.Transport
                     Metadata = metadata,
                 };
 
-                string messageString = JsonSerializer.Serialize(message, GetDefaultJsonSerializerOptions());
-                TraceMessage($"pw:channel:command {messageString}");
+                TraceMessage("pw:channel:command", message);
 
-                return _transport.SendAsync(messageString);
+                return OnMessage(message);
             }).ConfigureAwait(false);
 
             var result = await tcs.Task.ConfigureAwait(false);
@@ -190,6 +189,8 @@ namespace Microsoft.Playwright.Transport
             return result;
         }
 
+        internal void MarkAsRemote() => IsRemote = true;
+
         internal JsonSerializerOptions GetDefaultJsonSerializerOptions()
         {
             var options = JsonExtensions.GetNewDefaultSerializerOptions();
@@ -214,13 +215,11 @@ namespace Microsoft.Playwright.Transport
             }
         }
 
-        private void Transport_MessageReceived(object sender, MessageReceivedEventArgs e)
+        internal void Dispatch(PlaywrightServerMessage message)
         {
-            var message = JsonSerializer.Deserialize<PlaywrightServerMessage>(e.Message, JsonExtensions.DefaultJsonSerializerOptions);
-
             if (message.Id.HasValue)
             {
-                TraceMessage($"pw:channel:response {e.Message}");
+                TraceMessage("pw:channel:response", message);
 
                 if (_callbacks.TryRemove(message.Id.Value, out var callback))
                 {
@@ -237,7 +236,7 @@ namespace Microsoft.Playwright.Transport
                 return;
             }
 
-            TraceMessage($"pw:channel:event {e.Message}");
+            TraceMessage("pw:channel:event", message);
 
             try
             {
@@ -261,7 +260,7 @@ namespace Microsoft.Playwright.Transport
             }
             catch (Exception ex)
             {
-                Close(ex);
+                DoClose(ex);
             }
         }
 
@@ -270,6 +269,7 @@ namespace Microsoft.Playwright.Transport
             IChannelOwner result = null;
             var parent = string.IsNullOrEmpty(parentGuid) ? _rootObject : Objects[parentGuid];
 
+#pragma warning disable CA2000
             switch (type)
             {
                 case ChannelOwnerType.Artifact:
@@ -308,6 +308,9 @@ namespace Microsoft.Playwright.Transport
                 case ChannelOwnerType.JSHandle:
                     result = new JSHandle(parent, guid, initializer?.ToObject<JSHandleInitializer>(GetDefaultJsonSerializerOptions()));
                     break;
+                case ChannelOwnerType.JsonPipe:
+                    result = new JsonPipe(parent, guid, initializer?.ToObject<JsonPipeInitializer>(GetDefaultJsonSerializerOptions()));
+                    break;
                 case ChannelOwnerType.Page:
                     result = new Page(parent, guid, initializer?.ToObject<PageInitializer>(GetDefaultJsonSerializerOptions()));
                     break;
@@ -333,21 +336,22 @@ namespace Microsoft.Playwright.Transport
                     result = new Stream(parent, guid);
                     break;
                 default:
-                    TraceMessage("Missing type " + type);
+                    TraceMessage("pw:dotnet", "Missing type " + type);
                     break;
             }
 
             Objects.TryAdd(guid, result);
             OnObjectCreated(guid, result);
+#pragma warning restore CA2000
         }
 
-        private void Close(Exception ex)
+        private void DoClose(Exception ex)
         {
-            TraceMessage(ex.ToString());
-            Close(ex.Message);
+            TraceMessage("pw:dotnet", ex.ToString());
+            DoClose(ex.Message);
         }
 
-        private void Close(string reason)
+        internal void DoClose(string reason)
         {
             _reason = string.IsNullOrEmpty(_reason) ? reason : _reason;
             if (!IsClosed)
@@ -408,16 +412,21 @@ namespace Microsoft.Playwright.Transport
             }
 
             _queue.Dispose();
-            _transport.Close("Connection disposed");
+            Close.Invoke(this, "Connection disposed");
         }
 
         [Conditional("DEBUG")]
-        private void TraceMessage(string message)
+        private void TraceMessage(string logLevel, object message)
         {
             if (!string.IsNullOrEmpty(Environment.GetEnvironmentVariable("DEBUGPWD")))
             {
-                Trace.WriteLine(message);
-                Console.Error.WriteLine(message);
+                if (!(message is string))
+                {
+                    message = JsonSerializer.Serialize(message, GetDefaultJsonSerializerOptions());
+                }
+                string line = $"{logLevel}: {message}";
+                Trace.WriteLine(line);
+                Console.Error.WriteLine(line);
             }
         }
     }

@@ -35,17 +35,17 @@ namespace Microsoft.Playwright.Transport
         /// <summary>
         /// Occurs when a message is received.
         /// </summary>
-        event EventHandler<MessageReceivedEventArgs> MessageReceived;
+        event EventHandler<string> MessageReceived;
 
         /// <summary>
         /// Occurs when a log message is received.
         /// </summary>
-        event EventHandler<LogReceivedEventArgs> LogReceived;
+        event EventHandler<string> LogReceived;
 
         /// <summary>
         /// Occurs when the transport is closed.
         /// </summary>
-        event EventHandler<TransportClosedEventArgs> TransportClosed;
+        event EventHandler<string> TransportClosed;
 
         /// <summary>
         /// Sends a message using the transport.

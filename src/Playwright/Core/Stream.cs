@@ -22,12 +22,14 @@
  * SOFTWARE.
  */
 
+using System;
+using System.Threading.Tasks;
 using Microsoft.Playwright.Transport;
 using Microsoft.Playwright.Transport.Channels;
 
 namespace Microsoft.Playwright.Core
 {
-    internal class Stream : ChannelOwnerBase, IChannelOwner<Stream>
+    internal class Stream : ChannelOwnerBase, IChannelOwner<Stream>, IAsyncDisposable
     {
         internal Stream(IChannelOwner parent, string guid) : base(parent, guid)
         {
@@ -39,5 +41,9 @@ namespace Microsoft.Playwright.Core
         IChannel<Stream> IChannelOwner<Stream>.Channel => Channel;
 
         public StreamChannel Channel { get; }
+
+        public async ValueTask DisposeAsync() => await Channel.CloseAsync().ConfigureAwait(false);
+
+        public async Task<string> ReadAsync() => await Channel.ReadAsync().ConfigureAwait(false);
     }
 }
