@@ -35,6 +35,7 @@ namespace Microsoft.Playwright.Tests
         [PlaywrightTest("web-socket.spec.ts", "should work")]
         public async Task ShouldWork()
         {
+            Server.SendOnWebSocketConnection("incoming");
             string value = await Page.EvaluateAsync<string>(@"port => {
                 let cb;
                 const result = new Promise(f => cb = f);
@@ -76,6 +77,7 @@ namespace Microsoft.Playwright.Tests
         [PlaywrightTest("web-socket.spec.ts", "should emit frame events")]
         public async Task ShouldEmitFrameEvents()
         {
+            Server.SendOnWebSocketConnection("incoming");
             var socketClosedTcs = new TaskCompletionSource<bool>();
             var log = new List<string>();
 
@@ -170,6 +172,7 @@ namespace Microsoft.Playwright.Tests
         [PlaywrightTest("web-socket.spec.ts", "should not have stray error events")]
         public async Task ShouldNotHaveStrayErrorEvents()
         {
+            Server.SendOnWebSocketConnection("incoming");
             var frameReceivedTcs = new TaskCompletionSource<bool>();
             string socketError = null;
             IWebSocket ws = null;

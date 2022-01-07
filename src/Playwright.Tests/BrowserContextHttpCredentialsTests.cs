@@ -40,12 +40,6 @@ namespace Microsoft.Playwright.Tests
             Assert.AreEqual((int)HttpStatusCode.Unauthorized, response.Status);
         }
 
-        [PlaywrightTest("browsercontext-credentials.spec.ts", "should work with setHTTPCredentials")]
-        [Ignore("This test is no longer applicable as the API no longer exists.")]
-        public void ShouldWorkWithSetHTTPCredentials()
-        {
-        }
-
         [PlaywrightTest("browsercontext-credentials.spec.ts", "should work with correct credentials")]
         public async Task ShouldWorkWithCorrectCredentials()
         {

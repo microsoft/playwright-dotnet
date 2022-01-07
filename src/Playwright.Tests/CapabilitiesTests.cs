@@ -45,6 +45,7 @@ namespace Microsoft.Playwright.Tests
         [Skip(SkipAttribute.Targets.Webkit | SkipAttribute.Targets.Windows)]
         public async Task WebSocketShouldWork()
         {
+            Server.SendOnWebSocketConnection("incoming");
             string value = await Page.EvaluateAsync<string>(
                 $@"(port) => {{
                     let cb;
