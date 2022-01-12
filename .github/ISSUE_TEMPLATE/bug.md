@@ -10,12 +10,9 @@ assignees: ''
 **Context:**
 - Playwright Version: [what Playwright version do you use?]
 - Operating System: [e.g. Windows, Linux or Mac]
-- .NET version: [e.g. .NET5]
+- .NET version: [e.g. .NET 5]
 - Browser: [e.g. All, Chromium, Firefox, WebKit]
 - Extra: [any specific details about your environment]
-
-<!-- CLI to auto-capture this info -->
-<!-- npx envinfo --preset playwright --markdown -->
 
 **Code Snippet**
 
