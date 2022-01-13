@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <OutputType>exe</OutputType>
+    <OutputType>Exe</OutputType>
     <Title>Microsoft.Playwright</Title>
     <PackageId>Microsoft.Playwright</PackageId>
     <Summary>The .NET port of Playwright, used to automate Chromium, Firefox and WebKit with a single API.</Summary>
@@ -28,15 +28,23 @@
   <Import Project="../Common/SignAssembly.props" />
   <Import Project="build/Microsoft.Playwright.targets" />
   <ItemGroup>
-    <PackageReference Include="Microsoft.VisualStudioEng.MicroBuild.Core" Version="0.4.1">
+    <PackageReference Include="Microsoft.VisualStudioEng.MicroBuild.Core" Version="1.0.0">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
     <PackageReference Include="System.ComponentModel.Annotations" Version="5.0.0" />
-    <PackageReference Include="System.Text.Json" Version="5.0.2" />
-    <PackageReference Include="Macross.Json.Extensions" Version="2.0.0" />
-    <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.0.0" PrivateAssets="All" />
-    <PackageReference Include="Microsoft.Bcl.AsyncInterfaces" Version="5.0.0" />
+    <PackageReference Include="System.Text.Json" Version="6.0.1" />
+    <PackageReference Include="Macross.Json.Extensions" Version="2.2.0" />
+    <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.1.1" PrivateAssets="All" />
+    <PackageReference Include="Microsoft.Bcl.AsyncInterfaces" Version="6.0.0" />
+    <PackageReference Include="Roslynator.Analyzers" Version="3.3.0">
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+      <PrivateAssets>all</PrivateAssets>
+    </PackageReference>
+    <PackageReference Include="Microsoft.VisualStudio.Threading.Analyzers" Version="17.0.64">
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
+      <PrivateAssets>all</PrivateAssets>
+    </PackageReference>
   </ItemGroup>
   <Target Name="DedupeDriver" AfterTargets="CopyFilesToOutputDirectory" BeforeTargets="CopyPlaywrightFilesToOutput">
     <ItemGroup>
@@ -48,20 +56,22 @@
       <DriverShell Include="Scripts\playwright.sh" />
       <DriverCmd Include="Scripts\playwright.cmd" />
     </ItemGroup>
-    <Copy SourceFiles="@(DriverPackage)" DestinationFiles="@(DriverPackage->'.playwright\package\%(RecursiveDir)%(Filename)%(Extension)')" />
-    <Copy SourceFiles="@(DriverNodeLicense)" DestinationFiles="@(DriverNodeLicense->'.playwright\node\%(RecursiveDir)%(Filename)%(Extension)')" />
-    <Copy SourceFiles="@(DriverNodeLinux)" DestinationFiles="@(DriverNodeLinux->'.playwright\node\linux\%(RecursiveDir)%(Filename)%(Extension)')" />
-    <Copy SourceFiles="@(DriverNodeMac)" DestinationFiles="@(DriverNodeMac->'.playwright\node\mac\%(RecursiveDir)%(Filename)%(Extension)')" />
-    <Copy SourceFiles="@(DriverNodeWin32_x64)" DestinationFiles="@(DriverNodeWin32_x64->'.playwright\node\win32_x64\%(RecursiveDir)%(Filename)%(Extension)')" />
-    <Copy SourceFiles="@(DriverShell)" DestinationFiles="@(DriverShell->'.playwright\node\linux\%(RecursiveDir)%(Filename)%(Extension)')" />
-    <Copy SourceFiles="@(DriverShell)" DestinationFiles="@(DriverShell->'.playwright\node\mac\%(RecursiveDir)%(Filename)%(Extension)')" />
-    <Copy SourceFiles="@(DriverCmd)" DestinationFiles="@(DriverCmd->'.playwright\node\win32_x64\%(RecursiveDir)%(Filename)%(Extension)')" />
+    <Copy SourceFiles="@(DriverPackage)" DestinationFiles="@(DriverPackage-&gt;'.playwright\package\%(RecursiveDir)%(Filename)%(Extension)')" />
+    <Copy SourceFiles="@(DriverNodeLicense)" DestinationFiles="@(DriverNodeLicense-&gt;'.playwright\node\%(RecursiveDir)%(Filename)%(Extension)')" />
+    <Copy SourceFiles="@(DriverNodeLinux)" DestinationFiles="@(DriverNodeLinux-&gt;'.playwright\node\linux\%(RecursiveDir)%(Filename)%(Extension)')" />
+    <Copy SourceFiles="@(DriverNodeMac)" DestinationFiles="@(DriverNodeMac-&gt;'.playwright\node\mac\%(RecursiveDir)%(Filename)%(Extension)')" />
+    <Copy SourceFiles="@(DriverNodeWin32_x64)" DestinationFiles="@(DriverNodeWin32_x64-&gt;'.playwright\node\win32_x64\%(RecursiveDir)%(Filename)%(Extension)')" />
+    <Copy SourceFiles="@(DriverShell)" DestinationFiles="@(DriverShell-&gt;'.playwright\node\linux\%(RecursiveDir)%(Filename)%(Extension)')" />
+    <Copy SourceFiles="@(DriverShell)" DestinationFiles="@(DriverShell-&gt;'.playwright\node\mac\%(RecursiveDir)%(Filename)%(Extension)')" />
+    <Copy SourceFiles="@(DriverCmd)" DestinationFiles="@(DriverCmd-&gt;'.playwright\node\win32_x64\%(RecursiveDir)%(Filename)%(Extension)')" />
   </Target>
   <ItemGroup>
     <None Include=".playwright\**" Pack="true" PackagePath=".playwright" />
     <None Include="build\**" Pack="true" PackagePath="buildTransitive" />
     <None Remove=".drivers\**" />
     <None Include="..\Common\icon.png" Pack="true" Visible="false" PackagePath="icon.png" />
+    <None Remove="Roslynator.Analyzers" />
+    <None Remove="Microsoft.VisualStudio.Threading.Analyzers" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Update="Microsoft.VisualStudio.Threading.Analyzers" Version="16.9.60">
