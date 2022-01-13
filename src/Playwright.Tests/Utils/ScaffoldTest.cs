@@ -33,6 +33,7 @@ using System.Text.RegularExpressions;
 namespace Microsoft.Playwright.Tests
 {
     [SuppressMessage("StyleCop.CSharp.ReadabilityRules", "SA1118:ParameterMustNotSpanMultipleLines", Justification = "CodeDom is complicated.")]
+    [SuppressMessage("Microsoft.CodeQuality.Analyzers", "CA1416", Justification = "Validate platform compatibility (we only run tests on win/mac/linux).")]
     internal static partial class ScaffoldTest
     {
         private static readonly TextInfo _textInfo = CultureInfo.InvariantCulture.TextInfo;
