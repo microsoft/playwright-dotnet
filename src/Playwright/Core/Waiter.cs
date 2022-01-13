@@ -169,7 +169,7 @@ namespace Microsoft.Playwright.Core
                 {
                     throw _immediateError;
                 }
-                var firstTask = await Task.WhenAny(_failures.Prepend(task)).ConfigureAwait(false);
+                var firstTask = await Task.WhenAny(Enumerable.Repeat(task, 1).Concat(_failures)).ConfigureAwait(false);
                 dispose?.Invoke();
                 await firstTask.ConfigureAwait(false);
                 return await task.ConfigureAwait(false);
