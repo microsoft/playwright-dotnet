@@ -183,6 +183,7 @@ dotnet_diagnostic.SA1600.severity = none
 dotnet_diagnostic.SA1513.severity = none
 dotnet_diagnostic.SA1202.severity = none
 dotnet_diagnostic.SA1503.severity = none
+dotnet_diagnostic.RCS1075.severity = none
 
 [Playwright/Core/*.cs]
 dotnet_diagnostic.SA1118.severity = none # This should be removed when we finish

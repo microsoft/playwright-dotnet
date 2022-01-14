@@ -43,10 +43,6 @@ namespace Microsoft.Playwright.Helpers
 
         internal async Task EnqueueAsync(Func<Task> taskGenerator)
         {
-            if (_disposed)
-            {
-                return;
-            }
             await _semaphore.WaitAsync().ConfigureAwait(false);
             try
             {

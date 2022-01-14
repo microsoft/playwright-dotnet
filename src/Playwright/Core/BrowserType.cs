@@ -144,9 +144,7 @@ namespace Microsoft.Playwright.Core
                 {
                     pipe.CloseAsync().ConfigureAwait(false);
                 }
-#pragma warning disable RCS1075 // Avoid empty catch clause that catches System.Exception.
                 catch (Exception)
-#pragma warning restore RCS1075 // Avoid empty catch clause that catches System.Exception.
                 {
                 }
             }
@@ -156,6 +154,7 @@ namespace Microsoft.Playwright.Core
             connection.MarkAsRemote();
             connection.Close += (_, _) => ClosePipe();
 
+            string closeError = null;
             Browser browser = null;
             void OnPipeClosed()
             {
@@ -169,7 +168,7 @@ namespace Microsoft.Playwright.Core
                     context.OnClose();
                 }
                 browser.DidClose();
-                connection.DoClose(DriverMessages.BrowserClosedExceptionMessage);
+                connection.DoClose(closeError != null ? closeError : DriverMessages.BrowserClosedExceptionMessage);
             }
             pipe.Closed += (_, _) => OnPipeClosed();
             connection.OnMessage = async (object message) =>
@@ -192,13 +191,12 @@ namespace Microsoft.Playwright.Core
                 }
                 catch (Exception ex)
                 {
-                    Console.Error.WriteLine("Playwright: Connection dispatch error");
-                    Console.Error.Write(ex);
+                    closeError = ex.ToString();
                     ClosePipe();
                 }
             };
 
-            async Task<IBrowser> CreateBrowserTask()
+            async Task<IBrowser> CreateBrowserAsync()
             {
                 var playwright = await connection.InitializePlaywrightAsync().ConfigureAwait(false);
                 playwright.Connection = connection;
@@ -212,7 +210,7 @@ namespace Microsoft.Playwright.Core
                 browser.Disconnected += (_, _) => ClosePipe();
                 return playwright.PreLaunchedBrowser;
             }
-            var task = CreateBrowserTask();
+            var task = CreateBrowserAsync();
             var timeout = options?.Timeout != null ? (int)options.Timeout : 30_000;
             return await task.WithTimeout(timeout, _ => throw new TimeoutException($"BrowserType.ConnectAsync: Timeout {options.Timeout}ms exceeded")).ConfigureAwait(false);
         }
