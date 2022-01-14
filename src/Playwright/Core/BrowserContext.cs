@@ -247,7 +247,7 @@ namespace Microsoft.Playwright.Core
         }
 
         public Task RouteAsync(string url, Action<IRoute> handler, BrowserContextRouteOptions options = default)
-            => RouteAsync(url, null, null, handler, options);
+            => RouteAsync(url, new Regex(CombineUrlWithBase(url).GlobToRegex()), null, handler, options);
 
         public Task RouteAsync(Regex url, Action<IRoute> handler, BrowserContextRouteOptions options = default)
             => RouteAsync(null, url, null, handler, options);
@@ -330,8 +330,7 @@ namespace Microsoft.Playwright.Core
             {
                 if (
                     ((item.Times ?? 0) == 0 || item.HandledCount >= item.Times) &&
-                    ((item.Url != null && UrlMatches(request.Url, item.Url)) ||
-                    (item.Regex?.IsMatch(request.Url) == true) ||
+                    ((item.Regex?.IsMatch(request.Url) == true) ||
                     (item.Function?.Invoke(request.Url) == true)))
                 {
                     item.Handle(route);
