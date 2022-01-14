@@ -271,7 +271,7 @@ namespace Microsoft.Playwright.Transport.Channels
                 ["noWaitAfter"] = noWaitAfter,
             };
 
-            return Connection.SendMessageToServerAsync<string>(Guid, "setInputFiles", args);
+            return Connection.SendMessageToServerAsync(Guid, "setInputFiles", args);
         }
 
         internal async Task<string> GetAttributeAsync(string name)

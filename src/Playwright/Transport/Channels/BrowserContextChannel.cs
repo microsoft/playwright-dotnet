@@ -234,13 +234,14 @@ namespace Microsoft.Playwright.Transport.Channels
         internal Task<StorageState> GetStorageStateAsync()
             => Connection.SendMessageToServerAsync<StorageState>(Guid, "storageState", null);
 
-        internal Task TracingStartAsync(string name, bool? screenshots, bool? snapshots)
+        internal Task TracingStartAsync(string name, string title, bool? screenshots, bool? snapshots)
             => Connection.SendMessageToServerAsync(
                 Guid,
                 "tracingStart",
                 new Dictionary<string, object>
                 {
                     ["name"] = name,
+                    ["title"] = title,
                     ["screenshots"] = screenshots,
                     ["snapshots"] = snapshots,
                 });
@@ -256,18 +257,25 @@ namespace Microsoft.Playwright.Transport.Channels
                 ["title"] = title,
             });
 
-        internal async Task<Artifact> StopChunkAsync(bool save = false, bool skipCompress = false)
+        internal async Task<(Artifact Artifact, List<NameValueEntry> SourceEntries)> StopChunkAsync(string mode)
         {
             var result = await Connection.SendMessageToServerAsync(Guid, "tracingStopChunk", new Dictionary<string, object>
             {
-                ["save"] = save,
-                ["skipCompress"] = skipCompress,
+                ["mode"] = mode,
             }).ConfigureAwait(false);
 
-            if (save)
-                return result.GetObject<Artifact>("artifact", Connection);
-
-            return null;
+            var artifact = result.GetObject<Artifact>("artifact", Connection);
+            List<NameValueEntry> sourceEntries = new() { };
+            if (result.Value.TryGetProperty("sourceEntries", out var sourceEntriesElement))
+            {
+                var sourceEntriesEnumerator = sourceEntriesElement.EnumerateArray();
+                while (sourceEntriesEnumerator.MoveNext())
+                {
+                    JsonElement current = sourceEntriesEnumerator.Current;
+                    sourceEntries.Add(result.Value.Deserialize<NameValueEntry>());
+                }
+            }
+            return (artifact, sourceEntries);
         }
 
         internal async Task<Artifact> HarExportAsync()

@@ -39,10 +39,22 @@ namespace Microsoft.Playwright.Core
         private readonly Frame _frame;
         private readonly string _selector;
 
-        public Locator(Frame parent, string selector)
+        private readonly LocatorLocatorOptions _options;
+
+        public Locator(Frame parent, string selector, LocatorLocatorOptions options = null)
         {
             _frame = parent;
             _selector = selector;
+            _options = options;
+
+            if (options?.HasTextRegex != null)
+            {
+                _selector += $" >> :scope:text-matches({options.HasTextRegex.ToString().EscapeWithQuotes("\"")}, {options.HasTextRegex.Options.GetInlineFlags().EscapeWithQuotes("\"")})";
+            }
+            if (options?.HasTextString != null)
+            {
+                _selector += $" >> :scope:has-text({options.HasTextString.EscapeWithQuotes("\"")})";
+            }
         }
 
         public ILocator First => new Locator(_frame, $"{_selector} >> nth=0");
@@ -104,7 +116,7 @@ namespace Microsoft.Playwright.Core
                 : UncheckAsync(ConvertOptions<LocatorUncheckOptions>(options));
 
         public Task<int> CountAsync()
-            => EvaluateAllAsync<int>("ee => ee.length");
+            => _frame.QueryCountAsync(_selector);
 
         public Task DblClickAsync(LocatorDblClickOptions options = null)
             => _frame.DblClickAsync(_selector, ConvertOptions<FrameDblClickOptions>(options));
@@ -180,12 +192,6 @@ namespace Microsoft.Playwright.Core
         public ILocator Nth(int index)
             => new Locator(_frame, $"{_selector} >> nth={index}");
 
-        public ILocator WithText(string text)
-            => new Locator(_frame, $"{_selector} >> :scope:has-text({text.EscapeWithQuotes("\"")})");
-
-        public ILocator WithText(Regex regex)
-            => new Locator(_frame, $"{_selector} >> :scope:text-matches({regex.ToString().EscapeWithQuotes("\"")}, {regex.Options.GetInlineFlags().EscapeWithQuotes("\"")})");
-
         public Task PressAsync(string key, LocatorPressOptions options = null)
             => _frame.PressAsync(_selector, key, ConvertOptions<FramePressOptions>(options));
 
@@ -240,8 +246,8 @@ namespace Microsoft.Playwright.Core
         public Task UncheckAsync(LocatorUncheckOptions options = null)
             => _frame.UncheckAsync(_selector, ConvertOptions<FrameUncheckOptions>(options));
 
-        ILocator ILocator.Locator(string selector)
-            => new Locator(_frame, $"{_selector} >> {selector}");
+        ILocator ILocator.Locator(string selector, LocatorLocatorOptions options)
+            => new Locator(_frame, $"{_selector} >> {selector}", options);
 
         public Task WaitForAsync(LocatorWaitForOptions options = null)
             => _frame.LocatorWaitForAsync(_selector, ConvertOptions<LocatorWaitForOptions>(options));

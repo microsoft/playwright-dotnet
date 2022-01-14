@@ -47,6 +47,8 @@ namespace Microsoft.Playwright.Core
 
         IChannel<BrowserType> IChannelOwner<BrowserType>.Channel => _channel;
 
+        internal PlaywrightImpl Playwright { get; set; }
+
         public string ExecutablePath => _initializer.ExecutablePath;
 
         public string Name => _initializer.Name;
@@ -54,7 +56,7 @@ namespace Microsoft.Playwright.Core
         public async Task<IBrowser> LaunchAsync(BrowserTypeLaunchOptions options = default)
         {
             options ??= new BrowserTypeLaunchOptions();
-            return (await _channel.LaunchAsync(
+            Browser browser = (await _channel.LaunchAsync(
                 headless: options.Headless,
                 channel: options.Channel,
                 executablePath: options.ExecutablePath,
@@ -73,6 +75,8 @@ namespace Microsoft.Playwright.Core
                 slowMo: options.SlowMo,
                 ignoreDefaultArgs: options.IgnoreDefaultArgs,
                 ignoreAllDefaultArgs: options.IgnoreAllDefaultArgs).ConfigureAwait(false)).Object;
+            browser.LocalUtils = Playwright.Utils;
+            return browser;
         }
 
         public async Task<IBrowserContext> LaunchPersistentContextAsync(string userDataDir, BrowserTypeLaunchPersistentContextOptions options = default)
@@ -130,6 +134,7 @@ namespace Microsoft.Playwright.Core
                 RecordHarPath = options.RecordHarPath,
                 RecordHarOmitContent = options.RecordHarOmitContent,
             };
+            context.LocalUtils = Playwright.Utils;
             return context;
         }
 
@@ -208,6 +213,7 @@ namespace Microsoft.Playwright.Core
                 browser = playwright.PreLaunchedBrowser;
                 browser.ShouldCloseConnectionOnClose = true;
                 browser.Disconnected += (_, _) => ClosePipe();
+                browser.LocalUtils = Playwright.Utils;
                 return playwright.PreLaunchedBrowser;
             }
             var task = CreateBrowserAsync();
@@ -228,6 +234,7 @@ namespace Microsoft.Playwright.Core
             {
                 browser.BrowserContextsList.Add(defaultContextValue.ToObject<BrowserContext>(_channel.Connection.GetDefaultJsonSerializerOptions()));
             }
+            browser.LocalUtils = Playwright.Utils;
             return browser;
         }
     }

@@ -73,25 +73,6 @@ namespace Microsoft.Playwright.Tests
             Assert.GreaterOrEqual(events.Where(x => x.Type == "screencast-frame").Count(), 1);
         }
 
-        [PlaywrightTest("tracing.spec.ts", "should exclude internal pages")]
-        [Ignore("Fails due to https://github.com/microsoft/playwright/issues/6743")]
-        public async Task ShouldExcludeInternalPages()
-        {
-            var page = await Context.NewPageAsync();
-            await page.GotoAsync(Server.EmptyPage);
-
-            await Context.Tracing.StartAsync();
-            await Context.StorageStateAsync();
-            await page.CloseAsync();
-
-            using var tmp = new TempDirectory();
-            var tracePath = Path.Combine(tmp.Path, "trace.zip");
-            await Context.Tracing.StopAsync(new() { Path = tracePath });
-            var trace = ParseTrace(tracePath);
-
-            Assert.AreEqual(1, trace.Where(x => x.Metadata != null).Select(x => x.Metadata.PageId).Distinct().Count());
-        }
-
         [PlaywrightTest("tracing.spec.ts", "should collect two traces")]
         public async Task ShouldCollectTwoTraces()
         {

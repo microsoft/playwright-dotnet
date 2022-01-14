@@ -23,50 +23,73 @@
  */
 
 using System.Threading.Tasks;
-using Microsoft.Playwright.Transport.Channels;
 
 namespace Microsoft.Playwright.Core
 {
     internal partial class Tracing : ITracing
     {
-        private readonly BrowserContextChannel _channel;
+        private readonly BrowserContext _context;
 
-        public Tracing(BrowserContextChannel channel)
+        public Tracing(BrowserContext context)
         {
-            _channel = channel;
+            _context = context;
         }
 
         public async Task StartAsync(TracingStartOptions options = default)
         {
-            await _channel.TracingStartAsync(
+            await _context.Channel.TracingStartAsync(
                         name: options?.Name,
+                        title: options?.Title,
                         screenshots: options?.Screenshots,
                         snapshots: options?.Snapshots).ConfigureAwait(false);
-
-            await StartChunkAsync().ConfigureAwait(false);
+            await _context.Channel.StartChunkAsync(options?.Title).ConfigureAwait(false);
         }
 
-        public Task StartChunkAsync() => StartChunkAsync(default);
+        public Task StartChunkAsync() => StartChunkAsync();
 
-        public Task StartChunkAsync(TracingStartChunkOptions options) => _channel.StartChunkAsync(options?.Title);
+        public Task StartChunkAsync(TracingStartChunkOptions options) => _context.Channel.StartChunkAsync(title: options?.Title);
 
         public async Task StopChunkAsync(TracingStopChunkOptions options = null)
         {
-            var artifact = await _channel.StopChunkAsync(!string.IsNullOrEmpty(options?.Path)).ConfigureAwait(false);
-            if (artifact == null)
-                return;
-
-            if (string.IsNullOrEmpty(options?.Path))
-                throw new PlaywrightException("Specified path was invalid or empty. Trace could not be saved.");
-
-            await artifact.SaveAsAsync(options.Path).ConfigureAwait(false);
-            await artifact.DeleteAsync().ConfigureAwait(false);
+            await DoStopChunkAsync(filePath: options.Path).ConfigureAwait(false);
         }
 
         public async Task StopAsync(TracingStopOptions options = default)
         {
             await StopChunkAsync(new() { Path = options?.Path }).ConfigureAwait(false);
-            await _channel.TracingStopAsync().ConfigureAwait(false);
+            await _context.Channel.TracingStopAsync().ConfigureAwait(false);
+        }
+
+        private async Task DoStopChunkAsync(string filePath)
+        {
+            bool isLocal = _context.Channel.Connection.IsRemote;
+
+            var mode = "doNotSave";
+            if (!string.IsNullOrEmpty(filePath))
+            {
+                if (isLocal)
+                    mode = "compressTraceAndSources";
+                else
+                    mode = "compressTrace";
+            }
+
+            var (artifact, sourceEntries) = await _context.Channel.StopChunkAsync(mode).ConfigureAwait(false);
+
+            // Not interested in artifacts.
+            if (string.IsNullOrEmpty(filePath))
+                throw new PlaywrightException("Specified path was invalid or empty. Trace could not be saved.");
+
+            // The artifact may be missing if the browser closed while stopping tracing.
+            if (artifact == null)
+                return;
+
+            // Save trace to the final local file.
+            await artifact.SaveAsAsync(filePath).ConfigureAwait(false);
+            await artifact.DeleteAsync().ConfigureAwait(false);
+
+            // Add local sources to the remote trace if necessary.
+            if (sourceEntries.Count > 0)
+                await _context.LocalUtils.ZipAsync(filePath, sourceEntries).ConfigureAwait(false);
         }
     }
 }

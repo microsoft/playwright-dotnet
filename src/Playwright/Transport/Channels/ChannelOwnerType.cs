@@ -63,6 +63,8 @@ namespace Microsoft.Playwright.Transport.Channels
 
         [EnumMember(Value = "JsonPipe")]
         JsonPipe,
+        [EnumMember(Value = "LocalUtils")]
+        LocalUtils,
 
         [EnumMember(Value = "page")]
         Page,

@@ -62,6 +62,8 @@ namespace Microsoft.Playwright.Core
 
         internal List<BrowserContext> BrowserContextsList { get; } = new();
 
+        internal LocalUtils LocalUtils { get; set; }
+
         public async Task CloseAsync()
         {
             try

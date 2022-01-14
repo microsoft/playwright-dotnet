@@ -1151,7 +1151,8 @@ namespace Microsoft.Playwright
         /// A selector to use when resolving DOM element. See <a href="./selectors.md">working
         /// with selectors</a> for more details.
         /// </param>
-        ILocator Locator(string selector);
+        /// <param name="options">Call options</param>
+        ILocator Locator(string selector, PageLocatorOptions? options = default);
 
         /// <summary>
         /// <para>

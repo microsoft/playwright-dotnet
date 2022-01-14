@@ -87,42 +87,42 @@ namespace Microsoft.Playwright.Tests.Locator
         public async Task ShouldFilterByText()
         {
             await Page.SetContentAsync("<div>Foobar</div><div>Bar</div>");
-            StringAssert.Contains(await Page.Locator("div").WithText("Foo").TextContentAsync(), "Foobar");
+            StringAssert.Contains(await Page.Locator("div", new() { HasTextString = "Foo" }).TextContentAsync(), "Foobar");
         }
 
         [PlaywrightTest("locator-query.spec.ts", "should filter by text 2")]
         public async Task ShouldFilterByText2()
         {
             await Page.SetContentAsync("<div>foo <span>hello world</span> bar</div>");
-            StringAssert.Contains(await Page.Locator("div").WithText("hello world").TextContentAsync(), "foo hello world bar");
+            StringAssert.Contains(await Page.Locator("div", new() { HasTextString = "hello world" }).TextContentAsync(), "foo hello world bar");
         }
 
         [PlaywrightTest("locator-query.spec.ts", "should filter by regex")]
         public async Task ShouldFilterByRegex()
         {
             await Page.SetContentAsync("<div>Foobar</div><div>Bar</div>");
-            StringAssert.Contains(await Page.Locator("div").WithText(new Regex("Foo.*")).InnerTextAsync(), "Foobar");
+            StringAssert.Contains(await Page.Locator("div", new() { HasTextRegex = new Regex("Foo.*") }).InnerTextAsync(), "Foobar");
         }
 
         [PlaywrightTest("locator-query.spec.ts", "should filter by text with quotes")]
         public async Task ShouldFilterByTextWithQuotes()
         {
             await Page.SetContentAsync("<div>Hello \"world\"</div><div>Hello world</div>");
-            StringAssert.Contains(await Page.Locator("div").WithText("Hello \"world\"").InnerTextAsync(), "Hello \"world\"");
+            StringAssert.Contains(await Page.Locator("div", new() { HasTextString = "Hello \"world\"" }).InnerTextAsync(), "Hello \"world\"");
         }
 
         [PlaywrightTest("locator-query.spec.ts", "should filter by regex with quotes")]
         public async Task ShouldFilterByRegexWithQuotes()
         {
             await Page.SetContentAsync("<div>Hello \"world\"</div><div>Hello world</div>");
-            StringAssert.Contains(await Page.Locator("div").WithText(new Regex("Hello \"world\"")).InnerTextAsync(), "Hello \"world\"");
+            StringAssert.Contains(await Page.Locator("div", new() { HasTextRegex = new Regex("Hello \"world\"") }).InnerTextAsync(), "Hello \"world\"");
         }
 
         [PlaywrightTest("locator-query.spec.ts", "should filter by regex and regexp flags")]
         public async Task ShouldFilterByRegexandRegexpFlags()
         {
             await Page.SetContentAsync("<div>Hello \"world\"</div><div>Hello world</div>");
-            StringAssert.Contains(await Page.Locator("div").WithText(new Regex("hElLo \"wOrld\"", RegexOptions.IgnoreCase)).InnerTextAsync(), "Hello \"world\"");
+            StringAssert.Contains(await Page.Locator("div", new() { HasTextRegex = new Regex("hElLo \"wOrld\"", RegexOptions.IgnoreCase) }).InnerTextAsync(), "Hello \"world\"");
         }
     }
 }
