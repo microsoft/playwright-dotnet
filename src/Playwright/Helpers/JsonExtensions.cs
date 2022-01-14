@@ -48,7 +48,7 @@ namespace Microsoft.Playwright.Helpers
         /// <param name="options">Serialization options.</param>
         /// <returns>Converted value.</returns>
         public static T ToObject<T>(this JsonElement element, JsonSerializerOptions options = null)
-            => JsonSerializer.Deserialize<T>(element.GetRawText(), options ?? DefaultJsonSerializerOptions);
+            => JsonSerializer.Deserialize<T>(element, options ?? DefaultJsonSerializerOptions);
 
         /// <summary>
         /// Convert a <see cref="JsonElement"/> to an object.
@@ -58,7 +58,7 @@ namespace Microsoft.Playwright.Helpers
         /// <param name="options">Serialization options.</param>
         /// <returns>Converted value.</returns>
         public static object ToObject(this JsonElement element, Type type, JsonSerializerOptions options = null)
-            => JsonSerializer.Deserialize(element.GetRawText(), type, options ?? DefaultJsonSerializerOptions);
+            => JsonSerializer.Deserialize(element, type, options ?? DefaultJsonSerializerOptions);
 
         /// <summary>
         /// Serialize an object.
