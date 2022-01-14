@@ -63,7 +63,7 @@ namespace Microsoft.Playwright.Transport.Channels
 
         internal event EventHandler<PageDownloadEvent> Download;
 
-        internal event EventHandler<PageErrorEventArgs> PageError;
+        internal event EventHandler<SerializedError> PageError;
 
         internal event EventHandler<FileChooserChannelEventArgs> FileChooser;
 
@@ -105,7 +105,7 @@ namespace Microsoft.Playwright.Transport.Channels
                     Popup?.Invoke(this, new() { Page = serverParams?.GetProperty("page").ToObject<PageChannel>(Connection.GetDefaultJsonSerializerOptions()).Object });
                     break;
                 case "pageError":
-                    PageError?.Invoke(this, serverParams?.GetProperty("error").GetProperty("error").ToObject<PageErrorEventArgs>(Connection.GetDefaultJsonSerializerOptions()));
+                    PageError?.Invoke(this, serverParams?.GetProperty("error").GetProperty("error").ToObject<SerializedError>(Connection.GetDefaultJsonSerializerOptions()));
                     break;
                 case "fileChooser":
                     FileChooser?.Invoke(this, serverParams?.ToObject<FileChooserChannelEventArgs>(Connection.GetDefaultJsonSerializerOptions()));

@@ -27,6 +27,7 @@
         <Compile Include="..\Playwright\Helpers\DoubleExtensions.cs" Link="DoubleExtensions.cs" />
         <Compile Include="..\Playwright\Helpers\JsonExtensions.cs" Link="JsonExtensions.cs" />
         <Compile Include="..\Playwright\Helpers\RegexOptionsExtensions.cs" Link="RegexOptionsExtensions.cs" />
+        <Compile Include="..\Playwright\Helpers\Paths.cs" Link="Paths.cs" />
     </ItemGroup>
     <ItemGroup>
         <ProjectReference Include="..\Playwright\Playwright.csproj" />

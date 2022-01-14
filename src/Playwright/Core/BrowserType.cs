@@ -136,36 +136,83 @@ namespace Microsoft.Playwright.Core
         public async Task<IBrowser> ConnectAsync(string wsEndpoint, BrowserTypeConnectOptions options = null)
         {
             options ??= new BrowserTypeConnectOptions();
+            JsonPipe pipe = (await _channel.ConnectAsync(wsEndpoint: wsEndpoint, headers: options.Headers, slowMo: options.SlowMo, timeout: options.Timeout).ConfigureAwait(false)).Object;
+
+            void ClosePipe()
+            {
+                try
+                {
+                    pipe.CloseAsync().ConfigureAwait(false);
+                }
+                catch (Exception)
+                {
+                }
+            }
 #pragma warning disable CA2000 // Dispose objects before losing scope
-            WebSocketTransport transport = new(wsEndpoint, options);
-            await transport.ConnectAsync().ConfigureAwait(false);
+            Connection connection = new Connection();
 #pragma warning restore CA2000
-            var connection = new Connection(transport);
-            var playwright = await connection.InitializePlaywrightAsync().ConfigureAwait(false);
-            playwright.Connection = connection;
+            connection.MarkAsRemote();
+            connection.Close += (_, _) => ClosePipe();
 
-            if (playwright.PreLaunchedBrowser == null)
+            string closeError = null;
+            Browser browser = null;
+            void OnPipeClosed()
             {
-                transport.Close("Disconnected");
-                throw new PlaywrightException("Malformed endpoint. Did you use launchServer method?");
+                // Emulate all pages, contexts and the browser closing upon disconnect.
+                foreach (BrowserContext context in browser.BrowserContextsList.ToArray())
+                {
+                    foreach (Page page in context.PagesList.ToArray())
+                    {
+                        page.OnClose();
+                    }
+                    context.OnClose();
+                }
+                browser.DidClose();
+                connection.DoClose(closeError != null ? closeError : DriverMessages.BrowserClosedExceptionMessage);
             }
-            var browser = playwright.PreLaunchedBrowser;
-            browser.IsRemote = true;
-            browser.IsConnectedOverWebSocket = true;
-            browser.Disconnected += (_, e) => CloseRemoteBrowser(transport, browser);
-            return browser;
-        }
+            pipe.Closed += (_, _) => OnPipeClosed();
+            connection.OnMessage = async (object message) =>
+            {
+                try
+                {
+                    await pipe.SendAsync(message).ConfigureAwait(false);
+                }
+                catch
+                {
+                    OnPipeClosed();
+                }
+            };
 
-        private void CloseRemoteBrowser(WebSocketTransport transport, Browser browser)
-        {
-            try
+            pipe.Message += (_, message) =>
             {
-                transport.Close("Browser closed");
-            }
-            catch (Exception)
+                try
+                {
+                    connection.Dispatch(message);
+                }
+                catch (Exception ex)
+                {
+                    closeError = ex.ToString();
+                    ClosePipe();
+                }
+            };
+
+            async Task<IBrowser> CreateBrowserAsync()
             {
-                throw new PlaywrightException("Unable to close transport");
+                var playwright = await connection.InitializePlaywrightAsync().ConfigureAwait(false);
+                playwright.Connection = connection;
+                if (playwright.PreLaunchedBrowser == null)
+                {
+                    ClosePipe();
+                    throw new ArgumentException("Malformed endpoint. Did you use launchServer method?");
+                }
+                browser = playwright.PreLaunchedBrowser;
+                browser.ShouldCloseConnectionOnClose = true;
+                browser.Disconnected += (_, _) => ClosePipe();
+                return playwright.PreLaunchedBrowser;
             }
+            var task = CreateBrowserAsync();
+            var timeout = options?.Timeout != null ? (int)options.Timeout : 30_000;
+            return await task.WithTimeout(timeout, _ => throw new TimeoutException($"BrowserType.ConnectAsync: Timeout {options.Timeout}ms exceeded")).ConfigureAwait(false);
         }
 
         public async Task<IBrowser> ConnectOverCDPAsync(string endpointURL, BrowserTypeConnectOverCDPOptions options = null)

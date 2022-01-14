@@ -22,9 +22,11 @@
  * SOFTWARE.
  */
 
+using System;
 using System.Diagnostics.CodeAnalysis;
+using System.Text.Json;
 using System.Threading.Tasks;
-using Microsoft.Playwright.Core;
+using Microsoft.Playwright.Helpers;
 using Microsoft.Playwright.Transport;
 
 namespace Microsoft.Playwright
@@ -39,8 +41,14 @@ namespace Microsoft.Playwright
         public static async Task<IPlaywright> CreateAsync()
         {
 #pragma warning disable CA2000 // Dispose objects before losing scope
-            var connection = new Connection(new StdIOTransport());
+            var transport = new StdIOTransport();
 #pragma warning restore CA2000
+            var connection = new Connection();
+            transport.MessageReceived += (_, message) => connection.Dispatch(JsonSerializer.Deserialize<PlaywrightServerMessage>(message, JsonExtensions.DefaultJsonSerializerOptions));
+            transport.LogReceived += (_, log) => Console.Error.WriteLine(log);
+            transport.TransportClosed += (_, reason) => connection.DoClose(reason);
+            connection.OnMessage = (message) => transport.SendAsync(JsonSerializer.Serialize(message, connection.GetDefaultJsonSerializerOptions()));
+            connection.Close += (_, e) => transport.Close(e);
             var playwright = await connection.InitializePlaywrightAsync().ConfigureAwait(false);
             playwright.Connection = connection;
             return playwright;

@@ -22,44 +22,37 @@
  * SOFTWARE.
  */
 
-namespace Microsoft.Playwright.Transport.Channels
+using System;
+using System.Threading.Tasks;
+using Microsoft.Playwright.Transport;
+using Microsoft.Playwright.Transport.Channels;
+using Microsoft.Playwright.Transport.Protocol;
+
+namespace Microsoft.Playwright.Core
 {
-    internal class PageErrorEventArgs
+    internal class JsonPipe : ChannelOwnerBase, IChannelOwner<JsonPipe>
     {
-        private string _message;
+        private readonly JsonPipeChannel _channel;
+        private readonly JsonPipeInitializer _initializer;
 
-        /// <summary>
-        /// Error name.
-        /// </summary>
-        public string Name { get; set; }
-
-        /// <summary>
-        /// Error Message.
-        /// </summary>
-        public string Message
+        public JsonPipe(IChannelOwner parent, string guid, JsonPipeInitializer initializer) : base(parent, guid)
         {
-            get => _message ?? Value;
-            set => _message = value;
+            _channel = new(guid, parent.Connection, this);
+            _initializer = initializer;
+            _channel.Closed += (_, e) => Closed.Invoke(this, e);
+            _channel.Message += (_, e) => Message.Invoke(this, e);
         }
 
-        /// <summary>
-        /// Error Value.
-        /// </summary>
-        public string Value { get; set; }
+        public event EventHandler<PlaywrightServerMessage> Message;
 
-        /// <summary>
-        /// Error stack.
-        /// </summary>
-        public string Stack { get; set; }
+        public event EventHandler<SerializedError> Closed;
 
-        public override string ToString()
-        {
-            if (!string.IsNullOrEmpty(Stack))
-            {
-                return $"{Stack}";
-            }
+        ChannelBase IChannelOwner.Channel => _channel;
 
-            return $"{Name}: {Message}";
-        }
+        IChannel<JsonPipe> IChannelOwner<JsonPipe>.Channel => _channel;
+
+        public Task CloseAsync() => _channel.CloseAsync();
+
+        public Task SendAsync(object message) => _channel.SendAsync(message);
     }
 }

@@ -76,7 +76,7 @@ namespace Microsoft.Playwright.Core
             _keyboard = new Keyboard(_channel);
             _touchscreen = new Touchscreen(_channel);
             _mouse = new Mouse(_channel);
-            _channel.Closed += Channel_Closed;
+            _channel.Closed += (_, _) => OnClose();
             _channel.Crashed += Channel_Crashed;
             _channel.Popup += (_, e) => Popup?.Invoke(this, e.Page);
             _channel.WebSocket += (_, e) => WebSocket?.Invoke(this, e);
@@ -449,10 +449,6 @@ namespace Microsoft.Playwright.Core
         {
             try
             {
-                if (IsClosed)
-                {
-                    return;
-                }
                 await _channel.CloseAsync(options?.RunBeforeUnload ?? false).ConfigureAwait(false);
                 if (OwnedContext != null)
                 {
@@ -1021,7 +1017,7 @@ namespace Microsoft.Playwright.Core
             => e.Message.Contains(DriverMessages.BrowserClosedExceptionMessage) ||
                e.Message.Contains(DriverMessages.BrowserOrContextClosedExceptionMessage);
 
-        private void Channel_Closed(object sender, EventArgs e)
+        internal void OnClose()
         {
             IsClosed = true;
             Context?.PagesList.Remove(this);
@@ -1101,7 +1097,7 @@ namespace Microsoft.Playwright.Core
             return _channel.ExposeBindingAsync(name, handle);
         }
 
-        private Video ForceVideo() => _video ??= new(this);
+        private Video ForceVideo() => _video ??= new(this, _channel.Connection);
 
         private FrameSetInputFilesOptions Map(PageSetInputFilesOptions options)
         {

@@ -61,6 +61,9 @@ namespace Microsoft.Playwright.Transport.Channels
         [EnumMember(Value = "jsHandle")]
         JSHandle,
 
+        [EnumMember(Value = "JsonPipe")]
+        JsonPipe,
+
         [EnumMember(Value = "page")]
         Page,
 

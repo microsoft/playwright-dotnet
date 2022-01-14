@@ -195,11 +195,6 @@ namespace Microsoft.Playwright.Core
 
         public async Task<IResponse> WaitForNavigationAsync(FrameWaitForNavigationOptions options = default)
         {
-            if (Page.IsClosed)
-            {
-                throw new PlaywrightException("Page closed");
-            }
-
             WaitUntilState waitUntil2 = options?.WaitUntil ?? WaitUntilState.Load;
             var waiter = SetupNavigationWaiter("frame.WaitForNavigationAsync", options?.Timeout);
             string toUrl = !string.IsNullOrEmpty(options?.UrlString) ? $" to \"{options?.UrlString}\"" : string.Empty;
@@ -603,6 +598,10 @@ namespace Microsoft.Playwright.Core
         private Waiter SetupNavigationWaiter(string @event, float? timeout)
         {
             var waiter = new Waiter((this.Page as Page)!.Channel, @event);
+            if (this.Page.IsClosed)
+            {
+                waiter.RejectImmediately(new PlaywrightException("Navigation failed because page was closed!"));
+            }
             waiter.RejectOnEvent<IPage>(Page, PageEvent.Close.Name, new("Navigation failed because page was closed!"));
             waiter.RejectOnEvent<IPage>(Page, PageEvent.Crash.Name, new("Navigation failed because page was crashed!"));
             waiter.RejectOnEvent<IFrame>(

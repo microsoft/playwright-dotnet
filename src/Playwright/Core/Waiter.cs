@@ -40,6 +40,7 @@ namespace Microsoft.Playwright.Core
         private readonly CancellationTokenSource _cts = new();
         private readonly string _waitId = Guid.NewGuid().ToString();
         private readonly ChannelBase _channel;
+        private Exception _immediateError;
 
         private bool _disposed;
         private string _error;
@@ -79,6 +80,11 @@ namespace Microsoft.Playwright.Core
             _logs.Add(log);
             var logArgs = new { info = new { waitId = _waitId, phase = "log", message = log } };
             _ = _channel.Connection.SendMessageToServerAsync(_channel.Guid, "waitForEventInfo", logArgs);
+        }
+
+        internal void RejectImmediately(Exception exception)
+        {
+            _immediateError = exception;
         }
 
         internal void RejectOnEvent<T>(
@@ -159,6 +165,10 @@ namespace Microsoft.Playwright.Core
         {
             try
             {
+                if (_immediateError != null)
+                {
+                    throw _immediateError;
+                }
                 var firstTask = await Task.WhenAny(_failures.Prepend(task)).ConfigureAwait(false);
                 dispose?.Invoke();
                 await firstTask.ConfigureAwait(false);

@@ -27,9 +27,9 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.IO.Compression;
-using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
+using Microsoft.Playwright.Helpers;
 using Microsoft.Playwright.NUnit;
 using NUnit.Framework;
 
@@ -38,7 +38,7 @@ namespace Microsoft.Playwright.Tests
     ///<playwright-file>browsertype-connect.spec.ts</playwright-file>
     public class BrowserTypeConnectTests : PlaywrightTestEx
     {
-        private BrowserServer _browserServer;
+        private RemoteServer _remoteServer;
 
         [SetUp]
         public void SetUpAsync()
@@ -46,12 +46,12 @@ namespace Microsoft.Playwright.Tests
             try
             {
                 DirectoryInfo assemblyDirectory = new(AppContext.BaseDirectory);
-                BrowserServer browserServer = new();
-                browserServer.Process = new()
+                RemoteServer remoteServer = new();
+                remoteServer.Process = new()
                 {
                     StartInfo =
                     {
-                        FileName = GetExecutablePath(),
+                        FileName = Paths.GetExecutablePath(),
                         Arguments = $"launch-server {BrowserType.Name}",
                         UseShellExecute = false,
                         RedirectStandardOutput = true,
@@ -60,14 +60,14 @@ namespace Microsoft.Playwright.Tests
                         CreateNoWindow = true,
                     },
                 };
-                browserServer.Process.Start();
-                browserServer.WSEndpoint = browserServer.Process.StandardOutput.ReadLine();
+                remoteServer.Process.Start();
+                remoteServer.WSEndpoint = remoteServer.Process.StandardOutput.ReadLine();
 
-                if (browserServer.WSEndpoint != null && !browserServer.WSEndpoint.StartsWith("ws://"))
+                if (remoteServer.WSEndpoint != null && !remoteServer.WSEndpoint.StartsWith("ws://"))
                 {
-                    throw new PlaywrightException("Invalid web socket address: " + browserServer.WSEndpoint);
+                    throw new PlaywrightException("Invalid web socket address: " + remoteServer.WSEndpoint);
                 }
-                _browserServer = browserServer;
+                _remoteServer = remoteServer;
             }
             catch (IOException ex)
             {
@@ -78,27 +78,27 @@ namespace Microsoft.Playwright.Tests
         [TearDown]
         public void TearDown()
         {
-            _browserServer.Process.Kill(true);
-            _browserServer = null;
+            _remoteServer.Process.Kill(true);
+            _remoteServer = null;
         }
 
         [PlaywrightTest("browsertype-connect.spec.ts", "should be able to reconnect to a browser")]
-        public async Task ShouldBeAbleToConnectToBrowserAsync()
+        public async Task ShouldBeAbleToReconnectToABrowser()
         {
             {
-                var browser = await BrowserType.ConnectAsync(_browserServer.WSEndpoint);
-                var context = await browser.NewContextAsync();
-                var page = await context.NewPageAsync();
-                var result = await page.EvaluateAsync("11 * 11");
-                Assert.AreEqual(result.ToString(), "121");
+                var browser = await BrowserType.ConnectAsync(_remoteServer.WSEndpoint);
+                var browserContext = await browser.NewContextAsync();
+                Assert.AreEqual(browserContext.Pages.Count, 0);
+                var page = await browserContext.NewPageAsync();
+                Assert.AreEqual(await page.EvaluateAsync<int>("11 * 11"), 121);
+                await page.GotoAsync(Server.EmptyPage);
                 await browser.CloseAsync();
             }
             {
-                var browser = await BrowserType.ConnectAsync(_browserServer.WSEndpoint);
-                var context = await browser.NewContextAsync();
-                var page = await context.NewPageAsync();
+                var browser = await BrowserType.ConnectAsync(_remoteServer.WSEndpoint);
+                var browserContext = await browser.NewContextAsync();
+                var page = await browserContext.NewPageAsync();
                 await page.GotoAsync(Server.EmptyPage);
-                Assert.AreEqual(Server.EmptyPage, page.Url);
                 await browser.CloseAsync();
             }
         }
@@ -106,23 +106,23 @@ namespace Microsoft.Playwright.Tests
         [PlaywrightTest("browsertype-connect.spec.ts", "should be able to connect two browsers at the same time")]
         public async Task ShouldBeAbleToConnectTwoBrowsersAtTheSameTime()
         {
-            var browser1 = await BrowserType.ConnectAsync(_browserServer.WSEndpoint);
+            var browser1 = await BrowserType.ConnectAsync(_remoteServer.WSEndpoint);
             Assert.AreEqual(browser1.Contexts.Count, 0);
             await browser1.NewContextAsync();
             Assert.AreEqual(browser1.Contexts.Count, 1);
 
-            var browser2 = await BrowserType.ConnectAsync(_browserServer.WSEndpoint);
+            var browser2 = await BrowserType.ConnectAsync(_remoteServer.WSEndpoint);
             Assert.AreEqual(browser2.Contexts.Count, 0);
-            var context2 = await browser2.NewContextAsync();
-            Assert.AreEqual(browser1.Contexts.Count, 1);
+            await browser2.NewContextAsync();
             Assert.AreEqual(browser2.Contexts.Count, 1);
+            Assert.AreEqual(browser1.Contexts.Count, 1);
 
             await browser1.CloseAsync();
             Assert.AreEqual(browser2.Contexts.Count, 1);
 
-            var page2 = await context2.NewPageAsync();
-            var result = await page2.EvaluateAsync("11 * 11");
-            Assert.AreEqual(result.ToString(), "121");
+            var page2 = await browser2.NewPageAsync();
+            Assert.AreEqual(await page2.EvaluateAsync<int>("7 * 6"), 42); // original browser should still work
+
             await browser2.CloseAsync();
         }
 
@@ -130,92 +130,104 @@ namespace Microsoft.Playwright.Tests
         [Skip(SkipAttribute.Targets.Windows)]
         public async Task ShouldTimeoutInConnectWhileConnecting()
         {
-            var exception = await PlaywrightAssert.ThrowsAsync<PlaywrightException>(async () => await BrowserType.ConnectAsync(_browserServer.WSEndpoint, new BrowserTypeConnectOptions { Timeout = 1 }));
-            StringAssert.Contains("Timeout 1ms exceeded", exception.Message);
+            var exception = await PlaywrightAssert.ThrowsAsync<TimeoutException>(async () => await BrowserType.ConnectAsync($"ws://localhost:{Server.Port}/ws", new BrowserTypeConnectOptions { Timeout = 100 }));
+            StringAssert.Contains("BrowserType.ConnectAsync: Timeout 100ms exceeded", exception.Message);
         }
 
         [PlaywrightTest("browsertype-connect.spec.ts", "should support slowmo option")]
         public async Task ShouldSupportSlowMo()
         {
-            var browser = await BrowserType.ConnectAsync(_browserServer.WSEndpoint, new BrowserTypeConnectOptions { SlowMo = 200 });
-            var time1 = DateTime.Now;
+            var browser = await BrowserType.ConnectAsync(_remoteServer.WSEndpoint, new BrowserTypeConnectOptions { SlowMo = 200 });
+            var start = DateTime.Now;
             var context = await browser.NewContextAsync();
-            await context.NewPageAsync();
             await browser.CloseAsync();
-            var time2 = DateTime.Now;
-            Assert.Greater((time2 - time1).TotalMilliseconds, 200);
+            Assert.Greater((DateTime.Now - start).TotalMilliseconds, 199);
         }
 
         [PlaywrightTest("browsertype-connect.spec.ts", "disconnected event should be emitted when browser is closed or server is closed")]
         public async Task DisconnectedEventShouldBeEmittedWhenBrowserIsClosedOrServerIsClosed()
         {
-            var browserOne = await BrowserType.ConnectAsync(_browserServer.WSEndpoint);
-            var pageOne = browserOne.NewPageAsync();
+            var browser1 = await BrowserType.ConnectAsync(_remoteServer.WSEndpoint);
+            await browser1.NewPageAsync();
 
-            var browserTwo = await BrowserType.ConnectAsync(_browserServer.WSEndpoint);
-            var pageTwo = browserTwo.NewPageAsync();
+            var browser2 = await BrowserType.ConnectAsync(_remoteServer.WSEndpoint);
+            await browser2.NewPageAsync();
 
-            int browserOneCloseCount = 0;
-            int browserTwoCloseCount = 0;
-            browserOne.Disconnected += (_, e) => browserOneCloseCount++;
-            browserTwo.Disconnected += (_, e) => browserTwoCloseCount++;
+            int disconnected1 = 0;
+            int disconnected2 = 0;
+            browser1.Disconnected += (_, e) => disconnected1++;
+            browser2.Disconnected += (_, e) => disconnected2++;
 
-            await browserOne.CloseAsync();
-            Assert.AreEqual(browserOneCloseCount, 1);
-            Assert.AreEqual(browserTwoCloseCount, 0);
+            var tsc1 = new TaskCompletionSource<object>();
+            browser1.Disconnected += (_, e) => tsc1.SetResult(null);
+            await browser1.CloseAsync();
+            await tsc1.Task;
+            Assert.AreEqual(disconnected1, 1);
+            Assert.AreEqual(disconnected2, 0);
 
-            await browserTwo.CloseAsync();
-            Assert.AreEqual(browserOneCloseCount, 1);
-            Assert.AreEqual(browserTwoCloseCount, 1);
+            var tsc2 = new TaskCompletionSource<object>();
+            browser2.Disconnected += (_, e) => tsc2.SetResult(null);
+            await browser2.CloseAsync();
+            await tsc2.Task;
+            Assert.AreEqual(disconnected1, 1);
+            Assert.AreEqual(disconnected2, 1);
         }
 
         [PlaywrightTest("browsertype-connect.spec.ts", "disconnected event should have browser as argument")]
         public async Task DisconnectedEventShouldHaveBrowserAsArguments()
         {
-            var browser = await BrowserType.ConnectAsync(_browserServer.WSEndpoint);
+            var browser = await BrowserType.ConnectAsync(_remoteServer.WSEndpoint);
             IBrowser disconneced = null;
-            browser.Disconnected += (_, e) => disconneced = e;
+            var tsc = new TaskCompletionSource<object>();
+            browser.Disconnected += (_, browser) =>
+            {
+                disconneced = browser;
+                tsc.SetResult(null);
+            };
             await browser.CloseAsync();
+            await tsc.Task;
             Assert.AreEqual(browser, disconneced);
-        }
-
-        [PlaywrightTest("browsertype-connect.spec.ts", "should handle exceptions during connect")]
-        [Ignore("SKIP WIRE")]
-        public void ShouldHandleExceptionsDuringConnect()
-        {
-            // An implementational detail test
         }
 
         [PlaywrightTest("browsertype-connect.spec.ts", "should set the browser connected state")]
         public async Task ShouldSetTheBrowserConnectedState()
         {
-            var browser = await BrowserType.ConnectAsync(_browserServer.WSEndpoint);
+            var browser = await BrowserType.ConnectAsync(_remoteServer.WSEndpoint);
             Assert.AreEqual(browser.IsConnected, true);
-            await browser.CloseAsync();
+            var tsc = new TaskCompletionSource<bool>();
+            browser.Disconnected += (_, e) => tsc.SetResult(false);
+            _remoteServer.Close();
+            await tsc.Task;
             Assert.AreEqual(browser.IsConnected, false);
         }
 
         [PlaywrightTest("browsertype-connect.spec.ts", "should throw when used after isConnected returns false")]
         public async Task ShouldThrowWhenUsedAfterIsConnectedReturnsFalse()
         {
-            var browser = await BrowserType.ConnectAsync(_browserServer.WSEndpoint);
+            var browser = await BrowserType.ConnectAsync(_remoteServer.WSEndpoint);
             var page = await browser.NewPageAsync();
-            await browser.CloseAsync();
+            var tsc = new TaskCompletionSource<bool>();
+            browser.Disconnected += (_, e) => tsc.SetResult(false);
+            _remoteServer.Close();
+            await tsc.Task;
             Assert.AreEqual(browser.IsConnected, false);
             var exception = await PlaywrightAssert.ThrowsAsync<PlaywrightException>(async () => await page.EvaluateAsync("1 + 1"));
-            StringAssert.Contains("Connection closed (Browser closed)", exception.Message);
+            StringAssert.Contains("has been closed", exception.Message);
         }
 
         [PlaywrightTest("browsertype-connect.spec.ts", "should throw when calling waitForNavigation after disconnect")]
         public async Task ShouldThrowWhenWhenCallingWaitForNavigationAfterDisconnect()
         {
-            var browser = await BrowserType.ConnectAsync(_browserServer.WSEndpoint);
+            var browser = await BrowserType.ConnectAsync(_remoteServer.WSEndpoint);
             var page = await browser.NewPageAsync();
-            await browser.CloseAsync();
+            var tsc = new TaskCompletionSource<bool>();
+            browser.Disconnected += (_, e) => tsc.SetResult(false);
+            _remoteServer.Close();
+            await tsc.Task;
 
             Assert.AreEqual(browser.IsConnected, false);
             var exception = await PlaywrightAssert.ThrowsAsync<PlaywrightException>(async () => await page.WaitForNavigationAsync());
-            StringAssert.Contains("Page closed", exception.Message);
+            StringAssert.Contains("Navigation failed because page was closed", exception.Message);
         }
 
         [PlaywrightTest("browsertype-connect.spec.ts", "should reject navigation when browser closes")]
@@ -227,7 +239,7 @@ namespace Microsoft.Playwright.Tests
                 return Task.CompletedTask;
             });
 
-            var browser = await BrowserType.ConnectAsync(_browserServer.WSEndpoint);
+            var browser = await BrowserType.ConnectAsync(_remoteServer.WSEndpoint);
             var page = await browser.NewPageAsync();
             var PageGoto = page.GotoAsync(Server.Prefix + "/one-style.html", new PageGotoOptions { Timeout = 60000 });
             await Server.WaitForRequest("/one-style.css");
@@ -235,122 +247,94 @@ namespace Microsoft.Playwright.Tests
 
             Assert.AreEqual(browser.IsConnected, false);
             var exception = await PlaywrightAssert.ThrowsAsync<PlaywrightException>(async () => await PageGoto);
-            StringAssert.Contains("Navigation failed because page was closed", exception.Message);
+            StringAssert.Contains("has been closed", exception.Message);
         }
 
         [PlaywrightTest("browsertype-connect.spec.ts", "should reject waitForSelector when browser closes")]
         public async Task ShouldRejectWaitForSelectorWhenBrowserCloses()
         {
-            var browser = await BrowserType.ConnectAsync(_browserServer.WSEndpoint);
-            var context = await browser.NewContextAsync();
-            var page = await context.NewPageAsync();
+            var browser = await BrowserType.ConnectAsync(_remoteServer.WSEndpoint);
+            var page = await browser.NewPageAsync();
             var watchdog = page.WaitForSelectorAsync("div");
             await browser.CloseAsync();
 
-            Assert.AreEqual(browser.IsConnected, false);
             var exception = await PlaywrightAssert.ThrowsAsync<PlaywrightException>(async () => await watchdog);
-            Assert.That(exception.Message, Contains.Substring("Target closed"));
+            Assert.That(exception.Message, Contains.Substring("has been closed"));
         }
 
         [PlaywrightTest("browsertype-connect.spec.ts", "should emit close events on pages and contexts")]
         public async Task ShouldEmitCloseEventsOnPagesAndContexts()
         {
-            var browser = await BrowserType.ConnectAsync(_browserServer.WSEndpoint);
+            var browser = await BrowserType.ConnectAsync(_remoteServer.WSEndpoint);
             var context = await browser.NewContextAsync();
+            var tsc = new TaskCompletionSource<object>();
+            context.Close += (_, e) => tsc.SetResult(null);
             var page = await context.NewPageAsync();
-            bool pageClosed = false, contextClosed = false;
+            bool pageClosed = false;
             page.Close += (_, e) => pageClosed = true;
-            context.Close += (_, e) => contextClosed = true;
 
-            await browser.CloseAsync();
+            _remoteServer.Close();
+            await tsc.Task;
             Assert.AreEqual(pageClosed, true);
-            Assert.AreEqual(contextClosed, true);
-            Assert.AreEqual(browser.IsConnected, false);
         }
 
         [PlaywrightTest("browsertype-connect.spec.ts", "should terminate network waiters")]
         public async Task ShouldTerminateNetworkWaiters()
         {
-            var browser = await BrowserType.ConnectAsync(_browserServer.WSEndpoint);
-            var context = await browser.NewContextAsync();
-            var page = await context.NewPageAsync();
-            var task = TaskUtils.WhenAll(page.WaitForRequestAsync(Server.EmptyPage), page.WaitForResponseAsync(Server.EmptyPage), browser.CloseAsync());
-            try
+            var browser = await BrowserType.ConnectAsync(_remoteServer.WSEndpoint);
+            var page = await browser.NewPageAsync();
+            var requestWatchdog = page.WaitForRequestAsync(Server.EmptyPage);
+            var responseWatchog = page.WaitForResponseAsync(Server.EmptyPage);
+            _remoteServer.Close();
+            async Task CheckTaskHasException(Task task)
             {
-                await task;
-            }
-            catch (Exception)
-            {
-            }
-            foreach (var exception in task.Exception.InnerExceptions)
-            {
+                var exception = await PlaywrightAssert.ThrowsAsync<PlaywrightException>(async () => await task);
                 StringAssert.Contains("Page closed", exception.Message);
+                StringAssert.DoesNotContain("Timeout", exception.Message);
+
             }
+            await CheckTaskHasException(requestWatchdog);
+            await CheckTaskHasException(responseWatchog);
         }
 
         [PlaywrightTest("browsertype-connect.spec.ts", "should not throw on close after disconnect")]
         public async Task ShouldNotThrowOnCloseAfterDisconnect()
         {
-            var browser = await BrowserType.ConnectAsync(_browserServer.WSEndpoint);
+            var browser = await BrowserType.ConnectAsync(_remoteServer.WSEndpoint);
             var page = await browser.NewPageAsync();
 
-            await KillServerAndCloseBrowser(browser);
-            while (browser.IsConnected)
-            {
-                try
-                {
-                    await page.WaitForTimeoutAsync(100);
-                }
-                catch (Exception)
-                {
-
-                }
-            }
-
+            var tcs = new TaskCompletionSource<bool>();
+            browser.Disconnected += (_, e) => tcs.SetResult(true);
+            _remoteServer.Close();
+            await tcs.Task;
             await browser.CloseAsync();
         }
 
         [PlaywrightTest("browsertype-connect.spec.ts", "should not throw on context.close after disconnect")]
         public async Task ShouldNotThrowOnContextCloseAfterDisconnect()
         {
-            var browser = await BrowserType.ConnectAsync(_browserServer.WSEndpoint);
+            var browser = await BrowserType.ConnectAsync(_remoteServer.WSEndpoint);
             var context = await browser.NewContextAsync();
-            var page = await context.NewPageAsync();
+            await context.NewPageAsync();
 
-            await KillServerAndCloseBrowser(browser);
-            while (browser.IsConnected)
-            {
-                try
-                {
-                    await page.WaitForTimeoutAsync(100);
-                }
-                catch (Exception)
-                {
-
-                }
-            }
+            var tcs = new TaskCompletionSource<bool>();
+            browser.Disconnected += (_, e) => tcs.SetResult(true);
+            _remoteServer.Close();
+            await tcs.Task;
             await context.CloseAsync();
         }
 
         [PlaywrightTest("browsertype-connect.spec.ts", "should not throw on page.close after disconnect")]
         public async Task ShouldNotThrowOnPageCloseAfterDisconnect()
         {
-            var browser = await BrowserType.ConnectAsync(_browserServer.WSEndpoint);
+            var browser = await BrowserType.ConnectAsync(_remoteServer.WSEndpoint);
             var context = await browser.NewContextAsync();
             var page = await context.NewPageAsync();
 
-            await KillServerAndCloseBrowser(browser);
-            while (browser.IsConnected)
-            {
-                try
-                {
-                    await page.WaitForTimeoutAsync(100);
-                }
-                catch (Exception)
-                {
-
-                }
-            }
+            var tcs = new TaskCompletionSource<bool>();
+            browser.Disconnected += (_, e) => tcs.SetResult(true);
+            _remoteServer.Close();
+            await tcs.Task;
             await page.CloseAsync();
         }
 
@@ -359,11 +343,11 @@ namespace Microsoft.Playwright.Tests
         {
             using var tempDirectory = new TempDirectory();
             var videoPath = tempDirectory.Path;
-            var browser = await BrowserType.ConnectAsync(_browserServer.WSEndpoint);
+            var browser = await BrowserType.ConnectAsync(_remoteServer.WSEndpoint);
             var context = await browser.NewContextAsync(new()
             {
                 RecordVideoDir = videoPath,
-                RecordVideoSize = new() { Height = 100, Width = 100 }
+                RecordVideoSize = new() { Height = 320, Width = 240 }
             });
 
             var page = await context.NewPageAsync();
@@ -374,25 +358,11 @@ namespace Microsoft.Playwright.Tests
             var videoSavePath = tempDirectory.Path + "my-video.webm";
             await page.Video.SaveAsAsync(videoSavePath);
             Assert.That(videoSavePath, Does.Exist);
+
+            var exception = await PlaywrightAssert.ThrowsAsync<PlaywrightException>(async () => await page.Video.PathAsync());
+            StringAssert.Contains("Path is not available when connecting remotely. Use SaveAsAsync() to save a local copy", exception.Message);
         }
 
-        [PlaywrightTest("browsertype-connect.spec.ts", "should be able to connect 20 times to a single server without warnings")]
-        public async Task ShouldConnectTwentyTimesToASingleServerWithoutWarnings()
-        {
-            List<IBrowser> browsers = new List<IBrowser>();
-            for (int i = 0; i < 20; i++)
-            {
-                browsers.Add(await BrowserType.ConnectAsync(_browserServer.WSEndpoint));
-            }
-
-            Assert.DoesNotThrowAsync(async () =>
-            {
-                foreach (var browser in browsers)
-                {
-                    await browser.CloseAsync();
-                }
-            });
-        }
 
         [PlaywrightTest("browsertype-connect.spec.ts", "should save download")]
         public async Task ShouldSaveDownload()
@@ -400,11 +370,11 @@ namespace Microsoft.Playwright.Tests
             Server.SetRoute("/download", context =>
             {
                 context.Response.Headers["Content-Type"] = "application/octet-stream";
-                context.Response.Headers["Content-Disposition"] = "attachment;";
+                context.Response.Headers["Content-Disposition"] = "attachment";
                 return context.Response.WriteAsync("Hello world");
             });
 
-            var browser = await BrowserType.ConnectAsync(_browserServer.WSEndpoint);
+            var browser = await BrowserType.ConnectAsync(_remoteServer.WSEndpoint);
             var page = await browser.NewPageAsync(new() { AcceptDownloads = true });
             await page.SetContentAsync($"<a href=\"{Server.Prefix}/download\">download</a>");
             var downloadTask = page.WaitForDownloadAsync();
@@ -419,9 +389,9 @@ namespace Microsoft.Playwright.Tests
             await download.SaveAsAsync(userPath);
             Assert.True(new FileInfo(userPath).Exists);
             Assert.AreEqual("Hello world", File.ReadAllText(userPath));
-            await page.CloseAsync();
             var exception = await PlaywrightAssert.ThrowsAsync<PlaywrightException>(() => download.PathAsync());
-            StringAssert.Contains("Target page, context or browser has been closed", exception.Message);
+            Assert.AreEqual("Path is not available when connecting remotely. Use SaveAsAsync() to save a local copy.", exception.Message);
+            await browser.CloseAsync();
         }
 
         [PlaywrightTest("browsertype-connect.spec.ts", "should error when saving download after deletion")]
@@ -430,11 +400,11 @@ namespace Microsoft.Playwright.Tests
             Server.SetRoute("/download", context =>
             {
                 context.Response.Headers["Content-Type"] = "application/octet-stream";
-                context.Response.Headers["Content-Disposition"] = "attachment; filename=file.txt";
+                context.Response.Headers["Content-Disposition"] = "attachment";
                 return context.Response.WriteAsync("Hello world");
             });
 
-            var browser = await BrowserType.ConnectAsync(_browserServer.WSEndpoint);
+            var browser = await BrowserType.ConnectAsync(_remoteServer.WSEndpoint);
             var page = await browser.NewPageAsync(new() { AcceptDownloads = true });
             await page.SetContentAsync($"<a href=\"{Server.Prefix}/download\">download</a>");
             var downloadTask = page.WaitForDownloadAsync();
@@ -449,16 +419,6 @@ namespace Microsoft.Playwright.Tests
             await download.DeleteAsync();
             var exception = await PlaywrightAssert.ThrowsAsync<PlaywrightException>(() => download.SaveAsAsync(userPath));
             StringAssert.Contains("Target page, context or browser has been closed", exception.Message);
-        }
-
-        [PlaywrightTest("browsertype-connect.spec.ts", "should be able to connect when the wsEndpont is passed as the first argument")]
-        public async Task ShouldConnectWhenWsEndpointIsPassedAsFirstArgument()
-        {
-            var browser = await BrowserType.ConnectAsync(_browserServer.WSEndpoint);
-            var context = await browser.NewContextAsync();
-            var page = await context.NewPageAsync();
-            var result = await page.EvaluateAsync("1 + 2");
-            Assert.AreEqual(result.ToString(), "3");
             await browser.CloseAsync();
         }
 
@@ -467,7 +427,7 @@ namespace Microsoft.Playwright.Tests
         {
             using var tempDirectory = new TempDirectory();
             var harPath = tempDirectory.Path + "/test.har";
-            var browser = await BrowserType.ConnectAsync(_browserServer.WSEndpoint);
+            var browser = await BrowserType.ConnectAsync(_remoteServer.WSEndpoint);
             var context = await browser.NewContextAsync(new()
             {
                 RecordHarPath = harPath
@@ -477,7 +437,6 @@ namespace Microsoft.Playwright.Tests
             await page.GotoAsync(Server.EmptyPage);
             await context.CloseAsync();
             await browser.CloseAsync();
-
 
             Assert.That(harPath, Does.Exist);
             var logString = System.IO.File.ReadAllText(harPath);
@@ -489,7 +448,7 @@ namespace Microsoft.Playwright.Tests
         {
             using var tempDirectory = new TempDirectory();
             var tracePath = tempDirectory.Path + "/trace.zip";
-            var browser = await BrowserType.ConnectAsync(_browserServer.WSEndpoint);
+            var browser = await BrowserType.ConnectAsync(_remoteServer.WSEndpoint);
             var context = await browser.NewContextAsync();
             var page = await context.NewPageAsync();
 
@@ -507,68 +466,16 @@ namespace Microsoft.Playwright.Tests
             Assert.That(tempDirectory.Path + "/trace.network", Does.Exist);
         }
 
-        private class BrowserServer
+        private class RemoteServer
         {
             public Process Process { get; set; }
             public string WSEndpoint { get; set; }
-        }
 
-        private async Task KillServerAndCloseBrowser(IBrowser browser)
-        {
-            _browserServer.Process.Kill();
-            await browser.CloseAsync();
-        }
-
-        private static string GetExecutablePath()
-        {
-            DirectoryInfo assemblyDirectory = new(AppContext.BaseDirectory);
-            if (!assemblyDirectory.Exists || !File.Exists(Path.Combine(assemblyDirectory.FullName, "Microsoft.Playwright.dll")))
+            internal void Close()
             {
-                var assemblyLocation = typeof(Playwright).Assembly.Location;
-                assemblyDirectory = new FileInfo(assemblyLocation).Directory;
+                Process.Kill(true);
+                Process.WaitForExit();
             }
-
-            string executableFile = GetPath(assemblyDirectory.FullName);
-            if (File.Exists(executableFile))
-            {
-                return executableFile;
-            }
-
-            // if the above fails, we can assume we're in the nuget registry
-            executableFile = GetPath(assemblyDirectory.Parent.Parent.FullName);
-            if (File.Exists(executableFile))
-            {
-                return executableFile;
-            }
-
-            throw new PlaywrightException($"Driver not found: {executableFile}");
-        }
-
-        private static string GetPath(string driversPath)
-        {
-            string platformId;
-            string runnerName;
-            if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
-            {
-                platformId = "win32_x64";
-                runnerName = "playwright.cmd";
-            }
-            else if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
-            {
-                runnerName = "playwright.sh";
-                platformId = "mac";
-            }
-            else if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
-            {
-                runnerName = "playwright.sh";
-                platformId = "linux";
-            }
-            else
-            {
-                throw new PlaywrightException("Unknown platform");
-            }
-
-            return Path.Combine(driversPath, ".playwright", "node", platformId, runnerName);
         }
     }
 }

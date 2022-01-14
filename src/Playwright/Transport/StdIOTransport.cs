@@ -45,7 +45,7 @@ namespace Microsoft.Playwright.Transport
             _process.StartInfo.Arguments = "run-driver";
             _process.Start();
             _process.Exited += (_, _) => Close("Process exited");
-            _process.ErrorDataReceived += (_, e) => LogReceived?.Invoke(this, new(e.Data));
+            _process.ErrorDataReceived += (_, error) => LogReceived?.Invoke(this, error.Data);
             _process.BeginErrorReadLine();
 
             ScheduleTransportTask(GetResponseAsync, _readerCancellationSource.Token);
@@ -54,11 +54,11 @@ namespace Microsoft.Playwright.Transport
         /// <inheritdoc cref="IDisposable.Dispose"/>
         ~StdIOTransport() => Dispose(false);
 
-        public event EventHandler<MessageReceivedEventArgs> MessageReceived;
+        public event EventHandler<string> MessageReceived;
 
-        public event EventHandler<TransportClosedEventArgs> TransportClosed;
+        public event EventHandler<string> TransportClosed;
 
-        public event EventHandler<LogReceivedEventArgs> LogReceived;
+        public event EventHandler<string> LogReceived;
 
         public bool IsClosed { get; private set; }
 
@@ -75,7 +75,7 @@ namespace Microsoft.Playwright.Transport
             if (!IsClosed)
             {
                 IsClosed = true;
-                TransportClosed?.Invoke(this, new() { CloseReason = closeReason });
+                TransportClosed.Invoke(this, closeReason);
                 _readerCancellationSource?.Cancel();
                 _process.StandardInput.Close();
                 _process.WaitForExit();
@@ -201,7 +201,7 @@ namespace Microsoft.Playwright.Transport
                 string result = System.Text.Encoding.UTF8.GetString(_data.GetRange(0, _currentMessageSize.Value).ToArray());
                 _data.RemoveRange(0, _currentMessageSize.Value);
                 _currentMessageSize = null;
-                MessageReceived?.Invoke(this, new(result));
+                MessageReceived?.Invoke(this, result);
             }
         }
     }

@@ -52,7 +52,7 @@ namespace Microsoft.Playwright.Core
         internal BrowserContext(IChannelOwner parent, string guid, BrowserContextInitializer initializer) : base(parent, guid)
         {
             Channel = new(guid, parent.Connection, this);
-            Channel.Close += Channel_Closed;
+            Channel.Close += (_, _) => OnClose();
             Channel.Page += Channel_OnPage;
             Channel.BindingCall += Channel_BindingCall;
             Channel.Route += Channel_Route;
@@ -99,8 +99,6 @@ namespace Microsoft.Playwright.Core
         public event EventHandler<IRequest> RequestFinished;
 
         public event EventHandler<IResponse> Response;
-
-        public bool IsClosedOrClosing { get; private set; }
 
         public ITracing Tracing
         {
@@ -168,10 +166,6 @@ namespace Microsoft.Playwright.Core
         {
             try
             {
-                if (IsClosedOrClosing)
-                {
-                    return;
-                }
                 if (Options.RecordHarPath != null)
                 {
                     Artifact artifact = await Channel.HarExportAsync().ConfigureAwait(false);
@@ -181,7 +175,7 @@ namespace Microsoft.Playwright.Core
                 await Channel.CloseAsync().ConfigureAwait(false);
                 await _closeTcs.Task.ConfigureAwait(false);
             }
-            catch (Exception e) when (IsTransient(e))
+            catch (Exception e) when (DriverMessages.IsSafeCloseError(e))
             {
                 // Swallow exception
             }
@@ -417,13 +411,13 @@ namespace Microsoft.Playwright.Core
             return Task.CompletedTask;
         }
 
-        private void Channel_Closed(object sender, EventArgs e)
+        internal void OnClose()
         {
             if (Browser != null)
             {
                 ((Browser)Browser).BrowserContextsList.Remove(this);
             }
-            IsClosedOrClosing = true;
+
             Close?.Invoke(this, this);
             _closeTcs.TrySetResult(true);
         }
@@ -470,9 +464,5 @@ namespace Microsoft.Playwright.Core
 
             return Channel.ExposeBindingAsync(name, handle);
         }
-
-        private bool IsTransient(Exception e)
-            => e.Message.Contains(DriverMessages.BrowserClosedExceptionMessage) ||
-                e.Message.Contains(DriverMessages.BrowserOrContextClosedExceptionMessage);
     }
 }

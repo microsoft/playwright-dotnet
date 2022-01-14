@@ -35,7 +35,6 @@ namespace Microsoft.Playwright.Core
     {
         private readonly BrowserInitializer _initializer;
         private readonly TaskCompletionSource<bool> _closedTcs = new();
-        private bool _isClosedOrClosing;
 
         internal Browser(IChannelOwner parent, string guid, BrowserInitializer initializer) : base(parent, guid)
         {
@@ -55,9 +54,7 @@ namespace Microsoft.Playwright.Core
 
         public bool IsConnected { get; private set; }
 
-        public bool IsRemote { get; set; }
-
-        public bool IsConnectedOverWebSocket { get; set; }
+        internal bool ShouldCloseConnectionOnClose { get; set; }
 
         public string Version => _initializer.Version;
 
@@ -67,17 +64,22 @@ namespace Microsoft.Playwright.Core
 
         public async Task CloseAsync()
         {
-            if (!_isClosedOrClosing)
+            try
             {
-                _isClosedOrClosing = true;
-                await Channel.CloseAsync().ConfigureAwait(false);
+                if (ShouldCloseConnectionOnClose)
+                {
+                    Channel.Connection.DoClose(DriverMessages.BrowserClosedExceptionMessage);
+                }
+                else
+                {
+                    await Channel.CloseAsync().ConfigureAwait(false);
+                }
+                await _closedTcs.Task.ConfigureAwait(false);
             }
-            if (IsConnectedOverWebSocket)
+            catch (Exception e) when (DriverMessages.IsSafeCloseError(e))
             {
-                await NotifyBrowserClosedAsync().ConfigureAwait(false);
-                return;
+                // Swallow exception
             }
-            await _closedTcs.Task.ConfigureAwait(false);
         }
 
         public async Task<IBrowserContext> NewContextAsync(BrowserNewContextOptions options = default)
@@ -192,23 +194,9 @@ namespace Microsoft.Playwright.Core
             return recordVideoArgs;
         }
 
-        public async Task NotifyBrowserClosedAsync()
-        {
-            foreach (BrowserContext context in BrowserContextsList.ToArray())
-            {
-                foreach (Page page in context.PagesList.ToArray())
-                {
-                    await page.CloseAsync().ConfigureAwait(false);
-                }
-                await context.CloseAsync().ConfigureAwait(false);
-            }
-            DidClose();
-        }
-
-        private void DidClose()
+        internal void DidClose()
         {
             IsConnected = false;
-            _isClosedOrClosing = true;
             Disconnected?.Invoke(this, this);
             _closedTcs.TrySetResult(true);
         }
