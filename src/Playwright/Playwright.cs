@@ -47,7 +47,7 @@ namespace Microsoft.Playwright
             transport.MessageReceived += (_, message) => connection.Dispatch(JsonSerializer.Deserialize<PlaywrightServerMessage>(message, JsonExtensions.DefaultJsonSerializerOptions));
             transport.LogReceived += (_, log) => Console.Error.WriteLine(log);
             transport.TransportClosed += (_, reason) => connection.DoClose(reason);
-            connection.OnMessage = (message) => transport.SendAsync(JsonSerializer.Serialize(message, connection.GetDefaultJsonSerializerOptions()));
+            connection.OnMessage = (message) => transport.SendAsync(JsonSerializer.SerializeToUtf8Bytes(message, connection.GetDefaultJsonSerializerOptions()));
             connection.Close += (_, e) => transport.Close(e);
             var playwright = await connection.InitializePlaywrightAsync().ConfigureAwait(false);
             playwright.Connection = connection;
