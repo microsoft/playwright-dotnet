@@ -47,11 +47,11 @@ namespace Microsoft.Playwright.Transport.Channels
             switch (method)
             {
                 case "navigated":
-                    var e = serverParams?.ToObject<FrameNavigatedEventArgs>(Connection.GetDefaultJsonSerializerOptions());
+                    var e = serverParams?.ToObject<FrameNavigatedEventArgs>(Connection.DefaultJsonSerializerOptions);
 
                     if (serverParams.Value.TryGetProperty("newDocument", out var documentElement))
                     {
-                        e.NewDocument = documentElement.ToObject<NavigateDocument>(Connection.GetDefaultJsonSerializerOptions());
+                        e.NewDocument = documentElement.ToObject<NavigateDocument>(Connection.DefaultJsonSerializerOptions);
                     }
 
                     Navigated?.Invoke(this, e);
@@ -59,7 +59,7 @@ namespace Microsoft.Playwright.Transport.Channels
                 case "loadstate":
                     LoadState?.Invoke(
                         this,
-                        serverParams?.ToObject<FrameChannelLoadStateEventArgs>(Connection.GetDefaultJsonSerializerOptions()));
+                        serverParams?.ToObject<FrameChannelLoadStateEventArgs>(Connection.DefaultJsonSerializerOptions));
                     break;
             }
         }
