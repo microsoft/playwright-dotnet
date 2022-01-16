@@ -23,9 +23,11 @@
  */
 
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.IO.Compression;
 using System.Linq;
+using System.Text;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
@@ -58,7 +60,7 @@ namespace Microsoft.Playwright.Tests
             var tracePath = Path.Combine(tmp.Path, "trace.zip");
             await Context.Tracing.StopAsync(new() { Path = tracePath });
 
-            var events = ParseTrace(tracePath);
+            var (events, resources) = ParseTrace(tracePath);
             CollectionAssert.IsNotEmpty(events);
 
             Assert.AreEqual("context-options", events[0].Type);
@@ -93,7 +95,7 @@ namespace Microsoft.Playwright.Tests
             await Context.Tracing.StopAsync(new() { Path = trace2Path });
 
             {
-                var events = ParseTrace(trace1Path);
+                var (events, resources) = ParseTrace(trace1Path);
                 Assert.AreEqual("context-options", events[0].Type);
                 Assert.GreaterOrEqual(events.Where(x => x.ApiName == "frame.goto").Count(), 1);
                 Assert.GreaterOrEqual(events.Where(x => x.ApiName == "frame.setContent").Count(), 1);
@@ -103,7 +105,7 @@ namespace Microsoft.Playwright.Tests
             }
 
             {
-                var events = ParseTrace(trace2Path);
+                var (events, resources) = ParseTrace(trace2Path);
                 Assert.AreEqual("context-options", events[0].Type);
                 Assert.AreEqual(0, events.Where(x => x.ApiName == "frame.goto").Count());
                 Assert.AreEqual(0, events.Where(x => x.ApiName == "frame.setContent").Count());
@@ -114,28 +116,59 @@ namespace Microsoft.Playwright.Tests
 
         }
 
-        private static IReadOnlyList<TraceEventEntry> ParseTrace(string path)
+        [PlaywrightTest("tracing.spec.ts", "should collect sources")]
+        public async Task ShouldCollectSources()
         {
-            List<TraceEventEntry> results = new();
-            var archive = ZipFile.OpenRead(path);
-            foreach (var events in new[] { archive.GetEntry("trace.trace"), archive.GetEntry("trace.network") })
+            await Context.Tracing.StartAsync(new()
             {
-                if (events != null)
+                Sources = true,
+            });
+
+            var page = await Context.NewPageAsync();
+            await page.GotoAsync(Server.Prefix + "/empty.html");
+            await page.SetContentAsync("<button>Click</button>");
+            await page.ClickAsync("\"Click\"");
+            await page.CloseAsync();
+
+            using var tmp = new TempDirectory();
+            var tracePath = Path.Combine(tmp.Path, "trace.zip");
+            await Context.Tracing.StopAsync(new() { Path = tracePath });
+
+            var (events, resources) = ParseTrace(tracePath);
+            var sourceNames = resources.Keys.Where(key => key.EndsWith(".txt")).ToArray();
+            Assert.AreEqual(sourceNames.Count(), 1);
+            var sourceTraceFileContent = resources[sourceNames[0]];
+            var currentFileContent = File.ReadAllText(new StackTrace(true).GetFrame(0).GetFileName());
+
+            Assert.AreEqual(sourceTraceFileContent, currentFileContent);
+        }
+
+        private static (IReadOnlyList<TraceEventEntry> Events, Dictionary<string, byte[]> Resources) ParseTrace(string path)
+        {
+            Dictionary<string, byte[]> resources = new();
+            var archive = ZipFile.OpenRead(path);
+            foreach (var entry in archive.Entries)
+            {
+                var memoryStream = new MemoryStream();
+                entry.Open().CopyTo(memoryStream);
+                resources.Add(entry.Name, memoryStream.ToArray());
+            }
+            List<TraceEventEntry> events = new();
+            foreach (var fileName in new[] { "trace.trace", "trace.network" })
+            {
+                foreach (var line in Encoding.UTF8.GetString(resources[fileName]).Split("\n"))
                 {
-                    var reader = new StreamReader(events.Open());
-                    while (true)
+                    if (!string.IsNullOrEmpty(line))
                     {
-                        var line = reader.ReadLine();
-                        if (line == null) break;
-                        results.Add(JsonSerializer.Deserialize<TraceEventEntry>(line,
-                            new JsonSerializerOptions()
-                            {
-                                PropertyNameCaseInsensitive = true,
-                            }));
+                        events.Add(JsonSerializer.Deserialize<TraceEventEntry>(line,
+                                new JsonSerializerOptions()
+                                {
+                                    PropertyNameCaseInsensitive = true,
+                                }));
                     }
                 }
             }
-            return results;
+            return (events, resources);
         }
 
         private class TraceEventEntry

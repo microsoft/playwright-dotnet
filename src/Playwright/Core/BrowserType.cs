@@ -164,7 +164,7 @@ namespace Microsoft.Playwright.Core
             void OnPipeClosed()
             {
                 // Emulate all pages, contexts and the browser closing upon disconnect.
-                foreach (BrowserContext context in browser.BrowserContextsList.ToArray())
+                foreach (BrowserContext context in browser?.BrowserContextsList.ToArray() ?? Array.Empty<BrowserContext>())
                 {
                     foreach (Page page in context.PagesList.ToArray())
                     {
@@ -172,7 +172,7 @@ namespace Microsoft.Playwright.Core
                     }
                     context.OnClose();
                 }
-                browser.DidClose();
+                browser?.DidClose();
                 connection.DoClose(closeError != null ? closeError : DriverMessages.BrowserClosedExceptionMessage);
             }
             pipe.Closed += (_, _) => OnPipeClosed();
@@ -197,6 +197,7 @@ namespace Microsoft.Playwright.Core
                 catch (Exception ex)
                 {
                     closeError = ex.ToString();
+                    _channel.Connection.TraceMessage("pw:dotnet", $"Dispatching error: {ex.Message}\n{ex.StackTrace}");
                     ClosePipe();
                 }
             };

@@ -118,6 +118,7 @@ namespace Microsoft.Playwright.Core
                forcedColors: options.ForcedColors).ConfigureAwait(false)).Object;
 
             context.Options = options;
+            context.LocalUtils = LocalUtils;
 
             BrowserContextsList.Add(context);
             return context;

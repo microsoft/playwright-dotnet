@@ -41,7 +41,8 @@ namespace Microsoft.Playwright.Core
                         name: options?.Name,
                         title: options?.Title,
                         screenshots: options?.Screenshots,
-                        snapshots: options?.Snapshots).ConfigureAwait(false);
+                        snapshots: options?.Snapshots,
+                        sources: options?.Sources).ConfigureAwait(false);
             await _context.Channel.StartChunkAsync(options?.Title).ConfigureAwait(false);
         }
 

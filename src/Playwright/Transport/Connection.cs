@@ -350,7 +350,7 @@ namespace Microsoft.Playwright.Transport
 
         private void DoClose(Exception ex)
         {
-            TraceMessage("pw:dotnet", ex.ToString());
+            TraceMessage("pw:dotnet", $"Connection Close: {ex.Message}\n{ex.StackTrace}");
             DoClose(ex.Message);
         }
 
@@ -419,10 +419,15 @@ namespace Microsoft.Playwright.Transport
         }
 
         [Conditional("DEBUG")]
-        private void TraceMessage(string logLevel, object message)
+        internal void TraceMessage(string logLevel, object message)
         {
-            if (!string.IsNullOrEmpty(Environment.GetEnvironmentVariable("DEBUGP")))
+            string actualLogLevel = Environment.GetEnvironmentVariable("DEBUG");
+            if (!string.IsNullOrEmpty(actualLogLevel))
             {
+                if (!actualLogLevel.Contains(logLevel))
+                {
+                    return;
+                }
                 if (!(message is string))
                 {
                     message = JsonSerializer.Serialize(message, GetDefaultJsonSerializerOptions());

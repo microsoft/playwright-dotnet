@@ -234,7 +234,7 @@ namespace Microsoft.Playwright.Transport.Channels
         internal Task<StorageState> GetStorageStateAsync()
             => Connection.SendMessageToServerAsync<StorageState>(Guid, "storageState", null);
 
-        internal Task TracingStartAsync(string name, string title, bool? screenshots, bool? snapshots)
+        internal Task TracingStartAsync(string name, string title, bool? screenshots, bool? snapshots, bool? sources)
             => Connection.SendMessageToServerAsync(
                 Guid,
                 "tracingStart",
@@ -244,6 +244,7 @@ namespace Microsoft.Playwright.Transport.Channels
                     ["title"] = title,
                     ["screenshots"] = screenshots,
                     ["snapshots"] = snapshots,
+                    ["sources"] = sources,
                 });
 
         internal Task TracingStopAsync()
@@ -272,7 +273,10 @@ namespace Microsoft.Playwright.Transport.Channels
                 while (sourceEntriesEnumerator.MoveNext())
                 {
                     JsonElement current = sourceEntriesEnumerator.Current;
-                    sourceEntries.Add(result.Value.Deserialize<NameValueEntry>());
+                    sourceEntries.Add(current.Deserialize<NameValueEntry>(new JsonSerializerOptions()
+                    {
+                        PropertyNameCaseInsensitive = true,
+                    }));
                 }
             }
             return (artifact, sourceEntries);

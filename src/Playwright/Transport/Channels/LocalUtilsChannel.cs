@@ -39,7 +39,7 @@ namespace Microsoft.Playwright.Transport.Channels
         internal Task ZipAsync(string zipFile, List<NameValueEntry> entries) =>
             Connection.SendMessageToServerAsync(Guid, "zip", new Dictionary<string, object>
             {
-                  { "zip", zipFile },
+                  { "zipFile", zipFile },
                   { "entries", entries },
             });
     }

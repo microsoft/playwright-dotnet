@@ -600,7 +600,7 @@ namespace Microsoft.Playwright.Core
 
         private Waiter SetupNavigationWaiter(string @event, float? timeout)
         {
-            var waiter = new Waiter(this, @event);
+            var waiter = new Waiter(this.Page as Page, @event);
             if (this.Page.IsClosed)
             {
                 waiter.RejectImmediately(new PlaywrightException("Navigation failed because page was closed!"));

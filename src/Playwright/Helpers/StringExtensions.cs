@@ -624,7 +624,7 @@ namespace Microsoft.Playwright.Helpers
                 query = query.Substring(1, query.Length - 1);
             }
 
-            foreach (string keyValue in query.Split('&').Where(kv => kv.Contains("=")))
+            foreach (string keyValue in query.Split('&').Where(kv => kv.Contains('=')))
             {
                 string[] pair = keyValue.Split('=');
                 result[pair[0]] = pair[1];
