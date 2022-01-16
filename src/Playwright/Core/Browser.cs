@@ -62,6 +62,8 @@ namespace Microsoft.Playwright.Core
 
         internal List<BrowserContext> BrowserContextsList { get; } = new();
 
+        internal LocalUtils LocalUtils { get; set; }
+
         public async Task CloseAsync()
         {
             try
@@ -116,6 +118,7 @@ namespace Microsoft.Playwright.Core
                forcedColors: options.ForcedColors).ConfigureAwait(false)).Object;
 
             context.Options = options;
+            context.LocalUtils = LocalUtils;
 
             BrowserContextsList.Add(context);
             return context;

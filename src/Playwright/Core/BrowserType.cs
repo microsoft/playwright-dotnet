@@ -47,6 +47,8 @@ namespace Microsoft.Playwright.Core
 
         IChannel<BrowserType> IChannelOwner<BrowserType>.Channel => _channel;
 
+        internal PlaywrightImpl Playwright { get; set; }
+
         public string ExecutablePath => _initializer.ExecutablePath;
 
         public string Name => _initializer.Name;
@@ -54,7 +56,7 @@ namespace Microsoft.Playwright.Core
         public async Task<IBrowser> LaunchAsync(BrowserTypeLaunchOptions options = default)
         {
             options ??= new BrowserTypeLaunchOptions();
-            return (await _channel.LaunchAsync(
+            Browser browser = (await _channel.LaunchAsync(
                 headless: options.Headless,
                 channel: options.Channel,
                 executablePath: options.ExecutablePath,
@@ -73,6 +75,8 @@ namespace Microsoft.Playwright.Core
                 slowMo: options.SlowMo,
                 ignoreDefaultArgs: options.IgnoreDefaultArgs,
                 ignoreAllDefaultArgs: options.IgnoreAllDefaultArgs).ConfigureAwait(false)).Object;
+            browser.LocalUtils = Playwright.Utils;
+            return browser;
         }
 
         public async Task<IBrowserContext> LaunchPersistentContextAsync(string userDataDir, BrowserTypeLaunchPersistentContextOptions options = default)
@@ -130,6 +134,7 @@ namespace Microsoft.Playwright.Core
                 RecordHarPath = options.RecordHarPath,
                 RecordHarOmitContent = options.RecordHarOmitContent,
             };
+            context.LocalUtils = Playwright.Utils;
             return context;
         }
 
@@ -159,7 +164,7 @@ namespace Microsoft.Playwright.Core
             void OnPipeClosed()
             {
                 // Emulate all pages, contexts and the browser closing upon disconnect.
-                foreach (BrowserContext context in browser.BrowserContextsList.ToArray())
+                foreach (BrowserContext context in browser?.BrowserContextsList.ToArray() ?? Array.Empty<BrowserContext>())
                 {
                     foreach (Page page in context.PagesList.ToArray())
                     {
@@ -167,7 +172,7 @@ namespace Microsoft.Playwright.Core
                     }
                     context.OnClose();
                 }
-                browser.DidClose();
+                browser?.DidClose();
                 connection.DoClose(closeError != null ? closeError : DriverMessages.BrowserClosedExceptionMessage);
             }
             pipe.Closed += (_, _) => OnPipeClosed();
@@ -192,6 +197,7 @@ namespace Microsoft.Playwright.Core
                 catch (Exception ex)
                 {
                     closeError = ex.ToString();
+                    _channel.Connection.TraceMessage("pw:dotnet", $"Dispatching error: {ex.Message}\n{ex.StackTrace}");
                     ClosePipe();
                 }
             };
@@ -208,6 +214,7 @@ namespace Microsoft.Playwright.Core
                 browser = playwright.PreLaunchedBrowser;
                 browser.ShouldCloseConnectionOnClose = true;
                 browser.Disconnected += (_, _) => ClosePipe();
+                browser.LocalUtils = Playwright.Utils;
                 return playwright.PreLaunchedBrowser;
             }
             var task = CreateBrowserAsync();
@@ -228,6 +235,7 @@ namespace Microsoft.Playwright.Core
             {
                 browser.BrowserContextsList.Add(defaultContextValue.ToObject<BrowserContext>(_channel.Connection.GetDefaultJsonSerializerOptions()));
             }
+            browser.LocalUtils = Playwright.Utils;
             return browser;
         }
     }

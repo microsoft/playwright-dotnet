@@ -454,7 +454,8 @@ namespace Microsoft.Playwright
         /// A selector to use when resolving DOM element. See <a href="./selectors.md">working
         /// with selectors</a> for more details.
         /// </param>
-        ILocator Locator(string selector);
+        /// <param name="options">Call options</param>
+        ILocator Locator(string selector, LocatorLocatorOptions? options = default);
 
         /// <summary><para>Returns locator to the n-th matching element.</para></summary>
         /// <param name="index">
@@ -977,24 +978,6 @@ namespace Microsoft.Playwright
         /// </summary>
         /// <param name="options">Call options</param>
         Task WaitForAsync(LocatorWaitForOptions? options = default);
-
-        /// <summary>
-        /// <para>
-        /// Matches elements containing specified text somewhere inside, possibly in a child
-        /// or a descendant element. For example, <c>"Playwright"</c> matches <c>&lt;article&gt;&lt;div&gt;Playwright&lt;/div&gt;&lt;/article&gt;</c>.
-        /// </para>
-        /// </summary>
-        /// <param name="text">Text to filter by as a string or as a regular expression.</param>
-        ILocator WithText(string text);
-
-        /// <summary>
-        /// <para>
-        /// Matches elements containing specified text somewhere inside, possibly in a child
-        /// or a descendant element. For example, <c>"Playwright"</c> matches <c>&lt;article&gt;&lt;div&gt;Playwright&lt;/div&gt;&lt;/article&gt;</c>.
-        /// </para>
-        /// </summary>
-        /// <param name="text">Text to filter by as a string or as a regular expression.</param>
-        ILocator WithText(Regex text);
     }
 }
 

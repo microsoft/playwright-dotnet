@@ -423,8 +423,8 @@ namespace Microsoft.Playwright.Core
             }
 
             timeout ??= _defaultTimeout;
-            using var waiter = new Waiter(_channel, $"page.WaitForEventAsync(\"{typeof(T)}\")");
-            waiter.RejectOnTimeout(Convert.ToInt32(timeout), $"Timeout while waiting for event \"{pageEvent.Name}\"");
+            using var waiter = new Waiter(this, $"page.WaitForEventAsync(\"{typeof(T)}\")");
+            waiter.RejectOnTimeout(Convert.ToInt32(timeout), $"Timeout {timeout}ms exceeded while waiting for event \"{pageEvent.Name}\"");
 
             if (pageEvent.Name != PageEvent.Crash.Name)
             {
@@ -468,8 +468,8 @@ namespace Microsoft.Playwright.Core
         public Task<T> EvalOnSelectorAsync<T>(string selector, string expression, object arg = null, PageEvalOnSelectorOptions options = null)
             => MainFrame.EvalOnSelectorAsync<T>(selector, expression, arg, new() { Strict = options?.Strict });
 
-        public ILocator Locator(string selector)
-            => MainFrame.Locator(selector);
+        public ILocator Locator(string selector, PageLocatorOptions options = default)
+            => MainFrame.Locator(selector, new() { HasTextString = options?.HasTextString, HasTextRegex = options?.HasTextRegex });
 
         public Task<IElementHandle> QuerySelectorAsync(string selector, PageQuerySelectorOptions options = null)
             => MainFrame.QuerySelectorAsync(selector, new() { Strict = options?.Strict });

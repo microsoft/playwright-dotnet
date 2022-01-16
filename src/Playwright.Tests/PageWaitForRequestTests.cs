@@ -72,11 +72,12 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-wait-for-request.spec.ts", "should respect default timeout")]
-        public Task ShouldRespectDefaultTimeout()
+        public async Task ShouldRespectDefaultTimeout()
         {
             Page.SetDefaultTimeout(1);
-            return PlaywrightAssert.ThrowsAsync<TimeoutException>(
+            var exception = await PlaywrightAssert.ThrowsAsync<TimeoutException>(
                 () => Page.WaitForRequestAsync(_ => false));
+            StringAssert.Contains(exception.Message, "Timeout 1ms exceeded while waiting for event \"Request\"");
         }
 
         [PlaywrightTest("page-wait-for-request.spec.ts", "should work with no timeout")]

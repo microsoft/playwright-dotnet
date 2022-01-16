@@ -102,6 +102,10 @@ namespace Microsoft.Playwright
         /// baseURL: <c>http://localhost:3000/foo/</c> and navigating to <c>./bar.html</c> results
         /// in <c>http://localhost:3000/foo/bar.html</c>
         /// </description></item>
+        /// <item><description>
+        /// baseURL: <c>http://localhost:3000/foo</c> (without trailing slash) and navigating
+        /// to <c>./bar.html</c> results in <c>http://localhost:3000/bar.html</c>
+        /// </description></item>
         /// </list>
         /// </summary>
         [JsonPropertyName("baseURL")]

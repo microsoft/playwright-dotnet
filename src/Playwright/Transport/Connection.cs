@@ -269,7 +269,7 @@ namespace Microsoft.Playwright.Transport
             IChannelOwner result = null;
             var parent = string.IsNullOrEmpty(parentGuid) ? _rootObject : Objects[parentGuid];
 
-#pragma warning disable CA2000
+#pragma warning disable CA2000 // Dispose objects before losing scope
             switch (type)
             {
                 case ChannelOwnerType.Artifact:
@@ -311,6 +311,9 @@ namespace Microsoft.Playwright.Transport
                 case ChannelOwnerType.JsonPipe:
                     result = new JsonPipe(parent, guid, initializer?.ToObject<JsonPipeInitializer>(GetDefaultJsonSerializerOptions()));
                     break;
+                case ChannelOwnerType.LocalUtils:
+                    result = new LocalUtils(parent, guid, initializer);
+                    break;
                 case ChannelOwnerType.Page:
                     result = new Page(parent, guid, initializer?.ToObject<PageInitializer>(GetDefaultJsonSerializerOptions()));
                     break;
@@ -339,15 +342,15 @@ namespace Microsoft.Playwright.Transport
                     TraceMessage("pw:dotnet", "Missing type " + type);
                     break;
             }
+#pragma warning restore CA2000
 
             Objects.TryAdd(guid, result);
             OnObjectCreated(guid, result);
-#pragma warning restore CA2000
         }
 
         private void DoClose(Exception ex)
         {
-            TraceMessage("pw:dotnet", ex.ToString());
+            TraceMessage("pw:dotnet", $"Connection Close: {ex.Message}\n{ex.StackTrace}");
             DoClose(ex.Message);
         }
 
@@ -416,10 +419,15 @@ namespace Microsoft.Playwright.Transport
         }
 
         [Conditional("DEBUG")]
-        private void TraceMessage(string logLevel, object message)
+        internal void TraceMessage(string logLevel, object message)
         {
-            if (!string.IsNullOrEmpty(Environment.GetEnvironmentVariable("DEBUGPWD")))
+            string actualLogLevel = Environment.GetEnvironmentVariable("DEBUG");
+            if (!string.IsNullOrEmpty(actualLogLevel))
             {
+                if (!actualLogLevel.Contains(logLevel))
+                {
+                    return;
+                }
                 if (!(message is string))
                 {
                     message = JsonSerializer.Serialize(message, GetDefaultJsonSerializerOptions());
