@@ -34,14 +34,17 @@ namespace Microsoft.Playwright.Transport.Channels
         {
         }
 
-        internal async Task<string> ReadAsync()
-            => (await Connection.SendMessageToServerAsync(
+        internal async Task<byte[]> ReadAsync(int size)
+        {
+            var response = await Connection.SendMessageToServerAsync(
                 Guid,
                 "read",
                 new Dictionary<string, object>
                 {
-                    ["size"] = 0,
-                }).ConfigureAwait(false))?.GetProperty("binary").ToString();
+                    ["size"] = size,
+                }).ConfigureAwait(false);
+            return response.Value.GetProperty("binary").GetBytesFromBase64();
+        }
 
         internal Task CloseAsync() => Connection.SendMessageToServerAsync(Guid, "close", null);
     }

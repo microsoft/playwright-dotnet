@@ -23,9 +23,13 @@
  */
 
 using System;
+using System.IO;
+using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Playwright.Transport;
 using Microsoft.Playwright.Transport.Channels;
+
+#pragma warning disable SA1402 // A C# code file contains more than one unique type.
 
 namespace Microsoft.Playwright.Core
 {
@@ -42,8 +46,55 @@ namespace Microsoft.Playwright.Core
 
         public StreamChannel Channel { get; }
 
-        public async ValueTask DisposeAsync() => await Channel.CloseAsync().ConfigureAwait(false);
+        public bool IsClosed { get; set; }
 
-        public async Task<string> ReadAsync() => await Channel.ReadAsync().ConfigureAwait(false);
+        public StreamImpl StreamImpl => new(this);
+
+        public Task<byte[]> ReadAsync(int size) => Channel.ReadAsync(size);
+
+        public async ValueTask DisposeAsync() => await CloseAsync().ConfigureAwait(false);
+
+        public async Task CloseAsync()
+        {
+            IsClosed = true;
+            await Channel.CloseAsync().ConfigureAwait(false);
+        }
+    }
+
+    internal class StreamImpl : System.IO.Stream
+    {
+        private readonly Stream _stream;
+
+        internal StreamImpl(Stream stream)
+        {
+            _stream = stream;
+        }
+
+        public override bool CanRead => !_stream.IsClosed;
+
+        public override bool CanSeek => false;
+
+        public override bool CanWrite => false;
+
+        public override long Length => throw new NotImplementedException();
+
+        public override long Position { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+
+        public override void Flush() => throw new NotImplementedException();
+
+        public override int Read(byte[] buffer, int offset, int count) => throw new NotImplementedException();
+
+        public override async Task<int> ReadAsync(byte[] buffer, int offset, int count, CancellationToken cancellationToken)
+        {
+            var result = await _stream.ReadAsync(count).ConfigureAwait(false);
+            result.CopyTo(buffer, offset);
+            return result.Length;
+        }
+
+        public override long Seek(long offset, SeekOrigin origin) => throw new NotImplementedException();
+
+        public override void SetLength(long value) => throw new NotImplementedException();
+
+        public override void Write(byte[] buffer, int offset, int count) => throw new NotImplementedException();
     }
 }

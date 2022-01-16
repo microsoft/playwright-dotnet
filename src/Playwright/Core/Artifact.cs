@@ -71,25 +71,16 @@ namespace Microsoft.Playwright.Core
             System.IO.Directory.CreateDirectory(Path.GetDirectoryName(path));
             await using var stream = await _channel.SaveAsStreamAsync().ConfigureAwait(false);
 
-            // TODO: Write it via a stream to the file
-            string base64 = await stream.ReadAsync().ConfigureAwait(false);
-            var bytes = Convert.FromBase64String(base64);
             using (var fileStream = new FileStream(path, FileMode.Create, FileAccess.Write))
             {
-                using var cancellationToken = new CancellationTokenSource();
-#pragma warning disable CA1835 // We can't use ReadOnlyMemory on netstandard
-                await fileStream.WriteAsync(bytes, 0, bytes.Length, cancellationToken.Token).ConfigureAwait(false);
-#pragma warning restore CA1835
+                await stream.StreamImpl.CopyToAsync(fileStream).ConfigureAwait(false);
             }
         }
 
         public async Task<System.IO.Stream> CreateReadStreamAsync()
         {
-            await using var stream = await _channel.StreamAsync().ConfigureAwait(false);
-
-            // TODO: use an actual Stream implementation
-            string base64 = await stream.ReadAsync().ConfigureAwait(false);
-            return new MemoryStream(Convert.FromBase64String(base64));
+            var stream = await _channel.StreamAsync().ConfigureAwait(false);
+            return stream.StreamImpl;
         }
 
         internal Task CancelAsync() => _channel.CancelAsync();
