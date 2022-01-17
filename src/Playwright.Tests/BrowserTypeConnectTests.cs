@@ -47,18 +47,21 @@ namespace Microsoft.Playwright.Tests
             {
                 DirectoryInfo assemblyDirectory = new(AppContext.BaseDirectory);
                 RemoteServer remoteServer = new();
+                var startInfo = new ProcessStartInfo(Driver.GetExecutablePath(), $"launch-server {BrowserType.Name}")
+                {
+                    UseShellExecute = false,
+                    RedirectStandardOutput = true,
+                    RedirectStandardInput = true,
+                    RedirectStandardError = false,
+                    CreateNoWindow = true,
+                };
+                foreach (var pair in Driver.GetEnvironmentVariables())
+                {
+                    startInfo.EnvironmentVariables[pair.Key] = pair.Value;
+                }
                 remoteServer.Process = new()
                 {
-                    StartInfo =
-                    {
-                        FileName = Paths.GetExecutablePath(),
-                        Arguments = $"launch-server {BrowserType.Name}",
-                        UseShellExecute = false,
-                        RedirectStandardOutput = true,
-                        RedirectStandardInput = true,
-                        RedirectStandardError = false,
-                        CreateNoWindow = true,
-                    },
+                    StartInfo = startInfo,
                 };
                 remoteServer.Process.Start();
                 remoteServer.WSEndpoint = remoteServer.Process.StandardOutput.ReadLine();

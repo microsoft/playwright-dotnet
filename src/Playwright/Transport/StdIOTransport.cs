@@ -114,18 +114,24 @@ namespace Microsoft.Playwright.Transport
         }
 
         private static Process GetProcess()
-            => new()
+        {
+            var startInfo = new ProcessStartInfo(Driver.GetExecutablePath())
             {
-                StartInfo =
-                {
-                    FileName = Paths.GetExecutablePath(),
-                    UseShellExecute = false,
-                    RedirectStandardOutput = true,
-                    RedirectStandardInput = true,
-                    RedirectStandardError = true,
-                    CreateNoWindow = true,
-                },
+                UseShellExecute = false,
+                RedirectStandardOutput = true,
+                RedirectStandardInput = true,
+                RedirectStandardError = true,
+                CreateNoWindow = true,
             };
+            foreach (var pair in Driver.GetEnvironmentVariables())
+            {
+                startInfo.EnvironmentVariables[pair.Key] = pair.Value;
+            }
+            return new()
+            {
+                StartInfo = startInfo,
+            };
+        }
 
         private static void ScheduleTransportTask(Func<CancellationToken, Task> func, CancellationToken cancellationToken)
             => Task.Factory.StartNew(() => func(cancellationToken), cancellationToken, TaskCreationOptions.LongRunning, TaskScheduler.Current);
