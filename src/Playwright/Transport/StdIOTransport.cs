@@ -54,7 +54,7 @@ namespace Microsoft.Playwright.Transport
         /// <inheritdoc cref="IDisposable.Dispose"/>
         ~StdIOTransport() => Dispose(false);
 
-        public event EventHandler<string> MessageReceived;
+        public event EventHandler<byte[]> MessageReceived;
 
         public event EventHandler<string> TransportClosed;
 
@@ -82,14 +82,13 @@ namespace Microsoft.Playwright.Transport
             }
         }
 
-        public async Task SendAsync(string message)
+        public async Task SendAsync(byte[] message)
         {
             try
             {
                 if (!_readerCancellationSource.IsCancellationRequested)
                 {
-                    byte[] bytes = System.Text.Encoding.UTF8.GetBytes(message.ToCharArray());
-                    int len = bytes.Length;
+                    int len = message.Length;
                     byte[] ll = new byte[4];
                     ll[0] = (byte)(len & 0xFF);
                     ll[1] = (byte)((len >> 8) & 0xFF);
@@ -99,11 +98,11 @@ namespace Microsoft.Playwright.Transport
 #if NETSTANDARD
 #pragma warning disable CA1835 // We can't use ReadOnlyMemory on netstandard
                     await _process.StandardInput.BaseStream.WriteAsync(ll, 0, 4, _readerCancellationSource.Token).ConfigureAwait(false);
-                    await _process.StandardInput.BaseStream.WriteAsync(bytes, 0, len, _readerCancellationSource.Token).ConfigureAwait(false);
+                    await _process.StandardInput.BaseStream.WriteAsync(message, 0, len, _readerCancellationSource.Token).ConfigureAwait(false);
 #pragma warning restore CA1835
 #else
                     await _process.StandardInput.BaseStream.WriteAsync(new(ll, 0, 4), _readerCancellationSource.Token).ConfigureAwait(false);
-                    await _process.StandardInput.BaseStream.WriteAsync(new(bytes, 0, len), _readerCancellationSource.Token).ConfigureAwait(false);
+                    await _process.StandardInput.BaseStream.WriteAsync(new(message, 0, len), _readerCancellationSource.Token).ConfigureAwait(false);
 #endif
                     await _process.StandardInput.BaseStream.FlushAsync(_readerCancellationSource.Token).ConfigureAwait(false);
                 }
@@ -166,7 +165,7 @@ namespace Microsoft.Playwright.Transport
 #endif
                     if (!token.IsCancellationRequested)
                     {
-                        _data.AddRange(buffer.AsMemory().Slice(0, read).ToArray());
+                        _data.AddRange(buffer.AsSpan(0, read).ToArray());
 
                         ProcessStream(token);
                     }
@@ -198,7 +197,7 @@ namespace Microsoft.Playwright.Transport
                     break;
                 }
 
-                string result = System.Text.Encoding.UTF8.GetString(_data.GetRange(0, _currentMessageSize.Value).ToArray());
+                byte[] result = _data.GetRange(0, _currentMessageSize.Value).ToArray();
                 _data.RemoveRange(0, _currentMessageSize.Value);
                 _currentMessageSize = null;
                 MessageReceived?.Invoke(this, result);

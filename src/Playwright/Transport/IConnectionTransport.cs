@@ -35,7 +35,7 @@ namespace Microsoft.Playwright.Transport
         /// <summary>
         /// Occurs when a message is received.
         /// </summary>
-        event EventHandler<string> MessageReceived;
+        event EventHandler<byte[]> MessageReceived;
 
         /// <summary>
         /// Occurs when a log message is received.
@@ -52,7 +52,7 @@ namespace Microsoft.Playwright.Transport
         /// </summary>
         /// <returns>The task.</returns>
         /// <param name="message">Message to send.</param>
-        Task SendAsync(string message);
+        Task SendAsync(byte[] message);
 
         /// <summary>
         /// Closes the connection.
