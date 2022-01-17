@@ -39,24 +39,23 @@ namespace Microsoft.Playwright.Core
         private readonly List<Action> _dispose = new();
         private readonly CancellationTokenSource _cts = new();
         private readonly string _waitId = Guid.NewGuid().ToString();
-        private readonly ChannelBase _channel;
+        private readonly IChannelOwner _channelOwner;
         private Exception _immediateError;
 
         private bool _disposed;
         private string _error;
 
-        internal Waiter(ChannelBase channel, string @event)
+        internal Waiter(IChannelOwner channelOwner, string @event)
         {
-            _channel = channel;
+            _channelOwner = channelOwner;
             var beforeArgs = new { info = new { @event = @event, waitId = _waitId, phase = "before" } };
-            var connection = _channel.Connection;
 
-            _ = connection.SendMessageToServerAsync(channel.Guid, "waitForEventInfo", beforeArgs);
+            _ = channelOwner.Connection.SendMessageToServerAsync(channelOwner.Channel.Guid, "waitForEventInfo", beforeArgs);
             _dispose.Add(() =>
             {
                 var afterArgs = new { info = new { waitId = _waitId, phase = "after", error = _error } };
 
-                _ = _channel.Connection.SendMessageToServerAsync(channel.Guid, "waitForEventInfo", afterArgs);
+                _ = channelOwner.Connection.SendMessageToServerAsync(channelOwner.Channel.Guid, "waitForEventInfo", afterArgs);
             });
         }
 
@@ -79,7 +78,7 @@ namespace Microsoft.Playwright.Core
         {
             _logs.Add(log);
             var logArgs = new { info = new { waitId = _waitId, phase = "log", message = log } };
-            _ = _channel.Connection.SendMessageToServerAsync(_channel.Guid, "waitForEventInfo", logArgs);
+            _ = _channelOwner.Connection.SendMessageToServerAsync(_channelOwner.Channel.Guid, "waitForEventInfo", logArgs);
         }
 
         internal void RejectImmediately(Exception exception)
@@ -169,7 +168,7 @@ namespace Microsoft.Playwright.Core
                 {
                     throw _immediateError;
                 }
-                var firstTask = await Task.WhenAny(_failures.Prepend(task)).ConfigureAwait(false);
+                var firstTask = await Task.WhenAny(Enumerable.Repeat(task, 1).Concat(_failures)).ConfigureAwait(false);
                 dispose?.Invoke();
                 await firstTask.ConfigureAwait(false);
                 return await task.ConfigureAwait(false);

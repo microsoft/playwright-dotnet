@@ -22,31 +22,25 @@
  * SOFTWARE.
  */
 
+using System;
 using System.Collections.Generic;
 using System.Text.Json;
-using System.Text.Json.Serialization;
 using System.Threading.Tasks;
-using Microsoft.Playwright.Helpers;
-using Microsoft.Playwright.Transport;
-using Microsoft.Playwright.Transport.Channels;
-using Microsoft.Playwright.Transport.Protocol;
+using Microsoft.Playwright.Core;
 
-namespace Microsoft.Playwright.Core
+namespace Microsoft.Playwright.Transport.Channels
 {
-    internal partial class LocalUtils : ChannelOwnerBase, IChannelOwner<LocalUtils>, ILocalUtils
+    internal class LocalUtilsChannel : Channel<LocalUtils>
     {
-        private readonly LocalUtilsChannel _channel;
-
-        public LocalUtils(IChannelOwner parent, string guid, JsonElement? initializer) : base(parent, guid)
+        public LocalUtilsChannel(string guid, Connection connection, LocalUtils owner) : base(guid, connection, owner)
         {
-            _channel = new(guid, parent.Connection, this);
         }
 
-        ChannelBase IChannelOwner.Channel => _channel;
-
-        IChannel<LocalUtils> IChannelOwner<LocalUtils>.Channel => _channel;
-
-        internal Task ZipAsync(string zipFile, List<NameValueEntry> entries)
-            => _channel.ZipAsync(zipFile, entries);
+        internal Task ZipAsync(string zipFile, List<NameValueEntry> entries) =>
+            Connection.SendMessageToServerAsync(Guid, "zip", new Dictionary<string, object>
+            {
+                  { "zipFile", zipFile },
+                  { "entries", entries },
+            });
     }
 }

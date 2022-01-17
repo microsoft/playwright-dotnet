@@ -47,11 +47,11 @@ namespace Microsoft.Playwright.Transport.Channels
             switch (method)
             {
                 case "navigated":
-                    var e = serverParams?.ToObject<FrameNavigatedEventArgs>(Connection.GetDefaultJsonSerializerOptions());
+                    var e = serverParams?.ToObject<FrameNavigatedEventArgs>(Connection.DefaultJsonSerializerOptions);
 
                     if (serverParams.Value.TryGetProperty("newDocument", out var documentElement))
                     {
-                        e.NewDocument = documentElement.ToObject<NavigateDocument>(Connection.GetDefaultJsonSerializerOptions());
+                        e.NewDocument = documentElement.ToObject<NavigateDocument>(Connection.DefaultJsonSerializerOptions);
                     }
 
                     Navigated?.Invoke(this, e);
@@ -59,7 +59,7 @@ namespace Microsoft.Playwright.Transport.Channels
                 case "loadstate":
                     LoadState?.Invoke(
                         this,
-                        serverParams?.ToObject<FrameChannelLoadStateEventArgs>(Connection.GetDefaultJsonSerializerOptions()));
+                        serverParams?.ToObject<FrameChannelLoadStateEventArgs>(Connection.DefaultJsonSerializerOptions));
                     break;
             }
         }
@@ -239,6 +239,17 @@ namespace Microsoft.Playwright.Transport.Channels
                 param);
         }
 
+        internal async Task<int> QueryCountAsync(string selector)
+        {
+            var args = new Dictionary<string, object>
+            {
+                ["selector"] = selector,
+            };
+
+            var result = await Connection.SendMessageToServerAsync(Guid, "queryCount", args).ConfigureAwait(false);
+            return result.Value.GetProperty("value").GetInt32();
+        }
+
         internal Task SetContentAsync(string html, float? timeout, WaitUntilState? waitUntil)
         {
             var args = new Dictionary<string, object>
@@ -413,7 +424,7 @@ namespace Microsoft.Playwright.Transport.Channels
             return Connection.SendMessageToServerAsync(Guid, "hover", args);
         }
 
-        internal Task<string[]> PressAsync(string selector, string text, float? delay, float? timeout, bool? noWaitAfter, bool? strict)
+        internal Task PressAsync(string selector, string text, float? delay, float? timeout, bool? noWaitAfter, bool? strict)
         {
             var args = new Dictionary<string, object>
             {
@@ -425,7 +436,7 @@ namespace Microsoft.Playwright.Transport.Channels
                 ["strict"] = strict,
             };
 
-            return Connection.SendMessageToServerAsync<string[]>(Guid, "press", args);
+            return Connection.SendMessageToServerAsync(Guid, "press", args);
         }
 
         internal async Task<string[]> SelectOptionAsync(string selector, IEnumerable<SelectOptionValue> values, bool? noWaitAfter, bool? strict, bool? force, float? timeout)
@@ -550,7 +561,7 @@ namespace Microsoft.Playwright.Transport.Channels
                 ["strict"] = strict,
             };
 
-            return Connection.SendMessageToServerAsync<string>(Guid, "setInputFiles", args);
+            return Connection.SendMessageToServerAsync(Guid, "setInputFiles", args);
         }
 
         internal async Task<string> TextContentAsync(string selector, float? timeout, bool? strict)

@@ -39,11 +39,11 @@ namespace Microsoft.Playwright.Transport.Channels
 
         internal async Task<ResponseServerAddrResult> ServerAddrAsync()
             => (await Connection.SendMessageToServerAsync(Guid, "serverAddr", null).ConfigureAwait(false))
-                ?.GetProperty("value").ToObject<ResponseServerAddrResult>(Connection.GetDefaultJsonSerializerOptions());
+                ?.GetProperty("value").ToObject<ResponseServerAddrResult>(Connection.DefaultJsonSerializerOptions);
 
         internal async Task<ResponseSecurityDetailsResult> SecurityDetailsAsync()
             => (await Connection.SendMessageToServerAsync(Guid, "securityDetails", null).ConfigureAwait(false))
-                ?.GetProperty("value").ToObject<ResponseSecurityDetailsResult>(Connection.GetDefaultJsonSerializerOptions());
+                ?.GetProperty("value").ToObject<ResponseSecurityDetailsResult>(Connection.DefaultJsonSerializerOptions);
 
         internal async Task<RequestSizesResult> SizesAsync() =>
             (await Connection.SendMessageToServerAsync(Guid, "sizes", null).ConfigureAwait(false))?.GetProperty("sizes").ToObject<RequestSizesResult>();

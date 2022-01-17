@@ -9,6 +9,8 @@ on:
     branches:
       - main
       - release-*
+env:
+  DEBUG: pw:dotnet
 
 jobs:
   test-net5:

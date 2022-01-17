@@ -55,6 +55,11 @@ namespace Microsoft.Playwright.Core
             {
                 _devices[entry.Name] = entry.Descriptor;
             }
+            Utils = initializer.Utils;
+
+            _initializer.Chromium.Playwright = this;
+            _initializer.Firefox.Playwright = this;
+            _initializer.Webkit.Playwright = this;
         }
 
         ~PlaywrightImpl() => Dispose(false);
@@ -78,6 +83,8 @@ namespace Microsoft.Playwright.Core
         internal Connection Connection { get; set; }
 
         internal Browser PreLaunchedBrowser => _initializer.PreLaunchedBrowser;
+
+        internal LocalUtils Utils { get; set; }
 
         /// <summary>
         /// Gets a <see cref="IBrowserType"/>.

@@ -83,7 +83,7 @@ namespace Microsoft.Playwright.Core
                 e.Page?.FireResponse(e.Response);
             };
 
-            _tracing = new Tracing(Channel);
+            _tracing = new Tracing(this);
             _initializer = initializer;
             Browser = parent as IBrowser;
         }
@@ -111,6 +111,8 @@ namespace Microsoft.Playwright.Core
         IChannel<BrowserContext> IChannelOwner<BrowserContext>.Channel => Channel;
 
         public IBrowser Browser { get; }
+
+        internal LocalUtils LocalUtils { get; set; }
 
         public IReadOnlyList<IPage> Pages => PagesList;
 
@@ -293,8 +295,8 @@ namespace Microsoft.Playwright.Core
             }
 
             timeout ??= DefaultTimeout;
-            using var waiter = new Waiter(Channel, $"context.WaitForEventAsync(\"{playwrightEvent.Name}\")");
-            waiter.RejectOnTimeout(Convert.ToInt32(timeout), $"Timeout while waiting for event \"{playwrightEvent.Name}\"");
+            using var waiter = new Waiter(this, $"context.WaitForEventAsync(\"{playwrightEvent.Name}\")");
+            waiter.RejectOnTimeout(Convert.ToInt32(timeout), $"Timeout {timeout}ms exceeded while waiting for event \"{playwrightEvent.Name}\"");
 
             if (playwrightEvent.Name != BrowserContextEvent.Close.Name)
             {

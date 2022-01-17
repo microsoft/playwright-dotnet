@@ -49,7 +49,7 @@ namespace Microsoft.Playwright.Core
 
         IFrameLocator IFrameLocator.FrameLocator(string selector) => new FrameLocator(_frame, $"{_frameSelector} >> control=enter-frame >> {selector}");
 
-        ILocator IFrameLocator.Locator(string selector) => new Locator(_frame, $"{_frameSelector} >> control=enter-frame >> {selector}");
+        ILocator IFrameLocator.Locator(string selector, FrameLocatorLocatorOptions options) => new Locator(_frame, $"{_frameSelector} >> control=enter-frame >> {selector}", new() { HasTextRegex = options?.HasTextRegex, HasTextString = options?.HasTextString });
 
         IFrameLocator IFrameLocator.Nth(int index) => new FrameLocator(_frame, $"{_frameSelector} >> nth={index}");
     }

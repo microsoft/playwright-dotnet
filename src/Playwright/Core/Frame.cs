@@ -276,6 +276,9 @@ namespace Microsoft.Playwright.Core
                 trial: options?.Trial,
                 strict: options?.Strict);
 
+        internal Task<int> QueryCountAsync(string selector)
+            => _channel.QueryCountAsync(selector);
+
         public Task<string> ContentAsync() => _channel.ContentAsync();
 
         public Task FocusAsync(string selector, FrameFocusOptions options = default)
@@ -517,7 +520,7 @@ namespace Microsoft.Playwright.Core
                 script,
                 arg: ScriptsHelper.SerializedArgument(arg)).ConfigureAwait(false));
 
-        public ILocator Locator(string selector) => new Locator(this, selector);
+        public ILocator Locator(string selector, FrameLocatorOptions options = null) => new Locator(this, selector, new() { HasTextRegex = options?.HasTextRegex, HasTextString = options?.HasTextString });
 
         public async Task<IElementHandle> QuerySelectorAsync(string selector, FrameQuerySelectorOptions options = null)
             => (await _channel.QuerySelectorAsync(selector, options?.Strict).ConfigureAwait(false))?.Object;
@@ -597,7 +600,7 @@ namespace Microsoft.Playwright.Core
 
         private Waiter SetupNavigationWaiter(string @event, float? timeout)
         {
-            var waiter = new Waiter((this.Page as Page)!.Channel, @event);
+            var waiter = new Waiter(this.Page as Page, @event);
             if (this.Page.IsClosed)
             {
                 waiter.RejectImmediately(new PlaywrightException("Navigation failed because page was closed!"));

@@ -717,7 +717,8 @@ namespace Microsoft.Playwright
         /// A selector to use when resolving DOM element. See <a href="./selectors.md">working
         /// with selectors</a> for more details.
         /// </param>
-        ILocator Locator(string selector);
+        /// <param name="options">Call options</param>
+        ILocator Locator(string selector, FrameLocatorOptions? options = default);
 
         /// <summary>
         /// <para>Returns frame's name attribute as specified in the tag.</para>

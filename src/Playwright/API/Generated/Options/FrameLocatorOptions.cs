@@ -39,49 +39,34 @@ using System.Threading.Tasks;
 
 namespace Microsoft.Playwright
 {
-    public class TracingStartOptions
+    public class FrameLocatorOptions
     {
-        public TracingStartOptions() { }
+        public FrameLocatorOptions() { }
 
-        public TracingStartOptions(TracingStartOptions clone)
+        public FrameLocatorOptions(FrameLocatorOptions clone)
         {
             if (clone == null) return;
-            Name = clone.Name;
-            Screenshots = clone.Screenshots;
-            Snapshots = clone.Snapshots;
-            Sources = clone.Sources;
-            Title = clone.Title;
+            HasTextString = clone.HasTextString;
+            HasTextRegex = clone.HasTextRegex;
         }
 
         /// <summary>
         /// <para>
-        /// If specified, the trace is going to be saved into the file with the given name inside
-        /// the <paramref name="tracesDir"/> folder specified in <see cref="IBrowserType.LaunchAsync"/>.
+        /// Matches elements containing specified text somewhere inside, possibly in a child
+        /// or a descendant element. For example, <c>"Playwright"</c> matches <c>&lt;article&gt;&lt;div&gt;Playwright&lt;/div&gt;&lt;/article&gt;</c>.
         /// </para>
         /// </summary>
-        [JsonPropertyName("name")]
-        public string? Name { get; set; }
+        [JsonPropertyName("hasTextString")]
+        public string? HasTextString { get; set; }
 
         /// <summary>
         /// <para>
-        /// Whether to capture screenshots during tracing. Screenshots are used to build a timeline
-        /// preview.
+        /// Matches elements containing specified text somewhere inside, possibly in a child
+        /// or a descendant element. For example, <c>"Playwright"</c> matches <c>&lt;article&gt;&lt;div&gt;Playwright&lt;/div&gt;&lt;/article&gt;</c>.
         /// </para>
         /// </summary>
-        [JsonPropertyName("screenshots")]
-        public bool? Screenshots { get; set; }
-
-        /// <summary><para>Whether to capture DOM snapshot on every action.</para></summary>
-        [JsonPropertyName("snapshots")]
-        public bool? Snapshots { get; set; }
-
-        /// <summary><para>Whether to include source files for trace actions.</para></summary>
-        [JsonPropertyName("sources")]
-        public bool? Sources { get; set; }
-
-        /// <summary><para>Trace name to be shown in the Trace Viewer.</para></summary>
-        [JsonPropertyName("title")]
-        public string? Title { get; set; }
+        [JsonPropertyName("hasTextRegex")]
+        public Regex? HasTextRegex { get; set; }
     }
 }
 

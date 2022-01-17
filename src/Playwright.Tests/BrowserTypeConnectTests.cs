@@ -452,7 +452,7 @@ namespace Microsoft.Playwright.Tests
             var context = await browser.NewContextAsync();
             var page = await context.NewPageAsync();
 
-            await context.Tracing.StartAsync();
+            await context.Tracing.StartAsync(new() { Sources = true });
             await page.GotoAsync(Server.EmptyPage);
             await page.SetContentAsync("<button>Click</button>");
             await page.ClickAsync("button");
@@ -464,6 +464,7 @@ namespace Microsoft.Playwright.Tests
             ZipFile.ExtractToDirectory(tracePath, tempDirectory.Path);
             Assert.That(tempDirectory.Path + "/trace.trace", Does.Exist);
             Assert.That(tempDirectory.Path + "/trace.network", Does.Exist);
+            Assert.AreEqual(1, Directory.GetFiles(Path.Join(tempDirectory.Path, "resources"), "*.txt").Length);
         }
 
         private class RemoteServer

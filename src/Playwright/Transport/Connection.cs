@@ -53,6 +53,12 @@ namespace Microsoft.Playwright.Transport
         public Connection()
         {
             _rootObject = new(null, this, string.Empty);
+
+            DefaultJsonSerializerOptions = JsonExtensions.GetNewDefaultSerializerOptions();
+            DefaultJsonSerializerOptions.Converters.Add(new ChannelToGuidConverter(this));
+            DefaultJsonSerializerOptions.Converters.Add(new ChannelOwnerToGuidConverter<JSHandle>(this));
+            DefaultJsonSerializerOptions.Converters.Add(new ChannelOwnerToGuidConverter<ElementHandle>(this));
+            DefaultJsonSerializerOptions.Converters.Add(new ChannelOwnerToGuidConverter<IChannelOwner>(this));
         }
 
         /// <inheritdoc cref="IDisposable.Dispose"/>
@@ -67,6 +73,8 @@ namespace Microsoft.Playwright.Transport
         internal bool IsRemote { get; set; }
 
         internal Func<object, Task> OnMessage { get; set; }
+
+        internal JsonSerializerOptions DefaultJsonSerializerOptions { get; }
 
         public void Dispose()
         {
@@ -174,12 +182,12 @@ namespace Microsoft.Playwright.Transport
                 var enumerate = result.Value.EnumerateObject();
 
                 return enumerate.Any()
-                    ? enumerate.FirstOrDefault().Value.ToObject<T>(GetDefaultJsonSerializerOptions())
+                    ? enumerate.FirstOrDefault().Value.ToObject<T>(DefaultJsonSerializerOptions)
                     : default;
             }
             else
             {
-                return result.Value.ToObject<T>(GetDefaultJsonSerializerOptions());
+                return result.Value.ToObject<T>(DefaultJsonSerializerOptions);
             }
         }
 
@@ -190,16 +198,6 @@ namespace Microsoft.Playwright.Transport
         }
 
         internal void MarkAsRemote() => IsRemote = true;
-
-        internal JsonSerializerOptions GetDefaultJsonSerializerOptions()
-        {
-            var options = JsonExtensions.GetNewDefaultSerializerOptions();
-            options.Converters.Add(new ChannelToGuidConverter(this));
-            options.Converters.Add(new ChannelOwnerToGuidConverter<JSHandle>(this));
-            options.Converters.Add(new ChannelOwnerToGuidConverter<ElementHandle>(this));
-            options.Converters.Add(new ChannelOwnerToGuidConverter<IChannelOwner>(this));
-            return options;
-        }
 
         internal Task<PlaywrightImpl> InitializePlaywrightAsync()
         {
@@ -242,7 +240,7 @@ namespace Microsoft.Playwright.Transport
             {
                 if (message.Method == "__create__")
                 {
-                    var createObjectInfo = message.Params.Value.ToObject<CreateObjectInfo>(GetDefaultJsonSerializerOptions());
+                    var createObjectInfo = message.Params.Value.ToObject<CreateObjectInfo>(DefaultJsonSerializerOptions);
                     CreateRemoteObject(message.Guid, createObjectInfo.Type, createObjectInfo.Guid, createObjectInfo.Initializer);
 
                     return;
@@ -269,65 +267,68 @@ namespace Microsoft.Playwright.Transport
             IChannelOwner result = null;
             var parent = string.IsNullOrEmpty(parentGuid) ? _rootObject : Objects[parentGuid];
 
-#pragma warning disable CA2000
+#pragma warning disable CA2000 // Dispose objects before losing scope
             switch (type)
             {
                 case ChannelOwnerType.Artifact:
-                    result = new Artifact(parent, guid, initializer?.ToObject<ArtifactInitializer>(GetDefaultJsonSerializerOptions()));
+                    result = new Artifact(parent, guid, initializer?.ToObject<ArtifactInitializer>(DefaultJsonSerializerOptions));
                     break;
                 case ChannelOwnerType.BindingCall:
-                    result = new BindingCall(parent, guid, initializer?.ToObject<BindingCallInitializer>(GetDefaultJsonSerializerOptions()));
+                    result = new BindingCall(parent, guid, initializer?.ToObject<BindingCallInitializer>(DefaultJsonSerializerOptions));
                     break;
                 case ChannelOwnerType.Playwright:
-                    result = new PlaywrightImpl(parent, guid, initializer?.ToObject<PlaywrightInitializer>(GetDefaultJsonSerializerOptions()));
+                    result = new PlaywrightImpl(parent, guid, initializer?.ToObject<PlaywrightInitializer>(DefaultJsonSerializerOptions));
                     break;
                 case ChannelOwnerType.Browser:
-                    var browserInitializer = initializer?.ToObject<BrowserInitializer>(GetDefaultJsonSerializerOptions());
+                    var browserInitializer = initializer?.ToObject<BrowserInitializer>(DefaultJsonSerializerOptions);
                     result = new Browser(parent, guid, browserInitializer);
                     break;
                 case ChannelOwnerType.BrowserType:
-                    var browserTypeInitializer = initializer?.ToObject<BrowserTypeInitializer>(GetDefaultJsonSerializerOptions());
+                    var browserTypeInitializer = initializer?.ToObject<BrowserTypeInitializer>(DefaultJsonSerializerOptions);
                     result = new Core.BrowserType(parent, guid, browserTypeInitializer);
                     break;
                 case ChannelOwnerType.BrowserContext:
-                    var browserContextInitializer = initializer?.ToObject<BrowserContextInitializer>(GetDefaultJsonSerializerOptions());
+                    var browserContextInitializer = initializer?.ToObject<BrowserContextInitializer>(DefaultJsonSerializerOptions);
                     result = new BrowserContext(parent, guid, browserContextInitializer);
                     break;
                 case ChannelOwnerType.ConsoleMessage:
-                    result = new ConsoleMessage(parent, guid, initializer?.ToObject<ConsoleMessageInitializer>(GetDefaultJsonSerializerOptions()));
+                    result = new ConsoleMessage(parent, guid, initializer?.ToObject<ConsoleMessageInitializer>(DefaultJsonSerializerOptions));
                     break;
                 case ChannelOwnerType.Dialog:
-                    result = new Dialog(parent, guid, initializer?.ToObject<DialogInitializer>(GetDefaultJsonSerializerOptions()));
+                    result = new Dialog(parent, guid, initializer?.ToObject<DialogInitializer>(DefaultJsonSerializerOptions));
                     break;
                 case ChannelOwnerType.ElementHandle:
-                    result = new ElementHandle(parent, guid, initializer?.ToObject<ElementHandleInitializer>(GetDefaultJsonSerializerOptions()));
+                    result = new ElementHandle(parent, guid, initializer?.ToObject<ElementHandleInitializer>(DefaultJsonSerializerOptions));
                     break;
                 case ChannelOwnerType.Frame:
-                    result = new Frame(parent, guid, initializer?.ToObject<FrameInitializer>(GetDefaultJsonSerializerOptions()));
+                    result = new Frame(parent, guid, initializer?.ToObject<FrameInitializer>(DefaultJsonSerializerOptions));
                     break;
                 case ChannelOwnerType.JSHandle:
-                    result = new JSHandle(parent, guid, initializer?.ToObject<JSHandleInitializer>(GetDefaultJsonSerializerOptions()));
+                    result = new JSHandle(parent, guid, initializer?.ToObject<JSHandleInitializer>(DefaultJsonSerializerOptions));
                     break;
                 case ChannelOwnerType.JsonPipe:
-                    result = new JsonPipe(parent, guid, initializer?.ToObject<JsonPipeInitializer>(GetDefaultJsonSerializerOptions()));
+                    result = new JsonPipe(parent, guid, initializer?.ToObject<JsonPipeInitializer>(DefaultJsonSerializerOptions));
+                    break;
+                case ChannelOwnerType.LocalUtils:
+                    result = new LocalUtils(parent, guid, initializer);
                     break;
                 case ChannelOwnerType.Page:
-                    result = new Page(parent, guid, initializer?.ToObject<PageInitializer>(GetDefaultJsonSerializerOptions()));
+                    result = new Page(parent, guid, initializer?.ToObject<PageInitializer>(DefaultJsonSerializerOptions));
                     break;
                 case ChannelOwnerType.Request:
-                    result = new Request(parent, guid, initializer?.ToObject<RequestInitializer>(GetDefaultJsonSerializerOptions()));
+                    result = new Request(parent, guid, initializer?.ToObject<RequestInitializer>(DefaultJsonSerializerOptions));
                     break;
                 case ChannelOwnerType.Response:
-                    result = new Response(parent, guid, initializer?.ToObject<ResponseInitializer>(GetDefaultJsonSerializerOptions()));
+                    result = new Response(parent, guid, initializer?.ToObject<ResponseInitializer>(DefaultJsonSerializerOptions));
                     break;
                 case ChannelOwnerType.Route:
-                    result = new Route(parent, guid, initializer?.ToObject<RouteInitializer>(GetDefaultJsonSerializerOptions()));
+                    result = new Route(parent, guid, initializer?.ToObject<RouteInitializer>(DefaultJsonSerializerOptions));
                     break;
                 case ChannelOwnerType.Worker:
-                    result = new Worker(parent, guid, initializer?.ToObject<WorkerInitializer>(GetDefaultJsonSerializerOptions()));
+                    result = new Worker(parent, guid, initializer?.ToObject<WorkerInitializer>(DefaultJsonSerializerOptions));
                     break;
                 case ChannelOwnerType.WebSocket:
-                    result = new WebSocket(parent, guid, initializer?.ToObject<WebSocketInitializer>(GetDefaultJsonSerializerOptions()));
+                    result = new WebSocket(parent, guid, initializer?.ToObject<WebSocketInitializer>(DefaultJsonSerializerOptions));
                     break;
                 case ChannelOwnerType.Selectors:
                     result = new Selectors(parent, guid);
@@ -339,15 +340,15 @@ namespace Microsoft.Playwright.Transport
                     TraceMessage("pw:dotnet", "Missing type " + type);
                     break;
             }
+#pragma warning restore CA2000
 
             Objects.TryAdd(guid, result);
             OnObjectCreated(guid, result);
-#pragma warning restore CA2000
         }
 
         private void DoClose(Exception ex)
         {
-            TraceMessage("pw:dotnet", ex.ToString());
+            TraceMessage("pw:dotnet", $"Connection Close: {ex.Message}\n{ex.StackTrace}");
             DoClose(ex.Message);
         }
 
@@ -416,13 +417,18 @@ namespace Microsoft.Playwright.Transport
         }
 
         [Conditional("DEBUG")]
-        private void TraceMessage(string logLevel, object message)
+        internal void TraceMessage(string logLevel, object message)
         {
-            if (!string.IsNullOrEmpty(Environment.GetEnvironmentVariable("DEBUGPWD")))
+            string actualLogLevel = Environment.GetEnvironmentVariable("DEBUG");
+            if (!string.IsNullOrEmpty(actualLogLevel))
             {
+                if (!actualLogLevel.Contains(logLevel))
+                {
+                    return;
+                }
                 if (!(message is string))
                 {
-                    message = JsonSerializer.Serialize(message, GetDefaultJsonSerializerOptions());
+                    message = JsonSerializer.Serialize(message, DefaultJsonSerializerOptions);
                 }
                 string line = $"{logLevel}: {message}";
                 Trace.WriteLine(line);

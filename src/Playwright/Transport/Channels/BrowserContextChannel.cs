@@ -69,11 +69,11 @@ namespace Microsoft.Playwright.Transport.Channels
                 case "bindingCall":
                     BindingCall?.Invoke(
                         this,
-                        new() { BidingCall = serverParams?.GetProperty("binding").ToObject<BindingCallChannel>(Connection.GetDefaultJsonSerializerOptions()).Object });
+                        new() { BidingCall = serverParams?.GetProperty("binding").ToObject<BindingCallChannel>(Connection.DefaultJsonSerializerOptions).Object });
                     break;
                 case "route":
-                    var route = serverParams?.GetProperty("route").ToObject<RouteChannel>(Connection.GetDefaultJsonSerializerOptions()).Object;
-                    var request = serverParams?.GetProperty("request").ToObject<RequestChannel>(Connection.GetDefaultJsonSerializerOptions()).Object;
+                    var route = serverParams?.GetProperty("route").ToObject<RouteChannel>(Connection.DefaultJsonSerializerOptions).Object;
+                    var request = serverParams?.GetProperty("request").ToObject<RequestChannel>(Connection.DefaultJsonSerializerOptions).Object;
                     Route?.Invoke(
                         this,
                         new() { Route = route, Request = request });
@@ -81,29 +81,29 @@ namespace Microsoft.Playwright.Transport.Channels
                 case "page":
                     Page?.Invoke(
                         this,
-                        new() { PageChannel = serverParams?.GetProperty("page").ToObject<PageChannel>(Connection.GetDefaultJsonSerializerOptions()) });
+                        new() { PageChannel = serverParams?.GetProperty("page").ToObject<PageChannel>(Connection.DefaultJsonSerializerOptions) });
                     break;
                 case "crBackgroundPage":
                     BackgroundPage?.Invoke(
                         this,
-                        new() { PageChannel = serverParams?.GetProperty("page").ToObject<PageChannel>(Connection.GetDefaultJsonSerializerOptions()) });
+                        new() { PageChannel = serverParams?.GetProperty("page").ToObject<PageChannel>(Connection.DefaultJsonSerializerOptions) });
                     break;
                 case "crServiceWorker":
                     ServiceWorker?.Invoke(
                         this,
-                        new() { WorkerChannel = serverParams?.GetProperty("worker").ToObject<WorkerChannel>(Connection.GetDefaultJsonSerializerOptions()) });
+                        new() { WorkerChannel = serverParams?.GetProperty("worker").ToObject<WorkerChannel>(Connection.DefaultJsonSerializerOptions) });
                     break;
                 case "request":
-                    Request?.Invoke(this, serverParams?.ToObject<BrowserContextChannelRequestEventArgs>(Connection.GetDefaultJsonSerializerOptions()));
+                    Request?.Invoke(this, serverParams?.ToObject<BrowserContextChannelRequestEventArgs>(Connection.DefaultJsonSerializerOptions));
                     break;
                 case "requestFinished":
-                    RequestFinished?.Invoke(this, serverParams?.ToObject<BrowserContextChannelRequestEventArgs>(Connection.GetDefaultJsonSerializerOptions()));
+                    RequestFinished?.Invoke(this, serverParams?.ToObject<BrowserContextChannelRequestEventArgs>(Connection.DefaultJsonSerializerOptions));
                     break;
                 case "requestFailed":
-                    RequestFailed?.Invoke(this, serverParams?.ToObject<BrowserContextChannelRequestEventArgs>(Connection.GetDefaultJsonSerializerOptions()));
+                    RequestFailed?.Invoke(this, serverParams?.ToObject<BrowserContextChannelRequestEventArgs>(Connection.DefaultJsonSerializerOptions));
                     break;
                 case "response":
-                    Response?.Invoke(this, serverParams?.ToObject<BrowserContextChannelResponseEventArgs>(Connection.GetDefaultJsonSerializerOptions()));
+                    Response?.Invoke(this, serverParams?.ToObject<BrowserContextChannelResponseEventArgs>(Connection.DefaultJsonSerializerOptions));
                     break;
             }
         }
@@ -234,15 +234,17 @@ namespace Microsoft.Playwright.Transport.Channels
         internal Task<StorageState> GetStorageStateAsync()
             => Connection.SendMessageToServerAsync<StorageState>(Guid, "storageState", null);
 
-        internal Task TracingStartAsync(string name, bool? screenshots, bool? snapshots)
+        internal Task TracingStartAsync(string name, string title, bool? screenshots, bool? snapshots, bool? sources)
             => Connection.SendMessageToServerAsync(
                 Guid,
                 "tracingStart",
                 new Dictionary<string, object>
                 {
                     ["name"] = name,
+                    ["title"] = title,
                     ["screenshots"] = screenshots,
                     ["snapshots"] = snapshots,
+                    ["sources"] = sources,
                 });
 
         internal Task TracingStopAsync()
@@ -256,18 +258,28 @@ namespace Microsoft.Playwright.Transport.Channels
                 ["title"] = title,
             });
 
-        internal async Task<Artifact> StopChunkAsync(bool save = false, bool skipCompress = false)
+        internal async Task<(Artifact Artifact, List<NameValueEntry> SourceEntries)> StopChunkAsync(string mode)
         {
             var result = await Connection.SendMessageToServerAsync(Guid, "tracingStopChunk", new Dictionary<string, object>
             {
-                ["save"] = save,
-                ["skipCompress"] = skipCompress,
+                ["mode"] = mode,
             }).ConfigureAwait(false);
 
-            if (save)
-                return result.GetObject<Artifact>("artifact", Connection);
-
-            return null;
+            var artifact = result.GetObject<Artifact>("artifact", Connection);
+            List<NameValueEntry> sourceEntries = new() { };
+            if (result.Value.TryGetProperty("sourceEntries", out var sourceEntriesElement))
+            {
+                var sourceEntriesEnumerator = sourceEntriesElement.EnumerateArray();
+                while (sourceEntriesEnumerator.MoveNext())
+                {
+                    JsonElement current = sourceEntriesEnumerator.Current;
+                    sourceEntries.Add(current.Deserialize<NameValueEntry>(new JsonSerializerOptions()
+                    {
+                        PropertyNameCaseInsensitive = true,
+                    }));
+                }
+            }
+            return (artifact, sourceEntries);
         }
 
         internal async Task<Artifact> HarExportAsync()
