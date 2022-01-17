@@ -318,7 +318,7 @@ namespace Microsoft.Playwright.Core
         public Task<IPage> RunAndWaitForPageAsync(Func<Task> action, BrowserContextRunAndWaitForPageOptions options = default)
             => InnerWaitForEventAsync(BrowserContextEvent.Page, action, options?.Predicate, options?.Timeout);
 
-        public async ValueTask DisposeAsync() => await CloseAsync().ConfigureAwait(false);
+        public ValueTask DisposeAsync() => new ValueTask(CloseAsync());
 
         public void SetDefaultNavigationTimeout(float timeout) => DefaultNavigationTimeout = timeout;
 
