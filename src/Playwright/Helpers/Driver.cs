@@ -24,12 +24,13 @@
  */
 
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Runtime.InteropServices;
 
 namespace Microsoft.Playwright.Helpers
 {
-    internal static class Paths
+    internal static class Driver
     {
         internal static string GetExecutablePath()
         {
@@ -81,6 +82,24 @@ namespace Microsoft.Playwright.Helpers
             }
 
             return Path.Combine(driversPath, ".playwright", "node", platformId, runnerName);
+        }
+
+        internal static Dictionary<string, string> GetEnvironmentVariables()
+        {
+            var environmentVariables = new Dictionary<string, string>();
+            environmentVariables.Add("PW_CLI_TARGET_LANG", "csharp");
+            environmentVariables.Add("PW_CLI_TARGET_LANG_VERSION", Environment.Version.ToString());
+            environmentVariables.Add("PW_CLI_DISPLAY_VERSION", GetSemVerPackageVersion());
+            return environmentVariables;
+        }
+
+        private static string GetSemVerPackageVersion()
+        {
+            // AssemblyName.Version returns a 4 digit version number, this method
+            // drops the last number which represents the build revision.
+            string version = typeof(Driver).Assembly.GetName().Version.ToString();
+            string[] versionParts = version.Split('.');
+            return $"{versionParts[0]}.{versionParts[1]}.{versionParts[2]}";
         }
     }
 }
