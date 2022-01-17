@@ -71,7 +71,7 @@ namespace Microsoft.Playwright.Transport.Channels
 
         internal async Task<List<JSElementProperty>> GetPropertiesAsync()
             => (await Connection.SendMessageToServerAsync(Guid, "getPropertyList", null).ConfigureAwait(false))?
-                .GetProperty("properties").ToObject<List<JSElementProperty>>(Connection.GetDefaultJsonSerializerOptions());
+                .GetProperty("properties").ToObject<List<JSElementProperty>>(Connection.DefaultJsonSerializerOptions);
 
         internal class JSElementProperty
         {

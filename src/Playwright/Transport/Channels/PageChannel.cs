@@ -92,49 +92,49 @@ namespace Microsoft.Playwright.Transport.Channels
                 case "bindingCall":
                     BindingCall?.Invoke(
                         this,
-                        new() { BidingCall = serverParams?.GetProperty("binding").ToObject<BindingCallChannel>(Connection.GetDefaultJsonSerializerOptions()).Object });
+                        new() { BidingCall = serverParams?.GetProperty("binding").ToObject<BindingCallChannel>(Connection.DefaultJsonSerializerOptions).Object });
                     break;
                 case "route":
-                    var route = serverParams?.GetProperty("route").ToObject<RouteChannel>(Connection.GetDefaultJsonSerializerOptions()).Object;
-                    var request = serverParams?.GetProperty("request").ToObject<RequestChannel>(Connection.GetDefaultJsonSerializerOptions()).Object;
+                    var route = serverParams?.GetProperty("route").ToObject<RouteChannel>(Connection.DefaultJsonSerializerOptions).Object;
+                    var request = serverParams?.GetProperty("request").ToObject<RequestChannel>(Connection.DefaultJsonSerializerOptions).Object;
                     Route?.Invoke(
                         this,
                         new() { Route = route, Request = request });
                     break;
                 case "popup":
-                    Popup?.Invoke(this, new() { Page = serverParams?.GetProperty("page").ToObject<PageChannel>(Connection.GetDefaultJsonSerializerOptions()).Object });
+                    Popup?.Invoke(this, new() { Page = serverParams?.GetProperty("page").ToObject<PageChannel>(Connection.DefaultJsonSerializerOptions).Object });
                     break;
                 case "pageError":
-                    PageError?.Invoke(this, serverParams?.GetProperty("error").GetProperty("error").ToObject<SerializedError>(Connection.GetDefaultJsonSerializerOptions()));
+                    PageError?.Invoke(this, serverParams?.GetProperty("error").GetProperty("error").ToObject<SerializedError>(Connection.DefaultJsonSerializerOptions));
                     break;
                 case "fileChooser":
-                    FileChooser?.Invoke(this, serverParams?.ToObject<FileChooserChannelEventArgs>(Connection.GetDefaultJsonSerializerOptions()));
+                    FileChooser?.Invoke(this, serverParams?.ToObject<FileChooserChannelEventArgs>(Connection.DefaultJsonSerializerOptions));
                     break;
                 case "frameAttached":
-                    FrameAttached?.Invoke(this, serverParams?.GetProperty("frame").ToObject<FrameChannel>(Connection.GetDefaultJsonSerializerOptions()).Object);
+                    FrameAttached?.Invoke(this, serverParams?.GetProperty("frame").ToObject<FrameChannel>(Connection.DefaultJsonSerializerOptions).Object);
                     break;
                 case "frameDetached":
-                    FrameDetached?.Invoke(this, serverParams?.GetProperty("frame").ToObject<FrameChannel>(Connection.GetDefaultJsonSerializerOptions()).Object);
+                    FrameDetached?.Invoke(this, serverParams?.GetProperty("frame").ToObject<FrameChannel>(Connection.DefaultJsonSerializerOptions).Object);
                     break;
                 case "dialog":
-                    Dialog?.Invoke(this, serverParams?.GetProperty("dialog").ToObject<DialogChannel>(Connection.GetDefaultJsonSerializerOptions()).Object);
+                    Dialog?.Invoke(this, serverParams?.GetProperty("dialog").ToObject<DialogChannel>(Connection.DefaultJsonSerializerOptions).Object);
                     break;
                 case "console":
-                    Console?.Invoke(this, serverParams?.GetProperty("message").ToObject<ConsoleMessage>(Connection.GetDefaultJsonSerializerOptions()));
+                    Console?.Invoke(this, serverParams?.GetProperty("message").ToObject<ConsoleMessage>(Connection.DefaultJsonSerializerOptions));
                     break;
                 case "webSocket":
-                    WebSocket?.Invoke(this, serverParams?.GetProperty("webSocket").ToObject<WebSocketChannel>(Connection.GetDefaultJsonSerializerOptions()).Object);
+                    WebSocket?.Invoke(this, serverParams?.GetProperty("webSocket").ToObject<WebSocketChannel>(Connection.DefaultJsonSerializerOptions).Object);
                     break;
                 case "download":
-                    Download?.Invoke(this, serverParams?.ToObject<PageDownloadEvent>(Connection.GetDefaultJsonSerializerOptions()));
+                    Download?.Invoke(this, serverParams?.ToObject<PageDownloadEvent>(Connection.DefaultJsonSerializerOptions));
                     break;
                 case "video":
-                    Video?.Invoke(this, new() { Artifact = serverParams?.GetProperty("artifact").ToObject<ArtifactChannel>(Connection.GetDefaultJsonSerializerOptions()).Object });
+                    Video?.Invoke(this, new() { Artifact = serverParams?.GetProperty("artifact").ToObject<ArtifactChannel>(Connection.DefaultJsonSerializerOptions).Object });
                     break;
                 case "worker":
                     Worker?.Invoke(
                         this,
-                        new() { WorkerChannel = serverParams?.GetProperty("worker").ToObject<WorkerChannel>(Connection.GetDefaultJsonSerializerOptions()) });
+                        new() { WorkerChannel = serverParams?.GetProperty("worker").ToObject<WorkerChannel>(Connection.DefaultJsonSerializerOptions) });
                     break;
             }
         }
@@ -245,7 +245,6 @@ namespace Microsoft.Playwright.Transport.Channels
 
             if ((await Connection.SendMessageToServerAsync(Guid, "accessibilitySnapshot", args).ConfigureAwait(false)).Value.TryGetProperty("rootAXNode", out var jsonElement))
             {
-                Connection.GetDefaultJsonSerializerOptions();
                 return jsonElement;
             }
 

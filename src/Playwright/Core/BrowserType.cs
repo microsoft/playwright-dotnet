@@ -230,10 +230,10 @@ namespace Microsoft.Playwright.Core
             }
             options ??= new BrowserTypeConnectOverCDPOptions();
             JsonElement result = await _channel.ConnectOverCDPAsync(endpointURL, headers: options.Headers, slowMo: options.SlowMo, timeout: options.Timeout).ConfigureAwait(false);
-            Browser browser = result.GetProperty("browser").ToObject<Browser>(_channel.Connection.GetDefaultJsonSerializerOptions());
+            Browser browser = result.GetProperty("browser").ToObject<Browser>(_channel.Connection.DefaultJsonSerializerOptions);
             if (result.TryGetProperty("defaultContext", out JsonElement defaultContextValue))
             {
-                browser.BrowserContextsList.Add(defaultContextValue.ToObject<BrowserContext>(_channel.Connection.GetDefaultJsonSerializerOptions()));
+                browser.BrowserContextsList.Add(defaultContextValue.ToObject<BrowserContext>(_channel.Connection.DefaultJsonSerializerOptions));
             }
             browser.LocalUtils = Playwright.Utils;
             return browser;

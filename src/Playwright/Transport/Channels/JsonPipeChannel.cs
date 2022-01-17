@@ -48,7 +48,7 @@ namespace Microsoft.Playwright.Transport.Channels
                 case "closed":
                     if (serverParams.Value.TryGetProperty("error", out var error))
                     {
-                        Closed?.Invoke(this, error.ToObject<SerializedError>(Connection.GetDefaultJsonSerializerOptions()));
+                        Closed?.Invoke(this, error.ToObject<SerializedError>(Connection.DefaultJsonSerializerOptions));
                     }
                     else
                     {
@@ -56,7 +56,7 @@ namespace Microsoft.Playwright.Transport.Channels
                     }
                     break;
                 case "message":
-                    Message?.Invoke(this, serverParams?.GetProperty("message").ToObject<PlaywrightServerMessage>(Connection.GetDefaultJsonSerializerOptions()));
+                    Message?.Invoke(this, serverParams?.GetProperty("message").ToObject<PlaywrightServerMessage>(Connection.DefaultJsonSerializerOptions));
                     break;
             }
         }
