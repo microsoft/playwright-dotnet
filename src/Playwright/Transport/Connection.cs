@@ -54,12 +54,11 @@ namespace Microsoft.Playwright.Transport
         {
             _rootObject = new(null, this, string.Empty);
 
-            var options = JsonExtensions.GetNewDefaultSerializerOptions();
-            options.Converters.Add(new ChannelToGuidConverter(this));
-            options.Converters.Add(new ChannelOwnerToGuidConverter<JSHandle>(this));
-            options.Converters.Add(new ChannelOwnerToGuidConverter<ElementHandle>(this));
-            options.Converters.Add(new ChannelOwnerToGuidConverter<IChannelOwner>(this));
-            DefaultJsonSerializerOptions = options;
+            DefaultJsonSerializerOptions = JsonExtensions.GetNewDefaultSerializerOptions();
+            DefaultJsonSerializerOptions.Converters.Add(new ChannelToGuidConverter(this));
+            DefaultJsonSerializerOptions.Converters.Add(new ChannelOwnerToGuidConverter<JSHandle>(this));
+            DefaultJsonSerializerOptions.Converters.Add(new ChannelOwnerToGuidConverter<ElementHandle>(this));
+            DefaultJsonSerializerOptions.Converters.Add(new ChannelOwnerToGuidConverter<IChannelOwner>(this));
         }
 
         /// <inheritdoc cref="IDisposable.Dispose"/>
