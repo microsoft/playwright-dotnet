@@ -43,7 +43,6 @@ namespace Microsoft.Playwright.Transport
 {
     internal class Connection : IDisposable
     {
-        private readonly ConcurrentDictionary<string, TaskCompletionSource<IChannelOwner>> _waitingForObject = new();
         private readonly ConcurrentDictionary<int, ConnectionCallback> _callbacks = new();
         private readonly Root _rootObject;
         private readonly TaskQueue _queue = new();
@@ -207,10 +206,6 @@ namespace Microsoft.Playwright.Transport
         internal void OnObjectCreated(string guid, IChannelOwner result)
         {
             Objects.TryAdd(guid, result);
-            if (_waitingForObject.TryRemove(guid, out var callback))
-            {
-                callback.TrySetResult(result);
-            }
         }
 
         internal void Dispatch(PlaywrightServerMessage message)
@@ -360,11 +355,6 @@ namespace Microsoft.Playwright.Transport
                 foreach (var callback in _callbacks)
                 {
                     callback.Value.TaskCompletionSource.TrySetException(new PlaywrightException(reason));
-                }
-
-                foreach (var callback in _waitingForObject)
-                {
-                    callback.Value.TrySetException(new PlaywrightException(reason));
                 }
 
                 Dispose();
