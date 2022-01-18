@@ -23,6 +23,8 @@
  */
 
 using System;
+using System.IO;
+using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Playwright.Transport;
 using Microsoft.Playwright.Transport.Channels;
@@ -42,8 +44,51 @@ namespace Microsoft.Playwright.Core
 
         public StreamChannel Channel { get; }
 
-        public async ValueTask DisposeAsync() => await Channel.CloseAsync().ConfigureAwait(false);
+        public StreamImpl StreamImpl => new(this);
 
-        public async Task<string> ReadAsync() => await Channel.ReadAsync().ConfigureAwait(false);
+        public Task<byte[]> ReadAsync(int size) => Channel.ReadAsync(size);
+
+        public ValueTask DisposeAsync() => new ValueTask(CloseAsync());
+
+        public Task CloseAsync() => Channel.CloseAsync();
+    }
+
+    internal class StreamImpl : System.IO.Stream
+    {
+        private readonly Stream _stream;
+
+        internal StreamImpl(Stream stream)
+        {
+            _stream = stream;
+        }
+
+        public override bool CanRead => true;
+
+        public override bool CanSeek => false;
+
+        public override bool CanWrite => throw new NotImplementedException();
+
+        public override long Length => throw new NotImplementedException();
+
+        public override long Position { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+
+        public override void Flush() => throw new NotImplementedException();
+
+        public override int Read(byte[] buffer, int offset, int count) => throw new NotImplementedException();
+
+        public override async Task<int> ReadAsync(byte[] buffer, int offset, int count, CancellationToken cancellationToken)
+        {
+            var result = await _stream.ReadAsync(count).ConfigureAwait(false);
+            result.CopyTo(buffer, offset);
+            return result.Length;
+        }
+
+        public override void Close() => _stream.CloseAsync().ConfigureAwait(false);
+
+        public override long Seek(long offset, SeekOrigin origin) => throw new NotImplementedException();
+
+        public override void SetLength(long value) => throw new NotImplementedException();
+
+        public override void Write(byte[] buffer, int offset, int count) => throw new NotImplementedException();
     }
 }

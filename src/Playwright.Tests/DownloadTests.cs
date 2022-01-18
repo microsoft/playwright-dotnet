@@ -59,6 +59,18 @@ namespace Microsoft.Playwright.Tests
                 await Task.Delay(3000);
                 await context.Response.WriteAsync("foo hello world");
             });
+
+            Server.SetRoute("/downloadLarge", context =>
+            {
+                context.Response.Headers["Content-Type"] = "application/octet-stream";
+                context.Response.Headers["Content-Disposition"] = "attachment";
+                var payload = string.Empty;
+                for (var i = 0; i < 10_000; i++)
+                {
+                    payload += $"a{i}";
+                }
+                return context.Response.WriteAsync(payload);
+            });
         }
 
         [PlaywrightTest("download.spec.ts", "should report downloads with acceptDownloads: false")]
@@ -387,7 +399,7 @@ namespace Microsoft.Playwright.Tests
         public async Task ShouldExposeStream()
         {
             var page = await Browser.NewPageAsync(new() { AcceptDownloads = true });
-            await page.SetContentAsync($"<a target=_blank href=\"{Server.Prefix}/download\">download</a>");
+            await page.SetContentAsync($"<a target=_blank href=\"{Server.Prefix}/downloadLarge\">download</a>");
             var downloadTask = page.WaitForDownloadAsync();
 
             await TaskUtils.WhenAll(
@@ -395,8 +407,13 @@ namespace Microsoft.Playwright.Tests
                 page.ClickAsync("a"));
 
             var download = downloadTask.Result;
+            var expected = string.Empty;
+            for (var i = 0; i < 10_000; i++)
+            {
+                expected += $"a{i}";
+            }
             using var stream = await download.CreateReadStreamAsync();
-            Assert.AreEqual("Hello world", await new StreamReader(stream).ReadToEndAsync());
+            Assert.AreEqual(expected, await new StreamReader(stream).ReadToEndAsync());
 
             await page.CloseAsync();
         }
