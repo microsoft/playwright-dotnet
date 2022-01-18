@@ -755,55 +755,22 @@ namespace Microsoft.Playwright.Core
             => _channel.AddInitScriptAsync(ScriptsHelper.EvaluationScript(script, scriptPath));
 
         public Task RouteAsync(string url, Action<IRoute> handler, PageRouteOptions options = null)
-            => RouteAsync(
-                new()
-                {
-                    Url = url,
-                    Handler = handler,
-                    Times = options?.Times,
-                });
+            => RouteAsync(new Regex(Context.CombineUrlWithBase(url).GlobToRegex()), null, handler, options);
 
         public Task RouteAsync(Regex url, Action<IRoute> handler, PageRouteOptions options = null)
-             => RouteAsync(
-                new()
-                {
-                    Regex = url,
-                    Handler = handler,
-                    Times = options?.Times,
-                });
+             => RouteAsync(url, null, handler, options);
 
         public Task RouteAsync(Func<string, bool> url, Action<IRoute> handler, PageRouteOptions options = null)
-            => RouteAsync(
-                new()
-                {
-                    Function = url,
-                    Handler = handler,
-                    Times = options?.Times,
-                });
+            => RouteAsync(null, url, handler, options);
 
         public Task UnrouteAsync(string urlString, Action<IRoute> handler)
-            => UnrouteAsync(
-                new()
-                {
-                    Url = urlString,
-                    Handler = handler,
-                });
+            => UnrouteAsync(new Regex(Context.CombineUrlWithBase(urlString).GlobToRegex()), null, handler);
 
         public Task UnrouteAsync(Regex urlString, Action<IRoute> handler)
-            => UnrouteAsync(
-                new()
-                {
-                    Regex = urlString,
-                    Handler = handler,
-                });
+            => UnrouteAsync(urlString, null, handler);
 
         public Task UnrouteAsync(Func<string, bool> urlFunc, Action<IRoute> handler)
-            => UnrouteAsync(
-                new()
-                {
-                    Function = urlFunc,
-                    Handler = handler,
-                });
+            => UnrouteAsync(null, urlFunc, handler);
 
         public Task WaitForLoadStateAsync(LoadState? state = default, PageWaitForLoadStateOptions options = default)
             => MainFrame.WaitForLoadStateAsync(state, new() { Timeout = options?.Timeout });
@@ -982,9 +949,17 @@ namespace Microsoft.Playwright.Core
 
         internal void FireResponse(IResponse response) => Response?.Invoke(this, response);
 
+        private Task RouteAsync(Regex urlRegex, Func<string, bool> urlFunc, Action<IRoute> handler, PageRouteOptions options)
+            => RouteAsync(new()
+            {
+                Regex = urlRegex,
+                Function = urlFunc,
+                Handler = handler,
+                Times = options?.Times,
+            });
+
         private Task RouteAsync(RouteSetting setting)
         {
-            setting.Url = Context.CombineUrlWithBase(setting.Url);
             _routes.Insert(0, setting);
 
             if (_routes.Count == 1)
@@ -995,12 +970,19 @@ namespace Microsoft.Playwright.Core
             return Task.CompletedTask;
         }
 
+        private Task UnrouteAsync(Regex urlRegex, Func<string, bool> urlFunc, Action<IRoute> handler = null)
+            => UnrouteAsync(new()
+            {
+                Function = urlFunc,
+                Regex = urlRegex,
+                Handler = handler,
+            });
+
         private Task UnrouteAsync(RouteSetting setting)
         {
             var newRoutesList = new List<RouteSetting>();
             newRoutesList.AddRange(_routes.Where(r =>
-                (setting.Url != null && r.Url != setting.Url) ||
-                (setting.Regex != null && r.Regex != setting.Regex) ||
+                (setting.Regex != null && !(r.Regex == setting.Regex || (r.Regex.ToString() == setting.Regex.ToString() && r.Regex.Options == setting.Regex.Options))) ||
                 (setting.Function != null && r.Function != setting.Function) ||
                 (setting.Handler != null && r.Handler != setting.Handler)));
             _routes = newRoutesList;
@@ -1045,8 +1027,7 @@ namespace Microsoft.Playwright.Core
             {
                 if (
                     ((route.Times ?? 0) == 0 || route.HandledCount >= route.Times) &&
-                    ((route.Url != null && Context.UrlMatches(e.Request.Url, route.Url)) ||
-                    (route.Regex?.IsMatch(e.Request.Url) == true) ||
+                    ((route.Regex?.IsMatch(e.Request.Url) == true) ||
                     (route.Function?.Invoke(e.Request.Url) == true)))
                 {
                     route.Handle(e.Route);

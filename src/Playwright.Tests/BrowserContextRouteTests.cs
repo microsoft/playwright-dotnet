@@ -113,6 +113,38 @@ namespace Microsoft.Playwright.Tests
             Assert.AreEqual(new List<int>() { 1 }, intercepted);
         }
 
+        [PlaywrightTest]
+        public async Task ShouldUnroutePageWithBaseUrl()
+        {
+            var options = new BrowserNewContextOptions();
+            options.BaseURL = Server.Prefix;
+
+            await using var context = await Browser.NewContextAsync(options);
+            var page = await context.NewPageAsync();
+            var intercepted = new List<int>();
+
+            await page.RouteAsync("/empty.html", (route) =>
+            {
+                intercepted.Add(1);
+                route.ContinueAsync();
+            });
+
+            Action<IRoute> handler2 = (route) =>
+            {
+                intercepted.Add(2);
+                route.ContinueAsync();
+            };
+            await page.RouteAsync("/empty.html", handler2);
+
+            await page.GotoAsync(Server.EmptyPage);
+            Assert.AreEqual(new List<int>() { 2 }, intercepted);
+
+            intercepted.Clear();
+            await page.UnrouteAsync("/empty.html", handler2);
+            await page.GotoAsync(Server.EmptyPage);
+            Assert.AreEqual(new List<int>() { 1 }, intercepted);
+        }
+
         [PlaywrightTest("browsercontext-route.spec.ts", "should yield to page.route")]
         public async Task ShouldYieldToPageRoute()
         {
@@ -149,6 +181,26 @@ namespace Microsoft.Playwright.Tests
 
             var response = await page.GotoAsync(Server.EmptyPage);
             Assert.AreEqual("context", await response.TextAsync());
+        }
+
+        [PlaywrightTest]
+        public async Task ShouldThrowOnInvalidRouteUrl()
+        {
+            await using var context = await Browser.NewContextAsync();
+
+#if NETCOREAPP3_1
+            var regexParseExceptionType = typeof(System.Text.RegularExpressions.Regex).Assembly
+                .GetType("System.Text.RegularExpressions.RegexParseException", throwOnError: true);
+#else
+            var regexParseExceptionType = typeof(System.Text.RegularExpressions.RegexParseException);
+#endif
+
+            Assert.Throws(regexParseExceptionType, () =>
+                context.RouteAsync("[", route =>
+                {
+                    route.ContinueAsync();
+                })
+            );
         }
     }
 }

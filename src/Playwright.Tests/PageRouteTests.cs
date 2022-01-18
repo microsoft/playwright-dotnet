@@ -691,5 +691,23 @@ namespace Microsoft.Playwright.Tests
 
             Assert.AreEqual(new[] { "DELETE", "electric", "cars" }, resp);
         }
+
+        [PlaywrightTest]
+        public void ShouldThrowOnInvalidRouteUrl()
+        {
+#if NETCOREAPP3_1
+            var regexParseExceptionType = typeof(Regex).Assembly
+                .GetType("System.Text.RegularExpressions.RegexParseException", throwOnError: true);
+#else
+            var regexParseExceptionType = typeof(RegexParseException);
+#endif
+
+            Assert.Throws(regexParseExceptionType, () =>
+                Page.RouteAsync("[", route =>
+                {
+                    route.ContinueAsync();
+                })
+            );
+        }
     }
 }

@@ -29,8 +29,6 @@ namespace Microsoft.Playwright.Core
 {
     internal class RouteSetting
     {
-        public string Url { get; set; }
-
         public Regex Regex { get; set; }
 
         public Func<string, bool> Function { get; set; }
