@@ -69,15 +69,36 @@ namespace Microsoft.Playwright.Core
                 options.BodyBytes,
                 options.Path);
 
-            return _channel.FulfillAsync(normalized);
+            return RaceWithPageCloseAsync(_channel.FulfillAsync(normalized));
         }
 
-        public Task AbortAsync(string errorCode = RequestAbortErrorCode.Failed) => _channel.AbortAsync(errorCode);
+        public Task AbortAsync(string errorCode = RequestAbortErrorCode.Failed) => RaceWithPageCloseAsync(_channel.AbortAsync(errorCode));
 
         public Task ContinueAsync(RouteContinueOptions options = default)
         {
             options ??= new RouteContinueOptions();
-            return _channel.ContinueAsync(url: options.Url, method: options.Method, postData: options.PostData, headers: options.Headers);
+            return RaceWithPageCloseAsync(_channel.ContinueAsync(url: options.Url, method: options.Method, postData: options.PostData, headers: options.Headers));
+        }
+
+        internal async Task InternalContinueAsync(RouteContinueOptions options = default)
+        {
+            try
+            {
+                await ContinueAsync(options).ConfigureAwait(false);
+            }
+            catch (Exception)
+            {
+            }
+        }
+
+        private async Task RaceWithPageCloseAsync(Task task)
+        {
+            var page = (Page)Request.Frame.Page;
+
+            // When page closes or crashes, we catch any potential rejects from this Route.
+            // Note that page could be missing when routing popup's initial request that
+            // does not have a Page initialized just yet.
+            await Task.WhenAny(task, page.ClosedOrCrashedTcs.Task).ConfigureAwait(false);
         }
 
         private NormalizedFulfillResponse NormalizeFulfillParameters(

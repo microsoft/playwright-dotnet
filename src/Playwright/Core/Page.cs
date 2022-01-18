@@ -50,7 +50,7 @@ namespace Microsoft.Playwright.Core
         private readonly ITouchscreen _touchscreen;
         private readonly PageInitializer _initializer;
 
-        private List<RouteSetting> _routes = new();
+        private List<RouteHandler> _routes = new();
         private EventHandler<IFileChooser> _fileChooserEventHandler;
         private bool _fileChooserIntercepted;
         private Video _video;
@@ -81,7 +81,7 @@ namespace Microsoft.Playwright.Core
             _channel.Popup += (_, e) => Popup?.Invoke(this, e.Page);
             _channel.WebSocket += (_, e) => WebSocket?.Invoke(this, e);
             _channel.BindingCall += Channel_BindingCall;
-            _channel.Route += Channel_Route;
+            _channel.Route += (_, e) => OnRoute(e.Route, e.Request);
             _channel.FrameAttached += Channel_FrameAttached;
             _channel.FrameDetached += Channel_FrameDetached;
             _channel.Dialog += (_, e) =>
@@ -120,6 +120,9 @@ namespace Microsoft.Playwright.Core
             _defaultNavigationTimeout = Context.DefaultNavigationTimeout;
             _defaultTimeout = Context.DefaultTimeout;
             _initializer = initializer;
+
+            Close += (_, _) => ClosedOrCrashedTcs.TrySetResult(true);
+            Crash += (_, _) => ClosedOrCrashedTcs.TrySetResult(true);
         }
 
         public event EventHandler<IConsoleMessage> Console;
@@ -273,10 +276,12 @@ namespace Microsoft.Playwright.Core
             }
         }
 
+        internal TaskCompletionSource<bool> ClosedOrCrashedTcs { get; } = new();
+
         public IFrame Frame(string name)
             => Frames.FirstOrDefault(f => f.Name == name);
 
-        public IFrame FrameByUrl(string urlString) => Frames.FirstOrDefault(f => Context.UrlMatches(urlString, f.Url));
+        public IFrame FrameByUrl(string urlString) => Frames.FirstOrDefault(f => Helpers.UrlHelpers.UrlMatches(Context.Options.BaseURL, urlString, f.Url));
 
         public IFrame FrameByUrl(Regex urlRegex) => Frames.FirstOrDefault(f => urlRegex.IsMatch(f.Url));
 
@@ -350,7 +355,7 @@ namespace Microsoft.Playwright.Core
             });
 
         public Task<IRequest> WaitForRequestAsync(string urlOrPredicate, PageWaitForRequestOptions options = default)
-            => InnerWaitForEventAsync(PageEvent.Request, null, e => Context.UrlMatches(e.Url, urlOrPredicate), options?.Timeout);
+            => InnerWaitForEventAsync(PageEvent.Request, null, e => Helpers.UrlHelpers.UrlMatches(Context.Options.BaseURL, e.Url, urlOrPredicate), options?.Timeout);
 
         public Task<IRequest> WaitForRequestAsync(Regex urlOrPredicate, PageWaitForRequestOptions options = default)
             => InnerWaitForEventAsync(PageEvent.Request, null, e => urlOrPredicate.IsMatch(e.Url), options?.Timeout);
@@ -362,7 +367,7 @@ namespace Microsoft.Playwright.Core
             => InnerWaitForEventAsync(PageEvent.RequestFinished, null, options?.Predicate, options?.Timeout);
 
         public Task<IResponse> WaitForResponseAsync(string urlOrPredicate, PageWaitForResponseOptions options = default)
-            => InnerWaitForEventAsync(PageEvent.Response, null, e => Context.UrlMatches(e.Url, urlOrPredicate), options?.Timeout);
+            => InnerWaitForEventAsync(PageEvent.Response, null, e => Helpers.UrlHelpers.UrlMatches(Context.Options.BaseURL, e.Url, urlOrPredicate), options?.Timeout);
 
         public Task<IResponse> WaitForResponseAsync(Regex urlOrPredicate, PageWaitForResponseOptions options = default)
             => InnerWaitForEventAsync(PageEvent.Response, null, e => urlOrPredicate.IsMatch(e.Url), options?.Timeout);
@@ -395,7 +400,7 @@ namespace Microsoft.Playwright.Core
             => InnerWaitForEventAsync(PageEvent.Worker, action, options?.Predicate, options?.Timeout);
 
         public Task<IRequest> RunAndWaitForRequestAsync(Func<Task> action, string urlOrPredicate, PageRunAndWaitForRequestOptions options = default)
-            => InnerWaitForEventAsync(PageEvent.Request, action, e => Context.UrlMatches(e.Url, urlOrPredicate), options?.Timeout);
+            => InnerWaitForEventAsync(PageEvent.Request, action, e => Helpers.UrlHelpers.UrlMatches(Context.Options.BaseURL, e.Url, urlOrPredicate), options?.Timeout);
 
         public Task<IRequest> RunAndWaitForRequestAsync(Func<Task> action, Regex urlOrPredicate, PageRunAndWaitForRequestOptions options = default)
             => InnerWaitForEventAsync(PageEvent.Request, action, e => urlOrPredicate.IsMatch(e.Url), options?.Timeout);
@@ -404,7 +409,7 @@ namespace Microsoft.Playwright.Core
             => InnerWaitForEventAsync(PageEvent.Request, action, e => urlOrPredicate(e), options?.Timeout);
 
         public Task<IResponse> RunAndWaitForResponseAsync(Func<Task> action, string urlOrPredicate, PageRunAndWaitForResponseOptions options = default)
-            => InnerWaitForEventAsync(PageEvent.Response, action, e => Context.UrlMatches(e.Url, urlOrPredicate), options?.Timeout);
+            => InnerWaitForEventAsync(PageEvent.Response, action, e => Helpers.UrlHelpers.UrlMatches(Context.Options.BaseURL, e.Url, urlOrPredicate), options?.Timeout);
 
         public Task<IResponse> RunAndWaitForResponseAsync(Func<Task> action, Regex urlOrPredicate, PageRunAndWaitForResponseOptions options = default)
             => InnerWaitForEventAsync(PageEvent.Response, action, e => urlOrPredicate.IsMatch(e.Url), options?.Timeout);
@@ -755,22 +760,27 @@ namespace Microsoft.Playwright.Core
             => _channel.AddInitScriptAsync(ScriptsHelper.EvaluationScript(script, scriptPath));
 
         public Task RouteAsync(string url, Action<IRoute> handler, PageRouteOptions options = null)
-            => RouteAsync(new Regex(Context.CombineUrlWithBase(url).GlobToRegex()), null, handler, options);
+             => RouteAsync(url, null, null, handler, options);
 
-        public Task RouteAsync(Regex url, Action<IRoute> handler, PageRouteOptions options = null)
-             => RouteAsync(url, null, handler, options);
+        public Task RouteAsync(Regex regex, Action<IRoute> handler, PageRouteOptions options = null)
+             => RouteAsync(null, regex, null, handler, options);
 
         public Task RouteAsync(Func<string, bool> url, Action<IRoute> handler, PageRouteOptions options = null)
-            => RouteAsync(null, url, handler, options);
+            => RouteAsync(null, null, url, handler, options);
 
         public Task UnrouteAsync(string urlString, Action<IRoute> handler)
-            => UnrouteAsync(new Regex(Context.CombineUrlWithBase(urlString).GlobToRegex()), null, handler);
+            => UnrouteAsync(urlString, null, null, handler);
 
-        public Task UnrouteAsync(Regex urlString, Action<IRoute> handler)
-            => UnrouteAsync(urlString, null, handler);
+        public Task UnrouteAsync(Regex regex, Action<IRoute> handler)
+            => UnrouteAsync(null, regex, null, handler);
 
         public Task UnrouteAsync(Func<string, bool> urlFunc, Action<IRoute> handler)
-            => UnrouteAsync(null, urlFunc, handler);
+            => UnrouteAsync(null, null, urlFunc, handler);
+
+        internal async Task DisableInterceptionAsync()
+        {
+            await Channel.SetNetworkInterceptionEnabledAsync(false).ConfigureAwait(false);
+        }
 
         public Task WaitForLoadStateAsync(LoadState? state = default, PageWaitForLoadStateOptions options = default)
             => MainFrame.WaitForLoadStateAsync(state, new() { Timeout = options?.Timeout });
@@ -949,18 +959,23 @@ namespace Microsoft.Playwright.Core
 
         internal void FireResponse(IResponse response) => Response?.Invoke(this, response);
 
-        private Task RouteAsync(Regex urlRegex, Func<string, bool> urlFunc, Action<IRoute> handler, PageRouteOptions options)
+        private Task RouteAsync(string urlString, Regex urlRegex, Func<string, bool> urlFunc, Action<IRoute> handler, PageRouteOptions options)
             => RouteAsync(new()
             {
+                Url = urlString,
                 Regex = urlRegex,
                 Function = urlFunc,
                 Handler = handler,
                 Times = options?.Times,
+                BaseURL = Context.Options.BaseURL,
             });
 
-        private Task RouteAsync(RouteSetting setting)
+        private Task RouteAsync(RouteHandler route)
         {
-            _routes.Insert(0, setting);
+            // Make sure that the given route match can be executed (e.g. invalid pattern)
+            route.Matches("http://127.0.0.1");
+
+            _routes.Insert(0, route);
 
             if (_routes.Count == 1)
             {
@@ -970,26 +985,26 @@ namespace Microsoft.Playwright.Core
             return Task.CompletedTask;
         }
 
-        private Task UnrouteAsync(Regex urlRegex, Func<string, bool> urlFunc, Action<IRoute> handler = null)
+        private Task UnrouteAsync(string urlString, Regex urlRegex, Func<string, bool> urlFunc, Action<IRoute> handler = null)
             => UnrouteAsync(new()
             {
-                Function = urlFunc,
+                Url = urlString,
                 Regex = urlRegex,
+                Function = urlFunc,
                 Handler = handler,
             });
 
-        private Task UnrouteAsync(RouteSetting setting)
+        private Task UnrouteAsync(RouteHandler route)
         {
-            var newRoutesList = new List<RouteSetting>();
-            newRoutesList.AddRange(_routes.Where(r =>
-                (setting.Regex != null && !(r.Regex == setting.Regex || (r.Regex.ToString() == setting.Regex.ToString() && r.Regex.Options == setting.Regex.Options))) ||
-                (setting.Function != null && r.Function != setting.Function) ||
-                (setting.Handler != null && r.Handler != setting.Handler)));
-            _routes = newRoutesList;
+            _routes = _routes.Where(r =>
+                (route.Url != null && r.Url != route.Url) ||
+                (route.Regex != null && r.Regex != route.Regex) ||
+                (route.Function != null && r.Function != route.Function) ||
+                (route.Handler != null && r.Handler != route.Handler)).ToList();
 
             if (_routes.Count == 0)
             {
-                return _channel.SetNetworkInterceptionEnabledAsync(false);
+                return DisableInterceptionAsync();
             }
 
             return Task.CompletedTask;
@@ -1021,21 +1036,22 @@ namespace Microsoft.Playwright.Core
             }
         }
 
-        private void Channel_Route(object sender, RouteEventArgs e)
+        private void OnRoute(Route route, IRequest request)
         {
-            foreach (var route in _routes)
+            foreach (var routeHandler in _routes.ToList())
             {
-                if (
-                    ((route.Times ?? 0) == 0 || route.HandledCount >= route.Times) &&
-                    ((route.Regex?.IsMatch(e.Request.Url) == true) ||
-                    (route.Function?.Invoke(e.Request.Url) == true)))
+                if (routeHandler.Matches(request.Url))
                 {
-                    route.Handle(e.Route);
+                    if (routeHandler.Handle(route))
+                    {
+                        _routes.Remove(routeHandler);
+                        if (_routes.Count == 0)
+                            DisableInterceptionAsync().ConfigureAwait(false);
+                    }
                     return;
                 }
             }
-
-            Context.OnRoute(e.Route, e.Request);
+            Context.OnRoute(route, request);
         }
 
         private void Channel_FrameDetached(object sender, IFrame args)

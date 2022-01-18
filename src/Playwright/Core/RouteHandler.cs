@@ -27,8 +27,10 @@ using System.Text.RegularExpressions;
 
 namespace Microsoft.Playwright.Core
 {
-    internal class RouteSetting
+    internal class RouteHandler
     {
+        public string Url { get; set; }
+
         public Regex Regex { get; set; }
 
         public Func<string, bool> Function { get; set; }
@@ -37,18 +39,20 @@ namespace Microsoft.Playwright.Core
 
         public int? Times { get; internal set; }
 
+        public string BaseURL { get; internal set; }
+
         public int HandledCount { get; set; }
 
-        public void Handle(IRoute route)
+        public bool Matches(string requestURL)
         {
-            try
-            {
-                Handler(route);
-            }
-            finally
-            {
-                HandledCount++;
-            }
+            return Helpers.UrlHelpers.UrlMatches(baseURL: BaseURL, urlString: requestURL, matchString: Url, matchRegex: Regex, matchFunction: Function);
+        }
+
+        public bool Handle(IRoute route)
+        {
+            bool expired = ++HandledCount >= Times;
+            Handler(route);
+            return expired;
         }
     }
 }

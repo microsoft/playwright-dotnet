@@ -213,7 +213,7 @@ namespace Microsoft.Playwright.Core
                     }
 
                     waiter.Log($"  navigated to \"{e.Url}\"");
-                    return UrlMatches(e.Url, options?.UrlString, options?.UrlRegex, options?.UrlFunc);
+                    return Helpers.UrlHelpers.UrlMatches(((Page)Page).Context.Options.BaseURL, e.Url, options?.UrlString, options?.UrlRegex, options?.UrlFunc);
                 });
 
             var navigatedEvent = await navigatedEventTask.ConfigureAwait(false);
@@ -566,7 +566,7 @@ namespace Microsoft.Playwright.Core
 
         private Task WaitForURLAsync(string urlString, Regex urlRegex, Func<string, bool> urlFunc, FrameWaitForURLOptions options = default)
         {
-            if (UrlMatches(Url, urlString, urlRegex, urlFunc))
+            if (Helpers.UrlHelpers.UrlMatches(((Page)Page).Context.Options.BaseURL, Url, urlString, urlRegex, urlFunc))
             {
                 return WaitForLoadStateAsync(ToLoadState(options?.WaitUntil), new() { Timeout = options?.Timeout });
             }
@@ -616,33 +616,6 @@ namespace Microsoft.Playwright.Core
             waiter.RejectOnTimeout(Convert.ToInt32(timeout), $"Timeout {timeout}ms exceeded.");
 
             return waiter;
-        }
-
-        private bool UrlMatches(string url, string matchUrl, Regex regex, Func<string, bool> match)
-        {
-            matchUrl = (Page.Context as BrowserContext)?.CombineUrlWithBase(matchUrl);
-
-            if (matchUrl == null && regex == null && match == null)
-            {
-                return true;
-            }
-
-            if (!string.IsNullOrEmpty(matchUrl))
-            {
-                regex = new(matchUrl.GlobToRegex());
-            }
-
-            if (matchUrl != null && url == matchUrl)
-            {
-                return true;
-            }
-
-            if (regex != null)
-            {
-                return regex.IsMatch(url);
-            }
-
-            return match(url);
         }
     }
 }

@@ -44,7 +44,7 @@ namespace Microsoft.Playwright.Core
         private readonly Dictionary<string, Delegate> _bindings = new();
         private readonly BrowserContextInitializer _initializer;
         private readonly ITracing _tracing;
-        private List<RouteSetting> _routes = new();
+        private List<RouteHandler> _routes = new();
 
         private float? _defaultNavigationTimeout;
         private float? _defaultTimeout;
@@ -247,13 +247,13 @@ namespace Microsoft.Playwright.Core
         }
 
         public Task RouteAsync(string url, Action<IRoute> handler, BrowserContextRouteOptions options = default)
-            => RouteAsync(new Regex(CombineUrlWithBase(url).GlobToRegex()), null, handler, options);
+            => RouteAsync(url, null, null, handler, options);
 
-        public Task RouteAsync(Regex url, Action<IRoute> handler, BrowserContextRouteOptions options = default)
-            => RouteAsync(url, null, handler, options);
+        public Task RouteAsync(Regex regex, Action<IRoute> handler, BrowserContextRouteOptions options = default)
+            => RouteAsync(null, regex, null, handler, options);
 
-        public Task RouteAsync(Func<string, bool> url, Action<IRoute> handler, BrowserContextRouteOptions options = default)
-            => RouteAsync(null, url, handler, options);
+        public Task RouteAsync(Func<string, bool> func, Action<IRoute> handler, BrowserContextRouteOptions options = default)
+            => RouteAsync(null, null, func, handler, options);
 
         public Task SetExtraHTTPHeadersAsync(IEnumerable<KeyValuePair<string, string>> headers)
             => Channel.SetExtraHTTPHeadersAsync(headers);
@@ -279,13 +279,13 @@ namespace Microsoft.Playwright.Core
         }
 
         public Task UnrouteAsync(string urlString, Action<IRoute> handler = default)
-            => UnrouteAsync(new Regex(CombineUrlWithBase(urlString).GlobToRegex()), null, handler);
+            => UnrouteAsync(urlString, null, null, handler);
 
         public Task UnrouteAsync(Regex urlRegex, Action<IRoute> handler = default)
-            => UnrouteAsync(urlRegex, null, handler);
+            => UnrouteAsync(null, urlRegex, null, handler);
 
         public Task UnrouteAsync(Func<string, bool> urlFunc, Action<IRoute> handler = default)
-            => UnrouteAsync(null, urlFunc, handler);
+            => UnrouteAsync(null, null, urlFunc, handler);
 
         public async Task<T> InnerWaitForEventAsync<T>(PlaywrightEvent<T> playwrightEvent, Func<Task> action = default, Func<T, bool> predicate = default, float? timeout = default)
         {
@@ -326,55 +326,41 @@ namespace Microsoft.Playwright.Core
 
         internal void OnRoute(Route route, IRequest request)
         {
-            foreach (var item in _routes)
+            foreach (var routeHandler in _routes.ToList())
             {
-                if (
-                    ((item.Times ?? 0) == 0 || item.HandledCount >= item.Times) &&
-                    ((item.Regex?.IsMatch(request.Url) == true) ||
-                    (item.Function?.Invoke(request.Url) == true)))
+                if (routeHandler.Matches(request.Url))
                 {
-                    item.Handle(route);
+                    if (routeHandler.Handle(route))
+                    {
+                        _routes.Remove(routeHandler);
+                        if (_routes.Count == 0)
+                        {
+                            DisableInterceptionAsync().ConfigureAwait(false);
+                        }
+                    }
                     return;
                 }
             }
-
-            _ = route.ContinueAsync(new());
+            route.InternalContinueAsync(new()).ConfigureAwait(false);
         }
 
-        internal bool UrlMatches(string url, string glob)
-           => new Regex(CombineUrlWithBase(glob).GlobToRegex()).Match(url).Success;
-
-        internal string CombineUrlWithBase(string url)
-        {
-            var baseUrl = Options?.BaseURL;
-            if (string.IsNullOrEmpty(baseUrl)
-                || (url?.StartsWith("*", StringComparison.InvariantCultureIgnoreCase) ?? false)
-                || !Uri.IsWellFormedUriString(url, UriKind.RelativeOrAbsolute))
-            {
-                return url;
-            }
-
-            var mUri = new Uri(url, UriKind.RelativeOrAbsolute);
-            if (!mUri.IsAbsoluteUri)
-            {
-                return new Uri(new Uri(baseUrl), mUri).ToString();
-            }
-
-            return url;
-        }
-
-        private Task RouteAsync(Regex urlRegex, Func<string, bool> urlFunc, Action<IRoute> handler, BrowserContextRouteOptions options)
+        private Task RouteAsync(string urlString, Regex urlRegex, Func<string, bool> urlFunc, Action<IRoute> handler, BrowserContextRouteOptions options)
             => RouteAsync(new()
             {
+                Url = urlString,
                 Regex = urlRegex,
                 Function = urlFunc,
                 Handler = handler,
                 Times = options?.Times,
+                BaseURL = this.Options?.BaseURL,
             });
 
-        private Task RouteAsync(RouteSetting setting)
+        private Task RouteAsync(RouteHandler route)
         {
-            _routes.Insert(0, setting);
+            // Make sure that the given route match can be executed (e.g. invalid pattern)
+            route.Matches("http://127.0.0.1");
+
+            _routes.Insert(0, route);
 
             if (_routes.Count == 1)
             {
@@ -384,29 +370,32 @@ namespace Microsoft.Playwright.Core
             return Task.CompletedTask;
         }
 
-        private Task UnrouteAsync(Regex urlRegex, Func<string, bool> urlFunc, Action<IRoute> handler = null)
+        private Task UnrouteAsync(string urlString, Regex urlRegex, Func<string, bool> urlFunc, Action<IRoute> handler = null)
             => UnrouteAsync(new()
             {
+                Url = urlString,
                 Function = urlFunc,
                 Regex = urlRegex,
                 Handler = handler,
             });
 
-        private Task UnrouteAsync(RouteSetting setting)
+        private Task UnrouteAsync(RouteHandler route)
         {
-            var newRoutesList = new List<RouteSetting>();
-            newRoutesList.AddRange(_routes.Where(r =>
-                (setting.Regex != null && !(r.Regex == setting.Regex || (r.Regex.ToString() == setting.Regex.ToString() && r.Regex.Options == setting.Regex.Options))) ||
-                (setting.Function != null && r.Function != setting.Function) ||
-                (setting.Handler != null && r.Handler != setting.Handler)));
-            _routes = newRoutesList;
+            _routes = _routes.Where(r => (route.Url != null && r.Url != route.Url) || (route.Regex != null && r.Regex != route.Regex) ||
+                (route.Function != null && r.Function != route.Function) ||
+                (route.Handler != null && r.Handler != route.Handler)).ToList();
 
             if (_routes.Count == 0)
             {
-                return Channel.SetNetworkInterceptionEnabledAsync(false);
+                return DisableInterceptionAsync();
             }
 
             return Task.CompletedTask;
+        }
+
+        internal async Task DisableInterceptionAsync()
+        {
+            await Channel.SetNetworkInterceptionEnabledAsync(false).ConfigureAwait(false);
         }
 
         internal void OnClose()
