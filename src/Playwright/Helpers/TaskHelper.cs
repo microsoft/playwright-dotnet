@@ -197,5 +197,10 @@ namespace Microsoft.Playwright.Helpers
                 return tcs.Task == await Task.WhenAny(task, tcs.Task).ConfigureAwait(false);
             }
         }
+
+        public static void IgnoreException(this Task task)
+        {
+            _ = task.ContinueWith(t => t.Exception.Handle(_ => true), CancellationToken.None, TaskContinuationOptions.OnlyOnFaulted, TaskScheduler.Default);
+        }
     }
 }

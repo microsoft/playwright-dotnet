@@ -66,6 +66,22 @@ namespace Microsoft.Playwright.Tests
             }
         }
 
+        internal static void AssertCSPError(string errorMessage)
+        {
+            if (TestConstants.IsWebKit)
+            {
+                StringAssert.StartsWith("Refused to execute a script because its hash, its nonce, or 'unsafe-inline' appears in neither the script-src directive nor the default-src directive of the Content Security Policy.", errorMessage);
+            }
+            else if (TestConstants.IsFirefox)
+            {
+                StringAssert.StartsWith("[JavaScript Error: \"Content Security Policy: The page’s settings blocked the loading of a resource at inline (“default-src”).\"", errorMessage);
+            }
+            else
+            {
+                StringAssert.StartsWith("Refused to execute inline script because it violates the following Content Security Policy directive: \"default-src 'self'\".", errorMessage);
+            }
+        }
+
         /// <summary>
         /// Removes as much whitespace as possible from a given string. Whitespace
         /// that separates letters and/or digits is collapsed to a space character.

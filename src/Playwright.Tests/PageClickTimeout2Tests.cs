@@ -49,7 +49,6 @@ namespace Microsoft.Playwright.Tests
         {
             await Page.GotoAsync(Server.Prefix + "/input/button.html");
             await Page.EvalOnSelectorAsync("button", "b => b.style.visibility = 'hidden'");
-            var clickTask = Page.ClickAsync("button", new() { Timeout = 5000 });
             var exception = await PlaywrightAssert.ThrowsAsync<TimeoutException>(()
                 => Page.ClickAsync("button", new() { Timeout = 5000 }));
 

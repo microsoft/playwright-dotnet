@@ -196,7 +196,7 @@ namespace Microsoft.Playwright.Core
         public async Task<IResponse> WaitForNavigationAsync(FrameWaitForNavigationOptions options = default)
         {
             WaitUntilState waitUntil2 = options?.WaitUntil ?? WaitUntilState.Load;
-            var waiter = SetupNavigationWaiter("frame.WaitForNavigationAsync", options?.Timeout);
+            using var waiter = SetupNavigationWaiter("frame.WaitForNavigationAsync", options?.Timeout);
             string toUrl = !string.IsNullOrEmpty(options?.UrlString) ? $" to \"{options?.UrlString}\"" : string.Empty;
 
             waiter.Log($"waiting for navigation{toUrl} until \"{waitUntil2}\"");
@@ -221,9 +221,7 @@ namespace Microsoft.Playwright.Core
             if (navigatedEvent.Error != null)
             {
                 var ex = new PlaywrightException(navigatedEvent.Error);
-                var tcs = new TaskCompletionSource<bool>();
-                tcs.TrySetException(ex);
-                await waiter.WaitForPromiseAsync(tcs.Task).ConfigureAwait(false);
+                await waiter.WaitForPromiseAsync(Task.FromException<object>(ex)).ConfigureAwait(false);
             }
 
             if (!_loadStates.Select(s => s.ToValueString()).Contains(waitUntil2.ToValueString()))
@@ -243,7 +241,6 @@ namespace Microsoft.Playwright.Core
                 ? await waiter.WaitForPromiseAsync(request.FinalRequest.ResponseAsync()).ConfigureAwait(false)
                 : null;
 
-            waiter.Dispose();
             return response;
         }
 

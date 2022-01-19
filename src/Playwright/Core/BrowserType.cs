@@ -145,13 +145,7 @@ namespace Microsoft.Playwright.Core
 
             void ClosePipe()
             {
-                try
-                {
-                    pipe.CloseAsync().ConfigureAwait(false);
-                }
-                catch (Exception)
-                {
-                }
+                pipe.CloseAsync().IgnoreException();
             }
 #pragma warning disable CA2000 // Dispose objects before losing scope
             Connection connection = new Connection();

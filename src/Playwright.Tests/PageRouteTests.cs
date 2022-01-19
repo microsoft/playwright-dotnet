@@ -275,8 +275,9 @@ namespace Microsoft.Playwright.Tests
 
             IRequest failedRequest = null;
             Page.RequestFailed += (_, e) => failedRequest = e;
-            await Page.GotoAsync(Server.EmptyPage).ContinueWith(_ => { });
+            var exception = await PlaywrightAssert.ThrowsAsync<PlaywrightException>(() => Page.GotoAsync(Server.EmptyPage));
             Assert.NotNull(failedRequest);
+            StringAssert.StartsWith(failedRequest.Failure, exception.Message);
             if (TestConstants.IsWebKit)
             {
                 Assert.AreEqual("Request intercepted", failedRequest.Failure);
