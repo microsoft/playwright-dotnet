@@ -383,7 +383,7 @@ namespace Microsoft.Playwright.Transport.Channels
                     ["headers"] = headers.Select(kv => new HeaderEntry { Name = kv.Key, Value = kv.Value }),
                 });
 
-        internal async Task<string> ScreenshotAsync(
+        internal async Task<byte[]> ScreenshotAsync(
             string path,
             bool? fullPage,
             Clip clip,
@@ -402,7 +402,7 @@ namespace Microsoft.Playwright.Transport.Channels
                 ["timeout"] = timeout,
                 ["quality"] = quality,
             };
-            return (await Connection.SendMessageToServerAsync(Guid, "screenshot", args).ConfigureAwait(false))?.GetProperty("binary").ToString();
+            return (await Connection.SendMessageToServerAsync(Guid, "screenshot", args).ConfigureAwait(false))?.GetProperty("binary").GetBytesFromBase64();
         }
 
         internal Task StartCSSCoverageAsync(bool resetOnNavigation)
@@ -424,7 +424,7 @@ namespace Microsoft.Playwright.Transport.Channels
                     ["reportAnonymousScripts"] = reportAnonymousScripts,
                 });
 
-        internal async Task<string> PdfAsync(
+        internal async Task<byte[]> PdfAsync(
             float? scale,
             bool? displayHeaderFooter,
             string headerTemplate,
@@ -453,7 +453,7 @@ namespace Microsoft.Playwright.Transport.Channels
                 ["format"] = format,
                 ["height"] = height,
             };
-            return (await Connection.SendMessageToServerAsync(Guid, "pdf", args).ConfigureAwait(false))?.GetProperty("pdf").ToString();
+            return (await Connection.SendMessageToServerAsync(Guid, "pdf", args).ConfigureAwait(false))?.GetProperty("pdf").GetBytesFromBase64();
         }
     }
 }

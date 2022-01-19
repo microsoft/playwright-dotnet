@@ -78,12 +78,12 @@ namespace Microsoft.Playwright.Core
                 options.Type = DetermineScreenshotType(options.Path);
             }
 
-            byte[] result = Convert.FromBase64String(await _channel.ScreenshotAsync(
+            byte[] result = await _channel.ScreenshotAsync(
                 options.Path,
                 options.OmitBackground,
                 options.Type,
                 options.Quality,
-                options.Timeout).ConfigureAwait(false));
+                options.Timeout).ConfigureAwait(false);
 
             if (!string.IsNullOrEmpty(options.Path))
             {

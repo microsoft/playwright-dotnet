@@ -48,7 +48,7 @@ namespace Microsoft.Playwright.Core
             _channel = new(guid, parent.Connection, this);
             _initializer = initializer;
             RedirectedFrom = _initializer.RedirectedFrom;
-            PostDataBuffer = _initializer.PostData != null ? Convert.FromBase64String(_initializer.PostData) : null;
+            PostDataBuffer = _initializer.PostData;
             Timing = new();
 
             if (RedirectedFrom != null)

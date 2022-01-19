@@ -98,7 +98,7 @@ namespace Microsoft.Playwright.Transport.Channels
                     ["selector"] = selector,
                 });
 
-        internal async Task<string> ScreenshotAsync(string path, bool? omitBackground, ScreenshotType? type, int? quality, float? timeout)
+        internal async Task<byte[]> ScreenshotAsync(string path, bool? omitBackground, ScreenshotType? type, int? quality, float? timeout)
         {
             var args = new Dictionary<string, object>
             {
@@ -109,7 +109,7 @@ namespace Microsoft.Playwright.Transport.Channels
                 ["quality"] = quality,
             };
 
-            return (await Connection.SendMessageToServerAsync(Guid, "screenshot", args).ConfigureAwait(false))?.GetProperty("binary").ToString();
+            return (await Connection.SendMessageToServerAsync(Guid, "screenshot", args).ConfigureAwait(false))?.GetProperty("binary").GetBytesFromBase64();
         }
 
         internal Task<JsonElement?> EvalOnSelectorAsync(string selector, string script, object arg)
