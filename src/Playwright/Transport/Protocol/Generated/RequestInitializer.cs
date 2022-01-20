@@ -36,7 +36,7 @@ namespace Microsoft.Playwright.Transport.Protocol
 
         public string Method { get; set; }
 
-        public byte[] PostData { get; set; }
+        public string PostData { get; set; }
 
         public List<HeaderEntry> Headers { get; set; }
 
