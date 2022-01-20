@@ -34,8 +34,8 @@ namespace Microsoft.Playwright.Transport.Channels
         {
         }
 
-        internal async Task<string> GetBodyAsync()
-            => (await Connection.SendMessageToServerAsync(Guid, "body", null).ConfigureAwait(false))?.GetProperty("binary").ToString();
+        internal async Task<byte[]> GetBodyAsync()
+            => (await Connection.SendMessageToServerAsync(Guid, "body", null).ConfigureAwait(false))?.GetProperty("binary").GetBytesFromBase64();
 
         internal async Task<ResponseServerAddrResult> ServerAddrAsync()
             => (await Connection.SendMessageToServerAsync(Guid, "serverAddr", null).ConfigureAwait(false))

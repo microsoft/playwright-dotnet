@@ -74,7 +74,7 @@ namespace Microsoft.Playwright.Core
         public async Task<Dictionary<string, string>> AllHeadersAsync()
             => (await GetRawHeadersAsync().ConfigureAwait(false)).Headers;
 
-        public async Task<byte[]> BodyAsync() => Convert.FromBase64String(await _channel.GetBodyAsync().ConfigureAwait(false));
+        public Task<byte[]> BodyAsync() => _channel.GetBodyAsync();
 
         public Task<string> FinishedAsync() => _finishedTask.Task;
 
@@ -89,7 +89,7 @@ namespace Microsoft.Playwright.Core
 
         public async Task<JsonElement?> JsonAsync()
         {
-            string content = await TextAsync().ConfigureAwait(false);
+            byte[] content = await BodyAsync().ConfigureAwait(false);
             return JsonDocument.Parse(content).RootElement;
         }
 

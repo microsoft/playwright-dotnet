@@ -583,14 +583,14 @@ namespace Microsoft.Playwright.Core
                 options.Type = ElementHandle.DetermineScreenshotType(options.Path);
             }
 
-            byte[] result = Convert.FromBase64String(await _channel.ScreenshotAsync(
+            byte[] result = await _channel.ScreenshotAsync(
                 path: options.Path,
                 fullPage: options.FullPage,
                 clip: options.Clip,
                 omitBackground: options.OmitBackground,
                 type: options.Type,
                 quality: options.Quality,
-                timeout: options.Timeout).ConfigureAwait(false));
+                timeout: options.Timeout).ConfigureAwait(false);
 
             if (!string.IsNullOrEmpty(options.Path))
             {
@@ -728,7 +728,7 @@ namespace Microsoft.Playwright.Core
                 throw new NotSupportedException("This browser doesn't support this action.");
             }
 
-            byte[] result = Convert.FromBase64String(await _channel.PdfAsync(
+            byte[] result = await _channel.PdfAsync(
                 scale: options?.Scale,
                 displayHeaderFooter: options?.DisplayHeaderFooter,
                 headerTemplate: options?.HeaderTemplate,
@@ -740,7 +740,7 @@ namespace Microsoft.Playwright.Core
                 width: options?.Width,
                 height: options?.Height,
                 margin: options?.Margin,
-                preferCSSPageSize: options?.PreferCSSPageSize).ConfigureAwait(false));
+                preferCSSPageSize: options?.PreferCSSPageSize).ConfigureAwait(false);
 
             if (!string.IsNullOrEmpty(options?.Path))
             {
