@@ -1,32 +1,54 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <Target Name="CopyPlaywrightFilesToOutput" AfterTargets="CopyFilesToOutputDirectory">
+  <Target Name="_GetPlaywrightCopyItems">
+    <PropertyGroup>
+      <PlaywrightPlatform Condition="'$(PlaywrightPlatform)' == ''">%(RuntimePack.RuntimeIdentifier)</PlaywrightPlatform>
+      <PlaywrightPlatform Condition="'$(PlaywrightPlatform)' == '' AND $([MSBuild]::IsOSPlatform('Linux'))">linux</PlaywrightPlatform>
+      <PlaywrightPlatform Condition="'$(PlaywrightPlatform)' == '' AND $([MSBuild]::IsOSPlatform('Windows'))">win</PlaywrightPlatform>
+      <PlaywrightPlatform Condition="'$(PlaywrightPlatform)' == '' AND $([MSBuild]::IsOSPlatform('OSX'))">osx</PlaywrightPlatform>
+    </PropertyGroup>
     <ItemGroup>
-      <_CopyItems Include="$(MSBuildThisFileDirectory)..\.playwright\**" />
+      <_PlaywrightCopyItems Include="$(MSBuildThisFileDirectory)..\.playwright\node\linux\**" Condition="$(PlaywrightPlatform.Contains('linux'))">
+        <PlaywrightFolder>node\linux\</PlaywrightFolder>
+      </_PlaywrightCopyItems>
+      <_PlaywrightCopyItems Include="$(MSBuildThisFileDirectory)..\.playwright\node\win32_x64\**" Condition="$(PlaywrightPlatform.Contains('win'))">
+        <PlaywrightFolder>node\win32_x64\</PlaywrightFolder>
+      </_PlaywrightCopyItems>
+      <_PlaywrightCopyItems Include="$(MSBuildThisFileDirectory)..\.playwright\node\mac\**" Condition="$(PlaywrightPlatform.Contains('osx'))">
+        <PlaywrightFolder>node\mac\</PlaywrightFolder>
+      </_PlaywrightCopyItems>
+      <_PlaywrightCopyItems Include="$(MSBuildThisFileDirectory)..\.playwright\node\**" Condition="'@(_PlaywrightCopyItems->Count())' == '0'">
+        <PlaywrightFolder>node\</PlaywrightFolder>
+      </_PlaywrightCopyItems>
+      <_PlaywrightCopyItems Include="$(MSBuildThisFileDirectory)..\.playwright\node\LICENSE">
+        <PlaywrightFolder>node\</PlaywrightFolder>
+      </_PlaywrightCopyItems>
+      <_PlaywrightCopyItems Include="$(MSBuildThisFileDirectory)..\.playwright\package\**">
+        <PlaywrightFolder>package\</PlaywrightFolder>
+      </_PlaywrightCopyItems>
     </ItemGroup>
+  </Target>
+  <Target Name="CopyPlaywrightFilesToOutput" AfterTargets="CopyFilesToOutputDirectory" DependsOnTargets="_GetPlaywrightCopyItems">
     <Message Text="[Playwright] Copying drivers from $(MSBuildThisFileDirectory) to $(OutputPath)..." />
-    <Copy SourceFiles="@(_CopyItems)" DestinationFiles="@(_CopyItems->'$(OutDir).playwright\%(RecursiveDir)%(Filename)%(Extension)')"/>
+    <Copy SourceFiles="@(_PlaywrightCopyItems)" DestinationFiles="@(_PlaywrightCopyItems->'$(OutDir).playwright\%(PlaywrightFolder)%(RecursiveDir)%(Filename)%(Extension)')" SkipUnchangedFiles="true"/>
   </Target>
   <Target Name="CopyRuntimeConfigToOutput" AfterTargets="CopyFilesToOutputDirectory">
     <ItemGroup Condition="Exists('$(MSBuildThisFileDirectory)..\lib\$(TargetFramework)\Microsoft.Playwright.runtimeconfig.json')">
       <_CopyRuntimeConfigItems Include="$(MSBuildThisFileDirectory)..\lib\$(TargetFramework)\Microsoft.Playwright.runtimeconfig.json" />
     </ItemGroup>
     <Message Text="[Playwright] Copying config from $(MSBuildThisFileDirectory)..\lib\$(TargetFramework) to $(OutDir)..." />
-    <Copy SourceFiles="@(_CopyRuntimeConfigItems)" DestinationFiles="@(_CopyRuntimeConfigItems->'$(OutDir)\%(RecursiveDir)%(Filename)%(Extension)')"/>
+    <Copy SourceFiles="@(_CopyRuntimeConfigItems)" DestinationFiles="@(_CopyRuntimeConfigItems->'$(OutDir)\%(RecursiveDir)%(Filename)%(Extension)')" SkipUnchangedFiles="true"/>
   </Target>
   <Target Name="CopyPlaywrightShellToOutput" AfterTargets="CopyFilesToOutputDirectory">
     <ItemGroup>
       <_CopyItemsShell Include="$(MSBuildThisFileDirectory)playwright.ps1" />
     </ItemGroup>
     <Message Text="[Playwright] Copying shell script from $(MSBuildThisFileDirectory) to $(OutputPath)..." />
-    <Copy SourceFiles="@(_CopyItemsShell)" DestinationFiles="@(_CopyItemsShell->'$(OutDir)\%(RecursiveDir)%(Filename)%(Extension)')"/>
+    <Copy SourceFiles="@(_CopyItemsShell)" DestinationFiles="@(_CopyItemsShell->'$(OutDir)\%(RecursiveDir)%(Filename)%(Extension)')" SkipUnchangedFiles="true"/>
   </Target>
-  <Target Name="PlaywrightCopyAfterPublish" AfterTargets="Publish">
-    <ItemGroup>
-      <_PublishCopyItems Include="$(MSBuildThisFileDirectory)..\.playwright\**" />
-    </ItemGroup>
+  <Target Name="PlaywrightCopyAfterPublish" AfterTargets="Publish" DependsOnTargets="_GetPlaywrightCopyItems">
     <Message Text="[Playwright] Copying files to publish folder..."/>
-    <Copy SourceFiles="@(_PublishCopyItems)" DestinationFiles="@(_PublishCopyItems->'$(PublishDir)\.playwright\%(RecursiveDir)%(Filename)%(Extension)')"/>
+    <Copy SourceFiles="@(_PlaywrightCopyItems)" DestinationFiles="@(_PlaywrightCopyItems->'$(PublishDir)\.playwright\%(PlaywrightFolder)%(RecursiveDir)%(Filename)%(Extension)')" SkipUnchangedFiles="true"/>
   </Target>
   <Target Name="PlaywrightBuildCleanup" AfterTargets="Clean">
     <Message Text="[Playwright] Cleaning up .playwright folder and artifacts..."/>
