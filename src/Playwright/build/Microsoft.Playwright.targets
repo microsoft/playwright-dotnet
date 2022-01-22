@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <Target Name="_GetPlaywrightCopyItems">
+  <Target Name="CopyPlaywrightFilesToOutput" AfterTargets="ProcessFrameworkReferences">
     <PropertyGroup>
       <PlaywrightPlatform Condition="'$(PlaywrightPlatform)' == ''">%(RuntimePack.RuntimeIdentifier)</PlaywrightPlatform>
       <PlaywrightPlatform Condition="'$(PlaywrightPlatform)' == '' AND $([MSBuild]::IsOSPlatform('Linux'))">linux</PlaywrightPlatform>
@@ -27,10 +27,14 @@
         <PlaywrightFolder>package\</PlaywrightFolder>
       </_PlaywrightCopyItems>
     </ItemGroup>
-  </Target>
-  <Target Name="CopyPlaywrightFilesToOutput" AfterTargets="CopyFilesToOutputDirectory" DependsOnTargets="_GetPlaywrightCopyItems">
-    <Message Text="[Playwright] Copying drivers from $(MSBuildThisFileDirectory) to $(OutputPath)..." />
-    <Copy SourceFiles="@(_PlaywrightCopyItems)" DestinationFiles="@(_PlaywrightCopyItems->'$(OutDir).playwright\%(PlaywrightFolder)%(RecursiveDir)%(Filename)%(Extension)')" SkipUnchangedFiles="true"/>
+    <ItemGroup>
+      <Content Include="@(_PlaywrightCopyItems)">
+        <Link>.playwright\%(_PlaywrightCopyItems.PlaywrightFolder)%(RecursiveDir)%(FileName)%(Extension)</Link>
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        <PublishState>Included</PublishState>
+        <Visible>false</Visible>
+      </Content>
+    </ItemGroup>
   </Target>
   <Target Name="CopyRuntimeConfigToOutput" AfterTargets="CopyFilesToOutputDirectory">
     <ItemGroup Condition="Exists('$(MSBuildThisFileDirectory)..\lib\$(TargetFramework)\Microsoft.Playwright.runtimeconfig.json')">
@@ -45,10 +49,6 @@
     </ItemGroup>
     <Message Text="[Playwright] Copying shell script from $(MSBuildThisFileDirectory) to $(OutputPath)..." />
     <Copy SourceFiles="@(_CopyItemsShell)" DestinationFiles="@(_CopyItemsShell->'$(OutDir)\%(RecursiveDir)%(Filename)%(Extension)')" SkipUnchangedFiles="true"/>
-  </Target>
-  <Target Name="PlaywrightCopyAfterPublish" AfterTargets="Publish" DependsOnTargets="_GetPlaywrightCopyItems">
-    <Message Text="[Playwright] Copying files to publish folder..."/>
-    <Copy SourceFiles="@(_PlaywrightCopyItems)" DestinationFiles="@(_PlaywrightCopyItems->'$(PublishDir)\.playwright\%(PlaywrightFolder)%(RecursiveDir)%(Filename)%(Extension)')" SkipUnchangedFiles="true"/>
   </Target>
   <Target Name="PlaywrightBuildCleanup" AfterTargets="Clean">
     <Message Text="[Playwright] Cleaning up .playwright folder and artifacts..."/>
