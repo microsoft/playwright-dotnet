@@ -138,6 +138,8 @@ namespace Microsoft.Playwright.Core
 
         internal BrowserContextChannel Channel { get; }
 
+        internal bool IsClosed { get; private set; }
+
         internal List<Page> PagesList { get; } = new();
 
         internal Page OwnerPage { get; set; }
@@ -411,13 +413,17 @@ namespace Microsoft.Playwright.Core
 
         internal void OnClose()
         {
-            if (Browser != null)
+            if (!IsClosed)
             {
-                ((Browser)Browser).BrowserContextsList.Remove(this);
-            }
+                IsClosed = true;
+                if (Browser != null)
+                {
+                    ((Browser)Browser).BrowserContextsList.Remove(this);
+                }
 
-            Close?.Invoke(this, this);
-            _closeTcs.TrySetResult(true);
+                Close?.Invoke(this, this);
+                _closeTcs.TrySetResult(true);
+            }
         }
 
         private void Channel_OnPage(object sender, BrowserContextPageEventArgs e)

@@ -199,9 +199,12 @@ namespace Microsoft.Playwright.Core
 
         internal void DidClose()
         {
-            IsConnected = false;
-            Disconnected?.Invoke(this, this);
-            _closedTcs.TrySetResult(true);
+            if (IsConnected)
+            {
+                IsConnected = false;
+                Disconnected?.Invoke(this, this);
+                _closedTcs.TrySetResult(true);
+            }
         }
     }
 }

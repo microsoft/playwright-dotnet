@@ -1001,10 +1001,13 @@ namespace Microsoft.Playwright.Core
 
         internal void OnClose()
         {
-            IsClosed = true;
-            Context?.PagesList.Remove(this);
-            RejectPendingOperations(false);
-            Close?.Invoke(this, this);
+            if (!IsClosed)
+            {
+                IsClosed = true;
+                Context?.PagesList.Remove(this);
+                RejectPendingOperations(false);
+                Close?.Invoke(this, this);
+            }
         }
 
         private void Channel_Crashed(object sender, EventArgs e)
