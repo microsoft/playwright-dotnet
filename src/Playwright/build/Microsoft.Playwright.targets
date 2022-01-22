@@ -7,7 +7,7 @@
       <PlaywrightPlatform Condition="'$(PlaywrightPlatform)' == '' AND $([MSBuild]::IsOSPlatform('Windows'))">win</PlaywrightPlatform>
       <PlaywrightPlatform Condition="'$(PlaywrightPlatform)' == '' AND $([MSBuild]::IsOSPlatform('OSX'))">osx</PlaywrightPlatform>
     </PropertyGroup>
-    <ItemGroup>
+    <ItemGroup Condition="'$(PlaywrightPlatform)' != 'none'">
       <_PlaywrightCopyItems Include="$(MSBuildThisFileDirectory)..\.playwright\node\linux\**" Condition="$(PlaywrightPlatform.Contains('linux'))">
         <PlaywrightFolder>node\linux\</PlaywrightFolder>
       </_PlaywrightCopyItems>
