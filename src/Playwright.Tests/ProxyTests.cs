@@ -87,7 +87,7 @@ namespace Microsoft.Playwright.Tests
             var proxy = new Proxy
             {
                 Server = $"localhost:{Server.Port}",
-                Bypass = "non-existent1.com, .non-existent2.com, .zone",
+                Bypass = "non-existent1.com, .non-existent2.com, .another.test",
             };
 
             await using var browser = await BrowserType.LaunchAsync(new() { Proxy = proxy });
@@ -99,7 +99,7 @@ namespace Microsoft.Playwright.Tests
 
             await PlaywrightAssert.ThrowsAsync<PlaywrightException>(() => page.GotoAsync("http://non-existent1.com/target.html"));
             await PlaywrightAssert.ThrowsAsync<PlaywrightException>(() => page.GotoAsync("http://sub.non-existent2.com/target.html"));
-            await PlaywrightAssert.ThrowsAsync<PlaywrightException>(() => page.GotoAsync("http://non-existent3.zone/target.html"));
+            await PlaywrightAssert.ThrowsAsync<PlaywrightException>(() => page.GotoAsync("http://foo.is.the.another.test/target.html"));
         }
     }
 }
