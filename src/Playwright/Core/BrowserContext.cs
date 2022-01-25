@@ -351,7 +351,7 @@ namespace Microsoft.Playwright.Core
                 }
             }
 
-            _ = route.ContinueInternalAsync(new());
+            _ = route.ContinueAsync().ConfigureAwait(false);
         }
 
         internal async Task DisableInterceptionAsync()

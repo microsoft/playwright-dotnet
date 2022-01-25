@@ -90,5 +90,42 @@ namespace Microsoft.Playwright.Tests
             );
             Assert.AreEqual("doggo", requestTask.Result);
         }
+
+        [PlaywrightTest("page-request-continue.spec.ts", "should not throw when continuing while page is closing")]
+        public async Task ShouldNotThrowWhenContinuingWhilePageIsClosing()
+        {
+            Task done = null;
+            await Page.RouteAsync("**/*", (route) =>
+            {
+                done = Task.WhenAll(
+                    route.ContinueAsync(),
+                    Page.CloseAsync()
+                );
+            });
+            await PlaywrightAssert.ThrowsAsync<PlaywrightException>(async () =>
+            {
+                await Page.GotoAsync(Server.EmptyPage);
+            });
+            await done;
+        }
+
+        [PlaywrightTest("page-request-continue.spec.ts", "should not throw when continuing after page is closed")]
+        public async Task ShouldNotThrowWhenContinuingAfterPageIsClosed()
+        {
+            var tsc = new TaskCompletionSource<bool>();
+            Task done = null;
+            await Page.RouteAsync("**/*", async (route) =>
+            {
+                await Page.CloseAsync();
+                done = route.ContinueAsync();
+                tsc.SetResult(true);
+            });
+            await PlaywrightAssert.ThrowsAsync<PlaywrightException>(async () =>
+            {
+                await Page.GotoAsync(Server.EmptyPage);
+            });
+            await tsc.Task;
+            await done;
+        }
     }
 }
