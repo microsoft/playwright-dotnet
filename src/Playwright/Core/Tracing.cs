@@ -78,7 +78,7 @@ namespace Microsoft.Playwright.Core
 
             // Not interested in artifacts.
             if (string.IsNullOrEmpty(filePath))
-                throw new PlaywrightException("Specified path was invalid or empty. Trace could not be saved.");
+                return;
 
             // The artifact may be missing if the browser closed while stopping tracing.
             if (artifact == null)
