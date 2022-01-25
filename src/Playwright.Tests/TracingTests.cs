@@ -143,6 +143,22 @@ namespace Microsoft.Playwright.Tests
             Assert.AreEqual(sourceTraceFileContent, currentFileContent);
         }
 
+        [PlaywrightTest("tracing.spec.ts", "should not throw when stopping without start but not exporting")]
+        public async Task ShouldNotThrowWhenStoppingWithoutStartButNotExporting()
+        {
+            await Context.Tracing.StopAsync();
+        }
+
+        [PlaywrightTest("tracing.spec.ts", "should not throw when stopping without passing a trace file")]
+        public async Task ShouldNotThrowWhenStoppingWithoutPath()
+        {
+            await Context.Tracing.StartAsync(new()
+            {
+                Snapshots = true,
+            });
+            await Context.Tracing.StopAsync();
+        }
+
         private static (IReadOnlyList<TraceEventEntry> Events, Dictionary<string, byte[]> Resources) ParseTrace(string path)
         {
             Dictionary<string, byte[]> resources = new();
