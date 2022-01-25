@@ -326,19 +326,37 @@ namespace Microsoft.Playwright.Core
 
         internal void OnRoute(Route route, IRequest request)
         {
-            foreach (var item in _routes)
+            foreach (var routeHandler in _routes)
             {
                 if (
-                    ((item.Times ?? 0) == 0 || item.HandledCount >= item.Times) &&
-                    ((item.Regex?.IsMatch(request.Url) == true) ||
-                    (item.Function?.Invoke(request.Url) == true)))
+                    routeHandler.Regex?.IsMatch(request.Url) == true ||
+                    routeHandler.Function?.Invoke(request.Url) == true)
                 {
-                    item.Handle(route);
+                    try
+                    {
+                        routeHandler.Handle(route);
+                    }
+                    finally
+                    {
+                        if (!routeHandler.IsActive())
+                        {
+                            _routes.Remove(routeHandler);
+                            if (_routes.Count == 0)
+                            {
+                                DisableInterceptionAsync().ConfigureAwait(false);
+                            }
+                        }
+                    }
                     return;
                 }
             }
 
-            _ = route.ContinueAsync(new());
+            _ = route.ContinueInternalAsync(new());
+        }
+
+        internal async Task DisableInterceptionAsync()
+        {
+            await Channel.SetNetworkInterceptionEnabledAsync(false).ConfigureAwait(false);
         }
 
         internal bool UrlMatches(string url, string glob)

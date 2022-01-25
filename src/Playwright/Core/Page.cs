@@ -81,7 +81,7 @@ namespace Microsoft.Playwright.Core
             _channel.Popup += (_, e) => Popup?.Invoke(this, e.Page);
             _channel.WebSocket += (_, e) => WebSocket?.Invoke(this, e);
             _channel.BindingCall += Channel_BindingCall;
-            _channel.Route += Channel_Route;
+            _channel.Route += (_, e) => OnRoute(e.Route, e.Request);
             _channel.FrameAttached += Channel_FrameAttached;
             _channel.FrameDetached += Channel_FrameDetached;
             _channel.Dialog += (_, e) =>
@@ -989,7 +989,7 @@ namespace Microsoft.Playwright.Core
 
             if (_routes.Count == 0)
             {
-                return _channel.SetNetworkInterceptionEnabledAsync(false);
+                return DisableInterceptionAsync();
             }
 
             return Task.CompletedTask;
@@ -1021,21 +1021,36 @@ namespace Microsoft.Playwright.Core
             }
         }
 
-        private void Channel_Route(object sender, RouteEventArgs e)
+        private void OnRoute(Route route, IRequest request)
         {
-            foreach (var route in _routes)
+            foreach (var routeHandler in _routes.ToList())
             {
-                if (
-                    ((route.Times ?? 0) == 0 || route.HandledCount >= route.Times) &&
-                    ((route.Regex?.IsMatch(e.Request.Url) == true) ||
-                    (route.Function?.Invoke(e.Request.Url) == true)))
+                if ((routeHandler.Regex?.IsMatch(request.Url) == true) ||
+                    (routeHandler.Function?.Invoke(request.Url) == true))
                 {
-                    route.Handle(e.Route);
+                    try
+                    {
+                        routeHandler.Handle(route);
+                    }
+                    finally
+                    {
+                        if (!routeHandler.IsActive())
+                        {
+                            _routes.Remove(routeHandler);
+                            if (_routes.Count == 0)
+                                DisableInterceptionAsync().ConfigureAwait(false);
+                        }
+                    }
                     return;
                 }
             }
 
-            Context.OnRoute(e.Route, e.Request);
+            Context.OnRoute(route, request);
+        }
+
+        internal async Task DisableInterceptionAsync()
+        {
+            await Channel.SetNetworkInterceptionEnabledAsync(false).ConfigureAwait(false);
         }
 
         private void Channel_FrameDetached(object sender, IFrame args)

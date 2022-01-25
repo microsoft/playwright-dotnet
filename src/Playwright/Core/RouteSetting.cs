@@ -41,14 +41,15 @@ namespace Microsoft.Playwright.Core
 
         public void Handle(IRoute route)
         {
-            try
-            {
-                Handler(route);
-            }
-            finally
-            {
-                HandledCount++;
-            }
+            ++HandledCount;
+            Handler(route);
+        }
+
+        public bool IsActive()
+        {
+            if (Times == null)
+                return true;
+            return HandledCount < Times;
         }
     }
 }

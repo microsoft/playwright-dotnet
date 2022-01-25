@@ -80,6 +80,12 @@ namespace Microsoft.Playwright.Core
             return _channel.ContinueAsync(url: options.Url, method: options.Method, postData: options.PostData, headers: options.Headers);
         }
 
+        public Task ContinueInternalAsync(RouteContinueOptions options = default)
+        {
+            // TODO: ignore exceptions
+            return ContinueAsync(options);
+        }
+
         private NormalizedFulfillResponse NormalizeFulfillParameters(
             int? status,
             IEnumerable<KeyValuePair<string, string>> headers,

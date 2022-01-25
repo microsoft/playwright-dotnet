@@ -709,5 +709,21 @@ namespace Microsoft.Playwright.Tests
                 })
             );
         }
+
+        [PlaywrightTest("page-route.spec.ts", "should support the times parameter with route matching")]
+        public async Task ShouldSupportTheTimesParameterWithRouteMatching()
+        {
+            List<int> intercepted = new();
+            await Page.RouteAsync("**/empty.html", (route) =>
+            {
+                intercepted.Add(1);
+                route.ContinueAsync();
+            }, new() { Times = 1 });
+
+            await Page.GotoAsync(Server.EmptyPage);
+            await Page.GotoAsync(Server.EmptyPage);
+            await Page.GotoAsync(Server.EmptyPage);
+            Assert.AreEqual(1, intercepted.Count);
+        }
     }
 }
