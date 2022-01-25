@@ -162,7 +162,7 @@ namespace Microsoft.Playwright.Tests
         private static (IReadOnlyList<TraceEventEntry> Events, Dictionary<string, byte[]> Resources) ParseTrace(string path)
         {
             Dictionary<string, byte[]> resources = new();
-            var archive = ZipFile.OpenRead(path);
+            using var archive = ZipFile.OpenRead(path);
             foreach (var entry in archive.Entries)
             {
                 var memoryStream = new MemoryStream();

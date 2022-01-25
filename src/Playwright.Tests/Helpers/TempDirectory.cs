@@ -87,7 +87,7 @@ namespace Microsoft.Playwright.Tests
                     Directory.Delete(path, true);
                     return;
                 }
-                catch (IOException)
+                catch (Exception ex) when (ex is IOException || ex is UnauthorizedAccessException)
                 {
                     await Task.Delay(retryDelay, cancellationToken).ConfigureAwait(false);
                     if (retryDelay < maxDelayInMs)
