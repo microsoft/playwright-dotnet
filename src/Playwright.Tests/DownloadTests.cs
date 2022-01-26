@@ -412,8 +412,10 @@ namespace Microsoft.Playwright.Tests
             {
                 expected += $"a{i}";
             }
-            using var stream = await download.CreateReadStreamAsync();
-            Assert.AreEqual(expected, await new StreamReader(stream).ReadToEndAsync());
+            using (var stream = await download.CreateReadStreamAsync())
+            {
+                Assert.AreEqual(expected, await new StreamReader(stream).ReadToEndAsync());
+            }
 
             await page.CloseAsync();
         }

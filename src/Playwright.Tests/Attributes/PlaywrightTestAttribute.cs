@@ -23,7 +23,15 @@
  */
 
 using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 using NUnit.Framework;
+using NUnit.Framework.Interfaces;
+using NUnit.Framework.Internal;
+using NUnit.Framework.Internal.Commands;
+
+// Run all tests in sequence
+[assembly: LevelOfParallelism(1)]
 
 namespace Microsoft.Playwright.Tests
 {
@@ -31,7 +39,7 @@ namespace Microsoft.Playwright.Tests
     /// Enables decorating test facts with information about the corresponding test in the upstream repository.
     /// </summary>
     [AttributeUsage(AttributeTargets.Method, AllowMultiple = true)]
-    public class PlaywrightTestAttribute : TestAttribute
+    public class PlaywrightTestAttribute : TestAttribute, IWrapSetUpTearDown
     {
         public PlaywrightTestAttribute()
         {
@@ -78,5 +86,57 @@ namespace Microsoft.Playwright.Tests
         /// The describe of the test, the decorated code is based on, if one exists.
         /// </summary>
         public string Describe { get; }
+
+        /// <summary>
+        /// Wraps the current test command in a <see cref="UnobservedTaskExceptionCommand"/>.
+        /// </summary>
+        /// <param name="command">the test command</param>
+        /// <returns>the wrapped test command</returns>
+        public TestCommand Wrap(TestCommand command)
+            => new UnobservedTaskExceptionCommand(command);
+
+        /// <summary>
+        /// Helper to detect UnobservedTaskExceptions
+        /// </summary>
+        private sealed class UnobservedTaskExceptionCommand : DelegatingTestCommand
+        {
+            public UnobservedTaskExceptionCommand(TestCommand innerCommand)
+                : base(innerCommand)
+            {
+            }
+
+            private readonly List<Exception> _unobservedTaskExceptions = new();
+
+            public override TestResult Execute(TestExecutionContext context)
+            {
+                TaskScheduler.UnobservedTaskException += UnobservedTaskException;
+                TestResult result = null;
+                try
+                {
+                    result = innerCommand.Execute(context);
+                }
+                finally
+                {
+                    // force a GC and wait for finalizers of (among other things) Tasks
+                    // for which the UnobservedTaskException is raised if the task.Exception was not observed 
+                    GC.Collect();
+                    GC.WaitForPendingFinalizers();
+
+                    TaskScheduler.UnobservedTaskException -= UnobservedTaskException;
+
+                    if (_unobservedTaskExceptions.Count > 0)
+                    {
+                        result.RecordTearDownException(new AggregateException(_unobservedTaskExceptions));
+                        _unobservedTaskExceptions.Clear();
+                    }
+                }
+                return result;
+            }
+
+            private void UnobservedTaskException(object sender, UnobservedTaskExceptionEventArgs e)
+            {
+                _unobservedTaskExceptions.Add(e.Exception);
+            }
+        }
     }
 }

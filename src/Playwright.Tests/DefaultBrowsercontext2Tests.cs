@@ -45,8 +45,8 @@ namespace Microsoft.Playwright.Tests
             await page.GotoAsync(Server.Prefix + "/mobile.html");
             Assert.True(await page.EvaluateAsync<bool>("() => 'ontouchstart' in window"));
 
-            tmp.Dispose();
             await context.DisposeAsync();
+            tmp.Dispose();
         }
 
         [PlaywrightTest("defaultbrowsercontext-2.spec.ts", "should work in persistent context")]
@@ -66,8 +66,8 @@ namespace Microsoft.Playwright.Tests
             await page.GotoAsync(Server.EmptyPage);
             Assert.AreEqual(980, await page.EvaluateAsync<int>("() => window.innerWidth"));
 
-            tmp.Dispose();
             await context.DisposeAsync();
+            tmp.Dispose();
         }
 
         [PlaywrightTest("defaultbrowsercontext-2.spec.ts", "should support colorScheme option")]
@@ -81,8 +81,8 @@ namespace Microsoft.Playwright.Tests
             Assert.False(await page.EvaluateAsync<bool?>("() => matchMedia('(prefers-color-scheme: light)').matches"));
             Assert.True(await page.EvaluateAsync<bool?>("() => matchMedia('(prefers-color-scheme: dark)').matches"));
 
-            tmp.Dispose();
             await context.DisposeAsync();
+            tmp.Dispose();
         }
 
         [PlaywrightTest("defaultbrowsercontext-2.spec.ts", "should support reducedMotion option")]
@@ -96,8 +96,8 @@ namespace Microsoft.Playwright.Tests
             Assert.True(await page.EvaluateAsync<bool?>("() => matchMedia('(prefers-reduced-motion: reduce)').matches"));
             Assert.False(await page.EvaluateAsync<bool?>("() => matchMedia('(prefers-reduced-motion: no-preference)').matches"));
 
-            tmp.Dispose();
             await context.DisposeAsync();
+            tmp.Dispose();
         }
 
         [PlaywrightTest("defaultbrowsercontext-2.spec.ts", "should support timezoneId option")]
@@ -110,8 +110,8 @@ namespace Microsoft.Playwright.Tests
 
             Assert.AreEqual("Sat Nov 19 2016 13:12:34 GMT-0500 (Eastern Standard Time)", await page.EvaluateAsync<string>("() => new Date(1479579154987).toString()"));
 
-            tmp.Dispose();
             await context.DisposeAsync();
+            tmp.Dispose();
         }
 
         [PlaywrightTest("defaultbrowsercontext-2.spec.ts", "should support locale option")]
@@ -124,8 +124,8 @@ namespace Microsoft.Playwright.Tests
 
             Assert.AreEqual("fr-CH", await page.EvaluateAsync<string>("() => navigator.language"));
 
-            tmp.Dispose();
             await context.DisposeAsync();
+            tmp.Dispose();
         }
 
         [PlaywrightTest("defaultbrowsercontext-2.spec.ts", "should support geolocation and permissions options")]
@@ -148,8 +148,8 @@ namespace Microsoft.Playwright.Tests
             Assert.AreEqual(10, geolocation.Latitude);
             Assert.AreEqual(10, geolocation.Longitude);
 
-            tmp.Dispose();
             await context.DisposeAsync();
+            tmp.Dispose();
         }
 
         [PlaywrightTest("defaultbrowsercontext-2.spec.ts", "should support ignoreHTTPSErrors option")]
@@ -163,8 +163,8 @@ namespace Microsoft.Playwright.Tests
             var response = await page.GotoAsync(HttpsServer.Prefix + "/empty.html");
             Assert.True(response.Ok);
 
-            tmp.Dispose();
             await context.DisposeAsync();
+            tmp.Dispose();
         }
 
         [PlaywrightTest("defaultbrowsercontext-2.spec.ts", "should support extraHTTPHeaders option")]
@@ -186,8 +186,8 @@ namespace Microsoft.Playwright.Tests
 
             Assert.AreEqual("bar", fooHeader);
 
-            tmp.Dispose();
             await context.DisposeAsync();
+            tmp.Dispose();
         }
 
         [PlaywrightTest("defaultbrowsercontext-2.spec.ts", "should accept userDataDir")]
@@ -227,16 +227,13 @@ namespace Microsoft.Playwright.Tests
                 await page.GotoAsync(Server.EmptyPage);
                 Assert.That("hello", Is.Not.EqualTo(await page.EvaluateAsync<string>("() => localStorage.hey")));
             }
-
-            userDataDir2.Dispose();
-            userDataDir.Dispose();
         }
 
         [PlaywrightTest("defaultbrowsercontext-2.spec.ts", "should restore cookies from userDataDir")]
         [Skip(SkipAttribute.Targets.Chromium | SkipAttribute.Targets.Windows)]
         public async Task ShouldRestoreCookiesFromUserDataDir()
         {
-            var userDataDir = new TempDirectory();
+            using var userDataDir = new TempDirectory();
 
             await using (var browserContext = await BrowserType.LaunchPersistentContextAsync(userDataDir.Path))
             {
@@ -257,16 +254,13 @@ namespace Microsoft.Playwright.Tests
                 Assert.AreEqual("doSomethingOnlyOnce=true", await page.EvaluateAsync<string>("() => document.cookie"));
             }
 
-            var userDataDir2 = new TempDirectory();
+            using var userDataDir2 = new TempDirectory();
             await using (var browserContext2 = await BrowserType.LaunchPersistentContextAsync(userDataDir2.Path))
             {
                 var page = await browserContext2.NewPageAsync();
                 await page.GotoAsync(Server.EmptyPage);
                 Assert.That("doSomethingOnlyOnce=true", Is.Not.EqualTo(await page.EvaluateAsync<string>("() => document.cookie")));
             }
-
-            userDataDir2.Dispose();
-            userDataDir.Dispose();
         }
 
         [PlaywrightTest("defaultbrowsercontext-2.spec.ts", "should have default URL when launching browser")]
@@ -277,19 +271,18 @@ namespace Microsoft.Playwright.Tests
             string[] urls = context.Pages.Select(p => p.Url).ToArray();
             Assert.AreEqual(new[] { "about:blank" }, urls);
 
-            tmp.Dispose();
             await context.DisposeAsync();
+            tmp.Dispose();
         }
 
         [PlaywrightTest("defaultbrowsercontext-2.spec.ts", "should throw if page argument is passed")]
         [Skip(SkipAttribute.Targets.Firefox)]
         public async Task ShouldThrowIfPageArgumentIsPassed()
         {
-            var tmp = new TempDirectory();
+            using var tmp = new TempDirectory();
             var args = new[] { Server.EmptyPage };
             await PlaywrightAssert.ThrowsAsync<PlaywrightException>(() =>
                 BrowserType.LaunchPersistentContextAsync(tmp.Path, new() { Args = args }));
-            tmp.Dispose();
         }
 
         [PlaywrightTest("defaultbrowsercontext-2.spec.ts", "should have passed URL when launching with ignoreDefaultArgs: true")]
@@ -320,8 +313,8 @@ namespace Microsoft.Playwright.Tests
 
             Assert.True(closed);
 
-            tmp.Dispose();
             await context.DisposeAsync();
+            tmp.Dispose();
         }
 
         [PlaywrightTest("defaultbrowsercontext-2.spec.ts", "coverage should work")]
@@ -374,8 +367,8 @@ namespace Microsoft.Playwright.Tests
             Assert.AreEqual("hello", await page.InnerHTMLAsync("css=div"));
             Assert.AreEqual("hello", await page.InnerHTMLAsync("defaultContextCSS=div"));
 
-            tmp.Dispose();
             await context.DisposeAsync();
+            tmp.Dispose();
         }
 
         private async Task<(TempDirectory tmp, IBrowserContext context, IPage page)> LaunchAsync(BrowserTypeLaunchPersistentContextOptions options = null)

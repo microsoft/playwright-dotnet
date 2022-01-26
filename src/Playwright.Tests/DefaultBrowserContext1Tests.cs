@@ -54,8 +54,8 @@ namespace Microsoft.Playwright.Tests
             Assert.IsFalse(cookie.Secure);
             Assert.AreEqual(TestConstants.IsChromium ? SameSiteAttribute.Lax : SameSiteAttribute.None, cookie.SameSite);
 
-            tmp.Dispose();
             await context.DisposeAsync();
+            tmp.Dispose();
         }
 
         [PlaywrightTest("defaultbrowsercontext-1.spec.ts", "context.addCookies() should work")]
@@ -86,8 +86,8 @@ namespace Microsoft.Playwright.Tests
             Assert.IsFalse(cookie.Secure);
             Assert.AreEqual(TestConstants.IsChromium ? SameSiteAttribute.Lax : SameSiteAttribute.None, cookie.SameSite);
 
-            tmp.Dispose();
             await context.DisposeAsync();
+            tmp.Dispose();
         }
 
         [PlaywrightTest("defaultbrowsercontext-1.spec.ts", "context.clearCookies() should work")]
@@ -119,8 +119,8 @@ namespace Microsoft.Playwright.Tests
             Assert.That(await page.Context.CookiesAsync(), Is.Empty);
             Assert.That(await page.EvaluateAsync<string>(@"() => document.cookie"), Is.Empty);
 
-            tmp.Dispose();
             await context.DisposeAsync();
+            tmp.Dispose();
         }
 
         [PlaywrightTest("defaultbrowsercontext-1.spec.ts", "should(not) block third party cookies")]
@@ -162,8 +162,8 @@ namespace Microsoft.Playwright.Tests
                 Assert.That(cookies, Is.Empty);
             }
 
-            tmp.Dispose();
             await context.DisposeAsync();
+            tmp.Dispose();
         }
 
         [PlaywrightTest("defaultbrowsercontext-1.spec.ts", "should support viewport option")]
@@ -182,8 +182,8 @@ namespace Microsoft.Playwright.Tests
             page = await context.NewPageAsync();
             await TestUtils.VerifyViewportAsync(page, 456, 789);
 
-            tmp.Dispose();
             await context.DisposeAsync();
+            tmp.Dispose();
         }
 
         [PlaywrightTest("defaultbrowsercontext-1.spec.ts", "should support deviceScaleFactor option")]
@@ -196,8 +196,8 @@ namespace Microsoft.Playwright.Tests
 
             Assert.AreEqual(3, await page.EvaluateAsync<int>("window.devicePixelRatio"));
 
-            tmp.Dispose();
             await context.DisposeAsync();
+            tmp.Dispose();
         }
 
         [PlaywrightTest("defaultbrowsercontext-1.spec.ts", "should support userAgent option")]
@@ -216,8 +216,8 @@ namespace Microsoft.Playwright.Tests
 
             Assert.AreEqual("foobar", userAgent);
 
-            tmp.Dispose();
             await context.DisposeAsync();
+            tmp.Dispose();
         }
 
         [PlaywrightTest("defaultbrowsercontext-1.spec.ts", "should support bypassCSP option")]
@@ -232,8 +232,8 @@ namespace Microsoft.Playwright.Tests
             await page.AddScriptTagAsync(new() { Content = "window.__injected = 42;" });
             Assert.AreEqual(42, await page.EvaluateAsync<int>("window.__injected"));
 
-            tmp.Dispose();
             await context.DisposeAsync();
+            tmp.Dispose();
         }
 
         [PlaywrightTest("defaultbrowsercontext-1.spec.ts", "should support javascriptEnabled option")]
@@ -256,8 +256,8 @@ namespace Microsoft.Playwright.Tests
                 StringAssert.Contains("something is not defined", exception.Message);
             }
 
-            tmp.Dispose();
             await context.DisposeAsync();
+            tmp.Dispose();
         }
 
         [PlaywrightTest("defaultbrowsercontext-1.spec.ts", "should support httpCredentials option")]
@@ -276,8 +276,8 @@ namespace Microsoft.Playwright.Tests
             var response = await page.GotoAsync(Server.Prefix + "/playground.html");
             Assert.AreEqual((int)HttpStatusCode.OK, response.Status);
 
-            tmp.Dispose();
             await context.DisposeAsync();
+            tmp.Dispose();
         }
 
         [PlaywrightTest("defaultbrowsercontext-1.spec.ts", "should support offline option")]
@@ -290,8 +290,8 @@ namespace Microsoft.Playwright.Tests
 
             await PlaywrightAssert.ThrowsAsync<PlaywrightException>(() => page.GotoAsync(Server.EmptyPage));
 
-            tmp.Dispose();
             await context.DisposeAsync();
+            tmp.Dispose();
         }
 
         [PlaywrightTest("defaultbrowsercontext-1.spec.ts", "should support acceptDownloads option")]

@@ -259,7 +259,8 @@ namespace Microsoft.Playwright.Tests
         public async Task ShouldNotCrashWhenNavigatingToBadSSLAfterACrossOriginNavigation()
         {
             await Page.GotoAsync(Server.CrossProcessPrefix + "/empty.html");
-            await Page.GotoAsync(HttpsServer.Prefix + "/empty.html").ContinueWith(_ => { });
+            var exception = await PlaywrightAssert.ThrowsAsync<PlaywrightException>(() => Page.GotoAsync(HttpsServer.Prefix + "/empty.html"));
+            TestUtils.AssertSSLError(exception.Message);
         }
 
         [PlaywrightTest("page-goto.spec.ts", "should throw if networkidle0 is passed as an option")]

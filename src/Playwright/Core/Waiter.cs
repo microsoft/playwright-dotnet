@@ -48,15 +48,9 @@ namespace Microsoft.Playwright.Core
         internal Waiter(IChannelOwner channelOwner, string @event)
         {
             _channelOwner = channelOwner;
+
             var beforeArgs = new { info = new { @event = @event, waitId = _waitId, phase = "before" } };
-
-            _ = channelOwner.Connection.SendMessageToServerAsync(channelOwner.Channel.Guid, "waitForEventInfo", beforeArgs);
-            _dispose.Add(() =>
-            {
-                var afterArgs = new { info = new { waitId = _waitId, phase = "after", error = _error } };
-
-                _ = channelOwner.Connection.SendMessageToServerAsync(channelOwner.Channel.Guid, "waitForEventInfo", afterArgs);
-            });
+            _channelOwner.Connection.SendMessageToServerAsync(_channelOwner.Channel.Guid, "waitForEventInfo", beforeArgs).IgnoreException();
         }
 
         public void Dispose()
@@ -69,6 +63,9 @@ namespace Microsoft.Playwright.Core
                     dispose();
                 }
 
+                var afterArgs = new { info = new { waitId = _waitId, phase = "after", error = _error } };
+                _channelOwner.Connection.SendMessageToServerAsync(_channelOwner.Channel.Guid, "waitForEventInfo", afterArgs).IgnoreException();
+
                 _cts.Cancel();
                 _cts.Dispose();
             }
@@ -77,8 +74,9 @@ namespace Microsoft.Playwright.Core
         internal void Log(string log)
         {
             _logs.Add(log);
+
             var logArgs = new { info = new { waitId = _waitId, phase = "log", message = log } };
-            _ = _channelOwner.Connection.SendMessageToServerAsync(_channelOwner.Channel.Guid, "waitForEventInfo", logArgs);
+            _channelOwner.Connection.SendMessageToServerAsync(_channelOwner.Channel.Guid, "waitForEventInfo", logArgs).IgnoreException();
         }
 
         internal void RejectImmediately(Exception exception)
