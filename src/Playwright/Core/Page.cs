@@ -90,11 +90,11 @@ namespace Microsoft.Playwright.Core
                 {
                     if ("beforeunload".Equals(e.Type, StringComparison.Ordinal))
                     {
-                        _ = e.AcceptAsync(null);
+                        e.AcceptAsync(null).IgnoreException();
                     }
                     else
                     {
-                        _ = e.DismissAsync();
+                        e.DismissAsync().IgnoreException();
                     }
                 }
                 else
@@ -155,7 +155,7 @@ namespace Microsoft.Playwright.Core
                 {
                     _fileChooserEventHandler += value;
                     _fileChooserIntercepted = true;
-                    _ = _channel.SetFileChooserInterceptedNoReplyAsync(true);
+                    _channel.SetFileChooserInterceptedNoReplyAsync(true).IgnoreException();
                 }
             }
 
@@ -168,7 +168,7 @@ namespace Microsoft.Playwright.Core
                     if (_fileChooserIntercepted)
                     {
                         _fileChooserIntercepted = false;
-                        _ = _channel.SetFileChooserInterceptedNoReplyAsync(false);
+                        _channel.SetFileChooserInterceptedNoReplyAsync(false).IgnoreException();
                     }
                 }
             }
@@ -262,7 +262,7 @@ namespace Microsoft.Playwright.Core
             set
             {
                 _defaultTimeout = value;
-                _ = _channel.SetDefaultTimeoutNoReplyAsync(value);
+                _channel.SetDefaultTimeoutNoReplyAsync(value).IgnoreException();
             }
         }
 
@@ -272,7 +272,7 @@ namespace Microsoft.Playwright.Core
             set
             {
                 _defaultNavigationTimeout = value;
-                _ = _channel.SetDefaultNavigationTimeoutNoReplyAsync(value);
+                _channel.SetDefaultNavigationTimeoutNoReplyAsync(value).IgnoreException();
             }
         }
 
@@ -1020,9 +1020,9 @@ namespace Microsoft.Playwright.Core
 
         private void Channel_BindingCall(object sender, BindingCallEventArgs e)
         {
-            if (Bindings.TryGetValue(e.BidingCall.Name, out var binding))
+            if (Bindings.TryGetValue(e.BindingCall.Name, out var binding))
             {
-                _ = e.BidingCall.CallAsync(binding);
+                _ = e.BindingCall.CallAsync(binding);
             }
         }
 

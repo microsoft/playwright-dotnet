@@ -83,12 +83,19 @@ namespace Microsoft.Playwright.Core
         private async Task RaceWithPageCloseAsync(Task task)
         {
             var page = (Page)Request.Frame.Page;
+            if (page == null)
+            {
+                task.IgnoreException();
+                return;
+            }
 
             // When page closes or crashes, we catch any potential rejects from this Route.
             // Note that page could be missing when routing popup's initial request that
             // does not have a Page initialized just yet.
-            // TODO: ignore exceptions
-            await Task.WhenAny(task, page.ClosedOrCrashedTcs.Task).ConfigureAwait(false);
+            if (task != await Task.WhenAny(task.ContinueWith(t => t.Exception.Handle(_ => true), System.Threading.CancellationToken.None, TaskContinuationOptions.OnlyOnFaulted, TaskScheduler.Default), page.ClosedOrCrashedTcs.Task).ConfigureAwait(false))
+            {
+                task.IgnoreException();
+            }
         }
 
         private NormalizedFulfillResponse NormalizeFulfillParameters(
