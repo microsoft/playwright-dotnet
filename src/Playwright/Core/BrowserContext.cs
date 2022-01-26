@@ -122,7 +122,7 @@ namespace Microsoft.Playwright.Core
             set
             {
                 _defaultNavigationTimeout = value;
-                _ = Channel.SetDefaultNavigationTimeoutNoReplyAsync(value);
+                Channel.SetDefaultNavigationTimeoutNoReplyAsync(value).IgnoreException();
             }
         }
 
@@ -132,7 +132,7 @@ namespace Microsoft.Playwright.Core
             set
             {
                 _defaultTimeout = value;
-                _ = Channel.SetDefaultTimeoutNoReplyAsync(value);
+                Channel.SetDefaultTimeoutNoReplyAsync(value).IgnoreException();
             }
         }
 
@@ -351,7 +351,7 @@ namespace Microsoft.Playwright.Core
                 }
             }
 
-            _ = route.ContinueAsync().ConfigureAwait(false);
+            route.ContinueAsync().IgnoreException();
         }
 
         internal async Task DisableInterceptionAsync()
@@ -453,9 +453,9 @@ namespace Microsoft.Playwright.Core
 
         private void Channel_BindingCall(object sender, BindingCallEventArgs e)
         {
-            if (_bindings.TryGetValue(e.BidingCall.Name, out var binding))
+            if (_bindings.TryGetValue(e.BindingCall.Name, out var binding))
             {
-                _ = e.BidingCall.CallAsync(binding);
+                _ = e.BindingCall.CallAsync(binding);
             }
         }
 

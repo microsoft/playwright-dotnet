@@ -29,6 +29,6 @@ namespace Microsoft.Playwright.Transport.Channels
 {
     internal class BindingCallEventArgs : EventArgs
     {
-        public BindingCall BidingCall { get; set; }
+        public BindingCall BindingCall { get; set; }
     }
 }

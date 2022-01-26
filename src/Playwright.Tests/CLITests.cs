@@ -29,14 +29,14 @@ using NUnit.Framework;
 
 namespace Microsoft.Playwright.Tests
 {
-    public class CLITests : WorkerAwareTest
+    public class CLITests : PlaywrightTest
     {
         [PlaywrightTest("cli.spec.ts", "")]
         public void ShouldBeAbleToRunCLICommands()
         {
             using var tempDir = new TempDirectory();
             string screenshotFile = Path.Combine(tempDir.Path, "screenshot.png");
-            var exitCode = Microsoft.Playwright.Program.Main(new[] { "screenshot", "data:text/html,Foobar", screenshotFile });
+            var exitCode = Microsoft.Playwright.Program.Main(new[] { "screenshot", "-b", BrowserName, "data:text/html,Foobar", screenshotFile });
             Assert.AreEqual(0, exitCode);
             Assert.IsTrue(System.IO.File.Exists(screenshotFile));
         }
