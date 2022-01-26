@@ -120,6 +120,9 @@ namespace Microsoft.Playwright.Core
             _defaultNavigationTimeout = Context.DefaultNavigationTimeout;
             _defaultTimeout = Context.DefaultTimeout;
             _initializer = initializer;
+
+            Close += (_, _) => ClosedOrCrashedTcs.TrySetResult(true);
+            Crash += (_, _) => ClosedOrCrashedTcs.TrySetResult(true);
         }
 
         public event EventHandler<IConsoleMessage> Console;
@@ -272,6 +275,8 @@ namespace Microsoft.Playwright.Core
                 _ = _channel.SetDefaultNavigationTimeoutNoReplyAsync(value);
             }
         }
+
+        internal TaskCompletionSource<bool> ClosedOrCrashedTcs { get; } = new();
 
         public IFrame Frame(string name)
             => Frames.FirstOrDefault(f => f.Name == name);
