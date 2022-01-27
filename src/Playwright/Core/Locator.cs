@@ -61,24 +61,11 @@ namespace Microsoft.Playwright.Core
 
         public ILocator Last => new Locator(_frame, $"{_selector} >> nth=-1");
 
-        public async Task<IReadOnlyList<string>> AllInnerTextsAsync()
-        {
-            var handles = await _frame.QuerySelectorAllAsync(_selector).ConfigureAwait(false);
-            return (await handles
-                    .SelectAsync(async x => await x.InnerTextAsync().ConfigureAwait(false))
-                    .ConfigureAwait(false))
-                .ToArray();
-        }
+        public Task<IReadOnlyList<string>> AllInnerTextsAsync()
+            => WithElementsAsync(h => h.InnerTextAsync());
 
-        public async Task<IReadOnlyList<string>> AllTextContentsAsync()
-        {
-            var handles = await _frame.QuerySelectorAllAsync(_selector).ConfigureAwait(false);
-            return (await handles
-                    .SelectAsync(async x => await x.TextContentAsync().ConfigureAwait(false))
-                    .ConfigureAwait(false))
-                .Select(x => x ?? string.Empty) // we don't filter nulls, as per https://github.com/microsoft/playwright/blob/master/src/client/locator.ts#L205
-                .ToArray();
-        }
+        public Task<IReadOnlyList<string>> AllTextContentsAsync()
+            => WithElementsAsync(async h => await h.TextContentAsync().ConfigureAwait(false) ?? string.Empty); // we don't filter nulls, as per https://github.com/microsoft/playwright/blob/master/src/client/locator.ts#L205
 
         public async Task<LocatorBoundingBoxResult> BoundingBoxAsync(LocatorBoundingBoxOptions options = null)
             => await WithElementAsync(
@@ -290,6 +277,19 @@ namespace Microsoft.Playwright.Core
             finally
             {
                 await handle.DisposeAsync().ConfigureAwait(false);
+            }
+        }
+
+        private async Task<IReadOnlyList<TResult>> WithElementsAsync<TResult>(Func<IElementHandle, Task<TResult>> callback)
+        {
+            IReadOnlyList<IElementHandle> handles = await ElementHandlesAsync().ConfigureAwait(false);
+            try
+            {
+                return (await handles.SelectAsync(callback).ConfigureAwait(false)).ToArray();
+            }
+            finally
+            {
+                await Task.WhenAll(handles.Select(async h => await h.DisposeAsync().ConfigureAwait(false))).ConfigureAwait(false);
             }
         }
     }
