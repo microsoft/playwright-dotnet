@@ -127,5 +127,26 @@ namespace Microsoft.Playwright.Tests
             await tsc.Task;
             await done;
         }
+
+        [PlaywrightTest("page-request-continue.spec.ts", "should not allow changing protocol when overriding url")]
+        public async Task ShouldNotAllowChangingProtocolWhenOverridingUrl()
+        {
+            PlaywrightException exception = null;
+            await Page.RouteAsync("**/empty.html", async (route) =>
+            {
+                try
+                {
+                    await route.ContinueAsync(new RouteContinueOptions { Url = "file:///tmp/foo" });
+                }
+                catch (PlaywrightException ex)
+                {
+                    exception = ex;
+                    await route.ContinueAsync();
+                }
+            });
+            await Page.GotoAsync(Server.EmptyPage);
+            Assert.NotNull(exception);
+            Assert.AreEqual("New URL must have same protocol as overridden URL", exception.Message);
+        }
     }
 }

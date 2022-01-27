@@ -92,9 +92,13 @@ namespace Microsoft.Playwright.Core
             // When page closes or crashes, we catch any potential rejects from this Route.
             // Note that page could be missing when routing popup's initial request that
             // does not have a Page initialized just yet.
-            if (task != await Task.WhenAny(task.ContinueWith(t => t.Exception.Handle(_ => true), System.Threading.CancellationToken.None, TaskContinuationOptions.OnlyOnFaulted, TaskScheduler.Default), page.ClosedOrCrashedTcs.Task).ConfigureAwait(false))
+            if (task != await Task.WhenAny(task, page.ClosedOrCrashedTcs.Task).ConfigureAwait(false))
             {
                 task.IgnoreException();
+            }
+            else
+            {
+                await task.ConfigureAwait(false);
             }
         }
 

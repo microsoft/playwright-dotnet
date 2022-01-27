@@ -193,7 +193,7 @@ namespace Microsoft.Playwright.Helpers
             using var cancellationToken = new CancellationTokenSource(timeout);
             using (cancellationToken.Token.Register(s => ((TaskCompletionSource<bool>)s).TrySetResult(true), tcs))
             {
-                if (tcs.Task == await Task.WhenAny(task, tcs.Task).ConfigureAwait(false))
+                if (task != await Task.WhenAny(task, tcs.Task).ConfigureAwait(false))
                 {
                     task.IgnoreException();
                     return true;
