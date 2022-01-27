@@ -241,6 +241,28 @@ namespace Microsoft.Playwright.Tests
         {
         }
 
+        [PlaywrightTest]
+        public async Task ShouldReturnNullForTask()
+        {
+            await Page.ExposeFunctionAsync("compute", () => Task.CompletedTask);
+            await Page.GotoAsync(Server.EmptyPage);
+            var result = await Page.EvaluateAsync(@"async function() {
+                return await compute();
+            }");
+            Assert.IsNull(result);
+        }
+
+        [PlaywrightTest]
+        public async Task ShouldReturnNullForTaskDelay()
+        {
+            await Page.ExposeFunctionAsync("compute", () => Task.Delay(100));
+            await Page.GotoAsync(Server.EmptyPage);
+            var result = await Page.EvaluateAsync(@"async function() {
+                return await compute();
+            }");
+            Assert.IsNull(result);
+        }
+
         internal class ComplexObject
         {
             public int x { get; set; }

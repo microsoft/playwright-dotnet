@@ -35,6 +35,8 @@ namespace Microsoft.Playwright.Core
 {
     internal class BindingCall : ChannelOwnerBase, IChannelOwner<BindingCall>
     {
+        private static readonly Type VoidTaskResultType = Type.GetType("System.Threading.Tasks.VoidTaskResult");
+
         private readonly BindingCallChannel _channel;
         private readonly BindingCallInitializer _initializer;
 
@@ -82,9 +84,12 @@ namespace Microsoft.Playwright.Core
 
                 if (result is Task taskResult)
                 {
+                    result = null;
+
                     await taskResult.ConfigureAwait(false);
 
-                    if (taskResult.GetType().IsGenericType)
+                    var taskResultType = taskResult.GetType();
+                    if (taskResultType.IsGenericType && taskResultType.GenericTypeArguments[0] != VoidTaskResultType)
                     {
                         // the task is already awaited and therefore the call to property Result will not deadlock
                         result = taskResult.GetType().GetProperty(taskResultPropertyName).GetValue(taskResult);
