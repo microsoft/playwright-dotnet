@@ -35,8 +35,11 @@ namespace Microsoft.Playwright.Helpers
         private static readonly ConcurrentDictionary<Type, IReadOnlyDictionary<Enum, string>> EnumToStringCache
             = new();
 
+        private static readonly ConcurrentDictionary<Type, IReadOnlyDictionary<string, Enum>> StringToEnumCache
+            = new();
+
         public static string ToValueString<TEnum>(this TEnum value)
-            where TEnum : Enum
+            where TEnum : struct, Enum
         {
             var enumValues = EnumToStringCache.GetOrAdd(typeof(TEnum), type =>
             {
@@ -56,12 +59,28 @@ namespace Microsoft.Playwright.Helpers
             return enumValues[value];
         }
 
-        public static TEnum EnsureDefaultValue<TEnum>(this TEnum value, TEnum defaultValue)
-            where TEnum : Enum =>
-            Convert.ToInt32(value) switch
+        public static TEnum FromValueString<TEnum>(string value)
+            where TEnum : struct, Enum
+        {
+            var enumValues = StringToEnumCache.GetOrAdd(typeof(TEnum), type =>
             {
-                0 => defaultValue,
-                _ => value,
-            };
+                string[] names = Enum.GetNames(type);
+                var dictionary = new Dictionary<string, Enum>();
+                foreach (string valueName in names)
+                {
+                    var field = type.GetField(valueName);
+                    var value = (TEnum)field.GetValue(null);
+                    dictionary[valueName] = value;
+                    if (field.GetCustomAttribute<EnumMemberAttribute>()?.Value is string enumMember)
+                    {
+                        dictionary[enumMember] = value;
+                    }
+                }
+
+                return dictionary;
+            });
+
+            return (TEnum)enumValues[value];
+        }
     }
 }
