@@ -62,23 +62,10 @@ namespace Microsoft.Playwright.Core
         public ILocator Last => new Locator(_frame, $"{_selector} >> nth=-1");
 
         public async Task<IReadOnlyList<string>> AllInnerTextsAsync()
-        {
-            var handles = await _frame.QuerySelectorAllAsync(_selector).ConfigureAwait(false);
-            return (await handles
-                    .SelectAsync(async x => await x.InnerTextAsync().ConfigureAwait(false))
-                    .ConfigureAwait(false))
-                .ToArray();
-        }
+            => await EvaluateAllAsync<string[]>("ee => ee.map(e => e.innerText)").ConfigureAwait(false);
 
         public async Task<IReadOnlyList<string>> AllTextContentsAsync()
-        {
-            var handles = await _frame.QuerySelectorAllAsync(_selector).ConfigureAwait(false);
-            return (await handles
-                    .SelectAsync(async x => await x.TextContentAsync().ConfigureAwait(false))
-                    .ConfigureAwait(false))
-                .Select(x => x ?? string.Empty) // we don't filter nulls, as per https://github.com/microsoft/playwright/blob/master/src/client/locator.ts#L205
-                .ToArray();
-        }
+            => await EvaluateAllAsync<string[]>("ee => ee.map(e => e.textContent || '')").ConfigureAwait(false);
 
         public async Task<LocatorBoundingBoxResult> BoundingBoxAsync(LocatorBoundingBoxOptions options = null)
             => await WithElementAsync(
