@@ -65,7 +65,7 @@ namespace Microsoft.Playwright.Core
             => await EvaluateAllAsync<string[]>("ee => ee.map(e => e.innerText)").ConfigureAwait(false);
 
         public async Task<IReadOnlyList<string>> AllTextContentsAsync()
-            => await EvaluateAllAsync<string[]>("ee => ee.map(e => e.textContent || '')").ConfigureAwait(false); // we don't filter nulls, as per https://github.com/microsoft/playwright/blob/master/src/client/locator.ts#L205
+            => await EvaluateAllAsync<string[]>("ee => ee.map(e => e.textContent || '')").ConfigureAwait(false);
 
         public async Task<LocatorBoundingBoxResult> BoundingBoxAsync(LocatorBoundingBoxOptions options = null)
             => await WithElementAsync(
