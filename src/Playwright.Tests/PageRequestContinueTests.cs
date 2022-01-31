@@ -22,6 +22,7 @@
  * SOFTWARE.
  */
 
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -126,6 +127,29 @@ namespace Microsoft.Playwright.Tests
             });
             await tsc.Task;
             await done;
+        }
+
+        [PlaywrightTest("page-request-continue.spec.ts", "should not allow changing protocol when overriding url")]
+        public async Task ShouldNotAllowChangingProtocolWhenOverridingUrl()
+        {
+            var tcs = new TaskCompletionSource<Exception>();
+            await Page.RouteAsync("**/empty.html", async (route) =>
+            {
+                try
+                {
+                    await route.ContinueAsync(new RouteContinueOptions { Url = "file:///tmp/foo" });
+                    tcs.SetResult(null);
+                }
+                catch (Exception ex)
+                {
+                    tcs.SetResult(ex);
+                }
+            });
+            var gotoTask = Page.GotoAsync(Server.EmptyPage, new PageGotoOptions { Timeout = 5000 });
+            var exception = await tcs.Task;
+            Assert.IsInstanceOf<PlaywrightException>(exception);
+            Assert.AreEqual("New URL must have same protocol as overridden URL", exception.Message);
+            await PlaywrightAssert.ThrowsAsync<TimeoutException>(() => gotoTask);
         }
     }
 }
