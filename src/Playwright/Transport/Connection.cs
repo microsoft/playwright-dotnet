@@ -331,6 +331,9 @@ namespace Microsoft.Playwright.Transport
                 case ChannelOwnerType.Stream:
                     result = new Stream(parent, guid);
                     break;
+                case ChannelOwnerType.Tracing:
+                    result = new Tracing(parent, guid);
+                    break;
                 default:
                     TraceMessage("pw:dotnet", "Missing type " + type);
                     break;

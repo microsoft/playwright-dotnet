@@ -462,6 +462,9 @@ namespace Microsoft.Playwright
         /// </param>
         ILocator Nth(int index);
 
+        /// <summary><para>A page this locator belongs to.</para></summary>
+        IPage Page { get; }
+
         /// <summary>
         /// <para>Focuses the element, and then uses <see cref="IKeyboard.DownAsync"/> and <see cref="IKeyboard.UpAsync"/>.</para>
         /// <para>

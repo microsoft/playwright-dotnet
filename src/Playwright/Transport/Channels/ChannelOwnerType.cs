@@ -102,6 +102,9 @@ namespace Microsoft.Playwright.Transport.Channels
         [EnumMember(Value = "stream")]
         Stream,
 
+        [EnumMember(Value = "tracing")]
+        Tracing,
+
         [EnumMember(Value = "fetchRequest")]
         FetchRequest,
 

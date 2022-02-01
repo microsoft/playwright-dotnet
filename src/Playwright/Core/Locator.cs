@@ -61,6 +61,8 @@ namespace Microsoft.Playwright.Core
 
         public ILocator Last => new Locator(_frame, $"{_selector} >> nth=-1");
 
+        IPage ILocator.Page => _frame.Page;
+
         public async Task<IReadOnlyList<string>> AllInnerTextsAsync()
             => await EvaluateAllAsync<string[]>("ee => ee.map(e => e.innerText)").ConfigureAwait(false);
 

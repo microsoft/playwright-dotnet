@@ -23,32 +23,41 @@
  */
 
 using System.Threading.Tasks;
+using Microsoft.Playwright.Transport;
+using Microsoft.Playwright.Transport.Channels;
+using Microsoft.Playwright.Transport.Protocol;
 
 namespace Microsoft.Playwright.Core
 {
-    internal partial class Tracing : ITracing
+    internal class Tracing : ChannelOwnerBase, IChannelOwner<Tracing>, ITracing
     {
-        private readonly BrowserContext _context;
+        private readonly TracingChannel _channel;
 
-        public Tracing(BrowserContext context)
+        public Tracing(IChannelOwner parent, string guid) : base(parent, guid)
         {
-            _context = context;
+            _channel = new(guid, parent.Connection, this);
         }
+
+        internal LocalUtils LocalUtils { get; set; }
+
+        ChannelBase IChannelOwner.Channel => _channel;
+
+        IChannel<Tracing> IChannelOwner<Tracing>.Channel => _channel;
 
         public async Task StartAsync(TracingStartOptions options = default)
         {
-            await _context.Channel.TracingStartAsync(
+            await _channel.TracingStartAsync(
                         name: options?.Name,
                         title: options?.Title,
                         screenshots: options?.Screenshots,
                         snapshots: options?.Snapshots,
                         sources: options?.Sources).ConfigureAwait(false);
-            await _context.Channel.StartChunkAsync(options?.Title).ConfigureAwait(false);
+            await _channel.StartChunkAsync(options?.Title).ConfigureAwait(false);
         }
 
         public Task StartChunkAsync() => StartChunkAsync();
 
-        public Task StartChunkAsync(TracingStartChunkOptions options) => _context.Channel.StartChunkAsync(title: options?.Title);
+        public Task StartChunkAsync(TracingStartChunkOptions options) => _channel.StartChunkAsync(title: options?.Title);
 
         public async Task StopChunkAsync(TracingStopChunkOptions options = null)
         {
@@ -58,12 +67,12 @@ namespace Microsoft.Playwright.Core
         public async Task StopAsync(TracingStopOptions options = default)
         {
             await StopChunkAsync(new() { Path = options?.Path }).ConfigureAwait(false);
-            await _context.Channel.TracingStopAsync().ConfigureAwait(false);
+            await _channel.TracingStopAsync().ConfigureAwait(false);
         }
 
         private async Task DoStopChunkAsync(string filePath)
         {
-            bool isLocal = _context.Channel.Connection.IsRemote;
+            bool isLocal = !_channel.Connection.IsRemote;
 
             var mode = "doNotSave";
             if (!string.IsNullOrEmpty(filePath))
@@ -74,7 +83,7 @@ namespace Microsoft.Playwright.Core
                     mode = "compressTrace";
             }
 
-            var (artifact, sourceEntries) = await _context.Channel.StopChunkAsync(mode).ConfigureAwait(false);
+            var (artifact, sourceEntries) = await _channel.StopChunkAsync(mode).ConfigureAwait(false);
 
             // Not interested in artifacts.
             if (string.IsNullOrEmpty(filePath))
@@ -90,7 +99,7 @@ namespace Microsoft.Playwright.Core
 
             // Add local sources to the remote trace if necessary.
             if (sourceEntries.Count > 0)
-                await _context.LocalUtils.ZipAsync(filePath, sourceEntries).ConfigureAwait(false);
+                await LocalUtils.ZipAsync(filePath, sourceEntries).ConfigureAwait(false);
         }
     }
 }

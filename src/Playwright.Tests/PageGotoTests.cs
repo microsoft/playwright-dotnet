@@ -396,7 +396,7 @@ namespace Microsoft.Playwright.Tests
             }
             else if (TestConstants.IsWebKit)
             {
-                StringAssert.Contains("cancelled", exception.Message);
+                StringAssert.Contains("Navigation interrupted by another one", exception.Message);
             }
             else
             {

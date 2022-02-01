@@ -28,5 +28,6 @@ namespace Microsoft.Playwright.Transport.Protocol
 {
     internal class APIRequestContextInitializer
     {
+        public Core.Tracing Tracing { get; set; }
     }
 }

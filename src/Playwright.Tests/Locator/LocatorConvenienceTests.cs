@@ -247,5 +247,19 @@ namespace Microsoft.Playwright.Tests.Locator
             await Page.SetContentAsync("<div>A</div><div>B</div><div>C</div>");
             CollectionAssert.AreEqual(new string[] { "A", "B", "C" }, (await Page.Locator("div").AllInnerTextsAsync()).ToArray());
         }
+
+        [PlaywrightTest("locator-convenience.spec.ts", "should return page")]
+        public async Task ShouldReturnPageInstance()
+        {
+            await Page.GotoAsync(Server.Prefix + "/frames/two-frames.html");
+            var outer = Page.Locator("#outer");
+            Assert.AreEqual(outer.Page, Page);
+
+            var inner = outer.Locator("#inner");
+            Assert.AreEqual(inner.Page, Page);
+
+            var inFrame = Page.Frames[1].Locator("div");
+            Assert.AreEqual(inFrame.Page, Page);
+        }
     }
 }
