@@ -134,7 +134,7 @@ namespace Microsoft.Playwright.Core
                 RecordHarPath = options.RecordHarPath,
                 RecordHarOmitContent = options.RecordHarOmitContent,
             };
-            context.LocalUtils = Playwright.Utils;
+            ((Core.Tracing)context.Tracing).LocalUtils = Playwright.Utils;
             return context;
         }
 

@@ -26,12 +26,7 @@ using System.Collections.Generic;
 
 namespace Microsoft.Playwright.Transport.Protocol
 {
-    internal class BrowserContextInitializer : EventTargetInitializer
+    internal class TracingInitializer
     {
-        public bool IsChromium { get; set; }
-
-        public Core.APIRequestContext APIRequestContext { get; set; }
-
-        public Core.Tracing Tracing { get; set; }
     }
 }

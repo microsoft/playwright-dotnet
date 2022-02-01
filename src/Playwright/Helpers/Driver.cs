@@ -87,8 +87,8 @@ namespace Microsoft.Playwright.Helpers
         internal static Dictionary<string, string> GetEnvironmentVariables()
         {
             var environmentVariables = new Dictionary<string, string>();
-            environmentVariables.Add("PW_CLI_TARGET_LANG", "csharp");
-            environmentVariables.Add("PW_CLI_TARGET_LANG_VERSION", $"{Environment.Version.Major}.{Environment.Version.Minor}");
+            environmentVariables.Add("PW_LANG_NAME", "csharp");
+            environmentVariables.Add("PW_LANG_NAME_VERSION", $"{Environment.Version.Major}.{Environment.Version.Minor}");
             environmentVariables.Add("PW_CLI_DISPLAY_VERSION", GetSemVerPackageVersion());
             return environmentVariables;
         }

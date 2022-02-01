@@ -83,7 +83,7 @@ namespace Microsoft.Playwright.Core
                 e.Page?.FireResponse(e.Response);
             };
 
-            _tracing = new Tracing(this);
+            _tracing = initializer.Tracing;
             _initializer = initializer;
             Browser = parent as IBrowser;
         }
@@ -111,8 +111,6 @@ namespace Microsoft.Playwright.Core
         IChannel<BrowserContext> IChannelOwner<BrowserContext>.Channel => Channel;
 
         public IBrowser Browser { get; }
-
-        internal LocalUtils LocalUtils { get; set; }
 
         public IReadOnlyList<IPage> Pages => PagesList;
 

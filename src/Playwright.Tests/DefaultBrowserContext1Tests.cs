@@ -52,7 +52,7 @@ namespace Microsoft.Playwright.Tests
             Assert.AreEqual(-1, cookie.Expires);
             Assert.IsFalse(cookie.HttpOnly);
             Assert.IsFalse(cookie.Secure);
-            Assert.AreEqual(TestConstants.IsChromium ? SameSiteAttribute.Lax : SameSiteAttribute.None, cookie.SameSite);
+            Assert.AreEqual((TestConstants.IsChromium || TestConstants.IsFirefox) ? SameSiteAttribute.Lax : SameSiteAttribute.None, cookie.SameSite);
 
             await context.DisposeAsync();
             tmp.Dispose();
@@ -141,26 +141,9 @@ namespace Microsoft.Playwright.Tests
 
             await page.FirstChildFrame().EvaluateAsync<string>("document.cookie = 'username=John Doe'");
             await page.WaitForTimeoutAsync(2000);
-            bool allowsThirdParty = TestConstants.IsFirefox;
             var cookies = await context.CookiesAsync(new[] { Server.CrossProcessPrefix + "/grid.html" });
 
-            if (allowsThirdParty)
-            {
-                Assert.That(cookies, Has.Count.EqualTo(1));
-                var cookie = cookies.First();
-                Assert.AreEqual("127.0.0.1", cookie.Domain);
-                Assert.AreEqual(cookie.Expires, -1);
-                Assert.IsFalse(cookie.HttpOnly);
-                Assert.AreEqual("username", cookie.Name);
-                Assert.AreEqual("/", cookie.Path);
-                Assert.AreEqual(TestConstants.IsChromium ? SameSiteAttribute.Lax : SameSiteAttribute.None, cookie.SameSite);
-                Assert.IsFalse(cookie.Secure);
-                Assert.AreEqual("John Doe", cookie.Value);
-            }
-            else
-            {
-                Assert.That(cookies, Is.Empty);
-            }
+            Assert.That(cookies, Is.Empty);
 
             await context.DisposeAsync();
             tmp.Dispose();

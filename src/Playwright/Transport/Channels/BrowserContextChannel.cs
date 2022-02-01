@@ -234,54 +234,6 @@ namespace Microsoft.Playwright.Transport.Channels
         internal Task<StorageState> GetStorageStateAsync()
             => Connection.SendMessageToServerAsync<StorageState>(Guid, "storageState", null);
 
-        internal Task TracingStartAsync(string name, string title, bool? screenshots, bool? snapshots, bool? sources)
-            => Connection.SendMessageToServerAsync(
-                Guid,
-                "tracingStart",
-                new Dictionary<string, object>
-                {
-                    ["name"] = name,
-                    ["title"] = title,
-                    ["screenshots"] = screenshots,
-                    ["snapshots"] = snapshots,
-                    ["sources"] = sources,
-                });
-
-        internal Task TracingStopAsync()
-            => Connection.SendMessageToServerAsync(
-                Guid,
-                "tracingStop");
-
-        internal Task StartChunkAsync(string title = null)
-            => Connection.SendMessageToServerAsync(Guid, "tracingStartChunk", new Dictionary<string, object>
-            {
-                ["title"] = title,
-            });
-
-        internal async Task<(Artifact Artifact, List<NameValueEntry> SourceEntries)> StopChunkAsync(string mode)
-        {
-            var result = await Connection.SendMessageToServerAsync(Guid, "tracingStopChunk", new Dictionary<string, object>
-            {
-                ["mode"] = mode,
-            }).ConfigureAwait(false);
-
-            var artifact = result.GetObject<Artifact>("artifact", Connection);
-            List<NameValueEntry> sourceEntries = new() { };
-            if (result.Value.TryGetProperty("sourceEntries", out var sourceEntriesElement))
-            {
-                var sourceEntriesEnumerator = sourceEntriesElement.EnumerateArray();
-                while (sourceEntriesEnumerator.MoveNext())
-                {
-                    JsonElement current = sourceEntriesEnumerator.Current;
-                    sourceEntries.Add(current.Deserialize<NameValueEntry>(new JsonSerializerOptions()
-                    {
-                        PropertyNameCaseInsensitive = true,
-                    }));
-                }
-            }
-            return (artifact, sourceEntries);
-        }
-
         internal async Task<Artifact> HarExportAsync()
         {
             var result = await Connection.SendMessageToServerAsync(

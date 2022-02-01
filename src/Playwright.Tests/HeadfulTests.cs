@@ -136,27 +136,10 @@ namespace Microsoft.Playwright.Tests
             }");
 
             await page.WaitForTimeoutAsync(2000);
-            bool allowsThirdParty = TestConstants.IsFirefox;
-            Assert.AreEqual(allowsThirdParty ? "username=John Doe" : string.Empty, documentCookie);
+            Assert.AreEqual(string.Empty, documentCookie);
             var cookies = await page.Context.CookiesAsync(new[] { Server.CrossProcessPrefix + "/grid.html" });
 
-            if (allowsThirdParty)
-            {
-                Assert.That(cookies, Has.Count.EqualTo(1));
-                var cookie = cookies.First();
-                Assert.AreEqual("127.0.0.1", cookie.Domain);
-                Assert.AreEqual(cookie.Expires, -1);
-                Assert.False(cookie.HttpOnly);
-                Assert.AreEqual("username", cookie.Name);
-                Assert.AreEqual("/", cookie.Path);
-                Assert.AreEqual(SameSiteAttribute.None, cookie.SameSite);
-                Assert.False(cookie.Secure);
-                Assert.AreEqual("John Doe", cookie.Value);
-            }
-            else
-            {
-                Assert.IsEmpty(cookies);
-            }
+            Assert.IsEmpty(cookies);
         }
 
         [PlaywrightTest("headful.spec.ts", "should not override viewport size when passed null")]
