@@ -72,8 +72,8 @@ namespace Microsoft.Playwright.Transport
             foreach (var item in _objects.Values)
             {
                 item.DisposeOwner();
-                _objects.Clear();
             }
+            _objects.Clear();
         }
     }
 }
