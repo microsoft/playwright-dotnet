@@ -42,7 +42,7 @@ namespace Microsoft.Playwright.Tests
         [PlaywrightTest("page-add-init-script.spec.ts", "should work with a path")]
         public async Task ShouldWorkWithAPath()
         {
-            await Page.AddInitScriptAsync(scriptPath: TestUtils.GetWebServerFile("injectedfile.js"));
+            await Page.AddInitScriptAsync(scriptPath: TestUtils.GetAsset("injectedfile.js"));
 
             await Page.GotoAsync(Server.Prefix + "/tamperable.html");
             Assert.AreEqual(123, await Page.EvaluateAsync<int>("() => window.result"));
@@ -78,7 +78,7 @@ namespace Microsoft.Playwright.Tests
         public async Task ShouldWorkWithBrowserContextScriptsWithPath()
         {
             await using var context = await Browser.NewContextAsync();
-            await context.AddInitScriptAsync(scriptPath: TestUtils.GetWebServerFile("injectedfile.js"));
+            await context.AddInitScriptAsync(scriptPath: TestUtils.GetAsset("injectedfile.js"));
 
             var page = await context.NewPageAsync();
 

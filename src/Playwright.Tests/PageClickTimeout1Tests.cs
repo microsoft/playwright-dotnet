@@ -31,12 +31,6 @@ namespace Microsoft.Playwright.Tests
 {
     public class PageClickTimeout1Tests : PageTestEx
     {
-        [PlaywrightTest("page-click-timeout-1.spec.ts", "should avoid side effects after timeout")]
-        [Ignore("Ignore USES_HOOKS")]
-        public void ShouldAvoidSideEffectsAfterTimeout()
-        {
-        }
-
         [PlaywrightTest("page-click-timeout-1.spec.ts", "should timeout waiting for button to be enabled")]
         public async Task ShouldTimeoutWaitingForButtonToBeEnabled()
         {

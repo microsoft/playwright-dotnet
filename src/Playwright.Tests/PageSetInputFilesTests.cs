@@ -235,8 +235,8 @@ namespace Microsoft.Playwright.Tests
                 </form>
             ");
 
-            await (await Page.QuerySelectorAsync("input[name=file1]")).SetInputFilesAsync(TestUtils.GetWebServerFile("file-to-upload.txt"));
-            await (await Page.QuerySelectorAsync("input[name=file2]")).SetInputFilesAsync(TestUtils.GetWebServerFile("pptr.png"));
+            await (await Page.QuerySelectorAsync("input[name=file1]")).SetInputFilesAsync(TestUtils.GetAsset("file-to-upload.txt"));
+            await (await Page.QuerySelectorAsync("input[name=file2]")).SetInputFilesAsync(TestUtils.GetAsset("pptr.png"));
 
             await TaskUtils.WhenAll(
                Page.ClickAsync("input[type=submit]"),
@@ -245,11 +245,11 @@ namespace Microsoft.Playwright.Tests
 
             Assert.AreEqual("file-to-upload.txt", files[0].name);
             Assert.AreEqual("text/plain", files[0].mime);
-            Assert.AreEqual(File.ReadAllBytes(TestUtils.GetWebServerFile("file-to-upload.txt")), files[0].content);
+            Assert.AreEqual(File.ReadAllBytes(TestUtils.GetAsset("file-to-upload.txt")), files[0].content);
 
             Assert.AreEqual("pptr.png", files[1].name);
             Assert.AreEqual("image/png", files[1].mime);
-            Assert.AreEqual(File.ReadAllBytes(TestUtils.GetWebServerFile("pptr.png")), files[1].content);
+            Assert.AreEqual(File.ReadAllBytes(TestUtils.GetAsset("pptr.png")), files[1].content);
         }
 
         [PlaywrightTest("page-set-input-files.spec.ts", "should be able to read selected file")]
@@ -299,8 +299,8 @@ namespace Microsoft.Playwright.Tests
             await PlaywrightAssert.ThrowsAsync<PlaywrightException>(() =>
                 fileChooser.SetFilesAsync(new string[]
                 {
-                    TestUtils.GetWebServerFile(TestConstants.FileToUpload),
-                    TestUtils.GetWebServerFile("pptr.png"),
+                    TestUtils.GetAsset(TestConstants.FileToUpload),
+                    TestUtils.GetAsset("pptr.png"),
                 }));
         }
 
@@ -318,7 +318,7 @@ namespace Microsoft.Playwright.Tests
                 </script>
             ");
 
-            await (await Page.QuerySelectorAsync("input")).SetInputFilesAsync(TestUtils.GetWebServerFile("file-to-upload.txt"));
+            await (await Page.QuerySelectorAsync("input")).SetInputFilesAsync(TestUtils.GetAsset("file-to-upload.txt"));
             Assert.AreEqual(2, events.Count);
             Assert.AreEqual("input", events[0]);
             Assert.AreEqual("change", events[1]);

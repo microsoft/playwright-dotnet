@@ -96,10 +96,6 @@ namespace Microsoft.Playwright.Tests
             AssertEqual(20, 20, geolocation2);
         }
 
-        [PlaywrightTest("geolocation.spec.ts", "should throw with missing latitude")]
-        [Ignore("We don't this test")]
-        public void ShouldThrowWithMissingLatitude() { }
-
         [PlaywrightTest("geolocation.spec.ts", "should not modify passed default options object")]
         [Skip(SkipAttribute.Targets.Firefox)]
         public async Task ShouldNotModifyPassedDefaultOptionsObject()

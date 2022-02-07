@@ -53,18 +53,6 @@ namespace Microsoft.Playwright.Tests
             Assert.AreEqual("Hi, I'm frame", await Page.Frames.ElementAt(1).EvaluateAsync<string>("() => document.body.textContent.trim()"));
         }
 
-        [PlaywrightTest("frame-evaluate.spec.ts", "should dispose context on navigation")]
-        [Ignore("Ignore USES_HOOKS")]
-        public void ShouldDisposeContextOnNavigation()
-        {
-        }
-
-        [PlaywrightTest("frame-evaluate.spec.ts", "should dispose context on cross-origin navigation")]
-        [Ignore("Ignore USES_HOOKS")]
-        public void ShouldDisposeContextOnCrossOriginNavigation()
-        {
-        }
-
         [PlaywrightTest("frame-evaluate.spec.ts", "should execute after cross-site navigation")]
         public async Task ShouldExecuteAfterCrossSiteNavigation()
         {

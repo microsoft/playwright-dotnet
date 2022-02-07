@@ -219,12 +219,6 @@ namespace Microsoft.Playwright.Tests
             await page.CloseAsync();
         }
 
-        [PlaywrightTest("download.spec.ts", "should save when connected remotely")]
-        [Ignore("SKIP WIRE")]
-        public void ShouldSaveWhenConnectedRemotely()
-        {
-        }
-
         [PlaywrightTest("download.spec.ts", "should error when saving with downloads disabled")]
         public async Task ShouldErrorWhenSavingWithDownloadsDisabled()
         {
@@ -261,12 +255,6 @@ namespace Microsoft.Playwright.Tests
             await download.DeleteAsync();
             var exception = await PlaywrightAssert.ThrowsAsync<PlaywrightException>(() => download.SaveAsAsync(userPath));
             StringAssert.Contains("Target page, context or browser has been closed", exception.Message);
-        }
-
-        [PlaywrightTest("download.spec.ts", "should error when saving after deletion when connected remotely")]
-        [Ignore("SKIP WIRE")]
-        public void ShouldErrorWhenSavingAfterDeletionWhenConnectedRemotely()
-        {
         }
 
         [PlaywrightTest("download.spec.ts", "should report non-navigation downloads")]

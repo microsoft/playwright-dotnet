@@ -180,12 +180,6 @@ namespace Microsoft.Playwright.Tests
             Assert.Null(element.foo[0].a);
         }
 
-        [PlaywrightTest("page-evaluate.spec.ts", "should work with function shorthands")]
-        [Ignore("Not relevant for C#, js specific")]
-        public void ShouldWorkWithFunctionShorthands()
-        {
-        }
-
         [PlaywrightTest("page-evaluate.spec.ts", "should work with unicode chars")]
         public async Task ShouldWorkWithUnicodeChars()
         {
@@ -346,12 +340,6 @@ namespace Microsoft.Playwright.Tests
             Assert.AreEqual(42, await Page.EvaluateAsync<int>("() => Promise.resolve(42)"));
         }
 
-        [PlaywrightTest("page-evaluate.spec.ts", "should throw when passed more than one parameter")]
-        [Ignore("Not relevant for C#, js specific")]
-        public void ShouldThrowWhenPassedMoreThanOneParameter()
-        {
-        }
-
         [PlaywrightTest("page-evaluate.spec.ts", @"should accept ""undefined"" as one of multiple parameters")]
         public async Task ShouldAcceptUndefinedAsOneOfMultipleParameters()
         {
@@ -362,12 +350,6 @@ namespace Microsoft.Playwright.Tests
                 return Object.is (a, null) && Object.is (b, 'foo')
             }", new { a = (object)null, b = "foo" });
             Assert.True(result);
-        }
-
-        [PlaywrightTest("page-evaluate.spec.ts", "should properly serialize undefined arguments")]
-        [Ignore("Not relevant for C#, js specific")]
-        public void ShouldProperlySerializeUndefinedArguments()
-        {
         }
 
         [PlaywrightTest("page-evaluate.spec.ts", "should properly serialize undefined fields")]
@@ -413,18 +395,6 @@ namespace Microsoft.Playwright.Tests
                 throw new Error(errorText);
             }", exceptionText.Message));
             StringAssert.Contains(exceptionText.Message, error.Message);
-        }
-
-        [PlaywrightTest("page-evaluate.spec.ts", "should accept a string")]
-        [Ignore("Not relevant for C#, js specific")]
-        public void ShouldAcceptAString()
-        {
-        }
-
-        [PlaywrightTest("page-evaluate.spec.ts", "should accept a string with semi colons")]
-        [Ignore("Not relevant for C#, js specific")]
-        public void ShouldAcceptAStringWithSemiColons()
-        {
         }
 
         [PlaywrightTest("page-evaluate.spec.ts", "should accept a string with comments")]

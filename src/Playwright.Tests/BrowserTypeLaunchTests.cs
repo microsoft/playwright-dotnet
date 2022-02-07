@@ -45,24 +45,6 @@ namespace Microsoft.Playwright.Tests
 
         }
 
-        [PlaywrightTest("browsertype-launch.spec.ts", "should throw if port option is passed")]
-        [Ignore("We don't need this test")]
-        public void ShouldThrowIfPortOptionIsPassed()
-        {
-        }
-
-        [PlaywrightTest("browsertype-launch.spec.ts", "should throw if userDataDir option is passed")]
-        [Ignore("This isn't supported in our language port.")]
-        public void ShouldThrowIfUserDataDirOptionIsPassed()
-        {
-        }
-
-        [PlaywrightTest("browsertype-launch.spec.ts", "should throw if port option is passed for persistent context")]
-        [Ignore("We don't need this test")]
-        public void ShouldThrowIfPortOptionIsPassedForPersistentContext()
-        {
-        }
-
         [PlaywrightTest("defaultbrowsercontext-2.spec.ts", "should throw if page argument is passed")]
         [Skip(SkipAttribute.Targets.Firefox)]
         public Task ShouldThrowIfPageArgumentIsPassed()
@@ -72,9 +54,9 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("browsertype-launch.spec.ts", "should reject if launched browser fails immediately")]
-        [Ignore("Skipped in playwright")]
-        public void ShouldRejectIfLaunchedBrowserFailsImmediately()
+        public async Task ShouldRejectIfLaunchedBrowserFailsImmediately()
         {
+            await PlaywrightAssert.ThrowsAsync<PlaywrightException>(() => BrowserType.LaunchAsync(new() { ExecutablePath = TestUtils.GetAsset("dummy_bad_browser_executable.js") }));
         }
 
         [PlaywrightTest("browsertype-launch.spec.ts", "should reject if executable path is invalid")]
@@ -83,24 +65,6 @@ namespace Microsoft.Playwright.Tests
             var exception = await PlaywrightAssert.ThrowsAsync<PlaywrightException>(() => BrowserType.LaunchAsync(new() { ExecutablePath = "random-invalid-path" }));
 
             StringAssert.Contains("Failed to launch", exception.Message);
-        }
-
-        [PlaywrightTest("browsertype-launch.spec.ts", "should handle timeout")]
-        [Ignore("We ignore hook tests")]
-        public void ShouldHandleTimeout()
-        {
-        }
-
-        [PlaywrightTest("browsertype-launch.spec.ts", "should report launch log")]
-        [Ignore("We ignore hook tests")]
-        public void ShouldReportLaunchLog()
-        {
-        }
-
-        [PlaywrightTest("browsertype-launch.spec.ts", "should accept objects as options")]
-        [Ignore("We don't need to test this")]
-        public void ShouldAcceptObjectsAsOptions()
-        {
         }
 
         [PlaywrightTest("browsertype-launch.spec.ts", "should fire close event for all contexts")]

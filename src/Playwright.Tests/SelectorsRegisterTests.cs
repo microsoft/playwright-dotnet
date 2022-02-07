@@ -59,7 +59,7 @@ namespace Microsoft.Playwright.Tests
         [PlaywrightTest("selectors-register.spec.ts", "should work with path")]
         public async Task ShouldWorkWithPath()
         {
-            await TestUtils.RegisterEngineWithPathAsync(Playwright, "foo", TestUtils.GetWebServerFile("sectionselectorengine.js"));
+            await TestUtils.RegisterEngineWithPathAsync(Playwright, "foo", TestUtils.GetAsset("sectionselectorengine.js"));
             await Page.SetContentAsync("<section></section>");
             Assert.AreEqual("SECTION", await Page.EvalOnSelectorAsync<string>("foo=whatever", "e => e.nodeName"));
         }

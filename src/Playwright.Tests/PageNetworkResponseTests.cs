@@ -41,7 +41,7 @@ namespace Microsoft.Playwright.Tests
         public async Task ShouldReturnBody()
         {
             var response = await Page.GotoAsync(Server.Prefix + "/pptr.png");
-            byte[] imageBuffer = File.ReadAllBytes(TestUtils.GetWebServerFile("pptr.png"));
+            byte[] imageBuffer = File.ReadAllBytes(TestUtils.GetAsset("pptr.png"));
             Assert.AreEqual(imageBuffer, await response.BodyAsync());
         }
 
@@ -50,7 +50,7 @@ namespace Microsoft.Playwright.Tests
         {
             Server.EnableGzip("/pptr.png");
             var response = await Page.GotoAsync(Server.Prefix + "/pptr.png");
-            byte[] imageBuffer = File.ReadAllBytes(TestUtils.GetWebServerFile("pptr.png"));
+            byte[] imageBuffer = File.ReadAllBytes(TestUtils.GetAsset("pptr.png"));
             Assert.AreEqual(imageBuffer, await response.BodyAsync());
         }
 

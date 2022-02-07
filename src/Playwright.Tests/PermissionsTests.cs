@@ -50,8 +50,12 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("permissions.spec.ts", "should fail when bad permission is given")]
-        [Ignore("We don't need this test")]
-        public void ShouldFailWhenBadPermissionIsGiven() { }
+        public async Task ShouldFailWhenBadPermissionIsGiven()
+        {
+            await Page.GotoAsync(Server.EmptyPage);
+            await PlaywrightAssert.ThrowsAsync<PlaywrightException>(() =>
+                Context.GrantPermissionsAsync(new[] { "foo" }, new() { Origin = Server.EmptyPage }));
+        }
 
         [PlaywrightTest("permissions.spec.ts", "should grant geolocation permission when listed")]
         [Skip(SkipAttribute.Targets.Webkit)]
@@ -178,13 +182,6 @@ namespace Microsoft.Playwright.Tests
             Assert.AreEqual("granted", await GetPermissionAsync(otherPage, "geolocation"));
 
             await otherContext.CloseAsync();
-        }
-
-
-        [PlaywrightTest("permissions.spec.ts", "should support clipboard read")]
-        [Ignore("Skipped in Playwright")]
-        public void ShouldSupportClipboardRead()
-        {
         }
 
         private static Task<string> GetPermissionAsync(IPage page, string name)

@@ -22,9 +22,11 @@
  * SOFTWARE.
  */
 
+using System.IO;
 using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
 using NUnit.Framework;
 
 namespace Microsoft.Playwright.Tests
@@ -34,7 +36,7 @@ namespace Microsoft.Playwright.Tests
         [PlaywrightTest("defaultbrowsercontext-1.spec.ts", "context.cookies() should work")]
         public async Task ContextCookiesShouldWork()
         {
-            var (tmp, context, page) = await LaunchAsync();
+            var (tmp, context, page) = await LaunchPersistentAsync();
 
             await page.GotoAsync(Server.EmptyPage);
 
@@ -61,7 +63,7 @@ namespace Microsoft.Playwright.Tests
         [PlaywrightTest("defaultbrowsercontext-1.spec.ts", "context.addCookies() should work")]
         public async Task ContextAddCookiesShouldWork()
         {
-            var (tmp, context, page) = await LaunchAsync();
+            var (tmp, context, page) = await LaunchPersistentAsync();
 
             await page.GotoAsync(Server.EmptyPage);
             await context.AddCookiesAsync(new[]
@@ -93,7 +95,7 @@ namespace Microsoft.Playwright.Tests
         [PlaywrightTest("defaultbrowsercontext-1.spec.ts", "context.clearCookies() should work")]
         public async Task ContextClearCookiesShouldWork()
         {
-            var (tmp, context, page) = await LaunchAsync();
+            var (tmp, context, page) = await LaunchPersistentAsync();
 
             await page.GotoAsync(Server.EmptyPage);
             await context.AddCookiesAsync(new[]
@@ -126,7 +128,7 @@ namespace Microsoft.Playwright.Tests
         [PlaywrightTest("defaultbrowsercontext-1.spec.ts", "should(not) block third party cookies")]
         public async Task ShouldNotBlockThirdPartyCookies()
         {
-            var (tmp, context, page) = await LaunchAsync();
+            var (tmp, context, page) = await LaunchPersistentAsync();
 
             await page.GotoAsync(Server.EmptyPage);
             await page.EvaluateAsync(@"src => {
@@ -152,7 +154,7 @@ namespace Microsoft.Playwright.Tests
         [PlaywrightTest("defaultbrowsercontext-1.spec.ts", "should support viewport option")]
         public async Task ShouldSupportViewportOption()
         {
-            var (tmp, context, page) = await LaunchAsync(new()
+            var (tmp, context, page) = await LaunchPersistentAsync(new()
             {
                 ViewportSize = new()
                 {
@@ -172,7 +174,7 @@ namespace Microsoft.Playwright.Tests
         [PlaywrightTest("defaultbrowsercontext-1.spec.ts", "should support deviceScaleFactor option")]
         public async Task ShouldSupportDeviceScaleFactorOption()
         {
-            var (tmp, context, page) = await LaunchAsync(new()
+            var (tmp, context, page) = await LaunchPersistentAsync(new()
             {
                 DeviceScaleFactor = 3
             });
@@ -186,7 +188,7 @@ namespace Microsoft.Playwright.Tests
         [PlaywrightTest("defaultbrowsercontext-1.spec.ts", "should support userAgent option")]
         public async Task ShouldSupportUserAgentOption()
         {
-            var (tmp, context, page) = await LaunchAsync(new()
+            var (tmp, context, page) = await LaunchPersistentAsync(new()
             {
                 UserAgent = "foobar"
             });
@@ -206,7 +208,7 @@ namespace Microsoft.Playwright.Tests
         [PlaywrightTest("defaultbrowsercontext-1.spec.ts", "should support bypassCSP option")]
         public async Task ShouldSupportBypassCSPOption()
         {
-            var (tmp, context, page) = await LaunchAsync(new()
+            var (tmp, context, page) = await LaunchPersistentAsync(new()
             {
                 BypassCSP = true
             });
@@ -222,7 +224,7 @@ namespace Microsoft.Playwright.Tests
         [PlaywrightTest("defaultbrowsercontext-1.spec.ts", "should support javascriptEnabled option")]
         public async Task ShouldSupportJavascriptEnabledOption()
         {
-            var (tmp, context, page) = await LaunchAsync(new()
+            var (tmp, context, page) = await LaunchPersistentAsync(new()
             {
                 JavaScriptEnabled = false
             });
@@ -246,7 +248,7 @@ namespace Microsoft.Playwright.Tests
         [PlaywrightTest("defaultbrowsercontext-1.spec.ts", "should support httpCredentials option")]
         public async Task ShouldSupportHttpCredentialsOption()
         {
-            var (tmp, context, page) = await LaunchAsync(new()
+            var (tmp, context, page) = await LaunchPersistentAsync(new()
             {
                 HttpCredentials = new()
                 {
@@ -266,7 +268,7 @@ namespace Microsoft.Playwright.Tests
         [PlaywrightTest("defaultbrowsercontext-1.spec.ts", "should support offline option")]
         public async Task ShouldSupportOfflineOption()
         {
-            var (tmp, context, page) = await LaunchAsync(new()
+            var (tmp, context, page) = await LaunchPersistentAsync(new()
             {
                 Offline = true
             });
@@ -278,12 +280,28 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("defaultbrowsercontext-1.spec.ts", "should support acceptDownloads option")]
-        [Ignore("Skipped on playwright")]
-        public void ShouldSupportAcceptDownloadsOption()
+        public async Task ShouldSupportAcceptDownloadsOption()
         {
+            var (tmp, context, page) = await LaunchPersistentAsync();
+            Server.SetRoute("/download", context =>
+            {
+                context.Response.Headers["Content-Type"] = "application/octet-stream";
+                context.Response.Headers["Content-Disposition"] = "attachment";
+                return context.Response.WriteAsync("Hello world");
+            });
+            await page.SetContentAsync($"<a href=\"{Server.Prefix}/download\">download</a>");
+            var downloadTask = page.WaitForDownloadAsync();
+
+            await TaskUtils.WhenAll(
+                downloadTask,
+                page.ClickAsync("a"));
+            var download = downloadTask.Result;
+            var path = await download.PathAsync();
+            Assert.AreEqual(File.Exists(path), true);
+            Assert.AreEqual(File.ReadAllText(path), "Hello world");
         }
 
-        private async Task<(TempDirectory tmp, IBrowserContext context, IPage page)> LaunchAsync(BrowserTypeLaunchPersistentContextOptions options = null)
+        private async Task<(TempDirectory tmp, IBrowserContext context, IPage page)> LaunchPersistentAsync(BrowserTypeLaunchPersistentContextOptions options = null)
         {
             var tmp = new TempDirectory();
             var context = await BrowserType.LaunchPersistentContextAsync(

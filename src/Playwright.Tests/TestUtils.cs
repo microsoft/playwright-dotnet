@@ -133,7 +133,7 @@ namespace Microsoft.Playwright.Tests
             }
         }
 
-        internal static string GetWebServerFile(string path) => Path.Combine(FindParentDirectory("Playwright.Tests.TestServer"), "assets", path);
+        internal static string GetAsset(string path) => Path.Combine(FindParentDirectory("Playwright.Tests.TestServer"), "assets", path);
 
         internal static async Task VerifyViewportAsync(IPage page, int width, int height)
         {
