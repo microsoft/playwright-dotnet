@@ -266,9 +266,5 @@ namespace Microsoft.Playwright.Tests
             await Page.ClickAsync("input[type=submit]");
             await Page.GotoAsync(Server.EmptyPage);
         }
-
-        [PlaywrightTest("page-autowaiting-basic.spec.ts", "should report navigation in the log when clicking anchor")]
-        [Ignore("We ignore USES_HOOKS")]
-        public void ShouldReportNavigationInTheLogWhenClickingAnchor() { }
     }
 }

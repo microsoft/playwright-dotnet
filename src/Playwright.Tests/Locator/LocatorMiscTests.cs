@@ -131,7 +131,7 @@ namespace Microsoft.Playwright.Tests.Locator
         {
             await Page.GotoAsync(Server.Prefix + "/input/fileupload.html");
             var input = Page.Locator("input[type=file]");
-            await input.SetInputFilesAsync(TestUtils.GetWebServerFile("file-to-upload.txt"));
+            await input.SetInputFilesAsync(TestUtils.GetAsset("file-to-upload.txt"));
             Assert.AreEqual("file-to-upload.txt", await Page.EvaluateAsync<string>("e => e.files[0].name", await input.ElementHandleAsync()));
         }
 

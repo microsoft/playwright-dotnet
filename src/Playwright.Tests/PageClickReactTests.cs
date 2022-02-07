@@ -31,30 +31,6 @@ namespace Microsoft.Playwright.Tests
 {
     public class PageClickReactTests : PageTestEx
     {
-        [PlaywrightTest("page-click-react.spec.ts", "should retarget when element is recycled during hit testing")]
-        [Ignore(" Skip USES_HOOKS")]
-        public void ShouldRetargetWhenElementIsRecycledDuringHitTesting()
-        {
-        }
-
-        [PlaywrightTest("page-click-react.spec.ts", "should report that selector does not match anymore")]
-        [Ignore(" Skip USES_HOOKS")]
-        public void ShouldReportThatSelectorDoesNotMatchAnymore()
-        {
-        }
-
-        [PlaywrightTest("page-click-react.spec.ts", "should retarget when element is recycled before enabled check")]
-        [Ignore(" Skip USES_HOOKS")]
-        public void ShouldRetargetWhenElementIsRecycledBeforeEnabledCheck()
-        {
-        }
-
-        [PlaywrightTest("page-click-react.spec.ts", "should not retarget the handle when element is recycled")]
-        [Ignore(" Skip USES_HOOKS")]
-        public void ShouldNotRetargetTheHandleWhenElementIsRecycled()
-        {
-        }
-
         [PlaywrightTest("page-click-react.spec.ts", "should timeout when click opens alert")]
         public async Task ShouldTimeoutWhenClickOpensAlert()
         {

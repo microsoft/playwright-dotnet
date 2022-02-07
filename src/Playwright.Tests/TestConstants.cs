@@ -48,7 +48,7 @@ namespace Microsoft.Playwright.Tests
         internal static readonly bool IsWindows = RuntimeInformation.IsOSPlatform(OSPlatform.Windows);
         internal static readonly bool IsLinux = RuntimeInformation.IsOSPlatform(OSPlatform.Linux);
 
-        public static string FileToUpload => TestUtils.GetWebServerFile("file-to-upload.txt");
+        public static string FileToUpload => TestUtils.GetAsset("file-to-upload.txt");
 
         public static readonly IEnumerable<string> NestedFramesDumpResult = new List<string>()
         {

@@ -82,7 +82,7 @@ namespace Microsoft.Playwright.Tests
         {
             await Page.RouteAsync("**/*", (route) =>
             {
-                byte[] imageBuffer = File.ReadAllBytes(TestUtils.GetWebServerFile("pptr.png"));
+                byte[] imageBuffer = File.ReadAllBytes(TestUtils.GetAsset("pptr.png"));
                 route.FulfillAsync(new()
                 {
                     ContentType = "image/png",
@@ -114,7 +114,7 @@ namespace Microsoft.Playwright.Tests
                 route.FulfillAsync(new()
                 {
                     ContentType = "shouldBeIgnored",
-                    Path = TestUtils.GetWebServerFile("pptr.png"),
+                    Path = TestUtils.GetAsset("pptr.png"),
                 });
             });
 

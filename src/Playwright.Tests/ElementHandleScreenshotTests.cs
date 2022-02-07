@@ -349,19 +349,6 @@ namespace Microsoft.Playwright.Tests
             await TestUtils.VerifyViewportAsync(page, 456, 789);
         }
 
-        [PlaywrightTest("elementhandle-screenshot.spec.ts", "should restore viewport after page screenshot and exception")]
-        [Ignore("Skip USES_HOOKS")]
-        public void ShouldRestoreViewportAfterPageScreenshotAndException()
-        {
-        }
-
-        [PlaywrightTest("elementhandle-screenshot.spec.ts", "should restore viewport after page screenshot and timeout")]
-        [Ignore("Skip USES_HOOKS")]
-        public void ShouldRestoreViewportAfterPageScreenshotAndTimeout()
-        {
-        }
-
-
         [PlaywrightTest("elementhandle-screenshot.spec.ts", "should take element screenshot when default viewport is null and restore back")]
         public async Task ShouldTakeElementScreenshotWhenDefaultViewportIsNullAndRestoreBack()
         {
@@ -396,12 +383,6 @@ namespace Microsoft.Playwright.Tests
             var sizeAfter = await page.EvaluateAsync<ViewportSize>("() => ({ width: document.body.offsetWidth, height: document.body.offsetHeight })");
             Assert.AreEqual(sizeBefore.Width, sizeAfter.Width);
             Assert.AreEqual(sizeBefore.Height, sizeAfter.Height);
-        }
-
-        [PlaywrightTest("elementhandle-screenshot.spec.ts", "should restore viewport after element screenshot and exception")]
-        [Ignore("Skip USES_HOOKS")]
-        public void ShouldRestoreViewportAfterElementScreenshotAndException()
-        {
         }
 
         [PlaywrightTest("elementhandle-screenshot.spec.ts", "should take screenshot of disabled button")]

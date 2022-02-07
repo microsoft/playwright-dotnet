@@ -46,7 +46,7 @@ namespace Microsoft.Playwright.Tests
         [PlaywrightTest("page-goto.spec.ts", "should work with file URL")]
         public async Task ShouldWorkWithFileURL()
         {
-            string fileurl = new Uri(TestUtils.GetWebServerFile(Path.Combine("frames", "two-frames.html"))).AbsoluteUri;
+            string fileurl = new Uri(TestUtils.GetAsset(Path.Combine("frames", "two-frames.html"))).AbsoluteUri;
             await Page.GotoAsync(fileurl);
             Assert.AreEqual(fileurl.ToLower(), Page.Url.ToLower());
             Assert.AreEqual(3, Page.Frames.Count);

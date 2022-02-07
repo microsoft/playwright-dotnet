@@ -109,11 +109,5 @@ namespace Microsoft.Playwright.Tests
             );
             Assert.AreEqual(Server.Prefix + "/digits/1.png", request.Url);
         }
-
-        [PlaywrightTest("page-wait-for-request.spec.ts", "should work with url match regular expression from a different context")]
-        [Ignore("We don't need to test this")]
-        public void ShouldWorkWithUrlMatchRegularExpressionFromADifferentContext()
-        {
-        }
     }
 }

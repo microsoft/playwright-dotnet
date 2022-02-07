@@ -23,7 +23,9 @@
  */
 
 using System.IO;
+using System.Text.Json;
 using System.Threading.Tasks;
+using Microsoft.Playwright.Core;
 using NUnit.Framework;
 
 namespace Microsoft.Playwright.Tests
@@ -58,9 +60,22 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("browsercontext-storage-state.spec.ts", "should set local storage")]
-        [Ignore("Needs to be implemented.")]
-        public void ShouldSetLocalStorage()
+        public async Task ShouldSetLocalStorage()
         {
+            var context = await Browser.NewContextAsync(new()
+            {
+                StorageState = "{\"cookies\":[],\"origins\":[{\"origin\":\"https://www.example.com\",\"localStorage\":[{\"name\":\"name1\",\"value\":\"value1\"}]}]}",
+            });
+            var page = await context.NewPageAsync();
+            await page.RouteAsync("**/*", (route) =>
+            {
+                route.FulfillAsync(new() { Body = "<html></html>" });
+            });
+            await page.GotoAsync("https://www.example.com");
+            var localStorage = await page.EvaluateAsync<string[]>("Object.keys(window.localStorage)");
+            Assert.AreEqual(localStorage, new string[] { "name1" });
+            var name1Value = await page.EvaluateAsync<string>("window.localStorage.getItem('name1')");
+            Assert.AreEqual(name1Value, "value1");
         }
 
         [PlaywrightTest("browsercontext-storage-state.spec.ts", "should round-trip through the file")]

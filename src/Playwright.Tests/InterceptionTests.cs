@@ -90,12 +90,6 @@ namespace Microsoft.Playwright.Tests
             Assert.False(requests["style.css"].IsNavigationRequest);
         }
 
-        [PlaywrightTest("interception.spec.ts", "should work with regular expression passed from a different context")]
-        [Ignore("We don't need to test Regex contexts")]
-        public void ShouldWorkWithRegularExpressionPassedFromADifferentContext()
-        {
-        }
-
         [PlaywrightTest("interception.spec.ts", "should intercept after a service worker")]
         public async Task ShouldInterceptAfterAServiceWorker()
         {

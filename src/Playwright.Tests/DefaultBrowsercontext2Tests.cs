@@ -285,24 +285,6 @@ namespace Microsoft.Playwright.Tests
                 BrowserType.LaunchPersistentContextAsync(tmp.Path, new() { Args = args }));
         }
 
-        [PlaywrightTest("defaultbrowsercontext-2.spec.ts", "should have passed URL when launching with ignoreDefaultArgs: true")]
-        [Ignore("Skip USES_HOOKS")]
-        public void ShouldHavePassedURLWhenLaunchingWithIgnoreDefaultArgsTrue()
-        {
-        }
-
-        [PlaywrightTest("defaultbrowsercontext-2.spec.ts", "should handle timeout")]
-        [Ignore("Skip USES_HOOKS")]
-        public void ShouldHandleTimeout()
-        {
-        }
-
-        [PlaywrightTest("defaultbrowsercontext-2.spec.ts", "should handle exception")]
-        [Ignore("Skip USES_HOOKS")]
-        public void ShouldHandleException()
-        {
-        }
-
         [PlaywrightTest("defaultbrowsercontext-2.spec.ts", "should fire close event for a persistent context")]
         public async Task ShouldFireCloseEventForAPersistentContext()
         {
@@ -315,37 +297,6 @@ namespace Microsoft.Playwright.Tests
 
             await context.DisposeAsync();
             tmp.Dispose();
-        }
-
-        [PlaywrightTest("defaultbrowsercontext-2.spec.ts", "coverage should work")]
-        [Ignore("We won't support coverage")]
-        public void CoverageShouldWork()
-        {
-            /*
-            var (tmp, context, page) = await LaunchAsync();
-
-            await page.Coverage.StartJSCoverageAsync();
-            await page.GotoAsync(Server.Prefix + "/jscoverage/simple.html", LoadState.NetworkIdle);
-            var coverage = await page.Coverage.StopJSCoverageAsync();
-            Assert.That(coverage, Has.Count.EqualTo(1));
-            StringAssert.Contains("/jscoverage/simple.html", coverage[0].Url);
-            Assert.AreEqual(1, coverage[0].Functions.Single(f => f.FunctionName == "foo").Ranges[0].Count);
-
-            tmp.Dispose();
-            await context.DisposeAsync();
-            */
-        }
-
-        [PlaywrightTest("defaultbrowsercontext-2.spec.ts", "coverage should be missing")]
-        [Ignore("We won't support coverage")]
-        public void CoverageShouldBeMissing()
-        {
-            /*
-            var (tmp, context, page) = await LaunchAsync();
-            Assert.Null(page.Coverage);
-            tmp.Dispose();
-            await context.DisposeAsync();
-            */
         }
 
         [PlaywrightTest("defaultbrowsercontext-2.spec.ts", "should respect selectors")]

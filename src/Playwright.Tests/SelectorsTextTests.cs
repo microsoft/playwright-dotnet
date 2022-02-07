@@ -31,7 +31,6 @@ namespace Microsoft.Playwright.Tests
     public class SelectorsTextTests : PageTestEx
     {
         [PlaywrightTest("selectors-text.spec.ts", "query")]
-        [Ignore("We need to update this test")]
         public async Task Query()
         {
             await Page.SetContentAsync("<div>yo</div><div>ya</div><div>\nye  </div>");
@@ -50,7 +49,7 @@ namespace Microsoft.Playwright.Tests
             Assert.AreEqual("<div> hello world! </div>", await Page.EvalOnSelectorAsync<string>("text=/^\\s*heLLo/i", "e => e.outerHTML"));
 
             await Page.SetContentAsync("<div>yo<div>ya</div>hey<div>hey</div></div>");
-            Assert.AreEqual("<div>yo<div>ya</div>hey<div>hey</div></div>", await Page.EvalOnSelectorAsync<string>("text=hey", "e => e.outerHTML"));
+            Assert.AreEqual("<div>hey</div>", await Page.EvalOnSelectorAsync<string>("text=hey", "e => e.outerHTML"));
             Assert.AreEqual("<div>ya</div>", await Page.EvalOnSelectorAsync<string>("text=\"yo\" >> text =\"ya\"", "e => e.outerHTML"));
             Assert.AreEqual("<div>ya</div>", await Page.EvalOnSelectorAsync<string>("text='yo' >> text =\"ya\"", "e => e.outerHTML"));
             Assert.AreEqual("<div>ya</div>", await Page.EvalOnSelectorAsync<string>("text=\"yo\" >> text='ya'", "e => e.outerHTML"));
@@ -93,10 +92,12 @@ namespace Microsoft.Playwright.Tests
             await Page.SetContentAsync("<div>a<br>b</div><div>a</div>");
             Assert.AreEqual("<div>a<br>b</div>", await Page.EvalOnSelectorAsync<string>("text=a", "e => e.outerHTML"));
             Assert.AreEqual("<div>a<br>b</div>", await Page.EvalOnSelectorAsync<string>("text=b", "e => e.outerHTML"));
-            Assert.Null(await Page.QuerySelectorAsync("text=ab"));
+            Assert.AreEqual("<div>a<br>b</div>", await Page.EvalOnSelectorAsync<string>("text=ab", "e => e.outerHTML"));
+            Assert.Null(await Page.QuerySelectorAsync("text=abc"));
             Assert.AreEqual(2, await Page.EvalOnSelectorAllAsync<int>("text=a", "els => els.length"));
             Assert.AreEqual(1, await Page.EvalOnSelectorAllAsync<int>("text=b", "els => els.length"));
-            Assert.AreEqual(0, await Page.EvalOnSelectorAllAsync<int>("text=ab", "els => els.length"));
+            Assert.AreEqual(1, await Page.EvalOnSelectorAllAsync<int>("text=ab", "els => els.length"));
+            Assert.AreEqual(0, await Page.EvalOnSelectorAllAsync<int>("text=abc", "els => els.length"));
 
             await Page.SetContentAsync("<div></div><span></span>");
             await Page.EvalOnSelectorAsync("div", @"div =>
@@ -112,12 +113,6 @@ namespace Microsoft.Playwright.Tests
             }");
             Assert.AreEqual("<div>helloworld</div>", await Page.EvalOnSelectorAsync<string>("text=lowo", "e => e.outerHTML"));
             Assert.AreEqual("<div>helloworld</div><span>helloworld</span>", await Page.EvalOnSelectorAllAsync<string>("text=lowo", "els => els.map(e => e.outerHTML).join('')"));
-        }
-
-        [PlaywrightTest("selectors-text.spec.ts", "create")]
-        [Ignore("Skip Hooks")]
-        public void Create()
-        {
         }
 
         [PlaywrightTest("selectors-text.spec.ts", "should be case sensitive if quotes are specified")]

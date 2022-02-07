@@ -30,12 +30,6 @@ namespace Microsoft.Playwright.Tests
 {
     public class PageAddScriptTagTests : PageTestEx
     {
-        [PlaywrightTest("page-add-script-tag.spec.ts", "should throw an error if no options are provided")]
-        [Ignore("Not relevant for C#, js specific")]
-        public void ShouldThrowAnErrorIfNoOptionsAreProvided()
-        {
-        }
-
         [PlaywrightTest("page-add-script-tag.spec.ts", "should work with a url")]
         public async Task ShouldWorkWithAUrl()
         {
@@ -57,7 +51,7 @@ namespace Microsoft.Playwright.Tests
         public async Task ShouldWorkWithAPathAndTypeModule()
         {
             await Page.GotoAsync(Server.EmptyPage);
-            await Page.AddScriptTagAsync(new() { Path = TestUtils.GetWebServerFile("es6/es6pathimport.js"), Type = "module" });
+            await Page.AddScriptTagAsync(new() { Path = TestUtils.GetAsset("es6/es6pathimport.js"), Type = "module" });
             await Page.WaitForFunctionAsync("window.__es6injected");
             Assert.AreEqual(42, await Page.EvaluateAsync<int>("() => __es6injected"));
         }
@@ -82,7 +76,7 @@ namespace Microsoft.Playwright.Tests
         public async Task ShouldWorkWithAPath()
         {
             await Page.GotoAsync(Server.EmptyPage);
-            var scriptHandle = await Page.AddScriptTagAsync(new() { Path = TestUtils.GetWebServerFile("injectedfile.js") });
+            var scriptHandle = await Page.AddScriptTagAsync(new() { Path = TestUtils.GetAsset("injectedfile.js") });
             Assert.NotNull(scriptHandle);
             Assert.AreEqual(42, await Page.EvaluateAsync<int>("() => __injected"));
         }
@@ -92,9 +86,9 @@ namespace Microsoft.Playwright.Tests
         public async Task ShouldIncludeSourceURLWhenPathIsProvided()
         {
             await Page.GotoAsync(Server.EmptyPage);
-            await Page.AddScriptTagAsync(new() { Path = TestUtils.GetWebServerFile("injectedfile.js") });
+            await Page.AddScriptTagAsync(new() { Path = TestUtils.GetAsset("injectedfile.js") });
             string result = await Page.EvaluateAsync<string>("() => __injectedError.stack");
-            StringAssert.Contains(TestUtils.GetWebServerFile("injectedfile.js"), result);
+            StringAssert.Contains(TestUtils.GetAsset("injectedfile.js"), result);
         }
 
         [PlaywrightTest("page-add-script-tag.spec.ts", "should work with content")]
