@@ -101,9 +101,20 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-expose-function.spec.ts", @"should support throwing ""null""")]
-        [Ignore("Not relevant for C#, js specific")]
-        public void ShouldSupportThrowingNull()
+        public async Task ShouldSupportThrowingNull()
         {
+            await Page.ExposeFunctionAsync("woof", () =>
+            {
+                throw null;
+            });
+            var result = await Page.EvaluateAsync(@"async () => {
+                try {
+                    await window['woof']();
+                } catch (e) {
+                    return e;
+                }
+            }");
+            Assert.AreEqual(null, null);
         }
 
         [PlaywrightTest("page-expose-function.spec.ts", "should be callable from-inside addInitScript")]
@@ -233,12 +244,6 @@ namespace Microsoft.Playwright.Tests
             await Page.ExposeFunctionAsync("foo", () => { });
             var exception = await PlaywrightAssert.ThrowsAsync<PlaywrightException>(() => Page.ExposeFunctionAsync("foo", () => { }));
             Assert.AreEqual("Function \"foo\" has been already registered", exception.Message);
-        }
-
-        [PlaywrightTest("page-expose-function.spec.ts", "exposeBindingHandle should throw for multiple arguments")]
-        [Ignore("Not relevant for C#, js specific")]
-        public void ExposeBindingHandleShouldThrowForMultipleArguments()
-        {
         }
 
         [PlaywrightTest]

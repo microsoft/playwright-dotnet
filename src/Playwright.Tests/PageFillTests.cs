@@ -171,12 +171,6 @@ namespace Microsoft.Playwright.Tests
             StringAssert.Contains("Element is not an <input>", exception.Message);
         }
 
-        [PlaywrightTest("page-fill.spec.ts", "should throw if passed a non-string value")]
-        [Ignore("Not relevant for C#, js specific")]
-        public void ShouldThrowIfPassedANonStringValue()
-        {
-        }
-
         [PlaywrightTest("page-fill.spec.ts", "should retry on disabled element")]
         public async Task ShouldRetryOnDisabledElement()
         {

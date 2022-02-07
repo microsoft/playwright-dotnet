@@ -27,6 +27,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Dynamic;
 using System.Text.Json;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Microsoft.Playwright.Helpers;
 using Microsoft.Playwright.NUnit;
@@ -485,7 +486,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-evaluate.spec.ts", "should transfer 100Mb of data from page to node.js")]
-        [Ignore("SKIP WIRE")]
         public async Task ShouldTransfer100MbOfDataFromPageToNodeJs()
         {
             string a = await Page.EvaluateAsync<string>("() => Array(100 * 1024 * 1024 + 1).join('a')");
@@ -522,12 +522,6 @@ namespace Microsoft.Playwright.Tests
             Assert.AreEqual(42, result);
         }
 
-        [PlaywrightTest("page-evaluate.spec.ts", "should work with new Function() and CSP")]
-        [Ignore("No need for downstream test")]
-        public void ShouldWorkWithNewFunctionAndCSP()
-        {
-        }
-
         [PlaywrightTest("page-evaluate.spec.ts", "should work with non-strict expressions")]
         public async Task ShouldWorkWithNonStrictExpressions()
         {
@@ -559,12 +553,6 @@ namespace Microsoft.Playwright.Tests
         {
             var exception = await PlaywrightAssert.ThrowsAsync<PlaywrightException>(() => Page.EvaluateAsync<object>(@"() => handles.length"));
             StringAssert.Contains("handles", exception.Message);
-        }
-
-        [PlaywrightTest("page-evaluate.spec.ts", "should work with CSP")]
-        [Ignore("No need for downstream test")]
-        public void ShouldWorkWithCSP()
-        {
         }
 
         [PlaywrightTest("page-evaluate.spec.ts", "should evaluate exception")]
@@ -601,7 +589,7 @@ namespace Microsoft.Playwright.Tests
             Assert.AreEqual(date, result);
         }
 
-        [Ignore("The driver doesn't support this yet")]
+        [PlaywrightTest()]
         public async Task ShouldTreatEcma2020AsFunctions()
              => Assert.AreEqual("dario", await Page.EvaluateAsync<string>(
                  @"() => {
@@ -610,9 +598,12 @@ namespace Microsoft.Playwright.Tests
                 }"));
 
         [PlaywrightTest("page-evaluate.spec.ts", "should roundtrip regex")]
-        [Ignore("Regex is not native as in javascript")]
-        public void ShouldRoundtripRegex()
+        public async Task ShouldRoundtripRegex()
         {
+            var regex = new Regex("hello", RegexOptions.IgnoreCase | RegexOptions.Multiline);
+            var result = await Page.EvaluateAsync<Regex>("regex => regex", regex);
+            Assert.AreEqual(regex.ToString(), result.ToString());
+            Assert.AreEqual(regex.Options, result.Options);
         }
 
         [PlaywrightTest("page-evaluate.spec.ts", "should jsonValue() date")]
@@ -621,18 +612,6 @@ namespace Microsoft.Playwright.Tests
             var resultHandle = await Page.EvaluateHandleAsync(@"() => ({ date: new Date('2020-05-27T01:31:38.506Z') })");
             dynamic result = await resultHandle.JsonValueAsync<ExpandoObject>();
             Assert.AreEqual(new DateTime(2020, 05, 27, 1, 31, 38, 506), result.date);
-        }
-
-        [PlaywrightTest("page-evaluate.spec.ts", "should not use toJSON when evaluating")]
-        [Ignore("Skip for now")]
-        public void ShouldNotUseToJSONWhenEvaluating()
-        {
-        }
-
-        [PlaywrightTest("page-evaluate.spec.ts", "should not use toJSON in jsonValue")]
-        [Ignore("Skip for now")]
-        public void ShouldNotUseToJSONInJsonValue()
-        {
         }
 
         public async Task ShouldSerializeEnumProperty()

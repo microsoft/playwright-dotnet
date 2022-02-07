@@ -98,9 +98,5 @@ namespace Microsoft.Playwright.Tests
             Assert.AreEqual("Bar", headerTask.Result.Item1);
             Assert.AreEqual("foO", headerTask.Result.Item2);
         }
-
-        [PlaywrightTest("page-set-extra-http-headers.spec.ts", "should throw for non-string header values")]
-        [Ignore("We don't need this test")]
-        public void ShouldThrowForNonStringHeaderValues() { }
     }
 }

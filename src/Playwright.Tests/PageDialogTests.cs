@@ -99,7 +99,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-dialog.spec.ts", "should log prompt actions")]
-        [Ignore("FAIL CHANNEL")]
         public async Task ShouldLogPromptActions()
         {
             Page.Dialog += async (_, e) =>

@@ -77,12 +77,6 @@ namespace Microsoft.Playwright.Tests
             Assert.AreEqual(42, await Page.EvaluateAsync<int>("() => window.CLICKED"));
         }
 
-        [PlaywrightTest("page-click.spec.ts", "should not throw UnhandledPromiseRejection when page closes")]
-        [Ignore("We don't need to test this race condition")]
-        public void ShouldGracefullyFailWhenPageCloses()
-        {
-        }
-
         [PlaywrightTest("page-click.spec.ts", "should click the button after navigation")]
         public async Task ShouldClickTheButtonAfterNavigation()
         {

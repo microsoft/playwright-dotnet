@@ -113,10 +113,6 @@ namespace Microsoft.Playwright.Tests
             Assert.AreEqual(options.Geolocation.Longitude, geolocation.Longitude);
         }
 
-        [PlaywrightTest("geolocation.spec.ts", "should throw with missing longitude in default options")]
-        [Ignore("We don't this test")]
-        public void ShouldThrowWithMissingLongitudeInDefaultOptions() { }
-
         [PlaywrightTest("geolocation.spec.ts", "should use context options")]
         public async Task ShouldUseContextOptions()
         {

@@ -34,18 +34,6 @@ namespace Microsoft.Playwright.Tests
     {
         private const string AddElement = "tag => document.body.appendChild(document.createElement(tag))";
 
-        [PlaywrightTest("page-wait-for-selector-1.spec.ts", "should throw on waitFor")]
-        [Ignore("We don't need to test this")]
-        public void ShouldThrowOnWaitFor()
-        {
-        }
-
-        [PlaywrightTest("page-wait-for-selector-1.spec.ts", "should tolerate waitFor=visible")]
-        [Ignore("We don't need to test this")]
-        public void ShouldTolerateWaitForVisible()
-        {
-        }
-
         [PlaywrightTest("page-wait-for-selector-1.spec.ts", "should immediately resolve promise if node exists")]
         public async Task ShouldImmediatelyResolveTaskIfNodeExists()
         {

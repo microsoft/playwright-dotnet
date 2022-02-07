@@ -75,12 +75,6 @@ namespace Microsoft.Playwright.Tests
             await Page.WaitForLoadStateAsync();
         }
 
-        [PlaywrightTest("page-wait-for-load-state.ts", "should throw for bad state")]
-        [Ignore("We don't need this test")]
-        public void ShouldThrowForBadState()
-        {
-        }
-
         [PlaywrightTest("page-wait-for-load-state.ts", "should resolve immediately if load state matches")]
         public async Task ShouldResolveImmediatelyIfLoadStateMatches()
         {

@@ -22,6 +22,7 @@
  * SOFTWARE.
  */
 
+using System;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
@@ -43,16 +44,23 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-basic.spec.ts", "async stacks should work")]
-        [Ignore("We don't need to test this in .NET")]
         public async Task AsyncStacksShouldWork()
         {
             Server.SetRoute("/empty.html", context =>
             {
-                context.Abort(); // is this right?
+                context.Abort();
                 return Task.CompletedTask;
             });
-            var exception = await PlaywrightAssert.ThrowsAsync<PlaywrightException>(() => Page.GotoAsync(Server.EmptyPage));
-            StringAssert.Contains(nameof(PageBasicTests), exception.StackTrace);
+            Exception exception = null;
+            try
+            {
+                await Page.GotoAsync(Server.EmptyPage);
+            }
+            catch (Exception ex)
+            {
+                exception = ex;
+            }
+            StringAssert.Contains(nameof(PageBasicTests) + ".cs", exception.StackTrace);
         }
 
         [PlaywrightTest("page-basic.spec.ts", "Page.press should work")]
