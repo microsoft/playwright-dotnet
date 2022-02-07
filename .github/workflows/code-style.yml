@@ -16,7 +16,9 @@ jobs:
     - name: Setup .NET Core
       uses: actions/setup-dotnet@v1
       with:
-        dotnet-version: 5.0.x
+        dotnet-version: |
+          5.0.x
+          6.0.x
     - name: Install dotnet-format
       run: dotnet tool install --global dotnet-format
     - name: Check formatting

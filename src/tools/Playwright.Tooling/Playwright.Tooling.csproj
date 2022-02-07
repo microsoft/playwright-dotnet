@@ -13,7 +13,7 @@
         <PackageReference Include="Macross.Json.Extensions" Version="2.2.0" />
         <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="6.0.0" />
         <PackageReference Include="Microsoft.Extensions.Primitives" Version="6.0.0" />
-        <PackageReference Include="Roslynator.Analyzers" Version="3.3.0">
+        <PackageReference Include="Roslynator.Analyzers" Version="4.0.2">
           <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
           <PrivateAssets>all</PrivateAssets>
         </PackageReference>

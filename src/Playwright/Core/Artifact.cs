@@ -69,11 +69,13 @@ namespace Microsoft.Playwright.Core
                 return;
             }
             System.IO.Directory.CreateDirectory(Path.GetDirectoryName(path));
-            await using var stream = await _channel.SaveAsStreamAsync().ConfigureAwait(false);
-
-            using (var fileStream = new FileStream(path, FileMode.Create, FileAccess.Write))
+            var stream = await _channel.SaveAsStreamAsync().ConfigureAwait(false);
+            await using (stream.ConfigureAwait(false))
             {
-                await stream.StreamImpl.CopyToAsync(fileStream).ConfigureAwait(false);
+                using (var fileStream = new FileStream(path, FileMode.Create, FileAccess.Write))
+                {
+                    await stream.StreamImpl.CopyToAsync(fileStream).ConfigureAwait(false);
+                }
             }
         }
 
