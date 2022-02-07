@@ -23,7 +23,9 @@
  */
 
 using System;
+using System.Diagnostics;
 using System.Text.Json;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 using Microsoft.Playwright.Helpers;
 using Microsoft.Playwright.Transport;
@@ -157,6 +159,20 @@ namespace Microsoft.Playwright.Core
             Browser browser = null;
             void OnPipeClosed()
             {
+                Console.Error.WriteLine("OnPipeClosed");
+                var st = new StackTrace(true);
+                for (int i = 0; i < st.FrameCount; ++i)
+                {
+                    var sf = st.GetFrame(i);
+                    string fileName = sf.GetFileName();
+                    if (string.IsNullOrEmpty(fileName))
+                    {
+                        continue;
+                    }
+
+                    Console.Error.WriteLine($"{fileName}:{sf.GetFileLineNumber()}");
+                }
+
                 // Emulate all pages, contexts and the browser closing upon disconnect.
                 foreach (BrowserContext context in browser?.BrowserContextsList.ToArray() ?? Array.Empty<BrowserContext>())
                 {
@@ -167,6 +183,7 @@ namespace Microsoft.Playwright.Core
                     context.OnClose();
                 }
                 browser?.DidClose();
+                Console.Error.WriteLine($"before connection.DoClose: closeError: {closeError}");
                 connection.DoClose(closeError != null ? closeError : DriverMessages.BrowserClosedExceptionMessage);
             }
             pipe.Closed += (_, _) => OnPipeClosed();
@@ -174,6 +191,7 @@ namespace Microsoft.Playwright.Core
             {
                 try
                 {
+                    Console.Error.WriteLine($"OnMessage: {JsonSerializer.Serialize(message)}");
                     await pipe.SendAsync(message).ConfigureAwait(false);
                 }
                 catch

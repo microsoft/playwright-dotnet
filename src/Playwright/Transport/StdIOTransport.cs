@@ -44,7 +44,6 @@ namespace Microsoft.Playwright.Transport
             _process = GetProcess();
             _process.StartInfo.Arguments = "run-driver";
             _process.Start();
-            _process.Exited += (_, _) => Close("Process exited");
             _process.ErrorDataReceived += (_, error) => LogReceived?.Invoke(this, error.Data);
             _process.BeginErrorReadLine();
 
@@ -56,11 +55,7 @@ namespace Microsoft.Playwright.Transport
 
         public event EventHandler<byte[]> MessageReceived;
 
-        public event EventHandler<string> TransportClosed;
-
         public event EventHandler<string> LogReceived;
-
-        public bool IsClosed { get; private set; }
 
         /// <inheritdoc/>
         public void Dispose()
@@ -70,12 +65,10 @@ namespace Microsoft.Playwright.Transport
         }
 
         /// <inheritdoc/>
-        public void Close(string closeReason)
+        public void Close()
         {
-            if (!IsClosed)
+            if (!_readerCancellationSource.IsCancellationRequested)
             {
-                IsClosed = true;
-                TransportClosed.Invoke(this, closeReason);
                 _readerCancellationSource?.Cancel();
                 _process.StandardInput.Close();
                 _process.WaitForExit();
@@ -107,9 +100,9 @@ namespace Microsoft.Playwright.Transport
                     await _process.StandardInput.BaseStream.FlushAsync(_readerCancellationSource.Token).ConfigureAwait(false);
                 }
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                Close(ex);
+                Close();
             }
         }
 
@@ -135,12 +128,6 @@ namespace Microsoft.Playwright.Transport
 
         private static void ScheduleTransportTask(Func<CancellationToken, Task> func, CancellationToken cancellationToken)
             => Task.Factory.StartNew(() => func(cancellationToken), cancellationToken, TaskCreationOptions.LongRunning, TaskScheduler.Current);
-
-        private void Close(Exception ex)
-        {
-            System.Diagnostics.Debug.WriteLine(ex);
-            Close(ex.ToString());
-        }
 
         private void Dispose(bool disposing)
         {
@@ -177,9 +164,9 @@ namespace Microsoft.Playwright.Transport
                     }
                 }
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                Close(ex);
+                Close();
             }
         }
 

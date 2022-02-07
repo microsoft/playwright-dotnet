@@ -43,11 +43,6 @@ namespace Microsoft.Playwright.Transport
         event EventHandler<string> LogReceived;
 
         /// <summary>
-        /// Occurs when the transport is closed.
-        /// </summary>
-        event EventHandler<string> TransportClosed;
-
-        /// <summary>
         /// Sends a message using the transport.
         /// </summary>
         /// <returns>The task.</returns>
@@ -57,7 +52,6 @@ namespace Microsoft.Playwright.Transport
         /// <summary>
         /// Closes the connection.
         /// </summary>
-        /// <param name="closeReason">Close reason.</param>
-        void Close(string closeReason);
+        void Close();
     }
 }

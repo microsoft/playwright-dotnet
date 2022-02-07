@@ -282,13 +282,17 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("browsertype-connect.spec.ts", "should terminate network waiters")]
+        [Repeat(25)]
         public async Task ShouldTerminateNetworkWaiters()
         {
             var browser = await BrowserType.ConnectAsync(_remoteServer.WSEndpoint);
             var page = await browser.NewPageAsync();
             var requestWatchdog = page.WaitForRequestAsync(Server.EmptyPage);
+            Console.WriteLine("kektop1");
             var responseWatchog = page.WaitForResponseAsync(Server.EmptyPage);
+            Console.WriteLine("kektop2");
             _remoteServer.Close();
+            Console.WriteLine("kektop3");
             async Task CheckTaskHasException(Task task)
             {
                 var exception = await PlaywrightAssert.ThrowsAsync<PlaywrightException>(async () => await task);
@@ -296,8 +300,11 @@ namespace Microsoft.Playwright.Tests
                 StringAssert.DoesNotContain("Timeout", exception.Message);
 
             }
+            Console.WriteLine("kektop3");
             await CheckTaskHasException(requestWatchdog);
+            Console.WriteLine("kektop3.1");
             await CheckTaskHasException(responseWatchog);
+            Console.WriteLine("done");
         }
 
         [PlaywrightTest("browsertype-connect.spec.ts", "should not throw on close after disconnect")]

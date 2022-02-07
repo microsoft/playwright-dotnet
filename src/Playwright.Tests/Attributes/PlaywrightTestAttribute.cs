@@ -126,6 +126,11 @@ namespace Microsoft.Playwright.Tests
 
                     if (_unobservedTaskExceptions.Count > 0)
                     {
+                        Console.Error.WriteLine("UnobservedTaskExceptions:");
+                        foreach (var exception in _unobservedTaskExceptions)
+                        {
+                            Console.Error.WriteLine(exception.InnerException.StackTrace);
+                        }
                         result.RecordTearDownException(new AggregateException(_unobservedTaskExceptions));
                         _unobservedTaskExceptions.Clear();
                     }
