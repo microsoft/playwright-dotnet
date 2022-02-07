@@ -28,10 +28,17 @@ stages:
     steps:
 
     - task: UseDotNet@2
-      displayName: 'Use .NET Core sdk'
+      displayName: 'Use .NET 5 SDK'
       inputs:
         packageType: sdk
         version: 5.x
+        installationPath: $(Agent.ToolsDirectory)/dotnet
+
+    - task: UseDotNet@2
+      displayName: 'Use .NET 6 SDK'
+      inputs:
+        packageType: sdk
+        version: 6.x
         installationPath: $(Agent.ToolsDirectory)/dotnet
 
     - task: MicroBuildSigningPlugin@3

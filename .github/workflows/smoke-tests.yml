@@ -12,7 +12,7 @@ on:
 
 jobs:
   test-net5:
-    name: Test Harness Tests .NET 5
+    name: Test Harness Tests .NET 6
     runs-on: ubuntu-latest
     timeout-minutes: 45
     steps:
@@ -20,7 +20,9 @@ jobs:
       - name: Setup .NET Core
         uses: actions/setup-dotnet@v1
         with:
-          dotnet-version: 5.0.x
+          dotnet-version: |
+            5.0.x
+            6.0.x
       - name: Install prerequisites and download drivers
         shell: bash
         run: ./build.sh --download-driver

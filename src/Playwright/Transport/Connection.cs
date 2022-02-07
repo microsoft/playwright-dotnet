@@ -143,7 +143,9 @@ namespace Microsoft.Playwright.Transport
                         object obj = propertyDescriptor.GetValue(args);
                         if (obj != null)
                         {
+#pragma warning disable CA1845 // Use span-based 'string.Concat' and 'AsSpan' instead of 'Substring
                             string name = propertyDescriptor.Name.Substring(0, 1).ToLower() + propertyDescriptor.Name.Substring(1);
+#pragma warning restore CA2000 // Use span-based 'string.Concat' and 'AsSpan' instead of 'Substring
                             sanitizedArgs.Add(name, obj);
                         }
                     }
