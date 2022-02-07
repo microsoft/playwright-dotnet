@@ -45,7 +45,7 @@ namespace Microsoft.Playwright.Tests.TestServer
         {
             if (!_server.GzipRoutes.Contains(context.Request.Path))
             {
-                await _next(context);
+                await _next(context).ConfigureAwait(false);
                 return;
             }
 
@@ -53,7 +53,7 @@ namespace Microsoft.Playwright.Tests.TestServer
             var bodyWrapperStream = new MemoryStream();
             context.Response.Body = bodyWrapperStream;
 
-            await _next(context);
+            await _next(context).ConfigureAwait(false);
             using (var stream = new MemoryStream())
             {
                 using (var compressionStream = new GZipStream(stream, CompressionMode.Compress, true))
@@ -65,7 +65,7 @@ namespace Microsoft.Playwright.Tests.TestServer
                 context.Response.Headers["Content-Encoding"] = "gzip";
                 context.Response.Headers["Content-Length"] = stream.Length.ToString();
                 stream.Position = 0;
-                await stream.CopyToAsync(response);
+                await stream.CopyToAsync(response).ConfigureAwait(false);
                 context.Response.Body = response;
             }
         }

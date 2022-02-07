@@ -53,7 +53,7 @@ namespace Microsoft.Playwright.MSTest
         {
             try
             {
-                Playwright = await _playwrightTask;
+                Playwright = await _playwrightTask.ConfigureAwait(false);
             }
             catch (Exception e)
             {
@@ -75,12 +75,12 @@ namespace Microsoft.Playwright.MSTest
         {
             if (TestOK)
             {
-                await Task.WhenAll(_currentWorker!.InstantiatedServices.Select(x => x.ResetAsync()));
+                await Task.WhenAll(_currentWorker!.InstantiatedServices.Select(x => x.ResetAsync())).ConfigureAwait(false);
                 _allWorkers.Push(_currentWorker);
             }
             else
             {
-                await Task.WhenAll(_currentWorker!.InstantiatedServices.Select(x => x.DisposeAsync()));
+                await Task.WhenAll(_currentWorker!.InstantiatedServices.Select(x => x.DisposeAsync())).ConfigureAwait(false);
                 _currentWorker.InstantiatedServices.Clear();
             }
         }
@@ -94,7 +94,7 @@ namespace Microsoft.Playwright.MSTest
             if (instance == null)
             {
                 instance = factory();
-                await instance.BuildAsync(this);
+                await instance.BuildAsync(this).ConfigureAwait(false);
                 _currentWorker.InstantiatedServices.Add(instance);
             }
 

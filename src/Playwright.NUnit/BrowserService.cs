@@ -38,7 +38,7 @@ namespace Microsoft.Playwright.NUnit
                 Browser = await browserType.LaunchAsync(new()
                 {
                     Headless = Environment.GetEnvironmentVariable("HEADED") != "1"
-                })
+                }).ConfigureAwait(false)
             });
         }
 

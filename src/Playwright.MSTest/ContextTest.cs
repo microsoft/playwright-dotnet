@@ -35,7 +35,7 @@ namespace Microsoft.Playwright.MSTest
         [TestInitialize]
         public async Task ContextSetup()
         {
-            Context = await NewContextAsync(ContextOptions);
+            Context = await NewContextAsync(ContextOptions).ConfigureAwait(false);
         }
 
         public virtual BrowserNewContextOptions? ContextOptions => null;

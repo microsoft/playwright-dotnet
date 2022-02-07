@@ -34,7 +34,7 @@ namespace Microsoft.Playwright.NUnit
         [SetUp]
         public async Task PageSetup()
         {
-            Page = await Context.NewPageAsync();
+            Page = await Context.NewPageAsync().ConfigureAwait(false);
         }
     }
 }

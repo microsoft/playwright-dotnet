@@ -39,7 +39,7 @@ namespace Microsoft.Playwright.NUnit
         [SetUp]
         public async Task ContextSetup()
         {
-            Context = await NewContext(ContextOptions());
+            Context = await NewContext(ContextOptions()).ConfigureAwait(false);
         }
     }
 }

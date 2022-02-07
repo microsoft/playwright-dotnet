@@ -35,7 +35,7 @@ namespace Microsoft.Playwright.NUnit
 
         public async Task<IBrowserContext> NewContext(BrowserNewContextOptions options)
         {
-            var context = await Browser.NewContextAsync(options);
+            var context = await Browser.NewContextAsync(options).ConfigureAwait(false);
             _contexts.Add(context);
             return context;
         }
@@ -43,7 +43,7 @@ namespace Microsoft.Playwright.NUnit
         [SetUp]
         public async Task BrowserSetup()
         {
-            var service = await BrowserService.Register(this, BrowserType);
+            var service = await BrowserService.Register(this, BrowserType).ConfigureAwait(false);
             Browser = service.Browser;
         }
 
@@ -54,7 +54,7 @@ namespace Microsoft.Playwright.NUnit
             {
                 foreach (var context in _contexts)
                 {
-                    await context.CloseAsync();
+                    await context.CloseAsync().ConfigureAwait(false);
                 }
             }
             _contexts.Clear();

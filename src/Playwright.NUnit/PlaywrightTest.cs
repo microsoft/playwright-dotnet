@@ -40,7 +40,7 @@ namespace Microsoft.Playwright.NUnit
         [SetUp]
         public async Task PlaywrightSetup()
         {
-            Playwright = await _playwrightTask;
+            Playwright = await _playwrightTask.ConfigureAwait(false);
             BrowserType = Playwright[BrowserName];
             Assert.IsNotNull(BrowserType, $"The requested browser ({BrowserName}) could not be found - make sure your BROWSER env variable is set correctly.");
         }
