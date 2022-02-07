@@ -31,37 +31,48 @@ namespace Microsoft.Playwright.Tests
 {
     public class CLITests : PlaywrightTest
     {
+        TextWriter _originalStdOut = Console.Out;
+        TextWriter _originalStdError = Console.Error;
+        StringWriter _cliStdOut;
+        StringWriter _cliStdError;
+
+        [SetUp]
+        public void SetUpCLITests()
+        {
+            _cliStdOut = new();
+            _cliStdError = new();
+            Console.SetOut(_cliStdOut);
+            Console.SetError(_cliStdError);
+        }
+
+        [TearDown]
+        public void TearDownCLITests()
+        {
+            Console.SetOut(_originalStdOut);
+            Console.SetError(_originalStdError);
+        }
+
         [PlaywrightTest("cli.spec.ts", "")]
         public void ShouldBeAbleToRunCLICommands()
         {
             using var tempDir = new TempDirectory();
             string screenshotFile = Path.Combine(tempDir.Path, "screenshot.png");
             var exitCode = Microsoft.Playwright.Program.Main(new[] { "screenshot", "-b", BrowserName, "data:text/html,Foobar", screenshotFile });
+
             Assert.AreEqual(0, exitCode);
-            Assert.IsTrue(System.IO.File.Exists(screenshotFile));
+            Assert.IsTrue(File.Exists(screenshotFile));
+            StringAssert.Contains("Foobar", _cliStdOut.ToString());
+            StringAssert.Contains(screenshotFile, _cliStdOut.ToString());
         }
 
         [PlaywrightTest("cli.spec.ts", "")]
         public void ShouldReturnExitCode1ForCommandNotFound()
         {
-            var originalError = Console.Error;
-            try
-            {
-                using (StringWriter sw = new StringWriter())
-                {
-                    Console.SetError(sw);
+            var exitCode = Microsoft.Playwright.Program.Main(new[] { "this-command-is-not-found" });
 
-                    var exitCode = Microsoft.Playwright.Program.Main(new[] { "this-command-is-not-found" });
-                    Assert.AreEqual(1, exitCode);
-
-                    StringAssert.Contains("this-command-is-not-found", sw.ToString());
-                    StringAssert.Contains("unknown command", sw.ToString());
-                }
-            }
-            finally
-            {
-                Console.SetError(originalError);
-            }
+            Assert.AreEqual(1, exitCode);
+            StringAssert.Contains("this-command-is-not-found", _cliStdError.ToString());
+            StringAssert.Contains("unknown command", _cliStdError.ToString());
         }
     }
 }
