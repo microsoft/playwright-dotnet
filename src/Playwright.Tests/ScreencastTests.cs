@@ -43,18 +43,6 @@ namespace Microsoft.Playwright.Tests
             StringAssert.Contains("\"RecordVideoSize\" option requires \"RecordVideoDir\" to be specified", exception.Message);
         }
 
-        [PlaywrightTest("screencast.spec.ts", "should work with old options")]
-        [Ignore("We are not using old properties")]
-        public void ShouldWorkWithOldOptions()
-        {
-        }
-
-        [PlaywrightTest("screencast.spec.ts", "should throw without recordVideo.dir")]
-        [Ignore("We don't need to test this")]
-        public void ShouldThrowWithoutRecordVideoDir()
-        {
-        }
-
         public async Task ShouldWorkWithoutASize()
         {
             using var tempDirectory = new TempDirectory();

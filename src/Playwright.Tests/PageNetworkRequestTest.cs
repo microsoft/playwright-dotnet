@@ -86,12 +86,6 @@ namespace Microsoft.Playwright.Tests
 #pragma warning restore 0612
         }
 
-        [PlaywrightTest("page-network-request.spec.ts", "Request.headers", "should get the same headers as the server")]
-        [Ignore("We don't need to test this")]
-        public void ShouldGetTheSameHeadersAsTheServer()
-        {
-        }
-
         [PlaywrightTest("page-network-request.spec.ts", "should return postData")]
         public async Task ShouldReturnPostData()
         {

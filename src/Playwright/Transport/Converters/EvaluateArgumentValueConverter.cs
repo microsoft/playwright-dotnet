@@ -30,6 +30,7 @@ using System.Dynamic;
 using System.Linq;
 using System.Text.Json;
 using System.Text.Json.Serialization;
+using System.Text.RegularExpressions;
 using Microsoft.Playwright.Core;
 using Microsoft.Playwright.Helpers;
 using Microsoft.Playwright.Transport.Channels;
@@ -128,6 +129,11 @@ namespace Microsoft.Playwright.Transport.Converters
                 return new { d = date };
             }
 
+            if (value is Regex regex)
+            {
+                return new { r = new { p = regex.ToString(), f = regex.Options.GetInlineFlags() } };
+            }
+
             if (value is IDictionary dictionary && dictionary.Keys.OfType<string>().Any())
             {
                 _visited.Add(value);
@@ -197,6 +203,11 @@ namespace Microsoft.Playwright.Transport.Converters
             if (result.ValueKind == JsonValueKind.Object && result.TryGetProperty("d", out var date))
             {
                 return date.ToObject<DateTime>();
+            }
+
+            if (result.ValueKind == JsonValueKind.Object && result.TryGetProperty("r", out var regex))
+            {
+                return new Regex(regex.GetProperty("p").ToString(), RegexOptionsExtensions.FromInlineFlags(regex.GetProperty("f").ToString()));
             }
 
             if (result.ValueKind == JsonValueKind.Object && result.TryGetProperty("b", out var boolean))

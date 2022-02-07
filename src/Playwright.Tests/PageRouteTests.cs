@@ -467,7 +467,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-route.spec.ts", "should navigate to URL with hash and and fire requests without hash")]
-        [Ignore("Not implemented")]
         public async Task ShouldNavigateToURLWithHashAndAndFireRequestsWithoutHash()
         {
             var requests = new List<IRequest>();

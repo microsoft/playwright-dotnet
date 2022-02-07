@@ -222,12 +222,6 @@ namespace Microsoft.Playwright.Tests
             Assert.True(await Page.EvalOnSelectorAsync<bool>("select", "select => Array.from(select.options).every(option => !option.selected)"));
         }
 
-        [PlaywrightTest("page-select-option.spec.ts", "should throw if passed wrong types")]
-        [Ignore("Not relevant for C#, js specific")]
-        public void ShouldThrowIfPassedWrongTypes()
-        {
-        }
-
         [PlaywrightTest("page-select-option.spec.ts", "should work when re-defining top-level Event class")]
         public async Task ShouldWorkWhenReDefiningTopLevelEventClass()
         {

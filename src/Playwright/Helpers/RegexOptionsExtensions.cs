@@ -53,5 +53,28 @@ namespace Microsoft.Playwright.Helpers
             }
             return flags;
         }
+
+        public static RegexOptions FromInlineFlags(string flags)
+        {
+            var options = RegexOptions.None;
+            for (int i = 0; i < flags.Length; i++)
+            {
+                switch (flags[i])
+                {
+                    case 'i':
+                        options |= RegexOptions.IgnoreCase;
+                        break;
+                    case 's':
+                        options |= RegexOptions.Singleline;
+                        break;
+                    case 'm':
+                        options |= RegexOptions.Multiline;
+                        break;
+                    default:
+                        throw new ArgumentException("Unsupported RegularExpression flags");
+                }
+            }
+            return options;
+        }
     }
 }

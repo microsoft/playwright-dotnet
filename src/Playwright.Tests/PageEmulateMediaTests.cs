@@ -58,10 +58,6 @@ namespace Microsoft.Playwright.Tests
             Assert.False(await Page.EvaluateAsync<bool>("() => matchMedia('(prefers-color-scheme: dark)').matches"));
         }
 
-        [PlaywrightTest("page-emulate-media.spec.ts", "should throw in case of bad media argument")]
-        [Ignore("We don't need this test. Leaving for tracking purposes")]
-        public void ShouldThrowInCaseOfBadMediaArgument() { }
-
         [PlaywrightTest("page-emulate-media.spec.ts", "should work during navigation")]
         [Skip(SkipAttribute.Targets.Firefox)]
         public async Task ShouldWorkDuringNavigation()
@@ -152,10 +148,6 @@ namespace Microsoft.Playwright.Tests
             Assert.True(await Page.EvaluateAsync<bool>("matchMedia('screen').matches"));
             Assert.False(await Page.EvaluateAsync<bool>("matchMedia('print').matches"));
         }
-
-        [PlaywrightTest("page-emulate-media.spec.ts", "should throw in case of bad colorScheme argument")]
-        [Ignore("We don't need this test. Leaving for tracking purposes")]
-        public void ShouldThrowInCaseOfBadColorSchemeArgument() { }
 
         [PlaywrightTest("page-emulate-media.spec.ts", "should emulate reduced motion")]
         public async Task ShouldEmulateReducedMotion()

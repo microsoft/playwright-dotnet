@@ -570,12 +570,6 @@ namespace Microsoft.Playwright.Tests
             await PlaywrightAssert.ThrowsAsync<PlaywrightException>(() => failed);
         }
 
-        [PlaywrightTest("page-goto.spec.ts", "extraHTTPHeaders should be pushed to provisional page")]
-        [Ignore("Skipped in Playwright")]
-        public void ExtraHTTPHeadersShouldBePushedToProvisionalPage()
-        {
-        }
-
         [PlaywrightTest("page-goto.spec.ts", "should return when navigation is comitted if commit is specified")]
         [Skip(SkipAttribute.Targets.Firefox, SkipAttribute.Targets.Webkit)]
         public async Task ShouldReturnWhenNavigationIsComittedIfCommitIsSpecified()

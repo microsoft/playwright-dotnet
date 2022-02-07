@@ -166,22 +166,6 @@ namespace Microsoft.Playwright.Tests
             StringAssert.Contains("WaitForSelector2Tests", exception.ToString());
         }
 
-        [PlaywrightTest("page-wait-for-selector-2.spec.ts", "should throw for unknown state option")]
-        [Ignore("We don't need this test")]
-        public void ShouldThrowForUnknownStateOption() { }
-
-        [PlaywrightTest("page-wait-for-selector-2.spec.ts", "should throw for visibility option")]
-        [Ignore("We don't need this test")]
-        public void ShouldThrowForVisibilityOption() { }
-
-        [PlaywrightTest("page-wait-for-selector-2.spec.ts", "should throw for true state option")]
-        [Ignore("We don't need this test")]
-        public void ShouldThrowForTrueStateOption() { }
-
-        [PlaywrightTest("page-wait-for-selector-2.spec.ts", "should throw for false state option")]
-        [Ignore("We don't need this test")]
-        public void ShouldThrowForFalseStateOption() { }
-
         [PlaywrightTest("page-wait-for-selector-2.spec.ts", "should support >> selector syntax")]
         public async Task ShouldSupportSelectorSyntax()
         {
