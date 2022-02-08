@@ -176,6 +176,10 @@ namespace Microsoft.Playwright.Core
                 {
                     await pipe.SendAsync(message).ConfigureAwait(false);
                 }
+                catch (Exception e) when (DriverMessages.IsSafeCloseError(e))
+                {
+                    // swallow exception
+                }
                 catch
                 {
                     OnPipeClosed();

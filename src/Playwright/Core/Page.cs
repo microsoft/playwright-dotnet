@@ -460,7 +460,7 @@ namespace Microsoft.Playwright.Core
                     await OwnedContext.CloseAsync().ConfigureAwait(false);
                 }
             }
-            catch (Exception e) when (IsSafeCloseException(e))
+            catch (Exception e) when (DriverMessages.IsSafeCloseError(e))
             {
                 // Swallow exception
             }
@@ -999,10 +999,6 @@ namespace Microsoft.Playwright.Core
 
             return Task.CompletedTask;
         }
-
-        private bool IsSafeCloseException(Exception e)
-            => e.Message.Contains(DriverMessages.BrowserClosedExceptionMessage) ||
-               e.Message.Contains(DriverMessages.BrowserOrContextClosedExceptionMessage);
 
         internal void OnClose()
         {
