@@ -45,7 +45,11 @@ namespace Microsoft.Playwright.Transport
             _process.StartInfo.Arguments = "run-driver";
             _process.Start();
             _process.Exited += (_, _) => Close("Process exited");
-            _process.ErrorDataReceived += (_, error) => LogReceived?.Invoke(this, error.Data);
+            _process.ErrorDataReceived += (_, error) =>
+            {
+                if (error.Data != null)
+                    LogReceived?.Invoke(this, error.Data);
+            };
             _process.BeginErrorReadLine();
 
             ScheduleTransportTask(GetResponseAsync, _readerCancellationSource.Token);
