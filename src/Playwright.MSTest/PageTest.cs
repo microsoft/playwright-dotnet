@@ -35,7 +35,7 @@ namespace Microsoft.Playwright.MSTest
         [TestInitialize]
         public async Task PageSetup()
         {
-            Page = await Context!.NewPageAsync();
+            Page = await Context!.NewPageAsync().ConfigureAwait(false);
         }
     }
 }

@@ -168,24 +168,73 @@ indent_size = 2
 # Shell scripts
 [*.sh]
 end_of_line = lf
-[*.{cmd, bat}]
-end_of_line = crlf
-
-[Playwright/API/Generated/**.cs]
-dotnet_diagnostic.CS1591.severity = none
-dotnet_diagnostic.CS1574.severity = none # This should be removed when we finish
-dotnet_diagnostic.CS0419.severity = none # This should be removed when we finish
-dotnet_diagnostic.SA1201.severity = none
 
 [*.cs]
-dotnet_diagnostic.CS1591.severity = none
-dotnet_diagnostic.SA1600.severity = none
-dotnet_diagnostic.SA1513.severity = none
-dotnet_diagnostic.SA1202.severity = none
-dotnet_diagnostic.SA1503.severity = none
-dotnet_diagnostic.RCS1075.severity = none
-dotnet_diagnostic.SA1402.severity = none
+dotnet_diagnostic.CA1003.severity = none
+dotnet_diagnostic.CA1014.severity = none
+dotnet_diagnostic.CA1031.severity = none
+dotnet_diagnostic.CA1040.severity = none
+dotnet_diagnostic.CA1054.severity = none
+dotnet_diagnostic.CA1056.severity = none
+dotnet_diagnostic.CA1200.severity = suggestion
+dotnet_diagnostic.CA1304.severity = none
+dotnet_diagnostic.CA1305.severity = none
+dotnet_diagnostic.CA1307.severity = none
+dotnet_diagnostic.CA1508.severity = none
+dotnet_diagnostic.CA1725.severity = error
+dotnet_diagnostic.CA1801.severity = suggestion
+dotnet_diagnostic.CA1812.severity = none
+dotnet_diagnostic.CA1815.severity = suggestion
+dotnet_diagnostic.CA1819.severity = suggestion
+dotnet_diagnostic.CA1822.severity = none
+dotnet_diagnostic.CA1823.severity = error
 dotnet_diagnostic.CA1844.severity = none
+dotnet_diagnostic.CA2007.severity = error
+dotnet_diagnostic.CA2227.severity = suggestion
+dotnet_diagnostic.CS1591.severity = none
+dotnet_diagnostic.RCS1075.severity = none
+dotnet_diagnostic.SA1101.severity = none
+dotnet_diagnostic.SA1128.severity = none
+dotnet_diagnostic.SA1128.severity = none
+dotnet_diagnostic.SA1202.severity = none
+dotnet_diagnostic.SA1309.severity = none
+dotnet_diagnostic.SA1402.severity = none
+dotnet_diagnostic.SA1503.severity = none
+dotnet_diagnostic.SA1513.severity = none
+dotnet_diagnostic.SA1600.severity = none
+dotnet_diagnostic.SA1601.severity = none
+dotnet_diagnostic.SA1623.severity = none
+dotnet_diagnostic.SA1633.severity = none
+dotnet_diagnostic.SX1309.severity = error
+dotnet_diagnostic.VSTHRD003.severity = none
+dotnet_diagnostic.VSTHRD200.severity = error
 
-[Playwright/Core/*.cs]
-dotnet_diagnostic.SA1118.severity = none # This should be removed when we finish
+
+[Playwright/API/Generated/**.cs]
+dotnet_diagnostic.CA1041.severity = none # [Obsolete] can exist without message
+dotnet_diagnostic.CA1711.severity = none
+dotnet_diagnostic.CA1724.severity = none
+dotnet_diagnostic.CS0419.severity = none # This should be removed when we finish
+dotnet_diagnostic.CS0612.severity = none # We can use [Obsolete] in generated code
+dotnet_diagnostic.CS1574.severity = none # This should be removed when we finish
+dotnet_diagnostic.RCS1139.severity = none
+dotnet_diagnostic.SA1121.severity = none
+dotnet_diagnostic.SA1201.severity = none
+dotnet_diagnostic.SA1502.severity = none
+dotnet_diagnostic.SA1602.severity = none
+dotnet_diagnostic.SA1604.severity = none
+dotnet_diagnostic.SA1606.severity = none
+dotnet_diagnostic.SA1614.severity = none
+dotnet_diagnostic.SA1615.severity = none
+dotnet_diagnostic.SA1618.severity = none
+dotnet_diagnostic.SA1629.severity = none
+
+
+[Playwright.Tests/**.cs]
+dotnet_diagnostic.CA2007.severity = none
+
+[Playwright.TestingHarnessTest/**.cs]
+dotnet_diagnostic.CA2007.severity = none
+
+[Playwright.LocalNugetTest/**.cs]
+dotnet_diagnostic.CA2007.severity = none

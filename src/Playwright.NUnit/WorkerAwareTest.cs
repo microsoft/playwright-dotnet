@@ -50,7 +50,7 @@ namespace Microsoft.Playwright.NUnit
         {
             if (!_currentWorker.Services.ContainsKey(name))
             {
-                _currentWorker.Services[name] = await factory();
+                _currentWorker.Services[name] = await factory().ConfigureAwait(false);
             }
 
             return _currentWorker.Services[name] as T;
@@ -73,7 +73,7 @@ namespace Microsoft.Playwright.NUnit
             {
                 foreach (var kv in _currentWorker.Services)
                 {
-                    await kv.Value.ResetAsync();
+                    await kv.Value.ResetAsync().ConfigureAwait(false);
                 }
                 _allWorkers.Push(_currentWorker);
             }
@@ -81,7 +81,7 @@ namespace Microsoft.Playwright.NUnit
             {
                 foreach (var kv in _currentWorker.Services)
                 {
-                    await kv.Value.DisposeAsync();
+                    await kv.Value.DisposeAsync().ConfigureAwait(false);
                 }
                 _currentWorker.Services.Clear();
             }

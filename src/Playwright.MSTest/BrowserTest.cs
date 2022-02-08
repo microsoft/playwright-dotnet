@@ -37,7 +37,7 @@ namespace Microsoft.Playwright.MSTest
 
         public async Task<IBrowserContext> NewContextAsync(BrowserNewContextOptions? options)
         {
-            var context = await Browser!.NewContextAsync(options);
+            var context = await Browser!.NewContextAsync(options).ConfigureAwait(false);
             _contexts.Add(context);
             return context;
         }
@@ -45,7 +45,7 @@ namespace Microsoft.Playwright.MSTest
         [TestInitialize]
         public async Task BrowserSetup()
         {
-            Browser = (await GetService<BrowserService>()).Browser;
+            Browser = (await GetService<BrowserService>().ConfigureAwait(false)).Browser;
         }
 
         [TestCleanup]
@@ -55,7 +55,7 @@ namespace Microsoft.Playwright.MSTest
             {
                 foreach (var context in _contexts)
                 {
-                    await context.CloseAsync();
+                    await context.CloseAsync().ConfigureAwait(false);
                 }
             }
             _contexts.Clear();

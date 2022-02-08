@@ -108,12 +108,12 @@ namespace Microsoft.Playwright.Tests.TestServer
                         {
                             if (context.WebSockets.IsWebSocketRequest)
                             {
-                                var webSocket = await context.WebSockets.AcceptWebSocketAsync();
+                                var webSocket = await context.WebSockets.AcceptWebSocketAsync().ConfigureAwait(false);
                                 if (_onWebSocketConnectionData != null)
                                 {
-                                    await webSocket.SendAsync(_onWebSocketConnectionData, WebSocketMessageType.Text, true, CancellationToken.None);
+                                    await webSocket.SendAsync(_onWebSocketConnectionData, WebSocketMessageType.Text, true, CancellationToken.None).ConfigureAwait(false);
                                 }
-                                await ReceiveLoopAsync(webSocket, context.Request.Headers["User-Agent"].ToString().Contains("Firefox"), CancellationToken.None);
+                                await ReceiveLoopAsync(webSocket, context.Request.Headers["User-Agent"].ToString().Contains("Firefox"), CancellationToken.None).ConfigureAwait(false);
                             }
                             else if (!context.Response.HasStarted)
                             {
@@ -130,7 +130,7 @@ namespace Microsoft.Playwright.Tests.TestServer
                             {
                                 context.Response.StatusCode = StatusCodes.Status401Unauthorized;
                             }
-                            await context.Response.WriteAsync("HTTP Error 401 Unauthorized: Access is denied");
+                            await context.Response.WriteAsync("HTTP Error 401 Unauthorized: Access is denied").ConfigureAwait(false);
                         }
                         if (_subscribers.TryGetValue(context.Request.Path, out var subscriber))
                         {
@@ -142,7 +142,7 @@ namespace Microsoft.Playwright.Tests.TestServer
                         }
                         if (_routes.TryGetValue(context.Request.Path + context.Request.QueryString, out var handler))
                         {
-                            await handler(context);
+                            await handler(context).ConfigureAwait(false);
                             return;
                         }
 
@@ -154,7 +154,7 @@ namespace Microsoft.Playwright.Tests.TestServer
                             context.Response.StatusCode = StatusCodes.Status304NotModified;
                         }
 
-                        await next();
+                        await next().ConfigureAwait(false);
                     })
                     .UseMiddleware<SimpleCompressionMiddleware>(this)
                     .UseStaticFiles(new StaticFileOptions
@@ -250,7 +250,7 @@ namespace Microsoft.Playwright.Tests.TestServer
                 taskCompletion.SetResult(selector(context.Request));
             });
 
-            var request = await taskCompletion.Task;
+            var request = await taskCompletion.Task.ConfigureAwait(false);
             _requestWaits.Remove(path);
 
             return request;
@@ -283,18 +283,18 @@ namespace Microsoft.Playwright.Tests.TestServer
             {
                 while (true)
                 {
-                    var result = await webSocket.ReceiveAsync(new(buffer), token);
+                    var result = await webSocket.ReceiveAsync(new(buffer), token).ConfigureAwait(false);
 
                     if (result.MessageType == WebSocketMessageType.Close)
                     {
                         if (sendCloseMessage)
                         {
-                            await webSocket.CloseAsync(WebSocketCloseStatus.NormalClosure, "Close", CancellationToken.None);
+                            await webSocket.CloseAsync(WebSocketCloseStatus.NormalClosure, "Close", CancellationToken.None).ConfigureAwait(false);
                         }
                         break;
                     }
 
-                    var data = await ReadFrames(result, webSocket, buffer, token);
+                    var data = await ReadFrames(result, webSocket, buffer, token).ConfigureAwait(false);
 
                     if (data.Count == 0)
                     {
@@ -317,11 +317,11 @@ namespace Microsoft.Playwright.Tests.TestServer
                 if (count >= MaxMessageSize)
                 {
                     string closeMessage = string.Format("Maximum message size: {0} bytes.", MaxMessageSize);
-                    await webSocket.CloseAsync(WebSocketCloseStatus.MessageTooBig, closeMessage, token);
+                    await webSocket.CloseAsync(WebSocketCloseStatus.MessageTooBig, closeMessage, token).ConfigureAwait(false);
                     return new();
                 }
 
-                result = await webSocket.ReceiveAsync(new(buffer, count, MaxMessageSize - count), token);
+                result = await webSocket.ReceiveAsync(new(buffer, count, MaxMessageSize - count), token).ConfigureAwait(false);
                 count += result.Count;
 
             }
