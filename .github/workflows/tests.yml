@@ -39,12 +39,12 @@ jobs:
         if: matrix.os != 'ubuntu-latest'
         env:
           BROWSER: ${{ matrix.browser }}
-        run: dotnet test ./src/Playwright.Tests/Playwright.Tests.csproj -c Debug -f net5.0 --logger "trx;LogFileName=TestResults.xml"
+        run: dotnet test ./src/Playwright.Tests/Playwright.Tests.csproj -c Debug -f net5.0
       - name: Running tests (Linux)
         if: matrix.os == 'ubuntu-latest'
         env:
           BROWSER: ${{ matrix.browser }}
-        run: xvfb-run dotnet test ./src/Playwright.Tests/Playwright.Tests.csproj -c Debug -f net5.0 --logger "trx"
+        run: xvfb-run dotnet test ./src/Playwright.Tests/Playwright.Tests.csproj -c Debug -f net5.0
 
   test-net31:
     name: chromium/ubuntu/.NET 3.1
@@ -70,4 +70,4 @@ jobs:
       - name: Running tests
         env:
           BROWSER: CHROMIUM
-        run: xvfb-run dotnet test ./src/Playwright.Tests/Playwright.Tests.csproj -c Debug -f netcoreapp3.1 --logger "trx"
+        run: xvfb-run dotnet test ./src/Playwright.Tests/Playwright.Tests.csproj -c Debug -f netcoreapp3.1

@@ -31,4 +31,4 @@ jobs:
       - name: Installing Browsers and dependencies
         run: dotnet run --project ./src/Playwright/Playwright.csproj -f net5.0 -- install --with-deps
       - name: Running tests 
-        run: xvfb-run dotnet test ./src/Playwright.TestingHarnessTest/Playwright.TestingHarnessTest.csproj -c Debug -f net5.0 --logger "trx"
+        run: xvfb-run dotnet test ./src/Playwright.TestingHarnessTest/Playwright.TestingHarnessTest.csproj -c Debug -f net5.0
