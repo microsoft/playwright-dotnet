@@ -71,7 +71,13 @@ namespace Microsoft.Playwright
         [JsonPropertyName("screenshots")]
         public bool? Screenshots { get; set; }
 
-        /// <summary><para>Whether to capture DOM snapshot on every action.</para></summary>
+        /// <summary>
+        /// <para>If this option is true tracing will</para>
+        /// <list type="bullet">
+        /// <item><description>capture DOM snapshot on every action</description></item>
+        /// <item><description>record network activity</description></item>
+        /// </list>
+        /// </summary>
         [JsonPropertyName("snapshots")]
         public bool? Snapshots { get; set; }
 
