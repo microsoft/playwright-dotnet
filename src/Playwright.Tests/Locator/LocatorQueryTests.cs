@@ -22,6 +22,7 @@
  * SOFTWARE.
  */
 
+using System;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using NUnit.Framework;
@@ -123,6 +124,33 @@ namespace Microsoft.Playwright.Tests.Locator
         {
             await Page.SetContentAsync("<div>Hello \"world\"</div><div>Hello world</div>");
             StringAssert.Contains(await Page.Locator("div", new() { HasTextRegex = new Regex("hElLo \"wOrld\"", RegexOptions.IgnoreCase) }).InnerTextAsync(), "Hello \"world\"");
+        }
+
+        [PlaywrightTest("locator-query.spec.ts", "should support has:locator")]
+        public async Task ShouldSupportHasLocator()
+        {
+            await Page.SetContentAsync("<div><span>hello</span></div><div><span>world</span></div>");
+            Assert.AreEqual(1, await Page.Locator("div", new() { Has = Page.Locator("text=world") }).CountAsync());
+            Assert.AreEqual("<div><span>world</span></div>", await Page.Locator("div", new() { Has = Page.Locator("text=world") }).EvaluateAsync<string>("e => e.outerHTML"));
+            Assert.AreEqual(1, await Page.Locator("div", new() { Has = Page.Locator("text=hello") }).CountAsync());
+            Assert.AreEqual("<div><span>hello</span></div>", await Page.Locator("div", new() { Has = Page.Locator("text=hello") }).EvaluateAsync<string>("e => e.outerHTML"));
+            Assert.AreEqual(2, await Page.Locator("div", new() { Has = Page.Locator("xpath=./span") }).CountAsync());
+            Assert.AreEqual(1, await Page.Locator("div", new() { Has = Page.Locator("span", new() { HasTextString = "wor" }) }).CountAsync());
+            Assert.AreEqual("<div><span>world</span></div>", await Page.Locator("div", new() { Has = Page.Locator("span", new() { HasTextString = "wor" }) }).EvaluateAsync<string>("e => e.outerHTML"));
+            Assert.AreEqual(1, await Page.Locator("div", new() { HasTextString = "wor", Has = Page.Locator("span") }).CountAsync());
+        }
+
+        [PlaywrightTest("locator-query.spec.ts", "should enforce same frame for has:locator'")]
+        public async Task ShouldEnforceSameFrameForHasLocator()
+        {
+            await Page.GotoAsync(Server.Prefix + "/frames/two-frames.html");
+            var child = Page.Frames[1];
+            var exception = await PlaywrightAssert.ThrowsAsync<ArgumentException>(() =>
+            {
+                Page.Locator("div", new() { Has = child.Locator("span") });
+                return Task.CompletedTask;
+            });
+            Assert.AreEqual(exception.Message, "Inner \"has\" locator must belong to the same frame.");
         }
     }
 }

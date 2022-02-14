@@ -31,8 +31,8 @@ namespace Microsoft.Playwright.Tests
 {
     public class CLITests : PlaywrightTest
     {
-        TextWriter _originalStdOut = Console.Out;
-        TextWriter _originalStdError = Console.Error;
+        readonly TextWriter _originalStdOut = Console.Out;
+        readonly TextWriter _originalStdError = Console.Error;
         StringWriter _cliStdOut;
         StringWriter _cliStdError;
 

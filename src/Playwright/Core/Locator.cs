@@ -55,6 +55,16 @@ namespace Microsoft.Playwright.Core
             {
                 _selector += $" >> :scope:has-text({options.HasTextString.EscapeWithQuotes("\"")})";
             }
+
+            if (options?.Has != null)
+            {
+                var has = (Locator)options.Has;
+                if (has._frame != _frame)
+                {
+                    throw new ArgumentException("Inner \"has\" locator must belong to the same frame.");
+                }
+                _selector += " >> has=" + JsonSerializer.Serialize(has._selector);
+            }
         }
 
         public ILocator First => new Locator(_frame, $"{_selector} >> nth=0");

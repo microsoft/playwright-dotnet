@@ -46,9 +46,24 @@ namespace Microsoft.Playwright
         public LocatorLocatorOptions(LocatorLocatorOptions clone)
         {
             if (clone == null) return;
+            Has = clone.Has;
             HasTextString = clone.HasTextString;
             HasTextRegex = clone.HasTextRegex;
         }
+
+        /// <summary>
+        /// <para>
+        /// Matches elements containing an element that matches an inner locator. Inner locator
+        /// is queried against the outer one. For example, <c>article</c> that has <c>text=Playwright</c>
+        /// matches <c>&lt;article&gt;&lt;div&gt;Playwright&lt;/div&gt;&lt;/article&gt;</c>.
+        /// </para>
+        /// <para>
+        /// Note that outer and inner locators must belong to the same frame. Inner locator
+        /// must not contain <see cref="IFrameLocator"/>s.
+        /// </para>
+        /// </summary>
+        [JsonPropertyName("has")]
+        public ILocator? Has { get; set; }
 
         /// <summary>
         /// <para>
