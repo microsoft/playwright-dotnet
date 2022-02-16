@@ -12,7 +12,7 @@ on:
 
 jobs:
   test-net5:
-    name: ${{ matrix.browser }}/${{ matrix.os }}/.NET 6
+    name: ${{ matrix.browser }}/${{ matrix.os }}/.NET 5
     runs-on: ${{ matrix.os }}
     timeout-minutes: 45
     strategy:
@@ -25,9 +25,7 @@ jobs:
       - name: Setup .NET Core
         uses: actions/setup-dotnet@v1
         with:
-          dotnet-version: |
-            5.0.x
-            6.0.x
+          dotnet-version: 5.0.x
       - name: Install prerequisites and download drivers
         shell: bash
         run: ./build.sh --download-driver
@@ -57,7 +55,6 @@ jobs:
           dotnet-version: |
             3.1.x
             5.0.x
-            6.0.x
       - name: Install prerequisites and download drivers
         shell: bash
         run: ./build.sh --download-driver
