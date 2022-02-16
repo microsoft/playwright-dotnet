@@ -32,14 +32,6 @@ stages:
       inputs:
         packageType: sdk
         version: 5.x
-        installationPath: $(Agent.ToolsDirectory)/dotnet
-
-    - task: UseDotNet@2
-      displayName: 'Use .NET 6 SDK'
-      inputs:
-        packageType: sdk
-        version: 6.x
-        installationPath: $(Agent.ToolsDirectory)/dotnet
 
     - task: MicroBuildSigningPlugin@3
       inputs:
