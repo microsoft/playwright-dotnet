@@ -126,6 +126,10 @@ namespace Microsoft.Playwright.Tests
 
                     if (_unobservedTaskExceptions.Count > 0)
                     {
+                        foreach (var exception in _unobservedTaskExceptions)
+                        {
+                            PrintException(exception);
+                        }
                         result.RecordTearDownException(new AggregateException(_unobservedTaskExceptions));
                         _unobservedTaskExceptions.Clear();
                     }
@@ -136,6 +140,19 @@ namespace Microsoft.Playwright.Tests
             private void UnobservedTaskException(object sender, UnobservedTaskExceptionEventArgs e)
             {
                 _unobservedTaskExceptions.Add(e.Exception);
+            }
+
+            private void PrintException(Exception ex)
+            {
+                if (ex == null)
+                {
+                    return;
+                }
+                Console.WriteLine("-----------UnobservedTaskException-----------");
+                Console.WriteLine(ex.Message);
+                Console.WriteLine(ex.StackTrace);
+                Console.WriteLine("InnerException:");
+                PrintException(ex.InnerException);
             }
         }
     }
