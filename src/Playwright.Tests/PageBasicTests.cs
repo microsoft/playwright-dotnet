@@ -238,7 +238,7 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-basic.spec.ts", "should terminate network waiters")]
-        public async Task ShouldTerminateNetworkWaiters()
+        public async Task ShouldTerminateNetwork2Waiters()
         {
             var newPage = await Context.NewPageAsync();
             var exception = await PlaywrightAssert.ThrowsAsync<PlaywrightException>(() => TaskUtils.WhenAll(
