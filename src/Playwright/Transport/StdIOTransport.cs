@@ -23,7 +23,6 @@
  */
 
 using System;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.Threading;
 using System.Threading.Tasks;
@@ -31,13 +30,11 @@ using Microsoft.Playwright.Helpers;
 
 namespace Microsoft.Playwright.Transport
 {
-    internal class StdIOTransport : IConnectionTransport, IDisposable
+    internal class StdIOTransport : IDisposable
     {
-        private const int DefaultBufferSize = 1024;  // Byte buffer size
+        private const int DefaultBufferSize = 32768;
         private readonly Process _process;
         private readonly CancellationTokenSource _readerCancellationSource = new();
-        private readonly List<byte> _data = new();
-        private int? _currentMessageSize;
 
         internal StdIOTransport()
         {
@@ -52,7 +49,7 @@ namespace Microsoft.Playwright.Transport
             };
             _process.BeginErrorReadLine();
 
-            ScheduleTransportTask(GetResponseAsync, _readerCancellationSource.Token);
+            ScheduleTransportTask(OnMessageAsync, _readerCancellationSource.Token);
         }
 
         /// <inheritdoc cref="IDisposable.Dispose"/>
@@ -64,56 +61,39 @@ namespace Microsoft.Playwright.Transport
 
         public event EventHandler<string> LogReceived;
 
-        public bool IsClosed { get; private set; }
-
-        /// <inheritdoc/>
         public void Dispose()
         {
             Dispose(true);
             GC.SuppressFinalize(this);
         }
 
-        /// <inheritdoc/>
         public void Close(string closeReason)
         {
-            if (!IsClosed)
+            if (!_readerCancellationSource.IsCancellationRequested)
             {
-                IsClosed = true;
-                TransportClosed.Invoke(this, closeReason);
                 _readerCancellationSource?.Cancel();
                 _process.StandardInput.Close();
                 _process.WaitForExit();
+                TransportClosed.Invoke(this, closeReason);
             }
         }
 
         public async Task SendAsync(byte[] message)
         {
-            try
+            if (!_readerCancellationSource.IsCancellationRequested)
             {
-                if (!_readerCancellationSource.IsCancellationRequested)
-                {
-                    int len = message.Length;
-                    byte[] ll = new byte[4];
-                    ll[0] = (byte)(len & 0xFF);
-                    ll[1] = (byte)((len >> 8) & 0xFF);
-                    ll[2] = (byte)((len >> 16) & 0xFF);
-                    ll[3] = (byte)((len >> 24) & 0xFF);
+                byte[] lengthPrefix = BitConverter.GetBytes(message.Length);
 
 #if NETSTANDARD
 #pragma warning disable CA1835 // We can't use ReadOnlyMemory on netstandard
-                    await _process.StandardInput.BaseStream.WriteAsync(ll, 0, 4, _readerCancellationSource.Token).ConfigureAwait(false);
-                    await _process.StandardInput.BaseStream.WriteAsync(message, 0, len, _readerCancellationSource.Token).ConfigureAwait(false);
+                await _process.StandardInput.BaseStream.WriteAsync(lengthPrefix, 0, 4, _readerCancellationSource.Token).ConfigureAwait(false);
+                await _process.StandardInput.BaseStream.WriteAsync(message, 0, message.Length, _readerCancellationSource.Token).ConfigureAwait(false);
 #pragma warning restore CA1835
 #else
-                    await _process.StandardInput.BaseStream.WriteAsync(new(ll, 0, 4), _readerCancellationSource.Token).ConfigureAwait(false);
-                    await _process.StandardInput.BaseStream.WriteAsync(new(message, 0, len), _readerCancellationSource.Token).ConfigureAwait(false);
+                await _process.StandardInput.BaseStream.WriteAsync(new(lengthPrefix, 0, 4), _readerCancellationSource.Token).ConfigureAwait(false);
+                await _process.StandardInput.BaseStream.WriteAsync(new(message, 0, message.Length), _readerCancellationSource.Token).ConfigureAwait(false);
 #endif
-                    await _process.StandardInput.BaseStream.FlushAsync(_readerCancellationSource.Token).ConfigureAwait(false);
-                }
-            }
-            catch (Exception ex)
-            {
-                Close(ex);
+                await _process.StandardInput.BaseStream.FlushAsync(_readerCancellationSource.Token).ConfigureAwait(false);
             }
         }
 
@@ -140,12 +120,6 @@ namespace Microsoft.Playwright.Transport
         private static void ScheduleTransportTask(Func<CancellationToken, Task> func, CancellationToken cancellationToken)
             => Task.Factory.StartNew(() => func(cancellationToken), cancellationToken, TaskCreationOptions.LongRunning, TaskScheduler.Current);
 
-        private void Close(Exception ex)
-        {
-            System.Diagnostics.Debug.WriteLine(ex);
-            Close(ex.ToString());
-        }
-
         private void Dispose(bool disposing)
         {
             if (!disposing)
@@ -157,60 +131,41 @@ namespace Microsoft.Playwright.Transport
             _process?.Dispose();
         }
 
-        private async Task GetResponseAsync(CancellationToken token)
+        private async Task OnMessageAsync(CancellationToken token)
         {
-            try
-            {
-                var stream = _process.StandardOutput;
-                byte[] buffer = new byte[DefaultBufferSize];
+            var stream = _process.StandardOutput.BaseStream;
+            byte[] lengthBuffer = new byte[4];
 
-                while (!token.IsCancellationRequested && !_process.HasExited)
+            while (!token.IsCancellationRequested && !_process.HasExited)
+            {
+                int lengthBufferPos = 0;
+                while (!token.IsCancellationRequested && lengthBufferPos < lengthBuffer.Length)
                 {
 #if NETSTANDARD
 #pragma warning disable CA1835 // We can't use ReadOnlyMemory on netstandard
-                    int read = await stream.BaseStream.ReadAsync(buffer, 0, DefaultBufferSize, token).ConfigureAwait(false);
+                    lengthBufferPos += await stream.ReadAsync(lengthBuffer, 0, lengthBuffer.Length - lengthBufferPos, token).ConfigureAwait(false);
 #pragma warning restore CA1835
 #else
-                    int read = await stream.BaseStream.ReadAsync(new(buffer, 0, DefaultBufferSize), token).ConfigureAwait(false);
+                    lengthBufferPos += await stream.ReadAsync(new(lengthBuffer, 0, lengthBuffer.Length - lengthBufferPos), token).ConfigureAwait(false);
 #endif
-                    if (!token.IsCancellationRequested)
-                    {
-                        _data.AddRange(buffer.AsSpan(0, read).ToArray());
-
-                        ProcessStream(token);
-                    }
                 }
-            }
-            catch (Exception ex)
-            {
-                Close(ex);
-            }
-        }
 
-        private void ProcessStream(CancellationToken token)
-        {
-            while (!token.IsCancellationRequested)
-            {
-                if (_currentMessageSize == null && _data.Count < 4)
+                int length = BitConverter.ToInt32(lengthBuffer, 0);
+                int pos = 0;
+                byte[] buffer = new byte[length];
+
+                while (!token.IsCancellationRequested && pos < length)
                 {
-                    break;
+                    int toRead = Math.Min(length - pos, DefaultBufferSize);
+#if NETSTANDARD
+#pragma warning disable CA1835 // We can't use ReadOnlyMemory on netstandard
+                    pos += await stream.ReadAsync(buffer, pos, toRead, token).ConfigureAwait(false);
+#pragma warning restore CA1835
+#else
+                    pos += await stream.ReadAsync(new(buffer, pos, toRead), token).ConfigureAwait(false);
+#endif
                 }
-
-                if (_currentMessageSize == null)
-                {
-                    _currentMessageSize = _data[0] + (_data[1] << 8) + (_data[2] << 16) + (_data[3] << 24);
-                    _data.RemoveRange(0, 4);
-                }
-
-                if (_data.Count < _currentMessageSize)
-                {
-                    break;
-                }
-
-                byte[] result = _data.GetRange(0, _currentMessageSize.Value).ToArray();
-                _data.RemoveRange(0, _currentMessageSize.Value);
-                _currentMessageSize = null;
-                MessageReceived?.Invoke(this, result);
+                MessageReceived?.Invoke(this, buffer);
             }
         }
     }

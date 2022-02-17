@@ -47,7 +47,7 @@ namespace Microsoft.Playwright.Transport
         private readonly Root _rootObject;
         private readonly TaskQueue _queue = new();
         private int _lastId;
-        private string _reason = string.Empty;
+        private string _closedErrorMessage;
 
         public Connection()
         {
@@ -68,8 +68,6 @@ namespace Microsoft.Playwright.Transport
         public ConcurrentDictionary<string, IChannelOwner> Objects { get; } = new();
 
         internal AsyncLocal<List<ApiZone>> ApiZone { get; } = new();
-
-        public bool IsClosed { get; private set; }
 
         internal bool IsRemote { get; set; }
 
@@ -99,9 +97,9 @@ namespace Microsoft.Playwright.Transport
             string method,
             object args = null)
         {
-            if (IsClosed)
+            if (!string.IsNullOrEmpty(_closedErrorMessage))
             {
-                throw new PlaywrightException($"Connection closed ({_reason})");
+                throw new PlaywrightException(_closedErrorMessage);
             }
 
             int id = Interlocked.Increment(ref _lastId);
@@ -202,6 +200,8 @@ namespace Microsoft.Playwright.Transport
 
         internal void Dispatch(PlaywrightServerMessage message)
         {
+            if (!string.IsNullOrEmpty(_closedErrorMessage))
+                return;
             if (message.Id.HasValue)
             {
                 TraceMessage("pw:channel:response", message);
@@ -342,19 +342,16 @@ namespace Microsoft.Playwright.Transport
             DoClose(ex.Message);
         }
 
-        internal void DoClose(string reason)
+        internal void DoClose(string errorMessage)
         {
-            _reason = string.IsNullOrEmpty(_reason) ? reason : _reason;
-            if (!IsClosed)
+            _closedErrorMessage = errorMessage;
+            foreach (var callback in _callbacks)
             {
-                foreach (var callback in _callbacks)
-                {
-                    callback.Value.TaskCompletionSource.TrySetException(new PlaywrightException(reason));
-                }
-
-                Dispose();
-                IsClosed = true;
+                callback.Value.TaskCompletionSource.TrySetException(new PlaywrightException(errorMessage));
             }
+            _callbacks.Clear();
+            Close.Invoke(this, _closedErrorMessage);
+            Dispose();
         }
 
         private Exception CreateException(PlaywrightServerError error)
@@ -379,15 +376,7 @@ namespace Microsoft.Playwright.Transport
                 return new PlaywrightException(error.Message);
             }
 
-            string message = error.Message
-                .Replace(
-                    "Try re-installing playwright with \"npm install playwright\"",
-                    "Try re-installing the browsers running `playwright.cmd install` in windows or `./playwright.sh install` in MacOS or Linux.")
-                .Replace(
-                    "use DEBUG=pw:api environment variable and rerun",
-                    "pass `debug: \"pw:api\"` to LaunchAsync");
-
-            return new PlaywrightException(message);
+            return new PlaywrightException(error.Message);
         }
 
         private void Dispose(bool disposing)
@@ -398,7 +387,6 @@ namespace Microsoft.Playwright.Transport
             }
 
             _queue.Dispose();
-            Close.Invoke(this, "Connection disposed");
         }
 
         [Conditional("DEBUG")]

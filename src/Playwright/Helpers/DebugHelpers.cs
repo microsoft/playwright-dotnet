@@ -23,41 +23,30 @@
  */
 
 using System;
-using System.Threading.Tasks;
+using System.Diagnostics;
 
-namespace Microsoft.Playwright.Transport
+namespace Microsoft.Playwright.Helpers
 {
-    /// <summary>
-    /// Transport interface.
-    /// </summary>
-    internal interface IConnectionTransport
+    internal static class DebugHelpers
     {
-        /// <summary>
-        /// Occurs when a message is received.
-        /// </summary>
-        event EventHandler<byte[]> MessageReceived;
+        [Conditional("DEBUG")]
+        internal static void PrintStack(string name)
+        {
+            Console.Error.WriteLine($"DebugHelpers::PrintStack({name})");
+            var prefix = !string.IsNullOrEmpty(name) ? $"{name}: " : string.Empty;
+            var st = new StackTrace(true);
+            for (int i = 0; i < st.FrameCount; ++i)
+            {
+                var sf = st.GetFrame(i);
+                string fileName = sf.GetFileName();
+                if (string.IsNullOrEmpty(fileName))
+                {
+                    continue;
+                }
 
-        /// <summary>
-        /// Occurs when a log message is received.
-        /// </summary>
-        event EventHandler<string> LogReceived;
-
-        /// <summary>
-        /// Occurs when the transport is closed.
-        /// </summary>
-        event EventHandler<string> TransportClosed;
-
-        /// <summary>
-        /// Sends a message using the transport.
-        /// </summary>
-        /// <returns>The task.</returns>
-        /// <param name="message">Message to send.</param>
-        Task SendAsync(byte[] message);
-
-        /// <summary>
-        /// Closes the connection.
-        /// </summary>
-        /// <param name="closeReason">Close reason.</param>
-        void Close(string closeReason);
+                Console.Error.WriteLine($"{prefix}{fileName}:{sf.GetFileLineNumber()}");
+            }
+            Console.Error.WriteLine("--------------------------------------------------------------------------");
+        }
     }
 }
