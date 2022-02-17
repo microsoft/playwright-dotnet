@@ -26,6 +26,7 @@ using System;
 using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.Playwright.Helpers;
 using Microsoft.Playwright.Transport;
 using Microsoft.Playwright.Transport.Channels;
 
@@ -83,7 +84,7 @@ namespace Microsoft.Playwright.Core
             return result.Length;
         }
 
-        public override void Close() => _stream.CloseAsync().ConfigureAwait(false);
+        public override void Close() => _stream.CloseAsync().IgnoreException();
 
         public override long Seek(long offset, SeekOrigin origin) => throw new NotImplementedException();
 
