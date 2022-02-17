@@ -23,7 +23,6 @@
  */
 
 using System;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.IO.Compression;
@@ -41,48 +40,15 @@ namespace Microsoft.Playwright.Tests
         private RemoteServer _remoteServer;
 
         [SetUp]
-        public void SetUpAsync()
+        public void SetUpRemoteServer()
         {
-            try
-            {
-                DirectoryInfo assemblyDirectory = new(AppContext.BaseDirectory);
-                RemoteServer remoteServer = new();
-                var startInfo = new ProcessStartInfo(Driver.GetExecutablePath(), $"launch-server {BrowserType.Name}")
-                {
-                    UseShellExecute = false,
-                    RedirectStandardOutput = true,
-                    RedirectStandardInput = true,
-                    RedirectStandardError = false,
-                    CreateNoWindow = true,
-                };
-                foreach (var pair in Driver.GetEnvironmentVariables())
-                {
-                    startInfo.EnvironmentVariables[pair.Key] = pair.Value;
-                }
-                remoteServer.Process = new()
-                {
-                    StartInfo = startInfo,
-                };
-                remoteServer.Process.Start();
-                remoteServer.WSEndpoint = remoteServer.Process.StandardOutput.ReadLine();
-
-                if (remoteServer.WSEndpoint != null && !remoteServer.WSEndpoint.StartsWith("ws://"))
-                {
-                    throw new PlaywrightException("Invalid web socket address: " + remoteServer.WSEndpoint);
-                }
-                _remoteServer = remoteServer;
-            }
-            catch (IOException ex)
-            {
-                throw new PlaywrightException("Failed to launch server", ex);
-            }
+            _remoteServer = new(BrowserType.Name);
         }
 
         [TearDown]
-        public void TearDown()
+        public void TearDownRemoteServer()
         {
-            _remoteServer.Process.Kill(true);
-            _remoteServer = null;
+            _remoteServer.Close();
         }
 
         [PlaywrightTest("browsertype-connect.spec.ts", "should be able to reconnect to a browser")]
@@ -472,13 +438,48 @@ namespace Microsoft.Playwright.Tests
 
         private class RemoteServer
         {
-            public Process Process { get; set; }
+            private Process Process { get; set; }
             public string WSEndpoint { get; set; }
+
+            internal RemoteServer(string browserName)
+            {
+                try
+                {
+                    var startInfo = new ProcessStartInfo(Driver.GetExecutablePath(), $"launch-server {browserName}")
+                    {
+                        UseShellExecute = false,
+                        RedirectStandardOutput = true,
+                        RedirectStandardInput = true,
+                        RedirectStandardError = false,
+                        CreateNoWindow = true,
+                    };
+                    foreach (var pair in Driver.GetEnvironmentVariables())
+                    {
+                        startInfo.EnvironmentVariables[pair.Key] = pair.Value;
+                    }
+                    Process = new()
+                    {
+                        StartInfo = startInfo,
+                    };
+                    Process.Start();
+                    WSEndpoint = Process.StandardOutput.ReadLine();
+
+                    if (WSEndpoint != null && !WSEndpoint.StartsWith("ws://"))
+                    {
+                        throw new PlaywrightException("Invalid web socket address: " + WSEndpoint);
+                    }
+                }
+                catch (IOException ex)
+                {
+                    throw new PlaywrightException("Failed to launch server", ex);
+                }
+            }
 
             internal void Close()
             {
                 Process.Kill(true);
                 Process.WaitForExit();
+                WSEndpoint = null;
             }
         }
     }

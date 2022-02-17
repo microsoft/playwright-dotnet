@@ -64,7 +64,7 @@ namespace Microsoft.Playwright.Core
                 }
 
                 var afterArgs = new { info = new { waitId = _waitId, phase = "after", error = _error } };
-                _channelOwner.Connection.SendMessageToServerAsync(_channelOwner.Channel.Guid, "waitForEventInfo", afterArgs).IgnoreException();
+                _channelOwner.WrapApiCallAsync(() => _channelOwner.Connection.SendMessageToServerAsync(_channelOwner.Channel.Guid, "waitForEventInfo", afterArgs), true).IgnoreException();
 
                 _cts.Cancel();
                 _cts.Dispose();
@@ -76,7 +76,7 @@ namespace Microsoft.Playwright.Core
             _logs.Add(log);
 
             var logArgs = new { info = new { waitId = _waitId, phase = "log", message = log } };
-            _channelOwner.Connection.SendMessageToServerAsync(_channelOwner.Channel.Guid, "waitForEventInfo", logArgs).IgnoreException();
+            _channelOwner.WrapApiCallAsync(() => _channelOwner.Connection.SendMessageToServerAsync(_channelOwner.Channel.Guid, "waitForEventInfo", logArgs), true).IgnoreException();
         }
 
         internal void RejectImmediately(Exception exception)

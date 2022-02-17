@@ -444,7 +444,7 @@ namespace Microsoft.Playwright.Core
             var result = waiter.WaitForEventAsync(this, pageEvent.Name, predicate);
             if (action != null)
             {
-                await Task.WhenAll(result, action()).ConfigureAwait(false);
+                await WrapApiBoundaryAsync(() => Task.WhenAll(result, action())).ConfigureAwait(false);
             }
 
             return await result.ConfigureAwait(false);

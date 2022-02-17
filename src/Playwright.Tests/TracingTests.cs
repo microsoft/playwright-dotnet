@@ -22,6 +22,7 @@
  * SOFTWARE.
  */
 
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
@@ -29,7 +30,6 @@ using System.IO.Compression;
 using System.Linq;
 using System.Text;
 using System.Text.Json;
-using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 using Microsoft.Playwright.NUnit;
 using NUnit.Framework;
@@ -44,7 +44,6 @@ namespace Microsoft.Playwright.Tests
         {
             await Context.Tracing.StartAsync(new()
             {
-                Name = "test",
                 Screenshots = true,
                 Snapshots = true
             });
@@ -53,7 +52,10 @@ namespace Microsoft.Playwright.Tests
             await page.GotoAsync(Server.Prefix + "/frames/frame.html");
             await page.SetContentAsync("<button>Click</button>");
             await page.ClickAsync("\"Click\"");
-            await page.WaitForTimeoutAsync(2000);
+            await page.Mouse.MoveAsync(20, 20);
+            await page.Mouse.DblClickAsync(20, 30);
+            await page.Keyboard.InsertTextAsync("abc");
+            await page.WaitForTimeoutAsync(2000); // Give it some time to produce screenshots.
             await page.CloseAsync();
 
             using var tmp = new TempDirectory();
@@ -65,14 +67,21 @@ namespace Microsoft.Playwright.Tests
 
             Assert.AreEqual("context-options", events[0].Type);
 
-            Assert.GreaterOrEqual(events.Where(x => x.ApiName == "frame.goto").Count(), 1);
-            Assert.GreaterOrEqual(events.Where(x => x.ApiName == "frame.setContent").Count(), 1);
-            Assert.GreaterOrEqual(events.Where(x => x.ApiName == "frame.click").Count(), 1);
-            Assert.GreaterOrEqual(events.Where(x => x.ApiName == "page.close").Count(), 1);
+            string[] actualActionApiNames = GetActions(events);
+            string[] expectedActionApiNames = new string[] { "BrowserContext.NewPageAsync", "Page.GotoAsync", "Page.SetContentAsync", "Page.ClickAsync", "Mouse.MoveAsync", "Mouse.DblClickAsync", "Keyboard.InsertTextAsync", "Page.WaitForTimeoutAsync", "Page.CloseAsync", "Tracing.StopAsync" };
+            Assert.AreEqual(expectedActionApiNames, actualActionApiNames);
+
+            Assert.GreaterOrEqual(events.Where(e => e.Metadata?.ApiName == "Page.GotoAsync").Count(), 1);
+            Assert.GreaterOrEqual(events.Where(e => e.Metadata?.ApiName == "Page.SetContentAsync").Count(), 1);
+            Assert.GreaterOrEqual(events.Where(e => e.Metadata?.ApiName == "Page.ClickAsync").Count(), 1);
+            Assert.GreaterOrEqual(events.Where(e => e.Metadata?.ApiName == "Mouse.MoveAsync").Count(), 1);
+            Assert.GreaterOrEqual(events.Where(e => e.Metadata?.ApiName == "Mouse.DblClickAsync").Count(), 1);
+            Assert.GreaterOrEqual(events.Where(e => e.Metadata?.ApiName == "Keyboard.InsertTextAsync").Count(), 1);
+            Assert.GreaterOrEqual(events.Where(e => e.Metadata?.ApiName == "Page.CloseAsync").Count(), 1);
 
             Assert.GreaterOrEqual(events.Where(x => x.Type == "frame-snapshot").Count(), 1);
-            Assert.GreaterOrEqual(events.Where(x => x.Type == "resource-snapshot").Count(), 1);
             Assert.GreaterOrEqual(events.Where(x => x.Type == "screencast-frame").Count(), 1);
+            Assert.GreaterOrEqual(events.Where(x => x.Type == "resource-snapshot").Count(), 1);
         }
 
         [PlaywrightTest("tracing.spec.ts", "should collect two traces")]
@@ -97,21 +106,21 @@ namespace Microsoft.Playwright.Tests
             {
                 var (events, resources) = ParseTrace(trace1Path);
                 Assert.AreEqual("context-options", events[0].Type);
-                Assert.GreaterOrEqual(events.Where(x => x.ApiName == "frame.goto").Count(), 1);
-                Assert.GreaterOrEqual(events.Where(x => x.ApiName == "frame.setContent").Count(), 1);
-                Assert.GreaterOrEqual(events.Where(x => x.ApiName == "frame.click").Count(), 1);
-                Assert.AreEqual(0, events.Where(x => x.ApiName == "page.close").Count());
-                Assert.AreEqual(0, events.Where(x => x.ApiName?.Contains("dblClick") ?? false).Count());
+                Assert.GreaterOrEqual(events.Where(x => x.Metadata?.ApiName == "Page.GotoAsync").Count(), 1);
+                Assert.GreaterOrEqual(events.Where(x => x.Metadata?.ApiName == "Page.SetContentAsync").Count(), 1);
+                Assert.GreaterOrEqual(events.Where(x => x.Metadata?.ApiName == "Page.ClickAsync").Count(), 1);
+                Assert.AreEqual(0, events.Where(x => x.Metadata?.ApiName == "Page.CloseAsync").Count());
+                Assert.AreEqual(0, events.Where(x => x.Metadata?.ApiName == "Page.DblClickAsync").Count());
             }
 
             {
                 var (events, resources) = ParseTrace(trace2Path);
                 Assert.AreEqual("context-options", events[0].Type);
-                Assert.AreEqual(0, events.Where(x => x.ApiName == "frame.goto").Count());
-                Assert.AreEqual(0, events.Where(x => x.ApiName == "frame.setContent").Count());
-                Assert.AreEqual(0, events.Where(x => x.ApiName == "frame.click").Count());
-                Assert.GreaterOrEqual(events.Where(x => x.ApiName == "page.close").Count(), 1);
-                Assert.GreaterOrEqual(events.Where(x => x.ApiName?.Contains("dblclick") ?? false).Count(), 1);
+                Assert.AreEqual(0, events.Where(x => x.Metadata?.ApiName == "Page.GottoAsync").Count());
+                Assert.AreEqual(0, events.Where(x => x.Metadata?.ApiName == "Page.SetContentAsync").Count());
+                Assert.AreEqual(0, events.Where(x => x.Metadata?.ApiName == "Page.ClickAsync").Count());
+                Assert.GreaterOrEqual(events.Where(x => x.Metadata?.ApiName == "Page.CloseAsync").Count(), 1);
+                Assert.GreaterOrEqual(events.Where(x => x.Metadata?.ApiName == "Page.DblClickAsync").Count(), 1);
             }
 
         }
@@ -137,6 +146,7 @@ namespace Microsoft.Playwright.Tests
             var (events, resources) = ParseTrace(tracePath);
             var sourceNames = resources.Keys.Where(key => key.EndsWith(".txt")).ToArray();
             Assert.AreEqual(sourceNames.Count(), 1);
+
             var sourceTraceFileContent = resources[sourceNames[0]];
             var currentFileContent = File.ReadAllText(new StackTrace(true).GetFrame(0).GetFileName());
 
@@ -157,6 +167,34 @@ namespace Microsoft.Playwright.Tests
                 Snapshots = true,
             });
             await Context.Tracing.StopAsync();
+        }
+
+        [PlaywrightTest()]
+        public async Task ShouldSendDotNetApiNames()
+        {
+            await Context.Tracing.StartAsync(new()
+            {
+                Screenshots = true,
+                Snapshots = true
+            });
+
+            var page = await Context.NewPageAsync();
+            await page.GotoAsync(Server.EmptyPage);
+            await page.SetContentAsync("<a target=_blank rel=noopener href=\"/one-style.html\">yo</a>");
+            var page1 = await Context.RunAndWaitForPageAsync(() => page.ClickAsync("a"));
+            Assert.AreEqual(42, await page1.EvaluateAsync<int>("1 + 41"));
+
+            using var tmp = new TempDirectory();
+            var tracePath = Path.Combine(tmp.Path, "trace.zip");
+            await Context.Tracing.StopAsync(new() { Path = tracePath });
+
+            var (events, resources) = ParseTrace(tracePath);
+            CollectionAssert.IsNotEmpty(events);
+
+            string[] actualActionApiNames = GetActions(events);
+            string[] expectedActionApiNames = new string[] { "BrowserContext.NewPageAsync", "Page.GotoAsync", "Page.SetContentAsync", "BrowserContext.RunAndWaitForPageAsync", "Page.ClickAsync", "Page.EvaluateAsync", "Tracing.StopAsync" };
+            Assert.AreEqual(expectedActionApiNames.Count(), actualActionApiNames.Count());
+            Assert.AreEqual(expectedActionApiNames, actualActionApiNames);
         }
 
         private static (IReadOnlyList<TraceEventEntry> Events, Dictionary<string, byte[]> Resources) ParseTrace(string path)
@@ -192,9 +230,6 @@ namespace Microsoft.Playwright.Tests
             public string Type { get; set; }
 
             public TraceEventMetadata Metadata { get; set; }
-
-            [JsonIgnore]
-            public string ApiName { get => Metadata != null ? $"{Metadata.Type.ToLower()}.{Metadata.Method}" : null; }
         }
 
         private class TraceEventMetadata
@@ -204,6 +239,12 @@ namespace Microsoft.Playwright.Tests
             public string Method { get; set; }
 
             public string PageId { get; set; }
+
+            public string ApiName { get; set; }
+
+            public double StartTime { get; set; }
         }
+
+        string[] GetActions(IReadOnlyList<TraceEventEntry> events) => events.Where(action => action.Type == "action").OrderBy(action => action.Metadata.StartTime).Select(action => action.Metadata.ApiName).ToArray();
     }
 }

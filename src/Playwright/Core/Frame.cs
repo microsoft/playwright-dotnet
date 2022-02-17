@@ -256,7 +256,7 @@ namespace Microsoft.Playwright.Core
             });
             if (action != null)
             {
-                await Task.WhenAll(result, action()).ConfigureAwait(false);
+                await WrapApiBoundaryAsync(() => Task.WhenAll(result, action())).ConfigureAwait(false);
             }
 
             return await result.ConfigureAwait(false);

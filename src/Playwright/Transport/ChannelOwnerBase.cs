@@ -22,7 +22,9 @@
  * SOFTWARE.
  */
 
+using System;
 using System.Collections.Concurrent;
+using System.Threading.Tasks;
 using Microsoft.Playwright.Transport.Channels;
 
 namespace Microsoft.Playwright.Transport
@@ -75,5 +77,9 @@ namespace Microsoft.Playwright.Transport
             }
             _objects.Clear();
         }
+
+        public Task<T> WrapApiCallAsync<T>(Func<Task<T>> action, bool isInternal = false) => _connection.WrapApiCallAsync(action, isInternal);
+
+        public Task WrapApiBoundaryAsync(Func<Task> action) => _connection.WrapApiBoundaryAsync(action);
     }
 }
