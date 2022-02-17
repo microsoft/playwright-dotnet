@@ -219,18 +219,6 @@ namespace Microsoft.Playwright.Tests
             StringAssert.Contains("has been closed", exception.Message);
         }
 
-        [PlaywrightTest("browsertype-connect.spec.ts", "should reject waitForSelector when browser closes")]
-        public async Task ShouldRejectWaitForSelectorWhenBrowserCloses()
-        {
-            var browser = await BrowserType.ConnectAsync(_remoteServer.WSEndpoint);
-            var page = await browser.NewPageAsync();
-            var watchdog = page.WaitForSelectorAsync("div");
-            await browser.CloseAsync();
-
-            var exception = await PlaywrightAssert.ThrowsAsync<PlaywrightException>(async () => await watchdog);
-            Assert.That(exception.Message, Contains.Substring("has been closed"));
-        }
-
         [PlaywrightTest("browsertype-connect.spec.ts", "should emit close events on pages and contexts")]
         public async Task ShouldEmitCloseEventsOnPagesAndContexts()
         {

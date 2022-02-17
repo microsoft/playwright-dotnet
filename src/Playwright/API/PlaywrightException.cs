@@ -23,21 +23,33 @@
  */
 
 using System;
+using System.Diagnostics;
 
 namespace Microsoft.Playwright
 {
     public class PlaywrightException : Exception
     {
+        private readonly string _constructorStack;
+
         public PlaywrightException()
         {
         }
 
         public PlaywrightException(string message) : base(message)
         {
+            _constructorStack = new StackTrace(false).ToString();
         }
 
         public PlaywrightException(string message, Exception innerException) : base(message, innerException)
         {
+        }
+
+        public override string StackTrace
+        {
+            get
+            {
+                return !string.IsNullOrEmpty(base.StackTrace) ? base.StackTrace : _constructorStack;
+            }
         }
     }
 }

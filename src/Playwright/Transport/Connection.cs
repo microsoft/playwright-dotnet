@@ -156,7 +156,17 @@ namespace Microsoft.Playwright.Transport
                 return OnMessage(message);
             }).ConfigureAwait(false);
 
-            var result = await tcs.Task.ConfigureAwait(false);
+            JsonElement? result = null;
+
+            try
+            {
+                result = await tcs.Task.ConfigureAwait(false);
+            }
+            catch (System.Exception e)
+            {
+                Console.WriteLine("kektese: " + e.Message + id + guid + method);
+                throw;
+            }
 
             if (typeof(T) == typeof(JsonElement?))
             {
