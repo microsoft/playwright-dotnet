@@ -109,13 +109,13 @@ The resulting code will follow our style guides. This is also enforced in our CI
 Tests can either be executed in their entirety:
 
 ```bash
-dotnet test ./src/Playwright.sln
+dotnet test ./src/Playwright.sln --logger:"console;verbosity=detailed"
 ```
 
 You can also specify a single test to run:
 
 ```bash
-dotnet test ./src/Playwright.sln --filter Playwright.Tests.TapTests
+dotnet test ./src/Playwright.sln --logger:"console;verbosity=detailed" --filter Playwright.Tests.TapTests
 ```
 
 Additionally, you can use the Test Explorer if you're using Visual Studio.
@@ -131,3 +131,13 @@ To generate the API, identify the upstream driver version from the GitHub Action
 ```
 
 This will re-generate the neccessary files for the new driver version.
+
+### Collecting coverage when running tests
+
+```shell
+dotnet tool install -g dotnet-reportgenerator-globaltool
+
+dotnet test ./src/Playwright.Tests/Playwright.Tests.csproj --logger:"console;verbosity=detailed" -f net5.0 -p:CollectCoverage=true -p:CoverletOutputFormat=cobertura -p:CoverletOutput="coverage.xml" --filter "Playwright.Tests.Assertions.PageAssertionsTests"
+reportgenerator -reports:src/Playwright.Tests/coverage.net5.0.xml -targetdir:coverage-report -reporttypes:HTML
+open coverage-report/index.html
+```
