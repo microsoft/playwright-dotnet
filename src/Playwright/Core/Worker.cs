@@ -89,7 +89,7 @@ namespace Microsoft.Playwright.Core
             var result = waiterResult.Task.WithTimeout(Convert.ToInt32(timeout ?? 0));
             if (action != null)
             {
-                await Task.WhenAll(result, action()).ConfigureAwait(false);
+                await WrapApiBoundaryAsync(() => Task.WhenAll(result, action())).ConfigureAwait(false);
             }
             else
             {

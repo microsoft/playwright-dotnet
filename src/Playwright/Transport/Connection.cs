@@ -67,6 +67,8 @@ namespace Microsoft.Playwright.Transport
 
         public ConcurrentDictionary<string, IChannelOwner> Objects { get; } = new();
 
+        internal AsyncLocal<List<ApiZone>> ApiZone { get; } = new();
+
         public bool IsClosed { get; private set; }
 
         internal bool IsRemote { get; set; }
@@ -87,7 +89,12 @@ namespace Microsoft.Playwright.Transport
             object args = null)
             => SendMessageToServerAsync<JsonElement?>(guid, method, args);
 
-        internal async Task<T> SendMessageToServerAsync<T>(
+        internal Task<T> SendMessageToServerAsync<T>(
+            string guid,
+            string method,
+            object args = null) => WrapApiCallAsync(() => InnerSendMessageToServerAsync<T>(guid, method, args));
+
+        private async Task<T> InnerSendMessageToServerAsync<T>(
             string guid,
             string method,
             object args = null)
@@ -105,23 +112,6 @@ namespace Microsoft.Playwright.Transport
             };
 
             _callbacks.TryAdd(id, callback);
-
-            var st = new StackTrace(true);
-            var stack = new List<object>();
-
-            for (int i = 0; i < st.FrameCount; ++i)
-            {
-                var sf = st.GetFrame(i);
-                string fileName = sf.GetFileName();
-                if (string.IsNullOrEmpty(fileName) || fileName.Contains("/Playwright/") || fileName.Contains("\\Playwright\\"))
-                {
-                    continue;
-                }
-
-                stack.Add(new { file = fileName, line = sf.GetFileLineNumber() });
-            }
-
-            var metadata = new { stack };
 
             var sanitizedArgs = new Dictionary<string, object>();
             if (args != null)
@@ -160,7 +150,7 @@ namespace Microsoft.Playwright.Transport
                     Guid = guid,
                     Method = method,
                     Params = sanitizedArgs,
-                    Metadata = metadata,
+                    Metadata = ApiZone.Value[0],
                 };
 
                 TraceMessage("pw:channel:command", message);
@@ -428,6 +418,90 @@ namespace Microsoft.Playwright.Transport
                 string line = $"{logLevel}: {message}";
                 Trace.WriteLine(line);
                 Console.Error.WriteLine(line);
+            }
+        }
+
+        internal async Task<T> WrapApiCallAsync<T>(Func<Task<T>> action, bool isInternal = false)
+        {
+            EnsureApiZoneExists();
+            if (ApiZone.Value[0] != null)
+            {
+                return await action().ConfigureAwait(false);
+            }
+            var st = new StackTrace(true);
+            var stack = new List<object>();
+            var lastInternalApiName = string.Empty;
+            var apiName = string.Empty;
+            for (int i = 0; i < st.FrameCount; ++i)
+            {
+                var sf = st.GetFrame(i);
+                string fileName = sf.GetFileName();
+                string cSharpNamespace = sf.GetMethod().ReflectedType.Namespace;
+                bool playwrightInternal = cSharpNamespace == "Microsoft.Playwright" || cSharpNamespace.StartsWith("Microsoft.Playwright.Core", StringComparison.InvariantCultureIgnoreCase) || cSharpNamespace.StartsWith("Microsoft.Playwright.Transport", StringComparison.InvariantCultureIgnoreCase) || cSharpNamespace.StartsWith("Microsoft.Playwright.Helpers", StringComparison.InvariantCultureIgnoreCase);
+                if (string.IsNullOrEmpty(fileName) && !playwrightInternal)
+                    continue;
+
+                if (!playwrightInternal)
+                {
+                    stack.Add(new { file = fileName, line = sf.GetFileLineNumber(), column = sf.GetFileColumnNumber() });
+                }
+
+                string methodName = $"{sf?.GetMethod()?.DeclaringType?.Name}.{sf?.GetMethod()?.Name}";
+                if (methodName.Contains("WrapApiBoundaryAsync"))
+                {
+                    break;
+                }
+                if (methodName.StartsWith("<", StringComparison.InvariantCultureIgnoreCase))
+                {
+                    continue;
+                }
+                if (playwrightInternal)
+                {
+                    lastInternalApiName = methodName;
+                }
+                else if (!string.IsNullOrEmpty(lastInternalApiName))
+                {
+                    apiName = lastInternalApiName;
+                    lastInternalApiName = string.Empty;
+                }
+            }
+            if (string.IsNullOrEmpty(apiName))
+            {
+                apiName = lastInternalApiName;
+            }
+            try
+            {
+                if (!string.IsNullOrEmpty(apiName))
+                {
+                    ApiZone.Value[0] = new() { ApiName = apiName, Stack = stack, IsInternal = isInternal };
+                }
+                return await action().ConfigureAwait(false);
+            }
+            finally
+            {
+                ApiZone.Value[0] = null;
+            }
+        }
+
+        internal async Task WrapApiBoundaryAsync(Func<Task> action)
+        {
+            EnsureApiZoneExists();
+            try
+            {
+                ApiZone.Value.Insert(0, null);
+                await action().ConfigureAwait(false);
+            }
+            finally
+            {
+                ApiZone.Value.RemoveAt(0);
+            }
+        }
+
+        private void EnsureApiZoneExists()
+        {
+            if (ApiZone.Value == null)
+            {
+                ApiZone.Value = new() { null };
             }
         }
     }

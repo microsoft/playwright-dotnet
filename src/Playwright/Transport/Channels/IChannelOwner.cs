@@ -22,7 +22,9 @@
  * SOFTWARE.
  */
 
+using System;
 using System.Collections.Concurrent;
+using System.Threading.Tasks;
 
 namespace Microsoft.Playwright.Transport.Channels
 {
@@ -50,6 +52,10 @@ namespace Microsoft.Playwright.Transport.Channels
         /// Removes the object from the parent and the connection list.
         /// </summary>
         void DisposeOwner();
+
+        Task<T> WrapApiCallAsync<T>(Func<Task<T>> action, bool isInternal = false);
+
+        Task WrapApiBoundaryAsync(Func<Task> action);
     }
 
     /// <summary>
