@@ -39,12 +39,12 @@ jobs:
         if: matrix.os != 'ubuntu-latest'
         env:
           BROWSER: ${{ matrix.browser }}
-        run: dotnet test ./src/Playwright.Tests/Playwright.Tests.csproj -c Debug -f net5.0
+        run: dotnet test ./src/Playwright.Tests/Playwright.Tests.csproj -c Debug -f net5.0 --filter "BrowserTypeConnectTests" -p:StopOnError=true
       - name: Running tests (Linux)
         if: matrix.os == 'ubuntu-latest'
         env:
           BROWSER: ${{ matrix.browser }}
-        run: xvfb-run dotnet test ./src/Playwright.Tests/Playwright.Tests.csproj -c Debug -f net5.0
+        run: xvfb-run dotnet test ./src/Playwright.Tests/Playwright.Tests.csproj -c Debug -f net5.0 --filter "BrowserTypeConnectTests" -p:StopOnError=true
 
   test-net31:
     name: chromium/ubuntu/.NET 3.1

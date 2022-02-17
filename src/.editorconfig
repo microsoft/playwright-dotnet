@@ -208,7 +208,7 @@ dotnet_diagnostic.SA1633.severity = none
 dotnet_diagnostic.SX1309.severity = error
 dotnet_diagnostic.VSTHRD003.severity = none
 dotnet_diagnostic.VSTHRD200.severity = error
-
+dotnet_diagnostic.CA1303.severity = none
 
 [Playwright/API/Generated/**.cs]
 dotnet_diagnostic.CA1041.severity = none # [Obsolete] can exist without message

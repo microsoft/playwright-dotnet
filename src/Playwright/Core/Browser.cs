@@ -70,6 +70,7 @@ namespace Microsoft.Playwright.Core
             {
                 if (ShouldCloseConnectionOnClose)
                 {
+                    Console.WriteLine("Closing browser connection1");
                     Channel.Connection.DoClose(DriverMessages.BrowserClosedExceptionMessage);
                 }
                 else

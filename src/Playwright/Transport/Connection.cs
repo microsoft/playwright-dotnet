@@ -344,6 +344,7 @@ namespace Microsoft.Playwright.Transport
 
         internal void DoClose(string errorMessage)
         {
+            Console.WriteLine("Connection.DoClose" + errorMessage);
             _closedErrorMessage = errorMessage;
             foreach (var callback in _callbacks)
             {

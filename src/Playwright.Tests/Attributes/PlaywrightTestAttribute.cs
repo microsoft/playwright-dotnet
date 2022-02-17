@@ -148,6 +148,16 @@ namespace Microsoft.Playwright.Tests
                 {
                     return;
                 }
+                if (ex is AggregateException)
+                {
+                    Console.WriteLine("AggregateException inner:");
+                    var agg = ((AggregateException)ex);
+                    for (var i = 0; i < agg.InnerExceptions.Count; i++)
+                    {
+                        Console.WriteLine($"AggregateException inner{i}:");
+                        PrintException(agg.InnerExceptions[i]);
+                    }
+                }
                 Console.WriteLine("-----------UnobservedTaskException-----------");
                 Console.WriteLine(ex.Message);
                 Console.WriteLine(ex.StackTrace);

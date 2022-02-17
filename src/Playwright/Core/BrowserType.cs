@@ -167,6 +167,7 @@ namespace Microsoft.Playwright.Core
                     context.OnClose();
                 }
                 browser?.DidClose();
+                Console.WriteLine("OnPipeClosed: " + closeError != null ? closeError : DriverMessages.BrowserClosedExceptionMessage);
                 connection.DoClose(closeError != null ? closeError : DriverMessages.BrowserClosedExceptionMessage);
             }
             pipe.Closed += (_, _) => OnPipeClosed();
