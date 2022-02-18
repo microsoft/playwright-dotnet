@@ -4,6 +4,7 @@ using Microsoft.Playwright.MSTest;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 using static Microsoft.Playwright.Assertions;
+
 namespace Playwright.TestingHarnessTest.MSTest
 {
     [TestClass]

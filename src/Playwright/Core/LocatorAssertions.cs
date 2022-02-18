@@ -68,13 +68,13 @@ namespace Microsoft.Playwright.Core
             ExpectImplAsync("to.have.text", new ExpectedTextValue() { String = expected, MatchSubstring = true, NormalizeWhiteSpace = true }, expected, "Locator expected to contain text", ConvertToFrameExpectOptions(options));
 
         public Task ToContainTextAsync(Regex expected, LocatorAssertionsToContainTextOptions options = null) =>
-            ExpectImplAsync("to.have.text", ExpectedRegex(expected, new() { MatchSubstring = true, NormalizeWhiteSpace = true }), expected, "Locator expected to contain regex", ConvertToFrameExpectOptions(options));
+            ExpectImplAsync("to.have.text", ExpectedRegex(expected, new() { MatchSubstring = true, NormalizeWhiteSpace = true }), expected, "Locator expected text matching regex", ConvertToFrameExpectOptions(options));
 
         public Task ToContainTextAsync(IEnumerable<string> expected, LocatorAssertionsToContainTextOptions options = null) =>
             ExpectImplAsync("to.contain.text.array", expected.Select(text => new ExpectedTextValue() { String = text, MatchSubstring = true, NormalizeWhiteSpace = true }).ToArray(), expected, "Locator expected to contain text", ConvertToFrameExpectOptions(options));
 
         public Task ToContainTextAsync(IEnumerable<Regex> expected, LocatorAssertionsToContainTextOptions options = null) =>
-            ExpectImplAsync("to.contain.text.array", expected.Select(regex => ExpectedRegex(regex, new() { MatchSubstring = true, NormalizeWhiteSpace = true })).ToArray(), expected, "Locator expected to contain regex", ConvertToFrameExpectOptions(options));
+            ExpectImplAsync("to.contain.text.array", expected.Select(regex => ExpectedRegex(regex, new() { MatchSubstring = true, NormalizeWhiteSpace = true })).ToArray(), expected, "Locator expected text matching regex", ConvertToFrameExpectOptions(options));
 
         public Task ToHaveAttributeAsync(string name, string value, LocatorAssertionsToHaveAttributeOptions options = null) =>
             ToHaveAttributeAsync(name, new() { String = value }, value, options);

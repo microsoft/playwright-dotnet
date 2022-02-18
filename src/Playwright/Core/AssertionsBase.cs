@@ -60,18 +60,26 @@ namespace Microsoft.Playwright.Core
         internal async Task ExpectImplAsync(string expression, FrameExpectOptions expectOptions, object expected, string message)
         {
             if (expectOptions.Timeout == null)
+            {
                 expectOptions.Timeout = 5_000;
+            }
             if (expectOptions.IsNot)
+            {
                 message = message.Replace("expected to", "expected not to");
+            }
             var result = await ActualLocator.ExpectAsync(expression, expectOptions).ConfigureAwait(false);
             if (result.Matches == IsNot)
             {
                 var actual = result.Received;
                 var log = string.Join("\n", result.Log);
                 if (!string.IsNullOrEmpty(log))
+                {
                     log = "\nCall log:\n" + log;
+                }
                 if (expected == null)
+                {
                     throw new PlaywrightException($"{message} {log}");
+                }
                 throw new PlaywrightException($"{message} '{FormatValue(expected)}'\nBut was: '{FormatValue(actual)}' {log}");
             }
         }

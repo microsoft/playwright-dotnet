@@ -4,6 +4,7 @@ using Microsoft.Playwright.NUnit;
 using NUnit.Framework;
 
 using static Microsoft.Playwright.Assertions;
+
 namespace Playwright.TestingHarnessTest.NUnit
 {
 

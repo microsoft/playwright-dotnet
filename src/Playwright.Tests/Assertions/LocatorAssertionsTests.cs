@@ -174,7 +174,7 @@ namespace Microsoft.Playwright.Tests.Assertions
             {
                 await Page.SetContentAsync("<div id=node>Text content</div>");
                 var exeption = await PlaywrightAssert.ThrowsAsync<PlaywrightException>(() => Expect(Page.Locator("#node")).ToContainTextAsync(new Regex("ex2"), new() { Timeout = 100 }));
-                StringAssert.Contains("Locator expected to contain regex 'ex2'", exeption.Message);
+                StringAssert.Contains("Locator expected text matching regex 'ex2'", exeption.Message);
                 StringAssert.Contains("But was: 'Text content'", exeption.Message);
                 StringAssert.Contains("LocatorAssertions.ToContainTextAsync with timeout 100ms", exeption.Message);
             }
@@ -289,7 +289,11 @@ namespace Microsoft.Playwright.Tests.Assertions
             await Page.EvalOnSelectorAsync("div", "e => e.foo = { a: 1, b: 'string', c: new Date(1627503992000) }");
             var locator = Page.Locator("div");
             await Expect(locator).ToHaveJSPropertyAsync("foo", new Dictionary<string, object>
-            { ["a"] = 1, ["b"] = "string", ["c"] = DateTime.Parse("2021-07-28T20:26:32.000Z") });
+            {
+                ["a"] = 1,
+                ["b"] = "string",
+                ["c"] = DateTime.Parse("2021-07-28T20:26:32.000Z"),
+            });
         }
 
         [PlaywrightTest("playwright-test/playwright.expect.misc.spec.ts", "should support toHaveValue")]
