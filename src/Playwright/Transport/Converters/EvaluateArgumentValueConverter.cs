@@ -126,7 +126,7 @@ namespace Microsoft.Playwright.Transport.Converters
 
             if (value is DateTime date)
             {
-                return new { d = date };
+                return new { d = date.ToString("o", System.Globalization.CultureInfo.InvariantCulture) };
             }
 
             if (value is Regex regex)

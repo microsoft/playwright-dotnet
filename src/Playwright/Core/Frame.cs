@@ -37,7 +37,7 @@ using Microsoft.Playwright.Transport.Protocol;
 
 namespace Microsoft.Playwright.Core
 {
-    internal partial class Frame : ChannelOwnerBase, IChannelOwner<Frame>, IFrame
+    internal class Frame : ChannelOwnerBase, IChannelOwner<Frame>, IFrame
     {
         private readonly FrameChannel _channel;
         private readonly List<WaitUntilState> _loadStates = new();
@@ -560,6 +560,8 @@ namespace Microsoft.Playwright.Core
 
         public Task DragAndDropAsync(string source, string target, FrameDragAndDropOptions options = null)
             => _channel.DragAndDropAsync(source, target, options?.Force, options?.NoWaitAfter, options?.Timeout, options?.Trial, options?.Strict);
+
+        internal Task<FrameExpectResult> ExpectAsync(string selector, string expression, FrameExpectOptions options = null) => _channel.ExpectAsync(selector, expression, expressionArg: options?.ExpressionArg, expectedText: options?.ExpectedText, expectedNumber: options?.ExpectedNumber, expectedValue: options?.ExpectedValue, useInnerText: options?.UseInnerText, isNot: options?.IsNot, timeout: options?.Timeout);
 
         private Task WaitForURLAsync(string urlString, Regex urlRegex, Func<string, bool> urlFunc, FrameWaitForURLOptions options = default)
         {

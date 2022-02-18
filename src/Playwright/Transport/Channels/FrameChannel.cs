@@ -29,6 +29,7 @@ using System.Text.Json;
 using System.Threading.Tasks;
 using Microsoft.Playwright.Core;
 using Microsoft.Playwright.Helpers;
+using Microsoft.Playwright.Transport.Protocol;
 
 namespace Microsoft.Playwright.Transport.Channels
 {
@@ -699,6 +700,30 @@ namespace Microsoft.Playwright.Transport.Channels
             };
 
             return Connection.SendMessageToServerAsync(Guid, "dragAndDrop", args);
+        }
+
+        internal async Task<FrameExpectResult> ExpectAsync(string selector, string expression, object expressionArg, ExpectedTextValue[] expectedText, int? expectedNumber, object expectedValue, bool? useInnerText, bool? isNot, float? timeout)
+        {
+            var args = new Dictionary<string, object>
+            {
+                ["selector"] = selector,
+                ["expression"] = expression,
+                ["expressionArg"] = expressionArg,
+                ["expectedText"] = expectedText,
+                ["expectedNumber"] = expectedNumber,
+                ["expectedValue"] = expectedValue,
+                ["useInnerText"] = useInnerText,
+                ["isNot"] = isNot,
+                ["timeout"] = timeout,
+            };
+            var result = await Connection.SendMessageToServerAsync(Guid, "expect", args).ConfigureAwait(false);
+            var parsed = result.Value.ToObject<FrameExpectResult>();
+            if (result.Value.TryGetProperty("received", out var received))
+            {
+                var outs = ScriptsHelper.ParseEvaluateResult<object>(received);
+                parsed.Received = outs;
+            }
+            return parsed;
         }
     }
 }
