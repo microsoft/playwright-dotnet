@@ -45,6 +45,25 @@ namespace Microsoft.Playwright
     /// assertions that will wait until the expected condition is met.
     /// </para>
     /// <para>Consider the following example:</para>
+    /// <code>
+    /// using System.Threading.Tasks;<br/>
+    /// using Microsoft.Playwright.NUnit;<br/>
+    /// using NUnit.Framework;<br/>
+    /// <br/>
+    /// using static Microsoft.Playwright.Assertions;<br/>
+    /// <br/>
+    /// namespace Playwright.TestingHarnessTest.NUnit<br/>
+    /// {<br/>
+    ///     public class ExampleTests : PageTest<br/>
+    ///     {<br/>
+    ///         [Test]<br/>
+    ///         public async Task StatusBecomesSubmitted()<br/>
+    ///         {<br/>
+    ///             await Expect(Page.Locator(".status")).ToHaveTextAsync("Submitted");<br/>
+    ///         }<br/>
+    ///     }<br/>
+    /// }
+    /// </code>
     /// <para>
     /// Playwright will be re-testing the node with the selector <c>.status</c> until fetched
     /// Node has the <c>"Submitted"</c> text. It will be re-fetching the node and checking
@@ -55,13 +74,19 @@ namespace Microsoft.Playwright
     /// </summary>
     public partial interface IPlaywrightAssertions
     {
-        /// <summary><para>Creates a <see cref="ILocatorAssertions"/> object for the given <see cref="ILocator"/>.</para></summary>
+        /// <summary>
+        /// <para>Creates a <see cref="ILocatorAssertions"/> object for the given <see cref="ILocator"/>.</para>
+        /// <code>await Expect(locator).ToBeVisibleAsync();</code>
+        /// </summary>
         /// <param name="locator"><see cref="ILocator"/> object to use for assertions.</param>
-        ILocatorAssertions ExpectLocator(ILocator locator);
+        ILocatorAssertions Expect(ILocator locator);
 
-        /// <summary><para>Creates a <see cref="IPageAssertions"/> object for the given <see cref="IPage"/>.</para></summary>
+        /// <summary>
+        /// <para>Creates a <see cref="IPageAssertions"/> object for the given <see cref="IPage"/>.</para>
+        /// <code>await Expect(page).ToHaveTitleAsync("News");</code>
+        /// </summary>
         /// <param name="page"><see cref="IPage"/> object to use for assertions.</param>
-        IPageAssertions ExpectPage(IPage page);
+        IPageAssertions Expect(IPage page);
     }
 }
 

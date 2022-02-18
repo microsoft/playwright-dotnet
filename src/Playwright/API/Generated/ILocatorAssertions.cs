@@ -43,8 +43,30 @@ namespace Microsoft.Playwright
     /// <para>
     /// The <see cref="ILocatorAssertions"/> class provides assertion methods that can be
     /// used to make assertions about the <see cref="ILocator"/> state in the tests. A new
-    /// instance of <see cref="ILocatorAssertions"/> is created by calling <see cref="IPlaywrightAssertions.ExpectLocator"/>:
+    /// instance of <see cref="ILocatorAssertions"/> is created by calling <see cref="IPlaywrightAssertions.Expect"/>:
     /// </para>
+    /// <code>
+    /// using System.Text.RegularExpressions;<br/>
+    /// using System.Threading.Tasks;<br/>
+    /// using Microsoft.Playwright.NUnit;<br/>
+    /// using NUnit.Framework;<br/>
+    /// <br/>
+    /// using static Microsoft.Playwright.Assertions;<br/>
+    /// <br/>
+    /// namespace PlaywrightTests<br/>
+    /// {<br/>
+    ///     public class ExampleTests : PageTest<br/>
+    ///     {<br/>
+    ///         [Test]<br/>
+    ///         public async Task StatusBecomesSubmitted()<br/>
+    ///         {<br/>
+    ///             // ..<br/>
+    ///             await Page.ClickAsync("#submit-button");<br/>
+    ///             await Expect(Page.Locator(".status")).ToHaveTextAsync("Submitted");<br/>
+    ///         }<br/>
+    ///     }<br/>
+    /// }
+    /// </code>
     /// </summary>
     public partial interface ILocatorAssertions
     {
@@ -53,18 +75,37 @@ namespace Microsoft.Playwright
         /// Makes the assertion check for the opposite condition. For example, this code tests
         /// that the Locator doesn't contain text <c>"error"</c>:
         /// </para>
+        /// <code>await Expect(locator).Not.ToContainTextAsync("error");</code>
         /// </summary>
         ILocatorAssertions Not { get; }
 
-        /// <summary><para>Ensures the <see cref="ILocator"/> points to a checked input.</para></summary>
+        /// <summary>
+        /// <para>Ensures the <see cref="ILocator"/> points to a checked input.</para>
+        /// <code>
+        /// var locator = Page.Locator(".subscribe");<br/>
+        /// await Expect(locator).ToBeCheckedAsync();
+        /// </code>
+        /// </summary>
         /// <param name="options">Call options</param>
         Task ToBeCheckedAsync(LocatorAssertionsToBeCheckedOptions? options = default);
 
-        /// <summary><para>Ensures the <see cref="ILocator"/> points to a disabled element.</para></summary>
+        /// <summary>
+        /// <para>Ensures the <see cref="ILocator"/> points to a disabled element.</para>
+        /// <code>
+        /// var locator = Page.Locator("button.submit");<br/>
+        /// await Expect(locator).ToBeDisabledAsync();
+        /// </code>
+        /// </summary>
         /// <param name="options">Call options</param>
         Task ToBeDisabledAsync(LocatorAssertionsToBeDisabledOptions? options = default);
 
-        /// <summary><para>Ensures the <see cref="ILocator"/> points to an editable element.</para></summary>
+        /// <summary>
+        /// <para>Ensures the <see cref="ILocator"/> points to an editable element.</para>
+        /// <code>
+        /// var locator = Page.Locator("input");<br/>
+        /// await Expect(locator).ToBeEditableAsync();
+        /// </code>
+        /// </summary>
         /// <param name="options">Call options</param>
         Task ToBeEditableAsync(LocatorAssertionsToBeEditableOptions? options = default);
 
@@ -73,15 +114,31 @@ namespace Microsoft.Playwright
         /// Ensures the <see cref="ILocator"/> points to an empty editable element or to a DOM
         /// node that has no text.
         /// </para>
+        /// <code>
+        /// var locator = Page.Locator("div.warning");<br/>
+        /// await Expect(locator).ToBeEmptyAsync();
+        /// </code>
         /// </summary>
         /// <param name="options">Call options</param>
         Task ToBeEmptyAsync(LocatorAssertionsToBeEmptyOptions? options = default);
 
-        /// <summary><para>Ensures the <see cref="ILocator"/> points to an enabled element.</para></summary>
+        /// <summary>
+        /// <para>Ensures the <see cref="ILocator"/> points to an enabled element.</para>
+        /// <code>
+        /// var locator = Page.Locator("button.submit");<br/>
+        /// await Expect(locator).toBeEnabledAsync();
+        /// </code>
+        /// </summary>
         /// <param name="options">Call options</param>
         Task ToBeEnabledAsync(LocatorAssertionsToBeEnabledOptions? options = default);
 
-        /// <summary><para>Ensures the <see cref="ILocator"/> points to a focused DOM node.</para></summary>
+        /// <summary>
+        /// <para>Ensures the <see cref="ILocator"/> points to a focused DOM node.</para>
+        /// <code>
+        /// var locator = Page.Locator("input");<br/>
+        /// await Expect(locator).ToBeFocusedAsync();
+        /// </code>
+        /// </summary>
         /// <param name="options">Call options</param>
         Task ToBeFocusedAsync(LocatorAssertionsToBeFocusedOptions? options = default);
 
@@ -90,6 +147,10 @@ namespace Microsoft.Playwright
         /// Ensures the <see cref="ILocator"/> points to a hidden DOM node, which is the opposite
         /// of <a href="./actionability.md#visible">visible</a>.
         /// </para>
+        /// <code>
+        /// var locator = Page.Locator(".my-element");<br/>
+        /// await Expect(locator).ToBeHiddenAsync();
+        /// </code>
         /// </summary>
         /// <param name="options">Call options</param>
         Task ToBeHiddenAsync(LocatorAssertionsToBeHiddenOptions? options = default);
@@ -99,6 +160,10 @@ namespace Microsoft.Playwright
         /// Ensures the <see cref="ILocator"/> points to a <a href="./actionability.md#visible">visible</a>
         /// DOM node.
         /// </para>
+        /// <code>
+        /// var locator = Page.Locator(".my-element");<br/>
+        /// await Expect(locator).ToBeVisibleAsync();
+        /// </code>
         /// </summary>
         /// <param name="options">Call options</param>
         Task ToBeVisibleAsync(LocatorAssertionsToBeVisibleOptions? options = default);
@@ -108,10 +173,19 @@ namespace Microsoft.Playwright
         /// Ensures the <see cref="ILocator"/> points to an element that contains the given
         /// text. You can use regular expressions for the value as well.
         /// </para>
+        /// <code>
+        /// var locator = Page.Locator(".title");<br/>
+        /// await Expect(locator).ToContainTextAsync("substring");<br/>
+        /// await Expect(locator).ToContainTextAsync(new Regex("\\d messages"));
+        /// </code>
         /// <para>
         /// Note that if array is passed as an expected value, entire lists of elements can
         /// be asserted:
         /// </para>
+        /// <code>
+        /// var locator = Page.Locator("list &gt; .list-item");<br/>
+        /// await Expect(locator).ToContainTextAsync(new string[] { "Text 1", "Text 4", "Text 5" });
+        /// </code>
         /// </summary>
         /// <param name="expected">Expected substring or RegExp or a list of those.</param>
         /// <param name="options">Call options</param>
@@ -122,10 +196,19 @@ namespace Microsoft.Playwright
         /// Ensures the <see cref="ILocator"/> points to an element that contains the given
         /// text. You can use regular expressions for the value as well.
         /// </para>
+        /// <code>
+        /// var locator = Page.Locator(".title");<br/>
+        /// await Expect(locator).ToContainTextAsync("substring");<br/>
+        /// await Expect(locator).ToContainTextAsync(new Regex("\\d messages"));
+        /// </code>
         /// <para>
         /// Note that if array is passed as an expected value, entire lists of elements can
         /// be asserted:
         /// </para>
+        /// <code>
+        /// var locator = Page.Locator("list &gt; .list-item");<br/>
+        /// await Expect(locator).ToContainTextAsync(new string[] { "Text 1", "Text 4", "Text 5" });
+        /// </code>
         /// </summary>
         /// <param name="expected">Expected substring or RegExp or a list of those.</param>
         /// <param name="options">Call options</param>
@@ -136,10 +219,19 @@ namespace Microsoft.Playwright
         /// Ensures the <see cref="ILocator"/> points to an element that contains the given
         /// text. You can use regular expressions for the value as well.
         /// </para>
+        /// <code>
+        /// var locator = Page.Locator(".title");<br/>
+        /// await Expect(locator).ToContainTextAsync("substring");<br/>
+        /// await Expect(locator).ToContainTextAsync(new Regex("\\d messages"));
+        /// </code>
         /// <para>
         /// Note that if array is passed as an expected value, entire lists of elements can
         /// be asserted:
         /// </para>
+        /// <code>
+        /// var locator = Page.Locator("list &gt; .list-item");<br/>
+        /// await Expect(locator).ToContainTextAsync(new string[] { "Text 1", "Text 4", "Text 5" });
+        /// </code>
         /// </summary>
         /// <param name="expected">Expected substring or RegExp or a list of those.</param>
         /// <param name="options">Call options</param>
@@ -150,22 +242,43 @@ namespace Microsoft.Playwright
         /// Ensures the <see cref="ILocator"/> points to an element that contains the given
         /// text. You can use regular expressions for the value as well.
         /// </para>
+        /// <code>
+        /// var locator = Page.Locator(".title");<br/>
+        /// await Expect(locator).ToContainTextAsync("substring");<br/>
+        /// await Expect(locator).ToContainTextAsync(new Regex("\\d messages"));
+        /// </code>
         /// <para>
         /// Note that if array is passed as an expected value, entire lists of elements can
         /// be asserted:
         /// </para>
+        /// <code>
+        /// var locator = Page.Locator("list &gt; .list-item");<br/>
+        /// await Expect(locator).ToContainTextAsync(new string[] { "Text 1", "Text 4", "Text 5" });
+        /// </code>
         /// </summary>
         /// <param name="expected">Expected substring or RegExp or a list of those.</param>
         /// <param name="options">Call options</param>
         Task ToContainTextAsync(IEnumerable<Regex> expected, LocatorAssertionsToContainTextOptions? options = default);
 
-        /// <summary><para>Ensures the <see cref="ILocator"/> points to an element with given attribute.</para></summary>
+        /// <summary>
+        /// <para>Ensures the <see cref="ILocator"/> points to an element with given attribute.</para>
+        /// <code>
+        /// var locator = Page.Locator("input");<br/>
+        /// await Expect(locator).ToHaveAttributeAsync("type", "text");
+        /// </code>
+        /// </summary>
         /// <param name="name">Attribute name.</param>
         /// <param name="value">Expected attribute value.</param>
         /// <param name="options">Call options</param>
         Task ToHaveAttributeAsync(string name, string value, LocatorAssertionsToHaveAttributeOptions? options = default);
 
-        /// <summary><para>Ensures the <see cref="ILocator"/> points to an element with given attribute.</para></summary>
+        /// <summary>
+        /// <para>Ensures the <see cref="ILocator"/> points to an element with given attribute.</para>
+        /// <code>
+        /// var locator = Page.Locator("input");<br/>
+        /// await Expect(locator).ToHaveAttributeAsync("type", "text");
+        /// </code>
+        /// </summary>
         /// <param name="name">Attribute name.</param>
         /// <param name="value">Expected attribute value.</param>
         /// <param name="options">Call options</param>
@@ -173,10 +286,18 @@ namespace Microsoft.Playwright
 
         /// <summary>
         /// <para>Ensures the <see cref="ILocator"/> points to an element with given CSS class.</para>
+        /// <code>
+        /// var locator = Page.Locator("#component");<br/>
+        /// await Expect(locator).ToHaveClassAsync(new Regex("selected"));
+        /// </code>
         /// <para>
         /// Note that if array is passed as an expected value, entire lists of elements can
         /// be asserted:
         /// </para>
+        /// <code>
+        /// var locator = Page.Locator("list &gt; .component");<br/>
+        /// await Expect(locator).ToHaveClassAsync(new string[]{"component", "component selected", "component"});
+        /// </code>
         /// </summary>
         /// <param name="expected">Expected class or RegExp or a list of those.</param>
         /// <param name="options">Call options</param>
@@ -184,10 +305,18 @@ namespace Microsoft.Playwright
 
         /// <summary>
         /// <para>Ensures the <see cref="ILocator"/> points to an element with given CSS class.</para>
+        /// <code>
+        /// var locator = Page.Locator("#component");<br/>
+        /// await Expect(locator).ToHaveClassAsync(new Regex("selected"));
+        /// </code>
         /// <para>
         /// Note that if array is passed as an expected value, entire lists of elements can
         /// be asserted:
         /// </para>
+        /// <code>
+        /// var locator = Page.Locator("list &gt; .component");<br/>
+        /// await Expect(locator).ToHaveClassAsync(new string[]{"component", "component selected", "component"});
+        /// </code>
         /// </summary>
         /// <param name="expected">Expected class or RegExp or a list of those.</param>
         /// <param name="options">Call options</param>
@@ -195,10 +324,18 @@ namespace Microsoft.Playwright
 
         /// <summary>
         /// <para>Ensures the <see cref="ILocator"/> points to an element with given CSS class.</para>
+        /// <code>
+        /// var locator = Page.Locator("#component");<br/>
+        /// await Expect(locator).ToHaveClassAsync(new Regex("selected"));
+        /// </code>
         /// <para>
         /// Note that if array is passed as an expected value, entire lists of elements can
         /// be asserted:
         /// </para>
+        /// <code>
+        /// var locator = Page.Locator("list &gt; .component");<br/>
+        /// await Expect(locator).ToHaveClassAsync(new string[]{"component", "component selected", "component"});
+        /// </code>
         /// </summary>
         /// <param name="expected">Expected class or RegExp or a list of those.</param>
         /// <param name="options">Call options</param>
@@ -206,16 +343,30 @@ namespace Microsoft.Playwright
 
         /// <summary>
         /// <para>Ensures the <see cref="ILocator"/> points to an element with given CSS class.</para>
+        /// <code>
+        /// var locator = Page.Locator("#component");<br/>
+        /// await Expect(locator).ToHaveClassAsync(new Regex("selected"));
+        /// </code>
         /// <para>
         /// Note that if array is passed as an expected value, entire lists of elements can
         /// be asserted:
         /// </para>
+        /// <code>
+        /// var locator = Page.Locator("list &gt; .component");<br/>
+        /// await Expect(locator).ToHaveClassAsync(new string[]{"component", "component selected", "component"});
+        /// </code>
         /// </summary>
         /// <param name="expected">Expected class or RegExp or a list of those.</param>
         /// <param name="options">Call options</param>
         Task ToHaveClassAsync(IEnumerable<Regex> expected, LocatorAssertionsToHaveClassOptions? options = default);
 
-        /// <summary><para>Ensures the <see cref="ILocator"/> resolves to an exact number of DOM nodes.</para></summary>
+        /// <summary>
+        /// <para>Ensures the <see cref="ILocator"/> resolves to an exact number of DOM nodes.</para>
+        /// <code>
+        /// var locator = Page.Locator("list &gt; .component");<br/>
+        /// await Expect(locator).ToHaveCountAsync(3);
+        /// </code>
+        /// </summary>
         /// <param name="count">Expected count.</param>
         /// <param name="options">Call options</param>
         Task ToHaveCountAsync(int count, LocatorAssertionsToHaveCountOptions? options = default);
@@ -225,6 +376,10 @@ namespace Microsoft.Playwright
         /// Ensures the <see cref="ILocator"/> resolves to an element with the given computed
         /// CSS style.
         /// </para>
+        /// <code>
+        /// var locator = Page.Locator("button");<br/>
+        /// await Expect(locator).ToHaveCSSAsync("display", "flex");
+        /// </code>
         /// </summary>
         /// <param name="name">CSS property name.</param>
         /// <param name="value">CSS property value.</param>
@@ -236,6 +391,10 @@ namespace Microsoft.Playwright
         /// Ensures the <see cref="ILocator"/> resolves to an element with the given computed
         /// CSS style.
         /// </para>
+        /// <code>
+        /// var locator = Page.Locator("button");<br/>
+        /// await Expect(locator).ToHaveCSSAsync("display", "flex");
+        /// </code>
         /// </summary>
         /// <param name="name">CSS property name.</param>
         /// <param name="value">CSS property value.</param>
@@ -247,6 +406,10 @@ namespace Microsoft.Playwright
         /// Ensures the <see cref="ILocator"/> points to an element with the given DOM Node
         /// ID.
         /// </para>
+        /// <code>
+        /// var locator = Page.Locator("input");<br/>
+        /// await Expect(locator).ToHaveIdAsync("lastname");
+        /// </code>
         /// </summary>
         /// <param name="id">Element id.</param>
         /// <param name="options">Call options</param>
@@ -257,6 +420,10 @@ namespace Microsoft.Playwright
         /// Ensures the <see cref="ILocator"/> points to an element with the given DOM Node
         /// ID.
         /// </para>
+        /// <code>
+        /// var locator = Page.Locator("input");<br/>
+        /// await Expect(locator).ToHaveIdAsync("lastname");
+        /// </code>
         /// </summary>
         /// <param name="id">Element id.</param>
         /// <param name="options">Call options</param>
@@ -268,6 +435,10 @@ namespace Microsoft.Playwright
         /// Note that this property can be of a primitive type as well as a plain serializable
         /// JavaScript object.
         /// </para>
+        /// <code>
+        /// var locator = Page.Locator(".component");<br/>
+        /// await Expect(locator).ToHaveJSPropertyAsync("loaded", true);
+        /// </code>
         /// </summary>
         /// <param name="name">Property name.</param>
         /// <param name="value">Property value.</param>
@@ -279,10 +450,19 @@ namespace Microsoft.Playwright
         /// Ensures the <see cref="ILocator"/> points to an element with the given text. You
         /// can use regular expressions for the value as well.
         /// </para>
+        /// <code>
+        /// var locator = Page.Locator(".title");<br/>
+        /// await Expect(locator).ToHaveTextAsync(new Regex("Welcome, Test User"));<br/>
+        /// await Expect(locator).ToHaveTextAsync(new Regex("Welcome, .*"));
+        /// </code>
         /// <para>
         /// Note that if array is passed as an expected value, entire lists of elements can
         /// be asserted:
         /// </para>
+        /// <code>
+        /// var locator = Page.Locator("list &gt; .component");<br/>
+        /// await Expect(locator).toHaveTextAsync(new string[]{ "Text 1", "Text 2", "Text 3" });
+        /// </code>
         /// </summary>
         /// <param name="expected">Expected substring or RegExp or a list of those.</param>
         /// <param name="options">Call options</param>
@@ -293,10 +473,19 @@ namespace Microsoft.Playwright
         /// Ensures the <see cref="ILocator"/> points to an element with the given text. You
         /// can use regular expressions for the value as well.
         /// </para>
+        /// <code>
+        /// var locator = Page.Locator(".title");<br/>
+        /// await Expect(locator).ToHaveTextAsync(new Regex("Welcome, Test User"));<br/>
+        /// await Expect(locator).ToHaveTextAsync(new Regex("Welcome, .*"));
+        /// </code>
         /// <para>
         /// Note that if array is passed as an expected value, entire lists of elements can
         /// be asserted:
         /// </para>
+        /// <code>
+        /// var locator = Page.Locator("list &gt; .component");<br/>
+        /// await Expect(locator).toHaveTextAsync(new string[]{ "Text 1", "Text 2", "Text 3" });
+        /// </code>
         /// </summary>
         /// <param name="expected">Expected substring or RegExp or a list of those.</param>
         /// <param name="options">Call options</param>
@@ -307,10 +496,19 @@ namespace Microsoft.Playwright
         /// Ensures the <see cref="ILocator"/> points to an element with the given text. You
         /// can use regular expressions for the value as well.
         /// </para>
+        /// <code>
+        /// var locator = Page.Locator(".title");<br/>
+        /// await Expect(locator).ToHaveTextAsync(new Regex("Welcome, Test User"));<br/>
+        /// await Expect(locator).ToHaveTextAsync(new Regex("Welcome, .*"));
+        /// </code>
         /// <para>
         /// Note that if array is passed as an expected value, entire lists of elements can
         /// be asserted:
         /// </para>
+        /// <code>
+        /// var locator = Page.Locator("list &gt; .component");<br/>
+        /// await Expect(locator).toHaveTextAsync(new string[]{ "Text 1", "Text 2", "Text 3" });
+        /// </code>
         /// </summary>
         /// <param name="expected">Expected substring or RegExp or a list of those.</param>
         /// <param name="options">Call options</param>
@@ -321,10 +519,19 @@ namespace Microsoft.Playwright
         /// Ensures the <see cref="ILocator"/> points to an element with the given text. You
         /// can use regular expressions for the value as well.
         /// </para>
+        /// <code>
+        /// var locator = Page.Locator(".title");<br/>
+        /// await Expect(locator).ToHaveTextAsync(new Regex("Welcome, Test User"));<br/>
+        /// await Expect(locator).ToHaveTextAsync(new Regex("Welcome, .*"));
+        /// </code>
         /// <para>
         /// Note that if array is passed as an expected value, entire lists of elements can
         /// be asserted:
         /// </para>
+        /// <code>
+        /// var locator = Page.Locator("list &gt; .component");<br/>
+        /// await Expect(locator).toHaveTextAsync(new string[]{ "Text 1", "Text 2", "Text 3" });
+        /// </code>
         /// </summary>
         /// <param name="expected">Expected substring or RegExp or a list of those.</param>
         /// <param name="options">Call options</param>
@@ -335,6 +542,10 @@ namespace Microsoft.Playwright
         /// Ensures the <see cref="ILocator"/> points to an element with the given input value.
         /// You can use regular expressions for the value as well.
         /// </para>
+        /// <code>
+        /// var locator = Page.Locator("input[type=number]");<br/>
+        /// await Expect(locator).ToHaveValueAsync(new Regex("[0-9]"));
+        /// </code>
         /// </summary>
         /// <param name="value">Expected value.</param>
         /// <param name="options">Call options</param>
@@ -345,6 +556,10 @@ namespace Microsoft.Playwright
         /// Ensures the <see cref="ILocator"/> points to an element with the given input value.
         /// You can use regular expressions for the value as well.
         /// </para>
+        /// <code>
+        /// var locator = Page.Locator("input[type=number]");<br/>
+        /// await Expect(locator).ToHaveValueAsync(new Regex("[0-9]"));
+        /// </code>
         /// </summary>
         /// <param name="value">Expected value.</param>
         /// <param name="options">Call options</param>
