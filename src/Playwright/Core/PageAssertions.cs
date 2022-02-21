@@ -29,7 +29,7 @@ using Microsoft.Playwright.Transport.Protocol;
 
 namespace Microsoft.Playwright.Core
 {
-    public class PageAssertions : AssertionsBase, IPageAssertions
+    internal class PageAssertions : AssertionsBase, IPageAssertions
     {
         private readonly Page _page;
 

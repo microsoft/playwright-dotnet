@@ -32,7 +32,7 @@ using Microsoft.Playwright.Transport.Protocol;
 
 namespace Microsoft.Playwright.Core
 {
-    public class AssertionsBase
+    internal class AssertionsBase
     {
         public AssertionsBase(ILocator actual, bool isNot)
         {

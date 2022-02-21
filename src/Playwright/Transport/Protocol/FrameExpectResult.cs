@@ -22,19 +22,14 @@
  * SOFTWARE.
  */
 
-using System.Text.Json.Serialization;
-
 namespace Microsoft.Playwright.Transport.Protocol
 {
     internal class FrameExpectResult
     {
-        [JsonPropertyName("matches")]
         public bool Matches { get; set; }
 
-        [JsonPropertyName("received")]
         public object Received { get; set; }
 
-        [JsonPropertyName("log")]
         public string[] Log { get; set; }
     }
 }

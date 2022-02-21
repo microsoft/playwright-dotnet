@@ -30,7 +30,7 @@ using Microsoft.Playwright.Transport.Protocol;
 
 namespace Microsoft.Playwright.Core
 {
-    public class LocatorAssertions : AssertionsBase, ILocatorAssertions
+    internal class LocatorAssertions : AssertionsBase, ILocatorAssertions
     {
         public LocatorAssertions(ILocator locator, bool isNot) : base(locator, isNot)
         {

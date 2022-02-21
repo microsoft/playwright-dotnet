@@ -22,25 +22,18 @@
  * SOFTWARE.
  */
 
-using System.Text.Json.Serialization;
-
 namespace Microsoft.Playwright.Transport.Protocol
 {
     internal class ExpectedTextValue
     {
-        [JsonPropertyName("string")]
         public string String { get; set; }
 
-        [JsonPropertyName("regexSource")]
         public string RegexSource { get; set; }
 
-        [JsonPropertyName("regexFlags")]
         public string RegexFlags { get; set; }
 
-        [JsonPropertyName("matchSubstring")]
         public bool MatchSubstring { get; set; }
 
-        [JsonPropertyName("normalizeWhiteSpace")]
         public bool NormalizeWhiteSpace { get; set; }
     }
 }

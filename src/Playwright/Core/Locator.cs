@@ -250,12 +250,10 @@ namespace Microsoft.Playwright.Core
             => _frame.LocatorWaitForAsync(_selector, ConvertOptions<LocatorWaitForOptions>(options));
 
         internal Task<FrameExpectResult> ExpectAsync(string expression, FrameExpectOptions options = null)
-        {
-            return _frame.ExpectAsync(
+            => _frame.ExpectAsync(
                 _selector,
                 expression,
                 options);
-        }
 
         public override string ToString() => "Locator@" + _selector;
 

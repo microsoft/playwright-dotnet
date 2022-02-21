@@ -27,6 +27,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Dynamic;
+using System.Globalization;
 using System.Linq;
 using System.Text.Json;
 using System.Text.Json.Serialization;
@@ -126,7 +127,7 @@ namespace Microsoft.Playwright.Transport.Converters
 
             if (value is DateTime date)
             {
-                return new { d = date.ToString("o", System.Globalization.CultureInfo.InvariantCulture) };
+                return new { d = date.ToString("o", CultureInfo.InvariantCulture) };
             }
 
             if (value is Regex regex)
