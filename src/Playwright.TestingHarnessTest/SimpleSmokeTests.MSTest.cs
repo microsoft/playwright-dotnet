@@ -3,6 +3,8 @@ using System.Threading.Tasks;
 using Microsoft.Playwright.MSTest;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
+using static Microsoft.Playwright.Assertions;
+
 namespace Playwright.TestingHarnessTest.MSTest
 {
     [TestClass]
@@ -20,6 +22,8 @@ namespace Playwright.TestingHarnessTest.MSTest
 
             var title = await Page.EvaluateAsync<string>("() => document.title");
             Assert.AreEqual("This is a website.", title);
+
+            await Expect(Page.Locator("h1")).ToBeVisibleAsync();
         }
 
     }

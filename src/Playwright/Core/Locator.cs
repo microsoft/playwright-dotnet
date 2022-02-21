@@ -25,12 +25,10 @@
  */
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Text.Json;
-using System.Text.Json.Serialization;
-using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Microsoft.Playwright.Helpers;
+using Microsoft.Playwright.Transport.Protocol;
 
 namespace Microsoft.Playwright.Core
 {
@@ -250,6 +248,12 @@ namespace Microsoft.Playwright.Core
 
         public Task WaitForAsync(LocatorWaitForOptions options = null)
             => _frame.LocatorWaitForAsync(_selector, ConvertOptions<LocatorWaitForOptions>(options));
+
+        internal Task<FrameExpectResult> ExpectAsync(string expression, FrameExpectOptions options = null)
+            => _frame.ExpectAsync(
+                _selector,
+                expression,
+                options);
 
         public override string ToString() => "Locator@" + _selector;
 

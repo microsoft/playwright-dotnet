@@ -3,6 +3,8 @@ using System.Threading.Tasks;
 using Microsoft.Playwright.NUnit;
 using NUnit.Framework;
 
+using static Microsoft.Playwright.Assertions;
+
 namespace Playwright.TestingHarnessTest.NUnit
 {
 
@@ -19,6 +21,8 @@ namespace Playwright.TestingHarnessTest.NUnit
 
             var title = await Page.EvaluateAsync<string>("() => document.title");
             Assert.AreEqual("This is a website.", title);
+
+            await Expect(Page.Locator("h1")).ToBeVisibleAsync();
         }
     }
 }
