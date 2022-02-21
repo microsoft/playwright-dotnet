@@ -33,6 +33,7 @@
         <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
         <PublishState>Included</PublishState>
         <Visible>false</Visible>
+        <Pack>false</Pack>
       </Content>
     </ItemGroup>
   </Target>
