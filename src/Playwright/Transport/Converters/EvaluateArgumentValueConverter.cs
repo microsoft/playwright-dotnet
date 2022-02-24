@@ -326,10 +326,7 @@ namespace Microsoft.Playwright.Transport.Converters
                     resultArray.Add(ParseEvaluateResult(item, t.GetElementType(), serializerOptions));
                 }
 
-                var destinationArray = Array.CreateInstance(t.GetElementType(), resultArray.Count);
-                Array.Copy(resultArray.ToArray(), destinationArray, resultArray.Count);
-
-                return destinationArray;
+                return resultArray.ToArray(t.GetElementType());
             }
 
             return result.ToObject(t);
