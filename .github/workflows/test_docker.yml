@@ -1,0 +1,34 @@
+name: Test Docker
+on:
+  push:
+    paths:
+      - '.github/workflows/test_docker.yml'
+    branches:
+      - main
+  pull_request:
+    paths:
+      - '.github/workflows/test_docker.yml'
+    branches:
+      - main
+jobs:
+  build:
+    timeout-minutes: 60
+    runs-on: ubuntu-20.04
+    steps:
+    - uses: actions/checkout@v2
+    - name: Setup .NET Core
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: 5.0.x
+    - name: Install prerequisites and download drivers
+      shell: bash
+      run: ./build.sh --download-driver
+    - name: Build Docker image
+      run: bash utils/docker/build.sh --amd64 focal playwright-dotnet:localbuild-focal
+    - name: Test
+      run: |
+        CONTAINER_ID="$(docker run --rm -v $(pwd):/root/playwright --name playwright-docker-test --workdir /root/playwright/ -d -t playwright-dotnet:localbuild-focal /bin/bash)"
+        docker exec "${CONTAINER_ID}" bash -c "curl -OL https://dot.net/v1/dotnet-install.sh && DOTNET_INSTALL_DIR=/usr/share/dotnet bash dotnet-install.sh -c 5.0"
+        docker exec -e BROWSER=chromium "${CONTAINER_ID}" xvfb-run dotnet test ./src/Playwright.Tests/Playwright.Tests.csproj -c Debug -f net5.0
+        docker exec -e BROWSER=firefox "${CONTAINER_ID}" xvfb-run dotnet test ./src/Playwright.Tests/Playwright.Tests.csproj -c Debug -f net5.0
+        docker exec -e BROWSER=webkit "${CONTAINER_ID}" xvfb-run dotnet test ./src/Playwright.Tests/Playwright.Tests.csproj -c Debug -f net5.0

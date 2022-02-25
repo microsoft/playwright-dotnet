@@ -1,0 +1,42 @@
+name: "publish release - Docker"
+
+on:
+  workflow_dispatch:
+    inputs:
+      is_release:
+        required: false
+        type: boolean
+        description: "Is this a release image?"
+
+  release:
+    types: [published]
+
+jobs:
+  publish-docker-release:
+    name: "publish to DockerHub"
+    runs-on: ubuntu-20.04
+    if: github.repository == 'microsoft/playwright-dotnet'
+    steps:
+    - uses: actions/checkout@v2
+    - name: Setup .NET Core
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: |
+          5.0.x
+          6.0.x
+    - name: Install prerequisites and download drivers
+      shell: bash
+      run: ./build.sh --download-driver
+    - uses: azure/docker-login@v1
+      with:
+        login-server: playwright.azurecr.io
+        username: playwright
+        password: ${{ secrets.DOCKER_PASSWORD }}
+    - name: Set up Docker QEMU for arm64 docker builds
+      uses: docker/setup-qemu-action@v1
+      with:
+        platforms: arm64
+    - run: ./utils/docker/publish_docker.sh stable
+      if: (github.event_name != 'workflow_dispatch' && !github.event.release.prerelease) || (github.event_name == 'workflow_dispatch' && github.event.inputs.is_release == 'true')
+    - run: ./utils/docker/publish_docker.sh canary
+      if: (github.event_name != 'workflow_dispatch' && github.event.release.prerelease) || (github.event_name == 'workflow_dispatch' && github.event.inputs.is_release != 'true')
