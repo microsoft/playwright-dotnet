@@ -45,7 +45,11 @@ namespace Microsoft.Playwright
 
         public MouseUpOptions(MouseUpOptions clone)
         {
-            if (clone == null) return;
+            if (clone == null)
+            {
+                return;
+            }
+
             Button = clone.Button;
             ClickCount = clone.ClickCount;
         }

@@ -45,7 +45,11 @@ namespace Microsoft.Playwright
 
         public FrameTypeOptions(FrameTypeOptions clone)
         {
-            if (clone == null) return;
+            if (clone == null)
+            {
+                return;
+            }
+
             Delay = clone.Delay;
             NoWaitAfter = clone.NoWaitAfter;
             Strict = clone.Strict;

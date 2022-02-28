@@ -1039,7 +1039,9 @@ namespace Microsoft.Playwright.Core
                         {
                             _routes.Remove(routeHandler);
                             if (_routes.Count == 0)
+                            {
                                 DisableInterceptionAsync().ConfigureAwait(false);
+                            }
                         }
                     }
                     return;

@@ -45,7 +45,11 @@ namespace Microsoft.Playwright
 
         public MouseDblClickOptions(MouseDblClickOptions clone)
         {
-            if (clone == null) return;
+            if (clone == null)
+            {
+                return;
+            }
+
             Button = clone.Button;
             Delay = clone.Delay;
         }

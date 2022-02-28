@@ -45,7 +45,11 @@ namespace Microsoft.Playwright
 
         public PageWaitForFileChooserOptions(PageWaitForFileChooserOptions clone)
         {
-            if (clone == null) return;
+            if (clone == null)
+            {
+                return;
+            }
+
             Predicate = clone.Predicate;
             Timeout = clone.Timeout;
         }

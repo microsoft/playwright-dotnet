@@ -48,7 +48,10 @@ namespace Microsoft.Playwright.Core
         public bool IsActive()
         {
             if (Times == null)
+            {
                 return true;
+            }
+
             return HandledCount < Times;
         }
     }

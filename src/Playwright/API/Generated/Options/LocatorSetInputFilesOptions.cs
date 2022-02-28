@@ -45,7 +45,11 @@ namespace Microsoft.Playwright
 
         public LocatorSetInputFilesOptions(LocatorSetInputFilesOptions clone)
         {
-            if (clone == null) return;
+            if (clone == null)
+            {
+                return;
+            }
+
             NoWaitAfter = clone.NoWaitAfter;
             Timeout = clone.Timeout;
         }

@@ -45,7 +45,11 @@ namespace Microsoft.Playwright
 
         public BrowserTypeLaunchPersistentContextOptions(BrowserTypeLaunchPersistentContextOptions clone)
         {
-            if (clone == null) return;
+            if (clone == null)
+            {
+                return;
+            }
+
             AcceptDownloads = clone.AcceptDownloads;
             Args = clone.Args;
             BaseURL = clone.BaseURL;

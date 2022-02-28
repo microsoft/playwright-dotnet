@@ -45,7 +45,11 @@ namespace Microsoft.Playwright
 
         public ElementHandleSetInputFilesOptions(ElementHandleSetInputFilesOptions clone)
         {
-            if (clone == null) return;
+            if (clone == null)
+            {
+                return;
+            }
+
             NoWaitAfter = clone.NoWaitAfter;
             Timeout = clone.Timeout;
         }

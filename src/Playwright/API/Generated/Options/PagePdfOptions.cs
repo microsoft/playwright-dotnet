@@ -45,7 +45,11 @@ namespace Microsoft.Playwright
 
         public PagePdfOptions(PagePdfOptions clone)
         {
-            if (clone == null) return;
+            if (clone == null)
+            {
+                return;
+            }
+
             DisplayHeaderFooter = clone.DisplayHeaderFooter;
             FooterTemplate = clone.FooterTemplate;
             Format = clone.Format;

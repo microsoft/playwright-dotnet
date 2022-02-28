@@ -45,7 +45,11 @@ namespace Microsoft.Playwright
 
         public LocatorIsVisibleOptions(LocatorIsVisibleOptions clone)
         {
-            if (clone == null) return;
+            if (clone == null)
+            {
+                return;
+            }
+
             Timeout = clone.Timeout;
         }
 

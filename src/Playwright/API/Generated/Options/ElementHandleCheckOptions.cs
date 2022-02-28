@@ -45,7 +45,11 @@ namespace Microsoft.Playwright
 
         public ElementHandleCheckOptions(ElementHandleCheckOptions clone)
         {
-            if (clone == null) return;
+            if (clone == null)
+            {
+                return;
+            }
+
             Force = clone.Force;
             NoWaitAfter = clone.NoWaitAfter;
             Position = clone.Position;

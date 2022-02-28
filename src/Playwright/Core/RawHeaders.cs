@@ -56,14 +56,20 @@ namespace Microsoft.Playwright.Core
         {
             var values = GetAll(name);
             if (values == null)
+            {
                 return null;
+            }
+
             return string.Join("set-cookie".Equals(name, StringComparison.OrdinalIgnoreCase) ? "\n" : ", ", values);
         }
 
         public string[] GetAll(string name)
         {
             if (_headersMap.TryGetValue(name.ToLower(), out List<string> values))
+            {
                 return values.ToArray();
+            }
+
             return null;
         }
     }

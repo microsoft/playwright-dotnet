@@ -45,7 +45,11 @@ namespace Microsoft.Playwright
 
         public AccessibilitySnapshotOptions(AccessibilitySnapshotOptions clone)
         {
-            if (clone == null) return;
+            if (clone == null)
+            {
+                return;
+            }
+
             InterestingOnly = clone.InterestingOnly;
             Root = clone.Root;
         }

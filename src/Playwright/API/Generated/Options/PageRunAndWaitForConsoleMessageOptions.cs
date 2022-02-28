@@ -45,7 +45,11 @@ namespace Microsoft.Playwright
 
         public PageRunAndWaitForConsoleMessageOptions(PageRunAndWaitForConsoleMessageOptions clone)
         {
-            if (clone == null) return;
+            if (clone == null)
+            {
+                return;
+            }
+
             Predicate = clone.Predicate;
             Timeout = clone.Timeout;
         }

@@ -45,7 +45,11 @@ namespace Microsoft.Playwright
 
         public FrameIsEditableOptions(FrameIsEditableOptions clone)
         {
-            if (clone == null) return;
+            if (clone == null)
+            {
+                return;
+            }
+
             Strict = clone.Strict;
             Timeout = clone.Timeout;
         }

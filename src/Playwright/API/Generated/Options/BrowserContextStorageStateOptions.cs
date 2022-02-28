@@ -45,7 +45,11 @@ namespace Microsoft.Playwright
 
         public BrowserContextStorageStateOptions(BrowserContextStorageStateOptions clone)
         {
-            if (clone == null) return;
+            if (clone == null)
+            {
+                return;
+            }
+
             Path = clone.Path;
         }
 

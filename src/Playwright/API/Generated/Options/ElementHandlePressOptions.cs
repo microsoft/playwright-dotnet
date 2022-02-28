@@ -45,7 +45,11 @@ namespace Microsoft.Playwright
 
         public ElementHandlePressOptions(ElementHandlePressOptions clone)
         {
-            if (clone == null) return;
+            if (clone == null)
+            {
+                return;
+            }
+
             Delay = clone.Delay;
             NoWaitAfter = clone.NoWaitAfter;
             Timeout = clone.Timeout;

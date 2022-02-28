@@ -45,7 +45,11 @@ namespace Microsoft.Playwright
 
         public PageRunAndWaitForRequestFinishedOptions(PageRunAndWaitForRequestFinishedOptions clone)
         {
-            if (clone == null) return;
+            if (clone == null)
+            {
+                return;
+            }
+
             Predicate = clone.Predicate;
             Timeout = clone.Timeout;
         }

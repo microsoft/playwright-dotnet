@@ -45,7 +45,11 @@ namespace Microsoft.Playwright
 
         public PageGoBackOptions(PageGoBackOptions clone)
         {
-            if (clone == null) return;
+            if (clone == null)
+            {
+                return;
+            }
+
             Timeout = clone.Timeout;
             WaitUntil = clone.WaitUntil;
         }

@@ -45,7 +45,11 @@ namespace Microsoft.Playwright
 
         public ElementHandleSelectTextOptions(ElementHandleSelectTextOptions clone)
         {
-            if (clone == null) return;
+            if (clone == null)
+            {
+                return;
+            }
+
             Force = clone.Force;
             Timeout = clone.Timeout;
         }

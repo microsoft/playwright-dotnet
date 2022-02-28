@@ -45,7 +45,11 @@ namespace Microsoft.Playwright
 
         public LocatorFocusOptions(LocatorFocusOptions clone)
         {
-            if (clone == null) return;
+            if (clone == null)
+            {
+                return;
+            }
+
             Timeout = clone.Timeout;
         }
 

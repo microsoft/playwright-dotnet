@@ -45,7 +45,11 @@ namespace Microsoft.Playwright
 
         public BrowserContextExposeBindingOptions(BrowserContextExposeBindingOptions clone)
         {
-            if (clone == null) return;
+            if (clone == null)
+            {
+                return;
+            }
+
             Handle = clone.Handle;
         }
 

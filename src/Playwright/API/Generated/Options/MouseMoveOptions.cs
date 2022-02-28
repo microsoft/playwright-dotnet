@@ -45,7 +45,11 @@ namespace Microsoft.Playwright
 
         public MouseMoveOptions(MouseMoveOptions clone)
         {
-            if (clone == null) return;
+            if (clone == null)
+            {
+                return;
+            }
+
             Steps = clone.Steps;
         }
 

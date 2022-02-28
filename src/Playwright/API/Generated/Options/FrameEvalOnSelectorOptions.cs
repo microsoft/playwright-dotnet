@@ -45,7 +45,11 @@ namespace Microsoft.Playwright
 
         public FrameEvalOnSelectorOptions(FrameEvalOnSelectorOptions clone)
         {
-            if (clone == null) return;
+            if (clone == null)
+            {
+                return;
+            }
+
             Strict = clone.Strict;
         }
 

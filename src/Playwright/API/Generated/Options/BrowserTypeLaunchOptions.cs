@@ -45,7 +45,11 @@ namespace Microsoft.Playwright
 
         public BrowserTypeLaunchOptions(BrowserTypeLaunchOptions clone)
         {
-            if (clone == null) return;
+            if (clone == null)
+            {
+                return;
+            }
+
             Args = clone.Args;
             Channel = clone.Channel;
             ChromiumSandbox = clone.ChromiumSandbox;

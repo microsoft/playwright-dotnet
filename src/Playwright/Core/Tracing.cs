@@ -78,20 +78,28 @@ namespace Microsoft.Playwright.Core
             if (!string.IsNullOrEmpty(filePath))
             {
                 if (isLocal)
+                {
                     mode = "compressTraceAndSources";
+                }
                 else
+                {
                     mode = "compressTrace";
+                }
             }
 
             var (artifact, sourceEntries) = await _channel.StopChunkAsync(mode).ConfigureAwait(false);
 
             // Not interested in artifacts.
             if (string.IsNullOrEmpty(filePath))
+            {
                 return;
+            }
 
             // The artifact may be missing if the browser closed while stopping tracing.
             if (artifact == null)
+            {
                 return;
+            }
 
             // Save trace to the final local file.
             await artifact.SaveAsAsync(filePath).ConfigureAwait(false);
@@ -99,7 +107,9 @@ namespace Microsoft.Playwright.Core
 
             // Add local sources to the remote trace if necessary.
             if (sourceEntries.Count > 0)
+            {
                 await LocalUtils.ZipAsync(filePath, sourceEntries).ConfigureAwait(false);
+            }
         }
     }
 }

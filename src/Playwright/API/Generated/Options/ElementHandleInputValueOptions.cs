@@ -45,7 +45,11 @@ namespace Microsoft.Playwright
 
         public ElementHandleInputValueOptions(ElementHandleInputValueOptions clone)
         {
-            if (clone == null) return;
+            if (clone == null)
+            {
+                return;
+            }
+
             Timeout = clone.Timeout;
         }
 

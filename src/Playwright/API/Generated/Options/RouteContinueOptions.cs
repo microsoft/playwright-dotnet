@@ -45,7 +45,11 @@ namespace Microsoft.Playwright
 
         public RouteContinueOptions(RouteContinueOptions clone)
         {
-            if (clone == null) return;
+            if (clone == null)
+            {
+                return;
+            }
+
             Headers = clone.Headers;
             Method = clone.Method;
             PostData = clone.PostData;

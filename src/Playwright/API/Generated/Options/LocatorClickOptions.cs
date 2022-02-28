@@ -45,7 +45,11 @@ namespace Microsoft.Playwright
 
         public LocatorClickOptions(LocatorClickOptions clone)
         {
-            if (clone == null) return;
+            if (clone == null)
+            {
+                return;
+            }
+
             Button = clone.Button;
             ClickCount = clone.ClickCount;
             Delay = clone.Delay;

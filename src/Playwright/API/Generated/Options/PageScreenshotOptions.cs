@@ -45,7 +45,11 @@ namespace Microsoft.Playwright
 
         public PageScreenshotOptions(PageScreenshotOptions clone)
         {
-            if (clone == null) return;
+            if (clone == null)
+            {
+                return;
+            }
+
             Clip = clone.Clip;
             FullPage = clone.FullPage;
             OmitBackground = clone.OmitBackground;

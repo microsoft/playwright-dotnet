@@ -45,7 +45,11 @@ namespace Microsoft.Playwright
 
         public FrameQuerySelectorOptions(FrameQuerySelectorOptions clone)
         {
-            if (clone == null) return;
+            if (clone == null)
+            {
+                return;
+            }
+
             Strict = clone.Strict;
         }
 

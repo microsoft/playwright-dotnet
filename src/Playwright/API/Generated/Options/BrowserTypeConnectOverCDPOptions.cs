@@ -45,7 +45,11 @@ namespace Microsoft.Playwright
 
         public BrowserTypeConnectOverCDPOptions(BrowserTypeConnectOverCDPOptions clone)
         {
-            if (clone == null) return;
+            if (clone == null)
+            {
+                return;
+            }
+
             Headers = clone.Headers;
             SlowMo = clone.SlowMo;
             Timeout = clone.Timeout;

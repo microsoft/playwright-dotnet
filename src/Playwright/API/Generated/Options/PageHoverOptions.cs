@@ -45,7 +45,11 @@ namespace Microsoft.Playwright
 
         public PageHoverOptions(PageHoverOptions clone)
         {
-            if (clone == null) return;
+            if (clone == null)
+            {
+                return;
+            }
+
             Force = clone.Force;
             Modifiers = clone.Modifiers;
             Position = clone.Position;

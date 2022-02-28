@@ -439,7 +439,9 @@ namespace Microsoft.Playwright.Transport
                 string cSharpNamespace = sf.GetMethod().ReflectedType.Namespace;
                 bool playwrightInternal = cSharpNamespace == "Microsoft.Playwright" || cSharpNamespace.StartsWith("Microsoft.Playwright.Core", StringComparison.InvariantCultureIgnoreCase) || cSharpNamespace.StartsWith("Microsoft.Playwright.Transport", StringComparison.InvariantCultureIgnoreCase) || cSharpNamespace.StartsWith("Microsoft.Playwright.Helpers", StringComparison.InvariantCultureIgnoreCase);
                 if (string.IsNullOrEmpty(fileName) && !playwrightInternal)
+                {
                     continue;
+                }
 
                 if (!playwrightInternal)
                 {

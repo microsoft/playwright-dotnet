@@ -45,7 +45,11 @@ namespace Microsoft.Playwright
 
         public PageSetInputFilesOptions(PageSetInputFilesOptions clone)
         {
-            if (clone == null) return;
+            if (clone == null)
+            {
+                return;
+            }
+
             NoWaitAfter = clone.NoWaitAfter;
             Strict = clone.Strict;
             Timeout = clone.Timeout;

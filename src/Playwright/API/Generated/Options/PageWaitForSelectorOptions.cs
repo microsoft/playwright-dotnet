@@ -45,7 +45,11 @@ namespace Microsoft.Playwright
 
         public PageWaitForSelectorOptions(PageWaitForSelectorOptions clone)
         {
-            if (clone == null) return;
+            if (clone == null)
+            {
+                return;
+            }
+
             State = clone.State;
             Strict = clone.Strict;
             Timeout = clone.Timeout;

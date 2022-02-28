@@ -45,7 +45,11 @@ namespace Microsoft.Playwright
 
         public FrameSetInputFilesOptions(FrameSetInputFilesOptions clone)
         {
-            if (clone == null) return;
+            if (clone == null)
+            {
+                return;
+            }
+
             NoWaitAfter = clone.NoWaitAfter;
             Strict = clone.Strict;
             Timeout = clone.Timeout;

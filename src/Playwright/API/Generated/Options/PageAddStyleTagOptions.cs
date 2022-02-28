@@ -45,7 +45,11 @@ namespace Microsoft.Playwright
 
         public PageAddStyleTagOptions(PageAddStyleTagOptions clone)
         {
-            if (clone == null) return;
+            if (clone == null)
+            {
+                return;
+            }
+
             Content = clone.Content;
             Path = clone.Path;
             Url = clone.Url;
