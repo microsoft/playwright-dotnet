@@ -45,7 +45,11 @@ namespace Microsoft.Playwright
 
         public PageQuerySelectorOptions(PageQuerySelectorOptions clone)
         {
-            if (clone == null) return;
+            if (clone == null)
+            {
+                return;
+            }
+
             Strict = clone.Strict;
         }
 

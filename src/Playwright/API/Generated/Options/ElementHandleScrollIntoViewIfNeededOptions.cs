@@ -45,7 +45,11 @@ namespace Microsoft.Playwright
 
         public ElementHandleScrollIntoViewIfNeededOptions(ElementHandleScrollIntoViewIfNeededOptions clone)
         {
-            if (clone == null) return;
+            if (clone == null)
+            {
+                return;
+            }
+
             Timeout = clone.Timeout;
         }
 

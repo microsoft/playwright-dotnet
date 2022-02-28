@@ -45,7 +45,11 @@ namespace Microsoft.Playwright
 
         public TracingStartOptions(TracingStartOptions clone)
         {
-            if (clone == null) return;
+            if (clone == null)
+            {
+                return;
+            }
+
             Name = clone.Name;
             Screenshots = clone.Screenshots;
             Snapshots = clone.Snapshots;

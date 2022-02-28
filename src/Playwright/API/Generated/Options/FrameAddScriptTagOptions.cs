@@ -45,7 +45,11 @@ namespace Microsoft.Playwright
 
         public FrameAddScriptTagOptions(FrameAddScriptTagOptions clone)
         {
-            if (clone == null) return;
+            if (clone == null)
+            {
+                return;
+            }
+
             Content = clone.Content;
             Path = clone.Path;
             Type = clone.Type;

@@ -45,7 +45,11 @@ namespace Microsoft.Playwright
 
         public LocatorAssertionsNotToHaveClassOptions(LocatorAssertionsNotToHaveClassOptions clone)
         {
-            if (clone == null) return;
+            if (clone == null)
+            {
+                return;
+            }
+
             Timeout = clone.Timeout;
         }
 

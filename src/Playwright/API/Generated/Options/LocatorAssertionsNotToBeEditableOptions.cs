@@ -45,7 +45,11 @@ namespace Microsoft.Playwright
 
         public LocatorAssertionsNotToBeEditableOptions(LocatorAssertionsNotToBeEditableOptions clone)
         {
-            if (clone == null) return;
+            if (clone == null)
+            {
+                return;
+            }
+
             Timeout = clone.Timeout;
         }
 

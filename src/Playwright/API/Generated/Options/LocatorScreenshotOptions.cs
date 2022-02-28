@@ -45,7 +45,11 @@ namespace Microsoft.Playwright
 
         public LocatorScreenshotOptions(LocatorScreenshotOptions clone)
         {
-            if (clone == null) return;
+            if (clone == null)
+            {
+                return;
+            }
+
             OmitBackground = clone.OmitBackground;
             Path = clone.Path;
             Quality = clone.Quality;

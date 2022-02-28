@@ -45,7 +45,11 @@ namespace Microsoft.Playwright
 
         public LocatorLocatorOptions(LocatorLocatorOptions clone)
         {
-            if (clone == null) return;
+            if (clone == null)
+            {
+                return;
+            }
+
             Has = clone.Has;
             HasTextString = clone.HasTextString;
             HasTextRegex = clone.HasTextRegex;

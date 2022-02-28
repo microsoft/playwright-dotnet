@@ -45,7 +45,11 @@ namespace Microsoft.Playwright
 
         public LocatorIsHiddenOptions(LocatorIsHiddenOptions clone)
         {
-            if (clone == null) return;
+            if (clone == null)
+            {
+                return;
+            }
+
             Timeout = clone.Timeout;
         }
 

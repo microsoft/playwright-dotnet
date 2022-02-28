@@ -45,7 +45,11 @@ namespace Microsoft.Playwright
 
         public FileChooserSetFilesOptions(FileChooserSetFilesOptions clone)
         {
-            if (clone == null) return;
+            if (clone == null)
+            {
+                return;
+            }
+
             NoWaitAfter = clone.NoWaitAfter;
             Timeout = clone.Timeout;
         }

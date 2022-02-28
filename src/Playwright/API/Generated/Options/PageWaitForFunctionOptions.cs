@@ -45,7 +45,11 @@ namespace Microsoft.Playwright
 
         public PageWaitForFunctionOptions(PageWaitForFunctionOptions clone)
         {
-            if (clone == null) return;
+            if (clone == null)
+            {
+                return;
+            }
+
             PollingInterval = clone.PollingInterval;
             Timeout = clone.Timeout;
         }

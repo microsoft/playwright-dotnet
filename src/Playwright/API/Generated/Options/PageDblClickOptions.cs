@@ -45,7 +45,11 @@ namespace Microsoft.Playwright
 
         public PageDblClickOptions(PageDblClickOptions clone)
         {
-            if (clone == null) return;
+            if (clone == null)
+            {
+                return;
+            }
+
             Button = clone.Button;
             Delay = clone.Delay;
             Force = clone.Force;

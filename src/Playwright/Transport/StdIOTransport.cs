@@ -48,7 +48,9 @@ namespace Microsoft.Playwright.Transport
             _process.ErrorDataReceived += (_, error) =>
             {
                 if (error.Data != null)
+                {
                     LogReceived?.Invoke(this, error.Data);
+                }
             };
             _process.BeginErrorReadLine();
 

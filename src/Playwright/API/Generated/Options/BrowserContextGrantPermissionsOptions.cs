@@ -45,7 +45,11 @@ namespace Microsoft.Playwright
 
         public BrowserContextGrantPermissionsOptions(BrowserContextGrantPermissionsOptions clone)
         {
-            if (clone == null) return;
+            if (clone == null)
+            {
+                return;
+            }
+
             Origin = clone.Origin;
         }
 

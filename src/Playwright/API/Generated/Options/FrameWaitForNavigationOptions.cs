@@ -45,7 +45,11 @@ namespace Microsoft.Playwright
 
         public FrameWaitForNavigationOptions(FrameWaitForNavigationOptions clone)
         {
-            if (clone == null) return;
+            if (clone == null)
+            {
+                return;
+            }
+
             Timeout = clone.Timeout;
             UrlString = clone.UrlString;
             UrlRegex = clone.UrlRegex;

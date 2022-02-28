@@ -45,7 +45,11 @@ namespace Microsoft.Playwright
 
         public RouteFulfillOptions(RouteFulfillOptions clone)
         {
-            if (clone == null) return;
+            if (clone == null)
+            {
+                return;
+            }
+
             Body = clone.Body;
             BodyBytes = clone.BodyBytes;
             ContentType = clone.ContentType;

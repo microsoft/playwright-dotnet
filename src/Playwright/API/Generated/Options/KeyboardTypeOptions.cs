@@ -45,7 +45,11 @@ namespace Microsoft.Playwright
 
         public KeyboardTypeOptions(KeyboardTypeOptions clone)
         {
-            if (clone == null) return;
+            if (clone == null)
+            {
+                return;
+            }
+
             Delay = clone.Delay;
         }
 

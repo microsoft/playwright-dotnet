@@ -45,7 +45,11 @@ namespace Microsoft.Playwright
 
         public LocatorFillOptions(LocatorFillOptions clone)
         {
-            if (clone == null) return;
+            if (clone == null)
+            {
+                return;
+            }
+
             Force = clone.Force;
             NoWaitAfter = clone.NoWaitAfter;
             Timeout = clone.Timeout;

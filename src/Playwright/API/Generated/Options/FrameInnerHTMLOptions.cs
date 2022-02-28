@@ -45,7 +45,11 @@ namespace Microsoft.Playwright
 
         public FrameInnerHTMLOptions(FrameInnerHTMLOptions clone)
         {
-            if (clone == null) return;
+            if (clone == null)
+            {
+                return;
+            }
+
             Strict = clone.Strict;
             Timeout = clone.Timeout;
         }

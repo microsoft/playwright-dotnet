@@ -45,7 +45,11 @@ namespace Microsoft.Playwright
 
         public FrameLocatorLocatorOptions(FrameLocatorLocatorOptions clone)
         {
-            if (clone == null) return;
+            if (clone == null)
+            {
+                return;
+            }
+
             Has = clone.Has;
             HasTextString = clone.HasTextString;
             HasTextRegex = clone.HasTextRegex;

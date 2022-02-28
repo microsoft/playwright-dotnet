@@ -192,6 +192,7 @@ dotnet_diagnostic.CA1844.severity = none
 dotnet_diagnostic.CA2007.severity = error
 dotnet_diagnostic.CA2227.severity = suggestion
 dotnet_diagnostic.CS1591.severity = none
+dotnet_diagnostic.RCS1007.severity = error
 dotnet_diagnostic.RCS1075.severity = none
 dotnet_diagnostic.SA1101.severity = none
 dotnet_diagnostic.SA1128.severity = none

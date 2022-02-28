@@ -45,7 +45,11 @@ namespace Microsoft.Playwright
 
         public PageGotoOptions(PageGotoOptions clone)
         {
-            if (clone == null) return;
+            if (clone == null)
+            {
+                return;
+            }
+
             Referer = clone.Referer;
             Timeout = clone.Timeout;
             WaitUntil = clone.WaitUntil;

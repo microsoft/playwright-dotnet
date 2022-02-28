@@ -45,7 +45,11 @@ namespace Microsoft.Playwright
 
         public PageRunAndWaitForDownloadOptions(PageRunAndWaitForDownloadOptions clone)
         {
-            if (clone == null) return;
+            if (clone == null)
+            {
+                return;
+            }
+
             Predicate = clone.Predicate;
             Timeout = clone.Timeout;
         }

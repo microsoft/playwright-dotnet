@@ -87,7 +87,10 @@ namespace Microsoft.Playwright.Core
         internal ExpectedTextValue ExpectedRegex(Regex pattern, ExpectedTextValue options = null)
         {
             if (pattern == null)
+            {
                 throw new ArgumentNullException(nameof(pattern));
+            }
+
             ExpectedTextValue textValue = options ?? new() { };
             textValue.RegexSource = pattern.ToString();
             textValue.RegexFlags = pattern.Options.GetInlineFlags();
@@ -99,7 +102,10 @@ namespace Microsoft.Playwright.Core
         {
             T target = new();
             if (source == null)
+            {
                 return target;
+            }
+
             var sourceType = source.GetType();
             var targetType = target.GetType();
             foreach (var sourceProperty in sourceType.GetProperties())
@@ -118,11 +124,20 @@ namespace Microsoft.Playwright.Core
         private string FormatValue(object value)
         {
             if (value == null)
+            {
                 return "null";
+            }
+
             if (value is string)
+            {
                 return (string)value;
+            }
+
             if (value is IEnumerable<object>)
+            {
                 return "[" + string.Join(", ", ((IEnumerable<object>)value).Select(value => $"'{value}'")) + "]";
+            }
+
             return value.ToString();
         }
     }

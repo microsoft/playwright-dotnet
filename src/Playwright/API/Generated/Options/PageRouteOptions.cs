@@ -45,7 +45,11 @@ namespace Microsoft.Playwright
 
         public PageRouteOptions(PageRouteOptions clone)
         {
-            if (clone == null) return;
+            if (clone == null)
+            {
+                return;
+            }
+
             Times = clone.Times;
         }
 

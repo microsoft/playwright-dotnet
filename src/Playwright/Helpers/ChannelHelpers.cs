@@ -25,7 +25,9 @@ namespace Microsoft.Playwright.Helpers
             }
 
             if (optional)
+            {
                 return null;
+            }
 
             throw new ArgumentNullException($"Element {name} was expected to not be optional, yet was not present in the data.");
         }
@@ -34,11 +36,15 @@ namespace Microsoft.Playwright.Helpers
             where T : ChannelOwnerBase, IChannelOwner<T>
         {
             if (!element.HasValue)
+            {
                 return null;
+            }
 
             JsonElement retElement;
             if (!element.Value.TryGetProperty(name, out retElement))
+            {
                 return null;
+            }
 
             var guid = retElement.GetProperty("guid").ToString();
             return connection.GetObject(guid) as T;
@@ -49,7 +55,10 @@ namespace Microsoft.Playwright.Helpers
         {
             var result = GetObject<T>((JsonElement?)element, name, connection);
             if (result == null)
+            {
                 throw new ArgumentNullException($"Element {name} expected, but was not found.");
+            }
+
             return result;
         }
 
@@ -57,7 +66,10 @@ namespace Microsoft.Playwright.Helpers
         // since .NET5 and throws an exception of "Serialization and deserialization of 'System.Type' instances are not supported and should be avoided since they can lead to security issues."}
         internal static dynamic ToObject(this Exception exception)
         {
-            if (exception == null) return new { };
+            if (exception == null)
+            {
+                return new { };
+            }
 
             return new
             {

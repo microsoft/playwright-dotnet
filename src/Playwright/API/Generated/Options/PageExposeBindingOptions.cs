@@ -45,7 +45,11 @@ namespace Microsoft.Playwright
 
         public PageExposeBindingOptions(PageExposeBindingOptions clone)
         {
-            if (clone == null) return;
+            if (clone == null)
+            {
+                return;
+            }
+
             Handle = clone.Handle;
         }
 

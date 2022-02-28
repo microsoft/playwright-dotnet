@@ -45,7 +45,11 @@ namespace Microsoft.Playwright
 
         public PageEmulateMediaOptions(PageEmulateMediaOptions clone)
         {
-            if (clone == null) return;
+            if (clone == null)
+            {
+                return;
+            }
+
             ColorScheme = clone.ColorScheme;
             ForcedColors = clone.ForcedColors;
             Media = clone.Media;

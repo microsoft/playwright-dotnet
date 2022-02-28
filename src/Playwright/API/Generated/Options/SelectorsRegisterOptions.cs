@@ -45,7 +45,11 @@ namespace Microsoft.Playwright
 
         public SelectorsRegisterOptions(SelectorsRegisterOptions clone)
         {
-            if (clone == null) return;
+            if (clone == null)
+            {
+                return;
+            }
+
             ContentScript = clone.ContentScript;
             Path = clone.Path;
             Script = clone.Script;

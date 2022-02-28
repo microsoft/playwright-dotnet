@@ -45,7 +45,11 @@ namespace Microsoft.Playwright
 
         public LocatorAssertionsToBeCheckedOptions(LocatorAssertionsToBeCheckedOptions clone)
         {
-            if (clone == null) return;
+            if (clone == null)
+            {
+                return;
+            }
+
             Checked = clone.Checked;
             Timeout = clone.Timeout;
         }

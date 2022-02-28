@@ -45,7 +45,11 @@ namespace Microsoft.Playwright
 
         public LocatorElementHandleOptions(LocatorElementHandleOptions clone)
         {
-            if (clone == null) return;
+            if (clone == null)
+            {
+                return;
+            }
+
             Timeout = clone.Timeout;
         }
 

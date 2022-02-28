@@ -45,7 +45,11 @@ namespace Microsoft.Playwright
 
         public FrameAddStyleTagOptions(FrameAddStyleTagOptions clone)
         {
-            if (clone == null) return;
+            if (clone == null)
+            {
+                return;
+            }
+
             Content = clone.Content;
             Path = clone.Path;
             Url = clone.Url;

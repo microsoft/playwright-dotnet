@@ -43,7 +43,10 @@ namespace Microsoft.Playwright.Core
         private static T PassThroughNonNull<T>(T value)
         {
             if (value == null)
+            {
                 throw new ArgumentNullException(nameof(value));
+            }
+
             return value;
         }
 

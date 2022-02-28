@@ -45,7 +45,11 @@ namespace Microsoft.Playwright
 
         public LocatorSelectTextOptions(LocatorSelectTextOptions clone)
         {
-            if (clone == null) return;
+            if (clone == null)
+            {
+                return;
+            }
+
             Force = clone.Force;
             Timeout = clone.Timeout;
         }

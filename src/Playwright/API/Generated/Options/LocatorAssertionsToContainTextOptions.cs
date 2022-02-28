@@ -45,7 +45,11 @@ namespace Microsoft.Playwright
 
         public LocatorAssertionsToContainTextOptions(LocatorAssertionsToContainTextOptions clone)
         {
-            if (clone == null) return;
+            if (clone == null)
+            {
+                return;
+            }
+
             Timeout = clone.Timeout;
             UseInnerText = clone.UseInnerText;
         }

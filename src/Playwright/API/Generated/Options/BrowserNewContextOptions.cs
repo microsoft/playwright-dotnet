@@ -45,7 +45,11 @@ namespace Microsoft.Playwright
 
         public BrowserNewContextOptions(BrowserNewContextOptions clone)
         {
-            if (clone == null) return;
+            if (clone == null)
+            {
+                return;
+            }
+
             AcceptDownloads = clone.AcceptDownloads;
             BaseURL = clone.BaseURL;
             BypassCSP = clone.BypassCSP;

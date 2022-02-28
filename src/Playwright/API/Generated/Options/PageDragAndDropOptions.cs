@@ -45,7 +45,11 @@ namespace Microsoft.Playwright
 
         public PageDragAndDropOptions(PageDragAndDropOptions clone)
         {
-            if (clone == null) return;
+            if (clone == null)
+            {
+                return;
+            }
+
             Force = clone.Force;
             NoWaitAfter = clone.NoWaitAfter;
             SourcePosition = clone.SourcePosition;

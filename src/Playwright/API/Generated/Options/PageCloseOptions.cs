@@ -45,7 +45,11 @@ namespace Microsoft.Playwright
 
         public PageCloseOptions(PageCloseOptions clone)
         {
-            if (clone == null) return;
+            if (clone == null)
+            {
+                return;
+            }
+
             RunBeforeUnload = clone.RunBeforeUnload;
         }
 

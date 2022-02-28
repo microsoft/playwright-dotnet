@@ -45,7 +45,11 @@ namespace Microsoft.Playwright
 
         public ElementHandleDblClickOptions(ElementHandleDblClickOptions clone)
         {
-            if (clone == null) return;
+            if (clone == null)
+            {
+                return;
+            }
+
             Button = clone.Button;
             Delay = clone.Delay;
             Force = clone.Force;
