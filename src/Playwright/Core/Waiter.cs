@@ -42,7 +42,6 @@ namespace Microsoft.Playwright.Core
         private readonly IChannelOwner _channelOwner;
         private Exception _immediateError;
 
-        private bool _disposed;
         private string _error;
 
         internal Waiter(IChannelOwner channelOwner, string @event)
@@ -51,24 +50,18 @@ namespace Microsoft.Playwright.Core
 
             var beforeArgs = new { info = new { @event = @event, waitId = _waitId, phase = "before" } };
             _channelOwner.Connection.SendMessageToServerAsync(_channelOwner.Channel.Guid, "waitForEventInfo", beforeArgs).IgnoreException();
+
+            _dispose.Add(() => _channelOwner.WrapApiCallAsync(() => _channelOwner.Connection.SendMessageToServerAsync(_channelOwner.Channel.Guid, "waitForEventInfo", new { info = new { waitId = _waitId, phase = "after", error = _error } }), true).IgnoreException());
         }
 
         public void Dispose()
         {
-            if (!_disposed)
+            foreach (var dispose in _dispose)
             {
-                _disposed = true;
-                foreach (var dispose in _dispose)
-                {
-                    dispose();
-                }
-
-                var afterArgs = new { info = new { waitId = _waitId, phase = "after", error = _error } };
-                _channelOwner.WrapApiCallAsync(() => _channelOwner.Connection.SendMessageToServerAsync(_channelOwner.Channel.Guid, "waitForEventInfo", afterArgs), true).IgnoreException();
-
-                _cts.Cancel();
-                _cts.Dispose();
+                dispose();
             }
+            _cts.Cancel();
+            _cts.Dispose();
         }
 
         internal void Log(string log)
@@ -90,11 +83,6 @@ namespace Microsoft.Playwright.Core
             PlaywrightException navigationException,
             Func<T, bool> predicate = null)
         {
-            if (eventSource == null)
-            {
-                return;
-            }
-
             var (task, dispose) = GetWaitForEventTask(eventSource, e, predicate);
             RejectOn(
                 task.ContinueWith(_ => throw navigationException, _cts.Token, TaskContinuationOptions.RunContinuationsAsynchronously, TaskScheduler.Current),
@@ -137,14 +125,11 @@ namespace Microsoft.Playwright.Core
             {
                 try
                 {
-                    if (predicate == null || predicate(e))
-                    {
-                        eventTsc.TrySetResult(e);
-                    }
-                    else
+                    if (predicate != null && !predicate(e))
                     {
                         return;
                     }
+                    eventTsc.TrySetResult(e);
                 }
                 catch (Exception ex)
                 {
@@ -155,7 +140,8 @@ namespace Microsoft.Playwright.Core
             }
 
             info.AddEventHandler(eventSource, (EventHandler<T>)EventHandler);
-            return (eventTsc.Task, () => info.RemoveEventHandler(eventSource, (EventHandler<T>)EventHandler));
+            void DisposeEventHandler() => info.RemoveEventHandler(eventSource, (EventHandler<T>)EventHandler);
+            return (eventTsc.Task, DisposeEventHandler);
         }
 
         internal async Task<T> WaitForPromiseAsync<T>(Task<T> task, Action dispose = null)
@@ -175,14 +161,12 @@ namespace Microsoft.Playwright.Core
             {
                 dispose?.Invoke();
                 _error = ex.ToString();
-                Dispose();
                 throw new TimeoutException(ex.Message + FormatLogRecording(_logs), ex);
             }
             catch (Exception ex)
             {
                 dispose?.Invoke();
                 _error = ex.ToString();
-                Dispose();
                 throw new PlaywrightException(ex.Message + FormatLogRecording(_logs), ex);
             }
         }
