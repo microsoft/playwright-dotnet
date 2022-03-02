@@ -101,15 +101,10 @@ namespace Microsoft.Playwright.Transport
                     ll[2] = (byte)((len >> 16) & 0xFF);
                     ll[3] = (byte)((len >> 24) & 0xFF);
 
-#if NETSTANDARD
 #pragma warning disable CA1835 // We can't use ReadOnlyMemory on netstandard
                     await _process.StandardInput.BaseStream.WriteAsync(ll, 0, 4, _readerCancellationSource.Token).ConfigureAwait(false);
                     await _process.StandardInput.BaseStream.WriteAsync(message, 0, len, _readerCancellationSource.Token).ConfigureAwait(false);
 #pragma warning restore CA1835
-#else
-                    await _process.StandardInput.BaseStream.WriteAsync(new(ll, 0, 4), _readerCancellationSource.Token).ConfigureAwait(false);
-                    await _process.StandardInput.BaseStream.WriteAsync(new(message, 0, len), _readerCancellationSource.Token).ConfigureAwait(false);
-#endif
                     await _process.StandardInput.BaseStream.FlushAsync(_readerCancellationSource.Token).ConfigureAwait(false);
                 }
             }
@@ -168,13 +163,9 @@ namespace Microsoft.Playwright.Transport
 
                 while (!token.IsCancellationRequested && !_process.HasExited)
                 {
-#if NETSTANDARD
 #pragma warning disable CA1835 // We can't use ReadOnlyMemory on netstandard
                     int read = await stream.BaseStream.ReadAsync(buffer, 0, DefaultBufferSize, token).ConfigureAwait(false);
 #pragma warning restore CA1835
-#else
-                    int read = await stream.BaseStream.ReadAsync(new(buffer, 0, DefaultBufferSize), token).ConfigureAwait(false);
-#endif
                     if (!token.IsCancellationRequested)
                     {
                         _data.AddRange(buffer.AsSpan(0, read).ToArray());
