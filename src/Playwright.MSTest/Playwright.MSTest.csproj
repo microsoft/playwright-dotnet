@@ -9,7 +9,7 @@
       and fixtures to enable using it within MSTest.
     </Description>
     <PackageIcon>icon.png</PackageIcon>
-    <TargetFrameworks>netcoreapp3.1;net5.0;net48</TargetFrameworks>
+    <TargetFrameworks>netstandard2.0</TargetFrameworks>
     <DebugSymbols>true</DebugSymbols>
     <PublishRepositoryUrl>true</PublishRepositoryUrl>
     <RunWithWarnings>true</RunWithWarnings>
