@@ -28,6 +28,12 @@ stages:
     steps:
 
     - task: UseDotNet@2
+      displayName: 'Use .NET 3.1 SDK'
+      inputs:
+        packageType: sdk
+        version: 3.1.x
+
+    - task: UseDotNet@2
       displayName: 'Use .NET 5 SDK'
       inputs:
         packageType: sdk
@@ -38,9 +44,9 @@ stages:
         signType: '${{ parameters.signType }}'
         feedSource: 'https://devdiv.pkgs.visualstudio.com/DefaultCollection/_packaging/MicroBuildToolset/nuget/v3/index.json'
         
-      # We need to download the browsers first, so we can build
+      # We need to download the driver first, so we can build
     - task: DotNetCoreCLI@2
-      displayName: Download the browsers
+      displayName: Download the driver
       inputs:
         command: 'run'
         arguments: '--project $(Build.SourcesDirectory)/src/tools/Playwright.Tooling/Playwright.Tooling.csproj -- download-drivers --basepath $(Build.SourcesDirectory)'

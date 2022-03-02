@@ -24,15 +24,12 @@
 
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.IO;
 using System.IO.Compression;
 using System.Linq;
 using System.Net.Http;
-using System.Net.Sockets;
 using System.Runtime.InteropServices;
 using System.Text.RegularExpressions;
-using System.Threading;
 using System.Threading.Tasks;
 using System.Xml;
 using DriverDownloader.Linux;
@@ -113,7 +110,7 @@ namespace Playwright.Tooling
                 cdn += "/next";
             }
 
-            using var client = CreateHTTPClient();
+            using var client = new HttpClient();
             string url = $"{cdn}/playwright-{driverVersion}-{platform}.zip";
 
             try
@@ -149,35 +146,6 @@ namespace Playwright.Tooling
             {
                 Console.WriteLine($"Unable to download driver for {driverVersion} using url {url}");
                 throw new($"Unable to download driver for {driverVersion} using url {url}", ex);
-            }
-        }
-
-        // Workaround for https://github.com/dotnet/runtime/issues/44686#issuecomment-733797994 which otherwise leads in timeout exceptions on macOS
-        public HttpClient CreateHTTPClient()
-        {
-            SocketsHttpHandler handler = new SocketsHttpHandler
-            {
-                ConnectCallback = IPv4ConnectAsync,
-            };
-            return new HttpClient(handler);
-
-            static async ValueTask<Stream> IPv4ConnectAsync(SocketsHttpConnectionContext context, CancellationToken cancellationToken)
-            {
-                // By default, we create dual-mode sockets:
-                // Socket socket = new Socket(SocketType.Stream, ProtocolType.Tcp);
-                Socket socket = new(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
-                socket.NoDelay = true;
-
-                try
-                {
-                    await socket.ConnectAsync(context.DnsEndPoint, cancellationToken).ConfigureAwait(false);
-                    return new NetworkStream(socket, ownsSocket: true);
-                }
-                catch
-                {
-                    socket.Dispose();
-                    throw;
-                }
             }
         }
 

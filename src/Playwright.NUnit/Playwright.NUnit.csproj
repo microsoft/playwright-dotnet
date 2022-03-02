@@ -9,7 +9,7 @@
       and fixtures to enable using it within NUnit.
     </Description>
     <PackageIcon>icon.png</PackageIcon>
-    <TargetFrameworks>netstandard2.0</TargetFrameworks>
+    <TargetFramework>netstandard2.0</TargetFramework>
     <DebugSymbols>true</DebugSymbols>
     <PublishRepositoryUrl>true</PublishRepositoryUrl>
     <RunWithWarnings>true</RunWithWarnings>
