@@ -11,7 +11,7 @@ on:
       - release-*
 
 jobs:
-  test-net5:
+  test:
     name: ${{ matrix.browser }}/${{ matrix.os }}/.NET 6
     runs-on: ${{ matrix.os }}
     timeout-minutes: 45
@@ -26,25 +26,25 @@ jobs:
         uses: actions/setup-dotnet@v1
         with:
           dotnet-version: |
-            5.0.x
+            3.1.x
             6.0.x
       - name: Install prerequisites and download drivers
         shell: bash
         run: ./build.sh --download-driver
       - name: Building
-        run: dotnet build -f net5.0 ./src
+        run: dotnet build ./src
       - name: Installing Browsers and dependencies
-        run: dotnet run --project ./src/Playwright/Playwright.csproj -f net5.0 -- install --with-deps ${{ matrix.browser }}
+        run: pwsh src/Playwright/bin/Debug/netstandard2.0/playwright.ps1 install --with-deps
       - name: Running tests
         if: matrix.os != 'ubuntu-latest'
         env:
           BROWSER: ${{ matrix.browser }}
-        run: dotnet test ./src/Playwright.Tests/Playwright.Tests.csproj -c Debug -f net5.0
+        run: dotnet test ./src/Playwright.Tests/Playwright.Tests.csproj -c Debug
       - name: Running tests (Linux)
         if: matrix.os == 'ubuntu-latest'
         env:
           BROWSER: ${{ matrix.browser }}
-        run: xvfb-run dotnet test ./src/Playwright.Tests/Playwright.Tests.csproj -c Debug -f net5.0
+        run: xvfb-run dotnet test ./src/Playwright.Tests/Playwright.Tests.csproj -c Debug
 
   test-net31:
     name: chromium/ubuntu/.NET 3.1
@@ -56,7 +56,6 @@ jobs:
         with:
           dotnet-version: |
             3.1.x
-            5.0.x
             6.0.x
       - name: Install prerequisites and download drivers
         shell: bash
@@ -66,7 +65,7 @@ jobs:
           dotnet build -f netstandard2.0 ./src/Playwright/Playwright.csproj
           dotnet build -f netcoreapp3.1 ./src/Playwright.Tests/Playwright.Tests.csproj
       - name: Installing Browsers and dependencies
-        run: dotnet run --project ./src/Playwright/Playwright.csproj -f net5.0 -- install --with-deps chromium
+        run: pwsh src/Playwright/bin/Debug/netstandard2.0/playwright.ps1 install --with-deps
       - name: Running tests
         env:
           BROWSER: CHROMIUM

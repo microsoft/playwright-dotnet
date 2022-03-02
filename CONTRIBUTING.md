@@ -137,7 +137,7 @@ This will re-generate the neccessary files for the new driver version.
 ```shell
 dotnet tool install -g dotnet-reportgenerator-globaltool
 
-dotnet test ./src/Playwright.Tests/Playwright.Tests.csproj --logger:"console;verbosity=detailed" -f net5.0 -p:CollectCoverage=true -p:CoverletOutputFormat=cobertura -p:CoverletOutput="coverage.xml" --filter "Playwright.Tests.Assertions.PageAssertionsTests"
-reportgenerator -reports:src/Playwright.Tests/coverage.net5.0.xml -targetdir:coverage-report -reporttypes:HTML
+dotnet test ./src/Playwright.Tests/Playwright.Tests.csproj --logger:"console;verbosity=detailed" -p:CollectCoverage=true -p:CoverletOutputFormat=cobertura -p:CoverletOutput="coverage.xml" --filter "Playwright.Tests.Assertions.PageAssertionsTests"
+reportgenerator -reports:src/Playwright.Tests/coverage.net6.0.xml -targetdir:coverage-report -reporttypes:HTML
 open coverage-report/index.html
 ```
