@@ -19,7 +19,7 @@
     <PackageOutputPath>./nupkg</PackageOutputPath>
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
     <IsPackable>true</IsPackable>
-    <RollForward>Major</RollForward>
+    <RollForward>LatestMajor</RollForward>
   </PropertyGroup>
   <PropertyGroup>
     <AssemblyVersion>1.2.2</AssemblyVersion>
