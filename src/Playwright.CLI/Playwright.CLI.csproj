@@ -22,8 +22,8 @@
     <RollForward>LatestMajor</RollForward>
   </PropertyGroup>
   <PropertyGroup>
-    <AssemblyVersion>1.2.2</AssemblyVersion>
-    <PackageVersion>$(AssemblyVersion)-next-2</PackageVersion>
+    <AssemblyVersion>1.2.3</AssemblyVersion>
+    <PackageVersion>$(AssemblyVersion)-next-1</PackageVersion>
     <ReleaseVersion>$(AssemblyVersion)</ReleaseVersion>
     <FileVersion>$(AssemblyVersion)</FileVersion>
     <NoDefaultExcludes>true</NoDefaultExcludes>
