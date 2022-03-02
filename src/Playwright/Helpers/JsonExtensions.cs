@@ -25,6 +25,7 @@
 using System;
 using System.Text.Json;
 using System.Text.Json.Serialization;
+using Microsoft.Playwright.Transport.Converters;
 
 namespace Microsoft.Playwright.Helpers
 {
@@ -94,7 +95,7 @@ namespace Microsoft.Playwright.Helpers
                 DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull,
                 Converters =
                 {
-                    new JsonStringEnumMemberConverter(JsonNamingPolicy.CamelCase),
+                    new JsonStringEnumMemberConverter(),
                 },
             };
     }

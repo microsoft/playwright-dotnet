@@ -173,7 +173,7 @@ namespace Microsoft.Playwright.Tests
                 var a = { };
                 a[Symbol('foo4')] = 42;
                 return a;
-            }")).ToJson());
+            }")).GetRawText());
             dynamic element = await Page.EvaluateAsync<ExpandoObject>(@"() => {
                 return { foo: [{ a: Symbol('foo4') }] };
             }");
