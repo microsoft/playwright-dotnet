@@ -117,5 +117,9 @@ namespace Microsoft.Playwright.MSTest
         }
 
         public TestContext? TestContext { get; set; }
+
+        public ILocatorAssertions Expect(ILocator locator) => Assertions.Expect(locator);
+
+        public IPageAssertions Expect(IPage page) => Assertions.Expect(page);
     }
 }

@@ -27,7 +27,6 @@ using System.Collections.Generic;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using NUnit.Framework;
-using static Microsoft.Playwright.Assertions;
 
 namespace Microsoft.Playwright.Tests.Assertions
 {
