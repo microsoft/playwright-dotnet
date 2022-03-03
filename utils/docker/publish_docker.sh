@@ -7,19 +7,16 @@ trap "cd $(pwd -P)" EXIT
 cd "$(dirname "$0")"
 
 MCR_IMAGE_NAME="playwright/dotnet"
-PW_VERSION=$(node -e "console.log(/\<AssemblyVersion\>(.*?)<\/AssemblyVersion\>/.exec(fs.readFileSync('src/Common/Version.props').toString())[1])")
+PW_VERSION=$(node -e "console.log(/\<AssemblyVersion\>(.*?)<\/AssemblyVersion\>/.exec(fs.readFileSync('../../src/Common/Version.props').toString())[1])")
 
 RELEASE_CHANNEL="$1"
 if [[ "${RELEASE_CHANNEL}" == "stable" ]]; then
-  if [[ "${PW_VERSION}" == *-* ]]; then
+  if [[ "${PW_VERSION}" == *next* ]]; then
     echo "ERROR: cannot publish stable docker with Playwright version '${PW_VERSION}'"
     exit 1
   fi
 elif [[ "${RELEASE_CHANNEL}" == "canary" ]]; then
-  if [[ "${PW_VERSION}" != *next* ]]; then
-    echo "ERROR: cannot publish canary docker with Playwright version '${PW_VERSION}'"
-    exit 1
-  fi
+  :
 else
   echo "ERROR: unknown release channel - ${RELEASE_CHANNEL}"
   echo "Must be either 'stable' or 'canary'"
