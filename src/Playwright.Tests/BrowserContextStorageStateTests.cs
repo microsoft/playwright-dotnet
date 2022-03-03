@@ -130,7 +130,14 @@ namespace Microsoft.Playwright.Tests
             var storageState = await Context.StorageStateAsync();
             StringAssert.Contains(@"""name"":""a"",""value"":""b""", storageState);
             StringAssert.Contains(@"""name"":""empty"",""value"":""""", storageState);
-            StringAssert.Contains(@"""sameSite"":""Lax""", storageState);
+            if (TestConstants.IsWebKit)
+            {
+                StringAssert.Contains(@"""sameSite"":""None""", storageState);
+            }
+            else
+            {
+                StringAssert.Contains(@"""sameSite"":""Lax""", storageState);
+            }
             StringAssert.DoesNotContain(@"""url"":null", storageState);
 
             await using var context2 = await Browser.NewContextAsync(new() { StorageState = storageState });
