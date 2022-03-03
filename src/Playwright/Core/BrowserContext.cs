@@ -262,11 +262,9 @@ namespace Microsoft.Playwright.Core
 
         public async Task<string> StorageStateAsync(BrowserContextStorageStateOptions options = default)
         {
-            var serializerOptions = new JsonSerializerOptions { PropertyNamingPolicy = JsonNamingPolicy.CamelCase };
-
             string state = JsonSerializer.Serialize(
                 await Channel.GetStorageStateAsync().ConfigureAwait(false),
-                serializerOptions);
+                JsonExtensions.DefaultJsonSerializerOptions);
 
             if (!string.IsNullOrEmpty(options?.Path))
             {
