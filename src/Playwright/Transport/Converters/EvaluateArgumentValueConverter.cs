@@ -317,16 +317,18 @@ namespace Microsoft.Playwright.Transport.Converters
 
             if (result.ValueKind == JsonValueKind.Array)
             {
+                var elementType = t.GetElementType();
                 var serializerOptions = JsonExtensions.GetNewDefaultSerializerOptions();
-                serializerOptions.Converters.Add(GetNewConverter(t.GetElementType()));
+                serializerOptions.Converters.Add(GetNewConverter(elementType));
 
-                var resultArray = new ArrayList();
+                var resultArray = Array.CreateInstance(elementType, result.GetArrayLength());
+                var i = 0;
                 foreach (var item in result.EnumerateArray())
                 {
-                    resultArray.Add(ParseEvaluateResult(item, t.GetElementType(), serializerOptions));
+                    resultArray.SetValue(ParseEvaluateResult(item, elementType, serializerOptions), i++);
                 }
 
-                return resultArray.ToArray(t.GetElementType());
+                return resultArray;
             }
 
             return result.ToObject(t);
