@@ -109,5 +109,45 @@ namespace Microsoft.Playwright.Tests
             Assert.AreEqual("value1", await page2.EvaluateAsync<string>("localStorage['name1']"));
             Assert.AreEqual("username=John Doe", await page2.EvaluateAsync<string>("document.cookie"));
         }
+
+        [PlaywrightTest("browsercontext-storage-state.spec.ts", "should capture cookies")]
+        public async Task ShouldCaptureCookies()
+        {
+            Server.SetRoute("/setcookie.html", context =>
+            {
+                context.Response.Cookies.Append("a", "b");
+                context.Response.Cookies.Append("empty", "");
+                return Task.CompletedTask;
+            });
+
+            await Page.GotoAsync(Server.Prefix + "/setcookie.html");
+            CollectionAssert.AreEqual(new[] { "a=b", "empty=" }, await Page.EvaluateAsync<string[]>(@"() =>
+            {
+                const cookies = document.cookie.split(';');
+                return cookies.map(cookie => cookie.trim()).sort();
+            }"));
+
+            var storageState = await Context.StorageStateAsync();
+            StringAssert.Contains(@"""name"":""a"",""value"":""b""", storageState);
+            StringAssert.Contains(@"""name"":""empty"",""value"":""""", storageState);
+            if (TestConstants.IsWebKit)
+            {
+                StringAssert.Contains(@"""sameSite"":""None""", storageState);
+            }
+            else
+            {
+                StringAssert.Contains(@"""sameSite"":""Lax""", storageState);
+            }
+            StringAssert.DoesNotContain(@"""url"":null", storageState);
+
+            await using var context2 = await Browser.NewContextAsync(new() { StorageState = storageState });
+            var page2 = await context2.NewPageAsync();
+            await page2.GotoAsync(Server.EmptyPage);
+            CollectionAssert.AreEqual(new[] { "a=b", "empty=" }, await page2.EvaluateAsync<string[]>(@"() =>
+            {
+                const cookies = document.cookie.split(';');
+                return cookies.map(cookie => cookie.trim()).sort();
+            }"));
+        }
     }
 }
