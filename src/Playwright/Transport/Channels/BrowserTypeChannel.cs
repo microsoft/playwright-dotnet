@@ -217,7 +217,7 @@ namespace Microsoft.Playwright.Transport.Channels
             var channelArgs = new Dictionary<string, object>
             {
                 { "wsEndpoint", wsEndpoint },
-                { "headers", headers.Remap() },
+                { "headers", headers },
                 { "slowMo", slowMo },
                 { "timeout", timeout },
             };

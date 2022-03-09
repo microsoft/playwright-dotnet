@@ -238,5 +238,13 @@ namespace Microsoft.Playwright.Tests.Locator
             await Page.EvalOnSelectorAsync("div", "div => div.innerHTML = ''");
             await task;
         }
+
+        [PlaywrightTest("locator-highlight.spec.ts", "should highlight locator")]
+        public async Task ShouldHighlightLocator()
+        {
+            await Page.GotoAsync(Server.Prefix + "/grid.html");
+            await Page.Locator(".box").Nth(3).HighlightAsync();
+            Assert.AreEqual(await Page.Locator("x-pw-glass").IsVisibleAsync(), true);
+        }
     }
 }

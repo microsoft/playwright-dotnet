@@ -51,8 +51,6 @@ namespace Microsoft.Playwright
     /// using Microsoft.Playwright.NUnit;<br/>
     /// using NUnit.Framework;<br/>
     /// <br/>
-    /// using static Microsoft.Playwright.Assertions;<br/>
-    /// <br/>
     /// namespace PlaywrightTests<br/>
     /// {<br/>
     ///     public class ExampleTests : PageTest<br/>
@@ -77,7 +75,7 @@ namespace Microsoft.Playwright
         /// </para>
         /// <code>await Expect(locator).Not.ToContainTextAsync("error");</code>
         /// </summary>
-        ILocatorAssertions Not { get; }
+        public ILocatorAssertions Not { get; }
 
         /// <summary>
         /// <para>Ensures the <see cref="ILocator"/> points to a checked input.</para>

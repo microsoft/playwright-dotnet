@@ -22,26 +22,20 @@
  * SOFTWARE.
  */
 
-using System.Collections.Generic;
+using Microsoft.Playwright.Transport;
+using Microsoft.Playwright.Transport.Channels;
 
-namespace Microsoft.Playwright.Transport.Protocol
+namespace Microsoft.Playwright.Core
 {
-    internal class PlaywrightInitializer
+    internal class SocksSupport : ChannelOwnerBase, IChannelOwner<SocksSupport>
     {
-        public Core.BrowserType Chromium { get; set; }
+        private readonly Channel<SocksSupport> _channel;
 
-        public Core.BrowserType Firefox { get; set; }
+        internal SocksSupport(IChannelOwner parent, string guid) : base(parent, guid)
+        {
+            _channel = new(guid, parent.Connection, this);
+        }
 
-        public Core.BrowserType Webkit { get; set; }
-
-        public Core.LocalUtils Utils { get; set; }
-
-        public List<DeviceDescriptorEntry> DeviceDescriptors { get; set; }
-
-        public Core.Selectors Selectors { get; set; }
-
-        public Core.Browser PreLaunchedBrowser { get; set; }
-
-        public Core.SocksSupport SocksSupport { get; set; }
+        IChannel<SocksSupport> IChannelOwner<SocksSupport>.Channel => _channel;
     }
 }

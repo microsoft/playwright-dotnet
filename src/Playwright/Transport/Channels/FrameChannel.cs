@@ -725,5 +725,15 @@ namespace Microsoft.Playwright.Transport.Channels
             }
             return parsed;
         }
+
+        internal async Task HighlightAsync(string selector)
+        {
+            var args = new Dictionary<string, object>
+            {
+                ["selector"] = selector,
+            };
+
+            await Connection.SendMessageToServerAsync(Guid, "highlight", args).ConfigureAwait(false);
+        }
     }
 }

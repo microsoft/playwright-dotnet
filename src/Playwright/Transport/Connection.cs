@@ -320,6 +320,9 @@ namespace Microsoft.Playwright.Transport
                 case ChannelOwnerType.Selectors:
                     result = new Selectors(parent, guid);
                     break;
+                case ChannelOwnerType.SocksSupport:
+                    result = new SocksSupport(parent, guid);
+                    break;
                 case ChannelOwnerType.Stream:
                     result = new Stream(parent, guid);
                     break;

@@ -34,8 +34,8 @@ namespace Microsoft.Playwright.Core
 {
     internal class Locator : ILocator
     {
-        private readonly Frame _frame;
-        private readonly string _selector;
+        internal readonly Frame _frame;
+        internal readonly string _selector;
 
         private readonly LocatorLocatorOptions _options;
 
@@ -295,5 +295,7 @@ namespace Microsoft.Playwright.Core
                 await handle.DisposeAsync().ConfigureAwait(false);
             }
         }
+
+        public Task HighlightAsync() => _frame.HighlightAsync(_selector);
     }
 }

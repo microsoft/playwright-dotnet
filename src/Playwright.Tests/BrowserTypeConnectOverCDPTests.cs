@@ -22,7 +22,9 @@
  * SOFTWARE.
  */
 
+using System.Collections.Generic;
 using System.Threading.Tasks;
+using Microsoft.Playwright.Helpers;
 using Microsoft.Playwright.NUnit;
 using NUnit.Framework;
 
@@ -51,6 +53,22 @@ namespace Microsoft.Playwright.Tests
 
                 await browserServer.CloseAsync();
             }
+        }
+
+        [PlaywrightTest("chromium/chromium.spec.ts", "should send extra headers with connect request")]
+        [Skip(SkipAttribute.Targets.Firefox, SkipAttribute.Targets.Webkit)]
+        public async Task ShouldSendExtraHeadersWithConnectRequest()
+        {
+            var waitForRequest = Server.WaitForWebSocketConnectionRequest();
+            BrowserType.ConnectOverCDPAsync($"ws://localhost:{Server.Port}/ws", new()
+            {
+                Headers = new Dictionary<string, string> {
+                    { "x-foo-bar", "fookek" }
+                },
+            }).IgnoreException();
+            var req = await waitForRequest;
+            Assert.AreEqual("fookek", req.Headers["x-foo-bar"]);
+            StringAssert.Contains("Playwright", req.Headers["user-agent"]);
         }
     }
 }

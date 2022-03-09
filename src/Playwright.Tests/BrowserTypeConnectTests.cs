@@ -23,9 +23,11 @@
  */
 
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.IO.Compression;
+using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Playwright.Helpers;
@@ -70,6 +72,23 @@ namespace Microsoft.Playwright.Tests
                 await page.GotoAsync(Server.EmptyPage);
                 await browser.CloseAsync();
             }
+        }
+
+        [PlaywrightTest("browsertype-connect.spec.ts", "should send default User-Agent and X-Playwright-Browser headers with connect request")]
+        public async Task ShouldSendDefaultUserAgentAndPlaywrightBrowserHeadersWithConnectRequest()
+        {
+            var connectionRequest = Server.WaitForWebSocketConnectionRequest();
+            BrowserType.ConnectAsync($"ws://localhost:{Server.Port}/ws", new()
+            {
+                Headers = new Dictionary<string, string>()
+                {
+                    ["hello-foo"] = "i-am-bar",
+                }
+            }).IgnoreException();
+            var request = await connectionRequest;
+            StringAssert.Contains("Playwright", request.Headers["User-Agent"]);
+            Assert.AreEqual(request.Headers["hello-foo"], "i-am-bar");
+            Assert.AreEqual(request.Headers["x-playwright-browser"], BrowserType.Name);
         }
 
         [PlaywrightTest("browsertype-connect.spec.ts", "should be able to connect two browsers at the same time")]
@@ -445,7 +464,7 @@ namespace Microsoft.Playwright.Tests
             {
                 try
                 {
-                    var startInfo = new ProcessStartInfo(Driver.GetExecutablePath(), $"launch-server {browserName}")
+                    var startInfo = new ProcessStartInfo(Driver.GetExecutablePath(), $"launch-server --browser {browserName}")
                     {
                         UseShellExecute = false,
                         RedirectStandardOutput = true,

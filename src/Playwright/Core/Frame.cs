@@ -644,5 +644,8 @@ namespace Microsoft.Playwright.Core
 
             return match(url);
         }
+
+        internal Task HighlightAsync(string selector)
+            => _channel.HighlightAsync(selector);
     }
 }
