@@ -6,7 +6,7 @@
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
- * to use, copy, modify, merge, publish, distribute, sublicense, and / or sell
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
  * copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions:
  *
@@ -22,26 +22,28 @@
  * SOFTWARE.
  */
 
+using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.Drawing;
+using System.Globalization;
+using System.IO;
+using System.Runtime.Serialization;
+using System.Text.Json;
+using System.Text.Json.Serialization;
+using System.Text.RegularExpressions;
+using System.Threading;
+using System.Threading.Tasks;
 
-namespace Microsoft.Playwright.Transport.Protocol
+#nullable enable
+
+namespace Microsoft.Playwright
 {
-    internal class PlaywrightInitializer
+    public enum ScreenshotAnimations
     {
-        public Core.BrowserType Chromium { get; set; }
-
-        public Core.BrowserType Firefox { get; set; }
-
-        public Core.BrowserType Webkit { get; set; }
-
-        public Core.LocalUtils Utils { get; set; }
-
-        public List<DeviceDescriptorEntry> DeviceDescriptors { get; set; }
-
-        public Core.Selectors Selectors { get; set; }
-
-        public Core.Browser PreLaunchedBrowser { get; set; }
-
-        public Core.SocksSupport SocksSupport { get; set; }
+        [EnumMember(Value = "disabled")]
+        Disabled,
     }
 }
+
+#nullable disable

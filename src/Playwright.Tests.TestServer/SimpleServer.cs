@@ -45,6 +45,7 @@ namespace Microsoft.Playwright.Tests.TestServer
 
         private readonly IDictionary<string, Action<HttpContext>> _subscribers;
         private readonly IDictionary<string, Action<HttpContext>> _requestWaits;
+        private readonly IList<Action<HttpContext>> _waitForWebSocketConnectionRequestsWaits;
         private readonly IDictionary<string, RequestDelegate> _routes;
         private readonly IDictionary<string, (string username, string password)> _auths;
         private readonly IDictionary<string, string> _csp;
@@ -85,6 +86,7 @@ namespace Microsoft.Playwright.Tests.TestServer
 
             _subscribers = new ConcurrentDictionary<string, Action<HttpContext>>();
             _requestWaits = new ConcurrentDictionary<string, Action<HttpContext>>();
+            _waitForWebSocketConnectionRequestsWaits = new List<Action<HttpContext>>();
             _routes = new ConcurrentDictionary<string, RequestDelegate>();
             _auths = new ConcurrentDictionary<string, (string username, string password)>();
             _csp = new ConcurrentDictionary<string, string>();
@@ -108,6 +110,10 @@ namespace Microsoft.Playwright.Tests.TestServer
                         {
                             if (context.WebSockets.IsWebSocketRequest)
                             {
+                                foreach (var wait in _waitForWebSocketConnectionRequestsWaits)
+                                {
+                                    wait(context);
+                                }
                                 var webSocket = await context.WebSockets.AcceptWebSocketAsync().ConfigureAwait(false);
                                 if (_onWebSocketConnectionData != null)
                                 {
@@ -257,6 +263,20 @@ namespace Microsoft.Playwright.Tests.TestServer
         }
 
         public Task WaitForRequest(string path) => WaitForRequest(path, _ => true);
+
+        public async Task<HttpRequest> WaitForWebSocketConnectionRequest()
+        {
+            var taskCompletion = new TaskCompletionSource<HttpRequest>();
+            void entryCb(HttpContext context)
+            {
+                taskCompletion.SetResult(context.Request);
+            };
+            _waitForWebSocketConnectionRequestsWaits.Add(entryCb);
+
+            var request = await taskCompletion.Task.ConfigureAwait(false);
+            _waitForWebSocketConnectionRequestsWaits.Remove(entryCb);
+            return request;
+        }
 
         private static bool Authenticate(string username, string password, HttpContext context)
         {

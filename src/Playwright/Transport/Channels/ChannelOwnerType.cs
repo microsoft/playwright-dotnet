@@ -93,6 +93,9 @@ namespace Microsoft.Playwright.Transport.Channels
         [EnumMember(Value = "selectors")]
         Selectors,
 
+        [EnumMember(Value = "SocksSupport")]
+        SocksSupport,
+
         [EnumMember(Value = "WebSocket")]
         WebSocket,
 

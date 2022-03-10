@@ -39,7 +39,7 @@ namespace Microsoft.Playwright.Core
 {
     internal class Frame : ChannelOwnerBase, IChannelOwner<Frame>, IFrame
     {
-        private readonly FrameChannel _channel;
+        internal readonly FrameChannel _channel;
         private readonly List<WaitUntilState> _loadStates = new();
 
         internal Frame(IChannelOwner parent, string guid, FrameInitializer initializer) : base(parent, guid)
@@ -644,5 +644,8 @@ namespace Microsoft.Playwright.Core
 
             return match(url);
         }
+
+        internal Task HighlightAsync(string selector)
+            => _channel.HighlightAsync(selector);
     }
 }

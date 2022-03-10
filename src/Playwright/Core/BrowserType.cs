@@ -23,6 +23,8 @@
  */
 
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Text.Json;
 using System.Threading.Tasks;
 using Microsoft.Playwright.Helpers;
@@ -141,14 +143,18 @@ namespace Microsoft.Playwright.Core
         public async Task<IBrowser> ConnectAsync(string wsEndpoint, BrowserTypeConnectOptions options = null)
         {
             options ??= new BrowserTypeConnectOptions();
-            JsonPipe pipe = (await _channel.ConnectAsync(wsEndpoint: wsEndpoint, headers: options.Headers, slowMo: options.SlowMo, timeout: options.Timeout).ConfigureAwait(false)).Object;
+            var headers = new List<KeyValuePair<string, string>>(options.Headers ?? new Dictionary<string, string>())
+            {
+                new KeyValuePair<string, string>("x-playwright-browser", Name),
+            }.ToDictionary(pair => pair.Key, pair => pair.Value);
+            JsonPipe pipe = (await _channel.ConnectAsync(wsEndpoint: wsEndpoint, headers: headers, slowMo: options.SlowMo, timeout: options.Timeout).ConfigureAwait(false)).Object;
 
             void ClosePipe()
             {
                 pipe.CloseAsync().IgnoreException();
             }
 #pragma warning disable CA2000 // Dispose objects before losing scope
-            Connection connection = new Connection();
+            var connection = new Connection();
 #pragma warning restore CA2000
             connection.MarkAsRemote();
             connection.Close += (_, _) => ClosePipe();

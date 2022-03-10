@@ -41,16 +41,14 @@ namespace Microsoft.Playwright
 {
     /// <summary>
     /// <para>
-    /// The <see cref="IPlaywrightAssertions"/> class provides convenience methods for creating
-    /// assertions that will wait until the expected condition is met.
+    /// Playwright gives you Web-First Assertions with convenience methods for creating
+    /// assertions that will wait and retry until the expected condition is met.
     /// </para>
     /// <para>Consider the following example:</para>
     /// <code>
     /// using System.Threading.Tasks;<br/>
     /// using Microsoft.Playwright.NUnit;<br/>
     /// using NUnit.Framework;<br/>
-    /// <br/>
-    /// using static Microsoft.Playwright.Assertions;<br/>
     /// <br/>
     /// namespace Playwright.TestingHarnessTest.NUnit<br/>
     /// {<br/>

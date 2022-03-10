@@ -595,6 +595,7 @@ namespace Microsoft.Playwright.Core
                 omitBackground: options.OmitBackground,
                 type: options.Type,
                 quality: options.Quality,
+                mask: options.Mask,
                 timeout: options.Timeout).ConfigureAwait(false);
 
             if (!string.IsNullOrEmpty(options.Path))

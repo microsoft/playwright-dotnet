@@ -1963,9 +1963,9 @@ namespace Microsoft.Playwright
         /// (and more) for all pages in the context at once.
         /// </para>
         /// <para>
-        /// <c>page.setViewportSize</c> will resize the page. A lot of websites don't expect
-        /// phones to change size, so you should set the viewport size before navigating to
-        /// the page. <see cref="IPage.SetViewportSizeAsync"/> will also reset <c>screen</c>
+        /// <see cref="IPage.SetViewportSizeAsync"/> will resize the page. A lot of websites
+        /// don't expect phones to change size, so you should set the viewport size before navigating
+        /// to the page. <see cref="IPage.SetViewportSizeAsync"/> will also reset <c>screen</c>
         /// size, use <see cref="IBrowser.NewContextAsync"/> with <c>screen</c> and <c>viewport</c>
         /// parameters if you need better control of these properties.
         /// </para>

@@ -50,14 +50,35 @@ namespace Microsoft.Playwright
                 return;
             }
 
+            Animations = clone.Animations;
             Clip = clone.Clip;
             FullPage = clone.FullPage;
+            Mask = clone.Mask;
             OmitBackground = clone.OmitBackground;
             Path = clone.Path;
             Quality = clone.Quality;
             Timeout = clone.Timeout;
             Type = clone.Type;
         }
+
+        /// <summary>
+        /// <para>
+        /// When set to <c>"disabled"</c>, stops CSS animations, CSS transitions and Web Animations.
+        /// Animations get different treatment depending on their duration:
+        /// </para>
+        /// <list type="bullet">
+        /// <item><description>
+        /// finite animations are fast-forwarded to completion, so they'll fire <c>transitionend</c>
+        /// event.
+        /// </description></item>
+        /// <item><description>
+        /// infinite animations are canceled to initial state, and then played over after the
+        /// screenshot.
+        /// </description></item>
+        /// </list>
+        /// </summary>
+        [JsonPropertyName("animations")]
+        public ScreenshotAnimations? Animations { get; set; }
 
         /// <summary>
         /// <para>
@@ -76,6 +97,16 @@ namespace Microsoft.Playwright
         /// </summary>
         [JsonPropertyName("fullPage")]
         public bool? FullPage { get; set; }
+
+        /// <summary>
+        /// <para>
+        /// Specify locators that should be masked when the screenshot is taken. Masked elements
+        /// will be overlayed with a pink box <c>#FF00FF</c> that completely covers its bounding
+        /// box.
+        /// </para>
+        /// </summary>
+        [JsonPropertyName("mask")]
+        public IEnumerable<ILocator>? Mask { get; set; }
 
         /// <summary>
         /// <para>

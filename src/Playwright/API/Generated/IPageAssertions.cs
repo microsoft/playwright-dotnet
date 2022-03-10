@@ -51,8 +51,6 @@ namespace Microsoft.Playwright
     /// using Microsoft.Playwright.NUnit;<br/>
     /// using NUnit.Framework;<br/>
     /// <br/>
-    /// using static Microsoft.Playwright.Assertions;<br/>
-    /// <br/>
     /// namespace PlaywrightTests<br/>
     /// {<br/>
     ///     public class ExampleTests : PageTest<br/>
@@ -77,7 +75,7 @@ namespace Microsoft.Playwright
         /// </para>
         /// <code>await Expect(page).Not.ToHaveURL("error");</code>
         /// </summary>
-        IPageAssertions Not { get; }
+        public IPageAssertions Not { get; }
 
         /// <summary>
         /// <para>Ensures the page has the given title.</para>

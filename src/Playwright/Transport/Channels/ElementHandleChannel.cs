@@ -98,7 +98,7 @@ namespace Microsoft.Playwright.Transport.Channels
                     ["selector"] = selector,
                 });
 
-        internal async Task<byte[]> ScreenshotAsync(string path, bool? omitBackground, ScreenshotType? type, int? quality, float? timeout)
+        internal async Task<byte[]> ScreenshotAsync(string path, bool? omitBackground, ScreenshotType? type, int? quality, IEnumerable<ILocator> mask, float? timeout)
         {
             var args = new Dictionary<string, object>
             {
@@ -108,6 +108,14 @@ namespace Microsoft.Playwright.Transport.Channels
                 ["timeout"] = timeout,
                 ["quality"] = quality,
             };
+            if (mask != null)
+            {
+                args["mask"] = mask.Select(locator => new Dictionary<string, object>
+                {
+                    ["frame"] = ((Locator)locator)._frame._channel,
+                    ["selector"] = ((Locator)locator)._selector,
+                }).ToArray();
+            }
 
             return (await Connection.SendMessageToServerAsync(Guid, "screenshot", args).ConfigureAwait(false))?.GetProperty("binary").GetBytesFromBase64();
         }

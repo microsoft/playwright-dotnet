@@ -366,6 +366,14 @@ namespace Microsoft.Playwright
         Task<string?> GetAttributeAsync(string name, LocatorGetAttributeOptions? options = default);
 
         /// <summary>
+        /// <para>
+        /// Highlight the corresponding element(s) on the screen. Useful for debugging, don't
+        /// commit the code that uses <see cref="ILocator.HighlightAsync"/>.
+        /// </para>
+        /// </summary>
+        Task HighlightAsync();
+
+        /// <summary>
         /// <para>This method hovers over the element by performing the following steps:</para>
         /// <list type="ordinal">
         /// <item><description>
