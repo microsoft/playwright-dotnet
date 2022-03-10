@@ -30,7 +30,7 @@ RUN mkdir /ms-playwright && \
     cd /ms-playwright-agent && \
     dotnet new console && \
     echo '<?xml version="1.0" encoding="utf-8"?><configuration><packageSources><add key="local" value="/tmp/"/></packageSources></configuration>' > nuget.config && \
-    dotnet add package Microsoft.Playwright && \
+    dotnet add package Microsoft.Playwright --prerelease && \
     dotnet build && \
     ./bin/Debug/net6.0/playwright.ps1 install --with-deps && \
     rm -rf /var/lib/apt/lists/* && \
