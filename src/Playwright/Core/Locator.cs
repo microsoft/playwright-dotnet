@@ -127,7 +127,7 @@ namespace Microsoft.Playwright.Core
         public async Task<IElementHandle> ElementHandleAsync(LocatorElementHandleOptions options = null)
             => await _frame.WaitForSelectorAsync(
                 _selector,
-                ConvertOptions<FrameWaitForSelectorOptions>(options, (o) => o.State = WaitForSelectorState.Attached)).ConfigureAwait(false);
+                ConvertOptions<FrameWaitForSelectorOptions>(options)).ConfigureAwait(false);
 
         public Task<IReadOnlyList<IElementHandle>> ElementHandlesAsync()
             => _frame.QuerySelectorAllAsync(_selector);
@@ -257,14 +257,29 @@ namespace Microsoft.Playwright.Core
 
         public override string ToString() => "Locator@" + _selector;
 
-        private T ConvertOptions<T>(object incoming, Action<T> configure = null)
+        private T ConvertOptions<T>(object source)
             where T : class, new()
         {
-            var jsonValue = JsonSerializer.Serialize(incoming);
-            T obj = JsonSerializer.Deserialize<T>(jsonValue) ?? new();
-            typeof(T).GetProperty("Strict")?.SetValue(obj, true);
-            configure?.Invoke(obj);
-            return obj;
+            T target = new();
+            var targetType = target.GetType();
+            if (source != null)
+            {
+                var sourceType = source.GetType();
+                foreach (var sourceProperty in sourceType.GetProperties())
+                {
+                    var targetProperty = targetType.GetProperty(sourceProperty.Name);
+                    if (targetProperty != null)
+                    {
+                        targetProperty.SetValue(target, sourceProperty.GetValue(source));
+                    }
+                }
+            }
+            var strictProperty = targetType.GetProperty("Strict");
+            if (strictProperty != null && strictProperty.GetValue(target) == null)
+            {
+                strictProperty.SetValue(target, true);
+            }
+            return target;
         }
 
         private async Task<TResult> WithElementAsync<TOptions, TResult>(Func<IElementHandle, TOptions, Task<TResult>> callback, TOptions options)

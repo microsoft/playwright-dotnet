@@ -191,7 +191,6 @@ namespace Microsoft.Playwright.Tests.Locator
         }
 
         [PlaywrightTest("locator-misc-2.spec.ts", "should take screenshot")]
-        [Ignore("We don't have the ability to match screenshots at the moment.")]
         public async Task ShouldTakeScreenshot()
         {
             await Page.SetViewportSizeAsync(500, 500);
@@ -199,7 +198,21 @@ namespace Microsoft.Playwright.Tests.Locator
 
             await Page.EvaluateAsync("() => window.scrollBy(50, 100)");
             var element = Page.Locator(".box:nth-of-type(3)");
-            var screenshot = await element.ScreenshotAsync();
+            await element.ScreenshotAsync();
+        }
+
+        [PlaywrightTest("locator-misc-2.spec.ts", "should take screenshot with mask")]
+        public async Task ShouldTakeScreenshotWithMaskOption()
+        {
+            await Page.SetViewportSizeAsync(500, 500);
+            await Page.GotoAsync(Server.Prefix + "/grid.html");
+
+            await Page.EvaluateAsync("() => window.scrollBy(50, 100)");
+            var element = Page.Locator("body");
+            await element.ScreenshotAsync(new()
+            {
+                Mask = new ILocator[] { Page.Locator(".box").Nth(3) },
+            });
         }
 
         [PlaywrightTest("locator-misc-2.spec.ts", "should return bounding box")]

@@ -112,7 +112,7 @@ namespace Microsoft.Playwright.Transport.Channels
             {
                 args["mask"] = mask.Select(locator => new Dictionary<string, object>
                 {
-                    ["frame"] = ((Locator)locator)._frame,
+                    ["frame"] = ((Locator)locator)._frame._channel,
                     ["selector"] = ((Locator)locator)._selector,
                 }).ToArray();
             }
