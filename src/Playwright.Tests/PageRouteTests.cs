@@ -514,7 +514,11 @@ namespace Microsoft.Playwright.Tests
             });
             var response = await Page.GotoAsync($"data:text/html,<link rel=\"stylesheet\" href=\"{Server.EmptyPage}/fonts?helvetica|arial\"/>");
             Assert.Null(response);
-            Assert.That(requests, Has.Count.EqualTo(1));
+            // TODO: https://github.com/microsoft/playwright/issues/12789
+            if (TestConstants.IsFirefox)
+                Assert.That(requests, Has.Count.EqualTo(2));
+            else
+                Assert.That(requests, Has.Count.EqualTo(1));
             Assert.AreEqual((int)HttpStatusCode.NotFound, (await requests[0].ResponseAsync()).Status);
         }
 

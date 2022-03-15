@@ -130,7 +130,7 @@ namespace Microsoft.Playwright.Tests
             var storageState = await Context.StorageStateAsync();
             StringAssert.Contains(@"""name"":""a"",""value"":""b""", storageState);
             StringAssert.Contains(@"""name"":""empty"",""value"":""""", storageState);
-            if (TestConstants.IsWebKit)
+            if (TestConstants.IsWebKit || TestConstants.IsFirefox)
             {
                 StringAssert.Contains(@"""sameSite"":""None""", storageState);
             }

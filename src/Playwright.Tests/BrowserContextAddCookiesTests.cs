@@ -511,9 +511,26 @@ namespace Microsoft.Playwright.Tests
 
             await Page.FirstChildFrame().EvaluateAsync<string>("document.cookie = 'username=John Doe'");
             await Page.WaitForTimeoutAsync(2000);
+            bool allowsThirdParty = TestConstants.IsFirefox;
             var cookies = await Context.CookiesAsync(new[] { Server.CrossProcessPrefix + "/grid.html" });
 
-            Assert.That(cookies, Is.Empty);
+            if (allowsThirdParty)
+            {
+                Assert.That(cookies, Has.Count.EqualTo(1));
+                var cookie = cookies[0];
+                Assert.AreEqual("127.0.0.1", cookie.Domain);
+                Assert.AreEqual(cookie.Expires, -1);
+                Assert.IsFalse(cookie.HttpOnly);
+                Assert.AreEqual("username", cookie.Name);
+                Assert.AreEqual("/", cookie.Path);
+                Assert.AreEqual(SameSiteAttribute.None, cookie.SameSite);
+                Assert.IsFalse(cookie.Secure);
+                Assert.AreEqual("John Doe", cookie.Value);
+            }
+            else
+            {
+                Assert.That(cookies, Is.Empty);
+            }
         }
 
         static void AssertEqual(IEnumerable<BrowserContextCookiesResult> ea, IEnumerable<BrowserContextCookiesResult> eb)
