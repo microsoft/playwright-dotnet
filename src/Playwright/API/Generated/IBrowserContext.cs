@@ -360,7 +360,6 @@ namespace Microsoft.Playwright
         /// <item><description><c>'midi'</c></description></item>
         /// <item><description><c>'midi-sysex'</c> (system-exclusive midi)</description></item>
         /// <item><description><c>'notifications'</c></description></item>
-        /// <item><description><c>'push'</c></description></item>
         /// <item><description><c>'camera'</c></description></item>
         /// <item><description><c>'microphone'</c></description></item>
         /// <item><description><c>'background-sync'</c></description></item>
