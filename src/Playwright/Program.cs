@@ -54,9 +54,6 @@ namespace Microsoft.Playwright
             {
                 UseShellExecute = false,
                 CreateNoWindow = true,
-                RedirectStandardError = true,
-                RedirectStandardInput = true,
-                RedirectStandardOutput = true,
             };
             foreach (var pair in Driver.GetEnvironmentVariables())
             {
@@ -68,41 +65,8 @@ namespace Microsoft.Playwright
                 StartInfo = playwrightStartInfo,
             };
 
-            using var outputWaitHandle = new AutoResetEvent(false);
-            using var errorWaitHandle = new AutoResetEvent(false);
-
-            pwProcess.OutputDataReceived += (_, e) =>
-            {
-                if (e.Data == null)
-                {
-                    outputWaitHandle.Set();
-                }
-                else
-                {
-                    Console.WriteLine(e.Data);
-                }
-            };
-
-            pwProcess.ErrorDataReceived += (_, e) =>
-            {
-                if (e.Data == null)
-                {
-                    errorWaitHandle.Set();
-                }
-                else
-                {
-                    Console.Error.WriteLine(e.Data);
-                }
-            };
-
             pwProcess.Start();
-
-            pwProcess.BeginOutputReadLine();
-            pwProcess.BeginErrorReadLine();
-
             pwProcess.WaitForExit();
-            outputWaitHandle.WaitOne(5000);
-            errorWaitHandle.WaitOne(5000);
             return pwProcess.ExitCode;
         }
 
