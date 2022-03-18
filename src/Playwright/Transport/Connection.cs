@@ -439,7 +439,7 @@ namespace Microsoft.Playwright.Transport
             {
                 var sf = st.GetFrame(i);
                 string fileName = sf.GetFileName();
-                string cSharpNamespace = sf.GetMethod().ReflectedType.Namespace;
+                string cSharpNamespace = sf.GetMethod().ReflectedType?.Namespace;
                 bool playwrightInternal = cSharpNamespace != null &&
                                           (cSharpNamespace == "Microsoft.Playwright" ||
                                           cSharpNamespace.StartsWith("Microsoft.Playwright.Core", StringComparison.InvariantCultureIgnoreCase) ||
