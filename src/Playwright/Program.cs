@@ -24,7 +24,6 @@
 
 using System;
 using System.Diagnostics;
-using System.Threading;
 using Microsoft.Playwright.Helpers;
 
 namespace Microsoft.Playwright
@@ -53,7 +52,6 @@ namespace Microsoft.Playwright
             var playwrightStartInfo = new ProcessStartInfo(pwPath, allArgs)
             {
                 UseShellExecute = false,
-                CreateNoWindow = true,
             };
             foreach (var pair in Driver.GetEnvironmentVariables())
             {

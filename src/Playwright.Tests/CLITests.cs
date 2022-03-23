@@ -22,7 +22,7 @@
  * SOFTWARE.
  */
 
-using System;
+using System.Diagnostics;
 using System.IO;
 using Microsoft.Playwright.NUnit;
 using NUnit.Framework;
@@ -31,48 +31,53 @@ namespace Microsoft.Playwright.Tests
 {
     public class CLITests : PlaywrightTest
     {
-        readonly TextWriter _originalStdOut = Console.Out;
-        readonly TextWriter _originalStdError = Console.Error;
-        StringWriter _cliStdOut;
-        StringWriter _cliStdError;
-
-        [SetUp]
-        public void SetUpCLITests()
-        {
-            _cliStdOut = new();
-            _cliStdError = new();
-            Console.SetOut(_cliStdOut);
-            Console.SetError(_cliStdError);
-        }
-
-        [TearDown]
-        public void TearDownCLITests()
-        {
-            Console.SetOut(_originalStdOut);
-            Console.SetError(_originalStdError);
-        }
+        private readonly string playwrightPs1Path = Path.Join(TestContext.CurrentContext.TestDirectory, "..", "..", "..", "..", "Playwright", "bin", "Debug", "netstandard2.0", "playwright.ps1");
 
         [PlaywrightTest("cli.spec.ts", "")]
         public void ShouldBeAbleToRunCLICommands()
         {
             using var tempDir = new TempDirectory();
             string screenshotFile = Path.Combine(tempDir.Path, "screenshot.png");
-            var exitCode = Microsoft.Playwright.Program.Main(new[] { "screenshot", "-b", BrowserName, "data:text/html,Foobar", screenshotFile });
-
+            var (stdout, stderr, exitCode) = ExecutePlaywrightPs1(new[] { "screenshot", "-b", BrowserName, "data:text/html,Foobar", screenshotFile });
             Assert.AreEqual(0, exitCode);
             Assert.IsTrue(File.Exists(screenshotFile));
-            StringAssert.Contains("Foobar", _cliStdOut.ToString());
-            StringAssert.Contains(screenshotFile, _cliStdOut.ToString());
+            StringAssert.Contains("Foobar", stdout);
+            StringAssert.Contains(screenshotFile, stdout);
         }
 
         [PlaywrightTest("cli.spec.ts", "")]
         public void ShouldReturnExitCode1ForCommandNotFound()
         {
-            var exitCode = Microsoft.Playwright.Program.Main(new[] { "this-command-is-not-found" });
+            var (stdout, stderr, exitCode) = ExecutePlaywrightPs1(new[] { "this-command-is-not-found" });
 
             Assert.AreEqual(1, exitCode);
-            StringAssert.Contains("this-command-is-not-found", _cliStdError.ToString());
-            StringAssert.Contains("unknown command", _cliStdError.ToString());
+            StringAssert.Contains("this-command-is-not-found", stderr);
+            StringAssert.Contains("unknown command", stderr);
+        }
+
+        // Out of process execution of playwright.ps1
+        private (string stdout, string stderr, int exitCode) ExecutePlaywrightPs1(string[] arguments)
+        {
+            var startInfo = new ProcessStartInfo("pwsh")
+            {
+                UseShellExecute = false,
+                RedirectStandardError = true,
+                RedirectStandardOutput = true,
+            };
+            startInfo.ArgumentList.Add("-NoProfile");
+            startInfo.ArgumentList.Add(playwrightPs1Path);
+            foreach (string arg in arguments)
+            {
+                startInfo.ArgumentList.Add(arg);
+            }
+            using var pwProcess = new Process()
+            {
+                StartInfo = startInfo,
+            };
+
+            pwProcess.Start();
+            pwProcess.WaitForExit();
+            return (pwProcess.StandardOutput.ReadToEnd(), pwProcess.StandardError.ReadToEnd(), pwProcess.ExitCode);
         }
     }
 }
