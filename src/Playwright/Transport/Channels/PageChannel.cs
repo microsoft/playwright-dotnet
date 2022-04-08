@@ -391,6 +391,9 @@ namespace Microsoft.Playwright.Transport.Channels
             ScreenshotType? type,
             int? quality,
             IEnumerable<ILocator> mask,
+            ScreenshotAnimations? animations,
+            ScreenshotCaret? caret,
+            ScreenshotScale? scale,
             float? timeout)
         {
             var args = new Dictionary<string, object>
@@ -401,6 +404,9 @@ namespace Microsoft.Playwright.Transport.Channels
                 ["path"] = path,
                 ["type"] = type,
                 ["timeout"] = timeout,
+                ["animations"] = animations,
+                ["caret"] = caret,
+                ["scale"] = scale,
                 ["quality"] = quality,
             };
             if (mask != null)

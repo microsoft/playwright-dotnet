@@ -42,7 +42,8 @@ namespace Microsoft.Playwright
     /// <summary>
     /// <para>
     /// API for collecting and saving Playwright traces. Playwright traces can be opened
-    /// in <a href="./trace-viewer.md">Trace Viewer</a> after Playwright script runs.
+    /// in <a href="https://playwright.dev/dotnet/docs/trace-viewer">Trace Viewer</a> after
+    /// Playwright script runs.
     /// </para>
     /// <para>
     /// Start recording a trace before performing actions. At the end, stop tracing and

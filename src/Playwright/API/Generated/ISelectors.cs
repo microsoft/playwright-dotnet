@@ -41,7 +41,7 @@ namespace Microsoft.Playwright
 {
     /// <summary>
     /// <para>
-    /// Selectors can be used to install custom selector engines. See <a href="./selectors.md">Working
+    /// Selectors can be used to install custom selector engines. See <a href="https://playwright.dev/dotnet/docs/selectors">Working
     /// with selectors</a> for more information.
     /// </para>
     /// </summary>

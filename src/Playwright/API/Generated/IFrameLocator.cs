@@ -82,7 +82,7 @@ namespace Microsoft.Playwright
         /// </para>
         /// </summary>
         /// <param name="selector">
-        /// A selector to use when resolving DOM element. See <a href="./selectors.md">working
+        /// A selector to use when resolving DOM element. See <a href="https://playwright.dev/dotnet/docs/selectors">working
         /// with selectors</a> for more details.
         /// </param>
         IFrameLocator FrameLocator(string selector);
@@ -97,13 +97,18 @@ namespace Microsoft.Playwright
         /// </para>
         /// </summary>
         /// <param name="selector">
-        /// A selector to use when resolving DOM element. See <a href="./selectors.md">working
+        /// A selector to use when resolving DOM element. See <a href="https://playwright.dev/dotnet/docs/selectors">working
         /// with selectors</a> for more details.
         /// </param>
         /// <param name="options">Call options</param>
         ILocator Locator(string selector, FrameLocatorLocatorOptions? options = default);
 
-        /// <summary><para>Returns locator to the n-th matching frame.</para></summary>
+        /// <summary>
+        /// <para>
+        /// Returns locator to the n-th matching frame. It's zero based, <c>nth(0)</c> selects
+        /// the first frame.
+        /// </para>
+        /// </summary>
         /// <param name="index">
         /// </param>
         IFrameLocator Nth(int index);

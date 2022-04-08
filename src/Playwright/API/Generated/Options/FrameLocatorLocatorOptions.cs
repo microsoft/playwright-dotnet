@@ -72,7 +72,8 @@ namespace Microsoft.Playwright
         /// <summary>
         /// <para>
         /// Matches elements containing specified text somewhere inside, possibly in a child
-        /// or a descendant element. For example, <c>"Playwright"</c> matches <c>&lt;article&gt;&lt;div&gt;Playwright&lt;/div&gt;&lt;/article&gt;</c>.
+        /// or a descendant element. When passed a <see cref="string"/>, matching is case-insensitive
+        /// and searches for a substring. For example, <c>"Playwright"</c> matches <c>&lt;article&gt;&lt;div&gt;Playwright&lt;/div&gt;&lt;/article&gt;</c>.
         /// </para>
         /// </summary>
         [JsonPropertyName("hasTextString")]
@@ -81,7 +82,8 @@ namespace Microsoft.Playwright
         /// <summary>
         /// <para>
         /// Matches elements containing specified text somewhere inside, possibly in a child
-        /// or a descendant element. For example, <c>"Playwright"</c> matches <c>&lt;article&gt;&lt;div&gt;Playwright&lt;/div&gt;&lt;/article&gt;</c>.
+        /// or a descendant element. When passed a <see cref="string"/>, matching is case-insensitive
+        /// and searches for a substring. For example, <c>"Playwright"</c> matches <c>&lt;article&gt;&lt;div&gt;Playwright&lt;/div&gt;&lt;/article&gt;</c>.
         /// </para>
         /// </summary>
         [JsonPropertyName("hasTextRegex")]

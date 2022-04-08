@@ -98,7 +98,7 @@ namespace Microsoft.Playwright.Transport.Channels
                     ["selector"] = selector,
                 });
 
-        internal async Task<byte[]> ScreenshotAsync(string path, bool? omitBackground, ScreenshotType? type, int? quality, IEnumerable<ILocator> mask, float? timeout)
+        internal async Task<byte[]> ScreenshotAsync(string path, bool? omitBackground, ScreenshotType? type, int? quality, IEnumerable<ILocator> mask, ScreenshotAnimations? animations, ScreenshotCaret? caret, ScreenshotScale? scale, float? timeout)
         {
             var args = new Dictionary<string, object>
             {
@@ -106,6 +106,9 @@ namespace Microsoft.Playwright.Transport.Channels
                 ["omitBackground"] = omitBackground,
                 ["path"] = path,
                 ["timeout"] = timeout,
+                ["animations"] = animations,
+                ["caret"] = caret,
+                ["scale"] = scale,
                 ["quality"] = quality,
             };
             if (mask != null)
@@ -269,12 +272,7 @@ namespace Microsoft.Playwright.Transport.Channels
         {
             var args = new Dictionary<string, object>
             {
-                ["files"] = files.Select(f => new
-                {
-                    f.Name,
-                    Buffer = Convert.ToBase64String(f.Buffer),
-                    f.MimeType,
-                }),
+                ["files"] = files.ConvertToProtocol(),
                 ["timeout"] = timeout,
                 ["noWaitAfter"] = noWaitAfter,
             };

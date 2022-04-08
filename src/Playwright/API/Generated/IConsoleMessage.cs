@@ -42,8 +42,28 @@ namespace Microsoft.Playwright
     /// <summary>
     /// <para>
     /// <see cref="IConsoleMessage"/> objects are dispatched by page via the <see cref="IPage.Console"/>
-    /// event.
+    /// event. For each console messages logged in the page there will be corresponding
+    /// event in the Playwright context.
     /// </para>
+    /// <code>
+    /// // Listen for all System.out.printlns<br/>
+    /// page.Console += (_, msg) =&gt; Console.WriteLine(msg.Text);<br/>
+    /// <br/>
+    /// // Listen for all console events and handle errors<br/>
+    /// page.Console += (_, msg) =&gt;<br/>
+    /// {<br/>
+    ///     if ("error".Equals(msg.Type))<br/>
+    ///         Console.WriteLine("Error text: " + msg.Text);<br/>
+    /// };<br/>
+    /// <br/>
+    /// // Get the next System.out.println<br/>
+    /// var waitForMessageTask = page.WaitForConsoleMessageAsync();<br/>
+    /// await page.EvaluateAsync("console.log('hello', 42, { foo: 'bar' });");<br/>
+    /// var message = await waitForMessageTask;<br/>
+    /// // Deconstruct console.log arguments<br/>
+    /// await message.Args.ElementAt(0).JsonValueAsync&lt;string&gt;(); // hello<br/>
+    /// await message.Args.ElementAt(1).JsonValueAsync&lt;int&gt;(); // 42
+    /// </code>
     /// </summary>
     public partial interface IConsoleMessage
     {

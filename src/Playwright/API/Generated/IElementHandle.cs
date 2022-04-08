@@ -125,8 +125,8 @@ namespace Microsoft.Playwright
         /// If the element is already checked, this method returns immediately.
         /// </description></item>
         /// <item><description>
-        /// Wait for <a href="./actionability.md">actionability</a> checks on the element, unless
-        /// <paramref name="force"/> option is set.
+        /// Wait for <a href="https://playwright.dev/dotnet/docs/actionability">actionability</a>
+        /// checks on the element, unless <paramref name="force"/> option is set.
         /// </description></item>
         /// <item><description>Scroll the element into view if needed.</description></item>
         /// <item><description>Use <see cref="IPage.Mouse"/> to click in the center of the element.</description></item>
@@ -153,8 +153,8 @@ namespace Microsoft.Playwright
         /// <para>This method clicks the element by performing the following steps:</para>
         /// <list type="ordinal">
         /// <item><description>
-        /// Wait for <a href="./actionability.md">actionability</a> checks on the element, unless
-        /// <paramref name="force"/> option is set.
+        /// Wait for <a href="https://playwright.dev/dotnet/docs/actionability">actionability</a>
+        /// checks on the element, unless <paramref name="force"/> option is set.
         /// </description></item>
         /// <item><description>Scroll the element into view if needed.</description></item>
         /// <item><description>
@@ -191,8 +191,8 @@ namespace Microsoft.Playwright
         /// <para>This method double clicks the element by performing the following steps:</para>
         /// <list type="ordinal">
         /// <item><description>
-        /// Wait for <a href="./actionability.md">actionability</a> checks on the element, unless
-        /// <paramref name="force"/> option is set.
+        /// Wait for <a href="https://playwright.dev/dotnet/docs/actionability">actionability</a>
+        /// checks on the element, unless <paramref name="force"/> option is set.
         /// </description></item>
         /// <item><description>Scroll the element into view if needed.</description></item>
         /// <item><description>
@@ -270,8 +270,8 @@ namespace Microsoft.Playwright
         /// <para>
         /// The method finds an element matching the specified selector in the <c>ElementHandle</c>s
         /// subtree and passes it as a first argument to <paramref name="expression"/>. See
-        /// <a href="./selectors.md">Working with selectors</a> for more details. If no elements
-        /// match the selector, the method throws an error.
+        /// <a href="https://playwright.dev/dotnet/docs/selectors">Working with selectors</a>
+        /// for more details. If no elements match the selector, the method throws an error.
         /// </para>
         /// <para>
         /// If <paramref name="expression"/> returns a <see cref="Task"/>, then <see cref="IElementHandle.EvalOnSelectorAsync"/>
@@ -285,8 +285,8 @@ namespace Microsoft.Playwright
         /// </code>
         /// </summary>
         /// <param name="selector">
-        /// A selector to query for. See <a href="./selectors.md">working with selectors</a>
-        /// for more details.
+        /// A selector to query for. See <a href="https://playwright.dev/dotnet/docs/selectors">working
+        /// with selectors</a> for more details.
         /// </param>
         /// <param name="expression">
         /// JavaScript expression to be evaluated in the browser context. If it looks like a
@@ -301,8 +301,8 @@ namespace Microsoft.Playwright
         /// <para>
         /// The method finds all elements matching the specified selector in the <c>ElementHandle</c>'s
         /// subtree and passes an array of matched elements as a first argument to <paramref
-        /// name="expression"/>. See <a href="./selectors.md">Working with selectors</a> for
-        /// more details.
+        /// name="expression"/>. See <a href="https://playwright.dev/dotnet/docs/selectors">Working
+        /// with selectors</a> for more details.
         /// </para>
         /// <para>
         /// If <paramref name="expression"/> returns a <see cref="Task"/>, then <see cref="IElementHandle.EvalOnSelectorAllAsync"/>
@@ -315,8 +315,8 @@ namespace Microsoft.Playwright
         /// </code>
         /// </summary>
         /// <param name="selector">
-        /// A selector to query for. See <a href="./selectors.md">working with selectors</a>
-        /// for more details.
+        /// A selector to query for. See <a href="https://playwright.dev/dotnet/docs/selectors">working
+        /// with selectors</a> for more details.
         /// </param>
         /// <param name="expression">
         /// JavaScript expression to be evaluated in the browser context. If it looks like a
@@ -328,9 +328,9 @@ namespace Microsoft.Playwright
 
         /// <summary>
         /// <para>
-        /// This method waits for <a href="./actionability.md">actionability</a> checks, focuses
-        /// the element, fills it and triggers an <c>input</c> event after filling. Note that
-        /// you can pass an empty string to clear the input field.
+        /// This method waits for <a href="https://playwright.dev/dotnet/docs/actionability">actionability</a>
+        /// checks, focuses the element, fills it and triggers an <c>input</c> event after filling.
+        /// Note that you can pass an empty string to clear the input field.
         /// </para>
         /// <para>
         /// If the target element is not an <c>&lt;input&gt;</c>, <c>&lt;textarea&gt;</c> or
@@ -363,8 +363,8 @@ namespace Microsoft.Playwright
         /// <para>This method hovers over the element by performing the following steps:</para>
         /// <list type="ordinal">
         /// <item><description>
-        /// Wait for <a href="./actionability.md">actionability</a> checks on the element, unless
-        /// <paramref name="force"/> option is set.
+        /// Wait for <a href="https://playwright.dev/dotnet/docs/actionability">actionability</a>
+        /// checks on the element, unless <paramref name="force"/> option is set.
         /// </description></item>
         /// <item><description>Scroll the element into view if needed.</description></item>
         /// <item><description>
@@ -412,19 +412,19 @@ namespace Microsoft.Playwright
         /// </summary>
         Task<bool> IsCheckedAsync();
 
-        /// <summary><para>Returns whether the element is disabled, the opposite of <a href="./actionability.md#enabled">enabled</a>.</para></summary>
+        /// <summary><para>Returns whether the element is disabled, the opposite of <a href="https://playwright.dev/dotnet/docs/actionability#enabled">enabled</a>.</para></summary>
         Task<bool> IsDisabledAsync();
 
-        /// <summary><para>Returns whether the element is <a href="./actionability.md#editable">editable</a>.</para></summary>
+        /// <summary><para>Returns whether the element is <a href="https://playwright.dev/dotnet/docs/actionability#editable">editable</a>.</para></summary>
         Task<bool> IsEditableAsync();
 
-        /// <summary><para>Returns whether the element is <a href="./actionability.md#enabled">enabled</a>.</para></summary>
+        /// <summary><para>Returns whether the element is <a href="https://playwright.dev/dotnet/docs/actionability#enabled">enabled</a>.</para></summary>
         Task<bool> IsEnabledAsync();
 
-        /// <summary><para>Returns whether the element is hidden, the opposite of <a href="./actionability.md#visible">visible</a>.</para></summary>
+        /// <summary><para>Returns whether the element is hidden, the opposite of <a href="https://playwright.dev/dotnet/docs/actionability#visible">visible</a>.</para></summary>
         Task<bool> IsHiddenAsync();
 
-        /// <summary><para>Returns whether the element is <a href="./actionability.md#visible">visible</a>.</para></summary>
+        /// <summary><para>Returns whether the element is <a href="https://playwright.dev/dotnet/docs/actionability#visible">visible</a>.</para></summary>
         Task<bool> IsVisibleAsync();
 
         /// <summary><para>Returns the frame containing the given element.</para></summary>
@@ -473,35 +473,36 @@ namespace Microsoft.Playwright
         /// <summary>
         /// <para>
         /// The method finds an element matching the specified selector in the <c>ElementHandle</c>'s
-        /// subtree. See <a href="./selectors.md">Working with selectors</a> for more details.
-        /// If no elements match the selector, returns <c>null</c>.
+        /// subtree. See <a href="https://playwright.dev/dotnet/docs/selectors">Working with
+        /// selectors</a> for more details. If no elements match the selector, returns <c>null</c>.
         /// </para>
         /// </summary>
         /// <param name="selector">
-        /// A selector to query for. See <a href="./selectors.md">working with selectors</a>
-        /// for more details.
+        /// A selector to query for. See <a href="https://playwright.dev/dotnet/docs/selectors">working
+        /// with selectors</a> for more details.
         /// </param>
         Task<IElementHandle?> QuerySelectorAsync(string selector);
 
         /// <summary>
         /// <para>
         /// The method finds all elements matching the specified selector in the <c>ElementHandle</c>s
-        /// subtree. See <a href="./selectors.md">Working with selectors</a> for more details.
-        /// If no elements match the selector, returns empty array.
+        /// subtree. See <a href="https://playwright.dev/dotnet/docs/selectors">Working with
+        /// selectors</a> for more details. If no elements match the selector, returns empty
+        /// array.
         /// </para>
         /// </summary>
         /// <param name="selector">
-        /// A selector to query for. See <a href="./selectors.md">working with selectors</a>
-        /// for more details.
+        /// A selector to query for. See <a href="https://playwright.dev/dotnet/docs/selectors">working
+        /// with selectors</a> for more details.
         /// </param>
         Task<IReadOnlyList<IElementHandle>> QuerySelectorAllAsync(string selector);
 
         /// <summary>
         /// <para>Returns the buffer with the captured screenshot.</para>
         /// <para>
-        /// This method waits for the <a href="./actionability.md">actionability</a> checks,
-        /// then scrolls element into view before taking a screenshot. If the element is detached
-        /// from DOM, the method throws an error.
+        /// This method waits for the <a href="https://playwright.dev/dotnet/docs/actionability">actionability</a>
+        /// checks, then scrolls element into view before taking a screenshot. If the element
+        /// is detached from DOM, the method throws an error.
         /// </para>
         /// </summary>
         /// <param name="options">Call options</param>
@@ -509,9 +510,9 @@ namespace Microsoft.Playwright
 
         /// <summary>
         /// <para>
-        /// This method waits for <a href="./actionability.md">actionability</a> checks, then
-        /// tries to scroll element into view, unless it is completely visible as defined by
-        /// <a href="https://developer.mozilla.org/en-US/docs/Web/API/Intersection_Observer_API">IntersectionObserver</a>'s
+        /// This method waits for <a href="https://playwright.dev/dotnet/docs/actionability">actionability</a>
+        /// checks, then tries to scroll element into view, unless it is completely visible
+        /// as defined by <a href="https://developer.mozilla.org/en-US/docs/Web/API/Intersection_Observer_API">IntersectionObserver</a>'s
         /// <c>ratio</c>.
         /// </para>
         /// <para>
@@ -524,9 +525,9 @@ namespace Microsoft.Playwright
 
         /// <summary>
         /// <para>
-        /// This method waits for <a href="./actionability.md">actionability</a> checks, waits
-        /// until all specified options are present in the <c>&lt;select&gt;</c> element and
-        /// selects these options.
+        /// This method waits for <a href="https://playwright.dev/dotnet/docs/actionability">actionability</a>
+        /// checks, waits until all specified options are present in the <c>&lt;select&gt;</c>
+        /// element and selects these options.
         /// </para>
         /// <para>
         /// If the target element is not a <c>&lt;select&gt;</c> element, this method throws
@@ -564,9 +565,9 @@ namespace Microsoft.Playwright
 
         /// <summary>
         /// <para>
-        /// This method waits for <a href="./actionability.md">actionability</a> checks, waits
-        /// until all specified options are present in the <c>&lt;select&gt;</c> element and
-        /// selects these options.
+        /// This method waits for <a href="https://playwright.dev/dotnet/docs/actionability">actionability</a>
+        /// checks, waits until all specified options are present in the <c>&lt;select&gt;</c>
+        /// element and selects these options.
         /// </para>
         /// <para>
         /// If the target element is not a <c>&lt;select&gt;</c> element, this method throws
@@ -604,9 +605,9 @@ namespace Microsoft.Playwright
 
         /// <summary>
         /// <para>
-        /// This method waits for <a href="./actionability.md">actionability</a> checks, waits
-        /// until all specified options are present in the <c>&lt;select&gt;</c> element and
-        /// selects these options.
+        /// This method waits for <a href="https://playwright.dev/dotnet/docs/actionability">actionability</a>
+        /// checks, waits until all specified options are present in the <c>&lt;select&gt;</c>
+        /// element and selects these options.
         /// </para>
         /// <para>
         /// If the target element is not a <c>&lt;select&gt;</c> element, this method throws
@@ -644,9 +645,9 @@ namespace Microsoft.Playwright
 
         /// <summary>
         /// <para>
-        /// This method waits for <a href="./actionability.md">actionability</a> checks, waits
-        /// until all specified options are present in the <c>&lt;select&gt;</c> element and
-        /// selects these options.
+        /// This method waits for <a href="https://playwright.dev/dotnet/docs/actionability">actionability</a>
+        /// checks, waits until all specified options are present in the <c>&lt;select&gt;</c>
+        /// element and selects these options.
         /// </para>
         /// <para>
         /// If the target element is not a <c>&lt;select&gt;</c> element, this method throws
@@ -684,9 +685,9 @@ namespace Microsoft.Playwright
 
         /// <summary>
         /// <para>
-        /// This method waits for <a href="./actionability.md">actionability</a> checks, waits
-        /// until all specified options are present in the <c>&lt;select&gt;</c> element and
-        /// selects these options.
+        /// This method waits for <a href="https://playwright.dev/dotnet/docs/actionability">actionability</a>
+        /// checks, waits until all specified options are present in the <c>&lt;select&gt;</c>
+        /// element and selects these options.
         /// </para>
         /// <para>
         /// If the target element is not a <c>&lt;select&gt;</c> element, this method throws
@@ -724,9 +725,9 @@ namespace Microsoft.Playwright
 
         /// <summary>
         /// <para>
-        /// This method waits for <a href="./actionability.md">actionability</a> checks, waits
-        /// until all specified options are present in the <c>&lt;select&gt;</c> element and
-        /// selects these options.
+        /// This method waits for <a href="https://playwright.dev/dotnet/docs/actionability">actionability</a>
+        /// checks, waits until all specified options are present in the <c>&lt;select&gt;</c>
+        /// element and selects these options.
         /// </para>
         /// <para>
         /// If the target element is not a <c>&lt;select&gt;</c> element, this method throws
@@ -764,8 +765,8 @@ namespace Microsoft.Playwright
 
         /// <summary>
         /// <para>
-        /// This method waits for <a href="./actionability.md">actionability</a> checks, then
-        /// focuses the element and selects all its text content.
+        /// This method waits for <a href="https://playwright.dev/dotnet/docs/actionability">actionability</a>
+        /// checks, then focuses the element and selects all its text content.
         /// </para>
         /// </summary>
         /// <param name="options">Call options</param>
@@ -777,9 +778,9 @@ namespace Microsoft.Playwright
         /// <item><description>Ensure that element is a checkbox or a radio input. If not, this method throws.</description></item>
         /// <item><description>If the element already has the right checked state, this method returns immediately.</description></item>
         /// <item><description>
-        /// Wait for <a href="./actionability.md">actionability</a> checks on the matched element,
-        /// unless <paramref name="force"/> option is set. If the element is detached during
-        /// the checks, the whole action is retried.
+        /// Wait for <a href="https://playwright.dev/dotnet/docs/actionability">actionability</a>
+        /// checks on the matched element, unless <paramref name="force"/> option is set. If
+        /// the element is detached during the checks, the whole action is retried.
         /// </description></item>
         /// <item><description>Scroll the element into view if needed.</description></item>
         /// <item><description>Use <see cref="IPage.Mouse"/> to click in the center of the element.</description></item>
@@ -867,8 +868,8 @@ namespace Microsoft.Playwright
         /// <para>This method taps the element by performing the following steps:</para>
         /// <list type="ordinal">
         /// <item><description>
-        /// Wait for <a href="./actionability.md">actionability</a> checks on the element, unless
-        /// <paramref name="force"/> option is set.
+        /// Wait for <a href="https://playwright.dev/dotnet/docs/actionability">actionability</a>
+        /// checks on the element, unless <paramref name="force"/> option is set.
         /// </description></item>
         /// <item><description>Scroll the element into view if needed.</description></item>
         /// <item><description>
@@ -931,8 +932,8 @@ namespace Microsoft.Playwright
         /// If the element is already unchecked, this method returns immediately.
         /// </description></item>
         /// <item><description>
-        /// Wait for <a href="./actionability.md">actionability</a> checks on the element, unless
-        /// <paramref name="force"/> option is set.
+        /// Wait for <a href="https://playwright.dev/dotnet/docs/actionability">actionability</a>
+        /// checks on the element, unless <paramref name="force"/> option is set.
         /// </description></item>
         /// <item><description>Scroll the element into view if needed.</description></item>
         /// <item><description>Use <see cref="IPage.Mouse"/> to click in the center of the element.</description></item>
@@ -959,27 +960,27 @@ namespace Microsoft.Playwright
         /// <para>Returns when the element satisfies the <paramref name="state"/>.</para>
         /// <para>
         /// Depending on the <paramref name="state"/> parameter, this method waits for one of
-        /// the <a href="./actionability.md">actionability</a> checks to pass. This method throws
-        /// when the element is detached while waiting, unless waiting for the <c>"hidden"</c>
-        /// state.
+        /// the <a href="https://playwright.dev/dotnet/docs/actionability">actionability</a>
+        /// checks to pass. This method throws when the element is detached while waiting, unless
+        /// waiting for the <c>"hidden"</c> state.
         /// </para>
         /// <list type="bullet">
-        /// <item><description><c>"visible"</c> Wait until the element is <a href="./actionability.md#visible">visible</a>.</description></item>
+        /// <item><description><c>"visible"</c> Wait until the element is <a href="https://playwright.dev/dotnet/docs/actionability#visible">visible</a>.</description></item>
         /// <item><description>
-        /// <c>"hidden"</c> Wait until the element is <a href="./actionability.md#visible">not
-        /// visible</a> or <a href="./actionability.md#attached">not attached</a>. Note that
-        /// waiting for hidden does not throw when the element detaches.
+        /// <c>"hidden"</c> Wait until the element is <a href="https://playwright.dev/dotnet/docs/actionability#visible">not
+        /// visible</a> or <a href="https://playwright.dev/dotnet/docs/actionability#attached">not
+        /// attached</a>. Note that waiting for hidden does not throw when the element detaches.
         /// </description></item>
         /// <item><description>
-        /// <c>"stable"</c> Wait until the element is both <a href="./actionability.md#visible">visible</a>
-        /// and <a href="./actionability.md#stable">stable</a>.
+        /// <c>"stable"</c> Wait until the element is both <a href="https://playwright.dev/dotnet/docs/actionability#visible">visible</a>
+        /// and <a href="https://playwright.dev/dotnet/docs/actionability#stable">stable</a>.
         /// </description></item>
-        /// <item><description><c>"enabled"</c> Wait until the element is <a href="./actionability.md#enabled">enabled</a>.</description></item>
+        /// <item><description><c>"enabled"</c> Wait until the element is <a href="https://playwright.dev/dotnet/docs/actionability#enabled">enabled</a>.</description></item>
         /// <item><description>
-        /// <c>"disabled"</c> Wait until the element is <a href="./actionability.md#enabled">not
+        /// <c>"disabled"</c> Wait until the element is <a href="https://playwright.dev/dotnet/docs/actionability#enabled">not
         /// enabled</a>.
         /// </description></item>
-        /// <item><description><c>"editable"</c> Wait until the element is <a href="./actionability.md#editable">editable</a>.</description></item>
+        /// <item><description><c>"editable"</c> Wait until the element is <a href="https://playwright.dev/dotnet/docs/actionability#editable">editable</a>.</description></item>
         /// </list>
         /// <para>
         /// If the element does not satisfy the condition for the <paramref name="timeout"/>
@@ -1017,8 +1018,8 @@ namespace Microsoft.Playwright
         /// </para>
         /// </remarks>
         /// <param name="selector">
-        /// A selector to query for. See <a href="./selectors.md">working with selectors</a>
-        /// for more details.
+        /// A selector to query for. See <a href="https://playwright.dev/dotnet/docs/selectors">working
+        /// with selectors</a> for more details.
         /// </param>
         /// <param name="options">Call options</param>
         Task<IElementHandle?> WaitForSelectorAsync(string selector, ElementHandleWaitForSelectorOptions? options = default);

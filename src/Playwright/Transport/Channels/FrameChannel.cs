@@ -551,12 +551,7 @@ namespace Microsoft.Playwright.Transport.Channels
             var args = new Dictionary<string, object>
             {
                 ["selector"] = selector,
-                ["files"] = files.Select(f => new
-                {
-                    f.Name,
-                    Buffer = Convert.ToBase64String(f.Buffer),
-                    f.MimeType,
-                }),
+                ["files"] = files.ConvertToProtocol(),
                 ["noWaitAfter"] = noWaitAfter,
                 ["timeout"] = timeout,
                 ["strict"] = strict,
