@@ -53,7 +53,7 @@ namespace Microsoft.Playwright
             Steps = clone.Steps;
         }
 
-        /// <summary><para>defaults to 1. Sends intermediate <c>mousemove</c> events.</para></summary>
+        /// <summary><para>Defaults to 1. Sends intermediate <c>mousemove</c> events.</para></summary>
         [JsonPropertyName("steps")]
         public int? Steps { get; set; }
     }

@@ -80,8 +80,8 @@ namespace Microsoft.Playwright
 
         /// <summary>
         /// <para>
-        /// Whether to bypass the <a href="./actionability.md">actionability</a> checks. Defaults
-        /// to <c>false</c>.
+        /// Whether to bypass the <a href="https://playwright.dev/dotnet/docs/actionability">actionability</a>
+        /// checks. Defaults to <c>false</c>.
         /// </para>
         /// </summary>
         [JsonPropertyName("force")]
@@ -129,7 +129,7 @@ namespace Microsoft.Playwright
 
         /// <summary>
         /// <para>
-        /// When set, this method only performs the <a href="./actionability.md">actionability</a>
+        /// When set, this method only performs the <a href="https://playwright.dev/dotnet/docs/actionability">actionability</a>
         /// checks and skips the action. Defaults to <c>false</c>. Useful to wait until the
         /// element is ready for the action without performing it.
         /// </para>

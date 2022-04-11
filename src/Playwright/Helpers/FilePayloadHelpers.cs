@@ -6,7 +6,7 @@
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
- * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * to use, copy, modify, merge, publish, distribute, sublicense, and / or sell
  * copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions:
  *
@@ -24,28 +24,27 @@
 
 using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Drawing;
-using System.Globalization;
-using System.IO;
-using System.Runtime.Serialization;
-using System.Text.Json;
-using System.Text.Json.Serialization;
-using System.Text.RegularExpressions;
-using System.Threading;
-using System.Threading.Tasks;
+using System.Linq;
 
-#nullable enable
-
-namespace Microsoft.Playwright
+namespace Microsoft.Playwright.Helpers
 {
-    public enum ScreenshotAnimations
+    internal static class FilePayloadHelpers
     {
-        [EnumMember(Value = "disabled")]
-        Disabled,
-        [EnumMember(Value = "allow")]
-        Allow,
+        private const int SizeLimitInBytes = 50 * 1024 * 1024;
+
+        public static object ConvertToProtocol(this IEnumerable<FilePayload> files)
+        {
+            var hasLargeBuffer = files.Any(f => f.Buffer?.Length > SizeLimitInBytes);
+            if (hasLargeBuffer)
+            {
+                throw new NotSupportedException("Cannot set buffer larger than 50Mb.");
+            }
+            return files.Select(f => new
+            {
+                f.Name,
+                Buffer = Convert.ToBase64String(f.Buffer),
+                f.MimeType,
+            });
+        }
     }
 }
-
-#nullable disable

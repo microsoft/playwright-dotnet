@@ -593,9 +593,7 @@ namespace Microsoft.Playwright.Tests
             await Page.GotoAsync(Server.EmptyPage);
             await Page.RouteAsync("**/cars*", (route) =>
             {
-                var headers = route.Request.Url.EndsWith("allow")
-                    ? new() { ["access-control-allow-origin"] = "*" }
-                    : new Dictionary<string, string>();
+                var headers = new Dictionary<string, string>() { ["access-control-allow-origin"] = route.Request.Url.EndsWith("allow") ? "*" : "none" };
 
                 _ = route.FulfillAsync(new()
                 {
@@ -613,7 +611,7 @@ namespace Microsoft.Playwright.Tests
 
             Assert.AreEqual(new[] { "electric", "cars" }, resp);
 
-            var exception = await PlaywrightAssert.ThrowsAsync<PlaywrightException>(() => Page.EvaluateAsync<string>(@"async () => {
+            var exception = await PlaywrightAssert.ThrowsAsync<PlaywrightException>(() => Page.EvaluateAsync<string[]>(@"async () => {
                 const response = await fetch('https://example.com/cars?reject', { mode: 'cors' });
                 return response.json();
             }"));

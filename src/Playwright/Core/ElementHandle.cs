@@ -84,6 +84,9 @@ namespace Microsoft.Playwright.Core
                 options.Type,
                 options.Quality,
                 options.Mask,
+                options.Animations,
+                options.Caret,
+                options.Scale,
                 options.Timeout).ConfigureAwait(false);
 
             if (!string.IsNullOrEmpty(options.Path))

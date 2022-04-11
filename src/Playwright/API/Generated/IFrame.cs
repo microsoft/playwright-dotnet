@@ -129,9 +129,9 @@ namespace Microsoft.Playwright
         /// throws. If the element is already checked, this method returns immediately.
         /// </description></item>
         /// <item><description>
-        /// Wait for <a href="./actionability.md">actionability</a> checks on the matched element,
-        /// unless <paramref name="force"/> option is set. If the element is detached during
-        /// the checks, the whole action is retried.
+        /// Wait for <a href="https://playwright.dev/dotnet/docs/actionability">actionability</a>
+        /// checks on the matched element, unless <paramref name="force"/> option is set. If
+        /// the element is detached during the checks, the whole action is retried.
         /// </description></item>
         /// <item><description>Scroll the element into view if needed.</description></item>
         /// <item><description>Use <see cref="IPage.Mouse"/> to click in the center of the element.</description></item>
@@ -149,8 +149,8 @@ namespace Microsoft.Playwright
         /// </summary>
         /// <param name="selector">
         /// A selector to search for an element. If there are multiple elements satisfying the
-        /// selector, the first will be used. See <a href="./selectors.md">working with selectors</a>
-        /// for more details.
+        /// selector, the first will be used. See <a href="https://playwright.dev/dotnet/docs/selectors">working
+        /// with selectors</a> for more details.
         /// </param>
         /// <param name="options">Call options</param>
         Task CheckAsync(string selector, FrameCheckOptions? options = default);
@@ -168,9 +168,9 @@ namespace Microsoft.Playwright
         /// a matching element is attached to the DOM.
         /// </description></item>
         /// <item><description>
-        /// Wait for <a href="./actionability.md">actionability</a> checks on the matched element,
-        /// unless <paramref name="force"/> option is set. If the element is detached during
-        /// the checks, the whole action is retried.
+        /// Wait for <a href="https://playwright.dev/dotnet/docs/actionability">actionability</a>
+        /// checks on the matched element, unless <paramref name="force"/> option is set. If
+        /// the element is detached during the checks, the whole action is retried.
         /// </description></item>
         /// <item><description>Scroll the element into view if needed.</description></item>
         /// <item><description>
@@ -190,8 +190,8 @@ namespace Microsoft.Playwright
         /// </summary>
         /// <param name="selector">
         /// A selector to search for an element. If there are multiple elements satisfying the
-        /// selector, the first will be used. See <a href="./selectors.md">working with selectors</a>
-        /// for more details.
+        /// selector, the first will be used. See <a href="https://playwright.dev/dotnet/docs/selectors">working
+        /// with selectors</a> for more details.
         /// </param>
         /// <param name="options">Call options</param>
         Task ClickAsync(string selector, FrameClickOptions? options = default);
@@ -210,9 +210,9 @@ namespace Microsoft.Playwright
         /// a matching element is attached to the DOM.
         /// </description></item>
         /// <item><description>
-        /// Wait for <a href="./actionability.md">actionability</a> checks on the matched element,
-        /// unless <paramref name="force"/> option is set. If the element is detached during
-        /// the checks, the whole action is retried.
+        /// Wait for <a href="https://playwright.dev/dotnet/docs/actionability">actionability</a>
+        /// checks on the matched element, unless <paramref name="force"/> option is set. If
+        /// the element is detached during the checks, the whole action is retried.
         /// </description></item>
         /// <item><description>Scroll the element into view if needed.</description></item>
         /// <item><description>
@@ -239,8 +239,8 @@ namespace Microsoft.Playwright
         /// </remarks>
         /// <param name="selector">
         /// A selector to search for an element. If there are multiple elements satisfying the
-        /// selector, the first will be used. See <a href="./selectors.md">working with selectors</a>
-        /// for more details.
+        /// selector, the first will be used. See <a href="https://playwright.dev/dotnet/docs/selectors">working
+        /// with selectors</a> for more details.
         /// </param>
         /// <param name="options">Call options</param>
         Task DblClickAsync(string selector, FrameDblClickOptions? options = default);
@@ -282,8 +282,8 @@ namespace Microsoft.Playwright
         /// </summary>
         /// <param name="selector">
         /// A selector to search for an element. If there are multiple elements satisfying the
-        /// selector, the first will be used. See <a href="./selectors.md">working with selectors</a>
-        /// for more details.
+        /// selector, the first will be used. See <a href="https://playwright.dev/dotnet/docs/selectors">working
+        /// with selectors</a> for more details.
         /// </param>
         /// <param name="type">DOM event type: <c>"click"</c>, <c>"dragstart"</c>, etc.</param>
         /// <param name="eventInit">Optional event-specific initialization properties.</param>
@@ -301,7 +301,7 @@ namespace Microsoft.Playwright
         /// <para>Returns the return value of <paramref name="expression"/>.</para>
         /// <para>
         /// The method finds an element matching the specified selector within the frame and
-        /// passes it as a first argument to <paramref name="expression"/>. See <a href="./selectors.md">Working
+        /// passes it as a first argument to <paramref name="expression"/>. See <a href="https://playwright.dev/dotnet/docs/selectors">Working
         /// with selectors</a> for more details. If no elements match the selector, the method
         /// throws an error.
         /// </para>
@@ -324,8 +324,8 @@ namespace Microsoft.Playwright
         /// </para>
         /// </remarks>
         /// <param name="selector">
-        /// A selector to query for. See <a href="./selectors.md">working with selectors</a>
-        /// for more details.
+        /// A selector to query for. See <a href="https://playwright.dev/dotnet/docs/selectors">working
+        /// with selectors</a> for more details.
         /// </param>
         /// <param name="expression">
         /// JavaScript expression to be evaluated in the browser context. If it looks like a
@@ -341,7 +341,8 @@ namespace Microsoft.Playwright
         /// <para>
         /// The method finds all elements matching the specified selector within the frame and
         /// passes an array of matched elements as a first argument to <paramref name="expression"/>.
-        /// See <a href="./selectors.md">Working with selectors</a> for more details.
+        /// See <a href="https://playwright.dev/dotnet/docs/selectors">Working with selectors</a>
+        /// for more details.
         /// </para>
         /// <para>
         /// If <paramref name="expression"/> returns a <see cref="Task"/>, then <see cref="IFrame.EvalOnSelectorAllAsync"/>
@@ -357,8 +358,8 @@ namespace Microsoft.Playwright
         /// </para>
         /// </remarks>
         /// <param name="selector">
-        /// A selector to query for. See <a href="./selectors.md">working with selectors</a>
-        /// for more details.
+        /// A selector to query for. See <a href="https://playwright.dev/dotnet/docs/selectors">working
+        /// with selectors</a> for more details.
         /// </param>
         /// <param name="expression">
         /// JavaScript expression to be evaluated in the browser context. If it looks like a
@@ -421,7 +422,7 @@ namespace Microsoft.Playwright
         /// var aWindowHandle = await frame.EvaluateHandleAsync("() =&gt; Promise.resolve(window)");
         /// </code>
         /// <para>A string can also be passed in instead of a function.</para>
-        /// <code>var docHandle = await frame.EvalueHandleAsync("document"); // Handle for the `document`</code>
+        /// <code>var docHandle = await frame.EvaluateHandleAsync("document"); // Handle for the `document`</code>
         /// <para><see cref="IJSHandle"/> instances can be passed as an argument to the <see cref="IFrame.EvaluateHandleAsync"/>:</para>
         /// <code>
         /// var handle = await frame.EvaluateHandleAsync("() =&gt; document.body");<br/>
@@ -441,9 +442,9 @@ namespace Microsoft.Playwright
         /// <summary>
         /// <para>
         /// This method waits for an element matching <paramref name="selector"/>, waits for
-        /// <a href="./actionability.md">actionability</a> checks, focuses the element, fills
-        /// it and triggers an <c>input</c> event after filling. Note that you can pass an empty
-        /// string to clear the input field.
+        /// <a href="https://playwright.dev/dotnet/docs/actionability">actionability</a> checks,
+        /// focuses the element, fills it and triggers an <c>input</c> event after filling.
+        /// Note that you can pass an empty string to clear the input field.
         /// </para>
         /// <para>
         /// If the target element is not an <c>&lt;input&gt;</c>, <c>&lt;textarea&gt;</c> or
@@ -455,8 +456,8 @@ namespace Microsoft.Playwright
         /// </summary>
         /// <param name="selector">
         /// A selector to search for an element. If there are multiple elements satisfying the
-        /// selector, the first will be used. See <a href="./selectors.md">working with selectors</a>
-        /// for more details.
+        /// selector, the first will be used. See <a href="https://playwright.dev/dotnet/docs/selectors">working
+        /// with selectors</a> for more details.
         /// </param>
         /// <param name="value">
         /// Value to fill for the <c>&lt;input&gt;</c>, <c>&lt;textarea&gt;</c> or <c>[contenteditable]</c>
@@ -474,8 +475,8 @@ namespace Microsoft.Playwright
         /// </summary>
         /// <param name="selector">
         /// A selector to search for an element. If there are multiple elements satisfying the
-        /// selector, the first will be used. See <a href="./selectors.md">working with selectors</a>
-        /// for more details.
+        /// selector, the first will be used. See <a href="https://playwright.dev/dotnet/docs/selectors">working
+        /// with selectors</a> for more details.
         /// </param>
         /// <param name="options">Call options</param>
         Task FocusAsync(string selector, FrameFocusOptions? options = default);
@@ -513,7 +514,7 @@ namespace Microsoft.Playwright
         /// </code>
         /// </summary>
         /// <param name="selector">
-        /// A selector to use when resolving DOM element. See <a href="./selectors.md">working
+        /// A selector to use when resolving DOM element. See <a href="https://playwright.dev/dotnet/docs/selectors">working
         /// with selectors</a> for more details.
         /// </param>
         IFrameLocator FrameLocator(string selector);
@@ -521,8 +522,8 @@ namespace Microsoft.Playwright
         /// <summary><para>Returns element attribute value.</para></summary>
         /// <param name="selector">
         /// A selector to search for an element. If there are multiple elements satisfying the
-        /// selector, the first will be used. See <a href="./selectors.md">working with selectors</a>
-        /// for more details.
+        /// selector, the first will be used. See <a href="https://playwright.dev/dotnet/docs/selectors">working
+        /// with selectors</a> for more details.
         /// </param>
         /// <param name="name">Attribute name to get the value for.</param>
         /// <param name="options">Call options</param>
@@ -573,9 +574,9 @@ namespace Microsoft.Playwright
         /// a matching element is attached to the DOM.
         /// </description></item>
         /// <item><description>
-        /// Wait for <a href="./actionability.md">actionability</a> checks on the matched element,
-        /// unless <paramref name="force"/> option is set. If the element is detached during
-        /// the checks, the whole action is retried.
+        /// Wait for <a href="https://playwright.dev/dotnet/docs/actionability">actionability</a>
+        /// checks on the matched element, unless <paramref name="force"/> option is set. If
+        /// the element is detached during the checks, the whole action is retried.
         /// </description></item>
         /// <item><description>Scroll the element into view if needed.</description></item>
         /// <item><description>
@@ -595,8 +596,8 @@ namespace Microsoft.Playwright
         /// </summary>
         /// <param name="selector">
         /// A selector to search for an element. If there are multiple elements satisfying the
-        /// selector, the first will be used. See <a href="./selectors.md">working with selectors</a>
-        /// for more details.
+        /// selector, the first will be used. See <a href="https://playwright.dev/dotnet/docs/selectors">working
+        /// with selectors</a> for more details.
         /// </param>
         /// <param name="options">Call options</param>
         Task HoverAsync(string selector, FrameHoverOptions? options = default);
@@ -604,8 +605,8 @@ namespace Microsoft.Playwright
         /// <summary><para>Returns <c>element.innerHTML</c>.</para></summary>
         /// <param name="selector">
         /// A selector to search for an element. If there are multiple elements satisfying the
-        /// selector, the first will be used. See <a href="./selectors.md">working with selectors</a>
-        /// for more details.
+        /// selector, the first will be used. See <a href="https://playwright.dev/dotnet/docs/selectors">working
+        /// with selectors</a> for more details.
         /// </param>
         /// <param name="options">Call options</param>
         Task<string> InnerHTMLAsync(string selector, FrameInnerHTMLOptions? options = default);
@@ -613,8 +614,8 @@ namespace Microsoft.Playwright
         /// <summary><para>Returns <c>element.innerText</c>.</para></summary>
         /// <param name="selector">
         /// A selector to search for an element. If there are multiple elements satisfying the
-        /// selector, the first will be used. See <a href="./selectors.md">working with selectors</a>
-        /// for more details.
+        /// selector, the first will be used. See <a href="https://playwright.dev/dotnet/docs/selectors">working
+        /// with selectors</a> for more details.
         /// </param>
         /// <param name="options">Call options</param>
         Task<string> InnerTextAsync(string selector, FrameInnerTextOptions? options = default);
@@ -627,8 +628,8 @@ namespace Microsoft.Playwright
         /// </summary>
         /// <param name="selector">
         /// A selector to search for an element. If there are multiple elements satisfying the
-        /// selector, the first will be used. See <a href="./selectors.md">working with selectors</a>
-        /// for more details.
+        /// selector, the first will be used. See <a href="https://playwright.dev/dotnet/docs/selectors">working
+        /// with selectors</a> for more details.
         /// </param>
         /// <param name="options">Call options</param>
         Task<string> InputValueAsync(string selector, FrameInputValueOptions? options = default);
@@ -641,8 +642,8 @@ namespace Microsoft.Playwright
         /// </summary>
         /// <param name="selector">
         /// A selector to search for an element. If there are multiple elements satisfying the
-        /// selector, the first will be used. See <a href="./selectors.md">working with selectors</a>
-        /// for more details.
+        /// selector, the first will be used. See <a href="https://playwright.dev/dotnet/docs/selectors">working
+        /// with selectors</a> for more details.
         /// </param>
         /// <param name="options">Call options</param>
         Task<bool> IsCheckedAsync(string selector, FrameIsCheckedOptions? options = default);
@@ -650,57 +651,57 @@ namespace Microsoft.Playwright
         /// <summary><para>Returns <c>true</c> if the frame has been detached, or <c>false</c> otherwise.</para></summary>
         bool IsDetached { get; }
 
-        /// <summary><para>Returns whether the element is disabled, the opposite of <a href="./actionability.md#enabled">enabled</a>.</para></summary>
+        /// <summary><para>Returns whether the element is disabled, the opposite of <a href="https://playwright.dev/dotnet/docs/actionability#enabled">enabled</a>.</para></summary>
         /// <param name="selector">
         /// A selector to search for an element. If there are multiple elements satisfying the
-        /// selector, the first will be used. See <a href="./selectors.md">working with selectors</a>
-        /// for more details.
+        /// selector, the first will be used. See <a href="https://playwright.dev/dotnet/docs/selectors">working
+        /// with selectors</a> for more details.
         /// </param>
         /// <param name="options">Call options</param>
         Task<bool> IsDisabledAsync(string selector, FrameIsDisabledOptions? options = default);
 
-        /// <summary><para>Returns whether the element is <a href="./actionability.md#editable">editable</a>.</para></summary>
+        /// <summary><para>Returns whether the element is <a href="https://playwright.dev/dotnet/docs/actionability#editable">editable</a>.</para></summary>
         /// <param name="selector">
         /// A selector to search for an element. If there are multiple elements satisfying the
-        /// selector, the first will be used. See <a href="./selectors.md">working with selectors</a>
-        /// for more details.
+        /// selector, the first will be used. See <a href="https://playwright.dev/dotnet/docs/selectors">working
+        /// with selectors</a> for more details.
         /// </param>
         /// <param name="options">Call options</param>
         Task<bool> IsEditableAsync(string selector, FrameIsEditableOptions? options = default);
 
-        /// <summary><para>Returns whether the element is <a href="./actionability.md#enabled">enabled</a>.</para></summary>
+        /// <summary><para>Returns whether the element is <a href="https://playwright.dev/dotnet/docs/actionability#enabled">enabled</a>.</para></summary>
         /// <param name="selector">
         /// A selector to search for an element. If there are multiple elements satisfying the
-        /// selector, the first will be used. See <a href="./selectors.md">working with selectors</a>
-        /// for more details.
+        /// selector, the first will be used. See <a href="https://playwright.dev/dotnet/docs/selectors">working
+        /// with selectors</a> for more details.
         /// </param>
         /// <param name="options">Call options</param>
         Task<bool> IsEnabledAsync(string selector, FrameIsEnabledOptions? options = default);
 
         /// <summary>
         /// <para>
-        /// Returns whether the element is hidden, the opposite of <a href="./actionability.md#visible">visible</a>.
+        /// Returns whether the element is hidden, the opposite of <a href="https://playwright.dev/dotnet/docs/actionability#visible">visible</a>.
         /// <paramref name="selector"/> that does not match any elements is considered hidden.
         /// </para>
         /// </summary>
         /// <param name="selector">
         /// A selector to search for an element. If there are multiple elements satisfying the
-        /// selector, the first will be used. See <a href="./selectors.md">working with selectors</a>
-        /// for more details.
+        /// selector, the first will be used. See <a href="https://playwright.dev/dotnet/docs/selectors">working
+        /// with selectors</a> for more details.
         /// </param>
         /// <param name="options">Call options</param>
         Task<bool> IsHiddenAsync(string selector, FrameIsHiddenOptions? options = default);
 
         /// <summary>
         /// <para>
-        /// Returns whether the element is <a href="./actionability.md#visible">visible</a>.
+        /// Returns whether the element is <a href="https://playwright.dev/dotnet/docs/actionability#visible">visible</a>.
         /// <paramref name="selector"/> that does not match any elements is considered not visible.
         /// </para>
         /// </summary>
         /// <param name="selector">
         /// A selector to search for an element. If there are multiple elements satisfying the
-        /// selector, the first will be used. See <a href="./selectors.md">working with selectors</a>
-        /// for more details.
+        /// selector, the first will be used. See <a href="https://playwright.dev/dotnet/docs/selectors">working
+        /// with selectors</a> for more details.
         /// </param>
         /// <param name="options">Call options</param>
         Task<bool> IsVisibleAsync(string selector, FrameIsVisibleOptions? options = default);
@@ -714,7 +715,7 @@ namespace Microsoft.Playwright
         /// </para>
         /// </summary>
         /// <param name="selector">
-        /// A selector to use when resolving DOM element. See <a href="./selectors.md">working
+        /// A selector to use when resolving DOM element. See <a href="https://playwright.dev/dotnet/docs/selectors">working
         /// with selectors</a> for more details.
         /// </param>
         /// <param name="options">Call options</param>
@@ -772,8 +773,8 @@ namespace Microsoft.Playwright
         /// </summary>
         /// <param name="selector">
         /// A selector to search for an element. If there are multiple elements satisfying the
-        /// selector, the first will be used. See <a href="./selectors.md">working with selectors</a>
-        /// for more details.
+        /// selector, the first will be used. See <a href="https://playwright.dev/dotnet/docs/selectors">working
+        /// with selectors</a> for more details.
         /// </param>
         /// <param name="key">
         /// Name of the key to press or a character to generate, such as <c>ArrowLeft</c> or
@@ -786,8 +787,8 @@ namespace Microsoft.Playwright
         /// <para>Returns the ElementHandle pointing to the frame element.</para>
         /// <para>
         /// The method finds an element matching the specified selector within the frame. See
-        /// <a href="./selectors.md">Working with selectors</a> for more details. If no elements
-        /// match the selector, returns <c>null</c>.
+        /// <a href="https://playwright.dev/dotnet/docs/selectors">Working with selectors</a>
+        /// for more details. If no elements match the selector, returns <c>null</c>.
         /// </para>
         /// </summary>
         /// <remarks>
@@ -797,8 +798,8 @@ namespace Microsoft.Playwright
         /// </para>
         /// </remarks>
         /// <param name="selector">
-        /// A selector to query for. See <a href="./selectors.md">working with selectors</a>
-        /// for more details.
+        /// A selector to query for. See <a href="https://playwright.dev/dotnet/docs/selectors">working
+        /// with selectors</a> for more details.
         /// </param>
         /// <param name="options">Call options</param>
         Task<IElementHandle?> QuerySelectorAsync(string selector, FrameQuerySelectorOptions? options = default);
@@ -807,8 +808,8 @@ namespace Microsoft.Playwright
         /// <para>Returns the ElementHandles pointing to the frame elements.</para>
         /// <para>
         /// The method finds all elements matching the specified selector within the frame.
-        /// See <a href="./selectors.md">Working with selectors</a> for more details. If no
-        /// elements match the selector, returns empty array.
+        /// See <a href="https://playwright.dev/dotnet/docs/selectors">Working with selectors</a>
+        /// for more details. If no elements match the selector, returns empty array.
         /// </para>
         /// </summary>
         /// <remarks>
@@ -818,16 +819,17 @@ namespace Microsoft.Playwright
         /// </para>
         /// </remarks>
         /// <param name="selector">
-        /// A selector to query for. See <a href="./selectors.md">working with selectors</a>
-        /// for more details.
+        /// A selector to query for. See <a href="https://playwright.dev/dotnet/docs/selectors">working
+        /// with selectors</a> for more details.
         /// </param>
         Task<IReadOnlyList<IElementHandle>> QuerySelectorAllAsync(string selector);
 
         /// <summary>
         /// <para>
         /// This method waits for an element matching <paramref name="selector"/>, waits for
-        /// <a href="./actionability.md">actionability</a> checks, waits until all specified
-        /// options are present in the <c>&lt;select&gt;</c> element and selects these options.
+        /// <a href="https://playwright.dev/dotnet/docs/actionability">actionability</a> checks,
+        /// waits until all specified options are present in the <c>&lt;select&gt;</c> element
+        /// and selects these options.
         /// </para>
         /// <para>
         /// If the target element is not a <c>&lt;select&gt;</c> element, this method throws
@@ -850,8 +852,8 @@ namespace Microsoft.Playwright
         /// </code>
         /// </summary>
         /// <param name="selector">
-        /// A selector to query for. See <a href="./selectors.md">working with selectors</a>
-        /// for more details.
+        /// A selector to query for. See <a href="https://playwright.dev/dotnet/docs/selectors">working
+        /// with selectors</a> for more details.
         /// </param>
         /// <param name="values">
         /// Options to select. If the <c>&lt;select&gt;</c> has the <c>multiple</c> attribute,
@@ -865,8 +867,9 @@ namespace Microsoft.Playwright
         /// <summary>
         /// <para>
         /// This method waits for an element matching <paramref name="selector"/>, waits for
-        /// <a href="./actionability.md">actionability</a> checks, waits until all specified
-        /// options are present in the <c>&lt;select&gt;</c> element and selects these options.
+        /// <a href="https://playwright.dev/dotnet/docs/actionability">actionability</a> checks,
+        /// waits until all specified options are present in the <c>&lt;select&gt;</c> element
+        /// and selects these options.
         /// </para>
         /// <para>
         /// If the target element is not a <c>&lt;select&gt;</c> element, this method throws
@@ -889,8 +892,8 @@ namespace Microsoft.Playwright
         /// </code>
         /// </summary>
         /// <param name="selector">
-        /// A selector to query for. See <a href="./selectors.md">working with selectors</a>
-        /// for more details.
+        /// A selector to query for. See <a href="https://playwright.dev/dotnet/docs/selectors">working
+        /// with selectors</a> for more details.
         /// </param>
         /// <param name="values">
         /// Options to select. If the <c>&lt;select&gt;</c> has the <c>multiple</c> attribute,
@@ -904,8 +907,9 @@ namespace Microsoft.Playwright
         /// <summary>
         /// <para>
         /// This method waits for an element matching <paramref name="selector"/>, waits for
-        /// <a href="./actionability.md">actionability</a> checks, waits until all specified
-        /// options are present in the <c>&lt;select&gt;</c> element and selects these options.
+        /// <a href="https://playwright.dev/dotnet/docs/actionability">actionability</a> checks,
+        /// waits until all specified options are present in the <c>&lt;select&gt;</c> element
+        /// and selects these options.
         /// </para>
         /// <para>
         /// If the target element is not a <c>&lt;select&gt;</c> element, this method throws
@@ -928,8 +932,8 @@ namespace Microsoft.Playwright
         /// </code>
         /// </summary>
         /// <param name="selector">
-        /// A selector to query for. See <a href="./selectors.md">working with selectors</a>
-        /// for more details.
+        /// A selector to query for. See <a href="https://playwright.dev/dotnet/docs/selectors">working
+        /// with selectors</a> for more details.
         /// </param>
         /// <param name="values">
         /// Options to select. If the <c>&lt;select&gt;</c> has the <c>multiple</c> attribute,
@@ -943,8 +947,9 @@ namespace Microsoft.Playwright
         /// <summary>
         /// <para>
         /// This method waits for an element matching <paramref name="selector"/>, waits for
-        /// <a href="./actionability.md">actionability</a> checks, waits until all specified
-        /// options are present in the <c>&lt;select&gt;</c> element and selects these options.
+        /// <a href="https://playwright.dev/dotnet/docs/actionability">actionability</a> checks,
+        /// waits until all specified options are present in the <c>&lt;select&gt;</c> element
+        /// and selects these options.
         /// </para>
         /// <para>
         /// If the target element is not a <c>&lt;select&gt;</c> element, this method throws
@@ -967,8 +972,8 @@ namespace Microsoft.Playwright
         /// </code>
         /// </summary>
         /// <param name="selector">
-        /// A selector to query for. See <a href="./selectors.md">working with selectors</a>
-        /// for more details.
+        /// A selector to query for. See <a href="https://playwright.dev/dotnet/docs/selectors">working
+        /// with selectors</a> for more details.
         /// </param>
         /// <param name="values">
         /// Options to select. If the <c>&lt;select&gt;</c> has the <c>multiple</c> attribute,
@@ -982,8 +987,9 @@ namespace Microsoft.Playwright
         /// <summary>
         /// <para>
         /// This method waits for an element matching <paramref name="selector"/>, waits for
-        /// <a href="./actionability.md">actionability</a> checks, waits until all specified
-        /// options are present in the <c>&lt;select&gt;</c> element and selects these options.
+        /// <a href="https://playwright.dev/dotnet/docs/actionability">actionability</a> checks,
+        /// waits until all specified options are present in the <c>&lt;select&gt;</c> element
+        /// and selects these options.
         /// </para>
         /// <para>
         /// If the target element is not a <c>&lt;select&gt;</c> element, this method throws
@@ -1006,8 +1012,8 @@ namespace Microsoft.Playwright
         /// </code>
         /// </summary>
         /// <param name="selector">
-        /// A selector to query for. See <a href="./selectors.md">working with selectors</a>
-        /// for more details.
+        /// A selector to query for. See <a href="https://playwright.dev/dotnet/docs/selectors">working
+        /// with selectors</a> for more details.
         /// </param>
         /// <param name="values">
         /// Options to select. If the <c>&lt;select&gt;</c> has the <c>multiple</c> attribute,
@@ -1021,8 +1027,9 @@ namespace Microsoft.Playwright
         /// <summary>
         /// <para>
         /// This method waits for an element matching <paramref name="selector"/>, waits for
-        /// <a href="./actionability.md">actionability</a> checks, waits until all specified
-        /// options are present in the <c>&lt;select&gt;</c> element and selects these options.
+        /// <a href="https://playwright.dev/dotnet/docs/actionability">actionability</a> checks,
+        /// waits until all specified options are present in the <c>&lt;select&gt;</c> element
+        /// and selects these options.
         /// </para>
         /// <para>
         /// If the target element is not a <c>&lt;select&gt;</c> element, this method throws
@@ -1045,8 +1052,8 @@ namespace Microsoft.Playwright
         /// </code>
         /// </summary>
         /// <param name="selector">
-        /// A selector to query for. See <a href="./selectors.md">working with selectors</a>
-        /// for more details.
+        /// A selector to query for. See <a href="https://playwright.dev/dotnet/docs/selectors">working
+        /// with selectors</a> for more details.
         /// </param>
         /// <param name="values">
         /// Options to select. If the <c>&lt;select&gt;</c> has the <c>multiple</c> attribute,
@@ -1073,9 +1080,9 @@ namespace Microsoft.Playwright
         /// </description></item>
         /// <item><description>If the element already has the right checked state, this method returns immediately.</description></item>
         /// <item><description>
-        /// Wait for <a href="./actionability.md">actionability</a> checks on the matched element,
-        /// unless <paramref name="force"/> option is set. If the element is detached during
-        /// the checks, the whole action is retried.
+        /// Wait for <a href="https://playwright.dev/dotnet/docs/actionability">actionability</a>
+        /// checks on the matched element, unless <paramref name="force"/> option is set. If
+        /// the element is detached during the checks, the whole action is retried.
         /// </description></item>
         /// <item><description>Scroll the element into view if needed.</description></item>
         /// <item><description>Use <see cref="IPage.Mouse"/> to click in the center of the element.</description></item>
@@ -1093,8 +1100,8 @@ namespace Microsoft.Playwright
         /// </summary>
         /// <param name="selector">
         /// A selector to search for an element. If there are multiple elements satisfying the
-        /// selector, the first will be used. See <a href="./selectors.md">working with selectors</a>
-        /// for more details.
+        /// selector, the first will be used. See <a href="https://playwright.dev/dotnet/docs/selectors">working
+        /// with selectors</a> for more details.
         /// </param>
         /// <param name="checkedState">Whether to check or uncheck the checkbox.</param>
         /// <param name="options">Call options</param>
@@ -1117,8 +1124,8 @@ namespace Microsoft.Playwright
         /// </summary>
         /// <param name="selector">
         /// A selector to search for an element. If there are multiple elements satisfying the
-        /// selector, the first will be used. See <a href="./selectors.md">working with selectors</a>
-        /// for more details.
+        /// selector, the first will be used. See <a href="https://playwright.dev/dotnet/docs/selectors">working
+        /// with selectors</a> for more details.
         /// </param>
         /// <param name="files">
         /// </param>
@@ -1138,8 +1145,8 @@ namespace Microsoft.Playwright
         /// </summary>
         /// <param name="selector">
         /// A selector to search for an element. If there are multiple elements satisfying the
-        /// selector, the first will be used. See <a href="./selectors.md">working with selectors</a>
-        /// for more details.
+        /// selector, the first will be used. See <a href="https://playwright.dev/dotnet/docs/selectors">working
+        /// with selectors</a> for more details.
         /// </param>
         /// <param name="files">
         /// </param>
@@ -1159,8 +1166,8 @@ namespace Microsoft.Playwright
         /// </summary>
         /// <param name="selector">
         /// A selector to search for an element. If there are multiple elements satisfying the
-        /// selector, the first will be used. See <a href="./selectors.md">working with selectors</a>
-        /// for more details.
+        /// selector, the first will be used. See <a href="https://playwright.dev/dotnet/docs/selectors">working
+        /// with selectors</a> for more details.
         /// </param>
         /// <param name="files">
         /// </param>
@@ -1180,8 +1187,8 @@ namespace Microsoft.Playwright
         /// </summary>
         /// <param name="selector">
         /// A selector to search for an element. If there are multiple elements satisfying the
-        /// selector, the first will be used. See <a href="./selectors.md">working with selectors</a>
-        /// for more details.
+        /// selector, the first will be used. See <a href="https://playwright.dev/dotnet/docs/selectors">working
+        /// with selectors</a> for more details.
         /// </param>
         /// <param name="files">
         /// </param>
@@ -1199,9 +1206,9 @@ namespace Microsoft.Playwright
         /// a matching element is attached to the DOM.
         /// </description></item>
         /// <item><description>
-        /// Wait for <a href="./actionability.md">actionability</a> checks on the matched element,
-        /// unless <paramref name="force"/> option is set. If the element is detached during
-        /// the checks, the whole action is retried.
+        /// Wait for <a href="https://playwright.dev/dotnet/docs/actionability">actionability</a>
+        /// checks on the matched element, unless <paramref name="force"/> option is set. If
+        /// the element is detached during the checks, the whole action is retried.
         /// </description></item>
         /// <item><description>Scroll the element into view if needed.</description></item>
         /// <item><description>
@@ -1227,8 +1234,8 @@ namespace Microsoft.Playwright
         /// </remarks>
         /// <param name="selector">
         /// A selector to search for an element. If there are multiple elements satisfying the
-        /// selector, the first will be used. See <a href="./selectors.md">working with selectors</a>
-        /// for more details.
+        /// selector, the first will be used. See <a href="https://playwright.dev/dotnet/docs/selectors">working
+        /// with selectors</a> for more details.
         /// </param>
         /// <param name="options">Call options</param>
         Task TapAsync(string selector, FrameTapOptions? options = default);
@@ -1236,8 +1243,8 @@ namespace Microsoft.Playwright
         /// <summary><para>Returns <c>element.textContent</c>.</para></summary>
         /// <param name="selector">
         /// A selector to search for an element. If there are multiple elements satisfying the
-        /// selector, the first will be used. See <a href="./selectors.md">working with selectors</a>
-        /// for more details.
+        /// selector, the first will be used. See <a href="https://playwright.dev/dotnet/docs/selectors">working
+        /// with selectors</a> for more details.
         /// </param>
         /// <param name="options">Call options</param>
         Task<string?> TextContentAsync(string selector, FrameTextContentOptions? options = default);
@@ -1259,8 +1266,8 @@ namespace Microsoft.Playwright
         /// </summary>
         /// <param name="selector">
         /// A selector to search for an element. If there are multiple elements satisfying the
-        /// selector, the first will be used. See <a href="./selectors.md">working with selectors</a>
-        /// for more details.
+        /// selector, the first will be used. See <a href="https://playwright.dev/dotnet/docs/selectors">working
+        /// with selectors</a> for more details.
         /// </param>
         /// <param name="text">A text to type into a focused element.</param>
         /// <param name="options">Call options</param>
@@ -1281,9 +1288,9 @@ namespace Microsoft.Playwright
         /// throws. If the element is already unchecked, this method returns immediately.
         /// </description></item>
         /// <item><description>
-        /// Wait for <a href="./actionability.md">actionability</a> checks on the matched element,
-        /// unless <paramref name="force"/> option is set. If the element is detached during
-        /// the checks, the whole action is retried.
+        /// Wait for <a href="https://playwright.dev/dotnet/docs/actionability">actionability</a>
+        /// checks on the matched element, unless <paramref name="force"/> option is set. If
+        /// the element is detached during the checks, the whole action is retried.
         /// </description></item>
         /// <item><description>Scroll the element into view if needed.</description></item>
         /// <item><description>Use <see cref="IPage.Mouse"/> to click in the center of the element.</description></item>
@@ -1301,8 +1308,8 @@ namespace Microsoft.Playwright
         /// </summary>
         /// <param name="selector">
         /// A selector to search for an element. If there are multiple elements satisfying the
-        /// selector, the first will be used. See <a href="./selectors.md">working with selectors</a>
-        /// for more details.
+        /// selector, the first will be used. See <a href="https://playwright.dev/dotnet/docs/selectors">working
+        /// with selectors</a> for more details.
         /// </param>
         /// <param name="options">Call options</param>
         Task UncheckAsync(string selector, FrameUncheckOptions? options = default);
@@ -1482,8 +1489,8 @@ namespace Microsoft.Playwright
         /// </para>
         /// </remarks>
         /// <param name="selector">
-        /// A selector to query for. See <a href="./selectors.md">working with selectors</a>
-        /// for more details.
+        /// A selector to query for. See <a href="https://playwright.dev/dotnet/docs/selectors">working
+        /// with selectors</a> for more details.
         /// </param>
         /// <param name="options">Call options</param>
         Task<IElementHandle?> WaitForSelectorAsync(string selector, FrameWaitForSelectorOptions? options = default);
@@ -1509,8 +1516,8 @@ namespace Microsoft.Playwright
         /// <param name="url">
         /// A glob pattern, regex pattern or predicate receiving <see cref="URL"/> to match
         /// while waiting for the navigation. Note that if the parameter is a string without
-        /// wilcard characters, the method will wait for navigation to URL that is exactly equal
-        /// to the string.
+        /// wildcard characters, the method will wait for navigation to URL that is exactly
+        /// equal to the string.
         /// </param>
         /// <param name="options">Call options</param>
         Task WaitForURLAsync(string url, FrameWaitForURLOptions? options = default);
@@ -1525,8 +1532,8 @@ namespace Microsoft.Playwright
         /// <param name="url">
         /// A glob pattern, regex pattern or predicate receiving <see cref="URL"/> to match
         /// while waiting for the navigation. Note that if the parameter is a string without
-        /// wilcard characters, the method will wait for navigation to URL that is exactly equal
-        /// to the string.
+        /// wildcard characters, the method will wait for navigation to URL that is exactly
+        /// equal to the string.
         /// </param>
         /// <param name="options">Call options</param>
         Task WaitForURLAsync(Regex url, FrameWaitForURLOptions? options = default);
@@ -1541,8 +1548,8 @@ namespace Microsoft.Playwright
         /// <param name="url">
         /// A glob pattern, regex pattern or predicate receiving <see cref="URL"/> to match
         /// while waiting for the navigation. Note that if the parameter is a string without
-        /// wilcard characters, the method will wait for navigation to URL that is exactly equal
-        /// to the string.
+        /// wildcard characters, the method will wait for navigation to URL that is exactly
+        /// equal to the string.
         /// </param>
         /// <param name="options">Call options</param>
         Task WaitForURLAsync(Func<string, bool> url, FrameWaitForURLOptions? options = default);

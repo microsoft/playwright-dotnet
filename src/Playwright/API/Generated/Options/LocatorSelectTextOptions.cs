@@ -56,8 +56,8 @@ namespace Microsoft.Playwright
 
         /// <summary>
         /// <para>
-        /// Whether to bypass the <a href="./actionability.md">actionability</a> checks. Defaults
-        /// to <c>false</c>.
+        /// Whether to bypass the <a href="https://playwright.dev/dotnet/docs/actionability">actionability</a>
+        /// checks. Defaults to <c>false</c>.
         /// </para>
         /// </summary>
         [JsonPropertyName("force")]

@@ -51,10 +51,12 @@ namespace Microsoft.Playwright
             }
 
             Animations = clone.Animations;
+            Caret = clone.Caret;
             Mask = clone.Mask;
             OmitBackground = clone.OmitBackground;
             Path = clone.Path;
             Quality = clone.Quality;
+            Scale = clone.Scale;
             Timeout = clone.Timeout;
             Type = clone.Type;
         }
@@ -74,9 +76,19 @@ namespace Microsoft.Playwright
         /// screenshot.
         /// </description></item>
         /// </list>
+        /// <para>Defaults to <c>"allow"</c> that leaves animations untouched.</para>
         /// </summary>
         [JsonPropertyName("animations")]
         public ScreenshotAnimations? Animations { get; set; }
+
+        /// <summary>
+        /// <para>
+        /// When set to <c>"hide"</c>, screenshot will hide text caret. When set to <c>"initial"</c>,
+        /// text caret behavior will not be changed.  Defaults to <c>"hide"</c>.
+        /// </para>
+        /// </summary>
+        [JsonPropertyName("caret")]
+        public ScreenshotCaret? Caret { get; set; }
 
         /// <summary>
         /// <para>
@@ -111,6 +123,17 @@ namespace Microsoft.Playwright
         /// <summary><para>The quality of the image, between 0-100. Not applicable to <c>png</c> images.</para></summary>
         [JsonPropertyName("quality")]
         public int? Quality { get; set; }
+
+        /// <summary>
+        /// <para>
+        /// When set to <c>"css"</c>, screenshot will have a single pixel per each css pixel
+        /// on the page. For high-dpi devices, this will keep screenshots small. Using <c>"device"</c>
+        /// option will produce a single pixel per each device pixel, so screenhots of high-dpi
+        /// devices will be twice as large or even larger. Defaults to <c>"device"</c>.
+        /// </para>
+        /// </summary>
+        [JsonPropertyName("scale")]
+        public ScreenshotScale? Scale { get; set; }
 
         /// <summary>
         /// <para>

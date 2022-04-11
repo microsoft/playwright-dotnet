@@ -102,7 +102,7 @@ namespace Microsoft.Playwright
         /// <code>
         /// await page.RouteAsync("**/*", route =&gt; route.FulfillAsync(<br/>
         ///     status: 404,<br/>
-        ///     contentType: "text/plain", <br/>
+        ///     contentType: "text/plain",<br/>
         ///     body: "Not Found!"));
         /// </code>
         /// <para>An example of serving static file:</para>

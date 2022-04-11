@@ -596,6 +596,9 @@ namespace Microsoft.Playwright.Core
                 type: options.Type,
                 quality: options.Quality,
                 mask: options.Mask,
+                animations: options.Animations,
+                caret: options.Caret,
+                scale: options.Scale,
                 timeout: options.Timeout).ConfigureAwait(false);
 
             if (!string.IsNullOrEmpty(options.Path))

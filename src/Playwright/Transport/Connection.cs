@@ -372,25 +372,7 @@ namespace Microsoft.Playwright.Transport
                 return new TimeoutException(error.Message);
             }
 
-            if (error.Message.Contains("Browser closed") || error.Message.Contains("Target closed") || error.Message.Contains("The page has been closed."))
-            {
-                return new PlaywrightException(error.Message);
-            }
-
-            if (error.Message.Contains("Navigation failed because"))
-            {
-                return new PlaywrightException(error.Message);
-            }
-
-            string message = error.Message
-                .Replace(
-                    "Try re-installing playwright with \"npm install playwright\"",
-                    "Try re-installing the browsers running `playwright.cmd install` in windows or `./playwright.sh install` in MacOS or Linux.")
-                .Replace(
-                    "use DEBUG=pw:api environment variable and rerun",
-                    "pass `debug: \"pw:api\"` to LaunchAsync");
-
-            return new PlaywrightException(message);
+            return new PlaywrightException(error.Message);
         }
 
         private void Dispose(bool disposing)
