@@ -326,6 +326,9 @@ namespace Microsoft.Playwright.Transport
                 case ChannelOwnerType.Stream:
                     result = new Stream(parent, guid);
                     break;
+                case ChannelOwnerType.WritableStream:
+                    result = new WritableStream(parent, guid);
+                    break;
                 case ChannelOwnerType.Tracing:
                     result = new Tracing(parent, guid);
                     break;

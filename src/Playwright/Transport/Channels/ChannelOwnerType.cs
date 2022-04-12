@@ -105,6 +105,9 @@ namespace Microsoft.Playwright.Transport.Channels
         [EnumMember(Value = "stream")]
         Stream,
 
+        [EnumMember(Value = "WritableStream")]
+        WritableStream,
+
         [EnumMember(Value = "tracing")]
         Tracing,
 

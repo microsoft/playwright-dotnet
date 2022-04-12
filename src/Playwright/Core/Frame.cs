@@ -359,14 +359,27 @@ namespace Microsoft.Playwright.Core
         public Task SetInputFilesAsync(string selector, string files, FrameSetInputFilesOptions options = default)
             => SetInputFilesAsync(selector, new[] { files }, options);
 
-        public Task SetInputFilesAsync(string selector, IEnumerable<string> files, FrameSetInputFilesOptions options = default)
-            => SetInputFilesAsync(selector, files.Select(x => x.ToFilePayload()), options);
+        public async Task SetInputFilesAsync(string selector, IEnumerable<string> files, FrameSetInputFilesOptions options = default)
+        {
+            var converted = await SetInputFilesHelpers.ConvertInputFilesAsync(files, (BrowserContext)Page.Context).ConfigureAwait(false);
+            if (converted.Files != null)
+            {
+                await _channel.SetInputFilesAsync(selector, converted.Files, options?.NoWaitAfter, options?.Timeout, options?.Strict).ConfigureAwait(false);
+            }
+            else
+            {
+                await _channel.SetInputFilePathsAsync(selector, converted?.LocalPaths, converted?.Streams, options?.NoWaitAfter, options?.Timeout, options?.Strict).ConfigureAwait(false);
+            }
+        }
 
         public Task SetInputFilesAsync(string selector, FilePayload files, FrameSetInputFilesOptions options = default)
             => SetInputFilesAsync(selector, new[] { files }, options);
 
-        public Task SetInputFilesAsync(string selector, IEnumerable<FilePayload> files, FrameSetInputFilesOptions options = default)
-            => _channel.SetInputFilesAsync(selector, files, noWaitAfter: options?.NoWaitAfter, timeout: options?.Timeout, options?.Strict);
+        public async Task SetInputFilesAsync(string selector, IEnumerable<FilePayload> files, FrameSetInputFilesOptions options = default)
+        {
+            var converted = SetInputFilesHelpers.ConvertInputFiles(files);
+            await _channel.SetInputFilesAsync(selector, converted.Files, noWaitAfter: options?.NoWaitAfter, timeout: options?.Timeout, options?.Strict).ConfigureAwait(false);
+        }
 
         public Task ClickAsync(string selector, FrameClickOptions options = default)
             => _channel.ClickAsync(

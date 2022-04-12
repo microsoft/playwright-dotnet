@@ -199,6 +199,7 @@ namespace Microsoft.Playwright.Tests.TestServer
                     {
                         options.Listen(IPAddress.Loopback, port);
                     }
+                    options.Limits.MaxRequestBodySize = long.MaxValue;
                 })
                 .UseContentRoot(contentRoot)
                 .Build();

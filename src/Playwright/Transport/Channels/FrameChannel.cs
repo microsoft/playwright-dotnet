@@ -546,18 +546,33 @@ namespace Microsoft.Playwright.Transport.Channels
             return (await Connection.SendMessageToServerAsync(Guid, "innerText", args).ConfigureAwait(false))?.GetProperty("value").ToString();
         }
 
-        internal Task SetInputFilesAsync(string selector, IEnumerable<FilePayload> files, bool? noWaitAfter, float? timeout, bool? strict)
+        internal Task SetInputFilesAsync(string selector, IEnumerable<InputFilesList> files, bool? noWaitAfter, float? timeout, bool? strict)
         {
             var args = new Dictionary<string, object>
             {
                 ["selector"] = selector,
-                ["files"] = files.ConvertToProtocol(),
+                ["files"] = files,
                 ["noWaitAfter"] = noWaitAfter,
                 ["timeout"] = timeout,
                 ["strict"] = strict,
             };
 
             return Connection.SendMessageToServerAsync(Guid, "setInputFiles", args);
+        }
+
+        internal Task SetInputFilePathsAsync(string selector, IEnumerable<string> localPaths, IEnumerable<WritableStreamChannel> streams, bool? noWaitAfter, float? timeout, bool? strict)
+        {
+            var args = new Dictionary<string, object>
+            {
+                ["selector"] = selector,
+                ["localPaths"] = localPaths,
+                ["streams"] = streams,
+                ["timeout"] = timeout,
+                ["noWaitAfter"] = noWaitAfter,
+                ["strict"] = strict,
+            };
+
+            return Connection.SendMessageToServerAsync(Guid, "setInputFilePaths", args);
         }
 
         internal async Task<string> TextContentAsync(string selector, float? timeout, bool? strict)

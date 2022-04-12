@@ -148,14 +148,32 @@ namespace Microsoft.Playwright.Core
         public Task SetInputFilesAsync(string files, ElementHandleSetInputFilesOptions options = default)
             => SetInputFilesAsync(new[] { files }, options);
 
-        public Task SetInputFilesAsync(IEnumerable<string> files, ElementHandleSetInputFilesOptions options = default)
-            => SetInputFilesAsync(files.Select(f => f.ToFilePayload()), options);
+        public async Task SetInputFilesAsync(IEnumerable<string> files, ElementHandleSetInputFilesOptions options = default)
+        {
+            var frame = await OwnerFrameAsync().ConfigureAwait(false);
+            if (frame == null)
+            {
+                throw new PlaywrightException("Cannot set input files to detached element.");
+            }
+            var converted = await SetInputFilesHelpers.ConvertInputFilesAsync(files, (BrowserContext)frame.Page.Context).ConfigureAwait(false);
+            if (converted.Files != null)
+            {
+                await _channel.SetInputFilesAsync(converted.Files, options?.NoWaitAfter, options?.Timeout).ConfigureAwait(false);
+            }
+            else
+            {
+                await _channel.SetInputFilePathsAsync(converted?.LocalPaths, converted?.Streams, options?.NoWaitAfter, options?.Timeout).ConfigureAwait(false);
+            }
+        }
 
         public Task SetInputFilesAsync(FilePayload files, ElementHandleSetInputFilesOptions options = default)
             => SetInputFilesAsync(new[] { files }, options);
 
-        public Task SetInputFilesAsync(IEnumerable<FilePayload> files, ElementHandleSetInputFilesOptions options = default)
-            => _channel.SetInputFilesAsync(files, noWaitAfter: options?.NoWaitAfter, timeout: options?.Timeout);
+        public async Task SetInputFilesAsync(IEnumerable<FilePayload> files, ElementHandleSetInputFilesOptions options = default)
+        {
+            var converted = SetInputFilesHelpers.ConvertInputFiles(files);
+            await _channel.SetInputFilesAsync(converted.Files, options?.NoWaitAfter, options?.Timeout).ConfigureAwait(false);
+        }
 
         public async Task<IElementHandle> QuerySelectorAsync(string selector)
             => (await _channel.QuerySelectorAsync(selector).ConfigureAwait(false))?.Object;

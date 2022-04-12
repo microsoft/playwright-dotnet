@@ -22,29 +22,29 @@
  * SOFTWARE.
  */
 
-using System;
 using System.Collections.Generic;
-using System.Linq;
+using System.Threading.Tasks;
+using Microsoft.Playwright.Core;
 
-namespace Microsoft.Playwright.Helpers
+namespace Microsoft.Playwright.Transport.Channels
 {
-    internal static class FilePayloadHelpers
+    internal class WritableStreamChannel : Channel<WritableStream>
     {
-        private const int SizeLimitInBytes = 50 * 1024 * 1024;
-
-        public static object ConvertToProtocol(this IEnumerable<FilePayload> files)
+        public WritableStreamChannel(string guid, Connection connection, WritableStream owner) : base(guid, connection, owner)
         {
-            var hasLargeBuffer = files.Any(f => f.Buffer?.Length > SizeLimitInBytes);
-            if (hasLargeBuffer)
-            {
-                throw new NotSupportedException("Cannot set buffer larger than 50Mb.");
-            }
-            return files.Select(f => new
-            {
-                f.Name,
-                Buffer = Convert.ToBase64String(f.Buffer),
-                f.MimeType,
-            });
         }
+
+        internal async Task WriteAsync(string binary)
+        {
+            await Connection.SendMessageToServerAsync(
+                Guid,
+                "write",
+                new Dictionary<string, object>
+                {
+                    ["binary"] = binary,
+                }).ConfigureAwait(false);
+        }
+
+        internal Task CloseAsync() => Connection.SendMessageToServerAsync(Guid, "close", null);
     }
 }

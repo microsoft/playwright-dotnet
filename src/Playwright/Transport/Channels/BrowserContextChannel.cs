@@ -241,5 +241,14 @@ namespace Microsoft.Playwright.Transport.Channels
             "harExport").ConfigureAwait(false);
             return result.GetObject<Artifact>("artifact", Connection);
         }
+
+        internal Task<WritableStream> CreateTempFileAsync(string name)
+        {
+            var channelArgs = new Dictionary<string, object>
+            {
+                { "name", name },
+            };
+            return Connection.SendMessageToServerAsync<WritableStream>(Guid, "createTempFile", channelArgs);
+        }
     }
 }
