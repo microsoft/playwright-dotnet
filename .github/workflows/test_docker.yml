@@ -5,13 +5,17 @@ on:
       - '.github/workflows/test_docker.yml'
       - 'src/Common/Version.props'
       - '**/*.csproj'
+      - '**/*Dockerfile.*'
     branches:
       - main
+      - release-*
   pull_request:
     paths:
       - '.github/workflows/test_docker.yml'
+      - '**/*Dockerfile.*'
     branches:
       - main
+      - release-*
 jobs:
   build:
     timeout-minutes: 60
