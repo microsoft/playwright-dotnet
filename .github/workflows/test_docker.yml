@@ -38,6 +38,6 @@ jobs:
     - name: Test
       run: |
         CONTAINER_ID="$(docker run --rm -v $(pwd):/root/playwright --name playwright-docker-test --workdir /root/playwright/ -d -t playwright-dotnet:localbuild-focal /bin/bash)"
-        docker exec -e BROWSER=chromium "${CONTAINER_ID}" xvfb-run dotnet test ./src/Playwright.Tests/Playwright.Tests.csproj -c Debug -f net6.0
-        docker exec -e BROWSER=firefox "${CONTAINER_ID}" xvfb-run dotnet test ./src/Playwright.Tests/Playwright.Tests.csproj -c Debug -f net6.0
-        docker exec -e BROWSER=webkit "${CONTAINER_ID}" xvfb-run dotnet test ./src/Playwright.Tests/Playwright.Tests.csproj -c Debug -f net6.0
+        docker exec -e BROWSER=chromium "${CONTAINER_ID}" xvfb-run dotnet test ./src/Playwright.Tests/Playwright.Tests.csproj -c Debug -f net6.0 --logger:"console;verbosity=detailed"
+        docker exec -e BROWSER=firefox "${CONTAINER_ID}" xvfb-run dotnet test ./src/Playwright.Tests/Playwright.Tests.csproj -c Debug -f net6.0 --logger:"console;verbosity=detailed"
+        docker exec -e BROWSER=webkit "${CONTAINER_ID}" xvfb-run dotnet test ./src/Playwright.Tests/Playwright.Tests.csproj -c Debug -f net6.0 --logger:"console;verbosity=detailed"

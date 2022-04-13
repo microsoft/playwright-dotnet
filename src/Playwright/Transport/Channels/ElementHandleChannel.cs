@@ -29,6 +29,7 @@ using System.Text.Json;
 using System.Threading.Tasks;
 using Microsoft.Playwright.Core;
 using Microsoft.Playwright.Helpers;
+using Microsoft.Playwright.Transport.Protocol;
 
 namespace Microsoft.Playwright.Transport.Channels
 {
@@ -268,16 +269,29 @@ namespace Microsoft.Playwright.Transport.Channels
             return Connection.SendMessageToServerAsync<ElementHandleChannel>(Guid, "dispatchEvent", args);
         }
 
-        internal Task SetInputFilesAsync(IEnumerable<FilePayload> files, bool? noWaitAfter, float? timeout)
+        internal Task SetInputFilesAsync(IEnumerable<InputFilesList> files, bool? noWaitAfter, float? timeout)
         {
             var args = new Dictionary<string, object>
             {
-                ["files"] = files.ConvertToProtocol(),
+                ["files"] = files,
                 ["timeout"] = timeout,
                 ["noWaitAfter"] = noWaitAfter,
             };
 
             return Connection.SendMessageToServerAsync(Guid, "setInputFiles", args);
+        }
+
+        internal Task SetInputFilePathsAsync(IEnumerable<string> localPaths, IEnumerable<WritableStream> streams, bool? noWaitAfter, float? timeout)
+        {
+            var args = new Dictionary<string, object>
+            {
+                ["localPaths"] = localPaths,
+                ["streams"] = streams,
+                ["timeout"] = timeout,
+                ["noWaitAfter"] = noWaitAfter,
+            };
+
+            return Connection.SendMessageToServerAsync(Guid, "setInputFilePaths", args);
         }
 
         internal async Task<string> GetAttributeAsync(string name)

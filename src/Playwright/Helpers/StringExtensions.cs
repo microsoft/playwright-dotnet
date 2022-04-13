@@ -28,7 +28,6 @@ using System.IO;
 using System.Linq;
 using System.Text.Encodings.Web;
 using System.Text.Json;
-using System.Text.Json.Serialization;
 using System.Text.RegularExpressions;
 using System.Text.Unicode;
 
@@ -731,18 +730,6 @@ namespace Microsoft.Playwright.Helpers
 
         internal static string MimeType(this string file)
             => _mappings.TryGetValue(new FileInfo(file).Extension, out string mime) ? mime : "application/octet-stream";
-
-        internal static FilePayload ToFilePayload(this string file)
-        {
-            var fileInfo = new FileInfo(file);
-
-            return new()
-            {
-                Name = fileInfo.Name,
-                Buffer = File.ReadAllBytes(file),
-                MimeType = file.MimeType(),
-            };
-        }
 
         private static string GetExtension(string path)
         {

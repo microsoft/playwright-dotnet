@@ -58,6 +58,9 @@ namespace Microsoft.Playwright.Transport
             DefaultJsonSerializerOptions.Converters.Add(new ChannelOwnerToGuidConverter<JSHandle>(this));
             DefaultJsonSerializerOptions.Converters.Add(new ChannelOwnerToGuidConverter<ElementHandle>(this));
             DefaultJsonSerializerOptions.Converters.Add(new ChannelOwnerToGuidConverter<IChannelOwner>(this));
+
+            // Workaround for https://github.com/dotnet/runtime/issues/46522
+            DefaultJsonSerializerOptions.Converters.Add(new ChannelOwnerListToGuidListConverter<WritableStream>(this));
         }
 
         /// <inheritdoc cref="IDisposable.Dispose"/>
@@ -325,6 +328,9 @@ namespace Microsoft.Playwright.Transport
                     break;
                 case ChannelOwnerType.Stream:
                     result = new Stream(parent, guid);
+                    break;
+                case ChannelOwnerType.WritableStream:
+                    result = new WritableStream(parent, guid);
                     break;
                 case ChannelOwnerType.Tracing:
                     result = new Tracing(parent, guid);

@@ -35,7 +35,9 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Http.Features;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace Microsoft.Playwright.Tests.TestServer
 {
@@ -102,6 +104,7 @@ namespace Microsoft.Playwright.Tests.TestServer
 #if NETCOREAPP
                     .UseWebSockets()
 #endif
+                    .UseDeveloperExceptionPage()
                     .Use(async (context, next) =>
                     {
                         RequestReceived?.Invoke(this, new() { Request = context.Request });
@@ -199,8 +202,16 @@ namespace Microsoft.Playwright.Tests.TestServer
                     {
                         options.Listen(IPAddress.Loopback, port);
                     }
+                    options.Limits.MaxRequestBodySize = int.MaxValue;
                 })
                 .UseContentRoot(contentRoot)
+                .ConfigureServices((builder, services) =>
+                {
+                    services.Configure<FormOptions>(o =>
+                    {
+                        o.MultipartBodyLengthLimit = int.MaxValue;
+                    });
+                })
                 .Build();
         }
 

@@ -358,5 +358,39 @@ namespace Microsoft.Playwright.Tests
             );
             Assert.True(fileChooser.IsMultiple);
         }
+
+        [PlaywrightTest("page-set-input-files.spec.ts", "should upload large file")]
+        [Skip(SkipAttribute.Targets.Firefox, SkipAttribute.Targets.Webkit)]
+        public async Task ShouldUploadLargeFile()
+        {
+            await Page.GotoAsync(Server.Prefix + "/input/fileupload.html");
+            using var tmpDir = new TempDirectory();
+            var filePath = Path.Combine(tmpDir.Path, "200MB");
+            using (var stream = File.OpenWrite(filePath))
+            {
+                var str = new string('a', 4 * 1024);
+                for (var i = 0; i < 50 * 1024; i++)
+                {
+                    await stream.WriteAsync(Encoding.UTF8.GetBytes(str));
+                }
+            }
+            var input = Page.Locator("input[type=file]");
+            var events = await input.EvaluateHandleAsync(@"e => {
+                const events = [];
+                e.addEventListener('input', () => events.push('input'));
+                e.addEventListener('change', () => events.push('change'));
+                return events;
+            }");
+            await input.SetInputFilesAsync(filePath);
+            Assert.AreEqual(await input.EvaluateAsync<string>("e => e.files[0].name"), "200MB");
+            Assert.AreEqual(await events.EvaluateAsync<string[]>("e => e"), new[] { "input", "change" });
+
+            var (file0Name, file0Size) = await TaskUtils.WhenAll(
+               Server.WaitForRequest("/upload", request => (request.Form.Files[0].FileName, request.Form.Files[0].Length)),
+               Page.ClickAsync("input[type=submit]")
+            );
+            Assert.AreEqual("200MB", file0Name);
+            Assert.AreEqual(200 * 1024 * 1024, file0Size);
+        }
     }
 }
