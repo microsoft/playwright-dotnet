@@ -281,7 +281,7 @@ namespace Microsoft.Playwright.Transport.Channels
             return Connection.SendMessageToServerAsync(Guid, "setInputFiles", args);
         }
 
-        internal Task SetInputFilePathsAsync(IEnumerable<string> localPaths, IEnumerable<WritableStreamChannel> streams, bool? noWaitAfter, float? timeout)
+        internal Task SetInputFilePathsAsync(IEnumerable<string> localPaths, IEnumerable<WritableStream> streams, bool? noWaitAfter, float? timeout)
         {
             var args = new Dictionary<string, object>
             {

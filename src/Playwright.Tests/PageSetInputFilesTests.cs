@@ -360,6 +360,7 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-set-input-files.spec.ts", "should upload large file")]
+        [Skip(SkipAttribute.Targets.Firefox, SkipAttribute.Targets.Webkit)]
         public async Task ShouldUploadLargeFile()
         {
             await Page.GotoAsync(Server.Prefix + "/input/fileupload.html");
@@ -384,18 +385,12 @@ namespace Microsoft.Playwright.Tests
             Assert.AreEqual(await input.EvaluateAsync<string>("e => e.files[0].name"), "200MB");
             Assert.AreEqual(await events.EvaluateAsync<string[]>("e => e"), new[] { "input", "change" });
 
-            Server.SetRoute("/upload", context =>
-            {
-                Console.WriteLine("got some", context.Request.Form.Count);
-                return Task.CompletedTask;
-            });
-
-            var (serverRequest, foo) = await TaskUtils.WhenAll(
-               Server.WaitForRequest("/upload", request => (request.Form.Files[0].Name, request.Form.Files[0].Length)),
+            var (file0Name, file0Size) = await TaskUtils.WhenAll(
+               Server.WaitForRequest("/upload", request => (request.Form.Files[0].FileName, request.Form.Files[0].Length)),
                Page.ClickAsync("input[type=submit]")
             );
-            Assert.AreEqual(serverRequest, "200MB");
-            Assert.AreEqual(foo, 200 * 1024 * 1024);
+            Assert.AreEqual("200MB", file0Name);
+            Assert.AreEqual(200 * 1024 * 1024, file0Size);
         }
     }
 }

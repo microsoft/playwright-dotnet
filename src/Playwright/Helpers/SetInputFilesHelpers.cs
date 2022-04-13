@@ -50,7 +50,7 @@ namespace Microsoft.Playwright.Helpers
                         await fileStream.CopyToAsync(stream.WritableStreamImpl).ConfigureAwait(false);
                         return stream;
                     }).ConfigureAwait(false);
-                    return new() { Streams = streams.Select(s => s.Channel).ToArray() };
+                    return new() { Streams = streams.ToArray() };
                 }
                 return new() { LocalPaths = files.ToArray() };
             }

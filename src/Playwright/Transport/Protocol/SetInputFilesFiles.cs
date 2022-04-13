@@ -23,7 +23,7 @@
  */
 
 using System.Collections.Generic;
-using Microsoft.Playwright.Transport.Channels;
+using Microsoft.Playwright.Core;
 
 namespace Microsoft.Playwright.Transport.Protocol
 {
@@ -33,6 +33,6 @@ namespace Microsoft.Playwright.Transport.Protocol
 
         public string[] LocalPaths { get; set; }
 
-        public WritableStreamChannel[] Streams { get; set; }
+        public WritableStream[] Streams { get; set; }
     }
 }

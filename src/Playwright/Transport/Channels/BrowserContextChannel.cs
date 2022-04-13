@@ -242,13 +242,14 @@ namespace Microsoft.Playwright.Transport.Channels
             return result.GetObject<Artifact>("artifact", Connection);
         }
 
-        internal Task<WritableStream> CreateTempFileAsync(string name)
+        internal async Task<WritableStream> CreateTempFileAsync(string name)
         {
             var channelArgs = new Dictionary<string, object>
             {
                 { "name", name },
             };
-            return Connection.SendMessageToServerAsync<WritableStream>(Guid, "createTempFile", channelArgs);
+            var result = await Connection.SendMessageToServerAsync(Guid, "createTempFile", channelArgs).ConfigureAwait(false);
+            return result.GetObject<WritableStream>("writableStream", Connection);
         }
     }
 }
