@@ -52,7 +52,7 @@ namespace Microsoft.Playwright.Helpers
                     }).ConfigureAwait(false);
                     return new() { Streams = streams.ToArray() };
                 }
-                return new() { LocalPaths = files.ToArray() };
+                return new() { LocalPaths = files.Select(f => Path.GetFullPath(f)).ToArray() };
             }
             return new()
             {
