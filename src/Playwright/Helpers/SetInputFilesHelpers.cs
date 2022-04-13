@@ -46,7 +46,8 @@ namespace Microsoft.Playwright.Helpers
                     var streams = await files.SelectAsync(async f =>
                     {
                         var stream = await context.Channel.CreateTempFileAsync(Path.GetFileName(f)).ConfigureAwait(false);
-                        await File.OpenRead(f).CopyToAsync(stream.WritableStreamImpl).ConfigureAwait(false);
+                        using var fileStream = File.OpenRead(f);
+                        await fileStream.CopyToAsync(stream.WritableStreamImpl).ConfigureAwait(false);
                         return stream;
                     }).ConfigureAwait(false);
                     return new() { Streams = streams.Select(s => s.Channel).ToArray() };
