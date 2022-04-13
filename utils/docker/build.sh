@@ -23,6 +23,15 @@ function cleanup() {
 trap "cleanup; cd $(pwd -P)" EXIT
 cd "$(dirname "$0")"
 
+# .NET internally has two sources when we install a tool with --add-source
+# so our local version needs to be higher that it gets priority over the remote one.
+# Also it should not include any pre-release versions (include next).
+xml_file_path="../../src/Common/Version.props"
+xml_file_contents=$(cat "${xml_file_path}")
+xml_file_contents=$(echo "${xml_file_contents}" | sed "s|<AssemblyVersion>.*</AssemblyVersion>|<AssemblyVersion>1.99.99</AssemblyVersion>|")
+xml_file_contents=$(echo "${xml_file_contents}" | sed "s|<PackageVersion>.*</PackageVersion>|<PackageVersion>1.99.99</PackageVersion>|")
+echo "${xml_file_contents}" > "${xml_file_path}"
+
 mkdir dist
 dotnet build ../../src/Playwright
 dotnet pack ../../src/Playwright -o dist/
