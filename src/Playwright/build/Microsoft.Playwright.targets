@@ -35,25 +35,13 @@
         <Visible>false</Visible>
         <Pack>false</Pack>
       </Content>
+      <Content Include="$(MSBuildThisFileDirectory)playwright.ps1">
+        <Link>playwright.ps1</Link>
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        <PublishState>Included</PublishState>
+        <Visible>false</Visible>
+        <Pack>false</Pack>
+      </Content>
     </ItemGroup>
-  </Target>
-  <Target Name="CopyRuntimeConfigToOutput" AfterTargets="CopyFilesToOutputDirectory">
-    <ItemGroup Condition="Exists('$(MSBuildThisFileDirectory)..\lib\$(TargetFramework)\Microsoft.Playwright.runtimeconfig.json')">
-      <_CopyRuntimeConfigItems Include="$(MSBuildThisFileDirectory)..\lib\$(TargetFramework)\Microsoft.Playwright.runtimeconfig.json" />
-    </ItemGroup>
-    <Message Text="[Playwright] Copying config from $(MSBuildThisFileDirectory)..\lib\$(TargetFramework) to $(OutDir)..." />
-    <Copy SourceFiles="@(_CopyRuntimeConfigItems)" DestinationFiles="@(_CopyRuntimeConfigItems->'$(OutDir)\%(RecursiveDir)%(Filename)%(Extension)')" SkipUnchangedFiles="true"/>
-  </Target>
-  <Target Name="CopyPlaywrightShellToOutput" AfterTargets="CopyFilesToOutputDirectory">
-    <ItemGroup>
-      <_CopyItemsShell Include="$(MSBuildThisFileDirectory)playwright.ps1" />
-    </ItemGroup>
-    <Message Text="[Playwright] Copying shell script from $(MSBuildThisFileDirectory) to $(OutputPath)..." />
-    <Copy SourceFiles="@(_CopyItemsShell)" DestinationFiles="@(_CopyItemsShell->'$(OutDir)\%(RecursiveDir)%(Filename)%(Extension)')" SkipUnchangedFiles="true"/>
-  </Target>
-  <Target Name="PlaywrightBuildCleanup" AfterTargets="Clean">
-    <Message Text="[Playwright] Cleaning up .playwright folder and artifacts..."/>
-    <RemoveDir Directories="$(OutDir)\.playwright" Condition="Exists('$(OutDir)\.playwright')"/>
-    <Delete Files="$(OutDir)\playwright.ps1" Condition="Exists('$(OutDir)\playwright.ps1')" />
   </Target>
 </Project>
