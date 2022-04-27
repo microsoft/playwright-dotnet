@@ -66,8 +66,8 @@ namespace Microsoft.Playwright
         /// <summary>
         /// <para>
         /// Sets the value of the file input this chooser is associated with. If some of the
-        /// <c>filePaths</c> are relative paths, then they are resolved relative to the the
-        /// current working directory. For empty array, clears the selected files.
+        /// <c>filePaths</c> are relative paths, then they are resolved relative to the current
+        /// working directory. For empty array, clears the selected files.
         /// </para>
         /// </summary>
         /// <param name="files">
@@ -78,8 +78,8 @@ namespace Microsoft.Playwright
         /// <summary>
         /// <para>
         /// Sets the value of the file input this chooser is associated with. If some of the
-        /// <c>filePaths</c> are relative paths, then they are resolved relative to the the
-        /// current working directory. For empty array, clears the selected files.
+        /// <c>filePaths</c> are relative paths, then they are resolved relative to the current
+        /// working directory. For empty array, clears the selected files.
         /// </para>
         /// </summary>
         /// <param name="files">
@@ -90,8 +90,8 @@ namespace Microsoft.Playwright
         /// <summary>
         /// <para>
         /// Sets the value of the file input this chooser is associated with. If some of the
-        /// <c>filePaths</c> are relative paths, then they are resolved relative to the the
-        /// current working directory. For empty array, clears the selected files.
+        /// <c>filePaths</c> are relative paths, then they are resolved relative to the current
+        /// working directory. For empty array, clears the selected files.
         /// </para>
         /// </summary>
         /// <param name="files">
@@ -102,8 +102,8 @@ namespace Microsoft.Playwright
         /// <summary>
         /// <para>
         /// Sets the value of the file input this chooser is associated with. If some of the
-        /// <c>filePaths</c> are relative paths, then they are resolved relative to the the
-        /// current working directory. For empty array, clears the selected files.
+        /// <c>filePaths</c> are relative paths, then they are resolved relative to the current
+        /// working directory. For empty array, clears the selected files.
         /// </para>
         /// </summary>
         /// <param name="files">

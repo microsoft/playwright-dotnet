@@ -50,15 +50,14 @@ namespace Microsoft.Playwright
     /// using Microsoft.Playwright.NUnit;<br/>
     /// using NUnit.Framework;<br/>
     /// <br/>
-    /// namespace Playwright.TestingHarnessTest.NUnit<br/>
+    /// namespace Playwright.TestingHarnessTest.NUnit;<br/>
+    /// <br/>
+    /// public class ExampleTests : PageTest<br/>
     /// {<br/>
-    ///     public class ExampleTests : PageTest<br/>
+    ///     [Test]<br/>
+    ///     public async Task StatusBecomesSubmitted()<br/>
     ///     {<br/>
-    ///         [Test]<br/>
-    ///         public async Task StatusBecomesSubmitted()<br/>
-    ///         {<br/>
-    ///             await Expect(Page.Locator(".status")).ToHaveTextAsync("Submitted");<br/>
-    ///         }<br/>
+    ///         await Expect(Page.Locator(".status")).ToHaveTextAsync("Submitted");<br/>
     ///     }<br/>
     /// }
     /// </code>

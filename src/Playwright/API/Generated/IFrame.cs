@@ -623,7 +623,12 @@ namespace Microsoft.Playwright
         /// <summary>
         /// <para>
         /// Returns <c>input.value</c> for the selected <c>&lt;input&gt;</c> or <c>&lt;textarea&gt;</c>
-        /// or <c>&lt;select&gt;</c> element. Throws for non-input elements.
+        /// or <c>&lt;select&gt;</c> element.
+        /// </para>
+        /// <para>
+        /// Throws for non-input elements. However, if the element is inside the <c>&lt;label&gt;</c>
+        /// element that has an associated <a href="https://developer.mozilla.org/en-US/docs/Web/API/HTMLLabelElement/control">control</a>,
+        /// returns the value of the control.
         /// </para>
         /// </summary>
         /// <param name="selector">
@@ -1113,13 +1118,15 @@ namespace Microsoft.Playwright
 
         /// <summary>
         /// <para>
-        /// This method expects <paramref name="selector"/> to point to an <a href="https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input">input
-        /// element</a>.
+        /// Sets the value of the file input to these file paths or files. If some of the <c>filePaths</c>
+        /// are relative paths, then they are resolved relative to the current working directory.
+        /// For empty array, clears the selected files.
         /// </para>
         /// <para>
-        /// Sets the value of the file input to these file paths or files. If some of the <c>filePaths</c>
-        /// are relative paths, then they are resolved relative to the the current working directory.
-        /// For empty array, clears the selected files.
+        /// This method expects <paramref name="selector"/> to point to an <a href="https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input">input
+        /// element</a>. However, if the element is inside the <c>&lt;label&gt;</c> element
+        /// that has an associated <a href="https://developer.mozilla.org/en-US/docs/Web/API/HTMLLabelElement/control">control</a>,
+        /// targets the control instead.
         /// </para>
         /// </summary>
         /// <param name="selector">
@@ -1134,13 +1141,15 @@ namespace Microsoft.Playwright
 
         /// <summary>
         /// <para>
-        /// This method expects <paramref name="selector"/> to point to an <a href="https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input">input
-        /// element</a>.
+        /// Sets the value of the file input to these file paths or files. If some of the <c>filePaths</c>
+        /// are relative paths, then they are resolved relative to the current working directory.
+        /// For empty array, clears the selected files.
         /// </para>
         /// <para>
-        /// Sets the value of the file input to these file paths or files. If some of the <c>filePaths</c>
-        /// are relative paths, then they are resolved relative to the the current working directory.
-        /// For empty array, clears the selected files.
+        /// This method expects <paramref name="selector"/> to point to an <a href="https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input">input
+        /// element</a>. However, if the element is inside the <c>&lt;label&gt;</c> element
+        /// that has an associated <a href="https://developer.mozilla.org/en-US/docs/Web/API/HTMLLabelElement/control">control</a>,
+        /// targets the control instead.
         /// </para>
         /// </summary>
         /// <param name="selector">
@@ -1155,13 +1164,15 @@ namespace Microsoft.Playwright
 
         /// <summary>
         /// <para>
-        /// This method expects <paramref name="selector"/> to point to an <a href="https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input">input
-        /// element</a>.
+        /// Sets the value of the file input to these file paths or files. If some of the <c>filePaths</c>
+        /// are relative paths, then they are resolved relative to the current working directory.
+        /// For empty array, clears the selected files.
         /// </para>
         /// <para>
-        /// Sets the value of the file input to these file paths or files. If some of the <c>filePaths</c>
-        /// are relative paths, then they are resolved relative to the the current working directory.
-        /// For empty array, clears the selected files.
+        /// This method expects <paramref name="selector"/> to point to an <a href="https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input">input
+        /// element</a>. However, if the element is inside the <c>&lt;label&gt;</c> element
+        /// that has an associated <a href="https://developer.mozilla.org/en-US/docs/Web/API/HTMLLabelElement/control">control</a>,
+        /// targets the control instead.
         /// </para>
         /// </summary>
         /// <param name="selector">
@@ -1176,13 +1187,15 @@ namespace Microsoft.Playwright
 
         /// <summary>
         /// <para>
-        /// This method expects <paramref name="selector"/> to point to an <a href="https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input">input
-        /// element</a>.
+        /// Sets the value of the file input to these file paths or files. If some of the <c>filePaths</c>
+        /// are relative paths, then they are resolved relative to the current working directory.
+        /// For empty array, clears the selected files.
         /// </para>
         /// <para>
-        /// Sets the value of the file input to these file paths or files. If some of the <c>filePaths</c>
-        /// are relative paths, then they are resolved relative to the the current working directory.
-        /// For empty array, clears the selected files.
+        /// This method expects <paramref name="selector"/> to point to an <a href="https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input">input
+        /// element</a>. However, if the element is inside the <c>&lt;label&gt;</c> element
+        /// that has an associated <a href="https://developer.mozilla.org/en-US/docs/Web/API/HTMLLabelElement/control">control</a>,
+        /// targets the control instead.
         /// </para>
         /// </summary>
         /// <param name="selector">

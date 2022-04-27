@@ -75,18 +75,20 @@ namespace Microsoft.Playwright.Tests
             await TestWaitingAsync(Page, "div => div.style.display = 'block'");
         }
 
-        [PlaywrightTest("elementhandle-scroll-into-view.spec.ts", "should wait for visibility:hidden to become visible")]
+        [PlaywrightTest("elementhandle-scroll-into-view.spec.ts", "should work for visibility:hidden element")]
         public async Task ShouldWaitForVisibilityHiddenToBecomeVisible()
         {
             await Page.SetContentAsync("<div style=\"visibility:hidden\">Hello</div>");
-            await TestWaitingAsync(Page, "div => div.style.visibility = 'visible'");
+            var div = await Page.QuerySelectorAsync("div");
+            await div.ScrollIntoViewIfNeededAsync();
         }
 
-        [PlaywrightTest("elementhandle-scroll-into-view.spec.ts", "should wait for zero-sized element to become visible")]
+        [PlaywrightTest("elementhandle-scroll-into-view.spec.ts", "should work for zero-sized element")]
         public async Task ShouldWaitForZeroSizedElementToBecomeVisible()
         {
             await Page.SetContentAsync("<div style=\"height:0\">Hello</div>");
-            await TestWaitingAsync(Page, "div => div.style.height = '100px'");
+            var div = await Page.QuerySelectorAsync("div");
+            await div.ScrollIntoViewIfNeededAsync();
         }
 
         [PlaywrightTest("elementhandle-scroll-into-view.spec.ts", "should wait for nested display:none to become visible")]
@@ -102,7 +104,7 @@ namespace Microsoft.Playwright.Tests
             await Page.SetContentAsync("<div style=\"display: none\">Hello</div>");
             var div = await Page.QuerySelectorAsync("div");
             var exception = await PlaywrightAssert.ThrowsAsync<TimeoutException>(() => div.ScrollIntoViewIfNeededAsync(new() { Timeout = 3000 }));
-            StringAssert.Contains("element is not visible", exception.Message);
+            StringAssert.Contains("element is not displayed, retrying in 100ms", exception.Message);
         }
 
         private async Task TestWaitingAsync(IPage page, string after)
