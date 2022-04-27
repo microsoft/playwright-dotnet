@@ -51,17 +51,16 @@ namespace Microsoft.Playwright
     /// using Microsoft.Playwright.NUnit;<br/>
     /// using NUnit.Framework;<br/>
     /// <br/>
-    /// namespace PlaywrightTests<br/>
+    /// namespace PlaywrightTests;<br/>
+    /// <br/>
+    /// public class ExampleTests : PageTest<br/>
     /// {<br/>
-    ///     public class ExampleTests : PageTest<br/>
+    ///     [Test]<br/>
+    ///     public async Task NavigatetoLoginPage()<br/>
     ///     {<br/>
-    ///         [Test]<br/>
-    ///         public async Task NavigatetoLoginPage()<br/>
-    ///         {<br/>
-    ///             // ..<br/>
-    ///             await Page.ClickAsync("#login");<br/>
-    ///             await Expect(Page.Locator("div#foobar")).ToHaveURL(new Regex(".*/login"));<br/>
-    ///         }<br/>
+    ///         // ..<br/>
+    ///         await Page.ClickAsync("#login");<br/>
+    ///         await Expect(Page.Locator("div#foobar")).ToHaveURL(new Regex(".*/login"));<br/>
     ///     }<br/>
     /// }
     /// </code>

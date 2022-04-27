@@ -152,5 +152,19 @@ namespace Microsoft.Playwright.Tests.Locator
             });
             Assert.AreEqual(exception.Message, "Inner \"has\" locator must belong to the same frame.");
         }
+
+        [PlaywrightTest("locator-query.spec.ts", "should support locator.that")]
+        public async Task ShouldSupportLocatorThat()
+        {
+            await Page.SetContentAsync("<section><div><span>hello</span></div><div><span>world</span></div></section>");
+            await Expect(Page.Locator("div").That(new() { HasTextString = "hello" })).ToHaveCountAsync(1);
+            await Expect(Page.Locator("div", new() { HasTextString = "hello" }).That(new() { HasTextString = "hello" })).ToHaveCountAsync(1);
+            await Expect(Page.Locator("div", new() { HasTextString = "hello" }).That(new() { HasTextString = "world" })).ToHaveCountAsync(0);
+            await Expect(Page.Locator("section", new() { HasTextString = "hello" }).That(new() { HasTextString = "world" })).ToHaveCountAsync(1);
+            await Expect(Page.Locator("div").That(new() { HasTextString = "hello" }).Locator("span")).ToHaveCountAsync(1);
+            await Expect(Page.Locator("div").That(new() { Has = Page.Locator("span", new() { HasTextString = "world" }) })).ToHaveCountAsync(1);
+            await Expect(Page.Locator("div").That(new() { Has = Page.Locator("span") })).ToHaveCountAsync(2);
+            await Expect(Page.Locator("div").That(new() { Has = Page.Locator("span"), HasTextString = "world" })).ToHaveCountAsync(1);
+        }
     }
 }

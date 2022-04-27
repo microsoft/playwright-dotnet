@@ -46,20 +46,13 @@ namespace Microsoft.Playwright
     /// </para>
     /// <code>
     /// using Microsoft.Playwright;<br/>
-    /// using System.Threading.Tasks;<br/>
     /// <br/>
-    /// class Program<br/>
-    /// {<br/>
-    ///     public static async Task Main()<br/>
-    ///     {<br/>
-    ///         using var playwright = await Playwright.CreateAsync();<br/>
-    ///         var firefox = playwright.Firefox;<br/>
-    ///         var browser = await firefox.LaunchAsync(new BrowserTypeLaunchOptions { Headless = false });<br/>
-    ///         var page = await browser.NewPageAsync();<br/>
-    ///         await page.GotoAsync("https://www.bing.com");<br/>
-    ///         await browser.CloseAsync();<br/>
-    ///     }<br/>
-    /// }
+    /// using var playwright = await Playwright.CreateAsync();<br/>
+    /// var firefox = playwright.Firefox;<br/>
+    /// var browser = await firefox.LaunchAsync(new BrowserTypeLaunchOptions { Headless = false });<br/>
+    /// var page = await browser.NewPageAsync();<br/>
+    /// await page.GotoAsync("https://www.bing.com");<br/>
+    /// await browser.CloseAsync();
     /// </code>
     /// </summary>
     public partial interface IBrowser

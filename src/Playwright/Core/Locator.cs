@@ -312,5 +312,8 @@ namespace Microsoft.Playwright.Core
         }
 
         public Task HighlightAsync() => _frame.HighlightAsync(_selector);
+
+        public ILocator That(LocatorThatOptions options = null) =>
+            new Locator(_frame, _selector, new() { Has = options?.Has, HasTextString = options?.HasTextString, HasTextRegex = options?.HasTextRegex });
     }
 }

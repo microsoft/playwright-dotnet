@@ -51,17 +51,16 @@ namespace Microsoft.Playwright
     /// using Microsoft.Playwright.NUnit;<br/>
     /// using NUnit.Framework;<br/>
     /// <br/>
-    /// namespace PlaywrightTests<br/>
+    /// namespace PlaywrightTests;<br/>
+    /// <br/>
+    /// public class ExampleTests : PageTest<br/>
     /// {<br/>
-    ///     public class ExampleTests : PageTest<br/>
+    ///     [Test]<br/>
+    ///     public async Task StatusBecomesSubmitted()<br/>
     ///     {<br/>
-    ///         [Test]<br/>
-    ///         public async Task StatusBecomesSubmitted()<br/>
-    ///         {<br/>
-    ///             // ..<br/>
-    ///             await Page.ClickAsync("#submit-button");<br/>
-    ///             await Expect(Page.Locator(".status")).ToHaveTextAsync("Submitted");<br/>
-    ///         }<br/>
+    ///         // ..<br/>
+    ///         await Page.ClickAsync("#submit-button");<br/>
+    ///         await Expect(Page.Locator(".status")).ToHaveTextAsync("Submitted");<br/>
     ///     }<br/>
     /// }
     /// </code>
@@ -88,7 +87,14 @@ namespace Microsoft.Playwright
         Task ToBeCheckedAsync(LocatorAssertionsToBeCheckedOptions? options = default);
 
         /// <summary>
-        /// <para>Ensures the <see cref="ILocator"/> points to a disabled element.</para>
+        /// <para>
+        /// Ensures the <see cref="ILocator"/> points to a disabled element. Element is disabled
+        /// if it has "disabled" attribute or is disabled via <a href="https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/Attributes/aria-disabled">'aria-disabled'</a>.
+        /// Note that only native control elements such as HTML <c>button</c>, <c>input</c>,
+        /// <c>select</c>, <c>textarea</c>, <c>option</c>, <c>optgroup</c> can be disabled by
+        /// setting "disabled" attribute. "disabled" attribute on other elements is ignored
+        /// by the browser.
+        /// </para>
         /// <code>
         /// var locator = Page.Locator("button.submit");<br/>
         /// await Expect(locator).ToBeDisabledAsync();

@@ -248,28 +248,21 @@ namespace Microsoft.Playwright
         /// <para>An example of exposing page URL to all frames in all pages in the context:</para>
         /// <code>
         /// using Microsoft.Playwright;<br/>
-        /// using System.Threading.Tasks;<br/>
         /// <br/>
-        /// class Program<br/>
-        /// {<br/>
-        ///     public static async Task Main()<br/>
-        ///     {<br/>
-        ///         using var playwright = await Playwright.CreateAsync();<br/>
-        ///         var browser = await playwright.Webkit.LaunchAsync(new BrowserTypeLaunchOptions { Headless = false });<br/>
-        ///         var context = await browser.NewContextAsync();<br/>
+        /// using var playwright = await Playwright.CreateAsync();<br/>
+        /// var browser = await playwright.Webkit.LaunchAsync(new BrowserTypeLaunchOptions { Headless = false });<br/>
+        /// var context = await browser.NewContextAsync();<br/>
         /// <br/>
-        ///         await context.ExposeBindingAsync("pageURL", source =&gt; source.Page.Url);<br/>
-        ///         var page = await context.NewPageAsync();<br/>
-        ///         await page.SetContentAsync("&lt;script&gt;\n" +<br/>
-        ///         "  async function onClick() {\n" +<br/>
-        ///         "    document.querySelector('div').textContent = await window.pageURL();\n" +<br/>
-        ///         "  }\n" +<br/>
-        ///         "&lt;/script&gt;\n" +<br/>
-        ///         "&lt;button onclick=\"onClick()\"&gt;Click me&lt;/button&gt;\n" +<br/>
-        ///         "&lt;div&gt;&lt;/div&gt;");<br/>
-        ///         await page.ClickAsync("button");<br/>
-        ///     }<br/>
-        /// }
+        /// await context.ExposeBindingAsync("pageURL", source =&gt; source.Page.Url);<br/>
+        /// var page = await context.NewPageAsync();<br/>
+        /// await page.SetContentAsync("&lt;script&gt;\n" +<br/>
+        /// "  async function onClick() {\n" +<br/>
+        /// "    document.querySelector('div').textContent = await window.pageURL();\n" +<br/>
+        /// "  }\n" +<br/>
+        /// "&lt;/script&gt;\n" +<br/>
+        /// "&lt;button onclick=\"onClick()\"&gt;Click me&lt;/button&gt;\n" +<br/>
+        /// "&lt;div&gt;&lt;/div&gt;");<br/>
+        /// await page.ClickAsync("button");
         /// </code>
         /// <para>An example of passing an element handle:</para>
         /// <code>
