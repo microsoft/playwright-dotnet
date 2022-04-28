@@ -537,9 +537,10 @@ namespace Microsoft.Playwright.Tests
         [PlaywrightTest("page-goto.spec.ts", "should override referrer-policy")]
         public async Task ShouldOverrideReferrerPolicy()
         {
-            Server.Subscribe("/grid.html", context =>
+            Server.SetRoute("/grid.html", async context =>
             {
                 context.Response.Headers["Referrer-Policy"] = "no-referrer";
+                await Server.ServeFile(context);
             });
 
             string referer1 = null;

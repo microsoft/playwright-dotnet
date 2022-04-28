@@ -30,7 +30,7 @@ using NUnit.Framework;
 
 namespace Microsoft.Playwright.Tests
 {
-    public sealed class BrowsercontextStorageStateTests : PageTestEx
+    public sealed class BrowserContextStorageStateTests : PageTestEx
     {
         [PlaywrightTest("browsercontext-storage-state.spec.ts", "should capture local storage")]
         public async Task ShouldCaptureLocalStorage()

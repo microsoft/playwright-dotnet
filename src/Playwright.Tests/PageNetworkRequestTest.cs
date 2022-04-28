@@ -299,7 +299,7 @@ namespace Microsoft.Playwright.Tests
             var sizes = await response.Request.SizesAsync();
 
             Assert.AreEqual(0, sizes.ResponseBodySize);
-            Assert.GreaterOrEqual(sizes.ResponseHeadersSize, 142);
+            Assert.GreaterOrEqual(sizes.ResponseHeadersSize, 133);
         }
 
 

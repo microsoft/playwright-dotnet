@@ -40,7 +40,6 @@ namespace Microsoft.Playwright.Tests
             Assert.AreEqual("42, 83", await Page.EvaluateAsync<string>("() => loadTable()"));
         }
 
-#if NETCOREAPP
         [PlaywrightTest("capabilities.spec.ts", "WebSocket should work")]
         [Skip(SkipAttribute.Targets.Webkit | SkipAttribute.Targets.Windows)]
         public async Task WebSocketShouldWork()
@@ -58,7 +57,6 @@ namespace Microsoft.Playwright.Tests
                 Server.Port);
             Assert.AreEqual("incoming", value);
         }
-#endif
 
         [PlaywrightTest("capabilities.spec.ts", "should respect CSP")]
         public async Task ShouldRespectCSP()

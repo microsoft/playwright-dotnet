@@ -24,6 +24,7 @@
  */
 
 using System.Collections.Generic;
+using System.IO;
 using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
@@ -67,7 +68,7 @@ namespace Microsoft.Playwright.Tests
         public async Task PageEventsRequestFailed()
         {
             int port = Server.Port + 100;
-            var disposableServer = new SimpleServer(port, TestUtils.FindParentDirectory("Playwright.Tests.TestServer"), false);
+            var disposableServer = new SimpleServer(port, Path.Combine(TestUtils.FindParentDirectory("Playwright.Tests.TestServer"), "assets"), false);
             await disposableServer.StartAsync();
 
             disposableServer.SetRoute("/one-style.css", async _ =>
