@@ -188,12 +188,8 @@ namespace Microsoft.Playwright.Tests
         {
             await using var context = await Browser.NewContextAsync();
 
-#if NETCOREAPP3_1
             var regexParseExceptionType = typeof(System.Text.RegularExpressions.Regex).Assembly
                 .GetType("System.Text.RegularExpressions.RegexParseException", throwOnError: true);
-#else
-            var regexParseExceptionType = typeof(System.Text.RegularExpressions.RegexParseException);
-#endif
 
             Assert.Throws(regexParseExceptionType, () =>
                 context.RouteAsync("[", route =>

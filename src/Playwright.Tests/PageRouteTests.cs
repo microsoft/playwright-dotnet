@@ -697,12 +697,9 @@ namespace Microsoft.Playwright.Tests
         [PlaywrightTest]
         public void ShouldThrowOnInvalidRouteUrl()
         {
-#if NETCOREAPP3_1
             var regexParseExceptionType = typeof(Regex).Assembly
-                .GetType("System.Text.RegularExpressions.RegexParseException", throwOnError: true);
-#else
-            var regexParseExceptionType = typeof(RegexParseException);
-#endif
+                    .GetType("System.Text.RegularExpressions.RegexParseException", throwOnError: true);
+
 
             Assert.Throws(regexParseExceptionType, () =>
                 Page.RouteAsync("[", route =>

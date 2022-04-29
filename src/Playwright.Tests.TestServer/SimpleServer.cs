@@ -26,17 +26,20 @@
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.IO;
+using System.IO.Compression;
 using System.Net;
 using System.Net.WebSockets;
 using System.Security.Cryptography.X509Certificates;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.Features;
-using Microsoft.Extensions.Configuration;
+using Microsoft.AspNetCore.StaticFiles;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Microsoft.Playwright.Tests.TestServer
@@ -45,12 +48,14 @@ namespace Microsoft.Playwright.Tests.TestServer
     {
         const int MaxMessageSize = 256 * 1024;
 
-        private readonly IDictionary<string, Action<HttpContext>> _subscribers;
         private readonly IDictionary<string, Action<HttpContext>> _requestWaits;
         private readonly IList<Action<HttpContext>> _waitForWebSocketConnectionRequestsWaits;
         private readonly IDictionary<string, RequestDelegate> _routes;
         private readonly IDictionary<string, (string username, string password)> _auths;
         private readonly IDictionary<string, string> _csp;
+        private readonly IList<string> _gzipRoutes;
+        private readonly string _contentRoot;
+
 
         private ArraySegment<byte> _onWebSocketConnectionData;
         private readonly IWebHost _webHost;
@@ -62,10 +67,6 @@ namespace Microsoft.Playwright.Tests.TestServer
         public string CrossProcessPrefix { get; }
         public string EmptyPage { get; internal set; }
 
-        internal IList<string> GzipRoutes { get; }
-
-        public event EventHandler<RequestReceivedEventArgs> RequestReceived;
-
         public static SimpleServer Create(int port, string contentRoot) => new(port, contentRoot, isHttps: false);
 
         public static SimpleServer CreateHttps(int port, string contentRoot) => new(port, contentRoot, isHttps: true);
@@ -73,42 +74,26 @@ namespace Microsoft.Playwright.Tests.TestServer
         public SimpleServer(int port, string contentRoot, bool isHttps)
         {
             Port = port;
-            if (isHttps)
-            {
-                Prefix = $"https://localhost:{port}";
-                CrossProcessPrefix = $"https://127.0.0.1:{port}";
-            }
-            else
-            {
-                Prefix = $"http://localhost:{port}";
-                CrossProcessPrefix = $"http://127.0.0.1:{port}";
-            }
+            var protocol = isHttps ? "https" : "http";
+            Prefix = $"{protocol}://localhost:{port}";
+            CrossProcessPrefix = $"{protocol}://127.0.0.1:{port}";
 
             EmptyPage = $"{Prefix}/empty.html";
 
-            _subscribers = new ConcurrentDictionary<string, Action<HttpContext>>();
             _requestWaits = new ConcurrentDictionary<string, Action<HttpContext>>();
             _waitForWebSocketConnectionRequestsWaits = new List<Action<HttpContext>>();
             _routes = new ConcurrentDictionary<string, RequestDelegate>();
             _auths = new ConcurrentDictionary<string, (string username, string password)>();
             _csp = new ConcurrentDictionary<string, string>();
-            GzipRoutes = new List<string>();
+            _gzipRoutes = new List<string>();
+            _contentRoot = contentRoot;
 
             _webHost = new WebHostBuilder()
-                .ConfigureAppConfiguration((context, builder) => builder
-                    .SetBasePath(context.HostingEnvironment.ContentRootPath)
-                    .AddEnvironmentVariables()
-                )
-                .UseWebRoot("assets")
-                .Configure(app => app
-#if NETCOREAPP
+                .Configure((app) => app
                     .UseWebSockets()
-#endif
                     .UseDeveloperExceptionPage()
-                    .Use(async (context, next) =>
+                    .Use(middleware: async (HttpContext context, Func<Task> next) =>
                     {
-                        RequestReceived?.Invoke(this, new() { Request = context.Request });
-
                         if (context.Request.Path == "/ws")
                         {
                             if (context.WebSockets.IsWebSocketRequest)
@@ -141,10 +126,6 @@ namespace Microsoft.Playwright.Tests.TestServer
                             }
                             await context.Response.WriteAsync("HTTP Error 401 Unauthorized: Access is denied").ConfigureAwait(false);
                         }
-                        if (_subscribers.TryGetValue(context.Request.Path, out var subscriber))
-                        {
-                            subscriber(context);
-                        }
                         if (_requestWaits.TryGetValue(context.Request.Path, out var requestWait))
                         {
                             requestWait(context);
@@ -163,33 +144,7 @@ namespace Microsoft.Playwright.Tests.TestServer
                             context.Response.StatusCode = StatusCodes.Status304NotModified;
                         }
 
-                        await next().ConfigureAwait(false);
-                    })
-                    .UseMiddleware<SimpleCompressionMiddleware>(this)
-                    .UseStaticFiles(new StaticFileOptions
-                    {
-                        OnPrepareResponse = fileResponseContext =>
-                        {
-                            if (_csp.TryGetValue(fileResponseContext.Context.Request.Path, out string csp))
-                            {
-                                fileResponseContext.Context.Response.Headers["Content-Security-Policy"] = csp;
-                            }
-
-                            if (fileResponseContext.Context.Request.Path.ToString().EndsWith(".html"))
-                            {
-                                fileResponseContext.Context.Response.Headers["Content-Type"] = "text/html; charset=utf-8";
-
-                                if (fileResponseContext.Context.Request.Path.ToString().Contains("/cached/"))
-                                {
-                                    fileResponseContext.Context.Response.Headers["Cache-Control"] = "public, max-age=31536000, no-cache";
-                                    fileResponseContext.Context.Response.Headers["Last-Modified"] = DateTime.Now.ToString("s");
-                                }
-                                else
-                                {
-                                    fileResponseContext.Context.Response.Headers["Cache-Control"] = "no-cache, no-store";
-                                }
-                            }
-                        }
+                        await ServeFile(context).ConfigureAwait(false);
                     }))
                 .UseKestrel(options =>
                 {
@@ -204,7 +159,6 @@ namespace Microsoft.Playwright.Tests.TestServer
                     }
                     options.Limits.MaxRequestBodySize = int.MaxValue;
                 })
-                .UseContentRoot(contentRoot)
                 .ConfigureServices((builder, services) =>
                 {
                     services.Configure<FormOptions>(o =>
@@ -213,6 +167,66 @@ namespace Microsoft.Playwright.Tests.TestServer
                     });
                 })
                 .Build();
+        }
+
+        public async Task ServeFile(HttpContext context)
+        {
+            var pathName = context.Request.Path.ToString();
+            var fileName = string.IsNullOrEmpty(pathName) ? "index.html" : pathName.Substring(1);
+            var filePath = Path.Combine(_contentRoot, fileName);
+
+            context.Response.Headers["Cache-Control"] = "no-cache, no-store";
+
+            if (_csp.TryGetValue(pathName, out string csp))
+            {
+                context.Response.Headers["Content-Security-Policy"] = csp;
+            }
+            if (!File.Exists(filePath))
+            {
+                context.Response.StatusCode = StatusCodes.Status404NotFound;
+                return;
+            }
+            context.Response.StatusCode = StatusCodes.Status200OK;
+            using (var file = File.Open(filePath, mode: FileMode.Open))
+            {
+                context.Response.ContentType = GetContentType(filePath);
+
+                if (_gzipRoutes.Contains(pathName))
+                {
+                    using (var gzipFile = new MemoryStream())
+                    {
+                        using (var compressionStream = new GZipStream(gzipFile, CompressionMode.Compress, true))
+                        {
+                            await file.CopyToAsync(compressionStream).ConfigureAwait(false);
+                        }
+                        context.Response.Headers["Content-Encoding"] = "gzip";
+                        context.Response.ContentLength = gzipFile.Length;
+                        gzipFile.Position = 0;
+                        await gzipFile.CopyToAsync(context.Response.Body).ConfigureAwait(false);
+                    }
+                }
+                else
+                {
+                    context.Response.ContentLength = new FileInfo(filePath).Length;
+                    await file.CopyToAsync(context.Response.Body).ConfigureAwait(false);
+                }
+            }
+        }
+
+        private string GetContentType(string fileName)
+        {
+            var provider = new FileExtensionContentTypeProvider();
+            var extension = Path.GetExtension(fileName);
+            if (provider.TryGetContentType(extension, out var contentType))
+            {
+                var isTextEncoding = Regex.IsMatch(contentType, @"^text\/|application\/(javascript|json)");
+                if (isTextEncoding)
+                {
+                    return $"{contentType}; charset=utf-8";
+                }
+                return contentType;
+            }
+            return "application/octet-stream";
         }
 
         public void SetAuth(string path, string username, string password) => _auths.Add(path, (username, password));
@@ -233,18 +247,12 @@ namespace Microsoft.Playwright.Tests.TestServer
             _routes.Clear();
             _auths.Clear();
             _csp.Clear();
-            _subscribers.Clear();
             _requestWaits.Clear();
-            GzipRoutes.Clear();
+            _gzipRoutes.Clear();
             _onWebSocketConnectionData = null;
-            foreach (var subscriber in _subscribers.Values)
-            {
-                subscriber(null);
-            }
-            _subscribers.Clear();
         }
 
-        public void EnableGzip(string path) => GzipRoutes.Add(path);
+        public void EnableGzip(string path) => _gzipRoutes.Add(path);
 
         public void SetRoute(string path, RequestDelegate handler) => _routes[path] = handler;
 
@@ -255,9 +263,6 @@ namespace Microsoft.Playwright.Tests.TestServer
             context.Response.Redirect(to);
             return Task.CompletedTask;
         });
-
-        public void Subscribe(string path, Action<HttpContext> action)
-            => _subscribers.Add(path, action);
 
         public async Task<T> WaitForRequest<T>(string path, Func<HttpRequest, T> selector)
         {
