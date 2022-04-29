@@ -22,6 +22,7 @@
  * SOFTWARE.
  */
 
+using System;
 using System.Collections.Generic;
 using System.Text.Json;
 using System.Threading.Tasks;
@@ -34,6 +35,18 @@ namespace Microsoft.Playwright.Transport.Channels
     {
         public JSHandleChannel(string guid, Connection connection, JSHandle owner) : base(guid, connection, owner)
         {
+        }
+
+        internal event EventHandler<string> PreviewUpdated;
+
+        internal override void OnMessage(string method, JsonElement? serverParams)
+        {
+            switch (method)
+            {
+                case "previewUpdated":
+                    PreviewUpdated?.Invoke(this, serverParams?.GetProperty("preview").ToString());
+                    break;
+            }
         }
 
         internal Task<JsonElement?> EvaluateExpressionAsync(string script, object arg)

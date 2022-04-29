@@ -40,19 +40,7 @@ namespace Microsoft.Playwright.Transport.Channels
             Object = owner;
         }
 
-        internal event EventHandler<PreviewUpdatedEventArgs> PreviewUpdated;
-
         public new ElementHandle Object { get; set; }
-
-        internal override void OnMessage(string method, JsonElement? serverParams)
-        {
-            switch (method)
-            {
-                case "previewUpdated":
-                    PreviewUpdated?.Invoke(this, new() { Preview = serverParams.Value.GetProperty("preview").ToString() });
-                    break;
-            }
-        }
 
         internal Task<ElementHandleChannel> WaitForSelectorAsync(string selector, WaitForSelectorState? state, float? timeout, bool? strict)
         {

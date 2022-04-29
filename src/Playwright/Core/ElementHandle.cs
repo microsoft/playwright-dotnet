@@ -34,14 +34,14 @@ using Microsoft.Playwright.Transport.Protocol;
 
 namespace Microsoft.Playwright.Core
 {
-    internal partial class ElementHandle : JSHandle, IElementHandle, IChannelOwner<ElementHandle>
+    internal class ElementHandle : JSHandle, IElementHandle, IChannelOwner<ElementHandle>
     {
         private readonly ElementHandleChannel _channel;
 
         internal ElementHandle(IChannelOwner parent, string guid, ElementHandleInitializer initializer) : base(parent, guid, initializer)
         {
             _channel = new(guid, parent.Connection, this);
-            _channel.PreviewUpdated += (_, e) => Preview = e.Preview;
+            _channel.PreviewUpdated += (_, newPreview) => _preview = newPreview;
         }
 
         ChannelBase IChannelOwner.Channel => _channel;

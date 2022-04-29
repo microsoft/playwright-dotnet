@@ -34,18 +34,18 @@ namespace Microsoft.Playwright.Core
     internal class JSHandle : ChannelOwnerBase, IChannelOwner<JSHandle>, IJSHandle
     {
         private readonly JSHandleChannel _channel;
+        protected string _preview;
 
         internal JSHandle(IChannelOwner parent, string guid, JSHandleInitializer initializer) : base(parent, guid)
         {
+            _preview = initializer.Preview;
             _channel = new(guid, parent.Connection, this);
-            Preview = initializer.Preview;
+            _channel.PreviewUpdated += (_, newPreview) => _preview = newPreview;
         }
 
         ChannelBase IChannelOwner.Channel => _channel;
 
         IChannel<JSHandle> IChannelOwner<JSHandle>.Channel => _channel;
-
-        internal string Preview { get; set; }
 
         public IElementHandle AsElement() => this as IElementHandle;
 
@@ -83,6 +83,6 @@ namespace Microsoft.Playwright.Core
 
         public async ValueTask DisposeAsync() => await _channel.DisposeAsync().ConfigureAwait(false);
 
-        public override string ToString() => Preview;
+        public override string ToString() => _preview;
     }
 }
