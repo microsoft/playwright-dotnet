@@ -23,15 +23,16 @@
  */
 
 using System.Collections.Generic;
+using System.Text.Json.Serialization;
 
 namespace Microsoft.Playwright.Transport.Protocol
 {
     internal class BrowserContextInitializer : EventTargetInitializer
     {
+        [JsonPropertyName("isChromium")]
         public bool IsChromium { get; set; }
 
-        public Core.APIRequestContext APIRequestContext { get; set; }
-
+        [JsonPropertyName("tracing")]
         public Core.Tracing Tracing { get; set; }
     }
 }

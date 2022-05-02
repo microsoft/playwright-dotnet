@@ -23,15 +23,19 @@
  */
 
 using System.Collections.Generic;
+using System.Text.Json.Serialization;
 
 namespace Microsoft.Playwright.Transport.Protocol
 {
     internal class DialogInitializer
     {
+        [JsonPropertyName("type")]
         public string Type { get; set; }
 
+        [JsonPropertyName("message")]
         public string Message { get; set; }
 
+        [JsonPropertyName("defaultValue")]
         public string DefaultValue { get; set; }
     }
 }

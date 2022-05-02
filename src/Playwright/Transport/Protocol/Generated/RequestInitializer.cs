@@ -23,25 +23,34 @@
  */
 
 using System.Collections.Generic;
+using System.Text.Json.Serialization;
 
 namespace Microsoft.Playwright.Transport.Protocol
 {
     internal class RequestInitializer
     {
+        [JsonPropertyName("frame")]
         public Core.Frame Frame { get; set; }
 
+        [JsonPropertyName("url")]
         public string Url { get; set; }
 
+        [JsonPropertyName("resourceType")]
         public string ResourceType { get; set; }
 
+        [JsonPropertyName("method")]
         public string Method { get; set; }
 
+        [JsonPropertyName("postData")]
         public byte[] PostData { get; set; }
 
+        [JsonPropertyName("headers")]
         public List<HeaderEntry> Headers { get; set; }
 
+        [JsonPropertyName("isNavigationRequest")]
         public bool IsNavigationRequest { get; set; }
 
+        [JsonPropertyName("redirectedFrom")]
         public Core.Request RedirectedFrom { get; set; }
     }
 }

@@ -23,25 +23,34 @@
  */
 
 using System.Collections.Generic;
+using System.Text.Json.Serialization;
 
 namespace Microsoft.Playwright.Transport.Protocol
 {
     internal class PlaywrightInitializer
     {
+        [JsonPropertyName("chromium")]
         public Core.BrowserType Chromium { get; set; }
 
+        [JsonPropertyName("firefox")]
         public Core.BrowserType Firefox { get; set; }
 
+        [JsonPropertyName("webkit")]
         public Core.BrowserType Webkit { get; set; }
 
+        [JsonPropertyName("utils")]
         public Core.LocalUtils Utils { get; set; }
 
+        [JsonPropertyName("deviceDescriptors")]
         public List<DeviceDescriptorEntry> DeviceDescriptors { get; set; }
 
+        [JsonPropertyName("selectors")]
         public Core.Selectors Selectors { get; set; }
 
+        [JsonPropertyName("preLaunchedBrowser")]
         public Core.Browser PreLaunchedBrowser { get; set; }
 
+        [JsonPropertyName("socksSupport")]
         public Core.SocksSupport SocksSupport { get; set; }
     }
 }
