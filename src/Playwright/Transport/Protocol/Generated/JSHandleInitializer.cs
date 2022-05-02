@@ -23,11 +23,13 @@
  */
 
 using System.Collections.Generic;
+using System.Text.Json.Serialization;
 
 namespace Microsoft.Playwright.Transport.Protocol
 {
     internal class JSHandleInitializer
     {
+        [JsonPropertyName("preview")]
         public string Preview { get; set; }
     }
 }

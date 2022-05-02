@@ -23,11 +23,13 @@
  */
 
 using System.Collections.Generic;
+using System.Text.Json.Serialization;
 
 namespace Microsoft.Playwright.Transport.Protocol
 {
     internal class ArtifactInitializer
     {
+        [JsonPropertyName("absolutePath")]
         public string AbsolutePath { get; set; }
     }
 }

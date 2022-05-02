@@ -23,17 +23,22 @@
  */
 
 using System.Collections.Generic;
+using System.Text.Json.Serialization;
 
 namespace Microsoft.Playwright.Transport.Protocol
 {
     internal class PageInitializer : EventTargetInitializer
     {
+        [JsonPropertyName("mainFrame")]
         public Core.Frame MainFrame { get; set; }
 
+        [JsonPropertyName("viewportSize")]
         public ViewportSize ViewportSize { get; set; }
 
+        [JsonPropertyName("isClosed")]
         public bool IsClosed { get; set; }
 
+        [JsonPropertyName("opener")]
         public Core.Page Opener { get; set; }
     }
 }
