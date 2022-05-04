@@ -47,6 +47,7 @@ namespace Microsoft.Playwright.Core
         private readonly IMouse _mouse;
         private readonly IKeyboard _keyboard;
         private readonly ITouchscreen _touchscreen;
+        private readonly IAPIRequestContext _request;
         private readonly PageInitializer _initializer;
 
         private List<RouteSetting> _routes = new();
@@ -75,6 +76,7 @@ namespace Microsoft.Playwright.Core
             _keyboard = new Keyboard(_channel);
             _touchscreen = new Touchscreen(_channel);
             _mouse = new Mouse(_channel);
+            _request = Context._request;
             _channel.Closed += (_, _) => OnClose();
             _channel.Crashed += Channel_Crashed;
             _channel.Popup += (_, e) => Popup?.Invoke(this, e.Page);
@@ -285,6 +287,8 @@ namespace Microsoft.Playwright.Core
         }
 
         internal TaskCompletionSource<bool> ClosedOrCrashedTcs { get; } = new();
+
+        IAPIRequestContext IPage.GetRequest => _request;
 
         public IFrame Frame(string name)
             => Frames.FirstOrDefault(f => f.Name == name);

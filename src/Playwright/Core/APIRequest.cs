@@ -22,20 +22,35 @@
  * SOFTWARE.
  */
 
-using System.Collections.Generic;
-using System.Text.Json.Serialization;
+using System.Threading.Tasks;
 
-namespace Microsoft.Playwright.Transport.Protocol
+namespace Microsoft.Playwright.Core
 {
-    internal class BrowserContextInitializer : EventTargetInitializer
+    internal class APIRequest : IAPIRequest
     {
-        [JsonPropertyName("isChromium")]
-        public bool IsChromium { get; set; }
+        private readonly PlaywrightImpl _playwright;
 
-        [JsonPropertyName("APIRequestContext")]
-        public Core.APIRequestContext APIRequestContext { get; set; }
+        public APIRequest(PlaywrightImpl playwright)
+        {
+            _playwright = playwright;
+        }
 
-        [JsonPropertyName("tracing")]
-        public Core.Tracing Tracing { get; set; }
+        async Task<IAPIRequestContext> IAPIRequest.NewContextAsync(APIRequestNewContextOptions options)
+        {
+            var context = await _playwright._channel.NewRequestAsync(
+                options?.BaseURL,
+                options?.UserAgent,
+                options?.IgnoreHTTPSErrors,
+                options?.ExtraHTTPHeaders,
+                options?.HttpCredentials,
+                options?.Proxy,
+                options?.Timeout,
+                options?.StorageState,
+                options?.StorageStatePath)
+            .ConfigureAwait(false);
+            context._tracing._localUtils = _playwright._utils;
+            context._request = this;
+            return context;
+        }
     }
 }

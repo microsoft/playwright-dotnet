@@ -1378,6 +1378,15 @@ namespace Microsoft.Playwright
         Task<IResponse?> ReloadAsync(PageReloadOptions? options = default);
 
         /// <summary>
+        /// <para>
+        /// API testing helper associated with this page. This method returns the same instance
+        /// as <see cref="IBrowserContext.GetRequest"/> on the page's context. See <see cref="IBrowserContext.GetRequest"/>
+        /// for more details.
+        /// </para>
+        /// </summary>
+        public IAPIRequestContext GetRequest { get; }
+
+        /// <summary>
         /// <para>Routing provides the capability to modify network requests that are made by a page.</para>
         /// <para>
         /// Once routing is enabled, every request matching the url pattern will stall unless

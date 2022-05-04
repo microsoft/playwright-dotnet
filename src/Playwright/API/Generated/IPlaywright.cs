@@ -106,6 +106,9 @@ namespace Microsoft.Playwright
         /// </summary>
         public IBrowserType Firefox { get; }
 
+        /// <summary><para>Exposes API that can be used for the Web API testing.</para></summary>
+        public IAPIRequest Request { get; }
+
         /// <summary>
         /// <para>
         /// Selectors can be used to install custom selector engines. See <a href="https://playwright.dev/dotnet/docs/selectors">Working

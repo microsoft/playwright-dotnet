@@ -40,9 +40,10 @@ namespace Microsoft.Playwright.Core
         public const int DefaultTimeout = 30_000;
 
         private readonly PlaywrightInitializer _initializer;
-        private readonly PlaywrightChannel _channel;
+        internal readonly PlaywrightChannel _channel;
         private readonly Connection _connection;
         internal readonly LocalUtils _utils;
+
         private readonly Dictionary<string, BrowserNewContextOptions> _devices = new(StringComparer.InvariantCultureIgnoreCase);
 
         internal PlaywrightImpl(IChannelOwner parent, string guid, PlaywrightInitializer initializer)
@@ -50,6 +51,7 @@ namespace Microsoft.Playwright.Core
         {
             _connection = parent.Connection;
             _initializer = initializer;
+            _utils = initializer.Utils;
             _channel = new(guid, parent.Connection, this);
             _utils = initializer.Utils;
 
@@ -61,6 +63,7 @@ namespace Microsoft.Playwright.Core
             _initializer.Chromium.Playwright = this;
             _initializer.Firefox.Playwright = this;
             _initializer.Webkit.Playwright = this;
+            Request = new APIRequest(this);
         }
 
         ~PlaywrightImpl() => Dispose(false);
@@ -84,6 +87,8 @@ namespace Microsoft.Playwright.Core
         internal Connection Connection { get; set; }
 
         internal Browser PreLaunchedBrowser => _initializer.PreLaunchedBrowser;
+
+        public IAPIRequest Request { get; }
 
         /// <summary>
         /// Gets a <see cref="IBrowserType"/>.

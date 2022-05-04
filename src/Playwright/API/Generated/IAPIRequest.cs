@@ -6,7 +6,7 @@
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
- * to use, copy, modify, merge, publish, distribute, sublicense, and / or sell
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
  * copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions:
  *
@@ -22,20 +22,37 @@
  * SOFTWARE.
  */
 
+using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.Drawing;
+using System.Globalization;
+using System.IO;
+using System.Runtime.Serialization;
+using System.Text.Json;
 using System.Text.Json.Serialization;
+using System.Text.RegularExpressions;
+using System.Threading;
+using System.Threading.Tasks;
 
-namespace Microsoft.Playwright.Transport.Protocol
+#nullable enable
+
+namespace Microsoft.Playwright
 {
-    internal class BrowserContextInitializer : EventTargetInitializer
+    /// <summary>
+    /// <para>
+    /// Exposes API that can be used for the Web API testing. This class is used for creating
+    /// <see cref="IAPIRequestContext"/> instance which in turn can be used for sending
+    /// web requests. An instance of this class can be obtained via <see cref="IPlaywright.Request"/>.
+    /// For more information see <see cref="IAPIRequestContext"/>.
+    /// </para>
+    /// </summary>
+    public partial interface IAPIRequest
     {
-        [JsonPropertyName("isChromium")]
-        public bool IsChromium { get; set; }
-
-        [JsonPropertyName("APIRequestContext")]
-        public Core.APIRequestContext APIRequestContext { get; set; }
-
-        [JsonPropertyName("tracing")]
-        public Core.Tracing Tracing { get; set; }
+        /// <summary><para>Creates new instances of <see cref="IAPIRequestContext"/>.</para></summary>
+        /// <param name="options">Call options</param>
+        Task<IAPIRequestContext> NewContextAsync(APIRequestNewContextOptions? options = default);
     }
 }
+
+#nullable disable

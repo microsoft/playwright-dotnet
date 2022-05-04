@@ -32,6 +32,8 @@ namespace Microsoft.Playwright.Core
     {
         private readonly TracingChannel _channel;
 
+        internal LocalUtils _localUtils;
+
         public Tracing(IChannelOwner parent, string guid) : base(parent, guid)
         {
             _channel = new(guid, parent.Connection, this);

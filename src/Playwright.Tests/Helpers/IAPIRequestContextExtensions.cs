@@ -22,20 +22,34 @@
  * SOFTWARE.
  */
 
-using System.Collections.Generic;
-using System.Text.Json.Serialization;
+using System;
+using System.Threading.Tasks;
 
-namespace Microsoft.Playwright.Transport.Protocol
+namespace Microsoft.Playwright.Tests
 {
-    internal class BrowserContextInitializer : EventTargetInitializer
+    internal static class IAPIRequestContextExtensions
     {
-        [JsonPropertyName("isChromium")]
-        public bool IsChromium { get; set; }
-
-        [JsonPropertyName("APIRequestContext")]
-        public Core.APIRequestContext APIRequestContext { get; set; }
-
-        [JsonPropertyName("tracing")]
-        public Core.Tracing Tracing { get; set; }
+        internal static Func<string, IRequestOptions, Task<IAPIResponse>> NameToMethod(this IAPIRequestContext request, string method)
+        {
+            switch (method)
+            {
+                case "fetch":
+                    return request.FetchAsync;
+                case "delete":
+                    return request.DeleteAsync;
+                case "get":
+                    return request.GetAsync;
+                case "head":
+                    return request.HeadAsync;
+                case "patch":
+                    return request.PatchAsync;
+                case "post":
+                    return request.PostAsync;
+                case "put":
+                    return request.PutAsync;
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(method));
+            }
+        }
     }
 }
