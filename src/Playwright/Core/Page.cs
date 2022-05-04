@@ -25,7 +25,6 @@
  */
 using System;
 using System.Collections.Generic;
-using System.Data.SqlTypes;
 using System.IO;
 using System.Linq;
 using System.Text.Json;
@@ -38,7 +37,7 @@ using Microsoft.Playwright.Transport.Protocol;
 
 namespace Microsoft.Playwright.Core
 {
-    internal partial class Page : ChannelOwnerBase, IChannelOwner<Page>, IPage
+    internal class Page : ChannelOwnerBase, IChannelOwner<Page>, IPage
     {
         private readonly PageChannel _channel;
         private readonly List<Frame> _frames = new();

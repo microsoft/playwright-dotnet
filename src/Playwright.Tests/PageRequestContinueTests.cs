@@ -81,7 +81,7 @@ namespace Microsoft.Playwright.Tests
             });
             var requestTask = Server.WaitForRequest("/sleep.zzz", request =>
             {
-                using StreamReader reader = new StreamReader(request.Body);
+                using StreamReader reader = new(request.Body);
                 return reader.ReadToEndAsync().GetAwaiter().GetResult();
             });
 

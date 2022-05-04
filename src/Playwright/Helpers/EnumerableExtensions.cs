@@ -32,7 +32,7 @@ namespace Microsoft.Playwright.Helpers
 {
     internal static class EnumerableExtensions
     {
-        public static IEnumerable<NameValueEntry> Remap(this IEnumerable<KeyValuePair<string, string>> input)
+        public static IEnumerable<NameValueEntry> ToProtocol(this IEnumerable<KeyValuePair<string, string>> input)
         {
             if (input == null)
             {
