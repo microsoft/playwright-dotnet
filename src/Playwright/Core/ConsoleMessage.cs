@@ -47,7 +47,7 @@ namespace Microsoft.Playwright.Core
 
         public string Type => _initializer.Type;
 
-        public IReadOnlyList<IJSHandle> Args => _initializer.Args.Select(a => (IJSHandle)a).ToList().AsReadOnly();
+        public IReadOnlyList<IJSHandle> Args => _initializer.Args.Cast<IJSHandle>().ToList().AsReadOnly();
 
         public string Location => _initializer.Location.ToString();
 

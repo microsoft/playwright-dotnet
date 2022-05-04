@@ -402,9 +402,13 @@ namespace Microsoft.Playwright.Transport
                 {
                     return;
                 }
-                if (!(message is string))
+                if (message is not string)
                 {
                     message = JsonSerializer.Serialize(message, DefaultJsonSerializerOptions);
+                }
+                if (((string)message).Contains("deviceDescriptors"))
+                {
+                    return;
                 }
                 string line = $"{logLevel}: {message}";
                 Trace.WriteLine(line);

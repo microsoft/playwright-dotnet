@@ -43,7 +43,7 @@ namespace Microsoft.Playwright.Core
         private readonly TaskCompletionSource<bool> _closeTcs = new();
         private readonly Dictionary<string, Delegate> _bindings = new();
         private readonly BrowserContextInitializer _initializer;
-        private readonly ITracing _tracing;
+        internal readonly ITracing _tracing;
         private List<RouteSetting> _routes = new();
 
         private float? _defaultNavigationTimeout;
@@ -314,7 +314,7 @@ namespace Microsoft.Playwright.Core
         public Task<IPage> RunAndWaitForPageAsync(Func<Task> action, BrowserContextRunAndWaitForPageOptions options = default)
             => InnerWaitForEventAsync(BrowserContextEvent.Page, action, options?.Predicate, options?.Timeout);
 
-        public ValueTask DisposeAsync() => new ValueTask(CloseAsync());
+        public ValueTask DisposeAsync() => new(CloseAsync());
 
         public void SetDefaultNavigationTimeout(float timeout) => DefaultNavigationTimeout = timeout;
 

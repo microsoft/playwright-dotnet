@@ -125,6 +125,7 @@ namespace Microsoft.Playwright.Tests.TestServer
                                 context.Response.StatusCode = StatusCodes.Status401Unauthorized;
                             }
                             await context.Response.WriteAsync("HTTP Error 401 Unauthorized: Access is denied").ConfigureAwait(false);
+                            return;
                         }
                         if (_requestWaits.TryGetValue(context.Request.Path, out var requestWait))
                         {

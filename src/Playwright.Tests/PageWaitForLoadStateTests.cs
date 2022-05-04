@@ -128,8 +128,8 @@ namespace Microsoft.Playwright.Tests
             await Page.GotoAsync(Server.Prefix + "/frames/one-frame.html");
             var frame = Page.Frames.ElementAt(1);
 
-            TaskCompletionSource<bool> requestTask = new TaskCompletionSource<bool>();
-            TaskCompletionSource<bool> routeReachedTask = new TaskCompletionSource<bool>();
+            TaskCompletionSource<bool> requestTask = new();
+            TaskCompletionSource<bool> routeReachedTask = new();
             await Page.RouteAsync(Server.Prefix + "/one-style.css", async (route) =>
             {
                 routeReachedTask.TrySetResult(true);

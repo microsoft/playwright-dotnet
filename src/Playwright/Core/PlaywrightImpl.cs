@@ -42,6 +42,7 @@ namespace Microsoft.Playwright.Core
         private readonly PlaywrightInitializer _initializer;
         private readonly PlaywrightChannel _channel;
         private readonly Connection _connection;
+        internal readonly LocalUtils _utils;
         private readonly Dictionary<string, BrowserNewContextOptions> _devices = new(StringComparer.InvariantCultureIgnoreCase);
 
         internal PlaywrightImpl(IChannelOwner parent, string guid, PlaywrightInitializer initializer)
@@ -50,12 +51,12 @@ namespace Microsoft.Playwright.Core
             _connection = parent.Connection;
             _initializer = initializer;
             _channel = new(guid, parent.Connection, this);
+            _utils = initializer.Utils;
 
             foreach (var entry in initializer.DeviceDescriptors)
             {
                 _devices[entry.Name] = entry.Descriptor;
             }
-            Utils = initializer.Utils;
 
             _initializer.Chromium.Playwright = this;
             _initializer.Firefox.Playwright = this;
@@ -83,8 +84,6 @@ namespace Microsoft.Playwright.Core
         internal Connection Connection { get; set; }
 
         internal Browser PreLaunchedBrowser => _initializer.PreLaunchedBrowser;
-
-        internal LocalUtils Utils { get; set; }
 
         /// <summary>
         /// Gets a <see cref="IBrowserType"/>.

@@ -77,7 +77,7 @@ namespace Microsoft.Playwright.Core
                 slowMo: options.SlowMo,
                 ignoreDefaultArgs: options.IgnoreDefaultArgs,
                 ignoreAllDefaultArgs: options.IgnoreAllDefaultArgs).ConfigureAwait(false)).Object;
-            browser.LocalUtils = Playwright.Utils;
+            browser.LocalUtils = Playwright._utils;
             return browser;
         }
 
@@ -136,7 +136,7 @@ namespace Microsoft.Playwright.Core
                 RecordHarPath = options.RecordHarPath,
                 RecordHarOmitContent = options.RecordHarOmitContent,
             };
-            ((Core.Tracing)context.Tracing).LocalUtils = Playwright.Utils;
+            ((Core.Tracing)context.Tracing).LocalUtils = Playwright._utils;
             return context;
         }
 
@@ -218,7 +218,7 @@ namespace Microsoft.Playwright.Core
                 browser = playwright.PreLaunchedBrowser;
                 browser.ShouldCloseConnectionOnClose = true;
                 browser.Disconnected += (_, _) => ClosePipe();
-                browser.LocalUtils = Playwright.Utils;
+                browser.LocalUtils = Playwright._utils;
                 return playwright.PreLaunchedBrowser;
             }
             var task = CreateBrowserAsync();
@@ -239,7 +239,7 @@ namespace Microsoft.Playwright.Core
             {
                 browser.BrowserContextsList.Add(defaultContextValue.ToObject<BrowserContext>(_channel.Connection.DefaultJsonSerializerOptions));
             }
-            browser.LocalUtils = Playwright.Utils;
+            browser.LocalUtils = Playwright._utils;
             return browser;
         }
     }

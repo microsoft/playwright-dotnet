@@ -68,7 +68,7 @@ namespace Microsoft.Playwright.Transport.Channels
                 { "handleSIGTERM", handleSIGTERM },
                 { "headless", headless },
                 { "devtools", devtools },
-                { "env", env.Remap() },
+                { "env", env.ToProtocol() },
                 { "proxy", proxy },
                 { "downloadsPath", downloadsPath },
                 { "tracesDir", tracesDir },
@@ -144,7 +144,7 @@ namespace Microsoft.Playwright.Transport.Channels
                 { "handleSIGTERM", handleSIGTERM },
                 { "handleSIGHUP", handleSIGHUP },
                 { "timeout", timeout },
-                { "env", env.Remap() },
+                { "env", env.ToProtocol() },
                 { "devtools", devtools },
                 { "slowMo", slowMo },
                 { "acceptDownloads", acceptDownloads },
@@ -172,7 +172,7 @@ namespace Microsoft.Playwright.Transport.Channels
             channelArgs.Add("geolocation", geolocation);
             channelArgs.Add("locale", locale);
             channelArgs.Add("permissions", permissions);
-            channelArgs.Add("extraHTTPHeaders", extraHTTPHeaders.Remap());
+            channelArgs.Add("extraHTTPHeaders", extraHTTPHeaders.ToProtocol());
             channelArgs.Add("offline", offline);
             channelArgs.Add("httpCredentials", httpCredentials);
             channelArgs.Add("colorScheme", colorScheme);
@@ -205,7 +205,7 @@ namespace Microsoft.Playwright.Transport.Channels
             var channelArgs = new Dictionary<string, object>
             {
                 { "endpointURL", endpointURL },
-                { "headers", headers.Remap() },
+                { "headers", headers.ToProtocol() },
                 { "slowMo", slowMo },
                 { "timeout", timeout },
             };
