@@ -61,6 +61,7 @@ function roll_driver() {
   echo "${xml_file_contents}" > "${xml_file_path}"
 
   echo "Generating API..."
+  rm -rf src/Playwright/API/Generated/
   node "$upstream_repo_path/utils/doclint/generateDotnetApi.js" "src/Playwright"
   echo "Generating transport channels..."
   rm -rf "src/Playwright/Transport/Protocol/Generated/"
