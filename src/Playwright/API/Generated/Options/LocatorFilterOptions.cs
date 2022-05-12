@@ -39,11 +39,11 @@ using System.Threading.Tasks;
 
 namespace Microsoft.Playwright
 {
-    public class PageLocatorOptions
+    public class LocatorFilterOptions
     {
-        public PageLocatorOptions() { }
+        public LocatorFilterOptions() { }
 
-        public PageLocatorOptions(PageLocatorOptions clone)
+        public LocatorFilterOptions(LocatorFilterOptions clone)
         {
             if (clone == null)
             {
