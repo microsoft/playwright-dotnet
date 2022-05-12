@@ -718,6 +718,7 @@ namespace Microsoft.Playwright
         /// so a series of actions on the same locator can in fact be performed on different
         /// DOM elements. That would happen if the DOM structure between those actions has changed.
         /// </para>
+        /// <para><a href="https://playwright.dev/dotnet/docs/locators">Learn more about locators</a>.</para>
         /// </summary>
         /// <param name="selector">
         /// A selector to use when resolving DOM element. See <a href="https://playwright.dev/dotnet/docs/selectors">working

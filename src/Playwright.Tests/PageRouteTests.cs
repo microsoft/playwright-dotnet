@@ -280,7 +280,7 @@ namespace Microsoft.Playwright.Tests
             StringAssert.StartsWith(failedRequest.Failure, exception.Message);
             if (TestConstants.IsWebKit)
             {
-                Assert.AreEqual("Request intercepted", failedRequest.Failure);
+                Assert.AreEqual("Blocked by Web Inspector", failedRequest.Failure);
             }
             else if (TestConstants.IsFirefox)
             {
@@ -315,7 +315,7 @@ namespace Microsoft.Playwright.Tests
             Assert.NotNull(exception);
             if (TestConstants.IsWebKit)
             {
-                StringAssert.Contains("Request intercepted", exception.Message);
+                StringAssert.Contains("Blocked by Web Inspector", exception.Message);
             }
             else if (TestConstants.IsFirefox)
             {

@@ -503,12 +503,18 @@ namespace Microsoft.Playwright
         Task<IReadOnlyList<IElementHandle>> QuerySelectorAllAsync(string selector);
 
         /// <summary>
-        /// <para>Returns the buffer with the captured screenshot.</para>
+        /// <para>
+        /// This method captures a screenshot of the page, clipped to the size and position
+        /// of this particular element. If the element is covered by other elements, it will
+        /// not be actually visible on the screenshot. If the element is a scrollable container,
+        /// only the currently scrolled content will be visible on the screenshot.
+        /// </para>
         /// <para>
         /// This method waits for the <a href="https://playwright.dev/dotnet/docs/actionability">actionability</a>
         /// checks, then scrolls element into view before taking a screenshot. If the element
         /// is detached from DOM, the method throws an error.
         /// </para>
+        /// <para>Returns the buffer with the captured screenshot.</para>
         /// </summary>
         /// <param name="options">Call options</param>
         Task<byte[]> ScreenshotAsync(ElementHandleScreenshotOptions? options = default);

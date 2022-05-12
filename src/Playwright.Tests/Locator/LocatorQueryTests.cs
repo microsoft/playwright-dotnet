@@ -23,6 +23,7 @@
  */
 
 using System;
+using System.Collections.Generic;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using NUnit.Framework;
@@ -145,26 +146,37 @@ namespace Microsoft.Playwright.Tests.Locator
         {
             await Page.GotoAsync(Server.Prefix + "/frames/two-frames.html");
             var child = Page.Frames[1];
-            var exception = await PlaywrightAssert.ThrowsAsync<ArgumentException>(() =>
+            var engines = new List<(string, PageLocatorOptions)>() {
+                ("Has", new () { Has = child.Locator("span") }),
+                ("LeftOf", new () { LeftOf = child.Locator("span") }),
+                ("RightOf", new () { RightOf = child.Locator("span") }),
+                ("Above", new () { Above = child.Locator("span") }),
+                ("Below", new () { Below = child.Locator("span") }),
+                ("Near", new () { Near = child.Locator("span") }),
+            };
+            foreach (var (name, options) in engines)
             {
-                Page.Locator("div", new() { Has = child.Locator("span") });
-                return Task.CompletedTask;
-            });
-            Assert.AreEqual(exception.Message, "Inner \"has\" locator must belong to the same frame.");
+                var exception = await PlaywrightAssert.ThrowsAsync<ArgumentException>(() =>
+                {
+                    Page.Locator("div", options);
+                    return Task.CompletedTask;
+                });
+                Assert.AreEqual(exception.Message, $"Inner \"{name}\" locator must belong to the same frame.");
+            }
         }
 
-        [PlaywrightTest("locator-query.spec.ts", "should support locator.that")]
-        public async Task ShouldSupportLocatorThat()
+        [PlaywrightTest("locator-query.spec.ts", "should support locator.filter")]
+        public async Task ShouldSupportLocatorFilter()
         {
             await Page.SetContentAsync("<section><div><span>hello</span></div><div><span>world</span></div></section>");
-            await Expect(Page.Locator("div").That(new() { HasTextString = "hello" })).ToHaveCountAsync(1);
-            await Expect(Page.Locator("div", new() { HasTextString = "hello" }).That(new() { HasTextString = "hello" })).ToHaveCountAsync(1);
-            await Expect(Page.Locator("div", new() { HasTextString = "hello" }).That(new() { HasTextString = "world" })).ToHaveCountAsync(0);
-            await Expect(Page.Locator("section", new() { HasTextString = "hello" }).That(new() { HasTextString = "world" })).ToHaveCountAsync(1);
-            await Expect(Page.Locator("div").That(new() { HasTextString = "hello" }).Locator("span")).ToHaveCountAsync(1);
-            await Expect(Page.Locator("div").That(new() { Has = Page.Locator("span", new() { HasTextString = "world" }) })).ToHaveCountAsync(1);
-            await Expect(Page.Locator("div").That(new() { Has = Page.Locator("span") })).ToHaveCountAsync(2);
-            await Expect(Page.Locator("div").That(new() { Has = Page.Locator("span"), HasTextString = "world" })).ToHaveCountAsync(1);
+            await Expect(Page.Locator("div").Filter(new() { HasTextString = "hello" })).ToHaveCountAsync(1);
+            await Expect(Page.Locator("div", new() { HasTextString = "hello" }).Filter(new() { HasTextString = "hello" })).ToHaveCountAsync(1);
+            await Expect(Page.Locator("div", new() { HasTextString = "hello" }).Filter(new() { HasTextString = "world" })).ToHaveCountAsync(0);
+            await Expect(Page.Locator("section", new() { HasTextString = "hello" }).Filter(new() { HasTextString = "world" })).ToHaveCountAsync(1);
+            await Expect(Page.Locator("div").Filter(new() { HasTextString = "hello" }).Locator("span")).ToHaveCountAsync(1);
+            await Expect(Page.Locator("div").Filter(new() { Has = Page.Locator("span", new() { HasTextString = "world" }) })).ToHaveCountAsync(1);
+            await Expect(Page.Locator("div").Filter(new() { Has = Page.Locator("span") })).ToHaveCountAsync(2);
+            await Expect(Page.Locator("div").Filter(new() { Has = Page.Locator("span"), HasTextString = "world" })).ToHaveCountAsync(1);
         }
     }
 }

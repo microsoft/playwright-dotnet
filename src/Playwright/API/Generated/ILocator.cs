@@ -332,6 +332,15 @@ namespace Microsoft.Playwright
         /// <param name="options">Call options</param>
         Task FillAsync(string value, LocatorFillOptions? options = default);
 
+        /// <summary>
+        /// <para>
+        /// This method narrows existing locator according to the options, for example filters
+        /// by text.
+        /// </para>
+        /// </summary>
+        /// <param name="options">Call options</param>
+        ILocator Filter(LocatorFilterOptions? options = default);
+
         /// <summary><para>Returns locator to the first matching element.</para></summary>
         ILocator First { get; }
 
@@ -460,7 +469,8 @@ namespace Microsoft.Playwright
         /// <summary>
         /// <para>
         /// The method finds an element matching the specified selector in the <c>Locator</c>'s
-        /// subtree.
+        /// subtree. It also accepts filter options, similar to <see cref="ILocator.Filter"/>
+        /// method.
         /// </para>
         /// </summary>
         /// <param name="selector">
@@ -524,12 +534,19 @@ namespace Microsoft.Playwright
         Task PressAsync(string key, LocatorPressOptions? options = default);
 
         /// <summary>
-        /// <para>Returns the buffer with the captured screenshot.</para>
+        /// <para>
+        /// This method captures a screenshot of the page, clipped to the size and position
+        /// of a particular element matching the locator. If the element is covered by other
+        /// elements, it will not be actually visible on the screenshot. If the element is a
+        /// scrollable container, only the currently scrolled content will be visible on the
+        /// screenshot.
+        /// </para>
         /// <para>
         /// This method waits for the <a href="https://playwright.dev/dotnet/docs/actionability">actionability</a>
         /// checks, then scrolls element into view before taking a screenshot. If the element
         /// is detached from DOM, the method throws an error.
         /// </para>
+        /// <para>Returns the buffer with the captured screenshot.</para>
         /// </summary>
         /// <param name="options">Call options</param>
         Task<byte[]> ScreenshotAsync(LocatorScreenshotOptions? options = default);
@@ -941,15 +958,6 @@ namespace Microsoft.Playwright
         /// <summary><para>Returns the <c>node.textContent</c>.</para></summary>
         /// <param name="options">Call options</param>
         Task<string?> TextContentAsync(LocatorTextContentOptions? options = default);
-
-        /// <summary>
-        /// <para>
-        /// This method narrows existing locator according to the options, for example filters
-        /// by text.
-        /// </para>
-        /// </summary>
-        /// <param name="options">Call options</param>
-        ILocator That(LocatorThatOptions? options = default);
 
         /// <summary>
         /// <para>
