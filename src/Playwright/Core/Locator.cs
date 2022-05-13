@@ -54,26 +54,14 @@ namespace Microsoft.Playwright.Core
                 _selector += $" >> :scope:has-text({options.HasTextString.EscapeWithQuotes("\"")})";
             }
 
-            var engines = new List<(string, string, ILocator)>()
+            if (options?.Has != null)
             {
-                ("Has", "has", options?.Has),
-                ("LeftOf", "left-of", options?.LeftOf),
-                ("RightOf", "right-of", options?.RightOf),
-                ("Above", "above", options?.Above),
-                ("Below", "below", options?.Below),
-                ("Near", "near", options?.Near),
-            };
-            foreach (var (name, selectorName, locator) in engines)
-            {
-                if (locator == null)
+                var has = (Locator)options.Has;
+                if (has._frame != _frame)
                 {
-                    continue;
+                    throw new ArgumentException("Inner \"has\" locator must belong to the same frame.");
                 }
-                if (((Locator)locator)._frame != _frame)
-                {
-                    throw new ArgumentException($"Inner \"{name}\" locator must belong to the same frame.");
-                }
-                _selector += $" >> {selectorName}=" + JsonSerializer.Serialize(((Locator)locator)._selector);
+                _selector += " >> has=" + JsonSerializer.Serialize(has._selector);
             }
         }
 
@@ -325,17 +313,7 @@ namespace Microsoft.Playwright.Core
 
         public Task HighlightAsync() => _frame.HighlightAsync(_selector);
 
-        public ILocator Filter(LocatorFilterOptions options = null) =>
-            new Locator(_frame, _selector, new()
-            {
-                Above = options?.Above,
-                Below = options?.Below,
-                Has = options?.Has,
-                HasTextString = options?.HasTextString,
-                HasTextRegex = options?.HasTextRegex,
-                LeftOf = options?.LeftOf,
-                Near = options?.Near,
-                RightOf = options?.RightOf,
-            });
+        public ILocator That(LocatorThatOptions options = null) =>
+            new Locator(_frame, _selector, new() { Has = options?.Has, HasTextString = options?.HasTextString, HasTextRegex = options?.HasTextRegex });
     }
 }

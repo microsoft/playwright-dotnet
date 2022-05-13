@@ -530,18 +530,7 @@ namespace Microsoft.Playwright.Core
                 script,
                 arg: ScriptsHelper.SerializedArgument(arg)).ConfigureAwait(false));
 
-        public ILocator Locator(string selector, FrameLocatorOptions options = null) =>
-            new Locator(this, selector, new()
-            {
-                Above = options?.Above,
-                Below = options?.Below,
-                Has = options?.Has,
-                HasTextString = options?.HasTextString,
-                HasTextRegex = options?.HasTextRegex,
-                LeftOf = options?.LeftOf,
-                Near = options?.Near,
-                RightOf = options?.RightOf,
-            });
+        public ILocator Locator(string selector, FrameLocatorOptions options = null) => new Locator(this, selector, new() { HasTextRegex = options?.HasTextRegex, HasTextString = options?.HasTextString, Has = options?.Has });
 
         public async Task<IElementHandle> QuerySelectorAsync(string selector, FrameQuerySelectorOptions options = null)
             => (await _channel.QuerySelectorAsync(selector, options?.Strict).ConfigureAwait(false))?.Object;

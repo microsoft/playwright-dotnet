@@ -48,18 +48,12 @@ namespace Microsoft.Playwright.Tests
             Assert.AreEqual(2017, json.Year);
         }
 
-        [PlaywrightTest("jshandle-json-value.spec.ts", "should handle circular objects")]
-        [Ignore("v1.22 blocker")]
+        [PlaywrightTest("jshandle-json-value.spec.ts", "should throw for circular objects")]
         public async Task ShouldThrowForCircularObjects()
         {
-            var windowHandle = await Page.EvaluateHandleAsync("const a = {}; a.b = a; a");
-            var a = await windowHandle.JsonValueAsync<TestClass>();
-            Assert.AreEqual(a.b, a);
-        }
-
-        class TestClass
-        {
-            public TestClass b { get; set; }
+            var windowHandle = await Page.EvaluateHandleAsync("window");
+            var exception = await PlaywrightAssert.ThrowsAsync<PlaywrightException>(() => windowHandle.JsonValueAsync<object>());
+            StringAssert.Contains("Argument is a circular structure", exception.Message);
         }
     }
 }

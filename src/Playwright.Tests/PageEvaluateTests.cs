@@ -372,24 +372,22 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-evaluate.spec.ts", "should return undefined for non-serializable objects")]
-        [Ignore("v1.22 blocker")]
         public async Task ShouldReturnUndefinedForNonSerializableObjects()
             => Assert.Null(await Page.EvaluateAsync<object>("() => window"));
 
-        [PlaywrightTest("page-evaluate.spec.ts", "should work for circular object")]
-        [Ignore("v1.22 blocker")]
-        public async Task ShouldWorkForCircularObject()
+        [PlaywrightTest("page-evaluate.spec.ts", "should fail for circular object")]
+        public async Task ShouldFailForCircularObject()
         {
             object result = await Page.EvaluateAsync<object>(@"() => {
                 var a = { };
-                a.b = a;
+                var b = { a };
+                a.b = b;
                 return a;
             }");
-            Assert.NotNull(result);
+            Assert.Null(result);
         }
 
         [PlaywrightTest("page-evaluate.spec.ts", "should be able to throw a tricky error")]
-        [Ignore("v1.22 blocker")]
         public async Task ShouldBeAbleToThrowATrickyError()
         {
             var windowHandle = await Page.EvaluateHandleAsync("() => window");
@@ -633,7 +631,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest(Description = "https://github.com/microsoft/playwright-dotnet/issues/1706")]
-        [Ignore("v1.22 blocker")] // actually this should not be possible what the test tries to achieve. No access to the internal data structure!
         public async Task ShouldNotReturnDisposedJsonElement()
         {
             var result = await Page.EvaluateAsync<JsonElement?>("()=> [{a:1,b:2},{a:1,b:2}]");

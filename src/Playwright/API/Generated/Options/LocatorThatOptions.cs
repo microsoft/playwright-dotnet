@@ -39,11 +39,11 @@ using System.Threading.Tasks;
 
 namespace Microsoft.Playwright
 {
-    public class FrameLocatorLocatorOptions
+    public class LocatorThatOptions
     {
-        public FrameLocatorLocatorOptions() { }
+        public LocatorThatOptions() { }
 
-        public FrameLocatorLocatorOptions(FrameLocatorLocatorOptions clone)
+        public LocatorThatOptions(LocatorThatOptions clone)
         {
             if (clone == null)
             {
