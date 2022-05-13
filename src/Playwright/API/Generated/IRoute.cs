@@ -44,6 +44,7 @@ namespace Microsoft.Playwright
     /// Whenever a network route is set up with <see cref="IPage.RouteAsync"/> or <see cref="IBrowserContext.RouteAsync"/>,
     /// the <c>Route</c> object allows to handle the route.
     /// </para>
+    /// <para>Learn more about <a href="https://playwright.dev/dotnet/docs/network">networking</a>.</para>
     /// </summary>
     public partial interface IRoute
     {
