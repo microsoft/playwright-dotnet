@@ -475,14 +475,9 @@ namespace Microsoft.Playwright.Core
         public ILocator Locator(string selector, PageLocatorOptions options = default)
             => MainFrame.Locator(selector, new()
             {
-                Above = options?.Above,
-                Below = options?.Below,
                 Has = options?.Has,
                 HasTextString = options?.HasTextString,
                 HasTextRegex = options?.HasTextRegex,
-                LeftOf = options?.LeftOf,
-                Near = options?.Near,
-                RightOf = options?.RightOf,
             });
 
         public Task<IElementHandle> QuerySelectorAsync(string selector, PageQuerySelectorOptions options = null)

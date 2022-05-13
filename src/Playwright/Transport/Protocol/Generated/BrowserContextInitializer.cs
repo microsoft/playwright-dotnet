@@ -32,9 +32,6 @@ namespace Microsoft.Playwright.Transport.Protocol
         [JsonPropertyName("isChromium")]
         public bool IsChromium { get; set; }
 
-        [JsonPropertyName("APIRequestContext")]
-        public Core.APIRequestContext APIRequestContext { get; set; }
-
         [JsonPropertyName("tracing")]
         public Core.Tracing Tracing { get; set; }
     }

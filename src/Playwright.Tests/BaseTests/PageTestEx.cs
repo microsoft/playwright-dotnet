@@ -33,6 +33,7 @@ namespace Microsoft.Playwright.Tests
     {
         public SimpleServer Server { get; internal set; }
         public SimpleServer HttpsServer { get; internal set; }
+        public int BrowserMajorVersion { get; internal set; }
 
         [SetUp]
         public async Task HttpSetup()
@@ -40,6 +41,7 @@ namespace Microsoft.Playwright.Tests
             var http = await HttpService.Register(this);
             Server = http.Server;
             HttpsServer = http.HttpsServer;
+            BrowserMajorVersion = int.Parse(Browser.Version.Split(".")[0]);
         }
     }
 }

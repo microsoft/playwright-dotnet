@@ -101,7 +101,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-evaluate-handle.spec.ts", "should throw for circular objects")]
-        [Ignore("v1.22 blocker")]
         public async Task ShouldThrowForCircularObjects()
         {
             dynamic a = new ExpandoObject();
