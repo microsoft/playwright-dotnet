@@ -146,23 +146,12 @@ namespace Microsoft.Playwright.Tests.Locator
         {
             await Page.GotoAsync(Server.Prefix + "/frames/two-frames.html");
             var child = Page.Frames[1];
-            var engines = new List<(string, PageLocatorOptions)>() {
-                ("Has", new () { Has = child.Locator("span") }),
-                ("LeftOf", new () { LeftOf = child.Locator("span") }),
-                ("RightOf", new () { RightOf = child.Locator("span") }),
-                ("Above", new () { Above = child.Locator("span") }),
-                ("Below", new () { Below = child.Locator("span") }),
-                ("Near", new () { Near = child.Locator("span") }),
-            };
-            foreach (var (name, options) in engines)
+            var exception = await PlaywrightAssert.ThrowsAsync<ArgumentException>(() =>
             {
-                var exception = await PlaywrightAssert.ThrowsAsync<ArgumentException>(() =>
-                {
-                    Page.Locator("div", options);
-                    return Task.CompletedTask;
-                });
-                Assert.AreEqual(exception.Message, $"Inner \"{name}\" locator must belong to the same frame.");
-            }
+                Page.Locator("div", new() { Has = child.Locator("span") });
+                return Task.CompletedTask;
+            });
+            Assert.AreEqual(exception.Message, "Inner \"has\" locator must belong to the same frame.");
         }
 
         [PlaywrightTest("locator-query.spec.ts", "should support locator.filter")]

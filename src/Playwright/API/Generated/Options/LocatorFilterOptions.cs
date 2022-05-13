@@ -50,45 +50,10 @@ namespace Microsoft.Playwright
                 return;
             }
 
-            Above = clone.Above;
-            Below = clone.Below;
             Has = clone.Has;
             HasTextString = clone.HasTextString;
             HasTextRegex = clone.HasTextRegex;
-            LeftOf = clone.LeftOf;
-            Near = clone.Near;
-            RightOf = clone.RightOf;
         }
-
-        /// <summary>
-        /// <para>
-        /// Matches elements that are above any of the elements matching the inner locator,
-        /// at any horizontal position. Inner locator is queried against the same root as the
-        /// outer one. More details in <a href="https://playwright.dev/dotnet/docs/selectors#selecting-elements-based-on-layout">layout
-        /// selectors</a> guide.
-        /// </para>
-        /// <para>
-        /// Note that outer and inner locators must belong to the same frame. Inner locator
-        /// must not contain <see cref="IFrameLocator"/>s.
-        /// </para>
-        /// </summary>
-        [JsonPropertyName("above")]
-        public ILocator? Above { get; set; }
-
-        /// <summary>
-        /// <para>
-        /// Matches elements that are below any of the elements matching the inner locator,
-        /// at any horizontal position. Inner locator is queried against the same root as the
-        /// outer one. More details in <a href="https://playwright.dev/dotnet/docs/selectors#selecting-elements-based-on-layout">layout
-        /// selectors</a> guide.
-        /// </para>
-        /// <para>
-        /// Note that outer and inner locators must belong to the same frame. Inner locator
-        /// must not contain <see cref="IFrameLocator"/>s.
-        /// </para>
-        /// </summary>
-        [JsonPropertyName("below")]
-        public ILocator? Below { get; set; }
 
         /// <summary>
         /// <para>
@@ -123,51 +88,6 @@ namespace Microsoft.Playwright
         /// </summary>
         [JsonPropertyName("hasTextRegex")]
         public Regex? HasTextRegex { get; set; }
-
-        /// <summary>
-        /// <para>
-        /// Matches elements that are to the left of any element matching the inner locator,
-        /// at any vertical position. Inner locator is queried against the same root as the
-        /// outer one. More details in <a href="https://playwright.dev/dotnet/docs/selectors#selecting-elements-based-on-layout">layout
-        /// selectors</a> guide.
-        /// </para>
-        /// <para>
-        /// Note that outer and inner locators must belong to the same frame. Inner locator
-        /// must not contain <see cref="IFrameLocator"/>s.
-        /// </para>
-        /// </summary>
-        [JsonPropertyName("leftOf")]
-        public ILocator? LeftOf { get; set; }
-
-        /// <summary>
-        /// <para>
-        /// Matches elements that are near (&lt;= 50 css pixels) any of the elements matching
-        /// the inner locator. Inner locator is queried against the same root as the outer one.
-        /// More details in <a href="https://playwright.dev/dotnet/docs/selectors#selecting-elements-based-on-layout">layout
-        /// selectors</a> guide.
-        /// </para>
-        /// <para>
-        /// Note that outer and inner locators must belong to the same frame. Inner locator
-        /// must not contain <see cref="IFrameLocator"/>s.
-        /// </para>
-        /// </summary>
-        [JsonPropertyName("near")]
-        public ILocator? Near { get; set; }
-
-        /// <summary>
-        /// <para>
-        /// Matches elements that are to the right of any element matching the inner locator,
-        /// at any vertical position. Inner locator is queried against the same root as the
-        /// outer one. More details in <a href="https://playwright.dev/dotnet/docs/selectors#selecting-elements-based-on-layout">layout
-        /// selectors</a> guide.
-        /// </para>
-        /// <para>
-        /// Note that outer and inner locators must belong to the same frame. Inner locator
-        /// must not contain <see cref="IFrameLocator"/>s.
-        /// </para>
-        /// </summary>
-        [JsonPropertyName("rightOf")]
-        public ILocator? RightOf { get; set; }
     }
 }
 

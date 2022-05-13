@@ -201,6 +201,11 @@ namespace Microsoft.Playwright.Transport.Converters
                 };
             }
 
+            if (result.ValueKind == JsonValueKind.Object && result.TryGetProperty("ref", out var refValue))
+            {
+                return null;
+            }
+
             if (result.ValueKind == JsonValueKind.Object && result.TryGetProperty("d", out var date))
             {
                 return date.ToObject<DateTime>();
