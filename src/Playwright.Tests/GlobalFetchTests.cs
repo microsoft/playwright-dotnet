@@ -156,7 +156,7 @@ namespace Microsoft.Playwright.Tests
         {
             HttpsServer.SetRedirect("/redir", "/empty.html");
             var request = await Playwright.APIRequest.NewContextAsync();
-            var response = await request.GetAsync(HttpsServer.Prefix + "/redir", new RequestOptions().SetIgnoreHTTPSErrors(true));
+            var response = await request.GetAsync(HttpsServer.Prefix + "/redir", new() { IgnoreHTTPSErrors = true });
             Assert.AreEqual(200, response.Status);
             await request.DisposeAsync();
         }
@@ -184,38 +184,38 @@ namespace Microsoft.Playwright.Tests
         [PlaywrightTest("global-fetch.spec.ts", "serialize corectly")]
         public async Task ShouldSerializeCorrectly()
         {
-            var testCases = new List<(string, object, string)>(){
-                ("object", new {Foo="Bar" }, "{\u0022foo\u0022:\u0022Bar\u0022}"),
-                ("array", new object[]{"foo", "bar", 2021 }, "[\"foo\",\"bar\",2021]"),
-                ("string", "foo", "foo"),
-                ("string (falsey)", string.Empty, string.Empty),
-                ("number", 2021, "2021"),
-                ("number (falsey)", 0, "0"),
-                ("boolean", true, "true"),
-                ("bool (false)", false, "false"),
-                ("null", null, string.Empty),
-                ("literal string undefined", "undefined", "undefined"),
+            var testCases = new List<(string, (string, object), string)>(){
+                ("object", (null, new {Foo="Bar" }), "{\u0022foo\u0022:\u0022Bar\u0022}"),
+                ("array", (null, new object[]{"foo", "bar", 2021 }), "[\"foo\",\"bar\",2021]"),
+                ("string", ("foo", null), "foo"),
+                ("string (falsey)", (string.Empty, null), string.Empty),
+                ("number", (null, 2021), "2021"),
+                ("number (falsey)", (null, 0), "0"),
+                ("boolean", (null, true), "true"),
+                ("bool (false)", (null, false), "false"),
+                ("null", (null, null), string.Empty),
+                ("literal string undefined", ("undefined", null), "undefined"),
             };
             IAPIRequestContext request;
             IAPIResponse response;
 
             Server.SetRoute("/in-is-out", ctx => ctx.Request.Body.CopyToAsync(ctx.Response.Body));
 
-            foreach (var (name, value, expected) in testCases)
+            foreach (var (name, (valueString, valueObject), expected) in testCases)
             {
                 request = await Playwright.APIRequest.NewContextAsync();
 
-                response = await request.PostAsync(Server.Prefix + "/in-is-out", new RequestOptions().SetData(value));
+                response = await request.PostAsync(Server.Prefix + "/in-is-out", new() { DataObject = valueObject, DataString = valueString });
                 Assert.AreEqual(expected, await response.TextAsync());
 
-                var stringifiedValue = JsonSerializer.Serialize(value);
+                var stringifiedValue = JsonSerializer.Serialize(string.IsNullOrEmpty(valueString) ? valueString : valueObject);
                 var (serverRequestBody, _) = await TaskUtils.WhenAll(
                     Server.WaitForRequest("/in-is-out", request =>
                     {
                         using StreamReader reader = new(request.Body, Encoding.UTF8);
                         return reader.ReadToEndAsync().GetAwaiter().GetResult();
                     }),
-                    request.PostAsync(Server.Prefix + "/in-is-out", new RequestOptions().SetData(stringifiedValue).SetHeader("content-type", "application/json"))
+                    request.PostAsync(Server.Prefix + "/in-is-out", new() { DataString = stringifiedValue, Headers = new Dictionary<string, string>() { ["Content-Type"] = "application/json" } })
                 );
                 Assert.AreEqual(stringifiedValue, serverRequestBody);
 
@@ -234,7 +234,7 @@ namespace Microsoft.Playwright.Tests
                     using StreamReader reader = new(request.Body);
                     return reader.ReadToEndAsync().GetAwaiter().GetResult();
                 }),
-                request.PostAsync(Server.EmptyPage, new RequestOptions().SetData(value).SetHeader("content-type", "application/json"))
+                request.PostAsync(Server.EmptyPage, new() { DataByte = value, Headers = new Dictionary<string, string>() { ["Content-Type"] = "application/json" } })
             );
             Assert.AreEqual(value, serverPostBody);
             await request.DisposeAsync();
@@ -244,7 +244,7 @@ namespace Microsoft.Playwright.Tests
         public async Task ShouldHaveANiceToString()
         {
             var request = await Playwright.APIRequest.NewContextAsync();
-            var response = await request.PostAsync(Server.EmptyPage, new RequestOptions().SetData("My post data").SetHeader("content-type", "application/json"));
+            var response = await request.PostAsync(Server.EmptyPage, new() { DataString = "My post data", Headers = new Dictionary<string, string>() { ["Content-Type"] = "application/json" } });
             var str = response.ToString();
             StringAssert.Contains("APIResponse: 200 OK", str);
             foreach (var header in response.HeadersArray)

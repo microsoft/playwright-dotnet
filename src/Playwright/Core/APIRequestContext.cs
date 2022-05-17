@@ -54,55 +54,52 @@ namespace Microsoft.Playwright.Core
 
         public ValueTask DisposeAsync() => new(_channel.DisposeAsync());
 
-        public async Task<IAPIResponse> FetchAsync(IRequest urlOrRequest, IRequestOptions optionsArg = null)
+        public async Task<IAPIResponse> FetchAsync(IRequest urlOrRequest, APIRequestContextOptions options = null)
         {
-            var options = (RequestOptions)optionsArg ?? new RequestOptions();
-            if (options.Method == null)
+            options ??= new APIRequestContextOptions();
+            if (string.IsNullOrEmpty(options.Method))
             {
-                options.SetMethod(urlOrRequest.Method);
+                options.Method = urlOrRequest.Method;
             }
             if (options.Headers == null)
             {
                 options.Headers = await urlOrRequest.AllHeadersAsync().ConfigureAwait(false);
             }
-            if (options.Data == null && options.Form == null && options.MultiPart == null)
+            if (options.DataByte == null && options.DataObject == null && options.DataString == null && options.Form == null && options.Multipart == null)
             {
-                options.Data = urlOrRequest.PostDataBuffer;
+                options.DataByte = urlOrRequest.PostDataBuffer;
             }
             return await FetchAsync(urlOrRequest.Url, options).ConfigureAwait(false);
         }
 
-        public async Task<IAPIResponse> FetchAsync(string url, IRequestOptions optionsArg = null)
+        public async Task<IAPIResponse> FetchAsync(string url, APIRequestContextOptions options = null)
         {
-            var options = optionsArg != null ? (RequestOptions)optionsArg : new RequestOptions();
+            options ??= new APIRequestContextOptions();
             var queryParams = new Dictionary<string, string>();
-            if (options.Parameters != null)
+            if (options.Params != null)
             {
-                queryParams = options.Parameters.ToDictionary(x => x.Key, x => x.Value.ToString());
+                queryParams = options.Params.ToDictionary(x => x.Key, x => x.Value.ToString());
             }
             byte[] postData = null;
             object jsonData = null;
-            if (options.Data != null)
+            if (!string.IsNullOrEmpty(options.DataString))
             {
-                if (options.Data is string dataString)
+                if (IsJsonContentType(options.Headers?.ToDictionary(x => x.Key, x => x.Value)))
                 {
-                    if (IsJsonContentType(options.Headers))
-                    {
-                        jsonData = options.Data;
-                    }
-                    else
-                    {
-                        postData = System.Text.Encoding.UTF8.GetBytes(dataString);
-                    }
-                }
-                else if (options.Data is byte[] data)
-                {
-                    postData = data;
+                    jsonData = options.DataString;
                 }
                 else
                 {
-                    jsonData = options.Data;
+                    postData = System.Text.Encoding.UTF8.GetBytes(options.DataString);
                 }
+            }
+            else if (options.DataByte != null)
+            {
+                postData = options.DataByte;
+            }
+            else
+            {
+                jsonData = options.DataObject;
             }
 
             return await _channel.FetchAsync(
@@ -112,8 +109,8 @@ namespace Microsoft.Playwright.Core
                 options.Headers,
                 jsonData,
                 postData,
-                options.Form,
-                options.MultiPart,
+                (FormData)options.Form,
+                (FormData)options.Multipart,
                 options.Timeout,
                 options?.FailOnStatusCode,
                 options?.IgnoreHTTPSErrors).ConfigureAwait(false);
@@ -133,19 +130,24 @@ namespace Microsoft.Playwright.Core
             return contentType.Value.Contains("application/json");
         }
 
-        public Task<IAPIResponse> DeleteAsync(string url, IRequestOptions options = null) => FetchAsync(url, EnsureOptions(options).SetMethod("DELETE"));
+        public Task<IAPIResponse> DeleteAsync(string url, APIRequestContextOptions options = null) => FetchAsync(url, WithMethod(options, "DELETE"));
 
-        public Task<IAPIResponse> GetAsync(string url, IRequestOptions options = null) => FetchAsync(url, EnsureOptions(options).SetMethod("GET"));
+        public Task<IAPIResponse> GetAsync(string url, APIRequestContextOptions options = null) => FetchAsync(url, WithMethod(options, "GET"));
 
-        public Task<IAPIResponse> HeadAsync(string url, IRequestOptions options = null) => FetchAsync(url, EnsureOptions(options).SetMethod("HEAD"));
+        public Task<IAPIResponse> HeadAsync(string url, APIRequestContextOptions options = null) => FetchAsync(url, WithMethod(options, "HEAD"));
 
-        public Task<IAPIResponse> PatchAsync(string url, IRequestOptions options = null) => FetchAsync(url, EnsureOptions(options).SetMethod("PATCH"));
+        public Task<IAPIResponse> PatchAsync(string url, APIRequestContextOptions options = null) => FetchAsync(url, WithMethod(options, "PATCH"));
 
-        public Task<IAPIResponse> PostAsync(string url, IRequestOptions options = null) => FetchAsync(url, EnsureOptions(options).SetMethod("POST"));
+        public Task<IAPIResponse> PostAsync(string url, APIRequestContextOptions options = null) => FetchAsync(url, WithMethod(options, "POST"));
 
-        public Task<IAPIResponse> PutAsync(string url, IRequestOptions options = null) => FetchAsync(url, EnsureOptions(options).SetMethod("PUT"));
+        public Task<IAPIResponse> PutAsync(string url, APIRequestContextOptions options = null) => FetchAsync(url, WithMethod(options, "PUT"));
 
-        private IRequestOptions EnsureOptions(IRequestOptions options) => options ?? new RequestOptions();
+        private APIRequestContextOptions WithMethod(APIRequestContextOptions options, string method)
+        {
+            options ??= new APIRequestContextOptions();
+            options.Method = method;
+            return options;
+        }
 
         public async Task<string> StorageStateAsync(APIRequestContextStorageStateOptions options = null)
         {

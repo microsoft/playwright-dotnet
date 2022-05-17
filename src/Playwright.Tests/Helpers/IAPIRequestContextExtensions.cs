@@ -29,7 +29,7 @@ namespace Microsoft.Playwright.Tests
 {
     internal static class IAPIRequestContextExtensions
     {
-        internal static Func<string, IRequestOptions, Task<IAPIResponse>> NameToMethod(this IAPIRequestContext request, string method)
+        internal static Func<string, APIRequestContextOptions, Task<IAPIResponse>> NameToMethod(this IAPIRequestContext request, string method)
         {
             switch (method)
             {

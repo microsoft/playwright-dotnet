@@ -78,8 +78,8 @@ namespace Microsoft.Playwright
         /// </para>
         /// </summary>
         /// <param name="url">Target URL.</param>
-        /// <param name="options">Optional request parameters.</param>
-        Task<IAPIResponse> DeleteAsync(string url, IRequestOptions? options = default);
+        /// <param name="options">Call options</param>
+        Task<IAPIResponse> DeleteAsync(string url, APIRequestContextOptions? options = default);
 
         /// <summary>
         /// <para>
@@ -89,8 +89,8 @@ namespace Microsoft.Playwright
         /// </para>
         /// </summary>
         /// <param name="urlOrRequest">Target URL or Request to get all parameters from.</param>
-        /// <param name="options">Optional request parameters.</param>
-        Task<IAPIResponse> FetchAsync(string urlOrRequest, IRequestOptions? options = default);
+        /// <param name="options">Call options</param>
+        Task<IAPIResponse> FetchAsync(string urlOrRequest, APIRequestContextOptions? options = default);
 
         /// <summary>
         /// <para>
@@ -100,8 +100,8 @@ namespace Microsoft.Playwright
         /// </para>
         /// </summary>
         /// <param name="urlOrRequest">Target URL or Request to get all parameters from.</param>
-        /// <param name="options">Optional request parameters.</param>
-        Task<IAPIResponse> FetchAsync(IRequest urlOrRequest, IRequestOptions? options = default);
+        /// <param name="options">Call options</param>
+        Task<IAPIResponse> FetchAsync(IRequest urlOrRequest, APIRequestContextOptions? options = default);
 
         /// <summary>
         /// <para>
@@ -112,8 +112,8 @@ namespace Microsoft.Playwright
         /// </para>
         /// </summary>
         /// <param name="url">Target URL.</param>
-        /// <param name="options">Optional request parameters.</param>
-        Task<IAPIResponse> GetAsync(string url, IRequestOptions? options = default);
+        /// <param name="options">Call options</param>
+        Task<IAPIResponse> GetAsync(string url, APIRequestContextOptions? options = default);
 
         /// <summary>
         /// <para>
@@ -124,8 +124,8 @@ namespace Microsoft.Playwright
         /// </para>
         /// </summary>
         /// <param name="url">Target URL.</param>
-        /// <param name="options">Optional request parameters.</param>
-        Task<IAPIResponse> HeadAsync(string url, IRequestOptions? options = default);
+        /// <param name="options">Call options</param>
+        Task<IAPIResponse> HeadAsync(string url, APIRequestContextOptions? options = default);
 
         /// <summary>
         /// <para>
@@ -136,8 +136,8 @@ namespace Microsoft.Playwright
         /// </para>
         /// </summary>
         /// <param name="url">Target URL.</param>
-        /// <param name="options">Optional request parameters.</param>
-        Task<IAPIResponse> PatchAsync(string url, IRequestOptions? options = default);
+        /// <param name="options">Call options</param>
+        Task<IAPIResponse> PatchAsync(string url, APIRequestContextOptions? options = default);
 
         /// <summary>
         /// <para>
@@ -148,8 +148,8 @@ namespace Microsoft.Playwright
         /// </para>
         /// </summary>
         /// <param name="url">Target URL.</param>
-        /// <param name="options">Optional request parameters.</param>
-        Task<IAPIResponse> PostAsync(string url, IRequestOptions? options = default);
+        /// <param name="options">Call options</param>
+        Task<IAPIResponse> PostAsync(string url, APIRequestContextOptions? options = default);
 
         /// <summary>
         /// <para>
@@ -160,8 +160,8 @@ namespace Microsoft.Playwright
         /// </para>
         /// </summary>
         /// <param name="url">Target URL.</param>
-        /// <param name="options">Optional request parameters.</param>
-        Task<IAPIResponse> PutAsync(string url, IRequestOptions? options = default);
+        /// <param name="options">Call options</param>
+        Task<IAPIResponse> PutAsync(string url, APIRequestContextOptions? options = default);
 
         /// <summary>
         /// <para>
