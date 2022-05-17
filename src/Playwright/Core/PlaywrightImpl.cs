@@ -63,7 +63,7 @@ namespace Microsoft.Playwright.Core
             _initializer.Chromium.Playwright = this;
             _initializer.Firefox.Playwright = this;
             _initializer.Webkit.Playwright = this;
-            Request = new APIRequest(this);
+            APIRequest = new APIRequest(this);
         }
 
         ~PlaywrightImpl() => Dispose(false);
@@ -88,7 +88,7 @@ namespace Microsoft.Playwright.Core
 
         internal Browser PreLaunchedBrowser => _initializer.PreLaunchedBrowser;
 
-        public IAPIRequest Request { get; }
+        public IAPIRequest APIRequest { get; }
 
         /// <summary>
         /// Gets a <see cref="IBrowserType"/>.

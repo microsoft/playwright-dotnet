@@ -43,7 +43,7 @@ namespace Microsoft.Playwright
     /// <para>
     /// Exposes API that can be used for the Web API testing. This class is used for creating
     /// <see cref="IAPIRequestContext"/> instance which in turn can be used for sending
-    /// web requests. An instance of this class can be obtained via <see cref="IPlaywright.Request"/>.
+    /// web requests. An instance of this class can be obtained via <see cref="IPlaywright.APIRequest"/>.
     /// For more information see <see cref="IAPIRequestContext"/>.
     /// </para>
     /// </summary>

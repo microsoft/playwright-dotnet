@@ -47,14 +47,14 @@ namespace Microsoft.Playwright
     /// <para>
     /// Each Playwright browser context has associated with it <see cref="IAPIRequestContext"/>
     /// instance which shares cookie storage with the browser context and can be accessed
-    /// via <see cref="IBrowserContext.GetRequest"/> or <see cref="IPage.GetRequest"/>.
+    /// via <see cref="IBrowserContext.APIRequest"/> or <see cref="IPage.APIRequest"/>.
     /// It is also possible to create a new APIRequestContext instance manually by calling
     /// <see cref="IAPIRequest.NewContextAsync"/>.
     /// </para>
     /// <para>**Cookie management**</para>
     /// <para>
-    /// <see cref="IAPIRequestContext"/> retuned by <see cref="IBrowserContext.GetRequest"/>
-    /// and <see cref="IPage.GetRequest"/> shares cookie storage with the corresponding
+    /// <see cref="IAPIRequestContext"/> retuned by <see cref="IBrowserContext.APIRequest"/>
+    /// and <see cref="IPage.APIRequest"/> shares cookie storage with the corresponding
     /// <see cref="IBrowserContext"/>. Each API request will have <c>Cookie</c> header populated
     /// with the values from the browser context. If the API response contains <c>Set-Cookie</c>
     /// header it will automatically update <see cref="IBrowserContext"/> cookies and requests

@@ -381,7 +381,7 @@ namespace Microsoft.Playwright
         /// use context cookies.
         /// </para>
         /// </summary>
-        public IAPIRequestContext GetRequest { get; }
+        public IAPIRequestContext APIRequest { get; }
 
         /// <summary>
         /// <para>

@@ -107,7 +107,7 @@ namespace Microsoft.Playwright
         public IBrowserType Firefox { get; }
 
         /// <summary><para>Exposes API that can be used for the Web API testing.</para></summary>
-        public IAPIRequest Request { get; }
+        public IAPIRequest APIRequest { get; }
 
         /// <summary>
         /// <para>

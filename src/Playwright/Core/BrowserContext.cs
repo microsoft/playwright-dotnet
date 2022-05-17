@@ -148,7 +148,7 @@ namespace Microsoft.Playwright.Core
 
         internal BrowserNewContextOptions Options { get; set; }
 
-        public IAPIRequestContext GetRequest => _request;
+        public IAPIRequestContext APIRequest => _request;
 
         public Task AddCookiesAsync(IEnumerable<Cookie> cookies) => Channel.AddCookiesAsync(cookies);
 

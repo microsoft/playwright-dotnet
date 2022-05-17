@@ -41,7 +41,7 @@ namespace Microsoft.Playwright.Tests
         [PlaywrightTest("browsercontext-fetch.spec.ts", "get should work")]
         public async Task GetShouldWork()
         {
-            var response = await Context.GetRequest.GetAsync(Server.Prefix + "/simple.json");
+            var response = await Context.APIRequest.GetAsync(Server.Prefix + "/simple.json");
             Assert.AreEqual(Server.Prefix + "/simple.json", response.Url);
             Assert.AreEqual(200, response.Status);
             Assert.AreEqual("OK", response.StatusText);
@@ -54,7 +54,7 @@ namespace Microsoft.Playwright.Tests
         [PlaywrightTest("browsercontext-fetch.spec.ts", "fetch should work")]
         public async Task FetchShouldWork()
         {
-            var response = await Context.GetRequest.FetchAsync(Server.Prefix + "/simple.json");
+            var response = await Context.APIRequest.FetchAsync(Server.Prefix + "/simple.json");
             Assert.AreEqual(Server.Prefix + "/simple.json", response.Url);
             Assert.AreEqual(200, response.Status);
             Assert.AreEqual("OK", response.StatusText);
@@ -72,7 +72,7 @@ namespace Microsoft.Playwright.Tests
                 context.Abort();
                 return Task.CompletedTask;
             });
-            var error = await PlaywrightAssert.ThrowsAsync<PlaywrightException>(async () => await Context.GetRequest.GetAsync(Server.Prefix + "/test"));
+            var error = await PlaywrightAssert.ThrowsAsync<PlaywrightException>(async () => await Context.APIRequest.GetAsync(Server.Prefix + "/test"));
             StringAssert.Contains("socket hang up", error.Message);
         }
 
@@ -85,7 +85,7 @@ namespace Microsoft.Playwright.Tests
                 context.Abort();
                 return Task.CompletedTask;
             });
-            var error = await PlaywrightAssert.ThrowsAsync<PlaywrightException>(async () => await Context.GetRequest.GetAsync(Server.Prefix + "/redirect"));
+            var error = await PlaywrightAssert.ThrowsAsync<PlaywrightException>(async () => await Context.APIRequest.GetAsync(Server.Prefix + "/redirect"));
             StringAssert.Contains("socket hang up", error.Message);
         }
 
@@ -105,7 +105,7 @@ namespace Microsoft.Playwright.Tests
             }});
             var (cookieHeader, _) = await TaskUtils.WhenAll(
                 Server.WaitForRequest("/simple.json", request => request.Headers["Cookie"].First()),
-                Context.GetRequest.FetchAsync(Server.Prefix + "/simple.json")
+                Context.APIRequest.FetchAsync(Server.Prefix + "/simple.json")
             );
             Assert.AreEqual("username=John Doe", cookieHeader);
         }
@@ -117,7 +117,7 @@ namespace Microsoft.Playwright.Tests
             queryString.Add("p1", "v1");
             queryString.Add("парам2", "знач2");
             var requestOptions = new RequestOptions().SetQueryParam("p1", "v1").SetQueryParam("парам2", "знач2");
-            await ForAllMethods(Context.GetRequest, async responseTask =>
+            await ForAllMethods(Context.APIRequest, async responseTask =>
             {
                 var (receivedQueryString, _) = await TaskUtils.WhenAll(
                     Server.WaitForRequest("/empty.html", request => request.Query),
@@ -131,7 +131,7 @@ namespace Microsoft.Playwright.Tests
         [PlaywrightTest("browsercontext-fetch.spec.ts", "should support failOnStatusCode")]
         public async Task ShouldSupportFailOnStatusCode()
         {
-            await ForAllMethods(Context.GetRequest, async responseTask =>
+            await ForAllMethods(Context.APIRequest, async responseTask =>
             {
                 var exception = await PlaywrightAssert.ThrowsAsync<PlaywrightException>(async () => await responseTask);
                 StringAssert.Contains("404 Not Found", exception.Message);
@@ -141,7 +141,7 @@ namespace Microsoft.Playwright.Tests
         [PlaywrightTest("browsercontext-fetch.spec.ts", "should support ignoreHTTPSErrors option")]
         public async Task ShouldSupporIgnoreHTTPSErrorsOption()
         {
-            await ForAllMethods(Context.GetRequest, async responseTask =>
+            await ForAllMethods(Context.APIRequest, async responseTask =>
             {
                 var response = await responseTask;
                 Assert.AreEqual(200, response.Status);
@@ -162,7 +162,7 @@ namespace Microsoft.Playwright.Tests
                 Secure = false,
                 SameSite = SameSiteAttribute.Lax,
             }});
-            await ForAllMethods(Context.GetRequest, async responseTask =>
+            await ForAllMethods(Context.APIRequest, async responseTask =>
             {
                 var (response, _) = await TaskUtils.WhenAll(
                     Server.WaitForRequest("/empty.html", request => request.Headers["Cookie"].First()),
@@ -190,7 +190,7 @@ namespace Microsoft.Playwright.Tests
             }});
             var ((requestURL, requestCookieHeader), response) = await TaskUtils.WhenAll(
                 Server.WaitForRequest("/simple.json", request => (request.Path, request.Headers["Cookie"].First())),
-                Context.GetRequest.FetchAsync(Server.Prefix + "/redirect1")
+                Context.APIRequest.FetchAsync(Server.Prefix + "/redirect1")
             );
             Assert.AreEqual("username=John Doe", requestCookieHeader);
             Assert.AreEqual("/simple.json", requestURL.ToString());
@@ -206,7 +206,7 @@ namespace Microsoft.Playwright.Tests
                 context.Response.StatusCode = 200;
                 return Task.CompletedTask;
             });
-            await Context.GetRequest.GetAsync(Server.Prefix + "/setcookie.html");
+            await Context.APIRequest.GetAsync(Server.Prefix + "/setcookie.html");
             await Page.GotoAsync(Server.EmptyPage);
             Assert.AreEqual("first=", await Page.EvaluateAsync<string>("() => document.cookie"));
             var cookies = await Context.CookiesAsync();
@@ -225,7 +225,7 @@ namespace Microsoft.Playwright.Tests
                 await context.Response.Body.WriteAsync(System.Text.Encoding.UTF8.GetBytes("text content"));
                 await context.Response.CompleteAsync();
             });
-            var response = await Context.GetRequest.GetAsync(Server.Prefix + "/setcookie.html");
+            var response = await Context.APIRequest.GetAsync(Server.Prefix + "/setcookie.html");
             Assert.AreEqual("text content", await response.TextAsync());
         }
 
@@ -251,7 +251,7 @@ namespace Microsoft.Playwright.Tests
                     Server.WaitForRequest("/redirect1", request => request.Headers["Cookie"].FirstOrDefault()),
                     Server.WaitForRequest("/a/b/redirect2", request => request.Headers["Cookie"].FirstOrDefault()),
                     Server.WaitForRequest("/title.html", request => request.Headers["Cookie"].FirstOrDefault()),
-                    Context.GetRequest.GetAsync(Server.Prefix + "/redirect1")
+                    Context.APIRequest.GetAsync(Server.Prefix + "/redirect1")
                 );
                 Assert.AreEqual(req1Cookie, null);
                 Assert.AreEqual("r1=v1", req2Cookie);
@@ -262,7 +262,7 @@ namespace Microsoft.Playwright.Tests
                     Server.WaitForRequest("/redirect1", request => request.Headers["Cookie"].FirstOrDefault()),
                     Server.WaitForRequest("/a/b/redirect2", request => request.Headers["Cookie"].FirstOrDefault()),
                     Server.WaitForRequest("/title.html", request => request.Headers["Cookie"].FirstOrDefault()),
-                    Context.GetRequest.GetAsync(Server.Prefix + "/redirect1")
+                    Context.APIRequest.GetAsync(Server.Prefix + "/redirect1")
                 );
                 Assert.AreEqual("r1=v1", req1Cookie);
                 Assert.AreEqual(new string[] { "r1=v1", "r2=v2" }, req2Cookie.Split(';').Select(s => s.Trim()).OrderBy(s => s).ToArray());
@@ -289,7 +289,7 @@ namespace Microsoft.Playwright.Tests
                 context.Response.StatusCode = 200;
                 return Task.CompletedTask;
             });
-            var response = await Context.GetRequest.GetAsync(Server.Prefix + "/headers");
+            var response = await Context.APIRequest.GetAsync(Server.Prefix + "/headers");
             Assert.AreEqual(200, response.Status);
             var headers = response.HeadersArray.Where(header => header.Name.ToLower().StartsWith("name-")).ToList();
             Assert.AreEqual(4, headers.Count);
@@ -313,7 +313,7 @@ namespace Microsoft.Playwright.Tests
 
             var (requestURL, response) = await TaskUtils.WhenAll(
                 Server.WaitForRequest("/empty.html", request => request.Path.ToString()),
-                Context.GetRequest.GetAsync(Server.Prefix + "/empty.html", new RequestOptions().SetHeader("Authorization", $"Basic {Convert.ToBase64String(System.Text.Encoding.UTF8.GetBytes("user:pass"))}"))
+                Context.APIRequest.GetAsync(Server.Prefix + "/empty.html", new RequestOptions().SetHeader("Authorization", $"Basic {Convert.ToBase64String(System.Text.Encoding.UTF8.GetBytes("user:pass"))}"))
             );
             Assert.AreEqual(200, response.Status);
             Assert.AreEqual("/empty.html", requestURL);
@@ -330,7 +330,7 @@ namespace Microsoft.Playwright.Tests
                     using StreamReader reader = new(request.Body, System.Text.Encoding.UTF8);
                     return (request.Method, request.Path, reader.ReadToEndAsync().GetAwaiter().GetResult());
                 }),
-                    Context.GetRequest.NameToMethod(method)(Server.Prefix + "/simple.json", new RequestOptions().SetMethod("POST").SetData("My request"))
+                    Context.APIRequest.NameToMethod(method)(Server.Prefix + "/simple.json", new RequestOptions().SetMethod("POST").SetData("My request"))
                 );
                 Assert.AreEqual(method.ToUpper(), requestMethod);
                 Assert.AreEqual("My request", requestBody);
@@ -344,7 +344,7 @@ namespace Microsoft.Playwright.Tests
         {
             var (requestHeaders, _) = await TaskUtils.WhenAll(
                 Server.WaitForRequest("/empty.html", request => request.Headers.ToDictionary(header => header.Key, header => header.Value)),
-                Context.GetRequest.GetAsync(Server.Prefix + "/empty.html")
+                Context.APIRequest.GetAsync(Server.Prefix + "/empty.html")
             );
             Assert.AreEqual("*/*", requestHeaders["Accept"].First());
             var userAgent = await Page.EvaluateAsync<string>("() => navigator.userAgent");
@@ -362,7 +362,7 @@ namespace Microsoft.Playwright.Tests
             }
             var ((requestHeaderContentLength, requestHeaderContentType), _) = await TaskUtils.WhenAll(
                 Server.WaitForRequest("/empty.html", request => (request.Headers["Content-Length"].FirstOrDefault(), request.Headers["Content-Type"].FirstOrDefault())),
-                Context.GetRequest.PostAsync(Server.Prefix + "/empty.html", new RequestOptions().SetData(bytes))
+                Context.APIRequest.PostAsync(Server.Prefix + "/empty.html", new RequestOptions().SetData(bytes))
             );
             Assert.AreEqual("256", requestHeaderContentLength);
             Assert.AreEqual("application/octet-stream", requestHeaderContentType);
@@ -375,7 +375,7 @@ namespace Microsoft.Playwright.Tests
             Server.SetRedirect("/redirect", "/empty.html");
             var (requestHeaders, _) = await TaskUtils.WhenAll(
                 Server.WaitForRequest("/redirect", request => request.Headers.ToDictionary(header => header.Key, header => header.Value)),
-                Context.GetRequest.GetAsync(Server.Prefix + "/redirect")
+                Context.APIRequest.GetAsync(Server.Prefix + "/redirect")
             );
             Assert.AreEqual("*/*", requestHeaders["Accept"].First());
             var userAgent = await Page.EvaluateAsync<string>("() => navigator.userAgent");
@@ -389,7 +389,7 @@ namespace Microsoft.Playwright.Tests
             Server.SetRedirect("/redirect", "/empty.html");
             var (requestHeaders, _) = await TaskUtils.WhenAll(
                 Server.WaitForRequest("/redirect", request => request.Headers.ToDictionary(header => header.Key, header => header.Value)),
-                Context.GetRequest.GetAsync(Server.Prefix + "/redirect")
+                Context.APIRequest.GetAsync(Server.Prefix + "/redirect")
             );
             Assert.AreEqual("*/*", requestHeaders["Accept"].First());
             var userAgent = await Page.EvaluateAsync<string>("() => navigator.userAgent");
@@ -406,7 +406,7 @@ namespace Microsoft.Playwright.Tests
                 Server.WaitForRequest("/a/redirect1", request => request.Headers.ToDictionary(header => header.Key, header => header.Value)),
                 Server.WaitForRequest("/b/c/redirect2", request => request.Headers.ToDictionary(header => header.Key, header => header.Value)),
                 Server.WaitForRequest("/simple.json", request => request.Headers.ToDictionary(header => header.Key, header => header.Value)),
-                Context.GetRequest.GetAsync(Server.Prefix + "/a/redirect1", new RequestOptions().SetHeader("foo", "bar"))
+                Context.APIRequest.GetAsync(Server.Prefix + "/a/redirect1", new RequestOptions().SetHeader("foo", "bar"))
             );
             Assert.AreEqual("bar", req1Headers["foo"].First());
             Assert.AreEqual("bar", req2Headers["foo"].First());
@@ -425,7 +425,7 @@ namespace Microsoft.Playwright.Tests
                 Server.WaitForRequest("/a/redirect1", request => request.Headers["my-secret"].First()),
                 Server.WaitForRequest("/b/c/redirect2", request => request.Headers["my-secret"].First()),
                 Server.WaitForRequest("/simple.json", request => request.Headers["my-secret"].First()),
-                Context.GetRequest.GetAsync(Server.Prefix + "/a/redirect1")
+                Context.APIRequest.GetAsync(Server.Prefix + "/a/redirect1")
             );
             Assert.AreEqual("Value", req1SecretHeader);
             Assert.AreEqual("Value", req2SecretHeader);
@@ -435,24 +435,24 @@ namespace Microsoft.Playwright.Tests
         [PlaywrightTest("browsercontext-fetch.spec.ts", "should throw on invalid header value")]
         public async Task ShouldThrowOnInvalidHeaderValue()
         {
-            var exception = await PlaywrightAssert.ThrowsAsync<PlaywrightException>(async () => await Context.GetRequest.GetAsync(Server.Prefix + "/a/redirect1", new RequestOptions().SetHeader("foo", "недопустимое значение")));
+            var exception = await PlaywrightAssert.ThrowsAsync<PlaywrightException>(async () => await Context.APIRequest.GetAsync(Server.Prefix + "/a/redirect1", new RequestOptions().SetHeader("foo", "недопустимое значение")));
             StringAssert.Contains("Invalid character in header content", exception.Message);
         }
 
         [PlaywrightTest("browsercontext-fetch.spec.ts", "should throw on non-http(s) protocol")]
         public async Task ShouldThrowOnNonHttpsProtocol()
         {
-            var exception = await PlaywrightAssert.ThrowsAsync<PlaywrightException>(async () => await Context.GetRequest.GetAsync("data:text/plain,test"));
+            var exception = await PlaywrightAssert.ThrowsAsync<PlaywrightException>(async () => await Context.APIRequest.GetAsync("data:text/plain,test"));
             StringAssert.Contains("Protocol \"data:\" not supported", exception.Message);
 
-            exception = await PlaywrightAssert.ThrowsAsync<PlaywrightException>(async () => await Context.GetRequest.GetAsync("file:///tmp/foo"));
+            exception = await PlaywrightAssert.ThrowsAsync<PlaywrightException>(async () => await Context.APIRequest.GetAsync("file:///tmp/foo"));
             StringAssert.Contains("Protocol \"file:\" not supported", exception.Message);
         }
 
         [PlaywrightTest("browsercontext-fetch.spec.ts", "should support https")]
         public async Task ShouldSupportHttps()
         {
-            var response = await Context.GetRequest.GetAsync(HttpsServer.EmptyPage, new RequestOptions().SetIgnoreHTTPSErrors(true));
+            var response = await Context.APIRequest.GetAsync(HttpsServer.EmptyPage, new RequestOptions().SetIgnoreHTTPSErrors(true));
             Assert.AreEqual(200, response.Status);
         }
 
@@ -463,7 +463,7 @@ namespace Microsoft.Playwright.Tests
             {
                 IgnoreHTTPSErrors = true
             });
-            var response = await context.GetRequest.GetAsync(HttpsServer.EmptyPage);
+            var response = await context.APIRequest.GetAsync(HttpsServer.EmptyPage);
             Assert.AreEqual(200, response.Status);
             await context.CloseAsync();
         }
@@ -475,7 +475,7 @@ namespace Microsoft.Playwright.Tests
             {
                 BaseURL = Server.Prefix,
             });
-            var response = await context.GetRequest.GetAsync("/empty.html");
+            var response = await context.APIRequest.GetAsync("/empty.html");
             Assert.AreEqual(Server.EmptyPage, response.Url);
             await context.CloseAsync();
         }
@@ -487,14 +487,14 @@ namespace Microsoft.Playwright.Tests
             {
                 await Task.Delay(5000);
             });
-            var exception = await PlaywrightAssert.ThrowsAsync<PlaywrightException>(async () => await Context.GetRequest.GetAsync(Server.Prefix + "/slow", new RequestOptions().SetTimeout(10)));
+            var exception = await PlaywrightAssert.ThrowsAsync<PlaywrightException>(async () => await Context.APIRequest.GetAsync(Server.Prefix + "/slow", new RequestOptions().SetTimeout(10)));
             StringAssert.Contains("Request timed out after 10ms", exception.Message);
         }
 
         [PlaywrightTest("browsercontext-fetch.spec.ts", "should dispose")]
         public async Task ShouldDispose()
         {
-            var response = await Context.GetRequest.GetAsync(Server.Prefix + "/simple.json");
+            var response = await Context.APIRequest.GetAsync(Server.Prefix + "/simple.json");
             Assert.AreEqual("bar", (await response.JsonAsync())?.GetProperty("foo").GetString());
             await response.DisposeAsync();
             var exception = await PlaywrightAssert.ThrowsAsync<PlaywrightException>(() => response.BodyAsync());
@@ -505,7 +505,7 @@ namespace Microsoft.Playwright.Tests
         [PlaywrightTest("browsercontext-fetch.spec.ts", "should dispose when context closes")]
         public async Task ShouldDisposeWhenContextCloses()
         {
-            var response = await Context.GetRequest.GetAsync(Server.Prefix + "/simple.json");
+            var response = await Context.APIRequest.GetAsync(Server.Prefix + "/simple.json");
             Assert.AreEqual("bar", (await response.JsonAsync())?.GetProperty("foo").GetString());
             await Context.CloseAsync();
             var exception = await PlaywrightAssert.ThrowsAsync<PlaywrightException>(() => response.BodyAsync());
@@ -525,7 +525,7 @@ namespace Microsoft.Playwright.Tests
                     using StreamReader reader = new(request.Body, System.Text.Encoding.UTF8);
                     return (request.Method, request.Headers.ToDictionary(header => header.Key, header => header.Value), reader.ReadToEndAsync().GetAwaiter().GetResult());
                 }),
-                Context.GetRequest.FetchAsync(pageRequest, new RequestOptions().SetMethod("POST").SetHeader("foo", "bar").SetData("Data"))
+                Context.APIRequest.FetchAsync(pageRequest, new RequestOptions().SetMethod("POST").SetHeader("foo", "bar").SetData("Data"))
             );
             Assert.AreEqual("POST", requestMethod);
             Assert.AreEqual("bar", requestHeaders["foo"].First());
@@ -545,7 +545,7 @@ namespace Microsoft.Playwright.Tests
                     request.Headers.ToDictionary(header => header.Key, header => header.Value),
                     request.Form.ToDictionary(form => form.Key, form => form.Value)
                 )),
-                Context.GetRequest.PostAsync(Server.EmptyPage, new RequestOptions().SetForm(formData))
+                Context.APIRequest.PostAsync(Server.EmptyPage, new RequestOptions().SetForm(formData))
             );
             Assert.AreEqual("POST", requestMethod);
             Assert.AreEqual("application/x-www-form-urlencoded", requestHeaders["Content-Type"].First());
@@ -575,7 +575,7 @@ namespace Microsoft.Playwright.Tests
                         reader.ReadToEndAsync().GetAwaiter().GetResult()
                     );
                 }),
-                Context.GetRequest.PostAsync(Server.EmptyPage, new RequestOptions().SetData(data))
+                Context.APIRequest.PostAsync(Server.EmptyPage, new RequestOptions().SetData(data))
             );
             Assert.AreEqual("POST", requestMethod);
             Assert.AreEqual("application/json", requestHeaders["Content-Type"].First());
@@ -607,7 +607,7 @@ namespace Microsoft.Playwright.Tests
                     request.Method,
                     request.Headers.ToDictionary(header => header.Key, header => header.Value)
                 )),
-                Context.GetRequest.PostAsync(Server.EmptyPage, new RequestOptions().SetMultipart(multipart))
+                Context.APIRequest.PostAsync(Server.EmptyPage, new RequestOptions().SetMultipart(multipart))
             );
             Assert.AreEqual("POST", responseMethod);
             StringAssert.Contains("multipart/form-data", responseHeaders["Content-Type"].First());
@@ -634,7 +634,7 @@ namespace Microsoft.Playwright.Tests
                     using StreamReader reader = new(request.Body, System.Text.Encoding.UTF8);
                     return (request.Method, request.Headers.ToDictionary(header => header.Key, header => header.Value), reader.ReadToEndAsync().GetAwaiter().GetResult());
                 }),
-                Context.GetRequest.PostAsync(Server.EmptyPage, new RequestOptions().SetData(data).SetHeader("content-type", "unknown"))
+                Context.APIRequest.PostAsync(Server.EmptyPage, new RequestOptions().SetData(data).SetHeader("content-type", "unknown"))
             );
             Assert.AreEqual("POST", requestMethod);
             Assert.AreEqual("unknown", requestHeaders["Content-Type"].First());
@@ -646,7 +646,7 @@ namespace Microsoft.Playwright.Tests
         public async Task ShouldThrowWhenDataPassedForUnsupportedRequest()
         {
             var exception = await PlaywrightAssert.ThrowsAsync<PlaywrightException>(() =>
-               Context.GetRequest.FetchAsync(Server.EmptyPage, new RequestOptions().SetMethod("GET").SetData(new Dictionary<string, object>())));
+               Context.APIRequest.FetchAsync(Server.EmptyPage, new RequestOptions().SetMethod("GET").SetData(new Dictionary<string, object>())));
             StringAssert.Contains("Method GET does not accept post data", exception.Message);
         }
 
@@ -658,13 +658,13 @@ namespace Microsoft.Playwright.Tests
                 context.Response.Headers["Set-Cookie"] = new(new string[] { "foobar42=kekstar42", "c=d" });
                 return Task.CompletedTask;
             });
-            await Context.GetRequest.GetAsync(Server.Prefix + "/setcookie.html");
+            await Context.APIRequest.GetAsync(Server.Prefix + "/setcookie.html");
             var contextState = await Context.StorageStateAsync();
-            var requestState = await Context.GetRequest.StorageStateAsync();
+            var requestState = await Context.APIRequest.StorageStateAsync();
             StringAssert.Contains("foobar42", contextState);
             StringAssert.Contains("kekstar42", contextState);
             Assert.AreEqual(contextState, requestState);
-            var pageState = await Page.GetRequest.StorageStateAsync();
+            var pageState = await Page.APIRequest.StorageStateAsync();
             Assert.AreEqual(contextState, pageState);
         }
 
@@ -678,7 +678,7 @@ namespace Microsoft.Playwright.Tests
                 .SetQueryParam("bool2", false);
             var (receivedQueryParams, _) = await TaskUtils.WhenAll(
                 Server.WaitForRequest("/empty.html", request => request.Query.ToDictionary(param => param.Key, param => param.Value)),
-                Context.GetRequest.GetAsync(Server.EmptyPage, requestOptions)
+                Context.APIRequest.GetAsync(Server.EmptyPage, requestOptions)
             );
             Assert.AreEqual("s", receivedQueryParams["str"].First());
             Assert.AreEqual("10", receivedQueryParams["num"].First());

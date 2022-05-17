@@ -1380,11 +1380,11 @@ namespace Microsoft.Playwright
         /// <summary>
         /// <para>
         /// API testing helper associated with this page. This method returns the same instance
-        /// as <see cref="IBrowserContext.GetRequest"/> on the page's context. See <see cref="IBrowserContext.GetRequest"/>
+        /// as <see cref="IBrowserContext.APIRequest"/> on the page's context. See <see cref="IBrowserContext.APIRequest"/>
         /// for more details.
         /// </para>
         /// </summary>
-        public IAPIRequestContext GetRequest { get; }
+        public IAPIRequestContext APIRequest { get; }
 
         /// <summary>
         /// <para>Routing provides the capability to modify network requests that are made by a page.</para>
