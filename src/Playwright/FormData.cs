@@ -24,8 +24,9 @@
 
 using System;
 using System.Collections.Generic;
+using Microsoft.Playwright.Core;
 
-namespace Microsoft.Playwright.Core
+namespace Microsoft.Playwright
 {
     public class FormData : IFormData
     {
