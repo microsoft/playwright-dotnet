@@ -162,5 +162,7 @@ namespace Microsoft.Playwright.Core
 
             return state;
         }
+
+        IFormData IAPIRequestContext.CreateFormData() => new FormData();
     }
 }

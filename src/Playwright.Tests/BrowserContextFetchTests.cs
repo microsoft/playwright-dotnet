@@ -542,7 +542,7 @@ namespace Microsoft.Playwright.Tests
         [PlaywrightTest("browsercontext-fetch.spec.ts", "should support application/x-www-form-urlencoded")]
         public async Task ShouldSupportApplicationXWwwFormUrlEncoded()
         {
-            var formData = new FormData();
+            var formData = Context.APIRequest.CreateFormData();
             formData.Set("firstNam", "John");
             formData.Set("lastNam", "Doe");
             formData.Set("file", "f.js");
@@ -599,7 +599,7 @@ namespace Microsoft.Playwright.Tests
                 MimeType = "text/javascript",
                 Buffer = System.Text.Encoding.UTF8.GetBytes("var x = 10;\r\n;console.log(x);")
             };
-            var multipart = new FormData();
+            var multipart = Context.APIRequest.CreateFormData();
             multipart.Set("firstName", "John");
             multipart.Set("lastName", "Doe");
             multipart.Set("file", file);

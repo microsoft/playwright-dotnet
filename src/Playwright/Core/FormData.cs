@@ -24,9 +24,9 @@
 
 using System;
 using System.Collections.Generic;
-using Microsoft.Playwright.Core;
+using Microsoft.Playwright.Transport.Protocol;
 
-namespace Microsoft.Playwright
+namespace Microsoft.Playwright.Core
 {
     public class FormData : IFormData
     {
@@ -71,7 +71,7 @@ namespace Microsoft.Playwright
                 }
                 else
                 {
-                    output.Add(new NameValueEntry(kvp.Key, kvp.Value.ToString()));
+                    output.Add(new NameValue() { Name = kvp.Key, Value = kvp.Value.ToString() });
                 }
             }
             return output;

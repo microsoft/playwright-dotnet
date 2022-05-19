@@ -34,11 +34,11 @@ namespace Microsoft.Playwright.Core
     {
         internal APIRequestContext _context;
 
-        private readonly APIResponseInitializer _initializer;
+        private readonly Transport.Protocol.APIResponse _initializer;
 
         private readonly RawHeaders _rawHeaders;
 
-        public APIResponse(APIRequestContext context, APIResponseInitializer initializer)
+        public APIResponse(APIRequestContext context, Transport.Protocol.APIResponse initializer)
         {
             _initializer = initializer;
             _context = context;

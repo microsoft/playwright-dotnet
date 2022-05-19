@@ -71,6 +71,14 @@ namespace Microsoft.Playwright
     {
         /// <summary>
         /// <para>
+        /// Creates a new <see cref="IFormData"/> instance which is used for providing form
+        /// and multipart data when making HTTP requests.
+        /// </para>
+        /// </summary>
+        IFormData CreateFormData();
+
+        /// <summary>
+        /// <para>
         /// Sends HTTP(S) <a href="https://developer.mozilla.org/en-US/docs/Web/HTTP/Methods/DELETE">DELETE</a>
         /// request and returns its response. The method will populate request cookies from
         /// the context and update context cookies from the response. The method will automatically

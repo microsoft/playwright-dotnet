@@ -27,6 +27,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.Playwright.Core;
 using Microsoft.Playwright.Helpers;
+using Microsoft.Playwright.Transport.Protocol;
 
 namespace Microsoft.Playwright.Transport.Channels
 {
@@ -67,7 +68,7 @@ namespace Microsoft.Playwright.Transport.Channels
             };
 
             var response = await Connection.SendMessageToServerAsync(Guid, "fetch", message).ConfigureAwait(false);
-            return new APIResponse(Object, response?.GetProperty("response").ToObject<APIResponseInitializer>());
+            return new Core.APIResponse(Object, response?.GetProperty("response").ToObject<Protocol.APIResponse>());
         }
 
         internal Task<StorageState> StorageStateAsync()
