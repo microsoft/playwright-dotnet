@@ -22,44 +22,26 @@
  * SOFTWARE.
  */
 
-namespace Microsoft.Playwright.Transport.Channels
+using System.Collections.Generic;
+using System.Text.Json.Serialization;
+
+namespace Microsoft.Playwright.Transport.Protocol
 {
-    internal class SerializedError
+    internal class SecurityDetails
     {
-        private string _message;
+        [JsonPropertyName("issuer")]
+        public string Issuer { get; set; }
 
-        /// <summary>
-        /// Error name.
-        /// </summary>
-        public string Name { get; set; }
+        [JsonPropertyName("protocol")]
+        public string Protocol { get; set; }
 
-        /// <summary>
-        /// Error Message.
-        /// </summary>
-        public string Message
-        {
-            get => _message ?? Value;
-            set => _message = value;
-        }
+        [JsonPropertyName("subjectName")]
+        public string SubjectName { get; set; }
 
-        /// <summary>
-        /// Error Value.
-        /// </summary>
-        public string Value { get; set; }
+        [JsonPropertyName("validFrom")]
+        public int? ValidFrom { get; set; }
 
-        /// <summary>
-        /// Error stack.
-        /// </summary>
-        public string Stack { get; set; }
-
-        public override string ToString()
-        {
-            if (!string.IsNullOrEmpty(Stack))
-            {
-                return $"{Stack}";
-            }
-
-            return $"{Name}: {Message}";
-        }
+        [JsonPropertyName("validTo")]
+        public int? ValidTo { get; set; }
     }
 }

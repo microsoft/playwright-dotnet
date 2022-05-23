@@ -23,30 +23,34 @@
  */
 
 using System.Collections.Generic;
-using System.Text.Json;
 using System.Text.Json.Serialization;
-using System.Threading.Tasks;
-using Microsoft.Playwright.Helpers;
-using Microsoft.Playwright.Transport;
-using Microsoft.Playwright.Transport.Channels;
-using Microsoft.Playwright.Transport.Protocol;
 
-namespace Microsoft.Playwright.Core
+namespace Microsoft.Playwright.Transport.Protocol
 {
-    internal partial class LocalUtils : ChannelOwnerBase, IChannelOwner<LocalUtils>, ILocalUtils
+    internal class NetworkCookie
     {
-        private readonly LocalUtilsChannel _channel;
+        [JsonPropertyName("name")]
+        public string Name { get; set; }
 
-        public LocalUtils(IChannelOwner parent, string guid, JsonElement? initializer) : base(parent, guid)
-        {
-            _channel = new(guid, parent.Connection, this);
-        }
+        [JsonPropertyName("value")]
+        public string Value { get; set; }
 
-        ChannelBase IChannelOwner.Channel => _channel;
+        [JsonPropertyName("domain")]
+        public string Domain { get; set; }
 
-        IChannel<LocalUtils> IChannelOwner<LocalUtils>.Channel => _channel;
+        [JsonPropertyName("path")]
+        public string Path { get; set; }
 
-        internal Task ZipAsync(string zipFile, List<NameValue> entries)
-            => _channel.ZipAsync(zipFile, entries);
+        [JsonPropertyName("expires")]
+        public int Expires { get; set; }
+
+        [JsonPropertyName("httpOnly")]
+        public bool HttpOnly { get; set; }
+
+        [JsonPropertyName("secure")]
+        public bool Secure { get; set; }
+
+        [JsonPropertyName("sameSite")]
+        public string SameSite { get; set; }
     }
 }

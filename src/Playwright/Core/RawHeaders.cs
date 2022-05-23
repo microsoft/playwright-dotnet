@@ -25,6 +25,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Microsoft.Playwright.Transport.Protocol;
 
 namespace Microsoft.Playwright.Core
 {
@@ -32,7 +33,7 @@ namespace Microsoft.Playwright.Core
     {
         private readonly Dictionary<string, List<string>> _headersMap = new();
 
-        public RawHeaders(NameValueEntry[] headers)
+        public RawHeaders(List<NameValue> headers)
         {
             HeadersArray = new(headers.Select(x => new Header() { Name = x.Name, Value = x.Value }));
             foreach (var entry in headers)

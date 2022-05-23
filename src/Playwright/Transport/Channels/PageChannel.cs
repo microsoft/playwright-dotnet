@@ -105,7 +105,7 @@ namespace Microsoft.Playwright.Transport.Channels
                     Popup?.Invoke(this, new() { Page = serverParams?.GetProperty("page").ToObject<PageChannel>(Connection.DefaultJsonSerializerOptions).Object });
                     break;
                 case "pageError":
-                    PageError?.Invoke(this, serverParams?.GetProperty("error").GetProperty("error").ToObject<SerializedError>(Connection.DefaultJsonSerializerOptions));
+                    PageError?.Invoke(this, serverParams?.GetProperty("error").ToObject<SerializedError>(Connection.DefaultJsonSerializerOptions));
                     break;
                 case "fileChooser":
                     FileChooser?.Invoke(this, serverParams?.ToObject<FileChooserChannelEventArgs>(Connection.DefaultJsonSerializerOptions));

@@ -45,7 +45,7 @@ namespace Microsoft.Playwright.Transport.Protocol
         public byte[] PostData { get; set; }
 
         [JsonPropertyName("headers")]
-        public List<HeaderEntry> Headers { get; set; }
+        public List<NameValue> Headers { get; set; }
 
         [JsonPropertyName("isNavigationRequest")]
         public bool IsNavigationRequest { get; set; }

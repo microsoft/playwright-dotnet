@@ -149,8 +149,9 @@ namespace Microsoft.Playwright
         /// When set to <c>"css"</c>, screenshot will have a single pixel per each css pixel
         /// on the page. For high-dpi devices, this will keep screenshots small. Using <c>"device"</c>
         /// option will produce a single pixel per each device pixel, so screenhots of high-dpi
-        /// devices will be twice as large or even larger. Defaults to <c>"device"</c>.
+        /// devices will be twice as large or even larger.
         /// </para>
+        /// <para>Defaults to <c>"device"</c>.</para>
         /// </summary>
         [JsonPropertyName("scale")]
         public ScreenshotScale? Scale { get; set; }

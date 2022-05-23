@@ -56,7 +56,7 @@ namespace Microsoft.Playwright.Core
                 _initializer.RedirectedFrom.RedirectedTo = this;
             }
 
-            _headers = new RawHeaders(initializer.Headers.ConvertAll(x => new NameValueEntry(x.Name, x.Value)).ToArray());
+            _headers = new RawHeaders(initializer.Headers.ConvertAll(x => new NameValue() { Name = x.Name, Value = x.Value }).ToList());
         }
 
         ChannelBase IChannelOwner.Channel => _channel;

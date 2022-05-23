@@ -23,30 +23,22 @@
  */
 
 using System.Collections.Generic;
-using System.Text.Json;
 using System.Text.Json.Serialization;
-using System.Threading.Tasks;
-using Microsoft.Playwright.Helpers;
-using Microsoft.Playwright.Transport;
-using Microsoft.Playwright.Transport.Channels;
-using Microsoft.Playwright.Transport.Protocol;
 
-namespace Microsoft.Playwright.Core
+namespace Microsoft.Playwright.Transport.Protocol
 {
-    internal partial class LocalUtils : ChannelOwnerBase, IChannelOwner<LocalUtils>, ILocalUtils
+    internal class StackFrame
     {
-        private readonly LocalUtilsChannel _channel;
+        [JsonPropertyName("file")]
+        public string File { get; set; }
 
-        public LocalUtils(IChannelOwner parent, string guid, JsonElement? initializer) : base(parent, guid)
-        {
-            _channel = new(guid, parent.Connection, this);
-        }
+        [JsonPropertyName("line")]
+        public int? Line { get; set; }
 
-        ChannelBase IChannelOwner.Channel => _channel;
+        [JsonPropertyName("column")]
+        public int? Column { get; set; }
 
-        IChannel<LocalUtils> IChannelOwner<LocalUtils>.Channel => _channel;
-
-        internal Task ZipAsync(string zipFile, List<NameValue> entries)
-            => _channel.ZipAsync(zipFile, entries);
+        [JsonPropertyName("function")]
+        public string Function { get; set; }
     }
 }

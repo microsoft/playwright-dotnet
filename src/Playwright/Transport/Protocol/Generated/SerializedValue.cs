@@ -22,37 +22,44 @@
  * SOFTWARE.
  */
 
-using System;
 using System.Collections.Generic;
-using System.Linq;
+using System.Text.Json.Serialization;
 
-namespace Microsoft.Playwright.Core
+namespace Microsoft.Playwright.Transport.Protocol
 {
-    /// <summary>
-    /// See <see cref="StorageState.Origins"/>.
-    /// </summary>
-    internal class StorageStateOrigin : IEquatable<StorageStateOrigin>
+    internal class SerializedValue
     {
-        /// <summary>
-        /// Origin.
-        /// </summary>
-        public string Origin { get; set; }
+        [JsonPropertyName("n")]
+        public int? N { get; set; }
 
-        /// <summary>
-        /// Local storage.
-        /// </summary>
-        public ICollection<NameValueEntry> LocalStorage { get; set; } = new List<NameValueEntry>();
+        [JsonPropertyName("b")]
+        public bool B { get; set; }
 
-        public bool Equals(StorageStateOrigin other)
-            => other != null &&
-                Origin == other.Origin &&
-                LocalStorage.SequenceEqual(other.LocalStorage);
+        [JsonPropertyName("s")]
+        public string S { get; set; }
 
-        public override int GetHashCode()
-            => 412870874 +
-                EqualityComparer<string>.Default.GetHashCode(Origin) +
-                EqualityComparer<ICollection<NameValueEntry>>.Default.GetHashCode(LocalStorage);
+        [JsonPropertyName("v")]
+        public string V { get; set; }
 
-        public override bool Equals(object obj) => Equals(obj as StorageStateOrigin);
+        [JsonPropertyName("d")]
+        public string D { get; set; }
+
+        [JsonPropertyName("r")]
+        public SerializedValueR R { get; set; }
+
+        [JsonPropertyName("a")]
+        public List<System.Text.Json.JsonElement> A { get; set; }
+
+        [JsonPropertyName("o")]
+        public List<SerializedValueO> O { get; set; }
+
+        [JsonPropertyName("h")]
+        public int? H { get; set; }
+
+        [JsonPropertyName("id")]
+        public int? Id { get; set; }
+
+        [JsonPropertyName("ref")]
+        public int? Ref { get; set; }
     }
 }
