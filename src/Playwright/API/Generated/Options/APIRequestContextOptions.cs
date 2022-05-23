@@ -112,6 +112,7 @@ namespace Microsoft.Playwright
         /// header will be set to <c>application/x-www-form-urlencoded</c> unless explicitly
         /// provided.
         /// </para>
+        /// <para>An instance of <see cref="IFormData"/> can be created via <see cref="IAPIRequestContext.CreateFormData"/>.</para>
         /// </summary>
         [JsonPropertyName("form")]
         public IFormData? Form { get; set; }
@@ -142,6 +143,7 @@ namespace Microsoft.Playwright
         /// values can be passed either as <a href="https://nodejs.org/api/fs.html#fs_class_fs_readstream"><c>fs.ReadStream</c></a>
         /// or as file-like object containing file name, mime-type and its content.
         /// </para>
+        /// <para>An instance of <see cref="IFormData"/> can be created via <see cref="IAPIRequestContext.CreateFormData"/>.</para>
         /// </summary>
         [JsonPropertyName("multipart")]
         public IFormData? Multipart { get; set; }
