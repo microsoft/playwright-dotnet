@@ -260,6 +260,9 @@ namespace Microsoft.Playwright.Transport
 #pragma warning disable CA2000 // Dispose objects before losing scope
             switch (type)
             {
+                case ChannelOwnerType.APIRequestContext:
+                    result = new APIRequestContext(parent, guid, initializer?.ToObject<APIRequestContextInitializer>(DefaultJsonSerializerOptions));
+                    break;
                 case ChannelOwnerType.Artifact:
                     result = new Artifact(parent, guid, initializer?.ToObject<ArtifactInitializer>(DefaultJsonSerializerOptions));
                     break;

@@ -44,6 +44,7 @@ namespace Microsoft.Playwright.Core
         private readonly Dictionary<string, Delegate> _bindings = new();
         private readonly BrowserContextInitializer _initializer;
         internal readonly ITracing _tracing;
+        internal readonly IAPIRequestContext _request;
         private List<RouteSetting> _routes = new();
 
         private float? _defaultNavigationTimeout;
@@ -84,6 +85,7 @@ namespace Microsoft.Playwright.Core
             };
 
             _tracing = initializer.Tracing;
+            _request = initializer.APIRequestContext;
             _initializer = initializer;
             Browser = parent as IBrowser;
         }
@@ -145,6 +147,8 @@ namespace Microsoft.Playwright.Core
         internal bool IsChromium => _initializer.IsChromium;
 
         internal BrowserNewContextOptions Options { get; set; }
+
+        public IAPIRequestContext APIRequest => _request;
 
         public Task AddCookiesAsync(IEnumerable<Cookie> cookies) => Channel.AddCookiesAsync(cookies);
 

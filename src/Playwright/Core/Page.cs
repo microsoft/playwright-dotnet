@@ -75,6 +75,7 @@ namespace Microsoft.Playwright.Core
             _keyboard = new Keyboard(_channel);
             _touchscreen = new Touchscreen(_channel);
             _mouse = new Mouse(_channel);
+            APIRequest = Context._request;
             _channel.Closed += (_, _) => OnClose();
             _channel.Crashed += Channel_Crashed;
             _channel.Popup += (_, e) => Popup?.Invoke(this, e.Page);
@@ -285,6 +286,8 @@ namespace Microsoft.Playwright.Core
         }
 
         internal TaskCompletionSource<bool> ClosedOrCrashedTcs { get; } = new();
+
+        public IAPIRequestContext APIRequest { get; }
 
         public IFrame Frame(string name)
             => Frames.FirstOrDefault(f => f.Name == name);
