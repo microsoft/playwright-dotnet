@@ -424,7 +424,7 @@ namespace Microsoft.Playwright.Transport
                 return await action().ConfigureAwait(false);
             }
             var st = new StackTrace(true);
-            var stack = new List<object>();
+            var stack = new List<Protocol.StackFrame>();
             var lastInternalApiName = string.Empty;
             var apiName = string.Empty;
             for (int i = 0; i < st.FrameCount; ++i)
@@ -444,7 +444,7 @@ namespace Microsoft.Playwright.Transport
 
                 if (!playwrightInternal)
                 {
-                    stack.Add(new { file = fileName, line = sf.GetFileLineNumber(), column = sf.GetFileColumnNumber() });
+                    stack.Add(new Protocol.StackFrame() { File = fileName, Line = sf.GetFileLineNumber(), Column = sf.GetFileColumnNumber() });
                 }
 
                 string methodName = $"{sf?.GetMethod()?.DeclaringType?.Name}.{sf?.GetMethod()?.Name}";

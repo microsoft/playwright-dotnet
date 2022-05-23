@@ -104,7 +104,16 @@ namespace Microsoft.Playwright.Core
             _channel.Console += (_, e) => Console?.Invoke(this, e);
             _channel.DOMContentLoaded += (_, _) => DOMContentLoaded?.Invoke(this, this);
             _channel.Download += (_, e) => Download?.Invoke(this, new Download(this, e.Url, e.SuggestedFilename, e.Artifact.Object));
-            _channel.PageError += (_, e) => PageError?.Invoke(this, e.ToString());
+            _channel.PageError += (_, e) =>
+            {
+                if (!string.IsNullOrEmpty(e.Error.Stack))
+                {
+                    PageError?.Invoke(this, e.Error.Stack);
+                    return;
+                }
+
+                PageError?.Invoke(this, $"{e.Error.Name}: {e.Error.Message}");
+            };
             _channel.Load += (_, _) => Load?.Invoke(this, this);
             _channel.Video += (_, e) => ForceVideo().ArtifactReady(e.Artifact);
 

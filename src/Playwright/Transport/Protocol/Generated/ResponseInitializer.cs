@@ -42,7 +42,7 @@ namespace Microsoft.Playwright.Transport.Protocol
         public string StatusText { get; set; }
 
         [JsonPropertyName("headers")]
-        public List<HeaderEntry> Headers { get; set; }
+        public List<NameValue> Headers { get; set; }
 
         [JsonPropertyName("timing")]
         public RequestTimingResult Timing { get; set; }

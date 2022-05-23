@@ -27,6 +27,7 @@ using System.Text.Json;
 using System.Threading.Tasks;
 using Microsoft.Playwright.Core;
 using Microsoft.Playwright.Helpers;
+using Microsoft.Playwright.Transport.Protocol;
 
 namespace Microsoft.Playwright.Transport.Channels
 {
@@ -60,7 +61,7 @@ namespace Microsoft.Playwright.Transport.Channels
                 ["title"] = title,
             });
 
-        internal async Task<(Artifact Artifact, List<NameValueEntry> SourceEntries)> StopChunkAsync(string mode)
+        internal async Task<(Artifact Artifact, List<NameValue> SourceEntries)> StopChunkAsync(string mode)
         {
             var result = await Connection.SendMessageToServerAsync(Guid, "tracingStopChunk", new Dictionary<string, object>
             {
@@ -68,14 +69,14 @@ namespace Microsoft.Playwright.Transport.Channels
             }).ConfigureAwait(false);
 
             var artifact = result.GetObject<Artifact>("artifact", Connection);
-            List<NameValueEntry> sourceEntries = new() { };
+            List<NameValue> sourceEntries = new() { };
             if (result.Value.TryGetProperty("sourceEntries", out var sourceEntriesElement))
             {
                 var sourceEntriesEnumerator = sourceEntriesElement.EnumerateArray();
                 while (sourceEntriesEnumerator.MoveNext())
                 {
                     JsonElement current = sourceEntriesEnumerator.Current;
-                    sourceEntries.Add(current.Deserialize<NameValueEntry>(new JsonSerializerOptions()
+                    sourceEntries.Add(current.Deserialize<NameValue>(new JsonSerializerOptions()
                     {
                         PropertyNameCaseInsensitive = true,
                     }));

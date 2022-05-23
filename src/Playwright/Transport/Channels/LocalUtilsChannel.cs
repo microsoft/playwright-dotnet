@@ -27,6 +27,7 @@ using System.Collections.Generic;
 using System.Text.Json;
 using System.Threading.Tasks;
 using Microsoft.Playwright.Core;
+using Microsoft.Playwright.Transport.Protocol;
 
 namespace Microsoft.Playwright.Transport.Channels
 {
@@ -36,7 +37,7 @@ namespace Microsoft.Playwright.Transport.Channels
         {
         }
 
-        internal Task ZipAsync(string zipFile, List<NameValueEntry> entries) =>
+        internal Task ZipAsync(string zipFile, List<NameValue> entries) =>
             Connection.SendMessageToServerAsync(Guid, "zip", new Dictionary<string, object>
             {
                   { "zipFile", zipFile },

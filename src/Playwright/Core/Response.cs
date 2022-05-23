@@ -50,7 +50,7 @@ namespace Microsoft.Playwright.Core
             _initializer.Request.Timing = _initializer.Timing;
             _finishedTask = new();
 
-            _headers = new RawHeaders(_initializer.Headers.ConvertAll(x => new NameValueEntry(x.Name, x.Value)).ToArray());
+            _headers = new RawHeaders(_initializer.Headers.ConvertAll(x => new NameValue() { Name = x.Name, Value = x.Value }).ToList());
         }
 
         public IFrame Frame => _initializer.Request.Frame;

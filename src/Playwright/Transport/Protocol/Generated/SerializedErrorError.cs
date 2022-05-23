@@ -22,33 +22,20 @@
  * SOFTWARE.
  */
 
-using System;
 using System.Collections.Generic;
+using System.Text.Json.Serialization;
 
-namespace Microsoft.Playwright.Core
+namespace Microsoft.Playwright.Transport.Protocol
 {
-    internal class NameValueEntry : IEquatable<NameValueEntry>
+    internal class SerializedErrorError
     {
-        public NameValueEntry()
-        {
-        }
+        [JsonPropertyName("message")]
+        public string Message { get; set; }
 
-        public NameValueEntry(string name, string value) => (Name, Value) = (name, value);
-
+        [JsonPropertyName("name")]
         public string Name { get; set; }
 
-        public string Value { get; set; }
-
-        public bool Equals(NameValueEntry other)
-            => other != null &&
-                Name == other.Name &&
-                Value == other.Value;
-
-        public override int GetHashCode()
-            => 412870874 +
-                EqualityComparer<string>.Default.GetHashCode(Name) +
-                EqualityComparer<string>.Default.GetHashCode(Value);
-
-        public override bool Equals(object obj) => Equals(obj as NameValueEntry);
+        [JsonPropertyName("stack")]
+        public string Stack { get; set; }
     }
 }

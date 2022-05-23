@@ -23,6 +23,7 @@
  */
 
 using System.Collections.Generic;
+using Microsoft.Playwright.Transport.Protocol;
 
 namespace Microsoft.Playwright.Transport
 {
@@ -32,6 +33,6 @@ namespace Microsoft.Playwright.Transport
 
         public bool IsInternal { get; set; }
 
-        public List<object> Stack { get; set; }
+        public List<StackFrame> Stack { get; set; }
     }
 }

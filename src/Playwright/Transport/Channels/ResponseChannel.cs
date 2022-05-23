@@ -22,9 +22,11 @@
  * SOFTWARE.
  */
 
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.Playwright.Core;
 using Microsoft.Playwright.Helpers;
+using Microsoft.Playwright.Transport.Protocol;
 
 namespace Microsoft.Playwright.Transport.Channels
 {
@@ -48,7 +50,7 @@ namespace Microsoft.Playwright.Transport.Channels
         internal async Task<RequestSizesResult> SizesAsync() =>
             (await Connection.SendMessageToServerAsync(Guid, "sizes", null).ConfigureAwait(false))?.GetProperty("sizes").ToObject<RequestSizesResult>();
 
-        internal async Task<NameValueEntry[]> GetRawHeadersAsync() =>
-            (await Connection.SendMessageToServerAsync(Guid, "rawResponseHeaders", null).ConfigureAwait(false))?.GetProperty("headers").ToObject<NameValueEntry[]>();
+        internal async Task<List<NameValue>> GetRawHeadersAsync() =>
+            (await Connection.SendMessageToServerAsync(Guid, "rawResponseHeaders", null).ConfigureAwait(false))?.GetProperty("headers").ToObject<List<NameValue>>();
     }
 }

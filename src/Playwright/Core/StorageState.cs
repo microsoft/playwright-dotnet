@@ -25,6 +25,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Microsoft.Playwright.Transport.Protocol;
 
 namespace Microsoft.Playwright.Core
 {
@@ -38,7 +39,7 @@ namespace Microsoft.Playwright.Core
         /// <summary>
         /// List of local storage per origin.
         /// </summary>
-        public ICollection<StorageStateOrigin> Origins { get; set; } = new List<StorageStateOrigin>();
+        public ICollection<OriginStorage> Origins { get; set; } = new List<OriginStorage>();
 
         public bool Equals(StorageState other)
             => other != null &&
@@ -48,7 +49,7 @@ namespace Microsoft.Playwright.Core
         public override int GetHashCode()
             => 412870874 +
                 EqualityComparer<ICollection<Cookie>>.Default.GetHashCode(Cookies) +
-                EqualityComparer<ICollection<StorageStateOrigin>>.Default.GetHashCode(Origins);
+                EqualityComparer<ICollection<OriginStorage>>.Default.GetHashCode(Origins);
 
         public override bool Equals(object obj) => Equals(obj as StorageState);
     }
