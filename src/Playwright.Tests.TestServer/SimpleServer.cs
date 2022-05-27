@@ -188,7 +188,7 @@ namespace Microsoft.Playwright.Tests.TestServer
                 return;
             }
             context.Response.StatusCode = StatusCodes.Status200OK;
-            using (var file = File.Open(filePath, mode: FileMode.Open))
+            using (var file = new FileStream(filePath, FileMode.Open, FileAccess.Read, FileShare.Read))
             {
                 context.Response.ContentType = GetContentType(filePath);
 
