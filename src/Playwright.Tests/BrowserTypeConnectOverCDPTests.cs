@@ -70,5 +70,34 @@ namespace Microsoft.Playwright.Tests
             Assert.AreEqual("fookek", req.Headers["x-foo-bar"]);
             StringAssert.Contains("Playwright", req.Headers["user-agent"]);
         }
+
+        [PlaywrightTest("chromium/chromium.spec.ts", "should report all pages in an existing browser")]
+        [Skip(SkipAttribute.Targets.Firefox, SkipAttribute.Targets.Webkit)]
+        public async Task ShouldReportAllPagesInAnExistingBrowser()
+        {
+            int port = 9393 + WorkerIndex;
+            var browserServer = await BrowserType.LaunchAsync(new() { Args = new[] { $"--remote-debugging-port={port}" } });
+            try
+            {
+                var cdpBrowser = await BrowserType.ConnectOverCDPAsync($"http://127.0.0.1:{port}/");
+                var contexts = cdpBrowser.Contexts;
+                Assert.AreEqual(1, cdpBrowser.Contexts.Count);
+                for (int i = 0; i < 3; i++)
+                {
+                    await cdpBrowser.Contexts[0].NewPageAsync();
+                }
+                await cdpBrowser.CloseAsync();
+
+                var cdpBrowser2 = await BrowserType.ConnectOverCDPAsync($"http://127.0.0.1:{port}/");
+
+                Assert.AreEqual(3, cdpBrowser2.Contexts[0].Pages.Count);
+                await cdpBrowser2.CloseAsync();
+            }
+            finally
+            {
+
+                await browserServer.CloseAsync();
+            }
+        }
     }
 }
