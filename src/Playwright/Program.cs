@@ -24,6 +24,7 @@
 
 using System;
 using System.Diagnostics;
+using System.Text;
 using System.Threading;
 using Microsoft.Playwright.Helpers;
 
@@ -57,6 +58,8 @@ namespace Microsoft.Playwright
                 RedirectStandardError = true,
                 RedirectStandardInput = true,
                 RedirectStandardOutput = true,
+                StandardOutputEncoding = Encoding.UTF8,
+                StandardErrorEncoding = Encoding.UTF8,
             };
             foreach (var pair in Driver.GetEnvironmentVariables())
             {
