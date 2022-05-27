@@ -95,8 +95,8 @@ namespace Microsoft.Playwright.Tests
             var headerTask = Server.WaitForRequest("/empty.html", request => (request.Headers["Foo"], request.Headers["baR"]));
             await TaskUtils.WhenAll(page.GotoAsync(Server.EmptyPage), headerTask);
 
-            Assert.AreEqual("Bar", headerTask.Result.Item1);
-            Assert.AreEqual("foO", headerTask.Result.Item2);
+            Assert.AreEqual(new string[] { "Bar" }, headerTask.Result.Item1.ToArray());
+            Assert.AreEqual(new string[] { "foO" }, headerTask.Result.Item2.ToArray());
         }
     }
 }
