@@ -55,6 +55,7 @@ namespace Microsoft.Playwright
             ContentType = clone.ContentType;
             Headers = clone.Headers;
             Path = clone.Path;
+            Response = clone.Response;
             Status = clone.Status;
         }
 
@@ -83,6 +84,15 @@ namespace Microsoft.Playwright
         /// </summary>
         [JsonPropertyName("path")]
         public string? Path { get; set; }
+
+        /// <summary>
+        /// <para>
+        /// <see cref="IAPIResponse"/> to fulfill route's request with. Individual fields of
+        /// the response (such as headers) can be overridden using fulfill options.
+        /// </para>
+        /// </summary>
+        [JsonPropertyName("response")]
+        public IAPIResponse? Response { get; set; }
 
         /// <summary><para>Response status code, defaults to <c>200</c>.</para></summary>
         [JsonPropertyName("status")]

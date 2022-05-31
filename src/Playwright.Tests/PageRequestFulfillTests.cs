@@ -228,5 +228,106 @@ namespace Microsoft.Playwright.Tests
             Assert.AreEqual(Server.Prefix, interceptedRequest.Headers["origin"]);
 #pragma warning restore 0612
         }
+
+        [PlaywrightTest("page-request-fulfill.spec.ts", "should fulfill with global fetch result")]
+        public async Task ShouldFulfillWithGlobalFetchResult()
+        {
+            await Page.RouteAsync("**/*", async (route) =>
+            {
+                var request = await Playwright.APIRequest.NewContextAsync();
+                var response = await request.GetAsync(Server.Prefix + "/simple.json");
+                await route.FulfillAsync(new() { Response = response });
+            });
+            var response = await Page.GotoAsync(Server.EmptyPage);
+            Assert.AreEqual(response.Status, 200);
+            Assert.AreEqual(await response.TextAsync(), "{\"foo\": \"bar\"}\n");
+        }
+
+        [PlaywrightTest("page-request-fulfill.spec.ts", "should fulfill with fetch result")]
+        public async Task ShouldFulfillWithFetchResult()
+        {
+            await Page.RouteAsync("**/*", async (route) =>
+            {
+                var response = await Page.APIRequest.GetAsync(Server.Prefix + "/simple.json");
+                await route.FulfillAsync(new() { Response = response });
+            });
+            var response = await Page.GotoAsync(Server.EmptyPage);
+            Assert.AreEqual(response.Status, 200);
+            Assert.AreEqual(await response.TextAsync(), "{\"foo\": \"bar\"}\n");
+        }
+
+        [PlaywrightTest("page-request-fulfill.spec.ts", "should fulfill with fetch result and overrides")]
+        public async Task ShouldFulfillWithFetchResultAndOverrides()
+        {
+            await Page.RouteAsync("**/*", async (route) =>
+            {
+                var response = await Page.APIRequest.GetAsync(Server.Prefix + "/simple.json");
+                await route.FulfillAsync(new() { Response = response, Status = 201, Headers = new Dictionary<string, string> { ["Content-Type"] = "application/json", ["foo"] = "bar" } });
+            });
+            var response = await Page.GotoAsync(Server.EmptyPage);
+            Assert.AreEqual(response.Status, 201);
+            Assert.AreEqual((await response.AllHeadersAsync())["foo"], "bar");
+            Assert.AreEqual(await response.TextAsync(), "{\"foo\": \"bar\"}\n");
+        }
+
+        [PlaywrightTest("page-request-fulfill.spec.ts", "should fetch original request and fulfill")]
+        public async Task ShouldFetchOriginalRequestAndFulfill()
+        {
+            await Page.RouteAsync("**/*", async (route) =>
+            {
+                var response = await Page.APIRequest.FetchAsync(route.Request);
+                await route.FulfillAsync(new() { Response = response });
+            });
+            var response = await Page.GotoAsync(Server.Prefix + "/title.html");
+            Assert.AreEqual(response.Status, 200);
+            Assert.AreEqual(await Page.TitleAsync(), "Woof-Woof");
+        }
+
+        [PlaywrightTest("page-request-fulfill.spec.ts", "should fulfill with multiple set-cookie")]
+        public async Task ShouldFulfillWithMultipleSetCookies()
+        {
+            var cookies = new List<string>(){
+                "a=b",
+                "c=d",
+            };
+            await Page.RouteAsync("**/empty.html", async (route) =>
+            {
+                await route.FulfillAsync(new()
+                {
+                    Status = 200,
+                    Headers = new Dictionary<string, string>
+                    {
+                        ["X-Header-1"] = "v1",
+                        ["Set-Cookie"] = string.Join("\n", cookies),
+                        ["X-Header-2"] = "v2",
+                    },
+                    Body = ""
+                });
+            });
+            var response = await Page.GotoAsync(Server.EmptyPage);
+            Assert.AreEqual((await Page.EvaluateAsync<string[]>("() => document.cookie.split(';').map(s => s.trim()).sort()")), cookies);
+            Assert.AreEqual(await response.HeaderValueAsync("X-Header-1"), "v1");
+            Assert.AreEqual(await response.HeaderValueAsync("X-Header-2"), "v2");
+        }
+
+        [PlaywrightTest("page-request-fulfill.spec.ts", "should fulfill with fetch response that has multiple set-cookie")]
+        public async Task ShouldFulfillWithFetchResponseThatHasMultipleSetCookie()
+        {
+            Server.SetRoute("/empty.html", context =>
+            {
+                context.Response.Headers.Add("Set-Cookie", new Extensions.Primitives.StringValues(new[] { "a=b", "c=d" }));
+                context.Response.Headers.Add("Content-Type", "text/html");
+                return Task.CompletedTask;
+            });
+            await Page.RouteAsync("**/empty.html", async (route) =>
+            {
+                var request = await Playwright.APIRequest.NewContextAsync();
+                var response = await request.FetchAsync(route.Request);
+                await route.FulfillAsync(new() { Response = response });
+            });
+            await Page.GotoAsync(Server.EmptyPage);
+            var cookie = await Page.EvaluateAsync<string[]>("() => document.cookie.split(';').map(s => s.trim()).sort()");
+            Assert.AreEqual(cookie, new[] { "a=b", "c=d" });
+        }
     }
 }

@@ -665,7 +665,7 @@ namespace Microsoft.Playwright.Tests
                     ContentType = "application/json",
                     Headers = new Dictionary<string, string> { ["access-control-allow-origin"] = "*" },
                     Status = (int)HttpStatusCode.OK,
-                    Body = $"[\"{ route.Request.Method.ToString().ToUpper() }\", \"electric\", \"cars\"]"
+                    Body = $"[\"{route.Request.Method.ToString().ToUpper()}\", \"electric\", \"cars\"]"
                 });
             });
 

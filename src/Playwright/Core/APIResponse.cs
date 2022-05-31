@@ -36,18 +36,18 @@ namespace Microsoft.Playwright.Core
 
         private readonly Transport.Protocol.APIResponse _initializer;
 
-        private readonly RawHeaders _rawHeaders;
+        private readonly RawHeaders _headers;
 
         public APIResponse(APIRequestContext context, Transport.Protocol.APIResponse initializer)
         {
             _initializer = initializer;
             _context = context;
-            _rawHeaders = new RawHeaders(initializer.Headers);
+            _headers = new RawHeaders(initializer.Headers);
         }
 
-        public IEnumerable<KeyValuePair<string, string>> Headers => _rawHeaders.Headers;
+        public Dictionary<string, string> Headers => _headers.Headers;
 
-        public IReadOnlyList<Header> HeadersArray => _rawHeaders.HeadersArray;
+        public IReadOnlyList<Header> HeadersArray => _headers.HeadersArray;
 
         public bool Ok => _initializer.Status >= 200 && _initializer.Status <= 299;
 
@@ -82,7 +82,7 @@ namespace Microsoft.Playwright.Core
             return System.Text.Encoding.UTF8.GetString(buffer, 0, buffer.Length);
         }
 
-        private string FetchUid() => _initializer.FetchUid;
+        internal string FetchUid() => _initializer.FetchUid;
 
         public ValueTask DisposeAsync() => new(_context._channel.DisposeAPIResponseAsync(FetchUid()));
 

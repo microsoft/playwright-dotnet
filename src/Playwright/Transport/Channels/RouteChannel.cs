@@ -46,11 +46,11 @@ namespace Microsoft.Playwright.Transport.Channels
                     ["errorCode"] = string.IsNullOrEmpty(errorCode) ? RequestAbortErrorCode.Failed : errorCode,
                 });
 
-        public Task FulfillAsync(NormalizedFulfillResponse response)
+        public Task FulfillAsync(IDictionary<string, object> args)
             => Connection.SendMessageToServerAsync(
                 Guid,
                 "fulfill",
-                response);
+                args);
 
         public Task ContinueAsync(string url, string method, byte[] postData, IEnumerable<KeyValuePair<string, string>> headers)
         {

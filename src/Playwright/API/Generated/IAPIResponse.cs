@@ -51,7 +51,7 @@ namespace Microsoft.Playwright
         Task<byte[]> BodyAsync();
 
         /// <summary><para>An object with all the response HTTP headers associated with this response.</para></summary>
-        IEnumerable<KeyValuePair<string, string>> Headers { get; }
+        Dictionary<string, string> Headers { get; }
 
         /// <summary>
         /// <para>
