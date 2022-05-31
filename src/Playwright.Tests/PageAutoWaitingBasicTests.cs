@@ -110,7 +110,7 @@ namespace Microsoft.Playwright.Tests
             });
 
             await Page.SetContentAsync($@"
-                <form action=""{ Server.EmptyPage}"" method=""post"">
+                <form action=""{Server.EmptyPage}"" method=""post"">
                     <input name=""foo"" value=""bar"">
                     <input type=""submit"" value=""Submit"">
                 </form>");
@@ -197,7 +197,7 @@ namespace Microsoft.Playwright.Tests
             });
 
             await Page.SetContentAsync($@"
-                <a href=""{ Server.EmptyPage}"" target=target>empty.html</a>
+                <a href=""{Server.EmptyPage}"" target=target>empty.html</a>
                 <iframe name=target></iframe>");
 
             var frame = Page.Frame("target");
@@ -257,7 +257,7 @@ namespace Microsoft.Playwright.Tests
             });
 
             await Page.SetContentAsync($@"
-                <form action=""{ Server.EmptyPage}/login.html"" method=""get"">
+                <form action=""{Server.EmptyPage}/login.html"" method=""get"">
                     <input type=""text"">
                     <input type=""submit"" value=""Submit"">
                 </form>");

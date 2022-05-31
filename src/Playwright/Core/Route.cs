@@ -49,27 +49,25 @@ namespace Microsoft.Playwright.Core
             _initializer = initializer;
         }
 
-        /// <summary>
-        /// A request to be routed.
-        /// </summary>
         public IRequest Request => _initializer.Request;
 
         ChannelBase IChannelOwner.Channel => _channel;
 
         IChannel<Route> IChannelOwner<Route>.Channel => _channel;
 
-        public Task FulfillAsync(RouteFulfillOptions options = default)
+        public async Task FulfillAsync(RouteFulfillOptions options = default)
         {
             options ??= new RouteFulfillOptions();
-            var normalized = NormalizeFulfillParameters(
+            var normalized = await NormalizeFulfillParametersAsync(
                 options.Status,
                 options.Headers,
                 options.ContentType,
                 options.Body,
                 options.BodyBytes,
-                options.Path);
+                options.Path,
+                options.Response).ConfigureAwait(false);
 
-            return RaceWithPageCloseAsync(_channel.FulfillAsync(normalized));
+            await RaceWithPageCloseAsync(_channel.FulfillAsync(normalized)).ConfigureAwait(false);
         }
 
         public Task AbortAsync(string errorCode = RequestAbortErrorCode.Failed) => RaceWithPageCloseAsync(_channel.AbortAsync(errorCode));
@@ -102,15 +100,35 @@ namespace Microsoft.Playwright.Core
             }
         }
 
-        private NormalizedFulfillResponse NormalizeFulfillParameters(
+        private async Task<IDictionary<string, object>> NormalizeFulfillParametersAsync(
             int? status,
             IEnumerable<KeyValuePair<string, string>> headers,
             string contentType,
             string body,
             byte[] bodyContent,
-            string path)
+            string path,
+            IAPIResponse response)
         {
-            string resultBody = string.Empty;
+            string fetchResponseUid = null;
+
+            if (response != null)
+            {
+                status ??= response.Status;
+                headers ??= response.Headers;
+                if (body == null && path == null && response is APIResponse responseImpl)
+                {
+                    if (responseImpl._context._channel.Connection == this._channel.Connection)
+                    {
+                        fetchResponseUid = responseImpl.FetchUid();
+                    }
+                    else
+                    {
+                        bodyContent = await response.BodyAsync().ConfigureAwait(false);
+                    }
+                }
+            }
+
+            string resultBody = null;
             bool isBase64 = false;
             int length = 0;
 
@@ -158,12 +176,13 @@ namespace Microsoft.Playwright.Core
                 resultHeaders["content-length"] = length.ToString();
             }
 
-            return new()
+            return new Dictionary<string, object>()
             {
-                Status = status ?? (int)HttpStatusCode.OK,
-                Headers = resultHeaders.Select(kv => new HeaderEntry { Name = kv.Key, Value = kv.Value }).ToArray(),
-                Body = resultBody,
-                IsBase64 = isBase64,
+                ["status"] = status ?? 200,
+                ["headers"] = resultHeaders.Select(kv => new HeaderEntry { Name = kv.Key, Value = kv.Value }).ToArray(),
+                ["body"] = resultBody,
+                ["isBase64"] = isBase64,
+                ["fetchResponseUid"] = fetchResponseUid,
             };
         }
     }
