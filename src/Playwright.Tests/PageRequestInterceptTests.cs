@@ -52,8 +52,10 @@ namespace Microsoft.Playwright.Tests
             });
             var response = await Page.GotoAsync(Server.Prefix + "/empty.html");
             Assert.AreEqual(201, response.Status);
+#pragma warning disable 0612
             Assert.AreEqual(response.Headers["foo"], "bar");
             Assert.AreEqual(response.Headers["content-type"], "text/plain");
+#pragma warning restore 0612
             Assert.AreEqual(await Page.EvaluateAsync<string>("() => document.body.textContent"), "Yo, page!");
         }
 
@@ -96,12 +98,16 @@ namespace Microsoft.Playwright.Tests
             Assert.AreEqual(await response.TextAsync(), "");
             if (TestConstants.IsWebKit)
             {
+#pragma warning disable 0612
                 Assert.AreEqual(response.Headers.Count, 1);
                 Assert.AreEqual(response.Headers["content-type"], "text/plain");
+#pragma warning restore 0612
             }
             else
             {
+#pragma warning disable 0612
                 Assert.AreEqual(response.Headers.Count, 0);
+#pragma warning restore 0612
             }
         }
 
@@ -127,7 +133,9 @@ namespace Microsoft.Playwright.Tests
             var response = await Page.GotoAsync(Server.EmptyPage);
             Assert.AreEqual(201, response.Status);
             Assert.AreEqual(await response.TextAsync(), "Woo-hoo");
+#pragma warning disable 0612
             Assert.AreEqual(response.Headers["foo"], "bar");
+#pragma warning restore 0612
         }
 
         [PlaywrightTest("page-request-intercept.spec.ts", "should support fulfill after intercept")]
