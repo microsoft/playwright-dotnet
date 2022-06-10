@@ -5,13 +5,18 @@
       <PlaywrightPlatform Condition="'$(PlaywrightPlatform)' == ''">%(RuntimePack.RuntimeIdentifier)</PlaywrightPlatform>
       <PlaywrightPlatform Condition="'$(PlaywrightPlatform)' == ''">$(RuntimeIdentifier)</PlaywrightPlatform>
       <PlaywrightPlatform Condition="'$(PlaywrightPlatform)' == ''">$(RuntimeIdentifiers)</PlaywrightPlatform>
-      <PlaywrightPlatform Condition="'$(PlaywrightPlatform)' == '' AND $([MSBuild]::IsOSPlatform('Linux'))">linux</PlaywrightPlatform>
+      <PlaywrightPlatform Condition="'$(PlaywrightPlatform)' == '' AND $([MSBuild]::IsOSPlatform('Linux')) AND '$([System.Runtime.InteropServices.RuntimeInformation]::OSArchitecture)' == 'X64'">linux-x64</PlaywrightPlatform>
+      <PlaywrightPlatform Condition="'$(PlaywrightPlatform)' == '' AND $([MSBuild]::IsOSPlatform('Linux')) AND '$([System.Runtime.InteropServices.RuntimeInformation]::OSArchitecture)' == 'Arm64'">linux-arm64</PlaywrightPlatform>
       <PlaywrightPlatform Condition="'$(PlaywrightPlatform)' == '' AND $([MSBuild]::IsOSPlatform('Windows'))">win</PlaywrightPlatform>
       <PlaywrightPlatform Condition="'$(PlaywrightPlatform)' == '' AND $([MSBuild]::IsOSPlatform('OSX'))">osx</PlaywrightPlatform>
     </PropertyGroup>
     <ItemGroup Condition="'$(PlaywrightPlatform)' != 'none'">
-      <_PlaywrightCopyItems Include="$(MSBuildThisFileDirectory)..\.playwright\node\linux\**" Condition="$(PlaywrightPlatform.Contains('linux'))">
-        <PlaywrightFolder>node\linux\</PlaywrightFolder>
+       <!-- 'linux' to stay backwards compatible -->
+      <_PlaywrightCopyItems Include="$(MSBuildThisFileDirectory)..\.playwright\node\linux\**" Condition="$(PlaywrightPlatform.Contains('linux')) OR $(PlaywrightPlatform.Contains('linux-x64'))">
+        <PlaywrightFolder>node\linux-x64\</PlaywrightFolder>
+      </_PlaywrightCopyItems>
+      <_PlaywrightCopyItems Include="$(MSBuildThisFileDirectory)..\.playwright\node\linux-arm64\**" Condition="$(PlaywrightPlatform.Contains('linux-arm64'))">
+        <PlaywrightFolder>node\linux-arm64\</PlaywrightFolder>
       </_PlaywrightCopyItems>
       <_PlaywrightCopyItems Include="$(MSBuildThisFileDirectory)..\.playwright\node\win32_x64\**" Condition="$(PlaywrightPlatform.Contains('win'))">
         <PlaywrightFolder>node\win32_x64\</PlaywrightFolder>

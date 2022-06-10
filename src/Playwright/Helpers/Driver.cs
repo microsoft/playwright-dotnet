@@ -74,7 +74,7 @@ namespace Microsoft.Playwright.Helpers
             else if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
             {
                 runnerName = "playwright.sh";
-                platformId = "linux";
+                platformId = RuntimeInformation.ProcessArchitecture == Architecture.Arm64 ? "linux-arm64" : "linux-x64";
             }
             else
             {

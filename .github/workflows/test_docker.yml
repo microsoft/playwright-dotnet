@@ -27,7 +27,7 @@ jobs:
       with:
         dotnet-version: |
           3.1.x
-          5.0.x
+          6.0.x
     - name: Install prerequisites and download drivers
       shell: bash
       run: ./build.sh --download-driver

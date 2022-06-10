@@ -43,6 +43,7 @@ namespace Playwright.Tooling
         {
             "mac",
             "linux",
+            "linux-arm64",
             "win32_x64",
         };
 
