@@ -618,11 +618,30 @@ namespace Microsoft.Playwright.Tests
             Test = 1
         }
 
-        [PlaywrightTest(Description = "https://github.com/microsoft/playwright-dotnet/issues/1706")]
-        public async Task ShouldNotReturnDisposedJsonElement()
+        [PlaywrightTest()]
+        public async Task ShouldAllowJsonElementWhenDeserializing()
         {
-            var result = await Page.EvaluateAsync<JsonElement?>("()=> [{a:1,b:2},{a:1,b:2}]");
-            Assert.AreEqual("[{\"o\":[{\"k\":\"a\",\"v\":{\"n\":1}},{\"k\":\"b\",\"v\":{\"n\":2}}],\"id\":2},{\"o\":[{\"k\":\"a\",\"v\":{\"n\":1}},{\"k\":\"b\",\"v\":{\"n\":2}}],\"id\":3}]", result.ToString());
+            JsonElement? result = null;
+
+            result = await Page.EvaluateAsync<JsonElement?>("() => [{a:1,b:2},{a:1,b:2}]"); // list
+            Assert.AreEqual("[{\"a\":1,\"b\":2},{\"a\":1,\"b\":2}]", result.ToString());
+            result = await Page.EvaluateAsync<JsonElement>("() => [{a:1,b:2},{a:1,b:2}]");
+            Assert.AreEqual("[{\"a\":1,\"b\":2},{\"a\":1,\"b\":2}]", result.ToString());
+
+            result = await Page.EvaluateAsync<JsonElement?>("() => ({a:1,b:2})"); // object
+            Assert.AreEqual("{\"a\":1,\"b\":2}", result.ToString());
+            result = await Page.EvaluateAsync<JsonElement>("() => ({a:1,b:2})");
+            Assert.AreEqual("{\"a\":1,\"b\":2}", result.ToString());
+
+            result = await Page.EvaluateAsync<JsonElement?>("() => 42"); // number
+            Assert.AreEqual("42", result.ToString());
+            result = await Page.EvaluateAsync<JsonElement>("() => 42");
+            Assert.AreEqual("42", result.ToString());
+
+            result = await Page.EvaluateAsync<JsonElement?>("() => 'kek'"); // string
+            Assert.AreEqual("kek", result.ToString());
+            result = await Page.EvaluateAsync<JsonElement>("() => 'kek'");
+            Assert.AreEqual("kek", result.ToString());
         }
     }
 }
