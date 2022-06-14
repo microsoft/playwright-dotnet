@@ -38,30 +38,11 @@ using Microsoft.Playwright.Transport.Channels;
 
 namespace Microsoft.Playwright.Transport.Converters
 {
-    internal class EvaluateArgumentValueConverter<T> : JsonConverter<T>
+    internal class EvaluateArgumentValueConverter<T>
     {
         private readonly List<object> _visited = new();
 
         public List<EvaluateArgumentGuidElement> Handles { get; } = new();
-
-        public override bool CanConvert(Type type) => true;
-
-        public override T Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
-        {
-            using JsonDocument document = JsonDocument.ParseValue(ref reader);
-            var result = document.RootElement;
-
-            return (T)ParseEvaluateResult(
-                result.ValueKind == JsonValueKind.Object && result.TryGetProperty("value", out var valueProperty)
-                    ? valueProperty
-                    : result,
-                typeof(T),
-                options);
-        }
-
-        public override void Write(Utf8JsonWriter writer, T value, JsonSerializerOptions options)
-        {
-        }
 
         public object Serialize(object value)
         {
@@ -180,246 +161,165 @@ namespace Microsoft.Playwright.Transport.Converters
             return new { o = entries };
         }
 
-        private static object ParseEvaluateResult(JsonElement result, Type t, JsonSerializerOptions options)
+        internal static object ParseEvaluateResult(JsonElement result, Type t)
         {
-            if (result.ValueKind == JsonValueKind.Object && result.TryGetProperty("v", out var value))
-            {
-                if (value.ValueKind == JsonValueKind.Null)
-                {
-                    return GetDefaultValue(t);
-                }
+            var parsed = ParseEvaluateResultToExpando(result);
 
-                return value.ToString() switch
-                {
-                    "null" => GetDefaultValue(t),
-                    "undefined" => GetDefaultValue(t),
-                    "Infinity" => double.PositiveInfinity,
-                    "-Infinity" => double.NegativeInfinity,
-                    "-0" => -0d,
-                    "NaN" => double.NaN,
-                    _ => value.ToObject(t),
-                };
+            // If use wants expando or any object -> return as is.
+            if (t == typeof(ExpandoObject) || t == typeof(object))
+            {
+                return parsed;
             }
 
-            if (result.ValueKind == JsonValueKind.Object && result.TryGetProperty("ref", out var refValue))
+            // User wants Json, serialize/parse. On .Net 6 there is a method that does this w/o full serialization.
+            if (t == typeof(JsonElement) || t == typeof(JsonElement?))
+            {
+                string serialized = JsonSerializer.Serialize(parsed);
+                return JsonSerializer.Deserialize<T>(serialized);
+            }
+
+            // Convert recursively to a requested type.
+            return ToExpectedType(parsed, t);
+        }
+
+        private static object ToExpectedType(object parsed, Type t)
+        {
+            if (parsed == null)
             {
                 return null;
             }
 
-            if (result.ValueKind == JsonValueKind.Object && result.TryGetProperty("d", out var date))
+            if (parsed is Array)
+            {
+                var parsedArray = (Array)parsed;
+                var result = (IList)Activator.CreateInstance(t, parsedArray.Length);
+                for (int i = 0; i < parsedArray.Length; ++i)
+                {
+                    result[i] = ToExpectedType(parsedArray.GetValue(i), t.GetElementType());
+                }
+                return result;
+            }
+
+            if (parsed is ExpandoObject)
+            {
+                object objResult;
+                try
+                {
+                    objResult = Activator.CreateInstance(t);
+                }
+                catch (Exception)
+                {
+                    throw new PlaywrightException("Return type mismatch. Expecting " + t.ToString() + ", got Object");
+                }
+
+                foreach (var kv in (ExpandoObject)parsed)
+                {
+                    var property = t.GetProperties().FirstOrDefault(prop => string.Equals(prop.Name, kv.Key, StringComparison.OrdinalIgnoreCase));
+                    if (property != null)
+                    {
+                        property.SetValue(objResult, ToExpectedType(kv.Value, property.PropertyType));
+                    }
+                }
+
+                return objResult;
+            }
+
+            return ChangeType(parsed, t);
+        }
+
+        private static object ChangeType(object value, Type conversion)
+        {
+            var t = conversion;
+
+            if (t.IsGenericType && t.GetGenericTypeDefinition().Equals(typeof(Nullable<>)))
+            {
+                if (value == null)
+                {
+                    return null;
+                }
+
+                t = Nullable.GetUnderlyingType(t);
+            }
+
+            return Convert.ChangeType(value, t);
+        }
+
+        private static object ParseEvaluateResultToExpando(JsonElement result)
+        {
+            // Parse JSON into a structure where objects/arrays are represented with expando/arrays.
+            if (result.TryGetProperty("v", out var value))
+            {
+                if (value.ValueKind == JsonValueKind.Null)
+                {
+                    return null;
+                }
+
+                return value.ToString() switch
+                {
+                    "null" => null,
+                    "undefined" => null,
+                    "Infinity" => double.PositiveInfinity,
+                    "-Infinity" => double.NegativeInfinity,
+                    "-0" => -0d,
+                    "NaN" => double.NaN,
+                    _ => null,
+                };
+            }
+
+            if (result.TryGetProperty("ref", out var refValue))
+            {
+                return null;
+            }
+
+            if (result.TryGetProperty("d", out var date))
             {
                 return date.ToObject<DateTime>();
             }
 
-            if (result.ValueKind == JsonValueKind.Object && result.TryGetProperty("r", out var regex))
+            if (result.TryGetProperty("r", out var regex))
             {
                 return new Regex(regex.GetProperty("p").ToString(), RegexOptionsExtensions.FromInlineFlags(regex.GetProperty("f").ToString()));
             }
 
-            if (result.ValueKind == JsonValueKind.Object && result.TryGetProperty("b", out var boolean))
+            if (result.TryGetProperty("b", out var boolean))
             {
-                return boolean.ToObject(t);
+                return boolean.ToObject<bool>();
             }
 
-            if (result.ValueKind == JsonValueKind.Object && result.TryGetProperty("s", out var stringValue))
+            if (result.TryGetProperty("s", out var stringValue))
             {
-                return stringValue.ToObject(t);
+                return stringValue.ToObject<string>();
             }
 
-            if (result.ValueKind == JsonValueKind.Object && result.TryGetProperty("n", out var numericValue))
+            if (result.TryGetProperty("n", out var numericValue))
             {
-                return numericValue.ToObject(t);
+                return numericValue.ToObject<double>();
             }
 
-            if (result.ValueKind == JsonValueKind.Object && result.TryGetProperty("o", out var obj))
+            if (result.TryGetProperty("o", out var obj))
             {
+                var expando = new ExpandoObject();
+                IDictionary<string, object> dict = expando;
                 var keyValues = obj.ToObject<KeyJsonElementValueObject[]>();
 
-                if (t == typeof(JsonElement) || t == typeof(JsonElement?) || t == typeof(ExpandoObject) || t == typeof(object))
+                foreach (var kv in keyValues)
                 {
-                    var dynamicResult = new ExpandoObject();
-                    IDictionary<string, object> dicResult;
-
-                    if (typeof(T) == typeof(ExpandoObject) || typeof(T) == typeof(object))
-                    {
-                        dicResult = dynamicResult;
-                    }
-                    else
-                    {
-                        dicResult = new Dictionary<string, object>();
-                    }
-
-                    foreach (var kv in keyValues)
-                    {
-                        var serializerOptions = JsonExtensions.GetNewDefaultSerializerOptions();
-                        var type = ValueKindToType(kv.V);
-
-                        serializerOptions.Converters.Add(GetNewConverter(type));
-                        dicResult[kv.K] = kv.V.ToObject(type, serializerOptions);
-                    }
-
-                    if (typeof(T) == typeof(ExpandoObject) || typeof(T) == typeof(object))
-                    {
-                        return dynamicResult;
-                    }
-
-                    var defaultConverter = JsonExtensions.GetNewDefaultSerializerOptions();
-                    string serialized = JsonSerializer.Serialize(dicResult, defaultConverter);
-
-                    var retValue = JsonSerializer.Deserialize<T>(serialized, defaultConverter);
-
-                    // This particular check & clone call is required because otherwise, when we attempt to
-                    // access the value, we run into an Object Disposed Exception.
-                    // See: https://github.com/microsoft/playwright-dotnet/issues/1706
-                    if (retValue is JsonElement retValueAsJson)
-                    {
-                        return retValueAsJson.Clone();
-                    }
+                    dict[kv.K] = ParseEvaluateResultToExpando(kv.V);
                 }
 
-                try
+                return expando;
+            }
+
+            if (result.TryGetProperty("a", out var array))
+            {
+                IList<object> list = new List<object>();
+                foreach (var item in array.EnumerateArray())
                 {
-                    object objResult = Activator.CreateInstance(t);
-
-                    foreach (var kv in keyValues)
-                    {
-                        var serializerOptions = JsonExtensions.GetNewDefaultSerializerOptions();
-
-                        var property = t.GetProperties().FirstOrDefault(prop => string.Equals(prop.Name, kv.K, StringComparison.OrdinalIgnoreCase));
-                        serializerOptions.Converters.Add(GetNewConverter(property.PropertyType));
-                        property.SetValue(objResult, kv.V.ToObject(property.PropertyType, serializerOptions));
-                    }
-
-                    return objResult;
+                    list.Add(ParseEvaluateResultToExpando(item));
                 }
-                catch (Exception)
-                {
-                    return null;
-                }
+                return list.ToArray();
             }
-
-            if (result.ValueKind == JsonValueKind.Object && result.TryGetProperty("v", out var vNull) && vNull.ValueKind == JsonValueKind.Null)
-            {
-                return GetDefaultValue(t);
-            }
-
-            if (result.ValueKind == JsonValueKind.Object && result.TryGetProperty("a", out var array) && array.ValueKind == JsonValueKind.Array)
-            {
-                if (t == typeof(ExpandoObject) || t == typeof(object))
-                {
-                    return ReadList(array, options);
-                }
-
-                return array.ToObject(t, options);
-            }
-
-            if (t == typeof(JsonElement?))
-            {
-                // we need to make sure that the returned instance *is not* dependent on the
-                // lifecycle of JsonDocument, hence we Clone it
-                return result.Clone();
-            }
-
-            if (result.ValueKind == JsonValueKind.Array)
-            {
-                var elementType = t.GetElementType();
-                var serializerOptions = JsonExtensions.GetNewDefaultSerializerOptions();
-                serializerOptions.Converters.Add(GetNewConverter(elementType));
-
-                var resultArray = Array.CreateInstance(elementType, result.GetArrayLength());
-                var i = 0;
-                foreach (var item in result.EnumerateArray())
-                {
-                    resultArray.SetValue(ParseEvaluateResult(item, elementType, serializerOptions), i++);
-                }
-
-                return resultArray;
-            }
-
-            return result.ToObject(t);
-        }
-
-        private static object GetDefaultValue(Type t)
-        {
-            if (t.IsValueType)
-            {
-                return Activator.CreateInstance(t);
-            }
-
             return null;
-        }
-
-        private static JsonConverter GetNewConverter(Type type)
-        {
-            var converter = typeof(EvaluateArgumentValueConverter<>);
-            Type[] typeArgs = { type };
-            var makeme = converter.MakeGenericType(typeArgs);
-            return (JsonConverter)Activator.CreateInstance(makeme);
-        }
-
-        private static Type ValueKindToType(JsonElement element)
-        {
-            if (element.ValueKind == JsonValueKind.Object)
-            {
-                if (element.TryGetProperty("d", out _))
-                {
-                    return typeof(DateTime);
-                }
-
-                if (element.TryGetProperty("b", out _))
-                {
-                    return typeof(bool);
-                }
-
-                if (element.TryGetProperty("s", out _))
-                {
-                    return typeof(string);
-                }
-
-                if (element.TryGetProperty("n", out _))
-                {
-                    return typeof(decimal);
-                }
-
-                if (
-                    element.TryGetProperty("v", out var number) &&
-                    (number.ToString() == "Infinity" || number.ToString() == "-Infinity" || number.ToString() == "-0" || number.ToString() == "NaN"))
-                {
-                    return typeof(double);
-                }
-            }
-
-            return element.ValueKind switch
-            {
-                JsonValueKind.Array => typeof(Array),
-                JsonValueKind.String => typeof(string),
-                JsonValueKind.Number => decimal.Truncate(element.ToObject<decimal>()) != element.ToObject<decimal>() ? typeof(decimal) : typeof(int),
-                JsonValueKind.True => typeof(bool),
-                JsonValueKind.False => typeof(bool),
-                _ => typeof(object),
-            };
-        }
-
-        private static object ReadList(JsonElement jsonElement, JsonSerializerOptions options)
-        {
-            IList<object> list = new List<object>();
-            foreach (var item in jsonElement.EnumerateArray())
-            {
-                list.Add(ParseEvaluateResult(item, ValueKindToType(item), options));
-            }
-
-            return list.Count == 0 ? null : list;
-        }
-
-        private static object ReadObject(JsonElement jsonElement, JsonSerializerOptions options)
-        {
-            IDictionary<string, object> expandoObject = new ExpandoObject();
-            foreach (var obj in jsonElement.EnumerateObject())
-            {
-                expandoObject[obj.Name] = ParseEvaluateResult(obj.Value, ValueKindToType(obj.Value), options);
-            }
-
-            return expandoObject;
         }
     }
 }

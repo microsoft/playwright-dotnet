@@ -50,7 +50,7 @@ namespace Microsoft.Playwright.Tests
             var popupTask = Page.WaitForPopupAsync();
             await TaskUtils.WhenAll(
                 popupTask,
-                Page.EvaluateAsync<string>("() => window.open('about:blank', 'Title', 'toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=yes,resizable=yes,width=780,height=200,top=0,left=0')")
+                Page.EvaluateAsync("() => window.open('about:blank', 'Title', 'toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=yes,resizable=yes,width=780,height=200,top=0,left=0')")
             );
             var popup = popupTask.Result;
             Assert.False(await Page.EvaluateAsync<bool>("() => !!window.opener"));

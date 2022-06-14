@@ -44,12 +44,27 @@ namespace Microsoft.Playwright.Core
             return genericMethod.Invoke(null, new object[] { element });
         }
 
-        internal static T ParseEvaluateResult<T>(JsonElement? result)
+        internal static T ParseEvaluateResult<T>(JsonElement? resultOrNull)
         {
-            var serializerOptions = JsonExtensions.GetNewDefaultSerializerOptions();
-            serializerOptions.Converters.Add(new EvaluateArgumentValueConverter<T>());
+            if (resultOrNull == null)
+            {
+                return default;
+            }
 
-            return result == null ? default : result.Value.ToObject<T>(serializerOptions);
+            var result = (JsonElement)resultOrNull;
+
+            if (result.ValueKind == JsonValueKind.Object && result.TryGetProperty("value", out var valueProperty))
+            {
+                result = valueProperty;
+            }
+
+            var parsed = EvaluateArgumentValueConverter<T>.ParseEvaluateResult(result, typeof(T));
+            if (parsed == null)
+            {
+                return default;
+            }
+
+            return (T)parsed;
         }
 
         internal static object SerializedArgument(object arg)

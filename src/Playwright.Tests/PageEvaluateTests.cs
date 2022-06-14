@@ -622,7 +622,47 @@ namespace Microsoft.Playwright.Tests
         public async Task ShouldNotReturnDisposedJsonElement()
         {
             var result = await Page.EvaluateAsync<JsonElement?>("()=> [{a:1,b:2},{a:1,b:2}]");
-            Assert.AreEqual("[{\"o\":[{\"k\":\"a\",\"v\":{\"n\":1}},{\"k\":\"b\",\"v\":{\"n\":2}}],\"id\":2},{\"o\":[{\"k\":\"a\",\"v\":{\"n\":1}},{\"k\":\"b\",\"v\":{\"n\":2}}],\"id\":3}]", result.ToString());
+            Assert.AreEqual("[{\"a\":1,\"b\":2},{\"a\":1,\"b\":2}]", result.ToString());
+        }
+
+        [PlaywrightTest()]
+        public async Task ShouldAllowJsonElementWhenDeserializing()
+        {
+            JsonElement? result = null;
+
+            result = await Page.EvaluateAsync<JsonElement?>("() => [{a:1,b:2},{a:1,b:2}]"); // list
+            Assert.AreEqual("[{\"a\":1,\"b\":2},{\"a\":1,\"b\":2}]", result.ToString());
+            result = await Page.EvaluateAsync<JsonElement>("() => [{a:1,b:2},{a:1,b:2}]");
+            Assert.AreEqual("[{\"a\":1,\"b\":2},{\"a\":1,\"b\":2}]", result.ToString());
+
+            result = await Page.EvaluateAsync<JsonElement?>("() => ({a:1,b:2})"); // object
+            Assert.AreEqual("{\"a\":1,\"b\":2}", result.ToString());
+            result = await Page.EvaluateAsync<JsonElement>("() => ({a:1,b:2})");
+            Assert.AreEqual("{\"a\":1,\"b\":2}", result.ToString());
+
+            result = await Page.EvaluateAsync<JsonElement?>("() => 42"); // number
+            Assert.AreEqual("42", result.ToString());
+            result = await Page.EvaluateAsync<JsonElement>("() => 42");
+            Assert.AreEqual("42", result.ToString());
+
+            result = await Page.EvaluateAsync<JsonElement?>("() => 'kek'"); // string
+            Assert.AreEqual("kek", result.ToString());
+            result = await Page.EvaluateAsync<JsonElement>("() => 'kek'");
+            Assert.AreEqual("kek", result.ToString());
+        }
+
+        private class Shape
+        {
+            public int Width { get; set; } = default!;
+            public int Height { get; set; } = default!;
+        }
+
+        [PlaywrightTest()]
+        public async Task ShouldParseTypeProperties()
+        {
+            var result = await Page.EvaluateAsync<Shape>("() => ({ width: 600, height: 400 })");
+            Assert.AreEqual(600, result.Width);
+            Assert.AreEqual(400, result.Height);
         }
     }
 }
