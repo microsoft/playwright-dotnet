@@ -190,11 +190,11 @@ namespace Microsoft.Playwright.Tests
         public async Task ShouldWorkWithWindowClose()
         {
             var newPageTask = Page.WaitForPopupAsync();
-            await Page.EvaluateAsync<string>("() => window['newPage'] = window.open('about:blank')");
+            await Page.EvaluateAsync("() => window['newPage'] = window.open('about:blank')");
             var newPage = await newPageTask;
             var closedTsc = new TaskCompletionSource<bool>();
             newPage.Close += (_, _) => closedTsc.SetResult(true);
-            await Page.EvaluateAsync<string>("() => window['newPage'].close()");
+            await Page.EvaluateAsync("() => window['newPage'].close()");
             await closedTsc.Task;
         }
 
