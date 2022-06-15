@@ -210,7 +210,7 @@ namespace Microsoft.Playwright.Tests
             var touchStartResult = (await touchStartTask)[0];
             var touchEndResult = await touchEndTask;
 
-            Assert.AreEqual(new object[] {}, touchEndResult);
+            Assert.AreEqual(new object[] { }, touchEndResult);
             Assert.AreEqual(40, touchStartResult.clientX);
             Assert.AreEqual(60, touchStartResult.clientY);
             Assert.AreEqual(1, touchStartResult.force);

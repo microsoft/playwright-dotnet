@@ -30,7 +30,6 @@ using System.Dynamic;
 using System.Globalization;
 using System.Linq;
 using System.Text.Json;
-using System.Text.Json.Serialization;
 using System.Text.RegularExpressions;
 using Microsoft.Playwright.Core;
 using Microsoft.Playwright.Helpers;
@@ -171,7 +170,7 @@ namespace Microsoft.Playwright.Transport.Converters
                 return parsed;
             }
 
-            // User wants Json, serialize/parse. On .Net 6 there is a method that does this w/o full serialization.
+            // User wants Json, serialize/parse. On .NET 6 there is a method that does this w/o full serialization.
             if (t == typeof(JsonElement) || t == typeof(JsonElement?))
             {
                 string serialized = JsonSerializer.Serialize(parsed);
@@ -189,9 +188,8 @@ namespace Microsoft.Playwright.Transport.Converters
                 return null;
             }
 
-            if (parsed is Array)
+            if (parsed is Array parsedArray)
             {
-                var parsedArray = (Array)parsed;
                 var result = (IList)Activator.CreateInstance(t, parsedArray.Length);
                 for (int i = 0; i < parsedArray.Length; ++i)
                 {
@@ -200,7 +198,7 @@ namespace Microsoft.Playwright.Transport.Converters
                 return result;
             }
 
-            if (parsed is ExpandoObject)
+            if (parsed is ExpandoObject parsedExpando)
             {
                 object objResult;
                 try
@@ -212,7 +210,7 @@ namespace Microsoft.Playwright.Transport.Converters
                     throw new PlaywrightException("Return type mismatch. Expecting " + t.ToString() + ", got Object");
                 }
 
-                foreach (var kv in (ExpandoObject)parsed)
+                foreach (var kv in parsedExpando)
                 {
                     var property = t.GetProperties().FirstOrDefault(prop => string.Equals(prop.Name, kv.Key, StringComparison.OrdinalIgnoreCase));
                     if (property != null)
