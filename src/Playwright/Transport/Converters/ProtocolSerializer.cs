@@ -37,22 +37,18 @@ using Microsoft.Playwright.Transport.Channels;
 
 namespace Microsoft.Playwright.Transport.Converters
 {
-    internal class EvaluateArgumentValueConverter<T>
+    internal static class ProtocolSerializer
     {
-        private readonly List<object> _visited = new();
-
-        public List<EvaluateArgumentGuidElement> Handles { get; } = new();
-
-        public object Serialize(object value)
+        internal static object Serialize(object value, List<EvaluateArgumentGuidElement> handles, VisitorInfo visitorInfo)
         {
-            if (_visited.Contains(value))
-            {
-                throw new JsonException("Argument is a circular structure");
-            }
-
             if (value == null)
             {
                 return new { v = "null" };
+            }
+
+            if (visitorInfo.Visited.ContainsKey(value))
+            {
+                return new Dictionary<string, object> { ["ref"] = visitorInfo.Visited[value] };
             }
 
             if (value is double nan && double.IsNaN(nan))
@@ -117,52 +113,50 @@ namespace Microsoft.Playwright.Transport.Converters
 
             if (value is IDictionary dictionary && dictionary.Keys.OfType<string>().Any())
             {
-                _visited.Add(value);
-
                 var o = new List<object>();
+                var id = ++visitorInfo.LastId;
+                visitorInfo.Visited.Add(value, id);
                 foreach (object key in dictionary.Keys)
                 {
                     object obj = dictionary[key];
-                    o.Add(new { k = key.ToString(), v = Serialize(obj) });
+                    o.Add(new { k = key.ToString(), v = Serialize(obj, handles, visitorInfo) });
                 }
 
-                _visited.Remove(value);
-                return new { o = o };
+                return new { o, id };
             }
 
             if (value is IEnumerable array)
             {
                 var a = new List<object>();
+                var id = ++visitorInfo.LastId;
+                visitorInfo.Visited.Add(value, id);
                 foreach (object item in array)
                 {
-                    a.Add(Serialize(item));
+                    a.Add(Serialize(item, handles, visitorInfo));
                 }
 
-                return new { a = a };
+                return new { a, id };
             }
 
             if (value is IChannelOwner channelOwner)
             {
-                Handles.Add(new() { Guid = channelOwner.Channel.Guid });
-                return new { h = Handles.Count - 1 };
+                handles.Add(new() { Guid = channelOwner.Channel.Guid });
+                return new { h = handles.Count - 1 };
             }
-
-            _visited.Add(value);
 
             var entries = new List<object>();
             foreach (PropertyDescriptor propertyDescriptor in TypeDescriptor.GetProperties(value))
             {
                 object obj = propertyDescriptor.GetValue(value);
-                entries.Add(new { k = propertyDescriptor.Name, v = Serialize(obj) });
+                entries.Add(new { k = propertyDescriptor.Name, v = Serialize(obj, handles, visitorInfo) });
             }
 
-            _visited.Remove(value);
             return new { o = entries };
         }
 
         internal static object ParseEvaluateResult(JsonElement result, Type t)
         {
-            var parsed = ParseEvaluateResultToExpando(result);
+            var parsed = ParseEvaluateResultToExpando(result, new Dictionary<int, object>());
 
             // If use wants expando or any object -> return as is.
             if (t == typeof(ExpandoObject) || t == typeof(object))
@@ -173,27 +167,37 @@ namespace Microsoft.Playwright.Transport.Converters
             // User wants Json, serialize/parse. On .NET 6 there is a method that does this w/o full serialization.
             if (t == typeof(JsonElement) || t == typeof(JsonElement?))
             {
-                string serialized = JsonSerializer.Serialize(parsed);
-                return JsonSerializer.Deserialize<T>(serialized);
+                var serializerOptions = new JsonSerializerOptions
+                {
+                    ReferenceHandler = System.Text.Json.Serialization.ReferenceHandler.Preserve,
+                };
+                string serialized = JsonSerializer.Serialize(parsed, serializerOptions);
+                return JsonSerializer.Deserialize(serialized, t, serializerOptions);
             }
 
             // Convert recursively to a requested type.
-            return ToExpectedType(parsed, t);
+            return ToExpectedType(parsed, t, new Dictionary<object, object>());
         }
 
-        private static object ToExpectedType(object parsed, Type t)
+        private static object ToExpectedType(object parsed, Type t, IDictionary<object, object> visited)
         {
             if (parsed == null)
             {
                 return null;
             }
 
+            if (visited.ContainsKey(parsed))
+            {
+                return visited[parsed];
+            }
+
             if (parsed is Array parsedArray)
             {
                 var result = (IList)Activator.CreateInstance(t, parsedArray.Length);
+                visited.Add(parsed, result);
                 for (int i = 0; i < parsedArray.Length; ++i)
                 {
-                    result[i] = ToExpectedType(parsedArray.GetValue(i), t.GetElementType());
+                    result[i] = ToExpectedType(parsedArray.GetValue(i), t.GetElementType(), visited);
                 }
                 return result;
             }
@@ -209,13 +213,14 @@ namespace Microsoft.Playwright.Transport.Converters
                 {
                     throw new PlaywrightException("Return type mismatch. Expecting " + t.ToString() + ", got Object");
                 }
+                visited.Add(parsed, objResult);
 
                 foreach (var kv in parsedExpando)
                 {
                     var property = t.GetProperties().FirstOrDefault(prop => string.Equals(prop.Name, kv.Key, StringComparison.OrdinalIgnoreCase));
                     if (property != null)
                     {
-                        property.SetValue(objResult, ToExpectedType(kv.Value, property.PropertyType));
+                        property.SetValue(objResult, ToExpectedType(kv.Value, property.PropertyType, visited));
                     }
                 }
 
@@ -242,7 +247,7 @@ namespace Microsoft.Playwright.Transport.Converters
             return Convert.ChangeType(value, t);
         }
 
-        private static object ParseEvaluateResultToExpando(JsonElement result)
+        private static object ParseEvaluateResultToExpando(JsonElement result, IDictionary<int, object> refs)
         {
             // Parse JSON into a structure where objects/arrays are represented with expando/arrays.
             if (result.TryGetProperty("v", out var value))
@@ -266,7 +271,7 @@ namespace Microsoft.Playwright.Transport.Converters
 
             if (result.TryGetProperty("ref", out var refValue))
             {
-                return null;
+                return refs[refValue.GetInt32()];
             }
 
             if (result.TryGetProperty("d", out var date))
@@ -297,12 +302,13 @@ namespace Microsoft.Playwright.Transport.Converters
             if (result.TryGetProperty("o", out var obj))
             {
                 var expando = new ExpandoObject();
+                refs.Add(result.GetProperty("id").GetInt32(), expando);
                 IDictionary<string, object> dict = expando;
                 var keyValues = obj.ToObject<KeyJsonElementValueObject[]>();
 
                 foreach (var kv in keyValues)
                 {
-                    dict[kv.K] = ParseEvaluateResultToExpando(kv.V);
+                    dict[kv.K] = ParseEvaluateResultToExpando(kv.V, refs);
                 }
 
                 return expando;
@@ -311,13 +317,21 @@ namespace Microsoft.Playwright.Transport.Converters
             if (result.TryGetProperty("a", out var array))
             {
                 IList<object> list = new List<object>();
+                refs.Add(result.GetProperty("id").GetInt32(), list);
                 foreach (var item in array.EnumerateArray())
                 {
-                    list.Add(ParseEvaluateResultToExpando(item));
+                    list.Add(ParseEvaluateResultToExpando(item, refs));
                 }
                 return list.ToArray();
             }
             return null;
+        }
+
+        internal class VisitorInfo
+        {
+            public Dictionary<object, int> Visited { get; set; }
+
+            public int LastId { get; set; }
         }
     }
 }

@@ -52,13 +52,13 @@ namespace Microsoft.Playwright.Tests
         public async Task ShouldHandleCircularObjects()
         {
             var windowHandle = await Page.EvaluateHandleAsync("const a = {}; a.b = a; a");
-            var a = await windowHandle.JsonValueAsync<TestClass>();
-            Assert.AreEqual(null, a.b);
+            var a = await windowHandle.JsonValueAsync<RecursiveCircularObjectClass>();
+            Assert.AreEqual(a, a.b);
         }
 
-        class TestClass
+        private class RecursiveCircularObjectClass
         {
-            public TestClass b { get; set; }
+            public RecursiveCircularObjectClass b { get; set; }
         }
     }
 }

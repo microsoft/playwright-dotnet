@@ -22,6 +22,7 @@
  * SOFTWARE.
  */
 
+using System.Collections.Generic;
 using System.Dynamic;
 using System.Linq;
 using System.Text.Json;
@@ -100,15 +101,25 @@ namespace Microsoft.Playwright.Tests
             Assert.AreEqual("baz", json.GetProperty("a2").GetProperty("arr").EnumerateArray().First().GetProperty("baz").EnumerateArray().First().ToString());
         }
 
-        [PlaywrightTest("page-evaluate-handle.spec.ts", "should throw for circular objects")]
-        public async Task ShouldThrowForCircularObjects()
+        [PlaywrightTest("page-evaluate-handle.spec.ts", "should be able to serialize circular data structures")]
+        public async Task ShouldBeAbleToSerializeCircularDataStructures()
         {
-            dynamic a = new ExpandoObject();
-            a.a = 1;
-            a.y = a;
+            {
+                // objects
+                var a = new Dictionary<string, object>();
+                a["b"] = a;
+                var wasCorrectlySerialized = await Page.EvaluateAsync<bool>("a => a.b === a", a);
+                Assert.True(wasCorrectlySerialized);
+            }
 
-            var exception = await PlaywrightAssert.ThrowsAsync<JsonException>(() => Page.EvaluateAsync("x => x", a));
-            Assert.AreEqual("Argument is a circular structure", exception.Message);
+            {
+                // lists
+                var a = new List<object>();
+                a.Add(a);
+                var wasCorrectlySerialized = await Page.EvaluateAsync<bool>("a => window.a = a.length === 1 && a[0] && a[0] === a", a);
+                await Page.PauseAsync();
+                Assert.True(wasCorrectlySerialized);
+            }
         }
 
         [PlaywrightTest("page-evaluate-handle.spec.ts", "should accept same nested object multiple times")]
