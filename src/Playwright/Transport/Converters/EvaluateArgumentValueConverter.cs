@@ -47,9 +47,9 @@ namespace Microsoft.Playwright.Transport.Converters
                 return new { v = "null" };
             }
 
-            if (visitorInfo.Visited.ContainsKey(value.GetHashCode()))
+            if (visitorInfo.Visited.TryGetValue(value, out var @ref))
             {
-                return new Dictionary<string, object> { ["ref"] = visitorInfo.Visited[value.GetHashCode()] };
+                return new Dictionary<string, object> { ["ref"] = @ref };
             }
 
             if (value is double nan && double.IsNaN(nan))
@@ -116,7 +116,7 @@ namespace Microsoft.Playwright.Transport.Converters
             {
                 var o = new List<object>();
                 id = ++visitorInfo.LastId;
-                visitorInfo.Visited.Add(value.GetHashCode(), id);
+                visitorInfo.Visited.Add(value, id);
                 foreach (KeyValuePair<string, object> property in (IDictionary<string, object>)value)
                 {
                     o.Add(new { k = property.Key, v = Serialize(property.Value, handles, visitorInfo) });
@@ -128,7 +128,7 @@ namespace Microsoft.Playwright.Transport.Converters
             {
                 var o = new List<object>();
                 id = ++visitorInfo.LastId;
-                visitorInfo.Visited.Add(value.GetHashCode(), id);
+                visitorInfo.Visited.Add(value, id);
                 foreach (object key in dictionary.Keys)
                 {
                     object obj = dictionary[key];
@@ -142,7 +142,7 @@ namespace Microsoft.Playwright.Transport.Converters
             {
                 var a = new List<object>();
                 id = ++visitorInfo.LastId;
-                visitorInfo.Visited.Add(value.GetHashCode(), id);
+                visitorInfo.Visited.Add(value, id);
                 foreach (object item in array)
                 {
                     a.Add(Serialize(item, handles, visitorInfo));
@@ -158,7 +158,7 @@ namespace Microsoft.Playwright.Transport.Converters
             }
 
             id = ++visitorInfo.LastId;
-            visitorInfo.Visited.Add(value.GetHashCode(), id);
+            visitorInfo.Visited.Add(value, id);
             var entries = new List<object>();
             foreach (PropertyDescriptor propertyDescriptor in TypeDescriptor.GetProperties(value))
             {
@@ -201,9 +201,9 @@ namespace Microsoft.Playwright.Transport.Converters
                 return null;
             }
 
-            if (visited.ContainsKey(parsed))
+            if (visited.TryGetValue(parsed, out var value))
             {
-                return visited[parsed];
+                return value;
             }
 
             if (parsed is Array parsedArray)
@@ -344,7 +344,7 @@ namespace Microsoft.Playwright.Transport.Converters
 
         internal class VisitorInfo
         {
-            public Dictionary<int, int> Visited { get; set; }
+            public Dictionary<object, int> Visited { get; set; }
 
             public int LastId { get; set; }
         }

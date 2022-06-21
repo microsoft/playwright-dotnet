@@ -70,7 +70,7 @@ namespace Microsoft.Playwright.Core
         internal static object SerializedArgument(object arg)
         {
             var handles = new List<EvaluateArgumentGuidElement>();
-            return new { value = EvaluateArgumentValueConverter.Serialize(arg, handles, new() { Visited = new Dictionary<int, int> { } }), handles };
+            return new { value = EvaluateArgumentValueConverter.Serialize(arg, handles, new() { Visited = new Dictionary<object, int> { } }), handles };
         }
 
         internal static string EvaluationScript(string content, string path)
