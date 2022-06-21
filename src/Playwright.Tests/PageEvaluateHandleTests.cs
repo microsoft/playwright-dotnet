@@ -22,6 +22,7 @@
  * SOFTWARE.
  */
 
+using System;
 using System.Collections.Generic;
 using System.Dynamic;
 using System.Linq;
@@ -105,6 +106,13 @@ namespace Microsoft.Playwright.Tests
         public async Task ShouldBeAbleToSerializeCircularDataStructures()
         {
             {
+                // ExpandoObject
+                dynamic a = new ExpandoObject();
+                a.b = a;
+                var wasCorrectlySerialized = await Page.EvaluateAsync<bool>("a => a.b === a", a);
+                Assert.True(wasCorrectlySerialized);
+            }
+            {
                 // objects
                 var a = new Dictionary<string, object>();
                 a["b"] = a;
@@ -152,6 +160,8 @@ namespace Microsoft.Playwright.Tests
         [PlaywrightTest("page-evaluate-handle.spec.ts", "should pass configurable args")]
         public async Task ShouldPassConfigurableArgs()
         {
+            dynamic parsed = new ExpandoObject();
+            parsed.b = parsed;
             JsonElement result = await Page.EvaluateAsync<JsonElement>(
                @"arg =>{
                   if (arg.foo !== 42)
@@ -166,7 +176,7 @@ namespace Microsoft.Playwright.Tests
                 }",
                 new { foo = 42 });
 
-            Assert.AreEqual("{}", result.ToString());
+            Assert.AreEqual("{\"$id\":\"1\"}", result.ToString());
         }
 
         [PlaywrightTest("page-evaluate-handle.spec.ts", "should work with primitives")]

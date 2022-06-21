@@ -41,6 +41,7 @@ namespace Microsoft.Playwright.Transport.Converters
     {
         internal static object Serialize(object value, List<EvaluateArgumentGuidElement> handles, VisitorInfo visitorInfo)
         {
+            int id;
             if (value == null)
             {
                 return new { v = "null" };
@@ -111,10 +112,22 @@ namespace Microsoft.Playwright.Transport.Converters
                 return new { r = new { p = regex.ToString(), f = regex.Options.GetInlineFlags() } };
             }
 
+            if (value is ExpandoObject)
+            {
+                var o = new List<object>();
+                id = ++visitorInfo.LastId;
+                visitorInfo.Visited.Add(value, id);
+                foreach (KeyValuePair<string, object> property in (IDictionary<string, object>)value)
+                {
+                    o.Add(new { k = property.Key, v = Serialize(property.Value, handles, visitorInfo) });
+                }
+                return new { o, id };
+            }
+
             if (value is IDictionary dictionary && dictionary.Keys.OfType<string>().Any())
             {
                 var o = new List<object>();
-                var id = ++visitorInfo.LastId;
+                id = ++visitorInfo.LastId;
                 visitorInfo.Visited.Add(value, id);
                 foreach (object key in dictionary.Keys)
                 {
@@ -128,7 +141,7 @@ namespace Microsoft.Playwright.Transport.Converters
             if (value is IEnumerable array)
             {
                 var a = new List<object>();
-                var id = ++visitorInfo.LastId;
+                id = ++visitorInfo.LastId;
                 visitorInfo.Visited.Add(value, id);
                 foreach (object item in array)
                 {
@@ -144,6 +157,8 @@ namespace Microsoft.Playwright.Transport.Converters
                 return new { h = handles.Count - 1 };
             }
 
+            id = ++visitorInfo.LastId;
+            visitorInfo.Visited.Add(value, id);
             var entries = new List<object>();
             foreach (PropertyDescriptor propertyDescriptor in TypeDescriptor.GetProperties(value))
             {
@@ -151,7 +166,7 @@ namespace Microsoft.Playwright.Transport.Converters
                 entries.Add(new { k = propertyDescriptor.Name, v = Serialize(obj, handles, visitorInfo) });
             }
 
-            return new { o = entries };
+            return new { o = entries, id };
         }
 
         internal static object ParseEvaluateResult(JsonElement result, Type t)

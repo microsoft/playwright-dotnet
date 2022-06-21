@@ -169,7 +169,7 @@ namespace Microsoft.Playwright.Tests
         public async Task ShouldReturnUndefinedForObjectsWithSymbols()
         {
             Assert.AreEqual(new object[] { null }, await Page.EvaluateAsync<object>("() => [Symbol('foo4')]"));
-            Assert.AreEqual("{}", (await Page.EvaluateAsync<JsonElement>(@"() => {
+            Assert.AreEqual("{\"$id\":\"1\"}", (await Page.EvaluateAsync<JsonElement>(@"() => {
                 var a = { };
                 a[Symbol('foo4')] = 42;
                 return a;
@@ -622,7 +622,7 @@ namespace Microsoft.Playwright.Tests
         public async Task ShouldNotReturnDisposedJsonElement()
         {
             var result = await Page.EvaluateAsync<JsonElement?>("()=> [{a:1,b:2},{a:1,b:2}]");
-            Assert.AreEqual("[{\"a\":1,\"b\":2},{\"a\":1,\"b\":2}]", result.ToString());
+            Assert.AreEqual("[{\"$id\":\"1\",\"a\":1,\"b\":2},{\"$id\":\"2\",\"a\":1,\"b\":2}]", result.ToString());
         }
 
         [PlaywrightTest()]
@@ -631,14 +631,14 @@ namespace Microsoft.Playwright.Tests
             JsonElement? result = null;
 
             result = await Page.EvaluateAsync<JsonElement?>("() => [{a:1,b:2},{a:1,b:2}]"); // list
-            Assert.AreEqual("[{\"a\":1,\"b\":2},{\"a\":1,\"b\":2}]", result.ToString());
+            Assert.AreEqual("[{\"$id\":\"1\",\"a\":1,\"b\":2},{\"$id\":\"2\",\"a\":1,\"b\":2}]", result.ToString());
             result = await Page.EvaluateAsync<JsonElement>("() => [{a:1,b:2},{a:1,b:2}]");
-            Assert.AreEqual("[{\"a\":1,\"b\":2},{\"a\":1,\"b\":2}]", result.ToString());
+            Assert.AreEqual("[{\"$id\":\"1\",\"a\":1,\"b\":2},{\"$id\":\"2\",\"a\":1,\"b\":2}]", result.ToString());
 
             result = await Page.EvaluateAsync<JsonElement?>("() => ({a:1,b:2})"); // object
-            Assert.AreEqual("{\"a\":1,\"b\":2}", result.ToString());
+            Assert.AreEqual("{\"$id\":\"1\",\"a\":1,\"b\":2}", result.ToString());
             result = await Page.EvaluateAsync<JsonElement>("() => ({a:1,b:2})");
-            Assert.AreEqual("{\"a\":1,\"b\":2}", result.ToString());
+            Assert.AreEqual("{\"$id\":\"1\",\"a\":1,\"b\":2}", result.ToString());
 
             result = await Page.EvaluateAsync<JsonElement?>("() => 42"); // number
             Assert.AreEqual("42", result.ToString());
