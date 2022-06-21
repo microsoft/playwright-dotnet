@@ -125,7 +125,6 @@ namespace Microsoft.Playwright.Tests
                 var a = new List<object>();
                 a.Add(a);
                 var wasCorrectlySerialized = await Page.EvaluateAsync<bool>("a => window.a = a.length === 1 && a[0] && a[0] === a", a);
-                await Page.PauseAsync();
                 Assert.True(wasCorrectlySerialized);
             }
         }

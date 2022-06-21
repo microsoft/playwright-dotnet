@@ -58,7 +58,7 @@ namespace Microsoft.Playwright.Core
                 result = valueProperty;
             }
 
-            var parsed = ProtocolSerializer.ParseEvaluateResult(result, typeof(T));
+            var parsed = EvaluateArgumentValueConverter.Deserialize(result, typeof(T));
             if (parsed == null)
             {
                 return default;
@@ -70,7 +70,7 @@ namespace Microsoft.Playwright.Core
         internal static object SerializedArgument(object arg)
         {
             var handles = new List<EvaluateArgumentGuidElement>();
-            return new { value = ProtocolSerializer.Serialize(arg, handles, new() { Visited = new Dictionary<object, int> { } }), handles };
+            return new { value = EvaluateArgumentValueConverter.Serialize(arg, handles, new() { Visited = new Dictionary<int, int> { } }), handles };
         }
 
         internal static string EvaluationScript(string content, string path)

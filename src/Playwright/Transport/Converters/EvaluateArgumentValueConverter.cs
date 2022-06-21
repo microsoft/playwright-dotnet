@@ -37,7 +37,7 @@ using Microsoft.Playwright.Transport.Channels;
 
 namespace Microsoft.Playwright.Transport.Converters
 {
-    internal static class ProtocolSerializer
+    internal static class EvaluateArgumentValueConverter
     {
         internal static object Serialize(object value, List<EvaluateArgumentGuidElement> handles, VisitorInfo visitorInfo)
         {
@@ -47,9 +47,9 @@ namespace Microsoft.Playwright.Transport.Converters
                 return new { v = "null" };
             }
 
-            if (visitorInfo.Visited.ContainsKey(value))
+            if (visitorInfo.Visited.ContainsKey(value.GetHashCode()))
             {
-                return new Dictionary<string, object> { ["ref"] = visitorInfo.Visited[value] };
+                return new Dictionary<string, object> { ["ref"] = visitorInfo.Visited[value.GetHashCode()] };
             }
 
             if (value is double nan && double.IsNaN(nan))
@@ -116,7 +116,7 @@ namespace Microsoft.Playwright.Transport.Converters
             {
                 var o = new List<object>();
                 id = ++visitorInfo.LastId;
-                visitorInfo.Visited.Add(value, id);
+                visitorInfo.Visited.Add(value.GetHashCode(), id);
                 foreach (KeyValuePair<string, object> property in (IDictionary<string, object>)value)
                 {
                     o.Add(new { k = property.Key, v = Serialize(property.Value, handles, visitorInfo) });
@@ -128,7 +128,7 @@ namespace Microsoft.Playwright.Transport.Converters
             {
                 var o = new List<object>();
                 id = ++visitorInfo.LastId;
-                visitorInfo.Visited.Add(value, id);
+                visitorInfo.Visited.Add(value.GetHashCode(), id);
                 foreach (object key in dictionary.Keys)
                 {
                     object obj = dictionary[key];
@@ -142,7 +142,7 @@ namespace Microsoft.Playwright.Transport.Converters
             {
                 var a = new List<object>();
                 id = ++visitorInfo.LastId;
-                visitorInfo.Visited.Add(value, id);
+                visitorInfo.Visited.Add(value.GetHashCode(), id);
                 foreach (object item in array)
                 {
                     a.Add(Serialize(item, handles, visitorInfo));
@@ -158,7 +158,7 @@ namespace Microsoft.Playwright.Transport.Converters
             }
 
             id = ++visitorInfo.LastId;
-            visitorInfo.Visited.Add(value, id);
+            visitorInfo.Visited.Add(value.GetHashCode(), id);
             var entries = new List<object>();
             foreach (PropertyDescriptor propertyDescriptor in TypeDescriptor.GetProperties(value))
             {
@@ -169,7 +169,7 @@ namespace Microsoft.Playwright.Transport.Converters
             return new { o = entries, id };
         }
 
-        internal static object ParseEvaluateResult(JsonElement result, Type t)
+        internal static object Deserialize(JsonElement result, Type t)
         {
             var parsed = ParseEvaluateResultToExpando(result, new Dictionary<int, object>());
 
@@ -344,7 +344,7 @@ namespace Microsoft.Playwright.Transport.Converters
 
         internal class VisitorInfo
         {
-            public Dictionary<object, int> Visited { get; set; }
+            public Dictionary<int, int> Visited { get; set; }
 
             public int LastId { get; set; }
         }
