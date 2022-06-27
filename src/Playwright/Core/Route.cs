@@ -42,11 +42,14 @@ namespace Microsoft.Playwright.Core
     {
         private readonly RouteChannel _channel;
         private readonly RouteInitializer _initializer;
+        private readonly Request _request;
+        private TaskCompletionSource<bool> _handlingTask;
 
         internal Route(IChannelOwner parent, string guid, RouteInitializer initializer) : base(parent, guid)
         {
             _channel = new(guid, parent.Connection, this);
             _initializer = initializer;
+            _request = initializer.Request;
         }
 
         public IRequest Request => _initializer.Request;
@@ -57,6 +60,7 @@ namespace Microsoft.Playwright.Core
 
         public async Task FulfillAsync(RouteFulfillOptions options = default)
         {
+            CheckNotHandled();
             options ??= new RouteFulfillOptions();
             var normalized = await NormalizeFulfillParametersAsync(
                 options.Status,
@@ -68,14 +72,34 @@ namespace Microsoft.Playwright.Core
                 options.Response).ConfigureAwait(false);
 
             await RaceWithPageCloseAsync(_channel.FulfillAsync(normalized)).ConfigureAwait(false);
+            ReportHandled(true);
         }
 
-        public Task AbortAsync(string errorCode = RequestAbortErrorCode.Failed) => RaceWithPageCloseAsync(_channel.AbortAsync(errorCode));
-
-        public Task ContinueAsync(RouteContinueOptions options = default)
+        public async Task AbortAsync(string errorCode = RequestAbortErrorCode.Failed)
         {
-            options ??= new RouteContinueOptions();
-            return RaceWithPageCloseAsync(_channel.ContinueAsync(url: options.Url, method: options.Method, postData: options.PostData, headers: options.Headers));
+            CheckNotHandled();
+            await RaceWithPageCloseAsync(_channel.AbortAsync(errorCode)).ConfigureAwait(false);
+            ReportHandled(true);
+        }
+
+        public async Task ContinueAsync(RouteContinueOptions options = default)
+        {
+            CheckNotHandled();
+            _request.ApplyFallbackOverrides(new RouteFallbackOptions().FromRouteContinueOptions(options));
+            await InnerContinueAsync().ConfigureAwait(false);
+            ReportHandled(true);
+        }
+
+        internal async Task InnerContinueAsync(bool @internal = false)
+        {
+            var options = _request.FallbackOverridesForContinue();
+            await _channel.Connection.WrapApiCallAsync(
+                async () =>
+                {
+                    await RaceWithPageCloseAsync(_channel.ContinueAsync(url: options.Url, method: options.Method, postData: options.PostData, headers: options.Headers)).ConfigureAwait(false);
+                    return 0;
+                },
+                @internal).ConfigureAwait(false);
         }
 
         private async Task RaceWithPageCloseAsync(Task task)
@@ -186,6 +210,33 @@ namespace Microsoft.Playwright.Core
             };
         }
 
-        public Task FallbackAsync(RouteFallbackOptions options = null) => throw new NotImplementedException();
+        public Task FallbackAsync(RouteFallbackOptions options = null)
+        {
+            CheckNotHandled();
+            _request.ApplyFallbackOverrides(options);
+            ReportHandled(false);
+            return Task.CompletedTask;
+        }
+
+        internal Task<bool> StartHandlingAsync()
+        {
+            _handlingTask = new();
+            return _handlingTask.Task;
+        }
+
+        private void CheckNotHandled()
+        {
+            if (_handlingTask == null)
+            {
+                throw new InvalidOperationException("Route is already handled!");
+            }
+        }
+
+        private void ReportHandled(bool handled)
+        {
+            var chain = _handlingTask;
+            _handlingTask = null;
+            chain.SetResult(handled);
+        }
     }
 }

@@ -22,37 +22,21 @@
  * SOFTWARE.
  */
 
-using System;
-using System.Text.RegularExpressions;
-
-namespace Microsoft.Playwright.Core
+namespace Microsoft.Playwright.Helpers
 {
-    internal class RouteSetting
+    internal static class RouteFallbackOptionsExtensions
     {
-        public Regex Regex { get; set; }
-
-        public Func<string, bool> Function { get; set; }
-
-        public Action<IRoute> Handler { get; set; }
-
-        public int? Times { get; internal set; }
-
-        public int HandledCount { get; set; }
-
-        public void Handle(IRoute route)
+        public static RouteFallbackOptions FromRouteContinueOptions(this RouteFallbackOptions options, RouteContinueOptions overrides)
         {
-            ++HandledCount;
-            Handler(route);
-        }
-
-        public bool IsActive()
-        {
-            if (Times == null)
+            if (overrides == null)
             {
-                return true;
+                return options;
             }
-
-            return HandledCount < Times;
+            options.Headers = overrides.Headers;
+            options.Method = overrides.Method;
+            options.PostData = overrides.PostData;
+            options.Url = overrides.Url;
+            return options;
         }
     }
 }

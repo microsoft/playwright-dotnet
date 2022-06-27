@@ -23,7 +23,10 @@
  */
 
 using System;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+
+#nullable enable
 
 namespace Microsoft.Playwright
 {
@@ -81,5 +84,23 @@ namespace Microsoft.Playwright
 
         /// <inheritdoc cref="ExposeFunctionAsync(string, Action)"/>
         Task ExposeFunctionAsync<T1, T2, T3, T4, TResult>(string name, Func<T1, T2, T3, T4, TResult> callback);
+
+        /// <inheritdoc cref="RouteAsync(string, Action{IRoute}, BrowserContextRouteOptions?)"/>
+        Task RouteAsync(string url, Func<IRoute, Task> handler, BrowserContextRouteOptions? options = default);
+
+        /// <inheritdoc cref="RouteAsync(Regex, Action{IRoute}, BrowserContextRouteOptions?)"/>
+        Task RouteAsync(Regex url, Func<IRoute, Task> handler, BrowserContextRouteOptions? options = default);
+
+        /// <inheritdoc cref="RouteAsync(Func{string, bool}, Action{IRoute}, BrowserContextRouteOptions?)"/>
+        Task RouteAsync(Func<string, bool> url, Func<IRoute, Task> handler, BrowserContextRouteOptions? options = default);
+
+        /// <inheritdoc cref="UnrouteAsync(string, Action{IRoute}?)"/>
+        Task UnrouteAsync(string url, Func<IRoute, Task> handler);
+
+        /// <inheritdoc cref="UnrouteAsync(Regex, Action{IRoute}?)"/>
+        Task UnrouteAsync(Regex url, Func<IRoute, Task> handler);
+
+        /// <inheritdoc cref="UnrouteAsync(Func{string, bool}, Action{IRoute}?)"/>
+        Task UnrouteAsync(Func<string, bool> url, Func<IRoute, Task> handler);
     }
 }

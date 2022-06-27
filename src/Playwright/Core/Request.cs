@@ -27,6 +27,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Text.Json;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 using System.Web;
 using Microsoft.Playwright.Transport;
@@ -39,16 +40,15 @@ namespace Microsoft.Playwright.Core
     {
         private readonly RequestChannel _channel;
         private readonly RequestInitializer _initializer;
-        private readonly RawHeaders _headers;
+        private readonly RawHeaders _provisionalHeaders;
+        private readonly RouteFallbackOptions _fallbackOverrides = new();
         private Task<RawHeaders> _rawHeadersTask;
 
         internal Request(IChannelOwner parent, string guid, RequestInitializer initializer) : base(parent, guid)
         {
-            // TODO: Consider using a mapper between RequestInitiliazer and this object
             _channel = new(guid, parent.Connection, this);
             _initializer = initializer;
             RedirectedFrom = _initializer.RedirectedFrom;
-            PostDataBuffer = _initializer.PostData;
             Timing = new();
 
             if (RedirectedFrom != null)
@@ -56,7 +56,7 @@ namespace Microsoft.Playwright.Core
                 _initializer.RedirectedFrom.RedirectedTo = this;
             }
 
-            _headers = new RawHeaders(initializer.Headers.ConvertAll(x => new NameValue() { Name = x.Name, Value = x.Value }).ToList());
+            _provisionalHeaders = new RawHeaders(initializer.Headers.ConvertAll(x => new NameValue() { Name = x.Name, Value = x.Value }).ToList());
         }
 
         ChannelBase IChannelOwner.Channel => _channel;
@@ -67,15 +67,46 @@ namespace Microsoft.Playwright.Core
 
         public IFrame Frame => _initializer.Frame;
 
-        public Dictionary<string, string> Headers => _headers.Headers;
+        public Dictionary<string, string> Headers
+        {
+            get
+            {
+                if (_fallbackOverrides.Headers != null)
+                {
+                    return RawHeaders.FromHeadersObjectLossy(_fallbackOverrides.Headers).Headers;
+                }
+                return _provisionalHeaders.Headers;
+            }
+        }
 
         public bool IsNavigationRequest => _initializer.IsNavigationRequest;
 
-        public string Method => _initializer.Method;
+        public string Method => !string.IsNullOrEmpty(_fallbackOverrides.Method) ? _fallbackOverrides.Method : _initializer.Method;
 
-        public string PostData => PostDataBuffer == null ? null : Encoding.UTF8.GetString(PostDataBuffer);
+        public string PostData
+        {
+            get
+            {
+                if (_fallbackOverrides.PostData != null)
+                {
+                    return Encoding.UTF8.GetString(_fallbackOverrides.PostData);
+                }
+                return PostDataBuffer == null ? null : Encoding.UTF8.GetString(PostDataBuffer);
+            }
+        }
 
-        public byte[] PostDataBuffer { get; }
+
+        public byte[] PostDataBuffer
+        {
+            get
+            {
+                if (_fallbackOverrides.PostData != null)
+                {
+                    return _fallbackOverrides.PostData;
+                }
+                return _initializer.PostData;
+            }
+        }
 
         public IRequest RedirectedFrom { get; }
 
@@ -85,7 +116,7 @@ namespace Microsoft.Playwright.Core
 
         public RequestTimingResult Timing { get; internal set; }
 
-        public string Url => _initializer.Url;
+        public string Url => !string.IsNullOrEmpty(_fallbackOverrides.Url) ? _fallbackOverrides.Url : _initializer.Url;
 
         internal Request FinalRequest => RedirectedTo != null ? ((Request)RedirectedTo).FinalRequest : this;
 
@@ -134,16 +165,20 @@ namespace Microsoft.Playwright.Core
         }
 
         public async Task<Dictionary<string, string>> AllHeadersAsync()
-            => (await GetRawHeadersAsync().ConfigureAwait(false)).Headers;
+            => (await ActualHeadersAsync().ConfigureAwait(false)).Headers;
 
         public async Task<IReadOnlyList<Header>> HeadersArrayAsync()
-            => (await GetRawHeadersAsync().ConfigureAwait(false)).HeadersArray;
+            => (await ActualHeadersAsync().ConfigureAwait(false)).HeadersArray;
 
         public async Task<string> HeaderValueAsync(string name)
-            => (await GetRawHeadersAsync().ConfigureAwait(false)).Get(name);
+            => (await ActualHeadersAsync().ConfigureAwait(false)).Get(name);
 
-        private Task<RawHeaders> GetRawHeadersAsync()
+        private Task<RawHeaders> ActualHeadersAsync()
         {
+            if (_fallbackOverrides.Headers != null)
+            {
+                return Task.FromResult(RawHeaders.FromHeadersObjectLossy(_fallbackOverrides.Headers));
+            }
             if (_rawHeadersTask == null)
             {
                 _rawHeadersTask = GetRawHeadersTaskAsync();
@@ -154,8 +189,17 @@ namespace Microsoft.Playwright.Core
 
         private async Task<RawHeaders> GetRawHeadersTaskAsync()
         {
-            var headers = await _channel.GetRawRequestHeadersAsync().ConfigureAwait(false);
-            return new(headers);
+            return new(await _channel.GetRawRequestHeadersAsync().ConfigureAwait(false));
         }
+
+        internal void ApplyFallbackOverrides(RouteFallbackOptions overrides)
+        {
+            _fallbackOverrides.Url = overrides?.Url ?? _fallbackOverrides.Url;
+            _fallbackOverrides.Method = overrides?.Method ?? _fallbackOverrides.Method;
+            _fallbackOverrides.Headers = overrides?.Headers ?? _fallbackOverrides.Headers;
+            _fallbackOverrides.PostData = overrides?.PostData ?? _fallbackOverrides.PostData;
+        }
+
+        internal RouteFallbackOptions FallbackOverridesForContinue() => _fallbackOverrides;
     }
 }
