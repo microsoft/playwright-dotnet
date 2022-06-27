@@ -22,6 +22,8 @@
  * SOFTWARE.
  */
 
+using System;
+using System.Collections.Generic;
 using System.Dynamic;
 using System.Linq;
 using System.Text.Json;
@@ -100,15 +102,31 @@ namespace Microsoft.Playwright.Tests
             Assert.AreEqual("baz", json.GetProperty("a2").GetProperty("arr").EnumerateArray().First().GetProperty("baz").EnumerateArray().First().ToString());
         }
 
-        [PlaywrightTest("page-evaluate-handle.spec.ts", "should throw for circular objects")]
-        public async Task ShouldThrowForCircularObjects()
+        [PlaywrightTest("page-evaluate-handle.spec.ts", "should be able to serialize circular data structures")]
+        public async Task ShouldBeAbleToSerializeCircularDataStructures()
         {
-            dynamic a = new ExpandoObject();
-            a.a = 1;
-            a.y = a;
+            {
+                // ExpandoObject
+                dynamic a = new ExpandoObject();
+                a.b = a;
+                var wasCorrectlySerialized = await Page.EvaluateAsync<bool>("a => a.b === a", a);
+                Assert.True(wasCorrectlySerialized);
+            }
+            {
+                // objects
+                var a = new Dictionary<string, object>();
+                a["b"] = a;
+                var wasCorrectlySerialized = await Page.EvaluateAsync<bool>("a => a.b === a", a);
+                Assert.True(wasCorrectlySerialized);
+            }
 
-            var exception = await PlaywrightAssert.ThrowsAsync<JsonException>(() => Page.EvaluateAsync("x => x", a));
-            Assert.AreEqual("Argument is a circular structure", exception.Message);
+            {
+                // lists
+                var a = new List<object>();
+                a.Add(a);
+                var wasCorrectlySerialized = await Page.EvaluateAsync<bool>("a => window.a = a.length === 1 && a[0] && a[0] === a", a);
+                Assert.True(wasCorrectlySerialized);
+            }
         }
 
         [PlaywrightTest("page-evaluate-handle.spec.ts", "should accept same nested object multiple times")]
@@ -141,6 +159,8 @@ namespace Microsoft.Playwright.Tests
         [PlaywrightTest("page-evaluate-handle.spec.ts", "should pass configurable args")]
         public async Task ShouldPassConfigurableArgs()
         {
+            dynamic parsed = new ExpandoObject();
+            parsed.b = parsed;
             JsonElement result = await Page.EvaluateAsync<JsonElement>(
                @"arg =>{
                   if (arg.foo !== 42)
@@ -155,7 +175,7 @@ namespace Microsoft.Playwright.Tests
                 }",
                 new { foo = 42 });
 
-            Assert.AreEqual("{}", result.ToString());
+            Assert.AreEqual("{\"$id\":\"1\"}", result.ToString());
         }
 
         [PlaywrightTest("page-evaluate-handle.spec.ts", "should work with primitives")]

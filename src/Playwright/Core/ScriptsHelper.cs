@@ -23,11 +23,11 @@
  */
 
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Text.Json;
-using Microsoft.Playwright.Helpers;
 using Microsoft.Playwright.Transport.Converters;
 
 namespace Microsoft.Playwright.Core
@@ -58,7 +58,7 @@ namespace Microsoft.Playwright.Core
                 result = valueProperty;
             }
 
-            var parsed = EvaluateArgumentValueConverter<T>.ParseEvaluateResult(result, typeof(T));
+            var parsed = EvaluateArgumentValueConverter.Deserialize(result, typeof(T));
             if (parsed == null)
             {
                 return default;
@@ -69,8 +69,8 @@ namespace Microsoft.Playwright.Core
 
         internal static object SerializedArgument(object arg)
         {
-            var converter = new EvaluateArgumentValueConverter<JsonElement>();
-            return new { value = converter.Serialize(arg), handles = converter.Handles };
+            var handles = new List<EvaluateArgumentGuidElement>();
+            return new { value = EvaluateArgumentValueConverter.Serialize(arg, handles, new()), handles };
         }
 
         internal static string EvaluationScript(string content, string path)
