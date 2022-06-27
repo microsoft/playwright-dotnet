@@ -103,7 +103,6 @@ namespace Microsoft.Playwright.Core
                 }
             };
             _channel.Console += (_, e) => Console?.Invoke(this, e);
-            _channel.DOMContentLoaded += (_, _) => DOMContentLoaded?.Invoke(this, this);
             _channel.Download += (_, e) => Download?.Invoke(this, new Download(this, e.Url, e.SuggestedFilename, e.Artifact.Object));
             _channel.PageError += (_, e) =>
             {
@@ -115,7 +114,6 @@ namespace Microsoft.Playwright.Core
 
                 PageError?.Invoke(this, $"{e.Error.Name}: {e.Error.Message}");
             };
-            _channel.Load += (_, _) => Load?.Invoke(this, this);
             _channel.Video += (_, e) => ForceVideo().ArtifactReady(e.Artifact);
 
             _channel.FileChooser += (_, e) => _fileChooserEventHandler?.Invoke(this, new FileChooser(this, e.Element.Object, e.IsMultiple));
@@ -974,6 +972,10 @@ namespace Microsoft.Playwright.Core
 
         internal void FireResponse(IResponse response) => Response?.Invoke(this, response);
 
+        internal void FireLoad() => Load?.Invoke(this, this);
+
+        internal void FireDOMContentLoaded() => DOMContentLoaded?.Invoke(this, this);
+
         private Task RouteAsync(Regex urlRegex, Func<string, bool> urlFunc, Action<IRoute> handler, PageRouteOptions options)
             => RouteAsync(new()
             {
@@ -1132,5 +1134,7 @@ namespace Microsoft.Playwright.Core
                 Strict = options.Strict,
             };
         }
+
+        public Task RouteFromHARAsync(string har, PageRouteFromHAROptions options = null) => throw new NotImplementedException();
     }
 }

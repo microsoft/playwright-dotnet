@@ -49,9 +49,10 @@ namespace Microsoft.Playwright.Transport
         private int _lastId;
         private string _reason = string.Empty;
 
-        public Connection()
+        public Connection(LocalUtils localUtils = null)
         {
             _rootObject = new(null, this, string.Empty);
+            LocalUtils = localUtils;
 
             DefaultJsonSerializerOptions = JsonExtensions.GetNewDefaultSerializerOptions();
             DefaultJsonSerializerOptions.Converters.Add(new ChannelToGuidConverter(this));
@@ -75,6 +76,8 @@ namespace Microsoft.Playwright.Transport
         public bool IsClosed { get; private set; }
 
         internal bool IsRemote { get; set; }
+
+        internal LocalUtils LocalUtils { get; private set; }
 
         internal Func<object, Task> OnMessage { get; set; }
 
@@ -304,6 +307,10 @@ namespace Microsoft.Playwright.Transport
                     break;
                 case ChannelOwnerType.LocalUtils:
                     result = new LocalUtils(parent, guid, initializer);
+                    if (LocalUtils == null)
+                    {
+                        LocalUtils = result as LocalUtils;
+                    }
                     break;
                 case ChannelOwnerType.Page:
                     result = new Page(parent, guid, initializer?.ToObject<PageInitializer>(DefaultJsonSerializerOptions));

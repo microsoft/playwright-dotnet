@@ -42,7 +42,6 @@ namespace Microsoft.Playwright.Core
         private readonly PlaywrightInitializer _initializer;
         internal readonly PlaywrightChannel _channel;
         private readonly Connection _connection;
-        internal readonly LocalUtils _utils;
 
         private readonly Dictionary<string, BrowserNewContextOptions> _devices = new(StringComparer.InvariantCultureIgnoreCase);
 
@@ -51,9 +50,7 @@ namespace Microsoft.Playwright.Core
         {
             _connection = parent.Connection;
             _initializer = initializer;
-            _utils = initializer.Utils;
             _channel = new(guid, parent.Connection, this);
-            _utils = initializer.Utils;
 
             foreach (var entry in initializer.DeviceDescriptors)
             {

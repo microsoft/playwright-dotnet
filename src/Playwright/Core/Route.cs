@@ -185,5 +185,7 @@ namespace Microsoft.Playwright.Core
                 ["fetchResponseUid"] = fetchResponseUid,
             };
         }
+
+        public Task FallbackAsync(RouteFallbackOptions options = null) => throw new NotImplementedException();
     }
 }

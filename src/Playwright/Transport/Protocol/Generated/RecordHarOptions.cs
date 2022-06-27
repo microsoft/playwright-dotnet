@@ -22,34 +22,29 @@
  * SOFTWARE.
  */
 
-using System.Threading.Tasks;
+using System.Collections.Generic;
+using System.Text.Json.Serialization;
 
-namespace Microsoft.Playwright.Core
+namespace Microsoft.Playwright.Transport.Protocol
 {
-    internal class APIRequest : IAPIRequest
+    internal class RecordHarOptions
     {
-        private readonly PlaywrightImpl _playwright;
+        [JsonPropertyName("path")]
+        public string Path { get; set; }
 
-        public APIRequest(PlaywrightImpl playwright)
-        {
-            _playwright = playwright;
-        }
+        [JsonPropertyName("content")]
+        public string Content { get; set; }
 
-        async Task<IAPIRequestContext> IAPIRequest.NewContextAsync(APIRequestNewContextOptions options)
-        {
-            var context = await _playwright._channel.NewRequestAsync(
-                options?.BaseURL,
-                options?.UserAgent,
-                options?.IgnoreHTTPSErrors,
-                options?.ExtraHTTPHeaders,
-                options?.HttpCredentials,
-                options?.Proxy,
-                options?.Timeout,
-                options?.StorageState,
-                options?.StorageStatePath)
-            .ConfigureAwait(false);
-            context._request = this;
-            return context;
-        }
+        [JsonPropertyName("mode")]
+        public string Mode { get; set; }
+
+        [JsonPropertyName("urlGlob")]
+        public string UrlGlob { get; set; }
+
+        [JsonPropertyName("urlRegexSource")]
+        public string UrlRegexSource { get; set; }
+
+        [JsonPropertyName("urlRegexFlags")]
+        public string UrlRegexFlags { get; set; }
     }
 }

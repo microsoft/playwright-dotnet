@@ -80,12 +80,17 @@ namespace Microsoft.Playwright
             Offline = clone.Offline;
             Permissions = clone.Permissions;
             Proxy = clone.Proxy;
+            RecordHarContent = clone.RecordHarContent;
+            RecordHarMode = clone.RecordHarMode;
             RecordHarOmitContent = clone.RecordHarOmitContent;
             RecordHarPath = clone.RecordHarPath;
+            RecordHarUrlFilterString = clone.RecordHarUrlFilterString;
+            RecordHarUrlFilterRegex = clone.RecordHarUrlFilterRegex;
             RecordVideoDir = clone.RecordVideoDir;
             RecordVideoSize = clone.RecordVideoSize;
             ReducedMotion = clone.ReducedMotion;
             ScreenSize = clone.ScreenSize;
+            ServiceWorkers = clone.ServiceWorkers;
             SlowMo = clone.SlowMo;
             StrictSelectors = clone.StrictSelectors;
             Timeout = clone.Timeout;
@@ -329,6 +334,27 @@ namespace Microsoft.Playwright
 
         /// <summary>
         /// <para>
+        /// Optional setting to control resource content management. If <c>omit</c> is specified,
+        /// content is not persisted. If <c>attach</c> is specified, resources are persistet
+        /// as separate files and all of these files are archived along with the HAR file. Defaults
+        /// to <c>embed</c>, which stores content inline the HAR file as per HAR specification.
+        /// </para>
+        /// </summary>
+        [JsonPropertyName("recordHarContent")]
+        public HarContentPolicy? RecordHarContent { get; set; }
+
+        /// <summary>
+        /// <para>
+        /// When set to <c>minimal</c>, only record information necessary for routing from HAR.
+        /// This omits sizes, timing, page, cookies, security and other types of HAR information
+        /// that are not used when replaying from HAR. Defaults to <c>full</c>.
+        /// </para>
+        /// </summary>
+        [JsonPropertyName("recordHarMode")]
+        public HarMode? RecordHarMode { get; set; }
+
+        /// <summary>
+        /// <para>
         /// Optional setting to control whether to omit request content from the HAR. Defaults
         /// to <c>false</c>.
         /// </para>
@@ -346,6 +372,12 @@ namespace Microsoft.Playwright
         /// </summary>
         [JsonPropertyName("recordHarPath")]
         public string? RecordHarPath { get; set; }
+
+        [JsonPropertyName("recordHarUrlFilterString")]
+        public string? RecordHarUrlFilterString { get; set; }
+
+        [JsonPropertyName("recordHarUrlFilterRegex")]
+        public Regex? RecordHarUrlFilterRegex { get; set; }
 
         /// <summary>
         /// <para>
@@ -388,6 +420,19 @@ namespace Microsoft.Playwright
         public ScreenSize? ScreenSize { get; set; }
 
         /// <summary>
+        /// <para>Whether to allow sites to register Service workers. Defaults to <c>'allow'</c>.</para>
+        /// <list type="bullet">
+        /// <item><description>
+        /// <c>'allow'</c>: <a href="https://developer.mozilla.org/en-US/docs/Web/API/Service_Worker_API">Service
+        /// Workers</a> can be registered.
+        /// </description></item>
+        /// <item><description><c>'block'</c>: Playwright will block all registration of Service Workers.</description></item>
+        /// </list>
+        /// </summary>
+        [JsonPropertyName("serviceWorkers")]
+        public ServiceWorkerPolicy? ServiceWorkers { get; set; }
+
+        /// <summary>
         /// <para>
         /// Slows down Playwright operations by the specified amount of milliseconds. Useful
         /// so that you can see what is going on.
@@ -398,7 +443,7 @@ namespace Microsoft.Playwright
 
         /// <summary>
         /// <para>
-        /// It specified, enables strict selectors mode for this context. In the strict selectors
+        /// If specified, enables strict selectors mode for this context. In the strict selectors
         /// mode all operations on selectors that imply single target DOM element will throw
         /// when more than one element matches the selector. See <see cref="ILocator"/> to learn
         /// more about the strict mode.
