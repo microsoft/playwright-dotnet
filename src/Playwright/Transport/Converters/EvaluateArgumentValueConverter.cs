@@ -29,6 +29,7 @@ using System.ComponentModel;
 using System.Dynamic;
 using System.Globalization;
 using System.Linq;
+using System.Runtime.Serialization;
 using System.Text.Json;
 using System.Text.RegularExpressions;
 using Microsoft.Playwright.Core;
@@ -47,7 +48,7 @@ namespace Microsoft.Playwright.Transport.Converters
                 return new { v = "null" };
             }
 
-            if (visitorInfo.Visited.TryGetValue(value, out var @ref))
+            if (visitorInfo.Visited.TryGetValue(visitorInfo.Identity(value), out var @ref))
             {
                 return new Dictionary<string, object> { ["ref"] = @ref };
             }
@@ -116,7 +117,7 @@ namespace Microsoft.Playwright.Transport.Converters
             {
                 var o = new List<object>();
                 id = ++visitorInfo.LastId;
-                visitorInfo.Visited.Add(value, id);
+                visitorInfo.Visited.Add(visitorInfo.Identity(value), id);
                 foreach (KeyValuePair<string, object> property in (IDictionary<string, object>)value)
                 {
                     o.Add(new { k = property.Key, v = Serialize(property.Value, handles, visitorInfo) });
@@ -128,7 +129,7 @@ namespace Microsoft.Playwright.Transport.Converters
             {
                 var o = new List<object>();
                 id = ++visitorInfo.LastId;
-                visitorInfo.Visited.Add(value, id);
+                visitorInfo.Visited.Add(visitorInfo.Identity(value), id);
                 foreach (object key in dictionary.Keys)
                 {
                     object obj = dictionary[key];
@@ -142,7 +143,7 @@ namespace Microsoft.Playwright.Transport.Converters
             {
                 var a = new List<object>();
                 id = ++visitorInfo.LastId;
-                visitorInfo.Visited.Add(value, id);
+                visitorInfo.Visited.Add(visitorInfo.Identity(value), id);
                 foreach (object item in array)
                 {
                     a.Add(Serialize(item, handles, visitorInfo));
@@ -158,7 +159,7 @@ namespace Microsoft.Playwright.Transport.Converters
             }
 
             id = ++visitorInfo.LastId;
-            visitorInfo.Visited.Add(value, id);
+            visitorInfo.Visited.Add(visitorInfo.Identity(value), id);
             var entries = new List<object>();
             foreach (PropertyDescriptor propertyDescriptor in TypeDescriptor.GetProperties(value))
             {
@@ -344,9 +345,20 @@ namespace Microsoft.Playwright.Transport.Converters
 
         internal class VisitorInfo
         {
-            public Dictionary<object, int> Visited { get; set; }
+            internal VisitorInfo()
+            {
+                Visited = new Dictionary<long, int>();
+                IDGenerator = new ObjectIDGenerator();
+            }
 
-            public int LastId { get; set; }
+            internal Dictionary<long, int> Visited { get; set; }
+
+            internal int LastId { get; set; }
+
+            private ObjectIDGenerator IDGenerator { get; set; }
+
+            internal long Identity(object obj)
+                => IDGenerator.GetId(obj, out _);
         }
     }
 }
