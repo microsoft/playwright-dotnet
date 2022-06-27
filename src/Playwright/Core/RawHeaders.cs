@@ -73,5 +73,11 @@ namespace Microsoft.Playwright.Core
 
             return null;
         }
+
+        internal static RawHeaders FromHeadersObjectLossy(IEnumerable<KeyValuePair<string, string>> headers)
+        {
+            var headersArray = headers.Select(x => new NameValue() { Name = x.Key, Value = x.Value }).Where(x => x.Value != null).ToList();
+            return new RawHeaders(headersArray);
+        }
     }
 }

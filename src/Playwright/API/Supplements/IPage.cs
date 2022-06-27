@@ -24,17 +24,20 @@
 
 using System;
 using System.Text.Json;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+
+#nullable enable
 
 namespace Microsoft.Playwright
 {
     public partial interface IPage
     {
-        Task<JsonElement?> EvaluateAsync(string expression, object arg = default);
+        Task<JsonElement?> EvaluateAsync(string expression, object? arg = default);
 
-        Task<JsonElement?> EvalOnSelectorAsync(string selector, string expression, object arg = default);
+        Task<JsonElement?> EvalOnSelectorAsync(string selector, string expression, object? arg = default);
 
-        Task<JsonElement?> EvalOnSelectorAllAsync(string selector, string expression, object arg = default);
+        Task<JsonElement?> EvalOnSelectorAllAsync(string selector, string expression, object? arg = default);
 
         Task ExposeBindingAsync(string name, Action<BindingSource> callback);
 
@@ -63,5 +66,23 @@ namespace Microsoft.Playwright
         Task ExposeFunctionAsync<T1, T2, T3, TResult>(string name, Func<T1, T2, T3, TResult> callback);
 
         Task ExposeFunctionAsync<T1, T2, T3, T4, TResult>(string name, Func<T1, T2, T3, T4, TResult> callback);
+
+        /// <inheritdoc cref="RouteAsync(string, Action{IRoute}, PageRouteOptions?)"/>
+        Task RouteAsync(string url, Func<IRoute, Task> handler, PageRouteOptions? options = default);
+
+        /// <inheritdoc cref="RouteAsync(Regex, Action{IRoute}, PageRouteOptions?)"/>
+        Task RouteAsync(Regex url, Func<IRoute, Task> handler, PageRouteOptions? options = default);
+
+        /// <inheritdoc cref="RouteAsync(Func{string, bool}, Action{IRoute}, PageRouteOptions?)"/>
+        Task RouteAsync(Func<string, bool> url, Func<IRoute, Task> handler, PageRouteOptions? options = default);
+
+        /// <inheritdoc cref="UnrouteAsync(string, Action{IRoute}?)"/>
+        Task UnrouteAsync(string url, Func<IRoute, Task> handler);
+
+        /// <inheritdoc cref="UnrouteAsync(Regex, Action{IRoute}?)"/>
+        Task UnrouteAsync(Regex url, Func<IRoute, Task> handler);
+
+        /// <inheritdoc cref="UnrouteAsync(Func{string, bool}, Action{IRoute}?)"/>
+        Task UnrouteAsync(Func<string, bool> url, Func<IRoute, Task> handler);
     }
 }
