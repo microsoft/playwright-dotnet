@@ -568,6 +568,38 @@ namespace Microsoft.Playwright
         /// <param name="value">Expected value.</param>
         /// <param name="options">Call options</param>
         Task ToHaveValueAsync(Regex value, LocatorAssertionsToHaveValueOptions? options = default);
+
+        /// <summary>
+        /// <para>
+        /// Ensures the <see cref="ILocator"/> points to multi-select/combobox (i.e. a <c>select</c>
+        /// with the <c>multiple</c> attribute) and the specified values are selected.
+        /// </para>
+        /// <para>For example, given the following element:</para>
+        /// <code>
+        /// var locator = Page.Locator("id=favorite-colors");<br/>
+        /// await locator.SelectOptionAsync(new string[] { "R", "G" })<br/>
+        /// await Expect(locator).ToHaveValuesAsync(new Regex[] { new Regex("R"), new Regex("G") });
+        /// </code>
+        /// </summary>
+        /// <param name="values">Expected options currently selected.</param>
+        /// <param name="options">Call options</param>
+        Task ToHaveValuesAsync(IEnumerable<string> values, LocatorAssertionsToHaveValuesOptions? options = default);
+
+        /// <summary>
+        /// <para>
+        /// Ensures the <see cref="ILocator"/> points to multi-select/combobox (i.e. a <c>select</c>
+        /// with the <c>multiple</c> attribute) and the specified values are selected.
+        /// </para>
+        /// <para>For example, given the following element:</para>
+        /// <code>
+        /// var locator = Page.Locator("id=favorite-colors");<br/>
+        /// await locator.SelectOptionAsync(new string[] { "R", "G" })<br/>
+        /// await Expect(locator).ToHaveValuesAsync(new Regex[] { new Regex("R"), new Regex("G") });
+        /// </code>
+        /// </summary>
+        /// <param name="values">Expected options currently selected.</param>
+        /// <param name="options">Call options</param>
+        Task ToHaveValuesAsync(IEnumerable<Regex> values, LocatorAssertionsToHaveValuesOptions? options = default);
     }
 }
 

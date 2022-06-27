@@ -169,6 +169,8 @@ namespace Microsoft.Playwright.Tests.Assertions
                 await Expect(Page.Locator("#node")).ToContainTextAsync(new Regex("ex"));
                 // Should not normalize whitespace.
                 await Expect(Page.Locator("#node")).ToContainTextAsync(new Regex("ext   cont"));
+                // Should respect ignoreCase.
+                await Expect(Page.Locator("#node")).ToContainTextAsync(new Regex("exT   cONt"), new() { IgnoreCase = true });
             }
             {
                 await Page.SetContentAsync("<div id=node>Text content</div>");
@@ -182,9 +184,13 @@ namespace Microsoft.Playwright.Tests.Assertions
                 var locator = Page.Locator("#node");
                 // Should normalize whitespace.
                 await Expect(locator).ToHaveTextAsync("Text                        content");
+                // Should respect ignoreCase.
+                await Expect(locator).ToHaveTextAsync("Text                        CONtent", new() { IgnoreCase = true });
                 // Should normalize zero width whitespace.
                 await Expect(locator).ToHaveTextAsync("T\u200be\u200bx\u200bt content");
                 await Expect(locator).ToHaveTextAsync(new Regex("Text\\s+content"));
+                // Should respect ignoreCase.
+                await Expect(Page.Locator("#node")).ToHaveTextAsync(new Regex("Text\\s+cONtent"), new() { IgnoreCase = true });
             }
             {
                 await Page.SetContentAsync("<div id=node>Text content</div>");
@@ -192,6 +198,8 @@ namespace Microsoft.Playwright.Tests.Assertions
                 await Expect(locator).ToContainTextAsync("Text");
                 // Should normalize whitespace.
                 await Expect(locator).ToContainTextAsync("   ext        cont\n  ");
+                // Should respect ignoreCase.
+                await Expect(locator).ToContainTextAsync("TEXT", new() { IgnoreCase = true });
             }
             {
                 await Page.SetContentAsync("<div id=node>Text content</div>");
@@ -293,6 +301,12 @@ namespace Microsoft.Playwright.Tests.Assertions
                 ["b"] = "string",
                 ["c"] = DateTime.Parse("2021-07-28T20:26:32.000Z"),
             });
+
+            await Page.EvalOnSelectorAsync("div", "e => e.foo = false");
+            await Expect(locator).ToHaveJSPropertyAsync("foo", false);
+            await Expect(locator).Not.ToHaveJSPropertyAsync("foo", true);
+            await Page.EvalOnSelectorAsync("div", "e => e.itsNull = null");
+            await Expect(locator).ToHaveJSPropertyAsync("itsNull", null);
         }
 
         [PlaywrightTest("playwright-test/playwright.expect.misc.spec.ts", "should support toHaveValue")]
@@ -309,6 +323,93 @@ namespace Microsoft.Playwright.Tests.Assertions
                 await Page.SetContentAsync("<label><input></input></label>");
                 await Page.Locator("label input").FillAsync("Text content");
                 await Expect(Page.Locator("label")).ToHaveValueAsync("Text content");
+            }
+        }
+
+        [PlaywrightTest("playwright-test/playwright.expect.misc.spec.ts", "should support toHaveValues")]
+        public async Task ShouldSupportToHaveValues()
+        {
+            {
+                // should support toHaveValues with multi-select > works with text
+                await Page.SetContentAsync(@"
+                <select multiple>
+                    <option value='R'>Red</option>
+                    <option value='G'>Green</option>
+                    <option value='B'>Blue</option>
+                </select>");
+                var locator = Page.Locator("select");
+                await locator.SelectOptionAsync(new string[] { "R", "G" });
+                await Expect(locator).ToHaveValuesAsync(new string[] { "R", "G" });
+            }
+            {
+                // should support toHaveValues with multi-select > follows labels
+                await Page.SetContentAsync(@"
+                <label for='colors'>Pick a Color</label>
+                    <select id='colors' multiple>
+                    <option value='R'>Red</option>
+                    <option value='G'>Green</option>
+                    <option value='B'>Blue</option>
+                </select>");
+                var locator = Page.Locator("text=Pick a Color");
+                await locator.SelectOptionAsync(new string[] { "R", "G" });
+                await Expect(locator).ToHaveValuesAsync(new string[] { "R", "G" });
+            }
+            {
+                // should support toHaveValues with multi-select > exact match with text
+                await Page.SetContentAsync(@"
+                <select multiple>
+                    <option value='RR'>Red</option>
+                    <option value='GG'>Green</option>
+                </select>");
+                var locator = Page.Locator("select");
+                await locator.SelectOptionAsync(new string[] { "RR", "GG" });
+                var exception = await PlaywrightAssert.ThrowsAsync<PlaywrightException>(() => Expect(locator).ToHaveValuesAsync(new string[] { "R", "G" }));
+                StringAssert.Contains("Locator expected to have values '['R', 'G']'\nBut was: '['RR', 'GG']'", exception.Message);
+            }
+            {
+                // should support toHaveValues with multi-select > works with regex
+                await Page.SetContentAsync(@"
+                <select multiple>
+                    <option value='R'>Red</option>
+                    <option value='G'>Green</option>
+                    <option value='B'>Blue</option>
+                </select>");
+                var locator = Page.Locator("select");
+                await locator.SelectOptionAsync(new string[] { "R", "G" });
+                await Expect(locator).ToHaveValuesAsync(new Regex[] { new Regex("R"), new Regex("G") });
+            }
+            {
+                // should support toHaveValues with multi-select > fails when items not selected
+                await Page.SetContentAsync(@"
+                <select multiple>
+                    <option value='R'>Red</option>
+                    <option value='G'>Green</option>
+                    <option value='B'>Blue</option>
+                </select>");
+                var locator = Page.Locator("select");
+                await locator.SelectOptionAsync(new string[] { "B" });
+                var exception = await PlaywrightAssert.ThrowsAsync<PlaywrightException>(() => Expect(locator).ToHaveValuesAsync(new Regex[] { new Regex("R"), new Regex("G") }));
+                StringAssert.Contains("Locator expected to have matching regex '['R', 'G']'\nBut was: '['B']'", exception.Message);
+            }
+            {
+                // should support toHaveValues with multi-select > fails when multiple not specified
+                await Page.SetContentAsync(@"
+                <select>
+                    <option value='R'>Red</option>
+                    <option value='G'>Green</option>
+                    <option value='B'>Blue</option>
+                </select>");
+                var locator = Page.Locator("select");
+                await locator.SelectOptionAsync(new string[] { "B" });
+                var exception = await PlaywrightAssert.ThrowsAsync<PlaywrightException>(() => Expect(locator).ToHaveValuesAsync(new Regex[] { new Regex("R"), new Regex("G") }));
+                StringAssert.Contains("Not a select element with a multiple attribute", exception.Message);
+            }
+            {
+                // should support toHaveValues with multi-select > fails when not a select element
+                await Page.SetContentAsync("<input value='foo'/>");
+                var locator = Page.Locator("input");
+                var exception = await PlaywrightAssert.ThrowsAsync<PlaywrightException>(() => Expect(locator).ToHaveValuesAsync(new Regex[] { new Regex("R"), new Regex("G") }));
+                StringAssert.Contains("Not a select element with a multiple attribute", exception.Message);
             }
         }
     }
