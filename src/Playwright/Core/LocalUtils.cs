@@ -33,7 +33,7 @@ using Microsoft.Playwright.Transport.Protocol;
 
 namespace Microsoft.Playwright.Core
 {
-    internal partial class LocalUtils : ChannelOwnerBase, IChannelOwner<LocalUtils>, ILocalUtils
+    internal partial class LocalUtils : ChannelOwnerBase, IChannelOwner<LocalUtils>
     {
         private readonly LocalUtilsChannel _channel;
 

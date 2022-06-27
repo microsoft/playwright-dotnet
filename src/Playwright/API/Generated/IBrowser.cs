@@ -69,6 +69,9 @@ namespace Microsoft.Playwright
         /// </summary>
         event EventHandler<IBrowser> Disconnected;
 
+        /// <summary><para>Get the browser type (chromium, firefox or webkit) that the browser belongs to.</para></summary>
+        IBrowserType BrowserType { get; }
+
         /// <summary>
         /// <para>
         /// In case this browser is obtained using <see cref="IBrowserType.LaunchAsync"/>, closes

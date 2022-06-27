@@ -426,10 +426,10 @@ namespace Microsoft.Playwright
         /// </summary>
         /// <remarks>
         /// <para>
-        /// <see cref="IPage.RouteAsync"/> will not intercept requests intercepted by Service
-        /// Worker. See <a href="https://github.com/microsoft/playwright/issues/1090">this</a>
-        /// issue. We recommend disabling Service Workers when using request interception. Via
-        /// <c>await context.addInitScript(() =&gt; delete window.navigator.serviceWorker);</c>
+        /// <see cref="IBrowserContext.RouteAsync"/> will not intercept requests intercepted
+        /// by Service Worker. See <a href="https://github.com/microsoft/playwright/issues/1090">this</a>
+        /// issue. We recommend disabling Service Workers when using request interception by
+        /// setting <paramref name="Browser.newContext.serviceWorkers"/> to <c>'block'</c>.
         /// </para>
         /// <para>Enabling routing disables http cache.</para>
         /// </remarks>
@@ -486,10 +486,10 @@ namespace Microsoft.Playwright
         /// </summary>
         /// <remarks>
         /// <para>
-        /// <see cref="IPage.RouteAsync"/> will not intercept requests intercepted by Service
-        /// Worker. See <a href="https://github.com/microsoft/playwright/issues/1090">this</a>
-        /// issue. We recommend disabling Service Workers when using request interception. Via
-        /// <c>await context.addInitScript(() =&gt; delete window.navigator.serviceWorker);</c>
+        /// <see cref="IBrowserContext.RouteAsync"/> will not intercept requests intercepted
+        /// by Service Worker. See <a href="https://github.com/microsoft/playwright/issues/1090">this</a>
+        /// issue. We recommend disabling Service Workers when using request interception by
+        /// setting <paramref name="Browser.newContext.serviceWorkers"/> to <c>'block'</c>.
         /// </para>
         /// <para>Enabling routing disables http cache.</para>
         /// </remarks>
@@ -546,10 +546,10 @@ namespace Microsoft.Playwright
         /// </summary>
         /// <remarks>
         /// <para>
-        /// <see cref="IPage.RouteAsync"/> will not intercept requests intercepted by Service
-        /// Worker. See <a href="https://github.com/microsoft/playwright/issues/1090">this</a>
-        /// issue. We recommend disabling Service Workers when using request interception. Via
-        /// <c>await context.addInitScript(() =&gt; delete window.navigator.serviceWorker);</c>
+        /// <see cref="IBrowserContext.RouteAsync"/> will not intercept requests intercepted
+        /// by Service Worker. See <a href="https://github.com/microsoft/playwright/issues/1090">this</a>
+        /// issue. We recommend disabling Service Workers when using request interception by
+        /// setting <paramref name="Browser.newContext.serviceWorkers"/> to <c>'block'</c>.
         /// </para>
         /// <para>Enabling routing disables http cache.</para>
         /// </remarks>
@@ -562,6 +562,27 @@ namespace Microsoft.Playwright
         /// <param name="handler">handler function to route the request.</param>
         /// <param name="options">Call options</param>
         Task RouteAsync(Func<string, bool> url, Action<IRoute> handler, BrowserContextRouteOptions? options = default);
+
+        /// <summary>
+        /// <para>
+        /// If specified the network requests that are made in the context will be served from
+        /// the HAR file. Read more about <a href="https://playwright.dev/dotnet/docs/network#replaying-from-har">Replaying
+        /// from HAR</a>.
+        /// </para>
+        /// <para>
+        /// Playwright will not serve requests intercepted by Service Worker from the HAR file.
+        /// See <a href="https://github.com/microsoft/playwright/issues/1090">this</a> issue.
+        /// We recommend disabling Service Workers when using request interception by setting
+        /// <paramref name="Browser.newContext.serviceWorkers"/> to <c>'block'</c>.
+        /// </para>
+        /// </summary>
+        /// <param name="har">
+        /// Path to a <a href="http://www.softwareishard.com/blog/har-12-spec">HAR</a> file
+        /// with prerecorded network data. If <c>path</c> is a relative path, then it is resolved
+        /// relative to the current working directory.
+        /// </param>
+        /// <param name="options">Call options</param>
+        Task RouteFromHARAsync(string har, BrowserContextRouteFromHAROptions? options = default);
 
         /// <summary>
         /// <para>

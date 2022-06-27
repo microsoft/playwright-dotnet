@@ -45,8 +45,6 @@ namespace Microsoft.Playwright.Transport.Channels
 
         internal event EventHandler<IWebSocket> WebSocket;
 
-        internal event EventHandler DOMContentLoaded;
-
         internal event EventHandler<PageChannelPopupEventArgs> Popup;
 
         internal event EventHandler<BindingCallEventArgs> BindingCall;
@@ -67,8 +65,6 @@ namespace Microsoft.Playwright.Transport.Channels
 
         internal event EventHandler<FileChooserChannelEventArgs> FileChooser;
 
-        internal event EventHandler Load;
-
         internal event EventHandler<WorkerChannelEventArgs> Worker;
 
         internal event EventHandler<VideoEventArgs> Video;
@@ -82,12 +78,6 @@ namespace Microsoft.Playwright.Transport.Channels
                     break;
                 case "crash":
                     Crashed?.Invoke(this, EventArgs.Empty);
-                    break;
-                case "domcontentloaded":
-                    DOMContentLoaded?.Invoke(this, EventArgs.Empty);
-                    break;
-                case "load":
-                    Load?.Invoke(this, EventArgs.Empty);
                     break;
                 case "bindingCall":
                     BindingCall?.Invoke(

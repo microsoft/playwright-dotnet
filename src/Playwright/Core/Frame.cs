@@ -64,6 +64,14 @@ namespace Microsoft.Playwright.Core
                     {
                         _loadStates.Remove(e.Remove.Value);
                     }
+                    if (this.ParentFrame == null && e.Add == WaitUntilState.Load && this.Page != null)
+                    {
+                        (this.Page as Page).FireLoad();
+                    }
+                    if (this.ParentFrame == null && e.Add == WaitUntilState.DOMContentLoaded && this.Page != null)
+                    {
+                        (this.Page as Page).FireDOMContentLoaded();
+                    }
                 }
             };
 

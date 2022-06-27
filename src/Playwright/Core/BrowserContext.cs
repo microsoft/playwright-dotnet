@@ -480,5 +480,7 @@ namespace Microsoft.Playwright.Core
 
             return Channel.ExposeBindingAsync(name, handle);
         }
+
+        public Task RouteFromHARAsync(string har, BrowserContextRouteFromHAROptions options = null) => throw new NotImplementedException();
     }
 }

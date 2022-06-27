@@ -335,8 +335,18 @@ namespace Microsoft.Playwright
         /// <summary>
         /// <para>
         /// This method narrows existing locator according to the options, for example filters
-        /// by text.
+        /// by text. It can be chained to filter multiple times.
         /// </para>
+        /// <code>
+        /// var rowLocator = page.Locator("tr");<br/>
+        /// // ...<br/>
+        /// await rowLocator<br/>
+        ///     .Filter(new LocatorFilterOptions { HasText = "text in column 1" })<br/>
+        ///     .Filter(new LocatorFilterOptions {<br/>
+        ///         Has = page.Locator("tr", new PageLocatorOptions { HasText = "column 2 button" } )<br/>
+        ///     })<br/>
+        ///     .ScreenshotAsync();
+        /// </code>
         /// </summary>
         /// <param name="options">Call options</param>
         ILocator Filter(LocatorFilterOptions? options = default);

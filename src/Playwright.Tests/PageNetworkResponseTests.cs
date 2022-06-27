@@ -22,11 +22,10 @@
  * SOFTWARE.
  */
 
-using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net;
-using System.Runtime.InteropServices;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.Features;
@@ -254,6 +253,23 @@ namespace Microsoft.Playwright.Tests
 #pragma warning disable 0612
             Assert.AreEqual(response.Headers, allHeaders);
 #pragma warning restore 0612
+        }
+
+        [PlaywrightTest("page-network-response.spec.ts", "should report if request was fromServiceWorker")]
+        public async Task ShouldReportIfRequestWasFromServiceWorker()
+        {
+            {
+                var res = await Page.GotoAsync(Server.Prefix + "/serviceworkers/fetch/sw.html");
+                Assert.False(res.FromServiceWorker);
+            }
+            await Page.EvaluateAsync("() => window['activationPromise']");
+            {
+                var (res, _) = await TaskUtils.WhenAll(
+                    Page.WaitForResponseAsync(new Regex("example.txt")),
+                    Page.EvaluateAsync("() => fetch('/example.txt')")
+                );
+                Assert.True(res.FromServiceWorker);
+            }
         }
     }
 }

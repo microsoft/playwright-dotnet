@@ -33,7 +33,7 @@ namespace Microsoft.Playwright.Tests
         [PlaywrightTest("browsercontext-locale.spec.ts", "should affect accept-language header")]
         public async Task ShouldAffectAcceptLanguageHeader()
         {
-            await using var context = await Browser.NewContextAsync(new() { Locale = "fr-CH" });
+            await using var context = await Browser.NewContextAsync(new() { Locale = "fr-FR" });
             string acceptLanguage = string.Empty;
             var page = await context.NewPageAsync();
             var requestTask = Server.WaitForRequest("/empty.html", c => acceptLanguage = c.Headers["accept-language"]);
@@ -42,7 +42,7 @@ namespace Microsoft.Playwright.Tests
                 requestTask,
                 page.GotoAsync(Server.EmptyPage));
 
-            Assert.That(acceptLanguage, Does.StartWith("fr-CH"));
+            Assert.That(acceptLanguage, Does.StartWith("fr-FR"));
         }
 
         [PlaywrightTest("browsercontext-locale.spec.ts", "should affect navigator.language")]
@@ -50,10 +50,10 @@ namespace Microsoft.Playwright.Tests
         {
             await using var context = await Browser.NewContextAsync(new()
             {
-                Locale = "fr-CH"
+                Locale = "fr-FR"
             });
             var page = await context.NewPageAsync();
-            Assert.AreEqual("fr-CH", await page.EvaluateAsync<string>("navigator.language"));
+            Assert.AreEqual("fr-FR", await page.EvaluateAsync<string>("navigator.language"));
         }
 
         [PlaywrightTest("browsercontext-locale.spec.ts", "should format number")]
@@ -71,7 +71,7 @@ namespace Microsoft.Playwright.Tests
 
             await using (var context = await Browser.NewContextAsync(new()
             {
-                Locale = "fr-CH"
+                Locale = "fr-FR"
             }))
             {
                 var page = await context.NewPageAsync();
@@ -116,7 +116,7 @@ namespace Microsoft.Playwright.Tests
         {
             await using var context = await Browser.NewContextAsync(new()
             {
-                Locale = "fr-CH"
+                Locale = "fr-FR"
             });
 
             var page = await context.NewPageAsync();
@@ -137,7 +137,7 @@ namespace Microsoft.Playwright.Tests
         {
             await using var context = await Browser.NewContextAsync(new()
             {
-                Locale = "fr-CH"
+                Locale = "fr-FR"
             });
 
             var page = await context.NewPageAsync();
@@ -150,7 +150,7 @@ namespace Microsoft.Playwright.Tests
 
             var popup = popupTask.Result;
             await popup.WaitForLoadStateAsync(LoadState.DOMContentLoaded);
-            Assert.AreEqual("fr-CH", await popup.EvaluateAsync<string>("() => window.initialNavigatorLanguage"));
+            Assert.AreEqual("fr-FR", await popup.EvaluateAsync<string>("() => window.initialNavigatorLanguage"));
         }
     }
 }

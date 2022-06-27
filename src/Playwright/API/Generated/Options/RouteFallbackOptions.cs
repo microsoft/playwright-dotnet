@@ -39,43 +39,44 @@ using System.Threading.Tasks;
 
 namespace Microsoft.Playwright
 {
-    public class LocatorAssertionsToHaveTextOptions
+    public class RouteFallbackOptions
     {
-        public LocatorAssertionsToHaveTextOptions() { }
+        public RouteFallbackOptions() { }
 
-        public LocatorAssertionsToHaveTextOptions(LocatorAssertionsToHaveTextOptions clone)
+        public RouteFallbackOptions(RouteFallbackOptions clone)
         {
             if (clone == null)
             {
                 return;
             }
 
-            IgnoreCase = clone.IgnoreCase;
-            Timeout = clone.Timeout;
-            UseInnerText = clone.UseInnerText;
+            Headers = clone.Headers;
+            Method = clone.Method;
+            PostData = clone.PostData;
+            Url = clone.Url;
         }
 
+        /// <summary><para>If set changes the request HTTP headers. Header values will be converted to a string.</para></summary>
+        [JsonPropertyName("headers")]
+        public IEnumerable<KeyValuePair<string, string>>? Headers { get; set; }
+
+        /// <summary><para>If set changes the request method (e.g. GET or POST)</para></summary>
+        [JsonPropertyName("method")]
+        public string? Method { get; set; }
+
+        /// <summary><para>If set changes the post data of request</para></summary>
+        [JsonPropertyName("postData")]
+        public byte[]? PostData { get; set; }
+
         /// <summary>
         /// <para>
-        /// Whether to perform case-insensitive match. <paramref name="ignoreCase"/> option
-        /// takes precedence over the corresponding regular expression flag if specified.
+        /// If set changes the request URL. New URL must have same protocol as original one.
+        /// Changing the URL won't affect the route matching, all the routes are matched using
+        /// the original request URL.
         /// </para>
         /// </summary>
-        [JsonPropertyName("ignoreCase")]
-        public bool? IgnoreCase { get; set; }
-
-        /// <summary><para>Time to retry the assertion for.</para></summary>
-        [JsonPropertyName("timeout")]
-        public float? Timeout { get; set; }
-
-        /// <summary>
-        /// <para>
-        /// Whether to use <c>element.innerText</c> instead of <c>element.textContent</c> when
-        /// retrieving DOM node text.
-        /// </para>
-        /// </summary>
-        [JsonPropertyName("useInnerText")]
-        public bool? UseInnerText { get; set; }
+        [JsonPropertyName("url")]
+        public string? Url { get; set; }
     }
 }
 
