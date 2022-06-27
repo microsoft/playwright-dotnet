@@ -62,7 +62,7 @@ namespace Microsoft.Playwright.Core
 
         internal List<BrowserContext> BrowserContextsList { get; } = new();
 
-        internal LocalUtils LocalUtils { get; set; }
+        public IBrowserType BrowserType { get; internal set; }
 
         public async Task CloseAsync()
         {
@@ -109,6 +109,7 @@ namespace Microsoft.Playwright.Core
                recordVideo: GetVideoArgs(options.RecordVideoDir, options.RecordVideoSize),
                storageState: options.StorageState,
                storageStatePath: options.StorageStatePath,
+               serviceWorkers: options.ServiceWorkers,
                timezoneId: options.TimezoneId,
                userAgent: options.UserAgent,
                viewportSize: options.ViewportSize,
@@ -118,7 +119,6 @@ namespace Microsoft.Playwright.Core
                forcedColors: options.ForcedColors).ConfigureAwait(false)).Object;
 
             context.Options = options;
-            ((Tracing)context.Tracing).LocalUtils = LocalUtils;
 
             BrowserContextsList.Add(context);
             return context;
@@ -157,6 +157,7 @@ namespace Microsoft.Playwright.Core
                 Proxy = options.Proxy,
                 StorageState = options.StorageState,
                 StorageStatePath = options.StorageStatePath,
+                ServiceWorkers = options.ServiceWorkers,
                 BaseURL = options.BaseURL,
                 StrictSelectors = options.StrictSelectors,
             };

@@ -98,6 +98,72 @@ namespace Microsoft.Playwright
         Task ContinueAsync(RouteContinueOptions? options = default);
 
         /// <summary>
+        /// <para>
+        /// When several routes match the given pattern, they run in the order opposite to their
+        /// registration. That way the last registered route can always override all the previos
+        /// ones. In the example below, request will be handled by the bottom-most handler first,
+        /// then it'll fall back to the previous one and in the end will be aborted by the first
+        /// registered route.
+        /// </para>
+        /// <code>
+        /// await page.RouteAsync("**/*", route =&gt; {<br/>
+        ///     // Runs last.<br/>
+        ///     await route.AbortAsync();<br/>
+        /// });<br/>
+        /// <br/>
+        /// await page.RouteAsync("**/*", route =&gt; {<br/>
+        ///     // Runs second.<br/>
+        ///     await route.FallbackAsync();<br/>
+        /// });<br/>
+        /// <br/>
+        /// await page.RouteAsync("**/*", route =&gt; {<br/>
+        ///     // Runs first.<br/>
+        ///     await route.FallbackAsync();<br/>
+        /// });
+        /// </code>
+        /// <para>
+        /// Registering multiple routes is useful when you want separate handlers to handle
+        /// different kinds of requests, for example API calls vs page resources or GET requests
+        /// vs POST requests as in the example below.
+        /// </para>
+        /// <code>
+        /// // Handle GET requests.<br/>
+        /// await page.RouteAsync("**/*", route =&gt; {<br/>
+        ///     if (route.Request.Method != "GET") {<br/>
+        ///         await route.FallbackAsync();<br/>
+        ///         return;<br/>
+        ///     }<br/>
+        ///     // Handling GET only.<br/>
+        ///     // ...<br/>
+        /// });<br/>
+        /// <br/>
+        /// // Handle POST requests.<br/>
+        /// await page.RouteAsync("**/*", route =&gt; {<br/>
+        ///     if (route.Request.Method != "POST") {<br/>
+        ///         await route.FallbackAsync();<br/>
+        ///         return;<br/>
+        ///     }<br/>
+        ///     // Handling POST only.<br/>
+        ///     // ...<br/>
+        /// });
+        /// </code>
+        /// <para>
+        /// One can also modify request while falling back to the subsequent handler, that way
+        /// intermediate route handler can modify url, method, headers and postData of the request.
+        /// </para>
+        /// <code>
+        /// await page.RouteAsync("**/*", route =&gt;<br/>
+        /// {<br/>
+        ///     var headers = new Dictionary&lt;string, string&gt;(route.Request.Headers) { { "foo", "foo-value" } };<br/>
+        ///     headers.Remove("bar");<br/>
+        ///     route.FallbackAsync(headers);<br/>
+        /// });
+        /// </code>
+        /// </summary>
+        /// <param name="options">Call options</param>
+        Task FallbackAsync(RouteFallbackOptions? options = default);
+
+        /// <summary>
         /// <para>Fulfills route's request with given response.</para>
         /// <para>An example of fulfilling all requests with 404 responses:</para>
         /// <code>

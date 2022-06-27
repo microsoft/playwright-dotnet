@@ -74,6 +74,7 @@ namespace Microsoft.Playwright.Transport.Channels
             Dictionary<string, object> recordVideo = null,
             string storageState = null,
             string storageStatePath = null,
+            ServiceWorkerPolicy? serviceWorkers = default,
             string timezoneId = null,
             string userAgent = null,
             ViewportSize viewportSize = default,
@@ -88,6 +89,7 @@ namespace Microsoft.Playwright.Transport.Channels
                 { "colorScheme", colorScheme },
                 { "reducedMotion", reducedMotion },
                 { "deviceScaleFactor", deviceScaleFactor },
+                { "serviceWorkers", serviceWorkers },
             };
 
             if (extraHTTPHeaders != null)

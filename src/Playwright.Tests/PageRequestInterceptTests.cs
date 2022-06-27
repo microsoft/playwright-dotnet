@@ -31,7 +31,7 @@ using NUnit.Framework;
 
 namespace Microsoft.Playwright.Tests
 {
-    public class RequestInterceptTests : PageTestEx
+    public class PageRequestInterceptTests : PageTestEx
     {
         [PlaywrightTest("page-request-intercept.spec.ts", "should fulfill intercepted response")]
         public async Task ShouldFulfillInterceptedResponse()
@@ -70,6 +70,9 @@ namespace Microsoft.Playwright.Tests
                     Response = response,
                     Status = 201,
                     Body = "",
+                    Headers = new Dictionary<string, string> {
+                        { "Content-Length", "0" },
+                    },
                 });
             });
             var response = await Page.GotoAsync(Server.Prefix + "/title.html");

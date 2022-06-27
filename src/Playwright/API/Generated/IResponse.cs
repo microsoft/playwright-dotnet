@@ -56,6 +56,14 @@ namespace Microsoft.Playwright
 
         /// <summary>
         /// <para>
+        /// Indicates whether this Response was fullfilled by a Service Worker's Fetch Handler
+        /// (i.e. via <a href="https://developer.mozilla.org/en-US/docs/Web/API/FetchEvent/respondWith">FetchEvent.respondWith</a>).
+        /// </para>
+        /// </summary>
+        bool FromServiceWorker { get; }
+
+        /// <summary>
+        /// <para>
         /// **DEPRECATED** Incomplete list of headers as seen by the rendering engine. Use <see
         /// cref="IResponse.AllHeadersAsync"/> instead.
         /// </para>

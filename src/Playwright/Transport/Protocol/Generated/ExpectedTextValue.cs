@@ -41,6 +41,9 @@ namespace Microsoft.Playwright.Transport.Protocol
         [JsonPropertyName("matchSubstring")]
         public bool MatchSubstring { get; set; }
 
+        [JsonPropertyName("ignoreCase")]
+        public bool IgnoreCase { get; set; }
+
         [JsonPropertyName("normalizeWhiteSpace")]
         public bool NormalizeWhiteSpace { get; set; }
     }

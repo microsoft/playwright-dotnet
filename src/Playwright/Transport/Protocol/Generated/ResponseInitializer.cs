@@ -46,5 +46,8 @@ namespace Microsoft.Playwright.Transport.Protocol
 
         [JsonPropertyName("timing")]
         public RequestTimingResult Timing { get; set; }
+
+        [JsonPropertyName("fromServiceWorker")]
+        public bool FromServiceWorker { get; set; }
     }
 }

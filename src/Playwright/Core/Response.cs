@@ -67,6 +67,8 @@ namespace Microsoft.Playwright.Core
 
         public string Url => _initializer.Url;
 
+        public bool FromServiceWorker => _initializer.FromServiceWorker;
+
         ChannelBase IChannelOwner.Channel => _channel;
 
         IChannel<Response> IChannelOwner<Response>.Channel => _channel;

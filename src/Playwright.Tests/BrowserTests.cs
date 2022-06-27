@@ -45,6 +45,16 @@ namespace Microsoft.Playwright.Tests
             Assert.That(browser.Contexts, Has.Length.EqualTo(1));
 
             await page2.CloseAsync();
+            await browser.CloseAsync();
+        }
+
+        [PlaywrightTest("browser.spec.ts", "should return browserType")]
+        public async Task ShouldReturnBrowserType()
+        {
+            var browserType = Playwright[TestConstants.BrowserName];
+            var browser = await browserType.LaunchAsync();
+            Assert.AreEqual(browser.BrowserType, browserType);
+            await browser.CloseAsync();
         }
 
         [PlaywrightTest("browser.spec.ts", "should throw upon second create new page")]

@@ -124,6 +124,7 @@ namespace Microsoft.Playwright.Transport.Channels
             string recordHarPath = default,
             bool? recordHarOmitContent = default,
             Dictionary<string, object> recordVideo = default,
+            ServiceWorkerPolicy? serviceWorkers = default,
             IEnumerable<string> ignoreDefaultArgs = default,
             bool? ignoreAllDefaultArgs = default,
             string baseUrl = default,
@@ -151,6 +152,7 @@ namespace Microsoft.Playwright.Transport.Channels
                 { "ignoreHTTPSErrors", ignoreHTTPSErrors },
                 { "bypassCSP", bypassCSP },
                 { "strictSelectors", strictSelectors },
+                { "serviceWorkers", serviceWorkers },
             };
 
             if (viewportSize?.Width == -1)

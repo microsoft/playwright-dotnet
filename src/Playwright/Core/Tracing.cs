@@ -32,14 +32,10 @@ namespace Microsoft.Playwright.Core
     {
         private readonly TracingChannel _channel;
 
-        internal LocalUtils _localUtils;
-
         public Tracing(IChannelOwner parent, string guid) : base(parent, guid)
         {
             _channel = new(guid, parent.Connection, this);
         }
-
-        internal LocalUtils LocalUtils { get; set; }
 
         ChannelBase IChannelOwner.Channel => _channel;
 
@@ -109,7 +105,7 @@ namespace Microsoft.Playwright.Core
             // Add local sources to the remote trace if necessary.
             if (sourceEntries.Count > 0)
             {
-                await LocalUtils.ZipAsync(filePath, sourceEntries).ConfigureAwait(false);
+                await _channel.Connection.LocalUtils.ZipAsync(filePath, sourceEntries).ConfigureAwait(false);
             }
         }
     }

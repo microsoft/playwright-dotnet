@@ -119,10 +119,10 @@ namespace Microsoft.Playwright.Tests
         {
             var (tmp, context, page) = await LaunchAsync(new()
             {
-                Locale = "fr-CH",
+                Locale = "fr-FR",
             });
 
-            Assert.AreEqual("fr-CH", await page.EvaluateAsync<string>("() => navigator.language"));
+            Assert.AreEqual("fr-FR", await page.EvaluateAsync<string>("() => navigator.language"));
 
             await context.DisposeAsync();
             tmp.Dispose();
@@ -226,40 +226,6 @@ namespace Microsoft.Playwright.Tests
                 var page = await browserContext2.NewPageAsync();
                 await page.GotoAsync(Server.EmptyPage);
                 Assert.That("hello", Is.Not.EqualTo(await page.EvaluateAsync<string>("() => localStorage.hey")));
-            }
-        }
-
-        [PlaywrightTest("defaultbrowsercontext-2.spec.ts", "should restore cookies from userDataDir")]
-        [Skip(SkipAttribute.Targets.Chromium | SkipAttribute.Targets.Windows)]
-        public async Task ShouldRestoreCookiesFromUserDataDir()
-        {
-            using var userDataDir = new TempDirectory();
-
-            await using (var browserContext = await BrowserType.LaunchPersistentContextAsync(userDataDir.Path))
-            {
-                var page = await browserContext.NewPageAsync();
-                await page.GotoAsync(Server.EmptyPage);
-                string documentCookie = await page.EvaluateAsync<string>(@"() => {
-                    document.cookie = 'doSomethingOnlyOnce=true; expires=Fri, 31 Dec 9999 23:59:59 GMT';
-                    return document.cookie;
-                }");
-
-                Assert.AreEqual("doSomethingOnlyOnce=true", documentCookie);
-            }
-
-            await using (var browserContext2 = await BrowserType.LaunchPersistentContextAsync(userDataDir.Path))
-            {
-                var page = await browserContext2.NewPageAsync();
-                await page.GotoAsync(Server.EmptyPage);
-                Assert.AreEqual("doSomethingOnlyOnce=true", await page.EvaluateAsync<string>("() => document.cookie"));
-            }
-
-            using var userDataDir2 = new TempDirectory();
-            await using (var browserContext2 = await BrowserType.LaunchPersistentContextAsync(userDataDir2.Path))
-            {
-                var page = await browserContext2.NewPageAsync();
-                await page.GotoAsync(Server.EmptyPage);
-                Assert.That("doSomethingOnlyOnce=true", Is.Not.EqualTo(await page.EvaluateAsync<string>("() => document.cookie")));
             }
         }
 
