@@ -49,9 +49,10 @@ namespace Microsoft.Playwright.Tests
                 ServiceWorkers = ServiceWorkerPolicy.Block
             });
             var page = await context.NewPageAsync();
-            await page.GotoAsync(Server.Prefix + "/serviceworkers/empty/sw.html");
-            var registrationResult = await page.EvaluateAsync<object>("() => window['registrationPromise']");
-            Assert.IsNull(registrationResult);
+            var (consoleMessage, _) = await TaskUtils.WhenAll(page.WaitForConsoleMessageAsync(),
+                page.GotoAsync(Server.Prefix + "/serviceworkers/empty/sw.html"));
+            Assert.AreEqual("Service Worker registration blocked by Playwright", consoleMessage.Text);
+            await context.CloseAsync();
         }
     }
 }
