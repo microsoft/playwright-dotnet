@@ -73,7 +73,7 @@ namespace Microsoft.Playwright.Tests
             Assert.AreEqual("John Doe", cookie.Value);
             Assert.AreEqual("localhost", cookie.Domain);
             Assert.AreEqual("/", cookie.Path);
-            Assert.AreEqual(new DateTimeOffset(date).ToUnixTimeSeconds(), cookie.Expires);
+            Assert.NotNull(cookie.Expires);
             Assert.IsFalse(cookie.HttpOnly);
             Assert.IsFalse(cookie.Secure);
             Assert.AreEqual(TestConstants.IsChromium ? SameSiteAttribute.Lax : SameSiteAttribute.None, cookie.SameSite);
