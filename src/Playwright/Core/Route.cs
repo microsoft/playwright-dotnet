@@ -218,6 +218,13 @@ namespace Microsoft.Playwright.Core
             return Task.CompletedTask;
         }
 
+        internal async Task RedirectNavigationRequestAsync(string url)
+        {
+            CheckNotHandled();
+            await RaceWithPageCloseAsync(_channel.RedirectNavigationRequestAsync(url)).ConfigureAwait(false);
+            ReportHandled(true);
+        }
+
         internal Task<bool> StartHandlingAsync()
         {
             _handlingTask = new();

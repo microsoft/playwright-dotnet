@@ -27,8 +27,10 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text.Json;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Microsoft.Playwright.Core;
+using Microsoft.Playwright.Helpers;
 using Microsoft.Playwright.Transport.Protocol;
 
 namespace Microsoft.Playwright.Transport.Channels
@@ -40,6 +42,49 @@ namespace Microsoft.Playwright.Transport.Channels
         }
 
         internal event EventHandler Closed;
+
+        internal static void ApplyHarOptions(
+            HarContentPolicy? recordHarContent,
+            HarMode? recordHarMode,
+            string recordHarPath,
+            bool? recordHarOmitContent,
+            string recordHarUrlFilterString,
+            Regex recordHarUrlFilterRegex,
+            Dictionary<string, object> args)
+        {
+            if (string.IsNullOrEmpty(recordHarPath))
+            {
+                return;
+            }
+            var recordHarArgs = new Dictionary<string, object>();
+            recordHarArgs["path"] = recordHarPath;
+            if (recordHarContent.HasValue)
+            {
+                recordHarArgs["content"] = recordHarContent;
+            }
+            else if (recordHarOmitContent == true)
+            {
+                recordHarArgs["content"] = HarContentPolicy.Omit;
+            }
+            if (!string.IsNullOrEmpty(recordHarUrlFilterString))
+            {
+                recordHarArgs["urlGlob"] = recordHarUrlFilterString;
+            }
+            else if (recordHarUrlFilterRegex != null)
+            {
+                recordHarArgs["urlRegex"] = recordHarUrlFilterRegex;
+                recordHarArgs["urlRegexFlags"] = recordHarUrlFilterRegex.Options.GetInlineFlags();
+            }
+            if (recordHarMode.HasValue)
+            {
+                recordHarArgs["mode"] = recordHarMode;
+            }
+
+            if (recordHarArgs.Keys.Count > 0)
+            {
+                args.Add("recordHar", recordHarArgs);
+            }
+        }
 
         internal override void OnMessage(string method, JsonElement? serverParams)
         {
@@ -69,8 +114,12 @@ namespace Microsoft.Playwright.Transport.Channels
             bool? offline = null,
             IEnumerable<string> permissions = null,
             Proxy proxy = null,
-            bool? recordHarOmitContent = null,
-            string recordHarPath = null,
+            HarContentPolicy? recordHarContent = default,
+            HarMode? recordHarMode = default,
+            string recordHarPath = default,
+            bool? recordHarOmitContent = default,
+            string recordHarUrlFilterString = default,
+            Regex recordHarUrlFilterRegex = default,
             Dictionary<string, object> recordVideo = null,
             string storageState = null,
             string storageStatePath = null,
@@ -110,14 +159,14 @@ namespace Microsoft.Playwright.Transport.Channels
             args.Add("strictSelectors", strictSelectors);
             args.Add("forcedColors", forcedColors);
 
-            if (!string.IsNullOrEmpty(recordHarPath))
-            {
-                args.Add("recordHar", new
-                {
-                    Path = recordHarPath,
-                    OmitContent = recordHarOmitContent,
-                });
-            }
+            ApplyHarOptions(
+                recordHarContent: recordHarContent,
+                recordHarMode: recordHarMode,
+                recordHarPath: recordHarPath,
+                recordHarOmitContent: recordHarOmitContent,
+                recordHarUrlFilterString: recordHarUrlFilterString,
+                recordHarUrlFilterRegex: recordHarUrlFilterRegex,
+                args);
 
             if (recordVideo != null)
             {

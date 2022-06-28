@@ -74,5 +74,14 @@ namespace Microsoft.Playwright.Transport.Channels
                 "continue",
                 args);
         }
+
+        internal Task RedirectNavigationRequestAsync(string url) =>
+            Connection.SendMessageToServerAsync(
+                Guid,
+                "redirectNavigationRequest",
+                new Dictionary<string, object>
+                {
+                    ["url"] = url,
+                });
     }
 }
