@@ -48,14 +48,14 @@ namespace Microsoft.Playwright.Core
             _notFoundAction = notFoundAction;
         }
 
-        internal static async Task<HarRouter> CreateAsync(LocalUtils localUtils, string file, HarNotFound? notFoundAction, HarRouterOptions options)
+        internal static async Task<HarRouter> CreateAsync(LocalUtils localUtils, string file, HarNotFound notFoundAction, HarRouterOptions options)
         {
             var (harId, error) = await localUtils.HarOpenAsync(file).ConfigureAwait(false);
             if (!string.IsNullOrEmpty(error))
             {
                 throw new PlaywrightException(error);
             }
-            return new HarRouter(localUtils, harId, notFoundAction ?? HarNotFound.Abort, options);
+            return new HarRouter(localUtils, harId, notFoundAction, options);
         }
 
         private async Task HandleAsync(Route route)
@@ -83,6 +83,10 @@ namespace Microsoft.Playwright.Core
                     BodyBytes = response.Body,
                 }).ConfigureAwait(false);
                 return;
+            }
+            if (response.Action == "error")
+            {
+                // Report the error, but fall through to the default handler.
             }
 
             if (_notFoundAction == HarNotFound.Abort)
