@@ -64,11 +64,12 @@ namespace Microsoft.Playwright
 
         /// <summary>
         /// <para>
-        /// **DEPRECATED** Incomplete list of headers as seen by the rendering engine. Use <see
-        /// cref="IResponse.AllHeadersAsync"/> instead.
+        /// An object with the response HTTP headers. The header names are lower-cased. Note
+        /// that this method does not return security-related headers, including cookie-related
+        /// ones. You can use <see cref="IResponse.AllHeadersAsync"/> for complete list of headers
+        /// that include <c>cookie</c> information.
         /// </para>
         /// </summary>
-        [System.Obsolete]
         Dictionary<string, string> Headers { get; }
 
         /// <summary>

@@ -27,6 +27,7 @@ using System.Collections.Generic;
 using System.Text.Json;
 using System.Threading.Tasks;
 using Microsoft.Playwright.Core;
+using Microsoft.Playwright.Helpers;
 using Microsoft.Playwright.Transport.Protocol;
 
 namespace Microsoft.Playwright.Transport.Channels
@@ -42,6 +43,41 @@ namespace Microsoft.Playwright.Transport.Channels
             {
                   { "zipFile", zipFile },
                   { "entries", entries },
+            });
+
+        internal async Task<(string HarId, string Error)> HarOpenAsync(string file)
+        {
+            var response = await Connection.SendMessageToServerAsync(Guid, "harOpen", new Dictionary<string, object>
+            {
+                  { "file", file },
+            }).ConfigureAwait(false);
+            return (response.GetString("harId", true), response.GetString("error", true));
+        }
+
+        internal async Task<LocalUtilsHarLookupResult> HarLookupAsync(
+            string harId,
+            string url,
+            string method,
+            List<Header> headers,
+            byte[] postData,
+            bool isNavigationRequest)
+        {
+            var response = await Connection.SendMessageToServerAsync<LocalUtilsHarLookupResult>(Guid, "harLookup", new Dictionary<string, object>
+            {
+                { "harId", harId },
+                { "url", url },
+                { "method", method },
+                { "headers", headers },
+                { "postData", postData != null ? Convert.ToBase64String(postData) : null },
+                { "isNavigationRequest", isNavigationRequest },
+            }).ConfigureAwait(false);
+            return response;
+        }
+
+        internal Task HarCloseAsync(string harId) =>
+            Connection.SendMessageToServerAsync(Guid, "HarCloseAsync", new Dictionary<string, object>
+            {
+                  { "harId", harId },
             });
     }
 }

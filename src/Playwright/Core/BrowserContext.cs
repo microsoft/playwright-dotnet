@@ -496,6 +496,15 @@ namespace Microsoft.Playwright.Core
             return Channel.ExposeBindingAsync(name, handle);
         }
 
-        public Task RouteFromHARAsync(string har, BrowserContextRouteFromHAROptions options = null) => throw new NotImplementedException();
+        public async Task RouteFromHARAsync(string har, BrowserContextRouteFromHAROptions options = null)
+        {
+            var harRouter = await HarRouter.CreateAsync(Channel.Connection.LocalUtils, har, options?.NotFound ?? HarNotFound.Abort, new()
+            {
+                UrlFunc = options?.UrlFunc,
+                UrlRegex = options?.UrlRegex,
+                UrlString = options?.UrlString,
+            }).ConfigureAwait(false);
+            await harRouter.AddContextRouteAsync(this).ConfigureAwait(false);
+        }
     }
 }

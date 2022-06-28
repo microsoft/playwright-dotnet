@@ -24,8 +24,8 @@
 
 using System.Collections.Generic;
 using System.Text.Json;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
-using Microsoft.Playwright.Core;
 using Microsoft.Playwright.Helpers;
 
 namespace Microsoft.Playwright.Transport.Channels
@@ -121,8 +121,12 @@ namespace Microsoft.Playwright.Transport.Channels
             ColorScheme? colorScheme = default,
             ReducedMotion? reducedMotion = default,
             ForcedColors? forcedColors = default,
+            HarContentPolicy? recordHarContent = default,
+            HarMode? recordHarMode = default,
             string recordHarPath = default,
             bool? recordHarOmitContent = default,
+            string recordHarUrlFilterString = default,
+            Regex recordHarUrlFilterRegex = default,
             Dictionary<string, object> recordVideo = default,
             ServiceWorkerPolicy? serviceWorkers = default,
             IEnumerable<string> ignoreDefaultArgs = default,
@@ -155,6 +159,15 @@ namespace Microsoft.Playwright.Transport.Channels
                 { "serviceWorkers", serviceWorkers },
             };
 
+            BrowserChannel.ApplyHarOptions(
+                recordHarContent: recordHarContent,
+                recordHarMode: recordHarMode,
+                recordHarPath: recordHarPath,
+                recordHarOmitContent: recordHarOmitContent,
+                recordHarUrlFilterString: recordHarUrlFilterString,
+                recordHarUrlFilterRegex: recordHarUrlFilterRegex,
+                args: channelArgs);
+
             if (viewportSize?.Width == -1)
             {
                 channelArgs.Add("noDefaultViewport", true);
@@ -179,15 +192,6 @@ namespace Microsoft.Playwright.Transport.Channels
             channelArgs.Add("httpCredentials", httpCredentials);
             channelArgs.Add("colorScheme", colorScheme);
             channelArgs.Add("reducedMotion", reducedMotion);
-
-            if (!string.IsNullOrEmpty(recordHarPath))
-            {
-                channelArgs.Add("recordHar", new
-                {
-                    Path = recordHarPath,
-                    OmitContent = recordHarOmitContent.GetValueOrDefault(false),
-                });
-            }
 
             if (recordVideo != null)
             {

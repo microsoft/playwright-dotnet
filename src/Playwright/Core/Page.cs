@@ -1153,6 +1153,15 @@ namespace Microsoft.Playwright.Core
             };
         }
 
-        public Task RouteFromHARAsync(string har, PageRouteFromHAROptions options = null) => throw new NotImplementedException();
+        public async Task RouteFromHARAsync(string har, PageRouteFromHAROptions options = null)
+        {
+            var harRouter = await HarRouter.CreateAsync(Channel.Connection.LocalUtils, har, options?.NotFound ?? HarNotFound.Abort, new()
+            {
+                UrlFunc = options?.UrlFunc,
+                UrlRegex = options?.UrlRegex,
+                UrlString = options?.UrlString,
+            }).ConfigureAwait(false);
+            await harRouter.AddPageRouteAsync(this).ConfigureAwait(false);
+        }
     }
 }

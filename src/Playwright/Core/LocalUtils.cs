@@ -24,9 +24,7 @@
 
 using System.Collections.Generic;
 using System.Text.Json;
-using System.Text.Json.Serialization;
 using System.Threading.Tasks;
-using Microsoft.Playwright.Helpers;
 using Microsoft.Playwright.Transport;
 using Microsoft.Playwright.Transport.Channels;
 using Microsoft.Playwright.Transport.Protocol;
@@ -48,5 +46,35 @@ namespace Microsoft.Playwright.Core
 
         internal Task ZipAsync(string zipFile, List<NameValue> entries)
             => _channel.ZipAsync(zipFile, entries);
+
+        internal Task<(string HarId, string Error)> HarOpenAsync(string file)
+            => _channel.HarOpenAsync(file);
+
+        internal Task<LocalUtilsHarLookupResult> HarLookupAsync(
+            string harId,
+            string url,
+            string method,
+            List<Header> headers,
+            byte[] postData,
+            bool isNavigationRequest)
+            => _channel.HarLookupAsync(harId, url, method, headers, postData, isNavigationRequest);
+
+        internal Task HarCloseAsync(string harId)
+             => _channel.HarCloseAsync(harId);
+    }
+
+    internal class LocalUtilsHarLookupResult
+    {
+        public string Action { get; set; }
+
+        public string Message { get; set; }
+
+        public string RedirectURL { get; set; }
+
+        public int Status { get; set; }
+
+        public List<NameValue> Headers { get; set; }
+
+        public byte[] Body { get; set; }
     }
 }
