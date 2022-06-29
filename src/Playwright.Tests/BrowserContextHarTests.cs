@@ -303,6 +303,28 @@ namespace Microsoft.Playwright.Tests
             await Expect(page2.Locator("body")).ToHaveCSSAsync("background-color", "rgb(255, 192, 203)");
         }
 
+
+        [PlaywrightTest("browsercontext-har.spec.ts", "should produce extracted zip")]
+        public async Task ShouldProduceExtractedZip()
+        {
+            using var tmpDir = new TempDirectory();
+            var harPath = Path.Join(tmpDir.Path, "har.har");
+            var context1 = await Browser.NewContextAsync(new() { RecordHarMode = HarMode.Minimal, RecordHarPath = harPath, RecordHarContent = HarContentPolicy.Attach });
+            var page1 = await context1.NewPageAsync();
+            await page1.GotoAsync(Server.Prefix + "/one-style.html");
+            await context1.CloseAsync();
+
+            Assert.True(File.Exists(harPath));
+            StringAssert.DoesNotContain("background-color", File.ReadAllText(harPath));
+
+            var context2 = await Browser.NewContextAsync();
+            await context2.RouteFromHARAsync(harPath, new() { NotFound = HarNotFound.Abort });
+            var page2 = await context2.NewPageAsync();
+            await page2.GotoAsync(Server.Prefix + "/one-style.html");
+            StringAssert.Contains("hello, world", await page2.ContentAsync());
+            await Expect(page2.Locator("body")).ToHaveCSSAsync("background-color", "rgb(255, 192, 203)");
+        }
+
         [PlaywrightTest("browsercontext-har.spec.ts", "should round-trip extracted har.zip")]
         public async Task ShouldRoundTripExtractedHarZip()
         {
@@ -395,6 +417,63 @@ namespace Microsoft.Playwright.Tests
             Assert.AreEqual(await page2.EvaluateAsync<string>(fetchFunction, "baz2"), "baz2");
             Assert.AreEqual(await page2.EvaluateAsync<string>(fetchFunction, "baz3"), "baz3");
             Assert.AreEqual(await page2.EvaluateAsync<string>(fetchFunction, "baz4"), "baz1");
+        }
+
+        [PlaywrightTest("browsercontext-har.spec.ts", "should update har.zip for context")]
+        public async Task ShouldUpdateHarZipForContent()
+        {
+            using var tmpDir = new TempDirectory();
+            var harPath = Path.Join(tmpDir.Path, "har.zip");
+            var context1 = await Browser.NewContextAsync();
+            await context1.RouteFromHARAsync(harPath, new() { Update = true });
+            var page1 = await context1.NewPageAsync();
+            await page1.GotoAsync(Server.Prefix + "/one-style.html");
+            await context1.CloseAsync();
+
+            var context2 = await Browser.NewContextAsync();
+            await context2.RouteFromHARAsync(harPath, new() { NotFound = HarNotFound.Abort });
+            var page2 = await context2.NewPageAsync();
+            await page2.GotoAsync(Server.Prefix + "/one-style.html");
+            StringAssert.Contains("hello, world", await page2.ContentAsync());
+            await Expect(page2.Locator("body")).ToHaveCSSAsync("background-color", "rgb(255, 192, 203)");
+        }
+
+        [PlaywrightTest("browsercontext-har.spec.ts", "should update har.zip for page")]
+        public async Task ShouldUpdateHarZipForPage()
+        {
+            using var tmpDir = new TempDirectory();
+            var harPath = Path.Join(tmpDir.Path, "har.zip");
+            var context1 = await Browser.NewContextAsync();
+            var page1 = await context1.NewPageAsync();
+            await page1.RouteFromHARAsync(harPath, new() { Update = true });
+            await page1.GotoAsync(Server.Prefix + "/one-style.html");
+            await context1.CloseAsync();
+
+            var context2 = await Browser.NewContextAsync();
+            await context2.RouteFromHARAsync(harPath, new() { NotFound = HarNotFound.Abort });
+            var page2 = await context2.NewPageAsync();
+            await page2.GotoAsync(Server.Prefix + "/one-style.html");
+            StringAssert.Contains("hello, world", await page2.ContentAsync());
+            await Expect(page2.Locator("body")).ToHaveCSSAsync("background-color", "rgb(255, 192, 203)");
+        }
+
+        [PlaywrightTest("browsercontext-har.spec.ts", "should update extracted har.zip for page")]
+        public async Task ShouldUpdateExtractedHarZipForPage()
+        {
+            using var tmpDir = new TempDirectory();
+            var harPath = Path.Join(tmpDir.Path, "har.har");
+            var context1 = await Browser.NewContextAsync();
+            var page1 = await context1.NewPageAsync();
+            await page1.RouteFromHARAsync(harPath, new() { Update = true });
+            await page1.GotoAsync(Server.Prefix + "/one-style.html");
+            await context1.CloseAsync();
+
+            var context2 = await Browser.NewContextAsync();
+            await context2.RouteFromHARAsync(harPath, new() { NotFound = HarNotFound.Abort });
+            var page2 = await context2.NewPageAsync();
+            await page2.GotoAsync(Server.Prefix + "/one-style.html");
+            StringAssert.Contains("hello, world", await page2.ContentAsync());
+            await Expect(page2.Locator("body")).ToHaveCSSAsync("background-color", "rgb(255, 192, 203)");
         }
     }
 }

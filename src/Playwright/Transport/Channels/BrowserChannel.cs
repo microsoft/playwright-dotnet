@@ -43,18 +43,17 @@ namespace Microsoft.Playwright.Transport.Channels
 
         internal event EventHandler Closed;
 
-        internal static void ApplyHarOptions(
+        internal static Dictionary<string, object> PrepareHarOptions(
             HarContentPolicy? recordHarContent,
             HarMode? recordHarMode,
             string recordHarPath,
             bool? recordHarOmitContent,
             string recordHarUrlFilterString,
-            Regex recordHarUrlFilterRegex,
-            Dictionary<string, object> args)
+            Regex recordHarUrlFilterRegex)
         {
             if (string.IsNullOrEmpty(recordHarPath))
             {
-                return;
+                return null;
             }
             var recordHarArgs = new Dictionary<string, object>();
             recordHarArgs["path"] = recordHarPath;
@@ -82,8 +81,9 @@ namespace Microsoft.Playwright.Transport.Channels
 
             if (recordHarArgs.Keys.Count > 0)
             {
-                args.Add("recordHar", recordHarArgs);
+                return recordHarArgs;
             }
+            return null;
         }
 
         internal override void OnMessage(string method, JsonElement? serverParams)
@@ -159,14 +159,17 @@ namespace Microsoft.Playwright.Transport.Channels
             args.Add("strictSelectors", strictSelectors);
             args.Add("forcedColors", forcedColors);
 
-            ApplyHarOptions(
+            var recordHarOptions = PrepareHarOptions(
                 recordHarContent: recordHarContent,
                 recordHarMode: recordHarMode,
                 recordHarPath: recordHarPath,
                 recordHarOmitContent: recordHarOmitContent,
                 recordHarUrlFilterString: recordHarUrlFilterString,
-                recordHarUrlFilterRegex: recordHarUrlFilterRegex,
-                args);
+                recordHarUrlFilterRegex: recordHarUrlFilterRegex);
+            if (recordHarOptions != null)
+            {
+                args["recordHar"] = recordHarOptions;
+            }
 
             if (recordVideo != null)
             {

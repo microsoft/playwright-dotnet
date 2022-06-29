@@ -79,5 +79,12 @@ namespace Microsoft.Playwright.Transport.Channels
             {
                   { "harId", harId },
             });
+
+        internal Task HarUnzipAsync(string zipFile, string harFile) =>
+            Connection.SendMessageToServerAsync(Guid, "harUnzip", new Dictionary<string, object>
+            {
+                  { "zipFile", zipFile },
+                  { "harFile", harFile },
+            });
     }
 }

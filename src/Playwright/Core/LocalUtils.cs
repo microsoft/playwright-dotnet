@@ -61,6 +61,9 @@ namespace Microsoft.Playwright.Core
 
         internal Task HarCloseAsync(string harId)
              => _channel.HarCloseAsync(harId);
+
+        internal Task HarUnzipAsync(string zipFile, string harFile)
+             => _channel.HarUnzipAsync(zipFile, harFile);
     }
 
     internal class LocalUtilsHarLookupResult

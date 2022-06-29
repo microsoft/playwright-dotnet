@@ -108,10 +108,6 @@ namespace Microsoft.Playwright.Core
             {
                 await context.RouteAsync(_options.UrlRegex, route => HandleAsync((Route)route)).ConfigureAwait(false);
             }
-            else if (_options.UrlFunc != null)
-            {
-                await context.RouteAsync(_options.UrlFunc, route => HandleAsync((Route)route)).ConfigureAwait(false);
-            }
             else
             {
                 await context.RouteAsync("**/*", route => HandleAsync((Route)route)).ConfigureAwait(false);
@@ -130,10 +126,6 @@ namespace Microsoft.Playwright.Core
             {
                 await page.RouteAsync(_options.UrlRegex, route => HandleAsync((Route)route)).ConfigureAwait(false);
             }
-            else if (_options.UrlFunc != null)
-            {
-                await page.RouteAsync(_options.UrlFunc, route => HandleAsync((Route)route)).ConfigureAwait(false);
-            }
             else
             {
                 await page.RouteAsync("**/*", route => HandleAsync((Route)route)).ConfigureAwait(false);
@@ -150,7 +142,5 @@ namespace Microsoft.Playwright.Core
         internal string UrlString { get; set; }
 
         internal Regex UrlRegex { get; set; }
-
-        internal Func<string, bool> UrlFunc { get; set; }
     }
 }
