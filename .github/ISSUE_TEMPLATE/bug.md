@@ -10,7 +10,7 @@ assignees: ''
 **Context:**
 - Playwright Version: [what Playwright version do you use?]
 - Operating System: [e.g. Windows, Linux or Mac]
-- .NET version: [e.g. .NET 5]
+- .NET version: [e.g. .NET 6]
 - Browser: [e.g. All, Chromium, Firefox, WebKit]
 - Extra: [any specific details about your environment]
 
