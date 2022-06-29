@@ -26,6 +26,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.Json;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Microsoft.Playwright.Core;
 using Microsoft.Playwright.Helpers;
@@ -234,12 +235,34 @@ namespace Microsoft.Playwright.Transport.Channels
         internal Task<StorageState> GetStorageStateAsync()
             => Connection.SendMessageToServerAsync<StorageState>(Guid, "storageState", null);
 
-        internal async Task<Artifact> HarExportAsync()
+        internal async Task<Artifact> HarExportAsync(string harId)
         {
             var result = await Connection.SendMessageToServerAsync(
             Guid,
-            "harExport").ConfigureAwait(false);
+            "harExport",
+            new Dictionary<string, object>
+            {
+                ["harId"] = harId,
+            }).ConfigureAwait(false);
             return result.GetObject<Artifact>("artifact", Connection);
+        }
+
+        internal async Task<string> HarStartAsync(
+            Page page,
+            string path,
+            string recordHarUrlFilterString,
+            Regex recordHarUrlFilterRegex)
+        {
+            var args = new Dictionary<string, object>
+            {
+                { "page", page?.Channel },
+                { "options", BrowserChannel.PrepareHarOptions(HarContentPolicy.Attach, HarMode.Minimal, path, null, recordHarUrlFilterString, recordHarUrlFilterRegex) },
+            };
+            var result = await Connection.SendMessageToServerAsync(
+            Guid,
+            "harStart",
+            args).ConfigureAwait(false);
+            return result.GetString("harId", false);
         }
 
         internal async Task<WritableStream> CreateTempFileAsync(string name)

@@ -1155,9 +1155,18 @@ namespace Microsoft.Playwright.Core
 
         public async Task RouteFromHARAsync(string har, PageRouteFromHAROptions options = null)
         {
+            if (options?.Update == true)
+            {
+                await Context.RecordIntoHarAsync(har, this, new()
+                {
+                    NotFound = options?.NotFound,
+                    UrlString = options?.UrlString,
+                    UrlRegex = options?.UrlRegex,
+                }).ConfigureAwait(false);
+                return;
+            }
             var harRouter = await HarRouter.CreateAsync(Channel.Connection.LocalUtils, har, options?.NotFound ?? HarNotFound.Abort, new()
             {
-                UrlFunc = options?.UrlFunc,
                 UrlRegex = options?.UrlRegex,
                 UrlString = options?.UrlString,
             }).ConfigureAwait(false);

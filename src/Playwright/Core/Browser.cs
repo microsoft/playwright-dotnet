@@ -62,7 +62,16 @@ namespace Microsoft.Playwright.Core
 
         internal List<BrowserContext> BrowserContextsList { get; } = new();
 
-        public IBrowserType BrowserType { get; internal set; }
+        public IBrowserType BrowserType { get; private set; }
+
+        internal void SetBrowserType(BrowserType browserType)
+        {
+            BrowserType = browserType;
+            foreach (var context in BrowserContextsList)
+            {
+                context.SetBrowserType(browserType);
+            }
+        }
 
         public async Task CloseAsync()
         {
@@ -125,6 +134,7 @@ namespace Microsoft.Playwright.Core
             context.Options = options;
 
             BrowserContextsList.Add(context);
+            context.SetBrowserType((BrowserType)this.BrowserType);
             return context;
         }
 

@@ -51,9 +51,9 @@ namespace Microsoft.Playwright
             }
 
             NotFound = clone.NotFound;
+            Update = clone.Update;
             UrlString = clone.UrlString;
             UrlRegex = clone.UrlRegex;
-            UrlFunc = clone.UrlFunc;
         }
 
         /// <summary>
@@ -65,6 +65,15 @@ namespace Microsoft.Playwright
         /// </summary>
         [JsonPropertyName("notFound")]
         public HarNotFound? NotFound { get; set; }
+
+        /// <summary>
+        /// <para>
+        /// If specified, updates the given HAR with the actual network information instead
+        /// of serving from file.
+        /// </para>
+        /// </summary>
+        [JsonPropertyName("update")]
+        public bool? Update { get; set; }
 
         /// <summary>
         /// <para>
@@ -85,16 +94,6 @@ namespace Microsoft.Playwright
         /// </summary>
         [JsonPropertyName("urlRegex")]
         public Regex? UrlRegex { get; set; }
-
-        /// <summary>
-        /// <para>
-        /// A glob pattern, regular expression or predicate to match the request URL. Only requests
-        /// with URL matching the pattern will be surved from the HAR file. If not specified,
-        /// all requests are served from the HAR file.
-        /// </para>
-        /// </summary>
-        [JsonPropertyName("urlFunc")]
-        public Func<string, bool>? UrlFunc { get; set; }
     }
 }
 

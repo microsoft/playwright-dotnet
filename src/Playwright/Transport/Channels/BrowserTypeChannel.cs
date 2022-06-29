@@ -159,14 +159,17 @@ namespace Microsoft.Playwright.Transport.Channels
                 { "serviceWorkers", serviceWorkers },
             };
 
-            BrowserChannel.ApplyHarOptions(
+            var recordHarOptions = BrowserChannel.PrepareHarOptions(
                 recordHarContent: recordHarContent,
                 recordHarMode: recordHarMode,
                 recordHarPath: recordHarPath,
                 recordHarOmitContent: recordHarOmitContent,
                 recordHarUrlFilterString: recordHarUrlFilterString,
-                recordHarUrlFilterRegex: recordHarUrlFilterRegex,
-                args: channelArgs);
+                recordHarUrlFilterRegex: recordHarUrlFilterRegex);
+            if (recordHarOptions != null)
+            {
+                channelArgs["recordHar"] = recordHarOptions;
+            }
 
             if (viewportSize?.Width == -1)
             {

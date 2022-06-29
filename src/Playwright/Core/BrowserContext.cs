@@ -44,6 +44,7 @@ namespace Microsoft.Playwright.Core
         internal readonly ITracing _tracing;
         internal readonly IAPIRequestContext _request;
         private List<RouteHandler> _routes = new();
+        private IDictionary<string, HarRecorder> _harRecorders = new Dictionary<string, HarRecorder>();
 
         private float? _defaultNavigationTimeout;
         private float? _defaultTimeout;
@@ -168,10 +169,21 @@ namespace Microsoft.Playwright.Core
         {
             try
             {
-                if (Options.RecordHarPath != null)
+                foreach (var harRecorder in _harRecorders)
                 {
-                    Artifact artifact = await Channel.HarExportAsync().ConfigureAwait(false);
-                    await artifact.SaveAsAsync(Options.RecordHarPath).ConfigureAwait(false);
+                    Artifact artifact = await Channel.HarExportAsync(harRecorder.Key).ConfigureAwait(false);
+                    // Server side will compress artifact if content is attach or if file is .zip.
+                    var isCompressed = harRecorder.Value.Content == HarContentPolicy.Attach || harRecorder.Value.Path.EndsWith(".zip", StringComparison.Ordinal);
+                    var needCompressed = harRecorder.Value.Path.EndsWith(".zip", StringComparison.Ordinal);
+                    if (isCompressed && !needCompressed)
+                    {
+                        await artifact.SaveAsAsync(harRecorder.Value.Path + ".tmp").ConfigureAwait(false);
+                        await Channel.Connection.LocalUtils.HarUnzipAsync(harRecorder.Value.Path + ".tmp", harRecorder.Value.Path).ConfigureAwait(false);
+                    }
+                    else
+                    {
+                        await artifact.SaveAsAsync(harRecorder.Value.Path).ConfigureAwait(false);
+                    }
                     await artifact.DeleteAsync().ConfigureAwait(false);
                 }
                 await Channel.CloseAsync().ConfigureAwait(false);
@@ -180,6 +192,14 @@ namespace Microsoft.Playwright.Core
             catch (Exception e) when (DriverMessages.IsSafeCloseError(e))
             {
                 // Swallow exception
+            }
+        }
+
+        internal void SetBrowserType(BrowserType browserType)
+        {
+            if (!string.IsNullOrEmpty(Options?.RecordHarPath))
+            {
+                _harRecorders.Add(string.Empty, new() { Path = Options.RecordHarPath, Content = Options.RecordHarContent });
             }
         }
 
@@ -496,15 +516,36 @@ namespace Microsoft.Playwright.Core
             return Channel.ExposeBindingAsync(name, handle);
         }
 
+        internal async Task RecordIntoHarAsync(string har, Page page, BrowserContextRouteFromHAROptions options)
+        {
+            var harId = await Channel.HarStartAsync(
+                page,
+                har,
+                options?.UrlString,
+                options?.UrlRegex).ConfigureAwait(false);
+            _harRecorders.Add(harId, new() { Path = har, Content = HarContentPolicy.Attach });
+        }
+
         public async Task RouteFromHARAsync(string har, BrowserContextRouteFromHAROptions options = null)
         {
+            if (options?.Update == true)
+            {
+                await RecordIntoHarAsync(har, null, options).ConfigureAwait(false);
+                return;
+            }
             var harRouter = await HarRouter.CreateAsync(Channel.Connection.LocalUtils, har, options?.NotFound ?? HarNotFound.Abort, new()
             {
-                UrlFunc = options?.UrlFunc,
                 UrlRegex = options?.UrlRegex,
                 UrlString = options?.UrlString,
             }).ConfigureAwait(false);
             await harRouter.AddContextRouteAsync(this).ConfigureAwait(false);
         }
+    }
+
+    internal class HarRecorder
+    {
+        internal string Path { get; set; }
+
+        internal HarContentPolicy? Content { get; set; }
     }
 }

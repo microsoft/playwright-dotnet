@@ -77,7 +77,7 @@ namespace Microsoft.Playwright.Core
                 slowMo: options.SlowMo,
                 ignoreDefaultArgs: options.IgnoreDefaultArgs,
                 ignoreAllDefaultArgs: options.IgnoreAllDefaultArgs).ConfigureAwait(false)).Object;
-            browser.BrowserType = this;
+            browser.SetBrowserType(this);
             return browser;
         }
 
@@ -138,9 +138,15 @@ namespace Microsoft.Playwright.Core
             {
                 RecordVideoDir = options.RecordVideoDir,
                 RecordVideoSize = options.RecordVideoSize,
-                RecordHarPath = options.RecordHarPath,
+                RecordHarContent = options.RecordHarContent,
+                RecordHarMode = options.RecordHarMode,
                 RecordHarOmitContent = options.RecordHarOmitContent,
+                RecordHarPath = options.RecordHarPath,
+                RecordHarUrlFilterString = options.RecordHarUrlFilterString,
+                RecordHarUrlFilterRegex = options.RecordHarUrlFilterRegex,
             };
+            context.SetBrowserType(this);
+
             return context;
         }
 
@@ -222,7 +228,7 @@ namespace Microsoft.Playwright.Core
                 browser = playwright.PreLaunchedBrowser;
                 browser.ShouldCloseConnectionOnClose = true;
                 browser.Disconnected += (_, _) => ClosePipe();
-                browser.BrowserType = this;
+                browser.SetBrowserType(this);
                 return playwright.PreLaunchedBrowser;
             }
             var task = CreateBrowserAsync();
@@ -243,7 +249,7 @@ namespace Microsoft.Playwright.Core
             {
                 browser.BrowserContextsList.Add(defaultContextValue.ToObject<BrowserContext>(_channel.Connection.DefaultJsonSerializerOptions));
             }
-            browser.BrowserType = this;
+            browser.SetBrowserType(this);
             return browser;
         }
     }
