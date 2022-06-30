@@ -43,8 +43,8 @@ namespace Microsoft.Playwright.Core
         private readonly BrowserContextInitializer _initializer;
         internal readonly ITracing _tracing;
         internal readonly IAPIRequestContext _request;
+        private readonly IDictionary<string, HarRecorder> _harRecorders = new Dictionary<string, HarRecorder>();
         private List<RouteHandler> _routes = new();
-        private IDictionary<string, HarRecorder> _harRecorders = new Dictionary<string, HarRecorder>();
 
         private float? _defaultNavigationTimeout;
         private float? _defaultTimeout;
