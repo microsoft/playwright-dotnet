@@ -183,6 +183,11 @@ namespace Microsoft.Playwright.Tests
             await page.SetContentAsync("<a target=_blank rel=noopener href=\"/one-style.html\">yo</a>");
             var page1 = await Context.RunAndWaitForPageAsync(() => page.ClickAsync("a"));
             Assert.AreEqual(42, await page1.EvaluateAsync<int>("1 + 41"));
+            // There should be a Route.ContinueAsync() entry for it in the trace.
+            await page1.RouteAsync("**/empty.html", route => route.ContinueAsync());
+            await page1.GotoAsync(Server.EmptyPage, new() { Timeout = 0 });
+            // For internal routes, which are not handled there should be no Route.ContinueAsync() entry.
+            await page1.GotoAsync(Server.Prefix + "/one-style.html", new() { Timeout = 0 });
 
             using var tmp = new TempDirectory();
             var tracePath = Path.Combine(tmp.Path, "trace.zip");
@@ -192,8 +197,19 @@ namespace Microsoft.Playwright.Tests
             CollectionAssert.IsNotEmpty(events);
 
             string[] actualActionApiNames = GetActions(events);
-            string[] expectedActionApiNames = new string[] { "BrowserContext.NewPageAsync", "Page.GotoAsync", "Page.SetContentAsync", "BrowserContext.RunAndWaitForPageAsync", "Page.ClickAsync", "Page.EvaluateAsync", "Tracing.StopAsync" };
-            Assert.AreEqual(expectedActionApiNames.Count(), actualActionApiNames.Count());
+            string[] expectedActionApiNames = new string[] {
+                "BrowserContext.NewPageAsync",
+                "Page.GotoAsync",
+                "Page.SetContentAsync",
+                "BrowserContext.RunAndWaitForPageAsync",
+                "Page.ClickAsync",
+                "Page.EvaluateAsync",
+                "Page.RouteAsync",
+                "Page.GotoAsync",
+                "Route.ContinueAsync",
+                "Page.GotoAsync",
+                "Tracing.StopAsync"
+            };
             Assert.AreEqual(expectedActionApiNames, actualActionApiNames);
         }
 
@@ -242,9 +258,11 @@ namespace Microsoft.Playwright.Tests
 
             public string ApiName { get; set; }
 
+            public bool Internal { get; set; }
+
             public double StartTime { get; set; }
         }
 
-        string[] GetActions(IReadOnlyList<TraceEventEntry> events) => events.Where(action => action.Type == "action").OrderBy(action => action.Metadata.StartTime).Select(action => action.Metadata.ApiName).ToArray();
+        string[] GetActions(IReadOnlyList<TraceEventEntry> events) => events.Where(action => action.Type == "action" && !action.Metadata.Internal).OrderBy(action => action.Metadata.StartTime).Select(action => action.Metadata.ApiName).ToArray();
     }
 }

@@ -462,18 +462,17 @@ namespace Microsoft.Playwright.Transport
                 {
                     break;
                 }
-                if (methodName.StartsWith("<", StringComparison.InvariantCultureIgnoreCase))
+                if (string.IsNullOrEmpty(apiName))
                 {
-                    continue;
-                }
-                if (playwrightInternal)
-                {
-                    lastInternalApiName = methodName;
-                }
-                else if (!string.IsNullOrEmpty(lastInternalApiName))
-                {
-                    apiName = lastInternalApiName;
-                    lastInternalApiName = string.Empty;
+                    if (playwrightInternal && !methodName.StartsWith("<", StringComparison.InvariantCultureIgnoreCase))
+                    {
+                        lastInternalApiName = methodName;
+                    }
+                    else if (!playwrightInternal && !string.IsNullOrEmpty(lastInternalApiName))
+                    {
+                        apiName = lastInternalApiName;
+                        lastInternalApiName = string.Empty;
+                    }
                 }
             }
             if (string.IsNullOrEmpty(apiName))
@@ -484,7 +483,7 @@ namespace Microsoft.Playwright.Transport
             {
                 if (!string.IsNullOrEmpty(apiName))
                 {
-                    ApiZone.Value[0] = new() { ApiName = apiName, Stack = stack, IsInternal = isInternal };
+                    ApiZone.Value[0] = new() { ApiName = isInternal ? null : apiName, Stack = stack, Internal = isInternal };
                 }
                 return await action().ConfigureAwait(false);
             }
