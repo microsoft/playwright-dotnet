@@ -442,13 +442,7 @@ namespace Microsoft.Playwright.Transport
             {
                 var sf = st.GetFrame(i);
                 string fileName = sf.GetFileName();
-                bool playwrightInternal = IsPlaywrightInternalNamespace(sf.GetMethod().ReflectedType?.Namespace);
-                if (string.IsNullOrEmpty(fileName) && !playwrightInternal)
-                {
-                    continue;
-                }
-
-                if (playwrightInternal)
+                if (IsPlaywrightInternalNamespace(sf.GetMethod().ReflectedType?.Namespace))
                 {
                     string methodName = $"{sf?.GetMethod()?.DeclaringType?.Name}.{sf?.GetMethod()?.Name}";
                     if (methodName.Contains("WrapApiBoundaryAsync"))
@@ -461,7 +455,7 @@ namespace Microsoft.Playwright.Transport
                         lastInternalApiName = methodName;
                     }
                 }
-                else
+                else if (!string.IsNullOrEmpty(fileName))
                 {
                     stack.Add(new() { File = fileName, Line = sf.GetFileLineNumber(), Column = sf.GetFileColumnNumber() });
                     if (!string.IsNullOrEmpty(lastInternalApiName) && !apiBoundaryReached)
