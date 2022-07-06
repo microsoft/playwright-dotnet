@@ -437,43 +437,31 @@ namespace Microsoft.Playwright.Transport
             var stack = new List<Protocol.StackFrame>();
             var lastInternalApiName = string.Empty;
             var apiName = string.Empty;
+            var apiBoundaryReached = false;
             for (int i = 0; i < st.FrameCount; ++i)
             {
                 var sf = st.GetFrame(i);
                 string fileName = sf.GetFileName();
-                string cSharpNamespace = sf.GetMethod().ReflectedType?.Namespace;
-                bool playwrightInternal = cSharpNamespace != null &&
-                                          (cSharpNamespace == "Microsoft.Playwright" ||
-                                          cSharpNamespace.StartsWith("Microsoft.Playwright.Core", StringComparison.InvariantCultureIgnoreCase) ||
-                                          cSharpNamespace.StartsWith("Microsoft.Playwright.Transport", StringComparison.InvariantCultureIgnoreCase) ||
-                                          cSharpNamespace.StartsWith("Microsoft.Playwright.Helpers", StringComparison.InvariantCultureIgnoreCase));
-                if (string.IsNullOrEmpty(fileName) && !playwrightInternal)
+                if (IsPlaywrightInternalNamespace(sf.GetMethod().ReflectedType?.Namespace))
                 {
-                    continue;
+                    string methodName = $"{sf?.GetMethod()?.DeclaringType?.Name}.{sf?.GetMethod()?.Name}";
+                    if (methodName.Contains("WrapApiBoundaryAsync"))
+                    {
+                        apiBoundaryReached = true;
+                    }
+                    var hasCleanMethodName = !methodName.StartsWith("<", StringComparison.InvariantCultureIgnoreCase);
+                    if (hasCleanMethodName)
+                    {
+                        lastInternalApiName = methodName;
+                    }
                 }
-
-                if (!playwrightInternal)
+                else if (!string.IsNullOrEmpty(fileName))
                 {
-                    stack.Add(new Protocol.StackFrame() { File = fileName, Line = sf.GetFileLineNumber(), Column = sf.GetFileColumnNumber() });
-                }
-
-                string methodName = $"{sf?.GetMethod()?.DeclaringType?.Name}.{sf?.GetMethod()?.Name}";
-                if (methodName.Contains("WrapApiBoundaryAsync"))
-                {
-                    break;
-                }
-                if (methodName.StartsWith("<", StringComparison.InvariantCultureIgnoreCase))
-                {
-                    continue;
-                }
-                if (playwrightInternal)
-                {
-                    lastInternalApiName = methodName;
-                }
-                else if (!string.IsNullOrEmpty(lastInternalApiName))
-                {
-                    apiName = lastInternalApiName;
-                    lastInternalApiName = string.Empty;
+                    stack.Add(new() { File = fileName, Line = sf.GetFileLineNumber(), Column = sf.GetFileColumnNumber() });
+                    if (!string.IsNullOrEmpty(lastInternalApiName) && !apiBoundaryReached)
+                    {
+                        apiName = lastInternalApiName;
+                    }
                 }
             }
             if (string.IsNullOrEmpty(apiName))
@@ -484,7 +472,7 @@ namespace Microsoft.Playwright.Transport
             {
                 if (!string.IsNullOrEmpty(apiName))
                 {
-                    ApiZone.Value[0] = new() { ApiName = apiName, Stack = stack, IsInternal = isInternal };
+                    ApiZone.Value[0] = new() { ApiName = isInternal ? null : apiName, Stack = stack, Internal = isInternal };
                 }
                 return await action().ConfigureAwait(false);
             }
@@ -492,6 +480,15 @@ namespace Microsoft.Playwright.Transport
             {
                 ApiZone.Value[0] = null;
             }
+        }
+
+        private static bool IsPlaywrightInternalNamespace(string namespaceName)
+        {
+            return namespaceName != null &&
+                (namespaceName == "Microsoft.Playwright" ||
+                namespaceName.StartsWith("Microsoft.Playwright.Core", StringComparison.InvariantCultureIgnoreCase) ||
+                namespaceName.StartsWith("Microsoft.Playwright.Transport", StringComparison.InvariantCultureIgnoreCase) ||
+                namespaceName.StartsWith("Microsoft.Playwright.Helpers", StringComparison.InvariantCultureIgnoreCase));
         }
 
         internal async Task WrapApiBoundaryAsync(Func<Task> action)

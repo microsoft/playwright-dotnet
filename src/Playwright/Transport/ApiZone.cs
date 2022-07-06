@@ -23,15 +23,17 @@
  */
 
 using System.Collections.Generic;
+using System.Text.Json.Serialization;
 using Microsoft.Playwright.Transport.Protocol;
 
 namespace Microsoft.Playwright.Transport
 {
     internal class ApiZone
     {
+        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
         public string ApiName { get; set; }
 
-        public bool IsInternal { get; set; }
+        public bool Internal { get; set; }
 
         public List<StackFrame> Stack { get; set; }
     }

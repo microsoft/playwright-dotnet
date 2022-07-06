@@ -43,13 +43,17 @@ namespace Microsoft.Playwright.Core
 
         public async Task StartAsync(TracingStartOptions options = default)
         {
-            await _channel.TracingStartAsync(
+            await _channel.Connection.WrapApiCallAsync(async () =>
+            {
+                await _channel.TracingStartAsync(
                         name: options?.Name,
                         title: options?.Title,
                         screenshots: options?.Screenshots,
                         snapshots: options?.Snapshots,
                         sources: options?.Sources).ConfigureAwait(false);
-            await _channel.StartChunkAsync(options?.Title).ConfigureAwait(false);
+                await _channel.StartChunkAsync(options?.Title).ConfigureAwait(false);
+                return 42; // We need to return something to make generics work.
+            }).ConfigureAwait(false);
         }
 
         public Task StartChunkAsync() => StartChunkAsync();
@@ -63,8 +67,12 @@ namespace Microsoft.Playwright.Core
 
         public async Task StopAsync(TracingStopOptions options = default)
         {
-            await StopChunkAsync(new() { Path = options?.Path }).ConfigureAwait(false);
-            await _channel.TracingStopAsync().ConfigureAwait(false);
+            await _channel.Connection.WrapApiCallAsync(async () =>
+            {
+                await StopChunkAsync(new() { Path = options?.Path }).ConfigureAwait(false);
+                await _channel.TracingStopAsync().ConfigureAwait(false);
+                return 42; // We need to return something to make generics work.
+            }).ConfigureAwait(false);
         }
 
         private async Task DoStopChunkAsync(string filePath)
