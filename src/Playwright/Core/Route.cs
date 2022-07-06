@@ -97,7 +97,7 @@ namespace Microsoft.Playwright.Core
                 async () =>
                 {
                     await RaceWithPageCloseAsync(_channel.ContinueAsync(url: options.Url, method: options.Method, postData: options.PostData, headers: options.Headers)).ConfigureAwait(false);
-                    return 0;
+                    return 42; // We need to return something to make generics work.
                 },
                 @internal).ConfigureAwait(false);
         }
