@@ -42,7 +42,7 @@ namespace Microsoft.Playwright.NUnit
         }
 
         private static readonly ConcurrentStack<Worker> _allWorkers = new();
-        private Worker _currentWorker;
+        private Worker _currentWorker = null!;
 
         public int WorkerIndex { get; internal set; }
 
@@ -53,7 +53,7 @@ namespace Microsoft.Playwright.NUnit
                 _currentWorker.Services[name] = await factory().ConfigureAwait(false);
             }
 
-            return _currentWorker.Services[name] as T;
+            return (_currentWorker.Services[name] as T)!;
         }
 
         [SetUp]

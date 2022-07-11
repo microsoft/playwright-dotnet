@@ -30,7 +30,7 @@ namespace Microsoft.Playwright.NUnit
 {
     public class BrowserTest : PlaywrightTest
     {
-        public IBrowser Browser { get; internal set; }
+        public IBrowser Browser { get; internal set; } = null!;
         private readonly List<IBrowserContext> _contexts = new();
 
         public async Task<IBrowserContext> NewContext(BrowserNewContextOptions options)
@@ -58,7 +58,7 @@ namespace Microsoft.Playwright.NUnit
                 }
             }
             _contexts.Clear();
-            Browser = null;
+            Browser = null!;
         }
     }
 }

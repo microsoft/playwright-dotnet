@@ -30,7 +30,7 @@ namespace Microsoft.Playwright.MSTest
     [TestClass]
     public class ContextTest : BrowserTest
     {
-        public IBrowserContext? Context { get; private set; }
+        public IBrowserContext Context { get; private set; } = null!;
 
         [TestInitialize]
         public async Task ContextSetup()

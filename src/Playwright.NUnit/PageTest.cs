@@ -29,7 +29,7 @@ namespace Microsoft.Playwright.NUnit
 {
     public class PageTest : ContextTest
     {
-        public IPage Page { get; private set; }
+        public IPage Page { get; private set; } = null!;
 
         [SetUp]
         public async Task PageSetup()

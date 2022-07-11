@@ -29,11 +29,11 @@ namespace Microsoft.Playwright.NUnit
 {
     public class ContextTest : BrowserTest
     {
-        public IBrowserContext Context { get; private set; }
+        public IBrowserContext Context { get; private set; } = null!;
 
         public virtual BrowserNewContextOptions ContextOptions()
         {
-            return null;
+            return null!;
         }
 
         [SetUp]
