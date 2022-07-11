@@ -34,8 +34,8 @@ namespace Microsoft.Playwright.NUnit
 
         private static readonly Task<IPlaywright> _playwrightTask = Microsoft.Playwright.Playwright.CreateAsync();
 
-        public IPlaywright Playwright { get; private set; }
-        public IBrowserType BrowserType { get; private set; }
+        public IPlaywright Playwright { get; private set; } = null!;
+        public IBrowserType BrowserType { get; private set; } = null!;
 
         [SetUp]
         public async Task PlaywrightSetup()

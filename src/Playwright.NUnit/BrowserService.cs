@@ -29,7 +29,7 @@ namespace Microsoft.Playwright.NUnit
 {
     public class BrowserService : IWorkerService
     {
-        public IBrowser Browser { get; internal set; }
+        public IBrowser Browser { get; internal set; } = null!;
 
         public static Task<BrowserService> Register(WorkerAwareTest test, IBrowserType browserType)
         {

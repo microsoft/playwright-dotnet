@@ -30,7 +30,7 @@ namespace Microsoft.Playwright.MSTest
     [TestClass]
     public class PageTest : ContextTest
     {
-        public IPage Page { get; private set; }
+        public IPage Page { get; private set; } = null!;
 
         [TestInitialize]
         public async Task PageSetup()
