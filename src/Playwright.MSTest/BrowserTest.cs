@@ -32,7 +32,7 @@ namespace Microsoft.Playwright.MSTest
     [TestClass]
     public class BrowserTest : PlaywrightTest
     {
-        public IBrowser? Browser { get; private set; }
+        public IBrowser Browser { get; private set; }
         private readonly List<IBrowserContext> _contexts = new();
 
         public async Task<IBrowserContext> NewContextAsync(BrowserNewContextOptions? options)

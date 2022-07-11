@@ -29,7 +29,7 @@ namespace Microsoft.Playwright.MSTest.Services
 {
     public class BrowserService : IWorkerService
     {
-        public IBrowser? Browser { get; internal set; }
+        public IBrowser Browser { get; internal set; }
 
         public Task ResetAsync() => Task.CompletedTask;
 
