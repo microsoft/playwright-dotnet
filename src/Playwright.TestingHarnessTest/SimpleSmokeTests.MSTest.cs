@@ -13,7 +13,6 @@ namespace Playwright.TestingHarnessTest.MSTest
         public async Task ShouldOpenPlaywright()
         {
             var path = Path.GetFullPath("index.html");
-            Assert.IsNotNull(Page);
             await Page.GotoAsync("file://" + path);
             var h1 = await Page.TextContentAsync("h1");
             Assert.AreEqual("Getting started.", h1);
