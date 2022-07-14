@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RunSettings>
+  <RunConfiguration>
+    <EnvironmentVariables>
+      <DEBUGA>pw:api</DEBUGA>
+    </EnvironmentVariables>
+  </RunConfiguration>
+  <TestRunParameters>
+    <Parameter name="browser" value="webkit" />
+    <Parameter name="IgnoreDefaultArgs" value="['--enable-automation', '--use-mock-keychain']" />
+    <Parameter name="headless" value="false" />
+  </TestRunParameters>
+</RunSettings>

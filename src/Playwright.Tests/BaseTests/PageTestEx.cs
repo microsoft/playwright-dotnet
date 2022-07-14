@@ -42,6 +42,7 @@ namespace Microsoft.Playwright.Tests
             Server = http.Server;
             HttpsServer = http.HttpsServer;
             BrowserMajorVersion = int.Parse(Browser.Version.Split(".")[0]);
+            TestConstants.BrowserName = BrowserName;
         }
     }
 }

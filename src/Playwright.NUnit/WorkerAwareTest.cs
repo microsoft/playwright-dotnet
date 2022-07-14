@@ -25,8 +25,10 @@
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.Playwright.Core.Shared;
 using NUnit.Framework;
 using NUnit.Framework.Interfaces;
 
@@ -43,6 +45,7 @@ namespace Microsoft.Playwright.NUnit
 
         private static readonly ConcurrentStack<Worker> _allWorkers = new();
         private Worker _currentWorker = null!;
+        internal RunSettingsParser ParsedSettings { get; private set; } = null!;
 
         public int WorkerIndex { get; internal set; }
 
@@ -64,6 +67,9 @@ namespace Microsoft.Playwright.NUnit
                 _currentWorker = new();
             }
             WorkerIndex = _currentWorker.WorkerIndex;
+            ParsedSettings = new RunSettingsParser(TestContext.Parameters.Names.ToDictionary(
+                key => key,
+                key => TestContext.Parameters[key]));
         }
 
         [TearDown]

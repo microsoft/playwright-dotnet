@@ -26,6 +26,7 @@
 using System;
 using System.Linq;
 using System.Runtime.InteropServices;
+using Microsoft.Playwright.Core.Shared;
 using NUnit.Framework;
 using NUnit.Framework.Interfaces;
 using NUnit.Framework.Internal;
@@ -35,6 +36,8 @@ namespace Microsoft.Playwright.NUnit
     public class SkipAttribute : NUnitAttribute, IApplyToTest
     {
         private readonly Targets[] _combinations;
+
+        public TestContext? TestContext { get; set; }
 
         [Flags]
         public enum Targets : short
@@ -58,6 +61,9 @@ namespace Microsoft.Playwright.NUnit
 
         public void ApplyToTest(Test test)
         {
+            var parsedSettings = new RunSettingsParser(TestContext.Parameters.Names.ToDictionary(
+                key => key,
+                key => TestContext.Parameters[key]));
             if (_combinations.Any(combination =>
             {
                 var requirements = (Enum.GetValues(typeof(Targets)) as Targets[]).Where(x => combination.HasFlag(x));
@@ -67,9 +73,9 @@ namespace Microsoft.Playwright.NUnit
                         Targets.Windows => RuntimeInformation.IsOSPlatform(System.Runtime.InteropServices.OSPlatform.Windows),
                         Targets.Linux => RuntimeInformation.IsOSPlatform(System.Runtime.InteropServices.OSPlatform.Linux),
                         Targets.OSX => RuntimeInformation.IsOSPlatform(System.Runtime.InteropServices.OSPlatform.OSX),
-                        Targets.Chromium => NUnit.PlaywrightTest.BrowserName == BrowserType.Chromium,
-                        Targets.Firefox => NUnit.PlaywrightTest.BrowserName == BrowserType.Firefox,
-                        Targets.Webkit => NUnit.PlaywrightTest.BrowserName == BrowserType.Webkit,
+                        Targets.Chromium => parsedSettings.BrowserName == BrowserType.Chromium,
+                        Targets.Firefox => parsedSettings.BrowserName == BrowserType.Firefox,
+                        Targets.Webkit => parsedSettings.BrowserName == BrowserType.Webkit,
                         _ => false,
                     });
             }))
