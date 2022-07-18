@@ -82,13 +82,13 @@ namespace Microsoft.Playwright.Core.Shared
                 case Type t when t == typeof(string):
                     property.SetValue(options, value);
                     break;
-                case Type t when type == typeof(bool):
+                case Type t when t == typeof(bool):
                     property.SetValue(options, bool.Parse(value));
                     break;
                 case Type t when t == typeof(float):
                     property.SetValue(options, float.Parse(value));
                     break;
-                case Type t when type?.IsEnum == true:
+                case Type t when t?.IsEnum == true:
                     {
                         var enumValue = Enum.GetNames(t).Where(name =>
                         {
@@ -99,13 +99,13 @@ namespace Microsoft.Playwright.Core.Shared
                         {
                             throw new ArgumentException($"Invalid value '{value}' for enum {t.Name}");
                         }
-                        property.SetValue(options, Enum.Parse(type, enumValue));
+                        property.SetValue(options, Enum.Parse(t, enumValue));
                     }
                     break;
                 // special case for IEnumerable<KeyValuePair<X, Y>> which we need to convert into a Dictionary<X, Y>
                 case Type t when t.IsGenericType && t.GetGenericTypeDefinition() == typeof(IEnumerable<>) && t.GetGenericArguments()[0].IsGenericType && t.GetGenericArguments()[0].GetGenericTypeDefinition() == typeof(KeyValuePair<,>):
                     {
-                        var dictKvGenericTypes = type.GetGenericArguments()[0].GetGenericArguments();
+                        var dictKvGenericTypes = t.GetGenericArguments()[0].GetGenericArguments();
                         var dictType = typeof(Dictionary<,>).MakeGenericType(dictKvGenericTypes[0], dictKvGenericTypes[1]);
                         property.SetValue(options, ParseAsJson(value, dictType));
                     }

@@ -39,29 +39,9 @@ namespace Microsoft.Playwright.Tests
         public const int DefaultTimeout = 10_000;
         public const int DefaultTaskTimeout = 5_000;
 
-        internal static bool IsWebKit
-        {
-            get
-            {
-                return BrowserName == BrowserType.Webkit;
-            }
-        }
-
-        internal static bool IsFirefox
-        {
-            get
-            {
-                return BrowserName == BrowserType.Firefox;
-            }
-        }
-
-        internal static bool IsChromium
-        {
-            get
-            {
-                return BrowserName == BrowserType.Chromium;
-            }
-        }
+        internal static bool IsChromium => BrowserName == BrowserType.Chromium;
+        internal static bool IsFirefox => BrowserName == BrowserType.Firefox;
+        internal static bool IsWebKit => BrowserName == BrowserType.Webkit;
 
         internal static readonly bool IsMacOSX = RuntimeInformation.IsOSPlatform(OSPlatform.OSX);
         internal static readonly bool IsWindows = RuntimeInformation.IsOSPlatform(OSPlatform.Windows);
