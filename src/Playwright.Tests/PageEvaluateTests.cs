@@ -580,8 +580,8 @@ namespace Microsoft.Playwright.Tests
         [PlaywrightTest("page-evaluate.spec.ts", "should evaluate url")]
         public async Task ShouldEvaluateUrl()
         {
-            dynamic result = await Page.EvaluateAsync<ExpandoObject>(@"() => ({ date: new URL('https://example.com') })");
-            Assert.AreEqual(new Uri("https://example.com"), result.date);
+            dynamic result = await Page.EvaluateAsync<ExpandoObject>(@"() => ({ someKey: new URL('https://example.com') })");
+            Assert.AreEqual(new Uri("https://example.com"), result.someKey);
         }
 
         [PlaywrightTest("page-evaluate.spec.ts", "should roundtrip url")]
