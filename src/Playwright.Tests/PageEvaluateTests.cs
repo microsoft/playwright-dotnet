@@ -577,6 +577,37 @@ namespace Microsoft.Playwright.Tests
             Assert.AreEqual(date, result);
         }
 
+        [PlaywrightTest("page-evaluate.spec.ts", "should evaluate url")]
+        public async Task ShouldEvaluateUrl()
+        {
+            dynamic result = await Page.EvaluateAsync<ExpandoObject>(@"() => ({ date: new URL('https://example.com') })");
+            Assert.AreEqual(new Uri("https://example.com"), result.date);
+        }
+
+        [PlaywrightTest("page-evaluate.spec.ts", "should roundtrip url")]
+        public async Task ShouldRoundtripUrl()
+        {
+            var uri = new Uri("https://example.com");
+            var result = await Page.EvaluateAsync<Uri>("url => url", uri);
+            Assert.AreEqual(uri, result);
+        }
+
+        [PlaywrightTest("page-evaluate.spec.ts", "should roundtrip complex url")]
+        public async Task ShouldRoundtripComplexUrl()
+        {
+            var uri = new Uri("https://user:password@www.contoso.com:80/Home/Index.htm?q1=v1&q2=v2#FragmentName");
+            var result = await Page.EvaluateAsync<Uri>("url => url", uri);
+            Assert.AreEqual(uri, result);
+        }
+
+        [PlaywrightTest("page-evaluate.spec.ts", "should jsonValue() url")]
+        public async Task ShouldJsonValueUrl()
+        {
+            var resultHandle = await Page.EvaluateHandleAsync("() => ({ url: new URL('https://example.com') })");
+            dynamic result = await resultHandle.JsonValueAsync<ExpandoObject>();
+            Assert.AreEqual(new Uri("https://example.com"), result.url);
+        }
+
         [PlaywrightTest()]
         public async Task ShouldTreatEcma2020AsFunctions()
              => Assert.AreEqual("dario", await Page.EvaluateAsync<string>(
