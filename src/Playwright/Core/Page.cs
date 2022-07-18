@@ -49,6 +49,7 @@ namespace Microsoft.Playwright.Core
         private readonly ITouchscreen _touchscreen;
         private readonly PageInitializer _initializer;
 
+        internal readonly List<Worker> _workers = new();
         private List<RouteHandler> _routes = new();
         private EventHandler<IFileChooser> _fileChooserEventHandler;
         private bool _fileChooserIntercepted;
@@ -117,11 +118,11 @@ namespace Microsoft.Playwright.Core
             _channel.Video += (_, e) => ForceVideo().ArtifactReady(e.Artifact);
 
             _channel.FileChooser += (_, e) => _fileChooserEventHandler?.Invoke(this, new FileChooser(this, e.Element.Object, e.IsMultiple));
-            _channel.Worker += (_, e) =>
+            _channel.Worker += (_, worker) =>
             {
-                WorkersList.Add(e.WorkerChannel.Object);
-                e.WorkerChannel.Object.Page = this;
-                Worker?.Invoke(this, e.WorkerChannel.Object);
+                _workers.Add(worker);
+                worker.Page = this;
+                Worker?.Invoke(this, worker);
             };
 
             _defaultNavigationTimeout = Context.DefaultNavigationTimeout;
@@ -237,7 +238,7 @@ namespace Microsoft.Playwright.Core
             get => _touchscreen;
         }
 
-        public IReadOnlyList<IWorker> Workers => WorkersList;
+        public IReadOnlyList<IWorker> Workers => _workers;
 
         public IVideo Video
         {
@@ -256,8 +257,6 @@ namespace Microsoft.Playwright.Core
         internal BrowserContext OwnedContext { get; set; }
 
         internal Dictionary<string, Delegate> Bindings { get; } = new();
-
-        internal List<Worker> WorkersList { get; } = new();
 
         internal Page Opener => _initializer.Opener;
 
@@ -1025,12 +1024,12 @@ namespace Microsoft.Playwright.Core
 
         private Task UnrouteAsync(RouteHandler setting)
         {
-            var newRoutesList = new List<RouteHandler>();
-            newRoutesList.AddRange(_routes.Where(r =>
+            var newRoutes = new List<RouteHandler>();
+            newRoutes.AddRange(_routes.Where(r =>
                 (setting.Regex != null && !(r.Regex == setting.Regex || (r.Regex.ToString() == setting.Regex.ToString() && r.Regex.Options == setting.Regex.Options))) ||
                 (setting.Function != null && r.Function != setting.Function) ||
                 (setting.Handler != null && r.Handler != setting.Handler)));
-            _routes = newRoutesList;
+            _routes = newRoutes;
 
             if (_routes.Count == 0)
             {
@@ -1043,7 +1042,7 @@ namespace Microsoft.Playwright.Core
         internal void OnClose()
         {
             IsClosed = true;
-            Context?.PagesList.Remove(this);
+            Context?._pages.Remove(this);
             RejectPendingOperations(false);
             Close?.Invoke(this, this);
         }
@@ -1101,7 +1100,7 @@ namespace Microsoft.Playwright.Core
             var frame = (Frame)args;
             _frames.Remove(frame);
             frame.IsDetached = true;
-            frame.ParentFrame?.ChildFramesList?.Remove(frame);
+            frame.ParentFrame?._childFrames?.Remove(frame);
             FrameDetached?.Invoke(this, args);
         }
 
@@ -1110,7 +1109,7 @@ namespace Microsoft.Playwright.Core
             var frame = (Frame)args;
             frame.Page = this;
             _frames.Add(frame);
-            frame.ParentFrame?.ChildFramesList?.Add(frame);
+            frame.ParentFrame?._childFrames?.Add(frame);
             FrameAttached?.Invoke(this, args);
         }
 

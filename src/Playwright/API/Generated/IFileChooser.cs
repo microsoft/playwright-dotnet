@@ -47,7 +47,7 @@ namespace Microsoft.Playwright
     /// <code>
     /// var fileChooser = await page.RunAndWaitForFileChooserAsync(async () =&gt;<br/>
     /// {<br/>
-    ///     await page.ClickAsync("upload");<br/>
+    ///     await page.Locator("upload").ClickAsync();<br/>
     /// });<br/>
     /// await fileChooser.SetFilesAsync("temp.txt");
     /// </code>

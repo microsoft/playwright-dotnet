@@ -174,9 +174,9 @@ namespace Microsoft.Playwright.Core
             void OnPipeClosed()
             {
                 // Emulate all pages, contexts and the browser closing upon disconnect.
-                foreach (BrowserContext context in browser?.BrowserContextsList.ToArray() ?? Array.Empty<BrowserContext>())
+                foreach (BrowserContext context in browser?._contexts.ToArray() ?? Array.Empty<BrowserContext>())
                 {
-                    foreach (Page page in context.PagesList.ToArray())
+                    foreach (Page page in context._pages.ToArray())
                     {
                         page.OnClose();
                     }
@@ -247,7 +247,7 @@ namespace Microsoft.Playwright.Core
             Browser browser = result.GetProperty("browser").ToObject<Browser>(_channel.Connection.DefaultJsonSerializerOptions);
             if (result.TryGetProperty("defaultContext", out JsonElement defaultContextValue))
             {
-                browser.BrowserContextsList.Add(defaultContextValue.ToObject<BrowserContext>(_channel.Connection.DefaultJsonSerializerOptions));
+                browser._contexts.Add(defaultContextValue.ToObject<BrowserContext>(_channel.Connection.DefaultJsonSerializerOptions));
             }
             browser.SetBrowserType(this);
             return browser;

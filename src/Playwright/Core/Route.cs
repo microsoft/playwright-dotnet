@@ -71,14 +71,14 @@ namespace Microsoft.Playwright.Core
                 options.Path,
                 options.Response).ConfigureAwait(false);
 
-            await RaceWithPageCloseAsync(_channel.FulfillAsync(normalized)).ConfigureAwait(false);
+            await RaceWithTargetCloseAsync(_channel.FulfillAsync(normalized)).ConfigureAwait(false);
             ReportHandled(true);
         }
 
         public async Task AbortAsync(string errorCode = RequestAbortErrorCode.Failed)
         {
             CheckNotHandled();
-            await RaceWithPageCloseAsync(_channel.AbortAsync(errorCode)).ConfigureAwait(false);
+            await RaceWithTargetCloseAsync(_channel.AbortAsync(errorCode)).ConfigureAwait(false);
             ReportHandled(true);
         }
 
@@ -96,16 +96,16 @@ namespace Microsoft.Playwright.Core
             await _channel.Connection.WrapApiCallAsync(
                 async () =>
                 {
-                    await RaceWithPageCloseAsync(_channel.ContinueAsync(url: options.Url, method: options.Method, postData: options.PostData, headers: options.Headers)).ConfigureAwait(false);
+                    await RaceWithTargetCloseAsync(_channel.ContinueAsync(url: options.Url, method: options.Method, postData: options.PostData, headers: options.Headers)).ConfigureAwait(false);
                     return 42; // We need to return something to make generics work.
                 },
                 @internal).ConfigureAwait(false);
         }
 
-        private async Task RaceWithPageCloseAsync(Task task)
+        private async Task RaceWithTargetCloseAsync(Task task)
         {
-            var page = (Page)Request.Frame.Page;
-            if (page == null)
+            var serviceWorkerOrPageClosedTask = ((Worker)((Request)Request).ServiceWorker)?.ClosedTcs.Task ?? ((Page)Request.Frame.Page)?.ClosedOrCrashedTcs.Task;
+            if (serviceWorkerOrPageClosedTask == null)
             {
                 task.IgnoreException();
                 return;
@@ -114,7 +114,7 @@ namespace Microsoft.Playwright.Core
             // When page closes or crashes, we catch any potential rejects from this Route.
             // Note that page could be missing when routing popup's initial request that
             // does not have a Page initialized just yet.
-            if (task != await Task.WhenAny(task, page.ClosedOrCrashedTcs.Task).ConfigureAwait(false))
+            if (task != await Task.WhenAny(task, serviceWorkerOrPageClosedTask).ConfigureAwait(false))
             {
                 task.IgnoreException();
             }
@@ -221,7 +221,7 @@ namespace Microsoft.Playwright.Core
         internal async Task RedirectNavigationRequestAsync(string url)
         {
             CheckNotHandled();
-            await RaceWithPageCloseAsync(_channel.RedirectNavigationRequestAsync(url)).ConfigureAwait(false);
+            await RaceWithTargetCloseAsync(_channel.RedirectNavigationRequestAsync(url)).ConfigureAwait(false);
             ReportHandled(true);
         }
 

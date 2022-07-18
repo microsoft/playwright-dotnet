@@ -52,14 +52,14 @@ namespace Microsoft.Playwright
     /// <code>
     /// await using var browser = playwright.Chromium.LaunchAsync();<br/>
     /// await using var context = await browser.NewContextAsync();<br/>
-    /// await context.Tracing.StartAsync(new TracingStartOptions<br/>
+    /// await context.Tracing.StartAsync(new()<br/>
     /// {<br/>
     ///   Screenshots: true,<br/>
     ///   Snapshots: true<br/>
     /// });<br/>
     /// var page = context.NewPageAsync();<br/>
     /// await page.GotoAsync("https://playwright.dev");<br/>
-    /// await context.Tracing.StopAsync(new TracingStopOptions<br/>
+    /// await context.Tracing.StopAsync(new()<br/>
     /// {<br/>
     ///   Path: "trace.zip"<br/>
     /// });
@@ -72,14 +72,14 @@ namespace Microsoft.Playwright
         /// <code>
         /// await using var browser = playwright.Chromium.LaunchAsync();<br/>
         /// await using var context = await browser.NewContextAsync();<br/>
-        /// await context.Tracing.StartAsync(new TracingStartOptions<br/>
+        /// await context.Tracing.StartAsync(new()<br/>
         /// {<br/>
         ///   Screenshots: true,<br/>
         ///   Snapshots: true<br/>
         /// });<br/>
         /// var page = context.NewPageAsync();<br/>
         /// await page.GotoAsync("https://playwright.dev");<br/>
-        /// await context.Tracing.StopAsync(new TracingStopOptions<br/>
+        /// await context.Tracing.StopAsync(new()<br/>
         /// {<br/>
         ///   Path: "trace.zip"<br/>
         /// });
@@ -97,7 +97,7 @@ namespace Microsoft.Playwright
         /// <code>
         /// await using var browser = playwright.Chromium.LaunchAsync();<br/>
         /// await using var context = await browser.NewContextAsync();<br/>
-        /// await context.Tracing.StartAsync(new TracingStartOptions<br/>
+        /// await context.Tracing.StartAsync(new()<br/>
         /// {<br/>
         ///   Screenshots: true,<br/>
         ///   Snapshots: true<br/>
@@ -108,7 +108,7 @@ namespace Microsoft.Playwright
         /// await context.Tracing.StartChunkAsync();<br/>
         /// await page.ClickAsync("text=Get Started");<br/>
         /// // Everything between StartChunkAsync and StopChunkAsync will be recorded in the trace.<br/>
-        /// await context.Tracing.StopChunkAsync(new TracingStopChunkOptions<br/>
+        /// await context.Tracing.StopChunkAsync(new()<br/>
         /// {<br/>
         ///   Path: "trace1.zip"<br/>
         /// });<br/>
@@ -116,7 +116,7 @@ namespace Microsoft.Playwright
         /// await context.Tracing.StartChunkAsync();<br/>
         /// await page.GotoAsync("http://example.com");<br/>
         /// // Save a second trace file with different actions.<br/>
-        /// await context.Tracing.StopChunkAsync(new TracingStopChunkOptions<br/>
+        /// await context.Tracing.StopChunkAsync(new()<br/>
         /// {<br/>
         ///   Path: "trace2.zip"<br/>
         /// });

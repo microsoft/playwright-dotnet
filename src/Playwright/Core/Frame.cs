@@ -41,6 +41,7 @@ namespace Microsoft.Playwright.Core
     {
         internal readonly FrameChannel _channel;
         private readonly List<WaitUntilState> _loadStates = new();
+        internal readonly List<Frame> _childFrames = new();
 
         internal Frame(IChannelOwner parent, string guid, FrameInitializer initializer) : base(parent, guid)
         {
@@ -102,7 +103,7 @@ namespace Microsoft.Playwright.Core
 
         IChannel<Frame> IChannelOwner<Frame>.Channel => _channel;
 
-        public IReadOnlyList<IFrame> ChildFrames => ChildFramesList;
+        public IReadOnlyList<IFrame> ChildFrames => _childFrames;
 
         public string Name { get; internal set; }
 
@@ -115,8 +116,6 @@ namespace Microsoft.Playwright.Core
         public IPage Page { get; internal set; }
 
         public bool IsDetached { get; internal set; }
-
-        internal List<Frame> ChildFramesList { get; } = new();
 
         public async Task<IElementHandle> FrameElementAsync()
             => (await _channel.FrameElementAsync().ConfigureAwait(false)).Object;

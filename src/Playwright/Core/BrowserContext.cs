@@ -44,7 +44,9 @@ namespace Microsoft.Playwright.Core
         internal readonly ITracing _tracing;
         internal readonly IAPIRequestContext _request;
         private readonly IDictionary<string, HarRecorder> _harRecorders = new Dictionary<string, HarRecorder>();
+        internal readonly List<IWorker> _serviceWorkers = new();
         private List<RouteHandler> _routes = new();
+        internal readonly List<Page> _pages = new();
 
         private float? _defaultNavigationTimeout;
         private float? _defaultTimeout;
@@ -83,6 +85,13 @@ namespace Microsoft.Playwright.Core
                 e.Page?.FireResponse(e.Response);
             };
 
+            Channel.ServiceWorker += (_, serviceWorker) =>
+            {
+                ((Worker)serviceWorker).Context = this;
+                _serviceWorkers.Add(serviceWorker);
+                ServiceWorker?.Invoke(this, serviceWorker);
+            };
+
             _tracing = initializer.Tracing;
             _request = initializer.APIRequestContext;
             _initializer = initializer;
@@ -101,6 +110,8 @@ namespace Microsoft.Playwright.Core
 
         public event EventHandler<IResponse> Response;
 
+        public event EventHandler<IWorker> ServiceWorker;
+
         public ITracing Tracing
         {
             get => _tracing;
@@ -113,7 +124,7 @@ namespace Microsoft.Playwright.Core
 
         public IBrowser Browser { get; }
 
-        public IReadOnlyList<IPage> Pages => PagesList;
+        public IReadOnlyList<IPage> Pages => _pages;
 
         internal float DefaultNavigationTimeout
         {
@@ -137,17 +148,15 @@ namespace Microsoft.Playwright.Core
 
         internal BrowserContextChannel Channel { get; }
 
-        internal List<Page> PagesList { get; } = new();
-
         internal Page OwnerPage { get; set; }
-
-        internal List<Worker> ServiceWorkersList { get; } = new();
 
         internal bool IsChromium => _initializer.IsChromium;
 
         internal BrowserNewContextOptions Options { get; set; }
 
         public IAPIRequestContext APIRequest => _request;
+
+        public IReadOnlyList<IWorker> ServiceWorkers => _serviceWorkers;
 
         public Task AddCookiesAsync(IEnumerable<Cookie> cookies) => Channel.AddCookiesAsync(cookies);
 
@@ -447,12 +456,12 @@ namespace Microsoft.Playwright.Core
 
         private Task UnrouteAsync(RouteHandler setting)
         {
-            var newRoutesList = new List<RouteHandler>();
-            newRoutesList.AddRange(_routes.Where(r =>
+            var newRoutes = new List<RouteHandler>();
+            newRoutes.AddRange(_routes.Where(r =>
                 (setting.Regex != null && !(r.Regex == setting.Regex || (r.Regex.ToString() == setting.Regex.ToString() && r.Regex.Options == setting.Regex.Options))) ||
                 (setting.Function != null && r.Function != setting.Function) ||
                 (setting.Handler != null && r.Handler != setting.Handler)));
-            _routes = newRoutesList;
+            _routes = newRoutes;
 
             if (_routes.Count == 0)
             {
@@ -466,7 +475,7 @@ namespace Microsoft.Playwright.Core
         {
             if (Browser != null)
             {
-                ((Browser)Browser).BrowserContextsList.Remove(this);
+                ((Browser)Browser)._contexts.Remove(this);
             }
 
             Close?.Invoke(this, this);
@@ -477,7 +486,7 @@ namespace Microsoft.Playwright.Core
         {
             var page = e.PageChannel.Object;
             page.Context = this;
-            PagesList.Add(page);
+            _pages.Add(page);
             Page?.Invoke(this, page);
 
             if (page.Opener?.IsClosed == false)
@@ -498,7 +507,7 @@ namespace Microsoft.Playwright.Core
 
         private Task ExposeBindingAsync(string name, Delegate callback, bool handle = false)
         {
-            foreach (var page in PagesList)
+            foreach (var page in _pages)
             {
                 if (page.Bindings.ContainsKey(name))
                 {

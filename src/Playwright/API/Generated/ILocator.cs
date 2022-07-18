@@ -62,7 +62,7 @@ namespace Microsoft.Playwright
         /// - which is usually the same as the browser window.
         /// </para>
         /// <para>
-        /// Scrolling affects the returned bonding box, similarly to <a href="https://developer.mozilla.org/en-US/docs/Web/API/Element/getBoundingClientRect">Element.getBoundingClientRect</a>.
+        /// Scrolling affects the returned bounding box, similarly to <a href="https://developer.mozilla.org/en-US/docs/Web/API/Element/getBoundingClientRect">Element.getBoundingClientRect</a>.
         /// That means <c>x</c> and/or <c>y</c> may be negative.
         /// </para>
         /// <para>

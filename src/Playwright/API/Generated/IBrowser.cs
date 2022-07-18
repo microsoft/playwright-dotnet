@@ -86,6 +86,13 @@ namespace Microsoft.Playwright
         /// be used anymore.
         /// </para>
         /// </summary>
+        /// <remarks>
+        /// <para>
+        /// This is similar to force quitting the browser. Therefore, you should call <see cref="IBrowserContext.CloseAsync"/>
+        /// on any <see cref="IBrowserContext"/>'s you explicitly created earlier with <see
+        /// cref="IBrowser.NewContextAsync"/> **before** calling <see cref="IBrowser.CloseAsync"/>.
+        /// </para>
+        /// </remarks>
         Task CloseAsync();
 
         /// <summary>
@@ -115,9 +122,22 @@ namespace Microsoft.Playwright
         /// var context = await browser.NewContextAsync();<br/>
         /// // Create a new page in a pristine context.<br/>
         /// var page = await context.NewPageAsync(); ;<br/>
-        /// await page.GotoAsync("https://www.bing.com");
+        /// await page.GotoAsync("https://www.bing.com");<br/>
+        /// <br/>
+        /// // Gracefully close up everything<br/>
+        /// await context.CloseAsync();<br/>
+        /// await browser.CloseAsync();
         /// </code>
         /// </summary>
+        /// <remarks>
+        /// <para>
+        /// If directly using this method to create <see cref="IBrowserContext"/>s, it is best
+        /// practice to explicilty close the returned context via <see cref="IBrowserContext.CloseAsync"/>
+        /// when your code is done with the <see cref="IBrowserContext"/>, and before calling
+        /// <see cref="IBrowser.CloseAsync"/>. This will ensure the <c>context</c> is closed
+        /// gracefully and any artifacts—like HARs and videos—are fully flushed and saved.
+        /// </para>
+        /// </remarks>
         /// <param name="options">Call options</param>
         Task<IBrowserContext> NewContextAsync(BrowserNewContextOptions? options = default);
 

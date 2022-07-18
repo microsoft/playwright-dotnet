@@ -57,7 +57,7 @@ namespace Microsoft.Playwright
     ///         var chromium = playwright.Chromium;<br/>
     ///         var browser = await chromium.LaunchAsync();<br/>
     ///         var page = await browser.NewPageAsync();<br/>
-    ///         await page.GoToAsync("https://www.bing.com");<br/>
+    ///         await page.GotoAsync("https://www.bing.com");<br/>
     ///         // other actions<br/>
     ///         await browser.CloseAsync();<br/>
     ///     }<br/>

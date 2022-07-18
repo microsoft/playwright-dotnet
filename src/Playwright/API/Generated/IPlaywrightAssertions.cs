@@ -57,6 +57,7 @@ namespace Microsoft.Playwright
     ///     [Test]<br/>
     ///     public async Task StatusBecomesSubmitted()<br/>
     ///     {<br/>
+    ///         await Page.Locator("#submit-button").ClickAsync();<br/>
     ///         await Expect(Page.Locator(".status")).ToHaveTextAsync("Submitted");<br/>
     ///     }<br/>
     /// }

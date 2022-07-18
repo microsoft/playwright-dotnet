@@ -35,6 +35,7 @@ namespace Microsoft.Playwright.Core
     {
         private readonly BrowserInitializer _initializer;
         private readonly TaskCompletionSource<bool> _closedTcs = new();
+        internal readonly List<BrowserContext> _contexts = new();
 
         internal Browser(IChannelOwner parent, string guid, BrowserInitializer initializer) : base(parent, guid)
         {
@@ -50,7 +51,7 @@ namespace Microsoft.Playwright.Core
 
         IChannel<Browser> IChannelOwner<Browser>.Channel => Channel;
 
-        public IReadOnlyList<IBrowserContext> Contexts => BrowserContextsList.ToArray();
+        public IReadOnlyList<IBrowserContext> Contexts => _contexts.ToArray();
 
         public bool IsConnected { get; private set; }
 
@@ -60,14 +61,12 @@ namespace Microsoft.Playwright.Core
 
         internal BrowserChannel Channel { get; }
 
-        internal List<BrowserContext> BrowserContextsList { get; } = new();
-
         public IBrowserType BrowserType { get; private set; }
 
         internal void SetBrowserType(BrowserType browserType)
         {
             BrowserType = browserType;
-            foreach (var context in BrowserContextsList)
+            foreach (var context in _contexts)
             {
                 context.SetBrowserType(browserType);
             }
@@ -133,7 +132,7 @@ namespace Microsoft.Playwright.Core
 
             context.Options = options;
 
-            BrowserContextsList.Add(context);
+            _contexts.Add(context);
             context.SetBrowserType((BrowserType)this.BrowserType);
             return context;
         }

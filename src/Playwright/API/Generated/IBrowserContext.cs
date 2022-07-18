@@ -91,7 +91,7 @@ namespace Microsoft.Playwright
         /// <code>
         /// var popup = await context.RunAndWaitForPageAsync(async =&gt;<br/>
         /// {<br/>
-        ///     await page.ClickAsync("a");<br/>
+        ///     await page.Locator("a").ClickAsync();<br/>
         /// });<br/>
         /// Console.WriteLine(await popup.EvaluateAsync&lt;string&gt;("location.href"));
         /// </code>
@@ -262,7 +262,7 @@ namespace Microsoft.Playwright
         /// "&lt;/script&gt;\n" +<br/>
         /// "&lt;button onclick=\"onClick()\"&gt;Click me&lt;/button&gt;\n" +<br/>
         /// "&lt;div&gt;&lt;/div&gt;");<br/>
-        /// await page.ClickAsync("button");
+        /// await page.Locator("button").ClickAsync();
         /// </code>
         /// <para>An example of passing an element handle:</para>
         /// <code>
@@ -329,7 +329,7 @@ namespace Microsoft.Playwright
         ///         "&lt;button onclick=\"onClick()\"&gt;Click me&lt;/button&gt;\n" +<br/>
         ///         "&lt;div&gt;&lt;/div&gt;");<br/>
         /// <br/>
-        ///         await page.ClickAsync("button");<br/>
+        ///         await page.Locator("button").ClickAsync();<br/>
         ///         Console.WriteLine(await page.TextContentAsync("div"));<br/>
         ///     }<br/>
         /// }

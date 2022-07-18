@@ -108,6 +108,11 @@ namespace Microsoft.Playwright.Transport.Converters
                 return new { d = date.ToString("o", CultureInfo.InvariantCulture) };
             }
 
+            if (value is Uri uri)
+            {
+                return new { u = uri.ToString() };
+            }
+
             if (value is Regex regex)
             {
                 return new { r = new { p = regex.ToString(), f = regex.Options.GetInlineFlags() } };
@@ -293,6 +298,11 @@ namespace Microsoft.Playwright.Transport.Converters
             if (result.TryGetProperty("d", out var date))
             {
                 return date.ToObject<DateTime>();
+            }
+
+            if (result.TryGetProperty("u", out var url))
+            {
+                return url.ToObject<Uri>();
             }
 
             if (result.TryGetProperty("r", out var regex))
