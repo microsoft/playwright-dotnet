@@ -47,7 +47,8 @@ namespace Microsoft.Playwright.Core
 
             if (options?.HasTextRegex != null)
             {
-                _selector += $" >> :scope:text-matches({options.HasTextRegex.ToString().EscapeWithQuotes("\"")}, {options.HasTextRegex.Options.GetInlineFlags().EscapeWithQuotes("\"")})";
+                var jsRegex = $"/{options.HasTextRegex.ToString()}/{options.HasTextRegex.Options.GetInlineFlags()}";
+                _selector += $" >> has={JsonSerializer.Serialize("text=" + jsRegex)}";
             }
             if (options?.HasTextString != null)
             {

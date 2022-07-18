@@ -55,7 +55,7 @@ namespace Microsoft.Playwright
     /// <code>
     /// var download = await page.RunAndWaitForDownloadAsync(async () =&gt;<br/>
     /// {<br/>
-    ///     await page.ClickAsync("#downloadButton");<br/>
+    ///     await page.Locator("#downloadButton").ClickAsync();<br/>
     /// });<br/>
     /// Console.WriteLine(await download.PathAsync());
     /// </code>

@@ -45,15 +45,16 @@ namespace Microsoft.Playwright.Core
             {
                 if (Page != null)
                 {
-                    Page.WorkersList.Remove(this);
+                    Page._workers.Remove(this);
                 }
 
-                if (BrowserContext != null)
+                if (Context != null)
                 {
-                    BrowserContext.ServiceWorkersList.Remove(this);
+                    Context._serviceWorkers.Remove(this);
                 }
 
                 Close?.Invoke(this, this);
+                ClosedTcs.SetResult(true);
             };
         }
 
@@ -67,7 +68,9 @@ namespace Microsoft.Playwright.Core
 
         internal Page Page { get; set; }
 
-        internal BrowserContext BrowserContext { get; set; }
+        internal BrowserContext Context { get; set; }
+
+        internal TaskCompletionSource<bool> ClosedTcs { get; } = new();
 
         public async Task<T> EvaluateAsync<T>(string expression, object arg = null)
             => ScriptsHelper.ParseEvaluateResult<T>(await _channel.EvaluateExpressionAsync(

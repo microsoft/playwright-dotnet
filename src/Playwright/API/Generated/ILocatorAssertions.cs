@@ -59,7 +59,7 @@ namespace Microsoft.Playwright
     ///     public async Task StatusBecomesSubmitted()<br/>
     ///     {<br/>
     ///         // ..<br/>
-    ///         await Page.ClickAsync("#submit-button");<br/>
+    ///         await Page.Locator("#submit-button").ClickAsync();<br/>
     ///         await Expect(Page.Locator(".status")).ToHaveTextAsync("Submitted");<br/>
     ///     }<br/>
     /// }
@@ -289,10 +289,14 @@ namespace Microsoft.Playwright
         Task ToHaveAttributeAsync(string name, Regex value, LocatorAssertionsToHaveAttributeOptions? options = default);
 
         /// <summary>
-        /// <para>Ensures the <see cref="ILocator"/> points to an element with given CSS class.</para>
+        /// <para>
+        /// Ensures the <see cref="ILocator"/> points to an element with given CSS classes.
+        /// This needs to be a full match or using a relaxed regular expression.
+        /// </para>
         /// <code>
         /// var locator = Page.Locator("#component");<br/>
-        /// await Expect(locator).ToHaveClassAsync(new Regex("selected"));
+        /// await Expect(locator).ToHaveClassAsync(new Regex("selected"));<br/>
+        /// await Expect(locator).ToHaveClassAsync("selected row");
         /// </code>
         /// <para>
         /// Note that if array is passed as an expected value, entire lists of elements can
@@ -308,10 +312,14 @@ namespace Microsoft.Playwright
         Task ToHaveClassAsync(string expected, LocatorAssertionsToHaveClassOptions? options = default);
 
         /// <summary>
-        /// <para>Ensures the <see cref="ILocator"/> points to an element with given CSS class.</para>
+        /// <para>
+        /// Ensures the <see cref="ILocator"/> points to an element with given CSS classes.
+        /// This needs to be a full match or using a relaxed regular expression.
+        /// </para>
         /// <code>
         /// var locator = Page.Locator("#component");<br/>
-        /// await Expect(locator).ToHaveClassAsync(new Regex("selected"));
+        /// await Expect(locator).ToHaveClassAsync(new Regex("selected"));<br/>
+        /// await Expect(locator).ToHaveClassAsync("selected row");
         /// </code>
         /// <para>
         /// Note that if array is passed as an expected value, entire lists of elements can
@@ -327,10 +335,14 @@ namespace Microsoft.Playwright
         Task ToHaveClassAsync(Regex expected, LocatorAssertionsToHaveClassOptions? options = default);
 
         /// <summary>
-        /// <para>Ensures the <see cref="ILocator"/> points to an element with given CSS class.</para>
+        /// <para>
+        /// Ensures the <see cref="ILocator"/> points to an element with given CSS classes.
+        /// This needs to be a full match or using a relaxed regular expression.
+        /// </para>
         /// <code>
         /// var locator = Page.Locator("#component");<br/>
-        /// await Expect(locator).ToHaveClassAsync(new Regex("selected"));
+        /// await Expect(locator).ToHaveClassAsync(new Regex("selected"));<br/>
+        /// await Expect(locator).ToHaveClassAsync("selected row");
         /// </code>
         /// <para>
         /// Note that if array is passed as an expected value, entire lists of elements can
@@ -346,10 +358,14 @@ namespace Microsoft.Playwright
         Task ToHaveClassAsync(IEnumerable<string> expected, LocatorAssertionsToHaveClassOptions? options = default);
 
         /// <summary>
-        /// <para>Ensures the <see cref="ILocator"/> points to an element with given CSS class.</para>
+        /// <para>
+        /// Ensures the <see cref="ILocator"/> points to an element with given CSS classes.
+        /// This needs to be a full match or using a relaxed regular expression.
+        /// </para>
         /// <code>
         /// var locator = Page.Locator("#component");<br/>
-        /// await Expect(locator).ToHaveClassAsync(new Regex("selected"));
+        /// await Expect(locator).ToHaveClassAsync(new Regex("selected"));<br/>
+        /// await Expect(locator).ToHaveClassAsync("selected row");
         /// </code>
         /// <para>
         /// Note that if array is passed as an expected value, entire lists of elements can

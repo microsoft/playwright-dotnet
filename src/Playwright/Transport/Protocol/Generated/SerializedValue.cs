@@ -44,6 +44,9 @@ namespace Microsoft.Playwright.Transport.Protocol
         [JsonPropertyName("d")]
         public string D { get; set; }
 
+        [JsonPropertyName("u")]
+        public string U { get; set; }
+
         [JsonPropertyName("r")]
         public SerializedValueR R { get; set; }
 

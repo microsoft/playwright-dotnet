@@ -127,6 +127,29 @@ namespace Microsoft.Playwright.Tests.Locator
             StringAssert.Contains(await Page.Locator("div", new() { HasTextRegex = new Regex("hElLo \"wOrld\"", RegexOptions.IgnoreCase) }).InnerTextAsync(), "Hello \"world\"");
         }
 
+        [PlaywrightTest("locator-query.spec.ts", "should filter by case-insensitive regex in a child")]
+        public async Task ShouldFilterByCaseInsensitiveRegexInAChild()
+        {
+            await Page.SetContentAsync("<div class=\"test\"><h5>Title Text</h5></div>");
+            await Expect(Page.Locator("div", new() { HasTextRegex = new Regex("^title text$", RegexOptions.IgnoreCase) })).ToHaveTextAsync("Title Text");
+        }
+
+
+        [PlaywrightTest("locator-query.spec.ts", "should filter by case-insensitive regex in multiple children")]
+        public async Task ShouldFilterByCaseInsensitiveRegexInMultipleChildren()
+        {
+            await Page.SetContentAsync("<div class=\"test\"><h5>Title</h5> <h2><i>Text</i></h2></div>");
+            await Expect(Page.Locator("div", new() { HasTextRegex = new Regex("^title text$", RegexOptions.IgnoreCase) })).ToHaveClassAsync("test");
+        }
+
+
+        [PlaywrightTest("locator-query.spec.ts", "should filter by regex with special symbols")]
+        public async Task ShouldFilterByRegexWithSpecialSymbols()
+        {
+            await Page.SetContentAsync("<div class=\"test\"><h5>First/\"and\"</h5><h2><i>Second\\</i></h2></div>");
+            await Expect(Page.Locator("div", new() { HasTextRegex = new Regex("^first/\\\".*\\\"second\\\\$", RegexOptions.IgnoreCase | RegexOptions.Singleline) })).ToHaveClassAsync("test");
+        }
+
         [PlaywrightTest("locator-query.spec.ts", "should support has:locator")]
         public async Task ShouldSupportHasLocator()
         {

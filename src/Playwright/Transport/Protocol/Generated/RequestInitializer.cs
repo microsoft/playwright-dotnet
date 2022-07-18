@@ -32,6 +32,9 @@ namespace Microsoft.Playwright.Transport.Protocol
         [JsonPropertyName("frame")]
         public Core.Frame Frame { get; set; }
 
+        [JsonPropertyName("serviceWorker")]
+        public Core.Worker ServiceWorker { get; set; }
+
         [JsonPropertyName("url")]
         public string Url { get; set; }
 

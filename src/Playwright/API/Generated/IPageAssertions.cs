@@ -59,7 +59,7 @@ namespace Microsoft.Playwright
     ///     public async Task NavigatetoLoginPage()<br/>
     ///     {<br/>
     ///         // ..<br/>
-    ///         await Page.ClickAsync("#login");<br/>
+    ///         await Page.Locator("#login").ClickAsync();<br/>
     ///         await Expect(Page.Locator("div#foobar")).ToHaveURL(new Regex(".*/login"));<br/>
     ///     }<br/>
     /// }
@@ -96,7 +96,7 @@ namespace Microsoft.Playwright
         /// <para>Ensures the page is navigated to the given URL.</para>
         /// <code>await Expect(page).ToHaveURL(new Regex(".*checkout"));</code>
         /// </summary>
-        /// <param name="urlOrRegExp">Expected substring or RegExp.</param>
+        /// <param name="urlOrRegExp">Expected URL string or RegExp.</param>
         /// <param name="options">Call options</param>
         Task ToHaveURLAsync(string urlOrRegExp, PageAssertionsToHaveURLOptions? options = default);
 
@@ -104,7 +104,7 @@ namespace Microsoft.Playwright
         /// <para>Ensures the page is navigated to the given URL.</para>
         /// <code>await Expect(page).ToHaveURL(new Regex(".*checkout"));</code>
         /// </summary>
-        /// <param name="urlOrRegExp">Expected substring or RegExp.</param>
+        /// <param name="urlOrRegExp">Expected URL string or RegExp.</param>
         /// <param name="options">Call options</param>
         Task ToHaveURLAsync(Regex urlOrRegExp, PageAssertionsToHaveURLOptions? options = default);
     }

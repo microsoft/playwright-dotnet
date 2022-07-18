@@ -22,12 +22,10 @@
  * SOFTWARE.
  */
 
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Text.Json;
-using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 using System.Web;
 using Microsoft.Playwright.Transport;
@@ -65,7 +63,17 @@ namespace Microsoft.Playwright.Core
 
         public string Failure { get; internal set; }
 
-        public IFrame Frame => _initializer.Frame;
+        public IFrame Frame
+        {
+            get
+            {
+                if (_initializer.Frame == null && ServiceWorker != null)
+                {
+                    throw new PlaywrightException("Service Worker requests do not have an associated frame.");
+                }
+                return _initializer.Frame;
+            }
+        }
 
         public Dictionary<string, string> Headers
         {
@@ -121,6 +129,8 @@ namespace Microsoft.Playwright.Core
         internal Request FinalRequest => RedirectedTo != null ? ((Request)RedirectedTo).FinalRequest : this;
 
         public RequestSizesResult Sizes { get; internal set; }
+
+        public IWorker ServiceWorker => _initializer.ServiceWorker;
 
         public async Task<IResponse> ResponseAsync() => (await _channel.GetResponseAsync().ConfigureAwait(false))?.Object;
 

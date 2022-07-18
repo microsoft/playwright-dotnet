@@ -536,8 +536,14 @@ namespace Microsoft.Playwright
         Task DispatchEventAsync(string selector, string type, object? eventInit = default, PageDispatchEventOptions? options = default);
 
         /// <param name="source">
+        /// A selector to search for an element to drag. If there are multiple elements satisfying
+        /// the selector, the first will be used. See <a href="https://playwright.dev/dotnet/docs/selectors">working
+        /// with selectors</a> for more details.
         /// </param>
         /// <param name="target">
+        /// A selector to search for an element to drop onto. If there are multiple elements
+        /// satisfying the selector, the first will be used. See <a href="https://playwright.dev/dotnet/docs/selectors">working
+        /// with selectors</a> for more details.
         /// </param>
         /// <param name="options">Call options</param>
         Task DragAndDropAsync(string source, string target, PageDragAndDropOptions? options = default);
@@ -744,7 +750,7 @@ namespace Microsoft.Playwright
         ///     public static async Task Main()<br/>
         ///     {<br/>
         ///         using var playwright = await Playwright.CreateAsync();<br/>
-        ///         await using var browser = await playwright.Webkit.LaunchAsync(new BrowserTypeLaunchOptions<br/>
+        ///         await using var browser = await playwright.Webkit.LaunchAsync(new()<br/>
         ///         {<br/>
         ///             Headless: false<br/>
         ///         });<br/>
@@ -808,7 +814,7 @@ namespace Microsoft.Playwright
         ///     public static async Task Main()<br/>
         ///     {<br/>
         ///         using var playwright = await Playwright.CreateAsync();<br/>
-        ///         await using var browser = await playwright.Webkit.LaunchAsync(new BrowserTypeLaunchOptions<br/>
+        ///         await using var browser = await playwright.Webkit.LaunchAsync(new()<br/>
         ///         {<br/>
         ///             Headless: false<br/>
         ///         });<br/>

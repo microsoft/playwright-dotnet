@@ -65,7 +65,7 @@ namespace Microsoft.Playwright.Transport.Channels
 
         internal event EventHandler<FileChooserChannelEventArgs> FileChooser;
 
-        internal event EventHandler<WorkerChannelEventArgs> Worker;
+        internal event EventHandler<Worker> Worker;
 
         internal event EventHandler<VideoEventArgs> Video;
 
@@ -124,7 +124,7 @@ namespace Microsoft.Playwright.Transport.Channels
                 case "worker":
                     Worker?.Invoke(
                         this,
-                        new() { WorkerChannel = serverParams?.GetProperty("worker").ToObject<WorkerChannel>(Connection.DefaultJsonSerializerOptions) });
+                        serverParams?.GetProperty("worker").ToObject<WorkerChannel>(Connection.DefaultJsonSerializerOptions).Object);
                     break;
             }
         }
