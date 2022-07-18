@@ -353,7 +353,7 @@ namespace Microsoft.Playwright.Tests
         [PlaywrightTest("browsercontext-add-cookies.spec.ts", "should not set a cookie with blank page URL")]
         public async Task ShouldNotSetACookieWithBlankPageURL()
         {
-            await Page.GotoAsync(TestConstants.AboutBlank);
+            await Page.GotoAsync("about:blank");
 
             var exception = await PlaywrightAssert.ThrowsAsync<PlaywrightException>(()
                 => Context.AddCookiesAsync(new[]

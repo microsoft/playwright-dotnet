@@ -28,6 +28,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.Playwright.Core.Shared;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Microsoft.Playwright.MSTest
@@ -38,19 +39,21 @@ namespace Microsoft.Playwright.MSTest
         private static int _workerCount = 0;
         private static readonly ConcurrentStack<Worker> _allWorkers = new();
         private Worker? _currentWorker;
-        public static string BrowserName => (Environment.GetEnvironmentVariable("BROWSER") ?? Microsoft.Playwright.BrowserType.Chromium).ToLower();
         private static readonly Task<IPlaywright> _playwrightTask = Microsoft.Playwright.Playwright.CreateAsync();
 
+        public string BrowserName { get; private set; } = null!;
+        public IPlaywright Playwright { get; private set; } = null!;
 
-        public IPlaywright? Playwright { get; private set; }
+        public IBrowserType BrowserType { get; private set; } = null!;
 
-        public IBrowserType? BrowserType { get; private set; }
+        internal RunSettingsParser ParsedSettings { get; private set; } = null!;
 
         public int WorkerIndex { get => _currentWorker!.WorkerIndex; }
 
         [TestInitialize]
         public async Task Setup()
         {
+            ParsedSettings = new RunSettingsParser(TestContext!.Properties.Keys.Cast<string>().ToDictionary(x => x, x => (string)TestContext!.Properties[x]));
             try
             {
                 Playwright = await _playwrightTask.ConfigureAwait(false);
@@ -60,8 +63,8 @@ namespace Microsoft.Playwright.MSTest
                 Assert.Fail(e.Message, e.StackTrace);
             }
             Assert.IsNotNull(Playwright, "Playwright could not be instantiated.");
+            BrowserName = ParsedSettings.BrowserName;
             BrowserType = Playwright[BrowserName];
-            Assert.IsNotNull(BrowserType, $"The requested browser ({BrowserName}) could not be found - make sure your BROWSER env variable is set correctly.");
 
             // get worker
             if (!_allWorkers.TryPop(out _currentWorker))

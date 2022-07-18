@@ -33,17 +33,16 @@ namespace Microsoft.Playwright.Tests
 {
     internal static class TestConstants
     {
-        public static string BrowserName => NUnit.PlaywrightTest.BrowserName;
+        public static string BrowserName { get; set; } = null!;
 
         public const int DefaultTestTimeout = 30_000;
         public const int DefaultTimeout = 10_000;
         public const int DefaultTaskTimeout = 5_000;
 
-        public const string AboutBlank = "about:blank";
+        internal static bool IsChromium => BrowserName == BrowserType.Chromium;
+        internal static bool IsFirefox => BrowserName == BrowserType.Firefox;
+        internal static bool IsWebKit => BrowserName == BrowserType.Webkit;
 
-        internal static readonly bool IsWebKit = BrowserName == BrowserType.Webkit;
-        internal static readonly bool IsFirefox = BrowserName == BrowserType.Firefox;
-        internal static readonly bool IsChromium = BrowserName == BrowserType.Chromium;
         internal static readonly bool IsMacOSX = RuntimeInformation.IsOSPlatform(OSPlatform.OSX);
         internal static readonly bool IsWindows = RuntimeInformation.IsOSPlatform(OSPlatform.Windows);
         internal static readonly bool IsLinux = RuntimeInformation.IsOSPlatform(OSPlatform.Linux);

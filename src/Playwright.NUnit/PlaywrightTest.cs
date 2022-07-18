@@ -22,7 +22,6 @@
  * SOFTWARE.
  */
 
-using System;
 using System.Threading.Tasks;
 using NUnit.Framework;
 
@@ -30,7 +29,7 @@ namespace Microsoft.Playwright.NUnit
 {
     public class PlaywrightTest : WorkerAwareTest
     {
-        public static string BrowserName => (Environment.GetEnvironmentVariable("BROWSER") ?? Microsoft.Playwright.BrowserType.Chromium).ToLower();
+        public string BrowserName { get; internal set; } = null!;
 
         private static readonly Task<IPlaywright> _playwrightTask = Microsoft.Playwright.Playwright.CreateAsync();
 
@@ -41,8 +40,8 @@ namespace Microsoft.Playwright.NUnit
         public async Task PlaywrightSetup()
         {
             Playwright = await _playwrightTask.ConfigureAwait(false);
+            BrowserName = ParsedSettings.BrowserName;
             BrowserType = Playwright[BrowserName];
-            Assert.IsNotNull(BrowserType, $"The requested browser ({BrowserName}) could not be found - make sure your BROWSER env variable is set correctly.");
         }
 
         public ILocatorAssertions Expect(ILocator locator) => Assertions.Expect(locator);

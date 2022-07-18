@@ -31,4 +31,4 @@ jobs:
       - name: Installing Browsers and dependencies
         run: pwsh src/Playwright/bin/Debug/netstandard2.0/playwright.ps1 install --with-deps
       - name: Running tests 
-        run: xvfb-run dotnet test ./src/Playwright.TestingHarnessTest/Playwright.TestingHarnessTest.csproj -c Debug --logger:"console;verbosity=detailed"
+        run: xvfb-run dotnet test ./src/Playwright.TestingHarnessTest/Playwright.TestingHarnessTest.csproj --settings:./src/Playwright.TestingHarnessTest/.runsettings -c Debug --logger:"console;verbosity=detailed"

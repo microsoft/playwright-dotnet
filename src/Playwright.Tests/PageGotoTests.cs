@@ -155,7 +155,7 @@ namespace Microsoft.Playwright.Tests
         [PlaywrightTest("page-goto.spec.ts", "should navigate to about:blank")]
         public async Task ShouldNavigateToAboutBlank()
         {
-            var response = await Page.GotoAsync(TestConstants.AboutBlank);
+            var response = await Page.GotoAsync("about:blank");
             Assert.Null(response);
         }
 

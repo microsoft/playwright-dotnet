@@ -40,6 +40,7 @@ namespace Microsoft.Playwright.Tests
             var http = await HttpService.Register(this);
             Server = http.Server;
             HttpsServer = http.HttpsServer;
+            TestConstants.BrowserName = BrowserName;
         }
     }
 }

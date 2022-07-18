@@ -37,10 +37,7 @@ namespace Microsoft.Playwright.MSTest.Services
 
         public async Task BuildAsync(PlaywrightTest parentTest)
         {
-            Browser = await parentTest!.BrowserType!.LaunchAsync(new()
-            {
-                Headless = Environment.GetEnvironmentVariable("HEADED") != "1"
-            }).ConfigureAwait(false);
+            Browser = await parentTest!.BrowserType!.LaunchAsync(parentTest.ParsedSettings.LaunchOptions).ConfigureAwait(false);
         }
     }
 }
