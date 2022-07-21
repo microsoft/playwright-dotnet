@@ -1,4 +1,4 @@
-name: Test Harness Tests
+name: Test Harness
 
 on:
   push:
@@ -12,7 +12,7 @@ on:
 
 jobs:
   test:
-    name: Test Harness Tests
+    name: Test
     runs-on: ubuntu-latest
     timeout-minutes: 45
     steps:
