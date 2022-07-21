@@ -12,7 +12,7 @@ on:
 
 jobs:
   test:
-    name: Test Harness Tests .NET 6
+    name: Test Harness Tests
     runs-on: ubuntu-latest
     timeout-minutes: 45
     steps:
@@ -23,6 +23,9 @@ jobs:
           dotnet-version: |
             3.1.x
             6.0.x
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 16
       - name: Install prerequisites and download drivers
         shell: bash
         run: ./build.sh --download-driver
@@ -30,5 +33,9 @@ jobs:
         run: dotnet build ./src
       - name: Installing Browsers and dependencies
         run: pwsh src/Playwright/bin/Debug/netstandard2.0/playwright.ps1 install --with-deps
-      - name: Running tests 
-        run: xvfb-run dotnet test ./src/Playwright.TestingHarnessTest/Playwright.TestingHarnessTest.csproj --settings:./src/Playwright.TestingHarnessTest/.runsettings -c Debug --logger:"console;verbosity=detailed"
+      - name: Install test-runner
+        run: npm ci
+        working-directory: src/Playwright.TestingHarnessTest
+      - name: Running tests
+        run: xvfb-run npx playwright test
+        working-directory: src/Playwright.TestingHarnessTest

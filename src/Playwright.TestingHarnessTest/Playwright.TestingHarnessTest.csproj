@@ -4,6 +4,7 @@
     <TargetFramework>net6.0</TargetFramework>
     <IsPackable>false</IsPackable>
     <ReleaseVersion>0.0.0</ReleaseVersion>
+    <LangVersion>10</LangVersion>
   </PropertyGroup>
 
   <!-- Required since we're not actually referencing Playwright -->
@@ -20,11 +21,4 @@
     <ProjectReference Include="..\Playwright.MSTest\Playwright.MSTest.csproj" />
     <ProjectReference Include="..\Playwright.NUnit\Playwright.NUnit.csproj" />
   </ItemGroup>
-
-  <ItemGroup>
-    <None Update="index.html">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-  </ItemGroup>
-
 </Project>
