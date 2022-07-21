@@ -1,0 +1,8 @@
+{
+  "name": "playwright.testingharnesstest",
+  "private": true,
+  "devDependencies": {
+    "@playwright/test": "^1.23.4",
+    "fast-xml-parser": "^4.0.9"
+  }
+}

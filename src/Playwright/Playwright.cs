@@ -45,7 +45,12 @@ namespace Microsoft.Playwright
 #pragma warning restore CA2000
             var connection = new Connection();
             transport.MessageReceived += (_, message) => connection.Dispatch(JsonSerializer.Deserialize<PlaywrightServerMessage>(message, JsonExtensions.DefaultJsonSerializerOptions));
-            transport.LogReceived += (_, log) => Console.Error.WriteLine(log);
+            transport.LogReceived += (_, log) =>
+            {
+                // workaround for https://github.com/nunit/nunit/issues/4144
+                var writer = Environment.GetEnvironmentVariable("PWAPI_TO_STDOUT") != null ? Console.Out : Console.Error;
+                writer.WriteLine(log);
+            };
             transport.TransportClosed += (_, reason) => connection.DoClose(reason);
             connection.OnMessage = (message) => transport.SendAsync(JsonSerializer.SerializeToUtf8Bytes(message, connection.DefaultJsonSerializerOptions));
             connection.Close += (_, reason) => transport.Close(reason);
