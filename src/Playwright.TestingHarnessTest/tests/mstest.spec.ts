@@ -124,6 +124,37 @@ test('should prioritize browser from env over the runsettings file', async ({ ru
   expect(/User-Agent: .*Firefox.*/.test(result.stdout)).toBeTruthy()
 });
 
+test('should be able to make the browser headed via the env', async ({ runTest }) => {
+  const result = await runTest({
+    'ExampleTests.cs': `
+      using System;
+      using System.Threading.Tasks;
+      using Microsoft.Playwright.MSTest;
+      using Microsoft.VisualStudio.TestTools.UnitTesting;
+
+      namespace Playwright.TestingHarnessTest.MSTest;
+
+      [TestClass]  
+      public class <class-name> : PageTest
+      {
+          [TestMethod]
+          public async Task Test()
+          {
+              await Page.GotoAsync("about:blank");
+              Console.WriteLine("BrowserName: " + BrowserName);
+              Console.WriteLine("User-Agent: " + await Page.EvaluateAsync<string>("() => navigator.userAgent"));
+          }
+      }`,
+  }, 'dotnet test', {
+    HEADED: '1'
+  });
+  expect(result.passed).toBe(1);
+  expect(result.failed).toBe(0);
+  expect(result.total).toBe(1);
+  expect(result.stdout).toContain("BrowserName: chromium")
+  expect(result.stdout).not.toContain("Headless")
+});
+
 test('should be able to override context options', async ({ runTest }) => {
   const result = await runTest({
     'ExampleTests.cs': `
