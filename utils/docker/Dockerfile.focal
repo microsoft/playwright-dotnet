@@ -8,7 +8,7 @@ ARG DOCKER_IMAGE_NAME_TEMPLATE="mcr.microsoft.com/playwright/dotnet:v%version%-f
 
 RUN apt-get update && \
     # Feature-parity with node.js base images.
-    apt-get install -y --no-install-recommends git openssh-client curl && \
+    apt-get install -y --no-install-recommends git openssh-client curl gpg && \
     # clean apt cache
     rm -rf /var/lib/apt/lists/* && \
     # Create the pwuser
