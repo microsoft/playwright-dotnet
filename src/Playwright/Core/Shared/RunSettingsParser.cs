@@ -45,8 +45,18 @@ namespace Microsoft.Playwright.Core.Shared
         internal RunSettingsParser(IDictionary<string, string> settings)
         {
             _settings = settings;
-            LaunchOptions = ParseTestParameters<BrowserTypeLaunchOptions>(settings);
+            LaunchOptions = DetermineLaunchOptions(settings);
             BrowserName = DetermineBrowserType();
+        }
+
+        private static BrowserTypeLaunchOptions DetermineLaunchOptions(IDictionary<string, string> settings)
+        {
+            var launchOptions = ParseTestParameters<BrowserTypeLaunchOptions>(settings);
+            if (Environment.GetEnvironmentVariable("HEADED") == "1")
+            {
+                launchOptions.Headless = false;
+            }
+            return launchOptions;
         }
 
         private static T ParseTestParameters<T>(IDictionary<string, string> parameters)
