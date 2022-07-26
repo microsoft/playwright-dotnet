@@ -150,6 +150,22 @@ namespace Microsoft.Playwright.Tests.Locator
             await Expect(Page.Locator("div", new() { HasTextRegex = new Regex("^first/\\\".*\\\"second\\\\$", RegexOptions.IgnoreCase | RegexOptions.Singleline) })).ToHaveClassAsync("test");
         }
 
+        [PlaywrightTest("locator-query.spec.ts", "")]
+        public async Task ShouldNotEncodeUnicode()
+        {
+            await Page.GotoAsync(Server.EmptyPage);
+            ILocator[] locators = new ILocator[] {
+                Page.Locator("button", new() { HasTextString = "Драматург" }),
+                Page.Locator("button", new() { HasTextRegex = new Regex("Драматург") }),
+                Page.Locator("button", new() { Has = Page.Locator("text=Драматург") }),
+            };
+            foreach (var locator in locators)
+            {
+                var exception = await PlaywrightAssert.ThrowsAsync<TimeoutException>(() => locator.ClickAsync(new() { Timeout = 1_000 }));
+                StringAssert.Contains("Драматург", exception.Message);
+            }
+        }
+
         [PlaywrightTest("locator-query.spec.ts", "should support has:locator")]
         public async Task ShouldSupportHasLocator()
         {

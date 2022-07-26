@@ -25,6 +25,7 @@
  */
 using System;
 using System.Collections.Generic;
+using System.Text.Encodings.Web;
 using System.Text.Json;
 using System.Threading.Tasks;
 using Microsoft.Playwright.Helpers;
@@ -45,10 +46,15 @@ namespace Microsoft.Playwright.Core
             _selector = selector;
             _options = options;
 
+            var serializerOptions = new JsonSerializerOptions
+            {
+                Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping,
+            };
+
             if (options?.HasTextRegex != null)
             {
                 var jsRegex = $"/{options.HasTextRegex.ToString()}/{options.HasTextRegex.Options.GetInlineFlags()}";
-                _selector += $" >> has={JsonSerializer.Serialize("text=" + jsRegex)}";
+                _selector += $" >> has={JsonSerializer.Serialize("text=" + jsRegex, serializerOptions)}";
             }
             if (options?.HasTextString != null)
             {
@@ -62,7 +68,7 @@ namespace Microsoft.Playwright.Core
                 {
                     throw new ArgumentException("Inner \"has\" locator must belong to the same frame.");
                 }
-                _selector += " >> has=" + JsonSerializer.Serialize(has._selector);
+                _selector += " >> has=" + JsonSerializer.Serialize(has._selector, serializerOptions);
             }
         }
 
