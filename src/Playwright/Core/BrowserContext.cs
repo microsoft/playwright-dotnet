@@ -93,7 +93,7 @@ namespace Microsoft.Playwright.Core
             };
 
             _tracing = initializer.Tracing;
-            _request = initializer.APIRequestContext;
+            _request = initializer.RequestContext;
             _initializer = initializer;
             Browser = parent as IBrowser;
         }

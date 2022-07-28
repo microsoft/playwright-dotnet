@@ -65,6 +65,13 @@ namespace Microsoft.Playwright.Transport
 
         internal IChannelOwner Parent { get; set; }
 
+        void IChannelOwner.Adopt(ChannelOwnerBase child)
+        {
+            child.Parent.Objects.TryRemove(child.Guid, out _);
+            _objects[child.Guid] = child;
+            child.Parent = this;
+        }
+
         /// <inheritdoc/>
         void IChannelOwner.DisposeOwner()
         {

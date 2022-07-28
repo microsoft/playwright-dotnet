@@ -68,11 +68,22 @@ namespace Microsoft.Playwright.Tests
             await TestWaitingAsync(Page, "div => div.style.display = 'block'");
         }
 
-        [PlaywrightTest("elementhandle-scroll-into-view.spec.ts", "should wait for display:contents to become visible")]
-        public async Task ShouldWaitForDisplayContentsToBecomeVisible()
+        [PlaywrightTest("elementhandle-scroll-into-view.spec.ts", "should scroll display:contents into view'")]
+        [Ignore("https://github.com/microsoft/playwright/issues/15034")]
+        public async Task ShouldScollDisplayContentsIntoView()
         {
-            await Page.SetContentAsync("<div style=\"display: contents\">Hello</div>");
-            await TestWaitingAsync(Page, "div => div.style.display = 'block'");
+            await Page.SetContentAsync(@"
+                <div id=container style=""width:200px;height:200px;overflow:scroll;border:1px solid black;"">
+                    <div style=""margin-top:500px;background:red;"">
+                        <div style=""height:50px;width:100px;background:cyan;"">
+                        <div id=target style=""display:contents"">Hello</div>
+                        </div>
+                    <div>
+                </div>
+            ");
+            var div = await Page.QuerySelectorAsync("#target");
+            await div.ScrollIntoViewIfNeededAsync();
+            Assert.AreEqual(350, await Page.EvalOnSelectorAsync<int>("#container", "e => e.scrollTop"));
         }
 
         [PlaywrightTest("elementhandle-scroll-into-view.spec.ts", "should work for visibility:hidden element")]
