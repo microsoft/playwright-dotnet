@@ -69,7 +69,7 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("elementhandle-scroll-into-view.spec.ts", "should scroll display:contents into view'")]
-        [Skip] // https://github.com/microsoft/playwright/issues/15034
+        [Ignore("https://github.com/microsoft/playwright/issues/15034")]
         public async Task ShouldScollDisplayContentsIntoView()
         {
             await Page.SetContentAsync(@"
