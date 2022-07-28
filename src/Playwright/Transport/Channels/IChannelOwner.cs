@@ -53,6 +53,8 @@ namespace Microsoft.Playwright.Transport.Channels
         /// </summary>
         void DisposeOwner();
 
+        void Adopt(ChannelOwnerBase child);
+
         Task<T> WrapApiCallAsync<T>(Func<Task<T>> action, bool isInternal = false);
 
         Task WrapApiBoundaryAsync(Func<Task> action);

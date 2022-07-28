@@ -239,10 +239,25 @@ namespace Microsoft.Playwright.Transport
                     return;
                 }
 
+                Objects.TryGetValue(message.Guid, out var @object);
+                if (@object == null)
+                {
+                    throw new PlaywrightException($"Cannot find object to '{message.Method}': '{message.Guid}'");
+                }
+
+                if (message.Method == "__adopt__")
+                {
+                    Objects.TryGetValue(message.Guid, out var child);
+                    if (child == null)
+                    {
+                        throw new PlaywrightException($"Unknown new child: '{message.Guid}'");
+                    }
+                    @object.Adopt((ChannelOwnerBase)child);
+                }
+
                 if (message.Method == "__dispose__")
                 {
-                    Objects.TryGetValue(message.Guid, out var disableObject);
-                    disableObject?.DisposeOwner();
+                    @object?.DisposeOwner();
                     return;
                 }
 

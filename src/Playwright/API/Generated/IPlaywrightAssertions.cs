@@ -50,7 +50,7 @@ namespace Microsoft.Playwright
     /// using Microsoft.Playwright.NUnit;<br/>
     /// using NUnit.Framework;<br/>
     /// <br/>
-    /// namespace Playwright.TestingHarnessTest.NUnit;<br/>
+    /// namespace PlaywrightTests;<br/>
     /// <br/>
     /// public class ExampleTests : PageTest<br/>
     /// {<br/>
