@@ -37,11 +37,12 @@ namespace Microsoft.Playwright
         /// <summary>
         /// Launches Playwright.
         /// </summary>
+        /// <param name="driversPath">Playwright driver path.</param>
         /// <returns>A <see cref="Task"/> that completes when the playwright driver is ready to be used.</returns>
-        public static async Task<IPlaywright> CreateAsync()
+        public static async Task<IPlaywright> CreateAsync(string driversPath = null)
         {
 #pragma warning disable CA2000 // Dispose objects before losing scope
-            var transport = new StdIOTransport();
+            var transport = new StdIOTransport(driversPath);
 #pragma warning restore CA2000
             var connection = new Connection();
             transport.MessageReceived += (_, message) => connection.Dispatch(JsonSerializer.Deserialize<PlaywrightServerMessage>(message, JsonExtensions.DefaultJsonSerializerOptions));

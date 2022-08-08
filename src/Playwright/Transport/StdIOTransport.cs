@@ -39,9 +39,9 @@ namespace Microsoft.Playwright.Transport
         private readonly List<byte> _data = new();
         private int? _currentMessageSize;
 
-        internal StdIOTransport()
+        internal StdIOTransport(string driversPath = null)
         {
-            _process = GetProcess();
+            _process = GetProcess(driversPath);
             _process.StartInfo.Arguments = "run-driver";
             _process.Start();
             _process.Exited += (_, _) => Close("Process exited");
@@ -114,9 +114,9 @@ namespace Microsoft.Playwright.Transport
             }
         }
 
-        private static Process GetProcess()
+        private static Process GetProcess(string driversPath = null)
         {
-            var startInfo = new ProcessStartInfo(Driver.GetExecutablePath())
+            var startInfo = new ProcessStartInfo(Driver.GetExecutablePath(driversPath))
             {
                 UseShellExecute = false,
                 RedirectStandardOutput = true,

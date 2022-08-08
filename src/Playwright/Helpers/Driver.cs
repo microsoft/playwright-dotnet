@@ -32,8 +32,13 @@ namespace Microsoft.Playwright.Helpers
 {
     internal static class Driver
     {
-        internal static string GetExecutablePath()
+        internal static string GetExecutablePath(string driversPath = null)
         {
+            if (driversPath != null)
+            {
+                return GetPath(driversPath);
+            }
+
             DirectoryInfo assemblyDirectory = new(AppContext.BaseDirectory);
             if (!assemblyDirectory.Exists || !File.Exists(Path.Combine(assemblyDirectory.FullName, "Microsoft.Playwright.dll")))
             {
