@@ -240,3 +240,98 @@ test('should be able to override launch options', async ({ runTest }) => {
   expect(result.total).toBe(1);
   expect(result.stdout).not.toContain("Headless");
 });
+
+test.describe('Expect() timeout', () => {
+  test('should have 5 seconds by default', async ({ runTest }) => {
+    const result = await runTest({
+      'ExampleTests.cs': `
+      using System;
+      using System.Collections.Generic;
+      using System.Threading.Tasks;
+      using Microsoft.Playwright;
+      using Microsoft.Playwright.NUnit;
+      using NUnit.Framework;
+      
+      namespace Playwright.TestingHarnessTest.NUnit;
+
+      public class <class-name> : PageTest
+      {
+          [Test]
+          public async Task Test()
+          {
+              await Page.GotoAsync("about:blank");
+              await Page.SetContentAsync("<button>Click me</button>");
+              await Expect(Page.Locator("button")).ToHaveTextAsync("noooo-wrong-text");
+          }
+      }`,
+    }, 'dotnet test');
+    expect(result.passed).toBe(0);
+    expect(result.failed).toBe(1);
+    expect(result.total).toBe(1);
+    expect(result.stdout).toContain("LocatorAssertions.ToHaveTextAsync with timeout 5000ms")
+  });
+  test('should be able to override it via each Expect() call', async ({ runTest }) => {
+    const result = await runTest({
+      'ExampleTests.cs': `
+        using System;
+        using System.Collections.Generic;
+        using System.Threading.Tasks;
+        using Microsoft.Playwright;
+        using Microsoft.Playwright.NUnit;
+        using NUnit.Framework;
+        
+        namespace Playwright.TestingHarnessTest.NUnit;
+
+        public class <class-name> : PageTest
+        {
+            [Test]
+            public async Task Test()
+            {
+                await Page.GotoAsync("about:blank");
+                await Page.SetContentAsync("<button>Click me</button>");
+                await Expect(Page.Locator("button")).ToHaveTextAsync("noooo-wrong-text", new() { Timeout = 100 });
+            }
+        }`,
+    }, 'dotnet test');
+    expect(result.passed).toBe(0);
+    expect(result.failed).toBe(1);
+    expect(result.total).toBe(1);
+    expect(result.stdout).toContain("LocatorAssertions.ToHaveTextAsync with timeout 100ms")
+  });
+  test('should be able to override it via the global config', async ({ runTest }) => {
+    const result = await runTest({
+      'ExampleTests.cs': `
+      using System;
+      using System.Collections.Generic;
+      using System.Threading.Tasks;
+      using Microsoft.Playwright;
+      using Microsoft.Playwright.NUnit;
+      using NUnit.Framework;
+      
+      namespace Playwright.TestingHarnessTest.NUnit;
+
+      public class <class-name> : PageTest
+      {
+          [Test]
+          public async Task Test()
+          {
+              await Page.GotoAsync("about:blank");
+              await Page.SetContentAsync("<button>Click me</button>");
+              await Expect(Page.Locator("button")).ToHaveTextAsync("noooo-wrong-text");
+          }
+      }`,
+      '.runsettings': `
+      <?xml version="1.0" encoding="utf-8"?>
+      <RunSettings>
+        <TestRunParameters>
+          <Parameter name="expect-timeout" value="123" />
+        </TestRunParameters>
+      </RunSettings>
+      `,
+    }, 'dotnet test --settings=.runsettings');
+    expect(result.passed).toBe(0);
+    expect(result.failed).toBe(1);
+    expect(result.total).toBe(1);
+    expect(result.stdout).toContain("LocatorAssertions.ToHaveTextAsync with timeout 123ms")
+  });
+});

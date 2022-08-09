@@ -41,12 +41,24 @@ namespace Microsoft.Playwright.Core.Shared
         private readonly IDictionary<string, string> _settings;
         public BrowserTypeLaunchOptions LaunchOptions;
         public string BrowserName;
+        public float? ExpectTimeout;
 
         internal RunSettingsParser(IDictionary<string, string> settings)
         {
             _settings = settings;
             LaunchOptions = DetermineLaunchOptions(settings);
             BrowserName = DetermineBrowserType();
+            if (settings.TryGetValue("expect-timeout", out var expectTimeout))
+            {
+                if (float.TryParse(expectTimeout, out var timeout))
+                {
+                    ExpectTimeout = timeout;
+                }
+                else
+                {
+                    throw new ArgumentException($"Invalid expect-timeout value: {expectTimeout}");
+                }
+            }
         }
 
         private static BrowserTypeLaunchOptions DetermineLaunchOptions(IDictionary<string, string> settings)
