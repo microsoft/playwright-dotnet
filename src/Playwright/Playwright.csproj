@@ -34,14 +34,6 @@
     <PackageReference Include="System.Text.Json" Version="6.0.5" />
     <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.1.1" PrivateAssets="All" />
     <PackageReference Include="Microsoft.Bcl.AsyncInterfaces" Version="6.0.0" />
-    <PackageReference Include="Roslynator.Analyzers" Version="4.1.1">
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-      <PrivateAssets>all</PrivateAssets>
-    </PackageReference>
-    <PackageReference Include="Microsoft.VisualStudio.Threading.Analyzers" Version="17.0.64">
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
-      <PrivateAssets>all</PrivateAssets>
-    </PackageReference>
   </ItemGroup>
   <Target Name="DedupeDriver" AfterTargets="CopyFilesToOutputDirectory" BeforeTargets="CopyPlaywrightFilesToOutput">
     <ItemGroup>
@@ -72,16 +64,6 @@
     <None Include="..\Common\icon.png" Pack="true" Visible="false" PackagePath="icon.png" />
     <None Remove="Roslynator.Analyzers" />
     <None Remove="Microsoft.VisualStudio.Threading.Analyzers" />
-  </ItemGroup>
-  <ItemGroup>
-    <PackageReference Update="Microsoft.VisualStudio.Threading.Analyzers" Version="17.2.32">
-      <PrivateAssets>all</PrivateAssets>
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
-    </PackageReference>
-    <PackageReference Update="Roslynator.Analyzers" Version="4.1.1">
-      <PrivateAssets>all</PrivateAssets>
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-    </PackageReference>
   </ItemGroup>
   <Target Name="EnsurePrerequisitsRan" BeforeTargets="DedupeDriver">
     <Error Text="Playwright prerequisites are missing. Ensure you've ran `dotnet run --project ./src/tools/Playwright.Tooling/Playwright.Tooling.csproj -- download-drivers --basepath .`" Condition="!Exists('$(MSBuildProjectDirectory)\.drivers')" />

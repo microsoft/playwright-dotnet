@@ -11,17 +11,5 @@
         <PackageReference Include="CommandLineParser" Version="2.9.1" />
         <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="6.0.1" />
         <PackageReference Include="Microsoft.Extensions.Primitives" Version="6.0.0" />
-        <PackageReference Include="Roslynator.Analyzers" Version="4.1.1">
-          <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-          <PrivateAssets>all</PrivateAssets>
-        </PackageReference>
-        <PackageReference Include="Microsoft.VisualStudio.Threading.Analyzers" Version="17.2.32">
-          <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
-          <PrivateAssets>all</PrivateAssets>
-        </PackageReference>
-    </ItemGroup>
-    <ItemGroup>
-      <None Remove="Roslynator.Analyzers" />
-      <None Remove="Microsoft.VisualStudio.Threading.Analyzers" />
     </ItemGroup>
 </Project>
