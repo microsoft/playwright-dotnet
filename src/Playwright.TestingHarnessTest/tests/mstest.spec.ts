@@ -70,7 +70,7 @@ test('should be able to set the browser via the runsettings file', async ({ runT
     <?xml version="1.0" encoding="utf-8"?>
     <RunSettings>
       <TestRunParameters>
-        <Parameter name="browser" value="webkit" />
+        <Parameter name="playwright.browser" value="webkit" />
       </TestRunParameters>
     </RunSettings>
     `,
@@ -109,7 +109,7 @@ test('should prioritize browser from env over the runsettings file', async ({ ru
     <?xml version="1.0" encoding="utf-8"?>
     <RunSettings>
       <TestRunParameters>
-        <Parameter name="browser" value="webkit" />
+        <Parameter name="playwright.browser" value="webkit" />
       </TestRunParameters>
     </RunSettings>
     `,
@@ -233,7 +233,7 @@ test('should be able to override launch options', async ({ runTest }) => {
     <?xml version="1.0" encoding="utf-8"?>
     <RunSettings>
       <TestRunParameters>
-        <Parameter name="headless" value="false" />
+        <Parameter name="playwright.launch-options.headless" value="false" />
       </TestRunParameters>
     </RunSettings>
     `,
@@ -324,7 +324,7 @@ test.describe('Expect() timeout', () => {
       <?xml version="1.0" encoding="utf-8"?>
       <RunSettings>
         <TestRunParameters>
-          <Parameter name="expect-timeout" value="123" />
+          <Parameter name="playwright.expect-timeout" value="123" />
         </TestRunParameters>
       </RunSettings>
       `,
