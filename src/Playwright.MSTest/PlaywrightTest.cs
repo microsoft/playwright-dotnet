@@ -28,6 +28,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.Playwright.Core;
 using Microsoft.Playwright.Core.Shared;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
@@ -54,6 +55,10 @@ namespace Microsoft.Playwright.MSTest
         public async Task Setup()
         {
             ParsedSettings = new RunSettingsParser(TestContext!.Properties.Keys.Cast<string>().ToDictionary(x => x, x => (string)TestContext!.Properties[x]));
+            if (ParsedSettings.ExpectTimeout.HasValue)
+            {
+                AssertionsBase.SetDefaultTimeout(ParsedSettings.ExpectTimeout.Value);
+            }
             try
             {
                 Playwright = await _playwrightTask.ConfigureAwait(false);

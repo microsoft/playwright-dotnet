@@ -28,6 +28,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.Playwright.Core;
 using Microsoft.Playwright.Core.Shared;
 using NUnit.Framework;
 using NUnit.Framework.Interfaces;
@@ -70,6 +71,10 @@ namespace Microsoft.Playwright.NUnit
             ParsedSettings = new RunSettingsParser(TestContext.Parameters.Names.ToDictionary(
                 key => key,
                 key => TestContext.Parameters[key]));
+            if (ParsedSettings.ExpectTimeout.HasValue)
+            {
+                AssertionsBase.SetDefaultTimeout(ParsedSettings.ExpectTimeout.Value);
+            }
         }
 
         [TearDown]

@@ -38,20 +38,33 @@ namespace Microsoft.Playwright.Core.Shared
 {
     internal class RunSettingsParser
     {
+        private const string SettingsPrefix = "playwright.";
         private readonly IDictionary<string, string> _settings;
         public BrowserTypeLaunchOptions LaunchOptions;
         public string BrowserName;
+        public float? ExpectTimeout;
 
         internal RunSettingsParser(IDictionary<string, string> settings)
         {
             _settings = settings;
             LaunchOptions = DetermineLaunchOptions(settings);
             BrowserName = DetermineBrowserType();
+            if (settings.TryGetValue(SettingsPrefix + "expect-timeout", out var expectTimeout))
+            {
+                if (float.TryParse(expectTimeout, out var timeout))
+                {
+                    ExpectTimeout = timeout;
+                }
+                else
+                {
+                    throw new ArgumentException($"Invalid expect-timeout value: {expectTimeout}");
+                }
+            }
         }
 
         private static BrowserTypeLaunchOptions DetermineLaunchOptions(IDictionary<string, string> settings)
         {
-            var launchOptions = ParseTestParameters<BrowserTypeLaunchOptions>(settings);
+            var launchOptions = ParseTestParameters<BrowserTypeLaunchOptions>(SettingsPrefix + "launch-options.", settings);
             if (Environment.GetEnvironmentVariable("HEADED") == "1")
             {
                 launchOptions.Headless = false;
@@ -59,15 +72,16 @@ namespace Microsoft.Playwright.Core.Shared
             return launchOptions;
         }
 
-        private static T ParseTestParameters<T>(IDictionary<string, string> parameters)
+        private static T ParseTestParameters<T>(string prefix, IDictionary<string, string> parameters)
         where T : class, new()
         {
             var options = new T();
             foreach (var parameter in parameters)
             {
-                if (!string.IsNullOrEmpty(parameter.Value))
+                if (!string.IsNullOrEmpty(parameter.Value) && parameter.Key.StartsWith(prefix, StringComparison.Ordinal))
                 {
-                    ApplyParameter(parameter.Key, parameter.Value, options);
+                    var parameterWithoutPrefix = parameter.Key.Substring(prefix.Length);
+                    ApplyParameter(parameterWithoutPrefix, parameter.Value, options);
                 }
             }
             return options;
@@ -143,7 +157,7 @@ namespace Microsoft.Playwright.Core.Shared
 
         private void ApplyDeviceOptions(BrowserNewContextOptions contextOptions, IPlaywright playwright)
         {
-            if (!_settings.ContainsKey("device"))
+            if (!_settings.ContainsKey(SettingsPrefix + "device"))
             {
                 return;
             }
@@ -151,19 +165,12 @@ namespace Microsoft.Playwright.Core.Shared
             {
                 throw new ArgumentException($"Device '{_settings["device"]}' not found!");
             }
-            var pwDevice = playwright.Devices[_settings["device"]];
+            var pwDevice = playwright.Devices[SettingsPrefix + _settings["device"]];
             contextOptions.UserAgent = pwDevice.UserAgent;
             contextOptions.ViewportSize = pwDevice.ViewportSize;
             contextOptions.DeviceScaleFactor = pwDevice.DeviceScaleFactor;
             contextOptions.IsMobile = pwDevice.IsMobile;
             contextOptions.HasTouch = pwDevice.HasTouch;
-        }
-
-        public BrowserNewContextOptions ContextOptions(IPlaywright playwright)
-        {
-            var contextOptions = ParseTestParameters<BrowserNewContextOptions>(_settings);
-            ApplyDeviceOptions(contextOptions, playwright);
-            return contextOptions;
         }
 
         private string DetermineBrowserType()
@@ -174,7 +181,7 @@ namespace Microsoft.Playwright.Core.Shared
                 ValidateBrowserName(browserFromEnv);
                 return browserFromEnv;
             }
-            if (_settings.TryGetValue("browser", out var browser))
+            if (_settings.TryGetValue(SettingsPrefix + "browser", out var browser))
             {
                 browser = browser.ToLower();
                 ValidateBrowserName(browser);
