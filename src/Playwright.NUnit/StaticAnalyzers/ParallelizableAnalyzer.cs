@@ -114,7 +114,7 @@ namespace Microsoft.Playwright.NUnit.StaticAnalyzers
             enumValue = optionalEnumValue.Value;
             return true;
         }
-    
+
         private static int? GetOptionalEnumValue(AttributeData attributeData)
         {
             var attributePositionalArguments = attributeData.ConstructorArguments;
