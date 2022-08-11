@@ -376,7 +376,7 @@ test.describe('Parallelizable analyzer', () => {
     expect(/User-Agent: .*WebKit.*/.test(result.stdout)).toBeTruthy()
   });
 
-  test('should work with ParallelScope.All', async ({ runTest }) => {
+  test('should not work with ParallelScope.All', async ({ runTest }) => {
     const result = await runTest({
       'ExampleTests.cs': `
         using System;

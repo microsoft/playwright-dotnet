@@ -19,6 +19,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Playwright.MSTest\Playwright.MSTest.csproj" />
-    <ProjectReference Include="..\Playwright.NUnit\Playwright.NUnit.csproj" />
+    <ProjectReference Include="..\Playwright.NUnit\Playwright.NUnit.csproj" OutputItemType="Analyzer"/>
   </ItemGroup>
 </Project>
