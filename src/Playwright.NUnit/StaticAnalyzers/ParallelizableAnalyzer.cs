@@ -32,7 +32,6 @@ namespace Microsoft.Playwright.NUnit.StaticAnalyzers
     [DiagnosticAnalyzer(LanguageNames.CSharp)]
     public sealed class ParallelizableAnalyzer : DiagnosticAnalyzer
     {
-
         private const string PlaywrigtTestClassName = "Microsoft.Playwright.NUnit.PlaywrightTest";
         public const string FullNameOfTypeParallelizableAttribute = "NUnit.Framework.ParallelizableAttribute";
         private const int ParallelScopeSelf = 1;
@@ -49,7 +48,6 @@ namespace Microsoft.Playwright.NUnit.StaticAnalyzers
 
         private static void AnalyzeClass(SymbolAnalysisContext context)
         {
-            
             if (!TryGetAttributeEnumValue(context.Compilation, context.Symbol,
                 out int enumValue,
                 out var attributeData))
@@ -109,7 +107,9 @@ namespace Microsoft.Playwright.NUnit.StaticAnalyzers
             }
             var optionalEnumValue = GetOptionalEnumValue(attributeData);
             if (optionalEnumValue is null)
+            {
                 return false;
+            }
 
             enumValue = optionalEnumValue.Value;
             return true;
