@@ -163,7 +163,7 @@ test('should be able to override context options', async ({ runTest }) => {
       using Microsoft.Playwright;
       using Microsoft.Playwright.NUnit;
       using NUnit.Framework;
-      
+
       namespace Playwright.TestingHarnessTest.NUnit;
 
       public class <class-name> : PageTest
@@ -251,7 +251,7 @@ test.describe('Expect() timeout', () => {
       using Microsoft.Playwright;
       using Microsoft.Playwright.NUnit;
       using NUnit.Framework;
-      
+
       namespace Playwright.TestingHarnessTest.NUnit;
 
       public class <class-name> : PageTest
@@ -279,7 +279,7 @@ test.describe('Expect() timeout', () => {
         using Microsoft.Playwright;
         using Microsoft.Playwright.NUnit;
         using NUnit.Framework;
-        
+
         namespace Playwright.TestingHarnessTest.NUnit;
 
         public class <class-name> : PageTest
@@ -307,7 +307,7 @@ test.describe('Expect() timeout', () => {
       using Microsoft.Playwright;
       using Microsoft.Playwright.NUnit;
       using NUnit.Framework;
-      
+
       namespace Playwright.TestingHarnessTest.NUnit;
 
       public class <class-name> : PageTest
@@ -333,5 +333,83 @@ test.describe('Expect() timeout', () => {
     expect(result.failed).toBe(1);
     expect(result.total).toBe(1);
     expect(result.stdout).toContain("LocatorAssertions.ToHaveTextAsync with timeout 123ms")
+  });
+});
+
+test.describe('Parallelizable analyzer', () => {
+  test('should work with ParallelScope.Self', async ({ runTest }) => {
+    const result = await runTest({
+      'ExampleTests.cs': `
+        using System;
+        using System.Threading.Tasks;
+        using Microsoft.Playwright.NUnit;
+        using NUnit.Framework;
+
+        namespace Playwright.TestingHarnessTest.NUnit;
+
+        [Parallelizable(ParallelScope.Self)]
+        public class <class-name> : PageTest
+        {
+            [Test]
+            public async Task Test()
+            {
+                await Page.GotoAsync("about:blank");
+                Console.WriteLine("BrowserName: " + BrowserName);
+                Console.WriteLine("BrowserType: " + BrowserType.Name);
+                Console.WriteLine("User-Agent: " + await Page.EvaluateAsync<string>("() => navigator.userAgent"));
+            }
+        }`,
+      '.runsettings': `
+      <?xml version="1.0" encoding="utf-8"?>
+      <RunSettings>
+        <TestRunParameters>
+          <Parameter name="playwright.browser" value="webkit" />
+        </TestRunParameters>
+      </RunSettings>
+      `,
+    }, 'dotnet test --settings=.runsettings');
+    expect(result.passed).toBe(1);
+    expect(result.failed).toBe(0);
+    expect(result.total).toBe(1);
+    expect(result.stdout).toContain("BrowserName: webkit")
+    expect(result.stdout).toContain("BrowserType: webkit")
+    expect(/User-Agent: .*WebKit.*/.test(result.stdout)).toBeTruthy()
+  });
+
+  test('should work with ParallelScope.All', async ({ runTest }) => {
+    const result = await runTest({
+      'ExampleTests.cs': `
+        using System;
+        using System.Threading.Tasks;
+        using Microsoft.Playwright.NUnit;
+        using NUnit.Framework;
+
+        namespace Playwright.TestingHarnessTest.NUnit;
+
+        [Parallelizable(ParallelScope.All)]
+        public class <class-name> : PageTest
+        {
+            [Test]
+            public async Task Test()
+            {
+                await Page.GotoAsync("about:blank");
+                Console.WriteLine("BrowserName: " + BrowserName);
+                Console.WriteLine("BrowserType: " + BrowserType.Name);
+                Console.WriteLine("User-Agent: " + await Page.EvaluateAsync<string>("() => navigator.userAgent"));
+            }
+        }`,
+      '.runsettings': `
+      <?xml version="1.0" encoding="utf-8"?>
+      <RunSettings>
+        <TestRunParameters>
+          <Parameter name="playwright.browser" value="webkit" />
+        </TestRunParameters>
+      </RunSettings>
+      `,
+    }, 'dotnet test --settings=.runsettings');
+    expect(result.passed).toBe(0);
+    expect(result.failed).toBe(0);
+    expect(result.total).toBe(0);
+    expect(result.stdout).toContain('PWNunit1001')
   });
 });
