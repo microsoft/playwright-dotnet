@@ -70,7 +70,7 @@ test('should be able to set the browser via the runsettings file', async ({ runT
     <?xml version="1.0" encoding="utf-8"?>
     <RunSettings>
       <Playwright>
-        <Browser>webkit</Browser>
+        <BrowserName>webkit</BrowserName>
       </Playwright>
     </RunSettings>
     `,
@@ -109,7 +109,7 @@ test('should prioritize browser from env over the runsettings file', async ({ ru
     <?xml version="1.0" encoding="utf-8"?>
     <RunSettings>
       <Playwright>
-        <Browser>webkit</Browser>
+        <BrowserName>webkit</BrowserName>
       </Playwright>
     </RunSettings>
     `,

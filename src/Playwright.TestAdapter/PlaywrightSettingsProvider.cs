@@ -45,9 +45,9 @@ namespace Microsoft.Playwright.TestAdapter
                     ValidateBrowserName(browserFromEnv);
                     return browserFromEnv;
                 }
-                if (_settings != null && !string.IsNullOrEmpty(_settings.Browser))
+                if (_settings != null && !string.IsNullOrEmpty(_settings.BrowserName))
                 {
-                    var browser = _settings.Browser!.ToLower();
+                    var browser = _settings.BrowserName!.ToLower();
                     ValidateBrowserName(browser);
                     return browser;
                 }

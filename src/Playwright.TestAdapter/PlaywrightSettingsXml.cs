@@ -46,16 +46,12 @@ namespace Microsoft.Playwright.TestAdapter
                 }
                 switch (reader.Name)
                 {
-                    case "Browser":
+                    case "BrowserName":
                         reader.Read();
-                        Browser = reader.Value;
+                        BrowserName = reader.Value;
                         break;
                     case "LaunchOptions":
                         LaunchOptions = ParseXmlIntoClass<BrowserTypeLaunchOptions>(reader);
-                        break;
-                    case "Headless":
-                        reader.Read();
-                        Headless = bool.Parse(reader.Value);
                         break;
                     case "ExpectTimeout":
                         reader.Read();
@@ -139,7 +135,7 @@ namespace Microsoft.Playwright.TestAdapter
         }
 
         public BrowserTypeLaunchOptions? LaunchOptions { get; private set; }
-        public string? Browser { get; private set; }
+        public string? BrowserName { get; private set; }
         public bool? Headless { get; private set; }
         public float? ExpectTimeout { get; private set; }
     }
