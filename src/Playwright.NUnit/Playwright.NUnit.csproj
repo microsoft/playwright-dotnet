@@ -26,6 +26,7 @@
   <Import Project="../Common/SignAssembly.props" />
   <ItemGroup>
     <ProjectReference Include="..\Playwright\Playwright.csproj" />
+    <ProjectReference Include="..\Playwright.TestAdapter\Playwright.TestAdapter.csproj" />
     <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.1.1">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>

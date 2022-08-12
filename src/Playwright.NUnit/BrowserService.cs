@@ -22,8 +22,8 @@
  * SOFTWARE.
  */
 
-using System;
 using System.Threading.Tasks;
+using Microsoft.Playwright.TestAdapter;
 
 namespace Microsoft.Playwright.NUnit
 {
@@ -35,7 +35,7 @@ namespace Microsoft.Playwright.NUnit
         {
             return test.RegisterService("Browser", async () => new BrowserService
             {
-                Browser = await browserType.LaunchAsync(test.ParsedSettings.LaunchOptions).ConfigureAwait(false)
+                Browser = await browserType.LaunchAsync(PlaywrightSettingsProvider.LaunchOptions).ConfigureAwait(false)
             });
         }
 

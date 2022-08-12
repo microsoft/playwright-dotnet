@@ -29,7 +29,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Playwright.Core;
-using Microsoft.Playwright.Core.Shared;
+using Microsoft.Playwright.TestAdapter;
 using NUnit.Framework;
 using NUnit.Framework.Interfaces;
 
@@ -46,7 +46,6 @@ namespace Microsoft.Playwright.NUnit
 
         private static readonly ConcurrentStack<Worker> _allWorkers = new();
         private Worker _currentWorker = null!;
-        internal RunSettingsParser ParsedSettings { get; private set; } = null!;
 
         public int WorkerIndex { get; internal set; }
 
@@ -68,12 +67,9 @@ namespace Microsoft.Playwright.NUnit
                 _currentWorker = new();
             }
             WorkerIndex = _currentWorker.WorkerIndex;
-            ParsedSettings = new RunSettingsParser(TestContext.Parameters.Names.ToDictionary(
-                key => key,
-                key => TestContext.Parameters[key]));
-            if (ParsedSettings.ExpectTimeout.HasValue)
+            if (PlaywrightSettingsProvider.ExpectTimeout.HasValue)
             {
-                AssertionsBase.SetDefaultTimeout(ParsedSettings.ExpectTimeout.Value);
+                AssertionsBase.SetDefaultTimeout(PlaywrightSettingsProvider.ExpectTimeout.Value);
             }
         }
 
