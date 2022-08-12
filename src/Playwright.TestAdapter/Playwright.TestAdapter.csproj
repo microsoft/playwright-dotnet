@@ -1,10 +1,24 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
+    <Title>Microsoft.Playwright.TestAdapter</Title>
+    <PackageId>Microsoft.Playwright.TestAdapter</PackageId>
+    <Summary>An Adapter which is used in Microsoft.Playwright.NUnit and Microsoft.Playwright.MSTest.</Summary>
+    <Description>
+      Playwright enables reliable end-to-end testing for modern web apps. This is a utility package used by the
+      Microsoft.Playwright.NUnit and Microsoft.Playwright.MSTest packages.
+    </Description>
+    <PackageIcon>icon.png</PackageIcon>
     <TargetFramework>netstandard2.0</TargetFramework>
-    <Nullable>enable</Nullable>
+    <PublishRepositoryUrl>true</PublishRepositoryUrl>
+    <RootNamespace>Microsoft.Playwright.TestAdapter</RootNamespace>
     <ReleaseVersion>0.0.0</ReleaseVersion>
+    <BuildFromSource>True</BuildFromSource>
     <AssemblyName>Microsoft.Playwright.TestAdapter</AssemblyName>
+    <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
+    <PackageOutputPath>./nupkg</PackageOutputPath>
+    <IsPackable>true</IsPackable>
+    <Nullable>enable</Nullable>
   </PropertyGroup>
 
   <Import Project="../Common/Version.props" />
@@ -14,5 +28,4 @@
     <PackageReference Include="Microsoft.TestPlatform.ObjectModel" Version="17.3.0" />
     <ProjectReference Include="..\Playwright\Playwright.csproj" />
   </ItemGroup>
-
 </Project>
