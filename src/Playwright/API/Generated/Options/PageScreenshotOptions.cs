@@ -113,7 +113,7 @@ namespace Microsoft.Playwright
         /// <summary>
         /// <para>
         /// Specify locators that should be masked when the screenshot is taken. Masked elements
-        /// will be overlayed with a pink box <c>#FF00FF</c> that completely covers its bounding
+        /// will be overlaid with a pink box <c>#FF00FF</c> that completely covers its bounding
         /// box.
         /// </para>
         /// </summary>

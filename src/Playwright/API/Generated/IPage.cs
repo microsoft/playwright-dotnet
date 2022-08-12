@@ -284,6 +284,15 @@ namespace Microsoft.Playwright
         /// </summary>
         event EventHandler<IWorker> Worker;
 
+        /// <summary>
+        /// <para>
+        /// **DEPRECATED** This property is deprecated. Please use other libraries such as <a
+        /// href="https://www.deque.com/axe/">Axe</a> if you need to test page accessibility.
+        /// See our Node.js <a href="https://playwright.dev/docs/accessibility-testing">guide</a>
+        /// for integration with Axe.
+        /// </para>
+        /// </summary>
+        [System.Obsolete]
         public IAccessibility Accessibility { get; }
 
         /// <summary>

@@ -56,7 +56,7 @@ namespace Microsoft.Playwright
 
         /// <summary>
         /// <para>
-        /// Indicates whether this Response was fullfilled by a Service Worker's Fetch Handler
+        /// Indicates whether this Response was fulfilled by a Service Worker's Fetch Handler
         /// (i.e. via <a href="https://developer.mozilla.org/en-US/docs/Web/API/FetchEvent/respondWith">FetchEvent.respondWith</a>).
         /// </para>
         /// </summary>

@@ -182,13 +182,27 @@ namespace Microsoft.Playwright
         /// await Expect(locator).ToContainTextAsync("substring");<br/>
         /// await Expect(locator).ToContainTextAsync(new Regex("\\d messages"));
         /// </code>
-        /// <para>
-        /// Note that if array is passed as an expected value, entire lists of elements can
-        /// be asserted:
-        /// </para>
+        /// <para>If you pass an array as an expected value, the expectations are:</para>
+        /// <list type="ordinal">
+        /// <item><description>Locator resolves to a list of elements.</description></item>
+        /// <item><description>Elements from a **subset** of this list contain text from the expected array, respectively.</description></item>
+        /// <item><description>The matching subset of elements has the same order as the expected array.</description></item>
+        /// <item><description>Each text value from the expected array is matched by some element from the list.</description></item>
+        /// </list>
+        /// <para>For example, consider the following list:</para>
+        /// <para>Let's see how we can use the assertion:</para>
         /// <code>
-        /// var locator = Page.Locator("list &gt; .list-item");<br/>
-        /// await Expect(locator).ToContainTextAsync(new string[] { "Text 1", "Text 4", "Text 5" });
+        /// // ✓ Contains the right items in the right order<br/>
+        /// await Expect(Page.Locator("ul &gt; li")).ToContainTextAsync(new string[] {"Text 1", "Text 3", "Text 4"});<br/>
+        /// <br/>
+        /// // ✖ Wrong order<br/>
+        /// await Expect(Page.Locator("ul &gt; li")).ToContainTextAsync(new string[] {"Text 3", "Text 2"});<br/>
+        /// <br/>
+        /// // ✖ No item contains this text<br/>
+        /// await Expect(Page.Locator("ul &gt; li")).ToContainTextAsync(new string[] {"Some 33"});<br/>
+        /// <br/>
+        /// // ✖ Locator points to the outer list element, not to the list items<br/>
+        /// await Expect(Page.Locator("ul")).ToContainTextAsync(new string[] {"Text 3"});
         /// </code>
         /// </summary>
         /// <param name="expected">Expected substring or RegExp or a list of those.</param>
@@ -205,13 +219,27 @@ namespace Microsoft.Playwright
         /// await Expect(locator).ToContainTextAsync("substring");<br/>
         /// await Expect(locator).ToContainTextAsync(new Regex("\\d messages"));
         /// </code>
-        /// <para>
-        /// Note that if array is passed as an expected value, entire lists of elements can
-        /// be asserted:
-        /// </para>
+        /// <para>If you pass an array as an expected value, the expectations are:</para>
+        /// <list type="ordinal">
+        /// <item><description>Locator resolves to a list of elements.</description></item>
+        /// <item><description>Elements from a **subset** of this list contain text from the expected array, respectively.</description></item>
+        /// <item><description>The matching subset of elements has the same order as the expected array.</description></item>
+        /// <item><description>Each text value from the expected array is matched by some element from the list.</description></item>
+        /// </list>
+        /// <para>For example, consider the following list:</para>
+        /// <para>Let's see how we can use the assertion:</para>
         /// <code>
-        /// var locator = Page.Locator("list &gt; .list-item");<br/>
-        /// await Expect(locator).ToContainTextAsync(new string[] { "Text 1", "Text 4", "Text 5" });
+        /// // ✓ Contains the right items in the right order<br/>
+        /// await Expect(Page.Locator("ul &gt; li")).ToContainTextAsync(new string[] {"Text 1", "Text 3", "Text 4"});<br/>
+        /// <br/>
+        /// // ✖ Wrong order<br/>
+        /// await Expect(Page.Locator("ul &gt; li")).ToContainTextAsync(new string[] {"Text 3", "Text 2"});<br/>
+        /// <br/>
+        /// // ✖ No item contains this text<br/>
+        /// await Expect(Page.Locator("ul &gt; li")).ToContainTextAsync(new string[] {"Some 33"});<br/>
+        /// <br/>
+        /// // ✖ Locator points to the outer list element, not to the list items<br/>
+        /// await Expect(Page.Locator("ul")).ToContainTextAsync(new string[] {"Text 3"});
         /// </code>
         /// </summary>
         /// <param name="expected">Expected substring or RegExp or a list of those.</param>
@@ -228,13 +256,27 @@ namespace Microsoft.Playwright
         /// await Expect(locator).ToContainTextAsync("substring");<br/>
         /// await Expect(locator).ToContainTextAsync(new Regex("\\d messages"));
         /// </code>
-        /// <para>
-        /// Note that if array is passed as an expected value, entire lists of elements can
-        /// be asserted:
-        /// </para>
+        /// <para>If you pass an array as an expected value, the expectations are:</para>
+        /// <list type="ordinal">
+        /// <item><description>Locator resolves to a list of elements.</description></item>
+        /// <item><description>Elements from a **subset** of this list contain text from the expected array, respectively.</description></item>
+        /// <item><description>The matching subset of elements has the same order as the expected array.</description></item>
+        /// <item><description>Each text value from the expected array is matched by some element from the list.</description></item>
+        /// </list>
+        /// <para>For example, consider the following list:</para>
+        /// <para>Let's see how we can use the assertion:</para>
         /// <code>
-        /// var locator = Page.Locator("list &gt; .list-item");<br/>
-        /// await Expect(locator).ToContainTextAsync(new string[] { "Text 1", "Text 4", "Text 5" });
+        /// // ✓ Contains the right items in the right order<br/>
+        /// await Expect(Page.Locator("ul &gt; li")).ToContainTextAsync(new string[] {"Text 1", "Text 3", "Text 4"});<br/>
+        /// <br/>
+        /// // ✖ Wrong order<br/>
+        /// await Expect(Page.Locator("ul &gt; li")).ToContainTextAsync(new string[] {"Text 3", "Text 2"});<br/>
+        /// <br/>
+        /// // ✖ No item contains this text<br/>
+        /// await Expect(Page.Locator("ul &gt; li")).ToContainTextAsync(new string[] {"Some 33"});<br/>
+        /// <br/>
+        /// // ✖ Locator points to the outer list element, not to the list items<br/>
+        /// await Expect(Page.Locator("ul")).ToContainTextAsync(new string[] {"Text 3"});
         /// </code>
         /// </summary>
         /// <param name="expected">Expected substring or RegExp or a list of those.</param>
@@ -251,13 +293,27 @@ namespace Microsoft.Playwright
         /// await Expect(locator).ToContainTextAsync("substring");<br/>
         /// await Expect(locator).ToContainTextAsync(new Regex("\\d messages"));
         /// </code>
-        /// <para>
-        /// Note that if array is passed as an expected value, entire lists of elements can
-        /// be asserted:
-        /// </para>
+        /// <para>If you pass an array as an expected value, the expectations are:</para>
+        /// <list type="ordinal">
+        /// <item><description>Locator resolves to a list of elements.</description></item>
+        /// <item><description>Elements from a **subset** of this list contain text from the expected array, respectively.</description></item>
+        /// <item><description>The matching subset of elements has the same order as the expected array.</description></item>
+        /// <item><description>Each text value from the expected array is matched by some element from the list.</description></item>
+        /// </list>
+        /// <para>For example, consider the following list:</para>
+        /// <para>Let's see how we can use the assertion:</para>
         /// <code>
-        /// var locator = Page.Locator("list &gt; .list-item");<br/>
-        /// await Expect(locator).ToContainTextAsync(new string[] { "Text 1", "Text 4", "Text 5" });
+        /// // ✓ Contains the right items in the right order<br/>
+        /// await Expect(Page.Locator("ul &gt; li")).ToContainTextAsync(new string[] {"Text 1", "Text 3", "Text 4"});<br/>
+        /// <br/>
+        /// // ✖ Wrong order<br/>
+        /// await Expect(Page.Locator("ul &gt; li")).ToContainTextAsync(new string[] {"Text 3", "Text 2"});<br/>
+        /// <br/>
+        /// // ✖ No item contains this text<br/>
+        /// await Expect(Page.Locator("ul &gt; li")).ToContainTextAsync(new string[] {"Some 33"});<br/>
+        /// <br/>
+        /// // ✖ Locator points to the outer list element, not to the list items<br/>
+        /// await Expect(Page.Locator("ul")).ToContainTextAsync(new string[] {"Text 3"});
         /// </code>
         /// </summary>
         /// <param name="expected">Expected substring or RegExp or a list of those.</param>
@@ -475,13 +531,29 @@ namespace Microsoft.Playwright
         /// await Expect(locator).ToHaveTextAsync(new Regex("Welcome, Test User"));<br/>
         /// await Expect(locator).ToHaveTextAsync(new Regex("Welcome, .*"));
         /// </code>
-        /// <para>
-        /// Note that if array is passed as an expected value, entire lists of elements can
-        /// be asserted:
-        /// </para>
+        /// <para>If you pass an array as an expected value, the expectations are:</para>
+        /// <list type="ordinal">
+        /// <item><description>Locator resolves to a list of elements.</description></item>
+        /// <item><description>The number of elements equals the number of expected values in the array.</description></item>
+        /// <item><description>
+        /// Elements from the list have text matching expected array values, one by one, in
+        /// order.
+        /// </description></item>
+        /// </list>
+        /// <para>For example, consider the following list:</para>
+        /// <para>Let's see how we can use the assertion:</para>
         /// <code>
-        /// var locator = Page.Locator("list &gt; .component");<br/>
-        /// await Expect(locator).toHaveTextAsync(new string[]{ "Text 1", "Text 2", "Text 3" });
+        /// // ✓ Has the right items in the right order<br/>
+        /// await Expect(Page.Locator("ul &gt; li")).ToHaveTextAsync(new string[] {"Text 1", "Text 2", "Text 3"});<br/>
+        /// <br/>
+        /// // ✖ Wrong order<br/>
+        /// await Expect(Page.Locator("ul &gt; li")).ToHaveTextAsync(new string[] {"Text 3", "Text 2", "Text 1"});<br/>
+        /// <br/>
+        /// // ✖ Last item does not match<br/>
+        /// await Expect(Page.Locator("ul &gt; li")).ToHaveTextAsync(new string[] {"Text 1", "Text 2", "Text"});<br/>
+        /// <br/>
+        /// // ✖ Locator points to the outer list element, not to the list items<br/>
+        /// await Expect(Page.Locator("ul")).ToHaveTextAsync(new string[] {"Text 1", "Text 2", "Text 3"});
         /// </code>
         /// </summary>
         /// <param name="expected">Expected substring or RegExp or a list of those.</param>
@@ -498,13 +570,29 @@ namespace Microsoft.Playwright
         /// await Expect(locator).ToHaveTextAsync(new Regex("Welcome, Test User"));<br/>
         /// await Expect(locator).ToHaveTextAsync(new Regex("Welcome, .*"));
         /// </code>
-        /// <para>
-        /// Note that if array is passed as an expected value, entire lists of elements can
-        /// be asserted:
-        /// </para>
+        /// <para>If you pass an array as an expected value, the expectations are:</para>
+        /// <list type="ordinal">
+        /// <item><description>Locator resolves to a list of elements.</description></item>
+        /// <item><description>The number of elements equals the number of expected values in the array.</description></item>
+        /// <item><description>
+        /// Elements from the list have text matching expected array values, one by one, in
+        /// order.
+        /// </description></item>
+        /// </list>
+        /// <para>For example, consider the following list:</para>
+        /// <para>Let's see how we can use the assertion:</para>
         /// <code>
-        /// var locator = Page.Locator("list &gt; .component");<br/>
-        /// await Expect(locator).toHaveTextAsync(new string[]{ "Text 1", "Text 2", "Text 3" });
+        /// // ✓ Has the right items in the right order<br/>
+        /// await Expect(Page.Locator("ul &gt; li")).ToHaveTextAsync(new string[] {"Text 1", "Text 2", "Text 3"});<br/>
+        /// <br/>
+        /// // ✖ Wrong order<br/>
+        /// await Expect(Page.Locator("ul &gt; li")).ToHaveTextAsync(new string[] {"Text 3", "Text 2", "Text 1"});<br/>
+        /// <br/>
+        /// // ✖ Last item does not match<br/>
+        /// await Expect(Page.Locator("ul &gt; li")).ToHaveTextAsync(new string[] {"Text 1", "Text 2", "Text"});<br/>
+        /// <br/>
+        /// // ✖ Locator points to the outer list element, not to the list items<br/>
+        /// await Expect(Page.Locator("ul")).ToHaveTextAsync(new string[] {"Text 1", "Text 2", "Text 3"});
         /// </code>
         /// </summary>
         /// <param name="expected">Expected substring or RegExp or a list of those.</param>
@@ -521,13 +609,29 @@ namespace Microsoft.Playwright
         /// await Expect(locator).ToHaveTextAsync(new Regex("Welcome, Test User"));<br/>
         /// await Expect(locator).ToHaveTextAsync(new Regex("Welcome, .*"));
         /// </code>
-        /// <para>
-        /// Note that if array is passed as an expected value, entire lists of elements can
-        /// be asserted:
-        /// </para>
+        /// <para>If you pass an array as an expected value, the expectations are:</para>
+        /// <list type="ordinal">
+        /// <item><description>Locator resolves to a list of elements.</description></item>
+        /// <item><description>The number of elements equals the number of expected values in the array.</description></item>
+        /// <item><description>
+        /// Elements from the list have text matching expected array values, one by one, in
+        /// order.
+        /// </description></item>
+        /// </list>
+        /// <para>For example, consider the following list:</para>
+        /// <para>Let's see how we can use the assertion:</para>
         /// <code>
-        /// var locator = Page.Locator("list &gt; .component");<br/>
-        /// await Expect(locator).toHaveTextAsync(new string[]{ "Text 1", "Text 2", "Text 3" });
+        /// // ✓ Has the right items in the right order<br/>
+        /// await Expect(Page.Locator("ul &gt; li")).ToHaveTextAsync(new string[] {"Text 1", "Text 2", "Text 3"});<br/>
+        /// <br/>
+        /// // ✖ Wrong order<br/>
+        /// await Expect(Page.Locator("ul &gt; li")).ToHaveTextAsync(new string[] {"Text 3", "Text 2", "Text 1"});<br/>
+        /// <br/>
+        /// // ✖ Last item does not match<br/>
+        /// await Expect(Page.Locator("ul &gt; li")).ToHaveTextAsync(new string[] {"Text 1", "Text 2", "Text"});<br/>
+        /// <br/>
+        /// // ✖ Locator points to the outer list element, not to the list items<br/>
+        /// await Expect(Page.Locator("ul")).ToHaveTextAsync(new string[] {"Text 1", "Text 2", "Text 3"});
         /// </code>
         /// </summary>
         /// <param name="expected">Expected substring or RegExp or a list of those.</param>
@@ -544,13 +648,29 @@ namespace Microsoft.Playwright
         /// await Expect(locator).ToHaveTextAsync(new Regex("Welcome, Test User"));<br/>
         /// await Expect(locator).ToHaveTextAsync(new Regex("Welcome, .*"));
         /// </code>
-        /// <para>
-        /// Note that if array is passed as an expected value, entire lists of elements can
-        /// be asserted:
-        /// </para>
+        /// <para>If you pass an array as an expected value, the expectations are:</para>
+        /// <list type="ordinal">
+        /// <item><description>Locator resolves to a list of elements.</description></item>
+        /// <item><description>The number of elements equals the number of expected values in the array.</description></item>
+        /// <item><description>
+        /// Elements from the list have text matching expected array values, one by one, in
+        /// order.
+        /// </description></item>
+        /// </list>
+        /// <para>For example, consider the following list:</para>
+        /// <para>Let's see how we can use the assertion:</para>
         /// <code>
-        /// var locator = Page.Locator("list &gt; .component");<br/>
-        /// await Expect(locator).toHaveTextAsync(new string[]{ "Text 1", "Text 2", "Text 3" });
+        /// // ✓ Has the right items in the right order<br/>
+        /// await Expect(Page.Locator("ul &gt; li")).ToHaveTextAsync(new string[] {"Text 1", "Text 2", "Text 3"});<br/>
+        /// <br/>
+        /// // ✖ Wrong order<br/>
+        /// await Expect(Page.Locator("ul &gt; li")).ToHaveTextAsync(new string[] {"Text 3", "Text 2", "Text 1"});<br/>
+        /// <br/>
+        /// // ✖ Last item does not match<br/>
+        /// await Expect(Page.Locator("ul &gt; li")).ToHaveTextAsync(new string[] {"Text 1", "Text 2", "Text"});<br/>
+        /// <br/>
+        /// // ✖ Locator points to the outer list element, not to the list items<br/>
+        /// await Expect(Page.Locator("ul")).ToHaveTextAsync(new string[] {"Text 1", "Text 2", "Text 3"});
         /// </code>
         /// </summary>
         /// <param name="expected">Expected substring or RegExp or a list of those.</param>

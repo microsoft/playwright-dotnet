@@ -132,7 +132,7 @@ namespace Microsoft.Playwright
         /// <remarks>
         /// <para>
         /// If directly using this method to create <see cref="IBrowserContext"/>s, it is best
-        /// practice to explicilty close the returned context via <see cref="IBrowserContext.CloseAsync"/>
+        /// practice to explicitly close the returned context via <see cref="IBrowserContext.CloseAsync"/>
         /// when your code is done with the <see cref="IBrowserContext"/>, and before calling
         /// <see cref="IBrowser.CloseAsync"/>. This will ensure the <c>context</c> is closed
         /// gracefully and any artifacts—like HARs and videos—are fully flushed and saved.
