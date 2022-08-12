@@ -29,7 +29,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Playwright.Core;
-using Microsoft.Playwright.Core.Shared;
+using Microsoft.Playwright.TestAdapter;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Microsoft.Playwright.MSTest
@@ -47,17 +47,14 @@ namespace Microsoft.Playwright.MSTest
 
         public IBrowserType BrowserType { get; private set; } = null!;
 
-        internal RunSettingsParser ParsedSettings { get; private set; } = null!;
-
         public int WorkerIndex { get => _currentWorker!.WorkerIndex; }
 
         [TestInitialize]
         public async Task Setup()
         {
-            ParsedSettings = new RunSettingsParser(TestContext!.Properties.Keys.Cast<string>().ToDictionary(x => x, x => (string)TestContext!.Properties[x]));
-            if (ParsedSettings.ExpectTimeout.HasValue)
+            if (PlaywrightSettingsProvider.ExpectTimeout.HasValue)
             {
-                AssertionsBase.SetDefaultTimeout(ParsedSettings.ExpectTimeout.Value);
+                AssertionsBase.SetDefaultTimeout(PlaywrightSettingsProvider.ExpectTimeout.Value);
             }
             try
             {
@@ -68,7 +65,7 @@ namespace Microsoft.Playwright.MSTest
                 Assert.Fail(e.Message, e.StackTrace);
             }
             Assert.IsNotNull(Playwright, "Playwright could not be instantiated.");
-            BrowserName = ParsedSettings.BrowserName;
+            BrowserName = PlaywrightSettingsProvider.BrowserName;
             BrowserType = Playwright[BrowserName];
 
             // get worker

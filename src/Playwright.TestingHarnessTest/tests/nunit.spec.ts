@@ -70,9 +70,9 @@ test('should be able to set the browser via the runsettings file', async ({ runT
     '.runsettings': `
     <?xml version="1.0" encoding="utf-8"?>
     <RunSettings>
-      <TestRunParameters>
-        <Parameter name="playwright.browser" value="webkit" />
-      </TestRunParameters>
+      <Playwright>
+        <Browser>webkit</Browser>
+      </Playwright>
     </RunSettings>
     `,
   }, 'dotnet test --settings=.runsettings');
@@ -108,9 +108,9 @@ test('should prioritize browser from env over the runsettings file', async ({ ru
     '.runsettings': `
     <?xml version="1.0" encoding="utf-8"?>
     <RunSettings>
-      <TestRunParameters>
-        <Parameter name="playwright.browser" value="webkit" />
-      </TestRunParameters>
+      <Playwright>
+        <Browser>webkit</Browser>
+      </Playwright>
     </RunSettings>
     `,
   }, 'dotnet test --settings=.runsettings', {
@@ -229,9 +229,11 @@ test('should be able to override launch options', async ({ runTest }) => {
     '.runsettings': `
     <?xml version="1.0" encoding="utf-8"?>
     <RunSettings>
-      <TestRunParameters>
-        <Parameter name="playwright.launch-options.headless" value="false" />
-      </TestRunParameters>
+      <Playwright>
+        <LaunchOptions>
+          <Headless>false</Headless>
+        </LaunchOptions>
+      </Playwright>
     </RunSettings>
     `,
   }, 'dotnet test --settings=.runsettings');
@@ -323,9 +325,9 @@ test.describe('Expect() timeout', () => {
       '.runsettings': `
       <?xml version="1.0" encoding="utf-8"?>
       <RunSettings>
-        <TestRunParameters>
-          <Parameter name="playwright.expect-timeout" value="123" />
-        </TestRunParameters>
+        <Playwright>
+          <ExpectTimeout>123</ExpectTimeout>
+        </Playwright>
       </RunSettings>
       `,
     }, 'dotnet test --settings=.runsettings');

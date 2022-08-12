@@ -23,6 +23,7 @@
  */
 
 using System.Threading.Tasks;
+using Microsoft.Playwright.TestAdapter;
 using NUnit.Framework;
 
 namespace Microsoft.Playwright.NUnit
@@ -40,7 +41,7 @@ namespace Microsoft.Playwright.NUnit
         public async Task PlaywrightSetup()
         {
             Playwright = await _playwrightTask.ConfigureAwait(false);
-            BrowserName = ParsedSettings.BrowserName;
+            BrowserName = PlaywrightSettingsProvider.BrowserName;
             BrowserType = Playwright[BrowserName];
         }
 

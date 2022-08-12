@@ -22,8 +22,8 @@
  * SOFTWARE.
  */
 
-using System;
 using System.Threading.Tasks;
+using Microsoft.Playwright.TestAdapter;
 
 namespace Microsoft.Playwright.MSTest.Services
 {
@@ -37,7 +37,7 @@ namespace Microsoft.Playwright.MSTest.Services
 
         public async Task BuildAsync(PlaywrightTest parentTest)
         {
-            Browser = await parentTest!.BrowserType!.LaunchAsync(parentTest.ParsedSettings.LaunchOptions).ConfigureAwait(false);
+            Browser = await parentTest!.BrowserType!.LaunchAsync(PlaywrightSettingsProvider.LaunchOptions).ConfigureAwait(false);
         }
     }
 }

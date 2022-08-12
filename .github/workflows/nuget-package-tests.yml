@@ -61,6 +61,11 @@ jobs:
         run: |
           dotnet build ./src/Playwright.NUnit/
           dotnet pack ./src/Playwright.NUnit/ -o ./src/Playwright.LocalNugetTest/nupkg
+
+      - name: Build Playwright.TestAdapter
+        run: |
+          dotnet build ./src/Playwright.TestAdapter/
+          dotnet pack ./src/Playwright.TestAdapter/ -o ./src/Playwright.LocalNugetTest/nupkg
       - name: Build Playwright.LocalNugetTest 
         run: dotnet build
         working-directory: ./src/Playwright.LocalNugetTest/

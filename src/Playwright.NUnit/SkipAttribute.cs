@@ -26,7 +26,7 @@
 using System;
 using System.Linq;
 using System.Runtime.InteropServices;
-using Microsoft.Playwright.Core.Shared;
+using Microsoft.Playwright.TestAdapter;
 using NUnit.Framework;
 using NUnit.Framework.Interfaces;
 using NUnit.Framework.Internal;
@@ -61,9 +61,6 @@ namespace Microsoft.Playwright.NUnit
 
         public void ApplyToTest(Test test)
         {
-            var parsedSettings = new RunSettingsParser(TestContext.Parameters.Names.ToDictionary(
-                key => key,
-                key => TestContext.Parameters[key]));
             if (_combinations.Any(combination =>
             {
                 var requirements = (Enum.GetValues(typeof(Targets)) as Targets[]).Where(x => combination.HasFlag(x));
@@ -73,9 +70,9 @@ namespace Microsoft.Playwright.NUnit
                         Targets.Windows => RuntimeInformation.IsOSPlatform(System.Runtime.InteropServices.OSPlatform.Windows),
                         Targets.Linux => RuntimeInformation.IsOSPlatform(System.Runtime.InteropServices.OSPlatform.Linux),
                         Targets.OSX => RuntimeInformation.IsOSPlatform(System.Runtime.InteropServices.OSPlatform.OSX),
-                        Targets.Chromium => parsedSettings.BrowserName == BrowserType.Chromium,
-                        Targets.Firefox => parsedSettings.BrowserName == BrowserType.Firefox,
-                        Targets.Webkit => parsedSettings.BrowserName == BrowserType.Webkit,
+                        Targets.Chromium => PlaywrightSettingsProvider.BrowserName == BrowserType.Chromium,
+                        Targets.Firefox => PlaywrightSettingsProvider.BrowserName == BrowserType.Firefox,
+                        Targets.Webkit => PlaywrightSettingsProvider.BrowserName == BrowserType.Webkit,
                         _ => false,
                     });
             }))

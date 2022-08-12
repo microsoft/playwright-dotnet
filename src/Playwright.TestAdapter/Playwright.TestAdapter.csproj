@@ -1,0 +1,18 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ReleaseVersion>0.0.0</ReleaseVersion>
+    <AssemblyName>Microsoft.Playwright.TestAdapter</AssemblyName>
+  </PropertyGroup>
+
+  <Import Project="../Common/Version.props" />
+  <Import Project="../Common/SignAssembly.props" />
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.TestPlatform.ObjectModel" Version="17.3.0" />
+    <ProjectReference Include="..\Playwright\Playwright.csproj" />
+  </ItemGroup>
+
+</Project>
