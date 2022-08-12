@@ -66,7 +66,14 @@ namespace Microsoft.Playwright
     /// </summary>
     public partial interface IBrowserType
     {
-        /// <summary><para>This method attaches Playwright to an existing browser instance.</para></summary>
+        /// <summary>
+        /// <para>
+        /// This method attaches Playwright to an existing browser instance. When connecting
+        /// to another browser launched via <c>BrowserType.launchServer</c> in Node.js, the
+        /// major and minor version needs to match the client version (1.2.3 → is compatible
+        /// with 1.2.x).
+        /// </para>
+        /// </summary>
         /// <param name="wsEndpoint">A browser websocket endpoint to connect to.</param>
         /// <param name="options">Call options</param>
         Task<IBrowser> ConnectAsync(string wsEndpoint, BrowserTypeConnectOptions? options = default);

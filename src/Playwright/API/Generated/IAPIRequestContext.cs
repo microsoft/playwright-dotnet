@@ -53,7 +53,7 @@ namespace Microsoft.Playwright
     /// </para>
     /// <para>**Cookie management**</para>
     /// <para>
-    /// <see cref="IAPIRequestContext"/> retuned by <see cref="IBrowserContext.APIRequest"/>
+    /// <see cref="IAPIRequestContext"/> returned by <see cref="IBrowserContext.APIRequest"/>
     /// and <see cref="IPage.APIRequest"/> shares cookie storage with the corresponding
     /// <see cref="IBrowserContext"/>. Each API request will have <c>Cookie</c> header populated
     /// with the values from the browser context. If the API response contains <c>Set-Cookie</c>
@@ -62,7 +62,7 @@ namespace Microsoft.Playwright
     /// your e2e test will be logged in and vice versa.
     /// </para>
     /// <para>
-    /// If you want API requests to not interfere with the browser cookies you shoud create
+    /// If you want API requests to not interfere with the browser cookies you should create
     /// a new <see cref="IAPIRequestContext"/> by calling <see cref="IAPIRequest.NewContextAsync"/>.
     /// Such <c>APIRequestContext</c> object will have its own isolated cookie storage.
     /// </para>
