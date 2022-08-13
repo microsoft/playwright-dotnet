@@ -40,10 +40,10 @@ namespace Microsoft.Playwright.TestAdapter
             get
             {
                 var browserFromEnv = Environment.GetEnvironmentVariable("BROWSER")?.ToLower();
-                if (browserFromEnv != null)
+                if (!string.IsNullOrEmpty(browserFromEnv))
                 {
-                    ValidateBrowserName(browserFromEnv);
-                    return browserFromEnv;
+                    ValidateBrowserName(browserFromEnv!);
+                    return browserFromEnv!;
                 }
                 if (_settings != null && !string.IsNullOrEmpty(_settings.BrowserName))
                 {
