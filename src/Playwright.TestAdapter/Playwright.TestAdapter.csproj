@@ -27,5 +27,16 @@
   <ItemGroup>
     <PackageReference Include="Microsoft.TestPlatform.ObjectModel" Version="17.3.0" />
     <ProjectReference Include="..\Playwright\Playwright.csproj" />
+    <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.1.1">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="Microsoft.VisualStudioEng.MicroBuild.Core" Version="1.0.0">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\Common\icon.png" Pack="true" Visible="false" PackagePath="icon.png" />
   </ItemGroup>
 </Project>
