@@ -73,6 +73,15 @@ namespace Microsoft.Playwright.TestAdapter
             private set { }
         }
 
+        public static int Retries
+        {
+            get
+            {
+                return _settings?.Retries ?? 0;
+            }
+            private set { }
+        }
+
         public static BrowserTypeLaunchOptions LaunchOptions
         {
             get

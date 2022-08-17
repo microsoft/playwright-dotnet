@@ -6,7 +6,7 @@
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
- * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * to use, copy, modify, merge, publish, distribute, sublicense, and / or sell
  * copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions:
  *
@@ -24,43 +24,30 @@
 
 using System;
 using System.Collections.Generic;
-using System.Threading.Tasks;
-using NUnit.Framework;
-using System.IO;
 
-namespace Microsoft.Playwright.NUnit
+namespace Microsoft.Playwright.TestAdapter
 {
-    public class BrowserTest : PlaywrightTest
+    public class TestHarnessStorage
     {
-        public IBrowser Browser { get; internal set; } = null!;
-        private readonly List<IBrowserContext> _contexts = new();
+        public static readonly IDictionary<string, int> _runCountPerTest = new Dictionary<string, int>();
 
-        public async Task<IBrowserContext> NewContext(BrowserNewContextOptions options)
+        public static bool IsLastRun(string key)
         {
-            var context = await Browser.NewContextAsync(options).ConfigureAwait(false);
-            _contexts.Add(context);
-            return context;
-        }
-
-        [SetUp]
-        public async Task BrowserSetup()
-        {
-            var service = await BrowserService.Register(this, BrowserType).ConfigureAwait(false);
-            Browser = service.Browser;
-        }
-
-        [TearDown]
-        public async Task BrowserTearDown()
-        {
-            if (TestOk())
+            if (!_runCountPerTest.ContainsKey(key))
             {
-                foreach (var context in _contexts)
-                {
-                    await context.CloseAsync().ConfigureAwait(false);
-                }
+                _runCountPerTest[key] = 0;
             }
-            _contexts.Clear();
-            Browser = null!;
+            return _runCountPerTest[key] == (PlaywrightSettingsProvider.Retries + 1);
+        }
+
+        public static void IncrementRunCount(string key)
+        {
+            _runCountPerTest[key]++;
+        }
+
+        public static void ResetRunCount(string key)
+        {
+            _runCountPerTest.Remove(key);
         }
     }
 }

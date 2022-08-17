@@ -4,21 +4,24 @@ import childProcess from 'child_process';
 import { test as base } from '@playwright/test';
 import { XMLParser } from 'fast-xml-parser';
 
-type TestResult = {
+type RunResult = {
   command: string;
   stdout: string;
   stderr: string;
+  stdoutMessages: string;
+  stderrMessages: string;
   passed: number;
   failed: number;
   total: number;
   exitCode: number;
+  results: any;
 }
 
 export const test = base.extend<{
-  runTest: (files: Record<string, string>, command: string, env?: NodeJS.ProcessEnv) => Promise<TestResult>;
+  runTest: (files: Record<string, string>, command: string, env?: NodeJS.ProcessEnv) => Promise<RunResult>;
 }>({
   runTest: async ({ }, use, testInfo) => {
-    const testResults: TestResult[] = [];
+    const testResults: RunResult[] = [];
     await use(async (files, command, env) => {
       const testDir = testInfo.outputPath();
       const testClassName = testInfo.titlePath.join(' ').replace(/[^\w]/g, '');
@@ -49,14 +52,27 @@ export const test = base.extend<{
         cp.on('error', reject);
         cp.on('exit', (code) => resolve(code))
       });
-      const { passed, failed, total } = await parseTrx(trxFile);
-      const testResult: TestResult = {
+      const { passed, failed, total, results } = await parseTrx(trxFile);
+      let [stdoutMessages, stderrMessages] = ['', ''];
+      {
+        // https://github.com/microsoft/vstest/blob/200a783858425e5ac6f4ebb8f87a7811b0ad39e3/src/vstest.console/Internal/ConsoleLogger.cs#L319-L343
+        const stdoutMessagesMatch = /Standard Output Messages:\n(.*?)\n\n/s.exec(stdout)
+        if (stdoutMessagesMatch)
+          stdoutMessages = stdoutMessagesMatch[1];
+        const stderrMessagesMatch = /Standard Error Messages:\n(.*?)\n\n/s.exec(stdout)
+        if (stderrMessagesMatch)
+          stderrMessages = stderrMessagesMatch[1];
+      }
+      const testResult: RunResult = {
         command,
         stdout,
         stderr,
+        stderrMessages,
+        stdoutMessages,
         passed,
         failed,
         total,
+        results,
         exitCode,
       };
       testResults.push(testResult)
@@ -81,15 +97,14 @@ export const test = base.extend<{
   }
 });
 
-type TrxFile = {
-  passed: number;
-  failed: number;
-  total: number;
-}
-
-async function parseTrx(trxFile: string): Promise<TrxFile> {
+async function parseTrx(trxFile: string): Promise<{
+  passed: number,
+  failed: number,
+  total: number,
+  results: any,
+}> {
   if (!fs.existsSync(trxFile))
-    return { failed: 0, passed: 0, total: 0 };
+    return { failed: 0, passed: 0, total: 0, results: null };
   const parser = new XMLParser({
     ignoreAttributes: false,
   });
@@ -100,6 +115,7 @@ async function parseTrx(trxFile: string): Promise<TrxFile> {
     total: parseInt(counters['@_total'], 10),
     passed: parseInt(counters['@_passed'], 10),
     failed: parseInt(counters['@_failed'], 10),
+    results: xmlParsed['TestRun'],
   }
 }
 

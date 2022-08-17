@@ -121,10 +121,11 @@ namespace Microsoft.Playwright.MSTest
                 || TestContext!.CurrentTestOutcome == UnitTestOutcome.NotRunnable;
         }
 
-        public TestContext? TestContext { get; set; }
+        public TestContext TestContext { get; set; } = null!;
 
         public ILocatorAssertions Expect(ILocator locator) => Assertions.Expect(locator);
 
         public IPageAssertions Expect(IPage page) => Assertions.Expect(page);
+
     }
 }
