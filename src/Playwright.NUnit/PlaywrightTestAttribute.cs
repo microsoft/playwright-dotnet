@@ -8,9 +8,9 @@ using Microsoft.Playwright.TestAdapter;
 namespace Microsoft.Playwright.NUnit
 {
     [AttributeUsage(AttributeTargets.Method, AllowMultiple = false, Inherited = true)]
-    public class TestAttribute : NUnitFrameworkBase.TestAttribute, IWrapTestMethod
+    public class PlaywrightTestAttribute : NUnitFrameworkBase.NUnitAttribute, IWrapTestMethod
     {
-        public TestAttribute() : base() {
+        public PlaywrightTestAttribute() : base() {
             
         }
 

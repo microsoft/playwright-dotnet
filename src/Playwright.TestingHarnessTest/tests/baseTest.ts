@@ -8,8 +8,6 @@ type RunResult = {
   command: string;
   stdout: string;
   stderr: string;
-  stdoutMessages: string;
-  stderrMessages: string;
   passed: number;
   failed: number;
   total: number;
@@ -53,22 +51,12 @@ export const test = base.extend<{
         cp.on('exit', (code) => resolve(code))
       });
       const { passed, failed, total, results } = await parseTrx(trxFile);
-      let [stdoutMessages, stderrMessages] = ['', ''];
-      {
-        // https://github.com/microsoft/vstest/blob/200a783858425e5ac6f4ebb8f87a7811b0ad39e3/src/vstest.console/Internal/ConsoleLogger.cs#L319-L343
-        const stdoutMessagesMatch = /Standard Output Messages:\n(.*?)\n\n/s.exec(stdout)
-        if (stdoutMessagesMatch)
-          stdoutMessages = stdoutMessagesMatch[1];
-        const stderrMessagesMatch = /Standard Error Messages:\n(.*?)\n\n/s.exec(stdout)
-        if (stderrMessagesMatch)
-          stderrMessages = stderrMessagesMatch[1];
-      }
       const testResult: RunResult = {
         command,
-        stdout,
+        // NUnit does write the stdout/stderr at the end of the test even tho it was already written to the console, so we remove it here to have a clean output.
+        // https://github.com/microsoft/vstest/blob/200a783858425e5ac6f4ebb8f87a7811b0ad39e3/src/vstest.console/Internal/ConsoleLogger.cs#L319-L343
+        stdout: stdout.replace(/Standard Output Messages:\n(.*?)\n\n/sg, '').replace(/Standard Error Messages:\n(.*?)\n\n/sg, ''),
         stderr,
-        stderrMessages,
-        stdoutMessages,
         passed,
         failed,
         total,

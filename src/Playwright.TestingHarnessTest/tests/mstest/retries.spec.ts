@@ -24,7 +24,7 @@ test('(retries 0) should not retry a passed test', async ({ runTest }) => {
   expect(result.passed).toBe(1);
   expect(result.failed).toBe(0);
   expect(result.total).toBe(1);
-  expect(result.stdoutMessages.match(/i-was-running/g).length).toBe(1);
+  expect(result.stdout.match(/i-was-running/g).length).toBe(1);
 });
 
 test('(retries 0) should not retry a failed test', async ({ runTest }) => {
@@ -52,7 +52,7 @@ test('(retries 0) should not retry a failed test', async ({ runTest }) => {
   expect(result.passed).toBe(0);
   expect(result.failed).toBe(1);
   expect(result.total).toBe(1);
-  expect(result.stdoutMessages.match(/i-was-running/g).length).toBe(1);
+  expect(result.stdout.match(/i-was-running/g).length).toBe(1);
 });
 
 test('(retries 1) should not retry a passed test', async ({ runTest }) => {
@@ -86,7 +86,7 @@ test('(retries 1) should not retry a passed test', async ({ runTest }) => {
   expect(result.passed).toBe(1);
   expect(result.failed).toBe(0);
   expect(result.total).toBe(1);
-  expect(result.stdoutMessages.match(/i-was-running/g).length).toBe(1);
+  expect(result.stdout.match(/i-was-running/g).length).toBe(1);
 });
 
 test('(retries 1) should retry a failed test', async ({ runTest }) => {
@@ -121,6 +121,6 @@ test('(retries 1) should retry a failed test', async ({ runTest }) => {
   expect(result.passed).toBe(0);
   expect(result.failed).toBe(2);
   expect(result.total).toBe(2);
-  expect(result.stdoutMessages.match(/i-was-running/g).length).toBe(2);
+  expect(result.stdout.match(/i-was-running/g).length).toBe(2);
   expect(new Set(result.results.TestDefinitions.UnitTest.map(test => test["@_name"]))).toEqual(new Set(["Test", "Test (retry #1)"]));
 });
