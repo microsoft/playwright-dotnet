@@ -64,8 +64,8 @@ test('should be able to forward DEBUG=pw:api env var', async ({ runTest }) => {
   expect(result.passed).toBe(1);
   expect(result.failed).toBe(0);
   expect(result.total).toBe(1);
-  expect(result.stdout).toContain("pw:api")
-  expect(result.stdout).toContain("element is not enabled - waiting...")
+  expect(result.stderr).toContain("pw:api")
+  expect(result.stderr).toContain("element is not enabled - waiting...")
 });
 
 test('should be able to set the browser via the runsettings file', async ({ runTest }) => {
@@ -296,7 +296,7 @@ test.describe('Expect() timeout', () => {
     expect(result.passed).toBe(0);
     expect(result.failed).toBe(1);
     expect(result.total).toBe(1);
-    expect(result.stdout).toContain("LocatorAssertions.ToHaveTextAsync with timeout 5000ms")
+    expect(result.rawStdout).toContain("LocatorAssertions.ToHaveTextAsync with timeout 5000ms")
   });
   test('should be able to override it via each Expect() call', async ({ runTest }) => {
     const result = await runTest({
@@ -323,7 +323,7 @@ test.describe('Expect() timeout', () => {
     expect(result.passed).toBe(0);
     expect(result.failed).toBe(1);
     expect(result.total).toBe(1);
-    expect(result.stdout).toContain("LocatorAssertions.ToHaveTextAsync with timeout 100ms")
+    expect(result.rawStdout).toContain("LocatorAssertions.ToHaveTextAsync with timeout 100ms")
   });
   test('should be able to override it via the global config', async ({ runTest }) => {
     const result = await runTest({
@@ -358,6 +358,6 @@ test.describe('Expect() timeout', () => {
     expect(result.passed).toBe(0);
     expect(result.failed).toBe(1);
     expect(result.total).toBe(1);
-    expect(result.stdout).toContain("LocatorAssertions.ToHaveTextAsync with timeout 123ms")
+    expect(result.rawStdout).toContain("LocatorAssertions.ToHaveTextAsync with timeout 123ms")
   });
 });

@@ -6,6 +6,7 @@ import { XMLParser } from 'fast-xml-parser';
 
 type RunResult = {
   command: string;
+  rawStdout: string;
   stdout: string;
   stderr: string;
   passed: number;
@@ -43,23 +44,19 @@ export const test = base.extend<{
         cp.stderr.pipe(process.stderr);
         console.log(`Running: ${command}`);
       }
-      let [stdout, stderr] = ['', ''];
-      cp.stdout.on('data', (data: Buffer) => stdout += data.toString());
-      cp.stderr.on('data', (data: Buffer) => stderr += data.toString());
+      let [rawStdout, rawStderr] = ['', ''];
+      cp.stdout.on('data', (data: Buffer) => rawStdout += data.toString());
+      cp.stderr.on('data', (data: Buffer) => rawStderr += data.toString());
       const exitCode = await new Promise<number>((resolve, reject) => {
         cp.on('error', reject);
         cp.on('exit', (code) => resolve(code))
       });
-      if (testInfo.titlePath[0].includes("nunit")) {
-        // NUnit does write the stdout/stderr at the end of the test even tho it was already written to the console, so we remove it here to have a clean output.
-        // https://github.com/microsoft/vstest/blob/200a783858425e5ac6f4ebb8f87a7811b0ad39e3/src/vstest.console/Internal/ConsoleLogger.cs#L319-L343
-        stdout = stdout.replace(/Standard Output Messages:\n(.*?)\n\n/sg, '').replace(/Standard Error Messages:\n(.*?)\n\n/sg, '');
-      }
       const { passed, failed, total, results } = await parseTrx(trxFile);
       const testResult: RunResult = {
         command,
-        stdout,
-        stderr,
+        rawStdout,
+        stdout: extractVstestMessages(rawStdout, 'Standard Output Messages:'),
+        stderr: extractVstestMessages(rawStdout, 'Standard Error Messages:'),
         passed,
         failed,
         total,
@@ -122,6 +119,16 @@ function unintentFile(content: string): string {
     });
   }
   return lines.join('\n').trim();
+}
+
+// https://github.com/microsoft/vstest/blob/200a783858425e5ac6f4ebb8f87a7811b0ad39e3/src/vstest.console/Internal/ConsoleLogger.cs#L319-L343
+function extractVstestMessages(stdout: string, prefix: string): string {
+  const matches = stdout.matchAll(new RegExp(`  ${prefix}\n(.*?)\n\n`, 'gs'));
+  let out = '';
+  for (const match of matches) {
+    out += match[1];
+  }
+  return out;
 }
 
 export { expect } from '@playwright/test';

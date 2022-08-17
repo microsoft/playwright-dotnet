@@ -80,8 +80,8 @@ test('(retries 0) should not retry a failed test', async ({ runTest }) => {
   expect(result.passed).toBe(0);
   expect(result.failed).toBe(1);
   expect(result.total).toBe(1);
-  expect(result.stdout).toContain("i-was-broken")
-  expect(result.stdout.match(/i-was-broken/g).length).toBe(1);
+  expect(result.rawStdout).toContain("i-was-broken")
+  expect(result.rawStdout.match(/i-was-broken/g).length).toBe(1);
 });
 
 test('(retries 1) should not retry a passed test', async ({ runTest }) => {
