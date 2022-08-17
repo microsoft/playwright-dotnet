@@ -50,12 +50,15 @@ export const test = base.extend<{
         cp.on('error', reject);
         cp.on('exit', (code) => resolve(code))
       });
+      if (testInfo.titlePath[0].includes("nunit")) {
+        // NUnit does write the stdout/stderr at the end of the test even tho it was already written to the console, so we remove it here to have a clean output.
+        // https://github.com/microsoft/vstest/blob/200a783858425e5ac6f4ebb8f87a7811b0ad39e3/src/vstest.console/Internal/ConsoleLogger.cs#L319-L343
+        stdout = stdout.replace(/Standard Output Messages:\n(.*?)\n\n/sg, '').replace(/Standard Error Messages:\n(.*?)\n\n/sg, '');
+      }
       const { passed, failed, total, results } = await parseTrx(trxFile);
       const testResult: RunResult = {
         command,
-        // NUnit does write the stdout/stderr at the end of the test even tho it was already written to the console, so we remove it here to have a clean output.
-        // https://github.com/microsoft/vstest/blob/200a783858425e5ac6f4ebb8f87a7811b0ad39e3/src/vstest.console/Internal/ConsoleLogger.cs#L319-L343
-        stdout: stdout.replace(/Standard Output Messages:\n(.*?)\n\n/sg, '').replace(/Standard Error Messages:\n(.*?)\n\n/sg, ''),
+        stdout,
         stderr,
         passed,
         failed,
