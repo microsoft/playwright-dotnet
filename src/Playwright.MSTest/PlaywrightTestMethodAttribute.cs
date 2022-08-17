@@ -36,7 +36,6 @@ namespace Microsoft.Playwright.MSTest
         {
             List<MSTestUnitTesting.TestResult> testResults = new();
             var key = testMethod.TestClassName + "." + testMethod.TestMethodName;
-            Console.WriteLine("Attribute " + key);
             while (!TestHarnessStorage.IsLastRun(key))
             {
                 var results = base.Execute(testMethod);
