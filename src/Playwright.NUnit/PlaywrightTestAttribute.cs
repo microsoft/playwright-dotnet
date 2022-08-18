@@ -67,7 +67,7 @@ namespace Microsoft.Playwright.NUnit
                     {
                         break;
                     }
-                    if (context.CurrentResult.ResultState == ResultState.Failure && TestHarnessStorage.IsLastRun(key))
+                    if (context.CurrentResult.ResultState == ResultState.Error && TestHarnessStorage.IsLastRun(key))
                     {
                         break;
                     }

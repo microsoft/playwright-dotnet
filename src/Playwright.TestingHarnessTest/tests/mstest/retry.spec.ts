@@ -24,7 +24,7 @@
 
 import { test, expect } from '../baseTest';
 
-test('(retries 0) should not retry a passed test', async ({ runTest }) => {
+test('should not retry a passed test with retries: 0', async ({ runTest }) => {
   const result = await runTest({
     'ExampleTests.cs': `
       using System;
@@ -51,7 +51,7 @@ test('(retries 0) should not retry a passed test', async ({ runTest }) => {
   expect(result.stdout.match(/i-was-running/g).length).toBe(1);
 });
 
-test('(retries 0) should not retry a failed test', async ({ runTest }) => {
+test('should not retry a failed test with retries: 0', async ({ runTest }) => {
   const result = await runTest({
     'ExampleTests.cs': `
       using System;
@@ -79,7 +79,7 @@ test('(retries 0) should not retry a failed test', async ({ runTest }) => {
   expect(result.stdout.match(/i-was-running/g).length).toBe(1);
 });
 
-test('(retries 1) should not retry a passed test', async ({ runTest }) => {
+test('should not retry a passed test with retries: 1', async ({ runTest }) => {
   const result = await runTest({
     'ExampleTests.cs': `
       using System;
@@ -113,7 +113,7 @@ test('(retries 1) should not retry a passed test', async ({ runTest }) => {
   expect(result.stdout.match(/i-was-running/g).length).toBe(1);
 });
 
-test('(retries 1) should retry a failed test', async ({ runTest }) => {
+test('should retry a failed test with retries: 1', async ({ runTest }) => {
   const result = await runTest({
     'ExampleTests.cs': `
       using System;
@@ -147,4 +147,44 @@ test('(retries 1) should retry a failed test', async ({ runTest }) => {
   expect(result.total).toBe(2);
   expect(result.stdout.match(/i-was-running/g).length).toBe(2);
   expect(new Set(result.results.TestDefinitions.UnitTest.map(test => test["@_name"]))).toEqual(new Set(["Test", "Test (retry #1)"]));
+});
+
+test('should retry a failed test and stop once it passed', async ({ runTest }) => {
+  const result = await runTest({
+    'ExampleTests.cs': `
+      using System;
+      using System.Threading.Tasks;
+      using Microsoft.Playwright.MSTest;
+      using Microsoft.VisualStudio.TestTools.UnitTesting;
+
+      namespace Playwright.TestingHarnessTest.MSTest;
+
+      [TestClass]  
+      public class <class-name> : PageTest
+      {
+          static int retries = 0;
+
+          [PlaywrightTestMethod]
+          public void Test()
+          {
+              Console.Error.WriteLine("i-was-running" + retries);
+              retries++;
+              if (retries < 5)
+                throw new Exception("i-was-broken");
+          }
+      }`,
+      '.runsettings': `
+      <?xml version="1.0" encoding="utf-8"?>
+      <RunSettings>
+        <Playwright>
+          <Retries>10</Retries>
+        </Playwright>
+      </RunSettings>`,
+  }, 'dotnet test --settings=.runsettings');
+  expect(result.exitCode).toBe(1);
+  expect(result.passed).toBe(1);
+  expect(result.failed).toBe(4);
+  expect(result.total).toBe(5);
+  expect(result.stderr.match(/i-was-running/g).length).toBe(5);
+  expect(new Set(result.results.TestDefinitions.UnitTest.map(test => test["@_name"]))).toEqual(new Set(["Test", "Test (retry #1)", "Test (retry #2)", "Test (retry #3)", "Test (retry #4)"]));
 });
