@@ -39,19 +39,16 @@ namespace Microsoft.Playwright.NUnit
 
         }
 
-        public TestCommand Wrap(TestCommand command)
-            => new RetryTestCommand(command);
+        public TestCommand Wrap(TestCommand command) => new RetryTestCommand(command);
 
         public class RetryTestCommand : DelegatingTestCommand
         {
-            public RetryTestCommand(TestCommand innerCommand)
-                : base(innerCommand)
+            public RetryTestCommand(TestCommand innerCommand) : base(innerCommand)
             {
             }
 
             public override TestResult Execute(TestExecutionContext context)
             {
-                Console.WriteLine("Execute" + PlaywrightSettingsProvider.Retries);
                 string key = Test.Id;
                 while (!TestHarnessStorage.IsLastRun(key))
                 {
@@ -59,7 +56,7 @@ namespace Microsoft.Playwright.NUnit
                     {
                         context.CurrentResult = innerCommand.Execute(context);
                     }
-                    catch (System.Exception ex)
+                    catch (Exception ex)
                     {
                         context.CurrentResult = context.CurrentTest.MakeTestResult();
                         context.CurrentResult.RecordException(ex);
@@ -67,9 +64,13 @@ namespace Microsoft.Playwright.NUnit
                     TestHarnessStorage.IncrementRunCount(key);
 
                     if (context.CurrentResult.ResultState == ResultState.Success)
+                    {
                         break;
+                    }
                     if (context.CurrentResult.ResultState == ResultState.Failure && TestHarnessStorage.IsLastRun(key))
+                    {
                         break;
+                    }
                 }
                 TestHarnessStorage.ResetRunCount(key);
                 return context.CurrentResult;

@@ -45,7 +45,7 @@ namespace Microsoft.Playwright.MSTest
                 {
                     foreach (var result in results)
                     {
-                        result.DisplayName = testMethod.TestMethodName + " (retry #" + TestHarnessStorage._runCountPerTest[key] + ")";
+                        result.DisplayName = $"{testMethod.TestMethodName} (retry #{TestHarnessStorage._runCountPerTest[key]})";
                     }
                 }
 

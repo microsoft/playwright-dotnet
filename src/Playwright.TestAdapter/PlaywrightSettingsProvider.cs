@@ -75,10 +75,7 @@ namespace Microsoft.Playwright.TestAdapter
 
         public static int Retries
         {
-            get
-            {
-                return _settings?.Retries ?? 0;
-            }
+            get => _settings?.Retries ?? 0;
             private set { }
         }
 
