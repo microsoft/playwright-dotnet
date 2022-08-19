@@ -23,6 +23,7 @@
  */
 
 using System;
+using System.Collections.Generic;
 using Microsoft.Playwright.TestAdapter;
 using NUnit.Framework.Interfaces;
 using NUnit.Framework.Internal;
@@ -34,6 +35,9 @@ namespace Microsoft.Playwright.NUnit
     [AttributeUsage(AttributeTargets.Method, AllowMultiple = false, Inherited = true)]
     public class PlaywrightTestAttribute : NUnitFrameworkBase.NUnitAttribute, IWrapTestMethod
     {
+        // First run is always 0, for each subsequent run, the run count is incremented by 1.
+        internal static readonly IDictionary<string, int> Test2RetryCount = new Dictionary<string, int>();
+
         public PlaywrightTestAttribute() : base()
         {
         }
@@ -49,12 +53,13 @@ namespace Microsoft.Playwright.NUnit
             public override TestResult Execute(TestExecutionContext context)
             {
                 string key = Test.Id;
-                TestHarnessStorage.RetryCount2Test[key] = -1;
-                while (TestHarnessStorage.RetryCount2Test[key] < PlaywrightSettingsProvider.Retries)
+                Test2RetryCount[key] = -1;
+
+                while (Test2RetryCount[key] < PlaywrightSettingsProvider.Retries)
                 {
                     try
                     {
-                        TestHarnessStorage.RetryCount2Test[key]++;
+                        Test2RetryCount[key]++;
                         context.CurrentResult = innerCommand.Execute(context);
                     }
                     catch (Exception ex)
@@ -67,15 +72,16 @@ namespace Microsoft.Playwright.NUnit
                         break;
                     }
                 }
-                if (TestHarnessStorage.RetryCount2Test[key] > 0)
+                if (Test2RetryCount[key] > 0)
                 {
-                    if (!string.IsNullOrEmpty(context.CurrentResult.Output)) {
+                    if (!string.IsNullOrEmpty(context.CurrentResult.Output))
+                    {
                         context.CurrentResult.OutWriter.Write("\n");
                     }
-                    var retryCount = TestHarnessStorage.RetryCount2Test[key];
+                    var retryCount = Test2RetryCount[key];
                     context.CurrentResult.OutWriter.Write($"Test was retried {retryCount} time{(retryCount > 1 ? "s" : "")}.");
                 }
-                TestHarnessStorage.RetryCount2Test.Remove(key);
+                Test2RetryCount.Remove(key);
                 return context.CurrentResult;
             }
         }
