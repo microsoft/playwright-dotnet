@@ -156,6 +156,7 @@ test('should retry a failed test with retries: 1', async ({ runTest }) => {
   expect(result.total).toBe(1);
   expect(result.rawStdout).toContain("i-was-broken")
   expect(result.stderr.match(/i-was-running/g).length).toBe(2);
+  expect(result.stdout).toContain('Test was retried 1 time.');
 });
 
 test('should retry a failed test and stop once it passed', async ({ runTest }) => {
@@ -197,4 +198,5 @@ test('should retry a failed test and stop once it passed', async ({ runTest }) =
   expect(result.failed).toBe(0);
   expect(result.total).toBe(1);
   expect(result.stderr.match(/i-was-running/g).length).toBe(5);
+  expect(result.stdout).toContain('Test was retried 4 times.');
 });

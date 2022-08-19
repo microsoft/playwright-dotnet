@@ -129,7 +129,7 @@ test('should retry a failed test with retries: 1', async ({ runTest }) => {
           [PlaywrightTestMethod]
           public void Test()
           {
-              Console.WriteLine("i-was-running");
+              Console.Error.WriteLine("i-was-running");
               throw new Exception("i-was-broken");
           }
       }`,
@@ -143,10 +143,9 @@ test('should retry a failed test with retries: 1', async ({ runTest }) => {
   }, 'dotnet test --settings=.runsettings');
   expect(result.exitCode).toBe(1);
   expect(result.passed).toBe(0);
-  expect(result.failed).toBe(2);
-  expect(result.total).toBe(2);
-  expect(result.stdout.match(/i-was-running/g).length).toBe(2);
-  expect(new Set(result.results.TestDefinitions.UnitTest.map(test => test["@_name"]))).toEqual(new Set(["Test", "Test (retry #1)"]));
+  expect(result.failed).toBe(1);
+  expect(result.total).toBe(1);
+  expect(result.stderr).toContain('Test was retried 1 time.');
 });
 
 test('should retry a failed test and stop once it passed', async ({ runTest }) => {
@@ -181,10 +180,9 @@ test('should retry a failed test and stop once it passed', async ({ runTest }) =
         </Playwright>
       </RunSettings>`,
   }, 'dotnet test --settings=.runsettings');
-  expect(result.exitCode).toBe(1);
+  expect(result.exitCode).toBe(0);
   expect(result.passed).toBe(1);
-  expect(result.failed).toBe(4);
-  expect(result.total).toBe(5);
-  expect(result.stderr.match(/i-was-running/g).length).toBe(5);
-  expect(new Set(result.results.TestDefinitions.UnitTest.map(test => test["@_name"]))).toEqual(new Set(["Test", "Test (retry #1)", "Test (retry #2)", "Test (retry #3)", "Test (retry #4)"]));
+  expect(result.failed).toBe(0);
+  expect(result.total).toBe(1);
+  expect(result.stderr).toContain('Test was retried 4 times.');
 });

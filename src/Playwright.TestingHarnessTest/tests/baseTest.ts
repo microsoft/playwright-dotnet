@@ -13,7 +13,6 @@ type RunResult = {
   failed: number;
   total: number;
   exitCode: number;
-  results: any;
 }
 
 export const test = base.extend<{
@@ -51,7 +50,7 @@ export const test = base.extend<{
         cp.on('error', reject);
         cp.on('exit', (code) => resolve(code))
       });
-      const { passed, failed, total, results } = await parseTrx(trxFile);
+      const { passed, failed, total } = await parseTrx(trxFile);
       const testResult: RunResult = {
         command,
         rawStdout,
@@ -60,7 +59,6 @@ export const test = base.extend<{
         passed,
         failed,
         total,
-        results,
         exitCode,
       };
       testResults.push(testResult)
@@ -89,10 +87,9 @@ async function parseTrx(trxFile: string): Promise<{
   passed: number,
   failed: number,
   total: number,
-  results: any,
 }> {
   if (!fs.existsSync(trxFile))
-    return { failed: 0, passed: 0, total: 0, results: null };
+    return { failed: 0, passed: 0, total: 0 };
   const parser = new XMLParser({
     ignoreAttributes: false,
   });
@@ -103,7 +100,6 @@ async function parseTrx(trxFile: string): Promise<{
     total: parseInt(counters['@_total'], 10),
     passed: parseInt(counters['@_passed'], 10),
     failed: parseInt(counters['@_failed'], 10),
-    results: xmlParsed['TestRun'],
   }
 }
 

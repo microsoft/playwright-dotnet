@@ -36,7 +36,6 @@ namespace Microsoft.Playwright.NUnit
     {
         public PlaywrightTestAttribute() : base()
         {
-
         }
 
         public TestCommand Wrap(TestCommand command) => new RetryTestCommand(command);
@@ -50,10 +49,12 @@ namespace Microsoft.Playwright.NUnit
             public override TestResult Execute(TestExecutionContext context)
             {
                 string key = Test.Id;
-                while (!TestHarnessStorage.IsLastRun(key))
+                TestHarnessStorage.RetryCount2Test[key] = -1;
+                while (TestHarnessStorage.RetryCount2Test[key] < PlaywrightSettingsProvider.Retries)
                 {
                     try
                     {
+                        TestHarnessStorage.RetryCount2Test[key]++;
                         context.CurrentResult = innerCommand.Execute(context);
                     }
                     catch (Exception ex)
@@ -61,18 +62,20 @@ namespace Microsoft.Playwright.NUnit
                         context.CurrentResult = context.CurrentTest.MakeTestResult();
                         context.CurrentResult.RecordException(ex);
                     }
-                    TestHarnessStorage.IncrementRunCount(key);
-
                     if (context.CurrentResult.ResultState == ResultState.Success)
                     {
                         break;
                     }
-                    if (context.CurrentResult.ResultState == ResultState.Error && TestHarnessStorage.IsLastRun(key))
-                    {
-                        break;
-                    }
                 }
-                TestHarnessStorage.ResetRunCount(key);
+                if (TestHarnessStorage.RetryCount2Test[key] > 0)
+                {
+                    if (!string.IsNullOrEmpty(context.CurrentResult.Output)) {
+                        context.CurrentResult.OutWriter.Write("\n");
+                    }
+                    var retryCount = TestHarnessStorage.RetryCount2Test[key];
+                    context.CurrentResult.OutWriter.Write($"Test was retried {retryCount} time{(retryCount > 1 ? "s" : "")}.");
+                }
+                TestHarnessStorage.RetryCount2Test.Remove(key);
                 return context.CurrentResult;
             }
         }

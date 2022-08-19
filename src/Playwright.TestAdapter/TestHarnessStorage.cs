@@ -29,25 +29,7 @@ namespace Microsoft.Playwright.TestAdapter
 {
     public class TestHarnessStorage
     {
-        public static readonly IDictionary<string, int> _runCountPerTest = new Dictionary<string, int>();
-
-        public static bool IsLastRun(string key)
-        {
-            if (!_runCountPerTest.ContainsKey(key))
-            {
-                _runCountPerTest[key] = 0;
-            }
-            return _runCountPerTest[key] == (PlaywrightSettingsProvider.Retries + 1);
-        }
-
-        public static void IncrementRunCount(string key)
-        {
-            _runCountPerTest[key]++;
-        }
-
-        public static void ResetRunCount(string key)
-        {
-            _runCountPerTest.Remove(key);
-        }
+        // First run is always 0, for each subsequent run, the run count is incremented by 1.
+        public static readonly IDictionary<string, int> RetryCount2Test = new Dictionary<string, int>();
     }
 }

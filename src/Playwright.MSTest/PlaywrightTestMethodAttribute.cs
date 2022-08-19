@@ -23,7 +23,6 @@
  */
 
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using Microsoft.Playwright.TestAdapter;
 using MSTestUnitTesting = Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -34,31 +33,30 @@ namespace Microsoft.Playwright.MSTest
     {
         public override MSTestUnitTesting.TestResult[] Execute(MSTestUnitTesting.ITestMethod testMethod)
         {
-            List<MSTestUnitTesting.TestResult> testResults = new();
             var key = testMethod.TestClassName + "." + testMethod.TestMethodName;
-            while (!TestHarnessStorage.IsLastRun(key))
+            MSTestUnitTesting.TestResult[] results = new MSTestUnitTesting.TestResult[]{};
+            TestHarnessStorage.RetryCount2Test[key] = -1;
+            while (TestHarnessStorage.RetryCount2Test[key] < PlaywrightSettingsProvider.Retries)
             {
-                var results = base.Execute(testMethod);
+                TestHarnessStorage.RetryCount2Test[key]++;
+                results = base.Execute(testMethod);
                 var allPassed = (results ?? new MSTestUnitTesting.TestResult[] { }).All(r => r.Outcome == MSTestUnitTesting.UnitTestOutcome.Passed);
 
-                if (results != null && TestHarnessStorage._runCountPerTest[key] > 0)
-                {
-                    foreach (var result in results)
-                    {
-                        result.DisplayName = $"{testMethod.TestMethodName} (retry #{TestHarnessStorage._runCountPerTest[key]})";
-                    }
-                }
-
-                testResults.AddRange(results.ToList());
-                TestHarnessStorage.IncrementRunCount(key);
                 if (allPassed)
                 {
                     break;
                 }
             }
-            TestHarnessStorage.ResetRunCount(key);
-            return testResults.ToArray();
+            if (TestHarnessStorage.RetryCount2Test[key] > 0)
+            {
+                if (!string.IsNullOrEmpty(results.Last().LogOutput)) {
+                    results.Last().LogError += "\n";
+                }
+                var retryCount = TestHarnessStorage.RetryCount2Test[key];
+                results.Last().LogError += $"Test was retried {retryCount} time{(retryCount > 1 ? "s" : "")}.";;
+            }
+            TestHarnessStorage.RetryCount2Test.Remove(key);
+            return results.ToArray();
         }
     }
 }
-
