@@ -28,7 +28,6 @@ test('should not retry a passed test with retries: 0', async ({ runTest }) => {
   const result = await runTest({
     'ExampleTests.cs': `
       using System;
-      using System.Threading.Tasks;
       using Microsoft.Playwright.MSTest;
       using Microsoft.VisualStudio.TestTools.UnitTesting;
 
@@ -55,7 +54,6 @@ test('should not retry a failed test with retries: 0', async ({ runTest }) => {
   const result = await runTest({
     'ExampleTests.cs': `
       using System;
-      using System.Threading.Tasks;
       using Microsoft.Playwright.MSTest;
       using Microsoft.VisualStudio.TestTools.UnitTesting;
 
@@ -83,7 +81,6 @@ test('should not retry a passed test with retries: 1', async ({ runTest }) => {
   const result = await runTest({
     'ExampleTests.cs': `
       using System;
-      using System.Threading.Tasks;
       using Microsoft.Playwright.MSTest;
       using Microsoft.VisualStudio.TestTools.UnitTesting;
 
@@ -117,7 +114,6 @@ test('should retry a failed test with retries: 1', async ({ runTest }) => {
   const result = await runTest({
     'ExampleTests.cs': `
       using System;
-      using System.Threading.Tasks;
       using Microsoft.Playwright.MSTest;
       using Microsoft.VisualStudio.TestTools.UnitTesting;
 
@@ -152,7 +148,6 @@ test('should retry a failed test and stop once it passed', async ({ runTest }) =
   const result = await runTest({
     'ExampleTests.cs': `
       using System;
-      using System.Threading.Tasks;
       using Microsoft.Playwright.MSTest;
       using Microsoft.VisualStudio.TestTools.UnitTesting;
 

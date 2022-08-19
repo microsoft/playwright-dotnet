@@ -29,7 +29,6 @@ test('should not retry a passed test with retries: 0', async ({ runTest }) => {
     'ExampleTests.cs': `
       using System;
       using System.Collections.Generic;
-      using System.Threading.Tasks;
       using Microsoft.Playwright;
       using Microsoft.Playwright.NUnit;
       using NUnit.Framework;
@@ -57,7 +56,6 @@ test('should not retry a failed test with retries: 0', async ({ runTest }) => {
     'ExampleTests.cs': `
       using System;
       using System.Collections.Generic;
-      using System.Threading.Tasks;
       using Microsoft.Playwright;
       using Microsoft.Playwright.NUnit;
       using NUnit.Framework;
@@ -87,7 +85,6 @@ test('should not retry a passed test with retries: 1', async ({ runTest }) => {
     'ExampleTests.cs': `
       using System;
       using System.Collections.Generic;
-      using System.Threading.Tasks;
       using Microsoft.Playwright;
       using Microsoft.Playwright.NUnit;
       using NUnit.Framework;
@@ -122,7 +119,6 @@ test('should retry a failed test with retries: 1', async ({ runTest }) => {
     'ExampleTests.cs': `
       using System;
       using System.Collections.Generic;
-      using System.Threading.Tasks;
       using Microsoft.Playwright;
       using Microsoft.Playwright.NUnit;
       using NUnit.Framework;
@@ -160,7 +156,6 @@ test('should retry a failed test and stop once it passed', async ({ runTest }) =
     'ExampleTests.cs': `
       using System;
       using System.Collections.Generic;
-      using System.Threading.Tasks;
       using Microsoft.Playwright;
       using Microsoft.Playwright.NUnit;
       using NUnit.Framework;
