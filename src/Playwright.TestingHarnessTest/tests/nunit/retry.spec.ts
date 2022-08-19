@@ -37,6 +37,7 @@ test('should not retry a passed test with retries: 0', async ({ runTest }) => {
 
       public class <class-name> : PageTest
       {
+          [Test]
           [PlaywrightTest]
           public void Test()
           {
@@ -64,6 +65,7 @@ test('should not retry a failed test with retries: 0', async ({ runTest }) => {
 
       public class <class-name> : PageTest
       {
+          [Test]
           [PlaywrightTest]
           public void Test()
           {
@@ -93,6 +95,7 @@ test('should not retry a passed test with retries: 1', async ({ runTest }) => {
 
       public class <class-name> : PageTest
       {
+          [Test]
           [PlaywrightTest]
           public void Test()
           {
@@ -127,6 +130,7 @@ test('should retry a failed test with retries: 1', async ({ runTest }) => {
 
       public class <class-name> : PageTest
       {
+          [Test]
           [PlaywrightTest]
           public void Test()
           {
@@ -166,6 +170,7 @@ test('should retry a failed test and stop once it passed', async ({ runTest }) =
       {
           static int retries = 0;
 
+          [Test]
           [PlaywrightTest]
           public void Test()
           {
