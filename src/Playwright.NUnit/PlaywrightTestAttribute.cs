@@ -54,7 +54,6 @@ namespace Microsoft.Playwright.NUnit
             {
                 string key = Test.Id;
                 Test2RetryCount[key] = -1;
-
                 while (Test2RetryCount[key] < PlaywrightSettingsProvider.Retries)
                 {
                     try
