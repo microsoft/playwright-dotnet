@@ -37,7 +37,16 @@ namespace Microsoft.Playwright.Helpers
             DirectoryInfo assemblyDirectory = new(AppContext.BaseDirectory);
             if (!assemblyDirectory.Exists || !File.Exists(Path.Combine(assemblyDirectory.FullName, "Microsoft.Playwright.dll")))
             {
+#if NETFRAMEWORK
+                var assemblyLocationFileUrl = typeof(Playwright).Assembly.CodeBase;
+                if (string.IsNullOrEmpty(assemblyLocationFileUrl))
+                {
+                    throw new PlaywrightException("Unable to find Microsoft.Playwright.dll");
+                }
+                var assemblyLocation = new Uri(assemblyLocationFileUrl).LocalPath;
+#else
                 var assemblyLocation = typeof(Playwright).Assembly.Location;
+#endif
                 assemblyDirectory = new FileInfo(assemblyLocation).Directory;
             }
 
