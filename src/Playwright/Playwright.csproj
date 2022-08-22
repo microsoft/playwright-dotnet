@@ -60,6 +60,7 @@
   <ItemGroup>
     <None Include=".playwright\**" Pack="true" PackagePath=".playwright" />
     <None Include="build\**" Pack="true" PackagePath="buildTransitive" />
+    <None Include="build\**" Pack="true" PackagePath="build" />
     <None Remove=".drivers\**" />
     <None Include="..\Common\icon.png" Pack="true" Visible="false" PackagePath="icon.png" />
     <None Remove="Roslynator.Analyzers" />
