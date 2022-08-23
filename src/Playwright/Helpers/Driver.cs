@@ -49,6 +49,7 @@ namespace Microsoft.Playwright.Helpers
                 {
                     assemblyLocation = assembly.Location;
                 }
+                assemblyDirectory = new FileInfo(assemblyLocation).Directory;
             }
 
             string executableFile = GetPath(assemblyDirectory.FullName);
