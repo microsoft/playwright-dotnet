@@ -26,23 +26,23 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.Playwright.TestAdapter;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using MSTestUnitTesting = Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Microsoft.Playwright.MSTest
 {
     public class PlaywrightTestMethodAttribute : MSTestUnitTesting.TestMethodAttribute
     {
-        // First run is always 0, for each subsequent run, the run count is incremented by 1.
-        internal static readonly IDictionary<string, int> Test2RetryCount = new Dictionary<string, int>();
+        internal static TestContext TestContext { get; set; } = null!;
+
+        private static int RetryCount { get => (int)TestContext.Properties["RetryCount"]; }
 
         public override MSTestUnitTesting.TestResult[] Execute(MSTestUnitTesting.ITestMethod testMethod)
         {
-            var key = testMethod.TestClassName + "." + testMethod.TestMethodName;
             MSTestUnitTesting.TestResult[] results = new MSTestUnitTesting.TestResult[] { };
-            Test2RetryCount[key] = -1;
-            while (Test2RetryCount[key] < PlaywrightSettingsProvider.Retries)
+            TestContext.Properties["RetryCount"] = 0;
+            while (true)
             {
-                Test2RetryCount[key]++;
                 results = base.Execute(testMethod);
                 var allPassed = (results ?? new MSTestUnitTesting.TestResult[] { }).All(r => r.Outcome == MSTestUnitTesting.UnitTestOutcome.Passed);
 
@@ -50,17 +50,21 @@ namespace Microsoft.Playwright.MSTest
                 {
                     break;
                 }
+                if (RetryCount == PlaywrightSettingsProvider.Retries)
+                {
+                    break;
+                }
+                TestContext.Properties["RetryCount"] = RetryCount + 1;
             }
-            if (Test2RetryCount[key] > 0)
+            if (RetryCount > 0)
             {
                 if (!string.IsNullOrEmpty(results.Last().LogOutput))
                 {
                     results.Last().LogError += "\n";
                 }
-                var retryCount = Test2RetryCount[key];
+                var retryCount = RetryCount;
                 results.Last().LogError += $"Test was retried {retryCount} time{(retryCount > 1 ? "s" : "")}."; ;
             }
-            Test2RetryCount.Remove(key);
             return results.ToArray();
         }
     }

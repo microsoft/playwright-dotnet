@@ -35,9 +35,6 @@ namespace Microsoft.Playwright.NUnit
     [AttributeUsage(AttributeTargets.Method, AllowMultiple = false, Inherited = true)]
     public class PlaywrightTestAttribute : NUnitFrameworkBase.NUnitAttribute, IWrapTestMethod
     {
-        // First run is always 0, for each subsequent run, the run count is incremented by 1.
-        internal static readonly IDictionary<string, int> Test2RetryCount = new Dictionary<string, int>();
-
         public PlaywrightTestAttribute() : base()
         {
         }
@@ -52,13 +49,11 @@ namespace Microsoft.Playwright.NUnit
 
             public override TestResult Execute(TestExecutionContext context)
             {
-                string key = Test.Id;
-                Test2RetryCount[key] = -1;
-                while (Test2RetryCount[key] < PlaywrightSettingsProvider.Retries)
+                context.CurrentTest.Properties.Set("RetryCount", 0);
+                while (true)
                 {
                     try
                     {
-                        Test2RetryCount[key]++;
                         context.CurrentResult = innerCommand.Execute(context);
                     }
                     catch (Exception ex)
@@ -70,18 +65,27 @@ namespace Microsoft.Playwright.NUnit
                     {
                         break;
                     }
+                    if (Test2RetryCount(context.CurrentTest) == PlaywrightSettingsProvider.Retries)
+                    {
+                        break;
+                    }
+                    context.CurrentTest.Properties.Set("RetryCount", Test2RetryCount(context.CurrentTest) + 1);
                 }
-                if (Test2RetryCount[key] > 0)
+                if (Test2RetryCount(context.CurrentTest) > 0)
                 {
                     if (!string.IsNullOrEmpty(context.CurrentResult.Output))
                     {
                         context.CurrentResult.OutWriter.Write("\n");
                     }
-                    var retryCount = Test2RetryCount[key];
+                    var retryCount = Test2RetryCount(context.CurrentTest);
                     context.CurrentResult.OutWriter.Write($"Test was retried {retryCount} time{(retryCount > 1 ? "s" : "")}.");
                 }
-                Test2RetryCount.Remove(key);
                 return context.CurrentResult;
+            }
+
+            private static int Test2RetryCount(Test test)
+            {
+                return (int)test.Properties.Get("RetryCount")!;
             }
         }
     }

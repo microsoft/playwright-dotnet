@@ -75,6 +75,12 @@ namespace Microsoft.Playwright.MSTest
             }
         }
 
+        [ClassInitialize(InheritanceBehavior.BeforeEachDerivedClass)]
+        public static void ClassInitialize(TestContext context)
+        {
+            PlaywrightTestMethodAttribute.TestContext = context;
+        }
+
         [TestCleanup]
         public async Task Teardown()
         {
