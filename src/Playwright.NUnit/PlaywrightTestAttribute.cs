@@ -24,6 +24,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using Microsoft.Playwright.TestAdapter;
 using NUnit.Framework.Interfaces;
 using NUnit.Framework.Internal;
@@ -49,6 +50,7 @@ namespace Microsoft.Playwright.NUnit
 
             public override TestResult Execute(TestExecutionContext context)
             {
+                List<TestResult> failedResults = new List<TestResult>();
                 context.CurrentTest.Properties.Set("RetryCount", 0);
                 while (true)
                 {
@@ -65,6 +67,7 @@ namespace Microsoft.Playwright.NUnit
                     {
                         break;
                     }
+                    failedResults.Add(context.CurrentResult);
                     if (Test2RetryCount(context.CurrentTest) == PlaywrightSettingsProvider.Retries)
                     {
                         break;
@@ -78,14 +81,46 @@ namespace Microsoft.Playwright.NUnit
                         context.CurrentResult.OutWriter.Write("\n");
                     }
                     var retryCount = Test2RetryCount(context.CurrentTest);
-                    context.CurrentResult.OutWriter.Write($"Test was retried {retryCount} time{(retryCount > 1 ? "s" : "")}.");
+                    context.CurrentResult.OutWriter.Write(GenerateOutputLog(failedResults, retryCount));
                 }
                 return context.CurrentResult;
             }
 
             private static int Test2RetryCount(Test test)
+                => (int)test.Properties.Get("RetryCount")!;
+
+            private static string GenerateOutputLog(List<TestResult> failedResults, int retryCount)
             {
-                return (int)test.Properties.Get("RetryCount")!;
+                var logSeparator = new String('=', 80);
+                string output = $"{logSeparator}\n";
+                output += $"Test was retried {retryCount} time{(retryCount > 1 ? "s" : "")}.";
+
+                if (failedResults.Count > 0)
+                {
+                    output += $"\nFailing test runs:\n";
+                    foreach (var result in failedResults)
+                    {
+                        output += new String('-', 40) + "\n";
+                        output += $"  Test: {result.FullName}\n";
+                        output += $"  Outcome: {result.ResultState}\n";
+                        if (!string.IsNullOrEmpty(result.Output))
+                        {
+                            output += $"  Standard Output Messages: \n{Indent(result.Output.TrimEnd(), 4)}\n";
+                        }
+                        if (!string.IsNullOrEmpty(result.Message))
+                        {
+                            output += $"  Message \n{Indent(result.Message.TrimEnd(), 4)}\n";
+                        }
+                    }
+                }
+
+                output += $"{logSeparator}";
+                return output;
+            }
+
+            private static string Indent(string text, int indent)
+            {
+                return text.Split(new[] { "\n" }, StringSplitOptions.None).Select(line => new String(' ', indent) + line).Aggregate((a, b) => a + "\n" + b);
             }
         }
     }

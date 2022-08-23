@@ -23,7 +23,6 @@
  */
 
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using Microsoft.Playwright.TestAdapter;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -35,37 +34,87 @@ namespace Microsoft.Playwright.MSTest
     {
         internal static TestContext TestContext { get; set; } = null!;
 
-        private static int RetryCount { get => (int)TestContext.Properties["RetryCount"]; }
+        private static int RetryCount
+        {
+            get => (int)TestContext.Properties["RetryCount"];
+            set => TestContext.Properties["RetryCount"] = value;
+        }
 
         public override MSTestUnitTesting.TestResult[] Execute(MSTestUnitTesting.ITestMethod testMethod)
         {
-            MSTestUnitTesting.TestResult[] results = new MSTestUnitTesting.TestResult[] { };
-            TestContext.Properties["RetryCount"] = 0;
+            MSTestUnitTesting.TestResult[] currentResults = new MSTestUnitTesting.TestResult[] { };
+            MSTestUnitTesting.TestResult[] failedResults = new MSTestUnitTesting.TestResult[] { };
+            RetryCount = 0;
             while (true)
             {
-                results = base.Execute(testMethod);
-                var allPassed = (results ?? new MSTestUnitTesting.TestResult[] { }).All(r => r.Outcome == MSTestUnitTesting.UnitTestOutcome.Passed);
+                currentResults = base.Execute(testMethod);
+                var allPassed = (currentResults ?? new MSTestUnitTesting.TestResult[] { }).All(r => r.Outcome == MSTestUnitTesting.UnitTestOutcome.Passed);
 
                 if (allPassed)
                 {
                     break;
                 }
+                if (currentResults != null)
+                {
+                    foreach (var result in currentResults)
+                    {
+                        result.DisplayName = $"{testMethod.TestClassName} (retry #{RetryCount})";
+                    }
+                }
+                failedResults = failedResults.Concat(currentResults).ToArray();
                 if (RetryCount == PlaywrightSettingsProvider.Retries)
                 {
                     break;
                 }
-                TestContext.Properties["RetryCount"] = RetryCount + 1;
+                RetryCount++;
             }
             if (RetryCount > 0)
             {
-                if (!string.IsNullOrEmpty(results.Last().LogOutput))
+                if (!string.IsNullOrEmpty(currentResults.Last().LogOutput))
                 {
-                    results.Last().LogError += "\n";
+                    currentResults.Last().LogOutput += "\n";
                 }
-                var retryCount = RetryCount;
-                results.Last().LogError += $"Test was retried {retryCount} time{(retryCount > 1 ? "s" : "")}."; ;
+                currentResults.Last().LogOutput += GenerateOutputLog(failedResults);
             }
-            return results.ToArray();
+            return currentResults.ToArray();
+        }
+
+        private static string GenerateOutputLog(MSTestUnitTesting.TestResult[] failedResults)
+        {
+            var logSeparator = new String('=', 80);
+            string output = $"{logSeparator}\n";
+            output += $"Test was retried {RetryCount} time{(RetryCount > 1 ? "s" : "")}.";
+
+            if (failedResults.Length > 0)
+            {
+                output += $"\nFailing test runs:\n";
+                foreach (var result in failedResults)
+                {
+                    output += new String('-', 40) + "\n";
+                    output += $"  Test: {result.DisplayName}\n";
+                    output += $"  Outcome: {result.Outcome}\n";
+                    if (result.TestFailureException != null)
+                    {
+                        output += $"  Exception: \n{Indent(result.TestFailureException.ToString(), 4)}\n";
+                    }
+                    if (!string.IsNullOrEmpty(result.LogOutput))
+                    {
+                        output += $"  Standard Output Messages: \n{Indent(result.LogOutput.TrimEnd(), 4)}\n";
+                    }
+                    if (!string.IsNullOrEmpty(result.LogError))
+                    {
+                        output += $"  Standard Error Messages: \n{Indent(result.LogError.TrimEnd(), 4)}\n";
+                    }
+                }
+            }
+
+            output += $"{logSeparator}";
+            return output;
+        }
+
+        private static string Indent(string text, int indent)
+        {
+            return text.Split(new[] { "\n" }, StringSplitOptions.None).Select(line => new String(' ', indent) + line).Aggregate((a, b) => a + "\n" + b);
         }
     }
 }
