@@ -24,7 +24,6 @@
   <Import Project="../Common/Version.props" />
   <Import Project="../Common/Dependencies.props" />
   <Import Project="../Common/SignAssembly.props" />
-  <Import Project="build/Microsoft.Playwright.targets" />
   <ItemGroup>
     <PackageReference Include="Microsoft.VisualStudioEng.MicroBuild.Core" Version="1.0.0">
       <PrivateAssets>all</PrivateAssets>
@@ -61,6 +60,10 @@
     <None Include=".playwright\**" Pack="true" PackagePath=".playwright" />
     <None Include="build\**" Pack="true" PackagePath="buildTransitive" />
     <None Include="build\**" Pack="true" PackagePath="build" />
+    <None Update="build\playwright.ps1">
+      <Link>%(RecursiveDir)%(Filename)%(Extension)</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Remove=".drivers\**" />
     <None Include="..\Common\icon.png" Pack="true" Visible="false" PackagePath="icon.png" />
     <None Remove="Roslynator.Analyzers" />
