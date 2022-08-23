@@ -37,16 +37,18 @@ namespace Microsoft.Playwright.Helpers
             DirectoryInfo assemblyDirectory = new(AppContext.BaseDirectory);
             if (!assemblyDirectory.Exists || !File.Exists(Path.Combine(assemblyDirectory.FullName, "Microsoft.Playwright.dll")))
             {
-#if NETFRAMEWORK
+                string assemblyLocation = null;
+#pragma warning disable SYSLIB0012 // 'Assembly.CodeBase' is obsolete: 'Assembly.CodeBase and Assembly.EscapedCodeBase are only included for .NET Framework compatibility.
                 var assemblyLocationFileUrl = typeof(Playwright).Assembly.CodeBase;
-                if (string.IsNullOrEmpty(assemblyLocationFileUrl))
+#pragma warning restore SYSLIB0012 // 'Assembly.CodeBase' is obsolete: 'Assembly.CodeBase and Assembly.EscapedCodeBase are only included for .NET Framework compatibility.
+                if (!string.IsNullOrEmpty(assemblyLocationFileUrl))
                 {
-                    throw new PlaywrightException("Unable to find Microsoft.Playwright.dll");
+                    assemblyLocation = new Uri(assemblyLocationFileUrl).LocalPath;
                 }
-                var assemblyLocation = new Uri(assemblyLocationFileUrl).LocalPath;
-#else
-                var assemblyLocation = typeof(Playwright).Assembly.Location;
-#endif
+                else
+                {
+                    assemblyLocation = typeof(Playwright).Assembly.Location;
+                }
                 assemblyDirectory = new FileInfo(assemblyLocation).Directory;
             }
 

@@ -23,11 +23,9 @@
  */
 
 using System;
-using System.Runtime.Serialization;
 
 namespace Microsoft.Playwright
 {
-    [Serializable]
     public class PlaywrightException : Exception
     {
         public PlaywrightException()
@@ -39,10 +37,6 @@ namespace Microsoft.Playwright
         }
 
         public PlaywrightException(string message, Exception innerException) : base(message, innerException)
-        {
-        }
-
-        protected PlaywrightException(SerializationInfo serializationInfo, StreamingContext streamingContext)
         {
         }
     }

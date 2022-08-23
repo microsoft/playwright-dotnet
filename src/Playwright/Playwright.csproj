@@ -7,7 +7,7 @@
     <Summary>The .NET port of Playwright, used to automate Chromium, Firefox and WebKit with a single API.</Summary>
     <Description>Playwright enables reliable end-to-end testing for modern web apps. It is built to enable cross-browser web automation that is ever-green, capable, reliable and fast. Learn more at https://playwright.dev/dotnet/.</Description>
     <PackageIcon>icon.png</PackageIcon>
-    <TargetFrameworks>netstandard2.0;net471</TargetFrameworks>
+    <TargetFramework>netstandard2.0</TargetFramework>
     <PublishRepositoryUrl>true</PublishRepositoryUrl>
     <DocumentationFile>Microsoft.Playwright.xml</DocumentationFile>
     <RunWithWarnings>true</RunWithWarnings>
@@ -33,8 +33,7 @@
     <PackageReference Include="System.ComponentModel.Annotations" Version="5.0.0" />
     <PackageReference Include="System.Text.Json" Version="6.0.5" />
     <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.1.1" PrivateAssets="All" />
-    <PackageReference Include="Microsoft.Bcl.AsyncInterfaces" Version="6.0.0" Condition="'$(TargetFramework)' == 'netstandard2.0'" />
-    <Reference Include="System.Web" Condition="'$(TargetFramework)' == 'net471'" />
+    <PackageReference Include="Microsoft.Bcl.AsyncInterfaces" Version="6.0.0" />
   </ItemGroup>
   <Target Name="DedupeDriver" AfterTargets="CopyFilesToOutputDirectory" BeforeTargets="CopyPlaywrightFilesToOutput">
     <ItemGroup>
