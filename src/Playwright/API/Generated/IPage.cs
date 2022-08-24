@@ -2882,7 +2882,7 @@ namespace Microsoft.Playwright
         /// <remarks>
         /// <para>
         /// Playwright automatically waits for element to be ready before performing an action.
-        /// Using <see cref="ILocator"/> objects and web-first assertions make the code wait-for-selector-free.
+        /// Using <see cref="ILocator"/> objects and web-first assertions makes the code wait-for-selector-free.
         /// </para>
         /// </remarks>
         /// <param name="selector">

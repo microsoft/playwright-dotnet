@@ -109,13 +109,13 @@ The resulting code will follow our style guides. This is also enforced in our CI
 Tests can either be executed in their entirety:
 
 ```bash
-dotnet test ./src/Playwright.sln --logger:"console;verbosity=detailed"
+dotnet test ./src/Playwright.Tests/Playwright.Tests.csproj --logger:"console;verbosity=detailed"
 ```
 
 You can also specify a single test to run:
 
 ```bash
-dotnet test ./src/Playwright.sln --logger:"console;verbosity=detailed" --filter Playwright.Tests.TapTests
+dotnet test ./src/Playwright.Tests/Playwright.Tests.csproj --logger:"console;verbosity=detailed" --filter Playwright.Tests.TapTests
 ```
 
 Additionally, you can use the Test Explorer if you're using Visual Studio.
