@@ -84,6 +84,8 @@ namespace Microsoft.Playwright.Core
 
         internal string FetchUid() => _initializer.FetchUid;
 
+        internal Task<List<string>> FetchLogAsync() => _context._channel.FetchResponseLogAsync(FetchUid());
+
         public ValueTask DisposeAsync() => new(_context._channel.DisposeAPIResponseAsync(FetchUid()));
 
         public override string ToString()

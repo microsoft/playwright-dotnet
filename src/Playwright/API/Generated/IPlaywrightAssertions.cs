@@ -72,6 +72,10 @@ namespace Microsoft.Playwright
     /// </summary>
     public partial interface IPlaywrightAssertions
     {
+        /// <summary><para>Creates a <see cref="IAPIResponseAssertions"/> object for the given <see cref="IAPIResponse"/>.</para></summary>
+        /// <param name="response"><see cref="IAPIResponse"/> object to use for assertions.</param>
+        IAPIResponseAssertions Expect(IAPIResponse response);
+
         /// <summary>
         /// <para>Creates a <see cref="ILocatorAssertions"/> object for the given <see cref="ILocator"/>.</para>
         /// <code>await Expect(locator).ToBeVisibleAsync();</code>

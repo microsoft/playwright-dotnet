@@ -133,5 +133,6 @@ namespace Microsoft.Playwright.MSTest
 
         public IPageAssertions Expect(IPage page) => Assertions.Expect(page);
 
+        public IAPIResponseAssertions Expect(IAPIResponse response) => Assertions.Expect(response);
     }
 }

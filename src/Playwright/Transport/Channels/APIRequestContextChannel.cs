@@ -84,6 +84,12 @@ namespace Microsoft.Playwright.Transport.Channels
             return null;
         }
 
+        internal async Task<List<string>> FetchResponseLogAsync(string fetchUid)
+        {
+            var response = await Connection.SendMessageToServerAsync(Guid, "fetchLog", new Dictionary<string, object> { ["fetchUid"] = fetchUid }).ConfigureAwait(false);
+            return response.Value.GetProperty("log").ToObject<List<string>>();
+        }
+
         internal Task DisposeAPIResponseAsync(string fetchUid)
             => Connection.SendMessageToServerAsync(Guid, "disposeAPIResponse", new Dictionary<string, object> { ["fetchUid"] = fetchUid });
     }
