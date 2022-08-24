@@ -53,7 +53,6 @@ namespace Microsoft.Playwright.TestAdapter
                 }
                 return BrowserType.Chromium;
             }
-            private set { }
         }
 
         public static float? ExpectTimeout
@@ -70,7 +69,11 @@ namespace Microsoft.Playwright.TestAdapter
                 }
                 return null;
             }
-            private set { }
+        }
+
+        public static int Retries
+        {
+            get => _settings?.Retries ?? 0;
         }
 
         public static BrowserTypeLaunchOptions LaunchOptions
@@ -88,7 +91,6 @@ namespace Microsoft.Playwright.TestAdapter
                 }
                 return launchOptions;
             }
-            private set { }
         }
 
         private static void ValidateBrowserName(string browserName)

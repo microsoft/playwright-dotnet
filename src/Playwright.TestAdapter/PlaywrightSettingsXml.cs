@@ -57,6 +57,10 @@ namespace Microsoft.Playwright.TestAdapter
                         reader.Read();
                         ExpectTimeout = float.Parse(reader.Value);
                         break;
+                    case "Retries":
+                        reader.Read();
+                        Retries = int.Parse(reader.Value);
+                        break;
                     default:
                         Console.Error.WriteLine($"Playwright RunSettings Parsing Error: Playwright>{reader.Name} is not implemented");
                         break;
@@ -138,6 +142,7 @@ namespace Microsoft.Playwright.TestAdapter
         public string? BrowserName { get; private set; }
         public bool? Headless { get; private set; }
         public float? ExpectTimeout { get; private set; }
+        public int? Retries { get; private set; }
     }
 }
 

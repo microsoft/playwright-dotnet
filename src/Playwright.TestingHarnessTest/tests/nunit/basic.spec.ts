@@ -1,19 +1,42 @@
-import { test, expect } from './baseTest';
+/*
+ * MIT License
+ *
+ * Copyright (c) Microsoft Corporation.
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
+ */
+
+import { test, expect } from '../baseTest';
 
 test('should be able to forward DEBUG=pw:api env var', async ({ runTest }) => {
   const result = await runTest({
     'ExampleTests.cs': `
       using System;
       using System.Threading.Tasks;
-      using Microsoft.Playwright.MSTest;
-      using Microsoft.VisualStudio.TestTools.UnitTesting;
+      using Microsoft.Playwright.NUnit;
+      using NUnit.Framework;
 
-      namespace Playwright.TestingHarnessTest.MSTest;
+      namespace Playwright.TestingHarnessTest.NUnit;
 
-      [TestClass]  
       public class <class-name> : PageTest
       {
-          [TestMethod]
+          [Test]
           public async Task Test()
           {
               await Page.GotoAsync("about:blank");
@@ -36,7 +59,10 @@ test('should be able to forward DEBUG=pw:api env var', async ({ runTest }) => {
           </EnvironmentVariables>
         </RunConfiguration>
       </RunSettings>`,
-  }, 'dotnet test --settings=.runsettings');
+  }, 'dotnet test --settings=.runsettings', {
+    // Workaround for https://github.com/nunit/nunit/issues/4144
+    PWAPI_TO_STDOUT: '1',
+  });
   expect(result.passed).toBe(1);
   expect(result.failed).toBe(0);
   expect(result.total).toBe(1);
@@ -49,15 +75,14 @@ test('should be able to set the browser via the runsettings file', async ({ runT
     'ExampleTests.cs': `
       using System;
       using System.Threading.Tasks;
-      using Microsoft.Playwright.MSTest;
-      using Microsoft.VisualStudio.TestTools.UnitTesting;
+      using Microsoft.Playwright.NUnit;
+      using NUnit.Framework;
 
-      namespace Playwright.TestingHarnessTest.MSTest;
+      namespace Playwright.TestingHarnessTest.NUnit;
 
-      [TestClass]  
       public class <class-name> : PageTest
       {
-          [TestMethod]
+          [Test]
           public async Task Test()
           {
               await Page.GotoAsync("about:blank");
@@ -88,15 +113,14 @@ test('should prioritize browser from env over the runsettings file', async ({ ru
     'ExampleTests.cs': `
       using System;
       using System.Threading.Tasks;
-      using Microsoft.Playwright.MSTest;
-      using Microsoft.VisualStudio.TestTools.UnitTesting;
+      using Microsoft.Playwright.NUnit;
+      using NUnit.Framework;
 
-      namespace Playwright.TestingHarnessTest.MSTest;
+      namespace Playwright.TestingHarnessTest.NUnit;
 
-      [TestClass]  
       public class <class-name> : PageTest
       {
-          [TestMethod]
+          [Test]
           public async Task Test()
           {
               await Page.GotoAsync("about:blank");
@@ -129,15 +153,14 @@ test('should be able to make the browser headed via the env', async ({ runTest }
     'ExampleTests.cs': `
       using System;
       using System.Threading.Tasks;
-      using Microsoft.Playwright.MSTest;
-      using Microsoft.VisualStudio.TestTools.UnitTesting;
+      using Microsoft.Playwright.NUnit;
+      using NUnit.Framework;
 
-      namespace Playwright.TestingHarnessTest.MSTest;
+      namespace Playwright.TestingHarnessTest.NUnit;
 
-      [TestClass]  
       public class <class-name> : PageTest
       {
-          [TestMethod]
+          [Test]
           public async Task Test()
           {
               await Page.GotoAsync("about:blank");
@@ -162,21 +185,20 @@ test('should be able to override context options', async ({ runTest }) => {
       using System.Collections.Generic;
       using System.Threading.Tasks;
       using Microsoft.Playwright;
-      using Microsoft.Playwright.MSTest;
-      using Microsoft.VisualStudio.TestTools.UnitTesting;
+      using Microsoft.Playwright.NUnit;
+      using NUnit.Framework;
       
-      namespace Playwright.TestingHarnessTest.MSTest;
+      namespace Playwright.TestingHarnessTest.NUnit;
 
-      [TestClass]  
       public class <class-name> : PageTest
       {
-        [TestMethod]
+        [Test]
         public async Task Test()
         {
             await Page.GotoAsync("about:blank");
 
-            Assert.IsFalse(await Page.EvaluateAsync<bool>("() => matchMedia('(prefers-color-scheme: light)').matches"));
-            Assert.IsTrue(await Page.EvaluateAsync<bool>("() => matchMedia('(prefers-color-scheme: dark)').matches"));
+            Assert.False(await Page.EvaluateAsync<bool>("() => matchMedia('(prefers-color-scheme: light)').matches"));
+            Assert.True(await Page.EvaluateAsync<bool>("() => matchMedia('(prefers-color-scheme: dark)').matches"));
 
             Assert.AreEqual(1920, await Page.EvaluateAsync<int>("() => window.innerWidth"));
             Assert.AreEqual(1080, await Page.EvaluateAsync<int>("() => window.innerHeight"));
@@ -214,15 +236,14 @@ test('should be able to override launch options', async ({ runTest }) => {
     'ExampleTests.cs': `
       using System;
       using System.Threading.Tasks;
-      using Microsoft.Playwright.MSTest;
-      using Microsoft.VisualStudio.TestTools.UnitTesting;
+      using Microsoft.Playwright.NUnit;
+      using NUnit.Framework;
 
-      namespace Playwright.TestingHarnessTest.MSTest;
+      namespace Playwright.TestingHarnessTest.NUnit;
 
-      [TestClass]  
       public class <class-name> : PageTest
       {
-          [TestMethod]
+          [Test]
           public async Task Test()
           {
               await Page.GotoAsync("about:blank");
@@ -251,16 +272,17 @@ test.describe('Expect() timeout', () => {
     const result = await runTest({
       'ExampleTests.cs': `
       using System;
+      using System.Collections.Generic;
       using System.Threading.Tasks;
-      using Microsoft.Playwright.MSTest;
-      using Microsoft.VisualStudio.TestTools.UnitTesting;
+      using Microsoft.Playwright;
+      using Microsoft.Playwright.NUnit;
+      using NUnit.Framework;
+      
+      namespace Playwright.TestingHarnessTest.NUnit;
 
-      namespace Playwright.TestingHarnessTest.MSTest;
-
-      [TestClass]  
       public class <class-name> : PageTest
       {
-          [TestMethod]
+          [Test]
           public async Task Test()
           {
               await Page.GotoAsync("about:blank");
@@ -272,22 +294,23 @@ test.describe('Expect() timeout', () => {
     expect(result.passed).toBe(0);
     expect(result.failed).toBe(1);
     expect(result.total).toBe(1);
-    expect(result.stdout).toContain("LocatorAssertions.ToHaveTextAsync with timeout 5000ms")
+    expect(result.rawStdout).toContain("LocatorAssertions.ToHaveTextAsync with timeout 5000ms")
   });
   test('should be able to override it via each Expect() call', async ({ runTest }) => {
     const result = await runTest({
       'ExampleTests.cs': `
         using System;
+        using System.Collections.Generic;
         using System.Threading.Tasks;
-        using Microsoft.Playwright.MSTest;
-        using Microsoft.VisualStudio.TestTools.UnitTesting;
-  
-        namespace Playwright.TestingHarnessTest.MSTest;
-  
-        [TestClass]  
+        using Microsoft.Playwright;
+        using Microsoft.Playwright.NUnit;
+        using NUnit.Framework;
+        
+        namespace Playwright.TestingHarnessTest.NUnit;
+
         public class <class-name> : PageTest
         {
-            [TestMethod]
+            [Test]
             public async Task Test()
             {
                 await Page.GotoAsync("about:blank");
@@ -299,22 +322,23 @@ test.describe('Expect() timeout', () => {
     expect(result.passed).toBe(0);
     expect(result.failed).toBe(1);
     expect(result.total).toBe(1);
-    expect(result.stdout).toContain("LocatorAssertions.ToHaveTextAsync with timeout 100ms")
+    expect(result.rawStdout).toContain("LocatorAssertions.ToHaveTextAsync with timeout 100ms")
   });
   test('should be able to override it via the global config', async ({ runTest }) => {
     const result = await runTest({
       'ExampleTests.cs': `
       using System;
+      using System.Collections.Generic;
       using System.Threading.Tasks;
-      using Microsoft.Playwright.MSTest;
-      using Microsoft.VisualStudio.TestTools.UnitTesting;
+      using Microsoft.Playwright;
+      using Microsoft.Playwright.NUnit;
+      using NUnit.Framework;
+      
+      namespace Playwright.TestingHarnessTest.NUnit;
 
-      namespace Playwright.TestingHarnessTest.MSTest;
-
-      [TestClass]  
       public class <class-name> : PageTest
       {
-          [TestMethod]
+          [Test]
           public async Task Test()
           {
               await Page.GotoAsync("about:blank");
@@ -334,6 +358,6 @@ test.describe('Expect() timeout', () => {
     expect(result.passed).toBe(0);
     expect(result.failed).toBe(1);
     expect(result.total).toBe(1);
-    expect(result.stdout).toContain("LocatorAssertions.ToHaveTextAsync with timeout 123ms")
+    expect(result.rawStdout).toContain("LocatorAssertions.ToHaveTextAsync with timeout 123ms")
   });
 });
