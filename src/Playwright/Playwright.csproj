@@ -24,7 +24,6 @@
   <Import Project="../Common/Version.props" />
   <Import Project="../Common/Dependencies.props" />
   <Import Project="../Common/SignAssembly.props" />
-  <Import Project="build/Microsoft.Playwright.targets" />
   <ItemGroup>
     <PackageReference Include="Microsoft.VisualStudioEng.MicroBuild.Core" Version="1.0.0">
       <PrivateAssets>all</PrivateAssets>
@@ -35,33 +34,21 @@
     <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.1.1" PrivateAssets="All" />
     <PackageReference Include="Microsoft.Bcl.AsyncInterfaces" Version="6.0.0" />
   </ItemGroup>
-  <Target Name="DedupeDriver" AfterTargets="CopyFilesToOutputDirectory" BeforeTargets="CopyPlaywrightFilesToOutput">
-    <ItemGroup>
-      <DriverPackage Include=".drivers\linux\package\**" />
-      <DriverNodeLicense Include=".drivers\linux\LICENSE" />
-      <DriverNodeLinuxX64 Include=".drivers\linux\node" />
-      <DriverNodeLinuxArm64 Include=".drivers\linux-arm64\node" />
-      <DriverNodeMac Include=".drivers\mac\node" />
-      <DriverNodeWin32_x64 Include=".drivers\win32_x64\node.exe" />
-      <DriverShell Include="Scripts\playwright.sh" />
-      <DriverCmd Include="Scripts\playwright.cmd" />
-    </ItemGroup>
-    <Copy SourceFiles="@(DriverPackage)" DestinationFiles="@(DriverPackage-&gt;'.playwright\package\%(RecursiveDir)%(Filename)%(Extension)')" />
-    <Copy SourceFiles="@(DriverNodeLicense)" DestinationFiles="@(DriverNodeLicense-&gt;'.playwright\node\%(RecursiveDir)%(Filename)%(Extension)')" />
-    <Copy SourceFiles="@(DriverNodeLinuxX64)" DestinationFiles="@(DriverNodeLinuxX64-&gt;'.playwright\node\linux-x64\%(RecursiveDir)%(Filename)%(Extension)')" />
-    <Copy SourceFiles="@(DriverNodeLinuxArm64)" DestinationFiles="@(DriverNodeLinuxArm64-&gt;'.playwright\node\linux-arm64\%(RecursiveDir)%(Filename)%(Extension)')" />
-    <Copy SourceFiles="@(DriverNodeMac)" DestinationFiles="@(DriverNodeMac-&gt;'.playwright\node\mac\%(RecursiveDir)%(Filename)%(Extension)')" />
-    <Copy SourceFiles="@(DriverNodeWin32_x64)" DestinationFiles="@(DriverNodeWin32_x64-&gt;'.playwright\node\win32_x64\%(RecursiveDir)%(Filename)%(Extension)')" />
-    <Copy SourceFiles="@(DriverShell)" DestinationFiles="@(DriverShell-&gt;'.playwright\node\linux-x64\%(RecursiveDir)%(Filename)%(Extension)')" />
-    <Copy SourceFiles="@(DriverShell)" DestinationFiles="@(DriverShell-&gt;'.playwright\node\linux-arm64\%(RecursiveDir)%(Filename)%(Extension)')" />
-    <Copy SourceFiles="@(DriverShell)" DestinationFiles="@(DriverShell-&gt;'.playwright\node\mac\%(RecursiveDir)%(Filename)%(Extension)')" />
-    <Copy SourceFiles="@(DriverCmd)" DestinationFiles="@(DriverCmd-&gt;'.playwright\node\win32_x64\%(RecursiveDir)%(Filename)%(Extension)')" />
-  </Target>
   <ItemGroup>
-    <None Include=".playwright\**" Pack="true" PackagePath=".playwright" />
+    <None Remove=".drivers\**" />
+    <None Include=".drivers\linux\package\**" Link=".playwright\package\%(RecursiveDir)%(Filename)%(Extension)" CopyToOutputDirectory="PreserveNewest" Pack="true" PackagePath=".playwright\package" />
+    <None Include=".drivers\linux\LICENSE" Pack="true" PackagePath=".playwright\node" />
+    <None Include=".drivers\linux\node" Link=".playwright\node\linux-x64\%(RecursiveDir)%(Filename)%(Extension)" CopyToOutputDirectory="PreserveNewest" Pack="true" PackagePath=".playwright\node\linux-x64" />
+    <None Include=".drivers\linux-arm64\node" Link=".playwright\node\linux-arm64\%(RecursiveDir)%(Filename)%(Extension)" CopyToOutputDirectory="PreserveNewest" Pack="true" PackagePath=".playwright\node\linux-arm64" />
+    <None Include=".drivers\mac\node" Link=".playwright\node\mac\%(RecursiveDir)%(Filename)%(Extension)" CopyToOutputDirectory="PreserveNewest" Pack="true" PackagePath=".playwright\node\mac" />
+    <None Include=".drivers\win32_x64\node.exe" Link=".playwright\node\win32_x64\%(RecursiveDir)%(Filename)%(Extension)" CopyToOutputDirectory="PreserveNewest" Pack="true" PackagePath=".playwright\node\win32_x64" />
+    <None Include="Scripts\playwright.sh" Link=".playwright\node\linux-x64\%(RecursiveDir)%(Filename)%(Extension)" CopyToOutputDirectory="PreserveNewest" Pack="true" PackagePath=".playwright\node\linux-x64" />
+    <None Include="Scripts\playwright.sh" Link=".playwright\node\linux-arm64\%(RecursiveDir)%(Filename)%(Extension)" CopyToOutputDirectory="PreserveNewest" Pack="true" PackagePath=".playwright\node\linux-arm64" />
+    <None Include="Scripts\playwright.sh" Link=".playwright\node\mac\%(RecursiveDir)%(Filename)%(Extension)" CopyToOutputDirectory="PreserveNewest" Pack="true" PackagePath=".playwright\node\mac" />
+    <None Include="Scripts\playwright.cmd" Link=".playwright\node\win32_x64\%(RecursiveDir)%(Filename)%(Extension)" CopyToOutputDirectory="PreserveNewest" Pack="true" PackagePath=".playwright\node\win32_x64" />
+    <None Include="build\playwright.ps1" Link="%(RecursiveDir)%(Filename)%(Extension)" CopyToOutputDirectory="PreserveNewest" />
     <None Include="build\**" Pack="true" PackagePath="buildTransitive" />
     <None Include="build\**" Pack="true" PackagePath="build" />
-    <None Remove=".drivers\**" />
     <None Include="..\Common\icon.png" Pack="true" Visible="false" PackagePath="icon.png" />
     <None Remove="Roslynator.Analyzers" />
     <None Remove="Microsoft.VisualStudio.Threading.Analyzers" />
