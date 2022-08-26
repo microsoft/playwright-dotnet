@@ -39,7 +39,7 @@ namespace Microsoft.Playwright.TestAdapter
         {
             get
             {
-                var browserFromEnv = Environment.GetEnvironmentVariable("BROWSER")?.ToLower();
+                var browserFromEnv = Environment.GetEnvironmentVariable("BROWSER")?.ToLowerInvariant();
                 if (!string.IsNullOrEmpty(browserFromEnv))
                 {
                     ValidateBrowserName(browserFromEnv!);
@@ -47,7 +47,7 @@ namespace Microsoft.Playwright.TestAdapter
                 }
                 if (_settings != null && !string.IsNullOrEmpty(_settings.BrowserName))
                 {
-                    var browser = _settings.BrowserName!.ToLower();
+                    var browser = _settings.BrowserName!.ToLowerInvariant();
                     ValidateBrowserName(browser);
                     return browser;
                 }

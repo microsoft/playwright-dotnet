@@ -25,6 +25,7 @@
  */
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Text.Json;
@@ -437,7 +438,7 @@ namespace Microsoft.Playwright.Core
 
             timeout ??= _defaultTimeout;
             using var waiter = new Waiter(this, $"page.WaitForEventAsync(\"{typeof(T)}\")");
-            waiter.RejectOnTimeout(Convert.ToInt32(timeout), $"Timeout {timeout}ms exceeded while waiting for event \"{pageEvent.Name}\"");
+            waiter.RejectOnTimeout(Convert.ToInt32(timeout, CultureInfo.InvariantCulture), $"Timeout {timeout}ms exceeded while waiting for event \"{pageEvent.Name}\"");
 
             if (pageEvent.Name != PageEvent.Crash.Name)
             {

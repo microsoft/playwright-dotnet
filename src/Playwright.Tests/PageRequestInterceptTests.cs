@@ -22,6 +22,7 @@
  * SOFTWARE.
  */
 
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -174,7 +175,7 @@ namespace Microsoft.Playwright.Tests
             Assert.True(response.Ok);
             Assert.True(response.Url.EndsWith("/title.html"));
             Assert.AreEqual(response.Headers["content-type"], "text/html; charset=utf-8");
-            Assert.AreEqual(response.HeadersArray.Where(x => x.Name.ToLower() == "content-type").First().Value, "text/html; charset=utf-8");
+            Assert.AreEqual(response.HeadersArray.Where(x => x.Name.Equals("content-type", StringComparison.OrdinalIgnoreCase)).First().Value, "text/html; charset=utf-8");
 
             await Task.WhenAll(
                evalTask,

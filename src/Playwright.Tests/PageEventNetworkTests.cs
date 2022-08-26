@@ -24,6 +24,7 @@
  */
 
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Net;
 using System.Net.Http;
@@ -131,7 +132,7 @@ namespace Microsoft.Playwright.Tests
             };
 
             Page.Request += (_, e) => events[e.Url].Add(e.Method);
-            Page.Response += (_, e) => events[e.Url].Add(e.Status.ToString());
+            Page.Response += (_, e) => events[e.Url].Add(e.Status.ToString(CultureInfo.InvariantCulture));
             Page.RequestFinished += (_, e) => events[e.Url].Add("DONE");
             Page.RequestFailed += (_, e) => events[e.Url].Add("FAIL");
             Server.SetRedirect("/foo.html", "/empty.html");

@@ -24,6 +24,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
@@ -409,7 +410,7 @@ namespace Microsoft.Playwright.Tests
         {
             await Page.GotoAsync(Server.EmptyPage);
             int responseCount = 1;
-            Server.SetRoute("/zzz", context => context.Response.WriteAsync((responseCount++ * 11).ToString()));
+            Server.SetRoute("/zzz", context => context.Response.WriteAsync((responseCount++ * 11).ToString(CultureInfo.InvariantCulture)));
 
             bool spinner = false;
             // Cancel 2nd request.
@@ -666,7 +667,7 @@ namespace Microsoft.Playwright.Tests
                     ContentType = "application/json",
                     Headers = new Dictionary<string, string> { ["access-control-allow-origin"] = "*" },
                     Status = (int)HttpStatusCode.OK,
-                    Body = $"[\"{route.Request.Method.ToString().ToUpper()}\", \"electric\", \"cars\"]"
+                    Body = $"[\"{route.Request.Method.ToUpperInvariant()}\", \"electric\", \"cars\"]"
                 });
             });
 

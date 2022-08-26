@@ -291,7 +291,7 @@ namespace Microsoft.Playwright.Tests
             });
             var response = await Context.APIRequest.GetAsync(Server.Prefix + "/headers");
             Assert.AreEqual(200, response.Status);
-            var headers = response.HeadersArray.Where(header => header.Name.ToLower().StartsWith("name-")).ToList();
+            var headers = response.HeadersArray.Where(header => header.Name.StartsWith("name-", StringComparison.OrdinalIgnoreCase)).ToList();
             Assert.AreEqual(4, headers.Count);
             Assert.AreEqual("Name-A", headers[0].Name);
             Assert.AreEqual("v1", headers[0].Value);
@@ -332,7 +332,7 @@ namespace Microsoft.Playwright.Tests
                 }),
                     Context.APIRequest.NameToMethod(method)(Server.Prefix + "/simple.json", new() { Method = "POST", DataString = "My request" })
                 );
-                Assert.AreEqual(method.ToUpper(), requestMethod);
+                Assert.AreEqual(method.ToUpperInvariant(), requestMethod);
                 Assert.AreEqual("My request", requestBody);
                 Assert.AreEqual(200, response.Status);
                 Assert.AreEqual("/simple.json", requestPath.ToString());

@@ -24,6 +24,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Reflection;
 using System.Runtime.Serialization;
@@ -55,11 +56,11 @@ namespace Microsoft.Playwright.TestAdapter
                         break;
                     case "ExpectTimeout":
                         reader.Read();
-                        ExpectTimeout = float.Parse(reader.Value);
+                        ExpectTimeout = float.Parse(reader.Value, CultureInfo.InvariantCulture);
                         break;
                     case "Retries":
                         reader.Read();
-                        Retries = int.Parse(reader.Value);
+                        Retries = int.Parse(reader.Value, CultureInfo.InvariantCulture);
                         break;
                     default:
                         Console.Error.WriteLine($"Playwright RunSettings Parsing Error: Playwright>{reader.Name} is not implemented");
@@ -101,7 +102,7 @@ namespace Microsoft.Playwright.TestAdapter
                     property.SetValue(options, bool.Parse(value));
                     break;
                 case Type t when t == typeof(float):
-                    property.SetValue(options, float.Parse(value));
+                    property.SetValue(options, float.Parse(value, CultureInfo.InvariantCulture));
                     break;
                 case Type t when t?.IsEnum == true:
                     {

@@ -24,6 +24,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Net;
@@ -182,7 +183,7 @@ namespace Microsoft.Playwright.Core
             {
                 foreach (var header in headers)
                 {
-                    resultHeaders[header.Key.ToLower()] = header.Value;
+                    resultHeaders[header.Key.ToLowerInvariant()] = header.Value;
                 }
             }
 
@@ -197,7 +198,7 @@ namespace Microsoft.Playwright.Core
 
             if (length > 0 && !resultHeaders.ContainsKey("content-length"))
             {
-                resultHeaders["content-length"] = length.ToString();
+                resultHeaders["content-length"] = length.ToString(CultureInfo.InvariantCulture);
             }
 
             return new Dictionary<string, object>()

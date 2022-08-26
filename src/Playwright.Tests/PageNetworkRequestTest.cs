@@ -312,7 +312,7 @@ namespace Microsoft.Playwright.Tests
                 expectedHeaders.Clear();
                 foreach (var header in ctx.Request.Headers)
                 {
-                    expectedHeaders.Add(header.Key.ToLower(), header.Value);
+                    expectedHeaders.Add(header.Key.ToLowerInvariant(), header.Value);
                 }
 
                 await ctx.Response.CompleteAsync();

@@ -22,6 +22,7 @@
  * SOFTWARE.
  */
 
+using System.Globalization;
 using System.Threading.Tasks;
 using Microsoft.Playwright.NUnit;
 using Microsoft.Playwright.Tests.TestServer;
@@ -41,7 +42,7 @@ namespace Microsoft.Playwright.Tests
             var http = await HttpService.Register(this);
             Server = http.Server;
             HttpsServer = http.HttpsServer;
-            BrowserMajorVersion = int.Parse(Browser.Version.Split(".")[0]);
+            BrowserMajorVersion = int.Parse(Browser.Version.Split(".")[0], CultureInfo.InvariantCulture);
             TestConstants.BrowserName = BrowserName;
         }
     }

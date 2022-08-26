@@ -24,6 +24,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using NUnit.Framework;
@@ -299,7 +300,7 @@ namespace Microsoft.Playwright.Tests.Assertions
             {
                 ["a"] = 1,
                 ["b"] = "string",
-                ["c"] = DateTime.Parse("2021-07-28T20:26:32.000Z"),
+                ["c"] = DateTime.Parse("2021-07-28T20:26:32.000Z", CultureInfo.InvariantCulture),
             });
 
             await Page.EvalOnSelectorAsync("div", "e => e.foo = false");

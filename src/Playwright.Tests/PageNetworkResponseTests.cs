@@ -22,6 +22,7 @@
  * SOFTWARE.
  */
 
+using System;
 using System.IO;
 using System.Linq;
 using System.Net;
@@ -216,7 +217,7 @@ namespace Microsoft.Playwright.Tests
             await Task.WhenAll(responseTask, Page.EvaluateAsync("() => fetch('/headers')"));
 
             var response = responseTask.Result;
-            var resultedHeaders = (await response.HeadersArrayAsync()).Where(x => x.Name.ToLower() == "set-cookie");
+            var resultedHeaders = (await response.HeadersArrayAsync()).Where(x => x.Name.Equals("set-cookie", StringComparison.OrdinalIgnoreCase));
             var values = resultedHeaders.Select(x => x.Value).ToArray();
             CollectionAssert.AreEqual(new string[] { "a=b", "c=d" }, values);
 

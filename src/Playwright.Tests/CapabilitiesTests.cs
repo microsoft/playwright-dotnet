@@ -22,6 +22,7 @@
  * SOFTWARE.
  */
 
+using System.Globalization;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Playwright.NUnit;
@@ -70,7 +71,7 @@ namespace Microsoft.Playwright.Tests
                     </script>
                 ";
 
-                context.Response.Headers["Content-Length"] = message.Length.ToString();
+                context.Response.Headers["Content-Length"] = message.Length.ToString(CultureInfo.InvariantCulture);
                 context.Response.Headers["Content-Security-Policy"] = "script-src 'unsafe-inline';";
                 return context.Response.WriteAsync(message);
             });
