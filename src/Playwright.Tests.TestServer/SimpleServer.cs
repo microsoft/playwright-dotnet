@@ -26,7 +26,6 @@
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
-using System.Globalization;
 using System.IO;
 using System.IO.Compression;
 using System.Net;
@@ -354,7 +353,7 @@ namespace Microsoft.Playwright.Tests.TestServer
             {
                 if (count >= MaxMessageSize)
                 {
-                    string closeMessage = string.Format(CultureInfo.InvariantCulture, "Maximum message size: {0} bytes.", MaxMessageSize);
+                    string closeMessage = $"Maximum message size: {MaxMessageSize} bytes.";
                     await webSocket.CloseAsync(WebSocketCloseStatus.MessageTooBig, closeMessage, token).ConfigureAwait(false);
                     return new();
                 }
