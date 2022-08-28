@@ -351,9 +351,7 @@ MigrationBackup/
 .ionide/
 .idea
 src/Playwright.sln.DotSettings
-src/Playwright/.playwright
 src/Playwright/.drivers
-src/Playwright/playwright
 src/Playwright.Tests/Screenshots/**/test.png
 src/Playwright/Microsoft.Playwright.xml
 
