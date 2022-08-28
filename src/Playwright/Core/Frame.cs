@@ -25,6 +25,7 @@
  */
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Text.Json;
@@ -639,7 +640,7 @@ namespace Microsoft.Playwright.Core
                 new("Navigating frame was detached!"),
                 e => e == this);
             timeout ??= (Page as Page)?.DefaultNavigationTimeout ?? PlaywrightImpl.DefaultTimeout;
-            waiter.RejectOnTimeout(Convert.ToInt32(timeout), $"Timeout {timeout}ms exceeded.");
+            waiter.RejectOnTimeout(Convert.ToInt32(timeout, CultureInfo.InvariantCulture), $"Timeout {timeout}ms exceeded.");
 
             return waiter;
         }

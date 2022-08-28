@@ -265,7 +265,7 @@ namespace Microsoft.Playwright.Transport.Converters
                 t = Nullable.GetUnderlyingType(t);
             }
 
-            return Convert.ChangeType(value, t);
+            return Convert.ChangeType(value, t, CultureInfo.InvariantCulture);
         }
 
         private static object ParseEvaluateResultToExpando(JsonElement result, IDictionary<int, object> refs)

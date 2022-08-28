@@ -95,7 +95,7 @@ namespace Microsoft.Playwright.Core
         /// <see cref="global::Microsoft.Playwright.BrowserType.Firefox"/> or <see cref="global::Microsoft.Playwright.BrowserType.Webkit"/>.
         /// </param>
         public IBrowserType this[string browserType]
-            => browserType?.ToLower() switch
+            => browserType?.ToLowerInvariant() switch
             {
                 global::Microsoft.Playwright.BrowserType.Chromium => Chromium,
                 global::Microsoft.Playwright.BrowserType.Firefox => Firefox,

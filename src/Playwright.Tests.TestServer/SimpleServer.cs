@@ -353,7 +353,7 @@ namespace Microsoft.Playwright.Tests.TestServer
             {
                 if (count >= MaxMessageSize)
                 {
-                    string closeMessage = string.Format("Maximum message size: {0} bytes.", MaxMessageSize);
+                    string closeMessage = $"Maximum message size: {MaxMessageSize} bytes.";
                     await webSocket.CloseAsync(WebSocketCloseStatus.MessageTooBig, closeMessage, token).ConfigureAwait(false);
                     return new();
                 }

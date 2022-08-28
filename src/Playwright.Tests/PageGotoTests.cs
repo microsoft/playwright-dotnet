@@ -48,7 +48,7 @@ namespace Microsoft.Playwright.Tests
         {
             string fileurl = new Uri(TestUtils.GetAsset(Path.Combine("frames", "two-frames.html"))).AbsoluteUri;
             await Page.GotoAsync(fileurl);
-            Assert.AreEqual(fileurl.ToLower(), Page.Url.ToLower());
+            Assert.AreEqual(fileurl.ToLowerInvariant(), Page.Url.ToLowerInvariant());
             Assert.AreEqual(3, Page.Frames.Count);
         }
 

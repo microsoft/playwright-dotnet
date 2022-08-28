@@ -122,7 +122,7 @@ namespace Microsoft.Playwright.Core
             {
                 return false;
             }
-            var contentType = headers.FirstOrDefault(x => x.Key.ToLower().Equals("content-type", StringComparison.OrdinalIgnoreCase));
+            var contentType = headers.FirstOrDefault(x => x.Key.Equals("content-type", StringComparison.OrdinalIgnoreCase));
             if (contentType.Value == null)
             {
                 return false;
