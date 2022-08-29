@@ -125,6 +125,57 @@ namespace Microsoft.Playwright.Tests
 
         }
 
+        [PlaywrightTest("tracing.spec.ts", "should work with multiple chunks")]
+        public async Task ShouldWorkWithMultipleChunks()
+        {
+            using var tmp = new TempDirectory();
+
+            await Context.Tracing.StartAsync(new()
+            {
+                Screenshots = true,
+                Snapshots = true,
+            });
+
+            var page = await Context.NewPageAsync();
+            await page.GotoAsync(Server.Prefix + "/frames/frame.html");
+
+            await Context.Tracing.StartChunkAsync();
+            await page.SetContentAsync("<button>Click</button>");
+            await page.ClickAsync("'Click'");
+            var traceFile1 = Path.Combine(tmp.Path, "trace1.zip");
+            await Context.Tracing.StopChunkAsync(new TracingStopChunkOptions { Path = traceFile1 });
+
+            await Context.Tracing.StartChunkAsync();
+            await page.HoverAsync("'Click'");
+            var traceFile2 = Path.Combine(tmp.Path, "trace2.zip");
+            await Context.Tracing.StopChunkAsync(new TracingStopChunkOptions { Path = traceFile2 });
+
+            await Context.Tracing.StartChunkAsync();
+            await page.HoverAsync("'Click'");
+            await Context.Tracing.StopChunkAsync(); // Should stop without a path.
+
+            {
+                var (events, resources) = ParseTrace(traceFile1);
+                Assert.AreEqual("context-options", events[0].Type);
+                Assert.GreaterOrEqual(events.Where(x => x.Metadata?.ApiName == "Page.SetContentAsync").Count(), 1);
+                Assert.GreaterOrEqual(events.Where(x => x.Metadata?.ApiName == "Page.ClickAsync").Count(), 1);
+                Assert.GreaterOrEqual(events.Where(x => x.Metadata?.ApiName == "Page.ClickAsync").Count(), 1);
+                Assert.GreaterOrEqual(events.Where(x => x.Metadata?.ApiName == "Tracing.StopChunkAsync").Count(), 1);
+
+                Assert.GreaterOrEqual(events.Where(x => x.Type == "frame-snapshot").Count(), 1);
+                Assert.GreaterOrEqual(events.Where(x => x.Type == "resource-snapshot").Count(), 1);
+            }
+            {
+                var (events, resources) = ParseTrace(traceFile2);
+                Assert.AreEqual("context-options", events[0].Type);
+                Assert.GreaterOrEqual(events.Where(x => x.Metadata?.ApiName == "Page.HoverAsync").Count(), 1);
+                Assert.GreaterOrEqual(events.Where(x => x.Metadata?.ApiName == "Tracing.StopChunkAsync").Count(), 1);
+
+                Assert.GreaterOrEqual(events.Where(x => x.Type == "frame-snapshot").Count(), 1);
+                Assert.GreaterOrEqual(events.Where(x => x.Type == "resource-snapshot").Count(), 1);
+            }
+        }
+
         [PlaywrightTest("tracing.spec.ts", "should collect sources")]
         public async Task ShouldCollectSources()
         {

@@ -56,14 +56,9 @@ namespace Microsoft.Playwright.Core
             }).ConfigureAwait(false);
         }
 
-        public Task StartChunkAsync() => StartChunkAsync();
+        public Task StartChunkAsync(TracingStartChunkOptions options = default) => _channel.StartChunkAsync(title: options?.Title);
 
-        public Task StartChunkAsync(TracingStartChunkOptions options) => _channel.StartChunkAsync(title: options?.Title);
-
-        public async Task StopChunkAsync(TracingStopChunkOptions options = null)
-        {
-            await DoStopChunkAsync(filePath: options.Path).ConfigureAwait(false);
-        }
+        public Task StopChunkAsync(TracingStopChunkOptions options = default) => DoStopChunkAsync(filePath: options?.Path);
 
         public async Task StopAsync(TracingStopOptions options = default)
         {
