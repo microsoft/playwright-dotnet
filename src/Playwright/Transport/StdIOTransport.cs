@@ -101,10 +101,8 @@ namespace Microsoft.Playwright.Transport
                     ll[2] = (byte)((len >> 16) & 0xFF);
                     ll[3] = (byte)((len >> 24) & 0xFF);
 
-#pragma warning disable CA1835 // We can't use ReadOnlyMemory on netstandard
                     await _process.StandardInput.BaseStream.WriteAsync(ll, 0, 4, _readerCancellationSource.Token).ConfigureAwait(false);
                     await _process.StandardInput.BaseStream.WriteAsync(message, 0, len, _readerCancellationSource.Token).ConfigureAwait(false);
-#pragma warning restore CA1835
                     await _process.StandardInput.BaseStream.FlushAsync(_readerCancellationSource.Token).ConfigureAwait(false);
                 }
             }
@@ -163,12 +161,10 @@ namespace Microsoft.Playwright.Transport
 
                 while (!token.IsCancellationRequested && !_process.HasExited)
                 {
-#pragma warning disable CA1835 // We can't use ReadOnlyMemory on netstandard
                     int read = await stream.BaseStream.ReadAsync(buffer, 0, DefaultBufferSize, token).ConfigureAwait(false);
-#pragma warning restore CA1835
                     if (!token.IsCancellationRequested)
                     {
-                        _data.AddRange(buffer.AsSpan(0, read).ToArray());
+                        _data.AddRange(new ArraySegment<byte>(buffer, 0, read));
 
                         ProcessStream(token);
                     }
@@ -182,28 +178,37 @@ namespace Microsoft.Playwright.Transport
 
         private void ProcessStream(CancellationToken token)
         {
-            while (!token.IsCancellationRequested)
+            var offset = 0;
+            try
             {
-                if (_currentMessageSize == null && _data.Count < 4)
+                while (!token.IsCancellationRequested)
                 {
-                    break;
-                }
+                    if (_currentMessageSize == null)
+                    {
+                        if (_data.Count < (uint)offset + 4)
+                        {
+                            break;
+                        }
 
-                if (_currentMessageSize == null)
-                {
-                    _currentMessageSize = _data[0] + (_data[1] << 8) + (_data[2] << 16) + (_data[3] << 24);
-                    _data.RemoveRange(0, 4);
-                }
+                        _currentMessageSize = _data[offset + 0] + (_data[offset + 1] << 8) + (_data[offset + 2] << 16) + (_data[offset + 3] << 24);
+                        offset += 4;
+                    }
 
-                if (_data.Count < _currentMessageSize)
-                {
-                    break;
-                }
+                    if (_data.Count < (uint)offset + _currentMessageSize)
+                    {
+                        break;
+                    }
 
-                byte[] result = _data.GetRange(0, _currentMessageSize.Value).ToArray();
-                _data.RemoveRange(0, _currentMessageSize.Value);
-                _currentMessageSize = null;
-                MessageReceived?.Invoke(this, result);
+                    byte[] result = new byte[_currentMessageSize.Value];
+                    _data.CopyTo(offset, result, 0, result.Length);
+                    offset += result.Length;
+                    _currentMessageSize = null;
+                    MessageReceived?.Invoke(this, result);
+                }
+            }
+            finally
+            {
+                _data.RemoveRange(0, offset);
             }
         }
     }
