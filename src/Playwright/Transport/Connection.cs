@@ -139,9 +139,7 @@ namespace Microsoft.Playwright.Transport
                         object obj = propertyDescriptor.GetValue(args);
                         if (obj != null)
                         {
-#pragma warning disable CA1845 // Use span-based 'string.Concat' and 'AsSpan' instead of 'Substring
                             string name = propertyDescriptor.Name.Substring(0, 1).ToLowerInvariant() + propertyDescriptor.Name.Substring(1);
-#pragma warning restore CA2000 // Use span-based 'string.Concat' and 'AsSpan' instead of 'Substring
                             sanitizedArgs.Add(name, obj);
                         }
                     }
@@ -201,29 +199,26 @@ namespace Microsoft.Playwright.Transport
             return _rootObject.InitializeAsync();
         }
 
-        internal void OnObjectCreated(string guid, IChannelOwner result)
-        {
-            Objects.TryAdd(guid, result);
-        }
-
         internal void Dispatch(PlaywrightServerMessage message)
         {
             if (message.Id.HasValue)
             {
                 TraceMessage("pw:channel:response", message);
 
-                if (_callbacks.TryRemove(message.Id.Value, out var callback))
+                _callbacks.TryRemove(message.Id.Value, out var callback);
+                if (callback == null)
                 {
-                    if (message.Error != null)
-                    {
-                        callback.TaskCompletionSource.TrySetException(CreateException(message.Error.Error));
-                    }
-                    else
-                    {
-                        callback.TaskCompletionSource.TrySetResult(message.Result);
-                    }
+                    throw new PlaywrightException($"Cannot find command to respond: '{message.Id}'");
                 }
 
+                if (message.Error != null)
+                {
+                    callback.TaskCompletionSource.TrySetException(CreateException(message.Error.Error));
+                }
+                else
+                {
+                    callback.TaskCompletionSource.TrySetResult(message.Result);
+                }
                 return;
             }
 
@@ -235,7 +230,6 @@ namespace Microsoft.Playwright.Transport
                 {
                     var createObjectInfo = message.Params.Value.ToObject<CreateObjectInfo>(DefaultJsonSerializerOptions);
                     CreateRemoteObject(message.Guid, createObjectInfo.Type, createObjectInfo.Guid, createObjectInfo.Initializer);
-
                     return;
                 }
 
@@ -247,22 +241,23 @@ namespace Microsoft.Playwright.Transport
 
                 if (message.Method == "__adopt__")
                 {
-                    Objects.TryGetValue(message.Guid, out var child);
+                    var childGuid = message.Params.Value.GetProperty("guid").GetString();
+                    Objects.TryGetValue(childGuid, out var child);
                     if (child == null)
                     {
-                        throw new PlaywrightException($"Unknown new child: '{message.Guid}'");
+                        throw new PlaywrightException($"Unknown new child: '{childGuid}'");
                     }
                     @object.Adopt((ChannelOwnerBase)child);
+                    return;
                 }
 
                 if (message.Method == "__dispose__")
                 {
-                    @object?.DisposeOwner();
+                    @object.DisposeOwner();
                     return;
                 }
 
-                Objects.TryGetValue(message.Guid, out var obj);
-                obj?.Channel?.OnMessage(message.Method, message.Params);
+                @object.Channel?.OnMessage(message.Method, message.Params);
             }
             catch (Exception ex)
             {
@@ -270,7 +265,7 @@ namespace Microsoft.Playwright.Transport
             }
         }
 
-        private void CreateRemoteObject(string parentGuid, ChannelOwnerType type, string guid, JsonElement? initializer)
+        private IChannelOwner CreateRemoteObject(string parentGuid, ChannelOwnerType type, string guid, JsonElement? initializer)
         {
             IChannelOwner result = null;
             var parent = string.IsNullOrEmpty(parentGuid) ? _rootObject : Objects[parentGuid];
@@ -365,9 +360,7 @@ namespace Microsoft.Playwright.Transport
                     break;
             }
 #pragma warning restore CA2000
-
-            Objects.TryAdd(guid, result);
-            OnObjectCreated(guid, result);
+            return result;
         }
 
         private void DoClose(Exception ex)
