@@ -31,6 +31,7 @@ using System.Linq;
 using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
+using Microsoft.Playwright.Helpers;
 using Microsoft.Playwright.NUnit;
 using NUnit.Framework;
 
@@ -142,6 +143,7 @@ namespace Microsoft.Playwright.Tests
             await Context.Tracing.StartChunkAsync();
             await page.SetContentAsync("<button>Click</button>");
             await page.ClickAsync("'Click'");
+            page.ClickAsync("'ClickNoButton'").IgnoreException();
             var traceFile1 = Path.Combine(tmp.Path, "trace1.zip");
             await Context.Tracing.StopChunkAsync(new TracingStopChunkOptions { Path = traceFile1 });
 
@@ -157,19 +159,29 @@ namespace Microsoft.Playwright.Tests
             {
                 var (events, resources) = ParseTrace(traceFile1);
                 Assert.AreEqual("context-options", events[0].Type);
-                Assert.GreaterOrEqual(events.Where(x => x.Metadata?.ApiName == "Page.SetContentAsync").Count(), 1);
-                Assert.GreaterOrEqual(events.Where(x => x.Metadata?.ApiName == "Page.ClickAsync").Count(), 1);
-                Assert.GreaterOrEqual(events.Where(x => x.Metadata?.ApiName == "Page.ClickAsync").Count(), 1);
-                Assert.GreaterOrEqual(events.Where(x => x.Metadata?.ApiName == "Tracing.StopChunkAsync").Count(), 1);
+                string[] actualActionApiNames = GetActions(events);
+                string[] expectedActionApiNames = new string[] {
+                    "Page.SetContentAsync",
+                    "Page.ClickAsync",
+                    "Page.ClickAsync",
+                    "Tracing.StopChunkAsync",
+                };
+                Assert.AreEqual(expectedActionApiNames, actualActionApiNames);
 
+                Assert.GreaterOrEqual(events.Where(x => x.Metadata?.ApiName == "Page.ClickAsync" && x.Metadata?.Error == null).Count(), 1);
+                Assert.GreaterOrEqual(events.Where(x => x.Metadata?.ApiName == "Page.ClickAsync" && x.Metadata?.Error?.Error?.Message == "Action was interrupted").Count(), 1);
                 Assert.GreaterOrEqual(events.Where(x => x.Type == "frame-snapshot").Count(), 1);
                 Assert.GreaterOrEqual(events.Where(x => x.Type == "resource-snapshot").Count(), 1);
             }
             {
                 var (events, resources) = ParseTrace(traceFile2);
                 Assert.AreEqual("context-options", events[0].Type);
-                Assert.GreaterOrEqual(events.Where(x => x.Metadata?.ApiName == "Page.HoverAsync").Count(), 1);
-                Assert.GreaterOrEqual(events.Where(x => x.Metadata?.ApiName == "Tracing.StopChunkAsync").Count(), 1);
+                string[] actualActionApiNames = GetActions(events);
+                string[] expectedActionApiNames = new string[] {
+                    "Page.HoverAsync",
+                    "Tracing.StopChunkAsync",
+                };
+                Assert.AreEqual(expectedActionApiNames, actualActionApiNames);
 
                 Assert.GreaterOrEqual(events.Where(x => x.Type == "frame-snapshot").Count(), 1);
                 Assert.GreaterOrEqual(events.Where(x => x.Type == "resource-snapshot").Count(), 1);
@@ -312,6 +324,20 @@ namespace Microsoft.Playwright.Tests
             public bool Internal { get; set; }
 
             public double StartTime { get; set; }
+
+            public TraceEventErrorWrapper Error { get; set; }
+        }
+
+        private class TraceEventErrorWrapper
+        {
+            public TraceEventError Error { get; set; }
+        }
+
+        private class TraceEventError
+        {
+            public string Name { get; set; }
+
+            public string Message { get; set; }
         }
 
         string[] GetActions(IReadOnlyList<TraceEventEntry> events) => events.Where(action => action.Type == "action" && !action.Metadata.Internal).OrderBy(action => action.Metadata.StartTime).Select(action => action.Metadata.ApiName).ToArray();
