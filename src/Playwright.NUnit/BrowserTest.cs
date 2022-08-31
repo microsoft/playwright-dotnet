@@ -24,6 +24,7 @@
 
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Microsoft.Playwright.TestAdapter;
 using NUnit.Framework;
 
 namespace Microsoft.Playwright.NUnit
@@ -36,6 +37,10 @@ namespace Microsoft.Playwright.NUnit
         public async Task<IBrowserContext> NewContext(BrowserNewContextOptions options)
         {
             var context = await Browser.NewContextAsync(options).ConfigureAwait(false);
+            if (PlaywrightSettingsProvider.ActionTimeout.HasValue)
+                context.SetDefaultTimeout(PlaywrightSettingsProvider.ActionTimeout.Value);
+            if (PlaywrightSettingsProvider.NavigationTimeout.HasValue)
+                context.SetDefaultNavigationTimeout(PlaywrightSettingsProvider.NavigationTimeout.Value);
             _contexts.Add(context);
             return context;
         }

@@ -58,6 +58,14 @@ namespace Microsoft.Playwright.TestAdapter
                         reader.Read();
                         ExpectTimeout = float.Parse(reader.Value, CultureInfo.InvariantCulture);
                         break;
+                    case "ActionTimeout":
+                        reader.Read();
+                        ActionTimeout = float.Parse(reader.Value, CultureInfo.InvariantCulture);
+                        break;
+                    case "NavigationTimeout":
+                        reader.Read();
+                        NavigationTimeout = float.Parse(reader.Value, CultureInfo.InvariantCulture);
+                        break;
                     case "Retries":
                         reader.Read();
                         Retries = int.Parse(reader.Value, CultureInfo.InvariantCulture);
@@ -143,6 +151,8 @@ namespace Microsoft.Playwright.TestAdapter
         public string? BrowserName { get; private set; }
         public bool? Headless { get; private set; }
         public float? ExpectTimeout { get; private set; }
+        public float? ActionTimeout { get; private set; }
+        public float? NavigationTimeout { get; private set; }
         public int? Retries { get; private set; }
     }
 }

@@ -59,15 +59,35 @@ namespace Microsoft.Playwright.TestAdapter
         {
             get
             {
-                if (_settings == null)
+                if (_settings == null || !_settings.ExpectTimeout.HasValue)
                 {
                     return null;
                 }
-                if (_settings.ExpectTimeout.HasValue)
+                return _settings.ExpectTimeout.Value;
+            }
+        }
+
+        public static float? ActionTimeout
+        {
+            get
+            {
+                if (_settings == null || !_settings.ActionTimeout.HasValue)
                 {
-                    return _settings.ExpectTimeout.Value;
+                    return null;
                 }
-                return null;
+                return _settings.ActionTimeout.Value;
+            }
+        }
+
+        public static float? NavigationTimeout
+        {
+            get
+            {
+                if (_settings == null || !_settings.NavigationTimeout.HasValue)
+                {
+                    return ActionTimeout;
+                }
+                return _settings.NavigationTimeout.Value;
             }
         }
 

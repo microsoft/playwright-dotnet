@@ -25,6 +25,7 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.Playwright.MSTest.Services;
+using Microsoft.Playwright.TestAdapter;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Microsoft.Playwright.MSTest
@@ -38,6 +39,10 @@ namespace Microsoft.Playwright.MSTest
         public async Task<IBrowserContext> NewContextAsync(BrowserNewContextOptions? options)
         {
             var context = await Browser!.NewContextAsync(options).ConfigureAwait(false);
+            if (PlaywrightSettingsProvider.ActionTimeout.HasValue)
+                context.SetDefaultTimeout(PlaywrightSettingsProvider.ActionTimeout.Value);
+            if (PlaywrightSettingsProvider.NavigationTimeout.HasValue)
+                context.SetDefaultNavigationTimeout(PlaywrightSettingsProvider.NavigationTimeout.Value);
             _contexts.Add(context);
             return context;
         }
