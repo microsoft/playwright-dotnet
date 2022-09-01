@@ -37,7 +37,7 @@ test('should not retry a passed test with retries: 0', async ({ runTest }) => {
       {
           [Test]
           [PlaywrightTest]
-          public void Test()
+          public void MyTest()
           {
               Console.WriteLine("i-was-running");
           }
@@ -48,6 +48,7 @@ test('should not retry a passed test with retries: 0', async ({ runTest }) => {
   expect(result.failed).toBe(0);
   expect(result.total).toBe(1);
   expect(result.stdout.match(/i-was-running/g).length).toBe(1);
+  expect(result.rawStdout).toMatch(/Passed MyTest \[/);
 });
 
 test('should not retry a failed test with retries: 0', async ({ runTest }) => {
@@ -63,7 +64,7 @@ test('should not retry a failed test with retries: 0', async ({ runTest }) => {
       {
           [Test]
           [PlaywrightTest]
-          public void Test()
+          public void MyTest()
           {
               Console.WriteLine("i-was-running");
               throw new Exception("i-was-broken");
@@ -76,6 +77,7 @@ test('should not retry a failed test with retries: 0', async ({ runTest }) => {
   expect(result.total).toBe(1);
   expect(result.rawStdout).toContain("i-was-broken")
   expect(result.rawStdout.match(/i-was-broken/g).length).toBe(1);
+  expect(result.rawStdout).toMatch(/Failed MyTest \[/);
 });
 
 test('should not retry a passed test with retries: 1', async ({ runTest }) => {
@@ -91,7 +93,7 @@ test('should not retry a passed test with retries: 1', async ({ runTest }) => {
       {
           [Test]
           [PlaywrightTest]
-          public void Test()
+          public void MyTest()
           {
               Console.WriteLine("i-was-running");
           }
@@ -109,6 +111,7 @@ test('should not retry a passed test with retries: 1', async ({ runTest }) => {
   expect(result.failed).toBe(0);
   expect(result.total).toBe(1);
   expect(result.stdout.match(/i-was-running/g).length).toBe(1);
+  expect(result.rawStdout).toMatch(/Passed MyTest \[/);
 });
 
 test('should retry a failed test with retries: 1', async ({ runTest }) => {
@@ -124,7 +127,7 @@ test('should retry a failed test with retries: 1', async ({ runTest }) => {
       {
           [Test]
           [PlaywrightTest]
-          public void Test()
+          public void MyTest()
           {
               Console.Error.WriteLine("i-was-running");
               throw new Exception("i-was-broken");
@@ -145,6 +148,7 @@ test('should retry a failed test with retries: 1', async ({ runTest }) => {
   expect(result.rawStdout).toContain("i-was-broken")
   expect(result.stderr.match(/i-was-running/g).length).toBe(2);
   expect(result.stdout).toContain('Test was retried 1 time.');
+  expect(result.rawStdout).toMatch(/Failed MyTest \[/);
 });
 
 test('should retry a failed test and stop once it passed', async ({ runTest }) => {
@@ -162,7 +166,7 @@ test('should retry a failed test and stop once it passed', async ({ runTest }) =
 
           [Test]
           [PlaywrightTest]
-          public void Test()
+          public void MyTest()
           {
               Console.Error.WriteLine("i-was-running");
               retries++;
@@ -184,4 +188,5 @@ test('should retry a failed test and stop once it passed', async ({ runTest }) =
   expect(result.total).toBe(1);
   expect(result.stderr.match(/i-was-running/g).length).toBe(5);
   expect(result.stdout).toContain('Test was retried 4 times.');
+  expect(result.rawStdout).toMatch(/Passed MyTest \[/);
 });
