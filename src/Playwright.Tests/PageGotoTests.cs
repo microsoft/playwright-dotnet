@@ -564,7 +564,7 @@ namespace Microsoft.Playwright.Tests
         {
             Server.SetRoute("/one-style.html", _ => Task.Delay(10_000));
             var request = Server.WaitForRequest("/one-style.html");
-            var failed = Page.GotoAsync(Server.Prefix + "/one-style.html", new() { WaitUntil = TestConstants.IsFirefox ? WaitUntilState.NetworkIdle : WaitUntilState.Load });
+            var failed = Page.GotoAsync(Server.Prefix + "/one-style.html");
             await request;
             await Page.GotoAsync(Server.EmptyPage);
 
@@ -572,7 +572,6 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-goto.spec.ts", "should return when navigation is comitted if commit is specified")]
-        [Skip(SkipAttribute.Targets.Firefox, SkipAttribute.Targets.Webkit)]
         public async Task ShouldReturnWhenNavigationIsComittedIfCommitIsSpecified()
         {
             Server.SetRoute("/empty.html", async context =>
@@ -583,10 +582,11 @@ namespace Microsoft.Playwright.Tests
                 // Write enought bytes of the body to trigge response received event.
                 var str = "<title>" + new string('a', 4100);
                 await context.Response.WriteAsync(str);
-                await context.Response.BodyWriter.FlushAsync();
+                await context.Response.Body.FlushAsync();
+                await Task.Delay(5_000);
             });
 
-            var response = await Page.GotoAsync(Server.EmptyPage, new() { WaitUntil = TestConstants.IsFirefox ? WaitUntilState.NetworkIdle : WaitUntilState.Load });
+            var response = await Page.GotoAsync(Server.EmptyPage, new() { WaitUntil = WaitUntilState.Commit });
             Assert.AreEqual(200, response.Status);
         }
 
