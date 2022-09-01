@@ -12,7 +12,7 @@
     </PropertyGroup>
     <ItemGroup Condition="'$(PlaywrightPlatform)' != 'none'">
        <!-- 'linux' to stay backwards compatible -->
-      <_PlaywrightCopyItems Include="$(MSBuildThisFileDirectory)..\.playwright\node\linux\**" Condition="$(PlaywrightPlatform.Contains('linux')) OR $(PlaywrightPlatform.Contains('linux-x64'))">
+      <_PlaywrightCopyItems Include="$(MSBuildThisFileDirectory)..\.playwright\node\linux-x64\**" Condition="$(PlaywrightPlatform.Contains('linux')) OR $(PlaywrightPlatform.Contains('linux-x64'))">
         <PlaywrightFolder>node\linux-x64\</PlaywrightFolder>
       </_PlaywrightCopyItems>
       <_PlaywrightCopyItems Include="$(MSBuildThisFileDirectory)..\.playwright\node\linux-arm64\**" Condition="$(PlaywrightPlatform.Contains('linux-arm64'))">
