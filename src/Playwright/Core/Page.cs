@@ -80,7 +80,7 @@ namespace Microsoft.Playwright.Core
             APIRequest = Context._request;
             _channel.Closed += (_, _) => OnClose();
             _channel.Crashed += Channel_Crashed;
-            _channel.Popup += (_, e) => Popup?.Invoke(this, e.Page);
+            _channel.Popup += (_, page) => Popup?.Invoke(this, page);
             _channel.WebSocket += (_, e) => WebSocket?.Invoke(this, e);
             _channel.BindingCall += Channel_BindingCall;
             _channel.Route += (_, route) => OnRouteAsync(route).ConfigureAwait(false);
@@ -116,7 +116,7 @@ namespace Microsoft.Playwright.Core
 
                 PageError?.Invoke(this, $"{e.Error.Name}: {e.Error.Message}");
             };
-            _channel.Video += (_, e) => ForceVideo().ArtifactReady(e.Artifact);
+            _channel.Video += (_, artifact) => ForceVideo().ArtifactReady(artifact);
 
             _channel.FileChooser += (_, e) => _fileChooserEventHandler?.Invoke(this, new FileChooser(this, e.Element.Object, e.IsMultiple));
             _channel.Worker += (_, worker) =>
@@ -1054,11 +1054,11 @@ namespace Microsoft.Playwright.Core
             Crash?.Invoke(this, this);
         }
 
-        private void Channel_BindingCall(object sender, BindingCallEventArgs e)
+        private void Channel_BindingCall(object sender, BindingCall bindingCall)
         {
-            if (Bindings.TryGetValue(e.BindingCall.Name, out var binding))
+            if (Bindings.TryGetValue(bindingCall.Name, out var binding))
             {
-                _ = e.BindingCall.CallAsync(binding);
+                _ = bindingCall.CallAsync(binding);
             }
         }
 

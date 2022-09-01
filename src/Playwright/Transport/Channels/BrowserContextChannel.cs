@@ -48,7 +48,7 @@ namespace Microsoft.Playwright.Transport.Channels
 
         internal event EventHandler<IWorker> ServiceWorker;
 
-        internal event EventHandler<BindingCallEventArgs> BindingCall;
+        internal event EventHandler<BindingCall> BindingCall;
 
         internal event EventHandler<Route> Route;
 
@@ -70,7 +70,7 @@ namespace Microsoft.Playwright.Transport.Channels
                 case "bindingCall":
                     BindingCall?.Invoke(
                         this,
-                        new() { BindingCall = serverParams?.GetProperty("binding").ToObject<BindingCallChannel>(Connection.DefaultJsonSerializerOptions).Object });
+                        serverParams?.GetProperty("binding").ToObject<BindingCallChannel>(Connection.DefaultJsonSerializerOptions).Object);
                     break;
                 case "route":
                     var route = serverParams?.GetProperty("route").ToObject<RouteChannel>(Connection.DefaultJsonSerializerOptions).Object;

@@ -45,9 +45,9 @@ namespace Microsoft.Playwright.Transport.Channels
 
         internal event EventHandler<IWebSocket> WebSocket;
 
-        internal event EventHandler<PageChannelPopupEventArgs> Popup;
+        internal event EventHandler<Page> Popup;
 
-        internal event EventHandler<BindingCallEventArgs> BindingCall;
+        internal event EventHandler<BindingCall> BindingCall;
 
         internal event EventHandler<Route> Route;
 
@@ -67,7 +67,7 @@ namespace Microsoft.Playwright.Transport.Channels
 
         internal event EventHandler<Worker> Worker;
 
-        internal event EventHandler<VideoEventArgs> Video;
+        internal event EventHandler<Artifact> Video;
 
         internal override void OnMessage(string method, JsonElement? serverParams)
         {
@@ -82,14 +82,14 @@ namespace Microsoft.Playwright.Transport.Channels
                 case "bindingCall":
                     BindingCall?.Invoke(
                         this,
-                        new() { BindingCall = serverParams?.GetProperty("binding").ToObject<BindingCallChannel>(Connection.DefaultJsonSerializerOptions).Object });
+                        serverParams?.GetProperty("binding").ToObject<BindingCallChannel>(Connection.DefaultJsonSerializerOptions).Object);
                     break;
                 case "route":
                     var route = serverParams?.GetProperty("route").ToObject<RouteChannel>(Connection.DefaultJsonSerializerOptions).Object;
                     Route?.Invoke(this, route);
                     break;
                 case "popup":
-                    Popup?.Invoke(this, new() { Page = serverParams?.GetProperty("page").ToObject<PageChannel>(Connection.DefaultJsonSerializerOptions).Object });
+                    Popup?.Invoke(this, serverParams?.GetProperty("page").ToObject<PageChannel>(Connection.DefaultJsonSerializerOptions).Object);
                     break;
                 case "pageError":
                     PageError?.Invoke(this, serverParams?.GetProperty("error").ToObject<SerializedError>(Connection.DefaultJsonSerializerOptions));
@@ -116,7 +116,7 @@ namespace Microsoft.Playwright.Transport.Channels
                     Download?.Invoke(this, serverParams?.ToObject<PageDownloadEvent>(Connection.DefaultJsonSerializerOptions));
                     break;
                 case "video":
-                    Video?.Invoke(this, new() { Artifact = serverParams?.GetProperty("artifact").ToObject<ArtifactChannel>(Connection.DefaultJsonSerializerOptions).Object });
+                    Video?.Invoke(this, serverParams?.GetProperty("artifact").ToObject<ArtifactChannel>(Connection.DefaultJsonSerializerOptions).Object);
                     break;
                 case "worker":
                     Worker?.Invoke(

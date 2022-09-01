@@ -496,11 +496,11 @@ namespace Microsoft.Playwright.Core
             }
         }
 
-        private void Channel_BindingCall(object sender, BindingCallEventArgs e)
+        private void Channel_BindingCall(object sender, BindingCall bindingCall)
         {
-            if (_bindings.TryGetValue(e.BindingCall.Name, out var binding))
+            if (_bindings.TryGetValue(bindingCall.Name, out var binding))
             {
-                _ = e.BindingCall.CallAsync(binding);
+                _ = bindingCall.CallAsync(binding);
             }
         }
 
