@@ -935,7 +935,7 @@ namespace Microsoft.Playwright
         /// <para>To press a special key, like <c>Control</c> or <c>ArrowDown</c>, use <see cref="IElementHandle.PressAsync"/>.</para>
         /// <code>
         /// await elementHandle.TypeAsync("Hello"); // Types instantly<br/>
-        /// await elementHandle.TypeAsync("World", delay: 100); // Types slower, like a user
+        /// await elementHandle.TypeAsync("World", new() { Delay = 100 }); // Types slower, like a user
         /// </code>
         /// <para>An example of typing into a text field and then submitting the form:</para>
         /// <code>

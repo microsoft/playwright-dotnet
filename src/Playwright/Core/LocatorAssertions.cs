@@ -91,7 +91,14 @@ namespace Microsoft.Playwright.Core
             {
                 message += " matching regex";
             }
-            return ExpectImplAsync("to.have.attribute", expectedText, expectedValue, message, commonOptions);
+            return ExpectImplAsync("to.have.attribute.value", expectedText, expectedValue, message, commonOptions);
+        }
+
+        public Task ToHaveAttributeAsync(string name, LocatorAssertionsToHaveAttributeOptions options = null)
+        {
+            var commonOptions = ConvertToFrameExpectOptions(options);
+            commonOptions.ExpressionArg = name;
+            return ExpectTrueAsync("to.have.attribute", $"Locator expected to have attribute '{name}'", commonOptions);
         }
 
         public Task ToHaveClassAsync(string expected, LocatorAssertionsToHaveClassOptions options = null) =>

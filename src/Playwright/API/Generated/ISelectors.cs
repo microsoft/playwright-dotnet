@@ -51,7 +51,7 @@ namespace Microsoft.Playwright
         /// <para>An example of registering selector engine that queries elements based on a tag name:</para>
         /// <code>
         /// using var playwright = await Playwright.CreateAsync();<br/>
-        /// // Script that evaluates to a selector engine instance.<br/>
+        /// // Script that evaluates to a selector engine instance. The script is evaluated in the page context.<br/>
         /// await playwright.Selectors.RegisterAsync("tag", @"{<br/>
         /// // Returns the first element matching given selector in the root's subtree.<br/>
         /// query(root, selector) {<br/>

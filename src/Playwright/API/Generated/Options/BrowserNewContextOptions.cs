@@ -149,12 +149,6 @@ namespace Microsoft.Playwright
         /// to <c>'none'</c>.
         /// </para>
         /// </summary>
-        /// <remarks>
-        /// <para>
-        /// It's not supported in WebKit, see <a href="https://bugs.webkit.org/show_bug.cgi?id=225281">here</a>
-        /// in their issue tracker.
-        /// </para>
-        /// </remarks>
         [JsonPropertyName("forcedColors")]
         public ForcedColors? ForcedColors { get; set; }
 

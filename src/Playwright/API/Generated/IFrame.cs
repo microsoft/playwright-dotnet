@@ -1281,7 +1281,7 @@ namespace Microsoft.Playwright
         /// <para>To press a special key, like <c>Control</c> or <c>ArrowDown</c>, use <see cref="IKeyboard.PressAsync"/>.</para>
         /// <code>
         /// await frame.TypeAsync("#mytextarea", "hello"); // types instantly<br/>
-        /// await frame.TypeAsync("#mytextarea", "world", delay: 100); // types slower, like a user
+        /// await frame.TypeAsync("#mytextarea", "world", new() { Delay = 100 }); // types slower, like a user
         /// </code>
         /// </summary>
         /// <param name="selector">

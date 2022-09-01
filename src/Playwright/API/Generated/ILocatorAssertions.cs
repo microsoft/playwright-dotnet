@@ -321,7 +321,7 @@ namespace Microsoft.Playwright
         Task ToContainTextAsync(IEnumerable<Regex> expected, LocatorAssertionsToContainTextOptions? options = default);
 
         /// <summary>
-        /// <para>Ensures the <see cref="ILocator"/> points to an element with given attribute.</para>
+        /// <para>Ensures the <see cref="ILocator"/> points to an element with given attribute value.</para>
         /// <code>
         /// var locator = Page.Locator("input");<br/>
         /// await Expect(locator).ToHaveAttributeAsync("type", "text");
@@ -333,7 +333,7 @@ namespace Microsoft.Playwright
         Task ToHaveAttributeAsync(string name, string value, LocatorAssertionsToHaveAttributeOptions? options = default);
 
         /// <summary>
-        /// <para>Ensures the <see cref="ILocator"/> points to an element with given attribute.</para>
+        /// <para>Ensures the <see cref="ILocator"/> points to an element with given attribute value.</para>
         /// <code>
         /// var locator = Page.Locator("input");<br/>
         /// await Expect(locator).ToHaveAttributeAsync("type", "text");
@@ -343,6 +343,21 @@ namespace Microsoft.Playwright
         /// <param name="value">Expected attribute value.</param>
         /// <param name="options">Call options</param>
         Task ToHaveAttributeAsync(string name, Regex value, LocatorAssertionsToHaveAttributeOptions? options = default);
+
+        /// <summary>
+        /// <para>
+        /// Ensures the <see cref="ILocator"/> points to an element with given attribute. The
+        /// method will assert attribute presence.
+        /// </para>
+        /// <code>
+        /// var locator = Page.Locator("input");<br/>
+        /// await Expect(locator).ToHaveAttributeAsync("disabled");<br/>
+        /// await Expect(locator).Not.ToHaveAttributeAsync("open");
+        /// </code>
+        /// </summary>
+        /// <param name="name">Attribute name.</param>
+        /// <param name="options">Call options</param>
+        Task ToHaveAttributeAsync(string name, LocatorAssertionsToHaveAttributeOptions? options = default);
 
         /// <summary>
         /// <para>

@@ -8,7 +8,7 @@ cd "$(dirname "$0")"
 if [[ ($1 == '--help') || ($1 == '-h') ]]; then
   echo "usage: build.sh <command>"
   echo "commands:"
-  echo "  --init                - download .NET deps, download driver, update assets"
+  echo "  --init                - download .NET deps and download driver"
   echo "  --roll <version>      - roll the .NET language binding to a specific driver version"
   echo "  --download-driver     - download the driver"
   echo "  --setup-dotnet-deps   - download and install the .NET tool deps"

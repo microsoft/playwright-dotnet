@@ -66,11 +66,21 @@ namespace Microsoft.Playwright
         [JsonPropertyName("contentScript")]
         public bool? ContentScript { get; set; }
 
-        /// <summary><para>Script that evaluates to a selector engine instance.</para></summary>
+        /// <summary>
+        /// <para>
+        /// Script that evaluates to a selector engine instance. The script is evaluated in
+        /// the page context.
+        /// </para>
+        /// </summary>
         [JsonPropertyName("path")]
         public string? Path { get; set; }
 
-        /// <summary><para>Script that evaluates to a selector engine instance.</para></summary>
+        /// <summary>
+        /// <para>
+        /// Script that evaluates to a selector engine instance. The script is evaluated in
+        /// the page context.
+        /// </para>
+        /// </summary>
         [JsonPropertyName("script")]
         public string? Script { get; set; }
     }

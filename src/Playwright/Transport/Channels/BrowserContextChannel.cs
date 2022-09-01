@@ -50,7 +50,7 @@ namespace Microsoft.Playwright.Transport.Channels
 
         internal event EventHandler<BindingCallEventArgs> BindingCall;
 
-        internal event EventHandler<RouteEventArgs> Route;
+        internal event EventHandler<Route> Route;
 
         internal event EventHandler<BrowserContextChannelRequestEventArgs> Request;
 
@@ -74,10 +74,7 @@ namespace Microsoft.Playwright.Transport.Channels
                     break;
                 case "route":
                     var route = serverParams?.GetProperty("route").ToObject<RouteChannel>(Connection.DefaultJsonSerializerOptions).Object;
-                    var request = serverParams?.GetProperty("request").ToObject<RequestChannel>(Connection.DefaultJsonSerializerOptions).Object;
-                    Route?.Invoke(
-                        this,
-                        new() { Route = route, Request = request });
+                    Route?.Invoke(this, route);
                     break;
                 case "page":
                     Page?.Invoke(

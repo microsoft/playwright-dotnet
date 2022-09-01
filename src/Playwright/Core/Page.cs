@@ -83,7 +83,7 @@ namespace Microsoft.Playwright.Core
             _channel.Popup += (_, e) => Popup?.Invoke(this, e.Page);
             _channel.WebSocket += (_, e) => WebSocket?.Invoke(this, e);
             _channel.BindingCall += Channel_BindingCall;
-            _channel.Route += (_, e) => OnRouteAsync(e.Route, e.Request).ConfigureAwait(false);
+            _channel.Route += (_, route) => OnRouteAsync(route).ConfigureAwait(false);
             _channel.FrameAttached += Channel_FrameAttached;
             _channel.FrameDetached += Channel_FrameDetached;
             _channel.Dialog += (_, e) =>
@@ -1062,13 +1062,13 @@ namespace Microsoft.Playwright.Core
             }
         }
 
-        private async Task OnRouteAsync(Route route, IRequest request)
+        private async Task OnRouteAsync(Route route)
         {
             var routeHandlers = _routes.ToArray();
             foreach (var routeHandler in routeHandlers)
             {
-                var matches = (routeHandler.Regex?.IsMatch(request.Url) == true) ||
-                    (routeHandler.Function?.Invoke(request.Url) == true);
+                var matches = (routeHandler.Regex?.IsMatch(route.Request.Url) == true) ||
+                    (routeHandler.Function?.Invoke(route.Request.Url) == true);
                 if (!matches)
                 {
                     continue;
@@ -1088,7 +1088,7 @@ namespace Microsoft.Playwright.Core
                 }
             }
 
-            await Context.OnRouteAsync(route, request).ConfigureAwait(false);
+            await Context.OnRouteAsync(route).ConfigureAwait(false);
         }
 
         internal async Task DisableInterceptionAsync()
