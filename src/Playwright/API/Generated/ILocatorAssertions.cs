@@ -148,8 +148,9 @@ namespace Microsoft.Playwright
 
         /// <summary>
         /// <para>
-        /// Ensures the <see cref="ILocator"/> points to a hidden DOM node, which is the opposite
-        /// of <a href="https://playwright.dev/dotnet/docs/api/actionability#visible">visible</a>.
+        /// Ensures that <see cref="ILocator"/> either does not resolve to any DOM node, or
+        /// resolves to a <a href="https://playwright.dev/dotnet/docs/api/actionability#visible">non-visible</a>
+        /// one.
         /// </para>
         /// <code>
         /// var locator = Page.Locator(".my-element");<br/>
@@ -161,7 +162,8 @@ namespace Microsoft.Playwright
 
         /// <summary>
         /// <para>
-        /// Ensures the <see cref="ILocator"/> points to a <a href="https://playwright.dev/dotnet/docs/api/actionability#visible">visible</a>
+        /// Ensures that <see cref="ILocator"/> points to an <a href="https://playwright.dev/dotnet/docs/api/actionability#visible">attached</a>
+        /// and <a href="https://playwright.dev/dotnet/docs/api/actionability#visible">visible</a>
         /// DOM node.
         /// </para>
         /// <code>
@@ -321,7 +323,7 @@ namespace Microsoft.Playwright
         Task ToContainTextAsync(IEnumerable<Regex> expected, LocatorAssertionsToContainTextOptions? options = default);
 
         /// <summary>
-        /// <para>Ensures the <see cref="ILocator"/> points to an element with given attribute.</para>
+        /// <para>Ensures the <see cref="ILocator"/> points to an element with given attribute value.</para>
         /// <code>
         /// var locator = Page.Locator("input");<br/>
         /// await Expect(locator).ToHaveAttributeAsync("type", "text");
@@ -333,7 +335,7 @@ namespace Microsoft.Playwright
         Task ToHaveAttributeAsync(string name, string value, LocatorAssertionsToHaveAttributeOptions? options = default);
 
         /// <summary>
-        /// <para>Ensures the <see cref="ILocator"/> points to an element with given attribute.</para>
+        /// <para>Ensures the <see cref="ILocator"/> points to an element with given attribute value.</para>
         /// <code>
         /// var locator = Page.Locator("input");<br/>
         /// await Expect(locator).ToHaveAttributeAsync("type", "text");
@@ -343,6 +345,21 @@ namespace Microsoft.Playwright
         /// <param name="value">Expected attribute value.</param>
         /// <param name="options">Call options</param>
         Task ToHaveAttributeAsync(string name, Regex value, LocatorAssertionsToHaveAttributeOptions? options = default);
+
+        /// <summary>
+        /// <para>
+        /// Ensures the <see cref="ILocator"/> points to an element with given attribute. The
+        /// method will assert attribute presence.
+        /// </para>
+        /// <code>
+        /// var locator = Page.Locator("input");<br/>
+        /// await Expect(locator).ToHaveAttributeAsync("disabled");<br/>
+        /// await Expect(locator).Not.ToHaveAttributeAsync("open");
+        /// </code>
+        /// </summary>
+        /// <param name="name">Attribute name.</param>
+        /// <param name="options">Call options</param>
+        Task ToHaveAttributeAsync(string name, LocatorAssertionsToHaveAttributeOptions? options = default);
 
         /// <summary>
         /// <para>

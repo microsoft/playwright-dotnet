@@ -649,14 +649,6 @@ namespace Microsoft.Playwright.Tests
             Assert.AreEqual(expect, requestBody);
         }
 
-        [PlaywrightTest("browsercontext-fetch.spec.ts", "should throw when data passed for unsupported request")]
-        public async Task ShouldThrowWhenDataPassedForUnsupportedRequest()
-        {
-            var exception = await PlaywrightAssert.ThrowsAsync<PlaywrightException>(() =>
-               Context.APIRequest.FetchAsync(Server.EmptyPage, new() { Method = "GET", DataObject = new Dictionary<string, object>() }));
-            StringAssert.Contains("Method GET does not accept post data", exception.Message);
-        }
-
         [PlaywrightTest("browsercontext-fetch.spec.ts", "context request should export same storage state as context")]
         public async Task ContextRequestShouldExportSameStorageStateAsContext()
         {

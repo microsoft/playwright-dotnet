@@ -509,7 +509,7 @@ namespace Microsoft.Playwright.Tests
             var point = BrowserName switch
             {
                 "chromium" => new(27, 18),
-                "webkit" => new(29, 19),
+                "webkit" => new(26, 17),
                 _ => new Point(28, 18),
             };
 

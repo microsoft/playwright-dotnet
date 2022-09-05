@@ -74,7 +74,7 @@ namespace Microsoft.Playwright.Tests
             });
             await using var context = await Browser.NewContextAsync(new() { IgnoreHTTPSErrors = true });
             var page = await context.NewPageAsync();
-            await page.GotoAsync(HttpsServer.Prefix + "/mixedcontent.html", new() { WaitUntil = WaitUntilState.DOMContentLoaded });
+            await page.GotoAsync(HttpsServer.Prefix + "/mixedcontent.html", new() { WaitUntil = WaitUntilState.Load });
             Assert.AreEqual(2, page.Frames.Count);
             Assert.AreEqual(3, await page.MainFrame.EvaluateAsync<int>("1 + 2"));
             Assert.AreEqual(5, await page.FirstChildFrame().EvaluateAsync<int>("2 + 3"));

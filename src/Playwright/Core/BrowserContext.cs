@@ -370,13 +370,13 @@ namespace Microsoft.Playwright.Core
 
         public void SetDefaultTimeout(float timeout) => DefaultTimeout = timeout;
 
-        internal async Task OnRouteAsync(Route route, IRequest request)
+        internal async Task OnRouteAsync(Route route)
         {
             var routeHandlers = _routes.ToArray();
             foreach (var routeHandler in routeHandlers)
             {
-                var matches = routeHandler.Regex?.IsMatch(request.Url) == true ||
-                    routeHandler.Function?.Invoke(request.Url) == true;
+                var matches = routeHandler.Regex?.IsMatch(route.Request.Url) == true ||
+                    routeHandler.Function?.Invoke(route.Request.Url) == true;
                 if (!matches)
                 {
                     continue;
@@ -496,15 +496,15 @@ namespace Microsoft.Playwright.Core
             }
         }
 
-        private void Channel_BindingCall(object sender, BindingCallEventArgs e)
+        private void Channel_BindingCall(object sender, BindingCall bindingCall)
         {
-            if (_bindings.TryGetValue(e.BindingCall.Name, out var binding))
+            if (_bindings.TryGetValue(bindingCall.Name, out var binding))
             {
-                _ = e.BindingCall.CallAsync(binding);
+                _ = bindingCall.CallAsync(binding);
             }
         }
 
-        private void Channel_Route(object sender, RouteEventArgs e) => OnRouteAsync(e.Route, e.Request).ConfigureAwait(false);
+        private void Channel_Route(object sender, Route route) => OnRouteAsync(route).ConfigureAwait(false);
 
         private Task ExposeBindingAsync(string name, Delegate callback, bool handle = false)
         {

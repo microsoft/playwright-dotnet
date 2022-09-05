@@ -302,10 +302,10 @@ namespace Microsoft.Playwright.Tests
             });
             await context.RouteAsync("**/empty.html", (route) =>
             {
-                route.ContinueAsync();
+                route.FallbackAsync();
             });
 
-            var exception = PlaywrightAssert.ThrowsAsync<PlaywrightException>(async () =>
+            var exception = await PlaywrightAssert.ThrowsAsync<PlaywrightException>(async () =>
             {
                 await page.GotoAsync(Server.EmptyPage);
             });

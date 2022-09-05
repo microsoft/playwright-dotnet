@@ -100,6 +100,10 @@ namespace Microsoft.Playwright.NUnit
                     output += $"\nFailing test runs:\n";
                     foreach (var result in failedResults)
                     {
+                        if (result == null)
+                        {
+                            continue;
+                        }
                         output += new String('-', 40) + "\n";
                         output += $"  Test: {result.FullName}\n";
                         output += $"  Outcome: {result.ResultState}\n";
@@ -109,7 +113,7 @@ namespace Microsoft.Playwright.NUnit
                         }
                         if (!string.IsNullOrEmpty(result.Message))
                         {
-                            output += $"  Message \n{Indent(result.Message.TrimEnd(), 4)}\n";
+                            output += $"  Message \n{Indent(result.Message!.TrimEnd(), 4)}\n";
                         }
                     }
                 }

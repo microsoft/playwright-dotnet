@@ -119,23 +119,21 @@ namespace Microsoft.Playwright.Tests
         [PlaywrightTest("page-request-fallback.spec.ts", "should not chain abort")]
         public async Task ShouldNotChainAbort()
         {
-            await using var context = await Browser.NewContextAsync();
-            var page = await context.NewPageAsync();
             var failed = false;
-            await page.RouteAsync("**/empty.html", (route) =>
+            await Page.RouteAsync("**/empty.html", (route) =>
             {
                 failed = true;
             });
-            await page.RouteAsync("**/empty.html", (route) =>
+            await Page.RouteAsync("**/empty.html", (route) =>
             {
                 route.AbortAsync();
             });
-            await page.RouteAsync("**/empty.html", (route) =>
+            await Page.RouteAsync("**/empty.html", (route) =>
             {
                 route.FallbackAsync();
             });
 
-            var exception = PlaywrightAssert.ThrowsAsync<PlaywrightException>(async () =>
+            var exception = await PlaywrightAssert.ThrowsAsync<PlaywrightException>(async () =>
             {
                 await Page.GotoAsync(Server.EmptyPage);
             });
@@ -247,7 +245,7 @@ namespace Microsoft.Playwright.Tests
         [PlaywrightTest("page-request-fallback.spec.ts", "should override request url")]
         public async Task ShouldOverrideRequestUrl()
         {
-            var requestMethod = Server.WaitForRequest("/global-var.html", request => request.Method);
+            var serverRequestMethod = Server.WaitForRequest("/global-var.html", request => request.Method);
 
             string url = null;
             await Page.RouteAsync("**/global-var.html", route =>
@@ -258,13 +256,12 @@ namespace Microsoft.Playwright.Tests
 
             await Page.RouteAsync("**/foo", route => route.FallbackAsync(new() { Url = Server.Prefix + "/global-var.html" }));
 
-            var (response, _) = await TaskUtils.WhenAll(
-                Page.WaitForResponseAsync("**/*"),
-                Page.GotoAsync(Server.Prefix + "/foo"));
+            var response = await Page.GotoAsync(Server.Prefix + "/foo");
             Assert.AreEqual(url, Server.Prefix + "/global-var.html");
-            Assert.AreEqual(response.Url, Server.Prefix + "/foo");
+            Assert.AreEqual(response.Request.Url, Server.Prefix + "/global-var.html");
+            Assert.AreEqual(response.Url, Server.Prefix + "/global-var.html");
             Assert.AreEqual(await Page.EvaluateAsync<int>("() => window['globalVar']"), 123);
-            Assert.AreEqual((await requestMethod), "GET");
+            Assert.AreEqual((await serverRequestMethod), "GET");
         }
 
         [PlaywrightTest("page-request-fallback.spec.ts", "should amend post data")]

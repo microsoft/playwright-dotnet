@@ -79,7 +79,7 @@ namespace Microsoft.Playwright
         /// <summary>
         /// <para>
         /// When true, the call requires selector to resolve to a single element. If given selector
-        /// resolves to more then one element, the call throws an exception.
+        /// resolves to more than one element, the call throws an exception.
         /// </para>
         /// </summary>
         [JsonPropertyName("strict")]

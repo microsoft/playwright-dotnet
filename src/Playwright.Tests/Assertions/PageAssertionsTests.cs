@@ -57,14 +57,14 @@ namespace Microsoft.Playwright.Tests.Assertions
             await Expect(Page).ToHaveURLAsync("data:text/html,<div>A</div>");
 
             await Page.GotoAsync("data:text/html,<div>B</div>");
-            var exception = await PlaywrightAssert.ThrowsAsync<PlaywrightException>(() => Expect(Page).ToHaveURLAsync("wrong", new() { Timeout = 100 }));
+            var exception = await PlaywrightAssert.ThrowsAsync<PlaywrightException>(() => Expect(Page).ToHaveURLAsync("wrong", new() { Timeout = 1000 }));
             StringAssert.Contains("Page URL expected to be 'wrong'", exception.Message);
             StringAssert.Contains("But was: 'data:text/html,<div>B</div>'", exception.Message);
-            StringAssert.Contains("PageAssertions.ToHaveURLAsync with timeout 100ms", exception.Message);
+            StringAssert.Contains("PageAssertions.ToHaveURLAsync with timeout 1000ms", exception.Message);
 
             await Page.GotoAsync(Server.EmptyPage);
             await Expect(Page).ToHaveURLAsync(new Regex(".*empty.html"));
-            await PlaywrightAssert.ThrowsAsync<PlaywrightException>(() => Expect(Page).ToHaveURLAsync(new Regex("nooo"), new() { Timeout = 100 }));
+            await PlaywrightAssert.ThrowsAsync<PlaywrightException>(() => Expect(Page).ToHaveURLAsync(new Regex("nooo"), new() { Timeout = 1000 }));
 
             await Page.GotoAsync(Server.EmptyPage);
             await Expect(Page).ToHaveURLAsync(Server.Prefix + "/empty.html");

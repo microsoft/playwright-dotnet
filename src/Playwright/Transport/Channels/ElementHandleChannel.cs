@@ -40,7 +40,7 @@ namespace Microsoft.Playwright.Transport.Channels
             Object = owner;
         }
 
-        internal event EventHandler<PreviewUpdatedEventArgs> PreviewUpdated;
+        internal event EventHandler<string> PreviewUpdated;
 
         public new ElementHandle Object { get; set; }
 
@@ -49,7 +49,7 @@ namespace Microsoft.Playwright.Transport.Channels
             switch (method)
             {
                 case "previewUpdated":
-                    PreviewUpdated?.Invoke(this, new() { Preview = serverParams.Value.GetProperty("preview").ToString() });
+                    PreviewUpdated?.Invoke(this, serverParams.Value.GetProperty("preview").ToString());
                     break;
             }
         }

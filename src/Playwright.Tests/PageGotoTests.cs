@@ -25,6 +25,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Net;
 using System.Threading.Tasks;
@@ -564,29 +565,28 @@ namespace Microsoft.Playwright.Tests
         {
             Server.SetRoute("/one-style.html", _ => Task.Delay(10_000));
             var request = Server.WaitForRequest("/one-style.html");
-            var failed = Page.GotoAsync(Server.Prefix + "/one-style.html", new() { WaitUntil = TestConstants.IsFirefox ? WaitUntilState.NetworkIdle : WaitUntilState.Load });
+            var failed = Page.GotoAsync(Server.Prefix + "/one-style.html");
             await request;
             await Page.GotoAsync(Server.EmptyPage);
 
             await PlaywrightAssert.ThrowsAsync<PlaywrightException>(() => failed);
         }
 
-        [PlaywrightTest("page-goto.spec.ts", "should return when navigation is comitted if commit is specified")]
-        [Skip(SkipAttribute.Targets.Firefox, SkipAttribute.Targets.Webkit)]
+        [PlaywrightTest("page-goto.spec.ts", "should return when navigation is committed if commit is specified'")]
         public async Task ShouldReturnWhenNavigationIsComittedIfCommitIsSpecified()
         {
             Server.SetRoute("/empty.html", async context =>
             {
                 context.Response.StatusCode = 200;
                 context.Response.Headers.Add("content-type", "text/html");
-                context.Response.Headers.Add("content-length", "8192");
+                context.Response.Headers.Add("content-length", (8192 + 7).ToString(CultureInfo.InvariantCulture));
                 // Write enought bytes of the body to trigge response received event.
-                var str = "<title>" + new string('a', 4100);
+                var str = "<title>" + new string('a', 8192);
                 await context.Response.WriteAsync(str);
-                await context.Response.BodyWriter.FlushAsync();
+                await context.Response.Body.FlushAsync();
             });
 
-            var response = await Page.GotoAsync(Server.EmptyPage, new() { WaitUntil = TestConstants.IsFirefox ? WaitUntilState.NetworkIdle : WaitUntilState.Load });
+            var response = await Page.GotoAsync(Server.EmptyPage, new() { WaitUntil = WaitUntilState.Commit });
             Assert.AreEqual(200, response.Status);
         }
 
