@@ -186,46 +186,36 @@ namespace Microsoft.Playwright.Tests
         [PlaywrightTest("page-wait-for-navigation.spec.ts", "should work when subframe issues window.stop()")]
         public async Task ShouldWorkWhenSubframeIssuesWindowStop()
         {
-            //This test is slightly different from the one in PW because of .NET Threads (or thanks to .NET Threads)
-            var framesNavigated = new List<IFrame>();
             IFrame frame = null;
 
             var frameAttachedTaskSource = new TaskCompletionSource<IFrame>();
-            Page.FrameAttached += (_, e) =>
-            {
-                frameAttachedTaskSource.SetResult(e);
-            };
+            Page.FrameAttached += (_, f) => frameAttachedTaskSource.SetResult(f);
             var frameNavigatedTaskSource = new TaskCompletionSource<bool>();
-            Page.FrameNavigated += (_, e) =>
+            Page.FrameNavigated += (_, f) =>
             {
-                if (frame != null)
+                if (frame != null && f == frame)
                 {
-                    if (e == frame)
-                    {
-                        frameNavigatedTaskSource.TrySetResult(true);
-                    }
-                }
-                else
-                {
-                    framesNavigated.Add(frame);
+                    frameNavigatedTaskSource.TrySetResult(true);
                 }
             };
 
-            Server.SetRoute("/frames/style.css", _ => Task.CompletedTask);
-            var navigationTask = Page.GotoAsync(Server.Prefix + "/frames/one-frame.html");
+            Server.SetRoute("/frames/style.css", _ => Task.Delay(-1));
+            bool navigated = false;
+            async Task navigate()
+            {
+                await Page.GotoAsync(Server.Prefix + "/frames/one-frame.html");
+                navigated = true;
+            }
+            navigate().IgnoreException();
 
             frame = await frameAttachedTaskSource.Task;
 
-            if (framesNavigated.Contains(frame))
-            {
-                frameNavigatedTaskSource.TrySetResult(true);
-            }
-
             await frameNavigatedTaskSource.Task;
-            await TaskUtils.WhenAll(
-                frame.EvaluateAsync("() => window.stop()"),
-                navigationTask
-            );
+            await frame.EvaluateAsync("() => window.stop()");
+            // give it some time to erroneously resolve
+            await Task.Delay(2000);
+            // Chromium and Firefox issue load event in this case.
+            Assert.AreEqual(navigated, BrowserName != "webkit");
         }
 
         [PlaywrightTest("page-wait-for-navigation.spec.ts", "should work with url match")]

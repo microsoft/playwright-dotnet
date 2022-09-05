@@ -148,8 +148,9 @@ namespace Microsoft.Playwright
 
         /// <summary>
         /// <para>
-        /// Ensures the <see cref="ILocator"/> points to a hidden DOM node, which is the opposite
-        /// of <a href="https://playwright.dev/dotnet/docs/api/actionability#visible">visible</a>.
+        /// Ensures that <see cref="ILocator"/> either does not resolve to any DOM node, or
+        /// resolves to a <a href="https://playwright.dev/dotnet/docs/api/actionability#visible">non-visible</a>
+        /// one.
         /// </para>
         /// <code>
         /// var locator = Page.Locator(".my-element");<br/>
@@ -161,7 +162,8 @@ namespace Microsoft.Playwright
 
         /// <summary>
         /// <para>
-        /// Ensures the <see cref="ILocator"/> points to a <a href="https://playwright.dev/dotnet/docs/api/actionability#visible">visible</a>
+        /// Ensures that <see cref="ILocator"/> points to an <a href="https://playwright.dev/dotnet/docs/api/actionability#visible">attached</a>
+        /// and <a href="https://playwright.dev/dotnet/docs/api/actionability#visible">visible</a>
         /// DOM node.
         /// </para>
         /// <code>
