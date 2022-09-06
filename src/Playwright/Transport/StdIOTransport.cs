@@ -31,7 +31,7 @@ using Microsoft.Playwright.Helpers;
 
 namespace Microsoft.Playwright.Transport
 {
-    internal class StdIOTransport : IConnectionTransport, IDisposable
+    internal class StdIOTransport : IDisposable
     {
         private const int DefaultBufferSize = 1024;  // Byte buffer size
         private readonly Process _process;
@@ -57,7 +57,6 @@ namespace Microsoft.Playwright.Transport
             ScheduleTransportTask(GetResponseAsync, _readerCancellationSource.Token);
         }
 
-        /// <inheritdoc cref="IDisposable.Dispose"/>
         ~StdIOTransport() => Dispose(false);
 
         public event EventHandler<byte[]> MessageReceived;
@@ -68,14 +67,12 @@ namespace Microsoft.Playwright.Transport
 
         public bool IsClosed { get; private set; }
 
-        /// <inheritdoc/>
         public void Dispose()
         {
             Dispose(true);
             GC.SuppressFinalize(this);
         }
 
-        /// <inheritdoc/>
         public void Close(string closeReason)
         {
             if (!IsClosed)
