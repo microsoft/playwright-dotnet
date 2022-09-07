@@ -33,9 +33,9 @@ test('should not retry a passed test with retries: 0', async ({ runTest }) => {
       
       namespace Playwright.TestingHarnessTest.NUnit;
 
+      [TestFixture]
       public class <class-name> : PageTest
       {
-          [Test]
           [PlaywrightTest]
           public void MyTest()
           {
@@ -60,9 +60,9 @@ test('should not retry a failed test with retries: 0', async ({ runTest }) => {
       
       namespace Playwright.TestingHarnessTest.NUnit;
 
+      [TestFixture]
       public class <class-name> : PageTest
       {
-          [Test]
           [PlaywrightTest]
           public void MyTest()
           {
@@ -89,9 +89,9 @@ test('should not retry a passed test with retries: 1', async ({ runTest }) => {
       
       namespace Playwright.TestingHarnessTest.NUnit;
 
+      [TestFixture]
       public class <class-name> : PageTest
       {
-          [Test]
           [PlaywrightTest]
           public void MyTest()
           {
@@ -123,9 +123,9 @@ test('should retry a failed test with retries: 1', async ({ runTest }) => {
       
       namespace Playwright.TestingHarnessTest.NUnit;
 
+      [TestFixture]
       public class <class-name> : PageTest
       {
-          [Test]
           [PlaywrightTest]
           public void MyTest()
           {
@@ -160,11 +160,11 @@ test('should retry a failed test and stop once it passed', async ({ runTest }) =
       
       namespace Playwright.TestingHarnessTest.NUnit;
 
+      [TestFixture]
       public class <class-name> : PageTest
       {
           static int retries = 0;
 
-          [Test]
           [PlaywrightTest]
           public void MyTest()
           {
