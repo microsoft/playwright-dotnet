@@ -34,7 +34,7 @@ using NUnitFrameworkBase = NUnit.Framework;
 namespace Microsoft.Playwright.NUnit
 {
     [AttributeUsage(AttributeTargets.Method, AllowMultiple = false, Inherited = true)]
-    public class PlaywrightTestAttribute : NUnitFrameworkBase.NUnitAttribute, IWrapTestMethod
+    public class PlaywrightTestAttribute : NUnitFrameworkBase.TestAttribute, IWrapTestMethod
     {
         public PlaywrightTestAttribute() : base()
         {
