@@ -34,11 +34,6 @@ namespace Microsoft.Playwright.Core
     [SuppressMessage("Microsoft.Design", "CA1724", Justification = "Playwright is the entrypoint for all languages.")]
     internal class PlaywrightImpl : ChannelOwnerBase, IPlaywright, IChannelOwner<PlaywrightImpl>
     {
-        /// <summary>
-        /// Default timeout.
-        /// </summary>
-        public const int DefaultTimeout = 30_000;
-
         private readonly PlaywrightInitializer _initializer;
         internal readonly PlaywrightChannel _channel;
         private readonly Connection _connection;

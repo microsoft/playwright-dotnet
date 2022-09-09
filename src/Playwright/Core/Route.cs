@@ -95,11 +95,7 @@ namespace Microsoft.Playwright.Core
         {
             var options = _request.FallbackOverridesForContinue();
             await _channel.Connection.WrapApiCallAsync(
-                async () =>
-                {
-                    await RaceWithTargetCloseAsync(_channel.ContinueAsync(url: options.Url, method: options.Method, postData: options.PostData, headers: options.Headers)).ConfigureAwait(false);
-                    return 42; // We need to return something to make generics work.
-                },
+                () => RaceWithTargetCloseAsync(_channel.ContinueAsync(url: options.Url, method: options.Method, postData: options.PostData, headers: options.Headers)),
                 @internal).ConfigureAwait(false);
         }
 

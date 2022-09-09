@@ -639,7 +639,7 @@ namespace Microsoft.Playwright.Core
                 "FrameDetached",
                 new("Navigating frame was detached!"),
                 e => e == this);
-            timeout ??= (Page as Page)?.DefaultNavigationTimeout ?? PlaywrightImpl.DefaultTimeout;
+            timeout = (Page as Page)?._timeoutSettings.NavigationTimeout(timeout);
             waiter.RejectOnTimeout(Convert.ToInt32(timeout, CultureInfo.InvariantCulture), $"Timeout {timeout}ms exceeded.");
 
             return waiter;

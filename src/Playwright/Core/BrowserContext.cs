@@ -49,8 +49,7 @@ namespace Microsoft.Playwright.Core
         private List<RouteHandler> _routes = new();
         internal readonly List<Page> _pages = new();
 
-        private float? _defaultNavigationTimeout;
-        private float? _defaultTimeout;
+        internal TimeoutSettings _timeoutSettings = new();
 
         internal BrowserContext(IChannelOwner parent, string guid, BrowserContextInitializer initializer) : base(parent, guid)
         {
@@ -126,26 +125,6 @@ namespace Microsoft.Playwright.Core
         public IBrowser Browser { get; }
 
         public IReadOnlyList<IPage> Pages => _pages;
-
-        internal float DefaultNavigationTimeout
-        {
-            get => _defaultNavigationTimeout ?? PlaywrightImpl.DefaultTimeout;
-            set
-            {
-                _defaultNavigationTimeout = value;
-                Channel.SetDefaultNavigationTimeoutNoReplyAsync(value).IgnoreException();
-            }
-        }
-
-        internal float DefaultTimeout
-        {
-            get => _defaultTimeout ?? PlaywrightImpl.DefaultTimeout;
-            set
-            {
-                _defaultTimeout = value;
-                Channel.SetDefaultTimeoutNoReplyAsync(value).IgnoreException();
-            }
-        }
 
         internal BrowserContextChannel Channel { get; }
 
@@ -340,7 +319,7 @@ namespace Microsoft.Playwright.Core
                 throw new ArgumentException("Page event is required", nameof(playwrightEvent));
             }
 
-            timeout ??= DefaultTimeout;
+            timeout = _timeoutSettings.Timeout(timeout);
             using var waiter = new Waiter(this, $"context.WaitForEventAsync(\"{playwrightEvent.Name}\")");
             waiter.RejectOnTimeout(Convert.ToInt32(timeout, CultureInfo.InvariantCulture), $"Timeout {timeout}ms exceeded while waiting for event \"{playwrightEvent.Name}\"");
 
@@ -366,9 +345,17 @@ namespace Microsoft.Playwright.Core
 
         public ValueTask DisposeAsync() => new(CloseAsync());
 
-        public void SetDefaultNavigationTimeout(float timeout) => DefaultNavigationTimeout = timeout;
+        public void SetDefaultNavigationTimeout(float timeout)
+        {
+            _timeoutSettings.SetDefaultNavigationTimeout(timeout);
+            WrapApiCallAsync(() => Channel.SetDefaultNavigationTimeoutNoReplyAsync(timeout), true).IgnoreException();
+        }
 
-        public void SetDefaultTimeout(float timeout) => DefaultTimeout = timeout;
+        public void SetDefaultTimeout(float timeout)
+        {
+            _timeoutSettings.SetDefaultTimeout(timeout);
+            WrapApiCallAsync(() => Channel.SetDefaultTimeoutNoReplyAsync(timeout), true).IgnoreException();
+        }
 
         internal async Task OnRouteAsync(Route route)
         {
