@@ -490,6 +490,15 @@ namespace Microsoft.Playwright.Transport
             }
         }
 
+        internal Task WrapApiCallAsync(Func<Task> action, bool isInternal = false)
+            => WrapApiCallAsync(
+                async () =>
+                {
+                    await action().ConfigureAwait(false);
+                    return true;
+                },
+                isInternal);
+
         private static bool IsPlaywrightInternalNamespace(string namespaceName)
         {
             return namespaceName != null &&

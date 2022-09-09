@@ -52,7 +52,6 @@ namespace Microsoft.Playwright.Core
                         snapshots: options?.Snapshots,
                         sources: options?.Sources).ConfigureAwait(false);
                 await _channel.StartChunkAsync(options?.Title).ConfigureAwait(false);
-                return 42; // We need to return something to make generics work.
             }).ConfigureAwait(false);
         }
 
@@ -66,7 +65,6 @@ namespace Microsoft.Playwright.Core
             {
                 await StopChunkAsync(new() { Path = options?.Path }).ConfigureAwait(false);
                 await _channel.TracingStopAsync().ConfigureAwait(false);
-                return 42; // We need to return something to make generics work.
             }).ConfigureAwait(false);
         }
 

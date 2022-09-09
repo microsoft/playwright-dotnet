@@ -51,16 +51,16 @@ namespace Microsoft.Playwright.Core
         private readonly PageInitializer _initializer;
 
         internal readonly List<Worker> _workers = new();
+        internal readonly TimeoutSettings _timeoutSettings;
         private List<RouteHandler> _routes = new();
         private EventHandler<IFileChooser> _fileChooserEventHandler;
         private bool _fileChooserIntercepted;
         private Video _video;
-        private float _defaultNavigationTimeout;
-        private float _defaultTimeout;
 
         internal Page(IChannelOwner parent, string guid, PageInitializer initializer) : base(parent, guid)
         {
             Context = (BrowserContext)parent;
+            _timeoutSettings = new(Context._timeoutSettings);
 
             _channel = new(guid, parent.Connection, this);
 
@@ -126,8 +126,6 @@ namespace Microsoft.Playwright.Core
                 Worker?.Invoke(this, worker);
             };
 
-            _defaultNavigationTimeout = Context.DefaultNavigationTimeout;
-            _defaultTimeout = Context.DefaultTimeout;
             _initializer = initializer;
 
             Close += (_, _) => ClosedOrCrashedTcs.TrySetResult(true);
@@ -262,26 +260,6 @@ namespace Microsoft.Playwright.Core
         internal Page Opener => _initializer.Opener;
 
         internal PageChannel Channel => _channel;
-
-        internal float DefaultTimeout
-        {
-            get => _defaultTimeout;
-            set
-            {
-                _defaultTimeout = value;
-                _channel.SetDefaultTimeoutNoReplyAsync(value).IgnoreException();
-            }
-        }
-
-        internal float DefaultNavigationTimeout
-        {
-            get => _defaultNavigationTimeout;
-            set
-            {
-                _defaultNavigationTimeout = value;
-                _channel.SetDefaultNavigationTimeoutNoReplyAsync(value).IgnoreException();
-            }
-        }
 
         internal TaskCompletionSource<bool> ClosedOrCrashedTcs { get; } = new();
 
@@ -436,7 +414,7 @@ namespace Microsoft.Playwright.Core
                 throw new ArgumentException("Page event is required", nameof(pageEvent));
             }
 
-            timeout ??= _defaultTimeout;
+            timeout = _timeoutSettings.Timeout(timeout);
             using var waiter = new Waiter(this, $"page.WaitForEventAsync(\"{typeof(T)}\")");
             waiter.RejectOnTimeout(Convert.ToInt32(timeout, CultureInfo.InvariantCulture), $"Timeout {timeout}ms exceeded while waiting for event \"{pageEvent.Name}\"");
 
@@ -956,9 +934,17 @@ namespace Microsoft.Playwright.Core
 
         public Task PauseAsync() => Context.Channel.PauseAsync();
 
-        public void SetDefaultNavigationTimeout(float timeout) => DefaultNavigationTimeout = timeout;
+        public void SetDefaultNavigationTimeout(float timeout)
+        {
+            _timeoutSettings.SetDefaultNavigationTimeout(timeout);
+            WrapApiCallAsync(() => Channel.SetDefaultNavigationTimeoutNoReplyAsync(timeout), true).IgnoreException();
+        }
 
-        public void SetDefaultTimeout(float timeout) => DefaultTimeout = timeout;
+        public void SetDefaultTimeout(float timeout)
+        {
+            _timeoutSettings.SetDefaultTimeout(timeout);
+            WrapApiCallAsync(() => Channel.SetDefaultTimeoutNoReplyAsync(timeout), true).IgnoreException();
+        }
 
         public Task<string> InputValueAsync(string selector, PageInputValueOptions options = null)
             => MainFrame.InputValueAsync(selector, new()
