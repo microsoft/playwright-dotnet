@@ -42,8 +42,8 @@ namespace Microsoft.Playwright
         {
 #pragma warning disable CA2000 // Dispose objects before losing scope
             var transport = new StdIOTransport();
-#pragma warning restore CA2000
             var connection = new Connection();
+#pragma warning restore CA2000
             transport.MessageReceived += (_, message) => connection.Dispatch(JsonSerializer.Deserialize<PlaywrightServerMessage>(message, JsonExtensions.DefaultJsonSerializerOptions));
             transport.LogReceived += (_, log) =>
             {
@@ -55,7 +55,6 @@ namespace Microsoft.Playwright
             connection.OnMessage = (message) => transport.SendAsync(JsonSerializer.SerializeToUtf8Bytes(message, connection.DefaultJsonSerializerOptions));
             connection.Close += (_, reason) => transport.Close(reason);
             var playwright = await connection.InitializePlaywrightAsync().ConfigureAwait(false);
-            playwright.Connection = connection;
             return playwright;
         }
     }

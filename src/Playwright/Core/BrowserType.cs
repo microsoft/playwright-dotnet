@@ -183,7 +183,7 @@ namespace Microsoft.Playwright.Core
                     context.OnClose();
                 }
                 browser?.DidClose();
-                connection.DoClose(closeError != null ? closeError : DriverMessages.BrowserClosedExceptionMessage);
+                connection.DoClose(closeError ?? DriverMessages.BrowserClosedExceptionMessage);
             }
             pipe.Closed += (_, _) => OnPipeClosed();
             connection.OnMessage = async (object message) =>
@@ -219,7 +219,6 @@ namespace Microsoft.Playwright.Core
             async Task<IBrowser> CreateBrowserAsync()
             {
                 var playwright = await connection.InitializePlaywrightAsync().ConfigureAwait(false);
-                playwright.Connection = connection;
                 if (playwright.PreLaunchedBrowser == null)
                 {
                     ClosePipe();
