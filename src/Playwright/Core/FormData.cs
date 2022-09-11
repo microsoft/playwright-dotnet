@@ -26,55 +26,54 @@ using System;
 using System.Collections.Generic;
 using Microsoft.Playwright.Transport.Protocol;
 
-namespace Microsoft.Playwright.Core
+namespace Microsoft.Playwright.Core;
+
+public class FormData : IFormData
 {
-    public class FormData : IFormData
+    public FormData()
     {
-        public FormData()
+        Values = new Dictionary<string, object>();
+    }
+
+    internal Dictionary<string, object> Values { get; }
+
+    private IFormData SetImpl(string name, object value)
+    {
+        Values.Add(name, value);
+        return this;
+    }
+
+    public IFormData Set(string name, string value) => SetImpl(name, value);
+
+    public IFormData Set(string name, bool value) => SetImpl(name, value);
+
+    public IFormData Set(string name, int value) => SetImpl(name, value);
+
+    public IFormData Set(string name, FilePayload value) => SetImpl(name, value);
+
+    internal IList<object> ToProtocol()
+    {
+        var output = new List<object>();
+        foreach (var kvp in Values)
         {
-            Values = new Dictionary<string, object>();
-        }
-
-        internal Dictionary<string, object> Values { get; }
-
-        private IFormData SetImpl(string name, object value)
-        {
-            Values.Add(name, value);
-            return this;
-        }
-
-        public IFormData Set(string name, string value) => SetImpl(name, value);
-
-        public IFormData Set(string name, bool value) => SetImpl(name, value);
-
-        public IFormData Set(string name, int value) => SetImpl(name, value);
-
-        public IFormData Set(string name, FilePayload value) => SetImpl(name, value);
-
-        internal IList<object> ToProtocol()
-        {
-            var output = new List<object>();
-            foreach (var kvp in Values)
+            if (kvp.Value is FilePayload file)
             {
-                if (kvp.Value is FilePayload file)
+                output.Add(new Dictionary<string, object>()
                 {
-                    output.Add(new Dictionary<string, object>()
+                    ["name"] = kvp.Key,
+                    ["file"] = new Dictionary<string, string>()
                     {
-                        ["name"] = kvp.Key,
-                        ["file"] = new Dictionary<string, string>()
-                        {
-                            ["name"] = file.Name,
-                            ["buffer"] = Convert.ToBase64String(file.Buffer),
-                            ["mimeType"] = file.MimeType,
-                        },
-                    });
-                }
-                else
-                {
-                    output.Add(new NameValue() { Name = kvp.Key, Value = kvp.Value.ToString() });
-                }
+                        ["name"] = file.Name,
+                        ["buffer"] = Convert.ToBase64String(file.Buffer),
+                        ["mimeType"] = file.MimeType,
+                    },
+                });
             }
-            return output;
+            else
+            {
+                output.Add(new NameValue() { Name = kvp.Key, Value = kvp.Value.ToString() });
+            }
         }
+        return output;
     }
 }

@@ -26,29 +26,28 @@ using System.Threading.Tasks;
 using Microsoft.Playwright.TestAdapter;
 using NUnit.Framework;
 
-namespace Microsoft.Playwright.NUnit
+namespace Microsoft.Playwright.NUnit;
+
+public class PlaywrightTest : WorkerAwareTest
 {
-    public class PlaywrightTest : WorkerAwareTest
+    public string BrowserName { get; internal set; } = null!;
+
+    private static readonly Task<IPlaywright> _playwrightTask = Microsoft.Playwright.Playwright.CreateAsync();
+
+    public IPlaywright Playwright { get; private set; } = null!;
+    public IBrowserType BrowserType { get; private set; } = null!;
+
+    [SetUp]
+    public async Task PlaywrightSetup()
     {
-        public string BrowserName { get; internal set; } = null!;
-
-        private static readonly Task<IPlaywright> _playwrightTask = Microsoft.Playwright.Playwright.CreateAsync();
-
-        public IPlaywright Playwright { get; private set; } = null!;
-        public IBrowserType BrowserType { get; private set; } = null!;
-
-        [SetUp]
-        public async Task PlaywrightSetup()
-        {
-            Playwright = await _playwrightTask.ConfigureAwait(false);
-            BrowserName = PlaywrightSettingsProvider.BrowserName;
-            BrowserType = Playwright[BrowserName];
-        }
-
-        public ILocatorAssertions Expect(ILocator locator) => Assertions.Expect(locator);
-
-        public IPageAssertions Expect(IPage page) => Assertions.Expect(page);
-
-        public IAPIResponseAssertions Expect(IAPIResponse response) => Assertions.Expect(response);
+        Playwright = await _playwrightTask.ConfigureAwait(false);
+        BrowserName = PlaywrightSettingsProvider.BrowserName;
+        BrowserType = Playwright[BrowserName];
     }
+
+    public ILocatorAssertions Expect(ILocator locator) => Assertions.Expect(locator);
+
+    public IPageAssertions Expect(IPage page) => Assertions.Expect(page);
+
+    public IAPIResponseAssertions Expect(IAPIResponse response) => Assertions.Expect(response);
 }

@@ -27,17 +27,17 @@ using System.Threading.Tasks;
 using Microsoft.Playwright.NUnit;
 using NUnit.Framework;
 
-namespace Microsoft.Playwright.Tests
-{
-    public class PageClickTimeout3Tests : PageTestEx
-    {
-        [PlaywrightTest("page-click-timeout-3.spec.ts", "should timeout waiting for hit target")]
-        public async Task ShouldTimeoutWaitingForHitTarget()
-        {
-            await Page.GotoAsync(Server.Prefix + "/input/button.html");
-            var button = await Page.QuerySelectorAsync("button");
+namespace Microsoft.Playwright.Tests;
 
-            await Page.EvalOnSelectorAsync("button", @"button => {
+public class PageClickTimeout3Tests : PageTestEx
+{
+    [PlaywrightTest("page-click-timeout-3.spec.ts", "should timeout waiting for hit target")]
+    public async Task ShouldTimeoutWaitingForHitTarget()
+    {
+        await Page.GotoAsync(Server.Prefix + "/input/button.html");
+        var button = await Page.QuerySelectorAsync("button");
+
+        await Page.EvalOnSelectorAsync("button", @"button => {
                 button.style.borderWidth = '0';
                 button.style.width = '200px';
                 button.style.height = '20px';
@@ -54,10 +54,9 @@ namespace Microsoft.Playwright.Tests
                 document.body.appendChild(flyOver);
             }");
 
-            var exception = await PlaywrightAssert.ThrowsAsync<TimeoutException>(()
-                => button.ClickAsync(new() { Timeout = 5000 }));
+        var exception = await PlaywrightAssert.ThrowsAsync<TimeoutException>(()
+            => button.ClickAsync(new() { Timeout = 5000 }));
 
-            StringAssert.Contains("Timeout 5000ms exceeded.", exception.Message);
-        }
+        StringAssert.Contains("Timeout 5000ms exceeded.", exception.Message);
     }
 }

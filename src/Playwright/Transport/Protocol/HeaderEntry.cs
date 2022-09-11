@@ -22,12 +22,11 @@
  * SOFTWARE.
  */
 
-namespace Microsoft.Playwright.Transport.Protocol
-{
-    internal class HeaderEntry
-    {
-        public string Name { get; set; }
+namespace Microsoft.Playwright.Transport.Protocol;
 
-        public string Value { get; set; }
-    }
+internal class HeaderEntry
+{
+    public string Name { get; set; }
+
+    public string Value { get; set; }
 }

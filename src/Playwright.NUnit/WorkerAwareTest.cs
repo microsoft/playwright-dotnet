@@ -33,72 +33,71 @@ using Microsoft.Playwright.TestAdapter;
 using NUnit.Framework;
 using NUnit.Framework.Interfaces;
 
-namespace Microsoft.Playwright.NUnit
+namespace Microsoft.Playwright.NUnit;
+
+public class WorkerAwareTest
 {
-    public class WorkerAwareTest
+    internal class Worker
     {
-        internal class Worker
+        private static int _lastWorkedIndex = 0;
+        public int WorkerIndex = Interlocked.Increment(ref _lastWorkedIndex);
+        public Dictionary<string, IWorkerService> Services = new();
+    }
+
+    private static readonly ConcurrentStack<Worker> _allWorkers = new();
+    private Worker _currentWorker = null!;
+
+    public int WorkerIndex { get; internal set; }
+
+    public async Task<T> RegisterService<T>(string name, Func<Task<T>> factory) where T : class, IWorkerService
+    {
+        if (!_currentWorker.Services.ContainsKey(name))
         {
-            private static int _lastWorkedIndex = 0;
-            public int WorkerIndex = Interlocked.Increment(ref _lastWorkedIndex);
-            public Dictionary<string, IWorkerService> Services = new();
+            _currentWorker.Services[name] = await factory().ConfigureAwait(false);
         }
 
-        private static readonly ConcurrentStack<Worker> _allWorkers = new();
-        private Worker _currentWorker = null!;
+        return (_currentWorker.Services[name] as T)!;
+    }
 
-        public int WorkerIndex { get; internal set; }
-
-        public async Task<T> RegisterService<T>(string name, Func<Task<T>> factory) where T : class, IWorkerService
+    [SetUp]
+    public void WorkerSetup()
+    {
+        if (!_allWorkers.TryPop(out _currentWorker))
         {
-            if (!_currentWorker.Services.ContainsKey(name))
-            {
-                _currentWorker.Services[name] = await factory().ConfigureAwait(false);
-            }
-
-            return (_currentWorker.Services[name] as T)!;
+            _currentWorker = new();
         }
-
-        [SetUp]
-        public void WorkerSetup()
+        WorkerIndex = _currentWorker.WorkerIndex;
+        if (PlaywrightSettingsProvider.ExpectTimeout.HasValue)
         {
-            if (!_allWorkers.TryPop(out _currentWorker))
-            {
-                _currentWorker = new();
-            }
-            WorkerIndex = _currentWorker.WorkerIndex;
-            if (PlaywrightSettingsProvider.ExpectTimeout.HasValue)
-            {
-                AssertionsBase.SetDefaultTimeout(PlaywrightSettingsProvider.ExpectTimeout.Value);
-            }
+            AssertionsBase.SetDefaultTimeout(PlaywrightSettingsProvider.ExpectTimeout.Value);
         }
+    }
 
-        [TearDown]
-        public async Task WorkerTeardown()
+    [TearDown]
+    public async Task WorkerTeardown()
+    {
+        if (TestOk())
         {
-            if (TestOk())
+            foreach (var kv in _currentWorker.Services)
             {
-                foreach (var kv in _currentWorker.Services)
-                {
-                    await kv.Value.ResetAsync().ConfigureAwait(false);
-                }
-                _allWorkers.Push(_currentWorker);
+                await kv.Value.ResetAsync().ConfigureAwait(false);
             }
-            else
-            {
-                foreach (var kv in _currentWorker.Services)
-                {
-                    await kv.Value.DisposeAsync().ConfigureAwait(false);
-                }
-                _currentWorker.Services.Clear();
-            }
+            _allWorkers.Push(_currentWorker);
         }
+        else
+        {
+            foreach (var kv in _currentWorker.Services)
+            {
+                await kv.Value.DisposeAsync().ConfigureAwait(false);
+            }
+            _currentWorker.Services.Clear();
+        }
+    }
 
-        public bool TestOk()
-        {
-            return
-                TestContext.CurrentContext.Result.Outcome.Status == TestStatus.Passed ||
-                TestContext.CurrentContext.Result.Outcome.Status == TestStatus.Skipped;
-        }
+    public bool TestOk()
+    {
+        return
+            TestContext.CurrentContext.Result.Outcome.Status == TestStatus.Passed ||
+            TestContext.CurrentContext.Result.Outcome.Status == TestStatus.Skipped;
     }
 }

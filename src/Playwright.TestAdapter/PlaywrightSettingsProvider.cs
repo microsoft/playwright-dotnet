@@ -27,83 +27,82 @@ using System.Xml;
 using Microsoft.VisualStudio.TestPlatform.ObjectModel;
 using Microsoft.VisualStudio.TestPlatform.ObjectModel.Adapter;
 
-namespace Microsoft.Playwright.TestAdapter
+namespace Microsoft.Playwright.TestAdapter;
+
+[ExtensionUri("settings://playwright")]
+[SettingsName("Playwright")]
+public class PlaywrightSettingsProvider : ISettingsProvider
 {
-    [ExtensionUri("settings://playwright")]
-    [SettingsName("Playwright")]
-    public class PlaywrightSettingsProvider : ISettingsProvider
+    private static PlaywrightSettingsXml? _settings = null!;
+
+    public static string BrowserName
     {
-        private static PlaywrightSettingsXml? _settings = null!;
-
-        public static string BrowserName
+        get
         {
-            get
+            var browserFromEnv = Environment.GetEnvironmentVariable("BROWSER")?.ToLowerInvariant();
+            if (!string.IsNullOrEmpty(browserFromEnv))
             {
-                var browserFromEnv = Environment.GetEnvironmentVariable("BROWSER")?.ToLowerInvariant();
-                if (!string.IsNullOrEmpty(browserFromEnv))
-                {
-                    ValidateBrowserName(browserFromEnv!);
-                    return browserFromEnv!;
-                }
-                if (_settings != null && !string.IsNullOrEmpty(_settings.BrowserName))
-                {
-                    var browser = _settings.BrowserName!.ToLowerInvariant();
-                    ValidateBrowserName(browser);
-                    return browser;
-                }
-                return BrowserType.Chromium;
+                ValidateBrowserName(browserFromEnv!);
+                return browserFromEnv!;
             }
-        }
-
-        public static float? ExpectTimeout
-        {
-            get
+            if (_settings != null && !string.IsNullOrEmpty(_settings.BrowserName))
             {
-                if (_settings == null)
-                {
-                    return null;
-                }
-                if (_settings.ExpectTimeout.HasValue)
-                {
-                    return _settings.ExpectTimeout.Value;
-                }
+                var browser = _settings.BrowserName!.ToLowerInvariant();
+                ValidateBrowserName(browser);
+                return browser;
+            }
+            return BrowserType.Chromium;
+        }
+    }
+
+    public static float? ExpectTimeout
+    {
+        get
+        {
+            if (_settings == null)
+            {
                 return null;
             }
-        }
-
-        public static int Retries
-        {
-            get => _settings?.Retries ?? 0;
-        }
-
-        public static BrowserTypeLaunchOptions LaunchOptions
-        {
-            get
+            if (_settings.ExpectTimeout.HasValue)
             {
-                var launchOptions = _settings?.LaunchOptions ?? new BrowserTypeLaunchOptions();
-                if (Environment.GetEnvironmentVariable("HEADED") == "1")
-                {
-                    launchOptions.Headless = false;
-                }
-                else if (_settings != null && _settings.Headless.HasValue)
-                {
-                    launchOptions.Headless = _settings.Headless.Value;
-                }
-                return launchOptions;
+                return _settings.ExpectTimeout.Value;
             }
+            return null;
         }
-
-        private static void ValidateBrowserName(string browserName)
-        {
-            if (browserName != BrowserType.Chromium &&
-                browserName != BrowserType.Firefox &&
-                browserName != BrowserType.Webkit)
-            {
-                throw new ArgumentException($"Invalid browser name: {browserName}");
-            }
-        }
-
-        public void Load(XmlReader reader)
-            => _settings = new PlaywrightSettingsXml(reader);
     }
+
+    public static int Retries
+    {
+        get => _settings?.Retries ?? 0;
+    }
+
+    public static BrowserTypeLaunchOptions LaunchOptions
+    {
+        get
+        {
+            var launchOptions = _settings?.LaunchOptions ?? new BrowserTypeLaunchOptions();
+            if (Environment.GetEnvironmentVariable("HEADED") == "1")
+            {
+                launchOptions.Headless = false;
+            }
+            else if (_settings != null && _settings.Headless.HasValue)
+            {
+                launchOptions.Headless = _settings.Headless.Value;
+            }
+            return launchOptions;
+        }
+    }
+
+    private static void ValidateBrowserName(string browserName)
+    {
+        if (browserName != BrowserType.Chromium &&
+            browserName != BrowserType.Firefox &&
+            browserName != BrowserType.Webkit)
+        {
+            throw new ArgumentException($"Invalid browser name: {browserName}");
+        }
+    }
+
+    public void Load(XmlReader reader)
+        => _settings = new PlaywrightSettingsXml(reader);
 }

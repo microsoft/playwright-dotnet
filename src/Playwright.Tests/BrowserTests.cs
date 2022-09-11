@@ -26,59 +26,58 @@ using System.Threading.Tasks;
 using Microsoft.Playwright.NUnit;
 using NUnit.Framework;
 
-namespace Microsoft.Playwright.Tests
+namespace Microsoft.Playwright.Tests;
+
+///<playwright-file>browser.spec.ts</playwright-file>
+public class BrowserTests : BrowserTestEx
 {
-    ///<playwright-file>browser.spec.ts</playwright-file>
-    public class BrowserTests : BrowserTestEx
+    [PlaywrightTest("browser.spec.ts", "should create new page")]
+    public async Task ShouldCreateNewPage()
     {
-        [PlaywrightTest("browser.spec.ts", "should create new page")]
-        public async Task ShouldCreateNewPage()
+        var browser = await Playwright[TestConstants.BrowserName].LaunchAsync();
+        var page1 = await browser.NewPageAsync();
+        Assert.That(browser.Contexts, Has.Length.EqualTo(1));
+
+        var page2 = await browser.NewPageAsync();
+        Assert.AreEqual(2, browser.Contexts.Count);
+
+        await page1.CloseAsync();
+        Assert.That(browser.Contexts, Has.Length.EqualTo(1));
+
+        await page2.CloseAsync();
+        await browser.CloseAsync();
+    }
+
+    [PlaywrightTest("browser.spec.ts", "should return browserType")]
+    public async Task ShouldReturnBrowserType()
+    {
+        var browserType = Playwright[TestConstants.BrowserName];
+        var browser = await browserType.LaunchAsync();
+        Assert.AreEqual(browser.BrowserType, browserType);
+        await browser.CloseAsync();
+    }
+
+    [PlaywrightTest("browser.spec.ts", "should throw upon second create new page")]
+    public async Task ShouldThrowUponSecondCreateNewPage()
+    {
+        var page = await Browser.NewPageAsync();
+        var ex = await PlaywrightAssert.ThrowsAsync<PlaywrightException>(() => page.Context.NewPageAsync());
+        await page.CloseAsync();
+        StringAssert.Contains("Please use Browser.NewContextAsync()", ex.Message);
+    }
+
+    [PlaywrightTest("browser.spec.ts", "version should work")]
+    public void VersionShouldWork()
+    {
+        string version = Browser.Version;
+
+        if (TestConstants.IsChromium)
         {
-            var browser = await Playwright[TestConstants.BrowserName].LaunchAsync();
-            var page1 = await browser.NewPageAsync();
-            Assert.That(browser.Contexts, Has.Length.EqualTo(1));
-
-            var page2 = await browser.NewPageAsync();
-            Assert.AreEqual(2, browser.Contexts.Count);
-
-            await page1.CloseAsync();
-            Assert.That(browser.Contexts, Has.Length.EqualTo(1));
-
-            await page2.CloseAsync();
-            await browser.CloseAsync();
+            Assert.That(version, Does.Match("\\d+\\.\\d+\\.\\d+\\.\\d+"));
         }
-
-        [PlaywrightTest("browser.spec.ts", "should return browserType")]
-        public async Task ShouldReturnBrowserType()
+        else
         {
-            var browserType = Playwright[TestConstants.BrowserName];
-            var browser = await browserType.LaunchAsync();
-            Assert.AreEqual(browser.BrowserType, browserType);
-            await browser.CloseAsync();
-        }
-
-        [PlaywrightTest("browser.spec.ts", "should throw upon second create new page")]
-        public async Task ShouldThrowUponSecondCreateNewPage()
-        {
-            var page = await Browser.NewPageAsync();
-            var ex = await PlaywrightAssert.ThrowsAsync<PlaywrightException>(() => page.Context.NewPageAsync());
-            await page.CloseAsync();
-            StringAssert.Contains("Please use Browser.NewContextAsync()", ex.Message);
-        }
-
-        [PlaywrightTest("browser.spec.ts", "version should work")]
-        public void VersionShouldWork()
-        {
-            string version = Browser.Version;
-
-            if (TestConstants.IsChromium)
-            {
-                Assert.That(version, Does.Match("\\d+\\.\\d+\\.\\d+\\.\\d+"));
-            }
-            else
-            {
-                Assert.That(version, Does.Match("\\d+\\.\\d+"));
-            }
+            Assert.That(version, Does.Match("\\d+\\.\\d+"));
         }
     }
 }

@@ -28,26 +28,26 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.Playwright.NUnit;
 using NUnit.Framework;
 
-namespace Microsoft.Playwright.Tests
-{
-    ///<playwright-file>capabilities.spec.ts</playwright-file>
-    public class CapabilitiesTests : PageTestEx
-    {
-        [PlaywrightTest("capabilities.spec.ts", "Web Assembly should work")]
-        [Skip(SkipAttribute.Targets.Webkit | SkipAttribute.Targets.Windows)]
-        public async Task WebAssemblyShouldWork()
-        {
-            await Page.GotoAsync(Server.Prefix + "/wasm/table2.html");
-            Assert.AreEqual("42, 83", await Page.EvaluateAsync<string>("() => loadTable()"));
-        }
+namespace Microsoft.Playwright.Tests;
 
-        [PlaywrightTest("capabilities.spec.ts", "WebSocket should work")]
-        [Skip(SkipAttribute.Targets.Webkit | SkipAttribute.Targets.Windows)]
-        public async Task WebSocketShouldWork()
-        {
-            Server.SendOnWebSocketConnection("incoming");
-            string value = await Page.EvaluateAsync<string>(
-                $@"(port) => {{
+///<playwright-file>capabilities.spec.ts</playwright-file>
+public class CapabilitiesTests : PageTestEx
+{
+    [PlaywrightTest("capabilities.spec.ts", "Web Assembly should work")]
+    [Skip(SkipAttribute.Targets.Webkit | SkipAttribute.Targets.Windows)]
+    public async Task WebAssemblyShouldWork()
+    {
+        await Page.GotoAsync(Server.Prefix + "/wasm/table2.html");
+        Assert.AreEqual("42, 83", await Page.EvaluateAsync<string>("() => loadTable()"));
+    }
+
+    [PlaywrightTest("capabilities.spec.ts", "WebSocket should work")]
+    [Skip(SkipAttribute.Targets.Webkit | SkipAttribute.Targets.Windows)]
+    public async Task WebSocketShouldWork()
+    {
+        Server.SendOnWebSocketConnection("incoming");
+        string value = await Page.EvaluateAsync<string>(
+            $@"(port) => {{
                     let cb;
                     const result = new Promise(f => cb = f);
                     const ws = new WebSocket('ws://localhost:' + port + '/ws');
@@ -55,38 +55,37 @@ namespace Microsoft.Playwright.Tests
                     ws.addEventListener('error', error => cb('Error'));
                     return result;
                 }}",
-                Server.Port);
-            Assert.AreEqual("incoming", value);
-        }
+            Server.Port);
+        Assert.AreEqual("incoming", value);
+    }
 
-        [PlaywrightTest("capabilities.spec.ts", "should respect CSP")]
-        public async Task ShouldRespectCSP()
+    [PlaywrightTest("capabilities.spec.ts", "should respect CSP")]
+    public async Task ShouldRespectCSP()
+    {
+        Server.SetRoute("/empty.html", context =>
         {
-            Server.SetRoute("/empty.html", context =>
-            {
-                const string message = @"
+            const string message = @"
                     <script>
                       window.testStatus = 'SUCCESS';
                       window.testStatus = eval(""'FAILED'"");
                     </script>
                 ";
 
-                context.Response.Headers["Content-Length"] = message.Length.ToString(CultureInfo.InvariantCulture);
-                context.Response.Headers["Content-Security-Policy"] = "script-src 'unsafe-inline';";
-                return context.Response.WriteAsync(message);
-            });
+            context.Response.Headers["Content-Length"] = message.Length.ToString(CultureInfo.InvariantCulture);
+            context.Response.Headers["Content-Security-Policy"] = "script-src 'unsafe-inline';";
+            return context.Response.WriteAsync(message);
+        });
 
-            await Page.GotoAsync(Server.EmptyPage);
-            Assert.AreEqual("SUCCESS", await Page.EvaluateAsync<string>("() => window.testStatus"));
-        }
+        await Page.GotoAsync(Server.EmptyPage);
+        Assert.AreEqual("SUCCESS", await Page.EvaluateAsync<string>("() => window.testStatus"));
+    }
 
-        [PlaywrightTest("capabilities.spec.ts", "should play video")]
-        [Skip(SkipAttribute.Targets.Webkit | SkipAttribute.Targets.Linux, SkipAttribute.Targets.Webkit | SkipAttribute.Targets.Windows, SkipAttribute.Targets.Firefox)]
-        public async Task ShouldPlayVideo()
-        {
-            await Page.GotoAsync(Server.Prefix + (TestConstants.IsWebKit ? "/video_mp4.html" : "/video.html"));
-            await Page.EvalOnSelectorAsync("video", "v => v.play()");
-            await Page.EvalOnSelectorAsync("video", "v => v.pause()");
-        }
+    [PlaywrightTest("capabilities.spec.ts", "should play video")]
+    [Skip(SkipAttribute.Targets.Webkit | SkipAttribute.Targets.Linux, SkipAttribute.Targets.Webkit | SkipAttribute.Targets.Windows, SkipAttribute.Targets.Firefox)]
+    public async Task ShouldPlayVideo()
+    {
+        await Page.GotoAsync(Server.Prefix + (TestConstants.IsWebKit ? "/video_mp4.html" : "/video.html"));
+        await Page.EvalOnSelectorAsync("video", "v => v.play()");
+        await Page.EvalOnSelectorAsync("video", "v => v.pause()");
     }
 }

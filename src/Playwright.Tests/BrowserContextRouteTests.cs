@@ -31,351 +31,350 @@ using System.Threading.Tasks;
 using Microsoft.Playwright.NUnit;
 using NUnit.Framework;
 
-namespace Microsoft.Playwright.Tests
+namespace Microsoft.Playwright.Tests;
+
+public class BrowserContextRouteTests : BrowserTestEx
 {
-    public class BrowserContextRouteTests : BrowserTestEx
+    [PlaywrightTest("browsercontext-route.spec.ts", "should intercept")]
+    public async Task ShouldIntercept()
     {
-        [PlaywrightTest("browsercontext-route.spec.ts", "should intercept")]
-        public async Task ShouldIntercept()
+        bool intercepted = false;
+
+        await using var context = await Browser.NewContextAsync();
+        IPage page = null;
+
+        await context.RouteAsync("**/empty.html", (route) =>
         {
-            bool intercepted = false;
+            intercepted = true;
 
-            await using var context = await Browser.NewContextAsync();
-            IPage page = null;
-
-            await context.RouteAsync("**/empty.html", (route) =>
-            {
-                intercepted = true;
-
-                StringAssert.Contains("empty.html", route.Request.Url);
+            StringAssert.Contains("empty.html", route.Request.Url);
 #pragma warning disable 0612
-                Assert.False(string.IsNullOrEmpty(route.Request.Headers["user-agent"]));
+            Assert.False(string.IsNullOrEmpty(route.Request.Headers["user-agent"]));
 #pragma warning restore 0612
-                Assert.AreEqual(HttpMethod.Get.Method, route.Request.Method);
-                Assert.Null(route.Request.PostData);
-                Assert.True(route.Request.IsNavigationRequest);
-                Assert.AreEqual("document", route.Request.ResourceType);
-                Assert.AreEqual(page.MainFrame, route.Request.Frame);
-                Assert.AreEqual("about:blank", page.MainFrame.Url);
+            Assert.AreEqual(HttpMethod.Get.Method, route.Request.Method);
+            Assert.Null(route.Request.PostData);
+            Assert.True(route.Request.IsNavigationRequest);
+            Assert.AreEqual("document", route.Request.ResourceType);
+            Assert.AreEqual(page.MainFrame, route.Request.Frame);
+            Assert.AreEqual("about:blank", page.MainFrame.Url);
 
+            route.ContinueAsync();
+        });
+
+        page = await context.NewPageAsync();
+        var response = await page.GotoAsync(Server.EmptyPage);
+        Assert.True(response.Ok);
+        Assert.True(intercepted);
+    }
+
+    [PlaywrightTest("browsercontext-route.spec.ts", "should unroute")]
+    public async Task ShouldUnroute()
+    {
+        await using var context = await Browser.NewContextAsync();
+        var page = await context.NewPageAsync();
+        var intercepted = new List<int>();
+
+
+        await context.RouteAsync("**/*", route =>
+        {
+            intercepted.Add(1);
+            route.ContinueAsync();
+        });
+
+        await context.RouteAsync("**/empty.html", (route) =>
+        {
+            intercepted.Add(2);
+            route.ContinueAsync();
+        });
+
+        await context.RouteAsync("**/empty.html", (route) =>
+        {
+            intercepted.Add(3);
+            route.ContinueAsync();
+        });
+
+        Action<IRoute> handler4 = (route) =>
+        {
+            intercepted.Add(4);
+            route.ContinueAsync();
+        };
+        await context.RouteAsync("**/empty.html", handler4);
+
+        await page.GotoAsync(Server.EmptyPage);
+        Assert.AreEqual(new List<int>() { 4 }, intercepted);
+
+        intercepted.Clear();
+        await context.UnrouteAsync("**/empty.html", handler4);
+        await page.GotoAsync(Server.EmptyPage);
+        Assert.AreEqual(new List<int>() { 3 }, intercepted);
+
+        intercepted.Clear();
+        await context.UnrouteAsync("**/empty.html");
+        await page.GotoAsync(Server.EmptyPage);
+        Assert.AreEqual(new List<int>() { 1 }, intercepted);
+    }
+
+    [PlaywrightTest]
+    public async Task ShouldUnroutePageWithBaseUrl()
+    {
+        var options = new BrowserNewContextOptions();
+        options.BaseURL = Server.Prefix;
+
+        await using var context = await Browser.NewContextAsync(options);
+        var page = await context.NewPageAsync();
+        var intercepted = new List<int>();
+
+        await page.RouteAsync("/empty.html", (route) =>
+        {
+            intercepted.Add(1);
+            route.ContinueAsync();
+        });
+
+        Action<IRoute> handler2 = (route) =>
+        {
+            intercepted.Add(2);
+            route.ContinueAsync();
+        };
+        await page.RouteAsync("/empty.html", handler2);
+
+        await page.GotoAsync(Server.EmptyPage);
+        Assert.AreEqual(new List<int>() { 2 }, intercepted);
+
+        intercepted.Clear();
+        await page.UnrouteAsync("/empty.html", handler2);
+        await page.GotoAsync(Server.EmptyPage);
+        Assert.AreEqual(new List<int>() { 1 }, intercepted);
+    }
+
+    [PlaywrightTest("browsercontext-route.spec.ts", "should yield to page.route")]
+    public async Task ShouldYieldToPageRoute()
+    {
+        await using var context = await Browser.NewContextAsync();
+        await context.RouteAsync("**/empty.html", (route) =>
+        {
+            route.FulfillAsync(new() { Status = (int)HttpStatusCode.OK, Body = "context" });
+        });
+
+        var page = await context.NewPageAsync();
+        await page.RouteAsync("**/empty.html", (route) =>
+        {
+            route.FulfillAsync(new() { Status = (int)HttpStatusCode.OK, Body = "page" });
+        });
+
+        var response = await page.GotoAsync(Server.EmptyPage);
+        Assert.AreEqual("page", await response.TextAsync());
+    }
+
+    [PlaywrightTest("browsercontext-route.spec.ts", "should fall back to context.route")]
+    public async Task ShouldFallBackToContextRoute()
+    {
+        await using var context = await Browser.NewContextAsync();
+        await context.RouteAsync("**/empty.html", (route) =>
+        {
+            route.FulfillAsync(new() { Status = (int)HttpStatusCode.OK, Body = "context" });
+        });
+
+        var page = await context.NewPageAsync();
+        await page.RouteAsync("**/non-empty.html", (route) =>
+        {
+            route.FulfillAsync(new() { Status = (int)HttpStatusCode.OK, Body = "page" });
+        });
+
+        var response = await page.GotoAsync(Server.EmptyPage);
+        Assert.AreEqual("context", await response.TextAsync());
+    }
+
+    [PlaywrightTest]
+    public async Task ShouldThrowOnInvalidRouteUrl()
+    {
+        await using var context = await Browser.NewContextAsync();
+
+        var regexParseExceptionType = typeof(System.Text.RegularExpressions.Regex).Assembly
+            .GetType("System.Text.RegularExpressions.RegexParseException", throwOnError: true);
+
+        Assert.Throws(regexParseExceptionType, () =>
+            context.RouteAsync("[", route =>
+            {
                 route.ContinueAsync();
-            });
+            })
+        );
+    }
 
-            page = await context.NewPageAsync();
-            var response = await page.GotoAsync(Server.EmptyPage);
-            Assert.True(response.Ok);
-            Assert.True(intercepted);
-        }
-
-        [PlaywrightTest("browsercontext-route.spec.ts", "should unroute")]
-        public async Task ShouldUnroute()
+    [PlaywrightTest("browsercontext-route.spec.ts", "should support the times parameter with route matching")]
+    public async Task ShouldSupportTheTimesParameterWithRouteMatching()
+    {
+        await using var context = await Browser.NewContextAsync();
+        var page = await context.NewPageAsync();
+        List<int> intercepted = new();
+        await context.RouteAsync("**/empty.html", (route) =>
         {
-            await using var context = await Browser.NewContextAsync();
-            var page = await context.NewPageAsync();
-            var intercepted = new List<int>();
+            intercepted.Add(1);
+            route.ContinueAsync();
+        }, new() { Times = 1 });
 
+        await page.GotoAsync(Server.EmptyPage);
+        await page.GotoAsync(Server.EmptyPage);
+        await page.GotoAsync(Server.EmptyPage);
+        Assert.AreEqual(1, intercepted.Count);
+    }
 
-            await context.RouteAsync("**/*", route =>
-            {
-                intercepted.Add(1);
-                route.ContinueAsync();
-            });
-
-            await context.RouteAsync("**/empty.html", (route) =>
-            {
-                intercepted.Add(2);
-                route.ContinueAsync();
-            });
-
-            await context.RouteAsync("**/empty.html", (route) =>
-            {
-                intercepted.Add(3);
-                route.ContinueAsync();
-            });
-
-            Action<IRoute> handler4 = (route) =>
-            {
-                intercepted.Add(4);
-                route.ContinueAsync();
-            };
-            await context.RouteAsync("**/empty.html", handler4);
-
-            await page.GotoAsync(Server.EmptyPage);
-            Assert.AreEqual(new List<int>() { 4 }, intercepted);
-
-            intercepted.Clear();
-            await context.UnrouteAsync("**/empty.html", handler4);
-            await page.GotoAsync(Server.EmptyPage);
-            Assert.AreEqual(new List<int>() { 3 }, intercepted);
-
-            intercepted.Clear();
-            await context.UnrouteAsync("**/empty.html");
-            await page.GotoAsync(Server.EmptyPage);
-            Assert.AreEqual(new List<int>() { 1 }, intercepted);
-        }
-
-        [PlaywrightTest]
-        public async Task ShouldUnroutePageWithBaseUrl()
+    [PlaywrightTest("browsercontext-route.spec.ts", "should support async handler w/ times")]
+    public async Task ShouldSupportAsyncHandlerWithTimes()
+    {
+        await using var context = await Browser.NewContextAsync();
+        var page = await context.NewPageAsync();
+        await context.RouteAsync("**/empty.html", async (route) =>
         {
-            var options = new BrowserNewContextOptions();
-            options.BaseURL = Server.Prefix;
+            await Task.Delay(100);
+            await route.FulfillAsync(new() { Body = "<html>intercepted</html>", ContentType = "text/html" });
+        }, new() { Times = 1 });
 
-            await using var context = await Browser.NewContextAsync(options);
-            var page = await context.NewPageAsync();
-            var intercepted = new List<int>();
+        await page.GotoAsync(Server.EmptyPage);
+        await Expect(page.Locator("body")).ToHaveTextAsync("intercepted");
+        await page.GotoAsync(Server.EmptyPage);
+        await Expect(page.Locator("body")).Not.ToHaveTextAsync("intercepted");
+    }
 
-            await page.RouteAsync("/empty.html", (route) =>
-            {
-                intercepted.Add(1);
-                route.ContinueAsync();
-            });
-
-            Action<IRoute> handler2 = (route) =>
-            {
-                intercepted.Add(2);
-                route.ContinueAsync();
-            };
-            await page.RouteAsync("/empty.html", handler2);
-
-            await page.GotoAsync(Server.EmptyPage);
-            Assert.AreEqual(new List<int>() { 2 }, intercepted);
-
-            intercepted.Clear();
-            await page.UnrouteAsync("/empty.html", handler2);
-            await page.GotoAsync(Server.EmptyPage);
-            Assert.AreEqual(new List<int>() { 1 }, intercepted);
-        }
-
-        [PlaywrightTest("browsercontext-route.spec.ts", "should yield to page.route")]
-        public async Task ShouldYieldToPageRoute()
+    [PlaywrightTest("browsercontext-route.spec.ts", "should chain fallback")]
+    public async Task ShouldChainFallback()
+    {
+        await using var context = await Browser.NewContextAsync();
+        var page = await context.NewPageAsync();
+        var intercepted = new List<int>();
+        await context.RouteAsync("**/empty.html", (route) =>
         {
-            await using var context = await Browser.NewContextAsync();
-            await context.RouteAsync("**/empty.html", (route) =>
-            {
-                route.FulfillAsync(new() { Status = (int)HttpStatusCode.OK, Body = "context" });
-            });
-
-            var page = await context.NewPageAsync();
-            await page.RouteAsync("**/empty.html", (route) =>
-            {
-                route.FulfillAsync(new() { Status = (int)HttpStatusCode.OK, Body = "page" });
-            });
-
-            var response = await page.GotoAsync(Server.EmptyPage);
-            Assert.AreEqual("page", await response.TextAsync());
-        }
-
-        [PlaywrightTest("browsercontext-route.spec.ts", "should fall back to context.route")]
-        public async Task ShouldFallBackToContextRoute()
+            intercepted.Add(1);
+            route.FallbackAsync();
+        });
+        await context.RouteAsync("**/empty.html", (route) =>
         {
-            await using var context = await Browser.NewContextAsync();
-            await context.RouteAsync("**/empty.html", (route) =>
-            {
-                route.FulfillAsync(new() { Status = (int)HttpStatusCode.OK, Body = "context" });
-            });
-
-            var page = await context.NewPageAsync();
-            await page.RouteAsync("**/non-empty.html", (route) =>
-            {
-                route.FulfillAsync(new() { Status = (int)HttpStatusCode.OK, Body = "page" });
-            });
-
-            var response = await page.GotoAsync(Server.EmptyPage);
-            Assert.AreEqual("context", await response.TextAsync());
-        }
-
-        [PlaywrightTest]
-        public async Task ShouldThrowOnInvalidRouteUrl()
+            intercepted.Add(2);
+            route.FallbackAsync();
+        });
+        await context.RouteAsync("**/empty.html", (route) =>
         {
-            await using var context = await Browser.NewContextAsync();
+            intercepted.Add(3);
+            route.FallbackAsync();
+        });
 
-            var regexParseExceptionType = typeof(System.Text.RegularExpressions.Regex).Assembly
-                .GetType("System.Text.RegularExpressions.RegexParseException", throwOnError: true);
+        await page.GotoAsync(Server.EmptyPage);
+        Assert.AreEqual(new List<int>() { 3, 2, 1 }, intercepted);
+    }
 
-            Assert.Throws(regexParseExceptionType, () =>
-                context.RouteAsync("[", route =>
-                {
-                    route.ContinueAsync();
-                })
-            );
-        }
-
-        [PlaywrightTest("browsercontext-route.spec.ts", "should support the times parameter with route matching")]
-        public async Task ShouldSupportTheTimesParameterWithRouteMatching()
+    [PlaywrightTest("browsercontext-route.spec.ts", "should not chain fulfill")]
+    public async Task ShouldNotChainFulfill()
+    {
+        await using var context = await Browser.NewContextAsync();
+        var page = await context.NewPageAsync();
+        var failed = false;
+        await context.RouteAsync("**/empty.html", (route) =>
         {
-            await using var context = await Browser.NewContextAsync();
-            var page = await context.NewPageAsync();
-            List<int> intercepted = new();
-            await context.RouteAsync("**/empty.html", (route) =>
-            {
-                intercepted.Add(1);
-                route.ContinueAsync();
-            }, new() { Times = 1 });
+            failed = true;
+        });
+        await context.RouteAsync("**/empty.html", (route) =>
+        {
+            route.FulfillAsync(new() { Status = 200, Body = "fulfilled" });
+        });
+        await context.RouteAsync("**/empty.html", (route) =>
+        {
+            route.FallbackAsync();
+        });
 
+        var response = await page.GotoAsync(Server.EmptyPage);
+        var body = await response.BodyAsync();
+        Assert.AreEqual(Encoding.UTF8.GetString(body), "fulfilled");
+        Assert.IsFalse(failed);
+    }
+
+    [PlaywrightTest("browsercontext-route.spec.ts", "should not chain abort")]
+    public async Task ShouldNotChainAbort()
+    {
+        await using var context = await Browser.NewContextAsync();
+        var page = await context.NewPageAsync();
+        var failed = false;
+        await context.RouteAsync("**/empty.html", (route) =>
+        {
+            failed = true;
+        });
+        await context.RouteAsync("**/empty.html", (route) =>
+        {
+            route.AbortAsync();
+        });
+        await context.RouteAsync("**/empty.html", (route) =>
+        {
+            route.FallbackAsync();
+        });
+
+        var exception = await PlaywrightAssert.ThrowsAsync<PlaywrightException>(async () =>
+        {
             await page.GotoAsync(Server.EmptyPage);
-            await page.GotoAsync(Server.EmptyPage);
-            await page.GotoAsync(Server.EmptyPage);
-            Assert.AreEqual(1, intercepted.Count);
-        }
+        });
+        Assert.NotNull(exception);
+        Assert.IsFalse(failed);
+    }
 
-        [PlaywrightTest("browsercontext-route.spec.ts", "should support async handler w/ times")]
-        public async Task ShouldSupportAsyncHandlerWithTimes()
+    [PlaywrightTest("browsercontext-route.spec.ts", "should chain fallback into page")]
+    public async Task ShouldChainFallbackIntoPage()
+    {
+        await using var context = await Browser.NewContextAsync();
+        var page = await context.NewPageAsync();
+        var interceped = new List<int>();
+        await context.RouteAsync("**/empty.html", (route) =>
         {
-            await using var context = await Browser.NewContextAsync();
-            var page = await context.NewPageAsync();
-            await context.RouteAsync("**/empty.html", async (route) =>
-            {
-                await Task.Delay(100);
-                await route.FulfillAsync(new() { Body = "<html>intercepted</html>", ContentType = "text/html" });
-            }, new() { Times = 1 });
-
-            await page.GotoAsync(Server.EmptyPage);
-            await Expect(page.Locator("body")).ToHaveTextAsync("intercepted");
-            await page.GotoAsync(Server.EmptyPage);
-            await Expect(page.Locator("body")).Not.ToHaveTextAsync("intercepted");
-        }
-
-        [PlaywrightTest("browsercontext-route.spec.ts", "should chain fallback")]
-        public async Task ShouldChainFallback()
+            interceped.Add(1);
+            route.FallbackAsync();
+        });
+        await context.RouteAsync("**/empty.html", (route) =>
         {
-            await using var context = await Browser.NewContextAsync();
-            var page = await context.NewPageAsync();
-            var intercepted = new List<int>();
-            await context.RouteAsync("**/empty.html", (route) =>
-            {
-                intercepted.Add(1);
-                route.FallbackAsync();
-            });
-            await context.RouteAsync("**/empty.html", (route) =>
-            {
-                intercepted.Add(2);
-                route.FallbackAsync();
-            });
-            await context.RouteAsync("**/empty.html", (route) =>
-            {
-                intercepted.Add(3);
-                route.FallbackAsync();
-            });
-
-            await page.GotoAsync(Server.EmptyPage);
-            Assert.AreEqual(new List<int>() { 3, 2, 1 }, intercepted);
-        }
-
-        [PlaywrightTest("browsercontext-route.spec.ts", "should not chain fulfill")]
-        public async Task ShouldNotChainFulfill()
+            interceped.Add(2);
+            route.FallbackAsync();
+        });
+        await context.RouteAsync("**/empty.html", (route) =>
         {
-            await using var context = await Browser.NewContextAsync();
-            var page = await context.NewPageAsync();
-            var failed = false;
-            await context.RouteAsync("**/empty.html", (route) =>
-            {
-                failed = true;
-            });
-            await context.RouteAsync("**/empty.html", (route) =>
-            {
-                route.FulfillAsync(new() { Status = 200, Body = "fulfilled" });
-            });
-            await context.RouteAsync("**/empty.html", (route) =>
-            {
-                route.FallbackAsync();
-            });
-
-            var response = await page.GotoAsync(Server.EmptyPage);
-            var body = await response.BodyAsync();
-            Assert.AreEqual(Encoding.UTF8.GetString(body), "fulfilled");
-            Assert.IsFalse(failed);
-        }
-
-        [PlaywrightTest("browsercontext-route.spec.ts", "should not chain abort")]
-        public async Task ShouldNotChainAbort()
+            interceped.Add(3);
+            route.FallbackAsync();
+        });
+        await page.RouteAsync("**/empty.html", (route) =>
         {
-            await using var context = await Browser.NewContextAsync();
-            var page = await context.NewPageAsync();
-            var failed = false;
-            await context.RouteAsync("**/empty.html", (route) =>
-            {
-                failed = true;
-            });
-            await context.RouteAsync("**/empty.html", (route) =>
-            {
-                route.AbortAsync();
-            });
-            await context.RouteAsync("**/empty.html", (route) =>
-            {
-                route.FallbackAsync();
-            });
-
-            var exception = await PlaywrightAssert.ThrowsAsync<PlaywrightException>(async () =>
-            {
-                await page.GotoAsync(Server.EmptyPage);
-            });
-            Assert.NotNull(exception);
-            Assert.IsFalse(failed);
-        }
-
-        [PlaywrightTest("browsercontext-route.spec.ts", "should chain fallback into page")]
-        public async Task ShouldChainFallbackIntoPage()
+            interceped.Add(4);
+            route.FallbackAsync();
+        });
+        await page.RouteAsync("**/empty.html", (route) =>
         {
-            await using var context = await Browser.NewContextAsync();
-            var page = await context.NewPageAsync();
-            var interceped = new List<int>();
-            await context.RouteAsync("**/empty.html", (route) =>
-            {
-                interceped.Add(1);
-                route.FallbackAsync();
-            });
-            await context.RouteAsync("**/empty.html", (route) =>
-            {
-                interceped.Add(2);
-                route.FallbackAsync();
-            });
-            await context.RouteAsync("**/empty.html", (route) =>
-            {
-                interceped.Add(3);
-                route.FallbackAsync();
-            });
-            await page.RouteAsync("**/empty.html", (route) =>
-            {
-                interceped.Add(4);
-                route.FallbackAsync();
-            });
-            await page.RouteAsync("**/empty.html", (route) =>
-            {
-                interceped.Add(5);
-                route.FallbackAsync();
-            });
-            await page.RouteAsync("**/empty.html", (route) =>
-            {
-                interceped.Add(6);
-                route.FallbackAsync();
-            });
-            await page.GotoAsync(Server.EmptyPage);
-            Assert.AreEqual(new List<int>() { 6, 5, 4, 3, 2, 1 }, interceped);
-        }
-
-        [PlaywrightTest("browsercontext-route.spec.ts", "should chain fallback w/ dynamic URL")]
-        public async Task ShouldChainFallbackWithDynamicURL()
+            interceped.Add(5);
+            route.FallbackAsync();
+        });
+        await page.RouteAsync("**/empty.html", (route) =>
         {
-            await using var context = await Browser.NewContextAsync();
-            var page = await context.NewPageAsync();
-            var interceped = new List<int>();
-            await context.RouteAsync("**/bar", (route) =>
-            {
-                interceped.Add(1);
-                route.FallbackAsync(new() { Url = Server.EmptyPage });
-            });
-            await context.RouteAsync("**/foo", (route) =>
-            {
-                interceped.Add(2);
-                route.FallbackAsync(new() { Url = "http://localhost/bar" });
-            });
-            await context.RouteAsync("**/empty.html", (route) =>
-            {
-                interceped.Add(3);
-                route.FallbackAsync(new() { Url = "http://localhost/foo" });
-            });
-            await page.GotoAsync(Server.EmptyPage);
-            Assert.AreEqual(new List<int>() { 3, 2, 1 }, interceped);
-        }
+            interceped.Add(6);
+            route.FallbackAsync();
+        });
+        await page.GotoAsync(Server.EmptyPage);
+        Assert.AreEqual(new List<int>() { 6, 5, 4, 3, 2, 1 }, interceped);
+    }
+
+    [PlaywrightTest("browsercontext-route.spec.ts", "should chain fallback w/ dynamic URL")]
+    public async Task ShouldChainFallbackWithDynamicURL()
+    {
+        await using var context = await Browser.NewContextAsync();
+        var page = await context.NewPageAsync();
+        var interceped = new List<int>();
+        await context.RouteAsync("**/bar", (route) =>
+        {
+            interceped.Add(1);
+            route.FallbackAsync(new() { Url = Server.EmptyPage });
+        });
+        await context.RouteAsync("**/foo", (route) =>
+        {
+            interceped.Add(2);
+            route.FallbackAsync(new() { Url = "http://localhost/bar" });
+        });
+        await context.RouteAsync("**/empty.html", (route) =>
+        {
+            interceped.Add(3);
+            route.FallbackAsync(new() { Url = "http://localhost/foo" });
+        });
+        await page.GotoAsync(Server.EmptyPage);
+        Assert.AreEqual(new List<int>() { 3, 2, 1 }, interceped);
     }
 }

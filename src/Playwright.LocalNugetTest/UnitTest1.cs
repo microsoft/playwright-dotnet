@@ -26,17 +26,16 @@ using System.Threading.Tasks;
 using Microsoft.Playwright.NUnit;
 using NUnit.Framework;
 
-namespace Microsoft.Playwright.LocalNugetTest
+namespace Microsoft.Playwright.LocalNugetTest;
+
+[Parallelizable(ParallelScope.Self)]
+public class NugetTests : PageTest
 {
-    [Parallelizable(ParallelScope.Self)]
-    public class NugetTests : PageTest
+    [Test]
+    public async Task ShouldWork()
     {
-        [Test]
-        public async Task ShouldWork()
-        {
-            TestContext.WriteLine("Performing local eval...");
-            var evalResult = await Page.EvaluateAsync<int>("() => 1 + 1");
-            Assert.AreEqual(2, evalResult);
-        }
+        TestContext.WriteLine("Performing local eval...");
+        var evalResult = await Page.EvaluateAsync<int>("() => 1 + 1");
+        Assert.AreEqual(2, evalResult);
     }
 }

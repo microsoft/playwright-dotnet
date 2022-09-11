@@ -24,11 +24,10 @@
 
 using System.Threading.Tasks;
 
-namespace Microsoft.Playwright.NUnit
+namespace Microsoft.Playwright.NUnit;
+
+public interface IWorkerService
 {
-    public interface IWorkerService
-    {
-        public Task ResetAsync();
-        public Task DisposeAsync();
-    }
+    public Task ResetAsync();
+    public Task DisposeAsync();
 }

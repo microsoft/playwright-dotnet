@@ -27,49 +27,48 @@ using System.IO;
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.PixelFormats;
 
-namespace Microsoft.Playwright.Tests
+namespace Microsoft.Playwright.Tests;
+
+internal class ScreenshotHelper
 {
-    internal class ScreenshotHelper
+    internal static bool PixelMatch(string screenShotFile, string fileName)
+        => PixelMatch(screenShotFile, File.ReadAllBytes(fileName));
+
+    internal static bool PixelMatch(string screenShotFile, byte[] screenshot)
     {
-        internal static bool PixelMatch(string screenShotFile, string fileName)
-            => PixelMatch(screenShotFile, File.ReadAllBytes(fileName));
+        const int pixelThreshold = 10;
+        const decimal totalTolerance = 0.05m;
 
-        internal static bool PixelMatch(string screenShotFile, byte[] screenshot)
+        var baseImage = Image.Load<Rgb24>(Path.Combine(TestUtils.FindParentDirectory("Screenshots"), TestConstants.BrowserName, screenShotFile));
+        var compareImage = Image.Load<Rgb24>(screenshot);
+
+        //Just for debugging purpose
+        compareImage.Save(Path.Combine(TestUtils.FindParentDirectory("Screenshots"), TestConstants.BrowserName, "test.png"));
+
+        if (baseImage.Width != compareImage.Width || baseImage.Height != compareImage.Height)
         {
-            const int pixelThreshold = 10;
-            const decimal totalTolerance = 0.05m;
+            return false;
+        }
 
-            var baseImage = Image.Load<Rgb24>(Path.Combine(TestUtils.FindParentDirectory("Screenshots"), TestConstants.BrowserName, screenShotFile));
-            var compareImage = Image.Load<Rgb24>(screenshot);
+        int invalidPixelsCount = 0;
 
-            //Just for debugging purpose
-            compareImage.Save(Path.Combine(TestUtils.FindParentDirectory("Screenshots"), TestConstants.BrowserName, "test.png"));
-
-            if (baseImage.Width != compareImage.Width || baseImage.Height != compareImage.Height)
+        for (int y = 0; y < baseImage.Height; y++)
+        {
+            for (int x = 0; x < baseImage.Width; x++)
             {
-                return false;
-            }
+                var pixelA = baseImage[x, y];
+                var pixelB = compareImage[x, y];
 
-            int invalidPixelsCount = 0;
 
-            for (int y = 0; y < baseImage.Height; y++)
-            {
-                for (int x = 0; x < baseImage.Width; x++)
+                if (Math.Abs(pixelA.R - pixelB.R) > pixelThreshold ||
+                    Math.Abs(pixelA.G - pixelB.G) > pixelThreshold ||
+                    Math.Abs(pixelA.B - pixelB.B) > pixelThreshold)
                 {
-                    var pixelA = baseImage[x, y];
-                    var pixelB = compareImage[x, y];
-
-
-                    if (Math.Abs(pixelA.R - pixelB.R) > pixelThreshold ||
-                        Math.Abs(pixelA.G - pixelB.G) > pixelThreshold ||
-                        Math.Abs(pixelA.B - pixelB.B) > pixelThreshold)
-                    {
-                        invalidPixelsCount++;
-                    }
+                    invalidPixelsCount++;
                 }
             }
-
-            return (invalidPixelsCount / (baseImage.Height * baseImage.Width)) < totalTolerance;
         }
+
+        return (invalidPixelsCount / (baseImage.Height * baseImage.Width)) < totalTolerance;
     }
 }

@@ -24,15 +24,14 @@
 
 using CommandLine;
 
-namespace Microsoft.Playwright.Tests
+namespace Microsoft.Playwright.Tests;
+
+public static class Program
 {
-    public static class Program
+    public static void Main(string[] args)
     {
-        public static void Main(string[] args)
-        {
-            ParserResult<object> result = Parser.Default.ParseArguments<ScaffoldTestOptions, IdentifyMissingTestsOptions>(args);
-            result.WithParsed<ScaffoldTestOptions>(ScaffoldTest.Run);
-            result.WithParsed<IdentifyMissingTestsOptions>(IdentifyMissingTests.Run);
-        }
+        ParserResult<object> result = Parser.Default.ParseArguments<ScaffoldTestOptions, IdentifyMissingTestsOptions>(args);
+        result.WithParsed<ScaffoldTestOptions>(ScaffoldTest.Run);
+        result.WithParsed<IdentifyMissingTestsOptions>(IdentifyMissingTests.Run);
     }
 }

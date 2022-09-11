@@ -29,77 +29,76 @@ using Microsoft.Playwright.Transport;
 using Microsoft.Playwright.Transport.Channels;
 using Microsoft.Playwright.Transport.Protocol;
 
-namespace Microsoft.Playwright.Core
+namespace Microsoft.Playwright.Core;
+
+internal class Worker : ChannelOwnerBase, IChannelOwner<Worker>, IWorker
 {
-    internal class Worker : ChannelOwnerBase, IChannelOwner<Worker>, IWorker
+    private readonly WorkerChannel _channel;
+    private readonly WorkerInitializer _initializer;
+
+    public Worker(IChannelOwner parent, string guid, WorkerInitializer initializer) : base(parent, guid)
     {
-        private readonly WorkerChannel _channel;
-        private readonly WorkerInitializer _initializer;
+        _channel = new(guid, parent.Connection, this);
+        _initializer = initializer;
 
-        public Worker(IChannelOwner parent, string guid, WorkerInitializer initializer) : base(parent, guid)
+        _channel.Close += (_, _) =>
         {
-            _channel = new(guid, parent.Connection, this);
-            _initializer = initializer;
-
-            _channel.Close += (_, _) =>
+            if (Page != null)
             {
-                if (Page != null)
-                {
-                    Page._workers.Remove(this);
-                }
-
-                if (Context != null)
-                {
-                    Context._serviceWorkers.Remove(this);
-                }
-
-                Close?.Invoke(this, this);
-                ClosedTcs.SetResult(true);
-            };
-        }
-
-        public event EventHandler<IWorker> Close;
-
-        public string Url => _initializer.Url;
-
-        ChannelBase IChannelOwner.Channel => _channel;
-
-        IChannel<Worker> IChannelOwner<Worker>.Channel => _channel;
-
-        internal Page Page { get; set; }
-
-        internal BrowserContext Context { get; set; }
-
-        internal TaskCompletionSource<bool> ClosedTcs { get; } = new();
-
-        public async Task<T> EvaluateAsync<T>(string expression, object arg = null)
-            => ScriptsHelper.ParseEvaluateResult<T>(await _channel.EvaluateExpressionAsync(
-                expression,
-                null,
-                ScriptsHelper.SerializedArgument(arg)).ConfigureAwait(false));
-
-        public async Task<IJSHandle> EvaluateHandleAsync(string expression, object arg = null)
-            => await _channel.EvaluateExpressionHandleAsync(
-                expression,
-                null,
-                ScriptsHelper.SerializedArgument(arg))
-            .ConfigureAwait(false);
-
-        public async Task<IWorker> WaitForCloseAsync(Func<Task> action = default, float? timeout = default)
-        {
-            using var waiter = new Waiter(this, "worker.WaitForCloseAsync");
-            var waiterResult = waiter.GetWaitForEventTask<IWorker>(this, nameof(Close), null);
-            var result = waiterResult.Task.WithTimeout(Convert.ToInt32(timeout ?? 0));
-            if (action != null)
-            {
-                await WrapApiBoundaryAsync(() => Task.WhenAll(result, action())).ConfigureAwait(false);
-            }
-            else
-            {
-                await result.ConfigureAwait(false);
+                Page._workers.Remove(this);
             }
 
-            return this;
+            if (Context != null)
+            {
+                Context._serviceWorkers.Remove(this);
+            }
+
+            Close?.Invoke(this, this);
+            ClosedTcs.SetResult(true);
+        };
+    }
+
+    public event EventHandler<IWorker> Close;
+
+    public string Url => _initializer.Url;
+
+    ChannelBase IChannelOwner.Channel => _channel;
+
+    IChannel<Worker> IChannelOwner<Worker>.Channel => _channel;
+
+    internal Page Page { get; set; }
+
+    internal BrowserContext Context { get; set; }
+
+    internal TaskCompletionSource<bool> ClosedTcs { get; } = new();
+
+    public async Task<T> EvaluateAsync<T>(string expression, object arg = null)
+        => ScriptsHelper.ParseEvaluateResult<T>(await _channel.EvaluateExpressionAsync(
+            expression,
+            null,
+            ScriptsHelper.SerializedArgument(arg)).ConfigureAwait(false));
+
+    public async Task<IJSHandle> EvaluateHandleAsync(string expression, object arg = null)
+        => await _channel.EvaluateExpressionHandleAsync(
+            expression,
+            null,
+            ScriptsHelper.SerializedArgument(arg))
+        .ConfigureAwait(false);
+
+    public async Task<IWorker> WaitForCloseAsync(Func<Task> action = default, float? timeout = default)
+    {
+        using var waiter = new Waiter(this, "worker.WaitForCloseAsync");
+        var waiterResult = waiter.GetWaitForEventTask<IWorker>(this, nameof(Close), null);
+        var result = waiterResult.Task.WithTimeout(Convert.ToInt32(timeout ?? 0));
+        if (action != null)
+        {
+            await WrapApiBoundaryAsync(() => Task.WhenAll(result, action())).ConfigureAwait(false);
         }
+        else
+        {
+            await result.ConfigureAwait(false);
+        }
+
+        return this;
     }
 }

@@ -24,12 +24,11 @@
 
 using Microsoft.Playwright.Core;
 
-namespace Microsoft.Playwright.Transport.Channels
+namespace Microsoft.Playwright.Transport.Channels;
+
+internal class ConsoleMessageChannel : Channel<ConsoleMessage>
 {
-    internal class ConsoleMessageChannel : Channel<ConsoleMessage>
+    public ConsoleMessageChannel(string guid, Connection connection, ConsoleMessage owner) : base(guid, connection, owner)
     {
-        public ConsoleMessageChannel(string guid, Connection connection, ConsoleMessage owner) : base(guid, connection, owner)
-        {
-        }
     }
 }

@@ -22,14 +22,13 @@
  * SOFTWARE.
  */
 
-namespace Microsoft.Playwright
+namespace Microsoft.Playwright;
+
+public class BindingSource
 {
-    public class BindingSource
-    {
-        public IBrowserContext Context { get; set; }
+    public IBrowserContext Context { get; set; }
 
-        public IPage Page { get; set; }
+    public IPage Page { get; set; }
 
-        public IFrame Frame { get; set; }
-    }
+    public IFrame Frame { get; set; }
 }

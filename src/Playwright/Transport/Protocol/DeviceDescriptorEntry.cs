@@ -22,12 +22,11 @@
  * SOFTWARE.
  */
 
-namespace Microsoft.Playwright.Transport.Protocol
-{
-    internal class DeviceDescriptorEntry
-    {
-        public string Name { get; set; }
+namespace Microsoft.Playwright.Transport.Protocol;
 
-        public BrowserNewContextOptions Descriptor { get; set; }
-    }
+internal class DeviceDescriptorEntry
+{
+    public string Name { get; set; }
+
+    public BrowserNewContextOptions Descriptor { get; set; }
 }

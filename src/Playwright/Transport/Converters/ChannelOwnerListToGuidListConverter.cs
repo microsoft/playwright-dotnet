@@ -28,37 +28,36 @@ using System.Text.Json;
 using System.Text.Json.Serialization;
 using Microsoft.Playwright.Transport.Channels;
 
-namespace Microsoft.Playwright.Transport.Converters
+namespace Microsoft.Playwright.Transport.Converters;
+
+internal class ChannelOwnerListToGuidListConverter<T>
+    : JsonConverter<IEnumerable<T>>
+    where T : class, IChannelOwner
 {
-    internal class ChannelOwnerListToGuidListConverter<T>
-        : JsonConverter<IEnumerable<T>>
-        where T : class, IChannelOwner
+    private readonly Connection _connection;
+
+    public ChannelOwnerListToGuidListConverter(Connection connection)
     {
-        private readonly Connection _connection;
+        _connection = connection;
+    }
 
-        public ChannelOwnerListToGuidListConverter(Connection connection)
+    public override bool CanConvert(Type type)
+        => type.IsArray && type.GetElementType() == typeof(T);
+
+    public override IEnumerable<T> Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
+    {
+        throw new NotImplementedException();
+    }
+
+    public override void Write(Utf8JsonWriter writer, IEnumerable<T> value, JsonSerializerOptions options)
+    {
+        writer.WriteStartArray();
+        foreach (T item in value)
         {
-            _connection = connection;
+            writer.WriteStartObject();
+            writer.WriteString("guid", item.Channel.Guid);
+            writer.WriteEndObject();
         }
-
-        public override bool CanConvert(Type type)
-            => type.IsArray && type.GetElementType() == typeof(T);
-
-        public override IEnumerable<T> Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
-        {
-            throw new NotImplementedException();
-        }
-
-        public override void Write(Utf8JsonWriter writer, IEnumerable<T> value, JsonSerializerOptions options)
-        {
-            writer.WriteStartArray();
-            foreach (T item in value)
-            {
-                writer.WriteStartObject();
-                writer.WriteString("guid", item.Channel.Guid);
-                writer.WriteEndObject();
-            }
-            writer.WriteEndArray();
-        }
+        writer.WriteEndArray();
     }
 }

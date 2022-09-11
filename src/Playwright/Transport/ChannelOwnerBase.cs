@@ -27,68 +27,67 @@ using System.Collections.Concurrent;
 using System.Threading.Tasks;
 using Microsoft.Playwright.Transport.Channels;
 
-namespace Microsoft.Playwright.Transport
+namespace Microsoft.Playwright.Transport;
+
+internal class ChannelOwnerBase : IChannelOwner
 {
-    internal class ChannelOwnerBase : IChannelOwner
+    private readonly Connection _connection;
+    private readonly ConcurrentDictionary<string, IChannelOwner> _objects = new();
+
+    internal ChannelOwnerBase(IChannelOwner parent, string guid) : this(parent, null, guid)
     {
-        private readonly Connection _connection;
-        private readonly ConcurrentDictionary<string, IChannelOwner> _objects = new();
-
-        internal ChannelOwnerBase(IChannelOwner parent, string guid) : this(parent, null, guid)
-        {
-        }
-
-        internal ChannelOwnerBase(IChannelOwner parent, Connection connection, string guid)
-        {
-            _connection = parent?.Connection ?? connection;
-
-            Guid = guid;
-            Parent = parent;
-
-            _connection.Objects[guid] = this;
-            if (Parent != null)
-            {
-                Parent.Objects[guid] = this;
-            }
-        }
-
-        /// <inheritdoc/>
-        Connection IChannelOwner.Connection => _connection;
-
-        /// <inheritdoc/>
-        ChannelBase IChannelOwner.Channel => null;
-
-        /// <inheritdoc/>
-        ConcurrentDictionary<string, IChannelOwner> IChannelOwner.Objects => _objects;
-
-        internal string Guid { get; set; }
-
-        internal IChannelOwner Parent { get; set; }
-
-        void IChannelOwner.Adopt(ChannelOwnerBase child)
-        {
-            child.Parent.Objects.TryRemove(child.Guid, out _);
-            _objects[child.Guid] = child;
-            child.Parent = this;
-        }
-
-        /// <inheritdoc/>
-        void IChannelOwner.DisposeOwner()
-        {
-            Parent?.Objects?.TryRemove(Guid, out var _);
-            _connection?.Objects.TryRemove(Guid, out var _);
-
-            foreach (var item in _objects.Values)
-            {
-                item.DisposeOwner();
-            }
-            _objects.Clear();
-        }
-
-        public Task<T> WrapApiCallAsync<T>(Func<Task<T>> action, bool isInternal = false) => _connection.WrapApiCallAsync(action, isInternal);
-
-        public Task WrapApiCallAsync(Func<Task> action, bool isInternal = false) => _connection.WrapApiCallAsync(action, isInternal);
-
-        public Task WrapApiBoundaryAsync(Func<Task> action) => _connection.WrapApiBoundaryAsync(action);
     }
+
+    internal ChannelOwnerBase(IChannelOwner parent, Connection connection, string guid)
+    {
+        _connection = parent?.Connection ?? connection;
+
+        Guid = guid;
+        Parent = parent;
+
+        _connection.Objects[guid] = this;
+        if (Parent != null)
+        {
+            Parent.Objects[guid] = this;
+        }
+    }
+
+    /// <inheritdoc/>
+    Connection IChannelOwner.Connection => _connection;
+
+    /// <inheritdoc/>
+    ChannelBase IChannelOwner.Channel => null;
+
+    /// <inheritdoc/>
+    ConcurrentDictionary<string, IChannelOwner> IChannelOwner.Objects => _objects;
+
+    internal string Guid { get; set; }
+
+    internal IChannelOwner Parent { get; set; }
+
+    void IChannelOwner.Adopt(ChannelOwnerBase child)
+    {
+        child.Parent.Objects.TryRemove(child.Guid, out _);
+        _objects[child.Guid] = child;
+        child.Parent = this;
+    }
+
+    /// <inheritdoc/>
+    void IChannelOwner.DisposeOwner()
+    {
+        Parent?.Objects?.TryRemove(Guid, out var _);
+        _connection?.Objects.TryRemove(Guid, out var _);
+
+        foreach (var item in _objects.Values)
+        {
+            item.DisposeOwner();
+        }
+        _objects.Clear();
+    }
+
+    public Task<T> WrapApiCallAsync<T>(Func<Task<T>> action, bool isInternal = false) => _connection.WrapApiCallAsync(action, isInternal);
+
+    public Task WrapApiCallAsync(Func<Task> action, bool isInternal = false) => _connection.WrapApiCallAsync(action, isInternal);
+
+    public Task WrapApiBoundaryAsync(Func<Task> action) => _connection.WrapApiBoundaryAsync(action);
 }

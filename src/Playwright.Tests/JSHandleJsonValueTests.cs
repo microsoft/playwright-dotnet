@@ -28,37 +28,36 @@ using System.Threading.Tasks;
 using Microsoft.Playwright.NUnit;
 using NUnit.Framework;
 
-namespace Microsoft.Playwright.Tests
+namespace Microsoft.Playwright.Tests;
+
+public class JSHandleJsonValueTests : PageTestEx
 {
-    public class JSHandleJsonValueTests : PageTestEx
+    [PlaywrightTest("jshandle-json-value.spec.ts", "should work")]
+    public async Task ShouldWork()
     {
-        [PlaywrightTest("jshandle-json-value.spec.ts", "should work")]
-        public async Task ShouldWork()
-        {
-            var aHandle = await Page.EvaluateHandleAsync("() => ({ foo: 'bar'})");
-            var json = await aHandle.JsonValueAsync<JsonElement>();
-            Assert.AreEqual("bar", json.GetProperty("foo").GetString());
-        }
+        var aHandle = await Page.EvaluateHandleAsync("() => ({ foo: 'bar'})");
+        var json = await aHandle.JsonValueAsync<JsonElement>();
+        Assert.AreEqual("bar", json.GetProperty("foo").GetString());
+    }
 
-        [PlaywrightTest("jshandle-json-value.spec.ts", "should work with dates")]
-        public async Task ShouldWorkWithDates()
-        {
-            var dateHandle = await Page.EvaluateHandleAsync("() => new Date('2017-09-26T00:00:00.000Z')");
-            var json = await dateHandle.JsonValueAsync<DateTime>();
-            Assert.AreEqual(2017, json.Year);
-        }
+    [PlaywrightTest("jshandle-json-value.spec.ts", "should work with dates")]
+    public async Task ShouldWorkWithDates()
+    {
+        var dateHandle = await Page.EvaluateHandleAsync("() => new Date('2017-09-26T00:00:00.000Z')");
+        var json = await dateHandle.JsonValueAsync<DateTime>();
+        Assert.AreEqual(2017, json.Year);
+    }
 
-        [PlaywrightTest("jshandle-json-value.spec.ts", "should handle circular objects")]
-        public async Task ShouldHandleCircularObjects()
-        {
-            var windowHandle = await Page.EvaluateHandleAsync("const a = {}; a.b = a; a");
-            var a = await windowHandle.JsonValueAsync<RecursiveCircularObjectClass>();
-            Assert.AreEqual(a, a.b);
-        }
+    [PlaywrightTest("jshandle-json-value.spec.ts", "should handle circular objects")]
+    public async Task ShouldHandleCircularObjects()
+    {
+        var windowHandle = await Page.EvaluateHandleAsync("const a = {}; a.b = a; a");
+        var a = await windowHandle.JsonValueAsync<RecursiveCircularObjectClass>();
+        Assert.AreEqual(a, a.b);
+    }
 
-        private class RecursiveCircularObjectClass
-        {
-            public RecursiveCircularObjectClass b { get; set; }
-        }
+    private class RecursiveCircularObjectClass
+    {
+        public RecursiveCircularObjectClass b { get; set; }
     }
 }

@@ -28,17 +28,16 @@ using System.Threading.Tasks;
 using Microsoft.Playwright.NUnit;
 using NUnit.Framework;
 
-namespace Microsoft.Playwright.Tests
+namespace Microsoft.Playwright.Tests;
+
+public class PageAccessibilityTests : PageTestEx
 {
-    public class PageAccessibilityTests : PageTestEx
+    [PlaywrightTest("page-accessibility.spec.ts", "should work with regular text")]
+    [System.Obsolete]
+    public async Task ShouldWorkWithRegularText()
     {
-        [PlaywrightTest("page-accessibility.spec.ts", "should work with regular text")]
-        [System.Obsolete]
-        public async Task ShouldWorkWithRegularText()
-        {
-            await Page.SetContentAsync("<div>Hello World</div>");
-            var snapshot = await Page.Accessibility.SnapshotAsync();
-            StringAssert.Contains("Hello World", JsonSerializer.Serialize(snapshot));
-        }
+        await Page.SetContentAsync("<div>Hello World</div>");
+        var snapshot = await Page.Accessibility.SnapshotAsync();
+        StringAssert.Contains("Hello World", JsonSerializer.Serialize(snapshot));
     }
 }

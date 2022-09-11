@@ -22,22 +22,21 @@
  * SOFTWARE.
  */
 
-namespace Microsoft.Playwright.Transport.Protocol
+namespace Microsoft.Playwright.Transport.Protocol;
+
+internal class FrameExpectOptions
 {
-    internal class FrameExpectOptions
-    {
-        public object ExpressionArg { get; set; }
+    public object ExpressionArg { get; set; }
 
-        public ExpectedTextValue[] ExpectedText { get; set; }
+    public ExpectedTextValue[] ExpectedText { get; set; }
 
-        public int ExpectedNumber { get; set; }
+    public int ExpectedNumber { get; set; }
 
-        public object ExpectedValue { get; set; }
+    public object ExpectedValue { get; set; }
 
-        public bool UseInnerText { get; set; }
+    public bool UseInnerText { get; set; }
 
-        public bool IsNot { get; set; }
+    public bool IsNot { get; set; }
 
-        public float? Timeout { get; set; }
-    }
+    public float? Timeout { get; set; }
 }

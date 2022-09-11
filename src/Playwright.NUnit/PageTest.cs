@@ -25,16 +25,15 @@
 using System.Threading.Tasks;
 using NUnit.Framework;
 
-namespace Microsoft.Playwright.NUnit
-{
-    public class PageTest : ContextTest
-    {
-        public IPage Page { get; private set; } = null!;
+namespace Microsoft.Playwright.NUnit;
 
-        [SetUp]
-        public async Task PageSetup()
-        {
-            Page = await Context.NewPageAsync().ConfigureAwait(false);
-        }
+public class PageTest : ContextTest
+{
+    public IPage Page { get; private set; } = null!;
+
+    [SetUp]
+    public async Task PageSetup()
+    {
+        Page = await Context.NewPageAsync().ConfigureAwait(false);
     }
 }

@@ -26,25 +26,24 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.Playwright.Core;
 
-namespace Microsoft.Playwright.Transport.Channels
+namespace Microsoft.Playwright.Transport.Channels;
+
+internal class WritableStreamChannel : Channel<WritableStream>
 {
-    internal class WritableStreamChannel : Channel<WritableStream>
+    public WritableStreamChannel(string guid, Connection connection, WritableStream owner) : base(guid, connection, owner)
     {
-        public WritableStreamChannel(string guid, Connection connection, WritableStream owner) : base(guid, connection, owner)
-        {
-        }
-
-        internal async Task WriteAsync(string binary)
-        {
-            await Connection.SendMessageToServerAsync(
-                Guid,
-                "write",
-                new Dictionary<string, object>
-                {
-                    ["binary"] = binary,
-                }).ConfigureAwait(false);
-        }
-
-        internal Task CloseAsync() => Connection.SendMessageToServerAsync(Guid, "close", null);
     }
+
+    internal async Task WriteAsync(string binary)
+    {
+        await Connection.SendMessageToServerAsync(
+            Guid,
+            "write",
+            new Dictionary<string, object>
+            {
+                ["binary"] = binary,
+            }).ConfigureAwait(false);
+    }
+
+    internal Task CloseAsync() => Connection.SendMessageToServerAsync(Guid, "close", null);
 }

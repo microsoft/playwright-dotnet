@@ -29,87 +29,86 @@ using Microsoft.Playwright.Transport;
 using Microsoft.Playwright.Transport.Channels;
 using Microsoft.Playwright.Transport.Protocol;
 
-namespace Microsoft.Playwright.Core
+namespace Microsoft.Playwright.Core;
+
+[SuppressMessage("Microsoft.Design", "CA1724", Justification = "Playwright is the entrypoint for all languages.")]
+internal class PlaywrightImpl : ChannelOwnerBase, IPlaywright, IChannelOwner<PlaywrightImpl>
 {
-    [SuppressMessage("Microsoft.Design", "CA1724", Justification = "Playwright is the entrypoint for all languages.")]
-    internal class PlaywrightImpl : ChannelOwnerBase, IPlaywright, IChannelOwner<PlaywrightImpl>
+    private readonly PlaywrightInitializer _initializer;
+    internal readonly PlaywrightChannel _channel;
+    private readonly Connection _connection;
+
+    private readonly Dictionary<string, BrowserNewContextOptions> _devices = new(StringComparer.InvariantCultureIgnoreCase);
+
+    internal PlaywrightImpl(IChannelOwner parent, string guid, PlaywrightInitializer initializer)
+         : base(parent, guid)
     {
-        private readonly PlaywrightInitializer _initializer;
-        internal readonly PlaywrightChannel _channel;
-        private readonly Connection _connection;
+        _connection = parent.Connection;
+        _initializer = initializer;
+        _channel = new(guid, parent.Connection, this);
 
-        private readonly Dictionary<string, BrowserNewContextOptions> _devices = new(StringComparer.InvariantCultureIgnoreCase);
-
-        internal PlaywrightImpl(IChannelOwner parent, string guid, PlaywrightInitializer initializer)
-             : base(parent, guid)
+        foreach (var entry in initializer.DeviceDescriptors)
         {
-            _connection = parent.Connection;
-            _initializer = initializer;
-            _channel = new(guid, parent.Connection, this);
-
-            foreach (var entry in initializer.DeviceDescriptors)
-            {
-                _devices[entry.Name] = entry.Descriptor;
-            }
-
-            _initializer.Chromium.Playwright = this;
-            _initializer.Firefox.Playwright = this;
-            _initializer.Webkit.Playwright = this;
-            APIRequest = new APIRequest(this);
+            _devices[entry.Name] = entry.Descriptor;
         }
 
-        ~PlaywrightImpl() => Dispose(false);
+        _initializer.Chromium.Playwright = this;
+        _initializer.Firefox.Playwright = this;
+        _initializer.Webkit.Playwright = this;
+        APIRequest = new APIRequest(this);
+    }
 
-        Connection IChannelOwner.Connection => _connection;
+    ~PlaywrightImpl() => Dispose(false);
 
-        ChannelBase IChannelOwner.Channel => _channel;
+    Connection IChannelOwner.Connection => _connection;
 
-        IChannel<PlaywrightImpl> IChannelOwner<PlaywrightImpl>.Channel => _channel;
+    ChannelBase IChannelOwner.Channel => _channel;
 
-        public IBrowserType Chromium { get => _initializer.Chromium; set => throw new NotSupportedException(); }
+    IChannel<PlaywrightImpl> IChannelOwner<PlaywrightImpl>.Channel => _channel;
 
-        public IBrowserType Firefox { get => _initializer.Firefox; set => throw new NotSupportedException(); }
+    public IBrowserType Chromium { get => _initializer.Chromium; set => throw new NotSupportedException(); }
 
-        public IBrowserType Webkit { get => _initializer.Webkit; set => throw new NotSupportedException(); }
+    public IBrowserType Firefox { get => _initializer.Firefox; set => throw new NotSupportedException(); }
 
-        public ISelectors Selectors => _initializer.Selectors;
+    public IBrowserType Webkit { get => _initializer.Webkit; set => throw new NotSupportedException(); }
 
-        public IReadOnlyDictionary<string, BrowserNewContextOptions> Devices => _devices;
+    public ISelectors Selectors => _initializer.Selectors;
 
-        internal Browser PreLaunchedBrowser => _initializer.PreLaunchedBrowser;
+    public IReadOnlyDictionary<string, BrowserNewContextOptions> Devices => _devices;
 
-        public IAPIRequest APIRequest { get; }
+    internal Browser PreLaunchedBrowser => _initializer.PreLaunchedBrowser;
 
-        /// <summary>
-        /// Gets a <see cref="IBrowserType"/>.
-        /// </summary>
-        /// <param name="browserType"><see cref="IBrowserType"/> name. You can get the names from <see cref="global::Microsoft.Playwright.BrowserType"/>.
-        /// e.g.: <see cref="global::Microsoft.Playwright.BrowserType.Chromium"/>,
-        /// <see cref="global::Microsoft.Playwright.BrowserType.Firefox"/> or <see cref="global::Microsoft.Playwright.BrowserType.Webkit"/>.
-        /// </param>
-        public IBrowserType this[string browserType]
-            => browserType?.ToLowerInvariant() switch
-            {
-                global::Microsoft.Playwright.BrowserType.Chromium => Chromium,
-                global::Microsoft.Playwright.BrowserType.Firefox => Firefox,
-                global::Microsoft.Playwright.BrowserType.Webkit => Webkit,
-                _ => null,
-            };
+    public IAPIRequest APIRequest { get; }
 
-        public void Dispose()
+    /// <summary>
+    /// Gets a <see cref="IBrowserType"/>.
+    /// </summary>
+    /// <param name="browserType"><see cref="IBrowserType"/> name. You can get the names from <see cref="global::Microsoft.Playwright.BrowserType"/>.
+    /// e.g.: <see cref="global::Microsoft.Playwright.BrowserType.Chromium"/>,
+    /// <see cref="global::Microsoft.Playwright.BrowserType.Firefox"/> or <see cref="global::Microsoft.Playwright.BrowserType.Webkit"/>.
+    /// </param>
+    public IBrowserType this[string browserType]
+        => browserType?.ToLowerInvariant() switch
         {
-            Dispose(true);
-            GC.SuppressFinalize(this);
+            global::Microsoft.Playwright.BrowserType.Chromium => Chromium,
+            global::Microsoft.Playwright.BrowserType.Firefox => Firefox,
+            global::Microsoft.Playwright.BrowserType.Webkit => Webkit,
+            _ => null,
+        };
+
+    public void Dispose()
+    {
+        Dispose(true);
+        GC.SuppressFinalize(this);
+    }
+
+    private void Dispose(bool disposing)
+    {
+        if (!disposing)
+        {
+            return;
         }
 
-        private void Dispose(bool disposing)
-        {
-            if (!disposing)
-            {
-                return;
-            }
-
-            _connection?.Dispose();
-        }
+        _connection?.Dispose();
     }
 }

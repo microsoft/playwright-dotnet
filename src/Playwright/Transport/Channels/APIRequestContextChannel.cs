@@ -29,70 +29,69 @@ using Microsoft.Playwright.Core;
 using Microsoft.Playwright.Helpers;
 using Microsoft.Playwright.Transport.Protocol;
 
-namespace Microsoft.Playwright.Transport.Channels
+namespace Microsoft.Playwright.Transport.Channels;
+
+internal class APIRequestContextChannel : Channel<APIRequestContext>
 {
-    internal class APIRequestContextChannel : Channel<APIRequestContext>
+    public APIRequestContextChannel(string guid, Connection connection, APIRequestContext owner) : base(guid, connection, owner)
     {
-        public APIRequestContextChannel(string guid, Connection connection, APIRequestContext owner) : base(guid, connection, owner)
-        {
-        }
-
-        internal Task DisposeAsync() => Connection.SendMessageToServerAsync(Guid, "dispose");
-
-        internal async Task<IAPIResponse> FetchAsync(
-            string url,
-            IEnumerable<KeyValuePair<string, string>> parameters,
-            string method,
-            IEnumerable<KeyValuePair<string, string>> headers,
-            object jsonData,
-            byte[] postData,
-            FormData formData,
-            FormData multipartData,
-            float? timeout,
-            bool? failOnStatusCode,
-            bool? ignoreHTTPSErrors,
-            int? maxRedirects)
-        {
-            var message = new Dictionary<string, object>
-            {
-                ["url"] = url,
-                ["method"] = method,
-                ["failOnStatusCode"] = failOnStatusCode,
-                ["ignoreHTTPSErrors"] = ignoreHTTPSErrors,
-                ["maxRedirects"] = maxRedirects,
-                ["timeout"] = timeout,
-                ["params"] = parameters?.ToProtocol(),
-                ["headers"] = headers?.ToProtocol(),
-                ["jsonData"] = jsonData,
-                ["postData"] = postData != null ? Convert.ToBase64String(postData) : null,
-                ["formData"] = formData?.ToProtocol(),
-                ["multipartData"] = multipartData?.ToProtocol(),
-            };
-
-            var response = await Connection.SendMessageToServerAsync(Guid, "fetch", message).ConfigureAwait(false);
-            return new Core.APIResponse(Object, response?.GetProperty("response").ToObject<Protocol.APIResponse>());
-        }
-
-        internal Task<StorageState> StorageStateAsync()
-            => Connection.SendMessageToServerAsync<StorageState>(Guid, "storageState", null);
-
-        internal async Task<string> FetchResponseBodyAsync(string fetchUid)
-        {
-            var response = await Connection.SendMessageToServerAsync(Guid, "fetchResponseBody", new Dictionary<string, object> { ["fetchUid"] = fetchUid }).ConfigureAwait(false);
-            if (response?.TryGetProperty("binary", out var binary) == true)
-            {
-                return binary.ToString();
-            }
-            return null;
-        }
-
-        internal async Task<List<string>> FetchResponseLogAsync(string fetchUid)
-        {
-            var response = await Connection.SendMessageToServerAsync(Guid, "fetchLog", new Dictionary<string, object> { ["fetchUid"] = fetchUid }).ConfigureAwait(false);
-            return response.Value.GetProperty("log").ToObject<List<string>>();
-        }
-
-        internal Task DisposeAPIResponseAsync(string fetchUid)
-            => Connection.SendMessageToServerAsync(Guid, "disposeAPIResponse", new Dictionary<string, object> { ["fetchUid"] = fetchUid });
     }
+
+    internal Task DisposeAsync() => Connection.SendMessageToServerAsync(Guid, "dispose");
+
+    internal async Task<IAPIResponse> FetchAsync(
+        string url,
+        IEnumerable<KeyValuePair<string, string>> parameters,
+        string method,
+        IEnumerable<KeyValuePair<string, string>> headers,
+        object jsonData,
+        byte[] postData,
+        FormData formData,
+        FormData multipartData,
+        float? timeout,
+        bool? failOnStatusCode,
+        bool? ignoreHTTPSErrors,
+        int? maxRedirects)
+    {
+        var message = new Dictionary<string, object>
+        {
+            ["url"] = url,
+            ["method"] = method,
+            ["failOnStatusCode"] = failOnStatusCode,
+            ["ignoreHTTPSErrors"] = ignoreHTTPSErrors,
+            ["maxRedirects"] = maxRedirects,
+            ["timeout"] = timeout,
+            ["params"] = parameters?.ToProtocol(),
+            ["headers"] = headers?.ToProtocol(),
+            ["jsonData"] = jsonData,
+            ["postData"] = postData != null ? Convert.ToBase64String(postData) : null,
+            ["formData"] = formData?.ToProtocol(),
+            ["multipartData"] = multipartData?.ToProtocol(),
+        };
+
+        var response = await Connection.SendMessageToServerAsync(Guid, "fetch", message).ConfigureAwait(false);
+        return new Core.APIResponse(Object, response?.GetProperty("response").ToObject<Protocol.APIResponse>());
+    }
+
+    internal Task<StorageState> StorageStateAsync()
+        => Connection.SendMessageToServerAsync<StorageState>(Guid, "storageState", null);
+
+    internal async Task<string> FetchResponseBodyAsync(string fetchUid)
+    {
+        var response = await Connection.SendMessageToServerAsync(Guid, "fetchResponseBody", new Dictionary<string, object> { ["fetchUid"] = fetchUid }).ConfigureAwait(false);
+        if (response?.TryGetProperty("binary", out var binary) == true)
+        {
+            return binary.ToString();
+        }
+        return null;
+    }
+
+    internal async Task<List<string>> FetchResponseLogAsync(string fetchUid)
+    {
+        var response = await Connection.SendMessageToServerAsync(Guid, "fetchLog", new Dictionary<string, object> { ["fetchUid"] = fetchUid }).ConfigureAwait(false);
+        return response.Value.GetProperty("log").ToObject<List<string>>();
+    }
+
+    internal Task DisposeAPIResponseAsync(string fetchUid)
+        => Connection.SendMessageToServerAsync(Guid, "disposeAPIResponse", new Dictionary<string, object> { ["fetchUid"] = fetchUid });
 }

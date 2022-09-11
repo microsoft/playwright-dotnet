@@ -25,20 +25,19 @@
 using System;
 using Microsoft.Playwright.Core;
 
-namespace Microsoft.Playwright.Transport.Channels
+namespace Microsoft.Playwright.Transport.Channels;
+
+internal class BrowserContextChannelRequestEventArgs : EventArgs
 {
-    internal class BrowserContextChannelRequestEventArgs : EventArgs
-    {
-        public Page Page { get; set; }
+    public Page Page { get; set; }
 
-        public Request Request { get; set; }
+    public Request Request { get; set; }
 
-        public Response Response { get; set; }
+    public Response Response { get; set; }
 
-        public RequestSizesResult RequestSizes { get; set; }
+    public RequestSizesResult RequestSizes { get; set; }
 
-        public string FailureText { get; set; }
+    public string FailureText { get; set; }
 
-        public float ResponseEndTiming { get; set; }
-    }
+    public float ResponseEndTiming { get; set; }
 }

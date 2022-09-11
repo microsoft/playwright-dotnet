@@ -27,39 +27,38 @@ using System.Threading.Tasks;
 using Microsoft.Playwright.MSTest.Services;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace Microsoft.Playwright.MSTest
+namespace Microsoft.Playwright.MSTest;
+
+[TestClass]
+public class BrowserTest : PlaywrightTest
 {
-    [TestClass]
-    public class BrowserTest : PlaywrightTest
+    public IBrowser Browser { get; private set; } = null!;
+    private readonly List<IBrowserContext> _contexts = new();
+
+    public async Task<IBrowserContext> NewContextAsync(BrowserNewContextOptions? options)
     {
-        public IBrowser Browser { get; private set; } = null!;
-        private readonly List<IBrowserContext> _contexts = new();
+        var context = await Browser!.NewContextAsync(options).ConfigureAwait(false);
+        _contexts.Add(context);
+        return context;
+    }
 
-        public async Task<IBrowserContext> NewContextAsync(BrowserNewContextOptions? options)
-        {
-            var context = await Browser!.NewContextAsync(options).ConfigureAwait(false);
-            _contexts.Add(context);
-            return context;
-        }
+    [TestInitialize]
+    public async Task BrowserSetup()
+    {
+        Browser = (await GetService<BrowserService>().ConfigureAwait(false)).Browser;
+    }
 
-        [TestInitialize]
-        public async Task BrowserSetup()
+    [TestCleanup]
+    public async Task BrowserTearDown()
+    {
+        if (TestOK)
         {
-            Browser = (await GetService<BrowserService>().ConfigureAwait(false)).Browser;
-        }
-
-        [TestCleanup]
-        public async Task BrowserTearDown()
-        {
-            if (TestOK)
+            foreach (var context in _contexts)
             {
-                foreach (var context in _contexts)
-                {
-                    await context.CloseAsync().ConfigureAwait(false);
-                }
+                await context.CloseAsync().ConfigureAwait(false);
             }
-            _contexts.Clear();
-            Browser = null!;
         }
+        _contexts.Clear();
+        Browser = null!;
     }
 }

@@ -30,65 +30,64 @@ using Microsoft.Playwright.Transport;
 using Microsoft.Playwright.Transport.Channels;
 using Microsoft.Playwright.Transport.Protocol;
 
-namespace Microsoft.Playwright.Core
+namespace Microsoft.Playwright.Core;
+
+internal class Artifact : ChannelOwnerBase, IChannelOwner<Artifact>
 {
-    internal class Artifact : ChannelOwnerBase, IChannelOwner<Artifact>
+    private readonly Connection _connection;
+    private readonly ArtifactChannel _channel;
+
+    internal Artifact(IChannelOwner parent, string guid, ArtifactInitializer initializer) : base(parent, guid)
     {
-        private readonly Connection _connection;
-        private readonly ArtifactChannel _channel;
-
-        internal Artifact(IChannelOwner parent, string guid, ArtifactInitializer initializer) : base(parent, guid)
-        {
-            _connection = parent.Connection;
-            _channel = new(guid, parent.Connection, this);
-            AbsolutePath = initializer.AbsolutePath;
-        }
-
-        Connection IChannelOwner.Connection => _connection;
-
-        ChannelBase IChannelOwner.Channel => _channel;
-
-        IChannel<Artifact> IChannelOwner<Artifact>.Channel => _channel;
-
-        internal string AbsolutePath { get; }
-
-        public async Task<string> PathAfterFinishedAsync()
-        {
-            if (_connection.IsRemote)
-            {
-                throw new PlaywrightException("Path is not available when connecting remotely. Use SaveAsAsync() to save a local copy.");
-            }
-            return await _channel.PathAfterFinishedAsync().ConfigureAwait(false);
-        }
-
-        public async Task SaveAsAsync(string path)
-        {
-            if (!_connection.IsRemote)
-            {
-                await _channel.SaveAsAsync(path).ConfigureAwait(false);
-                return;
-            }
-            System.IO.Directory.CreateDirectory(Path.GetDirectoryName(path));
-            var stream = await _channel.SaveAsStreamAsync().ConfigureAwait(false);
-            await using (stream.ConfigureAwait(false))
-            {
-                using (var fileStream = new FileStream(path, FileMode.Create, FileAccess.Write))
-                {
-                    await stream.StreamImpl.CopyToAsync(fileStream).ConfigureAwait(false);
-                }
-            }
-        }
-
-        public async Task<System.IO.Stream> CreateReadStreamAsync()
-        {
-            var stream = await _channel.StreamAsync().ConfigureAwait(false);
-            return stream.StreamImpl;
-        }
-
-        internal Task CancelAsync() => _channel.CancelAsync();
-
-        internal Task<string> FailureAsync() => _channel.FailureAsync();
-
-        internal Task DeleteAsync() => _channel.DeleteAsync();
+        _connection = parent.Connection;
+        _channel = new(guid, parent.Connection, this);
+        AbsolutePath = initializer.AbsolutePath;
     }
+
+    Connection IChannelOwner.Connection => _connection;
+
+    ChannelBase IChannelOwner.Channel => _channel;
+
+    IChannel<Artifact> IChannelOwner<Artifact>.Channel => _channel;
+
+    internal string AbsolutePath { get; }
+
+    public async Task<string> PathAfterFinishedAsync()
+    {
+        if (_connection.IsRemote)
+        {
+            throw new PlaywrightException("Path is not available when connecting remotely. Use SaveAsAsync() to save a local copy.");
+        }
+        return await _channel.PathAfterFinishedAsync().ConfigureAwait(false);
+    }
+
+    public async Task SaveAsAsync(string path)
+    {
+        if (!_connection.IsRemote)
+        {
+            await _channel.SaveAsAsync(path).ConfigureAwait(false);
+            return;
+        }
+        System.IO.Directory.CreateDirectory(Path.GetDirectoryName(path));
+        var stream = await _channel.SaveAsStreamAsync().ConfigureAwait(false);
+        await using (stream.ConfigureAwait(false))
+        {
+            using (var fileStream = new FileStream(path, FileMode.Create, FileAccess.Write))
+            {
+                await stream.StreamImpl.CopyToAsync(fileStream).ConfigureAwait(false);
+            }
+        }
+    }
+
+    public async Task<System.IO.Stream> CreateReadStreamAsync()
+    {
+        var stream = await _channel.StreamAsync().ConfigureAwait(false);
+        return stream.StreamImpl;
+    }
+
+    internal Task CancelAsync() => _channel.CancelAsync();
+
+    internal Task<string> FailureAsync() => _channel.FailureAsync();
+
+    internal Task DeleteAsync() => _channel.DeleteAsync();
 }

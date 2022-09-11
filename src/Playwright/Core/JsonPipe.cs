@@ -28,31 +28,30 @@ using Microsoft.Playwright.Transport;
 using Microsoft.Playwright.Transport.Channels;
 using Microsoft.Playwright.Transport.Protocol;
 
-namespace Microsoft.Playwright.Core
+namespace Microsoft.Playwright.Core;
+
+internal class JsonPipe : ChannelOwnerBase, IChannelOwner<JsonPipe>
 {
-    internal class JsonPipe : ChannelOwnerBase, IChannelOwner<JsonPipe>
+    private readonly JsonPipeChannel _channel;
+    private readonly JsonPipeInitializer _initializer;
+
+    public JsonPipe(IChannelOwner parent, string guid, JsonPipeInitializer initializer) : base(parent, guid)
     {
-        private readonly JsonPipeChannel _channel;
-        private readonly JsonPipeInitializer _initializer;
-
-        public JsonPipe(IChannelOwner parent, string guid, JsonPipeInitializer initializer) : base(parent, guid)
-        {
-            _channel = new(guid, parent.Connection, this);
-            _initializer = initializer;
-            _channel.Closed += (_, e) => Closed.Invoke(this, e);
-            _channel.Message += (_, e) => Message.Invoke(this, e);
-        }
-
-        public event EventHandler<PlaywrightServerMessage> Message;
-
-        public event EventHandler<SerializedError> Closed;
-
-        ChannelBase IChannelOwner.Channel => _channel;
-
-        IChannel<JsonPipe> IChannelOwner<JsonPipe>.Channel => _channel;
-
-        public Task CloseAsync() => _channel.CloseAsync();
-
-        public Task SendAsync(object message) => _channel.SendAsync(message);
+        _channel = new(guid, parent.Connection, this);
+        _initializer = initializer;
+        _channel.Closed += (_, e) => Closed.Invoke(this, e);
+        _channel.Message += (_, e) => Message.Invoke(this, e);
     }
+
+    public event EventHandler<PlaywrightServerMessage> Message;
+
+    public event EventHandler<SerializedError> Closed;
+
+    ChannelBase IChannelOwner.Channel => _channel;
+
+    IChannel<JsonPipe> IChannelOwner<JsonPipe>.Channel => _channel;
+
+    public Task CloseAsync() => _channel.CloseAsync();
+
+    public Task SendAsync(object message) => _channel.SendAsync(message);
 }

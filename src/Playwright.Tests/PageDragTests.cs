@@ -26,32 +26,32 @@ using System.Threading.Tasks;
 using Microsoft.Playwright.NUnit;
 using NUnit.Framework;
 
-namespace Microsoft.Playwright.Tests
+namespace Microsoft.Playwright.Tests;
+
+public class PageDragTests : PageTestEx
 {
-    public class PageDragTests : PageTestEx
+    [PlaywrightTest("page-drag.spec.ts", "should work")]
+    public async Task ShouldWork()
     {
-        [PlaywrightTest("page-drag.spec.ts", "should work")]
-        public async Task ShouldWork()
-        {
-            await Page.GotoAsync(Server.Prefix + "/drag-n-drop.html");
-            await Page.HoverAsync("#source");
-            await Page.Mouse.DownAsync();
-            await Page.HoverAsync("#target");
-            await Page.Mouse.UpAsync();
+        await Page.GotoAsync(Server.Prefix + "/drag-n-drop.html");
+        await Page.HoverAsync("#source");
+        await Page.Mouse.DownAsync();
+        await Page.HoverAsync("#target");
+        await Page.Mouse.UpAsync();
 
-            Assert.True(await Page.EvalOnSelectorAsync<bool>("#target", "target => target.contains(document.querySelector('#source'))"));
-        }
+        Assert.True(await Page.EvalOnSelectorAsync<bool>("#target", "target => target.contains(document.querySelector('#source'))"));
+    }
 
-        [PlaywrightTest("page-drag.spec.ts", "should allow specifying the position")]
-        public async Task ShouldAllowSpecifyingThePosition()
-        {
-            await Page.SetContentAsync(@"
+    [PlaywrightTest("page-drag.spec.ts", "should allow specifying the position")]
+    public async Task ShouldAllowSpecifyingThePosition()
+    {
+        await Page.SetContentAsync(@"
                 <div style=""width:100px;height:100px;background:red;"" id=""red"">
                 </div>
                 <div style=""width:100px;height:100px;background:blue;"" id=""blue"">
                 </div>
             ");
-            var eventsHandle = await Page.EvaluateHandleAsync(@"() => {
+        var eventsHandle = await Page.EvaluateHandleAsync(@"() => {
                 const events = [];
                 document.getElementById('red').addEventListener('mousedown', event => {
                     events.push({
@@ -69,24 +69,23 @@ namespace Microsoft.Playwright.Tests
                 });
                 return events;
             }");
-            await Page.DragAndDropAsync("#red", "#blue", new()
-            {
-                SourcePosition = new() { X = 34, Y = 7 },
-                TargetPosition = new() { X = 10, Y = 20 },
-            });
-            PlaywrightAssert.AreJsonEqual(new[]
-            {
+        await Page.DragAndDropAsync("#red", "#blue", new()
+        {
+            SourcePosition = new() { X = 34, Y = 7 },
+            TargetPosition = new() { X = 10, Y = 20 },
+        });
+        PlaywrightAssert.AreJsonEqual(new[]
+        {
                 new { type = "mousedown", x = 34, y = 7 },
                 new { type = "mouseup", x = 10, y = 20 },
             }, await eventsHandle.JsonValueAsync<object>());
-        }
+    }
 
-        [PlaywrightTest("page-drag.spec.ts", "should work with locators")]
-        public async Task DragAndDropWithLocatorsShouldWork()
-        {
-            await Page.GotoAsync(Server.Prefix + "/drag-n-drop.html");
-            await Page.Locator("#source").DragToAsync(Page.Locator("#target"));
-            Assert.IsTrue(await Page.EvalOnSelectorAsync<bool>("#target", "target => target.contains(document.querySelector('#source'))")); // could not find source in target
-        }
+    [PlaywrightTest("page-drag.spec.ts", "should work with locators")]
+    public async Task DragAndDropWithLocatorsShouldWork()
+    {
+        await Page.GotoAsync(Server.Prefix + "/drag-n-drop.html");
+        await Page.Locator("#source").DragToAsync(Page.Locator("#target"));
+        Assert.IsTrue(await Page.EvalOnSelectorAsync<bool>("#target", "target => target.contains(document.querySelector('#source'))")); // could not find source in target
     }
 }

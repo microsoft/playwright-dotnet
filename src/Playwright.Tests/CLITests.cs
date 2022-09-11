@@ -27,57 +27,56 @@ using System.IO;
 using Microsoft.Playwright.NUnit;
 using NUnit.Framework;
 
-namespace Microsoft.Playwright.Tests
+namespace Microsoft.Playwright.Tests;
+
+public class CLITests : PlaywrightTest
 {
-    public class CLITests : PlaywrightTest
+    private readonly string playwrightPs1Path = Path.Join(TestContext.CurrentContext.TestDirectory, "..", "..", "..", "..", "Playwright", "bin", "Debug", "netstandard2.0", "playwright.ps1");
+
+    [PlaywrightTest("cli.spec.ts", "")]
+    public void ShouldBeAbleToRunCLICommands()
     {
-        private readonly string playwrightPs1Path = Path.Join(TestContext.CurrentContext.TestDirectory, "..", "..", "..", "..", "Playwright", "bin", "Debug", "netstandard2.0", "playwright.ps1");
+        using var tempDir = new TempDirectory();
+        string screenshotFile = Path.Combine(tempDir.Path, "screenshot.png");
+        var (stdout, stderr, exitCode) = ExecutePlaywrightPs1(new[] { "screenshot", "-b", BrowserName, "data:text/html,Foobar", screenshotFile });
+        Assert.AreEqual(0, exitCode);
+        Assert.IsTrue(File.Exists(screenshotFile));
+        StringAssert.Contains("Foobar", stdout);
+        StringAssert.Contains(screenshotFile, stdout);
+    }
 
-        [PlaywrightTest("cli.spec.ts", "")]
-        public void ShouldBeAbleToRunCLICommands()
+    [PlaywrightTest("cli.spec.ts", "")]
+    public void ShouldReturnExitCode1ForCommandNotFound()
+    {
+        var (stdout, stderr, exitCode) = ExecutePlaywrightPs1(new[] { "this-command-is-not-found" });
+
+        Assert.AreEqual(1, exitCode);
+        StringAssert.Contains("this-command-is-not-found", stderr);
+        StringAssert.Contains("unknown command", stderr);
+    }
+
+    // Out of process execution of playwright.ps1
+    private (string stdout, string stderr, int exitCode) ExecutePlaywrightPs1(string[] arguments)
+    {
+        var startInfo = new ProcessStartInfo("pwsh")
         {
-            using var tempDir = new TempDirectory();
-            string screenshotFile = Path.Combine(tempDir.Path, "screenshot.png");
-            var (stdout, stderr, exitCode) = ExecutePlaywrightPs1(new[] { "screenshot", "-b", BrowserName, "data:text/html,Foobar", screenshotFile });
-            Assert.AreEqual(0, exitCode);
-            Assert.IsTrue(File.Exists(screenshotFile));
-            StringAssert.Contains("Foobar", stdout);
-            StringAssert.Contains(screenshotFile, stdout);
-        }
-
-        [PlaywrightTest("cli.spec.ts", "")]
-        public void ShouldReturnExitCode1ForCommandNotFound()
+            UseShellExecute = false,
+            RedirectStandardError = true,
+            RedirectStandardOutput = true,
+        };
+        startInfo.ArgumentList.Add("-NoProfile");
+        startInfo.ArgumentList.Add(playwrightPs1Path);
+        foreach (string arg in arguments)
         {
-            var (stdout, stderr, exitCode) = ExecutePlaywrightPs1(new[] { "this-command-is-not-found" });
-
-            Assert.AreEqual(1, exitCode);
-            StringAssert.Contains("this-command-is-not-found", stderr);
-            StringAssert.Contains("unknown command", stderr);
+            startInfo.ArgumentList.Add(arg);
         }
-
-        // Out of process execution of playwright.ps1
-        private (string stdout, string stderr, int exitCode) ExecutePlaywrightPs1(string[] arguments)
+        using var pwProcess = new Process()
         {
-            var startInfo = new ProcessStartInfo("pwsh")
-            {
-                UseShellExecute = false,
-                RedirectStandardError = true,
-                RedirectStandardOutput = true,
-            };
-            startInfo.ArgumentList.Add("-NoProfile");
-            startInfo.ArgumentList.Add(playwrightPs1Path);
-            foreach (string arg in arguments)
-            {
-                startInfo.ArgumentList.Add(arg);
-            }
-            using var pwProcess = new Process()
-            {
-                StartInfo = startInfo,
-            };
+            StartInfo = startInfo,
+        };
 
-            pwProcess.Start();
-            pwProcess.WaitForExit();
-            return (pwProcess.StandardOutput.ReadToEnd(), pwProcess.StandardError.ReadToEnd(), pwProcess.ExitCode);
-        }
+        pwProcess.Start();
+        pwProcess.WaitForExit();
+        return (pwProcess.StandardOutput.ReadToEnd(), pwProcess.StandardError.ReadToEnd(), pwProcess.ExitCode);
     }
 }

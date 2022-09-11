@@ -29,60 +29,59 @@ using Microsoft.Playwright.Core;
 using Microsoft.Playwright.Helpers;
 using Microsoft.Playwright.Transport.Protocol;
 
-namespace Microsoft.Playwright.Transport.Channels
+namespace Microsoft.Playwright.Transport.Channels;
+
+internal class TracingChannel : Channel<Tracing>
 {
-    internal class TracingChannel : Channel<Tracing>
+    public TracingChannel(string guid, Connection connection, Tracing owner) : base(guid, connection, owner)
     {
-        public TracingChannel(string guid, Connection connection, Tracing owner) : base(guid, connection, owner)
-        {
-        }
+    }
 
-        internal Task TracingStartAsync(string name, string title, bool? screenshots, bool? snapshots, bool? sources)
-            => Connection.SendMessageToServerAsync(
-                Guid,
-                "tracingStart",
-                new Dictionary<string, object>
-                {
-                    ["name"] = name,
-                    ["title"] = title,
-                    ["screenshots"] = screenshots,
-                    ["snapshots"] = snapshots,
-                    ["sources"] = sources,
-                });
-
-        internal Task TracingStopAsync()
-            => Connection.SendMessageToServerAsync(
-                Guid,
-                "tracingStop");
-
-        internal Task StartChunkAsync(string title = null)
-            => Connection.SendMessageToServerAsync(Guid, "tracingStartChunk", new Dictionary<string, object>
+    internal Task TracingStartAsync(string name, string title, bool? screenshots, bool? snapshots, bool? sources)
+        => Connection.SendMessageToServerAsync(
+            Guid,
+            "tracingStart",
+            new Dictionary<string, object>
             {
+                ["name"] = name,
                 ["title"] = title,
+                ["screenshots"] = screenshots,
+                ["snapshots"] = snapshots,
+                ["sources"] = sources,
             });
 
-        internal async Task<(Artifact Artifact, List<NameValue> SourceEntries)> StopChunkAsync(string mode)
-        {
-            var result = await Connection.SendMessageToServerAsync(Guid, "tracingStopChunk", new Dictionary<string, object>
-            {
-                ["mode"] = mode,
-            }).ConfigureAwait(false);
+    internal Task TracingStopAsync()
+        => Connection.SendMessageToServerAsync(
+            Guid,
+            "tracingStop");
 
-            var artifact = result.GetObject<Artifact>("artifact", Connection);
-            List<NameValue> sourceEntries = new() { };
-            if (result.Value.TryGetProperty("sourceEntries", out var sourceEntriesElement))
+    internal Task StartChunkAsync(string title = null)
+        => Connection.SendMessageToServerAsync(Guid, "tracingStartChunk", new Dictionary<string, object>
+        {
+            ["title"] = title,
+        });
+
+    internal async Task<(Artifact Artifact, List<NameValue> SourceEntries)> StopChunkAsync(string mode)
+    {
+        var result = await Connection.SendMessageToServerAsync(Guid, "tracingStopChunk", new Dictionary<string, object>
+        {
+            ["mode"] = mode,
+        }).ConfigureAwait(false);
+
+        var artifact = result.GetObject<Artifact>("artifact", Connection);
+        List<NameValue> sourceEntries = new() { };
+        if (result.Value.TryGetProperty("sourceEntries", out var sourceEntriesElement))
+        {
+            var sourceEntriesEnumerator = sourceEntriesElement.EnumerateArray();
+            while (sourceEntriesEnumerator.MoveNext())
             {
-                var sourceEntriesEnumerator = sourceEntriesElement.EnumerateArray();
-                while (sourceEntriesEnumerator.MoveNext())
+                JsonElement current = sourceEntriesEnumerator.Current;
+                sourceEntries.Add(current.Deserialize<NameValue>(new JsonSerializerOptions()
                 {
-                    JsonElement current = sourceEntriesEnumerator.Current;
-                    sourceEntries.Add(current.Deserialize<NameValue>(new JsonSerializerOptions()
-                    {
-                        PropertyNameCaseInsensitive = true,
-                    }));
-                }
+                    PropertyNameCaseInsensitive = true,
+                }));
             }
-            return (artifact, sourceEntries);
         }
+        return (artifact, sourceEntries);
     }
 }

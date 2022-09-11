@@ -24,97 +24,96 @@
 
 using System.Runtime.Serialization;
 
-namespace Microsoft.Playwright.Transport.Channels
+namespace Microsoft.Playwright.Transport.Channels;
+
+internal enum ChannelOwnerType
 {
-    internal enum ChannelOwnerType
-    {
-        [EnumMember(Value = "artifact")]
-        Artifact,
+    [EnumMember(Value = "artifact")]
+    Artifact,
 
-        [EnumMember(Value = "bindingCall")]
-        BindingCall,
+    [EnumMember(Value = "bindingCall")]
+    BindingCall,
 
-        [EnumMember(Value = "browser")]
-        Browser,
+    [EnumMember(Value = "browser")]
+    Browser,
 
-        [EnumMember(Value = "browserType")]
-        BrowserType,
+    [EnumMember(Value = "browserType")]
+    BrowserType,
 
-        [EnumMember(Value = "browserContext")]
-        BrowserContext,
+    [EnumMember(Value = "browserContext")]
+    BrowserContext,
 
-        [EnumMember(Value = "consoleMessage")]
-        ConsoleMessage,
+    [EnumMember(Value = "consoleMessage")]
+    ConsoleMessage,
 
-        [EnumMember(Value = "dialog")]
-        Dialog,
+    [EnumMember(Value = "dialog")]
+    Dialog,
 
-        [EnumMember(Value = "download")]
-        Download,
+    [EnumMember(Value = "download")]
+    Download,
 
-        [EnumMember(Value = "elementHandle")]
-        ElementHandle,
+    [EnumMember(Value = "elementHandle")]
+    ElementHandle,
 
-        [EnumMember(Value = "frame")]
-        Frame,
+    [EnumMember(Value = "frame")]
+    Frame,
 
-        [EnumMember(Value = "jsHandle")]
-        JSHandle,
+    [EnumMember(Value = "jsHandle")]
+    JSHandle,
 
-        [EnumMember(Value = "JsonPipe")]
-        JsonPipe,
-        [EnumMember(Value = "LocalUtils")]
-        LocalUtils,
+    [EnumMember(Value = "JsonPipe")]
+    JsonPipe,
+    [EnumMember(Value = "LocalUtils")]
+    LocalUtils,
 
-        [EnumMember(Value = "page")]
-        Page,
+    [EnumMember(Value = "page")]
+    Page,
 
-        [EnumMember(Value = "request")]
-        Request,
+    [EnumMember(Value = "request")]
+    Request,
 
-        [EnumMember(Value = "response")]
-        Response,
+    [EnumMember(Value = "response")]
+    Response,
 
-        [EnumMember(Value = "route")]
-        Route,
+    [EnumMember(Value = "route")]
+    Route,
 
-        [EnumMember(Value = "playwright")]
-        Playwright,
+    [EnumMember(Value = "playwright")]
+    Playwright,
 
-        [EnumMember(Value = "browserServer")]
-        BrowserServer,
+    [EnumMember(Value = "browserServer")]
+    BrowserServer,
 
-        [EnumMember(Value = "worker")]
-        Worker,
+    [EnumMember(Value = "worker")]
+    Worker,
 
-        [EnumMember(Value = "electron")]
-        Electron,
+    [EnumMember(Value = "electron")]
+    Electron,
 
-        [EnumMember(Value = "selectors")]
-        Selectors,
+    [EnumMember(Value = "selectors")]
+    Selectors,
 
-        [EnumMember(Value = "SocksSupport")]
-        SocksSupport,
+    [EnumMember(Value = "SocksSupport")]
+    SocksSupport,
 
-        [EnumMember(Value = "WebSocket")]
-        WebSocket,
+    [EnumMember(Value = "WebSocket")]
+    WebSocket,
 
-        [EnumMember(Value = "Android")]
-        Android,
+    [EnumMember(Value = "Android")]
+    Android,
 
-        [EnumMember(Value = "stream")]
-        Stream,
+    [EnumMember(Value = "stream")]
+    Stream,
 
-        [EnumMember(Value = "WritableStream")]
-        WritableStream,
+    [EnumMember(Value = "WritableStream")]
+    WritableStream,
 
-        [EnumMember(Value = "tracing")]
-        Tracing,
+    [EnumMember(Value = "tracing")]
+    Tracing,
 
-        [EnumMember(Value = "fetchRequest")]
-        FetchRequest,
+    [EnumMember(Value = "fetchRequest")]
+    FetchRequest,
 
-        [EnumMember(Value = "APIRequestContext")]
-        APIRequestContext,
-    }
+    [EnumMember(Value = "APIRequestContext")]
+    APIRequestContext,
 }

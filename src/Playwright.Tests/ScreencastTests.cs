@@ -27,154 +27,153 @@ using System.Threading.Tasks;
 using Microsoft.Playwright.NUnit;
 using NUnit.Framework;
 
-namespace Microsoft.Playwright.Tests
+namespace Microsoft.Playwright.Tests;
+
+///<playwright-file>screencast.spec.ts</playwright-file>
+public class ScreencastTests : BrowserTestEx
 {
-    ///<playwright-file>screencast.spec.ts</playwright-file>
-    public class ScreencastTests : BrowserTestEx
+    [PlaywrightTest("screencast.spec.ts", "videoSize should require videosPath")]
+    public async Task VideoSizeShouldRequireVideosPath()
     {
-        [PlaywrightTest("screencast.spec.ts", "videoSize should require videosPath")]
-        public async Task VideoSizeShouldRequireVideosPath()
+        var exception = await PlaywrightAssert.ThrowsAsync<PlaywrightException>(() => Browser.NewContextAsync(new()
         {
-            var exception = await PlaywrightAssert.ThrowsAsync<PlaywrightException>(() => Browser.NewContextAsync(new()
-            {
-                RecordVideoSize = new() { Height = 100, Width = 100 }
-            }));
+            RecordVideoSize = new() { Height = 100, Width = 100 }
+        }));
 
-            StringAssert.Contains("\"RecordVideoSize\" option requires \"RecordVideoDir\" to be specified", exception.Message);
-        }
+        StringAssert.Contains("\"RecordVideoSize\" option requires \"RecordVideoDir\" to be specified", exception.Message);
+    }
 
-        public async Task ShouldWorkWithoutASize()
+    public async Task ShouldWorkWithoutASize()
+    {
+        using var tempDirectory = new TempDirectory();
+        var context = await Browser.NewContextAsync(new()
         {
-            using var tempDirectory = new TempDirectory();
-            var context = await Browser.NewContextAsync(new()
-            {
-                RecordVideoDir = tempDirectory.Path
-            });
+            RecordVideoDir = tempDirectory.Path
+        });
 
-            var page = await context.NewPageAsync();
-            await page.EvaluateAsync("() => document.body.style.backgroundColor = 'red'");
-            await Task.Delay(1000);
-            await context.CloseAsync();
+        var page = await context.NewPageAsync();
+        await page.EvaluateAsync("() => document.body.style.backgroundColor = 'red'");
+        await Task.Delay(1000);
+        await context.CloseAsync();
 
-            Assert.IsNotEmpty(new DirectoryInfo(tempDirectory.Path).GetFiles("*.webm"));
-        }
+        Assert.IsNotEmpty(new DirectoryInfo(tempDirectory.Path).GetFiles("*.webm"));
+    }
 
-        [PlaywrightTest("screencast.spec.ts", "should capture static page")]
-        [Skip(SkipAttribute.Targets.Webkit | SkipAttribute.Targets.Windows)]
-        public async Task ShouldCaptureStaticPage()
+    [PlaywrightTest("screencast.spec.ts", "should capture static page")]
+    [Skip(SkipAttribute.Targets.Webkit | SkipAttribute.Targets.Windows)]
+    public async Task ShouldCaptureStaticPage()
+    {
+        using var tempDirectory = new TempDirectory();
+        var context = await Browser.NewContextAsync(new()
         {
-            using var tempDirectory = new TempDirectory();
-            var context = await Browser.NewContextAsync(new()
-            {
-                RecordVideoDir = tempDirectory.Path,
-                RecordVideoSize = new() { Height = 100, Width = 100 }
-            });
+            RecordVideoDir = tempDirectory.Path,
+            RecordVideoSize = new() { Height = 100, Width = 100 }
+        });
 
-            var page = await context.NewPageAsync();
-            await page.EvaluateAsync("() => document.body.style.backgroundColor = 'red'");
-            await Task.Delay(1000);
-            await context.CloseAsync();
+        var page = await context.NewPageAsync();
+        await page.EvaluateAsync("() => document.body.style.backgroundColor = 'red'");
+        await Task.Delay(1000);
+        await context.CloseAsync();
 
-            Assert.IsNotEmpty(new DirectoryInfo(tempDirectory.Path).GetFiles("*.webm"));
-        }
+        Assert.IsNotEmpty(new DirectoryInfo(tempDirectory.Path).GetFiles("*.webm"));
+    }
 
-        [PlaywrightTest("screencast.spec.ts", "should expose video path")]
-        public async Task ShouldExposeVideoPath()
+    [PlaywrightTest("screencast.spec.ts", "should expose video path")]
+    public async Task ShouldExposeVideoPath()
+    {
+        using var tempDirectory = new TempDirectory();
+        var context = await Browser.NewContextAsync(new()
         {
-            using var tempDirectory = new TempDirectory();
-            var context = await Browser.NewContextAsync(new()
-            {
-                RecordVideoDir = tempDirectory.Path,
-                RecordVideoSize = new() { Height = 100, Width = 100 }
-            });
+            RecordVideoDir = tempDirectory.Path,
+            RecordVideoSize = new() { Height = 100, Width = 100 }
+        });
 
-            var page = await context.NewPageAsync();
-            await page.EvaluateAsync("() => document.body.style.backgroundColor = 'red'");
-            string path = await page.Video.PathAsync();
-            StringAssert.Contains(tempDirectory.Path, path);
-            await context.CloseAsync();
+        var page = await context.NewPageAsync();
+        await page.EvaluateAsync("() => document.body.style.backgroundColor = 'red'");
+        string path = await page.Video.PathAsync();
+        StringAssert.Contains(tempDirectory.Path, path);
+        await context.CloseAsync();
 
-            Assert.True(new FileInfo(path).Exists);
-        }
+        Assert.True(new FileInfo(path).Exists);
+    }
 
-        [PlaywrightTest("screencast.spec.ts", "should expose video path blank page")]
-        public async Task ShouldExposeVideoPathBlankPage()
+    [PlaywrightTest("screencast.spec.ts", "should expose video path blank page")]
+    public async Task ShouldExposeVideoPathBlankPage()
+    {
+        using var tempDirectory = new TempDirectory();
+        var context = await Browser.NewContextAsync(new()
         {
-            using var tempDirectory = new TempDirectory();
-            var context = await Browser.NewContextAsync(new()
-            {
-                RecordVideoDir = tempDirectory.Path,
-                RecordVideoSize = new() { Height = 100, Width = 100 }
-            });
+            RecordVideoDir = tempDirectory.Path,
+            RecordVideoSize = new() { Height = 100, Width = 100 }
+        });
 
-            var page = await context.NewPageAsync();
-            string path = await page.Video.PathAsync();
-            StringAssert.Contains(tempDirectory.Path, path);
-            await context.CloseAsync();
+        var page = await context.NewPageAsync();
+        string path = await page.Video.PathAsync();
+        StringAssert.Contains(tempDirectory.Path, path);
+        await context.CloseAsync();
 
-            Assert.True(new FileInfo(path).Exists);
-        }
+        Assert.True(new FileInfo(path).Exists);
+    }
 
-        [PlaywrightTest("screencast.spec.ts", "should expose video path blank popup")]
-        [Ignore("We don't need to test video details")]
-        public void ShouldExposeVideoPathBlankPopup()
+    [PlaywrightTest("screencast.spec.ts", "should expose video path blank popup")]
+    [Ignore("We don't need to test video details")]
+    public void ShouldExposeVideoPathBlankPopup()
+    {
+    }
+
+    [PlaywrightTest("screencast.spec.ts", "should capture navigation")]
+    [Ignore("We don't need to test video details")]
+    public void ShouldCaptureNavigation()
+    {
+    }
+
+    [PlaywrightTest("screencast.spec.ts", "should capture css transformation")]
+    [Ignore("We don't need to test video details")]
+    public void ShouldCaptureCssTransformation()
+    {
+    }
+
+    [PlaywrightTest("screencast.spec.ts", "should work for popups")]
+    [Ignore("We don't need to test video details")]
+    public void ShouldWorkForPopups()
+    {
+    }
+
+    [PlaywrightTest("screencast.spec.ts", "should scale frames down to the requested size")]
+    [Ignore("We don't need to test video details")]
+    public void ShouldScaleFramesDownToTheRequestedSize()
+    {
+    }
+
+    [PlaywrightTest("screencast.spec.ts", "should use viewport as default size")]
+    [Ignore("We don't need to test video details")]
+    public void ShouldUseViewportAsDefaultSize()
+    {
+    }
+
+    [PlaywrightTest("screencast.spec.ts", "should be 1280x720 by default")]
+    [Ignore("We don't need to test video details")]
+    public void ShouldBe1280x720ByDefault()
+    {
+    }
+
+    [PlaywrightTest("screencast.spec.ts", "should capture static page in persistent context")]
+    [Skip(SkipAttribute.Targets.Webkit, SkipAttribute.Targets.Firefox)]
+    public async Task ShouldCaptureStaticPageInPersistentContext()
+    {
+        using var userDirectory = new TempDirectory();
+        using var tempDirectory = new TempDirectory();
+        var context = await BrowserType.LaunchPersistentContextAsync(userDirectory.Path, new()
         {
-        }
+            RecordVideoDir = tempDirectory.Path,
+            RecordVideoSize = new() { Height = 100, Width = 100 },
+        });
 
-        [PlaywrightTest("screencast.spec.ts", "should capture navigation")]
-        [Ignore("We don't need to test video details")]
-        public void ShouldCaptureNavigation()
-        {
-        }
+        var page = await context.NewPageAsync();
+        await page.EvaluateAsync("() => document.body.style.backgroundColor = 'red'");
+        await Task.Delay(1000);
+        await context.CloseAsync();
 
-        [PlaywrightTest("screencast.spec.ts", "should capture css transformation")]
-        [Ignore("We don't need to test video details")]
-        public void ShouldCaptureCssTransformation()
-        {
-        }
-
-        [PlaywrightTest("screencast.spec.ts", "should work for popups")]
-        [Ignore("We don't need to test video details")]
-        public void ShouldWorkForPopups()
-        {
-        }
-
-        [PlaywrightTest("screencast.spec.ts", "should scale frames down to the requested size")]
-        [Ignore("We don't need to test video details")]
-        public void ShouldScaleFramesDownToTheRequestedSize()
-        {
-        }
-
-        [PlaywrightTest("screencast.spec.ts", "should use viewport as default size")]
-        [Ignore("We don't need to test video details")]
-        public void ShouldUseViewportAsDefaultSize()
-        {
-        }
-
-        [PlaywrightTest("screencast.spec.ts", "should be 1280x720 by default")]
-        [Ignore("We don't need to test video details")]
-        public void ShouldBe1280x720ByDefault()
-        {
-        }
-
-        [PlaywrightTest("screencast.spec.ts", "should capture static page in persistent context")]
-        [Skip(SkipAttribute.Targets.Webkit, SkipAttribute.Targets.Firefox)]
-        public async Task ShouldCaptureStaticPageInPersistentContext()
-        {
-            using var userDirectory = new TempDirectory();
-            using var tempDirectory = new TempDirectory();
-            var context = await BrowserType.LaunchPersistentContextAsync(userDirectory.Path, new()
-            {
-                RecordVideoDir = tempDirectory.Path,
-                RecordVideoSize = new() { Height = 100, Width = 100 },
-            });
-
-            var page = await context.NewPageAsync();
-            await page.EvaluateAsync("() => document.body.style.backgroundColor = 'red'");
-            await Task.Delay(1000);
-            await context.CloseAsync();
-
-            Assert.IsNotEmpty(new DirectoryInfo(tempDirectory.Path).GetFiles("*.webm"));
-        }
+        Assert.IsNotEmpty(new DirectoryInfo(tempDirectory.Path).GetFiles("*.webm"));
     }
 }

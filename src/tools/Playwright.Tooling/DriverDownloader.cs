@@ -35,162 +35,161 @@ using System.Xml;
 using DriverDownloader.Linux;
 using Playwright.Tooling.Options;
 
-namespace Playwright.Tooling
+namespace Playwright.Tooling;
+
+internal class DriverDownloader
 {
-    internal class DriverDownloader
+    private static readonly string[] _platforms = new[]
     {
-        private static readonly string[] _platforms = new[]
-        {
             "mac",
             "linux",
             "linux-arm64",
             "win32_x64",
-        };
+    };
 
-        public string BasePath { get; set; }
+    public string BasePath { get; set; }
 
-        public string DriverVersion { get; set; }
+    public string DriverVersion { get; set; }
 
-        internal static Task RunAsync(DownloadDriversOptions o)
+    internal static Task RunAsync(DownloadDriversOptions o)
+    {
+        var props = new XmlDocument();
+        props.Load(Path.Combine(o.BasePath, "src", "Common", "Version.props"));
+        string driverVersion = props.DocumentElement.SelectSingleNode("/Project/PropertyGroup/DriverVersion").FirstChild.Value;
+
+        return new DriverDownloader()
         {
-            var props = new XmlDocument();
-            props.Load(Path.Combine(o.BasePath, "src", "Common", "Version.props"));
-            string driverVersion = props.DocumentElement.SelectSingleNode("/Project/PropertyGroup/DriverVersion").FirstChild.Value;
+            BasePath = o.BasePath,
+            DriverVersion = driverVersion,
+        }.ExecuteAsync();
+    }
 
-            return new DriverDownloader()
+    private async Task UpdateBrowserVersionsAsync(string basePath, string driverVersion)
+    {
+        try
+        {
+            string readmePath = Path.Combine(basePath, "README.md");
+            string playwrightVersion = driverVersion.Contains("-") ? driverVersion.Substring(0, driverVersion.IndexOf("-")) : driverVersion;
+
+            var regex = new Regex("<!-- GEN:(.*?) -->(.*?)<!-- GEN:stop -->", RegexOptions.Compiled);
+
+            var basePlaywrightDir = Environment.GetEnvironmentVariable("PW_SRC_DIR") ?? Path.Combine(Environment.CurrentDirectory, "..", "playwright");
+            var readme = File.ReadAllText(Path.Combine(basePlaywrightDir, "README.md"));
+            static string ReplaceBrowserVersion(string content, MatchCollection browserMatches)
             {
-                BasePath = o.BasePath,
-                DriverVersion = driverVersion,
-            }.ExecuteAsync();
+                foreach (Match match in browserMatches)
+                {
+                    content = new Regex($"<!-- GEN:{match.Groups[1].Value} -->.*?<!-- GEN:stop -->")
+                        .Replace(content, $"<!-- GEN:{match.Groups[1].Value} -->{match.Groups[2].Value}<!-- GEN:stop -->");
+                }
+
+                return content;
+            }
+
+            var browserMatches = regex.Matches(readme);
+            string readmeText = await File.ReadAllTextAsync(readmePath).ConfigureAwait(false);
+            await File.WriteAllTextAsync(readmePath, ReplaceBrowserVersion(readmeText, browserMatches)).ConfigureAwait(false);
+        }
+        catch (Exception e)
+        {
+            Console.ForegroundColor = ConsoleColor.Yellow;
+            Console.WriteLine("WARNING: Could not update the browser versions in the README file.");
+            Console.WriteLine($"This is usually due to the readme file not yet existing for {driverVersion}.");
+            Console.WriteLine(e.Message);
+        }
+    }
+
+    private async Task DownloadDriverAsync(DirectoryInfo destinationDirectory, string driverVersion, string platform)
+    {
+        Console.WriteLine("Downloading driver for " + platform);
+        string cdn = "https://playwright.azureedge.net/builds/driver";
+        if (
+            driverVersion.Contains("-alpha")
+            || driverVersion.Contains("-beta")
+            || driverVersion.Contains("-next"))
+        {
+            cdn += "/next";
         }
 
-        private async Task UpdateBrowserVersionsAsync(string basePath, string driverVersion)
+        using var client = new HttpClient();
+        string url = $"{cdn}/playwright-{driverVersion}-{platform}.zip";
+
+        try
         {
-            try
+            var response = await client.GetAsync(url).ConfigureAwait(false);
+
+            var directory = new DirectoryInfo(Path.Combine(destinationDirectory.FullName, platform));
+
+            if (directory.Exists)
             {
-                string readmePath = Path.Combine(basePath, "README.md");
-                string playwrightVersion = driverVersion.Contains("-") ? driverVersion.Substring(0, driverVersion.IndexOf("-")) : driverVersion;
+                directory.Delete(true);
+            }
 
-                var regex = new Regex("<!-- GEN:(.*?) -->(.*?)<!-- GEN:stop -->", RegexOptions.Compiled);
+            new ZipArchive(await response.Content.ReadAsStreamAsync().ConfigureAwait(false)).ExtractToDirectory(directory.FullName);
 
-                var basePlaywrightDir = Environment.GetEnvironmentVariable("PW_SRC_DIR") ?? Path.Combine(Environment.CurrentDirectory, "..", "playwright");
-                var readme = File.ReadAllText(Path.Combine(basePlaywrightDir, "README.md"));
-                static string ReplaceBrowserVersion(string content, MatchCollection browserMatches)
+            if (!RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+            {
+                var executables = new[] { "playwright.sh", "node", "package/third_party/ffmpeg/ffmpeg-linux", "package/third_party/ffmpeg/ffmpeg-mac" }
+                    .Select(f => Path.Combine(directory.FullName, f));
+
+                foreach (string executable in executables)
                 {
-                    foreach (Match match in browserMatches)
+                    if (new FileInfo(executable).Exists && LinuxSysCall.Chmod(executable, LinuxSysCall.ExecutableFilePermissions) != 0)
                     {
-                        content = new Regex($"<!-- GEN:{match.Groups[1].Value} -->.*?<!-- GEN:stop -->")
-                            .Replace(content, $"<!-- GEN:{match.Groups[1].Value} -->{match.Groups[2].Value}<!-- GEN:stop -->");
-                    }
-
-                    return content;
-                }
-
-                var browserMatches = regex.Matches(readme);
-                string readmeText = await File.ReadAllTextAsync(readmePath).ConfigureAwait(false);
-                await File.WriteAllTextAsync(readmePath, ReplaceBrowserVersion(readmeText, browserMatches)).ConfigureAwait(false);
-            }
-            catch (Exception e)
-            {
-                Console.ForegroundColor = ConsoleColor.Yellow;
-                Console.WriteLine("WARNING: Could not update the browser versions in the README file.");
-                Console.WriteLine($"This is usually due to the readme file not yet existing for {driverVersion}.");
-                Console.WriteLine(e.Message);
-            }
-        }
-
-        private async Task DownloadDriverAsync(DirectoryInfo destinationDirectory, string driverVersion, string platform)
-        {
-            Console.WriteLine("Downloading driver for " + platform);
-            string cdn = "https://playwright.azureedge.net/builds/driver";
-            if (
-                driverVersion.Contains("-alpha")
-                || driverVersion.Contains("-beta")
-                || driverVersion.Contains("-next"))
-            {
-                cdn += "/next";
-            }
-
-            using var client = new HttpClient();
-            string url = $"{cdn}/playwright-{driverVersion}-{platform}.zip";
-
-            try
-            {
-                var response = await client.GetAsync(url).ConfigureAwait(false);
-
-                var directory = new DirectoryInfo(Path.Combine(destinationDirectory.FullName, platform));
-
-                if (directory.Exists)
-                {
-                    directory.Delete(true);
-                }
-
-                new ZipArchive(await response.Content.ReadAsStreamAsync().ConfigureAwait(false)).ExtractToDirectory(directory.FullName);
-
-                if (!RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
-                {
-                    var executables = new[] { "playwright.sh", "node", "package/third_party/ffmpeg/ffmpeg-linux", "package/third_party/ffmpeg/ffmpeg-mac" }
-                        .Select(f => Path.Combine(directory.FullName, f));
-
-                    foreach (string executable in executables)
-                    {
-                        if (new FileInfo(executable).Exists && LinuxSysCall.Chmod(executable, LinuxSysCall.ExecutableFilePermissions) != 0)
-                        {
-                            throw new($"Unable to chmod {executable} ({Marshal.GetLastWin32Error()})");
-                        }
+                        throw new($"Unable to chmod {executable} ({Marshal.GetLastWin32Error()})");
                     }
                 }
+            }
 
-                Console.WriteLine($"Driver for {platform} downloaded");
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Unable to download driver for {driverVersion} using url {url}");
-                throw new($"Unable to download driver for {driverVersion} using url {url}", ex);
-            }
+            Console.WriteLine($"Driver for {platform} downloaded");
         }
-
-        private async Task<bool> ExecuteAsync()
+        catch (Exception ex)
         {
-            var destinationDirectory = new DirectoryInfo(Path.Combine(BasePath, "src", "Playwright", ".drivers"));
-            var dedupeDirectory = new DirectoryInfo(Path.Combine(BasePath, "src", "Playwright", ".playwright"));
-            string driverVersion = DriverVersion;
-
-            var versionFile = new FileInfo(Path.Combine(destinationDirectory.FullName, driverVersion));
-
-            if (!versionFile.Exists)
-            {
-                if (destinationDirectory.Exists)
-                {
-                    Directory.Delete(destinationDirectory.FullName, true);
-                }
-
-                if (dedupeDirectory.Exists)
-                {
-                    Directory.Delete(dedupeDirectory.FullName, true);
-                }
-
-                destinationDirectory.Create();
-
-                var tasks = new List<Task>();
-
-                foreach (var platform in _platforms)
-                {
-                    tasks.Add(DownloadDriverAsync(destinationDirectory, driverVersion, platform));
-                }
-
-                await Task.WhenAll(tasks).ConfigureAwait(false);
-                versionFile.CreateText();
-            }
-            else
-            {
-                Console.WriteLine("Drivers are up-to-date");
-            }
-
-            // update readme
-            await UpdateBrowserVersionsAsync(BasePath, driverVersion).ConfigureAwait(false);
-
-            return true;
+            Console.WriteLine($"Unable to download driver for {driverVersion} using url {url}");
+            throw new($"Unable to download driver for {driverVersion} using url {url}", ex);
         }
+    }
+
+    private async Task<bool> ExecuteAsync()
+    {
+        var destinationDirectory = new DirectoryInfo(Path.Combine(BasePath, "src", "Playwright", ".drivers"));
+        var dedupeDirectory = new DirectoryInfo(Path.Combine(BasePath, "src", "Playwright", ".playwright"));
+        string driverVersion = DriverVersion;
+
+        var versionFile = new FileInfo(Path.Combine(destinationDirectory.FullName, driverVersion));
+
+        if (!versionFile.Exists)
+        {
+            if (destinationDirectory.Exists)
+            {
+                Directory.Delete(destinationDirectory.FullName, true);
+            }
+
+            if (dedupeDirectory.Exists)
+            {
+                Directory.Delete(dedupeDirectory.FullName, true);
+            }
+
+            destinationDirectory.Create();
+
+            var tasks = new List<Task>();
+
+            foreach (var platform in _platforms)
+            {
+                tasks.Add(DownloadDriverAsync(destinationDirectory, driverVersion, platform));
+            }
+
+            await Task.WhenAll(tasks).ConfigureAwait(false);
+            versionFile.CreateText();
+        }
+        else
+        {
+            Console.WriteLine("Drivers are up-to-date");
+        }
+
+        // update readme
+        await UpdateBrowserVersionsAsync(BasePath, driverVersion).ConfigureAwait(false);
+
+        return true;
     }
 }

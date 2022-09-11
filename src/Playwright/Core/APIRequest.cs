@@ -24,32 +24,31 @@
 
 using System.Threading.Tasks;
 
-namespace Microsoft.Playwright.Core
+namespace Microsoft.Playwright.Core;
+
+internal class APIRequest : IAPIRequest
 {
-    internal class APIRequest : IAPIRequest
+    private readonly PlaywrightImpl _playwright;
+
+    public APIRequest(PlaywrightImpl playwright)
     {
-        private readonly PlaywrightImpl _playwright;
+        _playwright = playwright;
+    }
 
-        public APIRequest(PlaywrightImpl playwright)
-        {
-            _playwright = playwright;
-        }
-
-        async Task<IAPIRequestContext> IAPIRequest.NewContextAsync(APIRequestNewContextOptions options)
-        {
-            var context = await _playwright._channel.NewRequestAsync(
-                options?.BaseURL,
-                options?.UserAgent,
-                options?.IgnoreHTTPSErrors,
-                options?.ExtraHTTPHeaders,
-                options?.HttpCredentials,
-                options?.Proxy,
-                options?.Timeout,
-                options?.StorageState,
-                options?.StorageStatePath)
-            .ConfigureAwait(false);
-            context._request = this;
-            return context;
-        }
+    async Task<IAPIRequestContext> IAPIRequest.NewContextAsync(APIRequestNewContextOptions options)
+    {
+        var context = await _playwright._channel.NewRequestAsync(
+            options?.BaseURL,
+            options?.UserAgent,
+            options?.IgnoreHTTPSErrors,
+            options?.ExtraHTTPHeaders,
+            options?.HttpCredentials,
+            options?.Proxy,
+            options?.Timeout,
+            options?.StorageState,
+            options?.StorageStatePath)
+        .ConfigureAwait(false);
+        context._request = this;
+        return context;
     }
 }

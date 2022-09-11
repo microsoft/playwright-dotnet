@@ -28,56 +28,55 @@ using System.Threading.Tasks;
 using Microsoft.Playwright.Core;
 using Microsoft.Playwright.Helpers;
 
-namespace Microsoft.Playwright.Transport.Channels
+namespace Microsoft.Playwright.Transport.Channels;
+
+internal class JSHandleChannel : Channel<JSHandle>
 {
-    internal class JSHandleChannel : Channel<JSHandle>
+    public JSHandleChannel(string guid, Connection connection, JSHandle owner) : base(guid, connection, owner)
     {
-        public JSHandleChannel(string guid, Connection connection, JSHandle owner) : base(guid, connection, owner)
-        {
-        }
+    }
 
-        internal Task<JsonElement?> EvaluateExpressionAsync(string script, object arg)
-            => Connection.SendMessageToServerAsync<JsonElement?>(
-                Guid,
-                "evaluateExpression",
-                new Dictionary<string, object>
-                {
-                    ["expression"] = script,
-                    ["arg"] = arg,
-                });
+    internal Task<JsonElement?> EvaluateExpressionAsync(string script, object arg)
+        => Connection.SendMessageToServerAsync<JsonElement?>(
+            Guid,
+            "evaluateExpression",
+            new Dictionary<string, object>
+            {
+                ["expression"] = script,
+                ["arg"] = arg,
+            });
 
-        internal Task<JSHandleChannel> EvaluateExpressionHandleAsync(string script, object arg)
-            => Connection.SendMessageToServerAsync<JSHandleChannel>(
-                Guid,
-                "evaluateExpressionHandle",
-                new Dictionary<string, object>
-                {
-                    ["expression"] = script,
-                    ["arg"] = arg,
-                });
+    internal Task<JSHandleChannel> EvaluateExpressionHandleAsync(string script, object arg)
+        => Connection.SendMessageToServerAsync<JSHandleChannel>(
+            Guid,
+            "evaluateExpressionHandle",
+            new Dictionary<string, object>
+            {
+                ["expression"] = script,
+                ["arg"] = arg,
+            });
 
-        internal Task<JsonElement> JsonValueAsync() => Connection.SendMessageToServerAsync<JsonElement>(Guid, "jsonValue", null);
+    internal Task<JsonElement> JsonValueAsync() => Connection.SendMessageToServerAsync<JsonElement>(Guid, "jsonValue", null);
 
-        internal Task DisposeAsync() => Connection.SendMessageToServerAsync(Guid, "dispose", null);
+    internal Task DisposeAsync() => Connection.SendMessageToServerAsync(Guid, "dispose", null);
 
-        internal Task<JSHandleChannel> GetPropertyAsync(string propertyName)
-            => Connection.SendMessageToServerAsync<JSHandleChannel>(
-                Guid,
-                "getProperty",
-                new Dictionary<string, object>
-                {
-                    ["name"] = propertyName,
-                });
+    internal Task<JSHandleChannel> GetPropertyAsync(string propertyName)
+        => Connection.SendMessageToServerAsync<JSHandleChannel>(
+            Guid,
+            "getProperty",
+            new Dictionary<string, object>
+            {
+                ["name"] = propertyName,
+            });
 
-        internal async Task<List<JSElementProperty>> GetPropertiesAsync()
-            => (await Connection.SendMessageToServerAsync(Guid, "getPropertyList", null).ConfigureAwait(false))?
-                .GetProperty("properties").ToObject<List<JSElementProperty>>(Connection.DefaultJsonSerializerOptions);
+    internal async Task<List<JSElementProperty>> GetPropertiesAsync()
+        => (await Connection.SendMessageToServerAsync(Guid, "getPropertyList", null).ConfigureAwait(false))?
+            .GetProperty("properties").ToObject<List<JSElementProperty>>(Connection.DefaultJsonSerializerOptions);
 
-        internal class JSElementProperty
-        {
-            public string Name { get; set; }
+    internal class JSElementProperty
+    {
+        public string Name { get; set; }
 
-            public JSHandleChannel Value { get; set; }
-        }
+        public JSHandleChannel Value { get; set; }
     }
 }

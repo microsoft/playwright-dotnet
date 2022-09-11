@@ -26,88 +26,87 @@ using System.Threading.Tasks;
 using Microsoft.Playwright.Transport;
 using Microsoft.Playwright.Transport.Channels;
 
-namespace Microsoft.Playwright.Core
+namespace Microsoft.Playwright.Core;
+
+internal class Tracing : ChannelOwnerBase, IChannelOwner<Tracing>, ITracing
 {
-    internal class Tracing : ChannelOwnerBase, IChannelOwner<Tracing>, ITracing
+    private readonly TracingChannel _channel;
+
+    public Tracing(IChannelOwner parent, string guid) : base(parent, guid)
     {
-        private readonly TracingChannel _channel;
+        _channel = new(guid, parent.Connection, this);
+    }
 
-        public Tracing(IChannelOwner parent, string guid) : base(parent, guid)
+    ChannelBase IChannelOwner.Channel => _channel;
+
+    IChannel<Tracing> IChannelOwner<Tracing>.Channel => _channel;
+
+    public async Task StartAsync(TracingStartOptions options = default)
+    {
+        await _channel.Connection.WrapApiCallAsync(async () =>
         {
-            _channel = new(guid, parent.Connection, this);
+            await _channel.TracingStartAsync(
+                    name: options?.Name,
+                    title: options?.Title,
+                    screenshots: options?.Screenshots,
+                    snapshots: options?.Snapshots,
+                    sources: options?.Sources).ConfigureAwait(false);
+            await _channel.StartChunkAsync(options?.Title).ConfigureAwait(false);
+        }).ConfigureAwait(false);
+    }
+
+    public Task StartChunkAsync(TracingStartChunkOptions options = default) => _channel.StartChunkAsync(title: options?.Title);
+
+    public Task StopChunkAsync(TracingStopChunkOptions options = default) => DoStopChunkAsync(filePath: options?.Path);
+
+    public async Task StopAsync(TracingStopOptions options = default)
+    {
+        await _channel.Connection.WrapApiCallAsync(async () =>
+        {
+            await StopChunkAsync(new() { Path = options?.Path }).ConfigureAwait(false);
+            await _channel.TracingStopAsync().ConfigureAwait(false);
+        }).ConfigureAwait(false);
+    }
+
+    private async Task DoStopChunkAsync(string filePath)
+    {
+        bool isLocal = !_channel.Connection.IsRemote;
+
+        var mode = "doNotSave";
+        if (!string.IsNullOrEmpty(filePath))
+        {
+            if (isLocal)
+            {
+                mode = "compressTraceAndSources";
+            }
+            else
+            {
+                mode = "compressTrace";
+            }
         }
 
-        ChannelBase IChannelOwner.Channel => _channel;
+        var (artifact, sourceEntries) = await _channel.StopChunkAsync(mode).ConfigureAwait(false);
 
-        IChannel<Tracing> IChannelOwner<Tracing>.Channel => _channel;
-
-        public async Task StartAsync(TracingStartOptions options = default)
+        // Not interested in artifacts.
+        if (string.IsNullOrEmpty(filePath))
         {
-            await _channel.Connection.WrapApiCallAsync(async () =>
-            {
-                await _channel.TracingStartAsync(
-                        name: options?.Name,
-                        title: options?.Title,
-                        screenshots: options?.Screenshots,
-                        snapshots: options?.Snapshots,
-                        sources: options?.Sources).ConfigureAwait(false);
-                await _channel.StartChunkAsync(options?.Title).ConfigureAwait(false);
-            }).ConfigureAwait(false);
+            return;
         }
 
-        public Task StartChunkAsync(TracingStartChunkOptions options = default) => _channel.StartChunkAsync(title: options?.Title);
-
-        public Task StopChunkAsync(TracingStopChunkOptions options = default) => DoStopChunkAsync(filePath: options?.Path);
-
-        public async Task StopAsync(TracingStopOptions options = default)
+        // The artifact may be missing if the browser closed while stopping tracing.
+        if (artifact == null)
         {
-            await _channel.Connection.WrapApiCallAsync(async () =>
-            {
-                await StopChunkAsync(new() { Path = options?.Path }).ConfigureAwait(false);
-                await _channel.TracingStopAsync().ConfigureAwait(false);
-            }).ConfigureAwait(false);
+            return;
         }
 
-        private async Task DoStopChunkAsync(string filePath)
+        // Save trace to the final local file.
+        await artifact.SaveAsAsync(filePath).ConfigureAwait(false);
+        await artifact.DeleteAsync().ConfigureAwait(false);
+
+        // Add local sources to the remote trace if necessary.
+        if (sourceEntries.Count > 0)
         {
-            bool isLocal = !_channel.Connection.IsRemote;
-
-            var mode = "doNotSave";
-            if (!string.IsNullOrEmpty(filePath))
-            {
-                if (isLocal)
-                {
-                    mode = "compressTraceAndSources";
-                }
-                else
-                {
-                    mode = "compressTrace";
-                }
-            }
-
-            var (artifact, sourceEntries) = await _channel.StopChunkAsync(mode).ConfigureAwait(false);
-
-            // Not interested in artifacts.
-            if (string.IsNullOrEmpty(filePath))
-            {
-                return;
-            }
-
-            // The artifact may be missing if the browser closed while stopping tracing.
-            if (artifact == null)
-            {
-                return;
-            }
-
-            // Save trace to the final local file.
-            await artifact.SaveAsAsync(filePath).ConfigureAwait(false);
-            await artifact.DeleteAsync().ConfigureAwait(false);
-
-            // Add local sources to the remote trace if necessary.
-            if (sourceEntries.Count > 0)
-            {
-                await _channel.Connection.LocalUtils.ZipAsync(filePath, sourceEntries).ConfigureAwait(false);
-            }
+            await _channel.Connection.LocalUtils.ZipAsync(filePath, sourceEntries).ConfigureAwait(false);
         }
     }
 }

@@ -25,12 +25,11 @@
 using System;
 using Microsoft.Playwright.Core;
 
-namespace Microsoft.Playwright.Transport.Channels
-{
-    internal class BrowserContextChannelResponseEventArgs : EventArgs
-    {
-        public Page Page { get; set; }
+namespace Microsoft.Playwright.Transport.Channels;
 
-        public Response Response { get; set; }
-    }
+internal class BrowserContextChannelResponseEventArgs : EventArgs
+{
+    public Page Page { get; set; }
+
+    public Response Response { get; set; }
 }

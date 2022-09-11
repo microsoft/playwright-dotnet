@@ -24,12 +24,11 @@
 
 using System.Threading.Tasks;
 
-namespace Microsoft.Playwright.MSTest
+namespace Microsoft.Playwright.MSTest;
+
+public interface IWorkerService
 {
-    public interface IWorkerService
-    {
-        public Task BuildAsync(PlaywrightTest parentTest);
-        public Task ResetAsync();
-        public Task DisposeAsync();
-    }
+    public Task BuildAsync(PlaywrightTest parentTest);
+    public Task ResetAsync();
+    public Task DisposeAsync();
 }

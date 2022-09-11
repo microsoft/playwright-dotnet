@@ -29,33 +29,32 @@ using System.Threading.Tasks;
 using Microsoft.Playwright.Helpers;
 using Microsoft.Playwright.Transport;
 
-namespace Microsoft.Playwright
+namespace Microsoft.Playwright;
+
+[SuppressMessage("Microsoft.Design", "CA1724", Justification = "Playwright is the entrypoint for all languages.")]
+public static class Playwright
 {
-    [SuppressMessage("Microsoft.Design", "CA1724", Justification = "Playwright is the entrypoint for all languages.")]
-    public static class Playwright
+    /// <summary>
+    /// Launches Playwright.
+    /// </summary>
+    /// <returns>A <see cref="Task"/> that completes when the playwright driver is ready to be used.</returns>
+    public static async Task<IPlaywright> CreateAsync()
     {
-        /// <summary>
-        /// Launches Playwright.
-        /// </summary>
-        /// <returns>A <see cref="Task"/> that completes when the playwright driver is ready to be used.</returns>
-        public static async Task<IPlaywright> CreateAsync()
-        {
 #pragma warning disable CA2000 // Dispose objects before losing scope
-            var transport = new StdIOTransport();
-            var connection = new Connection();
+        var transport = new StdIOTransport();
+        var connection = new Connection();
 #pragma warning restore CA2000
-            transport.MessageReceived += (_, message) => connection.Dispatch(JsonSerializer.Deserialize<PlaywrightServerMessage>(message, JsonExtensions.DefaultJsonSerializerOptions));
-            transport.LogReceived += (_, log) =>
-            {
-                // workaround for https://github.com/nunit/nunit/issues/4144
-                var writer = Environment.GetEnvironmentVariable("PWAPI_TO_STDOUT") != null ? Console.Out : Console.Error;
-                writer.WriteLine(log);
-            };
-            transport.TransportClosed += (_, reason) => connection.DoClose(reason);
-            connection.OnMessage = (message) => transport.SendAsync(JsonSerializer.SerializeToUtf8Bytes(message, connection.DefaultJsonSerializerOptions));
-            connection.Close += (_, reason) => transport.Close(reason);
-            var playwright = await connection.InitializePlaywrightAsync().ConfigureAwait(false);
-            return playwright;
-        }
+        transport.MessageReceived += (_, message) => connection.Dispatch(JsonSerializer.Deserialize<PlaywrightServerMessage>(message, JsonExtensions.DefaultJsonSerializerOptions));
+        transport.LogReceived += (_, log) =>
+        {
+            // workaround for https://github.com/nunit/nunit/issues/4144
+            var writer = Environment.GetEnvironmentVariable("PWAPI_TO_STDOUT") != null ? Console.Out : Console.Error;
+            writer.WriteLine(log);
+        };
+        transport.TransportClosed += (_, reason) => connection.DoClose(reason);
+        connection.OnMessage = (message) => transport.SendAsync(JsonSerializer.SerializeToUtf8Bytes(message, connection.DefaultJsonSerializerOptions));
+        connection.Close += (_, reason) => transport.Close(reason);
+        var playwright = await connection.InitializePlaywrightAsync().ConfigureAwait(false);
+        return playwright;
     }
 }

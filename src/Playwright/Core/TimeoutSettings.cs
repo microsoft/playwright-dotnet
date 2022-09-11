@@ -22,74 +22,73 @@
  * SOFTWARE.
  */
 
-namespace Microsoft.Playwright.Core
+namespace Microsoft.Playwright.Core;
+
+internal class TimeoutSettings
 {
-    internal class TimeoutSettings
+    private const int DefaultTimeout = 30_000;
+
+    private readonly TimeoutSettings _parent;
+    private float? _defaultTimeout;
+    private float? _defaultNavigationTimeout;
+
+    public TimeoutSettings(TimeoutSettings parent = null)
     {
-        private const int DefaultTimeout = 30_000;
+        _parent = parent;
+    }
 
-        private readonly TimeoutSettings _parent;
-        private float? _defaultTimeout;
-        private float? _defaultNavigationTimeout;
+    public void SetDefaultTimeout(float timeout)
+    {
+        _defaultTimeout = timeout;
+    }
 
-        public TimeoutSettings(TimeoutSettings parent = null)
+    public void SetDefaultNavigationTimeout(float timeout)
+    {
+        _defaultNavigationTimeout = timeout;
+    }
+
+    public float NavigationTimeout(float? timeout)
+    {
+        if (timeout.HasValue)
         {
-            _parent = parent;
+            return timeout.Value;
         }
 
-        public void SetDefaultTimeout(float timeout)
+        if (_defaultNavigationTimeout.HasValue)
         {
-            _defaultTimeout = timeout;
+            return _defaultNavigationTimeout.Value;
         }
 
-        public void SetDefaultNavigationTimeout(float timeout)
+        if (_defaultTimeout.HasValue)
         {
-            _defaultNavigationTimeout = timeout;
+            return _defaultTimeout.Value;
         }
 
-        public float NavigationTimeout(float? timeout)
+        if (_parent != null)
         {
-            if (timeout.HasValue)
-            {
-                return timeout.Value;
-            }
-
-            if (_defaultNavigationTimeout.HasValue)
-            {
-                return _defaultNavigationTimeout.Value;
-            }
-
-            if (_defaultTimeout.HasValue)
-            {
-                return _defaultTimeout.Value;
-            }
-
-            if (_parent != null)
-            {
-                return _parent.NavigationTimeout(timeout);
-            }
-
-            return DefaultTimeout;
+            return _parent.NavigationTimeout(timeout);
         }
 
-        public float Timeout(float? timeout)
+        return DefaultTimeout;
+    }
+
+    public float Timeout(float? timeout)
+    {
+        if (timeout.HasValue)
         {
-            if (timeout.HasValue)
-            {
-                return timeout.Value;
-            }
-
-            if (_defaultTimeout.HasValue)
-            {
-                return _defaultTimeout.Value;
-            }
-
-            if (_parent != null)
-            {
-                return _parent.Timeout(timeout);
-            }
-
-            return DefaultTimeout;
+            return timeout.Value;
         }
+
+        if (_defaultTimeout.HasValue)
+        {
+            return _defaultTimeout.Value;
+        }
+
+        if (_parent != null)
+        {
+            return _parent.Timeout(timeout);
+        }
+
+        return DefaultTimeout;
     }
 }

@@ -25,14 +25,13 @@
 using System.Collections.Generic;
 using Microsoft.Playwright.Core;
 
-namespace Microsoft.Playwright.Transport.Protocol
+namespace Microsoft.Playwright.Transport.Protocol;
+
+internal class SetInputFilesFiles
 {
-    internal class SetInputFilesFiles
-    {
-        public IEnumerable<InputFilesList> Files { get; set; }
+    public IEnumerable<InputFilesList> Files { get; set; }
 
-        public string[] LocalPaths { get; set; }
+    public string[] LocalPaths { get; set; }
 
-        public WritableStream[] Streams { get; set; }
-    }
+    public WritableStream[] Streams { get; set; }
 }

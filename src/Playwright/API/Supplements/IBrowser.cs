@@ -24,9 +24,8 @@
 
 using System;
 
-namespace Microsoft.Playwright
+namespace Microsoft.Playwright;
+
+public partial interface IBrowser : IAsyncDisposable
 {
-    public partial interface IBrowser : IAsyncDisposable
-    {
-    }
 }

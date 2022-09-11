@@ -27,23 +27,22 @@ using System.IO;
 using Microsoft.Playwright.NUnit;
 using NUnit.Framework;
 
-namespace Microsoft.Playwright.Tests
-{
-    public class BrowserTypeBasicTests : PlaywrightTestEx
-    {
-        [PlaywrightTest("browsertype-basic.spec.ts", "browserType.executablePath should work")]
-        public void BrowserTypeExecutablePathShouldWork() => Assert.True(File.Exists(BrowserType.ExecutablePath));
+namespace Microsoft.Playwright.Tests;
 
-        [PlaywrightTest("browsertype-basic.spec.ts", "browserType.name should work")]
-        public void BrowserTypeNameShouldWork()
-            => Assert.AreEqual(
-                TestConstants.BrowserName switch
-                {
-                    "webkit" => "webkit",
-                    "firefox" => "firefox",
-                    "chromium" => "chromium",
-                    _ => null
-                },
-                BrowserType.Name);
-    }
+public class BrowserTypeBasicTests : PlaywrightTestEx
+{
+    [PlaywrightTest("browsertype-basic.spec.ts", "browserType.executablePath should work")]
+    public void BrowserTypeExecutablePathShouldWork() => Assert.True(File.Exists(BrowserType.ExecutablePath));
+
+    [PlaywrightTest("browsertype-basic.spec.ts", "browserType.name should work")]
+    public void BrowserTypeNameShouldWork()
+        => Assert.AreEqual(
+            TestConstants.BrowserName switch
+            {
+                "webkit" => "webkit",
+                "firefox" => "firefox",
+                "chromium" => "chromium",
+                _ => null
+            },
+            BrowserType.Name);
 }

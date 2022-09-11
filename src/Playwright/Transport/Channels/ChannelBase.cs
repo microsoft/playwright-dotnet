@@ -24,22 +24,21 @@
 
 using System.Text.Json;
 
-namespace Microsoft.Playwright.Transport.Channels
+namespace Microsoft.Playwright.Transport.Channels;
+
+internal class ChannelBase
 {
-    internal class ChannelBase
+    public ChannelBase(string guid, Connection connection)
     {
-        public ChannelBase(string guid, Connection connection)
-        {
-            Guid = guid;
-            Connection = connection;
-        }
+        Guid = guid;
+        Connection = connection;
+    }
 
-        public string Guid { get; }
+    public string Guid { get; }
 
-        public Connection Connection { get; }
+    public Connection Connection { get; }
 
-        internal virtual void OnMessage(string method, JsonElement? serverParams)
-        {
-        }
+    internal virtual void OnMessage(string method, JsonElement? serverParams)
+    {
     }
 }

@@ -26,18 +26,17 @@ using System;
 using System.Text.Json;
 using Microsoft.Playwright.Core;
 
-namespace Microsoft.Playwright.Transport.Channels
+namespace Microsoft.Playwright.Transport.Channels;
+
+internal partial class WorkerChannel
 {
-    internal partial class WorkerChannel
+    internal override void OnMessage(string method, JsonElement? serverParams)
     {
-        internal override void OnMessage(string method, JsonElement? serverParams)
+        switch (method)
         {
-            switch (method)
-            {
-                case "close":
-                    OnClose();
-                    break;
-            }
+            case "close":
+                OnClose();
+                break;
         }
     }
 }

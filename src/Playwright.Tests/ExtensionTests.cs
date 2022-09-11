@@ -26,21 +26,20 @@ using System.Text.RegularExpressions;
 using Microsoft.Playwright.Helpers;
 using NUnit.Framework;
 
-namespace Microsoft.Playwright.Tests
+namespace Microsoft.Playwright.Tests;
+
+public class ExtensionTests
 {
-    public class ExtensionTests
+    [Test]
+    public void ShouldSerializeRegexpFlagsCorrectly()
     {
-        [Test]
-        public void ShouldSerializeRegexpFlagsCorrectly()
+        Assert.AreEqual(new Regex("foo", RegexOptions.IgnoreCase).Options.GetInlineFlags(), "i");
+        Assert.AreEqual(new Regex("foo", RegexOptions.Multiline).Options.GetInlineFlags(), "m");
+        Assert.AreEqual(new Regex("foo", RegexOptions.Singleline).Options.GetInlineFlags(), "s");
+        Assert.AreEqual(new Regex("foo", RegexOptions.IgnoreCase | RegexOptions.Multiline | RegexOptions.Singleline).Options.GetInlineFlags(), "ism");
+        Assert.Throws<System.ArgumentException>(() =>
         {
-            Assert.AreEqual(new Regex("foo", RegexOptions.IgnoreCase).Options.GetInlineFlags(), "i");
-            Assert.AreEqual(new Regex("foo", RegexOptions.Multiline).Options.GetInlineFlags(), "m");
-            Assert.AreEqual(new Regex("foo", RegexOptions.Singleline).Options.GetInlineFlags(), "s");
-            Assert.AreEqual(new Regex("foo", RegexOptions.IgnoreCase | RegexOptions.Multiline | RegexOptions.Singleline).Options.GetInlineFlags(), "ism");
-            Assert.Throws<System.ArgumentException>(() =>
-            {
-                Assert.AreEqual(new Regex("foo", RegexOptions.IgnorePatternWhitespace).Options.GetInlineFlags(), "ism");
-            });
-        }
+            Assert.AreEqual(new Regex("foo", RegexOptions.IgnorePatternWhitespace).Options.GetInlineFlags(), "ism");
+        });
     }
 }

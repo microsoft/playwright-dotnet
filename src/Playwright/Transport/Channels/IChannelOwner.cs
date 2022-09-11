@@ -26,50 +26,49 @@ using System;
 using System.Collections.Concurrent;
 using System.Threading.Tasks;
 
-namespace Microsoft.Playwright.Transport.Channels
+namespace Microsoft.Playwright.Transport.Channels;
+
+/// <summary>
+/// An IChannelOwner has the ability to build data coming from a Playwright server and convert it into a Playwright class.
+/// </summary>
+internal interface IChannelOwner
 {
     /// <summary>
-    /// An IChannelOwner has the ability to build data coming from a Playwright server and convert it into a Playwright class.
+    /// Connection.
     /// </summary>
-    internal interface IChannelOwner
-    {
-        /// <summary>
-        /// Connection.
-        /// </summary>
-        Connection Connection { get; }
-
-        /// <summary>
-        /// Channel.
-        /// </summary>
-        ChannelBase Channel { get; }
-
-        /// <summary>
-        /// Child objects.
-        /// </summary>
-        ConcurrentDictionary<string, IChannelOwner> Objects { get; }
-
-        /// <summary>
-        /// Removes the object from the parent and the connection list.
-        /// </summary>
-        void DisposeOwner();
-
-        void Adopt(ChannelOwnerBase child);
-
-        Task<T> WrapApiCallAsync<T>(Func<Task<T>> action, bool isInternal = false);
-
-        Task WrapApiBoundaryAsync(Func<Task> action);
-    }
+    Connection Connection { get; }
 
     /// <summary>
-    /// An IChannelOwner has the ability to build data coming from a Playwright server and convert it into a Playwright class.
+    /// Channel.
     /// </summary>
-    /// <typeparam name="T">Channel Owner implementation.</typeparam>
-    internal interface IChannelOwner<T> : IChannelOwner
-        where T : ChannelOwnerBase, IChannelOwner<T>
-    {
-        /// <summary>
-        /// Channel.
-        /// </summary>
-        new IChannel<T> Channel { get; }
-    }
+    ChannelBase Channel { get; }
+
+    /// <summary>
+    /// Child objects.
+    /// </summary>
+    ConcurrentDictionary<string, IChannelOwner> Objects { get; }
+
+    /// <summary>
+    /// Removes the object from the parent and the connection list.
+    /// </summary>
+    void DisposeOwner();
+
+    void Adopt(ChannelOwnerBase child);
+
+    Task<T> WrapApiCallAsync<T>(Func<Task<T>> action, bool isInternal = false);
+
+    Task WrapApiBoundaryAsync(Func<Task> action);
+}
+
+/// <summary>
+/// An IChannelOwner has the ability to build data coming from a Playwright server and convert it into a Playwright class.
+/// </summary>
+/// <typeparam name="T">Channel Owner implementation.</typeparam>
+internal interface IChannelOwner<T> : IChannelOwner
+    where T : ChannelOwnerBase, IChannelOwner<T>
+{
+    /// <summary>
+    /// Channel.
+    /// </summary>
+    new IChannel<T> Channel { get; }
 }

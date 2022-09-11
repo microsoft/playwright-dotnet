@@ -33,117 +33,116 @@ using NUnit.Framework.Internal.Commands;
 // Run all tests in sequence
 [assembly: LevelOfParallelism(1)]
 
-namespace Microsoft.Playwright.Tests
+namespace Microsoft.Playwright.Tests;
+
+/// <summary>
+/// Enables decorating test facts with information about the corresponding test in the upstream repository.
+/// </summary>
+[AttributeUsage(AttributeTargets.Method, AllowMultiple = true)]
+public class PlaywrightTestAttribute : TestAttribute, IWrapSetUpTearDown
 {
-    /// <summary>
-    /// Enables decorating test facts with information about the corresponding test in the upstream repository.
-    /// </summary>
-    [AttributeUsage(AttributeTargets.Method, AllowMultiple = true)]
-    public class PlaywrightTestAttribute : TestAttribute, IWrapSetUpTearDown
+    public PlaywrightTestAttribute()
     {
-        public PlaywrightTestAttribute()
+    }
+
+    /// <summary>
+    /// Creates a new instance of the attribute.
+    /// </summary>
+    /// <param name="fileName"><see cref="FileName"/></param>
+    /// <param name="nameOfTest"><see cref="TestName"/></param>
+    public PlaywrightTestAttribute(string fileName, string nameOfTest)
+    {
+        FileName = fileName;
+        TestName = nameOfTest;
+    }
+
+    /// <summary>
+    /// Creates a new instance of the attribute.
+    /// </summary>
+    /// <param name="fileName"><see cref="FileName"/></param>
+    /// <param name="describe"><see cref="Describe"/></param>
+    /// <param name="nameOfTest"><see cref="TestName"/></param>
+    public PlaywrightTestAttribute(string fileName, string describe, string nameOfTest) : this(fileName, nameOfTest)
+    {
+        Describe = describe;
+    }
+
+    /// <summary>
+    /// The file name origin of the test.
+    /// </summary>
+    public string FileName { get; }
+
+    /// <summary>
+    /// Returns the trimmed file name.
+    /// </summary>
+    public string TrimmedName => FileName.Substring(0, FileName.IndexOf('.'));
+
+    /// <summary>
+    /// The name of the test, the decorated code is based on.
+    /// </summary>
+    public string TestName { get; }
+
+    /// <summary>
+    /// The describe of the test, the decorated code is based on, if one exists.
+    /// </summary>
+    public string Describe { get; }
+
+    /// <summary>
+    /// Wraps the current test command in a <see cref="UnobservedTaskExceptionCommand"/>.
+    /// </summary>
+    /// <param name="command">the test command</param>
+    /// <returns>the wrapped test command</returns>
+    public TestCommand Wrap(TestCommand command)
+        => new UnobservedTaskExceptionCommand(command);
+
+    /// <summary>
+    /// Helper to detect UnobservedTaskExceptions
+    /// </summary>
+    private sealed class UnobservedTaskExceptionCommand : NUnit.PlaywrightTestAttribute.RetryTestCommand
+    {
+        public UnobservedTaskExceptionCommand(TestCommand innerCommand)
+            : base(innerCommand)
         {
         }
 
-        /// <summary>
-        /// Creates a new instance of the attribute.
-        /// </summary>
-        /// <param name="fileName"><see cref="FileName"/></param>
-        /// <param name="nameOfTest"><see cref="TestName"/></param>
-        public PlaywrightTestAttribute(string fileName, string nameOfTest)
+        private readonly List<Exception> _unobservedTaskExceptions = new();
+
+        public override TestResult Execute(TestExecutionContext context)
         {
-            FileName = fileName;
-            TestName = nameOfTest;
-        }
-
-        /// <summary>
-        /// Creates a new instance of the attribute.
-        /// </summary>
-        /// <param name="fileName"><see cref="FileName"/></param>
-        /// <param name="describe"><see cref="Describe"/></param>
-        /// <param name="nameOfTest"><see cref="TestName"/></param>
-        public PlaywrightTestAttribute(string fileName, string describe, string nameOfTest) : this(fileName, nameOfTest)
-        {
-            Describe = describe;
-        }
-
-        /// <summary>
-        /// The file name origin of the test.
-        /// </summary>
-        public string FileName { get; }
-
-        /// <summary>
-        /// Returns the trimmed file name.
-        /// </summary>
-        public string TrimmedName => FileName.Substring(0, FileName.IndexOf('.'));
-
-        /// <summary>
-        /// The name of the test, the decorated code is based on.
-        /// </summary>
-        public string TestName { get; }
-
-        /// <summary>
-        /// The describe of the test, the decorated code is based on, if one exists.
-        /// </summary>
-        public string Describe { get; }
-
-        /// <summary>
-        /// Wraps the current test command in a <see cref="UnobservedTaskExceptionCommand"/>.
-        /// </summary>
-        /// <param name="command">the test command</param>
-        /// <returns>the wrapped test command</returns>
-        public TestCommand Wrap(TestCommand command)
-            => new UnobservedTaskExceptionCommand(command);
-
-        /// <summary>
-        /// Helper to detect UnobservedTaskExceptions
-        /// </summary>
-        private sealed class UnobservedTaskExceptionCommand : NUnit.PlaywrightTestAttribute.RetryTestCommand
-        {
-            public UnobservedTaskExceptionCommand(TestCommand innerCommand)
-                : base(innerCommand)
+            TaskScheduler.UnobservedTaskException += UnobservedTaskException;
+            TestResult result = null;
+            try
             {
+                result = base.Execute(context);
             }
-
-            private readonly List<Exception> _unobservedTaskExceptions = new();
-
-            public override TestResult Execute(TestExecutionContext context)
+            finally
             {
-                TaskScheduler.UnobservedTaskException += UnobservedTaskException;
-                TestResult result = null;
-                try
-                {
-                    result = base.Execute(context);
-                }
-                finally
-                {
-                    // force a GC and wait for finalizers of (among other things) Tasks
-                    // for which the UnobservedTaskException is raised if the task.Exception was not observed 
-                    GC.Collect();
-                    GC.WaitForPendingFinalizers();
+                // force a GC and wait for finalizers of (among other things) Tasks
+                // for which the UnobservedTaskException is raised if the task.Exception was not observed 
+                GC.Collect();
+                GC.WaitForPendingFinalizers();
 
-                    TaskScheduler.UnobservedTaskException -= UnobservedTaskException;
+                TaskScheduler.UnobservedTaskException -= UnobservedTaskException;
 
-                    if (_unobservedTaskExceptions.Count > 0)
+                if (_unobservedTaskExceptions.Count > 0)
+                {
+                    result.RecordTearDownException(new AggregateException(_unobservedTaskExceptions));
+                    foreach (var exc in _unobservedTaskExceptions)
                     {
-                        result.RecordTearDownException(new AggregateException(_unobservedTaskExceptions));
-                        foreach (var exc in _unobservedTaskExceptions)
-                        {
-                            Console.WriteLine("UnobservedTaskExceptions:");
-                            Console.WriteLine(exc);
-                            Console.WriteLine(exc.Message);
-                            Console.WriteLine(exc.StackTrace);
-                        }
-                        _unobservedTaskExceptions.Clear();
+                        Console.WriteLine("UnobservedTaskExceptions:");
+                        Console.WriteLine(exc);
+                        Console.WriteLine(exc.Message);
+                        Console.WriteLine(exc.StackTrace);
                     }
+                    _unobservedTaskExceptions.Clear();
                 }
-                return result;
             }
+            return result;
+        }
 
-            private void UnobservedTaskException(object sender, UnobservedTaskExceptionEventArgs e)
-            {
-                _unobservedTaskExceptions.Add(e.Exception);
-            }
+        private void UnobservedTaskException(object sender, UnobservedTaskExceptionEventArgs e)
+        {
+            _unobservedTaskExceptions.Add(e.Exception);
         }
     }
 }

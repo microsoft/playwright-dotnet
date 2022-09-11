@@ -26,34 +26,33 @@ using System;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace Microsoft.Playwright.Helpers
+namespace Microsoft.Playwright.Helpers;
+
+internal class TaskQueue : IDisposable
 {
-    internal class TaskQueue : IDisposable
+    private readonly SemaphoreSlim _semaphore;
+    private bool _disposed;
+
+    internal TaskQueue() => _semaphore = new(1, 1);
+
+    public void Dispose()
     {
-        private readonly SemaphoreSlim _semaphore;
-        private bool _disposed;
+        _disposed = true;
+        _semaphore.Dispose();
+    }
 
-        internal TaskQueue() => _semaphore = new(1, 1);
-
-        public void Dispose()
+    internal async Task EnqueueAsync(Func<Task> taskGenerator)
+    {
+        await _semaphore.WaitAsync().ConfigureAwait(false);
+        try
         {
-            _disposed = true;
-            _semaphore.Dispose();
+            await taskGenerator().ConfigureAwait(false);
         }
-
-        internal async Task EnqueueAsync(Func<Task> taskGenerator)
+        finally
         {
-            await _semaphore.WaitAsync().ConfigureAwait(false);
-            try
+            if (!_disposed)
             {
-                await taskGenerator().ConfigureAwait(false);
-            }
-            finally
-            {
-                if (!_disposed)
-                {
-                    _semaphore.Release();
-                }
+                _semaphore.Release();
             }
         }
     }

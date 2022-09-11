@@ -22,10 +22,9 @@
  * SOFTWARE.
  */
 
-namespace Microsoft.Playwright.Transport
+namespace Microsoft.Playwright.Transport;
+
+internal class ErrorEntry
 {
-    internal class ErrorEntry
-    {
-        public PlaywrightServerError Error { get; set; }
-    }
+    public PlaywrightServerError Error { get; set; }
 }

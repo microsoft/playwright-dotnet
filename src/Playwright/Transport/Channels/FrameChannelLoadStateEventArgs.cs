@@ -24,12 +24,11 @@
 
 using System;
 
-namespace Microsoft.Playwright.Transport.Channels
-{
-    internal class FrameChannelLoadStateEventArgs : EventArgs
-    {
-        public WaitUntilState? Add { get; set; }
+namespace Microsoft.Playwright.Transport.Channels;
 
-        public WaitUntilState? Remove { get; set; }
-    }
+internal class FrameChannelLoadStateEventArgs : EventArgs
+{
+    public WaitUntilState? Add { get; set; }
+
+    public WaitUntilState? Remove { get; set; }
 }
