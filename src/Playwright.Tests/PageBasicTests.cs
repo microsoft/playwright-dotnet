@@ -282,14 +282,5 @@ namespace Microsoft.Playwright.Tests
             await page.DragAndDropAsync("#source", "#target");
             Assert.IsTrue(await page.EvalOnSelectorAsync<bool>("#target", "target => target.contains(document.querySelector('#source'))"));
         }
-
-        [PlaywrightTest("page-drag.spec.ts", "")]
-        public async Task DragAndDropWithLocatorsShouldWork()
-        {
-            var page = await Context.NewPageAsync();
-            await page.GotoAsync(Server.Prefix + "/drag-n-drop.html");
-            await page.Locator("#source").DragToAsync(page.Locator("#target"));
-            Assert.IsTrue(await page.EvalOnSelectorAsync<bool>("#target", "target => target.contains(document.querySelector('#source'))"));
-        }
     }
 }

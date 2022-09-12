@@ -961,6 +961,8 @@ namespace Microsoft.Playwright.Core
                 Timeout = options?.Timeout,
                 Trial = options?.Trial,
                 Strict = options?.Strict,
+                SourcePosition = options?.SourcePosition,
+                TargetPosition = options?.TargetPosition,
             });
 
         internal void NotifyPopup(Page page) => Popup?.Invoke(this, page);

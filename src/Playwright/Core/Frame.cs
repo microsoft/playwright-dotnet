@@ -586,7 +586,7 @@ namespace Microsoft.Playwright.Core
             => WaitForURLAsync(null, null, url, options);
 
         public Task DragAndDropAsync(string source, string target, FrameDragAndDropOptions options = null)
-            => _channel.DragAndDropAsync(source, target, options?.Force, options?.NoWaitAfter, options?.Timeout, options?.Trial, options?.Strict);
+            => _channel.DragAndDropAsync(source, target, options?.Force, options?.NoWaitAfter, options?.Timeout, options?.Trial, options?.Strict, options?.SourcePosition, options?.TargetPosition);
 
         internal Task<FrameExpectResult> ExpectAsync(string selector, string expression, FrameExpectOptions options = null) =>
             _channel.ExpectAsync(selector, expression, expressionArg: options?.ExpressionArg, expectedText: options?.ExpectedText, expectedNumber: options?.ExpectedNumber, expectedValue: options?.ExpectedValue, useInnerText: options?.UseInnerText, isNot: options?.IsNot, timeout: options?.Timeout);

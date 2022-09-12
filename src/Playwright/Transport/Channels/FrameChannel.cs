@@ -696,7 +696,7 @@ namespace Microsoft.Playwright.Transport.Channels
             return (await Connection.SendMessageToServerAsync(Guid, "inputValue", args).ConfigureAwait(false))?.GetProperty("value").ToString();
         }
 
-        internal Task DragAndDropAsync(string source, string target, bool? force, bool? noWaitAfter, float? timeout, bool? trial, bool? strict)
+        internal Task DragAndDropAsync(string source, string target, bool? force, bool? noWaitAfter, float? timeout, bool? trial, bool? strict, SourcePosition sourcePosition, TargetPosition targetPosition)
         {
             var args = new Dictionary<string, object>
             {
@@ -707,6 +707,8 @@ namespace Microsoft.Playwright.Transport.Channels
                 ["timeout"] = timeout,
                 ["trial"] = trial,
                 ["strict"] = strict,
+                ["sourcePosition"] = sourcePosition,
+                ["targetPosition"] = targetPosition,
             };
 
             return Connection.SendMessageToServerAsync(Guid, "dragAndDrop", args);

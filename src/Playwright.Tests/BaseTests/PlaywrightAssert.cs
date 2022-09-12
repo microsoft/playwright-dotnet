@@ -23,6 +23,7 @@
  */
 
 using System;
+using System.Text.Json;
 using System.Threading.Tasks;
 using NUnit.Framework;
 using NUnit.Framework.Constraints;
@@ -48,6 +49,9 @@ namespace Microsoft.Playwright.Tests
             }
         }
 
-        internal static void DebugLog(string text) => TestContext.Progress.WriteLine(text);
+        internal static void AreJsonEqual(object expected, object actual)
+        {
+            Assert.AreEqual(JsonSerializer.Serialize(expected), JsonSerializer.Serialize(actual));
+        }
     }
 }

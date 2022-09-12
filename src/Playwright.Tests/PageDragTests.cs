@@ -41,5 +41,52 @@ namespace Microsoft.Playwright.Tests
 
             Assert.True(await Page.EvalOnSelectorAsync<bool>("#target", "target => target.contains(document.querySelector('#source'))"));
         }
+
+        [PlaywrightTest("page-drag.spec.ts", "should allow specifying the position")]
+        public async Task ShouldAllowSpecifyingThePosition()
+        {
+            await Page.SetContentAsync(@"
+                <div style=""width:100px;height:100px;background:red;"" id=""red"">
+                </div>
+                <div style=""width:100px;height:100px;background:blue;"" id=""blue"">
+                </div>
+            ");
+            var eventsHandle = await Page.EvaluateHandleAsync(@"() => {
+                const events = [];
+                document.getElementById('red').addEventListener('mousedown', event => {
+                    events.push({
+                    type: 'mousedown',
+                    x: event.offsetX,
+                    y: event.offsetY,
+                    });
+                });
+                document.getElementById('blue').addEventListener('mouseup', event => {
+                    events.push({
+                    type: 'mouseup',
+                    x: event.offsetX,
+                    y: event.offsetY,
+                    });
+                });
+                return events;
+            }");
+            await Page.DragAndDropAsync("#red", "#blue", new()
+            {
+                SourcePosition = new() { X = 34, Y = 7 },
+                TargetPosition = new() { X = 10, Y = 20 },
+            });
+            PlaywrightAssert.AreJsonEqual(new[]
+            {
+                new { type = "mousedown", x = 34, y = 7 },
+                new { type = "mouseup", x = 10, y = 20 },
+            }, await eventsHandle.JsonValueAsync<object>());
+        }
+
+        [PlaywrightTest("page-drag.spec.ts", "should work with locators")]
+        public async Task DragAndDropWithLocatorsShouldWork()
+        {
+            await Page.GotoAsync(Server.Prefix + "/drag-n-drop.html");
+            await Page.Locator("#source").DragToAsync(Page.Locator("#target"));
+            Assert.IsTrue(await Page.EvalOnSelectorAsync<bool>("#target", "target => target.contains(document.querySelector('#source'))")); // could not find source in target
+        }
     }
 }
