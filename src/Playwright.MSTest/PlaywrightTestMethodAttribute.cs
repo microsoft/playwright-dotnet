@@ -77,7 +77,7 @@ namespace Microsoft.Playwright.MSTest
         {
             var logSeparator = new String('=', 80);
             string output = $"{logSeparator}\n";
-            output += $"Test was retried {RetryCount} time{(RetryCount > 1 ? "s" : "")}.";
+            output += $"Test was retried {RetryCount} time{(RetryCount > 1 ? "s" : "")}.\n";
 
             if (failedRuns.Count > 0)
             {
