@@ -253,5 +253,100 @@ namespace Microsoft.Playwright.Tests
             }
             await response.DisposeAsync();
         }
+
+        [PlaywrightTest("global-fetch.spec.ts", "should not fail on empty body with encoding")]
+        public async Task ShouldNotFailOnEmptyBodyWithEncoding()
+        {
+            var request = await Playwright.APIRequest.NewContextAsync();
+            foreach (var method in new[] { "head", "put" })
+            {
+                foreach (var encoding in new[] { "br", "gzip", "deflate" })
+                {
+                    Server.SetRoute("/empty.html", (ctx) =>
+                    {
+                        ctx.Response.StatusCode = 200;
+                        ctx.Response.Headers.Add("Content-Encoding", encoding);
+                        ctx.Response.Headers.Add("Content-Type", "text/plain");
+                        return Task.CompletedTask;
+                    });
+                    var response = await request.NameToMethod(method)(Server.EmptyPage, null);
+                    Assert.AreEqual(200, response.Status);
+                    Assert.AreEqual(0, (await response.BodyAsync()).Length);
+                }
+            }
+            await request.DisposeAsync();
+        }
+
+        [PlaywrightTest("global-fetch.spec.ts", "should return body for failing requests")]
+        public async Task ShouldReturnBodyForFailingRequests()
+        {
+            var request = await Playwright.APIRequest.NewContextAsync();
+            foreach (var method in new[] { "head", "put", "trace" })
+            {
+                Server.SetRoute("/empty.html", async (ctx) =>
+                {
+                    ctx.Response.StatusCode = 404;
+                    ctx.Response.Headers.Add("Content-Length", "10");
+                    ctx.Response.Headers.Add("Content-Type", "text/plain");
+                    await ctx.Response.WriteAsync("Not found.");
+                });
+                var response = await request.FetchAsync(Server.EmptyPage, new() { Method = method });
+                Assert.AreEqual(404, response.Status);
+                // HEAD response returns empty body in node http module.
+                Assert.AreEqual(method == "head" ? "" : "Not found.", await response.TextAsync());
+            }
+            await request.DisposeAsync();
+        }
+
+        [PlaywrightTest("global-fetch.spec.ts", "should throw an error when maxRedirects is exceeded")]
+        public async Task ShouldThrowAnErrorWhenMaxRedirectsIsExceeded()
+        {
+            Server.SetRedirect("/a/redirect1", "/b/c/redirect2");
+            Server.SetRedirect("/b/c/redirect2", "/b/c/redirect3");
+            Server.SetRedirect("/b/c/redirect3", "/b/c/redirect4");
+            Server.SetRedirect("/b/c/redirect4", "/simple.json");
+
+            var request = await Playwright.APIRequest.NewContextAsync();
+            foreach (var method in new[] { "GET", "PUT", "POST", "OPTIONS", "HEAD", "PATCH" })
+            {
+                foreach (var maxRedirects in new[] { 1, 2, 3 })
+                {
+                    var exception = await PlaywrightAssert.ThrowsAsync<PlaywrightException>(() => request.FetchAsync($"{Server.Prefix}/a/redirect1", new() { Method = method, MaxRedirects = maxRedirects }));
+                    StringAssert.Contains("Max redirect count exceeded", exception.Message);
+                }
+            }
+            await request.DisposeAsync();
+        }
+
+        [PlaywrightTest("global-fetch.spec.ts", "should not follow redirects when maxRedirects is set to 0")]
+        public async Task ShouldNotFollowRedirectsWhenMaxRedirectsIsSetTo0()
+        {
+            Server.SetRedirect("/a/redirect1", "/b/c/redirect2");
+            Server.SetRedirect("/b/c/redirect2", "/simple.json");
+
+            var request = await Playwright.APIRequest.NewContextAsync();
+            foreach (var method in new[] { "GET", "PUT", "POST", "OPTIONS", "HEAD", "PATCH" })
+            {
+                var response = await request.FetchAsync($"{Server.Prefix}/a/redirect1", new() { Method = method, MaxRedirects = 0 });
+                Assert.AreEqual("/b/c/redirect2", response.Headers["location"]);
+                Assert.AreEqual(302, response.Status);
+            }
+            await request.DisposeAsync();
+        }
+
+        [PlaywrightTest("global-fetch.spec.ts", "should throw an error when maxRedirects is less than 0")]
+        public async Task ShouldThrowAnErrorWhenMaxRedirectsIsLessThan0()
+        {
+            Server.SetRedirect("/a/redirect1", "/b/c/redirect2");
+            Server.SetRedirect("/b/c/redirect2", "/simple.json");
+
+            var request = await Playwright.APIRequest.NewContextAsync();
+            foreach (var method in new[] { "GET", "PUT", "POST", "OPTIONS", "HEAD", "PATCH" })
+            {
+                var exception = await PlaywrightAssert.ThrowsAsync<PlaywrightException>(() => request.FetchAsync($"{Server.Prefix}/a/redirect1", new() { Method = method, MaxRedirects = -1 }));
+                StringAssert.Contains("'maxRedirects' should be greater than or equal to '0'", exception.Message);
+            }
+            await request.DisposeAsync();
+        }
     }
 }

@@ -50,7 +50,8 @@ namespace Microsoft.Playwright.Transport.Channels
             FormData multipartData,
             float? timeout,
             bool? failOnStatusCode,
-            bool? ignoreHTTPSErrors)
+            bool? ignoreHTTPSErrors,
+            int? maxRedirects)
         {
             var message = new Dictionary<string, object>
             {
@@ -58,6 +59,7 @@ namespace Microsoft.Playwright.Transport.Channels
                 ["method"] = method,
                 ["failOnStatusCode"] = failOnStatusCode,
                 ["ignoreHTTPSErrors"] = ignoreHTTPSErrors,
+                ["maxRedirects"] = maxRedirects,
                 ["timeout"] = timeout,
                 ["params"] = parameters?.ToProtocol(),
                 ["headers"] = headers?.ToProtocol(),

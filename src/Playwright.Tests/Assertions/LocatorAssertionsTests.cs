@@ -51,86 +51,183 @@ namespace Microsoft.Playwright.Tests.Assertions
             StringAssert.Contains("LocatorAssertions.ToBeCheckedAsync with timeout 300ms", exception.Message);
         }
 
-        [PlaywrightTest("playwright-test/playwright.expect.spec.ts", "should support toBeEditable, toBeEnabled, toBeDisabled, toBeEmpty")]
-        public async Task ShouldSupportToBeEditableToBeEnabledToBeDisabledToBeEmpty()
+        [PlaywrightTest("playwright-test/playwright.expect.spec.ts", "should support toBeEditable")]
+        public async Task ShouldSupportToBeEditable()
         {
             {
+                // default
                 await Page.SetContentAsync("<input></input>");
-                await Expect(Page.Locator("input")).ToBeEditableAsync();
+                var locator = Page.Locator("input");
+                await Expect(locator).ToBeEditableAsync();
             }
-
             {
+                // with not
+                await Page.SetContentAsync("<input readonly></input>");
+                var locator = Page.Locator("input");
+                await Expect(locator).Not.ToBeEditableAsync();
+            }
+            {
+                // with editable:true
+                await Page.SetContentAsync("<input></input>");
+                var locator = Page.Locator("input");
+                await Expect(locator).ToBeEditableAsync(new() { Editable = true });
+            }
+            {
+                // with editable:false
+                await Page.SetContentAsync("<input readonly></input>");
+                var locator = Page.Locator("input");
+                await Expect(locator).ToBeEditableAsync(new() { Editable = false });
+            }
+            {
+                // with not and editable:false
+                await Page.SetContentAsync("<input></input>");
+                var locator = Page.Locator("input");
+                await Expect(locator).Not.ToBeEditableAsync(new() { Editable = false });
+            }
+        }
+
+        [PlaywrightTest("playwright-test/playwright.expect.spec.ts", "should support toBeEnabled")]
+        public async Task ShouldSupportToBeEnabled()
+        {
+            {
+                // default
                 await Page.SetContentAsync("<button>Text</button>");
-                await Expect(Page.Locator("button")).ToBeEnabledAsync();
-            }
-
-            {
-                await Page.SetContentAsync("<button disabled>Text</button>");
-                var exception = await PlaywrightAssert.ThrowsAsync<PlaywrightException>(() => Expect(Page.Locator("button")).ToBeEnabledAsync(new() { Timeout = 500 }));
-                StringAssert.Contains("Locator expected to be enabled", exception.Message);
-                StringAssert.Contains("LocatorAssertions.ToBeEnabledAsync with timeout 500ms", exception.Message);
-            }
-
-            {
-                await Page.SetContentAsync("<button disabled>Text</button>");
                 var locator = Page.Locator("button");
-                await locator.EvaluateAsync("e => setTimeout(() => { e.removeAttribute('disabled') }, 500);");
                 await Expect(locator).ToBeEnabledAsync();
             }
-
             {
+                // with enabled:true
                 await Page.SetContentAsync("<button>Text</button>");
                 var locator = Page.Locator("button");
-                await locator.EvaluateAsync("e => setTimeout(() => { e.setAttribute('disabled', '') }, 500);");
+                await Expect(locator).ToBeEnabledAsync(new() { Enabled = true });
+            }
+            {
+                // with enabled:false
+                await Page.SetContentAsync("<button disabled>Text</button>");
+                var locator = Page.Locator("button");
+                await Expect(locator).ToBeEnabledAsync(new() { Enabled = false });
+            }
+            {
+                // failed
+                await Page.SetContentAsync("<button disabled>Text</button>");
+                var locator = Page.Locator("button");
+                var exception = await PlaywrightAssert.ThrowsAsync<PlaywrightException>(() => Expect(locator).ToBeEnabledAsync(new() { Timeout = 1000 }));
+                StringAssert.Contains("selector resolved to <button disabled>Text</button>", exception.Message);
+                // extra checks
+                StringAssert.Contains("Locator expected to be enabled", exception.Message);
+                StringAssert.Contains("LocatorAssertions.ToBeEnabledAsync with timeout 1000ms", exception.Message);
+            }
+            {
+                // eventually
+                await Page.SetContentAsync("<button disabled>Text</button>");
+                var locator = Page.Locator("button");
+                await locator.EvaluateAsync("e => setTimeout(() => e.removeAttribute('disabled'), 500);");
+                await Expect(locator).ToBeEnabledAsync();
+            }
+            {
+                // eventually with not
+                await Page.SetContentAsync("<button>Text</button>");
+                var locator = Page.Locator("button");
+                await locator.EvaluateAsync("e => setTimeout(() => e.setAttribute('disabled', ''), 500);");
                 await Expect(locator).Not.ToBeEnabledAsync();
             }
-
             {
+                // with not and enabled:false
+                await Page.SetContentAsync("<button>Text</button>");
+                var locator = Page.Locator("button");
+                await Expect(locator).Not.ToBeEnabledAsync(new() { Enabled = false });
+            }
+            {
+                // toBeDisabled
                 await Page.SetContentAsync("<button disabled>Text</button>");
                 var locator = Page.Locator("button");
                 await Expect(locator).ToBeDisabledAsync();
             }
-
-            {
-                await Page.SetContentAsync("<input></input>");
-                var locator = Page.Locator("input");
-                await Expect(locator).ToBeEmptyAsync();
-            }
-
-            {
-                await Page.SetContentAsync("<input value=text></input>");
-                var locator = Page.Locator("input");
-                await Expect(locator).Not.ToBeEmptyAsync();
-            }
         }
 
-        [PlaywrightTest("playwright-test/playwright.expect.spec.ts", "should support toBeVisible, toBeHidden")]
+        [PlaywrightTest("playwright-test/playwright.expect.spec.ts", "should support toBeVisible")]
         public async Task ShouldSupportToBeVisibleToBeHidden()
         {
             {
+                // default
                 await Page.SetContentAsync("<input></input>");
                 var locator = Page.Locator("input");
                 await Expect(locator).ToBeVisibleAsync();
             }
             {
+                // with not
                 await Page.SetContentAsync("<button style=\"display: none\"></button>");
                 var locator = Page.Locator("button");
                 await Expect(locator).Not.ToBeVisibleAsync();
             }
             {
+                // with visible:true
+                await Page.SetContentAsync("<button>hello</button>");
+                var locator = Page.Locator("button");
+                await Expect(locator).ToBeVisibleAsync(new() { Visible = true });
+            }
+            {
+                // with visible:false
+                await Page.SetContentAsync("<button hidden>hello</button>");
+                var locator = Page.Locator("button");
+                await Expect(locator).ToBeVisibleAsync(new() { Visible = false });
+            }
+            {
+                // with not and visible:false
+                await Page.SetContentAsync("<button>hello</button>");
+                var locator = Page.Locator("button");
+                await Expect(locator).Not.ToBeVisibleAsync(new() { Visible = false });
+            }
+            {
+                // eventually
+                await Page.SetContentAsync("<div></div>");
+                var locator = Page.Locator("span");
+                await Page.EvalOnSelectorAsync("div", "e => setTimeout(() => e.innerHTML = e.innerHTML + '<span>Hello</span>', 500);");
+                await Expect(locator).ToBeVisibleAsync();
+            }
+            {
+                // eventually with not
+                await Page.SetContentAsync("<div><span>Hello</span></div>");
+                var locator = Page.Locator("span");
+                await Page.EvalOnSelectorAsync("span", "span => setTimeout(() => span.textContent = '', 500);");
+                await Expect(locator).Not.ToBeVisibleAsync();
+            }
+            {
+                // fail
                 await Page.SetContentAsync("<button style=\"display: none\"></button>");
                 var locator = Page.Locator("button");
-                await Expect(locator).ToBeHiddenAsync();
+                var exception = await PlaywrightAssert.ThrowsAsync<PlaywrightException>(() => Expect(locator).ToBeVisibleAsync(new() { Timeout = 1000 }));
+                StringAssert.Contains("selector resolved to <button></button>", exception.Message);
             }
             {
-                await Page.SetContentAsync("<div></div>");
-                var locator = Page.Locator("div");
-                await Expect(locator).ToBeHiddenAsync();
-            }
-            {
+                // fail with not
                 await Page.SetContentAsync("<input></input>");
                 var locator = Page.Locator("input");
-                await Expect(locator).Not.ToBeHiddenAsync();
+                var exception = await PlaywrightAssert.ThrowsAsync<PlaywrightException>(() => Expect(locator).Not.ToBeVisibleAsync(new() { Timeout = 1000 }));
+                StringAssert.Contains("selector resolved to <input/>", exception.Message);
+            }
+        }
+
+        [PlaywrightTest("playwright-test/playwright.expect.spec.ts", "should support ToBeEmpty")]
+        public async Task ShouldSupportToBeEmpty()
+        {
+            {
+                // toBeEmpty input
+                await Page.SetContentAsync("<input></input>");
+                var locator = Page.Locator("input");
+                await Expect(locator).ToBeEmptyAsync();
+            }
+            {
+                // not.toBeEmpty
+                await Page.SetContentAsync("<input value=hello></input>");
+                var locator = Page.Locator("input");
+                await Expect(locator).Not.ToBeEmptyAsync();
+            }
+            {
+                // toBeEmpty div
+                await Page.SetContentAsync("<div style=\"width: 50; height: 50px\"></div>");
+                var locator = Page.Locator("div");
+                await Expect(locator).ToBeEmptyAsync();
             }
         }
 
