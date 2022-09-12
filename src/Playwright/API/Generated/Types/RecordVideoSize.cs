@@ -37,20 +37,19 @@ using System.Threading.Tasks;
 
 #nullable enable
 
-namespace Microsoft.Playwright
-{
-    public partial class RecordVideoSize
-    {
-        /// <summary><para>Video frame width.</para></summary>
-        [Required]
-        [JsonPropertyName("width")]
-        public int Width { get; set; } = default!;
+namespace Microsoft.Playwright;
 
-        /// <summary><para>Video frame height.</para></summary>
-        [Required]
-        [JsonPropertyName("height")]
-        public int Height { get; set; } = default!;
-    }
+public partial class RecordVideoSize
+{
+    /// <summary><para>Video frame width.</para></summary>
+    [Required]
+    [JsonPropertyName("width")]
+    public int Width { get; set; } = default!;
+
+    /// <summary><para>Video frame height.</para></summary>
+    [Required]
+    [JsonPropertyName("height")]
+    public int Height { get; set; } = default!;
 }
 
 #nullable disable

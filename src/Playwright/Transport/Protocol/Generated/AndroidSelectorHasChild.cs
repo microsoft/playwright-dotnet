@@ -25,11 +25,10 @@
 using System.Collections.Generic;
 using System.Text.Json.Serialization;
 
-namespace Microsoft.Playwright.Transport.Protocol
+namespace Microsoft.Playwright.Transport.Protocol;
+
+internal class AndroidSelectorHasChild
 {
-    internal class AndroidSelectorHasChild
-    {
-        [JsonPropertyName("selector")]
-        public AndroidSelector Selector { get; set; }
-    }
+    [JsonPropertyName("selector")]
+    public AndroidSelector Selector { get; set; }
 }

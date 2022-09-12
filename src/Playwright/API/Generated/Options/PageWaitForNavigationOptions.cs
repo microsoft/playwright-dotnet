@@ -37,94 +37,93 @@ using System.Threading.Tasks;
 
 #nullable enable
 
-namespace Microsoft.Playwright
+namespace Microsoft.Playwright;
+
+public class PageWaitForNavigationOptions
 {
-    public class PageWaitForNavigationOptions
+    public PageWaitForNavigationOptions() { }
+
+    public PageWaitForNavigationOptions(PageWaitForNavigationOptions clone)
     {
-        public PageWaitForNavigationOptions() { }
-
-        public PageWaitForNavigationOptions(PageWaitForNavigationOptions clone)
+        if (clone == null)
         {
-            if (clone == null)
-            {
-                return;
-            }
-
-            Timeout = clone.Timeout;
-            UrlString = clone.UrlString;
-            UrlRegex = clone.UrlRegex;
-            UrlFunc = clone.UrlFunc;
-            WaitUntil = clone.WaitUntil;
+            return;
         }
 
-        /// <summary>
-        /// <para>
-        /// Maximum operation time in milliseconds, defaults to 30 seconds, pass <c>0</c> to
-        /// disable timeout. The default value can be changed by using the <see cref="IBrowserContext.SetDefaultNavigationTimeout"/>,
-        /// <see cref="IBrowserContext.SetDefaultTimeout"/>, <see cref="IPage.SetDefaultNavigationTimeout"/>
-        /// or <see cref="IPage.SetDefaultTimeout"/> methods.
-        /// </para>
-        /// </summary>
-        [JsonPropertyName("timeout")]
-        public float? Timeout { get; set; }
-
-        /// <summary>
-        /// <para>
-        /// A glob pattern, regex pattern or predicate receiving <see cref="URL"/> to match
-        /// while waiting for the navigation. Note that if the parameter is a string without
-        /// wildcard characters, the method will wait for navigation to URL that is exactly
-        /// equal to the string.
-        /// </para>
-        /// </summary>
-        [JsonPropertyName("urlString")]
-        public string? UrlString { get; set; }
-
-        /// <summary>
-        /// <para>
-        /// A glob pattern, regex pattern or predicate receiving <see cref="URL"/> to match
-        /// while waiting for the navigation. Note that if the parameter is a string without
-        /// wildcard characters, the method will wait for navigation to URL that is exactly
-        /// equal to the string.
-        /// </para>
-        /// </summary>
-        [JsonPropertyName("urlRegex")]
-        public Regex? UrlRegex { get; set; }
-
-        /// <summary>
-        /// <para>
-        /// A glob pattern, regex pattern or predicate receiving <see cref="URL"/> to match
-        /// while waiting for the navigation. Note that if the parameter is a string without
-        /// wildcard characters, the method will wait for navigation to URL that is exactly
-        /// equal to the string.
-        /// </para>
-        /// </summary>
-        [JsonPropertyName("urlFunc")]
-        public Func<string, bool>? UrlFunc { get; set; }
-
-        /// <summary>
-        /// <para>When to consider operation succeeded, defaults to <c>load</c>. Events can be either:</para>
-        /// <list type="bullet">
-        /// <item><description>
-        /// <c>'domcontentloaded'</c> - consider operation to be finished when the <c>DOMContentLoaded</c>
-        /// event is fired.
-        /// </description></item>
-        /// <item><description>
-        /// <c>'load'</c> - consider operation to be finished when the <c>load</c> event is
-        /// fired.
-        /// </description></item>
-        /// <item><description>
-        /// <c>'networkidle'</c> - consider operation to be finished when there are no network
-        /// connections for at least <c>500</c> ms.
-        /// </description></item>
-        /// <item><description>
-        /// <c>'commit'</c> - consider operation to be finished when network response is received
-        /// and the document started loading.
-        /// </description></item>
-        /// </list>
-        /// </summary>
-        [JsonPropertyName("waitUntil")]
-        public WaitUntilState? WaitUntil { get; set; }
+        Timeout = clone.Timeout;
+        UrlString = clone.UrlString;
+        UrlRegex = clone.UrlRegex;
+        UrlFunc = clone.UrlFunc;
+        WaitUntil = clone.WaitUntil;
     }
+
+    /// <summary>
+    /// <para>
+    /// Maximum operation time in milliseconds, defaults to 30 seconds, pass <c>0</c> to
+    /// disable timeout. The default value can be changed by using the <see cref="IBrowserContext.SetDefaultNavigationTimeout"/>,
+    /// <see cref="IBrowserContext.SetDefaultTimeout"/>, <see cref="IPage.SetDefaultNavigationTimeout"/>
+    /// or <see cref="IPage.SetDefaultTimeout"/> methods.
+    /// </para>
+    /// </summary>
+    [JsonPropertyName("timeout")]
+    public float? Timeout { get; set; }
+
+    /// <summary>
+    /// <para>
+    /// A glob pattern, regex pattern or predicate receiving <see cref="URL"/> to match
+    /// while waiting for the navigation. Note that if the parameter is a string without
+    /// wildcard characters, the method will wait for navigation to URL that is exactly
+    /// equal to the string.
+    /// </para>
+    /// </summary>
+    [JsonPropertyName("urlString")]
+    public string? UrlString { get; set; }
+
+    /// <summary>
+    /// <para>
+    /// A glob pattern, regex pattern or predicate receiving <see cref="URL"/> to match
+    /// while waiting for the navigation. Note that if the parameter is a string without
+    /// wildcard characters, the method will wait for navigation to URL that is exactly
+    /// equal to the string.
+    /// </para>
+    /// </summary>
+    [JsonPropertyName("urlRegex")]
+    public Regex? UrlRegex { get; set; }
+
+    /// <summary>
+    /// <para>
+    /// A glob pattern, regex pattern or predicate receiving <see cref="URL"/> to match
+    /// while waiting for the navigation. Note that if the parameter is a string without
+    /// wildcard characters, the method will wait for navigation to URL that is exactly
+    /// equal to the string.
+    /// </para>
+    /// </summary>
+    [JsonPropertyName("urlFunc")]
+    public Func<string, bool>? UrlFunc { get; set; }
+
+    /// <summary>
+    /// <para>When to consider operation succeeded, defaults to <c>load</c>. Events can be either:</para>
+    /// <list type="bullet">
+    /// <item><description>
+    /// <c>'domcontentloaded'</c> - consider operation to be finished when the <c>DOMContentLoaded</c>
+    /// event is fired.
+    /// </description></item>
+    /// <item><description>
+    /// <c>'load'</c> - consider operation to be finished when the <c>load</c> event is
+    /// fired.
+    /// </description></item>
+    /// <item><description>
+    /// <c>'networkidle'</c> - consider operation to be finished when there are no network
+    /// connections for at least <c>500</c> ms.
+    /// </description></item>
+    /// <item><description>
+    /// <c>'commit'</c> - consider operation to be finished when network response is received
+    /// and the document started loading.
+    /// </description></item>
+    /// </list>
+    /// </summary>
+    [JsonPropertyName("waitUntil")]
+    public WaitUntilState? WaitUntil { get; set; }
 }
 
 #nullable disable

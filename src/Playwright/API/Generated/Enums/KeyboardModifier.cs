@@ -37,19 +37,18 @@ using System.Threading.Tasks;
 
 #nullable enable
 
-namespace Microsoft.Playwright
+namespace Microsoft.Playwright;
+
+public enum KeyboardModifier
 {
-    public enum KeyboardModifier
-    {
-        [EnumMember(Value = "Alt")]
-        Alt,
-        [EnumMember(Value = "Control")]
-        Control,
-        [EnumMember(Value = "Meta")]
-        Meta,
-        [EnumMember(Value = "Shift")]
-        Shift,
-    }
+    [EnumMember(Value = "Alt")]
+    Alt,
+    [EnumMember(Value = "Control")]
+    Control,
+    [EnumMember(Value = "Meta")]
+    Meta,
+    [EnumMember(Value = "Shift")]
+    Shift,
 }
 
 #nullable disable

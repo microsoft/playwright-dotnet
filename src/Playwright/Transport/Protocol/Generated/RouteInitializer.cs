@@ -25,11 +25,10 @@
 using System.Collections.Generic;
 using System.Text.Json.Serialization;
 
-namespace Microsoft.Playwright.Transport.Protocol
+namespace Microsoft.Playwright.Transport.Protocol;
+
+internal class RouteInitializer
 {
-    internal class RouteInitializer
-    {
-        [JsonPropertyName("request")]
-        public Core.Request Request { get; set; }
-    }
+    [JsonPropertyName("request")]
+    public Core.Request Request { get; set; }
 }

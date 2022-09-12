@@ -37,30 +37,29 @@ using System.Threading.Tasks;
 
 #nullable enable
 
-namespace Microsoft.Playwright
+namespace Microsoft.Playwright;
+
+public class LocatorAssertionsToBeEnabledOptions
 {
-    public class LocatorAssertionsToBeEnabledOptions
+    public LocatorAssertionsToBeEnabledOptions() { }
+
+    public LocatorAssertionsToBeEnabledOptions(LocatorAssertionsToBeEnabledOptions clone)
     {
-        public LocatorAssertionsToBeEnabledOptions() { }
-
-        public LocatorAssertionsToBeEnabledOptions(LocatorAssertionsToBeEnabledOptions clone)
+        if (clone == null)
         {
-            if (clone == null)
-            {
-                return;
-            }
-
-            Enabled = clone.Enabled;
-            Timeout = clone.Timeout;
+            return;
         }
 
-        [JsonPropertyName("enabled")]
-        public bool? Enabled { get; set; }
-
-        /// <summary><para>Time to retry the assertion for.</para></summary>
-        [JsonPropertyName("timeout")]
-        public float? Timeout { get; set; }
+        Enabled = clone.Enabled;
+        Timeout = clone.Timeout;
     }
+
+    [JsonPropertyName("enabled")]
+    public bool? Enabled { get; set; }
+
+    /// <summary><para>Time to retry the assertion for.</para></summary>
+    [JsonPropertyName("timeout")]
+    public float? Timeout { get; set; }
 }
 
 #nullable disable

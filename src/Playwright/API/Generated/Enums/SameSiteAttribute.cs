@@ -37,17 +37,16 @@ using System.Threading.Tasks;
 
 #nullable enable
 
-namespace Microsoft.Playwright
+namespace Microsoft.Playwright;
+
+public enum SameSiteAttribute
 {
-    public enum SameSiteAttribute
-    {
-        [EnumMember(Value = "Strict")]
-        Strict,
-        [EnumMember(Value = "Lax")]
-        Lax,
-        [EnumMember(Value = "None")]
-        None,
-    }
+    [EnumMember(Value = "Strict")]
+    Strict,
+    [EnumMember(Value = "Lax")]
+    Lax,
+    [EnumMember(Value = "None")]
+    None,
 }
 
 #nullable disable

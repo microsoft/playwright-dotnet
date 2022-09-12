@@ -37,48 +37,47 @@ using System.Threading.Tasks;
 
 #nullable enable
 
-namespace Microsoft.Playwright
+namespace Microsoft.Playwright;
+
+public partial class Cookie
 {
-    public partial class Cookie
-    {
-        /// <summary><para></para></summary>
-        [Required]
-        [JsonPropertyName("name")]
-        public string Name { get; set; } = default!;
+    /// <summary><para></para></summary>
+    [Required]
+    [JsonPropertyName("name")]
+    public string Name { get; set; } = default!;
 
-        /// <summary><para></para></summary>
-        [Required]
-        [JsonPropertyName("value")]
-        public string Value { get; set; } = default!;
+    /// <summary><para></para></summary>
+    [Required]
+    [JsonPropertyName("value")]
+    public string Value { get; set; } = default!;
 
-        /// <summary><para>either url or domain / path are required. Optional.</para></summary>
-        [JsonPropertyName("url")]
-        public string? Url { get; set; }
+    /// <summary><para>either url or domain / path are required. Optional.</para></summary>
+    [JsonPropertyName("url")]
+    public string? Url { get; set; }
 
-        /// <summary><para>either url or domain / path are required Optional.</para></summary>
-        [JsonPropertyName("domain")]
-        public string? Domain { get; set; }
+    /// <summary><para>either url or domain / path are required Optional.</para></summary>
+    [JsonPropertyName("domain")]
+    public string? Domain { get; set; }
 
-        /// <summary><para>either url or domain / path are required Optional.</para></summary>
-        [JsonPropertyName("path")]
-        public string? Path { get; set; }
+    /// <summary><para>either url or domain / path are required Optional.</para></summary>
+    [JsonPropertyName("path")]
+    public string? Path { get; set; }
 
-        /// <summary><para>Unix time in seconds. Optional.</para></summary>
-        [JsonPropertyName("expires")]
-        public float? Expires { get; set; }
+    /// <summary><para>Unix time in seconds. Optional.</para></summary>
+    [JsonPropertyName("expires")]
+    public float? Expires { get; set; }
 
-        /// <summary><para>Optional.</para></summary>
-        [JsonPropertyName("httpOnly")]
-        public bool? HttpOnly { get; set; }
+    /// <summary><para>Optional.</para></summary>
+    [JsonPropertyName("httpOnly")]
+    public bool? HttpOnly { get; set; }
 
-        /// <summary><para>Optional.</para></summary>
-        [JsonPropertyName("secure")]
-        public bool? Secure { get; set; }
+    /// <summary><para>Optional.</para></summary>
+    [JsonPropertyName("secure")]
+    public bool? Secure { get; set; }
 
-        /// <summary><para>Optional.</para></summary>
-        [JsonPropertyName("sameSite")]
-        public SameSiteAttribute? SameSite { get; set; }
-    }
+    /// <summary><para>Optional.</para></summary>
+    [JsonPropertyName("sameSite")]
+    public SameSiteAttribute? SameSite { get; set; }
 }
 
 #nullable disable

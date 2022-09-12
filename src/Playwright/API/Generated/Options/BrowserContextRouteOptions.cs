@@ -37,26 +37,25 @@ using System.Threading.Tasks;
 
 #nullable enable
 
-namespace Microsoft.Playwright
+namespace Microsoft.Playwright;
+
+public class BrowserContextRouteOptions
 {
-    public class BrowserContextRouteOptions
+    public BrowserContextRouteOptions() { }
+
+    public BrowserContextRouteOptions(BrowserContextRouteOptions clone)
     {
-        public BrowserContextRouteOptions() { }
-
-        public BrowserContextRouteOptions(BrowserContextRouteOptions clone)
+        if (clone == null)
         {
-            if (clone == null)
-            {
-                return;
-            }
-
-            Times = clone.Times;
+            return;
         }
 
-        /// <summary><para>How often a route should be used. By default it will be used every time.</para></summary>
-        [JsonPropertyName("times")]
-        public int? Times { get; set; }
+        Times = clone.Times;
     }
+
+    /// <summary><para>How often a route should be used. By default it will be used every time.</para></summary>
+    [JsonPropertyName("times")]
+    public int? Times { get; set; }
 }
 
 #nullable disable

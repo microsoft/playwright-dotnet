@@ -37,42 +37,41 @@ using System.Threading.Tasks;
 
 #nullable enable
 
-namespace Microsoft.Playwright
+namespace Microsoft.Playwright;
+
+public class ElementHandleSelectTextOptions
 {
-    public class ElementHandleSelectTextOptions
+    public ElementHandleSelectTextOptions() { }
+
+    public ElementHandleSelectTextOptions(ElementHandleSelectTextOptions clone)
     {
-        public ElementHandleSelectTextOptions() { }
-
-        public ElementHandleSelectTextOptions(ElementHandleSelectTextOptions clone)
+        if (clone == null)
         {
-            if (clone == null)
-            {
-                return;
-            }
-
-            Force = clone.Force;
-            Timeout = clone.Timeout;
+            return;
         }
 
-        /// <summary>
-        /// <para>
-        /// Whether to bypass the <a href="https://playwright.dev/dotnet/docs/actionability">actionability</a>
-        /// checks. Defaults to <c>false</c>.
-        /// </para>
-        /// </summary>
-        [JsonPropertyName("force")]
-        public bool? Force { get; set; }
-
-        /// <summary>
-        /// <para>
-        /// Maximum time in milliseconds, defaults to 30 seconds, pass <c>0</c> to disable timeout.
-        /// The default value can be changed by using the <see cref="IBrowserContext.SetDefaultTimeout"/>
-        /// or <see cref="IPage.SetDefaultTimeout"/> methods.
-        /// </para>
-        /// </summary>
-        [JsonPropertyName("timeout")]
-        public float? Timeout { get; set; }
+        Force = clone.Force;
+        Timeout = clone.Timeout;
     }
+
+    /// <summary>
+    /// <para>
+    /// Whether to bypass the <a href="https://playwright.dev/dotnet/docs/actionability">actionability</a>
+    /// checks. Defaults to <c>false</c>.
+    /// </para>
+    /// </summary>
+    [JsonPropertyName("force")]
+    public bool? Force { get; set; }
+
+    /// <summary>
+    /// <para>
+    /// Maximum time in milliseconds, defaults to 30 seconds, pass <c>0</c> to disable timeout.
+    /// The default value can be changed by using the <see cref="IBrowserContext.SetDefaultTimeout"/>
+    /// or <see cref="IPage.SetDefaultTimeout"/> methods.
+    /// </para>
+    /// </summary>
+    [JsonPropertyName("timeout")]
+    public float? Timeout { get; set; }
 }
 
 #nullable disable

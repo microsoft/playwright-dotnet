@@ -37,25 +37,24 @@ using System.Threading.Tasks;
 
 #nullable enable
 
-namespace Microsoft.Playwright
+namespace Microsoft.Playwright;
+
+public partial class FilePayload
 {
-    public partial class FilePayload
-    {
-        /// <summary><para>File name</para></summary>
-        [Required]
-        [JsonPropertyName("name")]
-        public string Name { get; set; } = default!;
+    /// <summary><para>File name</para></summary>
+    [Required]
+    [JsonPropertyName("name")]
+    public string Name { get; set; } = default!;
 
-        /// <summary><para>File type</para></summary>
-        [Required]
-        [JsonPropertyName("mimeType")]
-        public string MimeType { get; set; } = default!;
+    /// <summary><para>File type</para></summary>
+    [Required]
+    [JsonPropertyName("mimeType")]
+    public string MimeType { get; set; } = default!;
 
-        /// <summary><para>File content</para></summary>
-        [Required]
-        [JsonPropertyName("buffer")]
-        public byte[] Buffer { get; set; } = default!;
-    }
+    /// <summary><para>File content</para></summary>
+    [Required]
+    [JsonPropertyName("buffer")]
+    public byte[] Buffer { get; set; } = default!;
 }
 
 #nullable disable

@@ -37,22 +37,21 @@ using System.Threading.Tasks;
 
 #nullable enable
 
-namespace Microsoft.Playwright
+namespace Microsoft.Playwright;
+
+public partial class SelectOptionValue
 {
-    public partial class SelectOptionValue
-    {
-        /// <summary><para>Matches by <c>option.value</c>. Optional.</para></summary>
-        [JsonPropertyName("value")]
-        public string? Value { get; set; }
+    /// <summary><para>Matches by <c>option.value</c>. Optional.</para></summary>
+    [JsonPropertyName("value")]
+    public string? Value { get; set; }
 
-        /// <summary><para>Matches by <c>option.label</c>. Optional.</para></summary>
-        [JsonPropertyName("label")]
-        public string? Label { get; set; }
+    /// <summary><para>Matches by <c>option.label</c>. Optional.</para></summary>
+    [JsonPropertyName("label")]
+    public string? Label { get; set; }
 
-        /// <summary><para>Matches by the index. Optional.</para></summary>
-        [JsonPropertyName("index")]
-        public int? Index { get; set; }
-    }
+    /// <summary><para>Matches by the index. Optional.</para></summary>
+    [JsonPropertyName("index")]
+    public int? Index { get; set; }
 }
 
 #nullable disable

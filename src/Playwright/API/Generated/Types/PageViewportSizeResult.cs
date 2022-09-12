@@ -37,20 +37,19 @@ using System.Threading.Tasks;
 
 #nullable enable
 
-namespace Microsoft.Playwright
-{
-    public partial class PageViewportSizeResult
-    {
-        /// <summary><para>page width in pixels.</para></summary>
-        [Required]
-        [JsonPropertyName("width")]
-        public int Width { get; set; } = default!;
+namespace Microsoft.Playwright;
 
-        /// <summary><para>page height in pixels.</para></summary>
-        [Required]
-        [JsonPropertyName("height")]
-        public int Height { get; set; } = default!;
-    }
+public partial class PageViewportSizeResult
+{
+    /// <summary><para>page width in pixels.</para></summary>
+    [Required]
+    [JsonPropertyName("width")]
+    public int Width { get; set; } = default!;
+
+    /// <summary><para>page height in pixels.</para></summary>
+    [Required]
+    [JsonPropertyName("height")]
+    public int Height { get; set; } = default!;
 }
 
 #nullable disable

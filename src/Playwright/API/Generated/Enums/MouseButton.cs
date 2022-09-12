@@ -37,17 +37,16 @@ using System.Threading.Tasks;
 
 #nullable enable
 
-namespace Microsoft.Playwright
+namespace Microsoft.Playwright;
+
+public enum MouseButton
 {
-    public enum MouseButton
-    {
-        [EnumMember(Value = "left")]
-        Left,
-        [EnumMember(Value = "right")]
-        Right,
-        [EnumMember(Value = "middle")]
-        Middle,
-    }
+    [EnumMember(Value = "left")]
+    Left,
+    [EnumMember(Value = "right")]
+    Right,
+    [EnumMember(Value = "middle")]
+    Middle,
 }
 
 #nullable disable

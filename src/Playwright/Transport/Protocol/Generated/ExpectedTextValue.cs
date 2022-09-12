@@ -25,26 +25,25 @@
 using System.Collections.Generic;
 using System.Text.Json.Serialization;
 
-namespace Microsoft.Playwright.Transport.Protocol
+namespace Microsoft.Playwright.Transport.Protocol;
+
+internal class ExpectedTextValue
 {
-    internal class ExpectedTextValue
-    {
-        [JsonPropertyName("string")]
-        public string String { get; set; }
+    [JsonPropertyName("string")]
+    public string String { get; set; }
 
-        [JsonPropertyName("regexSource")]
-        public string RegexSource { get; set; }
+    [JsonPropertyName("regexSource")]
+    public string RegexSource { get; set; }
 
-        [JsonPropertyName("regexFlags")]
-        public string RegexFlags { get; set; }
+    [JsonPropertyName("regexFlags")]
+    public string RegexFlags { get; set; }
 
-        [JsonPropertyName("matchSubstring")]
-        public bool MatchSubstring { get; set; }
+    [JsonPropertyName("matchSubstring")]
+    public bool MatchSubstring { get; set; }
 
-        [JsonPropertyName("ignoreCase")]
-        public bool IgnoreCase { get; set; }
+    [JsonPropertyName("ignoreCase")]
+    public bool IgnoreCase { get; set; }
 
-        [JsonPropertyName("normalizeWhiteSpace")]
-        public bool NormalizeWhiteSpace { get; set; }
-    }
+    [JsonPropertyName("normalizeWhiteSpace")]
+    public bool NormalizeWhiteSpace { get; set; }
 }

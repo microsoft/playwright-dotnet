@@ -25,20 +25,19 @@
 using System.Collections.Generic;
 using System.Text.Json.Serialization;
 
-namespace Microsoft.Playwright.Transport.Protocol
+namespace Microsoft.Playwright.Transport.Protocol;
+
+internal class Rect
 {
-    internal class Rect
-    {
-        [JsonPropertyName("x")]
-        public int X { get; set; }
+    [JsonPropertyName("x")]
+    public int X { get; set; }
 
-        [JsonPropertyName("y")]
-        public int Y { get; set; }
+    [JsonPropertyName("y")]
+    public int Y { get; set; }
 
-        [JsonPropertyName("width")]
-        public int Width { get; set; }
+    [JsonPropertyName("width")]
+    public int Width { get; set; }
 
-        [JsonPropertyName("height")]
-        public int Height { get; set; }
-    }
+    [JsonPropertyName("height")]
+    public int Height { get; set; }
 }

@@ -37,29 +37,28 @@ using System.Threading.Tasks;
 
 #nullable enable
 
-namespace Microsoft.Playwright
+namespace Microsoft.Playwright;
+
+/// <summary><para>The <see cref="IWebSocket"/> class represents websocket connections in the page.</para></summary>
+public partial interface IWebSocket
 {
-    /// <summary><para>The <see cref="IWebSocket"/> class represents websocket connections in the page.</para></summary>
-    public partial interface IWebSocket
-    {
-        /// <summary><para>Fired when the websocket closes.</para></summary>
-        event EventHandler<IWebSocket> Close;
+    /// <summary><para>Fired when the websocket closes.</para></summary>
+    event EventHandler<IWebSocket> Close;
 
-        /// <summary><para>Fired when the websocket receives a frame.</para></summary>
-        event EventHandler<IWebSocketFrame> FrameReceived;
+    /// <summary><para>Fired when the websocket receives a frame.</para></summary>
+    event EventHandler<IWebSocketFrame> FrameReceived;
 
-        /// <summary><para>Fired when the websocket sends a frame.</para></summary>
-        event EventHandler<IWebSocketFrame> FrameSent;
+    /// <summary><para>Fired when the websocket sends a frame.</para></summary>
+    event EventHandler<IWebSocketFrame> FrameSent;
 
-        /// <summary><para>Fired when the websocket has an error.</para></summary>
-        event EventHandler<String> SocketError;
+    /// <summary><para>Fired when the websocket has an error.</para></summary>
+    event EventHandler<String> SocketError;
 
-        /// <summary><para>Indicates that the web socket has been closed.</para></summary>
-        bool IsClosed { get; }
+    /// <summary><para>Indicates that the web socket has been closed.</para></summary>
+    bool IsClosed { get; }
 
-        /// <summary><para>Contains the URL of the WebSocket.</para></summary>
-        string Url { get; }
-    }
+    /// <summary><para>Contains the URL of the WebSocket.</para></summary>
+    string Url { get; }
 }
 
 #nullable disable

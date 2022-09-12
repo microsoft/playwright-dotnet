@@ -37,17 +37,16 @@ using System.Threading.Tasks;
 
 #nullable enable
 
-namespace Microsoft.Playwright
+namespace Microsoft.Playwright;
+
+public enum ForcedColors
 {
-    public enum ForcedColors
-    {
-        [EnumMember(Value = "active")]
-        Active,
-        [EnumMember(Value = "none")]
-        None,
-        [EnumMember(Value = "null")]
-        Null,
-    }
+    [EnumMember(Value = "active")]
+    Active,
+    [EnumMember(Value = "none")]
+    None,
+    [EnumMember(Value = "null")]
+    Null,
 }
 
 #nullable disable

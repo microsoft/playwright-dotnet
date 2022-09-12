@@ -25,11 +25,10 @@
 using System.Collections.Generic;
 using System.Text.Json.Serialization;
 
-namespace Microsoft.Playwright.Transport.Protocol
+namespace Microsoft.Playwright.Transport.Protocol;
+
+internal class ElectronApplicationInitializer : EventTargetInitializer
 {
-    internal class ElectronApplicationInitializer : EventTargetInitializer
-    {
-        [JsonPropertyName("context")]
-        public Core.BrowserContext Context { get; set; }
-    }
+    [JsonPropertyName("context")]
+    public Core.BrowserContext Context { get; set; }
 }

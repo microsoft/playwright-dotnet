@@ -37,15 +37,14 @@ using System.Threading.Tasks;
 
 #nullable enable
 
-namespace Microsoft.Playwright
+namespace Microsoft.Playwright;
+
+public enum ServiceWorkerPolicy
 {
-    public enum ServiceWorkerPolicy
-    {
-        [EnumMember(Value = "allow")]
-        Allow,
-        [EnumMember(Value = "block")]
-        Block,
-    }
+    [EnumMember(Value = "allow")]
+    Allow,
+    [EnumMember(Value = "block")]
+    Block,
 }
 
 #nullable disable

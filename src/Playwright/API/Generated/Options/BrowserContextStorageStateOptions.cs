@@ -37,32 +37,31 @@ using System.Threading.Tasks;
 
 #nullable enable
 
-namespace Microsoft.Playwright
+namespace Microsoft.Playwright;
+
+public class BrowserContextStorageStateOptions
 {
-    public class BrowserContextStorageStateOptions
+    public BrowserContextStorageStateOptions() { }
+
+    public BrowserContextStorageStateOptions(BrowserContextStorageStateOptions clone)
     {
-        public BrowserContextStorageStateOptions() { }
-
-        public BrowserContextStorageStateOptions(BrowserContextStorageStateOptions clone)
+        if (clone == null)
         {
-            if (clone == null)
-            {
-                return;
-            }
-
-            Path = clone.Path;
+            return;
         }
 
-        /// <summary>
-        /// <para>
-        /// The file path to save the storage state to. If <paramref name="path"/> is a relative
-        /// path, then it is resolved relative to current working directory. If no path is provided,
-        /// storage state is still returned, but won't be saved to the disk.
-        /// </para>
-        /// </summary>
-        [JsonPropertyName("path")]
-        public string? Path { get; set; }
+        Path = clone.Path;
     }
+
+    /// <summary>
+    /// <para>
+    /// The file path to save the storage state to. If <paramref name="path"/> is a relative
+    /// path, then it is resolved relative to current working directory. If no path is provided,
+    /// storage state is still returned, but won't be saved to the disk.
+    /// </para>
+    /// </summary>
+    [JsonPropertyName("path")]
+    public string? Path { get; set; }
 }
 
 #nullable disable

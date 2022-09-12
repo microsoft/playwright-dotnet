@@ -25,20 +25,19 @@
 using System.Collections.Generic;
 using System.Text.Json.Serialization;
 
-namespace Microsoft.Playwright.Transport.Protocol
+namespace Microsoft.Playwright.Transport.Protocol;
+
+internal class RequestSizes
 {
-    internal class RequestSizes
-    {
-        [JsonPropertyName("requestBodySize")]
-        public int RequestBodySize { get; set; }
+    [JsonPropertyName("requestBodySize")]
+    public int RequestBodySize { get; set; }
 
-        [JsonPropertyName("requestHeadersSize")]
-        public int RequestHeadersSize { get; set; }
+    [JsonPropertyName("requestHeadersSize")]
+    public int RequestHeadersSize { get; set; }
 
-        [JsonPropertyName("responseBodySize")]
-        public int ResponseBodySize { get; set; }
+    [JsonPropertyName("responseBodySize")]
+    public int ResponseBodySize { get; set; }
 
-        [JsonPropertyName("responseHeadersSize")]
-        public int ResponseHeadersSize { get; set; }
-    }
+    [JsonPropertyName("responseHeadersSize")]
+    public int ResponseHeadersSize { get; set; }
 }

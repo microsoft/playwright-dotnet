@@ -37,45 +37,44 @@ using System.Threading.Tasks;
 
 #nullable enable
 
-namespace Microsoft.Playwright
+namespace Microsoft.Playwright;
+
+public partial class RequestSizesResult
 {
-    public partial class RequestSizesResult
-    {
-        /// <summary>
-        /// <para>
-        /// Size of the request body (POST data payload) in bytes. Set to 0 if there was no
-        /// body.
-        /// </para>
-        /// </summary>
-        [Required]
-        [JsonPropertyName("requestBodySize")]
-        public int RequestBodySize { get; set; } = default!;
+    /// <summary>
+    /// <para>
+    /// Size of the request body (POST data payload) in bytes. Set to 0 if there was no
+    /// body.
+    /// </para>
+    /// </summary>
+    [Required]
+    [JsonPropertyName("requestBodySize")]
+    public int RequestBodySize { get; set; } = default!;
 
-        /// <summary>
-        /// <para>
-        /// Total number of bytes from the start of the HTTP request message until (and including)
-        /// the double CRLF before the body.
-        /// </para>
-        /// </summary>
-        [Required]
-        [JsonPropertyName("requestHeadersSize")]
-        public int RequestHeadersSize { get; set; } = default!;
+    /// <summary>
+    /// <para>
+    /// Total number of bytes from the start of the HTTP request message until (and including)
+    /// the double CRLF before the body.
+    /// </para>
+    /// </summary>
+    [Required]
+    [JsonPropertyName("requestHeadersSize")]
+    public int RequestHeadersSize { get; set; } = default!;
 
-        /// <summary><para>Size of the received response body (encoded) in bytes.</para></summary>
-        [Required]
-        [JsonPropertyName("responseBodySize")]
-        public int ResponseBodySize { get; set; } = default!;
+    /// <summary><para>Size of the received response body (encoded) in bytes.</para></summary>
+    [Required]
+    [JsonPropertyName("responseBodySize")]
+    public int ResponseBodySize { get; set; } = default!;
 
-        /// <summary>
-        /// <para>
-        /// Total number of bytes from the start of the HTTP response message until (and including)
-        /// the double CRLF before the body.
-        /// </para>
-        /// </summary>
-        [Required]
-        [JsonPropertyName("responseHeadersSize")]
-        public int ResponseHeadersSize { get; set; } = default!;
-    }
+    /// <summary>
+    /// <para>
+    /// Total number of bytes from the start of the HTTP response message until (and including)
+    /// the double CRLF before the body.
+    /// </para>
+    /// </summary>
+    [Required]
+    [JsonPropertyName("responseHeadersSize")]
+    public int ResponseHeadersSize { get; set; } = default!;
 }
 
 #nullable disable

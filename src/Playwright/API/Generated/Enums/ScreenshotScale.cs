@@ -37,15 +37,14 @@ using System.Threading.Tasks;
 
 #nullable enable
 
-namespace Microsoft.Playwright
+namespace Microsoft.Playwright;
+
+public enum ScreenshotScale
 {
-    public enum ScreenshotScale
-    {
-        [EnumMember(Value = "css")]
-        Css,
-        [EnumMember(Value = "device")]
-        Device,
-    }
+    [EnumMember(Value = "css")]
+    Css,
+    [EnumMember(Value = "device")]
+    Device,
 }
 
 #nullable disable

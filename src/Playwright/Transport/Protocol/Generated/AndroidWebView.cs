@@ -25,17 +25,16 @@
 using System.Collections.Generic;
 using System.Text.Json.Serialization;
 
-namespace Microsoft.Playwright.Transport.Protocol
+namespace Microsoft.Playwright.Transport.Protocol;
+
+internal class AndroidWebView
 {
-    internal class AndroidWebView
-    {
-        [JsonPropertyName("pid")]
-        public int Pid { get; set; }
+    [JsonPropertyName("pid")]
+    public int Pid { get; set; }
 
-        [JsonPropertyName("pkg")]
-        public string Pkg { get; set; }
+    [JsonPropertyName("pkg")]
+    public string Pkg { get; set; }
 
-        [JsonPropertyName("socketName")]
-        public string SocketName { get; set; }
-    }
+    [JsonPropertyName("socketName")]
+    public string SocketName { get; set; }
 }

@@ -37,46 +37,45 @@ using System.Threading.Tasks;
 
 #nullable enable
 
-namespace Microsoft.Playwright
+namespace Microsoft.Playwright;
+
+public class LocatorAssertionsToHaveTextOptions
 {
-    public class LocatorAssertionsToHaveTextOptions
+    public LocatorAssertionsToHaveTextOptions() { }
+
+    public LocatorAssertionsToHaveTextOptions(LocatorAssertionsToHaveTextOptions clone)
     {
-        public LocatorAssertionsToHaveTextOptions() { }
-
-        public LocatorAssertionsToHaveTextOptions(LocatorAssertionsToHaveTextOptions clone)
+        if (clone == null)
         {
-            if (clone == null)
-            {
-                return;
-            }
-
-            IgnoreCase = clone.IgnoreCase;
-            Timeout = clone.Timeout;
-            UseInnerText = clone.UseInnerText;
+            return;
         }
 
-        /// <summary>
-        /// <para>
-        /// Whether to perform case-insensitive match. <paramref name="ignoreCase"/> option
-        /// takes precedence over the corresponding regular expression flag if specified.
-        /// </para>
-        /// </summary>
-        [JsonPropertyName("ignoreCase")]
-        public bool? IgnoreCase { get; set; }
-
-        /// <summary><para>Time to retry the assertion for.</para></summary>
-        [JsonPropertyName("timeout")]
-        public float? Timeout { get; set; }
-
-        /// <summary>
-        /// <para>
-        /// Whether to use <c>element.innerText</c> instead of <c>element.textContent</c> when
-        /// retrieving DOM node text.
-        /// </para>
-        /// </summary>
-        [JsonPropertyName("useInnerText")]
-        public bool? UseInnerText { get; set; }
+        IgnoreCase = clone.IgnoreCase;
+        Timeout = clone.Timeout;
+        UseInnerText = clone.UseInnerText;
     }
+
+    /// <summary>
+    /// <para>
+    /// Whether to perform case-insensitive match. <paramref name="ignoreCase"/> option
+    /// takes precedence over the corresponding regular expression flag if specified.
+    /// </para>
+    /// </summary>
+    [JsonPropertyName("ignoreCase")]
+    public bool? IgnoreCase { get; set; }
+
+    /// <summary><para>Time to retry the assertion for.</para></summary>
+    [JsonPropertyName("timeout")]
+    public float? Timeout { get; set; }
+
+    /// <summary>
+    /// <para>
+    /// Whether to use <c>element.innerText</c> instead of <c>element.textContent</c> when
+    /// retrieving DOM node text.
+    /// </para>
+    /// </summary>
+    [JsonPropertyName("useInnerText")]
+    public bool? UseInnerText { get; set; }
 }
 
 #nullable disable

@@ -25,35 +25,34 @@
 using System.Collections.Generic;
 using System.Text.Json.Serialization;
 
-namespace Microsoft.Playwright.Transport.Protocol
+namespace Microsoft.Playwright.Transport.Protocol;
+
+internal class SetNetworkCookie
 {
-    internal class SetNetworkCookie
-    {
-        [JsonPropertyName("name")]
-        public string Name { get; set; }
+    [JsonPropertyName("name")]
+    public string Name { get; set; }
 
-        [JsonPropertyName("value")]
-        public string Value { get; set; }
+    [JsonPropertyName("value")]
+    public string Value { get; set; }
 
-        [JsonPropertyName("url")]
-        public string Url { get; set; }
+    [JsonPropertyName("url")]
+    public string Url { get; set; }
 
-        [JsonPropertyName("domain")]
-        public string Domain { get; set; }
+    [JsonPropertyName("domain")]
+    public string Domain { get; set; }
 
-        [JsonPropertyName("path")]
-        public string Path { get; set; }
+    [JsonPropertyName("path")]
+    public string Path { get; set; }
 
-        [JsonPropertyName("expires")]
-        public int? Expires { get; set; }
+    [JsonPropertyName("expires")]
+    public int? Expires { get; set; }
 
-        [JsonPropertyName("httpOnly")]
-        public bool HttpOnly { get; set; }
+    [JsonPropertyName("httpOnly")]
+    public bool HttpOnly { get; set; }
 
-        [JsonPropertyName("secure")]
-        public bool Secure { get; set; }
+    [JsonPropertyName("secure")]
+    public bool Secure { get; set; }
 
-        [JsonPropertyName("sameSite")]
-        public string SameSite { get; set; }
-    }
+    [JsonPropertyName("sameSite")]
+    public string SameSite { get; set; }
 }

@@ -37,47 +37,46 @@ using System.Threading.Tasks;
 
 #nullable enable
 
-namespace Microsoft.Playwright
+namespace Microsoft.Playwright;
+
+public class RouteFallbackOptions
 {
-    public class RouteFallbackOptions
+    public RouteFallbackOptions() { }
+
+    public RouteFallbackOptions(RouteFallbackOptions clone)
     {
-        public RouteFallbackOptions() { }
-
-        public RouteFallbackOptions(RouteFallbackOptions clone)
+        if (clone == null)
         {
-            if (clone == null)
-            {
-                return;
-            }
-
-            Headers = clone.Headers;
-            Method = clone.Method;
-            PostData = clone.PostData;
-            Url = clone.Url;
+            return;
         }
 
-        /// <summary><para>If set changes the request HTTP headers. Header values will be converted to a string.</para></summary>
-        [JsonPropertyName("headers")]
-        public IEnumerable<KeyValuePair<string, string>>? Headers { get; set; }
-
-        /// <summary><para>If set changes the request method (e.g. GET or POST)</para></summary>
-        [JsonPropertyName("method")]
-        public string? Method { get; set; }
-
-        /// <summary><para>If set changes the post data of request</para></summary>
-        [JsonPropertyName("postData")]
-        public byte[]? PostData { get; set; }
-
-        /// <summary>
-        /// <para>
-        /// If set changes the request URL. New URL must have same protocol as original one.
-        /// Changing the URL won't affect the route matching, all the routes are matched using
-        /// the original request URL.
-        /// </para>
-        /// </summary>
-        [JsonPropertyName("url")]
-        public string? Url { get; set; }
+        Headers = clone.Headers;
+        Method = clone.Method;
+        PostData = clone.PostData;
+        Url = clone.Url;
     }
+
+    /// <summary><para>If set changes the request HTTP headers. Header values will be converted to a string.</para></summary>
+    [JsonPropertyName("headers")]
+    public IEnumerable<KeyValuePair<string, string>>? Headers { get; set; }
+
+    /// <summary><para>If set changes the request method (e.g. GET or POST)</para></summary>
+    [JsonPropertyName("method")]
+    public string? Method { get; set; }
+
+    /// <summary><para>If set changes the post data of request</para></summary>
+    [JsonPropertyName("postData")]
+    public byte[]? PostData { get; set; }
+
+    /// <summary>
+    /// <para>
+    /// If set changes the request URL. New URL must have same protocol as original one.
+    /// Changing the URL won't affect the route matching, all the routes are matched using
+    /// the original request URL.
+    /// </para>
+    /// </summary>
+    [JsonPropertyName("url")]
+    public string? Url { get; set; }
 }
 
 #nullable disable

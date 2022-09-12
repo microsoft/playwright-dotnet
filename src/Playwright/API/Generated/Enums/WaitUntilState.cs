@@ -37,19 +37,18 @@ using System.Threading.Tasks;
 
 #nullable enable
 
-namespace Microsoft.Playwright
+namespace Microsoft.Playwright;
+
+public enum WaitUntilState
 {
-    public enum WaitUntilState
-    {
-        [EnumMember(Value = "load")]
-        Load,
-        [EnumMember(Value = "domcontentloaded")]
-        DOMContentLoaded,
-        [EnumMember(Value = "networkidle")]
-        NetworkIdle,
-        [EnumMember(Value = "commit")]
-        Commit,
-    }
+    [EnumMember(Value = "load")]
+    Load,
+    [EnumMember(Value = "domcontentloaded")]
+    DOMContentLoaded,
+    [EnumMember(Value = "networkidle")]
+    NetworkIdle,
+    [EnumMember(Value = "commit")]
+    Commit,
 }
 
 #nullable disable

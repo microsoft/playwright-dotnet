@@ -25,17 +25,16 @@
 using System.Collections.Generic;
 using System.Text.Json.Serialization;
 
-namespace Microsoft.Playwright.Transport.Protocol
+namespace Microsoft.Playwright.Transport.Protocol;
+
+internal class SerializedErrorError
 {
-    internal class SerializedErrorError
-    {
-        [JsonPropertyName("message")]
-        public string Message { get; set; }
+    [JsonPropertyName("message")]
+    public string Message { get; set; }
 
-        [JsonPropertyName("name")]
-        public string Name { get; set; }
+    [JsonPropertyName("name")]
+    public string Name { get; set; }
 
-        [JsonPropertyName("stack")]
-        public string Stack { get; set; }
-    }
+    [JsonPropertyName("stack")]
+    public string Stack { get; set; }
 }

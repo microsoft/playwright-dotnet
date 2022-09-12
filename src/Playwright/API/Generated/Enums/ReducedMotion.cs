@@ -37,17 +37,16 @@ using System.Threading.Tasks;
 
 #nullable enable
 
-namespace Microsoft.Playwright
+namespace Microsoft.Playwright;
+
+public enum ReducedMotion
 {
-    public enum ReducedMotion
-    {
-        [EnumMember(Value = "reduce")]
-        Reduce,
-        [EnumMember(Value = "no-preference")]
-        NoPreference,
-        [EnumMember(Value = "null")]
-        Null,
-    }
+    [EnumMember(Value = "reduce")]
+    Reduce,
+    [EnumMember(Value = "no-preference")]
+    NoPreference,
+    [EnumMember(Value = "null")]
+    Null,
 }
 
 #nullable disable

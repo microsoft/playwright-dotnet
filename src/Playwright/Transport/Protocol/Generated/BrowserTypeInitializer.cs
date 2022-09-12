@@ -25,14 +25,13 @@
 using System.Collections.Generic;
 using System.Text.Json.Serialization;
 
-namespace Microsoft.Playwright.Transport.Protocol
-{
-    internal class BrowserTypeInitializer
-    {
-        [JsonPropertyName("executablePath")]
-        public string ExecutablePath { get; set; }
+namespace Microsoft.Playwright.Transport.Protocol;
 
-        [JsonPropertyName("name")]
-        public string Name { get; set; }
-    }
+internal class BrowserTypeInitializer
+{
+    [JsonPropertyName("executablePath")]
+    public string ExecutablePath { get; set; }
+
+    [JsonPropertyName("name")]
+    public string Name { get; set; }
 }

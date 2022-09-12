@@ -37,15 +37,14 @@ using System.Threading.Tasks;
 
 #nullable enable
 
-namespace Microsoft.Playwright
+namespace Microsoft.Playwright;
+
+public enum HarNotFound
 {
-    public enum HarNotFound
-    {
-        [EnumMember(Value = "abort")]
-        Abort,
-        [EnumMember(Value = "fallback")]
-        Fallback,
-    }
+    [EnumMember(Value = "abort")]
+    Abort,
+    [EnumMember(Value = "fallback")]
+    Fallback,
 }
 
 #nullable disable

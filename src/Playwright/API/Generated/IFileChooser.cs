@@ -37,80 +37,79 @@ using System.Threading.Tasks;
 
 #nullable enable
 
-namespace Microsoft.Playwright
+namespace Microsoft.Playwright;
+
+/// <summary>
+/// <para>
+/// <see cref="IFileChooser"/> objects are dispatched by the page in the <see cref="IPage.FileChooser"/>
+/// event.
+/// </para>
+/// <code>
+/// var fileChooser = await page.RunAndWaitForFileChooserAsync(async () =&gt;<br/>
+/// {<br/>
+///     await page.Locator("upload").ClickAsync();<br/>
+/// });<br/>
+/// await fileChooser.SetFilesAsync("temp.txt");
+/// </code>
+/// </summary>
+public partial interface IFileChooser
 {
+    /// <summary><para>Returns input element associated with this file chooser.</para></summary>
+    IElementHandle Element { get; }
+
+    /// <summary><para>Returns whether this file chooser accepts multiple files.</para></summary>
+    bool IsMultiple { get; }
+
+    /// <summary><para>Returns page this file chooser belongs to.</para></summary>
+    IPage Page { get; }
+
     /// <summary>
     /// <para>
-    /// <see cref="IFileChooser"/> objects are dispatched by the page in the <see cref="IPage.FileChooser"/>
-    /// event.
+    /// Sets the value of the file input this chooser is associated with. If some of the
+    /// <c>filePaths</c> are relative paths, then they are resolved relative to the current
+    /// working directory. For empty array, clears the selected files.
     /// </para>
-    /// <code>
-    /// var fileChooser = await page.RunAndWaitForFileChooserAsync(async () =&gt;<br/>
-    /// {<br/>
-    ///     await page.Locator("upload").ClickAsync();<br/>
-    /// });<br/>
-    /// await fileChooser.SetFilesAsync("temp.txt");
-    /// </code>
     /// </summary>
-    public partial interface IFileChooser
-    {
-        /// <summary><para>Returns input element associated with this file chooser.</para></summary>
-        IElementHandle Element { get; }
+    /// <param name="files">
+    /// </param>
+    /// <param name="options">Call options</param>
+    Task SetFilesAsync(string files, FileChooserSetFilesOptions? options = default);
 
-        /// <summary><para>Returns whether this file chooser accepts multiple files.</para></summary>
-        bool IsMultiple { get; }
+    /// <summary>
+    /// <para>
+    /// Sets the value of the file input this chooser is associated with. If some of the
+    /// <c>filePaths</c> are relative paths, then they are resolved relative to the current
+    /// working directory. For empty array, clears the selected files.
+    /// </para>
+    /// </summary>
+    /// <param name="files">
+    /// </param>
+    /// <param name="options">Call options</param>
+    Task SetFilesAsync(IEnumerable<string> files, FileChooserSetFilesOptions? options = default);
 
-        /// <summary><para>Returns page this file chooser belongs to.</para></summary>
-        IPage Page { get; }
+    /// <summary>
+    /// <para>
+    /// Sets the value of the file input this chooser is associated with. If some of the
+    /// <c>filePaths</c> are relative paths, then they are resolved relative to the current
+    /// working directory. For empty array, clears the selected files.
+    /// </para>
+    /// </summary>
+    /// <param name="files">
+    /// </param>
+    /// <param name="options">Call options</param>
+    Task SetFilesAsync(FilePayload files, FileChooserSetFilesOptions? options = default);
 
-        /// <summary>
-        /// <para>
-        /// Sets the value of the file input this chooser is associated with. If some of the
-        /// <c>filePaths</c> are relative paths, then they are resolved relative to the current
-        /// working directory. For empty array, clears the selected files.
-        /// </para>
-        /// </summary>
-        /// <param name="files">
-        /// </param>
-        /// <param name="options">Call options</param>
-        Task SetFilesAsync(string files, FileChooserSetFilesOptions? options = default);
-
-        /// <summary>
-        /// <para>
-        /// Sets the value of the file input this chooser is associated with. If some of the
-        /// <c>filePaths</c> are relative paths, then they are resolved relative to the current
-        /// working directory. For empty array, clears the selected files.
-        /// </para>
-        /// </summary>
-        /// <param name="files">
-        /// </param>
-        /// <param name="options">Call options</param>
-        Task SetFilesAsync(IEnumerable<string> files, FileChooserSetFilesOptions? options = default);
-
-        /// <summary>
-        /// <para>
-        /// Sets the value of the file input this chooser is associated with. If some of the
-        /// <c>filePaths</c> are relative paths, then they are resolved relative to the current
-        /// working directory. For empty array, clears the selected files.
-        /// </para>
-        /// </summary>
-        /// <param name="files">
-        /// </param>
-        /// <param name="options">Call options</param>
-        Task SetFilesAsync(FilePayload files, FileChooserSetFilesOptions? options = default);
-
-        /// <summary>
-        /// <para>
-        /// Sets the value of the file input this chooser is associated with. If some of the
-        /// <c>filePaths</c> are relative paths, then they are resolved relative to the current
-        /// working directory. For empty array, clears the selected files.
-        /// </para>
-        /// </summary>
-        /// <param name="files">
-        /// </param>
-        /// <param name="options">Call options</param>
-        Task SetFilesAsync(IEnumerable<FilePayload> files, FileChooserSetFilesOptions? options = default);
-    }
+    /// <summary>
+    /// <para>
+    /// Sets the value of the file input this chooser is associated with. If some of the
+    /// <c>filePaths</c> are relative paths, then they are resolved relative to the current
+    /// working directory. For empty array, clears the selected files.
+    /// </para>
+    /// </summary>
+    /// <param name="files">
+    /// </param>
+    /// <param name="options">Call options</param>
+    Task SetFilesAsync(IEnumerable<FilePayload> files, FileChooserSetFilesOptions? options = default);
 }
 
 #nullable disable

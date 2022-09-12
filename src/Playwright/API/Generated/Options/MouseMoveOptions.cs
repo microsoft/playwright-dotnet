@@ -37,26 +37,25 @@ using System.Threading.Tasks;
 
 #nullable enable
 
-namespace Microsoft.Playwright
+namespace Microsoft.Playwright;
+
+public class MouseMoveOptions
 {
-    public class MouseMoveOptions
+    public MouseMoveOptions() { }
+
+    public MouseMoveOptions(MouseMoveOptions clone)
     {
-        public MouseMoveOptions() { }
-
-        public MouseMoveOptions(MouseMoveOptions clone)
+        if (clone == null)
         {
-            if (clone == null)
-            {
-                return;
-            }
-
-            Steps = clone.Steps;
+            return;
         }
 
-        /// <summary><para>Defaults to 1. Sends intermediate <c>mousemove</c> events.</para></summary>
-        [JsonPropertyName("steps")]
-        public int? Steps { get; set; }
+        Steps = clone.Steps;
     }
+
+    /// <summary><para>Defaults to 1. Sends intermediate <c>mousemove</c> events.</para></summary>
+    [JsonPropertyName("steps")]
+    public int? Steps { get; set; }
 }
 
 #nullable disable

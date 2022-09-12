@@ -37,26 +37,25 @@ using System.Threading.Tasks;
 
 #nullable enable
 
-namespace Microsoft.Playwright
+namespace Microsoft.Playwright;
+
+public class LocatorAssertionsToBeFocusedOptions
 {
-    public class LocatorAssertionsToBeFocusedOptions
+    public LocatorAssertionsToBeFocusedOptions() { }
+
+    public LocatorAssertionsToBeFocusedOptions(LocatorAssertionsToBeFocusedOptions clone)
     {
-        public LocatorAssertionsToBeFocusedOptions() { }
-
-        public LocatorAssertionsToBeFocusedOptions(LocatorAssertionsToBeFocusedOptions clone)
+        if (clone == null)
         {
-            if (clone == null)
-            {
-                return;
-            }
-
-            Timeout = clone.Timeout;
+            return;
         }
 
-        /// <summary><para>Time to retry the assertion for.</para></summary>
-        [JsonPropertyName("timeout")]
-        public float? Timeout { get; set; }
+        Timeout = clone.Timeout;
     }
+
+    /// <summary><para>Time to retry the assertion for.</para></summary>
+    [JsonPropertyName("timeout")]
+    public float? Timeout { get; set; }
 }
 
 #nullable disable

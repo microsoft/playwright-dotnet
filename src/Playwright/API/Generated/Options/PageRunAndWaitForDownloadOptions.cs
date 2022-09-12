@@ -37,42 +37,41 @@ using System.Threading.Tasks;
 
 #nullable enable
 
-namespace Microsoft.Playwright
+namespace Microsoft.Playwright;
+
+public class PageRunAndWaitForDownloadOptions
 {
-    public class PageRunAndWaitForDownloadOptions
+    public PageRunAndWaitForDownloadOptions() { }
+
+    public PageRunAndWaitForDownloadOptions(PageRunAndWaitForDownloadOptions clone)
     {
-        public PageRunAndWaitForDownloadOptions() { }
-
-        public PageRunAndWaitForDownloadOptions(PageRunAndWaitForDownloadOptions clone)
+        if (clone == null)
         {
-            if (clone == null)
-            {
-                return;
-            }
-
-            Predicate = clone.Predicate;
-            Timeout = clone.Timeout;
+            return;
         }
 
-        /// <summary>
-        /// <para>
-        /// Receives the <see cref="IDownload"/> object and resolves to truthy value when the
-        /// waiting should resolve.
-        /// </para>
-        /// </summary>
-        [JsonPropertyName("predicate")]
-        public Func<IDownload, bool>? Predicate { get; set; }
-
-        /// <summary>
-        /// <para>
-        /// Maximum time to wait for in milliseconds. Defaults to <c>30000</c> (30 seconds).
-        /// Pass <c>0</c> to disable timeout. The default value can be changed by using the
-        /// <see cref="IBrowserContext.SetDefaultTimeout"/>.
-        /// </para>
-        /// </summary>
-        [JsonPropertyName("timeout")]
-        public float? Timeout { get; set; }
+        Predicate = clone.Predicate;
+        Timeout = clone.Timeout;
     }
+
+    /// <summary>
+    /// <para>
+    /// Receives the <see cref="IDownload"/> object and resolves to truthy value when the
+    /// waiting should resolve.
+    /// </para>
+    /// </summary>
+    [JsonPropertyName("predicate")]
+    public Func<IDownload, bool>? Predicate { get; set; }
+
+    /// <summary>
+    /// <para>
+    /// Maximum time to wait for in milliseconds. Defaults to <c>30000</c> (30 seconds).
+    /// Pass <c>0</c> to disable timeout. The default value can be changed by using the
+    /// <see cref="IBrowserContext.SetDefaultTimeout"/>.
+    /// </para>
+    /// </summary>
+    [JsonPropertyName("timeout")]
+    public float? Timeout { get; set; }
 }
 
 #nullable disable

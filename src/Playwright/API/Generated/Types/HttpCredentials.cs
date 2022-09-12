@@ -37,20 +37,19 @@ using System.Threading.Tasks;
 
 #nullable enable
 
-namespace Microsoft.Playwright
-{
-    public partial class HttpCredentials
-    {
-        /// <summary><para></para></summary>
-        [Required]
-        [JsonPropertyName("username")]
-        public string Username { get; set; } = default!;
+namespace Microsoft.Playwright;
 
-        /// <summary><para></para></summary>
-        [Required]
-        [JsonPropertyName("password")]
-        public string Password { get; set; } = default!;
-    }
+public partial class HttpCredentials
+{
+    /// <summary><para></para></summary>
+    [Required]
+    [JsonPropertyName("username")]
+    public string Username { get; set; } = default!;
+
+    /// <summary><para></para></summary>
+    [Required]
+    [JsonPropertyName("password")]
+    public string Password { get; set; } = default!;
 }
 
 #nullable disable

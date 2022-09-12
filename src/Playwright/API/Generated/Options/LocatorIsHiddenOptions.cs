@@ -37,32 +37,31 @@ using System.Threading.Tasks;
 
 #nullable enable
 
-namespace Microsoft.Playwright
+namespace Microsoft.Playwright;
+
+public class LocatorIsHiddenOptions
 {
-    public class LocatorIsHiddenOptions
+    public LocatorIsHiddenOptions() { }
+
+    public LocatorIsHiddenOptions(LocatorIsHiddenOptions clone)
     {
-        public LocatorIsHiddenOptions() { }
-
-        public LocatorIsHiddenOptions(LocatorIsHiddenOptions clone)
+        if (clone == null)
         {
-            if (clone == null)
-            {
-                return;
-            }
-
-            Timeout = clone.Timeout;
+            return;
         }
 
-        /// <summary>
-        /// <para>
-        /// **DEPRECATED** This option is ignored. <see cref="ILocator.IsHiddenAsync"/> does
-        /// not wait for the element to become hidden and returns immediately.
-        /// </para>
-        /// </summary>
-        [JsonPropertyName("timeout")]
-        [System.Obsolete]
-        public float? Timeout { get; set; }
+        Timeout = clone.Timeout;
     }
+
+    /// <summary>
+    /// <para>
+    /// **DEPRECATED** This option is ignored. <see cref="ILocator.IsHiddenAsync"/> does
+    /// not wait for the element to become hidden and returns immediately.
+    /// </para>
+    /// </summary>
+    [JsonPropertyName("timeout")]
+    [System.Obsolete]
+    public float? Timeout { get; set; }
 }
 
 #nullable disable

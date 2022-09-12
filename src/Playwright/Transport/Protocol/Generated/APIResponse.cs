@@ -25,23 +25,22 @@
 using System.Collections.Generic;
 using System.Text.Json.Serialization;
 
-namespace Microsoft.Playwright.Transport.Protocol
+namespace Microsoft.Playwright.Transport.Protocol;
+
+internal class APIResponse
 {
-    internal class APIResponse
-    {
-        [JsonPropertyName("fetchUid")]
-        public string FetchUid { get; set; }
+    [JsonPropertyName("fetchUid")]
+    public string FetchUid { get; set; }
 
-        [JsonPropertyName("url")]
-        public string Url { get; set; }
+    [JsonPropertyName("url")]
+    public string Url { get; set; }
 
-        [JsonPropertyName("status")]
-        public int Status { get; set; }
+    [JsonPropertyName("status")]
+    public int Status { get; set; }
 
-        [JsonPropertyName("statusText")]
-        public string StatusText { get; set; }
+    [JsonPropertyName("statusText")]
+    public string StatusText { get; set; }
 
-        [JsonPropertyName("headers")]
-        public List<NameValue> Headers { get; set; }
-    }
+    [JsonPropertyName("headers")]
+    public List<NameValue> Headers { get; set; }
 }

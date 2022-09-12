@@ -37,20 +37,19 @@ using System.Threading.Tasks;
 
 #nullable enable
 
-namespace Microsoft.Playwright
-{
-    public partial class Header
-    {
-        /// <summary><para>Name of the header.</para></summary>
-        [Required]
-        [JsonPropertyName("name")]
-        public string Name { get; set; } = default!;
+namespace Microsoft.Playwright;
 
-        /// <summary><para>Value of the header.</para></summary>
-        [Required]
-        [JsonPropertyName("value")]
-        public string Value { get; set; } = default!;
-    }
+public partial class Header
+{
+    /// <summary><para>Name of the header.</para></summary>
+    [Required]
+    [JsonPropertyName("name")]
+    public string Name { get; set; } = default!;
+
+    /// <summary><para>Value of the header.</para></summary>
+    [Required]
+    [JsonPropertyName("value")]
+    public string Value { get; set; } = default!;
 }
 
 #nullable disable

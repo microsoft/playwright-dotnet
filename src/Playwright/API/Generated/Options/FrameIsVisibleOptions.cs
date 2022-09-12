@@ -37,42 +37,41 @@ using System.Threading.Tasks;
 
 #nullable enable
 
-namespace Microsoft.Playwright
+namespace Microsoft.Playwright;
+
+public class FrameIsVisibleOptions
 {
-    public class FrameIsVisibleOptions
+    public FrameIsVisibleOptions() { }
+
+    public FrameIsVisibleOptions(FrameIsVisibleOptions clone)
     {
-        public FrameIsVisibleOptions() { }
-
-        public FrameIsVisibleOptions(FrameIsVisibleOptions clone)
+        if (clone == null)
         {
-            if (clone == null)
-            {
-                return;
-            }
-
-            Strict = clone.Strict;
-            Timeout = clone.Timeout;
+            return;
         }
 
-        /// <summary>
-        /// <para>
-        /// When true, the call requires selector to resolve to a single element. If given selector
-        /// resolves to more than one element, the call throws an exception.
-        /// </para>
-        /// </summary>
-        [JsonPropertyName("strict")]
-        public bool? Strict { get; set; }
-
-        /// <summary>
-        /// <para>
-        /// **DEPRECATED** This option is ignored. <see cref="IFrame.IsVisibleAsync"/> does
-        /// not wait for the element to become visible and returns immediately.
-        /// </para>
-        /// </summary>
-        [JsonPropertyName("timeout")]
-        [System.Obsolete]
-        public float? Timeout { get; set; }
+        Strict = clone.Strict;
+        Timeout = clone.Timeout;
     }
+
+    /// <summary>
+    /// <para>
+    /// When true, the call requires selector to resolve to a single element. If given selector
+    /// resolves to more than one element, the call throws an exception.
+    /// </para>
+    /// </summary>
+    [JsonPropertyName("strict")]
+    public bool? Strict { get; set; }
+
+    /// <summary>
+    /// <para>
+    /// **DEPRECATED** This option is ignored. <see cref="IFrame.IsVisibleAsync"/> does
+    /// not wait for the element to become visible and returns immediately.
+    /// </para>
+    /// </summary>
+    [JsonPropertyName("timeout")]
+    [System.Obsolete]
+    public float? Timeout { get; set; }
 }
 
 #nullable disable

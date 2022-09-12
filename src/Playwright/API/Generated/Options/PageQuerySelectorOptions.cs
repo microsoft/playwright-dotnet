@@ -37,31 +37,30 @@ using System.Threading.Tasks;
 
 #nullable enable
 
-namespace Microsoft.Playwright
+namespace Microsoft.Playwright;
+
+public class PageQuerySelectorOptions
 {
-    public class PageQuerySelectorOptions
+    public PageQuerySelectorOptions() { }
+
+    public PageQuerySelectorOptions(PageQuerySelectorOptions clone)
     {
-        public PageQuerySelectorOptions() { }
-
-        public PageQuerySelectorOptions(PageQuerySelectorOptions clone)
+        if (clone == null)
         {
-            if (clone == null)
-            {
-                return;
-            }
-
-            Strict = clone.Strict;
+            return;
         }
 
-        /// <summary>
-        /// <para>
-        /// When true, the call requires selector to resolve to a single element. If given selector
-        /// resolves to more than one element, the call throws an exception.
-        /// </para>
-        /// </summary>
-        [JsonPropertyName("strict")]
-        public bool? Strict { get; set; }
+        Strict = clone.Strict;
     }
+
+    /// <summary>
+    /// <para>
+    /// When true, the call requires selector to resolve to a single element. If given selector
+    /// resolves to more than one element, the call throws an exception.
+    /// </para>
+    /// </summary>
+    [JsonPropertyName("strict")]
+    public bool? Strict { get; set; }
 }
 
 #nullable disable

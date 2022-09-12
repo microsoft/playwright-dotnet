@@ -37,41 +37,40 @@ using System.Threading.Tasks;
 
 #nullable enable
 
-namespace Microsoft.Playwright
+namespace Microsoft.Playwright;
+
+public class MouseClickOptions
 {
-    public class MouseClickOptions
+    public MouseClickOptions() { }
+
+    public MouseClickOptions(MouseClickOptions clone)
     {
-        public MouseClickOptions() { }
-
-        public MouseClickOptions(MouseClickOptions clone)
+        if (clone == null)
         {
-            if (clone == null)
-            {
-                return;
-            }
-
-            Button = clone.Button;
-            ClickCount = clone.ClickCount;
-            Delay = clone.Delay;
+            return;
         }
 
-        /// <summary><para>Defaults to <c>left</c>.</para></summary>
-        [JsonPropertyName("button")]
-        public MouseButton? Button { get; set; }
-
-        /// <summary><para>defaults to 1. See <see cref="UIEvent.detail"/>.</para></summary>
-        [JsonPropertyName("clickCount")]
-        public int? ClickCount { get; set; }
-
-        /// <summary>
-        /// <para>
-        /// Time to wait between <c>mousedown</c> and <c>mouseup</c> in milliseconds. Defaults
-        /// to 0.
-        /// </para>
-        /// </summary>
-        [JsonPropertyName("delay")]
-        public float? Delay { get; set; }
+        Button = clone.Button;
+        ClickCount = clone.ClickCount;
+        Delay = clone.Delay;
     }
+
+    /// <summary><para>Defaults to <c>left</c>.</para></summary>
+    [JsonPropertyName("button")]
+    public MouseButton? Button { get; set; }
+
+    /// <summary><para>defaults to 1. See <see cref="UIEvent.detail"/>.</para></summary>
+    [JsonPropertyName("clickCount")]
+    public int? ClickCount { get; set; }
+
+    /// <summary>
+    /// <para>
+    /// Time to wait between <c>mousedown</c> and <c>mouseup</c> in milliseconds. Defaults
+    /// to 0.
+    /// </para>
+    /// </summary>
+    [JsonPropertyName("delay")]
+    public float? Delay { get; set; }
 }
 
 #nullable disable

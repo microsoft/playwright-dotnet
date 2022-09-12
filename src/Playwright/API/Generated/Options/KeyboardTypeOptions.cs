@@ -37,26 +37,25 @@ using System.Threading.Tasks;
 
 #nullable enable
 
-namespace Microsoft.Playwright
+namespace Microsoft.Playwright;
+
+public class KeyboardTypeOptions
 {
-    public class KeyboardTypeOptions
+    public KeyboardTypeOptions() { }
+
+    public KeyboardTypeOptions(KeyboardTypeOptions clone)
     {
-        public KeyboardTypeOptions() { }
-
-        public KeyboardTypeOptions(KeyboardTypeOptions clone)
+        if (clone == null)
         {
-            if (clone == null)
-            {
-                return;
-            }
-
-            Delay = clone.Delay;
+            return;
         }
 
-        /// <summary><para>Time to wait between key presses in milliseconds. Defaults to 0.</para></summary>
-        [JsonPropertyName("delay")]
-        public float? Delay { get; set; }
+        Delay = clone.Delay;
     }
+
+    /// <summary><para>Time to wait between key presses in milliseconds. Defaults to 0.</para></summary>
+    [JsonPropertyName("delay")]
+    public float? Delay { get; set; }
 }
 
 #nullable disable

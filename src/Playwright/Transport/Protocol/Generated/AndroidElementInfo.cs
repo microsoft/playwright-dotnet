@@ -25,56 +25,55 @@
 using System.Collections.Generic;
 using System.Text.Json.Serialization;
 
-namespace Microsoft.Playwright.Transport.Protocol
+namespace Microsoft.Playwright.Transport.Protocol;
+
+internal class AndroidElementInfo
 {
-    internal class AndroidElementInfo
-    {
-        [JsonPropertyName("children")]
-        public List<AndroidElementInfo> Children { get; set; }
+    [JsonPropertyName("children")]
+    public List<AndroidElementInfo> Children { get; set; }
 
-        [JsonPropertyName("clazz")]
-        public string Clazz { get; set; }
+    [JsonPropertyName("clazz")]
+    public string Clazz { get; set; }
 
-        [JsonPropertyName("desc")]
-        public string Desc { get; set; }
+    [JsonPropertyName("desc")]
+    public string Desc { get; set; }
 
-        [JsonPropertyName("res")]
-        public string Res { get; set; }
+    [JsonPropertyName("res")]
+    public string Res { get; set; }
 
-        [JsonPropertyName("pkg")]
-        public string Pkg { get; set; }
+    [JsonPropertyName("pkg")]
+    public string Pkg { get; set; }
 
-        [JsonPropertyName("text")]
-        public string Text { get; set; }
+    [JsonPropertyName("text")]
+    public string Text { get; set; }
 
-        [JsonPropertyName("bounds")]
-        public Rect Bounds { get; set; }
+    [JsonPropertyName("bounds")]
+    public Rect Bounds { get; set; }
 
-        [JsonPropertyName("checkable")]
-        public bool Checkable { get; set; }
+    [JsonPropertyName("checkable")]
+    public bool Checkable { get; set; }
 
-        [JsonPropertyName("checked")]
-        public bool Checked { get; set; }
+    [JsonPropertyName("checked")]
+    public bool Checked { get; set; }
 
-        [JsonPropertyName("clickable")]
-        public bool Clickable { get; set; }
+    [JsonPropertyName("clickable")]
+    public bool Clickable { get; set; }
 
-        [JsonPropertyName("enabled")]
-        public bool Enabled { get; set; }
+    [JsonPropertyName("enabled")]
+    public bool Enabled { get; set; }
 
-        [JsonPropertyName("focusable")]
-        public bool Focusable { get; set; }
+    [JsonPropertyName("focusable")]
+    public bool Focusable { get; set; }
 
-        [JsonPropertyName("focused")]
-        public bool Focused { get; set; }
+    [JsonPropertyName("focused")]
+    public bool Focused { get; set; }
 
-        [JsonPropertyName("longClickable")]
-        public bool LongClickable { get; set; }
+    [JsonPropertyName("longClickable")]
+    public bool LongClickable { get; set; }
 
-        [JsonPropertyName("scrollable")]
-        public bool Scrollable { get; set; }
+    [JsonPropertyName("scrollable")]
+    public bool Scrollable { get; set; }
 
-        [JsonPropertyName("selected")]
-        public bool Selected { get; set; }
-    }
+    [JsonPropertyName("selected")]
+    public bool Selected { get; set; }
 }

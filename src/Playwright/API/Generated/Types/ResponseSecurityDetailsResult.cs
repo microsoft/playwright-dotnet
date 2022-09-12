@@ -37,40 +37,39 @@ using System.Threading.Tasks;
 
 #nullable enable
 
-namespace Microsoft.Playwright
+namespace Microsoft.Playwright;
+
+public partial class ResponseSecurityDetailsResult
 {
-    public partial class ResponseSecurityDetailsResult
-    {
-        /// <summary>
-        /// <para>
-        /// Common Name component of the Issuer field. from the certificate. This should only
-        /// be used for informational purposes. Optional.
-        /// </para>
-        /// </summary>
-        [JsonPropertyName("issuer")]
-        public string? Issuer { get; set; }
+    /// <summary>
+    /// <para>
+    /// Common Name component of the Issuer field. from the certificate. This should only
+    /// be used for informational purposes. Optional.
+    /// </para>
+    /// </summary>
+    [JsonPropertyName("issuer")]
+    public string? Issuer { get; set; }
 
-        /// <summary><para>The specific TLS protocol used. (e.g. <c>TLS 1.3</c>). Optional.</para></summary>
-        [JsonPropertyName("protocol")]
-        public string? Protocol { get; set; }
+    /// <summary><para>The specific TLS protocol used. (e.g. <c>TLS 1.3</c>). Optional.</para></summary>
+    [JsonPropertyName("protocol")]
+    public string? Protocol { get; set; }
 
-        /// <summary>
-        /// <para>
-        /// Common Name component of the Subject field from the certificate. This should only
-        /// be used for informational purposes. Optional.
-        /// </para>
-        /// </summary>
-        [JsonPropertyName("subjectName")]
-        public string? SubjectName { get; set; }
+    /// <summary>
+    /// <para>
+    /// Common Name component of the Subject field from the certificate. This should only
+    /// be used for informational purposes. Optional.
+    /// </para>
+    /// </summary>
+    [JsonPropertyName("subjectName")]
+    public string? SubjectName { get; set; }
 
-        /// <summary><para>Unix timestamp (in seconds) specifying when this cert becomes valid. Optional.</para></summary>
-        [JsonPropertyName("validFrom")]
-        public float? ValidFrom { get; set; }
+    /// <summary><para>Unix timestamp (in seconds) specifying when this cert becomes valid. Optional.</para></summary>
+    [JsonPropertyName("validFrom")]
+    public float? ValidFrom { get; set; }
 
-        /// <summary><para>Unix timestamp (in seconds) specifying when this cert becomes invalid. Optional.</para></summary>
-        [JsonPropertyName("validTo")]
-        public float? ValidTo { get; set; }
-    }
+    /// <summary><para>Unix timestamp (in seconds) specifying when this cert becomes invalid. Optional.</para></summary>
+    [JsonPropertyName("validTo")]
+    public float? ValidTo { get; set; }
 }
 
 #nullable disable

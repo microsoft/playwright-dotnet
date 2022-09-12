@@ -37,67 +37,66 @@ using System.Threading.Tasks;
 
 #nullable enable
 
-namespace Microsoft.Playwright
+namespace Microsoft.Playwright;
+
+public class RouteFulfillOptions
 {
-    public class RouteFulfillOptions
+    public RouteFulfillOptions() { }
+
+    public RouteFulfillOptions(RouteFulfillOptions clone)
     {
-        public RouteFulfillOptions() { }
-
-        public RouteFulfillOptions(RouteFulfillOptions clone)
+        if (clone == null)
         {
-            if (clone == null)
-            {
-                return;
-            }
-
-            Body = clone.Body;
-            BodyBytes = clone.BodyBytes;
-            ContentType = clone.ContentType;
-            Headers = clone.Headers;
-            Path = clone.Path;
-            Response = clone.Response;
-            Status = clone.Status;
+            return;
         }
 
-        /// <summary><para>Optional response body as text.</para></summary>
-        [JsonPropertyName("body")]
-        public string? Body { get; set; }
-
-        /// <summary><para>Optional response body as raw bytes.</para></summary>
-        [JsonPropertyName("bodyBytes")]
-        public byte[]? BodyBytes { get; set; }
-
-        /// <summary><para>If set, equals to setting <c>Content-Type</c> response header.</para></summary>
-        [JsonPropertyName("contentType")]
-        public string? ContentType { get; set; }
-
-        /// <summary><para>Response headers. Header values will be converted to a string.</para></summary>
-        [JsonPropertyName("headers")]
-        public IEnumerable<KeyValuePair<string, string>>? Headers { get; set; }
-
-        /// <summary>
-        /// <para>
-        /// File path to respond with. The content type will be inferred from file extension.
-        /// If <c>path</c> is a relative path, then it is resolved relative to the current working
-        /// directory.
-        /// </para>
-        /// </summary>
-        [JsonPropertyName("path")]
-        public string? Path { get; set; }
-
-        /// <summary>
-        /// <para>
-        /// <see cref="IAPIResponse"/> to fulfill route's request with. Individual fields of
-        /// the response (such as headers) can be overridden using fulfill options.
-        /// </para>
-        /// </summary>
-        [JsonPropertyName("response")]
-        public IAPIResponse? Response { get; set; }
-
-        /// <summary><para>Response status code, defaults to <c>200</c>.</para></summary>
-        [JsonPropertyName("status")]
-        public int? Status { get; set; }
+        Body = clone.Body;
+        BodyBytes = clone.BodyBytes;
+        ContentType = clone.ContentType;
+        Headers = clone.Headers;
+        Path = clone.Path;
+        Response = clone.Response;
+        Status = clone.Status;
     }
+
+    /// <summary><para>Optional response body as text.</para></summary>
+    [JsonPropertyName("body")]
+    public string? Body { get; set; }
+
+    /// <summary><para>Optional response body as raw bytes.</para></summary>
+    [JsonPropertyName("bodyBytes")]
+    public byte[]? BodyBytes { get; set; }
+
+    /// <summary><para>If set, equals to setting <c>Content-Type</c> response header.</para></summary>
+    [JsonPropertyName("contentType")]
+    public string? ContentType { get; set; }
+
+    /// <summary><para>Response headers. Header values will be converted to a string.</para></summary>
+    [JsonPropertyName("headers")]
+    public IEnumerable<KeyValuePair<string, string>>? Headers { get; set; }
+
+    /// <summary>
+    /// <para>
+    /// File path to respond with. The content type will be inferred from file extension.
+    /// If <c>path</c> is a relative path, then it is resolved relative to the current working
+    /// directory.
+    /// </para>
+    /// </summary>
+    [JsonPropertyName("path")]
+    public string? Path { get; set; }
+
+    /// <summary>
+    /// <para>
+    /// <see cref="IAPIResponse"/> to fulfill route's request with. Individual fields of
+    /// the response (such as headers) can be overridden using fulfill options.
+    /// </para>
+    /// </summary>
+    [JsonPropertyName("response")]
+    public IAPIResponse? Response { get; set; }
+
+    /// <summary><para>Response status code, defaults to <c>200</c>.</para></summary>
+    [JsonPropertyName("status")]
+    public int? Status { get; set; }
 }
 
 #nullable disable

@@ -37,31 +37,30 @@ using System.Threading.Tasks;
 
 #nullable enable
 
-namespace Microsoft.Playwright
+namespace Microsoft.Playwright;
+
+public class AccessibilitySnapshotOptions
 {
-    public class AccessibilitySnapshotOptions
+    public AccessibilitySnapshotOptions() { }
+
+    public AccessibilitySnapshotOptions(AccessibilitySnapshotOptions clone)
     {
-        public AccessibilitySnapshotOptions() { }
-
-        public AccessibilitySnapshotOptions(AccessibilitySnapshotOptions clone)
+        if (clone == null)
         {
-            if (clone == null)
-            {
-                return;
-            }
-
-            InterestingOnly = clone.InterestingOnly;
-            Root = clone.Root;
+            return;
         }
 
-        /// <summary><para>Prune uninteresting nodes from the tree. Defaults to <c>true</c>.</para></summary>
-        [JsonPropertyName("interestingOnly")]
-        public bool? InterestingOnly { get; set; }
-
-        /// <summary><para>The root DOM element for the snapshot. Defaults to the whole page.</para></summary>
-        [JsonPropertyName("root")]
-        public IElementHandle? Root { get; set; }
+        InterestingOnly = clone.InterestingOnly;
+        Root = clone.Root;
     }
+
+    /// <summary><para>Prune uninteresting nodes from the tree. Defaults to <c>true</c>.</para></summary>
+    [JsonPropertyName("interestingOnly")]
+    public bool? InterestingOnly { get; set; }
+
+    /// <summary><para>The root DOM element for the snapshot. Defaults to the whole page.</para></summary>
+    [JsonPropertyName("root")]
+    public IElementHandle? Root { get; set; }
 }
 
 #nullable disable

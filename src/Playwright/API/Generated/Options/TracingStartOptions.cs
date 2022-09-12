@@ -37,62 +37,61 @@ using System.Threading.Tasks;
 
 #nullable enable
 
-namespace Microsoft.Playwright
+namespace Microsoft.Playwright;
+
+public class TracingStartOptions
 {
-    public class TracingStartOptions
+    public TracingStartOptions() { }
+
+    public TracingStartOptions(TracingStartOptions clone)
     {
-        public TracingStartOptions() { }
-
-        public TracingStartOptions(TracingStartOptions clone)
+        if (clone == null)
         {
-            if (clone == null)
-            {
-                return;
-            }
-
-            Name = clone.Name;
-            Screenshots = clone.Screenshots;
-            Snapshots = clone.Snapshots;
-            Sources = clone.Sources;
-            Title = clone.Title;
+            return;
         }
 
-        /// <summary>
-        /// <para>
-        /// If specified, the trace is going to be saved into the file with the given name inside
-        /// the <paramref name="tracesDir"/> folder specified in <see cref="IBrowserType.LaunchAsync"/>.
-        /// </para>
-        /// </summary>
-        [JsonPropertyName("name")]
-        public string? Name { get; set; }
-
-        /// <summary>
-        /// <para>
-        /// Whether to capture screenshots during tracing. Screenshots are used to build a timeline
-        /// preview.
-        /// </para>
-        /// </summary>
-        [JsonPropertyName("screenshots")]
-        public bool? Screenshots { get; set; }
-
-        /// <summary>
-        /// <para>If this option is true tracing will</para>
-        /// <list type="bullet">
-        /// <item><description>capture DOM snapshot on every action</description></item>
-        /// <item><description>record network activity</description></item>
-        /// </list>
-        /// </summary>
-        [JsonPropertyName("snapshots")]
-        public bool? Snapshots { get; set; }
-
-        /// <summary><para>Whether to include source files for trace actions.</para></summary>
-        [JsonPropertyName("sources")]
-        public bool? Sources { get; set; }
-
-        /// <summary><para>Trace name to be shown in the Trace Viewer.</para></summary>
-        [JsonPropertyName("title")]
-        public string? Title { get; set; }
+        Name = clone.Name;
+        Screenshots = clone.Screenshots;
+        Snapshots = clone.Snapshots;
+        Sources = clone.Sources;
+        Title = clone.Title;
     }
+
+    /// <summary>
+    /// <para>
+    /// If specified, the trace is going to be saved into the file with the given name inside
+    /// the <paramref name="tracesDir"/> folder specified in <see cref="IBrowserType.LaunchAsync"/>.
+    /// </para>
+    /// </summary>
+    [JsonPropertyName("name")]
+    public string? Name { get; set; }
+
+    /// <summary>
+    /// <para>
+    /// Whether to capture screenshots during tracing. Screenshots are used to build a timeline
+    /// preview.
+    /// </para>
+    /// </summary>
+    [JsonPropertyName("screenshots")]
+    public bool? Screenshots { get; set; }
+
+    /// <summary>
+    /// <para>If this option is true tracing will</para>
+    /// <list type="bullet">
+    /// <item><description>capture DOM snapshot on every action</description></item>
+    /// <item><description>record network activity</description></item>
+    /// </list>
+    /// </summary>
+    [JsonPropertyName("snapshots")]
+    public bool? Snapshots { get; set; }
+
+    /// <summary><para>Whether to include source files for trace actions.</para></summary>
+    [JsonPropertyName("sources")]
+    public bool? Sources { get; set; }
+
+    /// <summary><para>Trace name to be shown in the Trace Viewer.</para></summary>
+    [JsonPropertyName("title")]
+    public string? Title { get; set; }
 }
 
 #nullable disable

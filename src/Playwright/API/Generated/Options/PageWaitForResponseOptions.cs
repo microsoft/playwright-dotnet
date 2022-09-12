@@ -37,32 +37,31 @@ using System.Threading.Tasks;
 
 #nullable enable
 
-namespace Microsoft.Playwright
+namespace Microsoft.Playwright;
+
+public class PageWaitForResponseOptions
 {
-    public class PageWaitForResponseOptions
+    public PageWaitForResponseOptions() { }
+
+    public PageWaitForResponseOptions(PageWaitForResponseOptions clone)
     {
-        public PageWaitForResponseOptions() { }
-
-        public PageWaitForResponseOptions(PageWaitForResponseOptions clone)
+        if (clone == null)
         {
-            if (clone == null)
-            {
-                return;
-            }
-
-            Timeout = clone.Timeout;
+            return;
         }
 
-        /// <summary>
-        /// <para>
-        /// Maximum wait time in milliseconds, defaults to 30 seconds, pass <c>0</c> to disable
-        /// the timeout. The default value can be changed by using the <see cref="IBrowserContext.SetDefaultTimeout"/>
-        /// or <see cref="IPage.SetDefaultTimeout"/> methods.
-        /// </para>
-        /// </summary>
-        [JsonPropertyName("timeout")]
-        public float? Timeout { get; set; }
+        Timeout = clone.Timeout;
     }
+
+    /// <summary>
+    /// <para>
+    /// Maximum wait time in milliseconds, defaults to 30 seconds, pass <c>0</c> to disable
+    /// the timeout. The default value can be changed by using the <see cref="IBrowserContext.SetDefaultTimeout"/>
+    /// or <see cref="IPage.SetDefaultTimeout"/> methods.
+    /// </para>
+    /// </summary>
+    [JsonPropertyName("timeout")]
+    public float? Timeout { get; set; }
 }
 
 #nullable disable
