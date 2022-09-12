@@ -49,8 +49,8 @@ public class LocatorElementHandleTests : PageTestEx
         await Page.SetContentAsync("<html><body><div>A</div><br/><div>B</div></body></html>");
         var html = Page.Locator("html");
         var elements = await html.Locator("div").ElementHandlesAsync();
-        Assert.That(elements, Has.Count.EqualTo(2));
-        var promises = elements.Select(x => Page.EvaluateAsync<string>("e => e.textContent", x));
+        Assert.AreEqual(2, elements.Count);
+        var promises = elements.Select(element => Page.EvaluateAsync<string>("e => e.textContent", element));
         CollectionAssert.AreEqual(new string[] { "A", "B" }, await Task.WhenAll(promises));
     }
 
@@ -60,7 +60,7 @@ public class LocatorElementHandleTests : PageTestEx
         await Page.SetContentAsync("<html><body><span>A</span><br/><span>B</span></body></html>");
         var html = Page.Locator("html");
         var elements = await html.Locator("div").ElementHandlesAsync();
-        Assert.That(elements, Is.Empty);
+        Assert.AreEqual(0, elements.Count);
     }
 
     [PlaywrightTest("locator-element-handle.spec.ts", "xpath should query existing element")]
@@ -74,13 +74,12 @@ public class LocatorElementHandleTests : PageTestEx
         Assert.AreEqual("A", content);
     }
 
-
     [PlaywrightTest("locator-element-handle.spec.ts", "xpath should return null for non-existing element")]
     public async Task XPathShouldReturnNullForNonExistingElement()
     {
         await Page.SetContentAsync("<html><body><div class=\"second\"><div class=\"inner\">A</div></div></body></html>");
         var html = Page.Locator("html");
         var second = await html.Locator("xpath=/div[contains(@class, 'third')]").ElementHandlesAsync();
-        Assert.That(second, Is.Empty);
+        Assert.AreEqual(0, second.Count);
     }
 }

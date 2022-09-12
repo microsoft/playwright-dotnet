@@ -163,7 +163,7 @@ internal class FrameChannel : Channel<Frame>
     internal async Task<string> TitleAsync()
         => (await Connection.SendMessageToServerAsync(Guid, "title", null).ConfigureAwait(false))?.GetProperty("value").ToString();
 
-    internal Task<ElementHandleChannel> WaitForSelectorAsync(string selector, WaitForSelectorState? state, float? timeout, bool? strict, bool? omitReturnValue)
+    internal Task<ElementHandleChannel> WaitForSelectorAsync(string selector, WaitForSelectorState? state, float? timeout, bool? strict, bool? omitReturnValue = default)
     {
         var args = new Dictionary<string, object>
         {
