@@ -457,7 +457,7 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("browsertype-connect.spec.ts", "should upload large file")]
-        [Skip(SkipAttribute.Targets.Firefox, SkipAttribute.Targets.Webkit)]
+        [Timeout(TestConstants.SlowTestTimeout)]
         public async Task ShouldUploadLargeFile()
         {
             var browser = await BrowserType.ConnectAsync(_remoteServer.WSEndpoint);
