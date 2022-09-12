@@ -30,61 +30,60 @@ using System.Reflection;
 using System.Text.Json;
 using Microsoft.Playwright.Transport.Converters;
 
-namespace Microsoft.Playwright.Core
+namespace Microsoft.Playwright.Core;
+
+internal static class ScriptsHelper
 {
-    internal static class ScriptsHelper
+    private static readonly MethodInfo _parseEvaluateResult = typeof(ScriptsHelper)
+        .GetMethods(BindingFlags.NonPublic | BindingFlags.Static)
+        .Single(m => m.Name == nameof(ParseEvaluateResult) && m.IsGenericMethod);
+
+    internal static object ParseEvaluateResult(JsonElement? element, Type t)
     {
-        private static readonly MethodInfo _parseEvaluateResult = typeof(ScriptsHelper)
-            .GetMethods(BindingFlags.NonPublic | BindingFlags.Static)
-            .Single(m => m.Name == nameof(ParseEvaluateResult) && m.IsGenericMethod);
+        var genericMethod = _parseEvaluateResult.MakeGenericMethod(t);
+        return genericMethod.Invoke(null, new object[] { element });
+    }
 
-        internal static object ParseEvaluateResult(JsonElement? element, Type t)
+    internal static T ParseEvaluateResult<T>(JsonElement? resultOrNull)
+    {
+        if (resultOrNull == null)
         {
-            var genericMethod = _parseEvaluateResult.MakeGenericMethod(t);
-            return genericMethod.Invoke(null, new object[] { element });
+            return default;
         }
 
-        internal static T ParseEvaluateResult<T>(JsonElement? resultOrNull)
+        var result = (JsonElement)resultOrNull;
+
+        if (result.ValueKind == JsonValueKind.Object && result.TryGetProperty("value", out var valueProperty))
         {
-            if (resultOrNull == null)
-            {
-                return default;
-            }
-
-            var result = (JsonElement)resultOrNull;
-
-            if (result.ValueKind == JsonValueKind.Object && result.TryGetProperty("value", out var valueProperty))
-            {
-                result = valueProperty;
-            }
-
-            var parsed = EvaluateArgumentValueConverter.Deserialize(result, typeof(T));
-            if (parsed == null)
-            {
-                return default;
-            }
-
-            return (T)parsed;
+            result = valueProperty;
         }
 
-        internal static object SerializedArgument(object arg)
+        var parsed = EvaluateArgumentValueConverter.Deserialize(result, typeof(T));
+        if (parsed == null)
         {
-            var handles = new List<EvaluateArgumentGuidElement>();
-            return new { value = EvaluateArgumentValueConverter.Serialize(arg, handles, new()), handles };
+            return default;
         }
 
-        internal static string EvaluationScript(string content, string path)
-        {
-            if (!string.IsNullOrEmpty(content))
-            {
-                return content;
-            }
-            else if (!string.IsNullOrEmpty(path))
-            {
-                return File.ReadAllText(path);
-            }
+        return (T)parsed;
+    }
 
-            throw new ArgumentException("Either path or content property must be present");
+    internal static object SerializedArgument(object arg)
+    {
+        var handles = new List<EvaluateArgumentGuidElement>();
+        return new { value = EvaluateArgumentValueConverter.Serialize(arg, handles, new()), handles };
+    }
+
+    internal static string EvaluationScript(string content, string path)
+    {
+        if (!string.IsNullOrEmpty(content))
+        {
+            return content;
         }
+        else if (!string.IsNullOrEmpty(path))
+        {
+            return File.ReadAllText(path);
+        }
+
+        throw new ArgumentException("Either path or content property must be present");
     }
 }

@@ -28,243 +28,242 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.Playwright.NUnit;
 using NUnit.Framework;
 
-namespace Microsoft.Playwright.Tests
+namespace Microsoft.Playwright.Tests;
+
+public class PageAutoWaitingBasicTests : PageTestEx
 {
-    public class PageAutoWaitingBasicTests : PageTestEx
+    [PlaywrightTest("page-autowaiting-basic.spec.ts", "should await navigation when clicking anchor")]
+    [Ignore("Flacky")]
+    public async Task ShouldAwaitNavigationWhenClickingAnchor()
     {
-        [PlaywrightTest("page-autowaiting-basic.spec.ts", "should await navigation when clicking anchor")]
-        [Ignore("Flacky")]
-        public async Task ShouldAwaitNavigationWhenClickingAnchor()
+        var messages = new List<string>();
+        Server.SetRoute("/empty.html", context =>
         {
-            var messages = new List<string>();
-            Server.SetRoute("/empty.html", context =>
-            {
-                messages.Add("route");
-                context.Response.ContentType = "text/html";
-                return context.Response.WriteAsync("<link rel='stylesheet' href='./one-style.css'>");
-            });
+            messages.Add("route");
+            context.Response.ContentType = "text/html";
+            return context.Response.WriteAsync("<link rel='stylesheet' href='./one-style.css'>");
+        });
 
-            await Page.SetContentAsync($"<a href=\"{Server.EmptyPage}\">empty.html</a>");
-            await TaskUtils.WhenAll(
-                Page.ClickAsync("a").ContinueWith(_ => messages.Add("click")),
-                Page.WaitForNavigationAsync().ContinueWith(_ => messages.Add("navigated")));
+        await Page.SetContentAsync($"<a href=\"{Server.EmptyPage}\">empty.html</a>");
+        await TaskUtils.WhenAll(
+            Page.ClickAsync("a").ContinueWith(_ => messages.Add("click")),
+            Page.WaitForNavigationAsync().ContinueWith(_ => messages.Add("navigated")));
 
-            Assert.AreEqual("route|navigated|click", string.Join("|", messages));
-        }
+        Assert.AreEqual("route|navigated|click", string.Join("|", messages));
+    }
 
-        [PlaywrightTest("page-autowaiting-basic.spec.ts", "should await cross-process navigation when clicking anchor")]
-        [Ignore("Flacky")]
-        public async Task ShouldAwaitCrossProcessNavigationWhenClickingAnchor()
+    [PlaywrightTest("page-autowaiting-basic.spec.ts", "should await cross-process navigation when clicking anchor")]
+    [Ignore("Flacky")]
+    public async Task ShouldAwaitCrossProcessNavigationWhenClickingAnchor()
+    {
+        var messages = new List<string>();
+        Server.SetRoute("/empty.html", context =>
         {
-            var messages = new List<string>();
-            Server.SetRoute("/empty.html", context =>
-            {
-                messages.Add("route");
-                context.Response.ContentType = "text/html";
-                return context.Response.WriteAsync("<link rel='stylesheet' href='./one-style.css'>");
-            });
+            messages.Add("route");
+            context.Response.ContentType = "text/html";
+            return context.Response.WriteAsync("<link rel='stylesheet' href='./one-style.css'>");
+        });
 
-            await Page.SetContentAsync($"<a href=\"{Server.CrossProcessPrefix}/empty.html\">empty.html</a>");
-            await TaskUtils.WhenAll(
-                Page.ClickAsync("a").ContinueWith(_ => messages.Add("click")),
-                Page.WaitForNavigationAsync().ContinueWith(_ => messages.Add("navigated")));
+        await Page.SetContentAsync($"<a href=\"{Server.CrossProcessPrefix}/empty.html\">empty.html</a>");
+        await TaskUtils.WhenAll(
+            Page.ClickAsync("a").ContinueWith(_ => messages.Add("click")),
+            Page.WaitForNavigationAsync().ContinueWith(_ => messages.Add("navigated")));
 
-            Assert.AreEqual("route|navigated|click", string.Join("|", messages));
-        }
+        Assert.AreEqual("route|navigated|click", string.Join("|", messages));
+    }
 
-        [PlaywrightTest("page-autowaiting-basic.spec.ts", "should await form-get on click")]
-        [Ignore("Flacky")]
-        public async Task ShouldAwaitFormGetOnClick()
+    [PlaywrightTest("page-autowaiting-basic.spec.ts", "should await form-get on click")]
+    [Ignore("Flacky")]
+    public async Task ShouldAwaitFormGetOnClick()
+    {
+        var messages = new List<string>();
+        Server.SetRoute("/empty.html?foo=bar", context =>
         {
-            var messages = new List<string>();
-            Server.SetRoute("/empty.html?foo=bar", context =>
-            {
-                messages.Add("route");
-                context.Response.ContentType = "text/html";
-                return context.Response.WriteAsync("<link rel='stylesheet' href='./one-style.css'>");
-            });
+            messages.Add("route");
+            context.Response.ContentType = "text/html";
+            return context.Response.WriteAsync("<link rel='stylesheet' href='./one-style.css'>");
+        });
 
-            await Page.SetContentAsync($@"
+        await Page.SetContentAsync($@"
                 <form action=""{Server.EmptyPage}"" method=""get"">
                     <input name=""foo"" value=""bar"">
                     <input type=""submit"" value=""Submit"">
                 </form>");
 
-            await TaskUtils.WhenAll(
-                Page.ClickAsync("input[type=submit]").ContinueWith(_ => messages.Add("click")),
-                Page.WaitForNavigationAsync().ContinueWith(_ => messages.Add("navigated")));
+        await TaskUtils.WhenAll(
+            Page.ClickAsync("input[type=submit]").ContinueWith(_ => messages.Add("click")),
+            Page.WaitForNavigationAsync().ContinueWith(_ => messages.Add("navigated")));
 
-            Assert.AreEqual("route|navigated|click", string.Join("|", messages));
-        }
+        Assert.AreEqual("route|navigated|click", string.Join("|", messages));
+    }
 
-        [PlaywrightTest("page-autowaiting-basic.spec.ts", "should await form-post on click")]
-        [Ignore("Flacky")]
-        public async Task ShouldAwaitFormPostOnClick()
+    [PlaywrightTest("page-autowaiting-basic.spec.ts", "should await form-post on click")]
+    [Ignore("Flacky")]
+    public async Task ShouldAwaitFormPostOnClick()
+    {
+        var messages = new List<string>();
+        Server.SetRoute("/empty.html", context =>
         {
-            var messages = new List<string>();
-            Server.SetRoute("/empty.html", context =>
-            {
-                messages.Add("route");
-                context.Response.ContentType = "text/html";
-                return context.Response.WriteAsync("<link rel='stylesheet' href='./one-style.css'>");
-            });
+            messages.Add("route");
+            context.Response.ContentType = "text/html";
+            return context.Response.WriteAsync("<link rel='stylesheet' href='./one-style.css'>");
+        });
 
-            await Page.SetContentAsync($@"
+        await Page.SetContentAsync($@"
                 <form action=""{Server.EmptyPage}"" method=""post"">
                     <input name=""foo"" value=""bar"">
                     <input type=""submit"" value=""Submit"">
                 </form>");
 
-            await TaskUtils.WhenAll(
-                Page.ClickAsync("input[type=submit]").ContinueWith(_ => messages.Add("click")),
-                Page.WaitForNavigationAsync().ContinueWith(_ => messages.Add("navigated")));
+        await TaskUtils.WhenAll(
+            Page.ClickAsync("input[type=submit]").ContinueWith(_ => messages.Add("click")),
+            Page.WaitForNavigationAsync().ContinueWith(_ => messages.Add("navigated")));
 
-            Assert.AreEqual("route|navigated|click", string.Join("|", messages));
-        }
+        Assert.AreEqual("route|navigated|click", string.Join("|", messages));
+    }
 
-        [PlaywrightTest("page-autowaiting-basic.spec.ts", "should await navigation when assigning location")]
-        [Ignore("Flacky")]
-        public async Task ShouldAwaitNavigationWhenAssigningLocation()
+    [PlaywrightTest("page-autowaiting-basic.spec.ts", "should await navigation when assigning location")]
+    [Ignore("Flacky")]
+    public async Task ShouldAwaitNavigationWhenAssigningLocation()
+    {
+        var messages = new List<string>();
+        Server.SetRoute("/empty.html", context =>
         {
-            var messages = new List<string>();
-            Server.SetRoute("/empty.html", context =>
-            {
-                messages.Add("route");
-                context.Response.ContentType = "text/html";
-                return context.Response.WriteAsync("<link rel='stylesheet' href='./one-style.css'>");
-            });
+            messages.Add("route");
+            context.Response.ContentType = "text/html";
+            return context.Response.WriteAsync("<link rel='stylesheet' href='./one-style.css'>");
+        });
 
-            await TaskUtils.WhenAll(
-                Page.EvaluateAsync($"window.location.href = '{Server.EmptyPage}'").ContinueWith(_ => messages.Add("evaluate")),
-                Page.WaitForNavigationAsync().ContinueWith(_ => messages.Add("navigated")));
+        await TaskUtils.WhenAll(
+            Page.EvaluateAsync($"window.location.href = '{Server.EmptyPage}'").ContinueWith(_ => messages.Add("evaluate")),
+            Page.WaitForNavigationAsync().ContinueWith(_ => messages.Add("navigated")));
 
-            Assert.AreEqual("route|navigated|evaluate", string.Join("|", messages));
-        }
+        Assert.AreEqual("route|navigated|evaluate", string.Join("|", messages));
+    }
 
-        [PlaywrightTest("page-autowaiting-basic.spec.ts", "should await navigation when assigning location twice")]
-        public async Task ShouldAwaitNavigationWhenAssigningLocationTwice()
+    [PlaywrightTest("page-autowaiting-basic.spec.ts", "should await navigation when assigning location twice")]
+    public async Task ShouldAwaitNavigationWhenAssigningLocationTwice()
+    {
+        var messages = new List<string>();
+        Server.SetRoute("/empty.html?cancel", context =>
         {
-            var messages = new List<string>();
-            Server.SetRoute("/empty.html?cancel", context =>
-            {
-                return context.Response.WriteAsync("done");
-            });
+            return context.Response.WriteAsync("done");
+        });
 
-            Server.SetRoute("/empty.html?override", context =>
-            {
-                messages.Add("routeoverride");
-                return context.Response.WriteAsync("done");
-            });
+        Server.SetRoute("/empty.html?override", context =>
+        {
+            messages.Add("routeoverride");
+            return context.Response.WriteAsync("done");
+        });
 
-            await Page.EvaluateAsync($@"
+        await Page.EvaluateAsync($@"
                 window.location.href = '{Server.EmptyPage}?cancel';
                 window.location.href = '{Server.EmptyPage}?override';");
-            messages.Add("evaluate");
+        messages.Add("evaluate");
 
-            Assert.AreEqual("routeoverride|evaluate", string.Join("|", messages));
-        }
+        Assert.AreEqual("routeoverride|evaluate", string.Join("|", messages));
+    }
 
-        [PlaywrightTest("page-autowaiting-basic.spec.ts", "should await navigation when evaluating reload")]
-        [Ignore("Flacky")]
-        public async Task ShouldAwaitNavigationWhenEvaluatingReload()
+    [PlaywrightTest("page-autowaiting-basic.spec.ts", "should await navigation when evaluating reload")]
+    [Ignore("Flacky")]
+    public async Task ShouldAwaitNavigationWhenEvaluatingReload()
+    {
+        var messages = new List<string>();
+        await Page.GotoAsync(Server.EmptyPage);
+        Server.SetRoute("/empty.html", context =>
         {
-            var messages = new List<string>();
-            await Page.GotoAsync(Server.EmptyPage);
-            Server.SetRoute("/empty.html", context =>
-            {
-                messages.Add("route");
-                context.Response.ContentType = "text/html";
-                return context.Response.WriteAsync("<link rel='stylesheet' href='./one-style.css'>");
-            });
+            messages.Add("route");
+            context.Response.ContentType = "text/html";
+            return context.Response.WriteAsync("<link rel='stylesheet' href='./one-style.css'>");
+        });
 
-            await TaskUtils.WhenAll(
-                Page.EvaluateAsync($"window.location.reload();").ContinueWith(_ => messages.Add("evaluate")),
-                Page.WaitForNavigationAsync().ContinueWith(_ => messages.Add("navigated")));
+        await TaskUtils.WhenAll(
+            Page.EvaluateAsync($"window.location.reload();").ContinueWith(_ => messages.Add("evaluate")),
+            Page.WaitForNavigationAsync().ContinueWith(_ => messages.Add("navigated")));
 
-            Assert.AreEqual("route|navigated|evaluate", string.Join("|", messages));
-        }
+        Assert.AreEqual("route|navigated|evaluate", string.Join("|", messages));
+    }
 
-        [PlaywrightTest("page-autowaiting-basic.spec.ts", "should await navigating specified target")]
-        [Ignore("Flacky")]
-        public async Task ShouldAwaitNavigatingSpecifiedTarget()
+    [PlaywrightTest("page-autowaiting-basic.spec.ts", "should await navigating specified target")]
+    [Ignore("Flacky")]
+    public async Task ShouldAwaitNavigatingSpecifiedTarget()
+    {
+        var messages = new List<string>();
+        Server.SetRoute("/empty.html", context =>
         {
-            var messages = new List<string>();
-            Server.SetRoute("/empty.html", context =>
-            {
-                messages.Add("route");
-                context.Response.ContentType = "text/html";
-                return context.Response.WriteAsync("<link rel='stylesheet' href='./one-style.css'>");
-            });
+            messages.Add("route");
+            context.Response.ContentType = "text/html";
+            return context.Response.WriteAsync("<link rel='stylesheet' href='./one-style.css'>");
+        });
 
-            await Page.SetContentAsync($@"
+        await Page.SetContentAsync($@"
                 <a href=""{Server.EmptyPage}"" target=target>empty.html</a>
                 <iframe name=target></iframe>");
 
-            var frame = Page.Frame("target");
+        var frame = Page.Frame("target");
 
-            await TaskUtils.WhenAll(
-                Page.ClickAsync("a").ContinueWith(_ => messages.Add("click")),
-                Page.WaitForNavigationAsync().ContinueWith(_ => messages.Add("navigated")));
+        await TaskUtils.WhenAll(
+            Page.ClickAsync("a").ContinueWith(_ => messages.Add("click")),
+            Page.WaitForNavigationAsync().ContinueWith(_ => messages.Add("navigated")));
 
-            Assert.AreEqual(Server.EmptyPage, frame.Url);
-            Assert.AreEqual("route|navigated|click", string.Join("|", messages));
-        }
+        Assert.AreEqual(Server.EmptyPage, frame.Url);
+        Assert.AreEqual("route|navigated|click", string.Join("|", messages));
+    }
 
-        [PlaywrightTest("page-autowaiting-basic.spec.ts", "should work with noWaitAfter: true")]
-        public async Task ShouldWorkWithNoWaitAfterTrue()
+    [PlaywrightTest("page-autowaiting-basic.spec.ts", "should work with noWaitAfter: true")]
+    public async Task ShouldWorkWithNoWaitAfterTrue()
+    {
+        Server.SetRoute("/empty.html", _ => Task.CompletedTask);
+        await Page.SetContentAsync($"<a id=anchor href='{Server.EmptyPage}'>empty.html</a>");
+        await Page.ClickAsync("a", new() { NoWaitAfter = true });
+    }
+
+    [PlaywrightTest("page-autowaiting-basic.spec.ts", "should work with waitForLoadState(load)")]
+    [Ignore("Flacky")]
+    public async Task ShouldWorkWithWaitForLoadStateLoad()
+    {
+        var messages = new List<string>();
+        Server.SetRoute("/empty.html", context =>
         {
-            Server.SetRoute("/empty.html", _ => Task.CompletedTask);
-            await Page.SetContentAsync($"<a id=anchor href='{Server.EmptyPage}'>empty.html</a>");
-            await Page.ClickAsync("a", new() { NoWaitAfter = true });
-        }
+            messages.Add("route");
+            context.Response.ContentType = "text/html";
+            return context.Response.WriteAsync("<link rel='stylesheet' href='./one-style.css'>");
+        });
 
-        [PlaywrightTest("page-autowaiting-basic.spec.ts", "should work with waitForLoadState(load)")]
-        [Ignore("Flacky")]
-        public async Task ShouldWorkWithWaitForLoadStateLoad()
-        {
-            var messages = new List<string>();
-            Server.SetRoute("/empty.html", context =>
+        await Page.SetContentAsync($"<a href=\"{Server.EmptyPage}\">empty.html</a>");
+        var clickLoaded = new TaskCompletionSource<bool>();
+
+        await TaskUtils.WhenAll(
+            Page.ClickAsync("a").ContinueWith(_ => Page.WaitForLoadStateAsync(LoadState.Load).ContinueWith(_ =>
             {
-                messages.Add("route");
-                context.Response.ContentType = "text/html";
-                return context.Response.WriteAsync("<link rel='stylesheet' href='./one-style.css'>");
-            });
+                messages.Add("clickload");
+                clickLoaded.TrySetResult(true);
+            })),
+            clickLoaded.Task,
+            Page.WaitForNavigationAsync(new() { WaitUntil = WaitUntilState.DOMContentLoaded }).ContinueWith(_ => messages.Add("domcontentloaded")));
 
-            await Page.SetContentAsync($"<a href=\"{Server.EmptyPage}\">empty.html</a>");
-            var clickLoaded = new TaskCompletionSource<bool>();
+        Assert.AreEqual("route|domcontentloaded|clickload", string.Join("|", messages));
+    }
 
-            await TaskUtils.WhenAll(
-                Page.ClickAsync("a").ContinueWith(_ => Page.WaitForLoadStateAsync(LoadState.Load).ContinueWith(_ =>
-                {
-                    messages.Add("clickload");
-                    clickLoaded.TrySetResult(true);
-                })),
-                clickLoaded.Task,
-                Page.WaitForNavigationAsync(new() { WaitUntil = WaitUntilState.DOMContentLoaded }).ContinueWith(_ => messages.Add("domcontentloaded")));
-
-            Assert.AreEqual("route|domcontentloaded|clickload", string.Join("|", messages));
-        }
-
-        [PlaywrightTest("page-autowaiting-basic.spec.ts", "should work with goto following click")]
-        public async Task ShouldWorkWithGotoFollowingClick()
+    [PlaywrightTest("page-autowaiting-basic.spec.ts", "should work with goto following click")]
+    public async Task ShouldWorkWithGotoFollowingClick()
+    {
+        var messages = new List<string>();
+        Server.SetRoute("/empty.html", context =>
         {
-            var messages = new List<string>();
-            Server.SetRoute("/empty.html", context =>
-            {
-                messages.Add("route");
-                context.Response.ContentType = "text/html";
-                return context.Response.WriteAsync("You are logged in");
-            });
+            messages.Add("route");
+            context.Response.ContentType = "text/html";
+            return context.Response.WriteAsync("You are logged in");
+        });
 
-            await Page.SetContentAsync($@"
+        await Page.SetContentAsync($@"
                 <form action=""{Server.EmptyPage}/login.html"" method=""get"">
                     <input type=""text"">
                     <input type=""submit"" value=""Submit"">
                 </form>");
 
-            await Page.FillAsync("input[type=text]", "admin");
-            await Page.ClickAsync("input[type=submit]");
-            await Page.GotoAsync(Server.EmptyPage);
-        }
+        await Page.FillAsync("input[type=text]", "admin");
+        await Page.ClickAsync("input[type=submit]");
+        await Page.GotoAsync(Server.EmptyPage);
     }
 }

@@ -28,20 +28,20 @@ using System.Threading.Tasks;
 using NUnit.Framework;
 
 
-namespace Microsoft.Playwright.Tests
+namespace Microsoft.Playwright.Tests;
+
+/// <playwright-file>network-post-data.spec.ts</playwright-file>
+public sealed class NetworkPostDataTests : PageTestEx
 {
     /// <playwright-file>network-post-data.spec.ts</playwright-file>
-    public sealed class NetworkPostDataTests : PageTestEx
+    /// <playwright-it>should return correct postData buffer for utf-8 body</playwright-it>
+    public async Task ShouldReturnCorrectPostdataBufferForUtf8Body()
     {
-        /// <playwright-file>network-post-data.spec.ts</playwright-file>
-        /// <playwright-it>should return correct postData buffer for utf-8 body</playwright-it>
-        public async Task ShouldReturnCorrectPostdataBufferForUtf8Body()
-        {
-            await Page.GotoAsync(Server.EmptyPage);
-            string value = "baẞ";
+        await Page.GotoAsync(Server.EmptyPage);
+        string value = "baẞ";
 
-            var task = Page.WaitForRequestAsync("**/*");
-            var actualTask = Page.EvaluateAsync(@$"() => {{
+        var task = Page.WaitForRequestAsync("**/*");
+        var actualTask = Page.EvaluateAsync(@$"() => {{
                       const request = new Request('{Server.Prefix + "/title.html"}', {{
                         method: 'POST',
                         body: JSON.stringify('{value}'),
@@ -50,27 +50,27 @@ namespace Microsoft.Playwright.Tests
                       return fetch(request);
                     }}");
 
-            await Task.WhenAll(task, actualTask);
+        await Task.WhenAll(task, actualTask);
 
-            string expectedJsonValue = JsonSerializer.Serialize(value, new JsonSerializerOptions()
-            {
-                Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping,
-                WriteIndented = true
-            });
-
-            var request = task.Result;
-            Assert.AreEqual(expectedJsonValue, request.PostData);
-            Assert.AreEqual(value, request.PostDataJSON()?.GetString());
-        }
-
-        /// <playwright-file>network-post-data.spec.ts</playwright-file>
-        /// <playwright-it>should return post data w/o content-type</playwright-it>
-        public async Task ShouldReturnPostDataWOContentType()
+        string expectedJsonValue = JsonSerializer.Serialize(value, new JsonSerializerOptions()
         {
-            await Page.GotoAsync(Server.EmptyPage);
+            Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping,
+            WriteIndented = true
+        });
 
-            var task = Page.WaitForRequestAsync("**/*");
-            var actualTask = Page.EvaluateAsync(@"(url) => {
+        var request = task.Result;
+        Assert.AreEqual(expectedJsonValue, request.PostData);
+        Assert.AreEqual(value, request.PostDataJSON()?.GetString());
+    }
+
+    /// <playwright-file>network-post-data.spec.ts</playwright-file>
+    /// <playwright-it>should return post data w/o content-type</playwright-it>
+    public async Task ShouldReturnPostDataWOContentType()
+    {
+        await Page.GotoAsync(Server.EmptyPage);
+
+        var task = Page.WaitForRequestAsync("**/*");
+        var actualTask = Page.EvaluateAsync(@"(url) => {
                       const request = new Request(url, {
                         method: 'POST',
                         body: JSON.stringify({ value: 42 }),
@@ -79,20 +79,20 @@ namespace Microsoft.Playwright.Tests
                       return fetch(request);
                     }", Server.Prefix + "/title.html");
 
-            await Task.WhenAll(task, actualTask);
+        await Task.WhenAll(task, actualTask);
 
-            var request = task.Result;
-            Assert.AreEqual(42, request.PostDataJSON()?.GetProperty("value").GetInt32());
-        }
+        var request = task.Result;
+        Assert.AreEqual(42, request.PostDataJSON()?.GetProperty("value").GetInt32());
+    }
 
-        /// <playwright-file>network-post-data.spec.ts</playwright-file>
-        /// <playwright-it>should throw on invalid JSON in post data</playwright-it>
-        public async Task ShouldThrowOnInvalidJSONInPostData()
-        {
-            await Page.GotoAsync(Server.EmptyPage);
+    /// <playwright-file>network-post-data.spec.ts</playwright-file>
+    /// <playwright-it>should throw on invalid JSON in post data</playwright-it>
+    public async Task ShouldThrowOnInvalidJSONInPostData()
+    {
+        await Page.GotoAsync(Server.EmptyPage);
 
-            var task = Page.WaitForRequestAsync("**/*");
-            var actualTask = Page.EvaluateAsync(@"(url) => {
+        var task = Page.WaitForRequestAsync("**/*");
+        var actualTask = Page.EvaluateAsync(@"(url) => {
                       const request = new Request(url, {
                         method: 'POST',
                         body: '<not a json>',
@@ -100,20 +100,20 @@ namespace Microsoft.Playwright.Tests
                       return fetch(request);
                     }", Server.Prefix + "/title.html");
 
-            await Task.WhenAll(task, actualTask);
+        await Task.WhenAll(task, actualTask);
 
-            var request = task.Result;
-            Assert.That(() => request.PostDataJSON(), Throws.Exception);
-        }
+        var request = task.Result;
+        Assert.That(() => request.PostDataJSON(), Throws.Exception);
+    }
 
-        /// <playwright-file>network-post-data.spec.ts</playwright-file>
-        /// <playwright-it>should return post data for PUT requests</playwright-it>
-        public async Task ShouldReturnPostDataForPUTRequests()
-        {
-            await Page.GotoAsync(Server.EmptyPage);
+    /// <playwright-file>network-post-data.spec.ts</playwright-file>
+    /// <playwright-it>should return post data for PUT requests</playwright-it>
+    public async Task ShouldReturnPostDataForPUTRequests()
+    {
+        await Page.GotoAsync(Server.EmptyPage);
 
-            var task = Page.WaitForRequestAsync("**/*");
-            var actualTask = Page.EvaluateAsync(@"(url) => {
+        var task = Page.WaitForRequestAsync("**/*");
+        var actualTask = Page.EvaluateAsync(@"(url) => {
                       const request = new Request(url, {
                         method: 'PUT',
                         body: JSON.stringify({ value: 42 }),
@@ -121,10 +121,9 @@ namespace Microsoft.Playwright.Tests
                       return fetch(request);
                     }", Server.Prefix + "/title.html");
 
-            await Task.WhenAll(task, actualTask);
+        await Task.WhenAll(task, actualTask);
 
-            var request = task.Result;
-            Assert.AreEqual(42, request.PostDataJSON()?.GetProperty("value").GetInt32());
-        }
+        var request = task.Result;
+        Assert.AreEqual(42, request.PostDataJSON()?.GetProperty("value").GetInt32());
     }
 }

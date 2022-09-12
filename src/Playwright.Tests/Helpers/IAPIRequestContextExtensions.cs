@@ -25,31 +25,30 @@
 using System;
 using System.Threading.Tasks;
 
-namespace Microsoft.Playwright.Tests
+namespace Microsoft.Playwright.Tests;
+
+internal static class IAPIRequestContextExtensions
 {
-    internal static class IAPIRequestContextExtensions
+    internal static Func<string, APIRequestContextOptions, Task<IAPIResponse>> NameToMethod(this IAPIRequestContext request, string method)
     {
-        internal static Func<string, APIRequestContextOptions, Task<IAPIResponse>> NameToMethod(this IAPIRequestContext request, string method)
+        switch (method)
         {
-            switch (method)
-            {
-                case "fetch":
-                    return request.FetchAsync;
-                case "delete":
-                    return request.DeleteAsync;
-                case "get":
-                    return request.GetAsync;
-                case "head":
-                    return request.HeadAsync;
-                case "patch":
-                    return request.PatchAsync;
-                case "post":
-                    return request.PostAsync;
-                case "put":
-                    return request.PutAsync;
-                default:
-                    throw new ArgumentOutOfRangeException(nameof(method));
-            }
+            case "fetch":
+                return request.FetchAsync;
+            case "delete":
+                return request.DeleteAsync;
+            case "get":
+                return request.GetAsync;
+            case "head":
+                return request.HeadAsync;
+            case "patch":
+                return request.PatchAsync;
+            case "post":
+                return request.PostAsync;
+            case "put":
+                return request.PutAsync;
+            default:
+                throw new ArgumentOutOfRangeException(nameof(method));
         }
     }
 }

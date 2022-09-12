@@ -25,31 +25,31 @@ using System.Threading.Tasks;
 using Microsoft.Playwright.NUnit;
 using NUnit.Framework;
 
-namespace Microsoft.Playwright.Tests
-{
-    /// <playwright-file>tap.spec.ts</playwright-file>
-    public sealed class TapTests : PageTestEx
-    {
-        public override BrowserNewContextOptions ContextOptions()
-        {
-            return new() { HasTouch = true };
-        }
+namespace Microsoft.Playwright.Tests;
 
-        [PlaywrightTest("tap.spec.ts", "should send all of the correct events")]
-        public async Task ShouldSendAllOfTheCorrectEvents()
-        {
-            await Page.SetContentAsync(
-                @"<div id=""a"" style=""background: lightblue; width: 50px; height: 50px"">a</div>
+/// <playwright-file>tap.spec.ts</playwright-file>
+public sealed class TapTests : PageTestEx
+{
+    public override BrowserNewContextOptions ContextOptions()
+    {
+        return new() { HasTouch = true };
+    }
+
+    [PlaywrightTest("tap.spec.ts", "should send all of the correct events")]
+    public async Task ShouldSendAllOfTheCorrectEvents()
+    {
+        await Page.SetContentAsync(
+            @"<div id=""a"" style=""background: lightblue; width: 50px; height: 50px"">a</div>
                 <div id=""b"" style=""background: pink; width: 50px; height: 50px"">b</div>");
 
-            await Page.TapAsync("#a");
-            var handle = await TrackEventsAsync("#b");
-            await Page.TapAsync("#b");
+        await Page.TapAsync("#a");
+        var handle = await TrackEventsAsync("#b");
+        await Page.TapAsync("#b");
 
-            string[] result = await handle.JsonValueAsync<string[]>();
+        string[] result = await handle.JsonValueAsync<string[]>();
 
-            Assert.AreEqual(result, new string[]
-            {
+        Assert.AreEqual(result, new string[]
+        {
                 "pointerover",  "pointerenter",
                 "pointerdown",  "touchstart",
                 "pointerup",    "pointerout",
@@ -57,120 +57,120 @@ namespace Microsoft.Playwright.Tests
                 "mouseover",    "mouseenter",
                 "mousemove",    "mousedown",
                 "mouseup",      "click",
-            });
-        }
+        });
+    }
 
-        [PlaywrightTest("tap.spec.ts", "trial run should not tap")]
-        public async Task TrialRunShouldNotTap()
-        {
-            await Page.SetContentAsync(
-                @"<div id=""a"" style=""background: lightblue; width: 50px; height: 50px"">a</div>
+    [PlaywrightTest("tap.spec.ts", "trial run should not tap")]
+    public async Task TrialRunShouldNotTap()
+    {
+        await Page.SetContentAsync(
+            @"<div id=""a"" style=""background: lightblue; width: 50px; height: 50px"">a</div>
                 <div id=""b"" style=""background: pink; width: 50px; height: 50px"">b</div>");
 
-            await Page.TapAsync("#a");
-            var handle = await TrackEventsAsync("#b");
-            await Page.TapAsync("#b", new() { Trial = true });
+        await Page.TapAsync("#a");
+        var handle = await TrackEventsAsync("#b");
+        await Page.TapAsync("#b", new() { Trial = true });
 
-            string[] result = await handle.JsonValueAsync<string[]>();
-            Assert.AreEqual(result, new string[] { "pointerover", "pointerenter", "pointerout", "pointerleave" });
-        }
+        string[] result = await handle.JsonValueAsync<string[]>();
+        Assert.AreEqual(result, new string[] { "pointerover", "pointerenter", "pointerout", "pointerleave" });
+    }
 
-        [PlaywrightTest("tap.spec.ts", "should not send mouse events touchstart is canceled")]
-        public async Task ShouldNotSendMouseEventsTouchStartIsCanceled()
-        {
-            await Page.SetContentAsync(@"<div id=""a"" style=""background: lightblue; width: 50px; height: 50px"">a</div>");
-            await Page.EvaluateAsync(
-                @"() => {
+    [PlaywrightTest("tap.spec.ts", "should not send mouse events touchstart is canceled")]
+    public async Task ShouldNotSendMouseEventsTouchStartIsCanceled()
+    {
+        await Page.SetContentAsync(@"<div id=""a"" style=""background: lightblue; width: 50px; height: 50px"">a</div>");
+        await Page.EvaluateAsync(
+            @"() => {
                     document.addEventListener('touchstart', t => t.preventDefault(), {passive: false});
                 }");
 
-            var handle = await TrackEventsAsync("div");
-            await Page.TapAsync("div");
+        var handle = await TrackEventsAsync("div");
+        await Page.TapAsync("div");
 
-            string[] result = await handle.JsonValueAsync<string[]>();
+        string[] result = await handle.JsonValueAsync<string[]>();
 
-            Assert.AreEqual(result, new string[]
-            {
+        Assert.AreEqual(result, new string[]
+        {
                 "pointerover",  "pointerenter",
                 "pointerdown",  "touchstart",
                 "pointerup",    "pointerout",
                 "pointerleave", "touchend",
-            });
-        }
+        });
+    }
 
-        [PlaywrightTest("tap.spec.ts", "should not send mouse events when touchend is canceled")]
-        public async Task ShouldNotSendMouseEventsWhenTouchEndIsCanceled()
-        {
-            await Page.SetContentAsync(@"<div id=""a"" style=""background: lightblue; width: 50px; height: 50px"">a</div>");
-            await Page.EvaluateAsync(
-                @"() => {
+    [PlaywrightTest("tap.spec.ts", "should not send mouse events when touchend is canceled")]
+    public async Task ShouldNotSendMouseEventsWhenTouchEndIsCanceled()
+    {
+        await Page.SetContentAsync(@"<div id=""a"" style=""background: lightblue; width: 50px; height: 50px"">a</div>");
+        await Page.EvaluateAsync(
+            @"() => {
                     document.addEventListener('touchend', t => t.preventDefault());
                 }");
 
-            var handle = await TrackEventsAsync("div");
-            await Page.TapAsync("div");
+        var handle = await TrackEventsAsync("div");
+        await Page.TapAsync("div");
 
-            string[] result = await handle.JsonValueAsync<string[]>();
+        string[] result = await handle.JsonValueAsync<string[]>();
 
-            Assert.AreEqual(result, new string[]
-            {
+        Assert.AreEqual(result, new string[]
+        {
                 "pointerover",  "pointerenter",
                 "pointerdown",  "touchstart",
                 "pointerup",    "pointerout",
                 "pointerleave", "touchend",
-            });
-        }
+        });
+    }
 
-        [PlaywrightTest("tap.spec.ts", "should wait for a navigation caused by a tap")]
-        public async Task ShouldWaitForANavigationCausedByATap()
+    [PlaywrightTest("tap.spec.ts", "should wait for a navigation caused by a tap")]
+    public async Task ShouldWaitForANavigationCausedByATap()
+    {
+        var requestResponse = new TaskCompletionSource<bool>();
+        string route = "/intercept-this.html";
+        await Page.GotoAsync(Server.EmptyPage);
+        Server.SetRoute(route, _ =>
         {
-            var requestResponse = new TaskCompletionSource<bool>();
-            string route = "/intercept-this.html";
-            await Page.GotoAsync(Server.EmptyPage);
-            Server.SetRoute(route, _ =>
-            {
-                requestResponse.SetResult(true);
-                return requestResponse.Task;
-            });
+            requestResponse.SetResult(true);
+            return requestResponse.Task;
+        });
 
-            await Page.SetContentAsync($@"<a href=""{route}"">link</a>");
-            bool loaded = false;
-            var awaitTask = Page.TapAsync("a").ContinueWith(_ =>
-            {
-                // this shouldn't happen before the request is called
-                Assert.True(requestResponse.Task.IsCompleted);
-
-                // and make sure this hasn't been set
-                Assert.False(loaded);
-                loaded = true;
-            });
-
-            await awaitTask;
-            await requestResponse.Task;
-            Assert.True(loaded);
-        }
-
-        [PlaywrightTest("tap.spec.ts", "should work with modifiers")]
-        public async Task ShouldWorkWithModifiers()
+        await Page.SetContentAsync($@"<a href=""{route}"">link</a>");
+        bool loaded = false;
+        var awaitTask = Page.TapAsync("a").ContinueWith(_ =>
         {
-            await Page.SetContentAsync("hello world");
+            // this shouldn't happen before the request is called
+            Assert.True(requestResponse.Task.IsCompleted);
 
-            var altKeyTask = Page.EvaluateAsync<bool>(@"() =>
+            // and make sure this hasn't been set
+            Assert.False(loaded);
+            loaded = true;
+        });
+
+        await awaitTask;
+        await requestResponse.Task;
+        Assert.True(loaded);
+    }
+
+    [PlaywrightTest("tap.spec.ts", "should work with modifiers")]
+    public async Task ShouldWorkWithModifiers()
+    {
+        await Page.SetContentAsync("hello world");
+
+        var altKeyTask = Page.EvaluateAsync<bool>(@"() =>
                    new Promise(resolve => {
                         document.addEventListener('touchstart', event => {
                           resolve(event.altKey);
                         }, { passive: false })
                     })");
 
-            await Page.EvaluateAsync("() => void 0");
-            await Page.TapAsync("body", new() { Modifiers = new[] { KeyboardModifier.Alt } });
-            Assert.True((await altKeyTask));
-        }
+        await Page.EvaluateAsync("() => void 0");
+        await Page.TapAsync("body", new() { Modifiers = new[] { KeyboardModifier.Alt } });
+        Assert.True((await altKeyTask));
+    }
 
-        [PlaywrightTest("tap.spec.ts", "should send well formed touch points")]
-        public async Task ShouldSendWellFormedTouchPoints()
-        {
-            var touchStartTask = Page.EvaluateAsync<dynamic>(@"() =>
+    [PlaywrightTest("tap.spec.ts", "should send well formed touch points")]
+    public async Task ShouldSendWellFormedTouchPoints()
+    {
+        var touchStartTask = Page.EvaluateAsync<dynamic>(@"() =>
                 new Promise(resolve => {
                     document.addEventListener('touchstart', event => {
                         resolve([...event.touches].map(t => ({
@@ -187,7 +187,7 @@ namespace Microsoft.Playwright.Tests
                     }, false);
                 })");
 
-            var touchEndTask = Page.EvaluateAsync<dynamic>(@"() =>
+        var touchEndTask = Page.EvaluateAsync<dynamic>(@"() =>
                 new Promise(resolve => {
                     document.addEventListener('touchend', event => {
                         resolve([...event.touches].map(t => ({
@@ -204,28 +204,28 @@ namespace Microsoft.Playwright.Tests
                     }, false);
                 })");
 
-            await Page.EvaluateAsync("() => void 0");
+        await Page.EvaluateAsync("() => void 0");
 
-            await Page.Touchscreen.TapAsync(40, 60);
-            var touchStartResult = (await touchStartTask)[0];
-            var touchEndResult = await touchEndTask;
+        await Page.Touchscreen.TapAsync(40, 60);
+        var touchStartResult = (await touchStartTask)[0];
+        var touchEndResult = await touchEndTask;
 
-            Assert.AreEqual(new object[] { }, touchEndResult);
-            Assert.AreEqual(40, touchStartResult.clientX);
-            Assert.AreEqual(60, touchStartResult.clientY);
-            Assert.AreEqual(1, touchStartResult.force);
-            Assert.AreEqual(0, touchStartResult.identifier);
-            Assert.AreEqual(40, touchStartResult.pageX);
-            Assert.AreEqual(60, touchStartResult.pageY);
-            Assert.AreEqual(1, touchStartResult.radiusX);
-            Assert.AreEqual(1, touchStartResult.radiusY);
-            Assert.AreEqual(0, touchStartResult.rotationAngle);
-        }
+        Assert.AreEqual(new object[] { }, touchEndResult);
+        Assert.AreEqual(40, touchStartResult.clientX);
+        Assert.AreEqual(60, touchStartResult.clientY);
+        Assert.AreEqual(1, touchStartResult.force);
+        Assert.AreEqual(0, touchStartResult.identifier);
+        Assert.AreEqual(40, touchStartResult.pageX);
+        Assert.AreEqual(60, touchStartResult.pageY);
+        Assert.AreEqual(1, touchStartResult.radiusX);
+        Assert.AreEqual(1, touchStartResult.radiusY);
+        Assert.AreEqual(0, touchStartResult.rotationAngle);
+    }
 
-        [PlaywrightTest("tap.spec.ts", "should wait until an element is visible to tap it")]
-        public async Task ShouldWaitUntilAnElementIsVisibleToTapIt()
-        {
-            var div = (IElementHandle)await Page.EvaluateHandleAsync(@"() => {
+    [PlaywrightTest("tap.spec.ts", "should wait until an element is visible to tap it")]
+    public async Task ShouldWaitUntilAnElementIsVisibleToTapIt()
+    {
+        var div = (IElementHandle)await Page.EvaluateHandleAsync(@"() => {
                 const button = document.createElement('button');
                 button.textContent = 'not clicked';
                 document.body.appendChild(button);
@@ -233,20 +233,20 @@ namespace Microsoft.Playwright.Tests
                 return button;
             }");
 
-            var tapTask = div.TapAsync();
+        var tapTask = div.TapAsync();
 
-            await div.EvaluateAsync(@"div => div.onclick = () => div.textContent = 'clicked'");
-            await div.EvaluateAsync(@"div => div.style.display = 'block'");
+        await div.EvaluateAsync(@"div => div.onclick = () => div.textContent = 'clicked'");
+        await div.EvaluateAsync(@"div => div.style.display = 'block'");
 
-            await tapTask;
+        await tapTask;
 
-            Assert.AreEqual("clicked", await div.TextContentAsync());
-        }
+        Assert.AreEqual("clicked", await div.TextContentAsync());
+    }
 
-        private async Task<IJSHandle> TrackEventsAsync(string selector)
-        {
-            var target = await Page.QuerySelectorAsync(selector);
-            string jsFunc = @"(target) => {
+    private async Task<IJSHandle> TrackEventsAsync(string selector)
+    {
+        var target = await Page.QuerySelectorAsync(selector);
+        string jsFunc = @"(target) => {
                 const events = [];
                 for(const event of [
                     'mousedown', 'mouseenter', 'mouseleave', 'mousemove', 'mouseout', 'mouseover', 'mouseup', 'click',
@@ -256,7 +256,6 @@ namespace Microsoft.Playwright.Tests
                     return events;
                 }";
 
-            return await target.EvaluateHandleAsync(jsFunc);
-        }
+        return await target.EvaluateHandleAsync(jsFunc);
     }
 }

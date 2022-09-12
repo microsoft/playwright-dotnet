@@ -28,70 +28,69 @@ using System.Linq;
 using System.Text.Json;
 using System.Threading.Tasks;
 
-namespace Microsoft.Playwright.Core
+namespace Microsoft.Playwright.Core;
+
+internal class APIResponse : IAPIResponse
 {
-    internal class APIResponse : IAPIResponse
+    internal APIRequestContext _context;
+
+    private readonly Transport.Protocol.APIResponse _initializer;
+
+    private readonly RawHeaders _headers;
+
+    public APIResponse(APIRequestContext context, Transport.Protocol.APIResponse initializer)
     {
-        internal APIRequestContext _context;
+        _initializer = initializer;
+        _context = context;
+        _headers = new RawHeaders(initializer.Headers);
+    }
 
-        private readonly Transport.Protocol.APIResponse _initializer;
+    public Dictionary<string, string> Headers => _headers.Headers;
 
-        private readonly RawHeaders _headers;
+    public IReadOnlyList<Header> HeadersArray => _headers.HeadersArray;
 
-        public APIResponse(APIRequestContext context, Transport.Protocol.APIResponse initializer)
+    public bool Ok => _initializer.Status >= 200 && _initializer.Status <= 299;
+
+    public int Status => _initializer.Status;
+
+    public string StatusText => _initializer.StatusText;
+
+    public string Url => _initializer.Url;
+
+    public async Task<byte[]> BodyAsync()
+    {
+        try
         {
-            _initializer = initializer;
-            _context = context;
-            _headers = new RawHeaders(initializer.Headers);
-        }
-
-        public Dictionary<string, string> Headers => _headers.Headers;
-
-        public IReadOnlyList<Header> HeadersArray => _headers.HeadersArray;
-
-        public bool Ok => _initializer.Status >= 200 && _initializer.Status <= 299;
-
-        public int Status => _initializer.Status;
-
-        public string StatusText => _initializer.StatusText;
-
-        public string Url => _initializer.Url;
-
-        public async Task<byte[]> BodyAsync()
-        {
-            try
-            {
-                var result = await _context._channel.FetchResponseBodyAsync(FetchUid()).ConfigureAwait(false);
-                if (result == null)
-                {
-                    throw new PlaywrightException("Response has been disposed");
-                }
-                return Convert.FromBase64String(result);
-            }
-            catch (Exception e) when (e.Message == DriverMessages.BrowserOrContextClosedExceptionMessage)
+            var result = await _context._channel.FetchResponseBodyAsync(FetchUid()).ConfigureAwait(false);
+            if (result == null)
             {
                 throw new PlaywrightException("Response has been disposed");
             }
+            return Convert.FromBase64String(result);
         }
-
-        public async Task<JsonElement?> JsonAsync() => JsonSerializer.Deserialize<JsonElement>(await BodyAsync().ConfigureAwait(false));
-
-        public async Task<string> TextAsync()
+        catch (Exception e) when (e.Message == DriverMessages.BrowserOrContextClosedExceptionMessage)
         {
-            var buffer = await BodyAsync().ConfigureAwait(false);
-            return System.Text.Encoding.UTF8.GetString(buffer, 0, buffer.Length);
+            throw new PlaywrightException("Response has been disposed");
         }
+    }
 
-        internal string FetchUid() => _initializer.FetchUid;
+    public async Task<JsonElement?> JsonAsync() => JsonSerializer.Deserialize<JsonElement>(await BodyAsync().ConfigureAwait(false));
 
-        internal Task<List<string>> FetchLogAsync() => _context._channel.FetchResponseLogAsync(FetchUid());
+    public async Task<string> TextAsync()
+    {
+        var buffer = await BodyAsync().ConfigureAwait(false);
+        return System.Text.Encoding.UTF8.GetString(buffer, 0, buffer.Length);
+    }
 
-        public ValueTask DisposeAsync() => new(_context._channel.DisposeAPIResponseAsync(FetchUid()));
+    internal string FetchUid() => _initializer.FetchUid;
 
-        public override string ToString()
-        {
-            var headers = HeadersArray.Select(h => $"  {h.Name}: {h.Value}");
-            return $"APIResponse: {Status} {StatusText}\n{string.Join("\n", headers)}";
-        }
+    internal Task<List<string>> FetchLogAsync() => _context._channel.FetchResponseLogAsync(FetchUid());
+
+    public ValueTask DisposeAsync() => new(_context._channel.DisposeAPIResponseAsync(FetchUid()));
+
+    public override string ToString()
+    {
+        var headers = HeadersArray.Select(h => $"  {h.Name}: {h.Value}");
+        return $"APIResponse: {Status} {StatusText}\n{string.Join("\n", headers)}";
     }
 }

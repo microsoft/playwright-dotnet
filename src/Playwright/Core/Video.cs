@@ -25,42 +25,41 @@
 using System.Threading.Tasks;
 using Microsoft.Playwright.Transport;
 
-namespace Microsoft.Playwright.Core
+namespace Microsoft.Playwright.Core;
+
+internal class Video : IVideo
 {
-    internal class Video : IVideo
+    private readonly TaskCompletionSource<Artifact> _artifactTcs = new();
+    private readonly bool _isRemote;
+
+    public Video(Page page, Connection connection)
     {
-        private readonly TaskCompletionSource<Artifact> _artifactTcs = new();
-        private readonly bool _isRemote;
-
-        public Video(Page page, Connection connection)
-        {
-            _isRemote = connection.IsRemote;
-            page.Close += (_, _) => _artifactTcs.TrySetCanceled();
-            page.Crash += (_, _) => _artifactTcs.TrySetCanceled();
-        }
-
-        public async Task DeleteAsync()
-        {
-            var artifact = await _artifactTcs.Task.ConfigureAwait(false);
-            await artifact.DeleteAsync().ConfigureAwait(false);
-        }
-
-        public async Task<string> PathAsync()
-        {
-            if (_isRemote)
-            {
-                throw new PlaywrightException("Path is not available when connecting remotely. Use SaveAsAsync() to save a local copy.");
-            }
-            var artifact = await _artifactTcs.Task.ConfigureAwait(false);
-            return artifact.AbsolutePath;
-        }
-
-        public async Task SaveAsAsync(string path)
-        {
-            var artifact = await _artifactTcs.Task.ConfigureAwait(false);
-            await artifact.SaveAsAsync(path).ConfigureAwait(false);
-        }
-
-        internal void ArtifactReady(Artifact artifact) => _artifactTcs.TrySetResult(artifact);
+        _isRemote = connection.IsRemote;
+        page.Close += (_, _) => _artifactTcs.TrySetCanceled();
+        page.Crash += (_, _) => _artifactTcs.TrySetCanceled();
     }
+
+    public async Task DeleteAsync()
+    {
+        var artifact = await _artifactTcs.Task.ConfigureAwait(false);
+        await artifact.DeleteAsync().ConfigureAwait(false);
+    }
+
+    public async Task<string> PathAsync()
+    {
+        if (_isRemote)
+        {
+            throw new PlaywrightException("Path is not available when connecting remotely. Use SaveAsAsync() to save a local copy.");
+        }
+        var artifact = await _artifactTcs.Task.ConfigureAwait(false);
+        return artifact.AbsolutePath;
+    }
+
+    public async Task SaveAsAsync(string path)
+    {
+        var artifact = await _artifactTcs.Task.ConfigureAwait(false);
+        await artifact.SaveAsAsync(path).ConfigureAwait(false);
+    }
+
+    internal void ArtifactReady(Artifact artifact) => _artifactTcs.TrySetResult(artifact);
 }

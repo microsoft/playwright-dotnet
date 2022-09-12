@@ -29,67 +29,66 @@ using System.Threading.Tasks;
 using Microsoft.Playwright.Transport;
 using Microsoft.Playwright.Transport.Channels;
 
-namespace Microsoft.Playwright.Core
+namespace Microsoft.Playwright.Core;
+
+internal class WritableStream : ChannelOwnerBase, IChannelOwner<WritableStream>, IAsyncDisposable
 {
-    internal class WritableStream : ChannelOwnerBase, IChannelOwner<WritableStream>, IAsyncDisposable
+    internal WritableStream(IChannelOwner parent, string guid) : base(parent, guid)
     {
-        internal WritableStream(IChannelOwner parent, string guid) : base(parent, guid)
-        {
-            Channel = new(guid, parent.Connection, this);
-        }
-
-        ChannelBase IChannelOwner.Channel => Channel;
-
-        IChannel<WritableStream> IChannelOwner<WritableStream>.Channel => Channel;
-
-        public WritableStreamChannel Channel { get; }
-
-        public WritableStreamImpl WritableStreamImpl => new(this);
-
-        public Task WriteAsync(string binary) => Channel.WriteAsync(binary);
-
-        public ValueTask DisposeAsync() => new ValueTask(CloseAsync());
-
-        public Task CloseAsync() => Channel.CloseAsync();
+        Channel = new(guid, parent.Connection, this);
     }
 
-    internal class WritableStreamImpl : System.IO.Stream
+    ChannelBase IChannelOwner.Channel => Channel;
+
+    IChannel<WritableStream> IChannelOwner<WritableStream>.Channel => Channel;
+
+    public WritableStreamChannel Channel { get; }
+
+    public WritableStreamImpl WritableStreamImpl => new(this);
+
+    public Task WriteAsync(string binary) => Channel.WriteAsync(binary);
+
+    public ValueTask DisposeAsync() => new ValueTask(CloseAsync());
+
+    public Task CloseAsync() => Channel.CloseAsync();
+}
+
+internal class WritableStreamImpl : System.IO.Stream
+{
+    private readonly WritableStream _stream;
+
+    internal WritableStreamImpl(WritableStream stream)
     {
-        private readonly WritableStream _stream;
+        _stream = stream;
+    }
 
-        internal WritableStreamImpl(WritableStream stream)
-        {
-            _stream = stream;
-        }
+    public override bool CanRead => throw new NotImplementedException();
 
-        public override bool CanRead => throw new NotImplementedException();
+    public override bool CanSeek => throw new NotImplementedException();
 
-        public override bool CanSeek => throw new NotImplementedException();
+    public override bool CanWrite => true;
 
-        public override bool CanWrite => true;
+    public override long Length => throw new NotImplementedException();
 
-        public override long Length => throw new NotImplementedException();
+    public override long Position { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
 
-        public override long Position { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+    public override void Flush() => throw new NotImplementedException();
 
-        public override void Flush() => throw new NotImplementedException();
+    public override int Read(byte[] buffer, int offset, int count) => throw new NotImplementedException();
 
-        public override int Read(byte[] buffer, int offset, int count) => throw new NotImplementedException();
+    public override Task<int> ReadAsync(byte[] buffer, int offset, int count, CancellationToken cancellationToken) =>
+        throw new NotImplementedException();
 
-        public override Task<int> ReadAsync(byte[] buffer, int offset, int count, CancellationToken cancellationToken) =>
-            throw new NotImplementedException();
+    public override void Close() => _stream.CloseAsync().ConfigureAwait(false);
 
-        public override void Close() => _stream.CloseAsync().ConfigureAwait(false);
+    public override long Seek(long offset, SeekOrigin origin) => throw new NotImplementedException();
 
-        public override long Seek(long offset, SeekOrigin origin) => throw new NotImplementedException();
+    public override void SetLength(long value) => throw new NotImplementedException();
 
-        public override void SetLength(long value) => throw new NotImplementedException();
+    public override void Write(byte[] buffer, int offset, int count) => throw new NotImplementedException();
 
-        public override void Write(byte[] buffer, int offset, int count) => throw new NotImplementedException();
-
-        public override async Task WriteAsync(byte[] buffer, int offset, int count, CancellationToken cancellationToken)
-        {
-            await this._stream.WriteAsync(Convert.ToBase64String(buffer)).ConfigureAwait(false);
-        }
+    public override async Task WriteAsync(byte[] buffer, int offset, int count, CancellationToken cancellationToken)
+    {
+        await this._stream.WriteAsync(Convert.ToBase64String(buffer)).ConfigureAwait(false);
     }
 }

@@ -25,19 +25,18 @@
 using System.Threading.Tasks;
 using Microsoft.Playwright.TestAdapter;
 
-namespace Microsoft.Playwright.MSTest.Services
+namespace Microsoft.Playwright.MSTest.Services;
+
+public class BrowserService : IWorkerService
 {
-    public class BrowserService : IWorkerService
+    public IBrowser Browser { get; internal set; } = null!;
+
+    public Task ResetAsync() => Task.CompletedTask;
+
+    public Task DisposeAsync() => Browser?.CloseAsync() ?? Task.CompletedTask;
+
+    public async Task BuildAsync(PlaywrightTest parentTest)
     {
-        public IBrowser Browser { get; internal set; } = null!;
-
-        public Task ResetAsync() => Task.CompletedTask;
-
-        public Task DisposeAsync() => Browser?.CloseAsync() ?? Task.CompletedTask;
-
-        public async Task BuildAsync(PlaywrightTest parentTest)
-        {
-            Browser = await parentTest!.BrowserType!.LaunchAsync(PlaywrightSettingsProvider.LaunchOptions).ConfigureAwait(false);
-        }
+        Browser = await parentTest!.BrowserType!.LaunchAsync(PlaywrightSettingsProvider.LaunchOptions).ConfigureAwait(false);
     }
 }

@@ -22,14 +22,13 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-namespace Microsoft.Playwright.Transport.Channels
+namespace Microsoft.Playwright.Transport.Channels;
+
+internal class PageDownloadEvent
 {
-    internal class PageDownloadEvent
-    {
-        public string Url { get; set; }
+    public string Url { get; set; }
 
-        public string SuggestedFilename { get; set; }
+    public string SuggestedFilename { get; set; }
 
-        public ArtifactChannel Artifact { get; set; }
-    }
+    public ArtifactChannel Artifact { get; set; }
 }

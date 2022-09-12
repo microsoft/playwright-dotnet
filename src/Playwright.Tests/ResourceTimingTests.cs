@@ -27,109 +27,108 @@ using System.Threading.Tasks;
 using Microsoft.Playwright.NUnit;
 using NUnit.Framework;
 
-namespace Microsoft.Playwright.Tests
+namespace Microsoft.Playwright.Tests;
+
+///<playwright-file>resource-timing.spec.ts</playwright-file>
+public class ResourceTimingTests : PageTestEx
 {
-    ///<playwright-file>resource-timing.spec.ts</playwright-file>
-    public class ResourceTimingTests : PageTestEx
+    private void VerifyConnectionTimingConsistency(RequestTimingResult timing)
     {
-        private void VerifyConnectionTimingConsistency(RequestTimingResult timing)
+        static void verifyTimingValue(float value, float previous)
         {
-            static void verifyTimingValue(float value, float previous)
-            {
-                Assert.IsTrue(value == -1 || value > 0 && value >= previous);
-            }
-
-            verifyTimingValue(timing.DomainLookupStart, -1);
-            verifyTimingValue(timing.DomainLookupEnd, timing.DomainLookupStart);
-            verifyTimingValue(timing.ConnectStart, timing.DomainLookupEnd);
-            verifyTimingValue(timing.SecureConnectionStart, timing.ConnectStart);
-            verifyTimingValue(timing.ConnectEnd, timing.SecureConnectionStart);
+            Assert.IsTrue(value == -1 || value > 0 && value >= previous);
         }
 
-        [PlaywrightTest("resource-timing.spec.ts", "should work")]
-        public async Task ShouldWork()
-        {
-            var (request, _) = await TaskUtils.WhenAll(
-                Page.WaitForRequestFinishedAsync(),
-                Page.GotoAsync(Server.EmptyPage));
+        verifyTimingValue(timing.DomainLookupStart, -1);
+        verifyTimingValue(timing.DomainLookupEnd, timing.DomainLookupStart);
+        verifyTimingValue(timing.ConnectStart, timing.DomainLookupEnd);
+        verifyTimingValue(timing.SecureConnectionStart, timing.ConnectStart);
+        verifyTimingValue(timing.ConnectEnd, timing.SecureConnectionStart);
+    }
 
-            var timing = request.Timing;
+    [PlaywrightTest("resource-timing.spec.ts", "should work")]
+    public async Task ShouldWork()
+    {
+        var (request, _) = await TaskUtils.WhenAll(
+            Page.WaitForRequestFinishedAsync(),
+            Page.GotoAsync(Server.EmptyPage));
 
-            VerifyConnectionTimingConsistency(timing);
-            Assert.GreaterOrEqual(timing.RequestStart, timing.ConnectEnd);
-            Assert.GreaterOrEqual(timing.ResponseStart, timing.RequestStart);
-            Assert.GreaterOrEqual(timing.ResponseEnd, timing.ResponseStart);
-            Assert.Less(timing.ResponseEnd, 10000);
-        }
+        var timing = request.Timing;
 
-        [PlaywrightTest("resource-timing.spec.ts", "should work for subresource")]
-        public async Task ShouldWorkForSubresource()
-        {
-            var requests = new List<IRequest>();
+        VerifyConnectionTimingConsistency(timing);
+        Assert.GreaterOrEqual(timing.RequestStart, timing.ConnectEnd);
+        Assert.GreaterOrEqual(timing.ResponseStart, timing.RequestStart);
+        Assert.GreaterOrEqual(timing.ResponseEnd, timing.ResponseStart);
+        Assert.Less(timing.ResponseEnd, 10000);
+    }
 
-            Page.RequestFinished += (_, e) => requests.Add(e);
-            await Page.GotoAsync(Server.Prefix + "/one-style.html");
+    [PlaywrightTest("resource-timing.spec.ts", "should work for subresource")]
+    public async Task ShouldWorkForSubresource()
+    {
+        var requests = new List<IRequest>();
 
-            Assert.AreEqual(2, requests.Count);
+        Page.RequestFinished += (_, e) => requests.Add(e);
+        await Page.GotoAsync(Server.Prefix + "/one-style.html");
 
-            var timing = requests[1].Timing;
+        Assert.AreEqual(2, requests.Count);
 
-            VerifyConnectionTimingConsistency(timing);
+        var timing = requests[1].Timing;
 
-            Assert.GreaterOrEqual(timing.RequestStart, 0);
-            Assert.GreaterOrEqual(timing.ResponseStart, timing.RequestStart);
-            Assert.GreaterOrEqual(timing.ResponseEnd, timing.ResponseStart);
-            Assert.Less(timing.ResponseEnd, 10000);
-        }
+        VerifyConnectionTimingConsistency(timing);
 
-        [PlaywrightTest("resource-timing.spec.ts", "should work for SSL")]
-        public async Task ShouldWorkForSSL()
-        {
-            var page = await Browser.NewPageAsync(new() { IgnoreHTTPSErrors = true });
-            var (request, _) = await TaskUtils.WhenAll(
-                page.WaitForRequestFinishedAsync(),
-                page.GotoAsync(HttpsServer.Prefix + "/empty.html"));
+        Assert.GreaterOrEqual(timing.RequestStart, 0);
+        Assert.GreaterOrEqual(timing.ResponseStart, timing.RequestStart);
+        Assert.GreaterOrEqual(timing.ResponseEnd, timing.ResponseStart);
+        Assert.Less(timing.ResponseEnd, 10000);
+    }
 
-            var timing = request.Timing;
-            VerifyConnectionTimingConsistency(timing);
-            Assert.GreaterOrEqual(timing.RequestStart, timing.ConnectEnd);
-            Assert.GreaterOrEqual(timing.ResponseStart, timing.RequestStart);
-            Assert.GreaterOrEqual(timing.ResponseEnd, timing.ResponseStart);
-            Assert.Less(timing.ResponseEnd, 10000);
-            await page.CloseAsync();
-        }
+    [PlaywrightTest("resource-timing.spec.ts", "should work for SSL")]
+    public async Task ShouldWorkForSSL()
+    {
+        var page = await Browser.NewPageAsync(new() { IgnoreHTTPSErrors = true });
+        var (request, _) = await TaskUtils.WhenAll(
+            page.WaitForRequestFinishedAsync(),
+            page.GotoAsync(HttpsServer.Prefix + "/empty.html"));
 
-        [PlaywrightTest("resource-timing.spec.ts", "should work for redirect")]
-        [Skip(SkipAttribute.Targets.Webkit)]
-        public async Task ShouldWorkForRedirect()
-        {
-            Server.SetRedirect("/foo.html", "/empty.html");
-            var responses = new List<IResponse>();
+        var timing = request.Timing;
+        VerifyConnectionTimingConsistency(timing);
+        Assert.GreaterOrEqual(timing.RequestStart, timing.ConnectEnd);
+        Assert.GreaterOrEqual(timing.ResponseStart, timing.RequestStart);
+        Assert.GreaterOrEqual(timing.ResponseEnd, timing.ResponseStart);
+        Assert.Less(timing.ResponseEnd, 10000);
+        await page.CloseAsync();
+    }
 
-            Page.Response += (_, e) => responses.Add(e);
-            await Page.GotoAsync(Server.Prefix + "/foo.html");
+    [PlaywrightTest("resource-timing.spec.ts", "should work for redirect")]
+    [Skip(SkipAttribute.Targets.Webkit)]
+    public async Task ShouldWorkForRedirect()
+    {
+        Server.SetRedirect("/foo.html", "/empty.html");
+        var responses = new List<IResponse>();
 
-            // This is different on purpose, promises work different in TS.
-            await responses[1].FinishedAsync();
+        Page.Response += (_, e) => responses.Add(e);
+        await Page.GotoAsync(Server.Prefix + "/foo.html");
 
-            Assert.AreEqual(2, responses.Count);
-            Assert.AreEqual(Server.Prefix + "/foo.html", responses[0].Url);
-            Assert.AreEqual(Server.Prefix + "/empty.html", responses[1].Url);
+        // This is different on purpose, promises work different in TS.
+        await responses[1].FinishedAsync();
 
-            var timing1 = responses[0].Request.Timing;
-            VerifyConnectionTimingConsistency(timing1);
-            Assert.GreaterOrEqual(timing1.RequestStart, timing1.ConnectEnd);
-            Assert.GreaterOrEqual(timing1.ResponseStart, timing1.RequestStart);
-            Assert.GreaterOrEqual(timing1.ResponseEnd, timing1.ResponseStart);
-            Assert.Less(timing1.ResponseEnd, 10000);
+        Assert.AreEqual(2, responses.Count);
+        Assert.AreEqual(Server.Prefix + "/foo.html", responses[0].Url);
+        Assert.AreEqual(Server.Prefix + "/empty.html", responses[1].Url);
+
+        var timing1 = responses[0].Request.Timing;
+        VerifyConnectionTimingConsistency(timing1);
+        Assert.GreaterOrEqual(timing1.RequestStart, timing1.ConnectEnd);
+        Assert.GreaterOrEqual(timing1.ResponseStart, timing1.RequestStart);
+        Assert.GreaterOrEqual(timing1.ResponseEnd, timing1.ResponseStart);
+        Assert.Less(timing1.ResponseEnd, 10000);
 
 
-            var timing2 = responses[1].Request.Timing;
-            VerifyConnectionTimingConsistency(timing2);
-            Assert.GreaterOrEqual(timing2.RequestStart, timing2.ConnectEnd);
-            Assert.GreaterOrEqual(timing2.ResponseStart, timing2.RequestStart);
-            Assert.GreaterOrEqual(timing2.ResponseEnd, timing2.ResponseStart);
-            Assert.Less(timing2.ResponseEnd, 10000);
-        }
+        var timing2 = responses[1].Request.Timing;
+        VerifyConnectionTimingConsistency(timing2);
+        Assert.GreaterOrEqual(timing2.RequestStart, timing2.ConnectEnd);
+        Assert.GreaterOrEqual(timing2.ResponseStart, timing2.RequestStart);
+        Assert.GreaterOrEqual(timing2.ResponseEnd, timing2.ResponseStart);
+        Assert.Less(timing2.ResponseEnd, 10000);
     }
 }

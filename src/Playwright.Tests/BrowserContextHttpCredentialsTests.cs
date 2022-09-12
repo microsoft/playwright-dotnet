@@ -26,76 +26,75 @@ using System.Net;
 using System.Threading.Tasks;
 using NUnit.Framework;
 
-namespace Microsoft.Playwright.Tests
+namespace Microsoft.Playwright.Tests;
+
+public class BrowserContextCredentialsTests : BrowserTestEx
 {
-    public class BrowserContextCredentialsTests : BrowserTestEx
+    [PlaywrightTest("browsercontext-credentials.spec.ts", "should fail without credentials")]
+    public async Task ShouldFailWithoutCredentials()
     {
-        [PlaywrightTest("browsercontext-credentials.spec.ts", "should fail without credentials")]
-        public async Task ShouldFailWithoutCredentials()
-        {
-            Server.SetAuth("/empty.html", "user", "pass");
-            await using var context = await Browser.NewContextAsync();
-            var page = await context.NewPageAsync();
-            var response = await page.GotoAsync(Server.EmptyPage);
-            Assert.AreEqual((int)HttpStatusCode.Unauthorized, response.Status);
-        }
+        Server.SetAuth("/empty.html", "user", "pass");
+        await using var context = await Browser.NewContextAsync();
+        var page = await context.NewPageAsync();
+        var response = await page.GotoAsync(Server.EmptyPage);
+        Assert.AreEqual((int)HttpStatusCode.Unauthorized, response.Status);
+    }
 
-        [PlaywrightTest("browsercontext-credentials.spec.ts", "should work with correct credentials")]
-        public async Task ShouldWorkWithCorrectCredentials()
+    [PlaywrightTest("browsercontext-credentials.spec.ts", "should work with correct credentials")]
+    public async Task ShouldWorkWithCorrectCredentials()
+    {
+        // Use unique user/password since Chromium caches credentials per origin.
+        Server.SetAuth("/empty.html", "user", "pass");
+        await using var context = await Browser.NewContextAsync(new()
         {
-            // Use unique user/password since Chromium caches credentials per origin.
-            Server.SetAuth("/empty.html", "user", "pass");
-            await using var context = await Browser.NewContextAsync(new()
+            HttpCredentials = new()
             {
-                HttpCredentials = new()
-                {
-                    Username = "user",
-                    Password = "pass"
-                },
-            });
+                Username = "user",
+                Password = "pass"
+            },
+        });
 
-            var page = await context.NewPageAsync();
-            var response = await page.GotoAsync(Server.EmptyPage);
-            Assert.AreEqual((int)HttpStatusCode.OK, response.Status);
-        }
+        var page = await context.NewPageAsync();
+        var response = await page.GotoAsync(Server.EmptyPage);
+        Assert.AreEqual((int)HttpStatusCode.OK, response.Status);
+    }
 
-        [PlaywrightTest("browsercontext-credentials.spec.ts", "should fail if wrong credentials")]
-        public async Task ShouldFailIfWrongCredentials()
+    [PlaywrightTest("browsercontext-credentials.spec.ts", "should fail if wrong credentials")]
+    public async Task ShouldFailIfWrongCredentials()
+    {
+        // Use unique user/password since Chromium caches credentials per origin.
+        Server.SetAuth("/empty.html", "user", "pass");
+        await using var context = await Browser.NewContextAsync(new()
         {
-            // Use unique user/password since Chromium caches credentials per origin.
-            Server.SetAuth("/empty.html", "user", "pass");
-            await using var context = await Browser.NewContextAsync(new()
+            HttpCredentials = new()
             {
-                HttpCredentials = new()
-                {
-                    Username = "foo",
-                    Password = "bar"
-                },
-            });
+                Username = "foo",
+                Password = "bar"
+            },
+        });
 
-            var page = await context.NewPageAsync();
-            var response = await page.GotoAsync(Server.EmptyPage);
-            Assert.AreEqual((int)HttpStatusCode.Unauthorized, response.Status);
-        }
+        var page = await context.NewPageAsync();
+        var response = await page.GotoAsync(Server.EmptyPage);
+        Assert.AreEqual((int)HttpStatusCode.Unauthorized, response.Status);
+    }
 
-        [PlaywrightTest("browsercontext-credentials.spec.ts", "should return resource body")]
-        public async Task ShouldReturnResourceBody()
+    [PlaywrightTest("browsercontext-credentials.spec.ts", "should return resource body")]
+    public async Task ShouldReturnResourceBody()
+    {
+        Server.SetAuth("/playground.html", "user", "pass");
+        await using var context = await Browser.NewContextAsync(new()
         {
-            Server.SetAuth("/playground.html", "user", "pass");
-            await using var context = await Browser.NewContextAsync(new()
+            HttpCredentials = new()
             {
-                HttpCredentials = new()
-                {
-                    Username = "user",
-                    Password = "pass"
-                },
-            });
+                Username = "user",
+                Password = "pass"
+            },
+        });
 
-            var page = await context.NewPageAsync();
-            var response = await page.GotoAsync(Server.Prefix + "/playground.html");
-            Assert.AreEqual((int)HttpStatusCode.OK, response.Status);
-            Assert.AreEqual("Playground", await page.TitleAsync());
-            StringAssert.Contains("Playground", await response.TextAsync());
-        }
+        var page = await context.NewPageAsync();
+        var response = await page.GotoAsync(Server.Prefix + "/playground.html");
+        Assert.AreEqual((int)HttpStatusCode.OK, response.Status);
+        Assert.AreEqual("Playground", await page.TitleAsync());
+        StringAssert.Contains("Playground", await response.TextAsync());
     }
 }

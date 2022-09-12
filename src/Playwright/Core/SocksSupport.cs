@@ -25,17 +25,16 @@
 using Microsoft.Playwright.Transport;
 using Microsoft.Playwright.Transport.Channels;
 
-namespace Microsoft.Playwright.Core
+namespace Microsoft.Playwright.Core;
+
+internal class SocksSupport : ChannelOwnerBase, IChannelOwner<SocksSupport>
 {
-    internal class SocksSupport : ChannelOwnerBase, IChannelOwner<SocksSupport>
+    private readonly Channel<SocksSupport> _channel;
+
+    internal SocksSupport(IChannelOwner parent, string guid) : base(parent, guid)
     {
-        private readonly Channel<SocksSupport> _channel;
-
-        internal SocksSupport(IChannelOwner parent, string guid) : base(parent, guid)
-        {
-            _channel = new(guid, parent.Connection, this);
-        }
-
-        IChannel<SocksSupport> IChannelOwner<SocksSupport>.Channel => _channel;
+        _channel = new(guid, parent.Connection, this);
     }
+
+    IChannel<SocksSupport> IChannelOwner<SocksSupport>.Channel => _channel;
 }

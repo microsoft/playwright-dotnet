@@ -26,41 +26,40 @@ using System.Threading.Tasks;
 using Microsoft.Playwright.NUnit;
 using NUnit.Framework;
 
-namespace Microsoft.Playwright.Tests
+namespace Microsoft.Playwright.Tests;
+
+public class BrowserContextStrictSelectorsTests : BrowserTestEx
 {
-    public class BrowserContextStrictSelectorsTests : BrowserTestEx
+    [PlaywrightTest()]
+    public async Task ShouldNotFailPageTextContentInNonStrictMode()
     {
-        [PlaywrightTest()]
-        public async Task ShouldNotFailPageTextContentInNonStrictMode()
-        {
-            await using var browser = await BrowserType.LaunchAsync();
-            await using var context = await browser.NewContextAsync();
+        await using var browser = await BrowserType.LaunchAsync();
+        await using var context = await browser.NewContextAsync();
 
-            var page = await context.NewPageAsync();
-            await page.SetContentAsync("<span>span1</span><div><span>target</span></div>");
-            Assert.AreEqual("span1", await page.TextContentAsync("span"));
-        }
+        var page = await context.NewPageAsync();
+        await page.SetContentAsync("<span>span1</span><div><span>target</span></div>");
+        Assert.AreEqual("span1", await page.TextContentAsync("span"));
+    }
 
-        [PlaywrightTest()]
-        public async Task ShouldFailPageTextContentInStrictMode()
-        {
-            await using var browser = await BrowserType.LaunchAsync();
-            await using var context = await browser.NewContextAsync(new() { StrictSelectors = true });
+    [PlaywrightTest()]
+    public async Task ShouldFailPageTextContentInStrictMode()
+    {
+        await using var browser = await BrowserType.LaunchAsync();
+        await using var context = await browser.NewContextAsync(new() { StrictSelectors = true });
 
-            var page = await context.NewPageAsync();
-            await page.SetContentAsync("<span>span1</span><div><span>target</span></div>");
-            await PlaywrightAssert.ThrowsAsync<PlaywrightException>(() => page.TextContentAsync("span"));
-        }
+        var page = await context.NewPageAsync();
+        await page.SetContentAsync("<span>span1</span><div><span>target</span></div>");
+        await PlaywrightAssert.ThrowsAsync<PlaywrightException>(() => page.TextContentAsync("span"));
+    }
 
-        [PlaywrightTest()]
-        public async Task ShouldOptOutOfStrictMode()
-        {
-            await using var browser = await BrowserType.LaunchAsync();
-            await using var context = await browser.NewContextAsync(new() { StrictSelectors = true });
+    [PlaywrightTest()]
+    public async Task ShouldOptOutOfStrictMode()
+    {
+        await using var browser = await BrowserType.LaunchAsync();
+        await using var context = await browser.NewContextAsync(new() { StrictSelectors = true });
 
-            var page = await context.NewPageAsync();
-            await page.SetContentAsync("<span>span1</span><div><span>target</span></div>");
-            Assert.AreEqual("span1", await page.TextContentAsync("span", new() { Strict = false }));
-        }
+        var page = await context.NewPageAsync();
+        await page.SetContentAsync("<span>span1</span><div><span>target</span></div>");
+        Assert.AreEqual("span1", await page.TextContentAsync("span", new() { Strict = false }));
     }
 }

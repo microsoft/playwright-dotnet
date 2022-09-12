@@ -26,26 +26,25 @@ using System.Threading.Tasks;
 using Microsoft.Playwright.Core;
 using Microsoft.Playwright.Helpers;
 
-namespace Microsoft.Playwright.Transport.Channels
+namespace Microsoft.Playwright.Transport.Channels;
+
+internal class Root : ChannelOwnerBase
 {
-    internal class Root : ChannelOwnerBase
+    private readonly Connection _connection;
+
+    internal Root(IChannelOwner parent, Connection connection, string guid) : base(parent, connection, guid)
     {
-        private readonly Connection _connection;
+        _connection = connection;
+    }
 
-        internal Root(IChannelOwner parent, Connection connection, string guid) : base(parent, connection, guid)
+    internal async Task<PlaywrightImpl> InitializeAsync()
+    {
+        var args = new
         {
-            _connection = connection;
-        }
+            sdkLanguage = "csharp",
+        };
 
-        internal async Task<PlaywrightImpl> InitializeAsync()
-        {
-            var args = new
-            {
-                sdkLanguage = "csharp",
-            };
-
-            var jsonElement = await _connection.SendMessageToServerAsync(string.Empty, "initialize", args).ConfigureAwait(false);
-            return jsonElement.GetObject<PlaywrightImpl>("playwright", _connection);
-        }
+        var jsonElement = await _connection.SendMessageToServerAsync(string.Empty, "initialize", args).ConfigureAwait(false);
+        return jsonElement.GetObject<PlaywrightImpl>("playwright", _connection);
     }
 }

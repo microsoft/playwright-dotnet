@@ -26,14 +26,13 @@ using System.Threading.Tasks;
 using CommandLine;
 using Playwright.Tooling.Options;
 
-namespace Playwright.Tooling
+namespace Playwright.Tooling;
+
+internal static class Program
 {
-    internal static class Program
+    internal static async Task Main(string[] args)
     {
-        internal static async Task Main(string[] args)
-        {
-            ParserResult<DownloadDriversOptions> result = Parser.Default.ParseArguments<DownloadDriversOptions>(args);
-            await result.WithParsedAsync(DriverDownloader.RunAsync).ConfigureAwait(false);
-        }
+        ParserResult<DownloadDriversOptions> result = Parser.Default.ParseArguments<DownloadDriversOptions>(args);
+        await result.WithParsedAsync(DriverDownloader.RunAsync).ConfigureAwait(false);
     }
 }

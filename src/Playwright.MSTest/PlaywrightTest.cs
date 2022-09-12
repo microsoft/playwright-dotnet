@@ -32,107 +32,106 @@ using Microsoft.Playwright.Core;
 using Microsoft.Playwright.TestAdapter;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace Microsoft.Playwright.MSTest
+namespace Microsoft.Playwright.MSTest;
+
+[TestClass]
+public class PlaywrightTest
 {
-    [TestClass]
-    public class PlaywrightTest
+    private static int _workerCount = 0;
+    private static readonly ConcurrentStack<Worker> _allWorkers = new();
+    private Worker? _currentWorker;
+    private static readonly Task<IPlaywright> _playwrightTask = Microsoft.Playwright.Playwright.CreateAsync();
+
+    public string BrowserName { get; private set; } = null!;
+    public IPlaywright Playwright { get; private set; } = null!;
+
+    public IBrowserType BrowserType { get; private set; } = null!;
+
+    public int WorkerIndex { get => _currentWorker!.WorkerIndex; }
+
+    [TestInitialize]
+    public async Task Setup()
     {
-        private static int _workerCount = 0;
-        private static readonly ConcurrentStack<Worker> _allWorkers = new();
-        private Worker? _currentWorker;
-        private static readonly Task<IPlaywright> _playwrightTask = Microsoft.Playwright.Playwright.CreateAsync();
-
-        public string BrowserName { get; private set; } = null!;
-        public IPlaywright Playwright { get; private set; } = null!;
-
-        public IBrowserType BrowserType { get; private set; } = null!;
-
-        public int WorkerIndex { get => _currentWorker!.WorkerIndex; }
-
-        [TestInitialize]
-        public async Task Setup()
+        if (PlaywrightSettingsProvider.ExpectTimeout.HasValue)
         {
-            if (PlaywrightSettingsProvider.ExpectTimeout.HasValue)
-            {
-                AssertionsBase.SetDefaultTimeout(PlaywrightSettingsProvider.ExpectTimeout.Value);
-            }
-            try
-            {
-                Playwright = await _playwrightTask.ConfigureAwait(false);
-            }
-            catch (Exception e)
-            {
-                Assert.Fail(e.Message, e.StackTrace);
-            }
-            Assert.IsNotNull(Playwright, "Playwright could not be instantiated.");
-            BrowserName = PlaywrightSettingsProvider.BrowserName;
-            BrowserType = Playwright[BrowserName];
-
-            // get worker
-            if (!_allWorkers.TryPop(out _currentWorker))
-            {
-                _currentWorker = new();
-            }
+            AssertionsBase.SetDefaultTimeout(PlaywrightSettingsProvider.ExpectTimeout.Value);
         }
-
-        [ClassInitialize(InheritanceBehavior.BeforeEachDerivedClass)]
-        public static void ClassInitialize(TestContext context)
+        try
         {
-            PlaywrightTestMethodAttribute.TestContext = context;
+            Playwright = await _playwrightTask.ConfigureAwait(false);
         }
-
-        [TestCleanup]
-        public async Task Teardown()
+        catch (Exception e)
         {
-            if (TestOK)
-            {
-                await Task.WhenAll(_currentWorker!.InstantiatedServices.Select(x => x.ResetAsync())).ConfigureAwait(false);
-                _allWorkers.Push(_currentWorker);
-            }
-            else
-            {
-                await Task.WhenAll(_currentWorker!.InstantiatedServices.Select(x => x.DisposeAsync())).ConfigureAwait(false);
-                _currentWorker.InstantiatedServices.Clear();
-            }
+            Assert.Fail(e.Message, e.StackTrace);
         }
+        Assert.IsNotNull(Playwright, "Playwright could not be instantiated.");
+        BrowserName = PlaywrightSettingsProvider.BrowserName;
+        BrowserType = Playwright[BrowserName];
 
-        public async Task<T> GetService<T>(Func<T>? factory = null) where T : class, IWorkerService, new()
+        // get worker
+        if (!_allWorkers.TryPop(out _currentWorker))
         {
-            factory ??= () => new T();
-            var serviceType = typeof(T);
-
-            var instance = _currentWorker!.InstantiatedServices.SingleOrDefault(x => serviceType.IsInstanceOfType(x));
-            if (instance == null)
-            {
-                instance = factory();
-                await instance.BuildAsync(this).ConfigureAwait(false);
-                _currentWorker.InstantiatedServices.Add(instance);
-            }
-
-            if (instance is not T)
-                throw new Exception("There was a problem instantiating the service.");
-
-            return (T)instance;
+            _currentWorker = new();
         }
-
-        private class Worker
-        {
-            public int WorkerIndex { get; } = Interlocked.Increment(ref _workerCount);
-            public List<IWorkerService> InstantiatedServices { get; } = new();
-        }
-
-        protected bool TestOK
-        {
-            get => TestContext!.CurrentTestOutcome == UnitTestOutcome.Passed
-                || TestContext!.CurrentTestOutcome == UnitTestOutcome.NotRunnable;
-        }
-
-        public TestContext TestContext { get; set; } = null!;
-
-        public ILocatorAssertions Expect(ILocator locator) => Assertions.Expect(locator);
-
-        public IPageAssertions Expect(IPage page) => Assertions.Expect(page);
-
-        public IAPIResponseAssertions Expect(IAPIResponse response) => Assertions.Expect(response);
     }
+
+    [ClassInitialize(InheritanceBehavior.BeforeEachDerivedClass)]
+    public static void ClassInitialize(TestContext context)
+    {
+        PlaywrightTestMethodAttribute.TestContext = context;
+    }
+
+    [TestCleanup]
+    public async Task Teardown()
+    {
+        if (TestOK)
+        {
+            await Task.WhenAll(_currentWorker!.InstantiatedServices.Select(x => x.ResetAsync())).ConfigureAwait(false);
+            _allWorkers.Push(_currentWorker);
+        }
+        else
+        {
+            await Task.WhenAll(_currentWorker!.InstantiatedServices.Select(x => x.DisposeAsync())).ConfigureAwait(false);
+            _currentWorker.InstantiatedServices.Clear();
+        }
+    }
+
+    public async Task<T> GetService<T>(Func<T>? factory = null) where T : class, IWorkerService, new()
+    {
+        factory ??= () => new T();
+        var serviceType = typeof(T);
+
+        var instance = _currentWorker!.InstantiatedServices.SingleOrDefault(x => serviceType.IsInstanceOfType(x));
+        if (instance == null)
+        {
+            instance = factory();
+            await instance.BuildAsync(this).ConfigureAwait(false);
+            _currentWorker.InstantiatedServices.Add(instance);
+        }
+
+        if (instance is not T)
+            throw new Exception("There was a problem instantiating the service.");
+
+        return (T)instance;
+    }
+
+    private class Worker
+    {
+        public int WorkerIndex { get; } = Interlocked.Increment(ref _workerCount);
+        public List<IWorkerService> InstantiatedServices { get; } = new();
+    }
+
+    protected bool TestOK
+    {
+        get => TestContext!.CurrentTestOutcome == UnitTestOutcome.Passed
+            || TestContext!.CurrentTestOutcome == UnitTestOutcome.NotRunnable;
+    }
+
+    public TestContext TestContext { get; set; } = null!;
+
+    public ILocatorAssertions Expect(ILocator locator) => Assertions.Expect(locator);
+
+    public IPageAssertions Expect(IPage page) => Assertions.Expect(page);
+
+    public IAPIResponseAssertions Expect(IAPIResponse response) => Assertions.Expect(response);
 }

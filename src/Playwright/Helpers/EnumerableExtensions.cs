@@ -28,23 +28,22 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Playwright.Transport.Protocol;
 
-namespace Microsoft.Playwright.Helpers
+namespace Microsoft.Playwright.Helpers;
+
+internal static class EnumerableExtensions
 {
-    internal static class EnumerableExtensions
+    public static IEnumerable<NameValue> ToProtocol(this IEnumerable<KeyValuePair<string, string>> input)
     {
-        public static IEnumerable<NameValue> ToProtocol(this IEnumerable<KeyValuePair<string, string>> input)
+        if (input == null)
         {
-            if (input == null)
-            {
-                return null;
-            }
-
-            return input.Select(x => new NameValue() { Name = x.Key, Value = x.Value }).ToArray();
+            return null;
         }
 
-        public static async Task<IEnumerable<TResult>> SelectAsync<TSource, TResult>(this IEnumerable<TSource> source, Func<TSource, Task<TResult>> method)
-        {
-            return await Task.WhenAll(source.Select(x => method(x))).ConfigureAwait(false);
-        }
+        return input.Select(x => new NameValue() { Name = x.Key, Value = x.Value }).ToArray();
+    }
+
+    public static async Task<IEnumerable<TResult>> SelectAsync<TSource, TResult>(this IEnumerable<TSource> source, Func<TSource, Task<TResult>> method)
+    {
+        return await Task.WhenAll(source.Select(x => method(x))).ConfigureAwait(false);
     }
 }

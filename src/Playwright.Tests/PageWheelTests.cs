@@ -27,52 +27,52 @@ using System.Threading.Tasks;
 using Microsoft.Playwright.NUnit;
 using NUnit.Framework;
 
-namespace Microsoft.Playwright.Tests
+namespace Microsoft.Playwright.Tests;
+
+public class PageWheelTests : PageTestEx
 {
-    public class PageWheelTests : PageTestEx
+    private bool _ignoreDelta { get; set; }
+
+    [SetUp]
+    public void IgnoreDeltaSetup()
     {
-        private bool _ignoreDelta { get; set; }
-
-        [SetUp]
-        public void IgnoreDeltaSetup()
+        if (BrowserName == "chromium" && BrowserMajorVersion >= 102 && TestConstants.IsMacOSX)
         {
-            if (BrowserName == "chromium" && BrowserMajorVersion >= 102 && TestConstants.IsMacOSX)
-            {
-                // Chromium reports deltaX/deltaY scaled by host device scale factor.
-                // https://bugs.chromium.org/p/chromium/issues/detail?id=1324819
-                // https://github.com/microsoft/playwright/issues/7362
-                // Different bots have different scale factors (usually 1 or 2), so we just ignore the values
-                // instead of guessing the host scale factor.
-                _ignoreDelta = true;
-            }
+            // Chromium reports deltaX/deltaY scaled by host device scale factor.
+            // https://bugs.chromium.org/p/chromium/issues/detail?id=1324819
+            // https://github.com/microsoft/playwright/issues/7362
+            // Different bots have different scale factors (usually 1 or 2), so we just ignore the values
+            // instead of guessing the host scale factor.
+            _ignoreDelta = true;
         }
+    }
 
-        [PlaywrightTest("wheel.spec.ts", "should dispatch wheel events")]
-        public async Task ShouldDispatchWheelEvent()
+    [PlaywrightTest("wheel.spec.ts", "should dispatch wheel events")]
+    public async Task ShouldDispatchWheelEvent()
+    {
+        await Page.SetContentAsync("<div style=\"width: 5000px; height: 5000px;\"></div>");
+        await Page.Mouse.MoveAsync(50, 60);
+        await ListenForWheelEvents("div");
+        await Page.Mouse.WheelAsync(0, 100);
+        await Page.WaitForFunctionAsync("window.scrollY === 100");
+        if (!_ignoreDelta)
         {
-            await Page.SetContentAsync("<div style=\"width: 5000px; height: 5000px;\"></div>");
-            await Page.Mouse.MoveAsync(50, 60);
-            await ListenForWheelEvents("div");
-            await Page.Mouse.WheelAsync(0, 100);
-            await Page.WaitForFunctionAsync("window.scrollY === 100");
-            if (!_ignoreDelta)
-            {
-                Assert.AreEqual(100, (await Page.EvaluateAsync("window.lastEvent")).Value.GetProperty("deltaY").GetInt32());
-            }
+            Assert.AreEqual(100, (await Page.EvaluateAsync("window.lastEvent")).Value.GetProperty("deltaY").GetInt32());
         }
+    }
 
-        [PlaywrightTest("wheel.spec.ts", "should scroll when nobody is listening")]
-        public async Task ShouldScrollWhenNobodyIsListening()
-        {
-            await Page.GotoAsync(Server.Prefix + "/input/scrollable.html");
-            await Page.Mouse.MoveAsync(50, 60);
-            await Page.Mouse.WheelAsync(0, 100);
-            await Page.WaitForFunctionAsync("window.scrollY === 100");
-        }
+    [PlaywrightTest("wheel.spec.ts", "should scroll when nobody is listening")]
+    public async Task ShouldScrollWhenNobodyIsListening()
+    {
+        await Page.GotoAsync(Server.Prefix + "/input/scrollable.html");
+        await Page.Mouse.MoveAsync(50, 60);
+        await Page.Mouse.WheelAsync(0, 100);
+        await Page.WaitForFunctionAsync("window.scrollY === 100");
+    }
 
-        private async Task ListenForWheelEvents(string selector)
-        {
-            await Page.EvaluateAsync(@$"() =>
+    private async Task ListenForWheelEvents(string selector)
+    {
+        await Page.EvaluateAsync(@$"() =>
 {{
     document.querySelector('{selector}').addEventListener('wheel', (e) => {{
       window['lastEvent'] = {{
@@ -88,6 +88,5 @@ namespace Microsoft.Playwright.Tests
       }};
     }}, {{ passive: false }});
 }}");
-        }
     }
 }

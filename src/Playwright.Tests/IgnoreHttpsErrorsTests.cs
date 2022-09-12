@@ -30,63 +30,63 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.Playwright.NUnit;
 using NUnit.Framework;
 
-namespace Microsoft.Playwright.Tests
-{
-    ///<playwright-file>ignorehttpserrors.spec.ts</playwright-file>
-    ///<playwright-describe>ignoreHTTPSErrors</playwright-describe>
-    public class IgnoreHttpsErrorsTests : BrowserTestEx
-    {
-        [PlaywrightTest("ignorehttpserrors.spec.ts", "should work")]
-        public async Task ShouldWork()
-        {
-            await using var context = await Browser.NewContextAsync(new() { IgnoreHTTPSErrors = true });
-            var page = await context.NewPageAsync();
-            var responseTask = page.GotoAsync(HttpsServer.EmptyPage);
+namespace Microsoft.Playwright.Tests;
 
-            var response = responseTask.Result;
+///<playwright-file>ignorehttpserrors.spec.ts</playwright-file>
+///<playwright-describe>ignoreHTTPSErrors</playwright-describe>
+public class IgnoreHttpsErrorsTests : BrowserTestEx
+{
+    [PlaywrightTest("ignorehttpserrors.spec.ts", "should work")]
+    public async Task ShouldWork()
+    {
+        await using var context = await Browser.NewContextAsync(new() { IgnoreHTTPSErrors = true });
+        var page = await context.NewPageAsync();
+        var responseTask = page.GotoAsync(HttpsServer.EmptyPage);
+
+        var response = responseTask.Result;
+        Assert.AreEqual((int)HttpStatusCode.OK, response.Status);
+    }
+
+    [PlaywrightTest("ignorehttpserrors.spec.ts", "should isolate contexts")]
+    public async Task ShouldIsolateContexts()
+    {
+        await using (var context = await Browser.NewContextAsync(new() { IgnoreHTTPSErrors = true }))
+        {
+            var page = await context.NewPageAsync();
+            var response = await page.GotoAsync(HttpsServer.Prefix + "/empty.html");
+
             Assert.AreEqual((int)HttpStatusCode.OK, response.Status);
         }
 
-        [PlaywrightTest("ignorehttpserrors.spec.ts", "should isolate contexts")]
-        public async Task ShouldIsolateContexts()
+        await using (var context = await Browser.NewContextAsync())
         {
-            await using (var context = await Browser.NewContextAsync(new() { IgnoreHTTPSErrors = true }))
-            {
-                var page = await context.NewPageAsync();
-                var response = await page.GotoAsync(HttpsServer.Prefix + "/empty.html");
-
-                Assert.AreEqual((int)HttpStatusCode.OK, response.Status);
-            }
-
-            await using (var context = await Browser.NewContextAsync())
-            {
-                var page = await context.NewPageAsync();
-                await PlaywrightAssert.ThrowsAsync<PlaywrightException>(() => page.GotoAsync(HttpsServer.Prefix + "/empty.html"));
-            }
-        }
-
-        [PlaywrightTest("ignorehttpserrors.spec.ts", "should work with mixed content")]
-        public async Task ShouldWorkWithMixedContent()
-        {
-            HttpsServer.SetRoute("/mixedcontent.html", async (context) =>
-            {
-                await context.Response.WriteAsync($"<iframe src='{Server.EmptyPage}'></iframe>");
-            });
-            await using var context = await Browser.NewContextAsync(new() { IgnoreHTTPSErrors = true });
             var page = await context.NewPageAsync();
-            await page.GotoAsync(HttpsServer.Prefix + "/mixedcontent.html", new() { WaitUntil = WaitUntilState.Load });
-            Assert.AreEqual(2, page.Frames.Count);
-            Assert.AreEqual(3, await page.MainFrame.EvaluateAsync<int>("1 + 2"));
-            Assert.AreEqual(5, await page.FirstChildFrame().EvaluateAsync<int>("2 + 3"));
+            await PlaywrightAssert.ThrowsAsync<PlaywrightException>(() => page.GotoAsync(HttpsServer.Prefix + "/empty.html"));
         }
+    }
 
-        [PlaywrightTest("ignorehttpserrors.spec.ts", "should work with WebSocket")]
-        public async Task ShouldWorkWithWebSocket()
+    [PlaywrightTest("ignorehttpserrors.spec.ts", "should work with mixed content")]
+    public async Task ShouldWorkWithMixedContent()
+    {
+        HttpsServer.SetRoute("/mixedcontent.html", async (context) =>
         {
-            HttpsServer.SendOnWebSocketConnection("incoming");
-            await using var context = await Browser.NewContextAsync(new() { IgnoreHTTPSErrors = true });
-            var page = await context.NewPageAsync();
-            string value = await page.EvaluateAsync<string>(@"endpoint => {
+            await context.Response.WriteAsync($"<iframe src='{Server.EmptyPage}'></iframe>");
+        });
+        await using var context = await Browser.NewContextAsync(new() { IgnoreHTTPSErrors = true });
+        var page = await context.NewPageAsync();
+        await page.GotoAsync(HttpsServer.Prefix + "/mixedcontent.html", new() { WaitUntil = WaitUntilState.Load });
+        Assert.AreEqual(2, page.Frames.Count);
+        Assert.AreEqual(3, await page.MainFrame.EvaluateAsync<int>("1 + 2"));
+        Assert.AreEqual(5, await page.FirstChildFrame().EvaluateAsync<int>("2 + 3"));
+    }
+
+    [PlaywrightTest("ignorehttpserrors.spec.ts", "should work with WebSocket")]
+    public async Task ShouldWorkWithWebSocket()
+    {
+        HttpsServer.SendOnWebSocketConnection("incoming");
+        await using var context = await Browser.NewContextAsync(new() { IgnoreHTTPSErrors = true });
+        var page = await context.NewPageAsync();
+        string value = await page.EvaluateAsync<string>(@"endpoint => {
                 let cb;
               const result = new Promise(f => cb = f);
               const ws = new WebSocket(endpoint);
@@ -95,15 +95,15 @@ namespace Microsoft.Playwright.Tests
               return result;
             }", HttpsServer.Prefix.Replace("https", "wss") + "/ws");
 
-            Assert.AreEqual("incoming", value);
-        }
+        Assert.AreEqual("incoming", value);
+    }
 
-        [PlaywrightTest("ignorehttpserrors.spec.ts", "should fail with WebSocket if not ignored")]
-        public async Task ShouldFailWithWebSocketIfNotIgnored()
-        {
-            await using var context = await Browser.NewContextAsync();
-            var page = await context.NewPageAsync();
-            string value = await page.EvaluateAsync<string>(@"endpoint => {
+    [PlaywrightTest("ignorehttpserrors.spec.ts", "should fail with WebSocket if not ignored")]
+    public async Task ShouldFailWithWebSocketIfNotIgnored()
+    {
+        await using var context = await Browser.NewContextAsync();
+        var page = await context.NewPageAsync();
+        string value = await page.EvaluateAsync<string>(@"endpoint => {
                 let cb;
               const result = new Promise(f => cb = f);
               const ws = new WebSocket(endpoint);
@@ -112,7 +112,6 @@ namespace Microsoft.Playwright.Tests
               return result;
             }", HttpsServer.Prefix.Replace("https", "wss") + "/ws");
 
-            Assert.AreEqual("Error", value);
-        }
+        Assert.AreEqual("Error", value);
     }
 }

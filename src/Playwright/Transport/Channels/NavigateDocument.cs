@@ -22,10 +22,9 @@
  * SOFTWARE.
  */
 
-namespace Microsoft.Playwright.Transport.Channels
+namespace Microsoft.Playwright.Transport.Channels;
+
+internal class NavigateDocument
 {
-    internal class NavigateDocument
-    {
-        public RequestChannel Request { get; set; }
-    }
+    public RequestChannel Request { get; set; }
 }

@@ -22,12 +22,11 @@
  * SOFTWARE.
  */
 
-namespace Microsoft.Playwright.Core
-{
-    internal static class BrowserContextEvent
-    {
-        public static PlaywrightEvent<IPage> Page { get; } = new() { Name = "Page" };
+namespace Microsoft.Playwright.Core;
 
-        public static PlaywrightEvent<IBrowserContext> Close { get; } = new() { Name = "Close" };
-    }
+internal static class BrowserContextEvent
+{
+    public static PlaywrightEvent<IPage> Page { get; } = new() { Name = "Page" };
+
+    public static PlaywrightEvent<IBrowserContext> Close { get; } = new() { Name = "Close" };
 }

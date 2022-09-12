@@ -29,60 +29,59 @@ using System.Threading.Tasks;
 
 #nullable enable
 
-namespace Microsoft.Playwright
+namespace Microsoft.Playwright;
+
+public partial interface IPage
 {
-    public partial interface IPage
-    {
-        Task<JsonElement?> EvaluateAsync(string expression, object? arg = default);
+    Task<JsonElement?> EvaluateAsync(string expression, object? arg = default);
 
-        Task<JsonElement?> EvalOnSelectorAsync(string selector, string expression, object? arg = default);
+    Task<JsonElement?> EvalOnSelectorAsync(string selector, string expression, object? arg = default);
 
-        Task<JsonElement?> EvalOnSelectorAllAsync(string selector, string expression, object? arg = default);
+    Task<JsonElement?> EvalOnSelectorAllAsync(string selector, string expression, object? arg = default);
 
-        Task ExposeBindingAsync(string name, Action<BindingSource> callback);
+    Task ExposeBindingAsync(string name, Action<BindingSource> callback);
 
-        Task ExposeBindingAsync<T>(string name, Action<BindingSource, T> callback);
+    Task ExposeBindingAsync<T>(string name, Action<BindingSource, T> callback);
 
-        Task ExposeBindingAsync<TResult>(string name, Func<BindingSource, TResult> callback);
+    Task ExposeBindingAsync<TResult>(string name, Func<BindingSource, TResult> callback);
 
-        Task ExposeBindingAsync<TResult>(string name, Func<BindingSource, IJSHandle, TResult> callback);
+    Task ExposeBindingAsync<TResult>(string name, Func<BindingSource, IJSHandle, TResult> callback);
 
-        Task ExposeBindingAsync<T, TResult>(string name, Func<BindingSource, T, TResult> callback);
+    Task ExposeBindingAsync<T, TResult>(string name, Func<BindingSource, T, TResult> callback);
 
-        Task ExposeBindingAsync<T1, T2, TResult>(string name, Func<BindingSource, T1, T2, TResult> callback);
+    Task ExposeBindingAsync<T1, T2, TResult>(string name, Func<BindingSource, T1, T2, TResult> callback);
 
-        Task ExposeBindingAsync<T1, T2, T3, TResult>(string name, Func<BindingSource, T1, T2, T3, TResult> callback);
+    Task ExposeBindingAsync<T1, T2, T3, TResult>(string name, Func<BindingSource, T1, T2, T3, TResult> callback);
 
-        Task ExposeBindingAsync<T1, T2, T3, T4, TResult>(string name, Func<BindingSource, T1, T2, T3, T4, TResult> callback);
+    Task ExposeBindingAsync<T1, T2, T3, T4, TResult>(string name, Func<BindingSource, T1, T2, T3, T4, TResult> callback);
 
-        Task ExposeFunctionAsync<T>(string name, Action<T> callback);
+    Task ExposeFunctionAsync<T>(string name, Action<T> callback);
 
-        Task ExposeFunctionAsync<TResult>(string name, Func<TResult> callback);
+    Task ExposeFunctionAsync<TResult>(string name, Func<TResult> callback);
 
-        Task ExposeFunctionAsync<T, TResult>(string name, Func<T, TResult> callback);
+    Task ExposeFunctionAsync<T, TResult>(string name, Func<T, TResult> callback);
 
-        Task ExposeFunctionAsync<T1, T2, TResult>(string name, Func<T1, T2, TResult> callback);
+    Task ExposeFunctionAsync<T1, T2, TResult>(string name, Func<T1, T2, TResult> callback);
 
-        Task ExposeFunctionAsync<T1, T2, T3, TResult>(string name, Func<T1, T2, T3, TResult> callback);
+    Task ExposeFunctionAsync<T1, T2, T3, TResult>(string name, Func<T1, T2, T3, TResult> callback);
 
-        Task ExposeFunctionAsync<T1, T2, T3, T4, TResult>(string name, Func<T1, T2, T3, T4, TResult> callback);
+    Task ExposeFunctionAsync<T1, T2, T3, T4, TResult>(string name, Func<T1, T2, T3, T4, TResult> callback);
 
-        /// <inheritdoc cref="RouteAsync(string, Action{IRoute}, PageRouteOptions?)"/>
-        Task RouteAsync(string url, Func<IRoute, Task> handler, PageRouteOptions? options = default);
+    /// <inheritdoc cref="RouteAsync(string, Action{IRoute}, PageRouteOptions?)"/>
+    Task RouteAsync(string url, Func<IRoute, Task> handler, PageRouteOptions? options = default);
 
-        /// <inheritdoc cref="RouteAsync(Regex, Action{IRoute}, PageRouteOptions?)"/>
-        Task RouteAsync(Regex url, Func<IRoute, Task> handler, PageRouteOptions? options = default);
+    /// <inheritdoc cref="RouteAsync(Regex, Action{IRoute}, PageRouteOptions?)"/>
+    Task RouteAsync(Regex url, Func<IRoute, Task> handler, PageRouteOptions? options = default);
 
-        /// <inheritdoc cref="RouteAsync(Func{string, bool}, Action{IRoute}, PageRouteOptions?)"/>
-        Task RouteAsync(Func<string, bool> url, Func<IRoute, Task> handler, PageRouteOptions? options = default);
+    /// <inheritdoc cref="RouteAsync(Func{string, bool}, Action{IRoute}, PageRouteOptions?)"/>
+    Task RouteAsync(Func<string, bool> url, Func<IRoute, Task> handler, PageRouteOptions? options = default);
 
-        /// <inheritdoc cref="UnrouteAsync(string, Action{IRoute}?)"/>
-        Task UnrouteAsync(string url, Func<IRoute, Task> handler);
+    /// <inheritdoc cref="UnrouteAsync(string, Action{IRoute}?)"/>
+    Task UnrouteAsync(string url, Func<IRoute, Task> handler);
 
-        /// <inheritdoc cref="UnrouteAsync(Regex, Action{IRoute}?)"/>
-        Task UnrouteAsync(Regex url, Func<IRoute, Task> handler);
+    /// <inheritdoc cref="UnrouteAsync(Regex, Action{IRoute}?)"/>
+    Task UnrouteAsync(Regex url, Func<IRoute, Task> handler);
 
-        /// <inheritdoc cref="UnrouteAsync(Func{string, bool}, Action{IRoute}?)"/>
-        Task UnrouteAsync(Func<string, bool> url, Func<IRoute, Task> handler);
-    }
+    /// <inheritdoc cref="UnrouteAsync(Func{string, bool}, Action{IRoute}?)"/>
+    Task UnrouteAsync(Func<string, bool> url, Func<IRoute, Task> handler);
 }

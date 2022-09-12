@@ -32,97 +32,96 @@ using Microsoft.Playwright.Transport;
 using Microsoft.Playwright.Transport.Channels;
 using Microsoft.Playwright.Transport.Protocol;
 
-namespace Microsoft.Playwright.Core
+namespace Microsoft.Playwright.Core;
+
+internal class Response : ChannelOwnerBase, IChannelOwner<Response>, IResponse
 {
-    internal class Response : ChannelOwnerBase, IChannelOwner<Response>, IResponse
+    private readonly ResponseChannel _channel;
+    private readonly ResponseInitializer _initializer;
+    private readonly TaskCompletionSource<string> _finishedTask;
+    private readonly RawHeaders _headers;
+    private Task<RawHeaders> _rawHeadersTask;
+
+    internal Response(IChannelOwner parent, string guid, ResponseInitializer initializer) : base(parent, guid)
     {
-        private readonly ResponseChannel _channel;
-        private readonly ResponseInitializer _initializer;
-        private readonly TaskCompletionSource<string> _finishedTask;
-        private readonly RawHeaders _headers;
-        private Task<RawHeaders> _rawHeadersTask;
+        _channel = new(guid, parent.Connection, this);
+        _initializer = initializer;
+        _initializer.Request.Timing = _initializer.Timing;
+        _finishedTask = new();
 
-        internal Response(IChannelOwner parent, string guid, ResponseInitializer initializer) : base(parent, guid)
+        _headers = new RawHeaders(_initializer.Headers.ConvertAll(x => new NameValue() { Name = x.Name, Value = x.Value }).ToList());
+    }
+
+    public IFrame Frame => _initializer.Request.Frame;
+
+    public Dictionary<string, string> Headers => _headers.Headers;
+
+    public bool Ok => Status is 0 or >= 200 and <= 299;
+
+    public IRequest Request => _initializer.Request;
+
+    public int Status => _initializer.Status;
+
+    public string StatusText => _initializer.StatusText;
+
+    public string Url => _initializer.Url;
+
+    public bool FromServiceWorker => _initializer.FromServiceWorker;
+
+    ChannelBase IChannelOwner.Channel => _channel;
+
+    IChannel<Response> IChannelOwner<Response>.Channel => _channel;
+
+    public async Task<Dictionary<string, string>> AllHeadersAsync()
+        => (await GetRawHeadersAsync().ConfigureAwait(false)).Headers;
+
+    public Task<byte[]> BodyAsync() => _channel.GetBodyAsync();
+
+    public Task<string> FinishedAsync() => _finishedTask.Task;
+
+    public async Task<IReadOnlyList<Header>> HeadersArrayAsync()
+        => (await GetRawHeadersAsync().ConfigureAwait(false)).HeadersArray;
+
+    public async Task<string> HeaderValueAsync(string name)
+        => (await GetRawHeadersAsync().ConfigureAwait(false)).Get(name);
+
+    public async Task<IReadOnlyList<string>> HeaderValuesAsync(string name)
+        => (await GetRawHeadersAsync().ConfigureAwait(false)).GetAll(name);
+
+    public async Task<JsonElement?> JsonAsync()
+    {
+        byte[] content = await BodyAsync().ConfigureAwait(false);
+        return JsonDocument.Parse(content).RootElement;
+    }
+
+    public Task<ResponseSecurityDetailsResult> SecurityDetailsAsync() => _channel.SecurityDetailsAsync();
+
+    public Task<ResponseServerAddrResult> ServerAddrAsync() => _channel.ServerAddrAsync();
+
+    public async Task<string> TextAsync()
+    {
+        byte[] content = await BodyAsync().ConfigureAwait(false);
+        return Encoding.UTF8.GetString(content);
+    }
+
+    internal void ReportFinished(string erroMessage = null)
+    {
+        _finishedTask.SetResult(erroMessage);
+    }
+
+    private Task<RawHeaders> GetRawHeadersAsync()
+    {
+        if (_rawHeadersTask == null)
         {
-            _channel = new(guid, parent.Connection, this);
-            _initializer = initializer;
-            _initializer.Request.Timing = _initializer.Timing;
-            _finishedTask = new();
-
-            _headers = new RawHeaders(_initializer.Headers.ConvertAll(x => new NameValue() { Name = x.Name, Value = x.Value }).ToList());
+            _rawHeadersTask = GetRawHeadersTaskAsync();
         }
 
-        public IFrame Frame => _initializer.Request.Frame;
+        return _rawHeadersTask;
+    }
 
-        public Dictionary<string, string> Headers => _headers.Headers;
-
-        public bool Ok => Status is 0 or >= 200 and <= 299;
-
-        public IRequest Request => _initializer.Request;
-
-        public int Status => _initializer.Status;
-
-        public string StatusText => _initializer.StatusText;
-
-        public string Url => _initializer.Url;
-
-        public bool FromServiceWorker => _initializer.FromServiceWorker;
-
-        ChannelBase IChannelOwner.Channel => _channel;
-
-        IChannel<Response> IChannelOwner<Response>.Channel => _channel;
-
-        public async Task<Dictionary<string, string>> AllHeadersAsync()
-            => (await GetRawHeadersAsync().ConfigureAwait(false)).Headers;
-
-        public Task<byte[]> BodyAsync() => _channel.GetBodyAsync();
-
-        public Task<string> FinishedAsync() => _finishedTask.Task;
-
-        public async Task<IReadOnlyList<Header>> HeadersArrayAsync()
-            => (await GetRawHeadersAsync().ConfigureAwait(false)).HeadersArray;
-
-        public async Task<string> HeaderValueAsync(string name)
-            => (await GetRawHeadersAsync().ConfigureAwait(false)).Get(name);
-
-        public async Task<IReadOnlyList<string>> HeaderValuesAsync(string name)
-            => (await GetRawHeadersAsync().ConfigureAwait(false)).GetAll(name);
-
-        public async Task<JsonElement?> JsonAsync()
-        {
-            byte[] content = await BodyAsync().ConfigureAwait(false);
-            return JsonDocument.Parse(content).RootElement;
-        }
-
-        public Task<ResponseSecurityDetailsResult> SecurityDetailsAsync() => _channel.SecurityDetailsAsync();
-
-        public Task<ResponseServerAddrResult> ServerAddrAsync() => _channel.ServerAddrAsync();
-
-        public async Task<string> TextAsync()
-        {
-            byte[] content = await BodyAsync().ConfigureAwait(false);
-            return Encoding.UTF8.GetString(content);
-        }
-
-        internal void ReportFinished(string erroMessage = null)
-        {
-            _finishedTask.SetResult(erroMessage);
-        }
-
-        private Task<RawHeaders> GetRawHeadersAsync()
-        {
-            if (_rawHeadersTask == null)
-            {
-                _rawHeadersTask = GetRawHeadersTaskAsync();
-            }
-
-            return _rawHeadersTask;
-        }
-
-        private async Task<RawHeaders> GetRawHeadersTaskAsync()
-        {
-            var headers = await _channel.GetRawHeadersAsync().ConfigureAwait(false);
-            return new(headers);
-        }
+    private async Task<RawHeaders> GetRawHeadersTaskAsync()
+    {
+        var headers = await _channel.GetRawHeadersAsync().ConfigureAwait(false);
+        return new(headers);
     }
 }

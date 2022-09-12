@@ -24,9 +24,8 @@
 
 using System;
 
-namespace Microsoft.Playwright
+namespace Microsoft.Playwright;
+
+public partial interface IAPIResponse : IAsyncDisposable
 {
-    public partial interface IAPIResponse : IAsyncDisposable
-    {
-    }
 }

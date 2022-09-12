@@ -24,20 +24,19 @@
 
 using System;
 
-namespace Microsoft.Playwright
+namespace Microsoft.Playwright;
+
+public class PlaywrightException : Exception
 {
-    public class PlaywrightException : Exception
+    public PlaywrightException()
     {
-        public PlaywrightException()
-        {
-        }
+    }
 
-        public PlaywrightException(string message) : base(message)
-        {
-        }
+    public PlaywrightException(string message) : base(message)
+    {
+    }
 
-        public PlaywrightException(string message, Exception innerException) : base(message, innerException)
-        {
-        }
+    public PlaywrightException(string message, Exception innerException) : base(message, innerException)
+    {
     }
 }

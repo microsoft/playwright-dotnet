@@ -26,23 +26,22 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.Playwright.Core;
 
-namespace Microsoft.Playwright.Transport.Channels
+namespace Microsoft.Playwright.Transport.Channels;
+
+internal class DialogChannel : Channel<Dialog>
 {
-    internal class DialogChannel : Channel<Dialog>
+    public DialogChannel(string guid, Connection connection, Dialog owner) : base(guid, connection, owner)
     {
-        public DialogChannel(string guid, Connection connection, Dialog owner) : base(guid, connection, owner)
-        {
-        }
-
-        internal Task AcceptAsync(string promptText)
-            => Connection.SendMessageToServerAsync<PageChannel>(
-                Guid,
-                "accept",
-                new Dictionary<string, object>
-                {
-                    ["promptText"] = promptText,
-                });
-
-        internal Task DismissAsync() => Connection.SendMessageToServerAsync<PageChannel>(Guid, "dismiss", null);
     }
+
+    internal Task AcceptAsync(string promptText)
+        => Connection.SendMessageToServerAsync<PageChannel>(
+            Guid,
+            "accept",
+            new Dictionary<string, object>
+            {
+                ["promptText"] = promptText,
+            });
+
+    internal Task DismissAsync() => Connection.SendMessageToServerAsync<PageChannel>(Guid, "dismiss", null);
 }

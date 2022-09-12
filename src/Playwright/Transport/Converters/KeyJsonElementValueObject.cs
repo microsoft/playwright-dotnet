@@ -24,12 +24,11 @@
 
 using System.Text.Json;
 
-namespace Microsoft.Playwright.Transport.Converters
-{
-    internal class KeyJsonElementValueObject
-    {
-        public string K { get; set; }
+namespace Microsoft.Playwright.Transport.Converters;
 
-        public JsonElement V { get; set; }
-    }
+internal class KeyJsonElementValueObject
+{
+    public string K { get; set; }
+
+    public JsonElement V { get; set; }
 }

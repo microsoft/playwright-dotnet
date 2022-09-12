@@ -26,26 +26,25 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.Playwright.Core;
 
-namespace Microsoft.Playwright.Transport.Channels
+namespace Microsoft.Playwright.Transport.Channels;
+
+internal class StreamChannel : Channel<Stream>
 {
-    internal class StreamChannel : Channel<Stream>
+    public StreamChannel(string guid, Connection connection, Stream owner) : base(guid, connection, owner)
     {
-        public StreamChannel(string guid, Connection connection, Stream owner) : base(guid, connection, owner)
-        {
-        }
-
-        internal async Task<byte[]> ReadAsync(int size)
-        {
-            var response = await Connection.SendMessageToServerAsync(
-                Guid,
-                "read",
-                new Dictionary<string, object>
-                {
-                    ["size"] = size,
-                }).ConfigureAwait(false);
-            return response.Value.GetProperty("binary").GetBytesFromBase64();
-        }
-
-        internal Task CloseAsync() => Connection.SendMessageToServerAsync(Guid, "close", null);
     }
+
+    internal async Task<byte[]> ReadAsync(int size)
+    {
+        var response = await Connection.SendMessageToServerAsync(
+            Guid,
+            "read",
+            new Dictionary<string, object>
+            {
+                ["size"] = size,
+            }).ConfigureAwait(false);
+        return response.Value.GetProperty("binary").GetBytesFromBase64();
+    }
+
+    internal Task CloseAsync() => Connection.SendMessageToServerAsync(Guid, "close", null);
 }

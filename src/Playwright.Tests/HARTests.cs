@@ -28,61 +28,60 @@ using System.Threading.Tasks;
 using Microsoft.Playwright.NUnit;
 using NUnit.Framework;
 
-namespace Microsoft.Playwright.Tests
+namespace Microsoft.Playwright.Tests;
+
+public class HARTests : BrowserTestEx
 {
-    public class HARTests : BrowserTestEx
+    [PlaywrightTest("har.spec.ts", "should have version and creator")]
+    public async Task ShouldWork()
     {
-        [PlaywrightTest("har.spec.ts", "should have version and creator")]
-        public async Task ShouldWork()
+        var (page, context, getContent) = await PageWithHAR();
+        await page.GotoAsync(HttpsServer.EmptyPage);
+        JsonElement log = await getContent();
+        Assert.AreEqual("1.2", log.GetProperty("log").GetProperty("version").ToString());
+        Assert.AreEqual("Playwright", log.GetProperty("log").GetProperty("creator").GetProperty("name").ToString());
+    }
+
+    [PlaywrightTest("har.spec.ts", "should have pages in persistent context")]
+    public async Task ShouldWorkWithPersistentContext()
+    {
+        using var harFolder = new TempDirectory();
+        var harPath = Path.Combine(harFolder.Path, "har.json");
+        using var userDataDir = new TempDirectory();
+
+        var browserContext = await BrowserType.LaunchPersistentContextAsync(userDataDir.Path, new()
         {
-            var (page, context, getContent) = await PageWithHAR();
-            await page.GotoAsync(HttpsServer.EmptyPage);
-            JsonElement log = await getContent();
-            Assert.AreEqual("1.2", log.GetProperty("log").GetProperty("version").ToString());
-            Assert.AreEqual("Playwright", log.GetProperty("log").GetProperty("creator").GetProperty("name").ToString());
-        }
+            RecordHarPath = harPath,
+        });
+        var page = browserContext.Pages[0];
+        await page.GotoAsync("data:text/html,<title>Hello</title>");
+        // For data: load comes before domcontentloaded...
+        await page.WaitForLoadStateAsync(LoadState.DOMContentLoaded);
+        await browserContext.CloseAsync();
 
-        [PlaywrightTest("har.spec.ts", "should have pages in persistent context")]
-        public async Task ShouldWorkWithPersistentContext()
+        var content = await File.ReadAllTextAsync(harPath);
+        var log = JsonSerializer.Deserialize<dynamic>(content);
+        Assert.AreEqual(1, log.GetProperty("log").GetProperty("pages").GetArrayLength());
+        var pageEntry = log.GetProperty("log").GetProperty("pages")[0];
+        Assert.AreEqual("Hello", pageEntry.GetProperty("title").ToString());
+    }
+
+    private async Task<(IPage, IBrowserContext, System.Func<Task<dynamic>>)> PageWithHAR()
+    {
+
+        var tmp = new TempDirectory();
+        var harPath = Path.Combine(tmp.Path, "har.json");
+        IBrowserContext context = await Browser.NewContextAsync(new() { RecordHarPath = harPath, IgnoreHTTPSErrors = true });
+        IPage page = await context.NewPageAsync();
+
+        async Task<dynamic> getContent()
         {
-            using var harFolder = new TempDirectory();
-            var harPath = Path.Combine(harFolder.Path, "har.json");
-            using var userDataDir = new TempDirectory();
-
-            var browserContext = await BrowserType.LaunchPersistentContextAsync(userDataDir.Path, new()
-            {
-                RecordHarPath = harPath,
-            });
-            var page = browserContext.Pages[0];
-            await page.GotoAsync("data:text/html,<title>Hello</title>");
-            // For data: load comes before domcontentloaded...
-            await page.WaitForLoadStateAsync(LoadState.DOMContentLoaded);
-            await browserContext.CloseAsync();
-
+            await context.CloseAsync();
             var content = await File.ReadAllTextAsync(harPath);
-            var log = JsonSerializer.Deserialize<dynamic>(content);
-            Assert.AreEqual(1, log.GetProperty("log").GetProperty("pages").GetArrayLength());
-            var pageEntry = log.GetProperty("log").GetProperty("pages")[0];
-            Assert.AreEqual("Hello", pageEntry.GetProperty("title").ToString());
-        }
+            tmp.Dispose();
+            return JsonSerializer.Deserialize<dynamic>(content);
+        };
 
-        private async Task<(IPage, IBrowserContext, System.Func<Task<dynamic>>)> PageWithHAR()
-        {
-
-            var tmp = new TempDirectory();
-            var harPath = Path.Combine(tmp.Path, "har.json");
-            IBrowserContext context = await Browser.NewContextAsync(new() { RecordHarPath = harPath, IgnoreHTTPSErrors = true });
-            IPage page = await context.NewPageAsync();
-
-            async Task<dynamic> getContent()
-            {
-                await context.CloseAsync();
-                var content = await File.ReadAllTextAsync(harPath);
-                tmp.Dispose();
-                return JsonSerializer.Deserialize<dynamic>(content);
-            };
-
-            return (page, context, getContent);
-        }
+        return (page, context, getContent);
     }
 }

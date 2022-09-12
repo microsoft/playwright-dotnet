@@ -28,116 +28,116 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 
-namespace Microsoft.Playwright.Tests
+namespace Microsoft.Playwright.Tests;
+
+/// <summary>
+/// This will identify missing tests from upstream.
+/// </summary>
+internal static class IdentifyMissingTests
 {
+    private static readonly List<(string FileName, string TestName)> _testPairs = new();
+
     /// <summary>
-    /// This will identify missing tests from upstream.
+    /// Runs the scenario.
     /// </summary>
-    internal static class IdentifyMissingTests
+    /// <param name="options">The options argument.</param>
+    public static void Run(IdentifyMissingTestsOptions options)
     {
-        private static readonly List<(string FileName, string TestName)> _testPairs = new();
-
-        /// <summary>
-        /// Runs the scenario.
-        /// </summary>
-        /// <param name="options">The options argument.</param>
-        public static void Run(IdentifyMissingTestsOptions options)
+        // get all files that match a pattern
+        var directoryInfo = new DirectoryInfo(options.SpecFileLocations);
+        if (!directoryInfo.Exists)
         {
-            // get all files that match a pattern
-            var directoryInfo = new DirectoryInfo(options.SpecFileLocations);
-            if (!directoryInfo.Exists)
-            {
-                throw new ArgumentException($"The location ({directoryInfo.FullName}) specified does not exist.");
-            }
-
-            // let's map the test cases from the spec files
-            MapTestsCases(directoryInfo, options, string.Empty);
-
-            // now, let's load the DLL and use some reflection-fu
-            var assembly = Assembly.LoadFrom(options.TestsAssemblyPath);
-
-            var attributes = assembly.DefinedTypes.SelectMany(
-                type => type.GetMethods().SelectMany(method => method.GetCustomAttributes<PlaywrightTestAttribute>()));
-
-            int potentialMatches = 0;
-            int fullMatches = 0;
-            int noMatches = 0;
-            int totalTests = 0;
-
-            List<(string FileName, string TestName)> missingTests = new();
-            List<KeyValuePair<(string FileName, string TestName), List<(string FileName, string TestName)>>> invalidMaps = new();
-            foreach (var atx in attributes)
-            {
-                totalTests++;
-
-                // a test can either be a full match, a partial (i.e. just the test name) or no match
-                var potentialMatch = _testPairs.Where(x => string.Equals(x.TestName, atx.TestName, StringComparison.InvariantCultureIgnoreCase));
-                if (!potentialMatch.Any())
-                {
-                    noMatches++;
-                    missingTests.Add((atx.FileName, atx.TestName));
-                }
-                else if (potentialMatch.Any(x => string.Equals(x.FileName, atx.TrimmedName, StringComparison.InvariantCultureIgnoreCase)))
-                {
-                    fullMatches++;
-                    continue;
-                }
-                else
-                {
-                    invalidMaps.Add(new KeyValuePair<(string, string), List<(string, string)>>((atx.TrimmedName, atx.TestName), potentialMatch.ToList()));
-                    potentialMatches++;
-                }
-            }
-
-            Console.ForegroundColor = ConsoleColor.Green;
-            Console.WriteLine($"Total matching tests: {fullMatches}/{totalTests}.");
-            Console.ResetColor();
-
-            Console.ForegroundColor = ConsoleColor.Yellow;
-            Console.WriteLine($"Total tests found by name, but not by file: {potentialMatches}/{totalTests}.");
-            Console.ResetColor();
-
-            foreach (var invalidTest in invalidMaps)
-            {
-                Console.WriteLine($"{invalidTest.Key.FileName}: {invalidTest.Key.TestName}");
-                foreach (var (fileName, testName) in invalidTest.Value)
-                {
-                    Console.WriteLine($"\t{fileName}: {testName}");
-                }
-            }
-
-            Console.ForegroundColor = ConsoleColor.Red;
-            Console.WriteLine($"Total missing tests: {noMatches}/{totalTests}.");
-            Console.ResetColor();
-
-            foreach (var invalidTest in missingTests)
-            {
-                Console.WriteLine($"{invalidTest.FileName}: {invalidTest.TestName}");
-            }
-
-            Console.WriteLine($"Found/Mismatched/Missing: {fullMatches}/{potentialMatches}/{noMatches} out of {totalTests}");
+            throw new ArgumentException($"The location ({directoryInfo.FullName}) specified does not exist.");
         }
 
-        private static void MapTestsCases(DirectoryInfo directoryInfo, IdentifyMissingTestsOptions options, string basePath)
-        {
-            // get the sub-directories
-            if (options.Recursive)
-            {
-                foreach (var subdirectory in directoryInfo.GetDirectories())
-                {
-                    MapTestsCases(subdirectory, options, $"{basePath}{subdirectory.Name}/");
-                }
-            }
+        // let's map the test cases from the spec files
+        MapTestsCases(directoryInfo, options, string.Empty);
 
-            foreach (var fileInfo in directoryInfo.GetFiles(options.Pattern))
+        // now, let's load the DLL and use some reflection-fu
+        var assembly = Assembly.LoadFrom(options.TestsAssemblyPath);
+
+        var attributes = assembly.DefinedTypes.SelectMany(
+            type => type.GetMethods().SelectMany(method => method.GetCustomAttributes<PlaywrightTestAttribute>()));
+
+        int potentialMatches = 0;
+        int fullMatches = 0;
+        int noMatches = 0;
+        int totalTests = 0;
+
+        List<(string FileName, string TestName)> missingTests = new();
+        List<KeyValuePair<(string FileName, string TestName), List<(string FileName, string TestName)>>> invalidMaps = new();
+        foreach (var atx in attributes)
+        {
+            totalTests++;
+
+            // a test can either be a full match, a partial (i.e. just the test name) or no match
+            var potentialMatch = _testPairs.Where(x => string.Equals(x.TestName, atx.TestName, StringComparison.InvariantCultureIgnoreCase));
+            if (!potentialMatch.Any())
             {
-                ScaffoldTest.FindTestsInFile(
-                    fileInfo.FullName,
-                    (testName) =>
-                    {
-                        _testPairs.Add(new(basePath + fileInfo.Name.Substring(0, fileInfo.Name.IndexOf('.')), testName));
-                    });
+                noMatches++;
+                missingTests.Add((atx.FileName, atx.TestName));
             }
+            else if (potentialMatch.Any(x => string.Equals(x.FileName, atx.TrimmedName, StringComparison.InvariantCultureIgnoreCase)))
+            {
+                fullMatches++;
+                continue;
+            }
+            else
+            {
+                invalidMaps.Add(new KeyValuePair<(string, string), List<(string, string)>>((atx.TrimmedName, atx.TestName), potentialMatch.ToList()));
+                potentialMatches++;
+            }
+        }
+
+        Console.ForegroundColor = ConsoleColor.Green;
+        Console.WriteLine($"Total matching tests: {fullMatches}/{totalTests}.");
+        Console.ResetColor();
+
+        Console.ForegroundColor = ConsoleColor.Yellow;
+        Console.WriteLine($"Total tests found by name, but not by file: {potentialMatches}/{totalTests}.");
+        Console.ResetColor();
+
+        foreach (var invalidTest in invalidMaps)
+        {
+            Console.WriteLine($"{invalidTest.Key.FileName}: {invalidTest.Key.TestName}");
+            foreach (var (fileName, testName) in invalidTest.Value)
+            {
+                Console.WriteLine($"\t{fileName}: {testName}");
+            }
+        }
+
+        Console.ForegroundColor = ConsoleColor.Red;
+        Console.WriteLine($"Total missing tests: {noMatches}/{totalTests}.");
+        Console.ResetColor();
+
+        foreach (var invalidTest in missingTests)
+        {
+            Console.WriteLine($"{invalidTest.FileName}: {invalidTest.TestName}");
+        }
+
+        Console.WriteLine($"Found/Mismatched/Missing: {fullMatches}/{potentialMatches}/{noMatches} out of {totalTests}");
+    }
+
+    private static void MapTestsCases(DirectoryInfo directoryInfo, IdentifyMissingTestsOptions options, string basePath)
+    {
+        // get the sub-directories
+        if (options.Recursive)
+        {
+            foreach (var subdirectory in directoryInfo.GetDirectories())
+            {
+                MapTestsCases(subdirectory, options, $"{basePath}{subdirectory.Name}/");
+            }
+        }
+
+        foreach (var fileInfo in directoryInfo.GetFiles(options.Pattern))
+        {
+            ScaffoldTest.FindTestsInFile(
+                fileInfo.FullName,
+                (testName) =>
+                {
+                    _testPairs.Add(new(basePath + fileInfo.Name.Substring(0, fileInfo.Name.IndexOf('.')), testName));
+                });
         }
     }
 }
+

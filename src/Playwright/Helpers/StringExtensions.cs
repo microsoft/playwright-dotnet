@@ -31,16 +31,16 @@ using System.Text.Json;
 using System.Text.RegularExpressions;
 using System.Text.Unicode;
 
-namespace Microsoft.Playwright.Helpers
-{
-    /// <summary>
-    /// String extensions.
-    /// </summary>
-    internal static class StringExtensions
-    {
-        private static readonly char[] _escapeGlobChars = new[] { '/', '$', '^', '+', '.', '(', ')', '=', '!', '|' };
+namespace Microsoft.Playwright.Helpers;
 
-        private static readonly IDictionary<string, string> _mappings = new Dictionary<string, string>(StringComparer.InvariantCultureIgnoreCase)
+/// <summary>
+/// String extensions.
+/// </summary>
+internal static class StringExtensions
+{
+    private static readonly char[] _escapeGlobChars = new[] { '/', '$', '^', '+', '.', '(', ')', '=', '!', '|' };
+
+    private static readonly IDictionary<string, string> _mappings = new Dictionary<string, string>(StringComparer.InvariantCultureIgnoreCase)
         {
             { ".323", "text/h323" },
             { ".3g2", "video/3gpp2" },
@@ -604,169 +604,168 @@ namespace Microsoft.Playwright.Helpers
             { ".zip", "application/x-zip-compressed" },
         };
 
-        /// <summary>
-        /// Parse the query string.
-        /// </summary>
-        /// <param name="query">Query string.</param>
-        /// <returns>A <see cref="Dictionary{TKey, TValue}"/> containing the parsed QueryString.</returns>
-        public static Dictionary<string, string> ParseQueryString(this string query)
+    /// <summary>
+    /// Parse the query string.
+    /// </summary>
+    /// <param name="query">Query string.</param>
+    /// <returns>A <see cref="Dictionary{TKey, TValue}"/> containing the parsed QueryString.</returns>
+    public static Dictionary<string, string> ParseQueryString(this string query)
+    {
+        if (query is null)
         {
-            if (query is null)
-            {
-                throw new ArgumentNullException(nameof(query));
-            }
-
-            var result = new Dictionary<string, string>();
-
-            if (query.StartsWith("?", StringComparison.InvariantCultureIgnoreCase))
-            {
-                query = query.Substring(1, query.Length - 1);
-            }
-
-            foreach (string keyValue in query.Split('&').Where(kv => kv.Contains('=')))
-            {
-                string[] pair = keyValue.Split('=');
-                result[pair[0]] = pair[1];
-            }
-
-            return result;
+            throw new ArgumentNullException(nameof(query));
         }
 
-        /// <summary>
-        /// Converts an url glob expression to a regex.
-        /// </summary>
-        /// <param name="glob">Input url.</param>
-        /// <returns>A Regex with the glob expression.</returns>
-        public static string GlobToRegex(this string glob)
+        var result = new Dictionary<string, string>();
+
+        if (query.StartsWith("?", StringComparison.InvariantCultureIgnoreCase))
         {
-            if (string.IsNullOrEmpty(glob))
+            query = query.Substring(1, query.Length - 1);
+        }
+
+        foreach (string keyValue in query.Split('&').Where(kv => kv.Contains('=')))
+        {
+            string[] pair = keyValue.Split('=');
+            result[pair[0]] = pair[1];
+        }
+
+        return result;
+    }
+
+    /// <summary>
+    /// Converts an url glob expression to a regex.
+    /// </summary>
+    /// <param name="glob">Input url.</param>
+    /// <returns>A Regex with the glob expression.</returns>
+    public static string GlobToRegex(this string glob)
+    {
+        if (string.IsNullOrEmpty(glob))
+        {
+            return null;
+        }
+
+        List<string> tokens = new List<string> { "^" };
+        bool inGroup = false;
+
+        for (int i = 0; i < glob.Length; ++i)
+        {
+            char c = glob[i];
+            if (_escapeGlobChars.Contains(c))
             {
-                return null;
+                tokens.Add("\\" + c);
+                continue;
             }
 
-            List<string> tokens = new List<string> { "^" };
-            bool inGroup = false;
-
-            for (int i = 0; i < glob.Length; ++i)
+            if (c == '*')
             {
-                char c = glob[i];
-                if (_escapeGlobChars.Contains(c))
+                char? beforeDeep = i == 0 ? (char?)null : glob[i - 1];
+                int starCount = 1;
+
+                while (i < glob.Length - 1 && glob[i + 1] == '*')
                 {
+                    starCount++;
+                    i++;
+                }
+
+                char? afterDeep = i >= glob.Length - 1 ? (char?)null : glob[i + 1];
+                bool isDeep = starCount > 1 &&
+                    (beforeDeep == '/' || beforeDeep == null) &&
+                    (afterDeep == '/' || afterDeep == null);
+                if (isDeep)
+                {
+                    tokens.Add("((?:[^/]*(?:\\/|$))*)");
+                    i++;
+                }
+                else
+                {
+                    tokens.Add("([^/]*)");
+                }
+
+                continue;
+            }
+
+            switch (c)
+            {
+                case '?':
+                    tokens.Add(".");
+                    break;
+                case '{':
+                    inGroup = true;
+                    tokens.Add("(");
+                    break;
+                case '}':
+                    inGroup = false;
+                    tokens.Add(")");
+                    break;
+                case ',':
+                    if (inGroup)
+                    {
+                        tokens.Add("|");
+                        break;
+                    }
+
                     tokens.Add("\\" + c);
-                    continue;
-                }
-
-                if (c == '*')
-                {
-                    char? beforeDeep = i == 0 ? (char?)null : glob[i - 1];
-                    int starCount = 1;
-
-                    while (i < glob.Length - 1 && glob[i + 1] == '*')
-                    {
-                        starCount++;
-                        i++;
-                    }
-
-                    char? afterDeep = i >= glob.Length - 1 ? (char?)null : glob[i + 1];
-                    bool isDeep = starCount > 1 &&
-                        (beforeDeep == '/' || beforeDeep == null) &&
-                        (afterDeep == '/' || afterDeep == null);
-                    if (isDeep)
-                    {
-                        tokens.Add("((?:[^/]*(?:\\/|$))*)");
-                        i++;
-                    }
-                    else
-                    {
-                        tokens.Add("([^/]*)");
-                    }
-
-                    continue;
-                }
-
-                switch (c)
-                {
-                    case '?':
-                        tokens.Add(".");
-                        break;
-                    case '{':
-                        inGroup = true;
-                        tokens.Add("(");
-                        break;
-                    case '}':
-                        inGroup = false;
-                        tokens.Add(")");
-                        break;
-                    case ',':
-                        if (inGroup)
-                        {
-                            tokens.Add("|");
-                            break;
-                        }
-
-                        tokens.Add("\\" + c);
-                        break;
-                    default:
-                        tokens.Add(c.ToString());
-                        break;
-                }
+                    break;
+                default:
+                    tokens.Add(c.ToString());
+                    break;
             }
-
-            tokens.Add("$");
-            return string.Concat(tokens.ToArray());
         }
 
-        internal static string GetContentType(this string path)
+        tokens.Add("$");
+        return string.Concat(tokens.ToArray());
+    }
+
+    internal static string GetContentType(this string path)
+    {
+        const string defaultContentType = "application/octet-stream";
+        string extension = GetExtension(path);
+        if (extension == null)
         {
-            const string defaultContentType = "application/octet-stream";
-            string extension = GetExtension(path);
-            if (extension == null)
-            {
-                return defaultContentType;
-            }
-
-            return _mappings.TryGetValue(extension, out string contentType) ? contentType : defaultContentType;
+            return defaultContentType;
         }
 
-        internal static string MimeType(this string file)
-            => _mappings.TryGetValue(new FileInfo(file).Extension, out string mime) ? mime : "application/octet-stream";
+        return _mappings.TryGetValue(extension, out string contentType) ? contentType : defaultContentType;
+    }
 
-        private static string GetExtension(string path)
+    internal static string MimeType(this string file)
+        => _mappings.TryGetValue(new FileInfo(file).Extension, out string mime) ? mime : "application/octet-stream";
+
+    private static string GetExtension(string path)
+    {
+        if (string.IsNullOrWhiteSpace(path))
         {
-            if (string.IsNullOrWhiteSpace(path))
-            {
-                return null;
-            }
-
-            int index = path.LastIndexOf('.');
-            if (index < 0)
-            {
-                return null;
-            }
-
-            return path.Substring(index);
+            return null;
         }
 
-        public static string EscapeWithQuotes(this string text, string character = "\'")
+        int index = path.LastIndexOf('.');
+        if (index < 0)
         {
-            string stringified = JsonSerializer.Serialize(text, new JsonSerializerOptions
-            {
-                Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping,
-            });
-            string escapedText = stringified.Substring(1, stringified.Length - 2).Replace("\\\"", "\"");
-            if (character == "\'")
-            {
-                return character + Regex.Replace(escapedText, "[']", "\\\'") + character;
-            }
-            if (character == "\"")
-            {
-                return character + Regex.Replace(escapedText, "[\"]", "\\\"") + character;
-            }
-            if (character == "`")
-            {
-                return character + Regex.Replace(escapedText, "[`]", "\\`") + character;
-            }
-            throw new ArgumentException("Invalid escape char");
+            return null;
         }
+
+        return path.Substring(index);
+    }
+
+    public static string EscapeWithQuotes(this string text, string character = "\'")
+    {
+        string stringified = JsonSerializer.Serialize(text, new JsonSerializerOptions
+        {
+            Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping,
+        });
+        string escapedText = stringified.Substring(1, stringified.Length - 2).Replace("\\\"", "\"");
+        if (character == "\'")
+        {
+            return character + Regex.Replace(escapedText, "[']", "\\\'") + character;
+        }
+        if (character == "\"")
+        {
+            return character + Regex.Replace(escapedText, "[\"]", "\\\"") + character;
+        }
+        if (character == "`")
+        {
+            return character + Regex.Replace(escapedText, "[`]", "\\`") + character;
+        }
+        throw new ArgumentException("Invalid escape char");
     }
 }

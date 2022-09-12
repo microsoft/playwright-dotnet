@@ -29,84 +29,83 @@ using System.Threading;
 using System.Threading.Tasks;
 using PathHelper = System.IO.Path;
 
-namespace Microsoft.Playwright.Tests
+namespace Microsoft.Playwright.Tests;
+
+/// <summary>
+/// Represents a directory that is deleted on disposal.
+/// </summary>
+internal class TempDirectory : IDisposable
 {
-    /// <summary>
-    /// Represents a directory that is deleted on disposal.
-    /// </summary>
-    internal class TempDirectory : IDisposable
+    private Task _deleteTask;
+
+    public TempDirectory() : this(PathHelper.Combine(Directory.GetCurrentDirectory(), ".temp", Guid.NewGuid().ToString()))
     {
-        private Task _deleteTask;
+    }
 
-        public TempDirectory() : this(PathHelper.Combine(Directory.GetCurrentDirectory(), ".temp", Guid.NewGuid().ToString()))
+    private TempDirectory(string path)
+    {
+        if (string.IsNullOrEmpty(path))
         {
+            throw new ArgumentException("Path must be specified", nameof(path));
         }
 
-        private TempDirectory(string path)
+        Directory.CreateDirectory(path);
+        Path = path;
+    }
+
+    ~TempDirectory()
+    {
+        Dispose(false);
+    }
+
+    public string Path { get; }
+
+    public void Dispose()
+    {
+        GC.SuppressFinalize(this);
+        Dispose(true);
+    }
+
+    public override string ToString() => Path;
+
+    private static async Task DeleteAsync(string path, CancellationToken cancellationToken = default)
+    {
+        const int minDelayInMs = 200;
+        const int maxDelayInMs = 8000;
+
+        int retryDelay = minDelayInMs;
+        while (true)
         {
-            if (string.IsNullOrEmpty(path))
+            if (!Directory.Exists(path))
             {
-                throw new ArgumentException("Path must be specified", nameof(path));
+                return;
             }
 
-            Directory.CreateDirectory(path);
-            Path = path;
-        }
-
-        ~TempDirectory()
-        {
-            Dispose(false);
-        }
-
-        public string Path { get; }
-
-        public void Dispose()
-        {
-            GC.SuppressFinalize(this);
-            Dispose(true);
-        }
-
-        public override string ToString() => Path;
-
-        private static async Task DeleteAsync(string path, CancellationToken cancellationToken = default)
-        {
-            const int minDelayInMs = 200;
-            const int maxDelayInMs = 8000;
-
-            int retryDelay = minDelayInMs;
-            while (true)
+            cancellationToken.ThrowIfCancellationRequested();
+            try
             {
-                if (!Directory.Exists(path))
+                Directory.Delete(path, true);
+                return;
+            }
+            catch (Exception ex) when (ex is IOException || ex is UnauthorizedAccessException)
+            {
+                await Task.Delay(retryDelay, cancellationToken).ConfigureAwait(false);
+                if (retryDelay < maxDelayInMs)
                 {
-                    return;
-                }
-
-                cancellationToken.ThrowIfCancellationRequested();
-                try
-                {
-                    Directory.Delete(path, true);
-                    return;
-                }
-                catch (Exception ex) when (ex is IOException || ex is UnauthorizedAccessException)
-                {
-                    await Task.Delay(retryDelay, cancellationToken).ConfigureAwait(false);
-                    if (retryDelay < maxDelayInMs)
-                    {
-                        retryDelay = Math.Min(2 * retryDelay, maxDelayInMs);
-                    }
+                    retryDelay = Math.Min(2 * retryDelay, maxDelayInMs);
                 }
             }
         }
+    }
 
-        private Task DeleteAsync(CancellationToken cancellationToken = default)
-            => _deleteTask ??= DeleteAsync(Path, cancellationToken);
+    private Task DeleteAsync(CancellationToken cancellationToken = default)
+        => _deleteTask ??= DeleteAsync(Path, cancellationToken);
 
-        private void Dispose(bool disposing)
+    private void Dispose(bool disposing)
+    {
+        if (_deleteTask == null && disposing)
         {
-            if (_deleteTask == null && disposing)
-            {
-                _ = DeleteAsync();
-            }
+            _ = DeleteAsync();
         }
     }
 }

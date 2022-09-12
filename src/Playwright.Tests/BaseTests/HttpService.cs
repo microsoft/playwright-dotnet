@@ -27,39 +27,38 @@ using System.Threading.Tasks;
 using Microsoft.Playwright.NUnit;
 using Microsoft.Playwright.Tests.TestServer;
 
-namespace Microsoft.Playwright.Tests
+namespace Microsoft.Playwright.Tests;
+
+public class HttpService : IWorkerService
 {
-    public class HttpService : IWorkerService
+    public SimpleServer Server { get; internal set; }
+    public SimpleServer HttpsServer { get; internal set; }
+
+    public static Task<HttpService> Register(WorkerAwareTest test)
     {
-        public SimpleServer Server { get; internal set; }
-        public SimpleServer HttpsServer { get; internal set; }
-
-        public static Task<HttpService> Register(WorkerAwareTest test)
+        var workerIndex = test.WorkerIndex;
+        return test.RegisterService("Http", async () =>
         {
-            var workerIndex = test.WorkerIndex;
-            return test.RegisterService("Http", async () =>
+            var assetDir = Path.Combine(TestUtils.FindParentDirectory("Playwright.Tests.TestServer"), "assets");
+            var http = new HttpService
             {
-                var assetDir = Path.Combine(TestUtils.FindParentDirectory("Playwright.Tests.TestServer"), "assets");
-                var http = new HttpService
-                {
-                    Server = SimpleServer.Create(8907 + workerIndex * 2, assetDir),
-                    HttpsServer = SimpleServer.CreateHttps(8907 + workerIndex * 2 + 1, assetDir)
-                };
-                await Task.WhenAll(http.Server.StartAsync(), http.HttpsServer.StartAsync());
-                return http;
-            });
-        }
+                Server = SimpleServer.Create(8907 + workerIndex * 2, assetDir),
+                HttpsServer = SimpleServer.CreateHttps(8907 + workerIndex * 2 + 1, assetDir)
+            };
+            await Task.WhenAll(http.Server.StartAsync(), http.HttpsServer.StartAsync());
+            return http;
+        });
+    }
 
-        public Task ResetAsync()
-        {
-            Server.Reset();
-            HttpsServer.Reset();
-            return Task.CompletedTask;
-        }
+    public Task ResetAsync()
+    {
+        Server.Reset();
+        HttpsServer.Reset();
+        return Task.CompletedTask;
+    }
 
-        public Task DisposeAsync()
-        {
-            return Task.WhenAll(Server.StopAsync(), HttpsServer.StopAsync());
-        }
+    public Task DisposeAsync()
+    {
+        return Task.WhenAll(Server.StopAsync(), HttpsServer.StopAsync());
     }
 }

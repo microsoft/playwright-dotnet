@@ -28,59 +28,58 @@ using System.Collections.Generic;
 using System.Reflection;
 using System.Runtime.Serialization;
 
-namespace Microsoft.Playwright.Helpers
+namespace Microsoft.Playwright.Helpers;
+
+internal static class EnumHelper
 {
-    internal static class EnumHelper
+    private static readonly ConcurrentDictionary<Type, IReadOnlyDictionary<Enum, string>> EnumToStringCache
+        = new();
+
+    private static readonly ConcurrentDictionary<Type, IReadOnlyDictionary<string, Enum>> StringToEnumCache
+        = new();
+
+    public static string ToValueString<TEnum>(this TEnum value)
+        where TEnum : struct, Enum
     {
-        private static readonly ConcurrentDictionary<Type, IReadOnlyDictionary<Enum, string>> EnumToStringCache
-            = new();
-
-        private static readonly ConcurrentDictionary<Type, IReadOnlyDictionary<string, Enum>> StringToEnumCache
-            = new();
-
-        public static string ToValueString<TEnum>(this TEnum value)
-            where TEnum : struct, Enum
+        var enumValues = EnumToStringCache.GetOrAdd(typeof(TEnum), type =>
         {
-            var enumValues = EnumToStringCache.GetOrAdd(typeof(TEnum), type =>
+            string[] names = Enum.GetNames(type);
+            var dictionary = new Dictionary<Enum, string>();
+            foreach (string t in names)
             {
-                string[] names = Enum.GetNames(type);
-                var dictionary = new Dictionary<Enum, string>();
-                foreach (string t in names)
-                {
-                    var field = type.GetField(t);
-                    string valueName = field.GetCustomAttribute<EnumMemberAttribute>()?.Value ?? t;
-                    var value = (TEnum)field.GetValue(null);
-                    dictionary[value] = valueName;
-                }
+                var field = type.GetField(t);
+                string valueName = field.GetCustomAttribute<EnumMemberAttribute>()?.Value ?? t;
+                var value = (TEnum)field.GetValue(null);
+                dictionary[value] = valueName;
+            }
 
-                return dictionary;
-            });
+            return dictionary;
+        });
 
-            return enumValues[value];
-        }
+        return enumValues[value];
+    }
 
-        public static TEnum FromValueString<TEnum>(string value)
-            where TEnum : struct, Enum
+    public static TEnum FromValueString<TEnum>(string value)
+        where TEnum : struct, Enum
+    {
+        var enumValues = StringToEnumCache.GetOrAdd(typeof(TEnum), type =>
         {
-            var enumValues = StringToEnumCache.GetOrAdd(typeof(TEnum), type =>
+            string[] names = Enum.GetNames(type);
+            var dictionary = new Dictionary<string, Enum>();
+            foreach (string valueName in names)
             {
-                string[] names = Enum.GetNames(type);
-                var dictionary = new Dictionary<string, Enum>();
-                foreach (string valueName in names)
+                var field = type.GetField(valueName);
+                var value = (TEnum)field.GetValue(null);
+                dictionary[valueName] = value;
+                if (field.GetCustomAttribute<EnumMemberAttribute>()?.Value is string enumMember)
                 {
-                    var field = type.GetField(valueName);
-                    var value = (TEnum)field.GetValue(null);
-                    dictionary[valueName] = value;
-                    if (field.GetCustomAttribute<EnumMemberAttribute>()?.Value is string enumMember)
-                    {
-                        dictionary[enumMember] = value;
-                    }
+                    dictionary[enumMember] = value;
                 }
+            }
 
-                return dictionary;
-            });
+            return dictionary;
+        });
 
-            return (TEnum)enumValues[value];
-        }
+        return (TEnum)enumValues[value];
     }
 }

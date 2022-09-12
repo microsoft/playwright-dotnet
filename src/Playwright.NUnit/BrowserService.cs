@@ -25,21 +25,20 @@
 using System.Threading.Tasks;
 using Microsoft.Playwright.TestAdapter;
 
-namespace Microsoft.Playwright.NUnit
+namespace Microsoft.Playwright.NUnit;
+
+public class BrowserService : IWorkerService
 {
-    public class BrowserService : IWorkerService
+    public IBrowser Browser { get; internal set; } = null!;
+
+    public static Task<BrowserService> Register(WorkerAwareTest test, IBrowserType browserType)
     {
-        public IBrowser Browser { get; internal set; } = null!;
-
-        public static Task<BrowserService> Register(WorkerAwareTest test, IBrowserType browserType)
+        return test.RegisterService("Browser", async () => new BrowserService
         {
-            return test.RegisterService("Browser", async () => new BrowserService
-            {
-                Browser = await browserType.LaunchAsync(PlaywrightSettingsProvider.LaunchOptions).ConfigureAwait(false)
-            });
-        }
+            Browser = await browserType.LaunchAsync(PlaywrightSettingsProvider.LaunchOptions).ConfigureAwait(false)
+        });
+    }
 
-        public Task ResetAsync() => Task.CompletedTask;
-        public Task DisposeAsync() => Browser.CloseAsync();
-    };
-}
+    public Task ResetAsync() => Task.CompletedTask;
+    public Task DisposeAsync() => Browser.CloseAsync();
+};

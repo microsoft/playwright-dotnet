@@ -28,77 +28,76 @@ using Microsoft.Playwright.Helpers;
 using Microsoft.Playwright.NUnit;
 using NUnit.Framework;
 
-namespace Microsoft.Playwright.Tests
+namespace Microsoft.Playwright.Tests;
+
+///<playwright-file>chromium/chromium.spec.ts</playwright-file>
+public class BrowserTypeConnectOverCDPTests : PlaywrightTestEx
 {
-    ///<playwright-file>chromium/chromium.spec.ts</playwright-file>
-    public class BrowserTypeConnectOverCDPTests : PlaywrightTestEx
+    [PlaywrightTest("chromium/chromium.spec.ts", "should connect to an existing cdp session")]
+    [Skip(SkipAttribute.Targets.Firefox, SkipAttribute.Targets.Webkit)]
+    public async Task ShouldConnectToAnExistingCDPSession()
     {
-        [PlaywrightTest("chromium/chromium.spec.ts", "should connect to an existing cdp session")]
-        [Skip(SkipAttribute.Targets.Firefox, SkipAttribute.Targets.Webkit)]
-        public async Task ShouldConnectToAnExistingCDPSession()
+        int port = 9393 + WorkerIndex;
+        IBrowser browserServer = await BrowserType.LaunchAsync(new() { Args = new[] { $"--remote-debugging-port={port}" } });
+        try
         {
-            int port = 9393 + WorkerIndex;
-            IBrowser browserServer = await BrowserType.LaunchAsync(new() { Args = new[] { $"--remote-debugging-port={port}" } });
-            try
-            {
-                IBrowser cdpBrowser = await BrowserType.ConnectOverCDPAsync($"http://localhost:{port}/");
-                Assert.AreEqual(cdpBrowser.BrowserType, Playwright.Chromium);
-                var contexts = cdpBrowser.Contexts;
-                Assert.AreEqual(1, cdpBrowser.Contexts.Count);
-                var page = await cdpBrowser.Contexts[0].NewPageAsync();
-                Assert.AreEqual(2, await page.EvaluateAsync<int>("1 + 1"));
-                await cdpBrowser.CloseAsync();
-            }
-            finally
-            {
-
-                await browserServer.CloseAsync();
-            }
+            IBrowser cdpBrowser = await BrowserType.ConnectOverCDPAsync($"http://localhost:{port}/");
+            Assert.AreEqual(cdpBrowser.BrowserType, Playwright.Chromium);
+            var contexts = cdpBrowser.Contexts;
+            Assert.AreEqual(1, cdpBrowser.Contexts.Count);
+            var page = await cdpBrowser.Contexts[0].NewPageAsync();
+            Assert.AreEqual(2, await page.EvaluateAsync<int>("1 + 1"));
+            await cdpBrowser.CloseAsync();
         }
-
-        [PlaywrightTest("chromium/chromium.spec.ts", "should send extra headers with connect request")]
-        [Skip(SkipAttribute.Targets.Firefox, SkipAttribute.Targets.Webkit)]
-        public async Task ShouldSendExtraHeadersWithConnectRequest()
+        finally
         {
-            var waitForRequest = Server.WaitForWebSocketConnectionRequest();
-            BrowserType.ConnectOverCDPAsync($"ws://localhost:{Server.Port}/ws", new()
-            {
-                Headers = new Dictionary<string, string> {
+
+            await browserServer.CloseAsync();
+        }
+    }
+
+    [PlaywrightTest("chromium/chromium.spec.ts", "should send extra headers with connect request")]
+    [Skip(SkipAttribute.Targets.Firefox, SkipAttribute.Targets.Webkit)]
+    public async Task ShouldSendExtraHeadersWithConnectRequest()
+    {
+        var waitForRequest = Server.WaitForWebSocketConnectionRequest();
+        BrowserType.ConnectOverCDPAsync($"ws://localhost:{Server.Port}/ws", new()
+        {
+            Headers = new Dictionary<string, string> {
                     { "x-foo-bar", "fookek" }
                 },
-            }).IgnoreException();
-            var req = await waitForRequest;
-            Assert.AreEqual("fookek", req.Headers["x-foo-bar"]);
-            StringAssert.Contains("Playwright", req.Headers["user-agent"]);
-        }
+        }).IgnoreException();
+        var req = await waitForRequest;
+        Assert.AreEqual("fookek", req.Headers["x-foo-bar"]);
+        StringAssert.Contains("Playwright", req.Headers["user-agent"]);
+    }
 
-        [PlaywrightTest("chromium/chromium.spec.ts", "should report all pages in an existing browser")]
-        [Skip(SkipAttribute.Targets.Firefox, SkipAttribute.Targets.Webkit)]
-        public async Task ShouldReportAllPagesInAnExistingBrowser()
+    [PlaywrightTest("chromium/chromium.spec.ts", "should report all pages in an existing browser")]
+    [Skip(SkipAttribute.Targets.Firefox, SkipAttribute.Targets.Webkit)]
+    public async Task ShouldReportAllPagesInAnExistingBrowser()
+    {
+        int port = 9393 + WorkerIndex;
+        var browserServer = await BrowserType.LaunchAsync(new() { Args = new[] { $"--remote-debugging-port={port}" } });
+        try
         {
-            int port = 9393 + WorkerIndex;
-            var browserServer = await BrowserType.LaunchAsync(new() { Args = new[] { $"--remote-debugging-port={port}" } });
-            try
+            var cdpBrowser = await BrowserType.ConnectOverCDPAsync($"http://127.0.0.1:{port}/");
+            var contexts = cdpBrowser.Contexts;
+            Assert.AreEqual(1, cdpBrowser.Contexts.Count);
+            for (int i = 0; i < 3; i++)
             {
-                var cdpBrowser = await BrowserType.ConnectOverCDPAsync($"http://127.0.0.1:{port}/");
-                var contexts = cdpBrowser.Contexts;
-                Assert.AreEqual(1, cdpBrowser.Contexts.Count);
-                for (int i = 0; i < 3; i++)
-                {
-                    await cdpBrowser.Contexts[0].NewPageAsync();
-                }
-                await cdpBrowser.CloseAsync();
-
-                var cdpBrowser2 = await BrowserType.ConnectOverCDPAsync($"http://127.0.0.1:{port}/");
-
-                Assert.AreEqual(3, cdpBrowser2.Contexts[0].Pages.Count);
-                await cdpBrowser2.CloseAsync();
+                await cdpBrowser.Contexts[0].NewPageAsync();
             }
-            finally
-            {
+            await cdpBrowser.CloseAsync();
 
-                await browserServer.CloseAsync();
-            }
+            var cdpBrowser2 = await BrowserType.ConnectOverCDPAsync($"http://127.0.0.1:{port}/");
+
+            Assert.AreEqual(3, cdpBrowser2.Contexts[0].Pages.Count);
+            await cdpBrowser2.CloseAsync();
+        }
+        finally
+        {
+
+            await browserServer.CloseAsync();
         }
     }
 }

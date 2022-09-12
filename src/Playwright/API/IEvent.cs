@@ -22,13 +22,12 @@
  * SOFTWARE.
  */
 
-namespace Microsoft.Playwright
+namespace Microsoft.Playwright;
+
+public interface IEvent
 {
-    public interface IEvent
-    {
-        /// <summary>
-        /// Event Name.
-        /// </summary>
-        string Name { get; }
-    }
+    /// <summary>
+    /// Event Name.
+    /// </summary>
+    string Name { get; }
 }

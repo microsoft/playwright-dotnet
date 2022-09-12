@@ -24,17 +24,16 @@
 using System.Threading.Tasks;
 using Microsoft.Playwright.Transport.Channels;
 
-namespace Microsoft.Playwright.Core
+namespace Microsoft.Playwright.Core;
+
+internal class Touchscreen : ITouchscreen
 {
-    internal class Touchscreen : ITouchscreen
+    private readonly PageChannel _channel;
+
+    public Touchscreen(PageChannel channel)
     {
-        private readonly PageChannel _channel;
-
-        public Touchscreen(PageChannel channel)
-        {
-            _channel = channel;
-        }
-
-        public Task TapAsync(float x, float y) => _channel.TouchscreenTapAsync(x, y);
+        _channel = channel;
     }
+
+    public Task TapAsync(float x, float y) => _channel.TouchscreenTapAsync(x, y);
 }

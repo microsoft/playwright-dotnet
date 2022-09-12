@@ -25,56 +25,55 @@
 using System;
 using System.Text.RegularExpressions;
 
-namespace Microsoft.Playwright.Helpers
-{
-    /// <summary>
-    /// Extensions for <see cref="System.Text.RegularExpressions.RegexOptions"/>.
-    /// </summary>
-    internal static class RegexOptionsExtensions
-    {
-        public static string GetInlineFlags(this System.Text.RegularExpressions.RegexOptions options)
-        {
-            string flags = string.Empty;
-            if (options.HasFlag(RegexOptions.IgnoreCase))
-            {
-                flags += "i";
-            }
-            if (options.HasFlag(RegexOptions.Singleline))
-            {
-                flags += "s";
-            }
-            if (options.HasFlag(RegexOptions.Multiline))
-            {
-                flags += "m";
-            }
-            if ((options & ~(RegexOptions.IgnoreCase | RegexOptions.Singleline | RegexOptions.Multiline)) != 0)
-            {
-                throw new ArgumentException("Unsupported RegularExpression flags");
-            }
-            return flags;
-        }
+namespace Microsoft.Playwright.Helpers;
 
-        public static RegexOptions FromInlineFlags(string flags)
+/// <summary>
+/// Extensions for <see cref="System.Text.RegularExpressions.RegexOptions"/>.
+/// </summary>
+internal static class RegexOptionsExtensions
+{
+    public static string GetInlineFlags(this System.Text.RegularExpressions.RegexOptions options)
+    {
+        string flags = string.Empty;
+        if (options.HasFlag(RegexOptions.IgnoreCase))
         {
-            var options = RegexOptions.None;
-            for (int i = 0; i < flags.Length; i++)
-            {
-                switch (flags[i])
-                {
-                    case 'i':
-                        options |= RegexOptions.IgnoreCase;
-                        break;
-                    case 's':
-                        options |= RegexOptions.Singleline;
-                        break;
-                    case 'm':
-                        options |= RegexOptions.Multiline;
-                        break;
-                    default:
-                        throw new ArgumentException("Unsupported RegularExpression flags");
-                }
-            }
-            return options;
+            flags += "i";
         }
+        if (options.HasFlag(RegexOptions.Singleline))
+        {
+            flags += "s";
+        }
+        if (options.HasFlag(RegexOptions.Multiline))
+        {
+            flags += "m";
+        }
+        if ((options & ~(RegexOptions.IgnoreCase | RegexOptions.Singleline | RegexOptions.Multiline)) != 0)
+        {
+            throw new ArgumentException("Unsupported RegularExpression flags");
+        }
+        return flags;
+    }
+
+    public static RegexOptions FromInlineFlags(string flags)
+    {
+        var options = RegexOptions.None;
+        for (int i = 0; i < flags.Length; i++)
+        {
+            switch (flags[i])
+            {
+                case 'i':
+                    options |= RegexOptions.IgnoreCase;
+                    break;
+                case 's':
+                    options |= RegexOptions.Singleline;
+                    break;
+                case 'm':
+                    options |= RegexOptions.Multiline;
+                    break;
+                default:
+                    throw new ArgumentException("Unsupported RegularExpression flags");
+            }
+        }
+        return options;
     }
 }

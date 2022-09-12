@@ -28,21 +28,20 @@ using System.Runtime.InteropServices;
 [assembly: NUnit.Framework.Timeout(Microsoft.Playwright.Tests.TestConstants.DefaultTestTimeout)]
 [assembly: NUnit.Framework.Parallelizable(NUnit.Framework.ParallelScope.Fixtures)]
 
-namespace Microsoft.Playwright.Tests
+namespace Microsoft.Playwright.Tests;
+
+internal static class TestConstants
 {
-    internal static class TestConstants
-    {
-        public static string BrowserName { get; set; } = null!;
+    public static string BrowserName { get; set; } = null!;
 
-        public const int DefaultTestTimeout = 30_000;
-        public const int SlowTestTimeout = DefaultTestTimeout * 3;
+    public const int DefaultTestTimeout = 30_000;
+    public const int SlowTestTimeout = DefaultTestTimeout * 3;
 
-        internal static bool IsChromium => BrowserName == BrowserType.Chromium;
-        internal static bool IsFirefox => BrowserName == BrowserType.Firefox;
-        internal static bool IsWebKit => BrowserName == BrowserType.Webkit;
+    internal static bool IsChromium => BrowserName == BrowserType.Chromium;
+    internal static bool IsFirefox => BrowserName == BrowserType.Firefox;
+    internal static bool IsWebKit => BrowserName == BrowserType.Webkit;
 
-        internal static readonly bool IsMacOSX = RuntimeInformation.IsOSPlatform(OSPlatform.OSX);
-        internal static readonly bool IsWindows = RuntimeInformation.IsOSPlatform(OSPlatform.Windows);
-        internal static readonly bool IsLinux = RuntimeInformation.IsOSPlatform(OSPlatform.Linux);
-    }
+    internal static readonly bool IsMacOSX = RuntimeInformation.IsOSPlatform(OSPlatform.OSX);
+    internal static readonly bool IsWindows = RuntimeInformation.IsOSPlatform(OSPlatform.Windows);
+    internal static readonly bool IsLinux = RuntimeInformation.IsOSPlatform(OSPlatform.Linux);
 }

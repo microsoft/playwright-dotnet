@@ -22,21 +22,20 @@
  * SOFTWARE.
  */
 
-namespace Microsoft.Playwright.Helpers
+namespace Microsoft.Playwright.Helpers;
+
+internal static class RouteFallbackOptionsExtensions
 {
-    internal static class RouteFallbackOptionsExtensions
+    public static RouteFallbackOptions FromRouteContinueOptions(this RouteFallbackOptions options, RouteContinueOptions overrides)
     {
-        public static RouteFallbackOptions FromRouteContinueOptions(this RouteFallbackOptions options, RouteContinueOptions overrides)
+        if (overrides == null)
         {
-            if (overrides == null)
-            {
-                return options;
-            }
-            options.Headers = overrides.Headers;
-            options.Method = overrides.Method;
-            options.PostData = overrides.PostData;
-            options.Url = overrides.Url;
             return options;
         }
+        options.Headers = overrides.Headers;
+        options.Method = overrides.Method;
+        options.PostData = overrides.PostData;
+        options.Url = overrides.Url;
+        return options;
     }
 }

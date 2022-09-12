@@ -24,12 +24,11 @@
 
 using System;
 
-namespace Microsoft.Playwright.Transport.Channels
-{
-    internal class FileChooserChannelEventArgs : EventArgs
-    {
-        public ElementHandleChannel Element { get; set; }
+namespace Microsoft.Playwright.Transport.Channels;
 
-        public bool IsMultiple { get; set; }
-    }
+internal class FileChooserChannelEventArgs : EventArgs
+{
+    public ElementHandleChannel Element { get; set; }
+
+    public bool IsMultiple { get; set; }
 }

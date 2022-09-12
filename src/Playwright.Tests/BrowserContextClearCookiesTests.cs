@@ -27,16 +27,16 @@ using System.Threading.Tasks;
 using Microsoft.Playwright.NUnit;
 using NUnit.Framework;
 
-namespace Microsoft.Playwright.Tests
+namespace Microsoft.Playwright.Tests;
+
+public class BrowserContextClearCookiesTests : PageTestEx
 {
-    public class BrowserContextClearCookiesTests : PageTestEx
+    [PlaywrightTest("browsercontext-clearcookies.spec.ts", "should clear cookies")]
+    public async Task ShouldClearCookies()
     {
-        [PlaywrightTest("browsercontext-clearcookies.spec.ts", "should clear cookies")]
-        public async Task ShouldClearCookies()
+        await Page.GotoAsync(Server.EmptyPage);
+        await Context.AddCookiesAsync(new[]
         {
-            await Page.GotoAsync(Server.EmptyPage);
-            await Context.AddCookiesAsync(new[]
-            {
                 new Cookie
                 {
                     Url = Server.EmptyPage,
@@ -44,19 +44,19 @@ namespace Microsoft.Playwright.Tests
                     Value = "1"
                 }
             });
-            Assert.AreEqual("cookie1=1", await Page.EvaluateAsync<string>("document.cookie"));
-            await Context.ClearCookiesAsync();
-            Assert.IsEmpty(await Context.CookiesAsync());
-            await Page.ReloadAsync();
-            Assert.IsEmpty(await Page.EvaluateAsync<string>("document.cookie"));
-        }
+        Assert.AreEqual("cookie1=1", await Page.EvaluateAsync<string>("document.cookie"));
+        await Context.ClearCookiesAsync();
+        Assert.IsEmpty(await Context.CookiesAsync());
+        await Page.ReloadAsync();
+        Assert.IsEmpty(await Page.EvaluateAsync<string>("document.cookie"));
+    }
 
-        [PlaywrightTest("browsercontext-clearcookies.spec.ts", "should isolate cookies when clearing")]
-        public async Task ShouldIsolateWhenClearing()
+    [PlaywrightTest("browsercontext-clearcookies.spec.ts", "should isolate cookies when clearing")]
+    public async Task ShouldIsolateWhenClearing()
+    {
+        await using var anotherContext = await Browser.NewContextAsync();
+        await Context.AddCookiesAsync(new[]
         {
-            await using var anotherContext = await Browser.NewContextAsync();
-            await Context.AddCookiesAsync(new[]
-            {
                 new Cookie
                 {
                     Name = "page1cookie",
@@ -65,8 +65,8 @@ namespace Microsoft.Playwright.Tests
                 }
             });
 
-            await anotherContext.AddCookiesAsync(new[]
-            {
+        await anotherContext.AddCookiesAsync(new[]
+        {
                 new Cookie
                 {
                     Name = "page2cookie",
@@ -75,16 +75,15 @@ namespace Microsoft.Playwright.Tests
                 }
             });
 
-            Assert.That(await Context.CookiesAsync(), Has.Count.EqualTo(1));
-            Assert.That(await anotherContext.CookiesAsync(), Has.Count.EqualTo(1));
+        Assert.That(await Context.CookiesAsync(), Has.Count.EqualTo(1));
+        Assert.That(await anotherContext.CookiesAsync(), Has.Count.EqualTo(1));
 
-            await Context.ClearCookiesAsync();
-            Assert.IsEmpty((await Context.CookiesAsync()));
-            Assert.That((await anotherContext.CookiesAsync()), Has.Count.EqualTo(1));
+        await Context.ClearCookiesAsync();
+        Assert.IsEmpty((await Context.CookiesAsync()));
+        Assert.That((await anotherContext.CookiesAsync()), Has.Count.EqualTo(1));
 
-            await anotherContext.ClearCookiesAsync();
-            Assert.IsEmpty(await Context.CookiesAsync());
-            Assert.IsEmpty(await anotherContext.CookiesAsync());
-        }
+        await anotherContext.ClearCookiesAsync();
+        Assert.IsEmpty(await Context.CookiesAsync());
+        Assert.IsEmpty(await anotherContext.CookiesAsync());
     }
 }

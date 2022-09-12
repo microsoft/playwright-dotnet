@@ -25,44 +25,44 @@
 using System.Threading.Tasks;
 using NUnit.Framework;
 
-namespace Microsoft.Playwright.Tests.Locator
+namespace Microsoft.Playwright.Tests.Locator;
+
+
+public class LocatorClickTests : PageTestEx
 {
-
-    public class LocatorClickTests : PageTestEx
+    [PlaywrightTest("locator-click.spec.ts", "should work")]
+    public async Task ShouldWork()
     {
-        [PlaywrightTest("locator-click.spec.ts", "should work")]
-        public async Task ShouldWork()
-        {
-            await Page.GotoAsync(Server.Prefix + "/input/button.html");
-            var button = Page.Locator("button");
-            await button.ClickAsync();
-            Assert.AreEqual("Clicked", await Page.EvaluateAsync<string>("() => window['result']"));
-        }
+        await Page.GotoAsync(Server.Prefix + "/input/button.html");
+        var button = Page.Locator("button");
+        await button.ClickAsync();
+        Assert.AreEqual("Clicked", await Page.EvaluateAsync<string>("() => window['result']"));
+    }
 
-        [PlaywrightTest("locator-click.spec.ts", "should work with Node removed")]
-        public async Task ShouldWorkWithNodeRemoved()
-        {
-            await Page.GotoAsync(Server.Prefix + "/input/button.html");
-            await Page.EvaluateAsync("() => delete window['Node']");
-            var button = Page.Locator("button");
-            await button.ClickAsync();
-            Assert.AreEqual("Clicked", await Page.EvaluateAsync<string>("() => window['result']"));
-        }
+    [PlaywrightTest("locator-click.spec.ts", "should work with Node removed")]
+    public async Task ShouldWorkWithNodeRemoved()
+    {
+        await Page.GotoAsync(Server.Prefix + "/input/button.html");
+        await Page.EvaluateAsync("() => delete window['Node']");
+        var button = Page.Locator("button");
+        await button.ClickAsync();
+        Assert.AreEqual("Clicked", await Page.EvaluateAsync<string>("() => window['result']"));
+    }
 
-        [PlaywrightTest("locator-click.spec.ts", "should work for TextNodes")]
-        public async Task ShouldWorkForTextNodes()
-        {
-            await Page.GotoAsync(Server.Prefix + "/input/button.html");
-            var buttonTextNode = await Page.EvaluateHandleAsync("() => document.querySelector('button').firstChild");
-            await buttonTextNode.AsElement().ClickAsync();
-            Assert.AreEqual("Clicked", await Page.EvaluateAsync<string>("() => window['result']"));
-        }
+    [PlaywrightTest("locator-click.spec.ts", "should work for TextNodes")]
+    public async Task ShouldWorkForTextNodes()
+    {
+        await Page.GotoAsync(Server.Prefix + "/input/button.html");
+        var buttonTextNode = await Page.EvaluateHandleAsync("() => document.querySelector('button').firstChild");
+        await buttonTextNode.AsElement().ClickAsync();
+        Assert.AreEqual("Clicked", await Page.EvaluateAsync<string>("() => window['result']"));
+    }
 
-        [PlaywrightTest("locator-click.spec.ts", "should double click the button")]
-        public async Task ShouldDoubleClickTheButton()
-        {
-            await Page.GotoAsync(Server.Prefix + "/input/button.html");
-            await Page.EvaluateAsync(@"() =>
+    [PlaywrightTest("locator-click.spec.ts", "should double click the button")]
+    public async Task ShouldDoubleClickTheButton()
+    {
+        await Page.GotoAsync(Server.Prefix + "/input/button.html");
+        await Page.EvaluateAsync(@"() =>
 {
   window['double'] = false;
   const button = document.querySelector('button');
@@ -71,10 +71,9 @@ namespace Microsoft.Playwright.Tests.Locator
   });
 }");
 
-            var button = Page.Locator("button");
-            await button.DblClickAsync();
-            Assert.IsTrue(await Page.EvaluateAsync<bool>("() => window['double']"));
-            Assert.AreEqual("Clicked", await Page.EvaluateAsync<string>("() => window['result']"));
-        }
+        var button = Page.Locator("button");
+        await button.DblClickAsync();
+        Assert.IsTrue(await Page.EvaluateAsync<bool>("() => window['double']"));
+        Assert.AreEqual("Clicked", await Page.EvaluateAsync<string>("() => window['result']"));
     }
 }

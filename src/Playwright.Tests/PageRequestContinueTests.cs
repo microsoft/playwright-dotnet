@@ -32,124 +32,123 @@ using System.Threading.Tasks;
 using Microsoft.Playwright.NUnit;
 using NUnit.Framework;
 
-namespace Microsoft.Playwright.Tests
+namespace Microsoft.Playwright.Tests;
+
+public class PageRequestContinueTests : PageTestEx
 {
-    public class PageRequestContinueTests : PageTestEx
+    [PlaywrightTest("page-request-continue.spec.ts", "should work")]
+    public async Task ShouldWork()
     {
-        [PlaywrightTest("page-request-continue.spec.ts", "should work")]
-        public async Task ShouldWork()
-        {
-            await Page.RouteAsync("**/*", (route) => route.ContinueAsync());
-            await Page.GotoAsync(Server.EmptyPage);
-        }
+        await Page.RouteAsync("**/*", (route) => route.ContinueAsync());
+        await Page.GotoAsync(Server.EmptyPage);
+    }
 
-        [PlaywrightTest("page-request-continue.spec.ts", "should amend HTTP headers")]
-        public async Task ShouldAmendHTTPHeaders()
+    [PlaywrightTest("page-request-continue.spec.ts", "should amend HTTP headers")]
+    public async Task ShouldAmendHTTPHeaders()
+    {
+        await Page.RouteAsync("**/*", (route) =>
         {
-            await Page.RouteAsync("**/*", (route) =>
-            {
 #pragma warning disable 0612
-                var headers = new Dictionary<string, string>(route.Request.Headers.ToDictionary(x => x.Key, x => x.Value)) { ["FOO"] = "bar" };
+            var headers = new Dictionary<string, string>(route.Request.Headers.ToDictionary(x => x.Key, x => x.Value)) { ["FOO"] = "bar" };
 #pragma warning restore 0612
-                route.ContinueAsync(new() { Headers = headers });
-            });
-            await Page.GotoAsync(Server.EmptyPage);
-            var requestTask = Server.WaitForRequest("/sleep.zzz", request => request.Headers["foo"]);
-            await TaskUtils.WhenAll(
-                requestTask,
-                Page.EvaluateAsync("() => fetch('/sleep.zzz')")
+            route.ContinueAsync(new() { Headers = headers });
+        });
+        await Page.GotoAsync(Server.EmptyPage);
+        var requestTask = Server.WaitForRequest("/sleep.zzz", request => request.Headers["foo"]);
+        await TaskUtils.WhenAll(
+            requestTask,
+            Page.EvaluateAsync("() => fetch('/sleep.zzz')")
+        );
+        Assert.AreEqual("bar", requestTask.Result);
+    }
+
+    [PlaywrightTest("page-request-continue.spec.ts", "should amend method on main request")]
+    public async Task ShouldAmendMethodOnMainRequest()
+    {
+        var methodTask = Server.WaitForRequest("/empty.html", r => r.Method);
+        await Page.RouteAsync("**/*", (route) => route.ContinueAsync(new() { Method = HttpMethod.Post.Method }));
+        await Page.GotoAsync(Server.EmptyPage);
+        Assert.AreEqual("POST", await methodTask);
+    }
+
+    [PlaywrightTest("page-request-continue.spec.ts", "should amend post data")]
+    public async Task ShouldAmendPostData()
+    {
+        await Page.GotoAsync(Server.EmptyPage);
+        await Page.RouteAsync("**/*", (route) =>
+        {
+            route.ContinueAsync(new() { PostData = Encoding.UTF8.GetBytes("doggo") });
+        });
+        var requestTask = Server.WaitForRequest("/sleep.zzz", request =>
+        {
+            using StreamReader reader = new(request.Body);
+            return reader.ReadToEndAsync().GetAwaiter().GetResult();
+        });
+
+        await TaskUtils.WhenAll(
+            requestTask,
+            Page.EvaluateAsync("() => fetch('/sleep.zzz', { method: 'POST', body: 'birdy' })")
+        );
+        Assert.AreEqual("doggo", requestTask.Result);
+    }
+
+    [PlaywrightTest("page-request-continue.spec.ts", "should not throw when continuing while page is closing")]
+    public async Task ShouldNotThrowWhenContinuingWhilePageIsClosing()
+    {
+        Task done = null;
+        await Page.RouteAsync("**/*", (route) =>
+        {
+            done = Task.WhenAll(
+                route.ContinueAsync(),
+                Page.CloseAsync()
             );
-            Assert.AreEqual("bar", requestTask.Result);
-        }
-
-        [PlaywrightTest("page-request-continue.spec.ts", "should amend method on main request")]
-        public async Task ShouldAmendMethodOnMainRequest()
-        {
-            var methodTask = Server.WaitForRequest("/empty.html", r => r.Method);
-            await Page.RouteAsync("**/*", (route) => route.ContinueAsync(new() { Method = HttpMethod.Post.Method }));
-            await Page.GotoAsync(Server.EmptyPage);
-            Assert.AreEqual("POST", await methodTask);
-        }
-
-        [PlaywrightTest("page-request-continue.spec.ts", "should amend post data")]
-        public async Task ShouldAmendPostData()
+        });
+        await PlaywrightAssert.ThrowsAsync<PlaywrightException>(async () =>
         {
             await Page.GotoAsync(Server.EmptyPage);
-            await Page.RouteAsync("**/*", (route) =>
-            {
-                route.ContinueAsync(new() { PostData = Encoding.UTF8.GetBytes("doggo") });
-            });
-            var requestTask = Server.WaitForRequest("/sleep.zzz", request =>
-            {
-                using StreamReader reader = new(request.Body);
-                return reader.ReadToEndAsync().GetAwaiter().GetResult();
-            });
+        });
+        await done;
+    }
 
-            await TaskUtils.WhenAll(
-                requestTask,
-                Page.EvaluateAsync("() => fetch('/sleep.zzz', { method: 'POST', body: 'birdy' })")
-            );
-            Assert.AreEqual("doggo", requestTask.Result);
-        }
-
-        [PlaywrightTest("page-request-continue.spec.ts", "should not throw when continuing while page is closing")]
-        public async Task ShouldNotThrowWhenContinuingWhilePageIsClosing()
+    [PlaywrightTest("page-request-continue.spec.ts", "should not throw when continuing after page is closed")]
+    public async Task ShouldNotThrowWhenContinuingAfterPageIsClosed()
+    {
+        var tsc = new TaskCompletionSource<bool>();
+        Task done = null;
+        await Page.RouteAsync("**/*", async (route) =>
         {
-            Task done = null;
-            await Page.RouteAsync("**/*", (route) =>
-            {
-                done = Task.WhenAll(
-                    route.ContinueAsync(),
-                    Page.CloseAsync()
-                );
-            });
-            await PlaywrightAssert.ThrowsAsync<PlaywrightException>(async () =>
-            {
-                await Page.GotoAsync(Server.EmptyPage);
-            });
-            await done;
-        }
-
-        [PlaywrightTest("page-request-continue.spec.ts", "should not throw when continuing after page is closed")]
-        public async Task ShouldNotThrowWhenContinuingAfterPageIsClosed()
+            await Page.CloseAsync();
+            done = route.ContinueAsync();
+            tsc.SetResult(true);
+        });
+        await PlaywrightAssert.ThrowsAsync<PlaywrightException>(async () =>
         {
-            var tsc = new TaskCompletionSource<bool>();
-            Task done = null;
-            await Page.RouteAsync("**/*", async (route) =>
-            {
-                await Page.CloseAsync();
-                done = route.ContinueAsync();
-                tsc.SetResult(true);
-            });
-            await PlaywrightAssert.ThrowsAsync<PlaywrightException>(async () =>
-            {
-                await Page.GotoAsync(Server.EmptyPage);
-            });
-            await tsc.Task;
-            await done;
-        }
+            await Page.GotoAsync(Server.EmptyPage);
+        });
+        await tsc.Task;
+        await done;
+    }
 
-        [PlaywrightTest("page-request-continue.spec.ts", "should not allow changing protocol when overriding url")]
-        public async Task ShouldNotAllowChangingProtocolWhenOverridingUrl()
+    [PlaywrightTest("page-request-continue.spec.ts", "should not allow changing protocol when overriding url")]
+    public async Task ShouldNotAllowChangingProtocolWhenOverridingUrl()
+    {
+        var tcs = new TaskCompletionSource<Exception>();
+        await Page.RouteAsync("**/empty.html", async (route) =>
         {
-            var tcs = new TaskCompletionSource<Exception>();
-            await Page.RouteAsync("**/empty.html", async (route) =>
+            try
             {
-                try
-                {
-                    await route.ContinueAsync(new RouteContinueOptions { Url = "file:///tmp/foo" });
-                    tcs.SetResult(null);
-                }
-                catch (Exception ex)
-                {
-                    tcs.SetResult(ex);
-                }
-            });
-            var gotoTask = Page.GotoAsync(Server.EmptyPage, new PageGotoOptions { Timeout = 5000 });
-            var exception = await tcs.Task;
-            Assert.IsInstanceOf<PlaywrightException>(exception);
-            Assert.AreEqual("New URL must have same protocol as overridden URL", exception.Message);
-            await PlaywrightAssert.ThrowsAsync<TimeoutException>(() => gotoTask);
-        }
+                await route.ContinueAsync(new RouteContinueOptions { Url = "file:///tmp/foo" });
+                tcs.SetResult(null);
+            }
+            catch (Exception ex)
+            {
+                tcs.SetResult(ex);
+            }
+        });
+        var gotoTask = Page.GotoAsync(Server.EmptyPage, new PageGotoOptions { Timeout = 5000 });
+        var exception = await tcs.Task;
+        Assert.IsInstanceOf<PlaywrightException>(exception);
+        Assert.AreEqual("New URL must have same protocol as overridden URL", exception.Message);
+        await PlaywrightAssert.ThrowsAsync<TimeoutException>(() => gotoTask);
     }
 }

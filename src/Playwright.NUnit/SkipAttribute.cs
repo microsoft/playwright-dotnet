@@ -31,55 +31,54 @@ using NUnit.Framework;
 using NUnit.Framework.Interfaces;
 using NUnit.Framework.Internal;
 
-namespace Microsoft.Playwright.NUnit
+namespace Microsoft.Playwright.NUnit;
+
+public class SkipAttribute : NUnitAttribute, IApplyToTest
 {
-    public class SkipAttribute : NUnitAttribute, IApplyToTest
+    private readonly Targets[] _combinations;
+
+    public TestContext? TestContext { get; set; }
+
+    [Flags]
+    public enum Targets : short
     {
-        private readonly Targets[] _combinations;
+        Windows = 1 << 0,
+        Linux = 1 << 1,
+        OSX = 1 << 2,
+        Chromium = 1 << 3,
+        Firefox = 1 << 4,
+        Webkit = 1 << 5
+    }
 
-        public TestContext? TestContext { get; set; }
+    /// <summary>
+    /// Skips the combinations provided.
+    /// </summary>
+    /// <param name="pairs"></param>
+    public SkipAttribute(params Targets[] combinations)
+    {
+        _combinations = combinations;
+    }
 
-        [Flags]
-        public enum Targets : short
+    public void ApplyToTest(Test test)
+    {
+        if (_combinations.Any(combination =>
         {
-            Windows = 1 << 0,
-            Linux = 1 << 1,
-            OSX = 1 << 2,
-            Chromium = 1 << 3,
-            Firefox = 1 << 4,
-            Webkit = 1 << 5
-        }
-
-        /// <summary>
-        /// Skips the combinations provided.
-        /// </summary>
-        /// <param name="pairs"></param>
-        public SkipAttribute(params Targets[] combinations)
+            var requirements = (Enum.GetValues(typeof(Targets)) as Targets[]).Where(x => combination.HasFlag(x));
+            return requirements.All(flag =>
+                flag switch
+                {
+                    Targets.Windows => RuntimeInformation.IsOSPlatform(System.Runtime.InteropServices.OSPlatform.Windows),
+                    Targets.Linux => RuntimeInformation.IsOSPlatform(System.Runtime.InteropServices.OSPlatform.Linux),
+                    Targets.OSX => RuntimeInformation.IsOSPlatform(System.Runtime.InteropServices.OSPlatform.OSX),
+                    Targets.Chromium => PlaywrightSettingsProvider.BrowserName == BrowserType.Chromium,
+                    Targets.Firefox => PlaywrightSettingsProvider.BrowserName == BrowserType.Firefox,
+                    Targets.Webkit => PlaywrightSettingsProvider.BrowserName == BrowserType.Webkit,
+                    _ => false,
+                });
+        }))
         {
-            _combinations = combinations;
-        }
-
-        public void ApplyToTest(Test test)
-        {
-            if (_combinations.Any(combination =>
-            {
-                var requirements = (Enum.GetValues(typeof(Targets)) as Targets[]).Where(x => combination.HasFlag(x));
-                return requirements.All(flag =>
-                    flag switch
-                    {
-                        Targets.Windows => RuntimeInformation.IsOSPlatform(System.Runtime.InteropServices.OSPlatform.Windows),
-                        Targets.Linux => RuntimeInformation.IsOSPlatform(System.Runtime.InteropServices.OSPlatform.Linux),
-                        Targets.OSX => RuntimeInformation.IsOSPlatform(System.Runtime.InteropServices.OSPlatform.OSX),
-                        Targets.Chromium => PlaywrightSettingsProvider.BrowserName == BrowserType.Chromium,
-                        Targets.Firefox => PlaywrightSettingsProvider.BrowserName == BrowserType.Firefox,
-                        Targets.Webkit => PlaywrightSettingsProvider.BrowserName == BrowserType.Webkit,
-                        _ => false,
-                    });
-            }))
-            {
-                test.RunState = RunState.Ignored;
-                test.Properties.Set(global::NUnit.Framework.Internal.PropertyNames.SkipReason, "Skipped by browser/platform");
-            }
+            test.RunState = RunState.Ignored;
+            test.Properties.Set(global::NUnit.Framework.Internal.PropertyNames.SkipReason, "Skipped by browser/platform");
         }
     }
 }

@@ -26,33 +26,32 @@ using System.Threading.Tasks;
 using Microsoft.Playwright.NUnit;
 using NUnit.Framework;
 
-namespace Microsoft.Playwright.Tests
-{
-    public class BrowserContextServiceWorkerPolicyTests : BrowserTestEx
-    {
-        [PlaywrightTest("browsercontext-service-worker-policy.spec.ts", "should allow service workers by default")]
-        public async Task ShouldAllowServiceWorkersByDefault()
-        {
-            var context = await Browser.NewContextAsync();
-            var page = await context.NewPageAsync();
-            await page.GotoAsync(Server.Prefix + "/serviceworkers/empty/sw.html");
-            var registrationResult = await page.EvaluateAsync<object>("() => window['registrationPromise']");
-            Assert.IsNotNull(registrationResult);
-            await context.CloseAsync();
-        }
+namespace Microsoft.Playwright.Tests;
 
-        [PlaywrightTest("browsercontext-service-worker-policy.spec.ts", "blocks service worker registration")]
-        public async Task ShouldBlockServiceWorkerRegistration()
+public class BrowserContextServiceWorkerPolicyTests : BrowserTestEx
+{
+    [PlaywrightTest("browsercontext-service-worker-policy.spec.ts", "should allow service workers by default")]
+    public async Task ShouldAllowServiceWorkersByDefault()
+    {
+        var context = await Browser.NewContextAsync();
+        var page = await context.NewPageAsync();
+        await page.GotoAsync(Server.Prefix + "/serviceworkers/empty/sw.html");
+        var registrationResult = await page.EvaluateAsync<object>("() => window['registrationPromise']");
+        Assert.IsNotNull(registrationResult);
+        await context.CloseAsync();
+    }
+
+    [PlaywrightTest("browsercontext-service-worker-policy.spec.ts", "blocks service worker registration")]
+    public async Task ShouldBlockServiceWorkerRegistration()
+    {
+        var context = await Browser.NewContextAsync(new()
         {
-            var context = await Browser.NewContextAsync(new()
-            {
-                ServiceWorkers = ServiceWorkerPolicy.Block
-            });
-            var page = await context.NewPageAsync();
-            var (consoleMessage, _) = await TaskUtils.WhenAll(page.WaitForConsoleMessageAsync(),
-                page.GotoAsync(Server.Prefix + "/serviceworkers/empty/sw.html"));
-            Assert.AreEqual("Service Worker registration blocked by Playwright", consoleMessage.Text);
-            await context.CloseAsync();
-        }
+            ServiceWorkers = ServiceWorkerPolicy.Block
+        });
+        var page = await context.NewPageAsync();
+        var (consoleMessage, _) = await TaskUtils.WhenAll(page.WaitForConsoleMessageAsync(),
+            page.GotoAsync(Server.Prefix + "/serviceworkers/empty/sw.html"));
+        Assert.AreEqual("Service Worker registration blocked by Playwright", consoleMessage.Text);
+        await context.CloseAsync();
     }
 }

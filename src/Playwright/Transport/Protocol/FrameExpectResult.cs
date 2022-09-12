@@ -22,14 +22,13 @@
  * SOFTWARE.
  */
 
-namespace Microsoft.Playwright.Transport.Protocol
+namespace Microsoft.Playwright.Transport.Protocol;
+
+internal class FrameExpectResult
 {
-    internal class FrameExpectResult
-    {
-        public bool Matches { get; set; }
+    public bool Matches { get; set; }
 
-        public object Received { get; set; }
+    public object Received { get; set; }
 
-        public string[] Log { get; set; }
-    }
+    public string[] Log { get; set; }
 }

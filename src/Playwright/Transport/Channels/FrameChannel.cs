@@ -31,721 +31,720 @@ using Microsoft.Playwright.Core;
 using Microsoft.Playwright.Helpers;
 using Microsoft.Playwright.Transport.Protocol;
 
-namespace Microsoft.Playwright.Transport.Channels
+namespace Microsoft.Playwright.Transport.Channels;
+
+internal class FrameChannel : Channel<Frame>
 {
-    internal class FrameChannel : Channel<Frame>
+    public FrameChannel(string guid, Connection connection, Frame owner) : base(guid, connection, owner)
     {
-        public FrameChannel(string guid, Connection connection, Frame owner) : base(guid, connection, owner)
+    }
+
+    internal event EventHandler<FrameNavigatedEventArgs> Navigated;
+
+    internal event EventHandler<FrameChannelLoadStateEventArgs> LoadState;
+
+    internal override void OnMessage(string method, JsonElement? serverParams)
+    {
+        switch (method)
         {
-        }
+            case "navigated":
+                var e = serverParams?.ToObject<FrameNavigatedEventArgs>(Connection.DefaultJsonSerializerOptions);
 
-        internal event EventHandler<FrameNavigatedEventArgs> Navigated;
-
-        internal event EventHandler<FrameChannelLoadStateEventArgs> LoadState;
-
-        internal override void OnMessage(string method, JsonElement? serverParams)
-        {
-            switch (method)
-            {
-                case "navigated":
-                    var e = serverParams?.ToObject<FrameNavigatedEventArgs>(Connection.DefaultJsonSerializerOptions);
-
-                    if (serverParams.Value.TryGetProperty("newDocument", out var documentElement))
-                    {
-                        e.NewDocument = documentElement.ToObject<NavigateDocument>(Connection.DefaultJsonSerializerOptions);
-                    }
-
-                    Navigated?.Invoke(this, e);
-                    break;
-                case "loadstate":
-                    LoadState?.Invoke(
-                        this,
-                        serverParams?.ToObject<FrameChannelLoadStateEventArgs>(Connection.DefaultJsonSerializerOptions));
-                    break;
-            }
-        }
-
-        internal Task<ElementHandleChannel> QuerySelectorAsync(string selector, bool? strict)
-        {
-            var args = new Dictionary<string, object>
-            {
-                ["selector"] = selector,
-                ["strict"] = strict,
-            };
-
-            return Connection.SendMessageToServerAsync<ElementHandleChannel>(Guid, "querySelector", args);
-        }
-
-        internal Task<ResponseChannel> GotoAsync(string url, float? timeout, WaitUntilState? waitUntil, string referer)
-        {
-            var args = new Dictionary<string, object>
-            {
-                ["url"] = url,
-                ["timeout"] = timeout,
-                ["waitUntil"] = waitUntil,
-                ["referer"] = referer,
-            };
-            return Connection.SendMessageToServerAsync<ResponseChannel>(Guid, "goto", args);
-        }
-
-        internal Task<JSHandleChannel> EvaluateExpressionHandleAsync(
-            string script,
-            object arg)
-        {
-            return Connection.SendMessageToServerAsync<JSHandleChannel>(
-                Guid,
-                "evaluateExpressionHandle",
-                new Dictionary<string, object>
+                if (serverParams.Value.TryGetProperty("newDocument", out var documentElement))
                 {
-                    ["expression"] = script,
-                    ["arg"] = arg,
-                });
-        }
+                    e.NewDocument = documentElement.ToObject<NavigateDocument>(Connection.DefaultJsonSerializerOptions);
+                }
 
-        internal Task<JSHandleChannel> WaitForFunctionAsync(
-            string expression,
-            object arg,
-            float? timeout,
-            float? polling)
+                Navigated?.Invoke(this, e);
+                break;
+            case "loadstate":
+                LoadState?.Invoke(
+                    this,
+                    serverParams?.ToObject<FrameChannelLoadStateEventArgs>(Connection.DefaultJsonSerializerOptions));
+                break;
+        }
+    }
+
+    internal Task<ElementHandleChannel> QuerySelectorAsync(string selector, bool? strict)
+    {
+        var args = new Dictionary<string, object>
         {
-            var args = new Dictionary<string, object>
+            ["selector"] = selector,
+            ["strict"] = strict,
+        };
+
+        return Connection.SendMessageToServerAsync<ElementHandleChannel>(Guid, "querySelector", args);
+    }
+
+    internal Task<ResponseChannel> GotoAsync(string url, float? timeout, WaitUntilState? waitUntil, string referer)
+    {
+        var args = new Dictionary<string, object>
+        {
+            ["url"] = url,
+            ["timeout"] = timeout,
+            ["waitUntil"] = waitUntil,
+            ["referer"] = referer,
+        };
+        return Connection.SendMessageToServerAsync<ResponseChannel>(Guid, "goto", args);
+    }
+
+    internal Task<JSHandleChannel> EvaluateExpressionHandleAsync(
+        string script,
+        object arg)
+    {
+        return Connection.SendMessageToServerAsync<JSHandleChannel>(
+            Guid,
+            "evaluateExpressionHandle",
+            new Dictionary<string, object>
             {
-                ["expression"] = expression,
+                ["expression"] = script,
                 ["arg"] = arg,
-                ["timeout"] = timeout,
-                ["pollingInterval"] = polling,
-            };
-            return Connection.SendMessageToServerAsync<JSHandleChannel>(
-                Guid,
-                "waitForFunction",
-                args);
-        }
+            });
+    }
 
-        internal Task<JsonElement?> EvaluateExpressionAsync(
-            string script,
-            object arg)
+    internal Task<JSHandleChannel> WaitForFunctionAsync(
+        string expression,
+        object arg,
+        float? timeout,
+        float? polling)
+    {
+        var args = new Dictionary<string, object>
         {
-            return Connection.SendMessageToServerAsync<JsonElement?>(
-                Guid,
-                "evaluateExpression",
-                new Dictionary<string, object>
-                {
-                    ["expression"] = script,
-                    ["arg"] = arg,
-                });
-        }
+            ["expression"] = expression,
+            ["arg"] = arg,
+            ["timeout"] = timeout,
+            ["pollingInterval"] = polling,
+        };
+        return Connection.SendMessageToServerAsync<JSHandleChannel>(
+            Guid,
+            "waitForFunction",
+            args);
+    }
 
-        internal Task<JsonElement?> EvalOnSelectorAsync(string selector, string script, object arg, bool? strict)
-            => Connection.SendMessageToServerAsync<JsonElement?>(
-                Guid,
-                "evalOnSelector",
-                new Dictionary<string, object>
-                {
-                    ["selector"] = selector,
-                    ["expression"] = script,
-                    ["arg"] = arg,
-                    ["strict"] = strict,
-                });
+    internal Task<JsonElement?> EvaluateExpressionAsync(
+        string script,
+        object arg)
+    {
+        return Connection.SendMessageToServerAsync<JsonElement?>(
+            Guid,
+            "evaluateExpression",
+            new Dictionary<string, object>
+            {
+                ["expression"] = script,
+                ["arg"] = arg,
+            });
+    }
 
-        internal Task<JsonElement?> EvalOnSelectorAllAsync(string selector, string script, object arg)
-            => Connection.SendMessageToServerAsync<JsonElement?>(
-                Guid,
-                "evalOnSelectorAll",
-                new Dictionary<string, object>
-                {
-                    ["selector"] = selector,
-                    ["expression"] = script,
-                    ["arg"] = arg,
-                });
-
-        internal Task<ElementHandleChannel> FrameElementAsync() => Connection.SendMessageToServerAsync<ElementHandleChannel>(Guid, "frameElement", null);
-
-        internal async Task<string> TitleAsync()
-            => (await Connection.SendMessageToServerAsync(Guid, "title", null).ConfigureAwait(false))?.GetProperty("value").ToString();
-
-        internal Task<ElementHandleChannel> WaitForSelectorAsync(string selector, WaitForSelectorState? state, float? timeout, bool? strict, bool? omitReturnValue)
-        {
-            var args = new Dictionary<string, object>
+    internal Task<JsonElement?> EvalOnSelectorAsync(string selector, string script, object arg, bool? strict)
+        => Connection.SendMessageToServerAsync<JsonElement?>(
+            Guid,
+            "evalOnSelector",
+            new Dictionary<string, object>
             {
                 ["selector"] = selector,
-                ["timeout"] = timeout,
-                ["state"] = state,
+                ["expression"] = script,
+                ["arg"] = arg,
                 ["strict"] = strict,
-                ["omitReturnValue"] = omitReturnValue,
-            };
-            return Connection.SendMessageToServerAsync<ElementHandleChannel>(
-                Guid,
-                "waitForSelector",
-                args);
-        }
+            });
 
-        internal Task WaitForTimeoutAsync(float timeout)
-        {
-            var args = new Dictionary<string, object>
-            {
-                ["timeout"] = timeout,
-            };
-            return Connection.SendMessageToServerAsync<ElementHandleChannel>(
-                Guid,
-                "waitForTimeout",
-                args);
-        }
-
-        internal Task<ElementHandleChannel> AddScriptTagAsync(string url, string path, string content, string type)
-        {
-            var args = new Dictionary<string, object>
-            {
-                ["url"] = url,
-                ["path"] = path,
-                ["content"] = content,
-                ["type"] = type,
-            };
-            return Connection.SendMessageToServerAsync<ElementHandleChannel>(Guid, "addScriptTag", args);
-        }
-
-        internal Task<ElementHandleChannel> AddStyleTagAsync(string url, string path, string content)
-        {
-            var args = new Dictionary<string, object>
-            {
-                ["url"] = url,
-                ["path"] = path,
-                ["content"] = content,
-            };
-            return Connection.SendMessageToServerAsync<ElementHandleChannel>(Guid, "addStyleTag", args);
-        }
-
-        internal Task<ResponseChannel> WaitForNavigationAsync(LoadState? waitUntil, string url, float? timeout)
-        {
-            var param = new Dictionary<string, object>
-            {
-                ["timeout"] = timeout,
-                ["url"] = url,
-                ["waitUntil"] = waitUntil,
-            };
-
-            return Connection.SendMessageToServerAsync<ResponseChannel>(Guid, "waitForNavigation", param);
-        }
-
-        internal Task WaitForLoadStateAsync(LoadState? state, float? timeout)
-        {
-            var param = new Dictionary<string, object>
-            {
-                ["timeout"] = timeout,
-                ["state"] = state,
-            };
-
-            return Connection.SendMessageToServerAsync(
-                Guid,
-                "waitForLoadState",
-                param);
-        }
-
-        internal async Task<int> QueryCountAsync(string selector)
-        {
-            var args = new Dictionary<string, object>
+    internal Task<JsonElement?> EvalOnSelectorAllAsync(string selector, string script, object arg)
+        => Connection.SendMessageToServerAsync<JsonElement?>(
+            Guid,
+            "evalOnSelectorAll",
+            new Dictionary<string, object>
             {
                 ["selector"] = selector,
-            };
+                ["expression"] = script,
+                ["arg"] = arg,
+            });
 
-            var result = await Connection.SendMessageToServerAsync(Guid, "queryCount", args).ConfigureAwait(false);
-            return result.Value.GetProperty("value").GetInt32();
-        }
+    internal Task<ElementHandleChannel> FrameElementAsync() => Connection.SendMessageToServerAsync<ElementHandleChannel>(Guid, "frameElement", null);
 
-        internal Task SetContentAsync(string html, float? timeout, WaitUntilState? waitUntil)
+    internal async Task<string> TitleAsync()
+        => (await Connection.SendMessageToServerAsync(Guid, "title", null).ConfigureAwait(false))?.GetProperty("value").ToString();
+
+    internal Task<ElementHandleChannel> WaitForSelectorAsync(string selector, WaitForSelectorState? state, float? timeout, bool? strict, bool? omitReturnValue)
+    {
+        var args = new Dictionary<string, object>
         {
-            var args = new Dictionary<string, object>
-            {
-                ["html"] = html,
-                ["waitUntil"] = waitUntil,
-                ["timeout"] = timeout,
-            };
+            ["selector"] = selector,
+            ["timeout"] = timeout,
+            ["state"] = state,
+            ["strict"] = strict,
+            ["omitReturnValue"] = omitReturnValue,
+        };
+        return Connection.SendMessageToServerAsync<ElementHandleChannel>(
+            Guid,
+            "waitForSelector",
+            args);
+    }
 
-            return Connection.SendMessageToServerAsync(Guid, "setContent", args);
-        }
-
-        internal Task ClickAsync(
-            string selector,
-            float? delay,
-            MouseButton? button,
-            int? clickCount,
-            IEnumerable<KeyboardModifier> modifiers,
-            Position position,
-            float? timeout,
-            bool? force,
-            bool? noWaitAfter,
-            bool? trial,
-            bool? strict)
+    internal Task WaitForTimeoutAsync(float timeout)
+    {
+        var args = new Dictionary<string, object>
         {
-            var args = new Dictionary<string, object>
+            ["timeout"] = timeout,
+        };
+        return Connection.SendMessageToServerAsync<ElementHandleChannel>(
+            Guid,
+            "waitForTimeout",
+            args);
+    }
+
+    internal Task<ElementHandleChannel> AddScriptTagAsync(string url, string path, string content, string type)
+    {
+        var args = new Dictionary<string, object>
+        {
+            ["url"] = url,
+            ["path"] = path,
+            ["content"] = content,
+            ["type"] = type,
+        };
+        return Connection.SendMessageToServerAsync<ElementHandleChannel>(Guid, "addScriptTag", args);
+    }
+
+    internal Task<ElementHandleChannel> AddStyleTagAsync(string url, string path, string content)
+    {
+        var args = new Dictionary<string, object>
+        {
+            ["url"] = url,
+            ["path"] = path,
+            ["content"] = content,
+        };
+        return Connection.SendMessageToServerAsync<ElementHandleChannel>(Guid, "addStyleTag", args);
+    }
+
+    internal Task<ResponseChannel> WaitForNavigationAsync(LoadState? waitUntil, string url, float? timeout)
+    {
+        var param = new Dictionary<string, object>
+        {
+            ["timeout"] = timeout,
+            ["url"] = url,
+            ["waitUntil"] = waitUntil,
+        };
+
+        return Connection.SendMessageToServerAsync<ResponseChannel>(Guid, "waitForNavigation", param);
+    }
+
+    internal Task WaitForLoadStateAsync(LoadState? state, float? timeout)
+    {
+        var param = new Dictionary<string, object>
+        {
+            ["timeout"] = timeout,
+            ["state"] = state,
+        };
+
+        return Connection.SendMessageToServerAsync(
+            Guid,
+            "waitForLoadState",
+            param);
+    }
+
+    internal async Task<int> QueryCountAsync(string selector)
+    {
+        var args = new Dictionary<string, object>
+        {
+            ["selector"] = selector,
+        };
+
+        var result = await Connection.SendMessageToServerAsync(Guid, "queryCount", args).ConfigureAwait(false);
+        return result.Value.GetProperty("value").GetInt32();
+    }
+
+    internal Task SetContentAsync(string html, float? timeout, WaitUntilState? waitUntil)
+    {
+        var args = new Dictionary<string, object>
+        {
+            ["html"] = html,
+            ["waitUntil"] = waitUntil,
+            ["timeout"] = timeout,
+        };
+
+        return Connection.SendMessageToServerAsync(Guid, "setContent", args);
+    }
+
+    internal Task ClickAsync(
+        string selector,
+        float? delay,
+        MouseButton? button,
+        int? clickCount,
+        IEnumerable<KeyboardModifier> modifiers,
+        Position position,
+        float? timeout,
+        bool? force,
+        bool? noWaitAfter,
+        bool? trial,
+        bool? strict)
+    {
+        var args = new Dictionary<string, object>
+        {
+            ["selector"] = selector,
+            ["button"] = button,
+            ["force"] = force,
+            ["delay"] = delay,
+            ["clickCount"] = clickCount,
+            ["modifiers"] = modifiers?.Select(m => m.ToValueString()),
+            ["position"] = position,
+            ["noWaitAfter"] = noWaitAfter,
+            ["trial"] = trial,
+            ["timeout"] = timeout,
+            ["strict"] = strict,
+        };
+
+        return Connection.SendMessageToServerAsync<ElementHandleChannel>(Guid, "click", args);
+    }
+
+    internal Task DblClickAsync(
+        string selector,
+        float? delay,
+        MouseButton? button,
+        Position position,
+        IEnumerable<KeyboardModifier> modifiers,
+        float? timeout,
+        bool? force,
+        bool? noWaitAfter,
+        bool? trial,
+        bool? strict)
+    {
+        var args = new Dictionary<string, object>
+        {
+            ["selector"] = selector,
+            ["button"] = button,
+            ["delay"] = delay,
+            ["force"] = force,
+            ["modifiers"] = modifiers?.Select(m => m.ToValueString()),
+            ["position"] = position,
+            ["trial"] = trial,
+            ["timeout"] = timeout,
+            ["noWaitAfter"] = noWaitAfter,
+            ["strict"] = strict,
+        };
+
+        return Connection.SendMessageToServerAsync<ElementHandleChannel>(Guid, "dblclick", args);
+    }
+
+    internal Task<ElementHandleChannel> QuerySelectorAsync(string selector)
+        => Connection.SendMessageToServerAsync<ElementHandleChannel>(
+            Guid,
+            "querySelector",
+            new Dictionary<string, object>
             {
                 ["selector"] = selector,
-                ["button"] = button,
-                ["force"] = force,
-                ["delay"] = delay,
-                ["clickCount"] = clickCount,
-                ["modifiers"] = modifiers?.Select(m => m.ToValueString()),
-                ["position"] = position,
-                ["noWaitAfter"] = noWaitAfter,
-                ["trial"] = trial,
-                ["timeout"] = timeout,
-                ["strict"] = strict,
-            };
+            });
 
-            return Connection.SendMessageToServerAsync<ElementHandleChannel>(Guid, "click", args);
-        }
-
-        internal Task DblClickAsync(
-            string selector,
-            float? delay,
-            MouseButton? button,
-            Position position,
-            IEnumerable<KeyboardModifier> modifiers,
-            float? timeout,
-            bool? force,
-            bool? noWaitAfter,
-            bool? trial,
-            bool? strict)
-        {
-            var args = new Dictionary<string, object>
+    internal Task<ChannelBase[]> QuerySelectorAllAsync(string selector)
+        => Connection.SendMessageToServerAsync<ChannelBase[]>(
+            Guid,
+            "querySelectorAll",
+            new Dictionary<string, object>
             {
                 ["selector"] = selector,
-                ["button"] = button,
-                ["delay"] = delay,
-                ["force"] = force,
-                ["modifiers"] = modifiers?.Select(m => m.ToValueString()),
-                ["position"] = position,
-                ["trial"] = trial,
-                ["timeout"] = timeout,
-                ["noWaitAfter"] = noWaitAfter,
-                ["strict"] = strict,
-            };
+            });
 
-            return Connection.SendMessageToServerAsync<ElementHandleChannel>(Guid, "dblclick", args);
-        }
-
-        internal Task<ElementHandleChannel> QuerySelectorAsync(string selector)
-            => Connection.SendMessageToServerAsync<ElementHandleChannel>(
-                Guid,
-                "querySelector",
-                new Dictionary<string, object>
-                {
-                    ["selector"] = selector,
-                });
-
-        internal Task<ChannelBase[]> QuerySelectorAllAsync(string selector)
-            => Connection.SendMessageToServerAsync<ChannelBase[]>(
-                Guid,
-                "querySelectorAll",
-                new Dictionary<string, object>
-                {
-                    ["selector"] = selector,
-                });
-
-        internal Task FillAsync(string selector, string value, bool? force, float? timeout, bool? noWaitAfter, bool? strict)
+    internal Task FillAsync(string selector, string value, bool? force, float? timeout, bool? noWaitAfter, bool? strict)
+    {
+        var args = new Dictionary<string, object>
         {
-            var args = new Dictionary<string, object>
-            {
-                ["selector"] = selector,
-                ["value"] = value,
-                ["force"] = force,
-                ["timeout"] = timeout,
-                ["noWaitAfter"] = noWaitAfter,
-                ["strict"] = strict,
-            };
+            ["selector"] = selector,
+            ["value"] = value,
+            ["force"] = force,
+            ["timeout"] = timeout,
+            ["noWaitAfter"] = noWaitAfter,
+            ["strict"] = strict,
+        };
 
-            return Connection.SendMessageToServerAsync(Guid, "fill", args);
-        }
+        return Connection.SendMessageToServerAsync(Guid, "fill", args);
+    }
 
-        internal Task CheckAsync(string selector, Position position, float? timeout, bool? force, bool? noWaitAfter, bool? trial, bool? strict)
+    internal Task CheckAsync(string selector, Position position, float? timeout, bool? force, bool? noWaitAfter, bool? trial, bool? strict)
+    {
+        var args = new Dictionary<string, object>
         {
-            var args = new Dictionary<string, object>
-            {
-                ["selector"] = selector,
-                ["force"] = force,
-                ["position"] = position,
-                ["noWaitAfter"] = noWaitAfter,
-                ["trial"] = trial,
-                ["timeout"] = timeout,
-                ["strict"] = strict,
-            };
+            ["selector"] = selector,
+            ["force"] = force,
+            ["position"] = position,
+            ["noWaitAfter"] = noWaitAfter,
+            ["trial"] = trial,
+            ["timeout"] = timeout,
+            ["strict"] = strict,
+        };
 
-            return Connection.SendMessageToServerAsync<ElementHandleChannel>(Guid, "check", args);
-        }
+        return Connection.SendMessageToServerAsync<ElementHandleChannel>(Guid, "check", args);
+    }
 
-        internal Task UncheckAsync(string selector, Position position, float? timeout, bool? force, bool? noWaitAfter, bool? trial, bool? strict)
+    internal Task UncheckAsync(string selector, Position position, float? timeout, bool? force, bool? noWaitAfter, bool? trial, bool? strict)
+    {
+        var args = new Dictionary<string, object>
         {
-            var args = new Dictionary<string, object>
-            {
-                ["selector"] = selector,
-                ["force"] = force,
-                ["position"] = position,
-                ["noWaitAfter"] = noWaitAfter,
-                ["trial"] = trial,
-                ["timeout"] = timeout,
-                ["strict"] = strict,
-            };
+            ["selector"] = selector,
+            ["force"] = force,
+            ["position"] = position,
+            ["noWaitAfter"] = noWaitAfter,
+            ["trial"] = trial,
+            ["timeout"] = timeout,
+            ["strict"] = strict,
+        };
 
-            return Connection.SendMessageToServerAsync<ElementHandleChannel>(Guid, "uncheck", args);
-        }
+        return Connection.SendMessageToServerAsync<ElementHandleChannel>(Guid, "uncheck", args);
+    }
 
-        internal Task DispatchEventAsync(string selector, string type, object eventInit, float? timeout, bool? strict)
+    internal Task DispatchEventAsync(string selector, string type, object eventInit, float? timeout, bool? strict)
+    {
+        var args = new Dictionary<string, object>
         {
-            var args = new Dictionary<string, object>
-            {
-                ["selector"] = selector,
-                ["type"] = type,
-                ["eventInit"] = eventInit,
-                ["timeout"] = timeout,
-                ["strict"] = strict,
-            };
+            ["selector"] = selector,
+            ["type"] = type,
+            ["eventInit"] = eventInit,
+            ["timeout"] = timeout,
+            ["strict"] = strict,
+        };
 
-            return Connection.SendMessageToServerAsync(Guid, "dispatchEvent", args);
-        }
+        return Connection.SendMessageToServerAsync(Guid, "dispatchEvent", args);
+    }
 
-        internal Task HoverAsync(
-            string selector,
-            Position position,
-            IEnumerable<KeyboardModifier> modifiers,
-            bool? force,
-            float? timeout,
-            bool? trial,
-            bool? strict)
+    internal Task HoverAsync(
+        string selector,
+        Position position,
+        IEnumerable<KeyboardModifier> modifiers,
+        bool? force,
+        float? timeout,
+        bool? trial,
+        bool? strict)
+    {
+        var args = new Dictionary<string, object>
         {
-            var args = new Dictionary<string, object>
-            {
-                ["selector"] = selector,
-                ["force"] = force,
-                ["modifiers"] = modifiers?.Select(m => m.ToValueString()),
-                ["position"] = position,
-                ["trial"] = trial,
-                ["timeout"] = timeout,
-                ["strict"] = strict,
-            };
+            ["selector"] = selector,
+            ["force"] = force,
+            ["modifiers"] = modifiers?.Select(m => m.ToValueString()),
+            ["position"] = position,
+            ["trial"] = trial,
+            ["timeout"] = timeout,
+            ["strict"] = strict,
+        };
 
-            return Connection.SendMessageToServerAsync(Guid, "hover", args);
-        }
+        return Connection.SendMessageToServerAsync(Guid, "hover", args);
+    }
 
-        internal Task PressAsync(string selector, string text, float? delay, float? timeout, bool? noWaitAfter, bool? strict)
+    internal Task PressAsync(string selector, string text, float? delay, float? timeout, bool? noWaitAfter, bool? strict)
+    {
+        var args = new Dictionary<string, object>
         {
-            var args = new Dictionary<string, object>
-            {
-                ["selector"] = selector,
-                ["key"] = text,
-                ["delay"] = delay,
-                ["timeout"] = timeout,
-                ["noWaitAfter"] = noWaitAfter,
-                ["strict"] = strict,
-            };
+            ["selector"] = selector,
+            ["key"] = text,
+            ["delay"] = delay,
+            ["timeout"] = timeout,
+            ["noWaitAfter"] = noWaitAfter,
+            ["strict"] = strict,
+        };
 
-            return Connection.SendMessageToServerAsync(Guid, "press", args);
-        }
+        return Connection.SendMessageToServerAsync(Guid, "press", args);
+    }
 
-        internal async Task<string[]> SelectOptionAsync(string selector, IEnumerable<SelectOptionValue> values, bool? noWaitAfter, bool? strict, bool? force, float? timeout)
+    internal async Task<string[]> SelectOptionAsync(string selector, IEnumerable<SelectOptionValue> values, bool? noWaitAfter, bool? strict, bool? force, float? timeout)
+    {
+        var args = new Dictionary<string, object>
         {
-            var args = new Dictionary<string, object>
-            {
-                ["selector"] = selector,
-                ["options"] = values,
-                ["noWaitAfter"] = noWaitAfter,
-                ["strict"] = strict,
-                ["force"] = force,
-                ["timeout"] = timeout,
-            };
+            ["selector"] = selector,
+            ["options"] = values,
+            ["noWaitAfter"] = noWaitAfter,
+            ["strict"] = strict,
+            ["force"] = force,
+            ["timeout"] = timeout,
+        };
 
-            return (await Connection.SendMessageToServerAsync(Guid, "selectOption", args).ConfigureAwait(false))?.GetProperty("values").ToObject<string[]>();
-        }
+        return (await Connection.SendMessageToServerAsync(Guid, "selectOption", args).ConfigureAwait(false))?.GetProperty("values").ToObject<string[]>();
+    }
 
-        internal async Task<string[]> SelectOptionAsync(string selector, IEnumerable<ElementHandle> values, bool? noWaitAfter, bool? strict, bool? force, float? timeout)
+    internal async Task<string[]> SelectOptionAsync(string selector, IEnumerable<ElementHandle> values, bool? noWaitAfter, bool? strict, bool? force, float? timeout)
+    {
+        var args = new Dictionary<string, object>
         {
-            var args = new Dictionary<string, object>
-            {
-                ["selector"] = selector,
-                ["elements"] = values,
-                ["noWaitAfter"] = noWaitAfter,
-                ["strict"] = strict,
-                ["force"] = force,
-                ["timeout"] = timeout,
-            };
+            ["selector"] = selector,
+            ["elements"] = values,
+            ["noWaitAfter"] = noWaitAfter,
+            ["strict"] = strict,
+            ["force"] = force,
+            ["timeout"] = timeout,
+        };
 
-            return (await Connection.SendMessageToServerAsync(Guid, "selectOption", args).ConfigureAwait(false))?.GetProperty("values").ToObject<string[]>();
-        }
+        return (await Connection.SendMessageToServerAsync(Guid, "selectOption", args).ConfigureAwait(false))?.GetProperty("values").ToObject<string[]>();
+    }
 
-        internal async Task<string> GetAttributeAsync(string selector, string name, float? timeout, bool? strict)
+    internal async Task<string> GetAttributeAsync(string selector, string name, float? timeout, bool? strict)
+    {
+        var args = new Dictionary<string, object>
         {
-            var args = new Dictionary<string, object>
-            {
-                ["selector"] = selector,
-                ["name"] = name,
-                ["timeout"] = timeout,
-                ["strict"] = strict,
-            };
+            ["selector"] = selector,
+            ["name"] = name,
+            ["timeout"] = timeout,
+            ["strict"] = strict,
+        };
 
-            JsonElement retValue = default;
-            if ((await Connection.SendMessageToServerAsync(Guid, "getAttribute", args).ConfigureAwait(false))?.TryGetProperty("value", out retValue) ?? false)
-            {
-                return retValue.ToString();
-            }
-
-            return null;
-        }
-
-        internal async Task<string> InnerHTMLAsync(string selector, float? timeout, bool? strict)
+        JsonElement retValue = default;
+        if ((await Connection.SendMessageToServerAsync(Guid, "getAttribute", args).ConfigureAwait(false))?.TryGetProperty("value", out retValue) ?? false)
         {
-            var args = new Dictionary<string, object>
-            {
-                ["selector"] = selector,
-                ["timeout"] = timeout,
-                ["strict"] = strict,
-            };
-
-            return (await Connection.SendMessageToServerAsync(Guid, "innerHTML", args).ConfigureAwait(false))?.GetProperty("value").ToString();
+            return retValue.ToString();
         }
 
-        internal Task TypeAsync(string selector, string text, float? delay, float? timeout, bool? noWaitAfter, bool? strict)
+        return null;
+    }
+
+    internal async Task<string> InnerHTMLAsync(string selector, float? timeout, bool? strict)
+    {
+        var args = new Dictionary<string, object>
         {
-            var args = new Dictionary<string, object>
-            {
-                ["selector"] = selector,
-                ["text"] = text,
-                ["delay"] = delay,
-                ["noWaitAfter"] = noWaitAfter,
-                ["timeout"] = timeout,
-                ["strict"] = strict,
-            };
+            ["selector"] = selector,
+            ["timeout"] = timeout,
+            ["strict"] = strict,
+        };
 
-            return Connection.SendMessageToServerAsync(Guid, "type", args);
-        }
+        return (await Connection.SendMessageToServerAsync(Guid, "innerHTML", args).ConfigureAwait(false))?.GetProperty("value").ToString();
+    }
 
-        internal async Task<string> ContentAsync()
-            => (await Connection.SendMessageToServerAsync(
-                Guid,
-                "content",
-                null).ConfigureAwait(false))?.GetProperty("value").ToString();
-
-        internal Task FocusAsync(string selector, float? timeout, bool? strict)
+    internal Task TypeAsync(string selector, string text, float? delay, float? timeout, bool? noWaitAfter, bool? strict)
+    {
+        var args = new Dictionary<string, object>
         {
-            var args = new Dictionary<string, object>
-            {
-                ["selector"] = selector,
-                ["timeout"] = timeout,
-                ["strict"] = strict,
-            };
+            ["selector"] = selector,
+            ["text"] = text,
+            ["delay"] = delay,
+            ["noWaitAfter"] = noWaitAfter,
+            ["timeout"] = timeout,
+            ["strict"] = strict,
+        };
 
-            return Connection.SendMessageToServerAsync(Guid, "focus", args);
-        }
+        return Connection.SendMessageToServerAsync(Guid, "type", args);
+    }
 
-        internal async Task<string> InnerTextAsync(string selector, float? timeout, bool? strict)
+    internal async Task<string> ContentAsync()
+        => (await Connection.SendMessageToServerAsync(
+            Guid,
+            "content",
+            null).ConfigureAwait(false))?.GetProperty("value").ToString();
+
+    internal Task FocusAsync(string selector, float? timeout, bool? strict)
+    {
+        var args = new Dictionary<string, object>
         {
-            var args = new Dictionary<string, object>
-            {
-                ["selector"] = selector,
-                ["timeout"] = timeout,
-                ["strict"] = strict,
-            };
+            ["selector"] = selector,
+            ["timeout"] = timeout,
+            ["strict"] = strict,
+        };
 
-            return (await Connection.SendMessageToServerAsync(Guid, "innerText", args).ConfigureAwait(false))?.GetProperty("value").ToString();
-        }
+        return Connection.SendMessageToServerAsync(Guid, "focus", args);
+    }
 
-        internal Task SetInputFilesAsync(string selector, IEnumerable<InputFilesList> files, bool? noWaitAfter, float? timeout, bool? strict)
+    internal async Task<string> InnerTextAsync(string selector, float? timeout, bool? strict)
+    {
+        var args = new Dictionary<string, object>
         {
-            var args = new Dictionary<string, object>
-            {
-                ["selector"] = selector,
-                ["files"] = files,
-                ["noWaitAfter"] = noWaitAfter,
-                ["timeout"] = timeout,
-                ["strict"] = strict,
-            };
+            ["selector"] = selector,
+            ["timeout"] = timeout,
+            ["strict"] = strict,
+        };
 
-            return Connection.SendMessageToServerAsync(Guid, "setInputFiles", args);
-        }
+        return (await Connection.SendMessageToServerAsync(Guid, "innerText", args).ConfigureAwait(false))?.GetProperty("value").ToString();
+    }
 
-        internal Task SetInputFilePathsAsync(string selector, IEnumerable<string> localPaths, IEnumerable<WritableStream> streams, bool? noWaitAfter, float? timeout, bool? strict)
+    internal Task SetInputFilesAsync(string selector, IEnumerable<InputFilesList> files, bool? noWaitAfter, float? timeout, bool? strict)
+    {
+        var args = new Dictionary<string, object>
         {
-            var args = new Dictionary<string, object>
-            {
-                ["selector"] = selector,
-                ["localPaths"] = localPaths,
-                ["streams"] = streams,
-                ["timeout"] = timeout,
-                ["noWaitAfter"] = noWaitAfter,
-                ["strict"] = strict,
-            };
+            ["selector"] = selector,
+            ["files"] = files,
+            ["noWaitAfter"] = noWaitAfter,
+            ["timeout"] = timeout,
+            ["strict"] = strict,
+        };
 
-            return Connection.SendMessageToServerAsync(Guid, "setInputFilePaths", args);
-        }
+        return Connection.SendMessageToServerAsync(Guid, "setInputFiles", args);
+    }
 
-        internal async Task<string> TextContentAsync(string selector, float? timeout, bool? strict)
+    internal Task SetInputFilePathsAsync(string selector, IEnumerable<string> localPaths, IEnumerable<WritableStream> streams, bool? noWaitAfter, float? timeout, bool? strict)
+    {
+        var args = new Dictionary<string, object>
         {
-            var args = new Dictionary<string, object>
-            {
-                ["selector"] = selector,
-                ["timeout"] = timeout,
-                ["strict"] = strict,
-            };
+            ["selector"] = selector,
+            ["localPaths"] = localPaths,
+            ["streams"] = streams,
+            ["timeout"] = timeout,
+            ["noWaitAfter"] = noWaitAfter,
+            ["strict"] = strict,
+        };
 
-            return (await Connection.SendMessageToServerAsync(Guid, "textContent", args).ConfigureAwait(false))?.GetProperty("value").ToString();
-        }
+        return Connection.SendMessageToServerAsync(Guid, "setInputFilePaths", args);
+    }
 
-        internal Task TapAsync(
-            string selector,
-            IEnumerable<KeyboardModifier> modifiers,
-            Position position,
-            float? timeout,
-            bool? force,
-            bool? noWaitAfter,
-            bool? trial,
-            bool? strict)
+    internal async Task<string> TextContentAsync(string selector, float? timeout, bool? strict)
+    {
+        var args = new Dictionary<string, object>
         {
-            var args = new Dictionary<string, object>
-            {
-                ["selector"] = selector,
-                ["force"] = force,
-                ["modifiers"] = modifiers?.Select(m => m.ToValueString()),
-                ["noWaitAfter"] = noWaitAfter,
-                ["trial"] = trial,
-                ["timeout"] = timeout,
-                ["position"] = position,
-                ["strict"] = strict,
-            };
+            ["selector"] = selector,
+            ["timeout"] = timeout,
+            ["strict"] = strict,
+        };
 
-            return Connection.SendMessageToServerAsync(Guid, "tap", args);
-        }
+        return (await Connection.SendMessageToServerAsync(Guid, "textContent", args).ConfigureAwait(false))?.GetProperty("value").ToString();
+    }
 
-        internal async Task<bool> IsCheckedAsync(string selector, float? timeout, bool? strict)
+    internal Task TapAsync(
+        string selector,
+        IEnumerable<KeyboardModifier> modifiers,
+        Position position,
+        float? timeout,
+        bool? force,
+        bool? noWaitAfter,
+        bool? trial,
+        bool? strict)
+    {
+        var args = new Dictionary<string, object>
         {
-            var args = new Dictionary<string, object>
-            {
-                ["selector"] = selector,
-                ["timeout"] = timeout,
-                ["strict"] = strict,
-            };
+            ["selector"] = selector,
+            ["force"] = force,
+            ["modifiers"] = modifiers?.Select(m => m.ToValueString()),
+            ["noWaitAfter"] = noWaitAfter,
+            ["trial"] = trial,
+            ["timeout"] = timeout,
+            ["position"] = position,
+            ["strict"] = strict,
+        };
 
-            return (await Connection.SendMessageToServerAsync(Guid, "isChecked", args).ConfigureAwait(false))?.GetProperty("value").GetBoolean() ?? default;
-        }
+        return Connection.SendMessageToServerAsync(Guid, "tap", args);
+    }
 
-        internal async Task<bool> IsDisabledAsync(string selector, float? timeout, bool? strict)
+    internal async Task<bool> IsCheckedAsync(string selector, float? timeout, bool? strict)
+    {
+        var args = new Dictionary<string, object>
         {
-            var args = new Dictionary<string, object>
-            {
-                ["selector"] = selector,
-                ["timeout"] = timeout,
-                ["strict"] = strict,
-            };
+            ["selector"] = selector,
+            ["timeout"] = timeout,
+            ["strict"] = strict,
+        };
 
-            return (await Connection.SendMessageToServerAsync(Guid, "isDisabled", args).ConfigureAwait(false))?.GetProperty("value").GetBoolean() ?? default;
-        }
+        return (await Connection.SendMessageToServerAsync(Guid, "isChecked", args).ConfigureAwait(false))?.GetProperty("value").GetBoolean() ?? default;
+    }
 
-        internal async Task<bool> IsEditableAsync(string selector, float? timeout, bool? strict)
+    internal async Task<bool> IsDisabledAsync(string selector, float? timeout, bool? strict)
+    {
+        var args = new Dictionary<string, object>
         {
-            var args = new Dictionary<string, object>
-            {
-                ["selector"] = selector,
-                ["timeout"] = timeout,
-                ["strict"] = strict,
-            };
+            ["selector"] = selector,
+            ["timeout"] = timeout,
+            ["strict"] = strict,
+        };
 
-            return (await Connection.SendMessageToServerAsync(Guid, "isEditable", args).ConfigureAwait(false))?.GetProperty("value").GetBoolean() ?? default;
-        }
+        return (await Connection.SendMessageToServerAsync(Guid, "isDisabled", args).ConfigureAwait(false))?.GetProperty("value").GetBoolean() ?? default;
+    }
 
-        internal async Task<bool> IsEnabledAsync(string selector, float? timeout, bool? strict)
+    internal async Task<bool> IsEditableAsync(string selector, float? timeout, bool? strict)
+    {
+        var args = new Dictionary<string, object>
         {
-            var args = new Dictionary<string, object>
-            {
-                ["selector"] = selector,
-                ["timeout"] = timeout,
-                ["strict"] = strict,
-            };
+            ["selector"] = selector,
+            ["timeout"] = timeout,
+            ["strict"] = strict,
+        };
 
-            return (await Connection.SendMessageToServerAsync(Guid, "isEnabled", args).ConfigureAwait(false))?.GetProperty("value").GetBoolean() ?? default;
-        }
+        return (await Connection.SendMessageToServerAsync(Guid, "isEditable", args).ConfigureAwait(false))?.GetProperty("value").GetBoolean() ?? default;
+    }
 
-        internal async Task<bool> IsHiddenAsync(string selector, float? timeout, bool? strict)
+    internal async Task<bool> IsEnabledAsync(string selector, float? timeout, bool? strict)
+    {
+        var args = new Dictionary<string, object>
         {
-            var args = new Dictionary<string, object>
-            {
-                ["selector"] = selector,
-                ["timeout"] = timeout,
-                ["strict"] = strict,
-            };
+            ["selector"] = selector,
+            ["timeout"] = timeout,
+            ["strict"] = strict,
+        };
 
-            return (await Connection.SendMessageToServerAsync(Guid, "isHidden", args).ConfigureAwait(false))?.GetProperty("value").GetBoolean() ?? default;
-        }
+        return (await Connection.SendMessageToServerAsync(Guid, "isEnabled", args).ConfigureAwait(false))?.GetProperty("value").GetBoolean() ?? default;
+    }
 
-        internal async Task<bool> IsVisibleAsync(string selector, float? timeout, bool? strict)
+    internal async Task<bool> IsHiddenAsync(string selector, float? timeout, bool? strict)
+    {
+        var args = new Dictionary<string, object>
         {
-            var args = new Dictionary<string, object>
-            {
-                ["selector"] = selector,
-                ["timeout"] = timeout,
-                ["strict"] = strict,
-            };
+            ["selector"] = selector,
+            ["timeout"] = timeout,
+            ["strict"] = strict,
+        };
 
-            return (await Connection.SendMessageToServerAsync(Guid, "isVisible", args).ConfigureAwait(false))?.GetProperty("value").GetBoolean() ?? default;
-        }
+        return (await Connection.SendMessageToServerAsync(Guid, "isHidden", args).ConfigureAwait(false))?.GetProperty("value").GetBoolean() ?? default;
+    }
 
-        internal async Task<string> InputValueAsync(string selector, float? timeout, bool? strict)
+    internal async Task<bool> IsVisibleAsync(string selector, float? timeout, bool? strict)
+    {
+        var args = new Dictionary<string, object>
         {
-            var args = new Dictionary<string, object>
-            {
-                ["selector"] = selector,
-                ["timeout"] = timeout,
-                ["strict"] = strict,
-            };
+            ["selector"] = selector,
+            ["timeout"] = timeout,
+            ["strict"] = strict,
+        };
 
-            return (await Connection.SendMessageToServerAsync(Guid, "inputValue", args).ConfigureAwait(false))?.GetProperty("value").ToString();
-        }
+        return (await Connection.SendMessageToServerAsync(Guid, "isVisible", args).ConfigureAwait(false))?.GetProperty("value").GetBoolean() ?? default;
+    }
 
-        internal Task DragAndDropAsync(string source, string target, bool? force, bool? noWaitAfter, float? timeout, bool? trial, bool? strict, SourcePosition sourcePosition, TargetPosition targetPosition)
+    internal async Task<string> InputValueAsync(string selector, float? timeout, bool? strict)
+    {
+        var args = new Dictionary<string, object>
         {
-            var args = new Dictionary<string, object>
-            {
-                ["source"] = source,
-                ["target"] = target,
-                ["force"] = force,
-                ["noWaitAfter"] = noWaitAfter,
-                ["timeout"] = timeout,
-                ["trial"] = trial,
-                ["strict"] = strict,
-                ["sourcePosition"] = sourcePosition,
-                ["targetPosition"] = targetPosition,
-            };
+            ["selector"] = selector,
+            ["timeout"] = timeout,
+            ["strict"] = strict,
+        };
 
-            return Connection.SendMessageToServerAsync(Guid, "dragAndDrop", args);
-        }
+        return (await Connection.SendMessageToServerAsync(Guid, "inputValue", args).ConfigureAwait(false))?.GetProperty("value").ToString();
+    }
 
-        internal async Task<FrameExpectResult> ExpectAsync(string selector, string expression, object expressionArg, ExpectedTextValue[] expectedText, int? expectedNumber, object expectedValue, bool? useInnerText, bool? isNot, float? timeout)
+    internal Task DragAndDropAsync(string source, string target, bool? force, bool? noWaitAfter, float? timeout, bool? trial, bool? strict, SourcePosition sourcePosition, TargetPosition targetPosition)
+    {
+        var args = new Dictionary<string, object>
         {
-            var args = new Dictionary<string, object>
-            {
-                ["selector"] = selector,
-                ["expression"] = expression,
-                ["expressionArg"] = expressionArg,
-                ["expectedText"] = expectedText,
-                ["expectedNumber"] = expectedNumber,
-                ["expectedValue"] = expectedValue,
-                ["useInnerText"] = useInnerText,
-                ["isNot"] = isNot,
-                ["timeout"] = timeout,
-            };
-            var result = await Connection.SendMessageToServerAsync(Guid, "expect", args).ConfigureAwait(false);
-            var parsed = result.Value.ToObject<FrameExpectResult>();
-            if (result.Value.TryGetProperty("received", out var received))
-            {
-                var outs = ScriptsHelper.ParseEvaluateResult<object>(received);
-                parsed.Received = outs;
-            }
-            return parsed;
-        }
+            ["source"] = source,
+            ["target"] = target,
+            ["force"] = force,
+            ["noWaitAfter"] = noWaitAfter,
+            ["timeout"] = timeout,
+            ["trial"] = trial,
+            ["strict"] = strict,
+            ["sourcePosition"] = sourcePosition,
+            ["targetPosition"] = targetPosition,
+        };
 
-        internal async Task HighlightAsync(string selector)
+        return Connection.SendMessageToServerAsync(Guid, "dragAndDrop", args);
+    }
+
+    internal async Task<FrameExpectResult> ExpectAsync(string selector, string expression, object expressionArg, ExpectedTextValue[] expectedText, int? expectedNumber, object expectedValue, bool? useInnerText, bool? isNot, float? timeout)
+    {
+        var args = new Dictionary<string, object>
         {
-            var args = new Dictionary<string, object>
-            {
-                ["selector"] = selector,
-            };
-
-            await Connection.SendMessageToServerAsync(Guid, "highlight", args).ConfigureAwait(false);
+            ["selector"] = selector,
+            ["expression"] = expression,
+            ["expressionArg"] = expressionArg,
+            ["expectedText"] = expectedText,
+            ["expectedNumber"] = expectedNumber,
+            ["expectedValue"] = expectedValue,
+            ["useInnerText"] = useInnerText,
+            ["isNot"] = isNot,
+            ["timeout"] = timeout,
+        };
+        var result = await Connection.SendMessageToServerAsync(Guid, "expect", args).ConfigureAwait(false);
+        var parsed = result.Value.ToObject<FrameExpectResult>();
+        if (result.Value.TryGetProperty("received", out var received))
+        {
+            var outs = ScriptsHelper.ParseEvaluateResult<object>(received);
+            parsed.Received = outs;
         }
+        return parsed;
+    }
+
+    internal async Task HighlightAsync(string selector)
+    {
+        var args = new Dictionary<string, object>
+        {
+            ["selector"] = selector,
+        };
+
+        await Connection.SendMessageToServerAsync(Guid, "highlight", args).ConfigureAwait(false);
     }
 }

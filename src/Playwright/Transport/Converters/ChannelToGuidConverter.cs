@@ -27,31 +27,30 @@ using System.Text.Json;
 using System.Text.Json.Serialization;
 using Microsoft.Playwright.Transport.Channels;
 
-namespace Microsoft.Playwright.Transport.Converters
+namespace Microsoft.Playwright.Transport.Converters;
+
+internal class ChannelToGuidConverter : JsonConverter<ChannelBase>
 {
-    internal class ChannelToGuidConverter : JsonConverter<ChannelBase>
+    private readonly Connection _connection;
+
+    public ChannelToGuidConverter(Connection connection)
     {
-        private readonly Connection _connection;
+        _connection = connection;
+    }
 
-        public ChannelToGuidConverter(Connection connection)
-        {
-            _connection = connection;
-        }
+    public override bool CanConvert(Type type) => typeof(ChannelBase).IsAssignableFrom(type);
 
-        public override bool CanConvert(Type type) => typeof(ChannelBase).IsAssignableFrom(type);
+    public override ChannelBase Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
+    {
+        using JsonDocument document = JsonDocument.ParseValue(ref reader);
+        string guid = document.RootElement.GetProperty("guid").ToString();
+        return _connection.GetObject(guid).Channel;
+    }
 
-        public override ChannelBase Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
-        {
-            using JsonDocument document = JsonDocument.ParseValue(ref reader);
-            string guid = document.RootElement.GetProperty("guid").ToString();
-            return _connection.GetObject(guid).Channel;
-        }
-
-        public override void Write(Utf8JsonWriter writer, ChannelBase value, JsonSerializerOptions options)
-        {
-            writer.WriteStartObject();
-            writer.WriteString("guid", value.Guid);
-            writer.WriteEndObject();
-        }
+    public override void Write(Utf8JsonWriter writer, ChannelBase value, JsonSerializerOptions options)
+    {
+        writer.WriteStartObject();
+        writer.WriteString("guid", value.Guid);
+        writer.WriteEndObject();
     }
 }

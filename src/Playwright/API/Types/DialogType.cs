@@ -22,32 +22,31 @@
  * SOFTWARE.
  */
 
-namespace Microsoft.Playwright
+namespace Microsoft.Playwright;
+
+/// <summary>
+/// Dialog type.
+/// </summary>
+/// <seealso cref="IDialog"/>
+public static class DialogType
 {
     /// <summary>
-    /// Dialog type.
+    /// Alert dialog.
     /// </summary>
-    /// <seealso cref="IDialog"/>
-    public static class DialogType
-    {
-        /// <summary>
-        /// Alert dialog.
-        /// </summary>
-        public const string Alert = "alert";
+    public const string Alert = "alert";
 
-        /// <summary>
-        /// Prompt dialog.
-        /// </summary>
-        public const string Prompt = "prompt";
+    /// <summary>
+    /// Prompt dialog.
+    /// </summary>
+    public const string Prompt = "prompt";
 
-        /// <summary>
-        /// Confirm dialog.
-        /// </summary>
-        public const string Confirm = "confirm";
+    /// <summary>
+    /// Confirm dialog.
+    /// </summary>
+    public const string Confirm = "confirm";
 
-        /// <summary>
-        /// Before unload dialog.
-        /// </summary>
-        public const string BeforeUnload = "beforeunload";
-    }
+    /// <summary>
+    /// Before unload dialog.
+    /// </summary>
+    public const string BeforeUnload = "beforeunload";
 }

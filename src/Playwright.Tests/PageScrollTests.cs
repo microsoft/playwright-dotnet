@@ -24,9 +24,8 @@
 
 using NUnit.Framework;
 
-namespace Microsoft.Playwright.Tests
+namespace Microsoft.Playwright.Tests;
+
+public class PageScrollTests : PageTestEx
 {
-    public class PageScrollTests : PageTestEx
-    {
-    }
 }

@@ -22,14 +22,13 @@
  * SOFTWARE.
  */
 
-namespace Microsoft.Playwright.Transport.Protocol
+namespace Microsoft.Playwright.Transport.Protocol;
+
+public class InputFilesList
 {
-    public class InputFilesList
-    {
-        public string Name { get; set; }
+    public string Name { get; set; }
 
-        public string MimeType { get; set; }
+    public string MimeType { get; set; }
 
-        public string Buffer { get; set; }
-    }
+    public string Buffer { get; set; }
 }

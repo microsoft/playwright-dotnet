@@ -26,106 +26,105 @@ using System.Threading.Tasks;
 using Microsoft.Playwright.NUnit;
 using NUnit.Framework;
 
-namespace Microsoft.Playwright.Tests
+namespace Microsoft.Playwright.Tests;
+
+public class PageCheckTests : PageTestEx
 {
-    public class PageCheckTests : PageTestEx
+    [PlaywrightTest("page-check.spec.ts", "should check the box")]
+    public async Task ShouldCheckTheBox()
     {
-        [PlaywrightTest("page-check.spec.ts", "should check the box")]
-        public async Task ShouldCheckTheBox()
-        {
-            await Page.SetContentAsync("<input id='checkbox' type='checkbox'></input>");
-            await Page.CheckAsync("input");
-            Assert.True(await Page.EvaluateAsync<bool?>("checkbox.checked"));
-        }
+        await Page.SetContentAsync("<input id='checkbox' type='checkbox'></input>");
+        await Page.CheckAsync("input");
+        Assert.True(await Page.EvaluateAsync<bool?>("checkbox.checked"));
+    }
 
-        [PlaywrightTest("page-check.spec.ts", "should not check the checked box")]
-        public async Task ShouldNotCheckTheCheckedBox()
-        {
-            await Page.SetContentAsync("<input id='checkbox' type='checkbox' checked></input>");
-            await Page.CheckAsync("input");
-            Assert.True(await Page.EvaluateAsync<bool?>("checkbox.checked"));
-        }
+    [PlaywrightTest("page-check.spec.ts", "should not check the checked box")]
+    public async Task ShouldNotCheckTheCheckedBox()
+    {
+        await Page.SetContentAsync("<input id='checkbox' type='checkbox' checked></input>");
+        await Page.CheckAsync("input");
+        Assert.True(await Page.EvaluateAsync<bool?>("checkbox.checked"));
+    }
 
-        [PlaywrightTest("page-check.spec.ts", "should uncheck the box")]
-        public async Task ShouldUncheckTheBox()
-        {
-            await Page.SetContentAsync("<input id='checkbox' type='checkbox' checked></input>");
-            await Page.UncheckAsync("input");
-            Assert.False(await Page.EvaluateAsync<bool?>("checkbox.checked"));
-        }
+    [PlaywrightTest("page-check.spec.ts", "should uncheck the box")]
+    public async Task ShouldUncheckTheBox()
+    {
+        await Page.SetContentAsync("<input id='checkbox' type='checkbox' checked></input>");
+        await Page.UncheckAsync("input");
+        Assert.False(await Page.EvaluateAsync<bool?>("checkbox.checked"));
+    }
 
-        [PlaywrightTest("page-check.spec.ts", "should check the box by label")]
-        public async Task ShouldCheckTheBoxByLabel()
-        {
-            await Page.SetContentAsync("<label for='checkbox'><input id='checkbox' type='checkbox'></input></label>");
-            await Page.CheckAsync("label");
-            Assert.True(await Page.EvaluateAsync<bool?>("checkbox.checked"));
-        }
+    [PlaywrightTest("page-check.spec.ts", "should check the box by label")]
+    public async Task ShouldCheckTheBoxByLabel()
+    {
+        await Page.SetContentAsync("<label for='checkbox'><input id='checkbox' type='checkbox'></input></label>");
+        await Page.CheckAsync("label");
+        Assert.True(await Page.EvaluateAsync<bool?>("checkbox.checked"));
+    }
 
-        [PlaywrightTest("page-check.spec.ts", "should check the box outside label")]
-        public async Task ShouldCheckTheBoxOutsideLabel()
-        {
-            await Page.SetContentAsync("<label for='checkbox'>Text</label><div><input id='checkbox' type='checkbox'></input></div>");
-            await Page.CheckAsync("label");
-            Assert.True(await Page.EvaluateAsync<bool?>("checkbox.checked"));
-        }
+    [PlaywrightTest("page-check.spec.ts", "should check the box outside label")]
+    public async Task ShouldCheckTheBoxOutsideLabel()
+    {
+        await Page.SetContentAsync("<label for='checkbox'>Text</label><div><input id='checkbox' type='checkbox'></input></div>");
+        await Page.CheckAsync("label");
+        Assert.True(await Page.EvaluateAsync<bool?>("checkbox.checked"));
+    }
 
-        [PlaywrightTest("page-check.spec.ts", "should check the box inside label w/o id")]
-        public async Task ShouldCheckTheBoxInsideLabelWoId()
-        {
-            await Page.SetContentAsync("<label>Text<span><input id='checkbox' type='checkbox'></input></span></label>");
-            await Page.CheckAsync("label");
-            Assert.True(await Page.EvaluateAsync<bool?>("checkbox.checked"));
-        }
+    [PlaywrightTest("page-check.spec.ts", "should check the box inside label w/o id")]
+    public async Task ShouldCheckTheBoxInsideLabelWoId()
+    {
+        await Page.SetContentAsync("<label>Text<span><input id='checkbox' type='checkbox'></input></span></label>");
+        await Page.CheckAsync("label");
+        Assert.True(await Page.EvaluateAsync<bool?>("checkbox.checked"));
+    }
 
-        [PlaywrightTest("page-check.spec.ts", "should check radio")]
-        public async Task ShouldCheckRadio()
-        {
-            await Page.SetContentAsync(@"
+    [PlaywrightTest("page-check.spec.ts", "should check radio")]
+    public async Task ShouldCheckRadio()
+    {
+        await Page.SetContentAsync(@"
                 <input type='radio'>one</input>
                 <input id='two' type='radio'>two</input>
                 <input type='radio'>three</input>");
-            await Page.CheckAsync("#two");
-            Assert.True(await Page.EvaluateAsync<bool?>("two.checked"));
-        }
+        await Page.CheckAsync("#two");
+        Assert.True(await Page.EvaluateAsync<bool?>("two.checked"));
+    }
 
-        [PlaywrightTest("page-check.spec.ts", "should check the box by aria role")]
-        public async Task ShouldCheckTheBoxByAriaRole()
-        {
-            await Page.SetContentAsync(@"
+    [PlaywrightTest("page-check.spec.ts", "should check the box by aria role")]
+    public async Task ShouldCheckTheBoxByAriaRole()
+    {
+        await Page.SetContentAsync(@"
                 <div role='checkbox' id='checkbox'>CHECKBOX</div>
                 <script>
                 checkbox.addEventListener('click', () => checkbox.setAttribute('aria-checked', 'true'));
                 </script>");
-            await Page.CheckAsync("div");
-            Assert.AreEqual("true", await Page.EvaluateAsync<string>("checkbox.getAttribute('aria-checked')"));
-        }
-
-        [PlaywrightTest("page-check.spec.ts", "trial run should not check")]
-        public async Task TrialRunShouldNotCheck()
-        {
-            await Page.SetContentAsync("<input id='checkbox' type='checkbox'></input>");
-            await Page.CheckAsync("input", new() { Trial = true });
-            Assert.False(await Page.EvaluateAsync<bool>("window['checkbox'].checked"));
-        }
-
-        [PlaywrightTest("page-check.spec.ts", "trial run should not uncheck")]
-        public async Task TrialRunShouldNotUncheck()
-        {
-            await Page.SetContentAsync("<input id='checkbox' type='checkbox' checked></input>");
-            await Page.CheckAsync("input", new() { Trial = true });
-            Assert.True(await Page.EvaluateAsync<bool>("window['checkbox'].checked"));
-        }
-
-        [PlaywrightTest("page-check.spec.ts", "should check the box using setChecked")]
-        public async Task ShouldCheckTheBoxUsingSetChecked()
-        {
-            await Page.SetContentAsync("<input id='checkbox' type='checkbox'></input>");
-            await Page.SetCheckedAsync("input", true);
-            Assert.IsTrue(await Page.EvaluateAsync<bool>("checkbox.checked"));
-            await Page.SetCheckedAsync("input", false);
-            Assert.IsFalse(await Page.EvaluateAsync<bool>("checkbox.checked"));
-        }
-
+        await Page.CheckAsync("div");
+        Assert.AreEqual("true", await Page.EvaluateAsync<string>("checkbox.getAttribute('aria-checked')"));
     }
+
+    [PlaywrightTest("page-check.spec.ts", "trial run should not check")]
+    public async Task TrialRunShouldNotCheck()
+    {
+        await Page.SetContentAsync("<input id='checkbox' type='checkbox'></input>");
+        await Page.CheckAsync("input", new() { Trial = true });
+        Assert.False(await Page.EvaluateAsync<bool>("window['checkbox'].checked"));
+    }
+
+    [PlaywrightTest("page-check.spec.ts", "trial run should not uncheck")]
+    public async Task TrialRunShouldNotUncheck()
+    {
+        await Page.SetContentAsync("<input id='checkbox' type='checkbox' checked></input>");
+        await Page.CheckAsync("input", new() { Trial = true });
+        Assert.True(await Page.EvaluateAsync<bool>("window['checkbox'].checked"));
+    }
+
+    [PlaywrightTest("page-check.spec.ts", "should check the box using setChecked")]
+    public async Task ShouldCheckTheBoxUsingSetChecked()
+    {
+        await Page.SetContentAsync("<input id='checkbox' type='checkbox'></input>");
+        await Page.SetCheckedAsync("input", true);
+        Assert.IsTrue(await Page.EvaluateAsync<bool>("checkbox.checked"));
+        await Page.SetCheckedAsync("input", false);
+        Assert.IsFalse(await Page.EvaluateAsync<bool>("checkbox.checked"));
+    }
+
 }

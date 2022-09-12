@@ -27,20 +27,19 @@ using Microsoft.Playwright.NUnit;
 using Microsoft.Playwright.Tests.TestServer;
 using NUnit.Framework;
 
-namespace Microsoft.Playwright.Tests
-{
-    public class ContextTestEx : ContextTest
-    {
-        public SimpleServer Server { get; internal set; }
-        public SimpleServer HttpsServer { get; internal set; }
+namespace Microsoft.Playwright.Tests;
 
-        [SetUp]
-        public async Task HttpSetup()
-        {
-            var http = await HttpService.Register(this);
-            Server = http.Server;
-            HttpsServer = http.HttpsServer;
-            TestConstants.BrowserName = BrowserName;
-        }
+public class ContextTestEx : ContextTest
+{
+    public SimpleServer Server { get; internal set; }
+    public SimpleServer HttpsServer { get; internal set; }
+
+    [SetUp]
+    public async Task HttpSetup()
+    {
+        var http = await HttpService.Register(this);
+        Server = http.Server;
+        HttpsServer = http.HttpsServer;
+        TestConstants.BrowserName = BrowserName;
     }
 }

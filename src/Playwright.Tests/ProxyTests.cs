@@ -29,77 +29,76 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.Playwright.NUnit;
 using NUnit.Framework;
 
-namespace Microsoft.Playwright.Tests
+namespace Microsoft.Playwright.Tests;
+
+public class ProxyTests : PlaywrightTestEx
 {
-    public class ProxyTests : PlaywrightTestEx
+    [PlaywrightTest("proxy.spec.ts", "should use proxy")]
+    public async Task ShouldUseProxy()
     {
-        [PlaywrightTest("proxy.spec.ts", "should use proxy")]
-        public async Task ShouldUseProxy()
+        Server.SetRoute("/target.html", ctx => ctx.Response.WriteAsync("<html><title>Served by the proxy</title></html>"));
+
+        var proxy = new Proxy { Server = $"localhost:{Server.Port}" };
+
+        await using var browser = await BrowserType.LaunchAsync(new() { Proxy = proxy });
+
+        var page = await browser.NewPageAsync();
+        await page.GotoAsync("http://non-existent.com/target.html");
+
+        Assert.AreEqual("Served by the proxy", await page.TitleAsync());
+    }
+
+    [PlaywrightTest("proxy.spec.ts", "should authenticate")]
+    public async Task ShouldAuthenticate()
+    {
+        Server.SetRoute("/target.html", ctx =>
         {
-            Server.SetRoute("/target.html", ctx => ctx.Response.WriteAsync("<html><title>Served by the proxy</title></html>"));
+            string auth = ctx.Request.Headers["proxy-authorization"];
 
-            var proxy = new Proxy { Server = $"localhost:{Server.Port}" };
+            if (string.IsNullOrEmpty(auth))
+            {
+                ctx.Response.StatusCode = 407;
+                ctx.Response.Headers["Proxy-Authenticate"] = "Basic realm=\"Access to internal site\"";
+            }
 
-            await using var browser = await BrowserType.LaunchAsync(new() { Proxy = proxy });
+            return ctx.Response.WriteAsync($"<html><title>{auth}</title></html>");
+        });
 
-            var page = await browser.NewPageAsync();
-            await page.GotoAsync("http://non-existent.com/target.html");
-
-            Assert.AreEqual("Served by the proxy", await page.TitleAsync());
-        }
-
-        [PlaywrightTest("proxy.spec.ts", "should authenticate")]
-        public async Task ShouldAuthenticate()
+        var proxy = new Proxy
         {
-            Server.SetRoute("/target.html", ctx =>
-            {
-                string auth = ctx.Request.Headers["proxy-authorization"];
+            Server = $"localhost:{Server.Port}",
+            Username = "user",
+            Password = "secret"
+        };
 
-                if (string.IsNullOrEmpty(auth))
-                {
-                    ctx.Response.StatusCode = 407;
-                    ctx.Response.Headers["Proxy-Authenticate"] = "Basic realm=\"Access to internal site\"";
-                }
+        await using var browser = await BrowserType.LaunchAsync(new() { Proxy = proxy });
 
-                return ctx.Response.WriteAsync($"<html><title>{auth}</title></html>");
-            });
+        var page = await browser.NewPageAsync();
+        await page.GotoAsync("http://non-existent.com/target.html");
 
-            var proxy = new Proxy
-            {
-                Server = $"localhost:{Server.Port}",
-                Username = "user",
-                Password = "secret"
-            };
+        Assert.AreEqual("Basic " + Convert.ToBase64String(Encoding.UTF8.GetBytes("user:secret")), await page.TitleAsync());
+    }
 
-            await using var browser = await BrowserType.LaunchAsync(new() { Proxy = proxy });
+    [PlaywrightTest("proxy.spec.ts", "should exclude patterns")]
+    public async Task ShouldExcludePatterns()
+    {
+        Server.SetRoute("/target.html", ctx => ctx.Response.WriteAsync("<html><title>Served by the proxy</title></html>"));
 
-            var page = await browser.NewPageAsync();
-            await page.GotoAsync("http://non-existent.com/target.html");
-
-            Assert.AreEqual("Basic " + Convert.ToBase64String(Encoding.UTF8.GetBytes("user:secret")), await page.TitleAsync());
-        }
-
-        [PlaywrightTest("proxy.spec.ts", "should exclude patterns")]
-        public async Task ShouldExcludePatterns()
+        var proxy = new Proxy
         {
-            Server.SetRoute("/target.html", ctx => ctx.Response.WriteAsync("<html><title>Served by the proxy</title></html>"));
+            Server = $"localhost:{Server.Port}",
+            Bypass = "non-existent1.com, .non-existent2.com, .another.test",
+        };
 
-            var proxy = new Proxy
-            {
-                Server = $"localhost:{Server.Port}",
-                Bypass = "non-existent1.com, .non-existent2.com, .another.test",
-            };
+        await using var browser = await BrowserType.LaunchAsync(new() { Proxy = proxy });
 
-            await using var browser = await BrowserType.LaunchAsync(new() { Proxy = proxy });
+        var page = await browser.NewPageAsync();
+        await page.GotoAsync("http://non-existent.com/target.html");
 
-            var page = await browser.NewPageAsync();
-            await page.GotoAsync("http://non-existent.com/target.html");
+        Assert.AreEqual("Served by the proxy", await page.TitleAsync());
 
-            Assert.AreEqual("Served by the proxy", await page.TitleAsync());
-
-            await PlaywrightAssert.ThrowsAsync<PlaywrightException>(() => page.GotoAsync("http://non-existent1.com/target.html"));
-            await PlaywrightAssert.ThrowsAsync<PlaywrightException>(() => page.GotoAsync("http://sub.non-existent2.com/target.html"));
-            await PlaywrightAssert.ThrowsAsync<PlaywrightException>(() => page.GotoAsync("http://foo.is.the.another.test/target.html"));
-        }
+        await PlaywrightAssert.ThrowsAsync<PlaywrightException>(() => page.GotoAsync("http://non-existent1.com/target.html"));
+        await PlaywrightAssert.ThrowsAsync<PlaywrightException>(() => page.GotoAsync("http://sub.non-existent2.com/target.html"));
+        await PlaywrightAssert.ThrowsAsync<PlaywrightException>(() => page.GotoAsync("http://foo.is.the.another.test/target.html"));
     }
 }

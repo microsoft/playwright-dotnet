@@ -25,17 +25,16 @@
 using System.Threading.Tasks;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace Microsoft.Playwright.MSTest
-{
-    [TestClass]
-    public class PageTest : ContextTest
-    {
-        public IPage Page { get; private set; } = null!;
+namespace Microsoft.Playwright.MSTest;
 
-        [TestInitialize]
-        public async Task PageSetup()
-        {
-            Page = await Context!.NewPageAsync().ConfigureAwait(false);
-        }
+[TestClass]
+public class PageTest : ContextTest
+{
+    public IPage Page { get; private set; } = null!;
+
+    [TestInitialize]
+    public async Task PageSetup()
+    {
+        Page = await Context!.NewPageAsync().ConfigureAwait(false);
     }
 }

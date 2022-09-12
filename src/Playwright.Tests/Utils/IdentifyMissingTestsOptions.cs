@@ -24,24 +24,23 @@
 
 using CommandLine;
 
-namespace Microsoft.Playwright.Tests
+namespace Microsoft.Playwright.Tests;
+
+/// <summary>
+/// Describes the options for scaffolding the tests.
+/// </summary>
+[Verb("missing-tests", HelpText = "Checks if there are missing tests in the C# variant, compared to the specs.")]
+internal class IdentifyMissingTestsOptions
 {
-    /// <summary>
-    /// Describes the options for scaffolding the tests.
-    /// </summary>
-    [Verb("missing-tests", HelpText = "Checks if there are missing tests in the C# variant, compared to the specs.")]
-    internal class IdentifyMissingTestsOptions
-    {
-        [Option(Required = true, HelpText = "Location of the PlaywrightSharp.Tests assembly.")]
-        public string TestsAssemblyPath { get; set; }
+    [Option(Required = true, HelpText = "Location of the PlaywrightSharp.Tests assembly.")]
+    public string TestsAssemblyPath { get; set; }
 
-        [Option(Required = true, HelpText = "Location of spec files.")]
-        public string SpecFileLocations { get; set; }
+    [Option(Required = true, HelpText = "Location of spec files.")]
+    public string SpecFileLocations { get; set; }
 
-        [Option(Required = false, HelpText = "The search pattern to use for spec files.", Default = "*.spec.ts")]
-        public string Pattern { get; set; }
+    [Option(Required = false, HelpText = "The search pattern to use for spec files.", Default = "*.spec.ts")]
+    public string Pattern { get; set; }
 
-        [Option(Required = false, Default = true, HelpText = "When True, looks inside subdirectories of specified location as well.")]
-        public bool Recursive { get; set; }
-    }
+    [Option(Required = false, Default = true, HelpText = "When True, looks inside subdirectories of specified location as well.")]
+    public bool Recursive { get; set; }
 }

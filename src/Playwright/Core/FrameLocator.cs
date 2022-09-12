@@ -30,27 +30,26 @@ using System.Text.Json;
 using System.Threading.Tasks;
 using Microsoft.Playwright.Helpers;
 
-namespace Microsoft.Playwright.Core
+namespace Microsoft.Playwright.Core;
+
+internal class FrameLocator : IFrameLocator
 {
-    internal class FrameLocator : IFrameLocator
+    private readonly Frame _frame;
+    private readonly string _frameSelector;
+
+    public FrameLocator(Frame parent, string selector)
     {
-        private readonly Frame _frame;
-        private readonly string _frameSelector;
-
-        public FrameLocator(Frame parent, string selector)
-        {
-            _frame = parent;
-            _frameSelector = selector;
-        }
-
-        IFrameLocator IFrameLocator.First => new FrameLocator(_frame, $"{_frameSelector} >> nth=0");
-
-        IFrameLocator IFrameLocator.Last => new FrameLocator(_frame, $"{_frameSelector} >> nth=-1");
-
-        IFrameLocator IFrameLocator.FrameLocator(string selector) => new FrameLocator(_frame, $"{_frameSelector} >> control=enter-frame >> {selector}");
-
-        ILocator IFrameLocator.Locator(string selector, FrameLocatorLocatorOptions options) => new Locator(_frame, $"{_frameSelector} >> control=enter-frame >> {selector}", new() { HasTextRegex = options?.HasTextRegex, HasTextString = options?.HasTextString });
-
-        IFrameLocator IFrameLocator.Nth(int index) => new FrameLocator(_frame, $"{_frameSelector} >> nth={index}");
+        _frame = parent;
+        _frameSelector = selector;
     }
+
+    IFrameLocator IFrameLocator.First => new FrameLocator(_frame, $"{_frameSelector} >> nth=0");
+
+    IFrameLocator IFrameLocator.Last => new FrameLocator(_frame, $"{_frameSelector} >> nth=-1");
+
+    IFrameLocator IFrameLocator.FrameLocator(string selector) => new FrameLocator(_frame, $"{_frameSelector} >> control=enter-frame >> {selector}");
+
+    ILocator IFrameLocator.Locator(string selector, FrameLocatorLocatorOptions options) => new Locator(_frame, $"{_frameSelector} >> control=enter-frame >> {selector}", new() { HasTextRegex = options?.HasTextRegex, HasTextString = options?.HasTextString });
+
+    IFrameLocator IFrameLocator.Nth(int index) => new FrameLocator(_frame, $"{_frameSelector} >> nth={index}");
 }

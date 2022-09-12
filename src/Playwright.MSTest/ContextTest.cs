@@ -25,22 +25,21 @@
 using System.Threading.Tasks;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace Microsoft.Playwright.MSTest
+namespace Microsoft.Playwright.MSTest;
+
+[TestClass]
+public class ContextTest : BrowserTest
 {
-    [TestClass]
-    public class ContextTest : BrowserTest
+    public IBrowserContext Context { get; private set; } = null!;
+
+    [TestInitialize]
+    public async Task ContextSetup()
     {
-        public IBrowserContext Context { get; private set; } = null!;
+        Context = await NewContextAsync(ContextOptions()).ConfigureAwait(false);
+    }
 
-        [TestInitialize]
-        public async Task ContextSetup()
-        {
-            Context = await NewContextAsync(ContextOptions()).ConfigureAwait(false);
-        }
-
-        public virtual BrowserNewContextOptions ContextOptions()
-        {
-            return null!;
-        }
+    public virtual BrowserNewContextOptions ContextOptions()
+    {
+        return null!;
     }
 }

@@ -25,15 +25,14 @@
 using System.Threading.Tasks;
 using NUnit.Framework;
 
-namespace Microsoft.Playwright.Tests
+namespace Microsoft.Playwright.Tests;
+
+public class PauseTests : PageTestEx
 {
-    public class PauseTests : PageTestEx
+    [Test]
+    public async Task ShouldNotFail()
     {
-        [Test]
-        public async Task ShouldNotFail()
-        {
-            await Page.GotoAsync(Server.EmptyPage);
-            await Page.PauseAsync();
-        }
+        await Page.GotoAsync(Server.EmptyPage);
+        await Page.PauseAsync();
     }
 }

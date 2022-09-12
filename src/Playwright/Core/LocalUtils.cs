@@ -29,55 +29,54 @@ using Microsoft.Playwright.Transport;
 using Microsoft.Playwright.Transport.Channels;
 using Microsoft.Playwright.Transport.Protocol;
 
-namespace Microsoft.Playwright.Core
+namespace Microsoft.Playwright.Core;
+
+internal partial class LocalUtils : ChannelOwnerBase, IChannelOwner<LocalUtils>
 {
-    internal partial class LocalUtils : ChannelOwnerBase, IChannelOwner<LocalUtils>
+    private readonly LocalUtilsChannel _channel;
+
+    public LocalUtils(IChannelOwner parent, string guid, JsonElement? initializer) : base(parent, guid)
     {
-        private readonly LocalUtilsChannel _channel;
-
-        public LocalUtils(IChannelOwner parent, string guid, JsonElement? initializer) : base(parent, guid)
-        {
-            _channel = new(guid, parent.Connection, this);
-        }
-
-        ChannelBase IChannelOwner.Channel => _channel;
-
-        IChannel<LocalUtils> IChannelOwner<LocalUtils>.Channel => _channel;
-
-        internal Task ZipAsync(string zipFile, List<NameValue> entries)
-            => _channel.ZipAsync(zipFile, entries);
-
-        internal Task<(string HarId, string Error)> HarOpenAsync(string file)
-            => _channel.HarOpenAsync(file);
-
-        internal Task<LocalUtilsHarLookupResult> HarLookupAsync(
-            string harId,
-            string url,
-            string method,
-            List<Header> headers,
-            byte[] postData,
-            bool isNavigationRequest)
-            => _channel.HarLookupAsync(harId, url, method, headers, postData, isNavigationRequest);
-
-        internal Task HarCloseAsync(string harId)
-             => _channel.HarCloseAsync(harId);
-
-        internal Task HarUnzipAsync(string zipFile, string harFile)
-             => _channel.HarUnzipAsync(zipFile, harFile);
+        _channel = new(guid, parent.Connection, this);
     }
 
-    internal class LocalUtilsHarLookupResult
-    {
-        public string Action { get; set; }
+    ChannelBase IChannelOwner.Channel => _channel;
 
-        public string Message { get; set; }
+    IChannel<LocalUtils> IChannelOwner<LocalUtils>.Channel => _channel;
 
-        public string RedirectURL { get; set; }
+    internal Task ZipAsync(string zipFile, List<NameValue> entries)
+        => _channel.ZipAsync(zipFile, entries);
 
-        public int Status { get; set; }
+    internal Task<(string HarId, string Error)> HarOpenAsync(string file)
+        => _channel.HarOpenAsync(file);
 
-        public List<NameValue> Headers { get; set; }
+    internal Task<LocalUtilsHarLookupResult> HarLookupAsync(
+        string harId,
+        string url,
+        string method,
+        List<Header> headers,
+        byte[] postData,
+        bool isNavigationRequest)
+        => _channel.HarLookupAsync(harId, url, method, headers, postData, isNavigationRequest);
 
-        public byte[] Body { get; set; }
-    }
+    internal Task HarCloseAsync(string harId)
+         => _channel.HarCloseAsync(harId);
+
+    internal Task HarUnzipAsync(string zipFile, string harFile)
+         => _channel.HarUnzipAsync(zipFile, harFile);
+}
+
+internal class LocalUtilsHarLookupResult
+{
+    public string Action { get; set; }
+
+    public string Message { get; set; }
+
+    public string RedirectURL { get; set; }
+
+    public int Status { get; set; }
+
+    public List<NameValue> Headers { get; set; }
+
+    public byte[] Body { get; set; }
 }

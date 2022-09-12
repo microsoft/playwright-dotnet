@@ -30,138 +30,138 @@ using System.Globalization;
 using System.IO;
 using System.Text.RegularExpressions;
 
-namespace Microsoft.Playwright.Tests
+namespace Microsoft.Playwright.Tests;
+
+[SuppressMessage("StyleCop.CSharp.ReadabilityRules", "SA1118:ParameterMustNotSpanMultipleLines", Justification = "CodeDom is complicated.")]
+[SuppressMessage("Microsoft.CodeQuality.Analyzers", "CA1416", Justification = "Validate platform compatibility (we only run tests on win/mac/linux).")]
+internal static partial class ScaffoldTest
 {
-    [SuppressMessage("StyleCop.CSharp.ReadabilityRules", "SA1118:ParameterMustNotSpanMultipleLines", Justification = "CodeDom is complicated.")]
-    [SuppressMessage("Microsoft.CodeQuality.Analyzers", "CA1416", Justification = "Validate platform compatibility (we only run tests on win/mac/linux).")]
-    internal static partial class ScaffoldTest
+    private static readonly TextInfo _textInfo = CultureInfo.InvariantCulture.TextInfo;
+
+    public static void FindTestsInFile(string path, Action<string> callback)
     {
-        private static readonly TextInfo _textInfo = CultureInfo.InvariantCulture.TextInfo;
-
-        public static void FindTestsInFile(string path, Action<string> callback)
+        var rx = new Regex(@"it\('(.*)',");
+        foreach (string line in File.ReadAllLines(path))
         {
-            var rx = new Regex(@"it\('(.*)',");
-            foreach (string line in File.ReadAllLines(path))
+            var m = rx.Match(line);
+            if (m?.Success == false)
             {
-                var m = rx.Match(line);
-                if (m?.Success == false)
-                {
-                    continue;
-                }
-
-                // keep in mind, group 0 is the entire match, but
-                // first (and only group), should give us the describe value
-                callback(m.Groups[1].Value);
-            }
-        }
-
-        /// <summary>
-        /// Generates a clean name from the test name.
-        /// </summary>
-        /// <param name="testDescribe">The original test name.</param>
-        /// <returns>Returns a "clean" string, suitable for C# method names.</returns>
-        public static string CleanName(string testDescribe)
-            => new(Array.FindAll(_textInfo.ToTitleCase(testDescribe).ToCharArray(), c => char.IsLetterOrDigit(c)));
-
-        public static void Run(ScaffoldTestOptions options)
-        {
-            if (!File.Exists(options.SpecFile))
-            {
-                throw new FileNotFoundException();
+                continue;
             }
 
-            var fileInfo = new FileInfo(options.SpecFile);
+            // keep in mind, group 0 is the entire match, but
+            // first (and only group), should give us the describe value
+            callback(m.Groups[1].Value);
+        }
+    }
 
-            int dotSeparator = fileInfo.Name.IndexOf('.');
-            string name = _textInfo.ToTitleCase(fileInfo.Name.Substring(0, dotSeparator)) + "Tests";
-            var targetClass = GenerateClass(options.Namespace, name, fileInfo.Name);
+    /// <summary>
+    /// Generates a clean name from the test name.
+    /// </summary>
+    /// <param name="testDescribe">The original test name.</param>
+    /// <returns>Returns a "clean" string, suitable for C# method names.</returns>
+    public static string CleanName(string testDescribe)
+        => new(Array.FindAll(_textInfo.ToTitleCase(testDescribe).ToCharArray(), c => char.IsLetterOrDigit(c)));
 
-            FindTestsInFile(options.SpecFile, (name) => AddTest(targetClass, name, fileInfo.Name));
-
-            using CodeDomProvider provider = CodeDomProvider.CreateProvider("CSharp");
-            CodeGeneratorOptions codegenOptions = new CodeGeneratorOptions()
-            {
-                BracingStyle = "C",
-            };
-
-            using StreamWriter sourceWriter = new StreamWriter(options.OutputFile);
-            provider.GenerateCodeFromCompileUnit(
-                targetClass, sourceWriter, codegenOptions);
+    public static void Run(ScaffoldTestOptions options)
+    {
+        if (!File.Exists(options.SpecFile))
+        {
+            throw new FileNotFoundException();
         }
 
-        private static CodeCompileUnit GenerateClass(string @namespace, string @class, string fileOrigin)
+        var fileInfo = new FileInfo(options.SpecFile);
+
+        int dotSeparator = fileInfo.Name.IndexOf('.');
+        string name = _textInfo.ToTitleCase(fileInfo.Name.Substring(0, dotSeparator)) + "Tests";
+        var targetClass = GenerateClass(options.Namespace, name, fileInfo.Name);
+
+        FindTestsInFile(options.SpecFile, (name) => AddTest(targetClass, name, fileInfo.Name));
+
+        using CodeDomProvider provider = CodeDomProvider.CreateProvider("CSharp");
+        CodeGeneratorOptions codegenOptions = new CodeGeneratorOptions()
         {
-            var targetUnit = new CodeCompileUnit();
-            var globalNamespace = new CodeNamespace();
+            BracingStyle = "C",
+        };
 
-            // add imports
-            globalNamespace.Imports.Add(new("System.Threading.Tasks"));
-            globalNamespace.Imports.Add(new("Microsoft.Playwright.Tests.BaseTests"));
-            globalNamespace.Imports.Add(new("Xunit"));
-            globalNamespace.Imports.Add(new("Xunit.Abstractions"));
+        using StreamWriter sourceWriter = new StreamWriter(options.OutputFile);
+        provider.GenerateCodeFromCompileUnit(
+            targetClass, sourceWriter, codegenOptions);
+    }
 
-            targetUnit.Namespaces.Add(globalNamespace);
+    private static CodeCompileUnit GenerateClass(string @namespace, string @class, string fileOrigin)
+    {
+        var targetUnit = new CodeCompileUnit();
+        var globalNamespace = new CodeNamespace();
 
-            var codeNamespace = new CodeNamespace(@namespace);
-            var targetClass = new CodeTypeDeclaration(@class)
+        // add imports
+        globalNamespace.Imports.Add(new("System.Threading.Tasks"));
+        globalNamespace.Imports.Add(new("Microsoft.Playwright.Tests.BaseTests"));
+        globalNamespace.Imports.Add(new("Xunit"));
+        globalNamespace.Imports.Add(new("Xunit.Abstractions"));
+
+        targetUnit.Namespaces.Add(globalNamespace);
+
+        var codeNamespace = new CodeNamespace(@namespace);
+        var targetClass = new CodeTypeDeclaration(@class)
+        {
+            IsClass = true,
+            TypeAttributes = System.Reflection.TypeAttributes.Public | System.Reflection.TypeAttributes.Sealed,
+        };
+
+        targetClass.BaseTypes.Add(new CodeTypeReference("MicrosoftPlaywrightPageBaseTest"));
+
+        _ = targetClass.CustomAttributes.Add(new(
+            "Collection",
+            new CodeAttributeArgument[]
             {
-                IsClass = true,
-                TypeAttributes = System.Reflection.TypeAttributes.Public | System.Reflection.TypeAttributes.Sealed,
-            };
-
-            targetClass.BaseTypes.Add(new CodeTypeReference("MicrosoftPlaywrightPageBaseTest"));
-
-            _ = targetClass.CustomAttributes.Add(new(
-                "Collection",
-                new CodeAttributeArgument[]
-                {
                     new(
                         new CodeFieldReferenceExpression(
                             new CodeTypeReferenceExpression("TestConstants"),
                             "TestFixtureBrowserCollectionName")),
-                }));
+            }));
 
-            targetClass.Comments.Add(new($"<playwright-file>{fileOrigin}</playwright-file>", true));
-            codeNamespace.Types.Add(targetClass);
+        targetClass.Comments.Add(new($"<playwright-file>{fileOrigin}</playwright-file>", true));
+        codeNamespace.Types.Add(targetClass);
 
-            targetUnit.Namespaces.Add(codeNamespace);
+        targetUnit.Namespaces.Add(codeNamespace);
 
-            // add constructor
-            var constructor = new CodeConstructor()
-            {
-                Attributes = MemberAttributes.Public,
-            };
-
-            constructor.Parameters.Add(new("ITestOutputHelper", "output"));
-            constructor.BaseConstructorArgs.Add(new CodeVariableReferenceExpression("output"));
-            constructor.Comments.Add(new("<inheritdoc/>", true));
-            targetClass.Members.Add(constructor);
-
-            return targetUnit;
-        }
-
-        private static void AddTest(CodeCompileUnit @class, string testDescribe, string testOrigin)
+        // add constructor
+        var constructor = new CodeConstructor()
         {
-            // make name out of the describe, and we should ignore any whitespaces, hyphens, etc.
-            string name = CleanName(testDescribe);
+            Attributes = MemberAttributes.Public,
+        };
 
-            Console.WriteLine($"Adding {name}");
+        constructor.Parameters.Add(new("ITestOutputHelper", "output"));
+        constructor.BaseConstructorArgs.Add(new CodeVariableReferenceExpression("output"));
+        constructor.Comments.Add(new("<inheritdoc/>", true));
+        targetClass.Members.Add(constructor);
 
-            CodeMemberMethod method = new CodeMemberMethod()
+        return targetUnit;
+    }
+
+    private static void AddTest(CodeCompileUnit @class, string testDescribe, string testOrigin)
+    {
+        // make name out of the describe, and we should ignore any whitespaces, hyphens, etc.
+        string name = CleanName(testDescribe);
+
+        Console.WriteLine($"Adding {name}");
+
+        CodeMemberMethod method = new CodeMemberMethod()
+        {
+            Attributes = MemberAttributes.Public | MemberAttributes.Final,
+            ReturnType = new("async Task"),
+            Name = name,
+        };
+
+        @class.Namespaces[1].Types[0].Members.Add(method);
+
+        method.Comments.Add(new($"<playwright-file>{testOrigin}</playwright-file>", true));
+        method.Comments.Add(new($"<playwright-it>{testDescribe}</playwright-it>", true));
+        method.CustomAttributes.Add(new(
+            "Fact",
+            new CodeAttributeArgument[]
             {
-                Attributes = MemberAttributes.Public | MemberAttributes.Final,
-                ReturnType = new("async Task"),
-                Name = name,
-            };
-
-            @class.Namespaces[1].Types[0].Members.Add(method);
-
-            method.Comments.Add(new($"<playwright-file>{testOrigin}</playwright-file>", true));
-            method.Comments.Add(new($"<playwright-it>{testDescribe}</playwright-it>", true));
-            method.CustomAttributes.Add(new(
-                "Fact",
-                new CodeAttributeArgument[]
-                {
                     new(
                         "Timeout",
                         new CodeFieldReferenceExpression(
@@ -170,7 +170,6 @@ namespace Microsoft.Playwright.Tests
                     new(
                         "Skip",
                         new CodePrimitiveExpression("This test is not yet implemented.")),
-                }));
-        }
+            }));
     }
 }

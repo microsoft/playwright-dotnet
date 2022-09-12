@@ -22,10 +22,9 @@
  * SOFTWARE.
  */
 
-namespace Microsoft.Playwright.Core
+namespace Microsoft.Playwright.Core;
+
+internal class EvaluateArgumentGuidElement
 {
-    internal class EvaluateArgumentGuidElement
-    {
-        public string Guid { get; set; }
-    }
+    public string Guid { get; set; }
 }

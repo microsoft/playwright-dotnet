@@ -26,45 +26,45 @@ using System.Threading.Tasks;
 using Microsoft.Playwright.NUnit;
 using NUnit.Framework;
 
-namespace Microsoft.Playwright.Tests
-{
-    public class SelectorMiscTests : PageTestEx
-    {
-        [PlaywrightTest("selectors-misc.spec.ts", "should work for open shadow roots")]
-        public async Task ShouldWorkForOpenShadowRoots()
-        {
-            await Page.GotoAsync(Server.Prefix + "/deep-shadow.html");
-            Assert.AreEqual("Hello from root2", await Page.EvalOnSelectorAsync<string>("id=target", "e => e.textContent"));
-            Assert.AreEqual("Hello from root1", await Page.EvalOnSelectorAsync<string>("data-testid=foo", "e => e.textContent"));
-            Assert.AreEqual(3, await Page.EvalOnSelectorAllAsync<int>("data-testid=foo", "els => els.length"));
-            Assert.Null(await Page.QuerySelectorAsync("id:light=target"));
-            Assert.Null(await Page.QuerySelectorAsync("data-testid:light=foo"));
-            Assert.IsEmpty(await Page.QuerySelectorAllAsync("data-testid:light=foo"));
-        }
+namespace Microsoft.Playwright.Tests;
 
-        [PlaywrightTest("selectors-misc.spec.ts", "should work with layout selectors")]
-        public async Task ShouldWorkWithLayoutSelectors()
-        {
-            /*
-                +--+  +--+
-                | 1|  | 2|
-                +--+  ++-++
-                | 3|   | 4|
-            +-------+  ++-++
-            |   0   |  | 5|
-            | +--+  +--+--+
-            | | 6|  | 7|
-            | +--+  +--+
-            |       |
-            O-------+
+public class SelectorMiscTests : PageTestEx
+{
+    [PlaywrightTest("selectors-misc.spec.ts", "should work for open shadow roots")]
+    public async Task ShouldWorkForOpenShadowRoots()
+    {
+        await Page.GotoAsync(Server.Prefix + "/deep-shadow.html");
+        Assert.AreEqual("Hello from root2", await Page.EvalOnSelectorAsync<string>("id=target", "e => e.textContent"));
+        Assert.AreEqual("Hello from root1", await Page.EvalOnSelectorAsync<string>("data-testid=foo", "e => e.textContent"));
+        Assert.AreEqual(3, await Page.EvalOnSelectorAllAsync<int>("data-testid=foo", "els => els.length"));
+        Assert.Null(await Page.QuerySelectorAsync("id:light=target"));
+        Assert.Null(await Page.QuerySelectorAsync("data-testid:light=foo"));
+        Assert.IsEmpty(await Page.QuerySelectorAllAsync("data-testid:light=foo"));
+    }
+
+    [PlaywrightTest("selectors-misc.spec.ts", "should work with layout selectors")]
+    public async Task ShouldWorkWithLayoutSelectors()
+    {
+        /*
+            +--+  +--+
+            | 1|  | 2|
+            +--+  ++-++
+            | 3|   | 4|
+        +-------+  ++-++
+        |   0   |  | 5|
+        | +--+  +--+--+
+        | | 6|  | 7|
+        | +--+  +--+
+        |       |
+        O-------+
+                +--+
+                | 8|
+                +--++--+
+                    | 9|
                     +--+
-                    | 8|
-                    +--++--+
-                        | 9|
-                        +--+
-            */
-            await Page.SetContentAsync("<container style=\"width: 500px; height: 500px; position: relative;\"></container>");
-            await Page.EvalOnSelectorAsync("container", @"container => {
+        */
+        await Page.SetContentAsync("<container style=\"width: 500px; height: 500px; position: relative;\"></container>");
+        await Page.EvalOnSelectorAsync("container", @"container => {
                 const boxes = [
                     // x, y, width, height
                     [0, 0, 150, 150],
@@ -98,67 +98,66 @@ namespace Microsoft.Playwright.Tests
                     div.appendChild(span);
                 }
             }");
-            Assert.AreEqual(await Page.EvalOnSelectorAsync<string>("div:right-of(#id6)", "e => e.id"), "id7");
-            Assert.AreEqual(await Page.EvalOnSelectorAsync<string>("div:right-of(#id1)", "e => e.id"), "id2");
-            Assert.AreEqual(await Page.EvalOnSelectorAsync<string>("div:right-of(#id3)", "e => e.id"), "id4");
-            Assert.AreEqual(await Page.QuerySelectorAsync("div:right-of(#id4)"), null);
-            Assert.AreEqual(await Page.EvalOnSelectorAsync<string>("div:right-of(#id0)", "e => e.id"), "id7");
-            Assert.AreEqual(await Page.EvalOnSelectorAsync<string>("div:right-of(#id8)", "e => e.id"), "id9");
-            Assert.AreEqual(await Page.EvalOnSelectorAllAsync<string>("div:right-of(#id3)", "els => els.map(e => e.id).join(',')"), "id4,id2,id5,id7,id8,id9");
-            Assert.AreEqual(await Page.EvalOnSelectorAllAsync<string>("div:right-of(#id3, 50)", "els => els.map(e => e.id).join(',')"), "id2,id5,id7,id8");
-            Assert.AreEqual(await Page.EvalOnSelectorAllAsync<string>("div:right-of(#id3, 49)", "els => els.map(e => e.id).join(',')"), "id7,id8");
+        Assert.AreEqual(await Page.EvalOnSelectorAsync<string>("div:right-of(#id6)", "e => e.id"), "id7");
+        Assert.AreEqual(await Page.EvalOnSelectorAsync<string>("div:right-of(#id1)", "e => e.id"), "id2");
+        Assert.AreEqual(await Page.EvalOnSelectorAsync<string>("div:right-of(#id3)", "e => e.id"), "id4");
+        Assert.AreEqual(await Page.QuerySelectorAsync("div:right-of(#id4)"), null);
+        Assert.AreEqual(await Page.EvalOnSelectorAsync<string>("div:right-of(#id0)", "e => e.id"), "id7");
+        Assert.AreEqual(await Page.EvalOnSelectorAsync<string>("div:right-of(#id8)", "e => e.id"), "id9");
+        Assert.AreEqual(await Page.EvalOnSelectorAllAsync<string>("div:right-of(#id3)", "els => els.map(e => e.id).join(',')"), "id4,id2,id5,id7,id8,id9");
+        Assert.AreEqual(await Page.EvalOnSelectorAllAsync<string>("div:right-of(#id3, 50)", "els => els.map(e => e.id).join(',')"), "id2,id5,id7,id8");
+        Assert.AreEqual(await Page.EvalOnSelectorAllAsync<string>("div:right-of(#id3, 49)", "els => els.map(e => e.id).join(',')"), "id7,id8");
 
-            Assert.AreEqual(await Page.EvalOnSelectorAsync<string>("div:left-of(#id2)", "e => e.id"), "id1");
-            Assert.AreEqual(await Page.QuerySelectorAsync("div:left-of(#id0)"), null);
-            Assert.AreEqual(await Page.EvalOnSelectorAsync<string>("div:left-of(#id5)", "e => e.id"), "id0");
-            Assert.AreEqual(await Page.EvalOnSelectorAsync<string>("div:left-of(#id9)", "e => e.id"), "id8");
-            Assert.AreEqual(await Page.EvalOnSelectorAsync<string>("div:left-of(#id4)", "e => e.id"), "id3");
-            Assert.AreEqual(await Page.EvalOnSelectorAllAsync<string>("div:left-of(#id5)", "els => els.map(e => e.id).join(',')"), "id0,id7,id3,id1,id6,id8");
-            Assert.AreEqual(await Page.EvalOnSelectorAllAsync<string>("div:left-of(#id5, 3)", "els => els.map(e => e.id).join(',')"), "id7,id8");
+        Assert.AreEqual(await Page.EvalOnSelectorAsync<string>("div:left-of(#id2)", "e => e.id"), "id1");
+        Assert.AreEqual(await Page.QuerySelectorAsync("div:left-of(#id0)"), null);
+        Assert.AreEqual(await Page.EvalOnSelectorAsync<string>("div:left-of(#id5)", "e => e.id"), "id0");
+        Assert.AreEqual(await Page.EvalOnSelectorAsync<string>("div:left-of(#id9)", "e => e.id"), "id8");
+        Assert.AreEqual(await Page.EvalOnSelectorAsync<string>("div:left-of(#id4)", "e => e.id"), "id3");
+        Assert.AreEqual(await Page.EvalOnSelectorAllAsync<string>("div:left-of(#id5)", "els => els.map(e => e.id).join(',')"), "id0,id7,id3,id1,id6,id8");
+        Assert.AreEqual(await Page.EvalOnSelectorAllAsync<string>("div:left-of(#id5, 3)", "els => els.map(e => e.id).join(',')"), "id7,id8");
 
-            Assert.AreEqual(await Page.EvalOnSelectorAsync<string>("div:above(#id0)", "e => e.id"), "id3");
-            Assert.AreEqual(await Page.EvalOnSelectorAsync<string>("div:above(#id5)", "e => e.id"), "id4");
-            Assert.AreEqual(await Page.EvalOnSelectorAsync<string>("div:above(#id7)", "e => e.id"), "id5");
-            Assert.AreEqual(await Page.EvalOnSelectorAsync<string>("div:above(#id8)", "e => e.id"), "id0");
-            Assert.AreEqual(await Page.EvalOnSelectorAsync<string>("div:above(#id9)", "e => e.id"), "id8");
-            Assert.AreEqual(await Page.QuerySelectorAsync("div:above(#id2)"), null);
-            Assert.AreEqual(await Page.EvalOnSelectorAllAsync<string>("div:above(#id5)", "els => els.map(e => e.id).join(',')"), "id4,id2,id3,id1");
-            Assert.AreEqual(await Page.EvalOnSelectorAllAsync<string>("div:above(#id5, 20)", "els => els.map(e => e.id).join(',')"), "id4,id3");
+        Assert.AreEqual(await Page.EvalOnSelectorAsync<string>("div:above(#id0)", "e => e.id"), "id3");
+        Assert.AreEqual(await Page.EvalOnSelectorAsync<string>("div:above(#id5)", "e => e.id"), "id4");
+        Assert.AreEqual(await Page.EvalOnSelectorAsync<string>("div:above(#id7)", "e => e.id"), "id5");
+        Assert.AreEqual(await Page.EvalOnSelectorAsync<string>("div:above(#id8)", "e => e.id"), "id0");
+        Assert.AreEqual(await Page.EvalOnSelectorAsync<string>("div:above(#id9)", "e => e.id"), "id8");
+        Assert.AreEqual(await Page.QuerySelectorAsync("div:above(#id2)"), null);
+        Assert.AreEqual(await Page.EvalOnSelectorAllAsync<string>("div:above(#id5)", "els => els.map(e => e.id).join(',')"), "id4,id2,id3,id1");
+        Assert.AreEqual(await Page.EvalOnSelectorAllAsync<string>("div:above(#id5, 20)", "els => els.map(e => e.id).join(',')"), "id4,id3");
 
-            Assert.AreEqual(await Page.EvalOnSelectorAsync<string>("div:below(#id4)", "e => e.id"), "id5");
-            Assert.AreEqual(await Page.EvalOnSelectorAsync<string>("div:below(#id3)", "e => e.id"), "id0");
-            Assert.AreEqual(await Page.EvalOnSelectorAsync<string>("div:below(#id2)", "e => e.id"), "id4");
-            Assert.AreEqual(await Page.EvalOnSelectorAsync<string>("div:below(#id6)", "e => e.id"), "id8");
-            Assert.AreEqual(await Page.EvalOnSelectorAsync<string>("div:below(#id7)", "e => e.id"), "id8");
-            Assert.AreEqual(await Page.EvalOnSelectorAsync<string>("div:below(#id8)", "e => e.id"), "id9");
-            Assert.AreEqual(await Page.QuerySelectorAsync("div:below(#id9)"), null);
-            Assert.AreEqual(await Page.EvalOnSelectorAllAsync<string>("div:below(#id3)", "els => els.map(e => e.id).join(',')"), "id0,id5,id6,id7,id8,id9");
-            Assert.AreEqual(await Page.EvalOnSelectorAllAsync<string>("div:below(#id3, 105)", "els => els.map(e => e.id).join(',')"), "id0,id5,id6,id7");
+        Assert.AreEqual(await Page.EvalOnSelectorAsync<string>("div:below(#id4)", "e => e.id"), "id5");
+        Assert.AreEqual(await Page.EvalOnSelectorAsync<string>("div:below(#id3)", "e => e.id"), "id0");
+        Assert.AreEqual(await Page.EvalOnSelectorAsync<string>("div:below(#id2)", "e => e.id"), "id4");
+        Assert.AreEqual(await Page.EvalOnSelectorAsync<string>("div:below(#id6)", "e => e.id"), "id8");
+        Assert.AreEqual(await Page.EvalOnSelectorAsync<string>("div:below(#id7)", "e => e.id"), "id8");
+        Assert.AreEqual(await Page.EvalOnSelectorAsync<string>("div:below(#id8)", "e => e.id"), "id9");
+        Assert.AreEqual(await Page.QuerySelectorAsync("div:below(#id9)"), null);
+        Assert.AreEqual(await Page.EvalOnSelectorAllAsync<string>("div:below(#id3)", "els => els.map(e => e.id).join(',')"), "id0,id5,id6,id7,id8,id9");
+        Assert.AreEqual(await Page.EvalOnSelectorAllAsync<string>("div:below(#id3, 105)", "els => els.map(e => e.id).join(',')"), "id0,id5,id6,id7");
 
-            Assert.AreEqual(await Page.EvalOnSelectorAsync<string>("div:near(#id0)", "e => e.id"), "id3");
-            Assert.AreEqual(await Page.EvalOnSelectorAllAsync<string>("div:near(#id7)", "els => els.map(e => e.id).join(',')"), "id0,id5,id3,id6");
-            Assert.AreEqual(await Page.EvalOnSelectorAllAsync<string>("div:near(#id0)", "els => els.map(e => e.id).join(',')"), "id3,id6,id7,id8,id1,id5");
-            Assert.AreEqual(await Page.EvalOnSelectorAllAsync<string>("div:near(#id6)", "els => els.map(e => e.id).join(',')"), "id0,id3,id7");
-            Assert.AreEqual(await Page.EvalOnSelectorAllAsync<string>("div:near(#id6, 10)", "els => els.map(e => e.id).join(',')"), "id0");
-            Assert.AreEqual(await Page.EvalOnSelectorAllAsync<string>("div:near(#id0, 100)", "els => els.map(e => e.id).join(',')"), "id3,id6,id7,id8,id1,id5,id4,id2");
+        Assert.AreEqual(await Page.EvalOnSelectorAsync<string>("div:near(#id0)", "e => e.id"), "id3");
+        Assert.AreEqual(await Page.EvalOnSelectorAllAsync<string>("div:near(#id7)", "els => els.map(e => e.id).join(',')"), "id0,id5,id3,id6");
+        Assert.AreEqual(await Page.EvalOnSelectorAllAsync<string>("div:near(#id0)", "els => els.map(e => e.id).join(',')"), "id3,id6,id7,id8,id1,id5");
+        Assert.AreEqual(await Page.EvalOnSelectorAllAsync<string>("div:near(#id6)", "els => els.map(e => e.id).join(',')"), "id0,id3,id7");
+        Assert.AreEqual(await Page.EvalOnSelectorAllAsync<string>("div:near(#id6, 10)", "els => els.map(e => e.id).join(',')"), "id0");
+        Assert.AreEqual(await Page.EvalOnSelectorAllAsync<string>("div:near(#id0, 100)", "els => els.map(e => e.id).join(',')"), "id3,id6,id7,id8,id1,id5,id4,id2");
 
-            Assert.AreEqual(await Page.EvalOnSelectorAllAsync<string>("div:below(#id5):above(#id8)", "els => els.map(e => e.id).join(',')"), "id7,id6");
-            Assert.AreEqual(await Page.EvalOnSelectorAsync<string>("div:below(#id5):above(#id8)", "e => e.id"), "id7");
+        Assert.AreEqual(await Page.EvalOnSelectorAllAsync<string>("div:below(#id5):above(#id8)", "els => els.map(e => e.id).join(',')"), "id7,id6");
+        Assert.AreEqual(await Page.EvalOnSelectorAsync<string>("div:below(#id5):above(#id8)", "e => e.id"), "id7");
 
-            Assert.AreEqual(await Page.EvalOnSelectorAllAsync<string>("div:right-of(#id0) + div:above(#id8)", "els => els.map(e => e.id).join(',')"), "id5,id6,id3");
+        Assert.AreEqual(await Page.EvalOnSelectorAllAsync<string>("div:right-of(#id0) + div:above(#id8)", "els => els.map(e => e.id).join(',')"), "id5,id6,id3");
 
-            var error = await PlaywrightAssert.ThrowsAsync<PlaywrightException>(async () => await Page.QuerySelectorAsync(":near(50)"));
-            StringAssert.Contains("\"near\" engine expects a selector list and optional maximum distance in pixels", error.Message);
-            var error1 = await PlaywrightAssert.ThrowsAsync<PlaywrightException>(async () => await Page.QuerySelectorAsync("div >> left-of=abc"));
-            StringAssert.Contains("Malformed selector: left-of=abc", error1.Message);
-            var error2 = await PlaywrightAssert.ThrowsAsync<PlaywrightException>(async () => await Page.QuerySelectorAsync("left-of=\"div\""));
-            StringAssert.Contains("\"left-of\" selector cannot be first", error2.Message);
-            var error3 = await PlaywrightAssert.ThrowsAsync<PlaywrightException>(async () => await Page.QuerySelectorAsync("div >> left-of=33"));
-            StringAssert.Contains("Malformed selector: left-of=33", error3.Message);
-            var error4 = await PlaywrightAssert.ThrowsAsync<PlaywrightException>(async () => await Page.QuerySelectorAsync("div >> left-of=\"span\",\"foo\""));
-            StringAssert.Contains("Malformed selector: left-of=\"span\",\"foo\"", error4.Message);
-            var error5 = await PlaywrightAssert.ThrowsAsync<PlaywrightException>(async () => await Page.QuerySelectorAsync("div >> left-of=\"span\",3,4"));
-            StringAssert.Contains("Malformed selector: left-of=\"span\",3,4", error5.Message);
-        }
+        var error = await PlaywrightAssert.ThrowsAsync<PlaywrightException>(async () => await Page.QuerySelectorAsync(":near(50)"));
+        StringAssert.Contains("\"near\" engine expects a selector list and optional maximum distance in pixels", error.Message);
+        var error1 = await PlaywrightAssert.ThrowsAsync<PlaywrightException>(async () => await Page.QuerySelectorAsync("div >> left-of=abc"));
+        StringAssert.Contains("Malformed selector: left-of=abc", error1.Message);
+        var error2 = await PlaywrightAssert.ThrowsAsync<PlaywrightException>(async () => await Page.QuerySelectorAsync("left-of=\"div\""));
+        StringAssert.Contains("\"left-of\" selector cannot be first", error2.Message);
+        var error3 = await PlaywrightAssert.ThrowsAsync<PlaywrightException>(async () => await Page.QuerySelectorAsync("div >> left-of=33"));
+        StringAssert.Contains("Malformed selector: left-of=33", error3.Message);
+        var error4 = await PlaywrightAssert.ThrowsAsync<PlaywrightException>(async () => await Page.QuerySelectorAsync("div >> left-of=\"span\",\"foo\""));
+        StringAssert.Contains("Malformed selector: left-of=\"span\",\"foo\"", error4.Message);
+        var error5 = await PlaywrightAssert.ThrowsAsync<PlaywrightException>(async () => await Page.QuerySelectorAsync("div >> left-of=\"span\",3,4"));
+        StringAssert.Contains("Malformed selector: left-of=\"span\",3,4", error5.Message);
     }
 }

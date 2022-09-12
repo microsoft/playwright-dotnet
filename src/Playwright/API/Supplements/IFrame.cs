@@ -25,14 +25,13 @@
 using System.Text.Json;
 using System.Threading.Tasks;
 
-namespace Microsoft.Playwright
+namespace Microsoft.Playwright;
+
+public partial interface IFrame
 {
-    public partial interface IFrame
-    {
-        Task<JsonElement?> EvaluateAsync(string expression, object arg = default);
+    Task<JsonElement?> EvaluateAsync(string expression, object arg = default);
 
-        Task<JsonElement?> EvalOnSelectorAsync(string selector, string expression, object arg = default);
+    Task<JsonElement?> EvalOnSelectorAsync(string selector, string expression, object arg = default);
 
-        Task<JsonElement?> EvalOnSelectorAllAsync(string selector, string expression, object arg = default);
-    }
+    Task<JsonElement?> EvalOnSelectorAllAsync(string selector, string expression, object arg = default);
 }

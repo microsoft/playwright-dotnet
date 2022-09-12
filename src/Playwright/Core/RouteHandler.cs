@@ -26,35 +26,34 @@ using System;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
-namespace Microsoft.Playwright.Core
+namespace Microsoft.Playwright.Core;
+
+internal class RouteHandler
 {
-    internal class RouteHandler
+    public Regex Regex { get; set; }
+
+    public Func<string, bool> Function { get; set; }
+
+    public Delegate Handler { get; set; }
+
+    public int? Times { get; internal set; }
+
+    public int HandledCount { get; set; }
+
+    public async Task<bool> HandleAsync(Route route)
     {
-        public Regex Regex { get; set; }
-
-        public Func<string, bool> Function { get; set; }
-
-        public Delegate Handler { get; set; }
-
-        public int? Times { get; internal set; }
-
-        public int HandledCount { get; set; }
-
-        public async Task<bool> HandleAsync(Route route)
+        ++HandledCount;
+        var handledTask = route.StartHandlingAsync();
+        var maybeTask = Handler.DynamicInvoke(new object[] { route });
+        if (maybeTask is Task task)
         {
-            ++HandledCount;
-            var handledTask = route.StartHandlingAsync();
-            var maybeTask = Handler.DynamicInvoke(new object[] { route });
-            if (maybeTask is Task task)
-            {
-                await task.ConfigureAwait(false);
-            }
-            return await handledTask.ConfigureAwait(false);
+            await task.ConfigureAwait(false);
         }
+        return await handledTask.ConfigureAwait(false);
+    }
 
-        public bool WillExpire()
-        {
-            return HandledCount + 1 >= Times;
-        }
+    public bool WillExpire()
+    {
+        return HandledCount + 1 >= Times;
     }
 }

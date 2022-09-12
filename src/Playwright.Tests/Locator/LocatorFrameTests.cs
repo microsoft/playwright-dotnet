@@ -25,26 +25,26 @@
 using System.Threading.Tasks;
 using NUnit.Framework;
 
-namespace Microsoft.Playwright.Tests.Locator
-{
+namespace Microsoft.Playwright.Tests.Locator;
 
-    public class LocatorFrameTests : PageTestEx
+
+public class LocatorFrameTests : PageTestEx
+{
+    public async Task RouteIFrame(IPage page)
     {
-        public async Task RouteIFrame(IPage page)
+        await page.RouteAsync("**/empty.html", async route =>
         {
-            await page.RouteAsync("**/empty.html", async route =>
+            await route.FulfillAsync(new RouteFulfillOptions
             {
-                await route.FulfillAsync(new RouteFulfillOptions
-                {
-                    Body = "<iframe src=\"/iframe.html\"></iframe>",
-                    ContentType = "text/html"
-                });
+                Body = "<iframe src=\"/iframe.html\"></iframe>",
+                ContentType = "text/html"
             });
-            await page.RouteAsync("**/iframe.html", async route =>
+        });
+        await page.RouteAsync("**/iframe.html", async route =>
+        {
+            await route.FulfillAsync(new RouteFulfillOptions
             {
-                await route.FulfillAsync(new RouteFulfillOptions
-                {
-                    Body = @"
+                Body = @"
                     <html>
                     <div>
                         <button>Hello iframe</button>
@@ -53,39 +53,38 @@ namespace Microsoft.Playwright.Tests.Locator
                     <span>1</span>
                     <span>2</span>
                     </html>",
-                    ContentType = "text/html"
-                });
+                ContentType = "text/html"
             });
-            await page.RouteAsync("**/iframe-2.html", async route =>
+        });
+        await page.RouteAsync("**/iframe-2.html", async route =>
+        {
+            await route.FulfillAsync(new RouteFulfillOptions
             {
-                await route.FulfillAsync(new RouteFulfillOptions
-                {
-                    Body = "<html><button>Hello nested iframe</button></html>",
-                    ContentType = "text/html"
-                });
+                Body = "<html><button>Hello nested iframe</button></html>",
+                ContentType = "text/html"
             });
-        }
+        });
+    }
 
-        [PlaywrightTest("locator-frame.spec.ts", "should work for iframe")]
-        public async Task ShouldWorkForIFrame()
-        {
-            await RouteIFrame(Page);
-            await Page.GotoAsync(Server.EmptyPage);
-            var button = Page.FrameLocator("iframe").Locator("button");
-            await button.WaitForAsync();
-            Assert.AreEqual(await button.InnerTextAsync(), "Hello iframe");
-            await button.ClickAsync();
-        }
+    [PlaywrightTest("locator-frame.spec.ts", "should work for iframe")]
+    public async Task ShouldWorkForIFrame()
+    {
+        await RouteIFrame(Page);
+        await Page.GotoAsync(Server.EmptyPage);
+        var button = Page.FrameLocator("iframe").Locator("button");
+        await button.WaitForAsync();
+        Assert.AreEqual(await button.InnerTextAsync(), "Hello iframe");
+        await button.ClickAsync();
+    }
 
-        [PlaywrightTest("locator-frame.spec.ts", "should work for nested iframe")]
-        public async Task ShouldWorkForNestedIFrame()
-        {
-            await RouteIFrame(Page);
-            await Page.GotoAsync(Server.EmptyPage);
-            var button = Page.FrameLocator("iframe").FrameLocator("iframe").Locator("button");
-            await button.WaitForAsync();
-            Assert.AreEqual(await button.InnerTextAsync(), "Hello nested iframe");
-            await button.ClickAsync();
-        }
+    [PlaywrightTest("locator-frame.spec.ts", "should work for nested iframe")]
+    public async Task ShouldWorkForNestedIFrame()
+    {
+        await RouteIFrame(Page);
+        await Page.GotoAsync(Server.EmptyPage);
+        var button = Page.FrameLocator("iframe").FrameLocator("iframe").Locator("button");
+        await button.WaitForAsync();
+        Assert.AreEqual(await button.InnerTextAsync(), "Hello nested iframe");
+        await button.ClickAsync();
     }
 }

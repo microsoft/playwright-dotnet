@@ -26,27 +26,26 @@ using System.Threading.Tasks;
 using Microsoft.Playwright.Transport;
 using Microsoft.Playwright.Transport.Channels;
 
-namespace Microsoft.Playwright.Core
+namespace Microsoft.Playwright.Core;
+
+internal class Selectors : ChannelOwnerBase, IChannelOwner<Selectors>, ISelectors
 {
-    internal class Selectors : ChannelOwnerBase, IChannelOwner<Selectors>, ISelectors
+    private readonly SelectorsChannel _channel;
+
+    internal Selectors(IChannelOwner parent, string guid) : base(parent, guid)
     {
-        private readonly SelectorsChannel _channel;
+        _channel = new(guid, parent.Connection, this);
+    }
 
-        internal Selectors(IChannelOwner parent, string guid) : base(parent, guid)
-        {
-            _channel = new(guid, parent.Connection, this);
-        }
+    ChannelBase IChannelOwner.Channel => _channel;
 
-        ChannelBase IChannelOwner.Channel => _channel;
+    IChannel<Selectors> IChannelOwner<Selectors>.Channel => _channel;
 
-        IChannel<Selectors> IChannelOwner<Selectors>.Channel => _channel;
+    public async Task RegisterAsync(string name, SelectorsRegisterOptions options = default)
+    {
+        options ??= new SelectorsRegisterOptions();
 
-        public async Task RegisterAsync(string name, SelectorsRegisterOptions options = default)
-        {
-            options ??= new SelectorsRegisterOptions();
-
-            var script = ScriptsHelper.EvaluationScript(options?.Script, options?.Path);
-            await _channel.RegisterAsync(name, script, options?.ContentScript).ConfigureAwait(false);
-        }
+        var script = ScriptsHelper.EvaluationScript(options?.Script, options?.Path);
+        await _channel.RegisterAsync(name, script, options?.ContentScript).ConfigureAwait(false);
     }
 }
