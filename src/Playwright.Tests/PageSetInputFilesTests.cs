@@ -33,14 +33,15 @@ using NUnit.Framework;
 
 namespace Microsoft.Playwright.Tests
 {
-    ///<playwright-file>page-set-input-files.spec.ts</playwright-file>
     public class PageSetInputFilesTests : PageTestEx
     {
+        public static string FileToUpload = TestUtils.GetAsset("file-to-upload.txt");
+
         [PlaywrightTest("page-set-input-files.spec.ts", "should upload the file")]
         public async Task ShouldUploadTheFile()
         {
             await Page.GotoAsync(Server.Prefix + "/input/fileupload.html");
-            string filePath = Path.Combine(Directory.GetCurrentDirectory(), "Assets", TestConstants.FileToUpload);
+            string filePath = Path.Combine(Directory.GetCurrentDirectory(), "Assets", FileToUpload);
             var input = await Page.QuerySelectorAsync("input");
             await input.SetInputFilesAsync(filePath);
             Assert.AreEqual("file-to-upload.txt", await Page.EvaluateAsync<string>("e => e.files[0].name", input));
@@ -56,7 +57,7 @@ namespace Microsoft.Playwright.Tests
         public async Task ShouldWork()
         {
             await Page.SetContentAsync("<input type=file>");
-            string filePath = Path.Combine(Directory.GetCurrentDirectory(), "Assets", TestConstants.FileToUpload);
+            string filePath = Path.Combine(Directory.GetCurrentDirectory(), "Assets", FileToUpload);
             await Page.SetInputFilesAsync("input", filePath);
 
             Assert.AreEqual(1, await Page.EvalOnSelectorAsync<int>("input", "e => e.files.length"));
@@ -142,7 +143,7 @@ namespace Microsoft.Playwright.Tests
             await Page.GotoAsync(Server.EmptyPage);
             await Page.SetContentAsync("<input type=file>");
 
-            await Page.SetInputFilesAsync("input", Path.Combine(Directory.GetCurrentDirectory(), "Assets", TestConstants.FileToUpload));
+            await Page.SetInputFilesAsync("input", Path.Combine(Directory.GetCurrentDirectory(), "Assets", FileToUpload));
             Assert.AreEqual(1, await Page.EvalOnSelectorAsync<int>("input", "input => input.files.length"));
             Assert.AreEqual("file-to-upload.txt", await Page.EvalOnSelectorAsync<string>("input", "input => input.files[0].name"));
         }
@@ -205,7 +206,7 @@ namespace Microsoft.Playwright.Tests
 
             Assert.AreEqual(Page, fileChooser.Page);
             Assert.NotNull(fileChooser.Element);
-            await fileChooser.SetFilesAsync(TestConstants.FileToUpload);
+            await fileChooser.SetFilesAsync(FileToUpload);
             Assert.AreEqual(1, await Page.EvalOnSelectorAsync<int>("input", "input => input.files.length"));
             Assert.AreEqual("file-to-upload.txt", await Page.EvalOnSelectorAsync<string>("input", "input => input.files[0].name"));
         }
@@ -257,7 +258,7 @@ namespace Microsoft.Playwright.Tests
         {
             await Page.SetContentAsync("<input type=file>");
             _ = Page.WaitForFileChooserAsync()
-                .ContinueWith(task => task.Result.SetFilesAsync(TestConstants.FileToUpload));
+                .ContinueWith(task => task.Result.SetFilesAsync(FileToUpload));
             Assert.AreEqual("contents of the file", await Page.EvalOnSelectorAsync<string>("input", @"async picker => {
                 picker.click();
                 await new Promise(x => picker.oninput = x);
@@ -273,7 +274,7 @@ namespace Microsoft.Playwright.Tests
         {
             await Page.SetContentAsync("<input type=file>");
             _ = Page.WaitForFileChooserAsync()
-                .ContinueWith(task => task.Result.SetFilesAsync(TestConstants.FileToUpload));
+                .ContinueWith(task => task.Result.SetFilesAsync(FileToUpload));
             Assert.AreEqual(1, await Page.EvalOnSelectorAsync<int>("input", @"async picker => {
                 picker.click();
                 await new Promise(x => picker.oninput = x);
@@ -299,7 +300,7 @@ namespace Microsoft.Playwright.Tests
             await PlaywrightAssert.ThrowsAsync<PlaywrightException>(() =>
                 fileChooser.SetFilesAsync(new string[]
                 {
-                    TestUtils.GetAsset(TestConstants.FileToUpload),
+                    TestUtils.GetAsset(FileToUpload),
                     TestUtils.GetAsset("pptr.png"),
                 }));
         }
@@ -360,7 +361,7 @@ namespace Microsoft.Playwright.Tests
         }
 
         [PlaywrightTest("page-set-input-files.spec.ts", "should upload large file")]
-        [Skip(SkipAttribute.Targets.Firefox, SkipAttribute.Targets.Webkit)]
+        [Timeout(TestConstants.SlowTestTimeout)]
         public async Task ShouldUploadLargeFile()
         {
             await Page.GotoAsync(Server.Prefix + "/input/fileupload.html");

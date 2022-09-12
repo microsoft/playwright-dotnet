@@ -36,7 +36,15 @@ namespace Microsoft.Playwright.Tests
         public async Task ShouldHandleNestedFrames()
         {
             await Page.GotoAsync(Server.Prefix + "/frames/nested-frames.html");
-            Assert.AreEqual(TestConstants.NestedFramesDumpResult, FrameUtils.DumpFrames(Page.MainFrame));
+            var nestedFramesDumpResult = new List<string>()
+            {
+                "http://localhost:<PORT>/frames/nested-frames.html",
+                "    http://localhost:<PORT>/frames/two-frames.html (2frames)",
+                "        http://localhost:<PORT>/frames/frame.html (uno)",
+                "        http://localhost:<PORT>/frames/frame.html (dos)",
+                "    http://localhost:<PORT>/frames/frame.html (aframe)"
+            };
+            Assert.AreEqual(nestedFramesDumpResult, FrameUtils.DumpFrames(Page.MainFrame));
         }
 
         [PlaywrightTest("frame-hierarchy.spec.ts", "should send events when frames are manipulated dynamically")]

@@ -23,7 +23,6 @@
  * SOFTWARE.
  */
 
-using System.Collections.Generic;
 using System.Runtime.InteropServices;
 
 [assembly: NUnit.Framework.Timeout(Microsoft.Playwright.Tests.TestConstants.DefaultTestTimeout)]
@@ -36,8 +35,7 @@ namespace Microsoft.Playwright.Tests
         public static string BrowserName { get; set; } = null!;
 
         public const int DefaultTestTimeout = 30_000;
-        public const int DefaultTimeout = 10_000;
-        public const int DefaultTaskTimeout = 5_000;
+        public const int SlowTestTimeout = DefaultTestTimeout * 3;
 
         internal static bool IsChromium => BrowserName == BrowserType.Chromium;
         internal static bool IsFirefox => BrowserName == BrowserType.Firefox;
@@ -46,16 +44,5 @@ namespace Microsoft.Playwright.Tests
         internal static readonly bool IsMacOSX = RuntimeInformation.IsOSPlatform(OSPlatform.OSX);
         internal static readonly bool IsWindows = RuntimeInformation.IsOSPlatform(OSPlatform.Windows);
         internal static readonly bool IsLinux = RuntimeInformation.IsOSPlatform(OSPlatform.Linux);
-
-        public static string FileToUpload => TestUtils.GetAsset("file-to-upload.txt");
-
-        public static readonly IEnumerable<string> NestedFramesDumpResult = new List<string>()
-        {
-            "http://localhost:<PORT>/frames/nested-frames.html",
-            "    http://localhost:<PORT>/frames/two-frames.html (2frames)",
-            "        http://localhost:<PORT>/frames/frame.html (uno)",
-            "        http://localhost:<PORT>/frames/frame.html (dos)",
-            "    http://localhost:<PORT>/frames/frame.html (aframe)"
-        };
     }
 }
