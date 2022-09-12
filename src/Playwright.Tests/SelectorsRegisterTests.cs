@@ -31,6 +31,31 @@ namespace Microsoft.Playwright.Tests;
 ///<playwright-file>selectors-register.spec.ts</playwright-file>
 public class SelectorsRegisterTests : PageTestEx
 {
+    [PlaywrightTest("selector-register.spec.ts", "textContent should be atomic")]
+    public async Task TextContentShouldBeAtomic()
+    {
+        string script = @"
+({
+    query(root, selector) {
+      const result = root.querySelector(selector);
+      if (result)
+        Promise.resolve().then(() => result.textContent = 'modified');
+      return result;
+    },
+    queryAll(root, selector) {
+      const result = Array.from(root.querySelectorAll(selector));
+      for (const e of result)
+        Promise.resolve().then(() => e.textContent = 'modified');
+      return result;
+    }
+ })";
+        await Playwright.Selectors.RegisterAsync("textContentFromLocators", new() { Script = script });
+        await Page.SetContentAsync("<div>Hello</div>");
+        var tc = await Page.TextContentAsync("textContentFromLocators=div");
+        Assert.AreEqual("Hello", tc);
+        Assert.AreEqual("modified", await Page.EvaluateAsync<string>("() => document.querySelector('div').innerText"));
+    }
+
     [PlaywrightTest("selectors-register.spec.ts", "should work")]
     public async Task ShouldWork()
     {

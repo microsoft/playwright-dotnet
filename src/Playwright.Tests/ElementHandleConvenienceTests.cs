@@ -98,32 +98,6 @@ public class ElementHandleConvenienceTests : PageTestEx
         Assert.AreEqual("Text,\nmore text", await Page.TextContentAsync("#outer"));
     }
 
-    [PlaywrightTest("elementhandle-convenience.spec.ts", "Page.dispatchEvent(click)", "textContent should be atomic")]
-    public async Task TextContentShouldBeAtomic()
-    {
-        const string createDummySelector = @"({
-                create(root, target) { },
-                query(root, selector) {
-                  const result = root.querySelector(selector);
-                  if (result)
-                    Promise.resolve().then(() => result.textContent = 'modified');
-                  return result;
-                },
-                queryAll(root, selector) {
-                  const result = Array.from(root.querySelectorAll(selector));
-                  for (const e of result)
-                    Promise.resolve().then(() => e.textContent = 'modified');
-                  return result;
-                }
-            })";
-
-        await TestUtils.RegisterEngineAsync(Playwright, "textContent", createDummySelector);
-        await Page.SetContentAsync("<div>Hello</div>");
-        string tc = await Page.TextContentAsync("textContent=div");
-        Assert.AreEqual("Hello", tc);
-        Assert.AreEqual("modified", await Page.EvaluateAsync<string>("() => document.querySelector('div').textContent"));
-    }
-
     [PlaywrightTest("elementhandle-convenience.spec.ts", "Page.dispatchEvent(click)", "innerText should be atomic")]
     public async Task InnerTextShouldBeAtomic()
     {

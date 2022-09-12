@@ -71,4 +71,10 @@ internal static class TaskUtils
 
         return (task1.Result, task2.Result);
     }
+
+    public static async Task<bool> WithBooleanReturnType(this Task task)
+    {
+        await task.ConfigureAwait(false);
+        return default;
+    }
 }

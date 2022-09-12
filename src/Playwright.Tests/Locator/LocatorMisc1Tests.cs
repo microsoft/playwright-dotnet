@@ -27,7 +27,7 @@ using NUnit.Framework;
 
 namespace Microsoft.Playwright.Tests.Locator;
 
-public class LocatorMiscTests : PageTestEx
+public class LocatorMisc1Tests : PageTestEx
 {
     [PlaywrightTest("locator-misc-1.spec.ts", "should hover")]
     public async Task ShouldHover()
@@ -53,8 +53,7 @@ public class LocatorMiscTests : PageTestEx
     {
         await Page.GotoAsync(Server.Prefix + "/input/textarea.html");
         var handle = Page.Locator("input");
-        await Page.FillAsync("input", "some value");
-        //await handle.FillAsync("some value");
+        await handle.FillAsync("some value");
         Assert.AreEqual("some value", await Page.EvaluateAsync<string>("() => window['result']"));
     }
 
@@ -77,15 +76,6 @@ public class LocatorMiscTests : PageTestEx
         Assert.IsTrue(await Page.EvaluateAsync<bool>("checkbox.checked"));
     }
 
-    [PlaywrightTest("locator-misc-1.spec.ts", "should uncheck the box")]
-    public async Task ShouldUncheckTheBox()
-    {
-        await Page.SetContentAsync("<input id='checkbox' type='checkbox' checked></input>");
-        var input = Page.Locator("input");
-        await input.UncheckAsync();
-        Assert.IsFalse(await Page.EvaluateAsync<bool>("checkbox.checked"));
-    }
-
     [PlaywrightTest("locator-misc-1.spec.ts", "should check the box using setChecked")]
     public async Task ShouldCheckTheBoxUsingSetChecked()
     {
@@ -94,6 +84,15 @@ public class LocatorMiscTests : PageTestEx
         await input.SetCheckedAsync(true);
         Assert.IsTrue(await Page.EvaluateAsync<bool>("checkbox.checked"));
         await input.SetCheckedAsync(false);
+        Assert.IsFalse(await Page.EvaluateAsync<bool>("checkbox.checked"));
+    }
+
+    [PlaywrightTest("locator-misc-1.spec.ts", "should uncheck the box")]
+    public async Task ShouldUncheckTheBox()
+    {
+        await Page.SetContentAsync("<input id='checkbox' type='checkbox' checked></input>");
+        var input = Page.Locator("input");
+        await input.UncheckAsync();
         Assert.IsFalse(await Page.EvaluateAsync<bool>("checkbox.checked"));
     }
 
@@ -117,6 +116,14 @@ public class LocatorMiscTests : PageTestEx
         Assert.IsTrue(await button.EvaluateAsync<bool>("button => document.activeElement === button"));
     }
 
+    [PlaywrightTest("locator-misc-1.spec.ts", "focus should respect strictness")]
+    public async Task FocusShouldRespectStrictness()
+    {
+        await Page.SetContentAsync("<div>A</div><div>B</div>");
+        var exception = await PlaywrightAssert.ThrowsAsync<PlaywrightException>(() => Page.Locator("div").FocusAsync());
+        StringAssert.Contains("strict mode violation", exception.Message);
+    }
+
     [PlaywrightTest("locator-misc-1.spec.ts", "should dispatch click event via ElementHandles")]
     public async Task ShouldDispatchClickEventViaElementhandles()
     {
@@ -133,130 +140,5 @@ public class LocatorMiscTests : PageTestEx
         var input = Page.Locator("input[type=file]");
         await input.SetInputFilesAsync(TestUtils.GetAsset("file-to-upload.txt"));
         Assert.AreEqual("file-to-upload.txt", await Page.EvaluateAsync<string>("e => e.files[0].name", await input.ElementHandleAsync()));
-    }
-
-    [PlaywrightTest("locator-misc-2.spec.ts", "should press")]
-    public async Task ShouldPress()
-    {
-        await Page.SetContentAsync("<input type='text' />");
-        await Page.Locator("input").PressAsync("h");
-        Assert.AreEqual("h", await Page.EvaluateAsync<string>("input => input.value", await Page.QuerySelectorAsync("input")));
-    }
-
-    [PlaywrightTest("locator-misc-2.spec.ts", "should scroll into view")]
-    public async Task ShouldScrollIntoView()
-    {
-        await Page.GotoAsync(Server.Prefix + "/offscreenbuttons.html");
-
-        for (int i = 0; i < 11; ++i)
-        {
-            var button = Page.Locator($"#btn{i}");
-            var before = await button.EvaluateAsync<int>("button => { return button.getBoundingClientRect().right - window.innerWidth; }");
-            Assert.AreEqual(10 * i, before);
-
-            await button.ScrollIntoViewIfNeededAsync();
-
-            var after = await button.EvaluateAsync<int>("button => { return button.getBoundingClientRect().right - window.innerWidth; }");
-            Assert.IsTrue(after <= 0);
-            await Page.EvaluateAsync("() => window.scrollTo(0, 0)");
-        }
-    }
-
-    [PlaywrightTest("locator-misc-2.spec.ts", "should select textarea")]
-    public async Task ShouldSelectTextarea()
-    {
-        await Page.GotoAsync(Server.Prefix + "/input/textarea.html");
-
-        var textarea = Page.Locator("textarea");
-        await textarea.EvaluateAsync<string>("textarea => textarea.value = 'some value'");
-
-        await textarea.SelectTextAsync();
-        if (TestConstants.IsFirefox)
-        {
-            Assert.AreEqual(0, await textarea.EvaluateAsync<int>("el => el.selectionStart"));
-            Assert.AreEqual(10, await textarea.EvaluateAsync<int>("el => el.selectionEnd"));
-        }
-        else
-        {
-            Assert.AreEqual("some value", await textarea.EvaluateAsync<string>("() => window.getSelection().toString()"));
-        }
-    }
-
-    [PlaywrightTest("locator-misc-2.spec.ts", "should type")]
-    public async Task ShouldType()
-    {
-        await Page.SetContentAsync("<input type='text' />");
-        await Page.Locator("input").TypeAsync("hello");
-        Assert.AreEqual("hello", await Page.EvaluateAsync<string>("input => input.value", await Page.QuerySelectorAsync("input")));
-    }
-
-    [PlaywrightTest("locator-misc-2.spec.ts", "should take screenshot")]
-    public async Task ShouldTakeScreenshot()
-    {
-        await Page.SetViewportSizeAsync(500, 500);
-        await Page.GotoAsync(Server.Prefix + "/grid.html");
-
-        await Page.EvaluateAsync("() => window.scrollBy(50, 100)");
-        var element = Page.Locator(".box:nth-of-type(3)");
-        await element.ScreenshotAsync();
-    }
-
-    [PlaywrightTest("locator-misc-2.spec.ts", "should take screenshot with mask")]
-    public async Task ShouldTakeScreenshotWithMaskOption()
-    {
-        await Page.SetViewportSizeAsync(500, 500);
-        await Page.GotoAsync(Server.Prefix + "/grid.html");
-
-        await Page.EvaluateAsync("() => window.scrollBy(50, 100)");
-        var element = Page.Locator("body");
-        await element.ScreenshotAsync(new()
-        {
-            Mask = new ILocator[] { Page.Locator(".box").Nth(3) },
-        });
-    }
-
-    [PlaywrightTest("locator-misc-2.spec.ts", "should return bounding box")]
-    [Skip(SkipAttribute.Targets.Firefox)]
-    public async Task ShouldReturnBoundingBox()
-    {
-        await Page.SetViewportSizeAsync(500, 500);
-        await Page.GotoAsync(Server.Prefix + "/grid.html");
-
-        var element = Page.Locator(".box:nth-of-type(13)");
-        var box = await element.BoundingBoxAsync();
-
-        Assert.AreEqual(100, box.X);
-        Assert.AreEqual(50, box.Y);
-        Assert.AreEqual(50, box.Width);
-        Assert.AreEqual(50, box.Height);
-    }
-
-    [PlaywrightTest("locator-misc-2.spec.ts", "should waitFor")]
-    public async Task ShouldWaitFor()
-    {
-        await Page.SetContentAsync("<div></div>");
-        var locator = Page.Locator("span");
-        var task = locator.WaitForAsync();
-        await Page.EvalOnSelectorAsync("div", "div => div.innerHTML = '<span>target</span>'");
-        await task;
-        Assert.AreEqual("target", await locator.TextContentAsync());
-    }
-
-    [PlaywrightTest("locator-misc-2.spec.ts", "should waitFor hidden")]
-    public async Task ShouldWaitForHidden()
-    {
-        await Page.SetContentAsync("<div><span></span></div>");
-        var locator = Page.Locator("span");
-        var task = locator.WaitForAsync(new() { State = WaitForSelectorState.Hidden });
-        await Page.EvalOnSelectorAsync("div", "div => div.innerHTML = ''");
-        await task;
-    }
-
-    [PlaywrightTest("locator-highlight.spec.ts", "should highlight locator")]
-    public async Task ShouldHighlightLocator()
-    {
-        await Page.GotoAsync(Server.Prefix + "/grid.html");
-        await Page.Locator(".box").Nth(3).HighlightAsync();
-        Assert.AreEqual(await Page.Locator("x-pw-glass").IsVisibleAsync(), true);
     }
 }

@@ -22,6 +22,7 @@
  * SOFTWARE.
  */
 
+using System;
 using System.Linq;
 using System.Threading.Tasks;
 using NUnit.Framework;
@@ -115,6 +116,14 @@ public class LocatorConvenienceTests : PageTestEx
         StringAssert.Contains("Node is not an HTMLElement", e.Message);
     }
 
+    [PlaywrightTest("locator-convenience.spec.ts", "innerText should produce log")]
+    public async Task InnerTextShouldProduceLog()
+    {
+        await Page.SetContentAsync("<div>hello</div>");
+        var locator = Page.Locator("span");
+        var error = await PlaywrightAssert.ThrowsAsync<TimeoutException>(async () => await locator.InnerTextAsync(new() { Timeout = 1000 }));
+        StringAssert.Contains("waiting for selector \"span\"", error.Message);
+    }
 
     [PlaywrightTest("locator-convenience.spec.ts", "textContent should work")]
     public async Task TextContentShouldWork()
@@ -123,53 +132,6 @@ public class LocatorConvenienceTests : PageTestEx
         var locator = Page.Locator("#inner");
         Assert.AreEqual("Text,\nmore text", await locator.TextContentAsync());
         Assert.AreEqual("Text,\nmore text", await Page.TextContentAsync("#inner"));
-    }
-
-    [PlaywrightTest("locator-convenience.spec.ts", "textContent should be atomic")]
-    public async Task TextContentShouldBeAtomic()
-    {
-        string script = @"
-({
-    query(root, selector) {
-      const result = root.querySelector(selector);
-      if (result)
-        Promise.resolve().then(() => result.textContent = 'modified');
-      return result;
-    },
-    queryAll(root, selector) {
-      const result = Array.from(root.querySelectorAll(selector));
-      for (const e of result)
-        Promise.resolve().then(() => e.textContent = 'modified');
-      return result;
-    }
- })";
-        await Playwright.Selectors.RegisterAsync("textContentFromLocators", new() { Script = script });
-        await Page.SetContentAsync("<div>Hello</div>");
-        var tc = await Page.TextContentAsync("textContentFromLocators=div");
-        Assert.AreEqual("Hello", tc);
-        Assert.AreEqual("modified", await Page.EvaluateAsync<string>("() => document.querySelector('div').innerText"));
-    }
-
-
-    [PlaywrightTest("locator-convenience.spec.ts", "isVisible and isHidden should work")]
-    public async Task IsVisibleAndIsHiddenShouldWork()
-    {
-        await Page.SetContentAsync("<div>Hi</div><span></span>");
-
-        var div = Page.Locator("div");
-        Assert.IsTrue(await div.IsVisibleAsync());
-        Assert.IsFalse(await div.IsHiddenAsync());
-        Assert.IsTrue(await Page.IsVisibleAsync("div"));
-        Assert.IsFalse(await Page.IsHiddenAsync("div"));
-
-        var span = Page.Locator("span");
-        Assert.IsFalse(await span.IsVisibleAsync());
-        Assert.IsTrue(await span.IsHiddenAsync());
-        Assert.IsFalse(await Page.IsVisibleAsync("span"));
-        Assert.IsTrue(await Page.IsHiddenAsync("span"));
-
-        Assert.IsFalse(await Page.IsVisibleAsync("no-such-element"));
-        Assert.IsTrue(await Page.IsHiddenAsync("no-such-element"));
     }
 
     [PlaywrightTest("locator-convenience.spec.ts", "isEnabled and isDisabled should work")]
@@ -203,7 +165,7 @@ public class LocatorConvenienceTests : PageTestEx
     public async Task IsEditableShouldWork()
     {
         await Page.SetContentAsync("<input id=input1 disabled><textarea></textarea><input id=input2>");
-        await Page.EvaluateAsync("t => t.readOnly = true", await Page.QuerySelectorAsync("textarea"));
+        await Page.EvalOnSelectorAsync("textarea", "t => t.readOnly = true");
 
         var input1 = Page.Locator("#input1");
         Assert.IsFalse(await input1.IsEditableAsync());
@@ -225,7 +187,7 @@ public class LocatorConvenienceTests : PageTestEx
         var element = Page.Locator("input");
         Assert.IsTrue(await element.IsCheckedAsync());
         Assert.IsTrue(await Page.IsCheckedAsync("input"));
-        await element.EvaluateAsync<bool>("input => input.checked = false");
+        await element.EvaluateAsync("input => input.checked = false");
 
         Assert.IsFalse(await element.IsCheckedAsync());
         Assert.IsFalse(await Page.IsCheckedAsync("input"));

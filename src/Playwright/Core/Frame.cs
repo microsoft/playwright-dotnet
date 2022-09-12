@@ -482,14 +482,6 @@ internal class Frame : ChannelOwnerBase, IChannelOwner<Frame>, IFrame
             strict: options?.Strict,
             omitReturnValue: false).ConfigureAwait(false))?.Object;
 
-    public async Task<IElementHandle> LocatorWaitForAsync(string selector, LocatorWaitForOptions options = default)
-        => (await _channel.WaitForSelectorAsync(
-            selector: selector,
-            state: options?.State,
-            timeout: options?.Timeout,
-            strict: true,
-            omitReturnValue: true).ConfigureAwait(false))?.Object;
-
     public async Task<IJSHandle> EvaluateHandleAsync(string script, object args = null)
         => (await _channel.EvaluateExpressionHandleAsync(
             script,

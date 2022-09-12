@@ -56,7 +56,6 @@ public class LocatorEvaluateTests : PageTestEx
         CollectionAssert.AreEqual(new string[] { "100", "10" }, content);
     }
 
-
     [PlaywrightTest("locator-element-handle.spec.ts", "should retrieve content from subtree for all")]
     public async Task ShouldRetrieveContentFromSubtreeForAll()
     {
@@ -70,7 +69,7 @@ public class LocatorEvaluateTests : PageTestEx
     public async Task ShouldNotThrowInCaseOfMissingSelectorForAll()
     {
         await Page.SetContentAsync("<div class=\"a\">not-a-child-div</div><div id=\"myId\"></div>");
-        var element = Page.Locator("#mdId .a");
+        var element = Page.Locator("#myId .a");
         var nodesLength = await element.EvaluateAllAsync<int>("nodes => nodes.length");
         Assert.AreEqual(0, nodesLength);
     }
