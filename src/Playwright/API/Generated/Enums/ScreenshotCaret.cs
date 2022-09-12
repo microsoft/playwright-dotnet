@@ -37,15 +37,14 @@ using System.Threading.Tasks;
 
 #nullable enable
 
-namespace Microsoft.Playwright
+namespace Microsoft.Playwright;
+
+public enum ScreenshotCaret
 {
-    public enum ScreenshotCaret
-    {
-        [EnumMember(Value = "hide")]
-        Hide,
-        [EnumMember(Value = "initial")]
-        Initial,
-    }
+    [EnumMember(Value = "hide")]
+    Hide,
+    [EnumMember(Value = "initial")]
+    Initial,
 }
 
 #nullable disable

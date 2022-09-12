@@ -37,36 +37,35 @@ using System.Threading.Tasks;
 
 #nullable enable
 
-namespace Microsoft.Playwright
+namespace Microsoft.Playwright;
+
+public class MouseDblClickOptions
 {
-    public class MouseDblClickOptions
+    public MouseDblClickOptions() { }
+
+    public MouseDblClickOptions(MouseDblClickOptions clone)
     {
-        public MouseDblClickOptions() { }
-
-        public MouseDblClickOptions(MouseDblClickOptions clone)
+        if (clone == null)
         {
-            if (clone == null)
-            {
-                return;
-            }
-
-            Button = clone.Button;
-            Delay = clone.Delay;
+            return;
         }
 
-        /// <summary><para>Defaults to <c>left</c>.</para></summary>
-        [JsonPropertyName("button")]
-        public MouseButton? Button { get; set; }
-
-        /// <summary>
-        /// <para>
-        /// Time to wait between <c>mousedown</c> and <c>mouseup</c> in milliseconds. Defaults
-        /// to 0.
-        /// </para>
-        /// </summary>
-        [JsonPropertyName("delay")]
-        public float? Delay { get; set; }
+        Button = clone.Button;
+        Delay = clone.Delay;
     }
+
+    /// <summary><para>Defaults to <c>left</c>.</para></summary>
+    [JsonPropertyName("button")]
+    public MouseButton? Button { get; set; }
+
+    /// <summary>
+    /// <para>
+    /// Time to wait between <c>mousedown</c> and <c>mouseup</c> in milliseconds. Defaults
+    /// to 0.
+    /// </para>
+    /// </summary>
+    [JsonPropertyName("delay")]
+    public float? Delay { get; set; }
 }
 
 #nullable disable

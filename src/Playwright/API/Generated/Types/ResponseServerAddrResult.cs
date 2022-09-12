@@ -37,20 +37,19 @@ using System.Threading.Tasks;
 
 #nullable enable
 
-namespace Microsoft.Playwright
-{
-    public partial class ResponseServerAddrResult
-    {
-        /// <summary><para>IPv4 or IPV6 address of the server.</para></summary>
-        [Required]
-        [JsonPropertyName("ipAddress")]
-        public string IpAddress { get; set; } = default!;
+namespace Microsoft.Playwright;
 
-        /// <summary><para></para></summary>
-        [Required]
-        [JsonPropertyName("port")]
-        public int Port { get; set; } = default!;
-    }
+public partial class ResponseServerAddrResult
+{
+    /// <summary><para>IPv4 or IPV6 address of the server.</para></summary>
+    [Required]
+    [JsonPropertyName("ipAddress")]
+    public string IpAddress { get; set; } = default!;
+
+    /// <summary><para></para></summary>
+    [Required]
+    [JsonPropertyName("port")]
+    public int Port { get; set; } = default!;
 }
 
 #nullable disable

@@ -25,23 +25,22 @@
 using System.Collections.Generic;
 using System.Text.Json.Serialization;
 
-namespace Microsoft.Playwright.Transport.Protocol
+namespace Microsoft.Playwright.Transport.Protocol;
+
+internal class SecurityDetails
 {
-    internal class SecurityDetails
-    {
-        [JsonPropertyName("issuer")]
-        public string Issuer { get; set; }
+    [JsonPropertyName("issuer")]
+    public string Issuer { get; set; }
 
-        [JsonPropertyName("protocol")]
-        public string Protocol { get; set; }
+    [JsonPropertyName("protocol")]
+    public string Protocol { get; set; }
 
-        [JsonPropertyName("subjectName")]
-        public string SubjectName { get; set; }
+    [JsonPropertyName("subjectName")]
+    public string SubjectName { get; set; }
 
-        [JsonPropertyName("validFrom")]
-        public int? ValidFrom { get; set; }
+    [JsonPropertyName("validFrom")]
+    public int? ValidFrom { get; set; }
 
-        [JsonPropertyName("validTo")]
-        public int? ValidTo { get; set; }
-    }
+    [JsonPropertyName("validTo")]
+    public int? ValidTo { get; set; }
 }

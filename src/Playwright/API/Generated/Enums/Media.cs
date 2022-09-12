@@ -37,17 +37,16 @@ using System.Threading.Tasks;
 
 #nullable enable
 
-namespace Microsoft.Playwright
+namespace Microsoft.Playwright;
+
+public enum Media
 {
-    public enum Media
-    {
-        [EnumMember(Value = "screen")]
-        Screen,
-        [EnumMember(Value = "print")]
-        Print,
-        [EnumMember(Value = "null")]
-        Null,
-    }
+    [EnumMember(Value = "screen")]
+    Screen,
+    [EnumMember(Value = "print")]
+    Print,
+    [EnumMember(Value = "null")]
+    Null,
 }
 
 #nullable disable

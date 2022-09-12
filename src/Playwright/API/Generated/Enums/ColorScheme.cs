@@ -37,19 +37,18 @@ using System.Threading.Tasks;
 
 #nullable enable
 
-namespace Microsoft.Playwright
+namespace Microsoft.Playwright;
+
+public enum ColorScheme
 {
-    public enum ColorScheme
-    {
-        [EnumMember(Value = "light")]
-        Light,
-        [EnumMember(Value = "dark")]
-        Dark,
-        [EnumMember(Value = "no-preference")]
-        NoPreference,
-        [EnumMember(Value = "null")]
-        Null,
-    }
+    [EnumMember(Value = "light")]
+    Light,
+    [EnumMember(Value = "dark")]
+    Dark,
+    [EnumMember(Value = "no-preference")]
+    NoPreference,
+    [EnumMember(Value = "null")]
+    Null,
 }
 
 #nullable disable

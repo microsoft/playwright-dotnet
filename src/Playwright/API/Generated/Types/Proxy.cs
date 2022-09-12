@@ -37,38 +37,37 @@ using System.Threading.Tasks;
 
 #nullable enable
 
-namespace Microsoft.Playwright
+namespace Microsoft.Playwright;
+
+public partial class Proxy
 {
-    public partial class Proxy
-    {
-        /// <summary>
-        /// <para>
-        /// Proxy to be used for all requests. HTTP and SOCKS proxies are supported, for example
-        /// <c>http://myproxy.com:3128</c> or <c>socks5://myproxy.com:3128</c>. Short form <c>myproxy.com:3128</c>
-        /// is considered an HTTP proxy.
-        /// </para>
-        /// </summary>
-        [Required]
-        [JsonPropertyName("server")]
-        public string Server { get; set; } = default!;
+    /// <summary>
+    /// <para>
+    /// Proxy to be used for all requests. HTTP and SOCKS proxies are supported, for example
+    /// <c>http://myproxy.com:3128</c> or <c>socks5://myproxy.com:3128</c>. Short form <c>myproxy.com:3128</c>
+    /// is considered an HTTP proxy.
+    /// </para>
+    /// </summary>
+    [Required]
+    [JsonPropertyName("server")]
+    public string Server { get; set; } = default!;
 
-        /// <summary>
-        /// <para>
-        /// Optional comma-separated domains to bypass proxy, for example <c>".com, chromium.org,
-        /// .domain.com"</c>.
-        /// </para>
-        /// </summary>
-        [JsonPropertyName("bypass")]
-        public string? Bypass { get; set; }
+    /// <summary>
+    /// <para>
+    /// Optional comma-separated domains to bypass proxy, for example <c>".com, chromium.org,
+    /// .domain.com"</c>.
+    /// </para>
+    /// </summary>
+    [JsonPropertyName("bypass")]
+    public string? Bypass { get; set; }
 
-        /// <summary><para>Optional username to use if HTTP proxy requires authentication.</para></summary>
-        [JsonPropertyName("username")]
-        public string? Username { get; set; }
+    /// <summary><para>Optional username to use if HTTP proxy requires authentication.</para></summary>
+    [JsonPropertyName("username")]
+    public string? Username { get; set; }
 
-        /// <summary><para>Optional password to use if HTTP proxy requires authentication.</para></summary>
-        [JsonPropertyName("password")]
-        public string? Password { get; set; }
-    }
+    /// <summary><para>Optional password to use if HTTP proxy requires authentication.</para></summary>
+    [JsonPropertyName("password")]
+    public string? Password { get; set; }
 }
 
 #nullable disable

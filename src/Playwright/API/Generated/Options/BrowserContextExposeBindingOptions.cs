@@ -37,32 +37,31 @@ using System.Threading.Tasks;
 
 #nullable enable
 
-namespace Microsoft.Playwright
+namespace Microsoft.Playwright;
+
+public class BrowserContextExposeBindingOptions
 {
-    public class BrowserContextExposeBindingOptions
+    public BrowserContextExposeBindingOptions() { }
+
+    public BrowserContextExposeBindingOptions(BrowserContextExposeBindingOptions clone)
     {
-        public BrowserContextExposeBindingOptions() { }
-
-        public BrowserContextExposeBindingOptions(BrowserContextExposeBindingOptions clone)
+        if (clone == null)
         {
-            if (clone == null)
-            {
-                return;
-            }
-
-            Handle = clone.Handle;
+            return;
         }
 
-        /// <summary>
-        /// <para>
-        /// Whether to pass the argument as a handle, instead of passing by value. When passing
-        /// a handle, only one argument is supported. When passing by value, multiple arguments
-        /// are supported.
-        /// </para>
-        /// </summary>
-        [JsonPropertyName("handle")]
-        public bool? Handle { get; set; }
+        Handle = clone.Handle;
     }
+
+    /// <summary>
+    /// <para>
+    /// Whether to pass the argument as a handle, instead of passing by value. When passing
+    /// a handle, only one argument is supported. When passing by value, multiple arguments
+    /// are supported.
+    /// </para>
+    /// </summary>
+    [JsonPropertyName("handle")]
+    public bool? Handle { get; set; }
 }
 
 #nullable disable

@@ -37,46 +37,45 @@ using System.Threading.Tasks;
 
 #nullable enable
 
-namespace Microsoft.Playwright
+namespace Microsoft.Playwright;
+
+public class BrowserTypeConnectOverCDPOptions
 {
-    public class BrowserTypeConnectOverCDPOptions
+    public BrowserTypeConnectOverCDPOptions() { }
+
+    public BrowserTypeConnectOverCDPOptions(BrowserTypeConnectOverCDPOptions clone)
     {
-        public BrowserTypeConnectOverCDPOptions() { }
-
-        public BrowserTypeConnectOverCDPOptions(BrowserTypeConnectOverCDPOptions clone)
+        if (clone == null)
         {
-            if (clone == null)
-            {
-                return;
-            }
-
-            Headers = clone.Headers;
-            SlowMo = clone.SlowMo;
-            Timeout = clone.Timeout;
+            return;
         }
 
-        /// <summary><para>Additional HTTP headers to be sent with connect request. Optional.</para></summary>
-        [JsonPropertyName("headers")]
-        public IEnumerable<KeyValuePair<string, string>>? Headers { get; set; }
-
-        /// <summary>
-        /// <para>
-        /// Slows down Playwright operations by the specified amount of milliseconds. Useful
-        /// so that you can see what is going on. Defaults to 0.
-        /// </para>
-        /// </summary>
-        [JsonPropertyName("slowMo")]
-        public float? SlowMo { get; set; }
-
-        /// <summary>
-        /// <para>
-        /// Maximum time in milliseconds to wait for the connection to be established. Defaults
-        /// to <c>30000</c> (30 seconds). Pass <c>0</c> to disable timeout.
-        /// </para>
-        /// </summary>
-        [JsonPropertyName("timeout")]
-        public float? Timeout { get; set; }
+        Headers = clone.Headers;
+        SlowMo = clone.SlowMo;
+        Timeout = clone.Timeout;
     }
+
+    /// <summary><para>Additional HTTP headers to be sent with connect request. Optional.</para></summary>
+    [JsonPropertyName("headers")]
+    public IEnumerable<KeyValuePair<string, string>>? Headers { get; set; }
+
+    /// <summary>
+    /// <para>
+    /// Slows down Playwright operations by the specified amount of milliseconds. Useful
+    /// so that you can see what is going on. Defaults to 0.
+    /// </para>
+    /// </summary>
+    [JsonPropertyName("slowMo")]
+    public float? SlowMo { get; set; }
+
+    /// <summary>
+    /// <para>
+    /// Maximum time in milliseconds to wait for the connection to be established. Defaults
+    /// to <c>30000</c> (30 seconds). Pass <c>0</c> to disable timeout.
+    /// </para>
+    /// </summary>
+    [JsonPropertyName("timeout")]
+    public float? Timeout { get; set; }
 }
 
 #nullable disable

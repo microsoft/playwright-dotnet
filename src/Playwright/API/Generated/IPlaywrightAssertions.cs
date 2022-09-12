@@ -37,60 +37,59 @@ using System.Threading.Tasks;
 
 #nullable enable
 
-namespace Microsoft.Playwright
+namespace Microsoft.Playwright;
+
+/// <summary>
+/// <para>
+/// Playwright gives you Web-First Assertions with convenience methods for creating
+/// assertions that will wait and retry until the expected condition is met.
+/// </para>
+/// <para>Consider the following example:</para>
+/// <code>
+/// using System.Threading.Tasks;<br/>
+/// using Microsoft.Playwright.NUnit;<br/>
+/// using NUnit.Framework;<br/>
+/// <br/>
+/// namespace PlaywrightTests;<br/>
+/// <br/>
+/// [TestFixture]<br/>
+/// public class ExampleTests : PageTest<br/>
+/// {<br/>
+///     [PlaywrightTest]<br/>
+///     public async Task StatusBecomesSubmitted()<br/>
+///     {<br/>
+///         await Page.Locator("#submit-button").ClickAsync();<br/>
+///         await Expect(Page.Locator(".status")).ToHaveTextAsync("Submitted");<br/>
+///     }<br/>
+/// }
+/// </code>
+/// <para>
+/// Playwright will be re-testing the node with the selector <c>.status</c> until fetched
+/// Node has the <c>"Submitted"</c> text. It will be re-fetching the node and checking
+/// it over and over, until the condition is met or until the timeout is reached. You
+/// can pass this timeout as an option.
+/// </para>
+/// <para>By default, the timeout for assertions is set to 5 seconds.</para>
+/// </summary>
+public partial interface IPlaywrightAssertions
 {
+    /// <summary><para>Creates a <see cref="IAPIResponseAssertions"/> object for the given <see cref="IAPIResponse"/>.</para></summary>
+    /// <param name="response"><see cref="IAPIResponse"/> object to use for assertions.</param>
+    IAPIResponseAssertions Expect(IAPIResponse response);
+
     /// <summary>
-    /// <para>
-    /// Playwright gives you Web-First Assertions with convenience methods for creating
-    /// assertions that will wait and retry until the expected condition is met.
-    /// </para>
-    /// <para>Consider the following example:</para>
-    /// <code>
-    /// using System.Threading.Tasks;<br/>
-    /// using Microsoft.Playwright.NUnit;<br/>
-    /// using NUnit.Framework;<br/>
-    /// <br/>
-    /// namespace PlaywrightTests;<br/>
-    /// <br/>
-    /// [TestFixture]<br/>
-    /// public class ExampleTests : PageTest<br/>
-    /// {<br/>
-    ///     [PlaywrightTest]<br/>
-    ///     public async Task StatusBecomesSubmitted()<br/>
-    ///     {<br/>
-    ///         await Page.Locator("#submit-button").ClickAsync();<br/>
-    ///         await Expect(Page.Locator(".status")).ToHaveTextAsync("Submitted");<br/>
-    ///     }<br/>
-    /// }
-    /// </code>
-    /// <para>
-    /// Playwright will be re-testing the node with the selector <c>.status</c> until fetched
-    /// Node has the <c>"Submitted"</c> text. It will be re-fetching the node and checking
-    /// it over and over, until the condition is met or until the timeout is reached. You
-    /// can pass this timeout as an option.
-    /// </para>
-    /// <para>By default, the timeout for assertions is set to 5 seconds.</para>
+    /// <para>Creates a <see cref="ILocatorAssertions"/> object for the given <see cref="ILocator"/>.</para>
+    /// <code>await Expect(locator).ToBeVisibleAsync();</code>
     /// </summary>
-    public partial interface IPlaywrightAssertions
-    {
-        /// <summary><para>Creates a <see cref="IAPIResponseAssertions"/> object for the given <see cref="IAPIResponse"/>.</para></summary>
-        /// <param name="response"><see cref="IAPIResponse"/> object to use for assertions.</param>
-        IAPIResponseAssertions Expect(IAPIResponse response);
+    /// <param name="locator"><see cref="ILocator"/> object to use for assertions.</param>
+    ILocatorAssertions Expect(ILocator locator);
 
-        /// <summary>
-        /// <para>Creates a <see cref="ILocatorAssertions"/> object for the given <see cref="ILocator"/>.</para>
-        /// <code>await Expect(locator).ToBeVisibleAsync();</code>
-        /// </summary>
-        /// <param name="locator"><see cref="ILocator"/> object to use for assertions.</param>
-        ILocatorAssertions Expect(ILocator locator);
-
-        /// <summary>
-        /// <para>Creates a <see cref="IPageAssertions"/> object for the given <see cref="IPage"/>.</para>
-        /// <code>await Expect(page).ToHaveTitleAsync("News");</code>
-        /// </summary>
-        /// <param name="page"><see cref="IPage"/> object to use for assertions.</param>
-        IPageAssertions Expect(IPage page);
-    }
+    /// <summary>
+    /// <para>Creates a <see cref="IPageAssertions"/> object for the given <see cref="IPage"/>.</para>
+    /// <code>await Expect(page).ToHaveTitleAsync("News");</code>
+    /// </summary>
+    /// <param name="page"><see cref="IPage"/> object to use for assertions.</param>
+    IPageAssertions Expect(IPage page);
 }
 
 #nullable disable

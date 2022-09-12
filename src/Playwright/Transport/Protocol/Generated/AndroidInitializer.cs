@@ -25,9 +25,8 @@
 using System.Collections.Generic;
 using System.Text.Json.Serialization;
 
-namespace Microsoft.Playwright.Transport.Protocol
+namespace Microsoft.Playwright.Transport.Protocol;
+
+internal class AndroidInitializer
 {
-    internal class AndroidInitializer
-    {
-    }
 }

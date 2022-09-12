@@ -25,14 +25,13 @@
 using System.Collections.Generic;
 using System.Text.Json.Serialization;
 
-namespace Microsoft.Playwright.Transport.Protocol
-{
-    internal class AndroidDeviceInitializer : EventTargetInitializer
-    {
-        [JsonPropertyName("model")]
-        public string Model { get; set; }
+namespace Microsoft.Playwright.Transport.Protocol;
 
-        [JsonPropertyName("serial")]
-        public string Serial { get; set; }
-    }
+internal class AndroidDeviceInitializer : EventTargetInitializer
+{
+    [JsonPropertyName("model")]
+    public string Model { get; set; }
+
+    [JsonPropertyName("serial")]
+    public string Serial { get; set; }
 }

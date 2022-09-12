@@ -37,26 +37,25 @@ using System.Threading.Tasks;
 
 #nullable enable
 
-namespace Microsoft.Playwright
+namespace Microsoft.Playwright;
+
+public class TracingStartChunkOptions
 {
-    public class TracingStartChunkOptions
+    public TracingStartChunkOptions() { }
+
+    public TracingStartChunkOptions(TracingStartChunkOptions clone)
     {
-        public TracingStartChunkOptions() { }
-
-        public TracingStartChunkOptions(TracingStartChunkOptions clone)
+        if (clone == null)
         {
-            if (clone == null)
-            {
-                return;
-            }
-
-            Title = clone.Title;
+            return;
         }
 
-        /// <summary><para>Trace name to be shown in the Trace Viewer.</para></summary>
-        [JsonPropertyName("title")]
-        public string? Title { get; set; }
+        Title = clone.Title;
     }
+
+    /// <summary><para>Trace name to be shown in the Trace Viewer.</para></summary>
+    [JsonPropertyName("title")]
+    public string? Title { get; set; }
 }
 
 #nullable disable

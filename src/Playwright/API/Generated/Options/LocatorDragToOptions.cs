@@ -37,85 +37,84 @@ using System.Threading.Tasks;
 
 #nullable enable
 
-namespace Microsoft.Playwright
+namespace Microsoft.Playwright;
+
+public class LocatorDragToOptions
 {
-    public class LocatorDragToOptions
+    public LocatorDragToOptions() { }
+
+    public LocatorDragToOptions(LocatorDragToOptions clone)
     {
-        public LocatorDragToOptions() { }
-
-        public LocatorDragToOptions(LocatorDragToOptions clone)
+        if (clone == null)
         {
-            if (clone == null)
-            {
-                return;
-            }
-
-            Force = clone.Force;
-            NoWaitAfter = clone.NoWaitAfter;
-            SourcePosition = clone.SourcePosition;
-            TargetPosition = clone.TargetPosition;
-            Timeout = clone.Timeout;
-            Trial = clone.Trial;
+            return;
         }
 
-        /// <summary>
-        /// <para>
-        /// Whether to bypass the <a href="https://playwright.dev/dotnet/docs/actionability">actionability</a>
-        /// checks. Defaults to <c>false</c>.
-        /// </para>
-        /// </summary>
-        [JsonPropertyName("force")]
-        public bool? Force { get; set; }
-
-        /// <summary>
-        /// <para>
-        /// Actions that initiate navigations are waiting for these navigations to happen and
-        /// for pages to start loading. You can opt out of waiting via setting this flag. You
-        /// would only need this option in the exceptional cases such as navigating to inaccessible
-        /// pages. Defaults to <c>false</c>.
-        /// </para>
-        /// </summary>
-        [JsonPropertyName("noWaitAfter")]
-        public bool? NoWaitAfter { get; set; }
-
-        /// <summary>
-        /// <para>
-        /// Clicks on the source element at this point relative to the top-left corner of the
-        /// element's padding box. If not specified, some visible point of the element is used.
-        /// </para>
-        /// </summary>
-        [JsonPropertyName("sourcePosition")]
-        public SourcePosition? SourcePosition { get; set; }
-
-        /// <summary>
-        /// <para>
-        /// Drops on the target element at this point relative to the top-left corner of the
-        /// element's padding box. If not specified, some visible point of the element is used.
-        /// </para>
-        /// </summary>
-        [JsonPropertyName("targetPosition")]
-        public TargetPosition? TargetPosition { get; set; }
-
-        /// <summary>
-        /// <para>
-        /// Maximum time in milliseconds, defaults to 30 seconds, pass <c>0</c> to disable timeout.
-        /// The default value can be changed by using the <see cref="IBrowserContext.SetDefaultTimeout"/>
-        /// or <see cref="IPage.SetDefaultTimeout"/> methods.
-        /// </para>
-        /// </summary>
-        [JsonPropertyName("timeout")]
-        public float? Timeout { get; set; }
-
-        /// <summary>
-        /// <para>
-        /// When set, this method only performs the <a href="https://playwright.dev/dotnet/docs/actionability">actionability</a>
-        /// checks and skips the action. Defaults to <c>false</c>. Useful to wait until the
-        /// element is ready for the action without performing it.
-        /// </para>
-        /// </summary>
-        [JsonPropertyName("trial")]
-        public bool? Trial { get; set; }
+        Force = clone.Force;
+        NoWaitAfter = clone.NoWaitAfter;
+        SourcePosition = clone.SourcePosition;
+        TargetPosition = clone.TargetPosition;
+        Timeout = clone.Timeout;
+        Trial = clone.Trial;
     }
+
+    /// <summary>
+    /// <para>
+    /// Whether to bypass the <a href="https://playwright.dev/dotnet/docs/actionability">actionability</a>
+    /// checks. Defaults to <c>false</c>.
+    /// </para>
+    /// </summary>
+    [JsonPropertyName("force")]
+    public bool? Force { get; set; }
+
+    /// <summary>
+    /// <para>
+    /// Actions that initiate navigations are waiting for these navigations to happen and
+    /// for pages to start loading. You can opt out of waiting via setting this flag. You
+    /// would only need this option in the exceptional cases such as navigating to inaccessible
+    /// pages. Defaults to <c>false</c>.
+    /// </para>
+    /// </summary>
+    [JsonPropertyName("noWaitAfter")]
+    public bool? NoWaitAfter { get; set; }
+
+    /// <summary>
+    /// <para>
+    /// Clicks on the source element at this point relative to the top-left corner of the
+    /// element's padding box. If not specified, some visible point of the element is used.
+    /// </para>
+    /// </summary>
+    [JsonPropertyName("sourcePosition")]
+    public SourcePosition? SourcePosition { get; set; }
+
+    /// <summary>
+    /// <para>
+    /// Drops on the target element at this point relative to the top-left corner of the
+    /// element's padding box. If not specified, some visible point of the element is used.
+    /// </para>
+    /// </summary>
+    [JsonPropertyName("targetPosition")]
+    public TargetPosition? TargetPosition { get; set; }
+
+    /// <summary>
+    /// <para>
+    /// Maximum time in milliseconds, defaults to 30 seconds, pass <c>0</c> to disable timeout.
+    /// The default value can be changed by using the <see cref="IBrowserContext.SetDefaultTimeout"/>
+    /// or <see cref="IPage.SetDefaultTimeout"/> methods.
+    /// </para>
+    /// </summary>
+    [JsonPropertyName("timeout")]
+    public float? Timeout { get; set; }
+
+    /// <summary>
+    /// <para>
+    /// When set, this method only performs the <a href="https://playwright.dev/dotnet/docs/actionability">actionability</a>
+    /// checks and skips the action. Defaults to <c>false</c>. Useful to wait until the
+    /// element is ready for the action without performing it.
+    /// </para>
+    /// </summary>
+    [JsonPropertyName("trial")]
+    public bool? Trial { get; set; }
 }
 
 #nullable disable

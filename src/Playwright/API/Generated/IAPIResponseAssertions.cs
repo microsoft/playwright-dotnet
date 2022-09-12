@@ -37,29 +37,28 @@ using System.Threading.Tasks;
 
 #nullable enable
 
-namespace Microsoft.Playwright
+namespace Microsoft.Playwright;
+
+/// <summary>
+/// <para>
+/// The <see cref="IAPIResponseAssertions"/> class provides assertion methods that can
+/// be used to make assertions about the <see cref="IAPIResponse"/> in the tests. A
+/// new instance of <see cref="IAPIResponseAssertions"/> is created by calling <see
+/// cref="IPlaywrightAssertions.Expect"/>:
+/// </para>
+/// </summary>
+public partial interface IAPIResponseAssertions
 {
     /// <summary>
     /// <para>
-    /// The <see cref="IAPIResponseAssertions"/> class provides assertion methods that can
-    /// be used to make assertions about the <see cref="IAPIResponse"/> in the tests. A
-    /// new instance of <see cref="IAPIResponseAssertions"/> is created by calling <see
-    /// cref="IPlaywrightAssertions.Expect"/>:
+    /// Makes the assertion check for the opposite condition. For example, this code tests
+    /// that the response status is not successful:
     /// </para>
     /// </summary>
-    public partial interface IAPIResponseAssertions
-    {
-        /// <summary>
-        /// <para>
-        /// Makes the assertion check for the opposite condition. For example, this code tests
-        /// that the response status is not successful:
-        /// </para>
-        /// </summary>
-        public IAPIResponseAssertions Not { get; }
+    public IAPIResponseAssertions Not { get; }
 
-        /// <summary><para>Ensures the response status code is within <c>200..299</c> range.</para></summary>
-        Task ToBeOKAsync();
-    }
+    /// <summary><para>Ensures the response status code is within <c>200..299</c> range.</para></summary>
+    Task ToBeOKAsync();
 }
 
 #nullable disable

@@ -37,30 +37,29 @@ using System.Threading.Tasks;
 
 #nullable enable
 
-namespace Microsoft.Playwright
+namespace Microsoft.Playwright;
+
+public class LocatorAssertionsToBeEditableOptions
 {
-    public class LocatorAssertionsToBeEditableOptions
+    public LocatorAssertionsToBeEditableOptions() { }
+
+    public LocatorAssertionsToBeEditableOptions(LocatorAssertionsToBeEditableOptions clone)
     {
-        public LocatorAssertionsToBeEditableOptions() { }
-
-        public LocatorAssertionsToBeEditableOptions(LocatorAssertionsToBeEditableOptions clone)
+        if (clone == null)
         {
-            if (clone == null)
-            {
-                return;
-            }
-
-            Editable = clone.Editable;
-            Timeout = clone.Timeout;
+            return;
         }
 
-        [JsonPropertyName("editable")]
-        public bool? Editable { get; set; }
-
-        /// <summary><para>Time to retry the assertion for.</para></summary>
-        [JsonPropertyName("timeout")]
-        public float? Timeout { get; set; }
+        Editable = clone.Editable;
+        Timeout = clone.Timeout;
     }
+
+    [JsonPropertyName("editable")]
+    public bool? Editable { get; set; }
+
+    /// <summary><para>Time to retry the assertion for.</para></summary>
+    [JsonPropertyName("timeout")]
+    public float? Timeout { get; set; }
 }
 
 #nullable disable

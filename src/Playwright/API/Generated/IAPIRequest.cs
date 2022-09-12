@@ -37,22 +37,21 @@ using System.Threading.Tasks;
 
 #nullable enable
 
-namespace Microsoft.Playwright
+namespace Microsoft.Playwright;
+
+/// <summary>
+/// <para>
+/// Exposes API that can be used for the Web API testing. This class is used for creating
+/// <see cref="IAPIRequestContext"/> instance which in turn can be used for sending
+/// web requests. An instance of this class can be obtained via <see cref="IPlaywright.APIRequest"/>.
+/// For more information see <see cref="IAPIRequestContext"/>.
+/// </para>
+/// </summary>
+public partial interface IAPIRequest
 {
-    /// <summary>
-    /// <para>
-    /// Exposes API that can be used for the Web API testing. This class is used for creating
-    /// <see cref="IAPIRequestContext"/> instance which in turn can be used for sending
-    /// web requests. An instance of this class can be obtained via <see cref="IPlaywright.APIRequest"/>.
-    /// For more information see <see cref="IAPIRequestContext"/>.
-    /// </para>
-    /// </summary>
-    public partial interface IAPIRequest
-    {
-        /// <summary><para>Creates new instances of <see cref="IAPIRequestContext"/>.</para></summary>
-        /// <param name="options">Call options</param>
-        Task<IAPIRequestContext> NewContextAsync(APIRequestNewContextOptions? options = default);
-    }
+    /// <summary><para>Creates new instances of <see cref="IAPIRequestContext"/>.</para></summary>
+    /// <param name="options">Call options</param>
+    Task<IAPIRequestContext> NewContextAsync(APIRequestNewContextOptions? options = default);
 }
 
 #nullable disable

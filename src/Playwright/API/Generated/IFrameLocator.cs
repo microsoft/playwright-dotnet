@@ -37,82 +37,81 @@ using System.Threading.Tasks;
 
 #nullable enable
 
-namespace Microsoft.Playwright
+namespace Microsoft.Playwright;
+
+/// <summary>
+/// <para>
+/// FrameLocator represents a view to the <c>iframe</c> on the page. It captures the
+/// logic sufficient to retrieve the <c>iframe</c> and locate elements in that iframe.
+/// FrameLocator can be created with either <see cref="IPage.FrameLocator"/> or <see
+/// cref="ILocator.FrameLocator"/> method.
+/// </para>
+/// <code>
+/// var locator = page.FrameLocator("#my-frame").Locator("text=Submit");<br/>
+/// await locator.ClickAsync();
+/// </code>
+/// <para>**Strictness**</para>
+/// <para>
+/// Frame locators are strict. This means that all operations on frame locators will
+/// throw if more than one element matches a given selector.
+/// </para>
+/// <code>
+/// // Throws if there are several frames in DOM:<br/>
+/// await page.FrameLocator(".result-frame").Locator("button").ClickAsync();<br/>
+/// <br/>
+/// // Works because we explicitly tell locator to pick the first frame:<br/>
+/// await page.FrameLocator(".result-frame").First.Locator("button").ClickAsync();
+/// </code>
+/// <para>**Converting Locator to FrameLocator**</para>
+/// <para>
+/// If you have a <see cref="ILocator"/> object pointing to an <c>iframe</c> it can
+/// be converted to <see cref="IFrameLocator"/> using <a href="https://developer.mozilla.org/en-US/docs/Web/CSS/:scope"><c>:scope</c></a>
+/// CSS selector:
+/// </para>
+/// <code>var frameLocator = locator.FrameLocator(":scope");</code>
+/// </summary>
+public partial interface IFrameLocator
 {
+    /// <summary><para>Returns locator to the first matching frame.</para></summary>
+    IFrameLocator First { get; }
+
     /// <summary>
     /// <para>
-    /// FrameLocator represents a view to the <c>iframe</c> on the page. It captures the
-    /// logic sufficient to retrieve the <c>iframe</c> and locate elements in that iframe.
-    /// FrameLocator can be created with either <see cref="IPage.FrameLocator"/> or <see
-    /// cref="ILocator.FrameLocator"/> method.
+    /// When working with iframes, you can create a frame locator that will enter the iframe
+    /// and allow selecting elements in that iframe.
     /// </para>
-    /// <code>
-    /// var locator = page.FrameLocator("#my-frame").Locator("text=Submit");<br/>
-    /// await locator.ClickAsync();
-    /// </code>
-    /// <para>**Strictness**</para>
-    /// <para>
-    /// Frame locators are strict. This means that all operations on frame locators will
-    /// throw if more than one element matches given selector.
-    /// </para>
-    /// <code>
-    /// // Throws if there are several frames in DOM:<br/>
-    /// await page.FrameLocator(".result-frame").Locator("button").ClickAsync();<br/>
-    /// <br/>
-    /// // Works because we explicitly tell locator to pick the first frame:<br/>
-    /// await page.FrameLocator(".result-frame").First.Locator("button").ClickAsync();
-    /// </code>
-    /// <para>**Converting Locator to FrameLocator**</para>
-    /// <para>
-    /// If you have a <see cref="ILocator"/> object pointing to an <c>iframe</c> it can
-    /// be converted to <see cref="IFrameLocator"/> using <a href="https://developer.mozilla.org/en-US/docs/Web/CSS/:scope"><c>:scope</c></a>
-    /// CSS selector:
-    /// </para>
-    /// <code>var frameLocator = locator.FrameLocator(":scope");</code>
     /// </summary>
-    public partial interface IFrameLocator
-    {
-        /// <summary><para>Returns locator to the first matching frame.</para></summary>
-        IFrameLocator First { get; }
+    /// <param name="selector">
+    /// A selector to use when resolving DOM element. See <a href="https://playwright.dev/dotnet/docs/selectors">working
+    /// with selectors</a> for more details.
+    /// </param>
+    IFrameLocator FrameLocator(string selector);
 
-        /// <summary>
-        /// <para>
-        /// When working with iframes, you can create a frame locator that will enter the iframe
-        /// and allow selecting elements in that iframe.
-        /// </para>
-        /// </summary>
-        /// <param name="selector">
-        /// A selector to use when resolving DOM element. See <a href="https://playwright.dev/dotnet/docs/selectors">working
-        /// with selectors</a> for more details.
-        /// </param>
-        IFrameLocator FrameLocator(string selector);
+    /// <summary><para>Returns locator to the last matching frame.</para></summary>
+    IFrameLocator Last { get; }
 
-        /// <summary><para>Returns locator to the last matching frame.</para></summary>
-        IFrameLocator Last { get; }
+    /// <summary>
+    /// <para>
+    /// The method finds an element matching the specified selector in the FrameLocator's
+    /// subtree.
+    /// </para>
+    /// </summary>
+    /// <param name="selector">
+    /// A selector to use when resolving DOM element. See <a href="https://playwright.dev/dotnet/docs/selectors">working
+    /// with selectors</a> for more details.
+    /// </param>
+    /// <param name="options">Call options</param>
+    ILocator Locator(string selector, FrameLocatorLocatorOptions? options = default);
 
-        /// <summary>
-        /// <para>
-        /// The method finds an element matching the specified selector in the FrameLocator's
-        /// subtree.
-        /// </para>
-        /// </summary>
-        /// <param name="selector">
-        /// A selector to use when resolving DOM element. See <a href="https://playwright.dev/dotnet/docs/selectors">working
-        /// with selectors</a> for more details.
-        /// </param>
-        /// <param name="options">Call options</param>
-        ILocator Locator(string selector, FrameLocatorLocatorOptions? options = default);
-
-        /// <summary>
-        /// <para>
-        /// Returns locator to the n-th matching frame. It's zero based, <c>nth(0)</c> selects
-        /// the first frame.
-        /// </para>
-        /// </summary>
-        /// <param name="index">
-        /// </param>
-        IFrameLocator Nth(int index);
-    }
+    /// <summary>
+    /// <para>
+    /// Returns locator to the n-th matching frame. It's zero based, <c>nth(0)</c> selects
+    /// the first frame.
+    /// </para>
+    /// </summary>
+    /// <param name="index">
+    /// </param>
+    IFrameLocator Nth(int index);
 }
 
 #nullable disable

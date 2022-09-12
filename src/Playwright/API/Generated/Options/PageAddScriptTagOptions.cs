@@ -37,51 +37,50 @@ using System.Threading.Tasks;
 
 #nullable enable
 
-namespace Microsoft.Playwright
+namespace Microsoft.Playwright;
+
+public class PageAddScriptTagOptions
 {
-    public class PageAddScriptTagOptions
+    public PageAddScriptTagOptions() { }
+
+    public PageAddScriptTagOptions(PageAddScriptTagOptions clone)
     {
-        public PageAddScriptTagOptions() { }
-
-        public PageAddScriptTagOptions(PageAddScriptTagOptions clone)
+        if (clone == null)
         {
-            if (clone == null)
-            {
-                return;
-            }
-
-            Content = clone.Content;
-            Path = clone.Path;
-            Type = clone.Type;
-            Url = clone.Url;
+            return;
         }
 
-        /// <summary><para>Raw JavaScript content to be injected into frame.</para></summary>
-        [JsonPropertyName("content")]
-        public string? Content { get; set; }
-
-        /// <summary>
-        /// <para>
-        /// Path to the JavaScript file to be injected into frame. If <c>path</c> is a relative
-        /// path, then it is resolved relative to the current working directory.
-        /// </para>
-        /// </summary>
-        [JsonPropertyName("path")]
-        public string? Path { get; set; }
-
-        /// <summary>
-        /// <para>
-        /// Script type. Use 'module' in order to load a Javascript ES6 module. See <a href="https://developer.mozilla.org/en-US/docs/Web/HTML/Element/script">script</a>
-        /// for more details.
-        /// </para>
-        /// </summary>
-        [JsonPropertyName("type")]
-        public string? Type { get; set; }
-
-        /// <summary><para>URL of a script to be added.</para></summary>
-        [JsonPropertyName("url")]
-        public string? Url { get; set; }
+        Content = clone.Content;
+        Path = clone.Path;
+        Type = clone.Type;
+        Url = clone.Url;
     }
+
+    /// <summary><para>Raw JavaScript content to be injected into frame.</para></summary>
+    [JsonPropertyName("content")]
+    public string? Content { get; set; }
+
+    /// <summary>
+    /// <para>
+    /// Path to the JavaScript file to be injected into frame. If <c>path</c> is a relative
+    /// path, then it is resolved relative to the current working directory.
+    /// </para>
+    /// </summary>
+    [JsonPropertyName("path")]
+    public string? Path { get; set; }
+
+    /// <summary>
+    /// <para>
+    /// Script type. Use 'module' in order to load a Javascript ES6 module. See <a href="https://developer.mozilla.org/en-US/docs/Web/HTML/Element/script">script</a>
+    /// for more details.
+    /// </para>
+    /// </summary>
+    [JsonPropertyName("type")]
+    public string? Type { get; set; }
+
+    /// <summary><para>URL of a script to be added.</para></summary>
+    [JsonPropertyName("url")]
+    public string? Url { get; set; }
 }
 
 #nullable disable

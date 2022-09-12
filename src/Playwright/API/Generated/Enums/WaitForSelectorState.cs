@@ -37,19 +37,18 @@ using System.Threading.Tasks;
 
 #nullable enable
 
-namespace Microsoft.Playwright
+namespace Microsoft.Playwright;
+
+public enum WaitForSelectorState
 {
-    public enum WaitForSelectorState
-    {
-        [EnumMember(Value = "attached")]
-        Attached,
-        [EnumMember(Value = "detached")]
-        Detached,
-        [EnumMember(Value = "visible")]
-        Visible,
-        [EnumMember(Value = "hidden")]
-        Hidden,
-    }
+    [EnumMember(Value = "attached")]
+    Attached,
+    [EnumMember(Value = "detached")]
+    Detached,
+    [EnumMember(Value = "visible")]
+    Visible,
+    [EnumMember(Value = "hidden")]
+    Hidden,
 }
 
 #nullable disable

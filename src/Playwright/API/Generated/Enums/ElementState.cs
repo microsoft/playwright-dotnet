@@ -37,23 +37,22 @@ using System.Threading.Tasks;
 
 #nullable enable
 
-namespace Microsoft.Playwright
+namespace Microsoft.Playwright;
+
+public enum ElementState
 {
-    public enum ElementState
-    {
-        [EnumMember(Value = "visible")]
-        Visible,
-        [EnumMember(Value = "hidden")]
-        Hidden,
-        [EnumMember(Value = "stable")]
-        Stable,
-        [EnumMember(Value = "enabled")]
-        Enabled,
-        [EnumMember(Value = "disabled")]
-        Disabled,
-        [EnumMember(Value = "editable")]
-        Editable,
-    }
+    [EnumMember(Value = "visible")]
+    Visible,
+    [EnumMember(Value = "hidden")]
+    Hidden,
+    [EnumMember(Value = "stable")]
+    Stable,
+    [EnumMember(Value = "enabled")]
+    Enabled,
+    [EnumMember(Value = "disabled")]
+    Disabled,
+    [EnumMember(Value = "editable")]
+    Editable,
 }
 
 #nullable disable

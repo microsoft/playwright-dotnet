@@ -37,64 +37,63 @@ using System.Threading.Tasks;
 
 #nullable enable
 
-namespace Microsoft.Playwright
+namespace Microsoft.Playwright;
+
+public class PageFillOptions
 {
-    public class PageFillOptions
+    public PageFillOptions() { }
+
+    public PageFillOptions(PageFillOptions clone)
     {
-        public PageFillOptions() { }
-
-        public PageFillOptions(PageFillOptions clone)
+        if (clone == null)
         {
-            if (clone == null)
-            {
-                return;
-            }
-
-            Force = clone.Force;
-            NoWaitAfter = clone.NoWaitAfter;
-            Strict = clone.Strict;
-            Timeout = clone.Timeout;
+            return;
         }
 
-        /// <summary>
-        /// <para>
-        /// Whether to bypass the <a href="https://playwright.dev/dotnet/docs/actionability">actionability</a>
-        /// checks. Defaults to <c>false</c>.
-        /// </para>
-        /// </summary>
-        [JsonPropertyName("force")]
-        public bool? Force { get; set; }
-
-        /// <summary>
-        /// <para>
-        /// Actions that initiate navigations are waiting for these navigations to happen and
-        /// for pages to start loading. You can opt out of waiting via setting this flag. You
-        /// would only need this option in the exceptional cases such as navigating to inaccessible
-        /// pages. Defaults to <c>false</c>.
-        /// </para>
-        /// </summary>
-        [JsonPropertyName("noWaitAfter")]
-        public bool? NoWaitAfter { get; set; }
-
-        /// <summary>
-        /// <para>
-        /// When true, the call requires selector to resolve to a single element. If given selector
-        /// resolves to more than one element, the call throws an exception.
-        /// </para>
-        /// </summary>
-        [JsonPropertyName("strict")]
-        public bool? Strict { get; set; }
-
-        /// <summary>
-        /// <para>
-        /// Maximum time in milliseconds, defaults to 30 seconds, pass <c>0</c> to disable timeout.
-        /// The default value can be changed by using the <see cref="IBrowserContext.SetDefaultTimeout"/>
-        /// or <see cref="IPage.SetDefaultTimeout"/> methods.
-        /// </para>
-        /// </summary>
-        [JsonPropertyName("timeout")]
-        public float? Timeout { get; set; }
+        Force = clone.Force;
+        NoWaitAfter = clone.NoWaitAfter;
+        Strict = clone.Strict;
+        Timeout = clone.Timeout;
     }
+
+    /// <summary>
+    /// <para>
+    /// Whether to bypass the <a href="https://playwright.dev/dotnet/docs/actionability">actionability</a>
+    /// checks. Defaults to <c>false</c>.
+    /// </para>
+    /// </summary>
+    [JsonPropertyName("force")]
+    public bool? Force { get; set; }
+
+    /// <summary>
+    /// <para>
+    /// Actions that initiate navigations are waiting for these navigations to happen and
+    /// for pages to start loading. You can opt out of waiting via setting this flag. You
+    /// would only need this option in the exceptional cases such as navigating to inaccessible
+    /// pages. Defaults to <c>false</c>.
+    /// </para>
+    /// </summary>
+    [JsonPropertyName("noWaitAfter")]
+    public bool? NoWaitAfter { get; set; }
+
+    /// <summary>
+    /// <para>
+    /// When true, the call requires selector to resolve to a single element. If given selector
+    /// resolves to more than one element, the call throws an exception.
+    /// </para>
+    /// </summary>
+    [JsonPropertyName("strict")]
+    public bool? Strict { get; set; }
+
+    /// <summary>
+    /// <para>
+    /// Maximum time in milliseconds, defaults to 30 seconds, pass <c>0</c> to disable timeout.
+    /// The default value can be changed by using the <see cref="IBrowserContext.SetDefaultTimeout"/>
+    /// or <see cref="IPage.SetDefaultTimeout"/> methods.
+    /// </para>
+    /// </summary>
+    [JsonPropertyName("timeout")]
+    public float? Timeout { get; set; }
 }
 
 #nullable disable

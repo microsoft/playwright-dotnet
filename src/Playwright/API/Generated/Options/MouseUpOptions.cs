@@ -37,31 +37,30 @@ using System.Threading.Tasks;
 
 #nullable enable
 
-namespace Microsoft.Playwright
+namespace Microsoft.Playwright;
+
+public class MouseUpOptions
 {
-    public class MouseUpOptions
+    public MouseUpOptions() { }
+
+    public MouseUpOptions(MouseUpOptions clone)
     {
-        public MouseUpOptions() { }
-
-        public MouseUpOptions(MouseUpOptions clone)
+        if (clone == null)
         {
-            if (clone == null)
-            {
-                return;
-            }
-
-            Button = clone.Button;
-            ClickCount = clone.ClickCount;
+            return;
         }
 
-        /// <summary><para>Defaults to <c>left</c>.</para></summary>
-        [JsonPropertyName("button")]
-        public MouseButton? Button { get; set; }
-
-        /// <summary><para>defaults to 1. See <see cref="UIEvent.detail"/>.</para></summary>
-        [JsonPropertyName("clickCount")]
-        public int? ClickCount { get; set; }
+        Button = clone.Button;
+        ClickCount = clone.ClickCount;
     }
+
+    /// <summary><para>Defaults to <c>left</c>.</para></summary>
+    [JsonPropertyName("button")]
+    public MouseButton? Button { get; set; }
+
+    /// <summary><para>defaults to 1. See <see cref="UIEvent.detail"/>.</para></summary>
+    [JsonPropertyName("clickCount")]
+    public int? ClickCount { get; set; }
 }
 
 #nullable disable

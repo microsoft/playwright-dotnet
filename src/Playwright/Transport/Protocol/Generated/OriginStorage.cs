@@ -25,14 +25,13 @@
 using System.Collections.Generic;
 using System.Text.Json.Serialization;
 
-namespace Microsoft.Playwright.Transport.Protocol
-{
-    internal class OriginStorage
-    {
-        [JsonPropertyName("origin")]
-        public string Origin { get; set; }
+namespace Microsoft.Playwright.Transport.Protocol;
 
-        [JsonPropertyName("localStorage")]
-        public List<NameValue> LocalStorage { get; set; }
-    }
+internal class OriginStorage
+{
+    [JsonPropertyName("origin")]
+    public string Origin { get; set; }
+
+    [JsonPropertyName("localStorage")]
+    public List<NameValue> LocalStorage { get; set; }
 }

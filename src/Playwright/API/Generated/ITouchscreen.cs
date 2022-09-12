@@ -37,29 +37,28 @@ using System.Threading.Tasks;
 
 #nullable enable
 
-namespace Microsoft.Playwright
+namespace Microsoft.Playwright;
+
+/// <summary>
+/// <para>
+/// The Touchscreen class operates in main-frame CSS pixels relative to the top-left
+/// corner of the viewport. Methods on the touchscreen can only be used in browser contexts
+/// that have been initialized with <c>hasTouch</c> set to true.
+/// </para>
+/// </summary>
+public partial interface ITouchscreen
 {
     /// <summary>
     /// <para>
-    /// The Touchscreen class operates in main-frame CSS pixels relative to the top-left
-    /// corner of the viewport. Methods on the touchscreen can only be used in browser contexts
-    /// that have been initialized with <c>hasTouch</c> set to true.
+    /// Dispatches a <c>touchstart</c> and <c>touchend</c> event with a single touch at
+    /// the position (<paramref name="x"/>,<paramref name="y"/>).
     /// </para>
     /// </summary>
-    public partial interface ITouchscreen
-    {
-        /// <summary>
-        /// <para>
-        /// Dispatches a <c>touchstart</c> and <c>touchend</c> event with a single touch at
-        /// the position (<paramref name="x"/>,<paramref name="y"/>).
-        /// </para>
-        /// </summary>
-        /// <param name="x">
-        /// </param>
-        /// <param name="y">
-        /// </param>
-        Task TapAsync(float x, float y);
-    }
+    /// <param name="x">
+    /// </param>
+    /// <param name="y">
+    /// </param>
+    Task TapAsync(float x, float y);
 }
 
 #nullable disable

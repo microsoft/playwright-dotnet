@@ -25,32 +25,31 @@
 using System.Collections.Generic;
 using System.Text.Json.Serialization;
 
-namespace Microsoft.Playwright.Transport.Protocol
+namespace Microsoft.Playwright.Transport.Protocol;
+
+internal class ResourceTiming
 {
-    internal class ResourceTiming
-    {
-        [JsonPropertyName("startTime")]
-        public int StartTime { get; set; }
+    [JsonPropertyName("startTime")]
+    public int StartTime { get; set; }
 
-        [JsonPropertyName("domainLookupStart")]
-        public int DomainLookupStart { get; set; }
+    [JsonPropertyName("domainLookupStart")]
+    public int DomainLookupStart { get; set; }
 
-        [JsonPropertyName("domainLookupEnd")]
-        public int DomainLookupEnd { get; set; }
+    [JsonPropertyName("domainLookupEnd")]
+    public int DomainLookupEnd { get; set; }
 
-        [JsonPropertyName("connectStart")]
-        public int ConnectStart { get; set; }
+    [JsonPropertyName("connectStart")]
+    public int ConnectStart { get; set; }
 
-        [JsonPropertyName("secureConnectionStart")]
-        public int SecureConnectionStart { get; set; }
+    [JsonPropertyName("secureConnectionStart")]
+    public int SecureConnectionStart { get; set; }
 
-        [JsonPropertyName("connectEnd")]
-        public int ConnectEnd { get; set; }
+    [JsonPropertyName("connectEnd")]
+    public int ConnectEnd { get; set; }
 
-        [JsonPropertyName("requestStart")]
-        public int RequestStart { get; set; }
+    [JsonPropertyName("requestStart")]
+    public int RequestStart { get; set; }
 
-        [JsonPropertyName("responseStart")]
-        public int ResponseStart { get; set; }
-    }
+    [JsonPropertyName("responseStart")]
+    public int ResponseStart { get; set; }
 }

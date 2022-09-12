@@ -37,78 +37,77 @@ using System.Threading.Tasks;
 
 #nullable enable
 
-namespace Microsoft.Playwright
+namespace Microsoft.Playwright;
+
+/// <summary>
+/// <para>
+/// The <see cref="IPageAssertions"/> class provides assertion methods that can be used
+/// to make assertions about the <see cref="IPage"/> state in the tests. A new instance
+/// of <see cref="IPageAssertions"/> is created by calling <see cref="IPlaywrightAssertions.Expect"/>:
+/// </para>
+/// <code>
+/// using System.Text.RegularExpressions;<br/>
+/// using System.Threading.Tasks;<br/>
+/// using Microsoft.Playwright.NUnit;<br/>
+/// using NUnit.Framework;<br/>
+/// <br/>
+/// namespace PlaywrightTests;<br/>
+/// <br/>
+/// [TestFixture]<br/>
+/// public class ExampleTests : PageTest<br/>
+/// {<br/>
+///     [PlaywrightTest]<br/>
+///     public async Task NavigatetoLoginPage()<br/>
+///     {<br/>
+///         // ..<br/>
+///         await Page.Locator("#login").ClickAsync();<br/>
+///         await Expect(Page.Locator("div#foobar")).ToHaveURL(new Regex(".*/login"));<br/>
+///     }<br/>
+/// }
+/// </code>
+/// </summary>
+public partial interface IPageAssertions
 {
     /// <summary>
     /// <para>
-    /// The <see cref="IPageAssertions"/> class provides assertion methods that can be used
-    /// to make assertions about the <see cref="IPage"/> state in the tests. A new instance
-    /// of <see cref="IPageAssertions"/> is created by calling <see cref="IPlaywrightAssertions.Expect"/>:
+    /// Makes the assertion check for the opposite condition. For example, this code tests
+    /// that the page URL doesn't contain <c>"error"</c>:
     /// </para>
-    /// <code>
-    /// using System.Text.RegularExpressions;<br/>
-    /// using System.Threading.Tasks;<br/>
-    /// using Microsoft.Playwright.NUnit;<br/>
-    /// using NUnit.Framework;<br/>
-    /// <br/>
-    /// namespace PlaywrightTests;<br/>
-    /// <br/>
-    /// [TestFixture]<br/>
-    /// public class ExampleTests : PageTest<br/>
-    /// {<br/>
-    ///     [PlaywrightTest]<br/>
-    ///     public async Task NavigatetoLoginPage()<br/>
-    ///     {<br/>
-    ///         // ..<br/>
-    ///         await Page.Locator("#login").ClickAsync();<br/>
-    ///         await Expect(Page.Locator("div#foobar")).ToHaveURL(new Regex(".*/login"));<br/>
-    ///     }<br/>
-    /// }
-    /// </code>
+    /// <code>await Expect(page).Not.ToHaveURL("error");</code>
     /// </summary>
-    public partial interface IPageAssertions
-    {
-        /// <summary>
-        /// <para>
-        /// Makes the assertion check for the opposite condition. For example, this code tests
-        /// that the page URL doesn't contain <c>"error"</c>:
-        /// </para>
-        /// <code>await Expect(page).Not.ToHaveURL("error");</code>
-        /// </summary>
-        public IPageAssertions Not { get; }
+    public IPageAssertions Not { get; }
 
-        /// <summary>
-        /// <para>Ensures the page has the given title.</para>
-        /// <code>await Expect(page).ToHaveTitle("Playwright");</code>
-        /// </summary>
-        /// <param name="titleOrRegExp">Expected title or RegExp.</param>
-        /// <param name="options">Call options</param>
-        Task ToHaveTitleAsync(string titleOrRegExp, PageAssertionsToHaveTitleOptions? options = default);
+    /// <summary>
+    /// <para>Ensures the page has the given title.</para>
+    /// <code>await Expect(page).ToHaveTitle("Playwright");</code>
+    /// </summary>
+    /// <param name="titleOrRegExp">Expected title or RegExp.</param>
+    /// <param name="options">Call options</param>
+    Task ToHaveTitleAsync(string titleOrRegExp, PageAssertionsToHaveTitleOptions? options = default);
 
-        /// <summary>
-        /// <para>Ensures the page has the given title.</para>
-        /// <code>await Expect(page).ToHaveTitle("Playwright");</code>
-        /// </summary>
-        /// <param name="titleOrRegExp">Expected title or RegExp.</param>
-        /// <param name="options">Call options</param>
-        Task ToHaveTitleAsync(Regex titleOrRegExp, PageAssertionsToHaveTitleOptions? options = default);
+    /// <summary>
+    /// <para>Ensures the page has the given title.</para>
+    /// <code>await Expect(page).ToHaveTitle("Playwright");</code>
+    /// </summary>
+    /// <param name="titleOrRegExp">Expected title or RegExp.</param>
+    /// <param name="options">Call options</param>
+    Task ToHaveTitleAsync(Regex titleOrRegExp, PageAssertionsToHaveTitleOptions? options = default);
 
-        /// <summary>
-        /// <para>Ensures the page is navigated to the given URL.</para>
-        /// <code>await Expect(page).ToHaveURL(new Regex(".*checkout"));</code>
-        /// </summary>
-        /// <param name="urlOrRegExp">Expected URL string or RegExp.</param>
-        /// <param name="options">Call options</param>
-        Task ToHaveURLAsync(string urlOrRegExp, PageAssertionsToHaveURLOptions? options = default);
+    /// <summary>
+    /// <para>Ensures the page is navigated to the given URL.</para>
+    /// <code>await Expect(page).ToHaveURL(new Regex(".*checkout"));</code>
+    /// </summary>
+    /// <param name="urlOrRegExp">Expected URL string or RegExp.</param>
+    /// <param name="options">Call options</param>
+    Task ToHaveURLAsync(string urlOrRegExp, PageAssertionsToHaveURLOptions? options = default);
 
-        /// <summary>
-        /// <para>Ensures the page is navigated to the given URL.</para>
-        /// <code>await Expect(page).ToHaveURL(new Regex(".*checkout"));</code>
-        /// </summary>
-        /// <param name="urlOrRegExp">Expected URL string or RegExp.</param>
-        /// <param name="options">Call options</param>
-        Task ToHaveURLAsync(Regex urlOrRegExp, PageAssertionsToHaveURLOptions? options = default);
-    }
+    /// <summary>
+    /// <para>Ensures the page is navigated to the given URL.</para>
+    /// <code>await Expect(page).ToHaveURL(new Regex(".*checkout"));</code>
+    /// </summary>
+    /// <param name="urlOrRegExp">Expected URL string or RegExp.</param>
+    /// <param name="options">Call options</param>
+    Task ToHaveURLAsync(Regex urlOrRegExp, PageAssertionsToHaveURLOptions? options = default);
 }
 
 #nullable disable

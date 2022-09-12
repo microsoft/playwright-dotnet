@@ -37,31 +37,30 @@ using System.Threading.Tasks;
 
 #nullable enable
 
-namespace Microsoft.Playwright
+namespace Microsoft.Playwright;
+
+public class PageCloseOptions
 {
-    public class PageCloseOptions
+    public PageCloseOptions() { }
+
+    public PageCloseOptions(PageCloseOptions clone)
     {
-        public PageCloseOptions() { }
-
-        public PageCloseOptions(PageCloseOptions clone)
+        if (clone == null)
         {
-            if (clone == null)
-            {
-                return;
-            }
-
-            RunBeforeUnload = clone.RunBeforeUnload;
+            return;
         }
 
-        /// <summary>
-        /// <para>
-        /// Defaults to <c>false</c>. Whether to run the <a href="https://developer.mozilla.org/en-US/docs/Web/Events/beforeunload">before
-        /// unload</a> page handlers.
-        /// </para>
-        /// </summary>
-        [JsonPropertyName("runBeforeUnload")]
-        public bool? RunBeforeUnload { get; set; }
+        RunBeforeUnload = clone.RunBeforeUnload;
     }
+
+    /// <summary>
+    /// <para>
+    /// Defaults to <c>false</c>. Whether to run the <a href="https://developer.mozilla.org/en-US/docs/Web/Events/beforeunload">before
+    /// unload</a> page handlers.
+    /// </para>
+    /// </summary>
+    [JsonPropertyName("runBeforeUnload")]
+    public bool? RunBeforeUnload { get; set; }
 }
 
 #nullable disable

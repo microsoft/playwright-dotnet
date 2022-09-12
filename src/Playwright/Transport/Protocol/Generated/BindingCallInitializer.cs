@@ -25,20 +25,19 @@
 using System.Collections.Generic;
 using System.Text.Json.Serialization;
 
-namespace Microsoft.Playwright.Transport.Protocol
+namespace Microsoft.Playwright.Transport.Protocol;
+
+internal class BindingCallInitializer
 {
-    internal class BindingCallInitializer
-    {
-        [JsonPropertyName("frame")]
-        public Core.Frame Frame { get; set; }
+    [JsonPropertyName("frame")]
+    public Core.Frame Frame { get; set; }
 
-        [JsonPropertyName("name")]
-        public string Name { get; set; }
+    [JsonPropertyName("name")]
+    public string Name { get; set; }
 
-        [JsonPropertyName("args")]
-        public List<System.Text.Json.JsonElement> Args { get; set; }
+    [JsonPropertyName("args")]
+    public List<System.Text.Json.JsonElement> Args { get; set; }
 
-        [JsonPropertyName("handle")]
-        public Core.JSHandle Handle { get; set; }
-    }
+    [JsonPropertyName("handle")]
+    public Core.JSHandle Handle { get; set; }
 }

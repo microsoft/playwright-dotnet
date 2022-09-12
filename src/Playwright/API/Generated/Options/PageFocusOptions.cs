@@ -37,42 +37,41 @@ using System.Threading.Tasks;
 
 #nullable enable
 
-namespace Microsoft.Playwright
+namespace Microsoft.Playwright;
+
+public class PageFocusOptions
 {
-    public class PageFocusOptions
+    public PageFocusOptions() { }
+
+    public PageFocusOptions(PageFocusOptions clone)
     {
-        public PageFocusOptions() { }
-
-        public PageFocusOptions(PageFocusOptions clone)
+        if (clone == null)
         {
-            if (clone == null)
-            {
-                return;
-            }
-
-            Strict = clone.Strict;
-            Timeout = clone.Timeout;
+            return;
         }
 
-        /// <summary>
-        /// <para>
-        /// When true, the call requires selector to resolve to a single element. If given selector
-        /// resolves to more than one element, the call throws an exception.
-        /// </para>
-        /// </summary>
-        [JsonPropertyName("strict")]
-        public bool? Strict { get; set; }
-
-        /// <summary>
-        /// <para>
-        /// Maximum time in milliseconds, defaults to 30 seconds, pass <c>0</c> to disable timeout.
-        /// The default value can be changed by using the <see cref="IBrowserContext.SetDefaultTimeout"/>
-        /// or <see cref="IPage.SetDefaultTimeout"/> methods.
-        /// </para>
-        /// </summary>
-        [JsonPropertyName("timeout")]
-        public float? Timeout { get; set; }
+        Strict = clone.Strict;
+        Timeout = clone.Timeout;
     }
+
+    /// <summary>
+    /// <para>
+    /// When true, the call requires selector to resolve to a single element. If given selector
+    /// resolves to more than one element, the call throws an exception.
+    /// </para>
+    /// </summary>
+    [JsonPropertyName("strict")]
+    public bool? Strict { get; set; }
+
+    /// <summary>
+    /// <para>
+    /// Maximum time in milliseconds, defaults to 30 seconds, pass <c>0</c> to disable timeout.
+    /// The default value can be changed by using the <see cref="IBrowserContext.SetDefaultTimeout"/>
+    /// or <see cref="IPage.SetDefaultTimeout"/> methods.
+    /// </para>
+    /// </summary>
+    [JsonPropertyName("timeout")]
+    public float? Timeout { get; set; }
 }
 
 #nullable disable

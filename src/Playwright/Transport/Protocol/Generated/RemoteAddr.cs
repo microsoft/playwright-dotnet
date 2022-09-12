@@ -25,14 +25,13 @@
 using System.Collections.Generic;
 using System.Text.Json.Serialization;
 
-namespace Microsoft.Playwright.Transport.Protocol
-{
-    internal class RemoteAddr
-    {
-        [JsonPropertyName("ipAddress")]
-        public string IpAddress { get; set; }
+namespace Microsoft.Playwright.Transport.Protocol;
 
-        [JsonPropertyName("port")]
-        public int Port { get; set; }
-    }
+internal class RemoteAddr
+{
+    [JsonPropertyName("ipAddress")]
+    public string IpAddress { get; set; }
+
+    [JsonPropertyName("port")]
+    public int Port { get; set; }
 }

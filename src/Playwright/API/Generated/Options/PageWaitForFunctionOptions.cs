@@ -37,43 +37,42 @@ using System.Threading.Tasks;
 
 #nullable enable
 
-namespace Microsoft.Playwright
+namespace Microsoft.Playwright;
+
+public class PageWaitForFunctionOptions
 {
-    public class PageWaitForFunctionOptions
+    public PageWaitForFunctionOptions() { }
+
+    public PageWaitForFunctionOptions(PageWaitForFunctionOptions clone)
     {
-        public PageWaitForFunctionOptions() { }
-
-        public PageWaitForFunctionOptions(PageWaitForFunctionOptions clone)
+        if (clone == null)
         {
-            if (clone == null)
-            {
-                return;
-            }
-
-            PollingInterval = clone.PollingInterval;
-            Timeout = clone.Timeout;
+            return;
         }
 
-        /// <summary>
-        /// <para>
-        /// If specified, then it is treated as an interval in milliseconds at which the function
-        /// would be executed. By default if the option is not specified <paramref name="expression"/>
-        /// is executed in <c>requestAnimationFrame</c> callback.
-        /// </para>
-        /// </summary>
-        [JsonPropertyName("pollingInterval")]
-        public float? PollingInterval { get; set; }
-
-        /// <summary>
-        /// <para>
-        /// maximum time to wait for in milliseconds. Defaults to <c>30000</c> (30 seconds).
-        /// Pass <c>0</c> to disable timeout. The default value can be changed by using the
-        /// <see cref="IBrowserContext.SetDefaultTimeout"/>.
-        /// </para>
-        /// </summary>
-        [JsonPropertyName("timeout")]
-        public float? Timeout { get; set; }
+        PollingInterval = clone.PollingInterval;
+        Timeout = clone.Timeout;
     }
+
+    /// <summary>
+    /// <para>
+    /// If specified, then it is treated as an interval in milliseconds at which the function
+    /// would be executed. By default if the option is not specified <paramref name="expression"/>
+    /// is executed in <c>requestAnimationFrame</c> callback.
+    /// </para>
+    /// </summary>
+    [JsonPropertyName("pollingInterval")]
+    public float? PollingInterval { get; set; }
+
+    /// <summary>
+    /// <para>
+    /// maximum time to wait for in milliseconds. Defaults to <c>30000</c> (30 seconds).
+    /// Pass <c>0</c> to disable timeout. The default value can be changed by using the
+    /// <see cref="IBrowserContext.SetDefaultTimeout"/>.
+    /// </para>
+    /// </summary>
+    [JsonPropertyName("timeout")]
+    public float? Timeout { get; set; }
 }
 
 #nullable disable

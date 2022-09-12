@@ -37,39 +37,38 @@ using System.Threading.Tasks;
 
 #nullable enable
 
-namespace Microsoft.Playwright
+namespace Microsoft.Playwright;
+
+/// <summary>
+/// <para>
+/// When browser context is created with the <c>recordVideo</c> option, each page has
+/// a video object associated with it.
+/// </para>
+/// <code>Console.WriteLine(await page.Video.GetPathAsync());</code>
+/// </summary>
+public partial interface IVideo
 {
+    /// <summary><para>Deletes the video file. Will wait for the video to finish if necessary.</para></summary>
+    Task DeleteAsync();
+
     /// <summary>
     /// <para>
-    /// When browser context is created with the <c>recordVideo</c> option, each page has
-    /// a video object associated with it.
+    /// Returns the file system path this video will be recorded to. The video is guaranteed
+    /// to be written to the filesystem upon closing the browser context. This method throws
+    /// when connected remotely.
     /// </para>
-    /// <code>Console.WriteLine(await page.Video.GetPathAsync());</code>
     /// </summary>
-    public partial interface IVideo
-    {
-        /// <summary><para>Deletes the video file. Will wait for the video to finish if necessary.</para></summary>
-        Task DeleteAsync();
+    Task<string> PathAsync();
 
-        /// <summary>
-        /// <para>
-        /// Returns the file system path this video will be recorded to. The video is guaranteed
-        /// to be written to the filesystem upon closing the browser context. This method throws
-        /// when connected remotely.
-        /// </para>
-        /// </summary>
-        Task<string> PathAsync();
-
-        /// <summary>
-        /// <para>
-        /// Saves the video to a user-specified path. It is safe to call this method while the
-        /// video is still in progress, or after the page has closed. This method waits until
-        /// the page is closed and the video is fully saved.
-        /// </para>
-        /// </summary>
-        /// <param name="path">Path where the video should be saved.</param>
-        Task SaveAsAsync(string path);
-    }
+    /// <summary>
+    /// <para>
+    /// Saves the video to a user-specified path. It is safe to call this method while the
+    /// video is still in progress, or after the page has closed. This method waits until
+    /// the page is closed and the video is fully saved.
+    /// </para>
+    /// </summary>
+    /// <param name="path">Path where the video should be saved.</param>
+    Task SaveAsAsync(string path);
 }
 
 #nullable disable

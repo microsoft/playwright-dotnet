@@ -37,26 +37,25 @@ using System.Threading.Tasks;
 
 #nullable enable
 
-namespace Microsoft.Playwright
+namespace Microsoft.Playwright;
+
+public class LocatorAssertionsToHaveCSSOptions
 {
-    public class LocatorAssertionsToHaveCSSOptions
+    public LocatorAssertionsToHaveCSSOptions() { }
+
+    public LocatorAssertionsToHaveCSSOptions(LocatorAssertionsToHaveCSSOptions clone)
     {
-        public LocatorAssertionsToHaveCSSOptions() { }
-
-        public LocatorAssertionsToHaveCSSOptions(LocatorAssertionsToHaveCSSOptions clone)
+        if (clone == null)
         {
-            if (clone == null)
-            {
-                return;
-            }
-
-            Timeout = clone.Timeout;
+            return;
         }
 
-        /// <summary><para>Time to retry the assertion for.</para></summary>
-        [JsonPropertyName("timeout")]
-        public float? Timeout { get; set; }
+        Timeout = clone.Timeout;
     }
+
+    /// <summary><para>Time to retry the assertion for.</para></summary>
+    [JsonPropertyName("timeout")]
+    public float? Timeout { get; set; }
 }
 
 #nullable disable

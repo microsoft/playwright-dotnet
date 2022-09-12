@@ -37,30 +37,29 @@ using System.Threading.Tasks;
 
 #nullable enable
 
-namespace Microsoft.Playwright
+namespace Microsoft.Playwright;
+
+public class LocatorAssertionsToBeVisibleOptions
 {
-    public class LocatorAssertionsToBeVisibleOptions
+    public LocatorAssertionsToBeVisibleOptions() { }
+
+    public LocatorAssertionsToBeVisibleOptions(LocatorAssertionsToBeVisibleOptions clone)
     {
-        public LocatorAssertionsToBeVisibleOptions() { }
-
-        public LocatorAssertionsToBeVisibleOptions(LocatorAssertionsToBeVisibleOptions clone)
+        if (clone == null)
         {
-            if (clone == null)
-            {
-                return;
-            }
-
-            Timeout = clone.Timeout;
-            Visible = clone.Visible;
+            return;
         }
 
-        /// <summary><para>Time to retry the assertion for.</para></summary>
-        [JsonPropertyName("timeout")]
-        public float? Timeout { get; set; }
-
-        [JsonPropertyName("visible")]
-        public bool? Visible { get; set; }
+        Timeout = clone.Timeout;
+        Visible = clone.Visible;
     }
+
+    /// <summary><para>Time to retry the assertion for.</para></summary>
+    [JsonPropertyName("timeout")]
+    public float? Timeout { get; set; }
+
+    [JsonPropertyName("visible")]
+    public bool? Visible { get; set; }
 }
 
 #nullable disable

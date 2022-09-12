@@ -37,26 +37,25 @@ using System.Threading.Tasks;
 
 #nullable enable
 
-namespace Microsoft.Playwright
+namespace Microsoft.Playwright;
+
+public class TracingStopOptions
 {
-    public class TracingStopOptions
+    public TracingStopOptions() { }
+
+    public TracingStopOptions(TracingStopOptions clone)
     {
-        public TracingStopOptions() { }
-
-        public TracingStopOptions(TracingStopOptions clone)
+        if (clone == null)
         {
-            if (clone == null)
-            {
-                return;
-            }
-
-            Path = clone.Path;
+            return;
         }
 
-        /// <summary><para>Export trace into the file with the given path.</para></summary>
-        [JsonPropertyName("path")]
-        public string? Path { get; set; }
+        Path = clone.Path;
     }
+
+    /// <summary><para>Export trace into the file with the given path.</para></summary>
+    [JsonPropertyName("path")]
+    public string? Path { get; set; }
 }
 
 #nullable disable

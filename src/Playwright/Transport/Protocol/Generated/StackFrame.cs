@@ -25,20 +25,19 @@
 using System.Collections.Generic;
 using System.Text.Json.Serialization;
 
-namespace Microsoft.Playwright.Transport.Protocol
+namespace Microsoft.Playwright.Transport.Protocol;
+
+internal class StackFrame
 {
-    internal class StackFrame
-    {
-        [JsonPropertyName("file")]
-        public string File { get; set; }
+    [JsonPropertyName("file")]
+    public string File { get; set; }
 
-        [JsonPropertyName("line")]
-        public int? Line { get; set; }
+    [JsonPropertyName("line")]
+    public int? Line { get; set; }
 
-        [JsonPropertyName("column")]
-        public int? Column { get; set; }
+    [JsonPropertyName("column")]
+    public int? Column { get; set; }
 
-        [JsonPropertyName("function")]
-        public string Function { get; set; }
-    }
+    [JsonPropertyName("function")]
+    public string Function { get; set; }
 }

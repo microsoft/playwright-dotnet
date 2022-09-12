@@ -37,44 +37,43 @@ using System.Threading.Tasks;
 
 #nullable enable
 
-namespace Microsoft.Playwright
+namespace Microsoft.Playwright;
+
+public class ElementHandleSetInputFilesOptions
 {
-    public class ElementHandleSetInputFilesOptions
+    public ElementHandleSetInputFilesOptions() { }
+
+    public ElementHandleSetInputFilesOptions(ElementHandleSetInputFilesOptions clone)
     {
-        public ElementHandleSetInputFilesOptions() { }
-
-        public ElementHandleSetInputFilesOptions(ElementHandleSetInputFilesOptions clone)
+        if (clone == null)
         {
-            if (clone == null)
-            {
-                return;
-            }
-
-            NoWaitAfter = clone.NoWaitAfter;
-            Timeout = clone.Timeout;
+            return;
         }
 
-        /// <summary>
-        /// <para>
-        /// Actions that initiate navigations are waiting for these navigations to happen and
-        /// for pages to start loading. You can opt out of waiting via setting this flag. You
-        /// would only need this option in the exceptional cases such as navigating to inaccessible
-        /// pages. Defaults to <c>false</c>.
-        /// </para>
-        /// </summary>
-        [JsonPropertyName("noWaitAfter")]
-        public bool? NoWaitAfter { get; set; }
-
-        /// <summary>
-        /// <para>
-        /// Maximum time in milliseconds, defaults to 30 seconds, pass <c>0</c> to disable timeout.
-        /// The default value can be changed by using the <see cref="IBrowserContext.SetDefaultTimeout"/>
-        /// or <see cref="IPage.SetDefaultTimeout"/> methods.
-        /// </para>
-        /// </summary>
-        [JsonPropertyName("timeout")]
-        public float? Timeout { get; set; }
+        NoWaitAfter = clone.NoWaitAfter;
+        Timeout = clone.Timeout;
     }
+
+    /// <summary>
+    /// <para>
+    /// Actions that initiate navigations are waiting for these navigations to happen and
+    /// for pages to start loading. You can opt out of waiting via setting this flag. You
+    /// would only need this option in the exceptional cases such as navigating to inaccessible
+    /// pages. Defaults to <c>false</c>.
+    /// </para>
+    /// </summary>
+    [JsonPropertyName("noWaitAfter")]
+    public bool? NoWaitAfter { get; set; }
+
+    /// <summary>
+    /// <para>
+    /// Maximum time in milliseconds, defaults to 30 seconds, pass <c>0</c> to disable timeout.
+    /// The default value can be changed by using the <see cref="IBrowserContext.SetDefaultTimeout"/>
+    /// or <see cref="IPage.SetDefaultTimeout"/> methods.
+    /// </para>
+    /// </summary>
+    [JsonPropertyName("timeout")]
+    public float? Timeout { get; set; }
 }
 
 #nullable disable

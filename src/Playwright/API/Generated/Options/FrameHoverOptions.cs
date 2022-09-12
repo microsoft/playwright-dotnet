@@ -37,84 +37,83 @@ using System.Threading.Tasks;
 
 #nullable enable
 
-namespace Microsoft.Playwright
+namespace Microsoft.Playwright;
+
+public class FrameHoverOptions
 {
-    public class FrameHoverOptions
+    public FrameHoverOptions() { }
+
+    public FrameHoverOptions(FrameHoverOptions clone)
     {
-        public FrameHoverOptions() { }
-
-        public FrameHoverOptions(FrameHoverOptions clone)
+        if (clone == null)
         {
-            if (clone == null)
-            {
-                return;
-            }
-
-            Force = clone.Force;
-            Modifiers = clone.Modifiers;
-            Position = clone.Position;
-            Strict = clone.Strict;
-            Timeout = clone.Timeout;
-            Trial = clone.Trial;
+            return;
         }
 
-        /// <summary>
-        /// <para>
-        /// Whether to bypass the <a href="https://playwright.dev/dotnet/docs/actionability">actionability</a>
-        /// checks. Defaults to <c>false</c>.
-        /// </para>
-        /// </summary>
-        [JsonPropertyName("force")]
-        public bool? Force { get; set; }
-
-        /// <summary>
-        /// <para>
-        /// Modifier keys to press. Ensures that only these modifiers are pressed during the
-        /// operation, and then restores current modifiers back. If not specified, currently
-        /// pressed modifiers are used.
-        /// </para>
-        /// </summary>
-        [JsonPropertyName("modifiers")]
-        public IEnumerable<KeyboardModifier>? Modifiers { get; set; }
-
-        /// <summary>
-        /// <para>
-        /// A point to use relative to the top-left corner of element padding box. If not specified,
-        /// uses some visible point of the element.
-        /// </para>
-        /// </summary>
-        [JsonPropertyName("position")]
-        public Position? Position { get; set; }
-
-        /// <summary>
-        /// <para>
-        /// When true, the call requires selector to resolve to a single element. If given selector
-        /// resolves to more than one element, the call throws an exception.
-        /// </para>
-        /// </summary>
-        [JsonPropertyName("strict")]
-        public bool? Strict { get; set; }
-
-        /// <summary>
-        /// <para>
-        /// Maximum time in milliseconds, defaults to 30 seconds, pass <c>0</c> to disable timeout.
-        /// The default value can be changed by using the <see cref="IBrowserContext.SetDefaultTimeout"/>
-        /// or <see cref="IPage.SetDefaultTimeout"/> methods.
-        /// </para>
-        /// </summary>
-        [JsonPropertyName("timeout")]
-        public float? Timeout { get; set; }
-
-        /// <summary>
-        /// <para>
-        /// When set, this method only performs the <a href="https://playwright.dev/dotnet/docs/actionability">actionability</a>
-        /// checks and skips the action. Defaults to <c>false</c>. Useful to wait until the
-        /// element is ready for the action without performing it.
-        /// </para>
-        /// </summary>
-        [JsonPropertyName("trial")]
-        public bool? Trial { get; set; }
+        Force = clone.Force;
+        Modifiers = clone.Modifiers;
+        Position = clone.Position;
+        Strict = clone.Strict;
+        Timeout = clone.Timeout;
+        Trial = clone.Trial;
     }
+
+    /// <summary>
+    /// <para>
+    /// Whether to bypass the <a href="https://playwright.dev/dotnet/docs/actionability">actionability</a>
+    /// checks. Defaults to <c>false</c>.
+    /// </para>
+    /// </summary>
+    [JsonPropertyName("force")]
+    public bool? Force { get; set; }
+
+    /// <summary>
+    /// <para>
+    /// Modifier keys to press. Ensures that only these modifiers are pressed during the
+    /// operation, and then restores current modifiers back. If not specified, currently
+    /// pressed modifiers are used.
+    /// </para>
+    /// </summary>
+    [JsonPropertyName("modifiers")]
+    public IEnumerable<KeyboardModifier>? Modifiers { get; set; }
+
+    /// <summary>
+    /// <para>
+    /// A point to use relative to the top-left corner of element padding box. If not specified,
+    /// uses some visible point of the element.
+    /// </para>
+    /// </summary>
+    [JsonPropertyName("position")]
+    public Position? Position { get; set; }
+
+    /// <summary>
+    /// <para>
+    /// When true, the call requires selector to resolve to a single element. If given selector
+    /// resolves to more than one element, the call throws an exception.
+    /// </para>
+    /// </summary>
+    [JsonPropertyName("strict")]
+    public bool? Strict { get; set; }
+
+    /// <summary>
+    /// <para>
+    /// Maximum time in milliseconds, defaults to 30 seconds, pass <c>0</c> to disable timeout.
+    /// The default value can be changed by using the <see cref="IBrowserContext.SetDefaultTimeout"/>
+    /// or <see cref="IPage.SetDefaultTimeout"/> methods.
+    /// </para>
+    /// </summary>
+    [JsonPropertyName("timeout")]
+    public float? Timeout { get; set; }
+
+    /// <summary>
+    /// <para>
+    /// When set, this method only performs the <a href="https://playwright.dev/dotnet/docs/actionability">actionability</a>
+    /// checks and skips the action. Defaults to <c>false</c>. Useful to wait until the
+    /// element is ready for the action without performing it.
+    /// </para>
+    /// </summary>
+    [JsonPropertyName("trial")]
+    public bool? Trial { get; set; }
 }
 
 #nullable disable

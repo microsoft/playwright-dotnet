@@ -37,63 +37,62 @@ using System.Threading.Tasks;
 
 #nullable enable
 
-namespace Microsoft.Playwright
+namespace Microsoft.Playwright;
+
+public class FrameWaitForSelectorOptions
 {
-    public class FrameWaitForSelectorOptions
+    public FrameWaitForSelectorOptions() { }
+
+    public FrameWaitForSelectorOptions(FrameWaitForSelectorOptions clone)
     {
-        public FrameWaitForSelectorOptions() { }
-
-        public FrameWaitForSelectorOptions(FrameWaitForSelectorOptions clone)
+        if (clone == null)
         {
-            if (clone == null)
-            {
-                return;
-            }
-
-            State = clone.State;
-            Strict = clone.Strict;
-            Timeout = clone.Timeout;
+            return;
         }
 
-        /// <summary>
-        /// <para>Defaults to <c>'visible'</c>. Can be either:</para>
-        /// <list type="bullet">
-        /// <item><description><c>'attached'</c> - wait for element to be present in DOM.</description></item>
-        /// <item><description><c>'detached'</c> - wait for element to not be present in DOM.</description></item>
-        /// <item><description>
-        /// <c>'visible'</c> - wait for element to have non-empty bounding box and no <c>visibility:hidden</c>.
-        /// Note that element without any content or with <c>display:none</c> has an empty bounding
-        /// box and is not considered visible.
-        /// </description></item>
-        /// <item><description>
-        /// <c>'hidden'</c> - wait for element to be either detached from DOM, or have an empty
-        /// bounding box or <c>visibility:hidden</c>. This is opposite to the <c>'visible'</c>
-        /// option.
-        /// </description></item>
-        /// </list>
-        /// </summary>
-        [JsonPropertyName("state")]
-        public WaitForSelectorState? State { get; set; }
-
-        /// <summary>
-        /// <para>
-        /// When true, the call requires selector to resolve to a single element. If given selector
-        /// resolves to more than one element, the call throws an exception.
-        /// </para>
-        /// </summary>
-        [JsonPropertyName("strict")]
-        public bool? Strict { get; set; }
-
-        /// <summary>
-        /// <para>
-        /// Maximum time in milliseconds, defaults to 30 seconds, pass <c>0</c> to disable timeout.
-        /// The default value can be changed by using the <see cref="IBrowserContext.SetDefaultTimeout"/>
-        /// or <see cref="IPage.SetDefaultTimeout"/> methods.
-        /// </para>
-        /// </summary>
-        [JsonPropertyName("timeout")]
-        public float? Timeout { get; set; }
+        State = clone.State;
+        Strict = clone.Strict;
+        Timeout = clone.Timeout;
     }
+
+    /// <summary>
+    /// <para>Defaults to <c>'visible'</c>. Can be either:</para>
+    /// <list type="bullet">
+    /// <item><description><c>'attached'</c> - wait for element to be present in DOM.</description></item>
+    /// <item><description><c>'detached'</c> - wait for element to not be present in DOM.</description></item>
+    /// <item><description>
+    /// <c>'visible'</c> - wait for element to have non-empty bounding box and no <c>visibility:hidden</c>.
+    /// Note that element without any content or with <c>display:none</c> has an empty bounding
+    /// box and is not considered visible.
+    /// </description></item>
+    /// <item><description>
+    /// <c>'hidden'</c> - wait for element to be either detached from DOM, or have an empty
+    /// bounding box or <c>visibility:hidden</c>. This is opposite to the <c>'visible'</c>
+    /// option.
+    /// </description></item>
+    /// </list>
+    /// </summary>
+    [JsonPropertyName("state")]
+    public WaitForSelectorState? State { get; set; }
+
+    /// <summary>
+    /// <para>
+    /// When true, the call requires selector to resolve to a single element. If given selector
+    /// resolves to more than one element, the call throws an exception.
+    /// </para>
+    /// </summary>
+    [JsonPropertyName("strict")]
+    public bool? Strict { get; set; }
+
+    /// <summary>
+    /// <para>
+    /// Maximum time in milliseconds, defaults to 30 seconds, pass <c>0</c> to disable timeout.
+    /// The default value can be changed by using the <see cref="IBrowserContext.SetDefaultTimeout"/>
+    /// or <see cref="IPage.SetDefaultTimeout"/> methods.
+    /// </para>
+    /// </summary>
+    [JsonPropertyName("timeout")]
+    public float? Timeout { get; set; }
 }
 
 #nullable disable

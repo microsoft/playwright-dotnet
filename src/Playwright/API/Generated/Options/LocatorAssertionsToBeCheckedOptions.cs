@@ -37,30 +37,29 @@ using System.Threading.Tasks;
 
 #nullable enable
 
-namespace Microsoft.Playwright
+namespace Microsoft.Playwright;
+
+public class LocatorAssertionsToBeCheckedOptions
 {
-    public class LocatorAssertionsToBeCheckedOptions
+    public LocatorAssertionsToBeCheckedOptions() { }
+
+    public LocatorAssertionsToBeCheckedOptions(LocatorAssertionsToBeCheckedOptions clone)
     {
-        public LocatorAssertionsToBeCheckedOptions() { }
-
-        public LocatorAssertionsToBeCheckedOptions(LocatorAssertionsToBeCheckedOptions clone)
+        if (clone == null)
         {
-            if (clone == null)
-            {
-                return;
-            }
-
-            Checked = clone.Checked;
-            Timeout = clone.Timeout;
+            return;
         }
 
-        [JsonPropertyName("checked")]
-        public bool? Checked { get; set; }
-
-        /// <summary><para>Time to retry the assertion for.</para></summary>
-        [JsonPropertyName("timeout")]
-        public float? Timeout { get; set; }
+        Checked = clone.Checked;
+        Timeout = clone.Timeout;
     }
+
+    [JsonPropertyName("checked")]
+    public bool? Checked { get; set; }
+
+    /// <summary><para>Time to retry the assertion for.</para></summary>
+    [JsonPropertyName("timeout")]
+    public float? Timeout { get; set; }
 }
 
 #nullable disable

@@ -25,14 +25,13 @@
 using System.Collections.Generic;
 using System.Text.Json.Serialization;
 
-namespace Microsoft.Playwright.Transport.Protocol
-{
-    internal class AndroidSelectorHasDescendant
-    {
-        [JsonPropertyName("selector")]
-        public AndroidSelector Selector { get; set; }
+namespace Microsoft.Playwright.Transport.Protocol;
 
-        [JsonPropertyName("maxDepth")]
-        public int? MaxDepth { get; set; }
-    }
+internal class AndroidSelectorHasDescendant
+{
+    [JsonPropertyName("selector")]
+    public AndroidSelector Selector { get; set; }
+
+    [JsonPropertyName("maxDepth")]
+    public int? MaxDepth { get; set; }
 }

@@ -25,14 +25,13 @@
 using System.Collections.Generic;
 using System.Text.Json.Serialization;
 
-namespace Microsoft.Playwright.Transport.Protocol
-{
-    internal class SerializedValueO
-    {
-        [JsonPropertyName("k")]
-        public string K { get; set; }
+namespace Microsoft.Playwright.Transport.Protocol;
 
-        [JsonPropertyName("v")]
-        public System.Text.Json.JsonElement V { get; set; }
-    }
+internal class SerializedValueO
+{
+    [JsonPropertyName("k")]
+    public string K { get; set; }
+
+    [JsonPropertyName("v")]
+    public System.Text.Json.JsonElement V { get; set; }
 }

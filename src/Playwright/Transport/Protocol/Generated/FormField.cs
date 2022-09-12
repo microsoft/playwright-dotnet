@@ -25,17 +25,16 @@
 using System.Collections.Generic;
 using System.Text.Json.Serialization;
 
-namespace Microsoft.Playwright.Transport.Protocol
+namespace Microsoft.Playwright.Transport.Protocol;
+
+internal class FormField
 {
-    internal class FormField
-    {
-        [JsonPropertyName("name")]
-        public string Name { get; set; }
+    [JsonPropertyName("name")]
+    public string Name { get; set; }
 
-        [JsonPropertyName("value")]
-        public string Value { get; set; }
+    [JsonPropertyName("value")]
+    public string Value { get; set; }
 
-        [JsonPropertyName("file")]
-        public FormFieldFile File { get; set; }
-    }
+    [JsonPropertyName("file")]
+    public FormFieldFile File { get; set; }
 }

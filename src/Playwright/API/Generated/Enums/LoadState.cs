@@ -37,17 +37,16 @@ using System.Threading.Tasks;
 
 #nullable enable
 
-namespace Microsoft.Playwright
+namespace Microsoft.Playwright;
+
+public enum LoadState
 {
-    public enum LoadState
-    {
-        [EnumMember(Value = "load")]
-        Load,
-        [EnumMember(Value = "domcontentloaded")]
-        DOMContentLoaded,
-        [EnumMember(Value = "networkidle")]
-        NetworkIdle,
-    }
+    [EnumMember(Value = "load")]
+    Load,
+    [EnumMember(Value = "domcontentloaded")]
+    DOMContentLoaded,
+    [EnumMember(Value = "networkidle")]
+    NetworkIdle,
 }
 
 #nullable disable

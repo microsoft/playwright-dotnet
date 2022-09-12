@@ -25,20 +25,19 @@
 using System.Collections.Generic;
 using System.Text.Json.Serialization;
 
-namespace Microsoft.Playwright.Transport.Protocol
+namespace Microsoft.Playwright.Transport.Protocol;
+
+internal class ConsoleMessageInitializer
 {
-    internal class ConsoleMessageInitializer
-    {
-        [JsonPropertyName("type")]
-        public string Type { get; set; }
+    [JsonPropertyName("type")]
+    public string Type { get; set; }
 
-        [JsonPropertyName("text")]
-        public string Text { get; set; }
+    [JsonPropertyName("text")]
+    public string Text { get; set; }
 
-        [JsonPropertyName("args")]
-        public List<Core.JSHandle> Args { get; set; }
+    [JsonPropertyName("args")]
+    public List<Core.JSHandle> Args { get; set; }
 
-        [JsonPropertyName("location")]
-        public ConsoleMessageLocation Location { get; set; }
-    }
+    [JsonPropertyName("location")]
+    public ConsoleMessageLocation Location { get; set; }
 }

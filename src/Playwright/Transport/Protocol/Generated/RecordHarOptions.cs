@@ -25,26 +25,25 @@
 using System.Collections.Generic;
 using System.Text.Json.Serialization;
 
-namespace Microsoft.Playwright.Transport.Protocol
+namespace Microsoft.Playwright.Transport.Protocol;
+
+internal class RecordHarOptions
 {
-    internal class RecordHarOptions
-    {
-        [JsonPropertyName("path")]
-        public string Path { get; set; }
+    [JsonPropertyName("path")]
+    public string Path { get; set; }
 
-        [JsonPropertyName("content")]
-        public string Content { get; set; }
+    [JsonPropertyName("content")]
+    public string Content { get; set; }
 
-        [JsonPropertyName("mode")]
-        public string Mode { get; set; }
+    [JsonPropertyName("mode")]
+    public string Mode { get; set; }
 
-        [JsonPropertyName("urlGlob")]
-        public string UrlGlob { get; set; }
+    [JsonPropertyName("urlGlob")]
+    public string UrlGlob { get; set; }
 
-        [JsonPropertyName("urlRegexSource")]
-        public string UrlRegexSource { get; set; }
+    [JsonPropertyName("urlRegexSource")]
+    public string UrlRegexSource { get; set; }
 
-        [JsonPropertyName("urlRegexFlags")]
-        public string UrlRegexFlags { get; set; }
-    }
+    [JsonPropertyName("urlRegexFlags")]
+    public string UrlRegexFlags { get; set; }
 }

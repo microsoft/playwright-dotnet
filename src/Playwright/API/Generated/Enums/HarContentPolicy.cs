@@ -37,17 +37,16 @@ using System.Threading.Tasks;
 
 #nullable enable
 
-namespace Microsoft.Playwright
+namespace Microsoft.Playwright;
+
+public enum HarContentPolicy
 {
-    public enum HarContentPolicy
-    {
-        [EnumMember(Value = "omit")]
-        Omit,
-        [EnumMember(Value = "embed")]
-        Embed,
-        [EnumMember(Value = "attach")]
-        Attach,
-    }
+    [EnumMember(Value = "omit")]
+    Omit,
+    [EnumMember(Value = "embed")]
+    Embed,
+    [EnumMember(Value = "attach")]
+    Attach,
 }
 
 #nullable disable

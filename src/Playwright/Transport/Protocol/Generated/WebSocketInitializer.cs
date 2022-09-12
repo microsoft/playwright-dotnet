@@ -25,11 +25,10 @@
 using System.Collections.Generic;
 using System.Text.Json.Serialization;
 
-namespace Microsoft.Playwright.Transport.Protocol
+namespace Microsoft.Playwright.Transport.Protocol;
+
+internal class WebSocketInitializer : EventTargetInitializer
 {
-    internal class WebSocketInitializer : EventTargetInitializer
-    {
-        [JsonPropertyName("url")]
-        public string Url { get; set; }
-    }
+    [JsonPropertyName("url")]
+    public string Url { get; set; }
 }

@@ -37,15 +37,14 @@ using System.Threading.Tasks;
 
 #nullable enable
 
-namespace Microsoft.Playwright
+namespace Microsoft.Playwright;
+
+public enum HarMode
 {
-    public enum HarMode
-    {
-        [EnumMember(Value = "full")]
-        Full,
-        [EnumMember(Value = "minimal")]
-        Minimal,
-    }
+    [EnumMember(Value = "full")]
+    Full,
+    [EnumMember(Value = "minimal")]
+    Minimal,
 }
 
 #nullable disable

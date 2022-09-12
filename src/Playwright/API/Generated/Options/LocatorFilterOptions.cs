@@ -37,58 +37,57 @@ using System.Threading.Tasks;
 
 #nullable enable
 
-namespace Microsoft.Playwright
+namespace Microsoft.Playwright;
+
+public class LocatorFilterOptions
 {
-    public class LocatorFilterOptions
+    public LocatorFilterOptions() { }
+
+    public LocatorFilterOptions(LocatorFilterOptions clone)
     {
-        public LocatorFilterOptions() { }
-
-        public LocatorFilterOptions(LocatorFilterOptions clone)
+        if (clone == null)
         {
-            if (clone == null)
-            {
-                return;
-            }
-
-            Has = clone.Has;
-            HasTextString = clone.HasTextString;
-            HasTextRegex = clone.HasTextRegex;
+            return;
         }
 
-        /// <summary>
-        /// <para>
-        /// Matches elements containing an element that matches an inner locator. Inner locator
-        /// is queried against the outer one. For example, <c>article</c> that has <c>text=Playwright</c>
-        /// matches <c>&lt;article&gt;&lt;div&gt;Playwright&lt;/div&gt;&lt;/article&gt;</c>.
-        /// </para>
-        /// <para>
-        /// Note that outer and inner locators must belong to the same frame. Inner locator
-        /// must not contain <see cref="IFrameLocator"/>s.
-        /// </para>
-        /// </summary>
-        [JsonPropertyName("has")]
-        public ILocator? Has { get; set; }
-
-        /// <summary>
-        /// <para>
-        /// Matches elements containing specified text somewhere inside, possibly in a child
-        /// or a descendant element. When passed a <see cref="string"/>, matching is case-insensitive
-        /// and searches for a substring. For example, <c>"Playwright"</c> matches <c>&lt;article&gt;&lt;div&gt;Playwright&lt;/div&gt;&lt;/article&gt;</c>.
-        /// </para>
-        /// </summary>
-        [JsonPropertyName("hasTextString")]
-        public string? HasTextString { get; set; }
-
-        /// <summary>
-        /// <para>
-        /// Matches elements containing specified text somewhere inside, possibly in a child
-        /// or a descendant element. When passed a <see cref="string"/>, matching is case-insensitive
-        /// and searches for a substring. For example, <c>"Playwright"</c> matches <c>&lt;article&gt;&lt;div&gt;Playwright&lt;/div&gt;&lt;/article&gt;</c>.
-        /// </para>
-        /// </summary>
-        [JsonPropertyName("hasTextRegex")]
-        public Regex? HasTextRegex { get; set; }
+        Has = clone.Has;
+        HasTextString = clone.HasTextString;
+        HasTextRegex = clone.HasTextRegex;
     }
+
+    /// <summary>
+    /// <para>
+    /// Matches elements containing an element that matches an inner locator. Inner locator
+    /// is queried against the outer one. For example, <c>article</c> that has <c>text=Playwright</c>
+    /// matches <c>&lt;article&gt;&lt;div&gt;Playwright&lt;/div&gt;&lt;/article&gt;</c>.
+    /// </para>
+    /// <para>
+    /// Note that outer and inner locators must belong to the same frame. Inner locator
+    /// must not contain <see cref="IFrameLocator"/>s.
+    /// </para>
+    /// </summary>
+    [JsonPropertyName("has")]
+    public ILocator? Has { get; set; }
+
+    /// <summary>
+    /// <para>
+    /// Matches elements containing specified text somewhere inside, possibly in a child
+    /// or a descendant element. When passed a <see cref="string"/>, matching is case-insensitive
+    /// and searches for a substring. For example, <c>"Playwright"</c> matches <c>&lt;article&gt;&lt;div&gt;Playwright&lt;/div&gt;&lt;/article&gt;</c>.
+    /// </para>
+    /// </summary>
+    [JsonPropertyName("hasTextString")]
+    public string? HasTextString { get; set; }
+
+    /// <summary>
+    /// <para>
+    /// Matches elements containing specified text somewhere inside, possibly in a child
+    /// or a descendant element. When passed a <see cref="string"/>, matching is case-insensitive
+    /// and searches for a substring. For example, <c>"Playwright"</c> matches <c>&lt;article&gt;&lt;div&gt;Playwright&lt;/div&gt;&lt;/article&gt;</c>.
+    /// </para>
+    /// </summary>
+    [JsonPropertyName("hasTextRegex")]
+    public Regex? HasTextRegex { get; set; }
 }
 
 #nullable disable

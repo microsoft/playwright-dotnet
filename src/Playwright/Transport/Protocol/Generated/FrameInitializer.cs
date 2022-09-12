@@ -25,20 +25,19 @@
 using System.Collections.Generic;
 using System.Text.Json.Serialization;
 
-namespace Microsoft.Playwright.Transport.Protocol
+namespace Microsoft.Playwright.Transport.Protocol;
+
+internal class FrameInitializer
 {
-    internal class FrameInitializer
-    {
-        [JsonPropertyName("url")]
-        public string Url { get; set; }
+    [JsonPropertyName("url")]
+    public string Url { get; set; }
 
-        [JsonPropertyName("name")]
-        public string Name { get; set; }
+    [JsonPropertyName("name")]
+    public string Name { get; set; }
 
-        [JsonPropertyName("parentFrame")]
-        public Core.Frame ParentFrame { get; set; }
+    [JsonPropertyName("parentFrame")]
+    public Core.Frame ParentFrame { get; set; }
 
-        [JsonPropertyName("loadStates")]
-        public List<WaitUntilState> LoadStates { get; set; }
-    }
+    [JsonPropertyName("loadStates")]
+    public List<WaitUntilState> LoadStates { get; set; }
 }

@@ -25,17 +25,16 @@
 using System.Collections.Generic;
 using System.Text.Json.Serialization;
 
-namespace Microsoft.Playwright.Transport.Protocol
+namespace Microsoft.Playwright.Transport.Protocol;
+
+internal class Metadata
 {
-    internal class Metadata
-    {
-        [JsonPropertyName("stack")]
-        public List<StackFrame> Stack { get; set; }
+    [JsonPropertyName("stack")]
+    public List<StackFrame> Stack { get; set; }
 
-        [JsonPropertyName("apiName")]
-        public string ApiName { get; set; }
+    [JsonPropertyName("apiName")]
+    public string ApiName { get; set; }
 
-        [JsonPropertyName("internal")]
-        public bool Internal { get; set; }
-    }
+    [JsonPropertyName("internal")]
+    public bool Internal { get; set; }
 }

@@ -37,15 +37,14 @@ using System.Threading.Tasks;
 
 #nullable enable
 
-namespace Microsoft.Playwright
+namespace Microsoft.Playwright;
+
+public enum ScreenshotAnimations
 {
-    public enum ScreenshotAnimations
-    {
-        [EnumMember(Value = "disabled")]
-        Disabled,
-        [EnumMember(Value = "allow")]
-        Allow,
-    }
+    [EnumMember(Value = "disabled")]
+    Disabled,
+    [EnumMember(Value = "allow")]
+    Allow,
 }
 
 #nullable disable

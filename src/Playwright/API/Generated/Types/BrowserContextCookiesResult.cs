@@ -37,50 +37,49 @@ using System.Threading.Tasks;
 
 #nullable enable
 
-namespace Microsoft.Playwright
+namespace Microsoft.Playwright;
+
+public partial class BrowserContextCookiesResult
 {
-    public partial class BrowserContextCookiesResult
-    {
-        /// <summary><para></para></summary>
-        [Required]
-        [JsonPropertyName("name")]
-        public string Name { get; set; } = default!;
+    /// <summary><para></para></summary>
+    [Required]
+    [JsonPropertyName("name")]
+    public string Name { get; set; } = default!;
 
-        /// <summary><para></para></summary>
-        [Required]
-        [JsonPropertyName("value")]
-        public string Value { get; set; } = default!;
+    /// <summary><para></para></summary>
+    [Required]
+    [JsonPropertyName("value")]
+    public string Value { get; set; } = default!;
 
-        /// <summary><para></para></summary>
-        [Required]
-        [JsonPropertyName("domain")]
-        public string Domain { get; set; } = default!;
+    /// <summary><para></para></summary>
+    [Required]
+    [JsonPropertyName("domain")]
+    public string Domain { get; set; } = default!;
 
-        /// <summary><para></para></summary>
-        [Required]
-        [JsonPropertyName("path")]
-        public string Path { get; set; } = default!;
+    /// <summary><para></para></summary>
+    [Required]
+    [JsonPropertyName("path")]
+    public string Path { get; set; } = default!;
 
-        /// <summary><para>Unix time in seconds.</para></summary>
-        [Required]
-        [JsonPropertyName("expires")]
-        public float Expires { get; set; } = default!;
+    /// <summary><para>Unix time in seconds.</para></summary>
+    [Required]
+    [JsonPropertyName("expires")]
+    public float Expires { get; set; } = default!;
 
-        /// <summary><para></para></summary>
-        [Required]
-        [JsonPropertyName("httpOnly")]
-        public bool HttpOnly { get; set; } = default!;
+    /// <summary><para></para></summary>
+    [Required]
+    [JsonPropertyName("httpOnly")]
+    public bool HttpOnly { get; set; } = default!;
 
-        /// <summary><para></para></summary>
-        [Required]
-        [JsonPropertyName("secure")]
-        public bool Secure { get; set; } = default!;
+    /// <summary><para></para></summary>
+    [Required]
+    [JsonPropertyName("secure")]
+    public bool Secure { get; set; } = default!;
 
-        /// <summary><para></para></summary>
-        [Required]
-        [JsonPropertyName("sameSite")]
-        public SameSiteAttribute SameSite { get; set; } = default!;
-    }
+    /// <summary><para></para></summary>
+    [Required]
+    [JsonPropertyName("sameSite")]
+    public SameSiteAttribute SameSite { get; set; } = default!;
 }
 
 #nullable disable

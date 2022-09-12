@@ -37,51 +37,50 @@ using System.Threading.Tasks;
 
 #nullable enable
 
-namespace Microsoft.Playwright
+namespace Microsoft.Playwright;
+
+/// <summary><para>The <see cref="IFormData"/> is used create form data that is sent via <see cref="IAPIRequestContext"/>.</para></summary>
+public partial interface IFormData
 {
-    /// <summary><para>The <see cref="IFormData"/> is used create form data that is sent via <see cref="IAPIRequestContext"/>.</para></summary>
-    public partial interface IFormData
-    {
-        /// <summary>
-        /// <para>
-        /// Sets a field on the form. File values can be passed either as <c>Path</c> or as
-        /// <c>FilePayload</c>.
-        /// </para>
-        /// </summary>
-        /// <param name="name">Field name.</param>
-        /// <param name="value">Field value.</param>
-        IFormData Set(string name, string value);
+    /// <summary>
+    /// <para>
+    /// Sets a field on the form. File values can be passed either as <c>Path</c> or as
+    /// <c>FilePayload</c>.
+    /// </para>
+    /// </summary>
+    /// <param name="name">Field name.</param>
+    /// <param name="value">Field value.</param>
+    IFormData Set(string name, string value);
 
-        /// <summary>
-        /// <para>
-        /// Sets a field on the form. File values can be passed either as <c>Path</c> or as
-        /// <c>FilePayload</c>.
-        /// </para>
-        /// </summary>
-        /// <param name="name">Field name.</param>
-        /// <param name="value">Field value.</param>
-        IFormData Set(string name, bool value);
+    /// <summary>
+    /// <para>
+    /// Sets a field on the form. File values can be passed either as <c>Path</c> or as
+    /// <c>FilePayload</c>.
+    /// </para>
+    /// </summary>
+    /// <param name="name">Field name.</param>
+    /// <param name="value">Field value.</param>
+    IFormData Set(string name, bool value);
 
-        /// <summary>
-        /// <para>
-        /// Sets a field on the form. File values can be passed either as <c>Path</c> or as
-        /// <c>FilePayload</c>.
-        /// </para>
-        /// </summary>
-        /// <param name="name">Field name.</param>
-        /// <param name="value">Field value.</param>
-        IFormData Set(string name, int value);
+    /// <summary>
+    /// <para>
+    /// Sets a field on the form. File values can be passed either as <c>Path</c> or as
+    /// <c>FilePayload</c>.
+    /// </para>
+    /// </summary>
+    /// <param name="name">Field name.</param>
+    /// <param name="value">Field value.</param>
+    IFormData Set(string name, int value);
 
-        /// <summary>
-        /// <para>
-        /// Sets a field on the form. File values can be passed either as <c>Path</c> or as
-        /// <c>FilePayload</c>.
-        /// </para>
-        /// </summary>
-        /// <param name="name">Field name.</param>
-        /// <param name="value">Field value.</param>
-        IFormData Set(string name, FilePayload value);
-    }
+    /// <summary>
+    /// <para>
+    /// Sets a field on the form. File values can be passed either as <c>Path</c> or as
+    /// <c>FilePayload</c>.
+    /// </para>
+    /// </summary>
+    /// <param name="name">Field name.</param>
+    /// <param name="value">Field value.</param>
+    IFormData Set(string name, FilePayload value);
 }
 
 #nullable disable

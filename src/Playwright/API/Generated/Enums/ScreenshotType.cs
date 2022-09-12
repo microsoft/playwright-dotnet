@@ -37,15 +37,14 @@ using System.Threading.Tasks;
 
 #nullable enable
 
-namespace Microsoft.Playwright
+namespace Microsoft.Playwright;
+
+public enum ScreenshotType
 {
-    public enum ScreenshotType
-    {
-        [EnumMember(Value = "png")]
-        Png,
-        [EnumMember(Value = "jpeg")]
-        Jpeg,
-    }
+    [EnumMember(Value = "png")]
+    Png,
+    [EnumMember(Value = "jpeg")]
+    Jpeg,
 }
 
 #nullable disable
