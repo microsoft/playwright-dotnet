@@ -118,6 +118,12 @@ internal class DriverDownloader
         {
             var response = await client.GetAsync(url).ConfigureAwait(false);
 
+            if (response.StatusCode != System.Net.HttpStatusCode.OK)
+            {
+                var content = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
+                throw new Exception($"Failed to download driver from {url} with status {response.StatusCode} and content {content}.");
+            }
+
             var directory = new DirectoryInfo(Path.Combine(destinationDirectory.FullName, platform));
 
             if (directory.Exists)
