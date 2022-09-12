@@ -47,7 +47,7 @@ namespace Microsoft.Playwright.Transport
         private readonly Root _rootObject;
         private readonly TaskQueue _queue = new();
         private int _lastId;
-        private string _reason = string.Empty;
+        private string _closedErrorMessage = string.Empty;
 
         public Connection(LocalUtils localUtils = null)
         {
@@ -72,8 +72,6 @@ namespace Microsoft.Playwright.Transport
         public ConcurrentDictionary<string, IChannelOwner> Objects { get; } = new();
 
         internal AsyncLocal<List<ApiZone>> ApiZone { get; } = new();
-
-        public bool IsClosed { get; private set; }
 
         internal bool IsRemote { get; set; }
 
@@ -105,9 +103,9 @@ namespace Microsoft.Playwright.Transport
             string method,
             object args = null)
         {
-            if (IsClosed)
+            if (!string.IsNullOrEmpty(_closedErrorMessage))
             {
-                throw new PlaywrightException($"Connection closed ({_reason})");
+                throw new PlaywrightException(this._closedErrorMessage);
             }
 
             int id = Interlocked.Increment(ref _lastId);
@@ -201,6 +199,10 @@ namespace Microsoft.Playwright.Transport
 
         internal void Dispatch(PlaywrightServerMessage message)
         {
+            if (!string.IsNullOrEmpty(this._closedErrorMessage))
+            {
+                return;
+            }
             if (message.Id.HasValue)
             {
                 TraceMessage("pw:channel:response", message);
@@ -261,7 +263,8 @@ namespace Microsoft.Playwright.Transport
             }
             catch (Exception ex)
             {
-                DoClose(ex);
+                TraceMessage("pw:dotnet", $"Connection Close: {ex.Message}\n{ex.StackTrace}");
+                DoClose(ex.ToString());
             }
         }
 
@@ -363,25 +366,19 @@ namespace Microsoft.Playwright.Transport
             return result;
         }
 
-        private void DoClose(Exception ex)
+        internal void DoClose(string errorMessage)
         {
-            TraceMessage("pw:dotnet", $"Connection Close: {ex.Message}\n{ex.StackTrace}");
-            DoClose(ex.Message);
-        }
-
-        internal void DoClose(string reason)
-        {
-            _reason = string.IsNullOrEmpty(_reason) ? reason : _reason;
-            if (!IsClosed)
+            _closedErrorMessage = errorMessage;
+            foreach (var callback in _callbacks)
             {
-                foreach (var callback in _callbacks)
-                {
-                    callback.Value.TaskCompletionSource.TrySetException(new PlaywrightException(reason));
-                }
-
-                Dispose();
-                IsClosed = true;
+                callback.Value.TaskCompletionSource.TrySetException(new PlaywrightException(errorMessage));
+                // We need to make sure that the task is handled otherwise it will be reported as unhandled on the caller side.
+                // Its still possible to get the exception from the task.
+                callback.Value.TaskCompletionSource.Task.IgnoreException();
             }
+            _callbacks.Clear();
+
+            Dispose();
         }
 
         private Exception CreateException(PlaywrightServerError error)

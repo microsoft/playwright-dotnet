@@ -76,8 +76,6 @@ namespace Microsoft.Playwright.Core
 
         public IReadOnlyDictionary<string, BrowserNewContextOptions> Devices => _devices;
 
-        internal Connection Connection { get; set; }
-
         internal Browser PreLaunchedBrowser => _initializer.PreLaunchedBrowser;
 
         public IAPIRequest APIRequest { get; }
@@ -111,7 +109,7 @@ namespace Microsoft.Playwright.Core
                 return;
             }
 
-            Connection?.Dispose();
+            _connection?.Dispose();
         }
     }
 }
