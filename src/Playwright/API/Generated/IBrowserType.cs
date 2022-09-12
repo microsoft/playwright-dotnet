@@ -84,6 +84,11 @@ namespace Microsoft.Playwright
         /// DevTools Protocol.
         /// </para>
         /// <para>The default browser context is accessible via <see cref="IBrowser.Contexts"/>.</para>
+        /// <code>
+        /// var browser = await playwright.Chromium.ConnectOverCDPAsync("http://localhost:9222");<br/>
+        /// var defaultContext = browser.Contexts[0];<br/>
+        /// var page = defaultContext.Pages[0];
+        /// </code>
         /// </summary>
         /// <remarks>
         /// <para>

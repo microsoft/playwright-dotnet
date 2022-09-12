@@ -46,17 +46,32 @@ namespace Microsoft.Playwright.Core
 
         public Task ToBeDisabledAsync(LocatorAssertionsToBeDisabledOptions options = null) => ExpectTrueAsync("to.be.disabled", "Locator expected to be disabled", ConvertToFrameExpectOptions(options));
 
-        public Task ToBeEditableAsync(LocatorAssertionsToBeEditableOptions options = null) => ExpectTrueAsync("to.be.editable", "Locator expected to be editable", ConvertToFrameExpectOptions(options));
+        public Task ToBeEditableAsync(LocatorAssertionsToBeEditableOptions options = null)
+        {
+            var editable = options == null || options.Editable == null || options.Editable == true;
+            var editableString = editable ? "editable" : "read-only";
+            return ExpectTrueAsync(editable ? "to.be.editable" : "to.be.readonly", $"Locator expected to be {editableString}", ConvertToFrameExpectOptions(options));
+        }
 
         public Task ToBeEmptyAsync(LocatorAssertionsToBeEmptyOptions options = null) => ExpectTrueAsync("to.be.empty", "Locator expected to be empty", ConvertToFrameExpectOptions(options));
 
-        public Task ToBeEnabledAsync(LocatorAssertionsToBeEnabledOptions options = null) => ExpectTrueAsync("to.be.enabled", "Locator expected to be enabled", ConvertToFrameExpectOptions(options));
+        public Task ToBeEnabledAsync(LocatorAssertionsToBeEnabledOptions options = null)
+        {
+            var enabled = options == null || options.Enabled == null || options.Enabled == true;
+            var enabledString = enabled ? "enabled" : "disabled";
+            return ExpectTrueAsync(enabled ? "to.be.enabled" : "to.be.disabled", $"Locator expected to be {enabledString}", ConvertToFrameExpectOptions(options));
+        }
 
         public Task ToBeFocusedAsync(LocatorAssertionsToBeFocusedOptions options = null) => ExpectTrueAsync("to.be.focused", "Locator expected to be focused", ConvertToFrameExpectOptions(options));
 
         public Task ToBeHiddenAsync(LocatorAssertionsToBeHiddenOptions options = null) => ExpectTrueAsync("to.be.hidden", "Locator expected to be hidden", ConvertToFrameExpectOptions(options));
 
-        public Task ToBeVisibleAsync(LocatorAssertionsToBeVisibleOptions options = null) => ExpectTrueAsync("to.be.visible", "Locator expected to be visible", ConvertToFrameExpectOptions(options));
+        public Task ToBeVisibleAsync(LocatorAssertionsToBeVisibleOptions options = null)
+        {
+            var visible = options == null || options.Visible == null || options.Visible == true;
+            var visibleString = visible ? "visible" : "hidden";
+            return ExpectTrueAsync(visible ? "to.be.visible" : "to.be.hidden", $"Locator expected to be {visibleString}", ConvertToFrameExpectOptions(options));
+        }
 
         private Task ExpectTrueAsync(string expression, string message, FrameExpectOptions options)
         {

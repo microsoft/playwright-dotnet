@@ -50,8 +50,12 @@ namespace Microsoft.Playwright
                 return;
             }
 
+            Enabled = clone.Enabled;
             Timeout = clone.Timeout;
         }
+
+        [JsonPropertyName("enabled")]
+        public bool? Enabled { get; set; }
 
         /// <summary><para>Time to retry the assertion for.</para></summary>
         [JsonPropertyName("timeout")]

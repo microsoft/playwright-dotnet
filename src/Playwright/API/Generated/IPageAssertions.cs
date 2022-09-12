@@ -53,9 +53,10 @@ namespace Microsoft.Playwright
     /// <br/>
     /// namespace PlaywrightTests;<br/>
     /// <br/>
+    /// [TestFixture]<br/>
     /// public class ExampleTests : PageTest<br/>
     /// {<br/>
-    ///     [Test]<br/>
+    ///     [PlaywrightTest]<br/>
     ///     public async Task NavigatetoLoginPage()<br/>
     ///     {<br/>
     ///         // ..<br/>

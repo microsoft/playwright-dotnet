@@ -51,11 +51,15 @@ namespace Microsoft.Playwright
             }
 
             Timeout = clone.Timeout;
+            Visible = clone.Visible;
         }
 
         /// <summary><para>Time to retry the assertion for.</para></summary>
         [JsonPropertyName("timeout")]
         public float? Timeout { get; set; }
+
+        [JsonPropertyName("visible")]
+        public bool? Visible { get; set; }
     }
 }
 

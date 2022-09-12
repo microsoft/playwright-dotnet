@@ -75,6 +75,16 @@ namespace Microsoft.Playwright.Core
         public async Task<IAPIResponse> FetchAsync(string url, APIRequestContextOptions options = null)
         {
             options ??= new APIRequestContextOptions();
+
+            if (options.MaxRedirects != null && options.MaxRedirects < 0)
+            {
+                throw new PlaywrightException("'maxRedirects' should be greater than or equal to '0'");
+            }
+            if (new[] { options.DataByte, options.DataObject, options.DataString, options.Form, options.Multipart }.Count(x => x != null) > 1)
+            {
+                throw new PlaywrightException("Only one of 'data', 'form' or 'multipart' can be specified");
+            }
+
             var queryParams = new Dictionary<string, string>();
             if (options.Params != null)
             {
@@ -113,7 +123,8 @@ namespace Microsoft.Playwright.Core
                 (FormData)options.Multipart,
                 options.Timeout,
                 options?.FailOnStatusCode,
-                options?.IgnoreHTTPSErrors).ConfigureAwait(false);
+                options?.IgnoreHTTPSErrors,
+                options?.MaxRedirects).ConfigureAwait(false);
         }
 
         private bool IsJsonContentType(IDictionary<string, string> headers)

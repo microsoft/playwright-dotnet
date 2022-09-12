@@ -50,8 +50,12 @@ namespace Microsoft.Playwright
                 return;
             }
 
+            Editable = clone.Editable;
             Timeout = clone.Timeout;
         }
+
+        [JsonPropertyName("editable")]
+        public bool? Editable { get; set; }
 
         /// <summary><para>Time to retry the assertion for.</para></summary>
         [JsonPropertyName("timeout")]
