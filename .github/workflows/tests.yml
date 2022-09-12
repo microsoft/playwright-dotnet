@@ -39,12 +39,12 @@ jobs:
         if: matrix.os != 'ubuntu-latest'
         env:
           BROWSER: ${{ matrix.browser }}
-        run: dotnet test ./src/Playwright.Tests/Playwright.Tests.csproj -c Debug -f net6.0 --logger:"console;verbosity=detailed"
+        run: dotnet test ./src/Playwright.Tests/Playwright.Tests.csproj -c Debug -f net6.0 --logger:"console;verbosity=detailed" -- Playwright.Retries=1
       - name: Running tests (Linux)
         if: matrix.os == 'ubuntu-latest'
         env:
           BROWSER: ${{ matrix.browser }}
-        run: xvfb-run dotnet test ./src/Playwright.Tests/Playwright.Tests.csproj -c Debug -f net6.0 --logger:"console;verbosity=detailed"
+        run: xvfb-run dotnet test ./src/Playwright.Tests/Playwright.Tests.csproj -c Debug -f net6.0 --logger:"console;verbosity=detailed" -- Playwright.Retries=1
 
   test-net31:
     name: chromium/ubuntu/.NET 3.1
@@ -69,4 +69,4 @@ jobs:
       - name: Running tests
         env:
           BROWSER: CHROMIUM
-        run: xvfb-run dotnet test ./src/Playwright.Tests/Playwright.Tests.csproj -c Debug -f netcoreapp3.1 --logger:"console;verbosity=detailed"
+        run: xvfb-run dotnet test ./src/Playwright.Tests/Playwright.Tests.csproj -c Debug -f netcoreapp3.1 --logger:"console;verbosity=detailed" -- Playwright.Retries=1

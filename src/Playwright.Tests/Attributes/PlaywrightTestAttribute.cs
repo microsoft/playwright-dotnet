@@ -98,7 +98,7 @@ namespace Microsoft.Playwright.Tests
         /// <summary>
         /// Helper to detect UnobservedTaskExceptions
         /// </summary>
-        private sealed class UnobservedTaskExceptionCommand : DelegatingTestCommand
+        private sealed class UnobservedTaskExceptionCommand : NUnit.PlaywrightTestAttribute.RetryTestCommand
         {
             public UnobservedTaskExceptionCommand(TestCommand innerCommand)
                 : base(innerCommand)
@@ -113,7 +113,7 @@ namespace Microsoft.Playwright.Tests
                 TestResult result = null;
                 try
                 {
-                    result = innerCommand.Execute(context);
+                    result = base.Execute(context);
                 }
                 finally
                 {
