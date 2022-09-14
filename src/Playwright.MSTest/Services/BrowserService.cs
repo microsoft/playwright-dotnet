@@ -27,7 +27,7 @@ using Microsoft.Playwright.TestAdapter;
 
 namespace Microsoft.Playwright.MSTest.Services;
 
-public class BrowserService : IWorkerService
+internal class BrowserService : IWorkerService
 {
     public IBrowser Browser { get; internal set; } = null!;
 

@@ -6,6 +6,7 @@
     <ReleaseVersion>0.0.0</ReleaseVersion>
     <LangVersion>10</LangVersion>
   </PropertyGroup>
+  <Import Project="../Common/SignAssembly.props" />
 
   <!-- Required since we're not actually referencing Playwright -->
   <Import Project="../Playwright.Tests/build/Playwright.Tests.targets" />
