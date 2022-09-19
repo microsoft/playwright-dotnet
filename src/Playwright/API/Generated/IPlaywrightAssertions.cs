@@ -55,7 +55,7 @@ namespace Microsoft.Playwright;
 /// [TestFixture]<br/>
 /// public class ExampleTests : PageTest<br/>
 /// {<br/>
-///     [PlaywrightTest]<br/>
+///     [Test]<br/>
 ///     public async Task StatusBecomesSubmitted()<br/>
 ///     {<br/>
 ///         await Page.Locator("#submit-button").ClickAsync();<br/>

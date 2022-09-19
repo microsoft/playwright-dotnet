@@ -56,7 +56,7 @@ namespace Microsoft.Playwright;
 /// [TestFixture]<br/>
 /// public class ExampleTests : PageTest<br/>
 /// {<br/>
-///     [PlaywrightTest]<br/>
+///     [Test]<br/>
 ///     public async Task StatusBecomesSubmitted()<br/>
 ///     {<br/>
 ///         // ..<br/>
@@ -324,7 +324,7 @@ public partial interface ILocatorAssertions
     Task ToContainTextAsync(IEnumerable<Regex> expected, LocatorAssertionsToContainTextOptions? options = default);
 
     /// <summary>
-    /// <para>Ensures the <see cref="ILocator"/> points to an element with given attribute value.</para>
+    /// <para>Ensures the <see cref="ILocator"/> points to an element with given attribute.</para>
     /// <code>
     /// var locator = Page.Locator("input");<br/>
     /// await Expect(locator).ToHaveAttributeAsync("type", "text");
@@ -336,7 +336,7 @@ public partial interface ILocatorAssertions
     Task ToHaveAttributeAsync(string name, string value, LocatorAssertionsToHaveAttributeOptions? options = default);
 
     /// <summary>
-    /// <para>Ensures the <see cref="ILocator"/> points to an element with given attribute value.</para>
+    /// <para>Ensures the <see cref="ILocator"/> points to an element with given attribute.</para>
     /// <code>
     /// var locator = Page.Locator("input");<br/>
     /// await Expect(locator).ToHaveAttributeAsync("type", "text");
@@ -346,21 +346,6 @@ public partial interface ILocatorAssertions
     /// <param name="value">Expected attribute value.</param>
     /// <param name="options">Call options</param>
     Task ToHaveAttributeAsync(string name, Regex value, LocatorAssertionsToHaveAttributeOptions? options = default);
-
-    /// <summary>
-    /// <para>
-    /// Ensures the <see cref="ILocator"/> points to an element with given attribute. The
-    /// method will assert attribute presence.
-    /// </para>
-    /// <code>
-    /// var locator = Page.Locator("input");<br/>
-    /// await Expect(locator).ToHaveAttributeAsync("disabled");<br/>
-    /// await Expect(locator).Not.ToHaveAttributeAsync("open");
-    /// </code>
-    /// </summary>
-    /// <param name="name">Attribute name.</param>
-    /// <param name="options">Call options</param>
-    Task ToHaveAttributeAsync(string name, LocatorAssertionsToHaveAttributeOptions? options = default);
 
     /// <summary>
     /// <para>

@@ -334,11 +334,8 @@ public class LocatorAssertionsTests : PageTestEx
     {
         await Page.SetContentAsync("<div checked id=node>Text content</div>");
         var locator = Page.Locator("#node");
-        await Expect(locator).ToHaveAttributeAsync("id");
-        await Expect(locator).ToHaveAttributeAsync("checked");
-        await Expect(locator).Not.ToHaveAttributeAsync("open");
-        await Expect(locator).ToHaveAttributeAsync("id", new Regex("node"));
-        await Expect(locator).Not.ToHaveAttributeAsync("open", new() { Timeout = 100 });
+        await Expect(locator).ToHaveAttributeAsync("id", "node");
+        await Expect(locator).ToHaveAttributeAsync("checked", new Regex(".*"));
     }
 
     [PlaywrightTest("playwright-test/playwright.expect.spec.ts", "should support toHaveCSS")]
