@@ -38,15 +38,15 @@
     <None Remove=".drivers\**" />
     <None Include=".drivers\linux\package\**" Link=".playwright\package\%(RecursiveDir)%(Filename)%(Extension)" CopyToOutputDirectory="PreserveNewest" Pack="true" PackagePath=".playwright\package" />
     <None Include=".drivers\linux\LICENSE" Pack="true" PackagePath=".playwright\node" />
-    <None Include=".drivers\linux\node" Link=".playwright\node\linux-x64\%(RecursiveDir)%(Filename)%(Extension)" CopyToOutputDirectory="PreserveNewest" Pack="true" PackagePath=".playwright\node\linux-x64" />
-    <None Include=".drivers\linux-arm64\node" Link=".playwright\node\linux-arm64\%(RecursiveDir)%(Filename)%(Extension)" CopyToOutputDirectory="PreserveNewest" Pack="true" PackagePath=".playwright\node\linux-arm64" />
-    <None Include=".drivers\mac\node" Link=".playwright\node\mac\%(RecursiveDir)%(Filename)%(Extension)" CopyToOutputDirectory="PreserveNewest" Pack="true" PackagePath=".playwright\node\mac" />
-    <None Include=".drivers\win32_x64\node.exe" Link=".playwright\node\win32_x64\%(RecursiveDir)%(Filename)%(Extension)" CopyToOutputDirectory="PreserveNewest" Pack="true" PackagePath=".playwright\node\win32_x64" />
-    <None Include="Scripts\playwright.sh" Link=".playwright\node\linux-x64\%(RecursiveDir)%(Filename)%(Extension)" CopyToOutputDirectory="PreserveNewest" Pack="true" PackagePath=".playwright\node\linux-x64" />
-    <None Include="Scripts\playwright.sh" Link=".playwright\node\linux-arm64\%(RecursiveDir)%(Filename)%(Extension)" CopyToOutputDirectory="PreserveNewest" Pack="true" PackagePath=".playwright\node\linux-arm64" />
-    <None Include="Scripts\playwright.sh" Link=".playwright\node\mac\%(RecursiveDir)%(Filename)%(Extension)" CopyToOutputDirectory="PreserveNewest" Pack="true" PackagePath=".playwright\node\mac" />
-    <None Include="Scripts\playwright.cmd" Link=".playwright\node\win32_x64\%(RecursiveDir)%(Filename)%(Extension)" CopyToOutputDirectory="PreserveNewest" Pack="true" PackagePath=".playwright\node\win32_x64" />
-    <None Include="build\playwright.ps1" Link="%(RecursiveDir)%(Filename)%(Extension)" CopyToOutputDirectory="PreserveNewest" />
+    <None Include=".drivers\linux\node" Link=".playwright\node\linux-x64\node" CopyToOutputDirectory="PreserveNewest" Pack="true" PackagePath=".playwright\node\linux-x64" />
+    <None Include=".drivers\linux-arm64\node" Link=".playwright\node\linux-arm64\node" CopyToOutputDirectory="PreserveNewest" Pack="true" PackagePath=".playwright\node\linux-arm64" />
+    <None Include=".drivers\mac\node" Link=".playwright\node\mac\node" CopyToOutputDirectory="PreserveNewest" Pack="true" PackagePath=".playwright\node\mac" />
+    <None Include=".drivers\win32_x64\node.exe" Link=".playwright\node\win32_x64\node.exe" CopyToOutputDirectory="PreserveNewest" Pack="true" PackagePath=".playwright\node\win32_x64" />
+    <None Include="Scripts\playwright.sh" Link=".playwright\node\linux-x64\playwright.sh" CopyToOutputDirectory="PreserveNewest" Pack="true" PackagePath=".playwright\node\linux-x64" />
+    <None Include="Scripts\playwright.sh" Link=".playwright\node\linux-arm64\playwright.sh" CopyToOutputDirectory="PreserveNewest" Pack="true" PackagePath=".playwright\node\linux-arm64" />
+    <None Include="Scripts\playwright.sh" Link=".playwright\node\mac\playwright.sh" CopyToOutputDirectory="PreserveNewest" Pack="true" PackagePath=".playwright\node\mac" />
+    <None Include="Scripts\playwright.cmd" Link=".playwright\node\win32_x64\playwright.cmd" CopyToOutputDirectory="PreserveNewest" Pack="true" PackagePath=".playwright\node\win32_x64" />
+    <None Include="build\playwright.ps1" Link="playwright.ps1" CopyToOutputDirectory="PreserveNewest" />
     <None Include="build\**" Pack="true" PackagePath="buildTransitive" />
     <None Include="build\**" Pack="true" PackagePath="build" />
     <None Include="..\Common\icon.png" Pack="true" Visible="false" PackagePath="icon.png" />
