@@ -22,9 +22,6 @@
  * SOFTWARE.
  */
 
-using System;
-using System.Threading.Tasks;
-
 namespace Microsoft.Playwright.Tests;
 
 internal static class IAPIRequestContextExtensions

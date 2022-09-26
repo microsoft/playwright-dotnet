@@ -22,12 +22,6 @@
  * SOFTWARE.
  */
 
-using System.IO;
-using System.Text.Json;
-using System.Threading.Tasks;
-using Microsoft.Playwright.Core;
-using NUnit.Framework;
-
 namespace Microsoft.Playwright.Tests;
 
 public sealed class BrowserContextStorageStateTests : PageTestEx

@@ -22,9 +22,6 @@
  * SOFTWARE.
  */
 
-using System.IO;
-using System.Threading.Tasks;
-using Microsoft.Playwright.NUnit;
 using Microsoft.Playwright.Tests.TestServer;
 
 namespace Microsoft.Playwright.Tests;

@@ -22,18 +22,11 @@
  * SOFTWARE.
  */
 
-using System;
-using System.Collections.Generic;
 using System.Diagnostics;
-using System.IO;
 using System.IO.Compression;
-using System.Linq;
 using System.Text;
 using System.Text.Json;
-using System.Threading.Tasks;
 using Microsoft.Playwright.Helpers;
-using Microsoft.Playwright.NUnit;
-using NUnit.Framework;
 
 namespace Microsoft.Playwright.Tests;
 

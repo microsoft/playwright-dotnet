@@ -23,15 +23,10 @@
  * SOFTWARE.
  */
 
-using System;
 using System.Collections.Concurrent;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.Net;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
-using Microsoft.Playwright.NUnit;
-using NUnit.Framework;
 
 namespace Microsoft.Playwright.Tests;
 

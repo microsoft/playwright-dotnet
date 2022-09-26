@@ -22,10 +22,7 @@
  * SOFTWARE.
  */
 
-using System;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
-using NUnit.Framework;
 
 namespace Microsoft.Playwright.Tests.Assertions;
 

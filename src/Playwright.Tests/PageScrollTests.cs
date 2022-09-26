@@ -22,8 +22,6 @@
  * SOFTWARE.
  */
 
-using NUnit.Framework;
-
 namespace Microsoft.Playwright.Tests;
 
 public class PageScrollTests : PageTestEx

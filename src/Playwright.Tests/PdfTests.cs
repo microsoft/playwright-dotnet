@@ -23,12 +23,6 @@
  * SOFTWARE.
  */
 
-using System;
-using System.IO;
-using System.Threading.Tasks;
-using Microsoft.Playwright.NUnit;
-using NUnit.Framework;
-
 namespace Microsoft.Playwright.Tests;
 
 ///<playwright-file>pdf.spec.ts</playwright-file>

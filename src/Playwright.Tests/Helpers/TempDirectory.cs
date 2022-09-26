@@ -23,10 +23,6 @@
  * SOFTWARE.
  */
 
-using System;
-using System.IO;
-using System.Threading;
-using System.Threading.Tasks;
 using PathHelper = System.IO.Path;
 
 namespace Microsoft.Playwright.Tests;

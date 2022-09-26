@@ -22,8 +22,6 @@
  * SOFTWARE.
  */
 
-using System.Threading.Tasks;
-using NUnit.Framework;
 namespace Microsoft.Playwright.Tests.Locator;
 
 public class LocatorIsVisibleTests : PageTestEx

@@ -23,8 +23,6 @@
  * SOFTWARE.
  */
 
-using System.Linq;
-
 namespace Microsoft.Playwright.Tests;
 
 internal static class PageExtensions

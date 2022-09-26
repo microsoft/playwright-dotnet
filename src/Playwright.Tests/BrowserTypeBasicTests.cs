@@ -23,10 +23,6 @@
  * SOFTWARE.
  */
 
-using System.IO;
-using Microsoft.Playwright.NUnit;
-using NUnit.Framework;
-
 namespace Microsoft.Playwright.Tests;
 
 public class BrowserTypeBasicTests : PlaywrightTestEx
