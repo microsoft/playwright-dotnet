@@ -22,11 +22,6 @@
  * SOFTWARE.
  */
 
-using System;
-using System.Linq;
-using System.Threading.Tasks;
-using NUnit.Framework;
-
 namespace Microsoft.Playwright.Tests.Locator;
 
 public class LocatorConvenienceTests : PageTestEx

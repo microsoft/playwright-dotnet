@@ -22,10 +22,7 @@
  * SOFTWARE.
  */
 
-using System.Threading.Tasks;
-using Microsoft.Playwright.NUnit;
 using Microsoft.Playwright.Tests.TestServer;
-using NUnit.Framework;
 
 namespace Microsoft.Playwright.Tests;
 

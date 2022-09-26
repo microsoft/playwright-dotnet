@@ -22,11 +22,6 @@
  * SOFTWARE.
  */
 
-using System;
-using System.Threading.Tasks;
-using Microsoft.Playwright.NUnit;
-using NUnit.Framework;
-
 namespace Microsoft.Playwright.Tests;
 
 ///<playwright-file>elementhandle-wait-for-element-state.spec.ts</playwright-file>

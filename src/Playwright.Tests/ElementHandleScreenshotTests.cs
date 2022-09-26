@@ -22,12 +22,6 @@
  * SOFTWARE.
  */
 
-using System;
-using System.IO;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.Playwright.NUnit;
-using NUnit.Framework;
 using SixLabors.ImageSharp;
 
 namespace Microsoft.Playwright.Tests;

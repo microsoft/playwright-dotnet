@@ -23,13 +23,7 @@
  * SOFTWARE.
  */
 
-using System;
-using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
-using Microsoft.Playwright.NUnit;
-using NUnit.Framework;
 
 namespace Microsoft.Playwright.Tests;
 

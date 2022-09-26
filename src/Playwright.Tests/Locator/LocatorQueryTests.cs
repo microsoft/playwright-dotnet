@@ -22,10 +22,7 @@
  * SOFTWARE.
  */
 
-using System;
 using System.Text.RegularExpressions;
-using System.Threading.Tasks;
-using NUnit.Framework;
 
 namespace Microsoft.Playwright.Tests.Locator;
 

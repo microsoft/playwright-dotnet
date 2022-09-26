@@ -22,12 +22,8 @@
  * SOFTWARE.
  */
 
-using System;
-using System.Collections.Generic;
 using System.Globalization;
 using System.Text.RegularExpressions;
-using System.Threading.Tasks;
-using NUnit.Framework;
 
 namespace Microsoft.Playwright.Tests.Assertions;
 

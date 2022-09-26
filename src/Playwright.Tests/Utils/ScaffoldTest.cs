@@ -22,12 +22,10 @@
  * SOFTWARE.
  */
 
-using System;
 using System.CodeDom;
 using System.CodeDom.Compiler;
 using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
-using System.IO;
 using System.Text.RegularExpressions;
 
 namespace Microsoft.Playwright.Tests;

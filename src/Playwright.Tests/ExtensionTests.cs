@@ -24,7 +24,6 @@
 
 using System.Text.RegularExpressions;
 using Microsoft.Playwright.Helpers;
-using NUnit.Framework;
 
 namespace Microsoft.Playwright.Tests;
 

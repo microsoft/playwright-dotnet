@@ -23,8 +23,6 @@
  */
 
 using System.Net;
-using System.Threading.Tasks;
-using NUnit.Framework;
 
 namespace Microsoft.Playwright.Tests;
 

@@ -22,9 +22,6 @@
  * SOFTWARE.
  */
 
-using System.Threading.Tasks;
-using NUnit.Framework;
-
 namespace Microsoft.Playwright.Tests;
 
 public class JSHandleToStringTests : PageTestEx

@@ -24,8 +24,6 @@
 
 using System.Text.Encodings.Web;
 using System.Text.Json;
-using System.Threading.Tasks;
-using NUnit.Framework;
 
 
 namespace Microsoft.Playwright.Tests;
