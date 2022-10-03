@@ -23,6 +23,7 @@
  */
 
 using System;
+using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Text.Json;
 using System.Threading.Tasks;
@@ -35,13 +36,14 @@ namespace Microsoft.Playwright;
 public static class Playwright
 {
     /// <summary>
-    /// Launches Playwright.
+    /// Launches Playwright with provided environment variables.
     /// </summary>
+    /// <param name="environmentVariables">Environment variables used in playwright Node.js process.</param>
     /// <returns>A <see cref="Task"/> that completes when the playwright driver is ready to be used.</returns>
-    public static async Task<IPlaywright> CreateAsync()
+    public static async Task<IPlaywright> CreateAsync(Dictionary<string, string> environmentVariables)
     {
 #pragma warning disable CA2000 // Dispose objects before losing scope
-        var transport = new StdIOTransport();
+        var transport = new StdIOTransport(environmentVariables);
         var connection = new Connection();
 #pragma warning restore CA2000
         transport.MessageReceived += (_, message) => connection.Dispatch(JsonSerializer.Deserialize<PlaywrightServerMessage>(message, JsonExtensions.DefaultJsonSerializerOptions));
@@ -57,4 +59,10 @@ public static class Playwright
         var playwright = await connection.InitializePlaywrightAsync().ConfigureAwait(false);
         return playwright;
     }
+
+    /// <summary>
+    /// Launches Playwright.
+    /// </summary>
+    /// <returns>A <see cref="Task"/> that completes when the playwright driver is ready to be used.</returns>
+    public static Task<IPlaywright> CreateAsync() => CreateAsync(null);
 }

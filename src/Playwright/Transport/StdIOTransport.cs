@@ -25,6 +25,7 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Playwright.Helpers;
@@ -39,9 +40,9 @@ internal class StdIOTransport : IDisposable
     private readonly List<byte> _data = new();
     private int? _currentMessageSize;
 
-    internal StdIOTransport()
+    internal StdIOTransport(Dictionary<string, string> additionalEnvironmentVariables)
     {
-        _process = GetProcess();
+        _process = GetProcess(additionalEnvironmentVariables);
         _process.StartInfo.Arguments = "run-driver";
         _process.Start();
         _process.Exited += (_, _) => Close("Process exited");
@@ -109,7 +110,7 @@ internal class StdIOTransport : IDisposable
         }
     }
 
-    private static Process GetProcess()
+    private static Process GetProcess(Dictionary<string, string> additionalEnvironmentVariables)
     {
         var startInfo = new ProcessStartInfo(Driver.GetExecutablePath())
         {
@@ -119,7 +120,14 @@ internal class StdIOTransport : IDisposable
             RedirectStandardError = true,
             CreateNoWindow = true,
         };
-        foreach (var pair in Driver.GetEnvironmentVariables())
+
+        var environmentVariables = Driver.GetEnvironmentVariables().AsEnumerable();
+        if (additionalEnvironmentVariables is not null)
+        {
+            environmentVariables = environmentVariables.Union(additionalEnvironmentVariables);
+        }
+
+        foreach (var pair in environmentVariables)
         {
             startInfo.EnvironmentVariables[pair.Key] = pair.Value;
         }
