@@ -28,6 +28,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Text.Encodings.Web;
 using System.Text.Json;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Microsoft.Playwright.Helpers;
 using Microsoft.Playwright.Transport.Protocol;
@@ -338,4 +339,28 @@ internal class Locator : ILocator
             },
             timeout).ConfigureAwait(false);
     }
+
+    public ILocator GetByAltText(string text, LocatorGetByAltTextOptions options = null) => throw new NotImplementedException();
+
+    public ILocator GetByAltText(Regex text, LocatorGetByAltTextOptions options = null) => throw new NotImplementedException();
+
+    public ILocator GetByLabel(string text, LocatorGetByLabelOptions options = null) => throw new NotImplementedException();
+
+    public ILocator GetByLabel(Regex text, LocatorGetByLabelOptions options = null) => throw new NotImplementedException();
+
+    public ILocator GetByPlaceholder(string text, LocatorGetByPlaceholderOptions options = null) => throw new NotImplementedException();
+
+    public ILocator GetByPlaceholder(Regex text, LocatorGetByPlaceholderOptions options = null) => throw new NotImplementedException();
+
+    public ILocator GetByRole(string role, LocatorGetByRoleOptions options = null) => throw new NotImplementedException();
+
+    public ILocator GetByTestId(string testId) => throw new NotImplementedException();
+
+    public ILocator GetByText(string text, LocatorGetByTextOptions options = null) => throw new NotImplementedException();
+
+    public ILocator GetByText(Regex text, LocatorGetByTextOptions options = null) => throw new NotImplementedException();
+
+    public ILocator GetByTitle(string text, LocatorGetByTitleOptions options = null) => throw new NotImplementedException();
+
+    public ILocator GetByTitle(Regex text, LocatorGetByTitleOptions options = null) => throw new NotImplementedException();
 }

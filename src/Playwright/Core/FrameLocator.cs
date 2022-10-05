@@ -24,6 +24,8 @@
  * SOFTWARE.
  */
 
+using System.Text.RegularExpressions;
+
 namespace Microsoft.Playwright.Core;
 
 internal class FrameLocator : IFrameLocator
@@ -40,6 +42,30 @@ internal class FrameLocator : IFrameLocator
     IFrameLocator IFrameLocator.First => new FrameLocator(_frame, $"{_frameSelector} >> nth=0");
 
     IFrameLocator IFrameLocator.Last => new FrameLocator(_frame, $"{_frameSelector} >> nth=-1");
+
+    public ILocator GetByAltText(string text, FrameLocatorGetByAltTextOptions options = null) => throw new System.NotImplementedException();
+
+    public ILocator GetByAltText(Regex text, FrameLocatorGetByAltTextOptions options = null) => throw new System.NotImplementedException();
+
+    public ILocator GetByLabel(string text, FrameLocatorGetByLabelOptions options = null) => throw new System.NotImplementedException();
+
+    public ILocator GetByLabel(Regex text, FrameLocatorGetByLabelOptions options = null) => throw new System.NotImplementedException();
+
+    public ILocator GetByPlaceholder(string text, FrameLocatorGetByPlaceholderOptions options = null) => throw new System.NotImplementedException();
+
+    public ILocator GetByPlaceholder(Regex text, FrameLocatorGetByPlaceholderOptions options = null) => throw new System.NotImplementedException();
+
+    public ILocator GetByRole(string role, FrameLocatorGetByRoleOptions options = null) => throw new System.NotImplementedException();
+
+    public ILocator GetByTestId(string testId) => throw new System.NotImplementedException();
+
+    public ILocator GetByText(string text, FrameLocatorGetByTextOptions options = null) => throw new System.NotImplementedException();
+
+    public ILocator GetByText(Regex text, FrameLocatorGetByTextOptions options = null) => throw new System.NotImplementedException();
+
+    public ILocator GetByTitle(string text, FrameLocatorGetByTitleOptions options = null) => throw new System.NotImplementedException();
+
+    public ILocator GetByTitle(Regex text, FrameLocatorGetByTitleOptions options = null) => throw new System.NotImplementedException();
 
     IFrameLocator IFrameLocator.FrameLocator(string selector) => new FrameLocator(_frame, $"{_frameSelector} >> control=enter-frame >> {selector}");
 

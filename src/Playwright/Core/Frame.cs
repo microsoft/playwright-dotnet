@@ -666,4 +666,28 @@ internal class Frame : ChannelOwnerBase, IChannelOwner<Frame>, IFrame
 
     internal Task HighlightAsync(string selector)
         => _channel.HighlightAsync(selector);
+
+    public ILocator GetByAltText(string text, FrameGetByAltTextOptions options = null) => throw new NotImplementedException();
+
+    public ILocator GetByAltText(Regex text, FrameGetByAltTextOptions options = null) => throw new NotImplementedException();
+
+    public ILocator GetByLabel(string text, FrameGetByLabelOptions options = null) => throw new NotImplementedException();
+
+    public ILocator GetByLabel(Regex text, FrameGetByLabelOptions options = null) => throw new NotImplementedException();
+
+    public ILocator GetByPlaceholder(string text, FrameGetByPlaceholderOptions options = null) => throw new NotImplementedException();
+
+    public ILocator GetByPlaceholder(Regex text, FrameGetByPlaceholderOptions options = null) => throw new NotImplementedException();
+
+    public ILocator GetByRole(string role, FrameGetByRoleOptions options = null) => throw new NotImplementedException();
+
+    public ILocator GetByTestId(string testId) => throw new NotImplementedException();
+
+    public ILocator GetByText(string text, FrameGetByTextOptions options = null) => throw new NotImplementedException();
+
+    public ILocator GetByText(Regex text, FrameGetByTextOptions options = null) => throw new NotImplementedException();
+
+    public ILocator GetByTitle(string text, FrameGetByTitleOptions options = null) => throw new NotImplementedException();
+
+    public ILocator GetByTitle(Regex text, FrameGetByTitleOptions options = null) => throw new NotImplementedException();
 }

@@ -1160,4 +1160,28 @@ internal class Page : ChannelOwnerBase, IChannelOwner<Page>, IPage
         }).ConfigureAwait(false);
         await harRouter.AddPageRouteAsync(this).ConfigureAwait(false);
     }
+
+    public ILocator GetByAltText(string text, PageGetByAltTextOptions options = null) => throw new NotImplementedException();
+
+    public ILocator GetByAltText(Regex text, PageGetByAltTextOptions options = null) => throw new NotImplementedException();
+
+    public ILocator GetByLabel(string text, PageGetByLabelOptions options = null) => throw new NotImplementedException();
+
+    public ILocator GetByLabel(Regex text, PageGetByLabelOptions options = null) => throw new NotImplementedException();
+
+    public ILocator GetByPlaceholder(string text, PageGetByPlaceholderOptions options = null) => throw new NotImplementedException();
+
+    public ILocator GetByPlaceholder(Regex text, PageGetByPlaceholderOptions options = null) => throw new NotImplementedException();
+
+    public ILocator GetByRole(string role, PageGetByRoleOptions options = null) => throw new NotImplementedException();
+
+    public ILocator GetByTestId(string testId) => throw new NotImplementedException();
+
+    public ILocator GetByText(string text, PageGetByTextOptions options = null) => throw new NotImplementedException();
+
+    public ILocator GetByText(Regex text, PageGetByTextOptions options = null) => throw new NotImplementedException();
+
+    public ILocator GetByTitle(string text, PageGetByTitleOptions options = null) => throw new NotImplementedException();
+
+    public ILocator GetByTitle(Regex text, PageGetByTitleOptions options = null) => throw new NotImplementedException();
 }

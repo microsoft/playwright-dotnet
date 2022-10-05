@@ -48,4 +48,6 @@ internal class Selectors : ChannelOwnerBase, IChannelOwner<Selectors>, ISelector
         var script = ScriptsHelper.EvaluationScript(options?.Script, options?.Path);
         await _channel.RegisterAsync(name, script, options?.ContentScript).ConfigureAwait(false);
     }
+
+    public void SetTestIdAttribute(string attributeName) => throw new System.NotImplementedException();
 }
