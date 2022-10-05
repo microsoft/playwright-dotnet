@@ -61,7 +61,7 @@ internal class BrowserContext : ChannelOwnerBase, IChannelOwner<BrowserContext>,
         Channel.RequestFailed += (_, e) =>
         {
             e.Request.Failure = e.FailureText;
-            e.Request.Timing.ResponseEnd = e.ResponseEndTiming;
+            e.Request.SetResponseEndTiming(e.ResponseEndTiming);
             RequestFailed?.Invoke(this, e.Request);
             e.Page?.FireRequestFailed(e.Request);
             e.Response?.ReportFinished(e.FailureText);
@@ -73,7 +73,7 @@ internal class BrowserContext : ChannelOwnerBase, IChannelOwner<BrowserContext>,
         };
         Channel.RequestFinished += (_, e) =>
         {
-            e.Request.Timing.ResponseEnd = e.ResponseEndTiming;
+            e.Request.SetResponseEndTiming(e.ResponseEndTiming);
             e.Request.Sizes = e.RequestSizes;
             RequestFinished?.Invoke(this, e.Request);
             e.Page?.FireRequestFinished(e.Request);

@@ -211,4 +211,13 @@ internal class Request : ChannelOwnerBase, IChannelOwner<Request>, IRequest
     }
 
     internal RouteFallbackOptions FallbackOverridesForContinue() => _fallbackOverrides;
+
+    internal void SetResponseEndTiming(float responseEndTiming)
+    {
+        Timing.ResponseEnd = responseEndTiming;
+        if (Timing.ResponseStart == -1)
+        {
+            Timing.ResponseStart = responseEndTiming;
+        }
+    }
 }
