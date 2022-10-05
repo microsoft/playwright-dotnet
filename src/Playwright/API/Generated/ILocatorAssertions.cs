@@ -51,7 +51,7 @@ namespace Microsoft.Playwright;
 ///     public async Task StatusBecomesSubmitted()<br/>
 ///     {<br/>
 ///         // ..<br/>
-///         await Page.Locator("#submit-button").ClickAsync();<br/>
+///         await Page.GetByRole("button").ClickAsync();<br/>
 ///         await Expect(Page.Locator(".status")).ToHaveTextAsync("Submitted");<br/>
 ///     }<br/>
 /// }
@@ -71,7 +71,7 @@ public partial interface ILocatorAssertions
     /// <summary>
     /// <para>Ensures the <see cref="ILocator"/> points to a checked input.</para>
     /// <code>
-    /// var locator = Page.Locator(".subscribe");<br/>
+    /// var locator = Page.GetByLabel("Subscribe to newsletter");<br/>
     /// await Expect(locator).ToBeCheckedAsync();
     /// </code>
     /// </summary>
@@ -98,7 +98,7 @@ public partial interface ILocatorAssertions
     /// <summary>
     /// <para>Ensures the <see cref="ILocator"/> points to an editable element.</para>
     /// <code>
-    /// var locator = Page.Locator("input");<br/>
+    /// var locator = Page.GetByRole("textbox");<br/>
     /// await Expect(locator).ToBeEditableAsync();
     /// </code>
     /// </summary>
@@ -131,7 +131,7 @@ public partial interface ILocatorAssertions
     /// <summary>
     /// <para>Ensures the <see cref="ILocator"/> points to a focused DOM node.</para>
     /// <code>
-    /// var locator = Page.Locator("input");<br/>
+    /// var locator = Page.GetByRole("textbox");<br/>
     /// await Expect(locator).ToBeFocusedAsync();
     /// </code>
     /// </summary>
@@ -154,7 +154,7 @@ public partial interface ILocatorAssertions
 
     /// <summary>
     /// <para>
-    /// Ensures that <see cref="ILocator"/> points to an <a href="https://playwright.dev/dotnet/docs/api/actionability#visible">attached</a>
+    /// Ensures that <see cref="ILocator"/> points to an <a href="https://playwright.dev/dotnet/docs/api/actionability#attached">attached</a>
     /// and <a href="https://playwright.dev/dotnet/docs/api/actionability#visible">visible</a>
     /// DOM node.
     /// </para>
@@ -447,7 +447,7 @@ public partial interface ILocatorAssertions
     /// CSS style.
     /// </para>
     /// <code>
-    /// var locator = Page.Locator("button");<br/>
+    /// var locator = Page.GetByRole("button");<br/>
     /// await Expect(locator).ToHaveCSSAsync("display", "flex");
     /// </code>
     /// </summary>
@@ -462,7 +462,7 @@ public partial interface ILocatorAssertions
     /// CSS style.
     /// </para>
     /// <code>
-    /// var locator = Page.Locator("button");<br/>
+    /// var locator = Page.GetByRole("button");<br/>
     /// await Expect(locator).ToHaveCSSAsync("display", "flex");
     /// </code>
     /// </summary>
@@ -477,7 +477,7 @@ public partial interface ILocatorAssertions
     /// ID.
     /// </para>
     /// <code>
-    /// var locator = Page.Locator("input");<br/>
+    /// var locator = Page.GetByRole("textbox");<br/>
     /// await Expect(locator).ToHaveIdAsync("lastname");
     /// </code>
     /// </summary>
@@ -491,7 +491,7 @@ public partial interface ILocatorAssertions
     /// ID.
     /// </para>
     /// <code>
-    /// var locator = Page.Locator("input");<br/>
+    /// var locator = Page.GetByRole("textbox");<br/>
     /// await Expect(locator).ToHaveIdAsync("lastname");
     /// </code>
     /// </summary>

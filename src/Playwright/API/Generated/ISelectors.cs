@@ -69,6 +69,15 @@ public partial interface ISelectors
     /// </param>
     /// <param name="options">Call options</param>
     Task RegisterAsync(string name, SelectorsRegisterOptions? options = default);
+
+    /// <summary>
+    /// <para>
+    /// Defines custom attribute name to be used in <see cref="IPage.GetByTestId"/>. <c>data-testid</c>
+    /// is used by default.
+    /// </para>
+    /// </summary>
+    /// <param name="attributeName">Test id attribute name.</param>
+    void SetTestIdAttribute(string attributeName);
 }
 
 #nullable disable

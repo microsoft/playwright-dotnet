@@ -254,7 +254,7 @@ public partial interface IBrowserContext
     /// "&lt;/script&gt;\n" +<br/>
     /// "&lt;button onclick=\"onClick()\"&gt;Click me&lt;/button&gt;\n" +<br/>
     /// "&lt;div&gt;&lt;/div&gt;");<br/>
-    /// await page.Locator("button").ClickAsync();
+    /// await page.GetByRole("button").ClickAsync();
     /// </code>
     /// <para>An example of passing an element handle:</para>
     /// <code>
@@ -321,7 +321,7 @@ public partial interface IBrowserContext
     ///         "&lt;button onclick=\"onClick()\"&gt;Click me&lt;/button&gt;\n" +<br/>
     ///         "&lt;div&gt;&lt;/div&gt;");<br/>
     /// <br/>
-    ///         await page.Locator("button").ClickAsync();<br/>
+    ///         await page.GetByRole("button").ClickAsync();<br/>
     ///         Console.WriteLine(await page.TextContentAsync("div"));<br/>
     ///     }<br/>
     /// }

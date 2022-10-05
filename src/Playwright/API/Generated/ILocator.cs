@@ -24,6 +24,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
 #nullable enable
@@ -216,6 +217,25 @@ public partial interface ILocator
     /// <param name="options">Call options</param>
     Task DispatchEventAsync(string type, object? eventInit = default, LocatorDispatchEventOptions? options = default);
 
+    /// <summary>
+    /// <para>
+    /// This method drags the locator to another target locator or target position. It will
+    /// first move to the source element, perform a <c>mousedown</c>, then move to the target
+    /// element or position and perform a <c>mouseup</c>.
+    /// </para>
+    /// <code>
+    /// var source = Page.Locator("#source");<br/>
+    /// var target = Page.Locator("#target");<br/>
+    /// <br/>
+    /// await source.DragToAsync(target);<br/>
+    /// // or specify exact positions relative to the top-left corners of the elements:<br/>
+    /// await source.DragToAsync(target, new()<br/>
+    /// {<br/>
+    ///     SourcePosition = new() { X = 34, Y = 7 },<br/>
+    ///     TargetPosition = new() { X = 10, Y = 20 },<br/>
+    /// });
+    /// </code>
+    /// </summary>
     /// <param name="target">Locator of the element to drag to.</param>
     /// <param name="options">Call options</param>
     Task DragToAsync(ILocator target, LocatorDragToOptions? options = default);
@@ -247,9 +267,8 @@ public partial interface ILocator
     /// </code>
     /// </summary>
     /// <param name="expression">
-    /// JavaScript expression to be evaluated in the browser context. If it looks like a
-    /// function declaration, it is interpreted as a function. Otherwise, evaluated as an
-    /// expression.
+    /// JavaScript expression to be evaluated in the browser context. If the expresion evaluates
+    /// to a function, the function is automatically invoked.
     /// </param>
     /// <param name="arg">Optional argument to pass to <paramref name="expression"/>.</param>
     /// <param name="options">Call options</param>
@@ -272,9 +291,8 @@ public partial interface ILocator
     /// </code>
     /// </summary>
     /// <param name="expression">
-    /// JavaScript expression to be evaluated in the browser context. If it looks like a
-    /// function declaration, it is interpreted as a function. Otherwise, evaluated as an
-    /// expression.
+    /// JavaScript expression to be evaluated in the browser context. If the expresion evaluates
+    /// to a function, the function is automatically invoked.
     /// </param>
     /// <param name="arg">Optional argument to pass to <paramref name="expression"/>.</param>
     Task<T> EvaluateAllAsync<T>(string expression, object? arg = default);
@@ -294,9 +312,8 @@ public partial interface ILocator
     /// <para>See <see cref="IPage.EvaluateHandleAsync"/> for more details.</para>
     /// </summary>
     /// <param name="expression">
-    /// JavaScript expression to be evaluated in the browser context. If it looks like a
-    /// function declaration, it is interpreted as a function. Otherwise, evaluated as an
-    /// expression.
+    /// JavaScript expression to be evaluated in the browser context. If the expresion evaluates
+    /// to a function, the function is automatically invoked.
     /// </param>
     /// <param name="arg">Optional argument to pass to <paramref name="expression"/>.</param>
     /// <param name="options">Call options</param>
@@ -334,7 +351,7 @@ public partial interface ILocator
     /// await rowLocator<br/>
     ///     .Filter(new LocatorFilterOptions { HasText = "text in column 1" })<br/>
     ///     .Filter(new LocatorFilterOptions {<br/>
-    ///         Has = page.Locator("tr", new PageLocatorOptions { HasText = "column 2 button" } )<br/>
+    ///         Has = page.GetByRole("button", new() { Name = "column 2 button" } )<br/>
     ///     })<br/>
     ///     .ScreenshotAsync();
     /// </code>
@@ -360,7 +377,7 @@ public partial interface ILocator
     /// and allow selecting elements in that iframe:
     /// </para>
     /// <code>
-    /// var locator = page.FrameLocator("iframe").Locator("text=Submit");<br/>
+    /// var locator = page.FrameLocator("iframe").GetByText("Submit");<br/>
     /// await locator.ClickAsync();
     /// </code>
     /// </summary>
@@ -374,6 +391,126 @@ public partial interface ILocator
     /// <param name="name">Attribute name to get the value for.</param>
     /// <param name="options">Call options</param>
     Task<string?> GetAttributeAsync(string name, LocatorGetAttributeOptions? options = default);
+
+    /// <summary>
+    /// <para>
+    /// Allows locating elements by their alt text. For example, this method will find the
+    /// image by alt text "Castle":
+    /// </para>
+    /// </summary>
+    /// <param name="text">Text to locate the element for.</param>
+    /// <param name="options">Call options</param>
+    ILocator GetByAltText(string text, LocatorGetByAltTextOptions? options = default);
+
+    /// <summary>
+    /// <para>
+    /// Allows locating elements by their alt text. For example, this method will find the
+    /// image by alt text "Castle":
+    /// </para>
+    /// </summary>
+    /// <param name="text">Text to locate the element for.</param>
+    /// <param name="options">Call options</param>
+    ILocator GetByAltText(Regex text, LocatorGetByAltTextOptions? options = default);
+
+    /// <summary>
+    /// <para>
+    /// Allows locating input elements by the text of the associated label. For example,
+    /// this method will find the input by label text Password in the following DOM:
+    /// </para>
+    /// </summary>
+    /// <param name="text">Text to locate the element for.</param>
+    /// <param name="options">Call options</param>
+    ILocator GetByLabel(string text, LocatorGetByLabelOptions? options = default);
+
+    /// <summary>
+    /// <para>
+    /// Allows locating input elements by the text of the associated label. For example,
+    /// this method will find the input by label text Password in the following DOM:
+    /// </para>
+    /// </summary>
+    /// <param name="text">Text to locate the element for.</param>
+    /// <param name="options">Call options</param>
+    ILocator GetByLabel(Regex text, LocatorGetByLabelOptions? options = default);
+
+    /// <summary>
+    /// <para>
+    /// Allows locating input elements by the placeholder text. For example, this method
+    /// will find the input by placeholder "Country":
+    /// </para>
+    /// </summary>
+    /// <param name="text">Text to locate the element for.</param>
+    /// <param name="options">Call options</param>
+    ILocator GetByPlaceholder(string text, LocatorGetByPlaceholderOptions? options = default);
+
+    /// <summary>
+    /// <para>
+    /// Allows locating input elements by the placeholder text. For example, this method
+    /// will find the input by placeholder "Country":
+    /// </para>
+    /// </summary>
+    /// <param name="text">Text to locate the element for.</param>
+    /// <param name="options">Call options</param>
+    ILocator GetByPlaceholder(Regex text, LocatorGetByPlaceholderOptions? options = default);
+
+    /// <summary>
+    /// <para>
+    /// Allows locating elements by their <a href="https://www.w3.org/TR/wai-aria-1.2/#roles">ARIA
+    /// role</a>, <a href="https://www.w3.org/TR/wai-aria-1.2/#aria-attributes">ARIA attributes</a>
+    /// and <a href="https://w3c.github.io/accname/#dfn-accessible-name">accessible name</a>.
+    /// Note that role selector **does not replace** accessibility audits and conformance
+    /// tests, but rather gives early feedback about the ARIA guidelines.
+    /// </para>
+    /// <para>
+    /// Note that many html elements have an implicitly <a href="https://w3c.github.io/html-aam/#html-element-role-mappings">defined
+    /// role</a> that is recognized by the role selector. You can find all the <a href="https://www.w3.org/TR/wai-aria-1.2/#role_definitions">supported
+    /// roles here</a>. ARIA guidelines **do not recommend** duplicating implicit roles
+    /// and attributes by setting <c>role</c> and/or <c>aria-*</c> attributes to default
+    /// values.
+    /// </para>
+    /// </summary>
+    /// <param name="role">Required aria role.</param>
+    /// <param name="options">Call options</param>
+    ILocator GetByRole(string role, LocatorGetByRoleOptions? options = default);
+
+    /// <summary>
+    /// <para>
+    /// Locate element by the test id. By default, the <c>data-testid</c> attribute is used
+    /// as a test id. Use <see cref="ISelectors.SetTestIdAttribute"/> to configure a different
+    /// test id attribute if necessary.
+    /// </para>
+    /// </summary>
+    /// <param name="testId">Id to locate the element by.</param>
+    ILocator GetByTestId(string testId);
+
+    /// <summary><para>Allows locating elements that contain given text.</para></summary>
+    /// <param name="text">Text to locate the element for.</param>
+    /// <param name="options">Call options</param>
+    ILocator GetByText(string text, LocatorGetByTextOptions? options = default);
+
+    /// <summary><para>Allows locating elements that contain given text.</para></summary>
+    /// <param name="text">Text to locate the element for.</param>
+    /// <param name="options">Call options</param>
+    ILocator GetByText(Regex text, LocatorGetByTextOptions? options = default);
+
+    /// <summary>
+    /// <para>
+    /// Allows locating elements by their title. For example, this method will find the
+    /// button by its title "Submit":
+    /// </para>
+    /// </summary>
+    /// <param name="text">Text to locate the element for.</param>
+    /// <param name="options">Call options</param>
+    ILocator GetByTitle(string text, LocatorGetByTitleOptions? options = default);
+
+    /// <summary>
+    /// <para>
+    /// Allows locating elements by their title. For example, this method will find the
+    /// button by its title "Submit":
+    /// </para>
+    /// </summary>
+    /// <param name="text">Text to locate the element for.</param>
+    /// <param name="options">Call options</param>
+    ILocator GetByTitle(Regex text, LocatorGetByTitleOptions? options = default);
 
     /// <summary>
     /// <para>
@@ -469,10 +606,10 @@ public partial interface ILocator
 
     /// <summary>
     /// <para>
-    /// The method finds an element matching the specified selector in the <c>Locator</c>'s
-    /// subtree. It also accepts filter options, similar to <see cref="ILocator.Filter"/>
-    /// method.
+    /// The method finds an element matching the specified selector in the locator's subtree.
+    /// It also accepts filter options, similar to <see cref="ILocator.Filter"/> method.
     /// </para>
+    /// <para><a href="https://playwright.dev/dotnet/docs/locators">Learn more about locators</a>.</para>
     /// </summary>
     /// <param name="selector">
     /// A selector to use when resolving DOM element. See <a href="https://playwright.dev/dotnet/docs/selectors">working
@@ -972,8 +1109,8 @@ public partial interface ILocator
     /// </code>
     /// <para>An example of typing into a text field and then submitting the form:</para>
     /// <code>
-    /// var element = page.Locator("input");<br/>
-    /// await element.TypeAsync("some text");<br/>
+    /// var element = page.GetByLabel("Password");<br/>
+    /// await element.TypeAsync("my password");<br/>
     /// await element.PressAsync("Enter");
     /// </code>
     /// </summary>
