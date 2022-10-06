@@ -54,12 +54,11 @@ internal class Locator : ILocator
 
         if (options?.HasTextRegex != null)
         {
-            var jsRegex = $"/{options.HasTextRegex.ToString()}/{options.HasTextRegex.Options.GetInlineFlags()}";
-            _selector += $" >> has={JsonSerializer.Serialize("text=" + jsRegex, serializerOptions)}";
+            _selector += $" >> internal:has={JsonSerializer.Serialize("text=" + EscapeForTextSelector(options.HasTextRegex, false), serializerOptions)}";
         }
         else if (options?.HasTextString != null)
         {
-            _selector += $" >> :scope:has-text({options.HasTextString.EscapeWithQuotes("\"")})";
+            _selector += $" >> internal:has={JsonSerializer.Serialize("text=" + EscapeForTextSelector(options.HasTextString, false), serializerOptions)}";
         }
 
         if (options?.Has != null)
@@ -69,7 +68,7 @@ internal class Locator : ILocator
             {
                 throw new ArgumentException("Inner \"Has\" locator must belong to the same frame.");
             }
-            _selector += " >> has=" + JsonSerializer.Serialize(has._selector, serializerOptions);
+            _selector += " >> internal:has=" + JsonSerializer.Serialize(has._selector, serializerOptions);
         }
     }
 
