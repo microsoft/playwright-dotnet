@@ -26,6 +26,7 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Linq;
 using System.Text.Encodings.Web;
 using System.Text.Json;
 using System.Text.RegularExpressions;
@@ -39,6 +40,7 @@ internal class Locator : ILocator
 {
     internal readonly Frame _frame;
     internal readonly string _selector;
+    private static string _testIdAttributeName = "data-testid";
 
     public Locator(Frame parent, string selector, LocatorLocatorOptions options = null)
     {
@@ -79,7 +81,7 @@ internal class Locator : ILocator
 
     public Task<LocatorBoundingBoxResult> BoundingBoxAsync(LocatorBoundingBoxOptions options = null)
         => WithElementAsync(
-            async (h, timeout) =>
+            async (h, _) =>
             {
                 var bb = await h.BoundingBoxAsync().ConfigureAwait(false);
                 if (bb == null)
@@ -340,27 +342,248 @@ internal class Locator : ILocator
             timeout).ConfigureAwait(false);
     }
 
-    public ILocator GetByAltText(string text, LocatorGetByAltTextOptions options = null) => throw new NotImplementedException();
+    public ILocator GetByAltText(string text, LocatorGetByAltTextOptions options = null)
+        => ((ILocator)this).Locator(GetByAltTextSelector(text, options?.Exact));
 
-    public ILocator GetByAltText(Regex text, LocatorGetByAltTextOptions options = null) => throw new NotImplementedException();
+    public ILocator GetByAltText(Regex text, LocatorGetByAltTextOptions options = null)
+        => ((ILocator)this).Locator(GetByAltTextSelector(text, options?.Exact));
 
-    public ILocator GetByLabel(string text, LocatorGetByLabelOptions options = null) => throw new NotImplementedException();
+    public ILocator GetByLabel(string text, LocatorGetByLabelOptions options = null)
+        => ((ILocator)this).Locator(GetByLabelSelector(text, options?.Exact));
 
-    public ILocator GetByLabel(Regex text, LocatorGetByLabelOptions options = null) => throw new NotImplementedException();
+    public ILocator GetByLabel(Regex text, LocatorGetByLabelOptions options = null)
+        => ((ILocator)this).Locator(GetByLabelSelector(text, options?.Exact));
 
-    public ILocator GetByPlaceholder(string text, LocatorGetByPlaceholderOptions options = null) => throw new NotImplementedException();
+    public ILocator GetByPlaceholder(string text, LocatorGetByPlaceholderOptions options = null)
+        => ((ILocator)this).Locator(GetByPlaceholderSelector(text, options?.Exact));
 
-    public ILocator GetByPlaceholder(Regex text, LocatorGetByPlaceholderOptions options = null) => throw new NotImplementedException();
+    public ILocator GetByPlaceholder(Regex text, LocatorGetByPlaceholderOptions options = null)
+        => ((ILocator)this).Locator(GetByPlaceholderSelector(text, options?.Exact));
 
-    public ILocator GetByRole(string role, LocatorGetByRoleOptions options = null) => throw new NotImplementedException();
+    public ILocator GetByRole(string role, LocatorGetByRoleOptions options = null)
+        => ((ILocator)this).Locator(GetByRoleSelector(role, new(options)));
 
-    public ILocator GetByTestId(string testId) => throw new NotImplementedException();
+    public ILocator GetByTestId(string testId)
+        => ((ILocator)this).Locator(GetByTestIdSelector(testId));
 
-    public ILocator GetByText(string text, LocatorGetByTextOptions options = null) => throw new NotImplementedException();
+    public ILocator GetByText(string text, LocatorGetByTextOptions options = null)
+        => ((ILocator)this).Locator(GetByTextSelector(text, options?.Exact));
 
-    public ILocator GetByText(Regex text, LocatorGetByTextOptions options = null) => throw new NotImplementedException();
+    public ILocator GetByText(Regex text, LocatorGetByTextOptions options = null)
+        => ((ILocator)this).Locator(GetByTextSelector(text, options?.Exact));
 
-    public ILocator GetByTitle(string text, LocatorGetByTitleOptions options = null) => throw new NotImplementedException();
+    public ILocator GetByTitle(string text, LocatorGetByTitleOptions options = null)
+        => ((ILocator)this).Locator(GetByTitleSelector(text, options?.Exact));
 
-    public ILocator GetByTitle(Regex text, LocatorGetByTitleOptions options = null) => throw new NotImplementedException();
+    public ILocator GetByTitle(Regex text, LocatorGetByTitleOptions options = null)
+        => ((ILocator)this).Locator(GetByTitleSelector(text, options?.Exact));
+
+    internal static void SetTestIdAttribute(string attributeName)
+        => _testIdAttributeName = attributeName;
+
+    internal static string GetByTestIdSelector(string testId)
+           => GetByAttributeTextSelector(_testIdAttributeName, testId, exact: true);
+
+    internal static string GetByAttributeTextSelector(string attrName, string text, bool? exact)
+    {
+        var exactFlag = (exact == true) ? "s" : "i";
+        return $"internal:attr=[{attrName}={EscapeForAttributeSelector(text)}{exactFlag}]";
+    }
+
+    internal static string GetByAttributeTextSelector(string attrName, Regex text, bool? exact)
+        => $"internal:attr=[{attrName}={EscapeForTextSelector(text, exact)}]";
+
+    internal static string GetByLabelSelector(string text, bool? exact)
+        => "internal:label=" + EscapeForTextSelector(text, exact);
+
+    internal static string GetByLabelSelector(Regex text, bool? exact)
+        => "internal:label=" + EscapeForTextSelector(text, exact);
+
+    internal static string GetByAltTextSelector(string text, bool? exact)
+        => GetByAttributeTextSelector("alt", text, exact);
+
+    internal static string GetByAltTextSelector(Regex text, bool? exact)
+        => GetByAttributeTextSelector("alt", text, exact);
+
+    internal static string GetByTitleSelector(string text, bool? exact)
+        => GetByAttributeTextSelector("title", text, exact);
+
+    internal static string GetByTitleSelector(Regex text, bool? exact)
+        => GetByAttributeTextSelector("title", text, exact);
+
+    internal static string GetByPlaceholderSelector(string text, bool? exact)
+        => GetByAttributeTextSelector("placeholder", text, exact);
+
+    internal static string GetByPlaceholderSelector(Regex text, bool? exact)
+        => GetByAttributeTextSelector("placeholder", text, exact);
+
+    internal static string GetByTextSelector(string text, bool? exact)
+        => $"text={EscapeForTextSelector(text, exact)}";
+
+    internal static string GetByTextSelector(Regex text, bool? exact)
+    => $"text={EscapeForTextSelector(text, exact)}";
+
+    internal static string GetByRoleSelector(string role, ByRoleOptions options)
+    {
+        List<List<string>> props = new();
+        if (options.Checked != null)
+        {
+            props.Add(new List<string> { "checked", options.Checked.ToString() });
+        }
+        if (options.Disabled != null)
+        {
+            props.Add(new List<string> { "disabled", options.Disabled.ToString() });
+        }
+        if (options.Selected != null)
+        {
+            props.Add(new List<string> { "selected", options.Selected.ToString() });
+        }
+        if (options.Expanded != null)
+        {
+            props.Add(new List<string> { "expanded", options.Expanded.ToString() });
+        }
+        if (options.IncludeHidden != null)
+        {
+            props.Add(new List<string> { "include-hidden", options.IncludeHidden.ToString() });
+        }
+        if (options.Level != null)
+        {
+            props.Add(new List<string> { "level", options.Level.ToString() });
+        }
+        if (options.NameString != null)
+        {
+            props.Add(new List<string> { "name", options.NameString });
+        }
+        else if (options.NameRegex != null)
+        {
+            props.Add(new List<string> { "checked", $"/{options.NameRegex}/{options.NameRegex.Options.GetInlineFlags()}" });
+        }
+        if (options.Pressed != null)
+        {
+            props.Add(new List<string> { "pressed", options.Pressed.ToString() });
+        }
+        return $"role={role}{string.Concat(props.Select(p => $"[{p[0]}={p[1]}]"))}";
+    }
+
+    private static string EscapeForAttributeSelector(string value)
+    {
+        // TODO: this should actually be
+        //   cssEscape(value).replace(/\\ /g, ' ')
+        // However, our attribute selectors do not conform to CSS parsing spec,
+        // so we escape them differently.
+        return $"\"{value.Replace("\"", "\\\"")}\"";
+    }
+
+    private static string EscapeForTextSelector(Regex text, bool? exact)
+    {
+        return $"/{text}/{text.Options.GetInlineFlags()}";
+    }
+
+    private static string EscapeForTextSelector(string text, bool? exact)
+    {
+        if (exact.HasValue && exact.Value)
+        {
+            return $"\"{text.Replace("\"", "\\\"")}\"";
+        }
+        if (text.Contains("\"") || text.Contains(">>") || text[0] == '/')
+        {
+            return $"/.*{EscapeForRegex(text).Replace("\\s+", "\\s+")}.*/" + ((exact.HasValue && exact.Value) ? string.Empty : "i");
+        }
+        return text;
+    }
+
+    private static string EscapeForRegex(string text)
+    {
+        var patern = new Regex(@"[.*+?^>${}()|[\]\\]");
+        return patern.Replace(text, "\\$&");
+    }
+}
+
+internal class ByRoleOptions
+{
+    public ByRoleOptions(FrameGetByRoleOptions clone)
+    {
+        if (clone == null)
+        {
+            return;
+        }
+        Checked = clone.Checked;
+        Disabled = clone.Disabled;
+        Expanded = clone.Expanded;
+        IncludeHidden = clone.IncludeHidden;
+        Level = clone.Level;
+        NameString = clone.NameString;
+        NameRegex = clone.NameRegex;
+        Pressed = clone.Pressed;
+        Selected = clone.Selected;
+    }
+
+    public ByRoleOptions(FrameLocatorGetByRoleOptions clone)
+    {
+        if (clone == null)
+        {
+            return;
+        }
+        Checked = clone.Checked;
+        Disabled = clone.Disabled;
+        Expanded = clone.Expanded;
+        IncludeHidden = clone.IncludeHidden;
+        Level = clone.Level;
+        NameString = clone.NameString;
+        NameRegex = clone.NameRegex;
+        Pressed = clone.Pressed;
+        Selected = clone.Selected;
+    }
+
+    public ByRoleOptions(PageGetByRoleOptions clone)
+    {
+        if (clone == null)
+        {
+            return;
+        }
+        Checked = clone.Checked;
+        Disabled = clone.Disabled;
+        Expanded = clone.Expanded;
+        IncludeHidden = clone.IncludeHidden;
+        Level = clone.Level;
+        NameString = clone.NameString;
+        NameRegex = clone.NameRegex;
+        Pressed = clone.Pressed;
+        Selected = clone.Selected;
+    }
+
+    public ByRoleOptions(LocatorGetByRoleOptions clone)
+    {
+        if (clone == null)
+        {
+            return;
+        }
+        Checked = clone.Checked;
+        Disabled = clone.Disabled;
+        Expanded = clone.Expanded;
+        IncludeHidden = clone.IncludeHidden;
+        Level = clone.Level;
+        NameString = clone.NameString;
+        NameRegex = clone.NameRegex;
+        Pressed = clone.Pressed;
+        Selected = clone.Selected;
+    }
+
+    public bool? Checked { get; set; }
+
+    public bool? Disabled { get; set; }
+
+    public bool? Expanded { get; set; }
+
+    public bool? IncludeHidden { get; set; }
+
+    public int? Level { get; set; }
+
+    public string NameString { get; set; }
+
+    public Regex NameRegex { get; set; }
+
+    public bool? Pressed { get; set; }
+
+    public bool? Selected { get; set; }
 }

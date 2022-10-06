@@ -667,27 +667,39 @@ internal class Frame : ChannelOwnerBase, IChannelOwner<Frame>, IFrame
     internal Task HighlightAsync(string selector)
         => _channel.HighlightAsync(selector);
 
-    public ILocator GetByAltText(string text, FrameGetByAltTextOptions options = null) => throw new NotImplementedException();
+    public ILocator GetByAltText(string text, FrameGetByAltTextOptions options = null)
+        => Locator(Core.Locator.GetByAltTextSelector(text, options?.Exact));
 
-    public ILocator GetByAltText(Regex text, FrameGetByAltTextOptions options = null) => throw new NotImplementedException();
+    public ILocator GetByAltText(Regex text, FrameGetByAltTextOptions options = null)
+        => Locator(Core.Locator.GetByAltTextSelector(text, options?.Exact));
 
-    public ILocator GetByLabel(string text, FrameGetByLabelOptions options = null) => throw new NotImplementedException();
+    public ILocator GetByLabel(string text, FrameGetByLabelOptions options = null)
+        => Locator(Core.Locator.GetByLabelSelector(text, options?.Exact));
 
-    public ILocator GetByLabel(Regex text, FrameGetByLabelOptions options = null) => throw new NotImplementedException();
+    public ILocator GetByLabel(Regex text, FrameGetByLabelOptions options = null)
+        => Locator(Core.Locator.GetByLabelSelector(text, options?.Exact));
 
-    public ILocator GetByPlaceholder(string text, FrameGetByPlaceholderOptions options = null) => throw new NotImplementedException();
+    public ILocator GetByPlaceholder(string text, FrameGetByPlaceholderOptions options = null)
+        => Locator(Core.Locator.GetByPlaceholderSelector(text, options?.Exact));
 
-    public ILocator GetByPlaceholder(Regex text, FrameGetByPlaceholderOptions options = null) => throw new NotImplementedException();
+    public ILocator GetByPlaceholder(Regex text, FrameGetByPlaceholderOptions options = null)
+        => Locator(Core.Locator.GetByPlaceholderSelector(text, options?.Exact));
 
-    public ILocator GetByRole(string role, FrameGetByRoleOptions options = null) => throw new NotImplementedException();
+    public ILocator GetByRole(string role, FrameGetByRoleOptions options = null)
+        => Locator(Core.Locator.GetByRoleSelector(role, new(options)));
 
-    public ILocator GetByTestId(string testId) => throw new NotImplementedException();
+    public ILocator GetByTestId(string testId)
+        => Locator(Core.Locator.GetByTestIdSelector(testId));
 
-    public ILocator GetByText(string text, FrameGetByTextOptions options = null) => throw new NotImplementedException();
+    public ILocator GetByText(string text, FrameGetByTextOptions options = null)
+        => Locator(Core.Locator.GetByTextSelector(text, options?.Exact));
 
-    public ILocator GetByText(Regex text, FrameGetByTextOptions options = null) => throw new NotImplementedException();
+    public ILocator GetByText(Regex text, FrameGetByTextOptions options = null)
+        => Locator(Core.Locator.GetByTextSelector(text, options?.Exact));
 
-    public ILocator GetByTitle(string text, FrameGetByTitleOptions options = null) => throw new NotImplementedException();
+    public ILocator GetByTitle(string text, FrameGetByTitleOptions options = null)
+        => Locator(Core.Locator.GetByTitleSelector(text, options?.Exact));
 
-    public ILocator GetByTitle(Regex text, FrameGetByTitleOptions options = null) => throw new NotImplementedException();
+    public ILocator GetByTitle(Regex text, FrameGetByTitleOptions options = null)
+        => Locator(Core.Locator.GetByTitleSelector(text, options?.Exact));
 }

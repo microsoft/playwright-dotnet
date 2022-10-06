@@ -1161,27 +1161,39 @@ internal class Page : ChannelOwnerBase, IChannelOwner<Page>, IPage
         await harRouter.AddPageRouteAsync(this).ConfigureAwait(false);
     }
 
-    public ILocator GetByAltText(string text, PageGetByAltTextOptions options = null) => throw new NotImplementedException();
+    public ILocator GetByAltText(string text, PageGetByAltTextOptions options = null)
+        => Locator(Core.Locator.GetByAltTextSelector(text, options?.Exact));
 
-    public ILocator GetByAltText(Regex text, PageGetByAltTextOptions options = null) => throw new NotImplementedException();
+    public ILocator GetByAltText(Regex text, PageGetByAltTextOptions options = null)
+        => Locator(Core.Locator.GetByAltTextSelector(text, options?.Exact));
 
-    public ILocator GetByLabel(string text, PageGetByLabelOptions options = null) => throw new NotImplementedException();
+    public ILocator GetByLabel(string text, PageGetByLabelOptions options = null)
+        => Locator(Core.Locator.GetByLabelSelector(text, options?.Exact));
 
-    public ILocator GetByLabel(Regex text, PageGetByLabelOptions options = null) => throw new NotImplementedException();
+    public ILocator GetByLabel(Regex text, PageGetByLabelOptions options = null)
+        => Locator(Core.Locator.GetByLabelSelector(text, options?.Exact));
 
-    public ILocator GetByPlaceholder(string text, PageGetByPlaceholderOptions options = null) => throw new NotImplementedException();
+    public ILocator GetByPlaceholder(string text, PageGetByPlaceholderOptions options = null)
+        => Locator(Core.Locator.GetByPlaceholderSelector(text, options?.Exact));
 
-    public ILocator GetByPlaceholder(Regex text, PageGetByPlaceholderOptions options = null) => throw new NotImplementedException();
+    public ILocator GetByPlaceholder(Regex text, PageGetByPlaceholderOptions options = null)
+        => Locator(Core.Locator.GetByPlaceholderSelector(text, options?.Exact));
 
-    public ILocator GetByRole(string role, PageGetByRoleOptions options = null) => throw new NotImplementedException();
+    public ILocator GetByRole(string role, PageGetByRoleOptions options = null)
+        => Locator(Core.Locator.GetByRoleSelector(role, new(options)));
 
-    public ILocator GetByTestId(string testId) => throw new NotImplementedException();
+    public ILocator GetByTestId(string testId)
+        => Locator(Core.Locator.GetByTestIdSelector(testId));
 
-    public ILocator GetByText(string text, PageGetByTextOptions options = null) => throw new NotImplementedException();
+    public ILocator GetByText(string text, PageGetByTextOptions options = null)
+        => Locator(Core.Locator.GetByTextSelector(text, options?.Exact));
 
-    public ILocator GetByText(Regex text, PageGetByTextOptions options = null) => throw new NotImplementedException();
+    public ILocator GetByText(Regex text, PageGetByTextOptions options = null)
+        => Locator(Core.Locator.GetByTextSelector(text, options?.Exact));
 
-    public ILocator GetByTitle(string text, PageGetByTitleOptions options = null) => throw new NotImplementedException();
+    public ILocator GetByTitle(string text, PageGetByTitleOptions options = null)
+        => Locator(Core.Locator.GetByTitleSelector(text, options?.Exact));
 
-    public ILocator GetByTitle(Regex text, PageGetByTitleOptions options = null) => throw new NotImplementedException();
+    public ILocator GetByTitle(Regex text, PageGetByTitleOptions options = null)
+        => Locator(Core.Locator.GetByTitleSelector(text, options?.Exact));
 }
