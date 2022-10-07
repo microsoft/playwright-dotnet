@@ -22,9 +22,7 @@
  * SOFTWARE.
  */
 
-using System;
 using System.IO;
-using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Playwright.Transport;
 using Microsoft.Playwright.Transport.Channels;
