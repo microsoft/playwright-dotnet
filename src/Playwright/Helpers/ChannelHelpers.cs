@@ -1,5 +1,4 @@
 using System;
-using System.Linq;
 using System.Text.Json;
 using Microsoft.Playwright.Transport;
 using Microsoft.Playwright.Transport.Channels;

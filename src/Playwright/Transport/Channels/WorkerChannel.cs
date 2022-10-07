@@ -22,9 +22,7 @@
  * SOFTWARE.
  */
 
-using System;
 using System.Text.Json;
-using Microsoft.Playwright.Core;
 
 namespace Microsoft.Playwright.Transport.Channels;
 
