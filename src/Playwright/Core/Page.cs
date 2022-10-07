@@ -1179,7 +1179,7 @@ internal class Page : ChannelOwnerBase, IChannelOwner<Page>, IPage
     public ILocator GetByPlaceholder(Regex text, PageGetByPlaceholderOptions options = null)
         => MainFrame.GetByPlaceholder(text, new() { Exact = options?.Exact });
 
-    public ILocator GetByRole(string role, PageGetByRoleOptions options = null)
+    public ILocator GetByRole(AriaRole role, PageGetByRoleOptions options = null)
         => Locator(Core.Locator.GetByRoleSelector(role, new(options)));
 
     public ILocator GetByTestId(string testId)

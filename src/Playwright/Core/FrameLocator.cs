@@ -61,7 +61,7 @@ internal class FrameLocator : IFrameLocator
     public ILocator GetByPlaceholder(Regex text, FrameLocatorGetByPlaceholderOptions options = null)
         => Locator(Core.Locator.GetByPlaceholderSelector(text, options?.Exact));
 
-    public ILocator GetByRole(string role, FrameLocatorGetByRoleOptions options = null)
+    public ILocator GetByRole(AriaRole role, FrameLocatorGetByRoleOptions options = null)
         => Locator(Core.Locator.GetByRoleSelector(role, new(options)));
 
     public ILocator GetByTestId(string testId)

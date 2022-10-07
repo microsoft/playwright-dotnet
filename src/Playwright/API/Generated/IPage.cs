@@ -1042,7 +1042,7 @@ public partial interface IPage
     /// </summary>
     /// <param name="role">Required aria role.</param>
     /// <param name="options">Call options</param>
-    ILocator GetByRole(string role, PageGetByRoleOptions? options = default);
+    ILocator GetByRole(AriaRole role, PageGetByRoleOptions? options = default);
 
     /// <summary>
     /// <para>

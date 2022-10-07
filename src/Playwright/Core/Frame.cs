@@ -685,7 +685,7 @@ internal class Frame : ChannelOwnerBase, IChannelOwner<Frame>, IFrame
     public ILocator GetByPlaceholder(Regex text, FrameGetByPlaceholderOptions options = null)
         => Locator(Core.Locator.GetByPlaceholderSelector(text, options?.Exact));
 
-    public ILocator GetByRole(string role, FrameGetByRoleOptions options = null)
+    public ILocator GetByRole(AriaRole role, FrameGetByRoleOptions options = null)
         => Locator(Core.Locator.GetByRoleSelector(role, new(options)));
 
     public ILocator GetByTestId(string testId)

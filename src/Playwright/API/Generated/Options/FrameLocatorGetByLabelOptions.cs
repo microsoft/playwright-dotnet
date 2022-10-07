@@ -42,7 +42,12 @@ public class FrameLocatorGetByLabelOptions
         Exact = clone.Exact;
     }
 
-    /// <summary><para>Whether to find an exact match: case-sensitive and whole-string. Default to false.</para></summary>
+    /// <summary>
+    /// <para>
+    /// Whether to find an exact match: case-sensitive and whole-string. Default to false.
+    /// Ignored when locating by a regular expression.
+    /// </para>
+    /// </summary>
     [JsonPropertyName("exact")]
     public bool? Exact { get; set; }
 }

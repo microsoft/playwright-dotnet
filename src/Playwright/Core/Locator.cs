@@ -361,7 +361,7 @@ internal class Locator : ILocator
     public ILocator GetByPlaceholder(Regex text, LocatorGetByPlaceholderOptions options = null)
         => ((ILocator)this).Locator(GetByPlaceholderSelector(text, options?.Exact));
 
-    public ILocator GetByRole(string role, LocatorGetByRoleOptions options = null)
+    public ILocator GetByRole(AriaRole role, LocatorGetByRoleOptions options = null)
         => ((ILocator)this).Locator(GetByRoleSelector(role, new(options)));
 
     public ILocator GetByTestId(string testId)
@@ -421,28 +421,28 @@ internal class Locator : ILocator
     internal static string GetByTextSelector(Regex text, bool? exact)
         => $"text={EscapeForTextSelector(text, exact)}";
 
-    internal static string GetByRoleSelector(string role, ByRoleOptions options)
+    internal static string GetByRoleSelector(AriaRole role, ByRoleOptions options)
     {
         List<List<string>> props = new();
         if (options.Checked != null)
         {
-            props.Add(new List<string> { "checked", options.Checked.ToString() });
+            props.Add(new List<string> { "checked", options.Checked.ToJson() });
         }
         if (options.Disabled != null)
         {
-            props.Add(new List<string> { "disabled", options.Disabled.ToString() });
+            props.Add(new List<string> { "disabled", options.Disabled.ToJson() });
         }
         if (options.Selected != null)
         {
-            props.Add(new List<string> { "selected", options.Selected.ToString() });
+            props.Add(new List<string> { "selected", options.Selected.ToJson() });
         }
         if (options.Expanded != null)
         {
-            props.Add(new List<string> { "expanded", options.Expanded.ToString() });
+            props.Add(new List<string> { "expanded", options.Expanded.ToJson() });
         }
         if (options.IncludeHidden != null)
         {
-            props.Add(new List<string> { "include-hidden", options.IncludeHidden.ToString() });
+            props.Add(new List<string> { "include-hidden", options.IncludeHidden.ToJson() });
         }
         if (options.Level != null)
         {
@@ -450,7 +450,7 @@ internal class Locator : ILocator
         }
         if (options.NameString != null)
         {
-            props.Add(new List<string> { "name", options.NameString });
+            props.Add(new List<string> { "name", EscapeForAttributeSelector(options.NameString, false) });
         }
         else if (options.NameRegex != null)
         {
@@ -458,9 +458,9 @@ internal class Locator : ILocator
         }
         if (options.Pressed != null)
         {
-            props.Add(new List<string> { "pressed", options.Pressed.ToString() });
+            props.Add(new List<string> { "pressed", options.Pressed.ToJson() });
         }
-        return $"role={role}{string.Concat(props.Select(p => $"[{p[0]}={p[1]}]"))}";
+        return $"role={role.ToValueString()}{string.Concat(props.Select(p => $"[{p[0]}={p[1]}]"))}";
     }
 
     private static string EscapeForAttributeSelector(string value, bool exact)
@@ -486,7 +486,7 @@ internal class Locator : ILocator
         }
         if (text.Contains("\"") || text.Contains(">>") || text[0] == '/')
         {
-            return $"/{EscapeForRegex(text).Replace(@"\s+", @"\\s+")}/i";
+            return $"/{new Regex(@"\s+").Replace(EscapeForRegex(text), "\\s+")}/i";
         }
         return text;
     }

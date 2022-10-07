@@ -133,29 +133,33 @@ public class SelectorsGetByTests : PageTestEx
     [PlaywrightTest("selector-get-by.spec.ts", "getBy escaping")]
     public async Task GetByEscapingShouldWork()
     {
-        await Page.SetContentAsync("<label id=label for=control>Hello\nwo\"rld</label><input id=control />");
-        await Page.EvalOnSelectorAsync("input", "input => {" +
-            "input.setAttribute('placeholder', 'hello\\nwo\"rld');" +
-            "input.setAttribute('title', 'hello\\nwo\"rld');" +
-            "input.setAttribute('alt', 'hello\\nwo\"rld');" +
-            "}");
-        await Expect(Page.GetByText("hello\nwo\"rld")).ToHaveAttributeAsync("id", "label");
-        await Expect(Page.GetByLabel("hello\nwo\"rld")).ToHaveAttributeAsync("id", "control");
-        await Expect(Page.GetByPlaceholder("hello\nwo\"rld")).ToHaveAttributeAsync("id", "control");
-        await Expect(Page.GetByAltText("hello\nwo\"rld")).ToHaveAttributeAsync("id", "control");
-        await Expect(Page.GetByTitle("hello\nwo\"rld")).ToHaveAttributeAsync("id", "control");
+        await Page.SetContentAsync(@"<label id=label for=control>Hello my
+  wo""rld</label><input id=control />");
+        await Page.EvalOnSelectorAsync("input", @"input => {
+            input.setAttribute('placeholder', 'hello my\nwo""rld');
+            input.setAttribute('title', 'hello my\nwo""rld');
+            input.setAttribute('alt', 'hello my\nwo""rld');
+        }");
+        await Expect(Page.GetByText("hello my\nwo\"rld")).ToHaveAttributeAsync("id", "label");
+        await Expect(Page.GetByText("hello       my     wo\"rld")).ToHaveAttributeAsync("id", "label");
+        await Expect(Page.GetByLabel("hello my\nwo\"rld")).ToHaveAttributeAsync("id", "control");
+        await Expect(Page.GetByPlaceholder("hello my\nwo\"rld")).ToHaveAttributeAsync("id", "control");
+        await Expect(Page.GetByAltText("hello my\nwo\"rld")).ToHaveAttributeAsync("id", "control");
+        await Expect(Page.GetByTitle("hello my\nwo\"rld")).ToHaveAttributeAsync("id", "control");
 
-        await Page.SetContentAsync("<label id=label for=control>Hello\nworld</label><input id=control />");
+        await Page.SetContentAsync(@"<label id=label for=control>Hello my
+  world</label><input id=control />");
 
-        await Page.EvalOnSelectorAsync("input", "input => {" +
-            "input.setAttribute('placeholder', 'hello\\nworld');" +
-            "input.setAttribute('title', 'hello\\nworld');" +
-            "input.setAttribute('alt', 'hello\\nworld');" +
-            "}");
-        await Expect(Page.GetByText("hello\nworld")).ToHaveAttributeAsync("id", "label");
-        await Expect(Page.GetByLabel("hello\nworld")).ToHaveAttributeAsync("id", "control");
-        await Expect(Page.GetByPlaceholder("hello\nworld")).ToHaveAttributeAsync("id", "control");
-        await Expect(Page.GetByAltText("hello\nworld")).ToHaveAttributeAsync("id", "control");
-        await Expect(Page.GetByTitle("hello\nworld")).ToHaveAttributeAsync("id", "control");
+        await Page.EvalOnSelectorAsync("input", @"input => {
+            input.setAttribute('placeholder', 'hello my\nworld');
+            input.setAttribute('title', 'hello my\nworld');
+            input.setAttribute('alt', 'hello my\nworld');
+        }");
+        await Expect(Page.GetByText("hello my\nworld")).ToHaveAttributeAsync("id", "label");
+        await Expect(Page.GetByText("hello        my    world")).ToHaveAttributeAsync("id", "label");
+        await Expect(Page.GetByLabel("hello my\nworld")).ToHaveAttributeAsync("id", "control");
+        await Expect(Page.GetByPlaceholder("hello my\nworld")).ToHaveAttributeAsync("id", "control");
+        await Expect(Page.GetByAltText("hello my\nworld")).ToHaveAttributeAsync("id", "control");
+        await Expect(Page.GetByTitle("hello my\nworld")).ToHaveAttributeAsync("id", "control");
     }
 }
