@@ -54,21 +54,23 @@ internal class Locator : ILocator
 
         if (options?.HasTextRegex != null)
         {
-            _selector += $" >> internal:has={JsonSerializer.Serialize("text=" + EscapeForTextSelector(options.HasTextRegex, false), serializerOptions)}";
+            var textSelector = "text=" + EscapeForTextSelector(options.HasTextRegex, false);
+            _selector += $" >> internal:has={JsonSerializer.Serialize(textSelector, serializerOptions)}";
         }
         else if (options?.HasTextString != null)
         {
-            _selector += $" >> internal:has={JsonSerializer.Serialize("text=" + EscapeForTextSelector(options.HasTextString, false), serializerOptions)}";
+            var textSelector = "text=" + EscapeForTextSelector(options.HasTextString, false);
+            _selector += $" >> internal:has={JsonSerializer.Serialize(textSelector, serializerOptions)}";
         }
 
         if (options?.Has != null)
         {
-            var has = (Locator)options.Has;
-            if (has._frame != _frame)
+            var locator = (Locator)options.Has;
+            if (locator._frame != _frame)
             {
                 throw new ArgumentException("Inner \"Has\" locator must belong to the same frame.");
             }
-            _selector += " >> internal:has=" + JsonSerializer.Serialize(has._selector, serializerOptions);
+            _selector += " >> internal:has=" + JsonSerializer.Serialize(locator._selector, serializerOptions);
         }
     }
 
@@ -420,7 +422,7 @@ internal class Locator : ILocator
         => $"text={EscapeForTextSelector(text, exact)}";
 
     internal static string GetByTextSelector(Regex text, bool? exact)
-    => $"text={EscapeForTextSelector(text, exact)}";
+        => $"text={EscapeForTextSelector(text, exact)}";
 
     internal static string GetByRoleSelector(string role, ByRoleOptions options)
     {
@@ -455,7 +457,7 @@ internal class Locator : ILocator
         }
         else if (options.NameRegex != null)
         {
-            props.Add(new List<string> { "checked", $"/{options.NameRegex}/{options.NameRegex.Options.GetInlineFlags()}" });
+            props.Add(new List<string> { "name", $"/{options.NameRegex}/{options.NameRegex.Options.GetInlineFlags()}" });
         }
         if (options.Pressed != null)
         {
@@ -480,13 +482,13 @@ internal class Locator : ILocator
 
     private static string EscapeForTextSelector(string text, bool? exact)
     {
-        if (exact.HasValue && exact.Value)
+        if (exact == true)
         {
             return $"\"{text.Replace("\"", "\\\"")}\"";
         }
         if (text.Contains("\"") || text.Contains(">>") || text[0] == '/')
         {
-            return $"/.*{EscapeForRegex(text).Replace("\\s+", "\\s+")}.*/" + ((exact.HasValue && exact.Value) ? string.Empty : "i");
+            return $"/{EscapeForRegex(text).Replace(@"\s+", @"\\s+")}/i";
         }
         return text;
     }

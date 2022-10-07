@@ -33,7 +33,7 @@ public class BrowserTest : PlaywrightTest
     public IBrowser Browser { get; internal set; } = null!;
     private readonly List<IBrowserContext> _contexts = new();
 
-    public async Task<IBrowserContext> NewContext(BrowserNewContextOptions options = null)
+    public async Task<IBrowserContext> NewContext(BrowserNewContextOptions? options = null)
     {
         var context = await Browser.NewContextAsync(options).ConfigureAwait(false);
         _contexts.Add(context);
