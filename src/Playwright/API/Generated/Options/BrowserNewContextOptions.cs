@@ -214,7 +214,7 @@ public class BrowserNewContextOptions
     /// <summary>
     /// <para>
     /// Optional setting to control resource content management. If <c>omit</c> is specified,
-    /// content is not persisted. If <c>attach</c> is specified, resources are persistet
+    /// content is not persisted. If <c>attach</c> is specified, resources are persisted
     /// as separate files and all of these files are archived along with the HAR file. Defaults
     /// to <c>embed</c>, which stores content inline the HAR file as per HAR specification.
     /// </para>

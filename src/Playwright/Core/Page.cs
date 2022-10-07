@@ -1160,4 +1160,40 @@ internal class Page : ChannelOwnerBase, IChannelOwner<Page>, IPage
         }).ConfigureAwait(false);
         await harRouter.AddPageRouteAsync(this).ConfigureAwait(false);
     }
+
+    public ILocator GetByAltText(string text, PageGetByAltTextOptions options = null)
+        => MainFrame.GetByAltText(text, new() { Exact = options?.Exact });
+
+    public ILocator GetByAltText(Regex text, PageGetByAltTextOptions options = null)
+        => MainFrame.GetByAltText(text, new() { Exact = options?.Exact });
+
+    public ILocator GetByLabel(string text, PageGetByLabelOptions options = null)
+        => MainFrame.GetByLabel(text, new() { Exact = options?.Exact });
+
+    public ILocator GetByLabel(Regex text, PageGetByLabelOptions options = null)
+        => MainFrame.GetByLabel(text, new() { Exact = options?.Exact });
+
+    public ILocator GetByPlaceholder(string text, PageGetByPlaceholderOptions options = null)
+        => MainFrame.GetByPlaceholder(text, new() { Exact = options?.Exact });
+
+    public ILocator GetByPlaceholder(Regex text, PageGetByPlaceholderOptions options = null)
+        => MainFrame.GetByPlaceholder(text, new() { Exact = options?.Exact });
+
+    public ILocator GetByRole(string role, PageGetByRoleOptions options = null)
+        => Locator(Core.Locator.GetByRoleSelector(role, new(options)));
+
+    public ILocator GetByTestId(string testId)
+        => MainFrame.GetByTestId(testId);
+
+    public ILocator GetByText(string text, PageGetByTextOptions options = null)
+        => MainFrame.GetByText(text, new() { Exact = options?.Exact });
+
+    public ILocator GetByText(Regex text, PageGetByTextOptions options = null)
+        => MainFrame.GetByText(text, new() { Exact = options?.Exact });
+
+    public ILocator GetByTitle(string text, PageGetByTitleOptions options = null)
+        => MainFrame.GetByTitle(text, new() { Exact = options?.Exact });
+
+    public ILocator GetByTitle(Regex text, PageGetByTitleOptions options = null)
+        => MainFrame.GetByTitle(text, new() { Exact = options?.Exact });
 }

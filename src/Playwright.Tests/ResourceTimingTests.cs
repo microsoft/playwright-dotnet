@@ -22,10 +22,12 @@
  * SOFTWARE.
  */
 
+using Microsoft.AspNetCore.Http;
+
 namespace Microsoft.Playwright.Tests;
 
 ///<playwright-file>resource-timing.spec.ts</playwright-file>
-public class ResourceTimingTests : PageTestEx
+public class ResourceTimingTests : ContextTestEx
 {
     private void VerifyConnectionTimingConsistency(RequestTimingResult timing)
     {
@@ -44,9 +46,11 @@ public class ResourceTimingTests : PageTestEx
     [PlaywrightTest("resource-timing.spec.ts", "should work")]
     public async Task ShouldWork()
     {
+        await using var context = await NewContext();
+        var page = await context.NewPageAsync();
         var (request, _) = await TaskUtils.WhenAll(
-            Page.WaitForRequestFinishedAsync(),
-            Page.GotoAsync(Server.EmptyPage));
+            page.WaitForRequestFinishedAsync(),
+            page.GotoAsync(Server.EmptyPage));
 
         var timing = request.Timing;
 
@@ -60,10 +64,12 @@ public class ResourceTimingTests : PageTestEx
     [PlaywrightTest("resource-timing.spec.ts", "should work for subresource")]
     public async Task ShouldWorkForSubresource()
     {
+        await using var context = await NewContext();
+        var page = await context.NewPageAsync();
         var requests = new List<IRequest>();
 
-        Page.RequestFinished += (_, e) => requests.Add(e);
-        await Page.GotoAsync(Server.Prefix + "/one-style.html");
+        page.RequestFinished += (_, e) => requests.Add(e);
+        await page.GotoAsync(Server.Prefix + "/one-style.html");
 
         Assert.AreEqual(2, requests.Count);
 
@@ -80,7 +86,8 @@ public class ResourceTimingTests : PageTestEx
     [PlaywrightTest("resource-timing.spec.ts", "should work for SSL")]
     public async Task ShouldWorkForSSL()
     {
-        var page = await Browser.NewPageAsync(new() { IgnoreHTTPSErrors = true });
+        await using var context = await NewContext(new() { IgnoreHTTPSErrors = true });
+        var page = await context.NewPageAsync();
         var (request, _) = await TaskUtils.WhenAll(
             page.WaitForRequestFinishedAsync(),
             page.GotoAsync(HttpsServer.Prefix + "/empty.html"));
@@ -91,18 +98,19 @@ public class ResourceTimingTests : PageTestEx
         Assert.GreaterOrEqual(timing.ResponseStart, timing.RequestStart);
         Assert.GreaterOrEqual(timing.ResponseEnd, timing.ResponseStart);
         Assert.Less(timing.ResponseEnd, 10000);
-        await page.CloseAsync();
     }
 
     [PlaywrightTest("resource-timing.spec.ts", "should work for redirect")]
     [Skip(SkipAttribute.Targets.Webkit)]
     public async Task ShouldWorkForRedirect()
     {
+        await using var context = await NewContext();
+        var page = await context.NewPageAsync();
         Server.SetRedirect("/foo.html", "/empty.html");
         var responses = new List<IResponse>();
 
-        Page.Response += (_, e) => responses.Add(e);
-        await Page.GotoAsync(Server.Prefix + "/foo.html");
+        page.Response += (_, e) => responses.Add(e);
+        await page.GotoAsync(Server.Prefix + "/foo.html");
 
         // This is different on purpose, promises work different in TS.
         await responses[1].FinishedAsync();
@@ -126,4 +134,34 @@ public class ResourceTimingTests : PageTestEx
         Assert.GreaterOrEqual(timing2.ResponseEnd, timing2.ResponseStart);
         Assert.Less(timing2.ResponseEnd, 10000);
     }
+
+    [PlaywrightTest("resource-timing.spec.ts", "should work when serving from memory cache")]
+    [Skip(SkipAttribute.Targets.Firefox)]
+    public async Task ShouldWorkWhenServingFromMemoryCache()
+    {
+        Server.SetRoute("/one-style.css", async (ctx) =>
+        {
+            ctx.Response.StatusCode = 200;
+            ctx.Response.ContentType = "text/css";
+            ctx.Response.Headers["Cache-Control"] = "public, max-age=10031518";
+            await ctx.Response.WriteAsync("body { background: red }");
+        });
+
+        await using var context = await NewContext();
+        var page = await context.NewPageAsync();
+
+        await page.GotoAsync(Server.Prefix + "/one-style.html");
+        var (response, _) = await TaskUtils.WhenAll(
+            page.WaitForResponseAsync("**/one-style.css"),
+            page.ReloadAsync());
+
+        await response.FinishedAsync();
+
+        var timing = response.Request.Timing;
+        VerifyConnectionTimingConsistency(timing);
+
+        Assert.AreEqual(timing.ResponseStart, timing.ResponseEnd);
+        Assert.Less(timing.ResponseEnd, 1000);
+    }
+
 }

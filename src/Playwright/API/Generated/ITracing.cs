@@ -95,7 +95,7 @@ public partial interface ITracing
     /// await page.GotoAsync("https://playwright.dev");<br/>
     /// <br/>
     /// await context.Tracing.StartChunkAsync();<br/>
-    /// await page.ClickAsync("text=Get Started");<br/>
+    /// await page.GetByText("Get Started").ClickAsync();<br/>
     /// // Everything between StartChunkAsync and StopChunkAsync will be recorded in the trace.<br/>
     /// await context.Tracing.StopChunkAsync(new()<br/>
     /// {<br/>

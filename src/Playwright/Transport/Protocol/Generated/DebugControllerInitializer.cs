@@ -22,32 +22,8 @@
  * SOFTWARE.
  */
 
-using System.Threading.Tasks;
-using Microsoft.Playwright.Transport;
-using Microsoft.Playwright.Transport.Channels;
+namespace Microsoft.Playwright.Transport.Protocol;
 
-namespace Microsoft.Playwright.Core;
-
-internal class Selectors : ChannelOwnerBase, IChannelOwner<Selectors>, ISelectors
+internal class DebugControllerInitializer
 {
-    private readonly SelectorsChannel _channel;
-
-    internal Selectors(IChannelOwner parent, string guid) : base(parent, guid)
-    {
-        _channel = new(guid, parent.Connection, this);
-    }
-
-    ChannelBase IChannelOwner.Channel => _channel;
-
-    IChannel<Selectors> IChannelOwner<Selectors>.Channel => _channel;
-
-    public async Task RegisterAsync(string name, SelectorsRegisterOptions options = default)
-    {
-        options ??= new SelectorsRegisterOptions();
-
-        var script = ScriptsHelper.EvaluationScript(options?.Script, options?.Path);
-        await _channel.RegisterAsync(name, script, options?.ContentScript).ConfigureAwait(false);
-    }
-
-    public void SetTestIdAttribute(string attributeName) => throw new System.NotImplementedException();
 }

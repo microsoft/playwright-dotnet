@@ -6,7 +6,7 @@
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
- * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * to use, copy, modify, merge, publish, distribute, sublicense, and / or sell
  * copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions:
  *
@@ -23,41 +23,33 @@
  */
 
 using System.Collections.Generic;
-using System.Threading.Tasks;
-using NUnit.Framework;
+using System.Text.Json.Serialization;
 
-namespace Microsoft.Playwright.NUnit;
+namespace Microsoft.Playwright.Transport.Protocol;
 
-public class BrowserTest : PlaywrightTest
+internal class RecorderSource
 {
-    public IBrowser Browser { get; internal set; } = null!;
-    private readonly List<IBrowserContext> _contexts = new();
+    [JsonPropertyName("isRecorded")]
+    public bool IsRecorded { get; set; }
 
-    public async Task<IBrowserContext> NewContext(BrowserNewContextOptions? options = null)
-    {
-        var context = await Browser.NewContextAsync(options).ConfigureAwait(false);
-        _contexts.Add(context);
-        return context;
-    }
+    [JsonPropertyName("id")]
+    public string Id { get; set; }
 
-    [SetUp]
-    public async Task BrowserSetup()
-    {
-        var service = await BrowserService.Register(this, BrowserType).ConfigureAwait(false);
-        Browser = service.Browser;
-    }
+    [JsonPropertyName("label")]
+    public string Label { get; set; }
 
-    [TearDown]
-    public async Task BrowserTearDown()
-    {
-        if (TestOk())
-        {
-            foreach (var context in _contexts)
-            {
-                await context.CloseAsync().ConfigureAwait(false);
-            }
-        }
-        _contexts.Clear();
-        Browser = null!;
-    }
+    [JsonPropertyName("text")]
+    public string Text { get; set; }
+
+    [JsonPropertyName("language")]
+    public string Language { get; set; }
+
+    [JsonPropertyName("highlight")]
+    public List<RecorderSourceHighlight> Highlight { get; set; }
+
+    [JsonPropertyName("revealLine")]
+    public int? RevealLine { get; set; }
+
+    [JsonPropertyName("group")]
+    public string Group { get; set; }
 }

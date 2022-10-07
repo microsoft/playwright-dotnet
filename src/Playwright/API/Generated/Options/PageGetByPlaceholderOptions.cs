@@ -22,42 +22,29 @@
  * SOFTWARE.
  */
 
-using System.Collections.Generic;
-using System.Threading.Tasks;
-using NUnit.Framework;
+using System.Text.Json.Serialization;
 
-namespace Microsoft.Playwright.NUnit;
+#nullable enable
 
-public class BrowserTest : PlaywrightTest
+namespace Microsoft.Playwright;
+
+public class PageGetByPlaceholderOptions
 {
-    public IBrowser Browser { get; internal set; } = null!;
-    private readonly List<IBrowserContext> _contexts = new();
+    public PageGetByPlaceholderOptions() { }
 
-    public async Task<IBrowserContext> NewContext(BrowserNewContextOptions? options = null)
+    public PageGetByPlaceholderOptions(PageGetByPlaceholderOptions clone)
     {
-        var context = await Browser.NewContextAsync(options).ConfigureAwait(false);
-        _contexts.Add(context);
-        return context;
-    }
-
-    [SetUp]
-    public async Task BrowserSetup()
-    {
-        var service = await BrowserService.Register(this, BrowserType).ConfigureAwait(false);
-        Browser = service.Browser;
-    }
-
-    [TearDown]
-    public async Task BrowserTearDown()
-    {
-        if (TestOk())
+        if (clone == null)
         {
-            foreach (var context in _contexts)
-            {
-                await context.CloseAsync().ConfigureAwait(false);
-            }
+            return;
         }
-        _contexts.Clear();
-        Browser = null!;
+
+        Exact = clone.Exact;
     }
+
+    /// <summary><para>Whether to find an exact match: case-sensitive and whole-string. Default to false.</para></summary>
+    [JsonPropertyName("exact")]
+    public bool? Exact { get; set; }
 }
+
+#nullable disable

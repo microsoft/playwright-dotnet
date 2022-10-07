@@ -220,16 +220,4 @@ internal class BrowserTypeChannel : Channel<Core.BrowserType>
             };
         return Connection.SendMessageToServerAsync<JsonElement>(Guid, "connectOverCDP", channelArgs);
     }
-
-    internal Task<JsonPipeChannel> ConnectAsync(string wsEndpoint = default, IEnumerable<KeyValuePair<string, string>> headers = default, float? slowMo = default, float? timeout = default)
-    {
-        var channelArgs = new Dictionary<string, object>
-            {
-                { "wsEndpoint", wsEndpoint },
-                { "headers", headers },
-                { "slowMo", slowMo },
-                { "timeout", timeout },
-            };
-        return Connection.SendMessageToServerAsync<JsonPipeChannel>(Guid, "connect", channelArgs);
-    }
 }

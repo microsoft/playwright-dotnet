@@ -50,7 +50,7 @@ namespace Microsoft.Playwright;
 ///     public async Task NavigatetoLoginPage()<br/>
 ///     {<br/>
 ///         // ..<br/>
-///         await Page.Locator("#login").ClickAsync();<br/>
+///         await Page.GetByText("Sing in").ClickAsync();<br/>
 ///         await Expect(Page.Locator("div#foobar")).ToHaveURL(new Regex(".*/login"));<br/>
 ///     }<br/>
 /// }

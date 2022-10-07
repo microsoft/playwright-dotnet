@@ -31,7 +31,7 @@ using Microsoft.Playwright.Transport.Protocol;
 
 namespace Microsoft.Playwright.Core;
 
-internal partial class LocalUtils : ChannelOwnerBase, IChannelOwner<LocalUtils>
+internal class LocalUtils : ChannelOwnerBase, IChannelOwner<LocalUtils>
 {
     private readonly LocalUtilsChannel _channel;
 
@@ -64,6 +64,9 @@ internal partial class LocalUtils : ChannelOwnerBase, IChannelOwner<LocalUtils>
 
     internal Task HarUnzipAsync(string zipFile, string harFile)
          => _channel.HarUnzipAsync(zipFile, harFile);
+
+    internal Task<JsonPipeChannel> ConnectAsync(string wsEndpoint = default, IEnumerable<KeyValuePair<string, string>> headers = default, float? slowMo = default, float? timeout = default)
+         => _channel.ConnectAsync(wsEndpoint, headers, slowMo, timeout);
 }
 
 internal class LocalUtilsHarLookupResult

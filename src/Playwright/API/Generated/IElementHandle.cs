@@ -69,7 +69,7 @@ namespace Microsoft.Playwright;
 /// element is going to be located twice.
 /// </para>
 /// <code>
-/// var locator = page.Locator("text=Submit");<br/>
+/// var locator = page.GetByText("Submit");<br/>
 /// await locator.HoverAsync();<br/>
 /// await locator.ClickAsync();
 /// </code>
@@ -280,9 +280,8 @@ public partial interface IElementHandle : IJSHandle
     /// with selectors</a> for more details.
     /// </param>
     /// <param name="expression">
-    /// JavaScript expression to be evaluated in the browser context. If it looks like a
-    /// function declaration, it is interpreted as a function. Otherwise, evaluated as an
-    /// expression.
+    /// JavaScript expression to be evaluated in the browser context. If the expresion evaluates
+    /// to a function, the function is automatically invoked.
     /// </param>
     /// <param name="arg">Optional argument to pass to <paramref name="expression"/>.</param>
     Task<T> EvalOnSelectorAsync<T>(string selector, string expression, object? arg = default);
@@ -310,9 +309,8 @@ public partial interface IElementHandle : IJSHandle
     /// with selectors</a> for more details.
     /// </param>
     /// <param name="expression">
-    /// JavaScript expression to be evaluated in the browser context. If it looks like a
-    /// function declaration, it is interpreted as a function. Otherwise, evaluated as an
-    /// expression.
+    /// JavaScript expression to be evaluated in the browser context. If the expresion evaluates
+    /// to a function, the function is automatically invoked.
     /// </param>
     /// <param name="arg">Optional argument to pass to <paramref name="expression"/>.</param>
     Task<T> EvalOnSelectorAllAsync<T>(string selector, string expression, object? arg = default);

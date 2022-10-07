@@ -84,6 +84,30 @@ public partial interface IAPIRequestContext
     /// cookies from the context and update context cookies from the response. The method
     /// will automatically follow redirects.
     /// </para>
+    /// <para>JSON objects can be passed directly to the request:</para>
+    /// <code>
+    /// var data = new Dictionary&lt;string, object&gt;() {<br/>
+    ///   { "title", "Book Title" },<br/>
+    ///   { "body", "John Doe" }<br/>
+    /// };<br/>
+    /// await Request.FetchAsync("https://example.com/api/createBook", new() { Method = "post", DataObject = data });
+    /// </code>
+    /// <para>
+    /// The common way to send file(s) in the body of a request is to encode it as form
+    /// fields with <c>multipart/form-data</c> encoding. You can achieve that with Playwright
+    /// API like this:
+    /// </para>
+    /// <code>
+    /// var file = new FilePayload()<br/>
+    /// {<br/>
+    ///     Name = "f.js",<br/>
+    ///     MimeType = "text/javascript",<br/>
+    ///     Buffer = System.Text.Encoding.UTF8.GetBytes("console.log(2022);")<br/>
+    /// };<br/>
+    /// var multipart = Context.APIRequest.CreateFormData();<br/>
+    /// multipart.Set("fileField", file);<br/>
+    /// await Request.FetchAsync("https://example.com/api/uploadScript", new() { Method = "post", Multipart = multipart });
+    /// </code>
     /// </summary>
     /// <param name="urlOrRequest">Target URL or Request to get all parameters from.</param>
     /// <param name="options">Call options</param>
@@ -95,6 +119,30 @@ public partial interface IAPIRequestContext
     /// cookies from the context and update context cookies from the response. The method
     /// will automatically follow redirects.
     /// </para>
+    /// <para>JSON objects can be passed directly to the request:</para>
+    /// <code>
+    /// var data = new Dictionary&lt;string, object&gt;() {<br/>
+    ///   { "title", "Book Title" },<br/>
+    ///   { "body", "John Doe" }<br/>
+    /// };<br/>
+    /// await Request.FetchAsync("https://example.com/api/createBook", new() { Method = "post", DataObject = data });
+    /// </code>
+    /// <para>
+    /// The common way to send file(s) in the body of a request is to encode it as form
+    /// fields with <c>multipart/form-data</c> encoding. You can achieve that with Playwright
+    /// API like this:
+    /// </para>
+    /// <code>
+    /// var file = new FilePayload()<br/>
+    /// {<br/>
+    ///     Name = "f.js",<br/>
+    ///     MimeType = "text/javascript",<br/>
+    ///     Buffer = System.Text.Encoding.UTF8.GetBytes("console.log(2022);")<br/>
+    /// };<br/>
+    /// var multipart = Context.APIRequest.CreateFormData();<br/>
+    /// multipart.Set("fileField", file);<br/>
+    /// await Request.FetchAsync("https://example.com/api/uploadScript", new() { Method = "post", Multipart = multipart });
+    /// </code>
     /// </summary>
     /// <param name="urlOrRequest">Target URL or Request to get all parameters from.</param>
     /// <param name="options">Call options</param>
@@ -107,6 +155,18 @@ public partial interface IAPIRequestContext
     /// the context and update context cookies from the response. The method will automatically
     /// follow redirects.
     /// </para>
+    /// <para>
+    /// Request parameters can be configured with <c>params</c> option, they will be serialized
+    /// into the URL search parameters:
+    /// </para>
+    /// <code>
+    /// var params = new Dictionary&lt;string, object&gt;()<br/>
+    /// {<br/>
+    ///   { "isbn", "1234" },<br/>
+    ///   { "page", 23 },<br/>
+    /// }<br/>
+    /// await request.GetAsync("https://example.com/api/getText", new() { Params = params });
+    /// </code>
     /// </summary>
     /// <param name="url">Target URL.</param>
     /// <param name="options">Call options</param>
@@ -143,6 +203,41 @@ public partial interface IAPIRequestContext
     /// the context and update context cookies from the response. The method will automatically
     /// follow redirects.
     /// </para>
+    /// <para>JSON objects can be passed directly to the request:</para>
+    /// <code>
+    /// var data = new Dictionary&lt;string, object&gt;() {<br/>
+    ///   { "firstNam", "John" },<br/>
+    ///   { "lastName", "Doe" }<br/>
+    /// };<br/>
+    /// await request.PostAsync("https://example.com/api/createBook", new() { DataObject = data });
+    /// </code>
+    /// <para>
+    /// To send form data to the server use <c>form</c> option. Its value will be encoded
+    /// into the request body with <c>application/x-www-form-urlencoded</c> encoding (see
+    /// below how to use <c>multipart/form-data</c> form encoding to send files):
+    /// </para>
+    /// <code>
+    /// var formData = Context.APIRequest.CreateFormData();<br/>
+    /// formData.Set("title", "Book Title");<br/>
+    /// formData.Set("body", "John Doe");<br/>
+    /// await request.PostAsync("https://example.com/api/findBook", new() { Form = formData });
+    /// </code>
+    /// <para>
+    /// The common way to send file(s) in the body of a request is to upload them as form
+    /// fields with <c>multipart/form-data</c> encoding. You can achieve that with Playwright
+    /// API like this:
+    /// </para>
+    /// <code>
+    /// var file = new FilePayload()<br/>
+    /// {<br/>
+    ///     Name = "f.js",<br/>
+    ///     MimeType = "text/javascript",<br/>
+    ///     Buffer = System.Text.Encoding.UTF8.GetBytes("console.log(2022);")<br/>
+    /// };<br/>
+    /// var multipart = Context.APIRequest.CreateFormData();<br/>
+    /// multipart.Set("fileField", file);<br/>
+    /// await request.PostAsync("https://example.com/api/uploadScript", new() { Multipart = multipart });
+    /// </code>
     /// </summary>
     /// <param name="url">Target URL.</param>
     /// <param name="options">Call options</param>

@@ -326,9 +326,8 @@ public partial interface IFrame
     /// with selectors</a> for more details.
     /// </param>
     /// <param name="expression">
-    /// JavaScript expression to be evaluated in the browser context. If it looks like a
-    /// function declaration, it is interpreted as a function. Otherwise, evaluated as an
-    /// expression.
+    /// JavaScript expression to be evaluated in the browser context. If the expresion evaluates
+    /// to a function, the function is automatically invoked.
     /// </param>
     /// <param name="arg">Optional argument to pass to <paramref name="expression"/>.</param>
     /// <param name="options">Call options</param>
@@ -360,9 +359,8 @@ public partial interface IFrame
     /// with selectors</a> for more details.
     /// </param>
     /// <param name="expression">
-    /// JavaScript expression to be evaluated in the browser context. If it looks like a
-    /// function declaration, it is interpreted as a function. Otherwise, evaluated as an
-    /// expression.
+    /// JavaScript expression to be evaluated in the browser context. If the expresion evaluates
+    /// to a function, the function is automatically invoked.
     /// </param>
     /// <param name="arg">Optional argument to pass to <paramref name="expression"/>.</param>
     Task<T> EvalOnSelectorAllAsync<T>(string selector, string expression, object? arg = default);
@@ -397,9 +395,8 @@ public partial interface IFrame
     /// </code>
     /// </summary>
     /// <param name="expression">
-    /// JavaScript expression to be evaluated in the browser context. If it looks like a
-    /// function declaration, it is interpreted as a function. Otherwise, evaluated as an
-    /// expression.
+    /// JavaScript expression to be evaluated in the browser context. If the expresion evaluates
+    /// to a function, the function is automatically invoked.
     /// </param>
     /// <param name="arg">Optional argument to pass to <paramref name="expression"/>.</param>
     Task<T> EvaluateAsync<T>(string expression, object? arg = default);
@@ -430,9 +427,8 @@ public partial interface IFrame
     /// </code>
     /// </summary>
     /// <param name="expression">
-    /// JavaScript expression to be evaluated in the browser context. If it looks like a
-    /// function declaration, it is interpreted as a function. Otherwise, evaluated as an
-    /// expression.
+    /// JavaScript expression to be evaluated in the browser context. If the expresion evaluates
+    /// to a function, the function is automatically invoked.
     /// </param>
     /// <param name="arg">Optional argument to pass to <paramref name="expression"/>.</param>
     Task<IJSHandle> EvaluateHandleAsync(string expression, object? arg = default);
@@ -507,7 +503,7 @@ public partial interface IFrame
     /// text "Submit" in the iframe with id <c>my-frame</c>, like <c>&lt;iframe id="my-frame"&gt;</c>:
     /// </para>
     /// <code>
-    /// var locator = frame.FrameLocator("#my-iframe").Locator("text=Submit");<br/>
+    /// var locator = frame.FrameLocator("#my-iframe").GetByText("Submit");<br/>
     /// await locator.ClickAsync();
     /// </code>
     /// </summary>
@@ -526,6 +522,126 @@ public partial interface IFrame
     /// <param name="name">Attribute name to get the value for.</param>
     /// <param name="options">Call options</param>
     Task<string?> GetAttributeAsync(string selector, string name, FrameGetAttributeOptions? options = default);
+
+    /// <summary>
+    /// <para>
+    /// Allows locating elements by their alt text. For example, this method will find the
+    /// image by alt text "Castle":
+    /// </para>
+    /// </summary>
+    /// <param name="text">Text to locate the element for.</param>
+    /// <param name="options">Call options</param>
+    ILocator GetByAltText(string text, FrameGetByAltTextOptions? options = default);
+
+    /// <summary>
+    /// <para>
+    /// Allows locating elements by their alt text. For example, this method will find the
+    /// image by alt text "Castle":
+    /// </para>
+    /// </summary>
+    /// <param name="text">Text to locate the element for.</param>
+    /// <param name="options">Call options</param>
+    ILocator GetByAltText(Regex text, FrameGetByAltTextOptions? options = default);
+
+    /// <summary>
+    /// <para>
+    /// Allows locating input elements by the text of the associated label. For example,
+    /// this method will find the input by label text Password in the following DOM:
+    /// </para>
+    /// </summary>
+    /// <param name="text">Text to locate the element for.</param>
+    /// <param name="options">Call options</param>
+    ILocator GetByLabel(string text, FrameGetByLabelOptions? options = default);
+
+    /// <summary>
+    /// <para>
+    /// Allows locating input elements by the text of the associated label. For example,
+    /// this method will find the input by label text Password in the following DOM:
+    /// </para>
+    /// </summary>
+    /// <param name="text">Text to locate the element for.</param>
+    /// <param name="options">Call options</param>
+    ILocator GetByLabel(Regex text, FrameGetByLabelOptions? options = default);
+
+    /// <summary>
+    /// <para>
+    /// Allows locating input elements by the placeholder text. For example, this method
+    /// will find the input by placeholder "Country":
+    /// </para>
+    /// </summary>
+    /// <param name="text">Text to locate the element for.</param>
+    /// <param name="options">Call options</param>
+    ILocator GetByPlaceholder(string text, FrameGetByPlaceholderOptions? options = default);
+
+    /// <summary>
+    /// <para>
+    /// Allows locating input elements by the placeholder text. For example, this method
+    /// will find the input by placeholder "Country":
+    /// </para>
+    /// </summary>
+    /// <param name="text">Text to locate the element for.</param>
+    /// <param name="options">Call options</param>
+    ILocator GetByPlaceholder(Regex text, FrameGetByPlaceholderOptions? options = default);
+
+    /// <summary>
+    /// <para>
+    /// Allows locating elements by their <a href="https://www.w3.org/TR/wai-aria-1.2/#roles">ARIA
+    /// role</a>, <a href="https://www.w3.org/TR/wai-aria-1.2/#aria-attributes">ARIA attributes</a>
+    /// and <a href="https://w3c.github.io/accname/#dfn-accessible-name">accessible name</a>.
+    /// Note that role selector **does not replace** accessibility audits and conformance
+    /// tests, but rather gives early feedback about the ARIA guidelines.
+    /// </para>
+    /// <para>
+    /// Note that many html elements have an implicitly <a href="https://w3c.github.io/html-aam/#html-element-role-mappings">defined
+    /// role</a> that is recognized by the role selector. You can find all the <a href="https://www.w3.org/TR/wai-aria-1.2/#role_definitions">supported
+    /// roles here</a>. ARIA guidelines **do not recommend** duplicating implicit roles
+    /// and attributes by setting <c>role</c> and/or <c>aria-*</c> attributes to default
+    /// values.
+    /// </para>
+    /// </summary>
+    /// <param name="role">Required aria role.</param>
+    /// <param name="options">Call options</param>
+    ILocator GetByRole(string role, FrameGetByRoleOptions? options = default);
+
+    /// <summary>
+    /// <para>
+    /// Locate element by the test id. By default, the <c>data-testid</c> attribute is used
+    /// as a test id. Use <see cref="ISelectors.SetTestIdAttribute"/> to configure a different
+    /// test id attribute if necessary.
+    /// </para>
+    /// </summary>
+    /// <param name="testId">Id to locate the element by.</param>
+    ILocator GetByTestId(string testId);
+
+    /// <summary><para>Allows locating elements that contain given text.</para></summary>
+    /// <param name="text">Text to locate the element for.</param>
+    /// <param name="options">Call options</param>
+    ILocator GetByText(string text, FrameGetByTextOptions? options = default);
+
+    /// <summary><para>Allows locating elements that contain given text.</para></summary>
+    /// <param name="text">Text to locate the element for.</param>
+    /// <param name="options">Call options</param>
+    ILocator GetByText(Regex text, FrameGetByTextOptions? options = default);
+
+    /// <summary>
+    /// <para>
+    /// Allows locating elements by their title. For example, this method will find the
+    /// button by its title "Submit":
+    /// </para>
+    /// </summary>
+    /// <param name="text">Text to locate the element for.</param>
+    /// <param name="options">Call options</param>
+    ILocator GetByTitle(string text, FrameGetByTitleOptions? options = default);
+
+    /// <summary>
+    /// <para>
+    /// Allows locating elements by their title. For example, this method will find the
+    /// button by its title "Submit":
+    /// </para>
+    /// </summary>
+    /// <param name="text">Text to locate the element for.</param>
+    /// <param name="options">Call options</param>
+    ILocator GetByTitle(Regex text, FrameGetByTitleOptions? options = default);
 
     /// <summary>
     /// <para>
@@ -711,11 +827,12 @@ public partial interface IFrame
 
     /// <summary>
     /// <para>
-    /// The method returns an element locator that can be used to perform actions in the
-    /// frame. Locator is resolved to the element immediately before performing an action,
-    /// so a series of actions on the same locator can in fact be performed on different
+    /// The method returns an element locator that can be used to perform actions on this
+    /// page / frame. Locator is resolved to the element immediately before performing an
+    /// action, so a series of actions on the same locator can in fact be performed on different
     /// DOM elements. That would happen if the DOM structure between those actions has changed.
     /// </para>
+    /// <para><a href="https://playwright.dev/dotnet/docs/locators">Learn more about locators</a>.</para>
     /// <para><a href="https://playwright.dev/dotnet/docs/locators">Learn more about locators</a>.</para>
     /// </summary>
     /// <param name="selector">
@@ -1361,9 +1478,8 @@ public partial interface IFrame
     /// </code>
     /// </summary>
     /// <param name="expression">
-    /// JavaScript expression to be evaluated in the browser context. If it looks like a
-    /// function declaration, it is interpreted as a function. Otherwise, evaluated as an
-    /// expression.
+    /// JavaScript expression to be evaluated in the browser context. If the expresion evaluates
+    /// to a function, the function is automatically invoked.
     /// </param>
     /// <param name="arg">Optional argument to pass to <paramref name="expression"/>.</param>
     /// <param name="options">Call options</param>

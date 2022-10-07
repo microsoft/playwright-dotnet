@@ -24,6 +24,8 @@
  * SOFTWARE.
  */
 
+using System.Text.RegularExpressions;
+
 namespace Microsoft.Playwright.Core;
 
 internal class FrameLocator : IFrameLocator
@@ -41,9 +43,45 @@ internal class FrameLocator : IFrameLocator
 
     IFrameLocator IFrameLocator.Last => new FrameLocator(_frame, $"{_frameSelector} >> nth=-1");
 
-    IFrameLocator IFrameLocator.FrameLocator(string selector) => new FrameLocator(_frame, $"{_frameSelector} >> control=enter-frame >> {selector}");
+    ILocator IFrameLocator.GetByAltText(string text, FrameLocatorGetByAltTextOptions options)
+        => Locator(Core.Locator.GetByAltTextSelector(text, options?.Exact));
 
-    ILocator IFrameLocator.Locator(string selector, FrameLocatorLocatorOptions options) => new Locator(_frame, $"{_frameSelector} >> control=enter-frame >> {selector}", new() { HasTextRegex = options?.HasTextRegex, HasTextString = options?.HasTextString });
+    public ILocator GetByAltText(Regex text, FrameLocatorGetByAltTextOptions options = null)
+        => Locator(Core.Locator.GetByAltTextSelector(text, options?.Exact));
 
-    IFrameLocator IFrameLocator.Nth(int index) => new FrameLocator(_frame, $"{_frameSelector} >> nth={index}");
+    public ILocator GetByLabel(string text, FrameLocatorGetByLabelOptions options = null)
+        => Locator(Core.Locator.GetByLabelSelector(text, options?.Exact));
+
+    public ILocator GetByLabel(Regex text, FrameLocatorGetByLabelOptions options = null)
+        => Locator(Core.Locator.GetByLabelSelector(text, options?.Exact));
+
+    public ILocator GetByPlaceholder(string text, FrameLocatorGetByPlaceholderOptions options = null)
+        => Locator(Core.Locator.GetByPlaceholderSelector(text, options?.Exact));
+
+    public ILocator GetByPlaceholder(Regex text, FrameLocatorGetByPlaceholderOptions options = null)
+        => Locator(Core.Locator.GetByPlaceholderSelector(text, options?.Exact));
+
+    public ILocator GetByRole(string role, FrameLocatorGetByRoleOptions options = null)
+        => Locator(Core.Locator.GetByRoleSelector(role, new(options)));
+
+    public ILocator GetByTestId(string testId)
+        => Locator(Core.Locator.GetByTestIdSelector(testId));
+
+    public ILocator GetByText(string text, FrameLocatorGetByTextOptions options = null)
+        => Locator(Core.Locator.GetByTextSelector(text, options?.Exact));
+
+    public ILocator GetByText(Regex text, FrameLocatorGetByTextOptions options = null)
+        => Locator(Core.Locator.GetByTextSelector(text, options?.Exact));
+
+    public ILocator GetByTitle(string text, FrameLocatorGetByTitleOptions options = null)
+        => Locator(Core.Locator.GetByTitleSelector(text, options?.Exact));
+
+    public ILocator GetByTitle(Regex text, FrameLocatorGetByTitleOptions options = null)
+        => Locator(Core.Locator.GetByTitleSelector(text, options?.Exact));
+
+    IFrameLocator IFrameLocator.FrameLocator(string selector) => new FrameLocator(_frame, $"{_frameSelector} >> internal:control=enter-frame  >> {selector}");
+
+    public ILocator Locator(string selector, FrameLocatorLocatorOptions options = null) => new Locator(_frame, $"{_frameSelector} >> internal:control=enter-frame  >> {selector}", new() { HasTextRegex = options?.HasTextRegex, HasTextString = options?.HasTextString });
+
+    public IFrameLocator Nth(int index) => new FrameLocator(_frame, $"{_frameSelector} >> nth={index}");
 }

@@ -311,24 +311,107 @@ public class BrowserContextFetchTests : PageTestEx
         Assert.AreEqual("/empty.html", requestURL);
     }
 
-    [PlaywrightTest("browsercontext-fetch.spec.ts", "should support post data")]
-    public async Task ShouldSupportPostData()
+    [PlaywrightTest("browsercontext-fetch.spec.ts", "delete should support post data")]
+    public async Task DeleteShouldSupportPostData()
     {
-        foreach (var method in new string[] { "delete", "patch", "post", "put" })
+        var ((requestMethod, requestPath, requestBody), response) = await TaskUtils.WhenAll(
+        Server.WaitForRequest("/simple.json", request =>
         {
-            var ((requestMethod, requestPath, requestBody), response) = await TaskUtils.WhenAll(
-            Server.WaitForRequest("/simple.json", request =>
-            {
-                using StreamReader reader = new(request.Body, System.Text.Encoding.UTF8);
-                return (request.Method, request.Path, reader.ReadToEndAsync().GetAwaiter().GetResult());
-            }),
-                Context.APIRequest.NameToMethod(method)(Server.Prefix + "/simple.json", new() { Method = "POST", DataString = "My request" })
-            );
-            Assert.AreEqual(method.ToUpperInvariant(), requestMethod);
-            Assert.AreEqual("My request", requestBody);
-            Assert.AreEqual(200, response.Status);
-            Assert.AreEqual("/simple.json", requestPath.ToString());
-        }
+            using StreamReader reader = new(request.Body, System.Text.Encoding.UTF8);
+            return (request.Method, request.Path, reader.ReadToEndAsync().GetAwaiter().GetResult());
+        }),
+            Context.APIRequest.DeleteAsync(Server.Prefix + "/simple.json", new() { Method = "POST", DataString = "My request" })
+        );
+        Assert.AreEqual("DELETE", requestMethod);
+        Assert.AreEqual("My request", requestBody);
+        Assert.AreEqual(200, response.Status);
+        Assert.AreEqual("/simple.json", requestPath.ToString());
+    }
+
+    [PlaywrightTest("browsercontext-fetch.spec.ts", "get should support post data")]
+    public async Task GetShouldSupportPostData()
+    {
+        var ((requestMethod, requestPath, requestBody), response) = await TaskUtils.WhenAll(
+        Server.WaitForRequest("/simple.json", request =>
+        {
+            using StreamReader reader = new(request.Body, System.Text.Encoding.UTF8);
+            return (request.Method, request.Path, reader.ReadToEndAsync().GetAwaiter().GetResult());
+        }),
+            Context.APIRequest.GetAsync(Server.Prefix + "/simple.json", new() { Method = "POST", DataString = "My request" })
+        );
+        Assert.AreEqual("GET", requestMethod);
+        Assert.AreEqual("My request", requestBody);
+        Assert.AreEqual(200, response.Status);
+        Assert.AreEqual("/simple.json", requestPath.ToString());
+    }
+
+    [PlaywrightTest("browsercontext-fetch.spec.ts", "head should support post data")]
+    public async Task HeadShouldSupportPostData()
+    {
+        var ((requestMethod, requestPath, requestBody), response) = await TaskUtils.WhenAll(
+        Server.WaitForRequest("/simple.json", request =>
+        {
+            using StreamReader reader = new(request.Body, System.Text.Encoding.UTF8);
+            return (request.Method, request.Path, reader.ReadToEndAsync().GetAwaiter().GetResult());
+        }),
+            Context.APIRequest.HeadAsync(Server.Prefix + "/simple.json", new() { Method = "POST", DataString = "My request" })
+        );
+        Assert.AreEqual("HEAD", requestMethod);
+        Assert.AreEqual("My request", requestBody);
+        Assert.AreEqual(200, response.Status);
+        Assert.AreEqual("/simple.json", requestPath.ToString());
+    }
+
+    [PlaywrightTest("browsercontext-fetch.spec.ts", "patch should support post data")]
+    public async Task PatchShouldSupportPostData()
+    {
+        var ((requestMethod, requestPath, requestBody), response) = await TaskUtils.WhenAll(
+        Server.WaitForRequest("/simple.json", request =>
+        {
+            using StreamReader reader = new(request.Body, System.Text.Encoding.UTF8);
+            return (request.Method, request.Path, reader.ReadToEndAsync().GetAwaiter().GetResult());
+        }),
+            Context.APIRequest.PatchAsync(Server.Prefix + "/simple.json", new() { Method = "POST", DataString = "My request" })
+        );
+        Assert.AreEqual("PATCH", requestMethod);
+        Assert.AreEqual("My request", requestBody);
+        Assert.AreEqual(200, response.Status);
+        Assert.AreEqual("/simple.json", requestPath.ToString());
+    }
+
+    [PlaywrightTest("browsercontext-fetch.spec.ts", "post should support post data")]
+    public async Task PostShouldSupportPostData()
+    {
+        var ((requestMethod, requestPath, requestBody), response) = await TaskUtils.WhenAll(
+        Server.WaitForRequest("/simple.json", request =>
+        {
+            using StreamReader reader = new(request.Body, System.Text.Encoding.UTF8);
+            return (request.Method, request.Path, reader.ReadToEndAsync().GetAwaiter().GetResult());
+        }),
+            Context.APIRequest.PostAsync(Server.Prefix + "/simple.json", new() { Method = "POST", DataString = "My request" })
+        );
+        Assert.AreEqual("POST", requestMethod);
+        Assert.AreEqual("My request", requestBody);
+        Assert.AreEqual(200, response.Status);
+        Assert.AreEqual("/simple.json", requestPath.ToString());
+    }
+
+
+    [PlaywrightTest("browsercontext-fetch.spec.ts", "put should support post data")]
+    public async Task PutShouldSupportPostData()
+    {
+        var ((requestMethod, requestPath, requestBody), response) = await TaskUtils.WhenAll(
+        Server.WaitForRequest("/simple.json", request =>
+        {
+            using StreamReader reader = new(request.Body, System.Text.Encoding.UTF8);
+            return (request.Method, request.Path, reader.ReadToEndAsync().GetAwaiter().GetResult());
+        }),
+            Context.APIRequest.PutAsync(Server.Prefix + "/simple.json", new() { Method = "POST", DataString = "My request" })
+        );
+        Assert.AreEqual("PUT", requestMethod);
+        Assert.AreEqual("My request", requestBody);
+        Assert.AreEqual(200, response.Status);
+        Assert.AreEqual("/simple.json", requestPath.ToString());
     }
 
     [PlaywrightTest("browsercontext-fetch.spec.ts", "should add default headers")]
