@@ -1162,38 +1162,38 @@ internal class Page : ChannelOwnerBase, IChannelOwner<Page>, IPage
     }
 
     public ILocator GetByAltText(string text, PageGetByAltTextOptions options = null)
-        => Locator(Core.Locator.GetByAltTextSelector(text, options?.Exact));
+        => MainFrame.GetByAltText(text, new() { Exact = options?.Exact });
 
     public ILocator GetByAltText(Regex text, PageGetByAltTextOptions options = null)
-        => Locator(Core.Locator.GetByAltTextSelector(text, options?.Exact));
+        => MainFrame.GetByAltText(text, new() { Exact = options?.Exact });
 
     public ILocator GetByLabel(string text, PageGetByLabelOptions options = null)
-        => Locator(Core.Locator.GetByLabelSelector(text, options?.Exact));
+        => MainFrame.GetByLabel(text, new() { Exact = options?.Exact });
 
     public ILocator GetByLabel(Regex text, PageGetByLabelOptions options = null)
-        => Locator(Core.Locator.GetByLabelSelector(text, options?.Exact));
+        => MainFrame.GetByLabel(text, new() { Exact = options?.Exact });
 
     public ILocator GetByPlaceholder(string text, PageGetByPlaceholderOptions options = null)
-        => Locator(Core.Locator.GetByPlaceholderSelector(text, options?.Exact));
+        => MainFrame.GetByPlaceholder(text, new() { Exact = options?.Exact });
 
     public ILocator GetByPlaceholder(Regex text, PageGetByPlaceholderOptions options = null)
-        => Locator(Core.Locator.GetByPlaceholderSelector(text, options?.Exact));
+        => MainFrame.GetByPlaceholder(text, new() { Exact = options?.Exact });
 
     public ILocator GetByRole(string role, PageGetByRoleOptions options = null)
         => Locator(Core.Locator.GetByRoleSelector(role, new(options)));
 
     public ILocator GetByTestId(string testId)
-        => Locator(Core.Locator.GetByTestIdSelector(testId));
+        => MainFrame.GetByTestId(testId);
 
     public ILocator GetByText(string text, PageGetByTextOptions options = null)
-        => Locator(Core.Locator.GetByTextSelector(text, options?.Exact));
+        => MainFrame.GetByText(text, new() { Exact = options?.Exact });
 
     public ILocator GetByText(Regex text, PageGetByTextOptions options = null)
-        => Locator(Core.Locator.GetByTextSelector(text, options?.Exact));
+        => MainFrame.GetByText(text, new() { Exact = options?.Exact });
 
     public ILocator GetByTitle(string text, PageGetByTitleOptions options = null)
-        => Locator(Core.Locator.GetByTitleSelector(text, options?.Exact));
+        => MainFrame.GetByTitle(text, new() { Exact = options?.Exact });
 
     public ILocator GetByTitle(Regex text, PageGetByTitleOptions options = null)
-        => Locator(Core.Locator.GetByTitleSelector(text, options?.Exact));
+        => MainFrame.GetByTitle(text, new() { Exact = options?.Exact });
 }

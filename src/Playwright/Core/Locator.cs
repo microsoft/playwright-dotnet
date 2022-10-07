@@ -383,13 +383,10 @@ internal class Locator : ILocator
         => _testIdAttributeName = attributeName;
 
     internal static string GetByTestIdSelector(string testId)
-           => GetByAttributeTextSelector(_testIdAttributeName, testId, exact: true);
+        => GetByAttributeTextSelector(_testIdAttributeName, testId, exact: true);
 
     internal static string GetByAttributeTextSelector(string attrName, string text, bool? exact)
-    {
-        var exactFlag = (exact == true) ? "s" : "i";
-        return $"internal:attr=[{attrName}={EscapeForAttributeSelector(text)}{exactFlag}]";
-    }
+        => $"internal:attr=[{attrName}={EscapeForAttributeSelector(text, exact ?? false)}]";
 
     internal static string GetByAttributeTextSelector(string attrName, Regex text, bool? exact)
         => $"internal:attr=[{attrName}={EscapeForTextSelector(text, exact)}]";
@@ -466,13 +463,14 @@ internal class Locator : ILocator
         return $"role={role}{string.Concat(props.Select(p => $"[{p[0]}={p[1]}]"))}";
     }
 
-    private static string EscapeForAttributeSelector(string value)
+    private static string EscapeForAttributeSelector(string value, bool exact)
     {
         // TODO: this should actually be
         //   cssEscape(value).replace(/\\ /g, ' ')
         // However, our attribute selectors do not conform to CSS parsing spec,
         // so we escape them differently.
-        return $"\"{value.Replace("\"", "\\\"")}\"";
+        var exactFlag = (exact == true) ? string.Empty : "i";
+        return $"\"{value.Replace("\"", "\\\"")}\"{exactFlag}";
     }
 
     private static string EscapeForTextSelector(Regex text, bool? exact)
