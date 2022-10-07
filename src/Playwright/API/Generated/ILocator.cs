@@ -470,7 +470,7 @@ public partial interface ILocator
     /// </summary>
     /// <param name="role">Required aria role.</param>
     /// <param name="options">Call options</param>
-    ILocator GetByRole(string role, LocatorGetByRoleOptions? options = default);
+    ILocator GetByRole(AriaRole role, LocatorGetByRoleOptions? options = default);
 
     /// <summary>
     /// <para>

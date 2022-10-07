@@ -154,7 +154,7 @@ public partial interface IFrameLocator
     /// </summary>
     /// <param name="role">Required aria role.</param>
     /// <param name="options">Call options</param>
-    ILocator GetByRole(string role, FrameLocatorGetByRoleOptions? options = default);
+    ILocator GetByRole(AriaRole role, FrameLocatorGetByRoleOptions? options = default);
 
     /// <summary>
     /// <para>

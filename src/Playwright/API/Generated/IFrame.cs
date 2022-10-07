@@ -601,7 +601,7 @@ public partial interface IFrame
     /// </summary>
     /// <param name="role">Required aria role.</param>
     /// <param name="options">Call options</param>
-    ILocator GetByRole(string role, FrameGetByRoleOptions? options = default);
+    ILocator GetByRole(AriaRole role, FrameGetByRoleOptions? options = default);
 
     /// <summary>
     /// <para>
