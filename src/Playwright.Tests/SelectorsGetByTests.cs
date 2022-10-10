@@ -38,6 +38,16 @@ public class SelectorsGetByTests : PageTestEx
         await Expect(Page.Locator("div").GetByTestId("Hello")).ToHaveTextAsync("Hello world");
     }
 
+    [PlaywrightTest("selector-get-by.spec.ts", "getByTestId with custom testId should work")]
+    public async Task GetByTestIdWithCustomTestIdShouldWork()
+    {
+        await Page.SetContentAsync("<div><div data-my-custom-testid=\"Hello\">Hello world</div></div>");
+        Playwright.Selectors.SetTestIdAttribute("data-my-custom-testid");
+        await Expect(Page.GetByTestId("Hello")).ToHaveTextAsync("Hello world");
+        await Expect(Page.MainFrame.GetByTestId("Hello")).ToHaveTextAsync("Hello world");
+        await Expect(Page.Locator("div").GetByTestId("Hello")).ToHaveTextAsync("Hello world");
+    }
+
     [PlaywrightTest("selector-get-by.spec.ts", "getByTestId should escape id")]
     public async Task GetByTestIdShouldEscapeId()
     {
