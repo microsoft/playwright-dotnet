@@ -49,5 +49,5 @@ internal class Selectors : ChannelOwnerBase, IChannelOwner<Selectors>, ISelector
         await _channel.RegisterAsync(name, script, options?.ContentScript).ConfigureAwait(false);
     }
 
-    public void SetTestIdAttribute(string attributeName) => throw new System.NotImplementedException();
+    public void SetTestIdAttribute(string attributeName) => Locator.SetTestIdAttribute(attributeName);
 }
