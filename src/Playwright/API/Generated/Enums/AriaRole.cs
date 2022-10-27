@@ -192,8 +192,8 @@ public enum AriaRole
     Tree,
     [EnumMember(Value = "treegrid")]
     Treegrid,
-    [EnumMember(Value = "treeite")]
-    Treeite,
+    [EnumMember(Value = "treeitem")]
+    Treeitem,
 }
 
 #nullable disable
