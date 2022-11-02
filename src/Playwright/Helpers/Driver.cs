@@ -34,7 +34,13 @@ internal static class Driver
 {
     internal static string GetExecutablePath()
     {
-        DirectoryInfo assemblyDirectory = new(AppContext.BaseDirectory);
+        string baseDirectory = Environment.GetEnvironmentVariable("PLAYWRIGHT_DRIVER_PATH");
+        if (string.IsNullOrEmpty(baseDirectory))
+        {
+            baseDirectory = AppContext.BaseDirectory;
+        }
+
+        DirectoryInfo assemblyDirectory = new(baseDirectory);
         if (!assemblyDirectory.Exists || !File.Exists(Path.Combine(assemblyDirectory.FullName, "Microsoft.Playwright.dll")))
         {
             string assemblyLocation;
