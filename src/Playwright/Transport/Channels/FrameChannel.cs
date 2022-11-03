@@ -418,6 +418,7 @@ internal class FrameChannel : Channel<Frame>
         Position position,
         IEnumerable<KeyboardModifier> modifiers,
         bool? force,
+        bool? noWaitAfter,
         float? timeout,
         bool? trial,
         bool? strict)
@@ -431,6 +432,7 @@ internal class FrameChannel : Channel<Frame>
             ["trial"] = trial,
             ["timeout"] = timeout,
             ["strict"] = strict,
+            ["noWaitAfter"] = noWaitAfter,
         };
 
         return Connection.SendMessageToServerAsync(Guid, "hover", args);

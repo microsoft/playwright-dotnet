@@ -310,6 +310,7 @@ internal class Frame : ChannelOwnerBase, IChannelOwner<Frame>, IFrame
             position: options?.Position,
             modifiers: options?.Modifiers,
             force: options?.Force,
+            noWaitAfter: options?.NoWaitAfter,
             timeout: options?.Timeout,
             trial: options?.Trial,
             strict: options?.Strict);
@@ -334,7 +335,14 @@ internal class Frame : ChannelOwnerBase, IChannelOwner<Frame>, IFrame
     public Task FillAsync(string selector, string value, FrameFillOptions options = default)
         => _channel.FillAsync(selector, value, force: options?.Force, timeout: options?.Timeout, noWaitAfter: options?.NoWaitAfter, options?.Strict);
 
-    public Task ClearAsync(string selector, FrameClearOptions options = null) => throw new NotImplementedException();
+    public Task ClearAsync(string selector, FrameClearOptions options = null)
+        => FillAsync(selector, string.Empty, new()
+        {
+            Force = options?.Force,
+            Timeout = options?.Timeout,
+            NoWaitAfter = options?.NoWaitAfter,
+            Strict = options?.Strict,
+        });
 
     public async Task<IElementHandle> AddScriptTagAsync(FrameAddScriptTagOptions options = default)
     {

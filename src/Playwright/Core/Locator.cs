@@ -58,7 +58,7 @@ internal class Locator : ILocator
         }
         else if (options?.HasTextString != null)
         {
-            _selector += $" >> internal:has-text={EscapeForTextSelector(options.HasTextRegex, false)}";
+            _selector += $" >> internal:has-text={EscapeForTextSelector(options.HasTextString, false)}";
         }
 
         if (options?.Has != null)
@@ -499,7 +499,7 @@ internal class Locator : ILocator
     {
         var patern = new Regex(@"[.*+?^>${}()|[\]\\]");
         return patern.Replace(text, "\\$&");
-    }        
+    }
 }
 
 internal class ByRoleOptions

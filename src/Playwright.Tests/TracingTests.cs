@@ -226,7 +226,7 @@ public class TracingTests : ContextTestEx
     }
 
     [PlaywrightTest()]
-    public async Task SheouldSendDotNetApiNames()
+    public async Task ShouldSendDotNetApiNames()
     {
         await Context.Tracing.StartAsync(new()
         {

@@ -519,6 +519,7 @@ internal class Page : ChannelOwnerBase, IChannelOwner<Page>, IPage
                 Position = options?.Position,
                 Modifiers = options?.Modifiers,
                 Force = options?.Force,
+                NoWaitAfter = options?.NoWaitAfter,
                 Timeout = options?.Timeout,
                 Trial = options?.Trial,
                 Strict = options?.Strict,

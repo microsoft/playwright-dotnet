@@ -62,7 +62,7 @@ public class PageFillTests : PageTestEx
         {
             await Page.EvalOnSelectorAsync("input", "(input, type) => input.setAttribute('type', type)", type);
             var exception = await PlaywrightAssert.ThrowsAsync<PlaywrightException>(() => Page.ClearAsync("input"));
-            StringAssert.Contains($"input of type \"{type}\" cannot be cleared", exception.Message);
+            StringAssert.Contains($"Input of type \"{type}\" cannot be filled", exception.Message);
         }
     }
 
@@ -184,7 +184,7 @@ public class PageFillTests : PageTestEx
     {
         await Page.GotoAsync(Server.Prefix + "/input/textarea.html");
         var exception = await PlaywrightAssert.ThrowsAsync<PlaywrightException>(() => Page.ClearAsync("body"));
-        StringAssert.Contains("page.clear: Error: Element is not an <input>, <textarea> or [contenteditable] element", exception.Message);
+        StringAssert.Contains("Element is not an <input>, <textarea> or [contenteditable] element", exception.Message);
     }
 
 

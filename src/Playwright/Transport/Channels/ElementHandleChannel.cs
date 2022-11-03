@@ -155,6 +155,7 @@ internal class ElementHandleChannel : JSHandleChannel, IChannel<ElementHandle>
         Position position,
         float? timeout,
         bool? force,
+        bool? noWaitAfter,
         bool? trial)
     {
         var args = new Dictionary<string, object>
@@ -164,6 +165,7 @@ internal class ElementHandleChannel : JSHandleChannel, IChannel<ElementHandle>
             ["timeout"] = timeout,
             ["trial"] = trial,
             ["modifiers"] = modifiers?.Select(m => m.ToValueString()),
+            ["noWaitAfter"] = noWaitAfter,
         };
 
         return Connection.SendMessageToServerAsync<JsonElement?>(Guid, "hover", args);

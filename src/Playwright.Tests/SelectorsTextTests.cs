@@ -237,7 +237,7 @@ public class SelectorsTextTests : PageTestEx
         await Expect(Page.GetByText("helloworld", new() { Exact = true })).ToHaveIdAsync("div1");
         await Expect(Page.GetByText("hello", new() { Exact = true })).ToHaveIdAsync("div2");
         await Expect(Page.Locator("div", new() { HasTextRegex = new Regex("^helloworld$") })).ToHaveIdAsync("div1");
-        await Expect(Page.Locator("div", new() { HasTextRegex= new Regex("^hello$") })).ToHaveIdAsync("div2");
+        await Expect(Page.Locator("div", new() { HasTextRegex = new Regex("^hello$") })).ToHaveIdAsync("div2");
 
         await Page.SetContentAsync(@"
             <div id=div1><span id=span1>hello</span>world</div>

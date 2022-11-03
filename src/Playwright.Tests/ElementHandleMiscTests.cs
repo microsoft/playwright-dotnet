@@ -70,9 +70,9 @@ public class ElementHandleMiscTests : PageTestEx
         await Page.GotoAsync(Server.Prefix + "/input/textarea.html");
         var handle = await Page.QuerySelectorAsync("input");
         await handle.FillAsync("some value");
-        Assert.AreEqual("some value", await Page.EvaluateAsync("window['result']"));
+        Assert.AreEqual("some value", await Page.EvaluateAsync<string>("window['result']"));
         await handle.ClearAsync();
-        Assert.AreEqual(string.Empty, await Page.EvaluateAsync("window['result']"));
+        Assert.AreEqual(string.Empty, await Page.EvaluateAsync<string>("window['result']"));
     }
 
     [PlaywrightTest("elementhandle-misc.spec.ts", "should check the box")]

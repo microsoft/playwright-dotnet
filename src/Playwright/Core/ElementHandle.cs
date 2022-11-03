@@ -120,6 +120,7 @@ internal partial class ElementHandle : JSHandle, IElementHandle, IChannelOwner<E
             position: options?.Position,
             timeout: options?.Timeout,
             force: options?.Force,
+            noWaitAfter: options?.NoWaitAfter,
             trial: options?.Trial);
 
     public Task ScrollIntoViewIfNeededAsync(ElementHandleScrollIntoViewIfNeededOptions options = default)

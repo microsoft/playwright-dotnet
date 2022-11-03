@@ -64,15 +64,15 @@ public class LocatorMisc1Tests : PageTestEx
         Assert.AreEqual("some value", await Page.EvaluateAsync<string>("() => window['result']"));
     }
 
-    [PlaywrightTest("elementhandle-misc.spec.ts", "should clear input")]
+    [PlaywrightTest("locator-misc-1.spec.ts", "should clear input")]
     public async Task ShouldClearInput()
     {
         await Page.GotoAsync(Server.Prefix + "/input/textarea.html");
         var locator = Page.Locator("input");
         await locator.FillAsync("some value");
-        Assert.AreEqual("some value", await Page.EvaluateAsync("window['result']"));
+        Assert.AreEqual("some value", await Page.EvaluateAsync<string>("window['result']"));
         await locator.ClearAsync();
-        Assert.AreEqual(string.Empty, await Page.EvaluateAsync("window['result']"));
+        Assert.AreEqual(string.Empty, await Page.EvaluateAsync<string>("window['result']"));
     }
 
     [PlaywrightTest("locator-misc-1.spec.ts", "should check the box")]
