@@ -180,8 +180,9 @@ public class PageWaitForNavigationTests : PageTestEx
     [PlaywrightTest("page-wait-for-navigation.spec.ts", "should work when subframe issues window.stop()")]
     public async Task ShouldWorkWhenSubframeIssuesWindowStop()
     {
-        IFrame frame = null;
+        Server.SetRoute("/frames/style.css", _ => Task.Delay(-1));
 
+        IFrame frame = null;
         var frameAttachedTaskSource = new TaskCompletionSource<IFrame>();
         Page.FrameAttached += (_, f) => frameAttachedTaskSource.SetResult(f);
         var frameNavigatedTaskSource = new TaskCompletionSource<bool>();
@@ -193,12 +194,11 @@ public class PageWaitForNavigationTests : PageTestEx
             }
         };
 
-        Server.SetRoute("/frames/style.css", _ => Task.Delay(-1));
-        bool navigated = false;
+        bool done = false;
         async Task navigate()
         {
             await Page.GotoAsync(Server.Prefix + "/frames/one-frame.html");
-            navigated = true;
+            done = true;
         }
         navigate().IgnoreException();
 
@@ -206,10 +206,9 @@ public class PageWaitForNavigationTests : PageTestEx
 
         await frameNavigatedTaskSource.Task;
         await frame.EvaluateAsync("() => window.stop()");
-        // give it some time to erroneously resolve
-        await Task.Delay(2000);
+        await Page.WaitForTimeoutAsync(2000); // give it some time to erroneously resolve
         // Chromium and Firefox issue load event in this case.
-        Assert.AreEqual(navigated, BrowserName != "webkit");
+        Assert.AreEqual(done, BrowserName != "webkit");
     }
 
     [PlaywrightTest("page-wait-for-navigation.spec.ts", "should work with url match")]
