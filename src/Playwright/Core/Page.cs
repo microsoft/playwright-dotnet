@@ -286,10 +286,10 @@ internal class Page : ChannelOwnerBase, IChannelOwner<Page>, IPage
     {
         var args = new Dictionary<string, object>
         {
-            ["media"] = options?.Media,
-            ["colorScheme"] = options?.ColorScheme,
-            ["reducedMotion"] = options?.ReducedMotion,
-            ["forcedColors"] = options?.ForcedColors,
+            ["media"] = options?.Media == Media.Null ? "no-override" : options?.Media,
+            ["colorScheme"] = options?.ColorScheme == ColorScheme.Null ? "no-override" : options?.ColorScheme,
+            ["reducedMotion"] = options?.ReducedMotion == ReducedMotion.Null ? "no-override" : options?.ReducedMotion,
+            ["forcedColors"] = options?.ForcedColors == ForcedColors.Null ? "no-override" : options?.ForcedColors,
         };
         return _channel.EmulateMediaAsync(args);
     }

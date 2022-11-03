@@ -193,8 +193,9 @@ internal class BrowserTypeChannel : Channel<Core.BrowserType>
         channelArgs.Add("extraHTTPHeaders", extraHTTPHeaders.ToProtocol());
         channelArgs.Add("offline", offline);
         channelArgs.Add("httpCredentials", httpCredentials);
-        channelArgs.Add("colorScheme", colorScheme);
-        channelArgs.Add("reducedMotion", reducedMotion);
+        channelArgs.Add("colorScheme", colorScheme == ColorScheme.Null ? "no-override" : colorScheme);
+        channelArgs.Add("reducedMotion", reducedMotion == ReducedMotion.Null ? "no-override" : reducedMotion);
+        channelArgs.Add("forcedColors", forcedColors == ForcedColors.Null ? "no-override" : forcedColors);
 
         if (recordVideo != null)
         {
@@ -204,7 +205,6 @@ internal class BrowserTypeChannel : Channel<Core.BrowserType>
         channelArgs.Add("ignoreDefaultArgs", ignoreDefaultArgs);
         channelArgs.Add("ignoreAllDefaultArgs", ignoreAllDefaultArgs);
         channelArgs.Add("baseURL", baseUrl);
-        channelArgs.Add("forcedColors", forcedColors);
 
         return Connection.SendMessageToServerAsync<BrowserContextChannel>(Guid, "launchPersistentContext", channelArgs);
     }

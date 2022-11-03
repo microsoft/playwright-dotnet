@@ -135,8 +135,6 @@ internal class BrowserChannel : Channel<Browser>
             {
                 { "acceptDownloads", acceptDownloads },
                 { "bypassCSP", bypassCSP },
-                { "colorScheme", colorScheme },
-                { "reducedMotion", reducedMotion },
                 { "deviceScaleFactor", deviceScaleFactor },
                 { "serviceWorkers", serviceWorkers },
             };
@@ -157,7 +155,10 @@ internal class BrowserChannel : Channel<Browser>
         args.Add("permissions", permissions);
         args.Add("proxy", proxy);
         args.Add("strictSelectors", strictSelectors);
-        args.Add("forcedColors", forcedColors);
+
+        args.Add("colorScheme", colorScheme == ColorScheme.Null ? "no-override" : colorScheme);
+        args.Add("reducedMotion", reducedMotion == ReducedMotion.Null ? "no-override" : reducedMotion);
+        args.Add("forcedColors", forcedColors == ForcedColors.Null ? "no-override" : forcedColors);
 
         var recordHarOptions = PrepareHarOptions(
             recordHarContent: recordHarContent,
