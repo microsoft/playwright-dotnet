@@ -32,7 +32,7 @@ namespace Microsoft.Playwright;
 /// <para>
 /// Keyboard provides an api for managing a virtual keyboard. The high level api is
 /// <see cref="IKeyboard.TypeAsync"/>, which takes raw characters and generates proper
-/// keydown, keypress/input, and keyup events on your page.
+/// <c>keydown</c>, <c>keypress</c>/<c>input</c>, and <c>keyup</c> events on your page.
 /// </para>
 /// <para>
 /// For finer control, you can use <see cref="IKeyboard.DownAsync"/>, <see cref="IKeyboard.UpAsync"/>,
@@ -56,7 +56,7 @@ namespace Microsoft.Playwright;
 /// <para>An example of pressing uppercase <c>A</c></para>
 /// <code>
 /// await page.Keyboard.PressAsync("Shift+KeyA");<br/>
-/// // or <br/>
+/// // or<br/>
 /// await page.Keyboard.PressAsync("Shift+A");
 /// </code>
 /// <para>An example to trigger select-all with the keyboard</para>

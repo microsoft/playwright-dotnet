@@ -54,13 +54,11 @@ internal class Locator : ILocator
 
         if (options?.HasTextRegex != null)
         {
-            var textSelector = "text=" + EscapeForTextSelector(options.HasTextRegex, false);
-            _selector += $" >> internal:has={JsonSerializer.Serialize(textSelector, serializerOptions)}";
+            _selector += $" >> internal:has-text={EscapeForTextSelector(options.HasTextRegex, false)}";
         }
         else if (options?.HasTextString != null)
         {
-            var textSelector = "text=" + EscapeForTextSelector(options.HasTextString, false);
-            _selector += $" >> internal:has={JsonSerializer.Serialize(textSelector, serializerOptions)}";
+            _selector += $" >> internal:has-text={EscapeForTextSelector(options.HasTextRegex, false)}";
         }
 
         if (options?.Has != null)
@@ -136,6 +134,9 @@ internal class Locator : ILocator
     public Task FillAsync(string value, LocatorFillOptions options = null)
         => _frame.FillAsync(_selector, value, ConvertOptions<FrameFillOptions>(options));
 
+    public Task ClearAsync(LocatorClearOptions options = null)
+        => _frame.FillAsync(_selector, string.Empty, ConvertOptions<FrameFillOptions>(options));
+
     public Task HighlightAsync() => _frame.HighlightAsync(_selector);
 
     ILocator ILocator.Locator(string selector, LocatorLocatorOptions options)
@@ -164,6 +165,9 @@ internal class Locator : ILocator
 
     public Task FocusAsync(LocatorFocusOptions options = null)
         => _frame.FocusAsync(_selector, ConvertOptions<FrameFocusOptions>(options));
+
+    public Task BlurAsync(LocatorBlurOptions options = null)
+        => _frame._channel.BlurAsync(_selector, true, options?.Timeout);
 
     public Task<int> CountAsync()
         => _frame.QueryCountAsync(_selector);
@@ -416,10 +420,10 @@ internal class Locator : ILocator
         => GetByAttributeTextSelector("placeholder", text, exact);
 
     internal static string GetByTextSelector(string text, bool? exact)
-        => $"text={EscapeForTextSelector(text, exact)}";
+        => $"internal:text={EscapeForTextSelector(text, exact)}";
 
     internal static string GetByTextSelector(Regex text, bool? exact)
-        => $"text={EscapeForTextSelector(text, exact)}";
+        => $"internal:text={EscapeForTextSelector(text, exact)}";
 
     internal static string GetByRoleSelector(AriaRole role, ByRoleOptions options)
     {
@@ -460,7 +464,7 @@ internal class Locator : ILocator
         {
             props.Add(new List<string> { "pressed", options.Pressed.ToJson() });
         }
-        return $"role={role.ToValueString()}{string.Concat(props.Select(p => $"[{p[0]}={p[1]}]"))}";
+        return $"internal:role={role.ToValueString()}{string.Concat(props.Select(p => $"[{p[0]}={p[1]}]"))}";
     }
 
     private static string EscapeForAttributeSelector(string value, bool exact)
@@ -495,7 +499,7 @@ internal class Locator : ILocator
     {
         var patern = new Regex(@"[.*+?^>${}()|[\]\\]");
         return patern.Replace(text, "\\$&");
-    }
+    }        
 }
 
 internal class ByRoleOptions

@@ -59,7 +59,8 @@ public class BrowserContextRouteFromHAROptions
     /// <summary>
     /// <para>
     /// If specified, updates the given HAR with the actual network information instead
-    /// of serving from file.
+    /// of serving from file. The file is written to disk when <see cref="IBrowserContext.CloseAsync"/>
+    /// is called.
     /// </para>
     /// </summary>
     [JsonPropertyName("update")]

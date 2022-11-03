@@ -203,6 +203,17 @@ internal class FrameChannel : Channel<Frame>
         return Connection.SendMessageToServerAsync<ElementHandleChannel>(Guid, "addScriptTag", args);
     }
 
+    internal Task BlurAsync(string selector, bool strict, float? timeout)
+    {
+        var args = new Dictionary<string, object>
+        {
+            ["selector"] = selector,
+            ["strict"] = strict,
+            ["timeout"] = timeout,
+        };
+        return Connection.SendMessageToServerAsync(Guid, "blur", args);
+    }
+
     internal Task<ElementHandleChannel> AddStyleTagAsync(string url, string path, string content)
     {
         var args = new Dictionary<string, object>

@@ -138,7 +138,7 @@ public class PageScreenshotOptions
     /// <para>
     /// When set to <c>"css"</c>, screenshot will have a single pixel per each css pixel
     /// on the page. For high-dpi devices, this will keep screenshots small. Using <c>"device"</c>
-    /// option will produce a single pixel per each device pixel, so screenhots of high-dpi
+    /// option will produce a single pixel per each device pixel, so screenshots of high-dpi
     /// devices will be twice as large or even larger.
     /// </para>
     /// <para>Defaults to <c>"device"</c>.</para>

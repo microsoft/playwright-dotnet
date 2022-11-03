@@ -49,6 +49,15 @@ public partial interface ILocator
 
     /// <summary>
     /// <para>
+    /// Calls <a href="https://developer.mozilla.org/en-US/docs/Web/API/HTMLElement/blur">blur</a>
+    /// on the element.
+    /// </para>
+    /// </summary>
+    /// <param name="options">Call options</param>
+    Task BlurAsync(LocatorBlurOptions? options = default);
+
+    /// <summary>
+    /// <para>
     /// This method returns the bounding box of the element, or <c>null</c> if the element
     /// is not visible. The bounding box is calculated relative to the main frame viewport
     /// - which is usually the same as the browser window.
@@ -104,6 +113,22 @@ public partial interface ILocator
     /// </summary>
     /// <param name="options">Call options</param>
     Task CheckAsync(LocatorCheckOptions? options = default);
+
+    /// <summary>
+    /// <para>
+    /// This method waits for <a href="https://playwright.dev/dotnet/docs/actionability">actionability</a>
+    /// checks, focuses the element, clears it and triggers an <c>input</c> event after
+    /// clearing.
+    /// </para>
+    /// <para>
+    /// If the target element is not an <c>&lt;input&gt;</c>, <c>&lt;textarea&gt;</c> or
+    /// <c>[contenteditable]</c> element, this method throws an error. However, if the element
+    /// is inside the <c>&lt;label&gt;</c> element that has an associated <a href="https://developer.mozilla.org/en-US/docs/Web/API/HTMLLabelElement/control">control</a>,
+    /// the control will be cleared instead.
+    /// </para>
+    /// </summary>
+    /// <param name="options">Call options</param>
+    Task ClearAsync(LocatorClearOptions? options = default);
 
     /// <summary>
     /// <para>This method clicks the element by performing the following steps:</para>
@@ -267,8 +292,8 @@ public partial interface ILocator
     /// </code>
     /// </summary>
     /// <param name="expression">
-    /// JavaScript expression to be evaluated in the browser context. If the expresion evaluates
-    /// to a function, the function is automatically invoked.
+    /// JavaScript expression to be evaluated in the browser context. If the expression
+    /// evaluates to a function, the function is automatically invoked.
     /// </param>
     /// <param name="arg">Optional argument to pass to <paramref name="expression"/>.</param>
     /// <param name="options">Call options</param>
@@ -291,8 +316,8 @@ public partial interface ILocator
     /// </code>
     /// </summary>
     /// <param name="expression">
-    /// JavaScript expression to be evaluated in the browser context. If the expresion evaluates
-    /// to a function, the function is automatically invoked.
+    /// JavaScript expression to be evaluated in the browser context. If the expression
+    /// evaluates to a function, the function is automatically invoked.
     /// </param>
     /// <param name="arg">Optional argument to pass to <paramref name="expression"/>.</param>
     Task<T> EvaluateAllAsync<T>(string expression, object? arg = default);
@@ -312,8 +337,8 @@ public partial interface ILocator
     /// <para>See <see cref="IPage.EvaluateHandleAsync"/> for more details.</para>
     /// </summary>
     /// <param name="expression">
-    /// JavaScript expression to be evaluated in the browser context. If the expresion evaluates
-    /// to a function, the function is automatically invoked.
+    /// JavaScript expression to be evaluated in the browser context. If the expression
+    /// evaluates to a function, the function is automatically invoked.
     /// </param>
     /// <param name="arg">Optional argument to pass to <paramref name="expression"/>.</param>
     /// <param name="options">Call options</param>
@@ -415,7 +440,7 @@ public partial interface ILocator
     /// <summary>
     /// <para>
     /// Allows locating input elements by the text of the associated label. For example,
-    /// this method will find the input by label text Password in the following DOM:
+    /// this method will find the input by label text "Password" in the following DOM:
     /// </para>
     /// </summary>
     /// <param name="text">Text to locate the element for.</param>
@@ -425,7 +450,7 @@ public partial interface ILocator
     /// <summary>
     /// <para>
     /// Allows locating input elements by the text of the associated label. For example,
-    /// this method will find the input by label text Password in the following DOM:
+    /// this method will find the input by label text "Password" in the following DOM:
     /// </para>
     /// </summary>
     /// <param name="text">Text to locate the element for.</param>
@@ -482,12 +507,82 @@ public partial interface ILocator
     /// <param name="testId">Id to locate the element by.</param>
     ILocator GetByTestId(string testId);
 
-    /// <summary><para>Allows locating elements that contain given text.</para></summary>
+    /// <summary>
+    /// <para>Allows locating elements that contain given text. Consider the following DOM structure:</para>
+    /// <para>You can locate by text substring, exact string, or a regular expression:</para>
+    /// <code>
+    /// // Matches &lt;span&gt;<br/>
+    /// page.GetByText("world")<br/>
+    /// <br/>
+    /// // Matches first &lt;div&gt;<br/>
+    /// page.GetByText("Hello world")<br/>
+    /// <br/>
+    /// // Matches second &lt;div&gt;<br/>
+    /// page.GetByText("Hello", new() { Exact: true })<br/>
+    /// <br/>
+    /// // Matches both &lt;div&gt;s<br/>
+    /// page.GetByText(new Regex("Hello"))<br/>
+    /// <br/>
+    /// // Matches second &lt;div&gt;<br/>
+    /// page.GetByText(new Regex("^hello$", RegexOptions.IgnoreCase))
+    /// </code>
+    /// <para>
+    /// See also <see cref="ILocator.Filter"/> that allows to match by another criteria,
+    /// like an accessible role, and then filter by the text content.
+    /// </para>
+    /// </summary>
+    /// <remarks>
+    /// <para>
+    /// Matching by text always normalizes whitespace, even with exact match. For example,
+    /// it turns multiple spaces into one, turns line breaks into spaces and ignores leading
+    /// and trailing whitespace.
+    /// </para>
+    /// <para>
+    /// Input elements of the type <c>button</c> and <c>submit</c> are matched by their
+    /// <c>value</c> instead of the text content. For example, locating by text <c>"Log
+    /// in"</c> matches <c>&lt;input type=button value="Log in"&gt;</c>.
+    /// </para>
+    /// </remarks>
     /// <param name="text">Text to locate the element for.</param>
     /// <param name="options">Call options</param>
     ILocator GetByText(string text, LocatorGetByTextOptions? options = default);
 
-    /// <summary><para>Allows locating elements that contain given text.</para></summary>
+    /// <summary>
+    /// <para>Allows locating elements that contain given text. Consider the following DOM structure:</para>
+    /// <para>You can locate by text substring, exact string, or a regular expression:</para>
+    /// <code>
+    /// // Matches &lt;span&gt;<br/>
+    /// page.GetByText("world")<br/>
+    /// <br/>
+    /// // Matches first &lt;div&gt;<br/>
+    /// page.GetByText("Hello world")<br/>
+    /// <br/>
+    /// // Matches second &lt;div&gt;<br/>
+    /// page.GetByText("Hello", new() { Exact: true })<br/>
+    /// <br/>
+    /// // Matches both &lt;div&gt;s<br/>
+    /// page.GetByText(new Regex("Hello"))<br/>
+    /// <br/>
+    /// // Matches second &lt;div&gt;<br/>
+    /// page.GetByText(new Regex("^hello$", RegexOptions.IgnoreCase))
+    /// </code>
+    /// <para>
+    /// See also <see cref="ILocator.Filter"/> that allows to match by another criteria,
+    /// like an accessible role, and then filter by the text content.
+    /// </para>
+    /// </summary>
+    /// <remarks>
+    /// <para>
+    /// Matching by text always normalizes whitespace, even with exact match. For example,
+    /// it turns multiple spaces into one, turns line breaks into spaces and ignores leading
+    /// and trailing whitespace.
+    /// </para>
+    /// <para>
+    /// Input elements of the type <c>button</c> and <c>submit</c> are matched by their
+    /// <c>value</c> instead of the text content. For example, locating by text <c>"Log
+    /// in"</c> matches <c>&lt;input type=button value="Log in"&gt;</c>.
+    /// </para>
+    /// </remarks>
     /// <param name="text">Text to locate the element for.</param>
     /// <param name="options">Call options</param>
     ILocator GetByText(Regex text, LocatorGetByTextOptions? options = default);
@@ -495,7 +590,7 @@ public partial interface ILocator
     /// <summary>
     /// <para>
     /// Allows locating elements by their title. For example, this method will find the
-    /// button by its title "Submit":
+    /// button by its title "Place the order":
     /// </para>
     /// </summary>
     /// <param name="text">Text to locate the element for.</param>
@@ -505,7 +600,7 @@ public partial interface ILocator
     /// <summary>
     /// <para>
     /// Allows locating elements by their title. For example, this method will find the
-    /// button by its title "Submit":
+    /// button by its title "Place the order":
     /// </para>
     /// </summary>
     /// <param name="text">Text to locate the element for.</param>

@@ -28,29 +28,29 @@ using System.Text.Json.Serialization;
 
 namespace Microsoft.Playwright;
 
-public class PageGetByTitleOptions
+public class LocatorBlurOptions
 {
-    public PageGetByTitleOptions() { }
+    public LocatorBlurOptions() { }
 
-    public PageGetByTitleOptions(PageGetByTitleOptions clone)
+    public LocatorBlurOptions(LocatorBlurOptions clone)
     {
         if (clone == null)
         {
             return;
         }
 
-        Exact = clone.Exact;
+        Timeout = clone.Timeout;
     }
 
     /// <summary>
     /// <para>
-    /// Whether to find an exact match: case-sensitive and whole-string. Default to false.
-    /// Ignored when locating by a regular expression. Note that exact match still trims
-    /// whitespace.
+    /// Maximum time in milliseconds, defaults to 30 seconds, pass <c>0</c> to disable timeout.
+    /// The default value can be changed by using the <see cref="IBrowserContext.SetDefaultTimeout"/>
+    /// or <see cref="IPage.SetDefaultTimeout"/> methods.
     /// </para>
     /// </summary>
-    [JsonPropertyName("exact")]
-    public bool? Exact { get; set; }
+    [JsonPropertyName("timeout")]
+    public float? Timeout { get; set; }
 }
 
 #nullable disable

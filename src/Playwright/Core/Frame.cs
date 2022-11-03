@@ -54,26 +54,23 @@ internal class Frame : ChannelOwnerBase, IChannelOwner<Frame>, IFrame
 
         _channel.LoadState += (_, e) =>
         {
-            lock (_loadStates)
+            if (e.Add.HasValue)
             {
-                if (e.Add.HasValue)
-                {
-                    _loadStates.Add(e.Add.Value);
-                    LoadState?.Invoke(this, e.Add.Value);
-                }
+                _loadStates.Add(e.Add.Value);
+                LoadState?.Invoke(this, e.Add.Value);
+            }
 
-                if (e.Remove.HasValue)
-                {
-                    _loadStates.Remove(e.Remove.Value);
-                }
-                if (this.ParentFrame == null && e.Add == WaitUntilState.Load && this.Page != null)
-                {
-                    (this.Page as Page).FireLoad();
-                }
-                if (this.ParentFrame == null && e.Add == WaitUntilState.DOMContentLoaded && this.Page != null)
-                {
-                    (this.Page as Page).FireDOMContentLoaded();
-                }
+            if (e.Remove.HasValue)
+            {
+                _loadStates.Remove(e.Remove.Value);
+            }
+            if (this.ParentFrame == null && e.Add == WaitUntilState.Load && this.Page != null)
+            {
+                (this.Page as Page).FireLoad();
+            }
+            if (this.ParentFrame == null && e.Add == WaitUntilState.DOMContentLoaded && this.Page != null)
+            {
+                (this.Page as Page).FireDOMContentLoaded();
             }
         };
 
@@ -161,7 +158,6 @@ internal class Frame : ChannelOwnerBase, IChannelOwner<Frame>, IFrame
 
     public async Task WaitForLoadStateAsync(LoadState? state = default, FrameWaitForLoadStateOptions options = default)
     {
-        Task<WaitUntilState> task;
         Waiter waiter = null;
         WaitUntilState loadState = Microsoft.Playwright.WaitUntilState.Load;
         switch (state)
@@ -178,22 +174,20 @@ internal class Frame : ChannelOwnerBase, IChannelOwner<Frame>, IFrame
         }
         try
         {
-            lock (_loadStates)
-            {
-                if (_loadStates.Contains(loadState))
-                {
-                    return;
-                }
+            waiter = SetupNavigationWaiter("frame.WaitForLoadStateAsync", options?.Timeout);
 
-                waiter = SetupNavigationWaiter("frame.WaitForLoadStateAsync", options?.Timeout);
-                task = waiter.WaitForEventAsync<WaitUntilState>(this, "LoadState", s =>
+            if (_loadStates.Contains(loadState))
+            {
+                waiter.Log($"  not waiting, \"{state}\" event already fired");
+            }
+            else
+            {
+                await waiter.WaitForEventAsync<WaitUntilState>(this, "LoadState", s =>
                 {
                     waiter.Log($"  \"{s}\" event fired");
                     return s == loadState;
-                });
+                }).ConfigureAwait(false);
             }
-
-            await task.ConfigureAwait(false);
         }
         finally
         {
@@ -339,6 +333,8 @@ internal class Frame : ChannelOwnerBase, IChannelOwner<Frame>, IFrame
 
     public Task FillAsync(string selector, string value, FrameFillOptions options = default)
         => _channel.FillAsync(selector, value, force: options?.Force, timeout: options?.Timeout, noWaitAfter: options?.NoWaitAfter, options?.Strict);
+
+    public Task ClearAsync(string selector, FrameClearOptions options = null) => throw new NotImplementedException();
 
     public async Task<IElementHandle> AddScriptTagAsync(FrameAddScriptTagOptions options = default)
     {

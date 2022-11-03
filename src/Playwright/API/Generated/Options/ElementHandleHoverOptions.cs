@@ -42,6 +42,7 @@ public class ElementHandleHoverOptions
 
         Force = clone.Force;
         Modifiers = clone.Modifiers;
+        NoWaitAfter = clone.NoWaitAfter;
         Position = clone.Position;
         Timeout = clone.Timeout;
         Trial = clone.Trial;
@@ -65,6 +66,17 @@ public class ElementHandleHoverOptions
     /// </summary>
     [JsonPropertyName("modifiers")]
     public IEnumerable<KeyboardModifier>? Modifiers { get; set; }
+
+    /// <summary>
+    /// <para>
+    /// Actions that initiate navigations are waiting for these navigations to happen and
+    /// for pages to start loading. You can opt out of waiting via setting this flag. You
+    /// would only need this option in the exceptional cases such as navigating to inaccessible
+    /// pages. Defaults to <c>false</c>.
+    /// </para>
+    /// </summary>
+    [JsonPropertyName("noWaitAfter")]
+    public bool? NoWaitAfter { get; set; }
 
     /// <summary>
     /// <para>

@@ -141,6 +141,22 @@ public partial interface IElementHandle : IJSHandle
     Task CheckAsync(ElementHandleCheckOptions? options = default);
 
     /// <summary>
+    /// <para>
+    /// This method waits for <a href="https://playwright.dev/dotnet/docs/actionability">actionability</a>
+    /// checks, focuses the element, clears it and triggers an <c>input</c> event after
+    /// clearing.
+    /// </para>
+    /// <para>
+    /// If the target element is not an <c>&lt;input&gt;</c>, <c>&lt;textarea&gt;</c> or
+    /// <c>[contenteditable]</c> element, this method throws an error. However, if the element
+    /// is inside the <c>&lt;label&gt;</c> element that has an associated <a href="https://developer.mozilla.org/en-US/docs/Web/API/HTMLLabelElement/control">control</a>,
+    /// the control will be cleared instead.
+    /// </para>
+    /// </summary>
+    /// <param name="options">Call options</param>
+    Task ClearAsync(ElementHandleClearOptions? options = default);
+
+    /// <summary>
     /// <para>This method clicks the element by performing the following steps:</para>
     /// <list type="ordinal">
     /// <item><description>
@@ -280,8 +296,8 @@ public partial interface IElementHandle : IJSHandle
     /// with selectors</a> for more details.
     /// </param>
     /// <param name="expression">
-    /// JavaScript expression to be evaluated in the browser context. If the expresion evaluates
-    /// to a function, the function is automatically invoked.
+    /// JavaScript expression to be evaluated in the browser context. If the expression
+    /// evaluates to a function, the function is automatically invoked.
     /// </param>
     /// <param name="arg">Optional argument to pass to <paramref name="expression"/>.</param>
     Task<T> EvalOnSelectorAsync<T>(string selector, string expression, object? arg = default);
@@ -309,8 +325,8 @@ public partial interface IElementHandle : IJSHandle
     /// with selectors</a> for more details.
     /// </param>
     /// <param name="expression">
-    /// JavaScript expression to be evaluated in the browser context. If the expresion evaluates
-    /// to a function, the function is automatically invoked.
+    /// JavaScript expression to be evaluated in the browser context. If the expression
+    /// evaluates to a function, the function is automatically invoked.
     /// </param>
     /// <param name="arg">Optional argument to pass to <paramref name="expression"/>.</param>
     Task<T> EvalOnSelectorAllAsync<T>(string selector, string expression, object? arg = default);

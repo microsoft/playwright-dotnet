@@ -22,6 +22,8 @@
  * SOFTWARE.
  */
 
+using System.Text.RegularExpressions;
+
 namespace Microsoft.Playwright.Tests;
 
 public class SelectorsTextTests : PageTestEx
@@ -224,5 +226,26 @@ public class SelectorsTextTests : PageTestEx
 
         var handle = await task;
         Assert.AreEqual("Hello from light", await handle.TextContentAsync());
+    }
+
+    public async Task ShouldHasTextAndInternalTextShouldMatchFullNodeTextInStrictMode()
+    {
+        await Page.SetContentAsync(@"
+            <div id=div1>hello<span>world</span></div>
+            <div id=div2>hello</div>
+        ");
+        await Expect(Page.GetByText("helloworld", new() { Exact = true })).ToHaveIdAsync("div1");
+        await Expect(Page.GetByText("hello", new() { Exact = true })).ToHaveIdAsync("div2");
+        await Expect(Page.Locator("div", new() { HasTextRegex = new Regex("^helloworld$") })).ToHaveIdAsync("div1");
+        await Expect(Page.Locator("div", new() { HasTextRegex= new Regex("^hello$") })).ToHaveIdAsync("div2");
+
+        await Page.SetContentAsync(@"
+            <div id=div1><span id=span1>hello</span>world</div>
+            <div id=div2><span id=span2>hello</span></div>
+        ");
+        await Expect(Page.GetByText("helloworld", new() { Exact = true })).ToHaveIdAsync("div1");
+        Assert.AreEqual(new[] { "span1", "span2" }, await Page.GetByText("hello", new() { Exact = true }).EvaluateAllAsync<string>("els => els.map(e => e.id)"));
+        await Expect(Page.Locator("div", new() { HasTextRegex = new Regex("^helloworld$") })).ToHaveIdAsync("div1");
+        await Expect(Page.Locator("div", new() { HasTextRegex = new Regex("^hello$") })).ToHaveIdAsync("div2");
     }
 }

@@ -64,6 +64,17 @@ public class LocatorMisc1Tests : PageTestEx
         Assert.AreEqual("some value", await Page.EvaluateAsync<string>("() => window['result']"));
     }
 
+    [PlaywrightTest("elementhandle-misc.spec.ts", "should clear input")]
+    public async Task ShouldClearInput()
+    {
+        await Page.GotoAsync(Server.Prefix + "/input/textarea.html");
+        var locator = Page.Locator("input");
+        await locator.FillAsync("some value");
+        Assert.AreEqual("some value", await Page.EvaluateAsync("window['result']"));
+        await locator.ClearAsync();
+        Assert.AreEqual(string.Empty, await Page.EvaluateAsync("window['result']"));
+    }
+
     [PlaywrightTest("locator-misc-1.spec.ts", "should check the box")]
     public async Task ShouldCheckTheBox()
     {
@@ -103,14 +114,31 @@ public class LocatorMisc1Tests : PageTestEx
         CollectionAssert.AreEqual(new string[] { "blue" }, await Page.EvaluateAsync<string[]>("() => window['result'].onChange"));
     }
 
-    [PlaywrightTest("locator-misc-1.spec.ts", "should focus a button")]
-    public async Task ShouldFocusAButton()
+    [PlaywrightTest("locator-misc-1.spec.ts", "should focus and blur a button")]
+    public async Task ShouldFocusAndBlurAButton()
     {
         await Page.GotoAsync(Server.Prefix + "/input/button.html");
         var button = Page.Locator("button");
         Assert.IsFalse(await button.EvaluateAsync<bool>("button => document.activeElement === button"));
+
+        var focused = false;
+        var blurred = false;
+        await Page.ExposeFunctionAsync("focusEvent", () => focused = true);
+        await Page.ExposeFunctionAsync("blurEvent", () => blurred = true);
+        await button.EvaluateAsync(@"button => {
+            button.addEventListener('focus', window['focusEvent']);
+            button.addEventListener('blur', window['blurEvent']);
+        }");
+
         await button.FocusAsync();
+        Assert.IsTrue(focused);
+        Assert.IsFalse(blurred);
         Assert.IsTrue(await button.EvaluateAsync<bool>("button => document.activeElement === button"));
+
+        await button.BlurAsync();
+        Assert.IsTrue(focused);
+        Assert.IsTrue(blurred);
+        Assert.IsFalse(await button.EvaluateAsync<bool>("button => document.activeElement === button"));
     }
 
     [PlaywrightTest("locator-misc-1.spec.ts", "focus should respect strictness")]

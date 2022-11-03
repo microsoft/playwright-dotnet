@@ -39,18 +39,23 @@ public partial interface ISelectors
     /// <summary>
     /// <para>An example of registering selector engine that queries elements based on a tag name:</para>
     /// <code>
+    /// using Microsoft.Playwright;<br/>
+    /// <br/>
     /// using var playwright = await Playwright.CreateAsync();<br/>
     /// // Script that evaluates to a selector engine instance. The script is evaluated in the page context.<br/>
-    /// await playwright.Selectors.RegisterAsync("tag", @"{<br/>
-    /// // Returns the first element matching given selector in the root's subtree.<br/>
-    /// query(root, selector) {<br/>
-    ///     return root.querySelector(selector);<br/>
-    ///   },<br/>
-    ///   // Returns all elements matching given selector in the root's subtree.<br/>
-    ///   queryAll(root, selector) {<br/>
-    ///     return Array.from(root.querySelectorAll(selector));<br/>
-    ///   }<br/>
-    /// }");<br/>
+    /// await playwright.Selectors.RegisterAsync("tag", new()<br/>
+    /// {<br/>
+    ///     Script = @"{<br/>
+    ///     // Returns the first element matching given selector in the root's subtree.<br/>
+    ///     query(root, selector) {<br/>
+    ///         return root.querySelector(selector);<br/>
+    ///       },<br/>
+    ///       // Returns all elements matching given selector in the root's subtree.<br/>
+    ///       queryAll(root, selector) {<br/>
+    ///         return Array.from(root.querySelectorAll(selector));<br/>
+    ///       }<br/>
+    ///     }"<br/>
+    /// });<br/>
     /// <br/>
     /// await using var browser = await playwright.Chromium.LaunchAsync();<br/>
     /// var page = await browser.NewPageAsync();<br/>

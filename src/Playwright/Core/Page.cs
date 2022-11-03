@@ -480,6 +480,9 @@ internal class Page : ChannelOwnerBase, IChannelOwner<Page>, IPage
     public Task FillAsync(string selector, string value, PageFillOptions options = default)
         => MainFrame.FillAsync(selector, value, new() { NoWaitAfter = options?.NoWaitAfter, Timeout = options?.Timeout, Force = options?.Force, Strict = options?.Strict });
 
+    public Task ClearAsync(string selector, PageClearOptions options = null)
+        => MainFrame.ClearAsync(selector, new() { NoWaitAfter = options?.NoWaitAfter, Timeout = options?.Timeout, Force = options?.Force, Strict = options?.Strict });
+
     public Task SetInputFilesAsync(string selector, string files, PageSetInputFilesOptions options = default)
         => MainFrame.SetInputFilesAsync(selector, files, Map(options));
 
