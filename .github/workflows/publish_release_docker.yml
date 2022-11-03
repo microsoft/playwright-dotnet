@@ -17,9 +17,9 @@ jobs:
     runs-on: ubuntu-20.04
     if: github.repository == 'microsoft/playwright-dotnet'
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v3
     - name: Setup .NET Core
-      uses: actions/setup-dotnet@v1
+      uses: actions/setup-dotnet@v3
       with:
         dotnet-version: |
           3.1.x
@@ -33,7 +33,7 @@ jobs:
         username: playwright
         password: ${{ secrets.DOCKER_PASSWORD }}
     - name: Set up Docker QEMU for arm64 docker builds
-      uses: docker/setup-qemu-action@v1
+      uses: docker/setup-qemu-action@v2
       with:
         platforms: arm64
     - run: ./utils/docker/publish_docker.sh stable
