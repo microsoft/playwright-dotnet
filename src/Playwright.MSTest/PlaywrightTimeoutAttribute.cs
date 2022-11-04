@@ -106,7 +106,7 @@ internal class PlaywrightTimeoutAttribute : TestMethodAttribute
                 new TestResult()
                 {
                     Outcome = UnitTestOutcome.Failed,
-                    TestFailureException = new InvalidOperationException($"Playwright test timeout ({playwrightTestTimeout}ms) is larger than MSTest timeout ({timeout}ms).")
+                    TestFailureException = new InvalidOperationException($"Playwright test timeout ({playwrightTestTimeout}ms) is larger than MSTest timeout ({timeout}ms). Set the Playwright test timeout to a lower value or disable the MSTest timeout.")
                 },
             };
         }

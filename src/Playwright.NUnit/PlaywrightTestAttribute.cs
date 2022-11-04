@@ -252,7 +252,7 @@ internal class PlaywrightTestAttribute : NUnitFrameworkBase.TestAttribute, IWrap
             if (timeout != 0 && playwrightTestTimeout > timeout)
             {
                 var result = context.CurrentTest.MakeTestResult();
-                result.RecordException(new InvalidOperationException($"The Playwright test timeout of {playwrightTestTimeout}ms is higher than the NUnit test timeout of {timeout}ms. Set the Playwright test timeout to a lower value."));
+                result.RecordException(new InvalidOperationException($"The Playwright test timeout of {playwrightTestTimeout}ms is higher than the NUnit test timeout of {timeout}ms. Set the Playwright test timeout to a lower value or disable the NUnit timeout."));
                 return result;
             }
             return null;
