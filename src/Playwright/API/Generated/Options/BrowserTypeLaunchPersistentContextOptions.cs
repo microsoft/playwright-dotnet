@@ -157,7 +157,8 @@ public class BrowserTypeLaunchPersistentContextOptions
     /// <para>
     /// Emulates <c>'prefers-colors-scheme'</c> media feature, supported values are <c>'light'</c>,
     /// <c>'dark'</c>, <c>'no-preference'</c>. See <see cref="IPage.EmulateMediaAsync"/>
-    /// for more details. Defaults to <c>'light'</c>.
+    /// for more details. Passing <c>'null'</c> resets emulation to system defaults. Defaults
+    /// to <c>'light'</c>.
     /// </para>
     /// </summary>
     [JsonPropertyName("colorScheme")]
@@ -209,8 +210,8 @@ public class BrowserTypeLaunchPersistentContextOptions
     /// <summary>
     /// <para>
     /// Emulates <c>'forced-colors'</c> media feature, supported values are <c>'active'</c>,
-    /// <c>'none'</c>. See <see cref="IPage.EmulateMediaAsync"/> for more details. Defaults
-    /// to <c>'none'</c>.
+    /// <c>'none'</c>. See <see cref="IPage.EmulateMediaAsync"/> for more details. Passing
+    /// <c>'null'</c> resets emulation to system defaults. Defaults to <c>'none'</c>.
     /// </para>
     /// </summary>
     [JsonPropertyName("forcedColors")]
@@ -389,7 +390,7 @@ public class BrowserTypeLaunchPersistentContextOptions
     /// <para>
     /// Emulates <c>'prefers-reduced-motion'</c> media feature, supported values are <c>'reduce'</c>,
     /// <c>'no-preference'</c>. See <see cref="IPage.EmulateMediaAsync"/> for more details.
-    /// Defaults to <c>'no-preference'</c>.
+    /// Passing <c>'null'</c> resets emulation to system defaults. Defaults to <c>'no-preference'</c>.
     /// </para>
     /// </summary>
     [JsonPropertyName("reducedMotion")]

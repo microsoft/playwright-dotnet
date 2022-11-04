@@ -153,10 +153,12 @@ public class SimpleServer
                 {
                     var cert = new X509Certificate2("key.pfx", "aaaa");
                     options.Listen(IPAddress.Loopback, port, listenOptions => listenOptions.UseHttps(cert));
+                    options.Listen(IPAddress.IPv6Loopback, port, listenOptions => listenOptions.UseHttps(cert));
                 }
                 else
                 {
                     options.Listen(IPAddress.Loopback, port);
+                    options.Listen(IPAddress.IPv6Loopback, port);
                 }
                 options.Limits.MaxRequestBodySize = int.MaxValue;
             })

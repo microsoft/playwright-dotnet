@@ -286,10 +286,10 @@ internal class Page : ChannelOwnerBase, IChannelOwner<Page>, IPage
     {
         var args = new Dictionary<string, object>
         {
-            ["media"] = options?.Media,
-            ["colorScheme"] = options?.ColorScheme,
-            ["reducedMotion"] = options?.ReducedMotion,
-            ["forcedColors"] = options?.ForcedColors,
+            ["media"] = options?.Media == Media.Null ? "no-override" : options?.Media,
+            ["colorScheme"] = options?.ColorScheme == ColorScheme.Null ? "no-override" : options?.ColorScheme,
+            ["reducedMotion"] = options?.ReducedMotion == ReducedMotion.Null ? "no-override" : options?.ReducedMotion,
+            ["forcedColors"] = options?.ForcedColors == ForcedColors.Null ? "no-override" : options?.ForcedColors,
         };
         return _channel.EmulateMediaAsync(args);
     }
@@ -480,6 +480,9 @@ internal class Page : ChannelOwnerBase, IChannelOwner<Page>, IPage
     public Task FillAsync(string selector, string value, PageFillOptions options = default)
         => MainFrame.FillAsync(selector, value, new() { NoWaitAfter = options?.NoWaitAfter, Timeout = options?.Timeout, Force = options?.Force, Strict = options?.Strict });
 
+    public Task ClearAsync(string selector, PageClearOptions options = null)
+        => MainFrame.ClearAsync(selector, new() { NoWaitAfter = options?.NoWaitAfter, Timeout = options?.Timeout, Force = options?.Force, Strict = options?.Strict });
+
     public Task SetInputFilesAsync(string selector, string files, PageSetInputFilesOptions options = default)
         => MainFrame.SetInputFilesAsync(selector, files, Map(options));
 
@@ -516,6 +519,7 @@ internal class Page : ChannelOwnerBase, IChannelOwner<Page>, IPage
                 Position = options?.Position,
                 Modifiers = options?.Modifiers,
                 Force = options?.Force,
+                NoWaitAfter = options?.NoWaitAfter,
                 Timeout = options?.Timeout,
                 Trial = options?.Trial,
                 Strict = options?.Strict,

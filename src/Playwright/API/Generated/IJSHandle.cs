@@ -69,8 +69,8 @@ public partial interface IJSHandle
     /// </code>
     /// </summary>
     /// <param name="expression">
-    /// JavaScript expression to be evaluated in the browser context. If the expresion evaluates
-    /// to a function, the function is automatically invoked.
+    /// JavaScript expression to be evaluated in the browser context. If the expression
+    /// evaluates to a function, the function is automatically invoked.
     /// </param>
     /// <param name="arg">Optional argument to pass to <paramref name="expression"/>.</param>
     Task<T> EvaluateAsync<T>(string expression, object? arg = default);
@@ -90,8 +90,8 @@ public partial interface IJSHandle
     /// <para>See <see cref="IPage.EvaluateHandleAsync"/> for more details.</para>
     /// </summary>
     /// <param name="expression">
-    /// JavaScript expression to be evaluated in the browser context. If the expresion evaluates
-    /// to a function, the function is automatically invoked.
+    /// JavaScript expression to be evaluated in the browser context. If the expression
+    /// evaluates to a function, the function is automatically invoked.
     /// </param>
     /// <param name="arg">Optional argument to pass to <paramref name="expression"/>.</param>
     Task<IJSHandle> EvaluateHandleAsync(string expression, object? arg = default);

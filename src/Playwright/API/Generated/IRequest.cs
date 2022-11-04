@@ -53,7 +53,7 @@ namespace Microsoft.Playwright;
 /// </para>
 /// <para>
 /// If request gets a 'redirect' response, the request is successfully finished with
-/// the 'requestfinished' event, and a new request is  issued to a redirected url.
+/// the <c>requestfinished</c> event, and a new request is  issued to a redirected url.
 /// </para>
 /// </summary>
 /// <remarks>

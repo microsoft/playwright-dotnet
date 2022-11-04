@@ -37,7 +37,7 @@ public class BrowserTypeConnectOverCDPTests : PlaywrightTestEx
         IBrowser browserServer = await BrowserType.LaunchAsync(new() { Args = new[] { $"--remote-debugging-port={port}" } });
         try
         {
-            IBrowser cdpBrowser = await BrowserType.ConnectOverCDPAsync($"http://localhost:{port}/");
+            IBrowser cdpBrowser = await BrowserType.ConnectOverCDPAsync($"http://127.0.0.1:{port}/");
             Assert.AreEqual(cdpBrowser.BrowserType, Playwright.Chromium);
             var contexts = cdpBrowser.Contexts;
             Assert.AreEqual(1, cdpBrowser.Contexts.Count);
@@ -57,7 +57,7 @@ public class BrowserTypeConnectOverCDPTests : PlaywrightTestEx
     public async Task ShouldSendExtraHeadersWithConnectRequest()
     {
         var waitForRequest = Server.WaitForWebSocketConnectionRequest();
-        BrowserType.ConnectOverCDPAsync($"ws://localhost:{Server.Port}/ws", new()
+        BrowserType.ConnectOverCDPAsync($"ws://127.0.0.1:{Server.Port}/ws", new()
         {
             Headers = new Dictionary<string, string> {
                     { "x-foo-bar", "fookek" }

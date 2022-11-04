@@ -269,6 +269,33 @@ public class TracingTests : ContextTestEx
         Assert.AreEqual(expectedActionApiNames, actualActionApiNames);
     }
 
+    [PlaywrightTest()]
+    public async Task ShouldDisplayWaitForLoadStateEvenIfDidNotWaitForIt()
+    {
+        var page = await Context.NewPageAsync();
+        await Context.Tracing.StartAsync();
+
+        await page.GotoAsync(Server.EmptyPage);
+        await page.WaitForLoadStateAsync(LoadState.Load);
+        await page.WaitForLoadStateAsync(LoadState.Load);
+
+        using var tmp = new TempDirectory();
+        var tracePath = Path.Combine(tmp.Path, "trace.zip");
+        await Context.Tracing.StopAsync(new() { Path = tracePath });
+
+        var (events, resources) = ParseTrace(tracePath);
+        CollectionAssert.IsNotEmpty(events);
+
+        string[] actualActionApiNames = GetActions(events);
+        string[] expectedActionApiNames = new string[] {
+                "Page.GotoAsync",
+                "Page.WaitForLoadStateAsync",
+                "Page.WaitForLoadStateAsync",
+                "Tracing.StopAsync"
+            };
+        Assert.AreEqual(expectedActionApiNames, actualActionApiNames);
+    }
+
     private static (IReadOnlyList<TraceEventEntry> Events, Dictionary<string, byte[]> Resources) ParseTrace(string path)
     {
         Dictionary<string, byte[]> resources = new();

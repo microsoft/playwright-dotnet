@@ -112,7 +112,7 @@ public class PageWaitForSelector2Tests : PageTestEx
             => Page.WaitForSelectorAsync("div", new() { State = WaitForSelectorState.Attached, Timeout = 3000 }));
 
         StringAssert.Contains("Timeout 3000ms exceeded", exception.Message);
-        StringAssert.Contains("waiting for selector \"div\"", exception.Message);
+        StringAssert.Contains("waiting for \"Locator(\"div\")\"", exception.Message);
     }
 
     [PlaywrightTest("page-wait-for-selector-2.spec.ts", "should have an error message specifically for awaiting an element to be hidden")]
@@ -123,7 +123,7 @@ public class PageWaitForSelector2Tests : PageTestEx
             => Page.WaitForSelectorAsync("div", new() { State = WaitForSelectorState.Hidden, Timeout = 1000 }));
 
         StringAssert.Contains("Timeout 1000ms exceeded", exception.Message);
-        StringAssert.Contains("waiting for selector \"div\" to be hidden", exception.Message);
+        StringAssert.Contains("waiting for \"Locator(\"div\")\" to be hidden", exception.Message);
     }
 
     [PlaywrightTest("page-wait-for-selector-2.spec.ts", "should respond to node attribute mutation")]
@@ -209,7 +209,7 @@ public class PageWaitForSelector2Tests : PageTestEx
                 => Page.WaitForSelectorAsync("//div", new() { State = WaitForSelectorState.Attached, Timeout = 3000 }));
 
         StringAssert.Contains("Timeout 3000ms exceeded", exception.Message);
-        StringAssert.Contains("waiting for selector \"//div\"", exception.Message);
+        StringAssert.Contains("waiting for \"Locator(\"xpath=//div\")\"", exception.Message);
     }
 
     [PlaywrightTest("page-wait-for-selector-2.spec.ts", "should run in specified frame xpath")]

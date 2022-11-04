@@ -50,6 +50,9 @@ internal class PlaywrightInitializer
     [JsonPropertyName("preLaunchedBrowser")]
     public Core.Browser PreLaunchedBrowser { get; set; }
 
+    [JsonPropertyName("preConnectedAndroidDevice")]
+    public Core.AndroidDevice PreConnectedAndroidDevice { get; set; }
+
     [JsonPropertyName("socksSupport")]
     public Core.SocksSupport SocksSupport { get; set; }
 }
