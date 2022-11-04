@@ -36,7 +36,7 @@ public class ContextTest : BrowserTest
     public async Task ContextInitialize()
     {
         Context = await NewContextAsync(ContextOptions()).ConfigureAwait(false);
-        PlaywrightTimeoutAttribute.ContextCloseHookOnTimeout = ContextCleanup;
+        PlaywrightTimeoutAttribute.ContextCloseHookOnTimeoutAsync = ContextCleanup;
     }
 
     [TestCleanup]

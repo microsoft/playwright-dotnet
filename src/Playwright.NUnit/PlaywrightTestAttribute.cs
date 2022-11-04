@@ -145,6 +145,8 @@ internal class PlaywrightTestAttribute : NUnitFrameworkBase.TestAttribute, IWrap
             return text.Split(new[] { "\n" }, StringSplitOptions.None).Select(line => new String(' ', indent) + line).Aggregate((a, b) => a + "\n" + b);
         }
 
+        // In case of a execution timeout, we run the teardown handler manually.
+        // To prevent running teardown twice, we need to keep track of it.
         private (TestResult, bool) ExecuteWithTimeout(TestExecutionContext context)
         {
             var timeout = PlaywrightSettingsProvider.TestTimeout;
@@ -153,7 +155,7 @@ internal class PlaywrightTestAttribute : NUnitFrameworkBase.TestAttribute, IWrap
                 return (innerCommand.Execute(context), false);
             }
 
-            if (CheckThatPlaywrightTimeoutIsSmallerThanNUnitTimeout(context, timeout.Value) is var result && result != null)
+            if (CheckThatPlaywrightTimeoutIsSmallerThanNUnitTimeout(context, timeout.Value) is TestResult result)
             {
                 return (result, false);
             };
@@ -250,7 +252,7 @@ internal class PlaywrightTestAttribute : NUnitFrameworkBase.TestAttribute, IWrap
             if (timeout != 0 && playwrightTestTimeout > timeout)
             {
                 var result = context.CurrentTest.MakeTestResult();
-                result.RecordException(new TimeoutException($"The Playwright test timeout of {playwrightTestTimeout}ms is higher than the NUnit test timeout of {timeout}ms. Set the Playwright test timeout to a lower value."));
+                result.RecordException(new InvalidOperationException($"The Playwright test timeout of {playwrightTestTimeout}ms is higher than the NUnit test timeout of {timeout}ms. Set the Playwright test timeout to a lower value."));
                 return result;
             }
             return null;

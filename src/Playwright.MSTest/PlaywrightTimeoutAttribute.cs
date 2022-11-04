@@ -34,7 +34,7 @@ namespace Microsoft.Playwright.MSTest;
 
 internal class PlaywrightTimeoutAttribute : TestMethodAttribute
 {
-    static internal Func<Task>? ContextCloseHookOnTimeout { get; set; } = null;
+    static internal Func<Task>? ContextCloseHookOnTimeoutAsync { get; set; } = null;
 
     public override TestResult[] Execute(ITestMethod testMethod)
     {
@@ -43,7 +43,7 @@ internal class PlaywrightTimeoutAttribute : TestMethodAttribute
         {
             return base.Execute(testMethod);
         }
-        if (CheckThatPlaywrightTimeoutIsSmallerThanNUnitTimeout(testMethod, timeout.Value) is var result && result != null)
+        if (CheckThatPlaywrightTimeoutIsSmallerThanNUnitTimeout(testMethod, timeout.Value) is TestResult[] result)
         {
             return result;
         }
@@ -55,15 +55,15 @@ internal class PlaywrightTimeoutAttribute : TestMethodAttribute
     {
         // 1. Race Test execution against the specified timeout.
         // In MSTest base.Execute will internally run the TestInitialize and TestCleanup. In case of a timeout, we don't
-        // run TestCleanup, only TestInitialize. To get good error messages, we close the browser context inside ContextCloseHookOnTimeout.
+        // run TestCleanup, only TestInitialize. To get good error messages, we close the browser context inside ContextCloseHookOnTimeoutAsync.
         var testExecutionTask = Task.Run(() => base.Execute(testMethod));
         var timeoutTask = Task.Delay(timeout);
         await Task.WhenAny(testExecutionTask, timeoutTask);
 
         // 2. Close the BrowserContext
-        if (ContextCloseHookOnTimeout != null)
+        if (ContextCloseHookOnTimeoutAsync != null)
         {
-            await ContextCloseHookOnTimeout().ConfigureAwait(false);
+            await ContextCloseHookOnTimeoutAsync().ConfigureAwait(false);
         }
 
         // 3. If timeout was reached, we need to wait for the test execution to finish, since Page.Click could hang.
@@ -106,7 +106,7 @@ internal class PlaywrightTimeoutAttribute : TestMethodAttribute
                 new TestResult()
                 {
                     Outcome = UnitTestOutcome.Failed,
-                    TestFailureException = new Exception($"Playwright test timeout ({playwrightTestTimeout}ms) is larger than MSTest timeout ({timeout}ms).")
+                    TestFailureException = new InvalidOperationException($"Playwright test timeout ({playwrightTestTimeout}ms) is larger than MSTest timeout ({timeout}ms).")
                 },
             };
         }
