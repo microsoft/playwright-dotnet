@@ -58,6 +58,10 @@ public class PlaywrightSettingsXml
                     reader.Read();
                     ExpectTimeout = float.Parse(reader.Value, CultureInfo.InvariantCulture);
                     break;
+                case "TestTimeout":
+                    reader.Read();
+                    TestTimeout = int.Parse(reader.Value, CultureInfo.InvariantCulture);
+                    break;
                 case "Retries":
                     reader.Read();
                     Retries = int.Parse(reader.Value, CultureInfo.InvariantCulture);
@@ -152,6 +156,7 @@ public class PlaywrightSettingsXml
     public string? BrowserName { get; private set; }
     public bool? Headless { get; private set; }
     public float? ExpectTimeout { get; private set; }
+    public int? TestTimeout { get; private set; }
     public int? Retries { get; private set; }
 }
 

@@ -33,9 +33,21 @@ public class ContextTest : BrowserTest
     public IBrowserContext Context { get; private set; } = null!;
 
     [TestInitialize]
-    public async Task ContextSetup()
+    public async Task ContextInitialize()
     {
         Context = await NewContextAsync(ContextOptions()).ConfigureAwait(false);
+        PlaywrightTimeoutAttribute.ContextCloseHookOnTimeout = ContextCleanup;
+    }
+
+    [TestCleanup]
+    public async Task ContextCleanup()
+    {
+        // Inside PlaywrightTimeoutAttribute we already call the Cleanup methods
+        if (Context != null)
+        {
+            await Context.CloseAsync().ConfigureAwait(false);
+            Context = null!;
+        }
     }
 
     public virtual BrowserNewContextOptions ContextOptions()

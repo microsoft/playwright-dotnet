@@ -28,13 +28,12 @@ using System.Linq;
 using System.Runtime.CompilerServices;
 using Microsoft.Playwright.TestAdapter;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using MSTestUnitTesting = Microsoft.VisualStudio.TestTools.UnitTesting;
 
 [assembly: InternalsVisibleToAttribute("Playwright.TestingHarnessTest, PublicKey=0024000004800000940000000602000000240000525341310004000001000100059a04ca5ca77c9b4eb2addd1afe3f8464b20ee6aefe73b8c23c0e6ca278d1a378b33382e7e18d4aa8300dd22d81f146e528d88368f73a288e5b8157da9710fe6f9fa9911fb786193f983408c5ebae0b1ba5d1d00111af2816f5db55871db03d7536f4a7a6c5152d630c1e1886b1a0fb68ba5e7f64a7f24ac372090889be2ffb")]
 
 namespace Microsoft.Playwright.MSTest;
 
-internal class PlaywrightTestMethodAttribute : MSTestUnitTesting.TestMethodAttribute
+internal class PlaywrightTestMethodAttribute : PlaywrightTimeoutAttribute
 {
     internal static TestContext TestContext { get; set; } = null!;
 
@@ -44,15 +43,15 @@ internal class PlaywrightTestMethodAttribute : MSTestUnitTesting.TestMethodAttri
         set => TestContext.Properties["RetryCount"] = value;
     }
 
-    public override MSTestUnitTesting.TestResult[] Execute(MSTestUnitTesting.ITestMethod testMethod)
+    public override TestResult[] Execute(ITestMethod testMethod)
     {
-        MSTestUnitTesting.TestResult[] currentResults = new MSTestUnitTesting.TestResult[] { };
-        List<MSTestUnitTesting.TestResult[]?> failedResults = new();
+        TestResult[] currentResults = new TestResult[] { };
+        List<TestResult[]?> failedResults = new();
         RetryCount = 0;
         while (true)
         {
             currentResults = base.Execute(testMethod);
-            var allPassed = (currentResults ?? new MSTestUnitTesting.TestResult[] { }).All(r => r.Outcome == MSTestUnitTesting.UnitTestOutcome.Passed);
+            var allPassed = (currentResults ?? new TestResult[] { }).All(r => r.Outcome == UnitTestOutcome.Passed);
 
             if (allPassed)
             {
@@ -76,7 +75,7 @@ internal class PlaywrightTestMethodAttribute : MSTestUnitTesting.TestMethodAttri
         return currentResults.ToArray();
     }
 
-    private static string GenerateOutputLog(List<MSTestUnitTesting.TestResult[]?> failedRuns, MSTestUnitTesting.ITestMethod testMethod)
+    private static string GenerateOutputLog(List<TestResult[]?> failedRuns, ITestMethod testMethod)
     {
         var logSeparator = new String('=', 80);
         string output = $"{logSeparator}\n";
@@ -85,12 +84,12 @@ internal class PlaywrightTestMethodAttribute : MSTestUnitTesting.TestMethodAttri
         if (failedRuns.Count > 0)
         {
             output += $"\nFailing test runs:\n";
-            foreach (var (run, retry) in failedRuns.Select((run, i) => (run ?? new MSTestUnitTesting.TestResult[] { }, i)))
+            foreach (var (run, retry) in failedRuns.Select((run, i) => (run ?? new TestResult[] { }, i)))
             {
                 foreach (var result in run)
                 {
                     output += new String('-', 40) + "\n";
-                    output += $"  Test: {testMethod.TestClassName} (retry #{RetryCount})\n";
+                    output += $"  Test: {testMethod.TestClassName} (retry #{retry})\n";
                     output += $"  Outcome: {result.Outcome}\n";
                     if (result.TestFailureException != null)
                     {
@@ -98,11 +97,11 @@ internal class PlaywrightTestMethodAttribute : MSTestUnitTesting.TestMethodAttri
                     }
                     if (!string.IsNullOrEmpty(result.LogOutput))
                     {
-                        output += $"  Standard Output Messages: \n{Indent(result.LogOutput.TrimEnd(), 4)}\n";
+                        output += $"  Standard Output Messages: \n{Indent(result.LogOutput.TrimEnd(), 4)}\n\n";
                     }
                     if (!string.IsNullOrEmpty(result.LogError))
                     {
-                        output += $"  Standard Error Messages: \n{Indent(result.LogError.TrimEnd(), 4)}\n";
+                        output += $"  Standard Error Messages: \n{Indent(result.LogError.TrimEnd(), 4)}\n\n";
                     }
                 }
             }

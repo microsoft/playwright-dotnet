@@ -71,6 +71,11 @@ public class PlaywrightSettingsProvider : ISettingsProvider
         }
     }
 
+    public static int? TestTimeout
+    {
+        get => _settings?.TestTimeout ?? 30_000;
+    }
+
     public static int Retries
     {
         get => _settings?.Retries ?? 0;

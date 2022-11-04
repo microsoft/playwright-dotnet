@@ -22,7 +22,7 @@ export const test = base.extend<{
     const testResults: RunResult[] = [];
     await use(async (files, command, env) => {
       const testDir = testInfo.outputPath();
-      const testClassName = testInfo.titlePath.join(' ').replace(/[^\w]/g, '');
+      const testClassName = testInfo.titlePath.join(' ').replace(/[^\w]/g, '') + testInfo.repeatEachIndex + 'Test';
       for (const [fileName, fileContent] of Object.entries(files)) {
         await fs.promises.writeFile(path.join(testDir, fileName), unintentFile(fileContent).replace('<class-name>', testClassName));
       }
