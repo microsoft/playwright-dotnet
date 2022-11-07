@@ -46,6 +46,5 @@ public class ContextTest : BrowserTest
     public async Task ContextTearDown()
     {
         await Context.CloseAsync().ConfigureAwait(false);
-        Context = null!;
     }
 }

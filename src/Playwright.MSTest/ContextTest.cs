@@ -42,12 +42,7 @@ public class ContextTest : BrowserTest
     [TestCleanup]
     public async Task ContextCleanup()
     {
-        // Inside PlaywrightTimeoutAttribute we already call the Cleanup methods
-        if (Context != null)
-        {
-            await Context.CloseAsync().ConfigureAwait(false);
-            Context = null!;
-        }
+        await Context.CloseAsync().ConfigureAwait(false);
     }
 
     public virtual BrowserNewContextOptions ContextOptions()

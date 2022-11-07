@@ -23,7 +23,6 @@
  */
 
 using System;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
@@ -43,7 +42,7 @@ internal class PlaywrightTimeoutAttribute : TestMethodAttribute
         {
             return base.Execute(testMethod);
         }
-        if (CheckThatPlaywrightTimeoutIsSmallerThanNUnitTimeout(testMethod, timeout.Value) is TestResult[] result)
+        if (EnsureThatPlaywrightTimeoutIsSmallerThanNUnitTimeout(testMethod, timeout.Value) is TestResult[] result)
         {
             return result;
         }
@@ -90,7 +89,7 @@ internal class PlaywrightTimeoutAttribute : TestMethodAttribute
         return await testExecutionTask;
     }
 
-    private TestResult[]? CheckThatPlaywrightTimeoutIsSmallerThanNUnitTimeout(ITestMethod testMethod, int playwrightTestTimeout)
+    private TestResult[]? EnsureThatPlaywrightTimeoutIsSmallerThanNUnitTimeout(ITestMethod testMethod, int playwrightTestTimeout)
     {
         var timeout = MSTestProvider.TestTimeout;
         var timeoutAttribute = testMethod.MethodInfo.GetCustomAttributes(typeof(TimeoutAttribute), false).FirstOrDefault();

@@ -155,7 +155,7 @@ internal class PlaywrightTestAttribute : NUnitFrameworkBase.TestAttribute, IWrap
                 return (innerCommand.Execute(context), false);
             }
 
-            if (CheckThatPlaywrightTimeoutIsSmallerThanNUnitTimeout(context, timeout.Value) is TestResult result)
+            if (EnsureThatPlaywrightTimeoutIsSmallerThanNUnitTimeout(context, timeout.Value) is TestResult result)
             {
                 return (result, false);
             };
@@ -239,7 +239,7 @@ internal class PlaywrightTestAttribute : NUnitFrameworkBase.TestAttribute, IWrap
             }
         }
 
-        private TestResult? CheckThatPlaywrightTimeoutIsSmallerThanNUnitTimeout(TestExecutionContext context, int playwrightTestTimeout)
+        private TestResult? EnsureThatPlaywrightTimeoutIsSmallerThanNUnitTimeout(TestExecutionContext context, int playwrightTestTimeout)
         {
             // See https://github.com/nunit/nunit/blob/f77ac94d69daf985653763f073e651304d9e31f8/src/NUnitFramework/framework/Internal/Execution/SimpleWorkItem.cs#L142-L148
             // If a timeout is specified, create a TimeoutCommand
