@@ -265,6 +265,15 @@ internal static class EvaluateArgumentValueConverter
             t = Nullable.GetUnderlyingType(t);
         }
 
+        if (t == typeof(Guid))
+        {
+            if (value == null)
+            {
+                return Guid.Empty;
+            }
+            return Guid.Parse(value.ToString());
+        }
+
         return Convert.ChangeType(value, t, CultureInfo.InvariantCulture);
     }
 
