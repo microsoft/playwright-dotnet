@@ -176,8 +176,16 @@ public class PopupTests : BrowserTestEx
         await page.GotoAsync(Server.EmptyPage);
 
         var (size, popup) = await TaskUtils.WhenAll(
-            page.EvaluateAsync<ViewportSize>(@"() => {
+            page.EvaluateAsync<ViewportSize>(@"async () => {
                     const win = window.open(window.location.href, 'Title', 'toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=yes,resizable=yes,width=600,height=300,top=0,left=0');
+                    await new Promise(resolve => {
+                        const interval = setInterval(() => {
+                            if (win.innerWidth === 600 && win.innerHeight === 300) {
+                                clearInterval(interval);
+                                resolve();
+                            }
+                        }, 10);
+                    });
                     return { width: win.innerWidth, height: win.innerHeight };
                 }"),
             page.WaitForPopupAsync());

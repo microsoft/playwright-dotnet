@@ -28,29 +28,51 @@ using System.Text.Json.Serialization;
 
 namespace Microsoft.Playwright;
 
-public class PageGetByTitleOptions
+public class LocatorClearOptions
 {
-    public PageGetByTitleOptions() { }
+    public LocatorClearOptions() { }
 
-    public PageGetByTitleOptions(PageGetByTitleOptions clone)
+    public LocatorClearOptions(LocatorClearOptions clone)
     {
         if (clone == null)
         {
             return;
         }
 
-        Exact = clone.Exact;
+        Force = clone.Force;
+        NoWaitAfter = clone.NoWaitAfter;
+        Timeout = clone.Timeout;
     }
 
     /// <summary>
     /// <para>
-    /// Whether to find an exact match: case-sensitive and whole-string. Default to false.
-    /// Ignored when locating by a regular expression. Note that exact match still trims
-    /// whitespace.
+    /// Whether to bypass the <a href="https://playwright.dev/dotnet/docs/actionability">actionability</a>
+    /// checks. Defaults to <c>false</c>.
     /// </para>
     /// </summary>
-    [JsonPropertyName("exact")]
-    public bool? Exact { get; set; }
+    [JsonPropertyName("force")]
+    public bool? Force { get; set; }
+
+    /// <summary>
+    /// <para>
+    /// Actions that initiate navigations are waiting for these navigations to happen and
+    /// for pages to start loading. You can opt out of waiting via setting this flag. You
+    /// would only need this option in the exceptional cases such as navigating to inaccessible
+    /// pages. Defaults to <c>false</c>.
+    /// </para>
+    /// </summary>
+    [JsonPropertyName("noWaitAfter")]
+    public bool? NoWaitAfter { get; set; }
+
+    /// <summary>
+    /// <para>
+    /// Maximum time in milliseconds, defaults to 30 seconds, pass <c>0</c> to disable timeout.
+    /// The default value can be changed by using the <see cref="IBrowserContext.SetDefaultTimeout"/>
+    /// or <see cref="IPage.SetDefaultTimeout"/> methods.
+    /// </para>
+    /// </summary>
+    [JsonPropertyName("timeout")]
+    public float? Timeout { get; set; }
 }
 
 #nullable disable

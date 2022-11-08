@@ -64,17 +64,21 @@ public class ElementHandleScrollIntoViewTests : PageTestEx
     }
 
     [PlaywrightTest("elementhandle-scroll-into-view.spec.ts", "should scroll display:contents into view'")]
-    [Ignore("https://github.com/microsoft/playwright/issues/15034")]
     public async Task ShouldScollDisplayContentsIntoView()
     {
         await Page.SetContentAsync(@"
-                <div id=container style=""width:200px;height:200px;overflow:scroll;border:1px solid black;"">
-                    <div style=""margin-top:500px;background:red;"">
-                        <div style=""height:50px;width:100px;background:cyan;"">
+            <style>
+            html, body { margin: 0; padding: 0; width: 100%; height: 100%; }
+            ::-webkit-scrollbar { display: none; }
+            * { scrollbar-width: none; }
+            </style>
+            <div id=container style=""width:200px;height:200px;overflow:scroll;border:1px solid black;"">
+                <div style=""margin-top:500px;background:red;"">
+                    <div style=""height:50px;width:100px;background:cyan;"">
                         <div id=target style=""display:contents"">Hello</div>
-                        </div>
-                    <div>
-                </div>
+                    </div>
+                <div>
+            </div>
             ");
         var div = await Page.QuerySelectorAsync("#target");
         await div.ScrollIntoViewIfNeededAsync();

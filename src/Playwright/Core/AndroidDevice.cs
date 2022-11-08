@@ -6,7 +6,7 @@
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
- * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * to use, copy, modify, merge, publish, distribute, sublicense, and / or sell
  * copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions:
  *
@@ -22,35 +22,15 @@
  * SOFTWARE.
  */
 
-using System.Text.Json.Serialization;
+using Microsoft.Playwright.Transport;
+using Microsoft.Playwright.Transport.Channels;
+using Microsoft.Playwright.Transport.Protocol;
 
-#nullable enable
+namespace Microsoft.Playwright.Core;
 
-namespace Microsoft.Playwright;
-
-public class PageGetByTitleOptions
+internal class AndroidDevice : ChannelOwnerBase
 {
-    public PageGetByTitleOptions() { }
-
-    public PageGetByTitleOptions(PageGetByTitleOptions clone)
+    internal AndroidDevice(IChannelOwner parent, string guid, BrowserInitializer initializer) : base(parent, guid)
     {
-        if (clone == null)
-        {
-            return;
-        }
-
-        Exact = clone.Exact;
     }
-
-    /// <summary>
-    /// <para>
-    /// Whether to find an exact match: case-sensitive and whole-string. Default to false.
-    /// Ignored when locating by a regular expression. Note that exact match still trims
-    /// whitespace.
-    /// </para>
-    /// </summary>
-    [JsonPropertyName("exact")]
-    public bool? Exact { get; set; }
 }
-
-#nullable disable
