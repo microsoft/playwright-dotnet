@@ -182,7 +182,7 @@ internal class PlaywrightTestAttribute : NUnitFrameworkBase.TestAttribute, IWrap
 
                 // 2.2 Wait for the test execution to complete (let e.g. Page.ClickAsync throw)
                 // and give the test 5 seconds to finish.
-                await Task.WhenAny(testExecutionTask, Task.Delay(5000));
+                // await Task.WhenAny(testExecutionTask, Task.Delay(5000));
             }
             TestResult result;
             if (!testExecutionTask.IsCompleted)
