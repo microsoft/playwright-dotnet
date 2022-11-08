@@ -51,6 +51,9 @@ function update_assets() {
 }
 
 function roll_driver() {
+  cat "${upstream_repo_path}/utils/build/run-driver-posix.sh" | sed "s|package|../../package|" > "src/Playwright/Scripts/playwright.sh"
+  cat "${upstream_repo_path}/utils/build/run-driver-win.cmd" | sed "s|package|..\\\..\\\package|" > "src/Playwright/Scripts/playwright.cmd"
+
   new_driver_version="$1"
   upstream_package_version=$(node -e "console.log(require('${upstream_repo_path}/package.json').version)")
   echo "Rolling .NET driver to driver ${new_driver_version} and upstream version ${upstream_package_version}..."
