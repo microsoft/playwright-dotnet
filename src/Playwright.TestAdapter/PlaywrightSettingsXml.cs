@@ -74,13 +74,15 @@ public class PlaywrightSettingsXml
         var options = new T();
         while (reader.Read())
         {
-            if (reader.NodeType != XmlNodeType.Element)
+            if (reader.NodeType == XmlNodeType.EndElement)
             {
-                continue;
+                break;
             }
             var name = reader.Name;
             reader.Read();
             ApplyParameter(name, reader.Value, options);
+            // Read the end element of the property
+            reader.Read();
         }
         return options;
     }

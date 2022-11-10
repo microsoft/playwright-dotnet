@@ -178,6 +178,46 @@ test('should be able to make the browser headed via the env', async ({ runTest }
   expect(result.stdout).not.toContain("Headless")
 });
 
+test('should be able to to parse BrowserName and LaunchOptions.Headless from runsettings', async ({ runTest }) => {
+  const result = await runTest({
+    'ExampleTests.cs': `
+      using System;
+      using System.Threading.Tasks;
+      using Microsoft.Playwright.NUnit;
+      using NUnit.Framework;
+
+      namespace Playwright.TestingHarnessTest.NUnit;
+
+      public class <class-name> : PageTest
+      {
+          [Test]
+          public async Task Test()
+          {
+              await Page.GotoAsync("about:blank");
+              Console.WriteLine("BrowserName: " + BrowserName);
+              Console.WriteLine("User-Agent: " + await Page.EvaluateAsync<string>("() => navigator.userAgent"));
+          }
+      }`,
+      '.runsettings': `
+        <?xml version="1.0" encoding="utf-8"?>
+        <RunSettings>
+          <Playwright>
+            <LaunchOptions>
+              <Headless>false</Headless>
+            </LaunchOptions>
+            <!-- Order here is important, so that LaunchOptions comes first -->
+            <BrowserName>firefox</BrowserName>
+          </Playwright>
+        </RunSettings>
+      `,
+  }, 'dotnet test --settings=.runsettings');
+  expect(result.passed).toBe(1);
+  expect(result.failed).toBe(0);
+  expect(result.total).toBe(1);
+  expect(result.stdout).toContain("BrowserName: firefox")
+  expect(result.stdout).not.toContain("Headless")
+});
+
 test('should be able to override context options', async ({ runTest }) => {
   const result = await runTest({
     'ExampleTests.cs': `
