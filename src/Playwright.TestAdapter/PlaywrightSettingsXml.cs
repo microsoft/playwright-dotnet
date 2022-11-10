@@ -71,16 +71,25 @@ public class PlaywrightSettingsXml
 
     private static T ParseXmlIntoClass<T>(XmlReader reader) where T : class, new()
     {
+        var endTag = reader.Name;
         var options = new T();
         while (reader.Read())
         {
-            if (reader.NodeType != XmlNodeType.Element)
+            if (reader.NodeType == XmlNodeType.EndElement && reader.Name == endTag)
             {
-                continue;
+                break;
             }
-            var name = reader.Name;
-            reader.Read();
-            ApplyParameter(name, reader.Value, options);
+            if (reader.NodeType == XmlNodeType.Element)
+            {
+                var key = reader.Name;
+                reader.Read();
+                if (reader.NodeType != XmlNodeType.Text)
+                {
+                    Console.Error.WriteLine($"Playwright RunSettings Parsing Error: Playwright>{endTag}>{key} is not supported");
+                    continue;
+                }
+                ApplyParameter(key, reader.Value, options);
+            }
         }
         return options;
     }
