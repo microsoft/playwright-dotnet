@@ -108,7 +108,7 @@ public class LocatorAssertionsTests : PageTestEx
             await Page.SetContentAsync("<button disabled>Text</button>");
             var locator = Page.Locator("button");
             var exception = await PlaywrightAssert.ThrowsAsync<PlaywrightException>(() => Expect(locator).ToBeEnabledAsync(new() { Timeout = 1000 }));
-            StringAssert.Contains("selector resolved to <button disabled>Text</button>", exception.Message);
+            StringAssert.Contains("locator resolved to <button disabled>Text</button>", exception.Message);
             // extra checks
             StringAssert.Contains("Locator expected to be enabled", exception.Message);
             StringAssert.Contains("LocatorAssertions.ToBeEnabledAsync with timeout 1000ms", exception.Message);
@@ -193,14 +193,14 @@ public class LocatorAssertionsTests : PageTestEx
             await Page.SetContentAsync("<button style=\"display: none\"></button>");
             var locator = Page.Locator("button");
             var exception = await PlaywrightAssert.ThrowsAsync<PlaywrightException>(() => Expect(locator).ToBeVisibleAsync(new() { Timeout = 1000 }));
-            StringAssert.Contains("selector resolved to <button></button>", exception.Message);
+            StringAssert.Contains("locator resolved to <button></button>", exception.Message);
         }
         {
             // fail with not
             await Page.SetContentAsync("<input></input>");
             var locator = Page.Locator("input");
             var exception = await PlaywrightAssert.ThrowsAsync<PlaywrightException>(() => Expect(locator).Not.ToBeVisibleAsync(new() { Timeout = 1000 }));
-            StringAssert.Contains("selector resolved to <input/>", exception.Message);
+            StringAssert.Contains("locator resolved to <input/>", exception.Message);
         }
     }
 

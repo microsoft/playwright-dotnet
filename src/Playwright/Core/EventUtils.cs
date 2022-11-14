@@ -29,7 +29,6 @@ using Microsoft.Playwright.Transport;
 
 internal class EventUtils
 {
-
     private Dictionary<string, string> _eventToSubscriptionMapping = new();
     private Dictionary<string, Delegate> _eventNameToHandlers = new();
     private Connection _connection;
