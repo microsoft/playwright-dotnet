@@ -30,7 +30,7 @@ using Microsoft.Playwright.Transport;
 internal class EventUtils
 {
     private Dictionary<string, string> _eventToSubscriptionMapping = new();
-    private Dictionary<string, Delegate> _eventNameToHandlers = new();
+    private Dictionary<string, Delegate> _eventToDelegate = new();
     private Connection _connection;
     private string _guid;
 
@@ -41,7 +41,7 @@ internal class EventUtils
     }
 
     internal void SetEventToSubscriptionMapping(Dictionary<string, string> mapping)
-    => _eventToSubscriptionMapping = mapping;
+        => _eventToSubscriptionMapping = mapping;
 
     internal void UpdateEventSubscription(string eventName, bool enabled)
     {
@@ -65,24 +65,24 @@ internal class EventUtils
         {
             UpdateEventSubscription(eventName, true);
         }
-        if (!_eventNameToHandlers.ContainsKey(eventName))
+        if (!_eventToDelegate.ContainsKey(eventName))
         {
-            _eventNameToHandlers[eventName] = handler;
+            _eventToDelegate[eventName] = handler;
         }
         else
         {
-            _eventNameToHandlers[eventName] = Delegate.Combine(_eventNameToHandlers[eventName], handler);
+            _eventToDelegate[eventName] = Delegate.Combine(_eventToDelegate[eventName], handler);
         }
     }
 
     internal void OnEventHandlerRemove<T>(string eventName, EventHandler<T> handler)
     {
-        if (_eventNameToHandlers.TryGetValue(eventName, out var handlers))
+        if (_eventToDelegate.TryGetValue(eventName, out var handlers))
         {
             handlers = Delegate.Remove(handlers, handler);
             if (EventListenerCount(eventName) == 0)
             {
-                _eventNameToHandlers.Remove(eventName);
+                _eventToDelegate.Remove(eventName);
                 UpdateEventSubscription(eventName, false);
             }
         }
@@ -90,7 +90,7 @@ internal class EventUtils
 
     internal void OnEventHandlerInvoke<T>(string eventName, T eventArgs)
     {
-        if (_eventNameToHandlers.TryGetValue(eventName, out var handlers))
+        if (_eventToDelegate.TryGetValue(eventName, out var handlers))
         {
             handlers.DynamicInvoke(this, eventArgs);
         }
@@ -98,7 +98,7 @@ internal class EventUtils
 
     private int EventListenerCount(string eventName)
     {
-        if (_eventNameToHandlers.TryGetValue(eventName, out var handlers))
+        if (_eventToDelegate.TryGetValue(eventName, out var handlers))
         {
             return handlers.GetInvocationList().Length;
         }
