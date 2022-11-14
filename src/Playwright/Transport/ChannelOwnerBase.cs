@@ -24,12 +24,14 @@
 
 using System;
 using System.Collections.Concurrent;
+using System.Collections.Generic;
 using System.Threading.Tasks;
+using Microsoft.Playwright.Helpers;
 using Microsoft.Playwright.Transport.Channels;
 
 namespace Microsoft.Playwright.Transport;
 
-internal class ChannelOwnerBase : IChannelOwner
+internal class ChannelOwnerBase : EventUtils, IChannelOwner
 {
     private readonly Connection _connection;
     private readonly ConcurrentDictionary<string, IChannelOwner> _objects = new();
@@ -38,7 +40,7 @@ internal class ChannelOwnerBase : IChannelOwner
     {
     }
 
-    internal ChannelOwnerBase(IChannelOwner parent, Connection connection, string guid)
+    internal ChannelOwnerBase(IChannelOwner parent, Connection connection, string guid) : base(parent?.Connection ?? connection, guid)
     {
         _connection = parent?.Connection ?? connection;
 

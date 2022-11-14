@@ -144,15 +144,6 @@ internal class PageChannel : Channel<Page>
                 ["timeout"] = timeout,
             });
 
-    internal Task SetFileChooserInterceptedNoReplyAsync(bool intercepted)
-        => Connection.SendMessageToServerAsync<PageChannel>(
-            Guid,
-            "setFileChooserInterceptedNoReply",
-            new Dictionary<string, object>
-            {
-                ["intercepted"] = intercepted,
-            });
-
     internal Task CloseAsync(bool runBeforeUnload)
         => Connection.SendMessageToServerAsync(
             Guid,

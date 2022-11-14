@@ -62,26 +62,26 @@ internal class BrowserContext : ChannelOwnerBase, IChannelOwner<BrowserContext>,
         {
             e.Request.Failure = e.FailureText;
             e.Request.SetResponseEndTiming(e.ResponseEndTiming);
-            RequestFailed?.Invoke(this, e.Request);
+            OnEventHandlerInvoke(nameof(RequestFailed), e.Request);
             e.Page?.FireRequestFailed(e.Request);
             e.Response?.ReportFinished(e.FailureText);
         };
         Channel.Request += (_, e) =>
         {
-            Request?.Invoke(this, e.Request);
+            OnEventHandlerInvoke(nameof(Request), e.Request);
             e.Page?.FireRequest(e.Request);
         };
         Channel.RequestFinished += (_, e) =>
         {
             e.Request.SetResponseEndTiming(e.ResponseEndTiming);
             e.Request.Sizes = e.RequestSizes;
-            RequestFinished?.Invoke(this, e.Request);
+            OnEventHandlerInvoke(nameof(RequestFinished), e.Request);
             e.Page?.FireRequestFinished(e.Request);
             e.Response?.ReportFinished();
         };
         Channel.Response += (_, e) =>
         {
-            Response?.Invoke(this, e.Response);
+            OnEventHandlerInvoke(nameof(Response), e.Response);
             e.Page?.FireResponse(e.Response);
         };
 
@@ -96,19 +96,44 @@ internal class BrowserContext : ChannelOwnerBase, IChannelOwner<BrowserContext>,
         _request = initializer.RequestContext;
         _initializer = initializer;
         Browser = parent as IBrowser;
+
+        SetEventToSubscriptionMapping(
+            new Dictionary<string, string>
+            {
+                [nameof(Request)] = "request",
+                [nameof(Response)] = "response",
+                [nameof(RequestFinished)] = "requestFinished",
+                [nameof(RequestFailed)] = "requestFailed",
+            });
     }
 
     public event EventHandler<IBrowserContext> Close;
 
     public event EventHandler<IPage> Page;
 
-    public event EventHandler<IRequest> Request;
+    public event EventHandler<IRequest> Request
+    {
+        add => OnEventHandlerAdd<IRequest>(nameof(Request), value);
+        remove => OnEventHandlerRemove<IRequest>(nameof(Request), value);
+    }
 
-    public event EventHandler<IRequest> RequestFailed;
+    public event EventHandler<IRequest> RequestFailed
+    {
+        add => OnEventHandlerAdd<IRequest>(nameof(RequestFailed), value);
+        remove => OnEventHandlerRemove<IRequest>(nameof(RequestFailed), value);
+    }
 
-    public event EventHandler<IRequest> RequestFinished;
+    public event EventHandler<IRequest> RequestFinished
+    {
+        add => OnEventHandlerAdd<IRequest>(nameof(RequestFinished), value);
+        remove => OnEventHandlerRemove<IRequest>(nameof(RequestFinished), value);
+    }
 
-    public event EventHandler<IResponse> Response;
+    public event EventHandler<IResponse> Response
+    {
+        add => OnEventHandlerAdd<IResponse>(nameof(Response), value);
+        remove => OnEventHandlerRemove<IResponse>(nameof(Response), value);
+    }
 
     public event EventHandler<IWorker> ServiceWorker;
 

@@ -335,15 +335,6 @@ internal class Frame : ChannelOwnerBase, IChannelOwner<Frame>, IFrame
     public Task FillAsync(string selector, string value, FrameFillOptions options = default)
         => _channel.FillAsync(selector, value, force: options?.Force, timeout: options?.Timeout, noWaitAfter: options?.NoWaitAfter, options?.Strict);
 
-    public Task ClearAsync(string selector, FrameClearOptions options = null)
-        => FillAsync(selector, string.Empty, new()
-        {
-            Force = options?.Force,
-            Timeout = options?.Timeout,
-            NoWaitAfter = options?.NoWaitAfter,
-            Strict = options?.Strict,
-        });
-
     public async Task<IElementHandle> AddScriptTagAsync(FrameAddScriptTagOptions options = default)
     {
         var content = options?.Content;

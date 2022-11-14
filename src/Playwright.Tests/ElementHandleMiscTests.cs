@@ -64,17 +64,6 @@ public class ElementHandleMiscTests : PageTestEx
         Assert.AreEqual("some value", await Page.EvaluateAsync<string>("() => result"));
     }
 
-    [PlaywrightTest("elementhandle-misc.spec.ts", "should clear input")]
-    public async Task ShouldClearInput()
-    {
-        await Page.GotoAsync(Server.Prefix + "/input/textarea.html");
-        var handle = await Page.QuerySelectorAsync("input");
-        await handle.FillAsync("some value");
-        Assert.AreEqual("some value", await Page.EvaluateAsync<string>("window['result']"));
-        await handle.ClearAsync();
-        Assert.AreEqual(string.Empty, await Page.EvaluateAsync<string>("window['result']"));
-    }
-
     [PlaywrightTest("elementhandle-misc.spec.ts", "should check the box")]
     public async Task ShouldCheckTheBox()
     {
