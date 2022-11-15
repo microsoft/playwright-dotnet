@@ -51,6 +51,14 @@ internal class BrowserContext : ChannelOwnerBase, IChannelOwner<BrowserContext>,
 
     internal TimeoutSettings _timeoutSettings = new();
 
+    private EventHandler<IRequest> _requestImpl;
+
+    private EventHandler<IResponse> _responseImpl;
+
+    private EventHandler<IRequest> _requestFinishedImpl;
+
+    private EventHandler<IRequest> _requestFailedImpl;
+
     internal BrowserContext(IChannelOwner parent, string guid, BrowserContextInitializer initializer) : base(parent, guid)
     {
         Channel = new(guid, parent.Connection, this);
@@ -62,26 +70,26 @@ internal class BrowserContext : ChannelOwnerBase, IChannelOwner<BrowserContext>,
         {
             e.Request.Failure = e.FailureText;
             e.Request.SetResponseEndTiming(e.ResponseEndTiming);
-            OnEventHandlerInvoke(nameof(RequestFailed), e.Request);
+            _requestFailedImpl?.Invoke(this, e.Request);
             e.Page?.FireRequestFailed(e.Request);
             e.Response?.ReportFinished(e.FailureText);
         };
         Channel.Request += (_, e) =>
         {
-            OnEventHandlerInvoke(nameof(Request), e.Request);
+            _requestImpl?.Invoke(this, e.Request);
             e.Page?.FireRequest(e.Request);
         };
         Channel.RequestFinished += (_, e) =>
         {
             e.Request.SetResponseEndTiming(e.ResponseEndTiming);
             e.Request.Sizes = e.RequestSizes;
-            OnEventHandlerInvoke(nameof(RequestFinished), e.Request);
+            _requestFinishedImpl?.Invoke(this, e.Request);
             e.Page?.FireRequestFinished(e.Request);
             e.Response?.ReportFinished();
         };
         Channel.Response += (_, e) =>
         {
-            OnEventHandlerInvoke(nameof(Response), e.Response);
+            _responseImpl?.Invoke(this, e.Response);
             e.Page?.FireResponse(e.Response);
         };
 
@@ -96,15 +104,6 @@ internal class BrowserContext : ChannelOwnerBase, IChannelOwner<BrowserContext>,
         _request = initializer.RequestContext;
         _initializer = initializer;
         Browser = parent as IBrowser;
-
-        SetEventToSubscriptionMapping(
-            new Dictionary<string, string>
-            {
-                [nameof(Request)] = "request",
-                [nameof(Response)] = "response",
-                [nameof(RequestFinished)] = "requestFinished",
-                [nameof(RequestFailed)] = "requestFailed",
-            });
     }
 
     public event EventHandler<IBrowserContext> Close;
@@ -113,26 +112,86 @@ internal class BrowserContext : ChannelOwnerBase, IChannelOwner<BrowserContext>,
 
     public event EventHandler<IRequest> Request
     {
-        add => OnEventHandlerAdd<IRequest>(nameof(Request), value);
-        remove => OnEventHandlerRemove<IRequest>(nameof(Request), value);
-    }
+        add
+        {
+            if ((this._requestImpl?.GetInvocationList().Count() ?? 0) == 0)
+            {
+                UpdateEventSubscription("request", true);
+            }
+            _requestImpl += value;
+        }
 
-    public event EventHandler<IRequest> RequestFailed
-    {
-        add => OnEventHandlerAdd<IRequest>(nameof(RequestFailed), value);
-        remove => OnEventHandlerRemove<IRequest>(nameof(RequestFailed), value);
-    }
-
-    public event EventHandler<IRequest> RequestFinished
-    {
-        add => OnEventHandlerAdd<IRequest>(nameof(RequestFinished), value);
-        remove => OnEventHandlerRemove<IRequest>(nameof(RequestFinished), value);
+        remove
+        {
+            _requestImpl -= value;
+            if ((this._requestImpl?.GetInvocationList().Count() ?? 0) == 0)
+            {
+                UpdateEventSubscription("request", false);
+            }
+        }
     }
 
     public event EventHandler<IResponse> Response
     {
-        add => OnEventHandlerAdd<IResponse>(nameof(Response), value);
-        remove => OnEventHandlerRemove<IResponse>(nameof(Response), value);
+        add
+        {
+            if ((this._responseImpl?.GetInvocationList().Count() ?? 0) == 0)
+            {
+                UpdateEventSubscription("response", true);
+            }
+            _responseImpl += value;
+        }
+
+        remove
+        {
+            _responseImpl -= value;
+            if ((this._responseImpl?.GetInvocationList().Count() ?? 0) == 0)
+            {
+                UpdateEventSubscription("response", false);
+            }
+        }
+    }
+
+    public event EventHandler<IRequest> RequestFinished
+    {
+        add
+        {
+            if ((this._requestFinishedImpl?.GetInvocationList().Count() ?? 0) == 0)
+            {
+                UpdateEventSubscription("requestFinished", true);
+            }
+            _requestFinishedImpl += value;
+        }
+
+        remove
+        {
+            _requestFinishedImpl -= value;
+            if ((this._requestFinishedImpl?.GetInvocationList().Count() ?? 0) == 0)
+            {
+                UpdateEventSubscription("requestFinished", false);
+            }
+        }
+    }
+
+    public event EventHandler<IRequest> RequestFailed
+    {
+        add
+        {
+            if ((this._requestFailedImpl?.GetInvocationList().Count() ?? 0) == 0)
+            {
+                UpdateEventSubscription("requestFailed", true);
+            }
+            _requestFailedImpl += value;
+        }
+
+        remove
+        {
+            _requestFailedImpl -= value;
+            if ((this._requestFailedImpl?.GetInvocationList().Count() ?? 0) == 0)
+            {
+                UpdateEventSubscription("requestFailed", false);
+            }
+        }
     }
 
     public event EventHandler<IWorker> ServiceWorker;

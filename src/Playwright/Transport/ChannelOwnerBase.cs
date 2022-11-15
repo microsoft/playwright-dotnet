@@ -31,7 +31,7 @@ using Microsoft.Playwright.Transport.Channels;
 
 namespace Microsoft.Playwright.Transport;
 
-internal class ChannelOwnerBase : EventUtils, IChannelOwner
+internal class ChannelOwnerBase : IChannelOwner
 {
     private readonly Connection _connection;
     private readonly ConcurrentDictionary<string, IChannelOwner> _objects = new();
@@ -40,7 +40,7 @@ internal class ChannelOwnerBase : EventUtils, IChannelOwner
     {
     }
 
-    internal ChannelOwnerBase(IChannelOwner parent, Connection connection, string guid) : base(parent?.Connection ?? connection, guid)
+    internal ChannelOwnerBase(IChannelOwner parent, Connection connection, string guid)
     {
         _connection = parent?.Connection ?? connection;
 
@@ -92,4 +92,16 @@ internal class ChannelOwnerBase : EventUtils, IChannelOwner
     public Task WrapApiCallAsync(Func<Task> action, bool isInternal = false) => _connection.WrapApiCallAsync(action, isInternal);
 
     public Task WrapApiBoundaryAsync(Func<Task> action) => _connection.WrapApiBoundaryAsync(action);
+
+    internal void UpdateEventSubscription(string eventName, bool enabled)
+    {
+        _connection.SendMessageToServerAsync(
+            Guid,
+            "updateSubscription",
+            new Dictionary<string, object>
+            {
+                ["event"] = eventName,
+                ["enabled"] = enabled,
+            }).IgnoreException();
+    }
 }

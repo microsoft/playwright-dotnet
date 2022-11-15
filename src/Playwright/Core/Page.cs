@@ -54,6 +54,16 @@ internal class Page : ChannelOwnerBase, IChannelOwner<Page>, IPage
     private List<RouteHandler> _routes = new();
     private Video _video;
 
+    private EventHandler<IRequest> _requestImpl;
+
+    private EventHandler<IResponse> _responseImpl;
+
+    private EventHandler<IRequest> _requestFinishedImpl;
+
+    private EventHandler<IRequest> _requestFailedImpl;
+
+    private EventHandler<IFileChooser> _fileChooserImpl;
+
     internal Page(IChannelOwner parent, string guid, PageInitializer initializer) : base(parent, guid)
     {
         Context = (BrowserContext)parent;
@@ -115,7 +125,7 @@ internal class Page : ChannelOwnerBase, IChannelOwner<Page>, IPage
         };
         _channel.Video += (_, artifact) => ForceVideo().ArtifactReady(artifact);
 
-        _channel.FileChooser += (_, e) => OnEventHandlerInvoke<FileChooser>(nameof(FileChooser), new FileChooser(this, e.Element.Object, e.IsMultiple));
+        _channel.FileChooser += (_, e) => _fileChooserImpl?.Invoke(this, new FileChooser(this, e.Element.Object, e.IsMultiple));
         _channel.Worker += (_, worker) =>
         {
             _workers.Add(worker);
@@ -127,15 +137,6 @@ internal class Page : ChannelOwnerBase, IChannelOwner<Page>, IPage
 
         Close += (_, _) => ClosedOrCrashedTcs.TrySetResult(true);
         Crash += (_, _) => ClosedOrCrashedTcs.TrySetResult(true);
-
-        SetEventToSubscriptionMapping(new Dictionary<string, string>
-        {
-            { nameof(Request), "request" },
-            { nameof(Response), "response" },
-            { nameof(RequestFinished), "requestFinished" },
-            { nameof(RequestFailed), "requestFailed" },
-            { nameof(FileChooser), "fileChooser" },
-        });
     }
 
     public event EventHandler<IConsoleMessage> Console;
@@ -144,28 +145,88 @@ internal class Page : ChannelOwnerBase, IChannelOwner<Page>, IPage
 
     public event EventHandler<IRequest> Request
     {
-        add => OnEventHandlerAdd<IRequest>(nameof(Request), value);
-        remove => OnEventHandlerRemove<IRequest>(nameof(Request), value);
+        add
+        {
+            if ((this._requestImpl?.GetInvocationList().Count() ?? 0) == 0)
+            {
+                UpdateEventSubscription("request", true);
+            }
+            _requestImpl += value;
+        }
+
+        remove
+        {
+            _requestImpl -= value;
+            if ((this._requestImpl?.GetInvocationList().Count() ?? 0) == 0)
+            {
+                UpdateEventSubscription("request", false);
+            }
+        }
     }
 
     public event EventHandler<IWebSocket> WebSocket;
 
     public event EventHandler<IResponse> Response
     {
-        add => OnEventHandlerAdd<IResponse>(nameof(Response), value);
-        remove => OnEventHandlerRemove<IResponse>(nameof(Response), value);
+        add
+        {
+            if ((this._responseImpl?.GetInvocationList().Count() ?? 0) == 0)
+            {
+                UpdateEventSubscription("response", true);
+            }
+            _responseImpl += value;
+        }
+
+        remove
+        {
+            _responseImpl -= value;
+            if ((this._responseImpl?.GetInvocationList().Count() ?? 0) == 0)
+            {
+                UpdateEventSubscription("response", false);
+            }
+        }
     }
 
     public event EventHandler<IRequest> RequestFinished
     {
-        add => OnEventHandlerAdd<IRequest>(nameof(RequestFinished), value);
-        remove => OnEventHandlerRemove<IRequest>(nameof(RequestFinished), value);
+        add
+        {
+            if ((this._requestFinishedImpl?.GetInvocationList().Count() ?? 0) == 0)
+            {
+                UpdateEventSubscription("requestFinished", true);
+            }
+            _requestFinishedImpl += value;
+        }
+
+        remove
+        {
+            _requestFinishedImpl -= value;
+            if ((this._requestFinishedImpl?.GetInvocationList().Count() ?? 0) == 0)
+            {
+                UpdateEventSubscription("requestFinished", false);
+            }
+        }
     }
 
     public event EventHandler<IRequest> RequestFailed
     {
-        add => OnEventHandlerAdd<IRequest>(nameof(RequestFailed), value);
-        remove => OnEventHandlerRemove<IRequest>(nameof(RequestFailed), value);
+        add
+        {
+            if ((this._requestFailedImpl?.GetInvocationList().Count() ?? 0) == 0)
+            {
+                UpdateEventSubscription("requestFailed", true);
+            }
+            _requestFailedImpl += value;
+        }
+
+        remove
+        {
+            _requestFailedImpl -= value;
+            if ((this._requestFailedImpl?.GetInvocationList().Count() ?? 0) == 0)
+            {
+                UpdateEventSubscription("requestFailed", false);
+            }
+        }
     }
 
     public event EventHandler<IDialog> Dialog;
@@ -178,8 +239,23 @@ internal class Page : ChannelOwnerBase, IChannelOwner<Page>, IPage
 
     public event EventHandler<IFileChooser> FileChooser
     {
-        add => OnEventHandlerAdd<IFileChooser>(nameof(FileChooser), value);
-        remove => OnEventHandlerRemove<IFileChooser>(nameof(FileChooser), value);
+        add
+        {
+            if ((this._fileChooserImpl?.GetInvocationList().Count() ?? 0) == 0)
+            {
+                UpdateEventSubscription("fileChooser", true);
+            }
+            _fileChooserImpl += value;
+        }
+
+        remove
+        {
+            _fileChooserImpl -= value;
+            if ((this._fileChooserImpl?.GetInvocationList().Count() ?? 0) == 0)
+            {
+                UpdateEventSubscription("fileChooser", false);
+            }
+        }
     }
 
     public event EventHandler<IPage> Load;
@@ -972,13 +1048,13 @@ internal class Page : ChannelOwnerBase, IChannelOwner<Page>, IPage
     internal void OnFrameNavigated(Frame frame)
         => FrameNavigated?.Invoke(this, frame);
 
-    internal void FireRequest(IRequest request) => OnEventHandlerInvoke(nameof(Request), request);
+    internal void FireRequest(IRequest request) => _requestImpl?.Invoke(this, request);
 
-    internal void FireRequestFailed(IRequest request) => OnEventHandlerInvoke(nameof(RequestFailed), request);
+    internal void FireRequestFailed(IRequest request) => _requestFailedImpl?.Invoke(this, request);
 
-    internal void FireRequestFinished(IRequest request) => OnEventHandlerInvoke(nameof(RequestFinished), request);
+    internal void FireRequestFinished(IRequest request) => _requestFinishedImpl?.Invoke(this, request);
 
-    internal void FireResponse(IResponse response) => OnEventHandlerInvoke(nameof(Response), response);
+    internal void FireResponse(IResponse response) => _responseImpl?.Invoke(this, response);
 
     internal void FireLoad() => Load?.Invoke(this, this);
 
