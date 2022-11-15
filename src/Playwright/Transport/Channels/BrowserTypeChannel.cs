@@ -125,6 +125,7 @@ internal class BrowserTypeChannel : Channel<Core.BrowserType>
         HarMode? recordHarMode = default,
         string recordHarPath = default,
         bool? recordHarOmitContent = default,
+        string recordHarUrlFilter = default,
         string recordHarUrlFilterString = default,
         Regex recordHarUrlFilterRegex = default,
         Dictionary<string, object> recordVideo = default,
@@ -164,6 +165,7 @@ internal class BrowserTypeChannel : Channel<Core.BrowserType>
             recordHarMode: recordHarMode,
             recordHarPath: recordHarPath,
             recordHarOmitContent: recordHarOmitContent,
+            recordHarUrlFilter: recordHarUrlFilter,
             recordHarUrlFilterString: recordHarUrlFilterString,
             recordHarUrlFilterRegex: recordHarUrlFilterRegex);
         if (recordHarOptions != null)

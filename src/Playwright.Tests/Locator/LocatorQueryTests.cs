@@ -92,7 +92,7 @@ public class LocatorQueryTests : PageTestEx
     public async Task ShouldFilterByText2()
     {
         await Page.SetContentAsync("<div>foo <span>hello world</span> bar</div>");
-        StringAssert.Contains(await Page.Locator("div", new() { HasTextString = "hello world" }).TextContentAsync(), "foo hello world bar");
+        StringAssert.Contains(await Page.Locator("div", new() { HasText = "hello world" }).TextContentAsync(), "foo hello world bar");
     }
 
     [PlaywrightTest("locator-query.spec.ts", "should filter by regex")]
@@ -151,7 +151,7 @@ public class LocatorQueryTests : PageTestEx
     {
         await Page.GotoAsync(Server.EmptyPage);
         ILocator[] locators = new ILocator[] {
-                Page.Locator("button", new() { HasTextString = "Драматург" }),
+                Page.Locator("button", new() { HasText = "Драматург" }),
                 Page.Locator("button", new() { HasTextRegex = new Regex("Драматург") }),
                 Page.Locator("button", new() { Has = Page.Locator("text=Драматург") }),
             };
@@ -181,14 +181,14 @@ public class LocatorQueryTests : PageTestEx
     public async Task ShouldSupportLocatorFilter()
     {
         await Page.SetContentAsync("<section><div><span>hello</span></div><div><span>world</span></div></section>");
-        await Expect(Page.Locator("div").Filter(new() { HasTextString = "hello" })).ToHaveCountAsync(1);
-        await Expect(Page.Locator("div", new() { HasTextString = "hello" }).Filter(new() { HasTextString = "hello" })).ToHaveCountAsync(1);
-        await Expect(Page.Locator("div", new() { HasTextString = "hello" }).Filter(new() { HasTextString = "world" })).ToHaveCountAsync(0);
-        await Expect(Page.Locator("section", new() { HasTextString = "hello" }).Filter(new() { HasTextString = "world" })).ToHaveCountAsync(1);
+        await Expect(Page.Locator("div").Filter(new() { HasText = "hello" })).ToHaveCountAsync(1);
+        await Expect(Page.Locator("div", new() { HasTextString = "hello" }).Filter(new() { HasText = "hello" })).ToHaveCountAsync(1);
+        await Expect(Page.Locator("div", new() { HasText = "hello" }).Filter(new() { HasTextString = "world" })).ToHaveCountAsync(0);
+        await Expect(Page.Locator("section", new() { HasText = "hello" }).Filter(new() { HasTextString = "world" })).ToHaveCountAsync(1);
         await Expect(Page.Locator("div").Filter(new() { HasTextString = "hello" }).Locator("span")).ToHaveCountAsync(1);
-        await Expect(Page.Locator("div").Filter(new() { Has = Page.Locator("span", new() { HasTextString = "world" }) })).ToHaveCountAsync(1);
+        await Expect(Page.Locator("div").Filter(new() { Has = Page.Locator("span", new() { HasText = "world" }) })).ToHaveCountAsync(1);
         await Expect(Page.Locator("div").Filter(new() { Has = Page.Locator("span") })).ToHaveCountAsync(2);
-        await Expect(Page.Locator("div").Filter(new() { Has = Page.Locator("span"), HasTextString = "world" })).ToHaveCountAsync(1);
+        await Expect(Page.Locator("div").Filter(new() { Has = Page.Locator("span"), HasText = "world" })).ToHaveCountAsync(1);
     }
 
     [PlaywrightTest("locator-query.spec.ts", "should enforce same frame for has:locator'")]

@@ -65,7 +65,7 @@ internal class APIRequestContext : ChannelOwnerBase, IChannelOwner<APIRequestCon
         {
             options.Headers = await urlOrRequest.AllHeadersAsync().ConfigureAwait(false);
         }
-        if (options.DataByte == null && options.DataObject == null && options.DataString == null && options.Form == null && options.Multipart == null)
+        if (options.Data == null && options.DataByte == null && options.DataObject == null && options.DataString == null && options.Form == null && options.Multipart == null)
         {
             options.DataByte = urlOrRequest.PostDataBuffer;
         }
@@ -80,7 +80,7 @@ internal class APIRequestContext : ChannelOwnerBase, IChannelOwner<APIRequestCon
         {
             throw new PlaywrightException("'maxRedirects' should be greater than or equal to '0'");
         }
-        if (new[] { options.DataByte, options.DataObject, options.DataString, options.Form, options.Multipart }.Count(x => x != null) > 1)
+        if (new[] { options.Data, options.DataByte, options.DataObject, options.DataString, options.Form, options.Multipart }.Count(x => x != null) > 1)
         {
             throw new PlaywrightException("Only one of 'data', 'form' or 'multipart' can be specified");
         }
@@ -92,15 +92,16 @@ internal class APIRequestContext : ChannelOwnerBase, IChannelOwner<APIRequestCon
         }
         byte[] postData = null;
         object jsonData = null;
-        if (!string.IsNullOrEmpty(options.DataString))
+        string dataString = !string.IsNullOrEmpty(options.Data) ? options.Data : options.DataString;
+        if (!string.IsNullOrEmpty(dataString))
         {
             if (IsJsonContentType(options.Headers?.ToDictionary(x => x.Key, x => x.Value)))
             {
-                jsonData = options.DataString;
+                jsonData = dataString;
             }
             else
             {
-                postData = System.Text.Encoding.UTF8.GetBytes(options.DataString);
+                postData = System.Text.Encoding.UTF8.GetBytes(dataString);
             }
         }
         else if (options.DataByte != null)

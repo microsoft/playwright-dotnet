@@ -121,7 +121,7 @@ public class BrowserContextHarTests : ContextTestEx
     {
         var path = TestUtils.GetAsset("har-fulfill.har");
 
-        await Context.RouteFromHARAsync(path, new() { UrlString = "**/*.js" });
+        await Context.RouteFromHARAsync(path, new() { Url = "**/*.js" });
         var page = await Context.NewPageAsync();
         await Context.RouteAsync("http://no.playwright/", async route =>
         {

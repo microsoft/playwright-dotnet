@@ -99,7 +99,11 @@ internal class HarRouter
 
     internal async Task AddContextRouteAsync(BrowserContext context)
     {
-        if (!string.IsNullOrEmpty(_options.UrlString))
+        if (!string.IsNullOrEmpty(_options.Url))
+        {
+            await context.RouteAsync(_options.Url, route => HandleAsync((Route)route)).ConfigureAwait(false);
+        }
+        else if (!string.IsNullOrEmpty(_options.UrlString))
         {
             await context.RouteAsync(_options.UrlString, route => HandleAsync((Route)route)).ConfigureAwait(false);
         }
@@ -117,7 +121,11 @@ internal class HarRouter
 
     internal async Task AddPageRouteAsync(Page page)
     {
-        if (!string.IsNullOrEmpty(_options.UrlString))
+        if (!string.IsNullOrEmpty(_options.Url))
+        {
+            await page.RouteAsync(_options.Url, route => HandleAsync((Route)route)).ConfigureAwait(false);
+        }
+        else if (!string.IsNullOrEmpty(_options.UrlString))
         {
             await page.RouteAsync(_options.UrlString, route => HandleAsync((Route)route)).ConfigureAwait(false);
         }
@@ -138,6 +146,8 @@ internal class HarRouter
 
 internal class HarRouterOptions
 {
+    internal string Url { get; set; }
+
     internal string UrlString { get; set; }
 
     internal Regex UrlRegex { get; set; }

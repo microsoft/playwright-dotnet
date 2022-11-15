@@ -542,6 +542,7 @@ internal class BrowserContext : ChannelOwnerBase, IChannelOwner<BrowserContext>,
         var harId = await Channel.HarStartAsync(
             page,
             har,
+            options?.Url,
             options?.UrlString,
             options?.UrlRegex).ConfigureAwait(false);
         _harRecorders.Add(harId, new() { Path = har, Content = HarContentPolicy.Attach });
@@ -556,6 +557,7 @@ internal class BrowserContext : ChannelOwnerBase, IChannelOwner<BrowserContext>,
         }
         var harRouter = await HarRouter.CreateAsync(Channel.Connection.LocalUtils, har, options?.NotFound ?? HarNotFound.Abort, new()
         {
+            Url = options?.Url,
             UrlRegex = options?.UrlRegex,
             UrlString = options?.UrlString,
         }).ConfigureAwait(false);

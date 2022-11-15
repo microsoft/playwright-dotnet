@@ -237,7 +237,7 @@ public class GlobalFetchTests : PlaywrightTestEx
     public async Task ShouldHaveANiceToString()
     {
         var request = await Playwright.APIRequest.NewContextAsync();
-        var response = await request.PostAsync(Server.EmptyPage, new() { DataString = "My post data", Headers = new Dictionary<string, string>() { ["Content-Type"] = "application/json" } });
+        var response = await request.PostAsync(Server.EmptyPage, new() { Data = "My post data", Headers = new Dictionary<string, string>() { ["Content-Type"] = "application/json" } });
         var str = response.ToString();
         StringAssert.Contains("APIResponse: 200 OK", str);
         foreach (var header in response.HeadersArray)

@@ -42,8 +42,9 @@ public class PageRouteFromHAROptions
 
         NotFound = clone.NotFound;
         Update = clone.Update;
-        UrlString = clone.UrlString;
+        Url = clone.Url;
         UrlRegex = clone.UrlRegex;
+        UrlString = clone.UrlString;
     }
 
     /// <summary>
@@ -73,8 +74,8 @@ public class PageRouteFromHAROptions
     /// all requests are served from the HAR file.
     /// </para>
     /// </summary>
-    [JsonPropertyName("urlString")]
-    public string? UrlString { get; set; }
+    [JsonPropertyName("url")]
+    public string? Url { get; set; }
 
     /// <summary>
     /// <para>
@@ -85,6 +86,16 @@ public class PageRouteFromHAROptions
     /// </summary>
     [JsonPropertyName("urlRegex")]
     public Regex? UrlRegex { get; set; }
+
+    /// <summary>
+    /// <para>
+    /// A glob pattern, regular expression or predicate to match the request URL. Only requests
+    /// with URL matching the pattern will be served from the HAR file. If not specified,
+    /// all requests are served from the HAR file.
+    /// </para>
+    /// </summary>
+    [JsonPropertyName("urlString")]
+    public string? UrlString { get; set; }
 }
 
 #nullable disable

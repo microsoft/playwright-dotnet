@@ -42,9 +42,10 @@ public class PageRunAndWaitForNavigationOptions
         }
 
         Timeout = clone.Timeout;
-        UrlString = clone.UrlString;
-        UrlRegex = clone.UrlRegex;
+        Url = clone.Url;
         UrlFunc = clone.UrlFunc;
+        UrlRegex = clone.UrlRegex;
+        UrlString = clone.UrlString;
         WaitUntil = clone.WaitUntil;
     }
 
@@ -67,8 +68,19 @@ public class PageRunAndWaitForNavigationOptions
     /// equal to the string.
     /// </para>
     /// </summary>
-    [JsonPropertyName("urlString")]
-    public string? UrlString { get; set; }
+    [JsonPropertyName("url")]
+    public string? Url { get; set; }
+
+    /// <summary>
+    /// <para>
+    /// A glob pattern, regex pattern or predicate receiving <see cref="URL"/> to match
+    /// while waiting for the navigation. Note that if the parameter is a string without
+    /// wildcard characters, the method will wait for navigation to URL that is exactly
+    /// equal to the string.
+    /// </para>
+    /// </summary>
+    [JsonPropertyName("urlFunc")]
+    public Func<string, bool>? UrlFunc { get; set; }
 
     /// <summary>
     /// <para>
@@ -89,8 +101,8 @@ public class PageRunAndWaitForNavigationOptions
     /// equal to the string.
     /// </para>
     /// </summary>
-    [JsonPropertyName("urlFunc")]
-    public Func<string, bool>? UrlFunc { get; set; }
+    [JsonPropertyName("urlString")]
+    public string? UrlString { get; set; }
 
     /// <summary>
     /// <para>When to consider operation succeeded, defaults to <c>load</c>. Events can be either:</para>

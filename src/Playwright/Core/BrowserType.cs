@@ -124,6 +124,7 @@ internal class BrowserType : ChannelOwnerBase, IChannelOwner<BrowserType>, IBrow
             recordHarMode: options.RecordHarMode,
             recordHarPath: options.RecordHarPath,
             recordHarOmitContent: options.RecordHarOmitContent,
+            recordHarUrlFilter: options.RecordHarUrlFilter,
             recordHarUrlFilterString: options.RecordHarUrlFilterString,
             recordHarUrlFilterRegex: options.RecordHarUrlFilterRegex,
             recordVideo: Browser.GetVideoArgs(options.RecordVideoDir, options.RecordVideoSize),
@@ -142,6 +143,7 @@ internal class BrowserType : ChannelOwnerBase, IChannelOwner<BrowserType>, IBrow
             RecordHarMode = options.RecordHarMode,
             RecordHarOmitContent = options.RecordHarOmitContent,
             RecordHarPath = options.RecordHarPath,
+            RecordHarUrlFilter = options.RecordHarUrlFilter,
             RecordHarUrlFilterString = options.RecordHarUrlFilterString,
             RecordHarUrlFilterRegex = options.RecordHarUrlFilterRegex,
         };
