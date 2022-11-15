@@ -62,26 +62,26 @@ internal class BrowserContext : ChannelOwnerBase, IChannelOwner<BrowserContext>,
         {
             e.Request.Failure = e.FailureText;
             e.Request.SetResponseEndTiming(e.ResponseEndTiming);
-            RequestFailed?.Invoke(this, e.Request);
+            _requestFailedImpl?.Invoke(this, e.Request);
             e.Page?.FireRequestFailed(e.Request);
             e.Response?.ReportFinished(e.FailureText);
         };
         Channel.Request += (_, e) =>
         {
-            Request?.Invoke(this, e.Request);
+            _requestImpl?.Invoke(this, e.Request);
             e.Page?.FireRequest(e.Request);
         };
         Channel.RequestFinished += (_, e) =>
         {
             e.Request.SetResponseEndTiming(e.ResponseEndTiming);
             e.Request.Sizes = e.RequestSizes;
-            RequestFinished?.Invoke(this, e.Request);
+            _requestFinishedImpl?.Invoke(this, e.Request);
             e.Page?.FireRequestFinished(e.Request);
             e.Response?.ReportFinished();
         };
         Channel.Response += (_, e) =>
         {
-            Response?.Invoke(this, e.Response);
+            _responseImpl?.Invoke(this, e.Response);
             e.Page?.FireResponse(e.Response);
         };
 
@@ -98,17 +98,41 @@ internal class BrowserContext : ChannelOwnerBase, IChannelOwner<BrowserContext>,
         Browser = parent as IBrowser;
     }
 
+    private event EventHandler<IRequest> _requestImpl;
+
+    private event EventHandler<IResponse> _responseImpl;
+
+    private event EventHandler<IRequest> _requestFinishedImpl;
+
+    private event EventHandler<IRequest> _requestFailedImpl;
+
     public event EventHandler<IBrowserContext> Close;
 
     public event EventHandler<IPage> Page;
 
-    public event EventHandler<IRequest> Request;
+    public event EventHandler<IRequest> Request
+    {
+        add => this._requestImpl = UpdateEventHandler("request", this._requestImpl, value, true);
+        remove => this._requestImpl = UpdateEventHandler("request", this._requestImpl, value, false);
+    }
 
-    public event EventHandler<IRequest> RequestFailed;
+    public event EventHandler<IResponse> Response
+    {
+        add => this._responseImpl = UpdateEventHandler("response", this._responseImpl, value, true);
+        remove => this._responseImpl = UpdateEventHandler("response", this._responseImpl, value, false);
+    }
 
-    public event EventHandler<IRequest> RequestFinished;
+    public event EventHandler<IRequest> RequestFinished
+    {
+        add => this._requestFinishedImpl = UpdateEventHandler("requestFinished", this._requestFinishedImpl, value, true);
+        remove => this._requestFinishedImpl = UpdateEventHandler("requestFinished", this._requestFinishedImpl, value, false);
+    }
 
-    public event EventHandler<IResponse> Response;
+    public event EventHandler<IRequest> RequestFailed
+    {
+        add => this._requestFailedImpl = UpdateEventHandler("requestFailed", this._requestFailedImpl, value, true);
+        remove => this._requestFailedImpl = UpdateEventHandler("requestFailed", this._requestFailedImpl, value, false);
+    }
 
     public event EventHandler<IWorker> ServiceWorker;
 

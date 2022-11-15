@@ -141,22 +141,6 @@ public partial interface IElementHandle : IJSHandle
     Task CheckAsync(ElementHandleCheckOptions? options = default);
 
     /// <summary>
-    /// <para>
-    /// This method waits for <a href="https://playwright.dev/dotnet/docs/actionability">actionability</a>
-    /// checks, focuses the element, clears it and triggers an <c>input</c> event after
-    /// clearing.
-    /// </para>
-    /// <para>
-    /// If the target element is not an <c>&lt;input&gt;</c>, <c>&lt;textarea&gt;</c> or
-    /// <c>[contenteditable]</c> element, this method throws an error. However, if the element
-    /// is inside the <c>&lt;label&gt;</c> element that has an associated <a href="https://developer.mozilla.org/en-US/docs/Web/API/HTMLLabelElement/control">control</a>,
-    /// the control will be cleared instead.
-    /// </para>
-    /// </summary>
-    /// <param name="options">Call options</param>
-    Task ClearAsync(ElementHandleClearOptions? options = default);
-
-    /// <summary>
     /// <para>This method clicks the element by performing the following steps:</para>
     /// <list type="ordinal">
     /// <item><description>

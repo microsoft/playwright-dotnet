@@ -126,7 +126,7 @@ public class LocatorFrameTests : PageTestEx
     {
         await Page.GotoAsync(Server.EmptyPage);
         var error = await Page.FrameLocator("iframe").Locator("span").ClickAsync(new() { Timeout = 1000 }).ContinueWith(t => t.Exception.InnerException);
-        StringAssert.Contains("waiting for frame \"iframe\"", error.Message);
+        StringAssert.Contains("waiting for frameLocator('iframe')", error.Message);
     }
 
     [PlaywrightTest("locator-frame.spec.ts", "should wait for frame 2")]
@@ -294,7 +294,7 @@ public class LocatorFrameTests : PageTestEx
         await Page.GotoAsync(Server.EmptyPage);
         var button = Page.Locator("body").FrameLocator("iframe").Locator("button");
         var error = await PlaywrightAssert.ThrowsAsync<PlaywrightException>(() => button.WaitForAsync());
-        StringAssert.Contains("Error: strict mode violation: \"body >> iframe\" resolved to 3 elements", error.Message);
+        StringAssert.Contains("Error: strict mode violation: Locator(\"body\").Locator(\"iframe\") resolved to 3 elements", error.Message);
     }
 
     [PlaywrightTest("locator-frame.spec.ts", "locator.frameLocator should not throw on first/last/nth")]

@@ -117,7 +117,7 @@ public class LocatorConvenienceTests : PageTestEx
         await Page.SetContentAsync("<div>hello</div>");
         var locator = Page.Locator("span");
         var error = await PlaywrightAssert.ThrowsAsync<TimeoutException>(async () => await locator.InnerTextAsync(new() { Timeout = 1000 }));
-        StringAssert.Contains("waiting for \"Locator(\"span\")\"", error.Message);
+        StringAssert.Contains("waiting for Locator(\"span\")", error.Message);
     }
 
     [PlaywrightTest("locator-convenience.spec.ts", "textContent should work")]

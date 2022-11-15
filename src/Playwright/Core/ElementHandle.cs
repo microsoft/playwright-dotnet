@@ -105,13 +105,6 @@ internal partial class ElementHandle : JSHandle, IElementHandle, IChannelOwner<E
             force: options?.Force,
             timeout: options?.Timeout);
 
-    public Task ClearAsync(ElementHandleClearOptions options = default)
-        => _channel.FillAsync(
-            string.Empty,
-            noWaitAfter: options?.NoWaitAfter,
-            force: options?.Force,
-            timeout: options?.Timeout);
-
     public async Task<IFrame> ContentFrameAsync() => (await _channel.ContentFrameAsync().ConfigureAwait(false))?.Object;
 
     public Task HoverAsync(ElementHandleHoverOptions options = default)

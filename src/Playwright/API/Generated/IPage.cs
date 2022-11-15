@@ -383,28 +383,6 @@ public partial interface IPage
 
     /// <summary>
     /// <para>
-    /// This method waits for an element matching <paramref name="selector"/>, waits for
-    /// <a href="https://playwright.dev/dotnet/docs/actionability">actionability</a> checks,
-    /// focuses the element, clears it and triggers an <c>input</c> event after clearing.
-    /// Note that you can pass an empty string to clear the input field.
-    /// </para>
-    /// <para>
-    /// If the target element is not an <c>&lt;input&gt;</c>, <c>&lt;textarea&gt;</c> or
-    /// <c>[contenteditable]</c> element, this method throws an error. However, if the element
-    /// is inside the <c>&lt;label&gt;</c> element that has an associated <a href="https://developer.mozilla.org/en-US/docs/Web/API/HTMLLabelElement/control">control</a>,
-    /// the control will be cleared instead.
-    /// </para>
-    /// </summary>
-    /// <param name="selector">
-    /// A selector to search for an element. If there are multiple elements satisfying the
-    /// selector, the first will be used. See <a href="https://playwright.dev/dotnet/docs/selectors">working
-    /// with selectors</a> for more details.
-    /// </param>
-    /// <param name="options">Call options</param>
-    Task ClearAsync(string selector, PageClearOptions? options = default);
-
-    /// <summary>
-    /// <para>
     /// This method clicks an element matching <paramref name="selector"/> by performing
     /// the following steps:
     /// </para>

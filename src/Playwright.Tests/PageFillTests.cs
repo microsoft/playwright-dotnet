@@ -54,18 +54,6 @@ public class PageFillTests : PageTestEx
         }
     }
 
-    [PlaywrightTest("page-fill.spec.ts", "should throw on supported inputs when clear()")]
-    public async Task ShouldThrowOnSupportedInputsWhenClear()
-    {
-        await Page.GotoAsync(Server.Prefix + "/input/textarea.html");
-        foreach (string type in new[] { "button", "checkbox", "file", "image", "radio", "reset", "submit" })
-        {
-            await Page.EvalOnSelectorAsync("input", "(input, type) => input.setAttribute('type', type)", type);
-            var exception = await PlaywrightAssert.ThrowsAsync<PlaywrightException>(() => Page.ClearAsync("input"));
-            StringAssert.Contains($"Input of type \"{type}\" cannot be filled", exception.Message);
-        }
-    }
-
     [PlaywrightTest("page-fill.spec.ts", "should fill different input types")]
     public async Task ShouldFillDifferentInputTypes()
     {
@@ -179,15 +167,6 @@ public class PageFillTests : PageTestEx
         StringAssert.Contains("Element is not an <input>", exception.Message);
     }
 
-    [PlaywrightTest("page-fill.spec.ts", "should throw nice error without injected script stack when element is not an <input> when clear()")]
-    public async Task ShouldThrowNiceErrorWithoutInjectedScriptStackWhenElementIsNotAnInputWhenClear()
-    {
-        await Page.GotoAsync(Server.Prefix + "/input/textarea.html");
-        var exception = await PlaywrightAssert.ThrowsAsync<PlaywrightException>(() => Page.ClearAsync("body"));
-        StringAssert.Contains("Element is not an <input>, <textarea> or [contenteditable] element", exception.Message);
-    }
-
-
     [PlaywrightTest("page-fill.spec.ts", "should retry on disabled element")]
     public async Task ShouldRetryOnDisabledElement()
     {
@@ -299,17 +278,6 @@ public class PageFillTests : PageTestEx
         await Page.FillAsync("input", "some value");
         Assert.AreEqual("some value", await Page.EvaluateAsync<string>("() => result"));
         await Page.FillAsync("input", "");
-        Assert.IsEmpty(await Page.EvaluateAsync<string>("() => result"));
-    }
-
-
-    [PlaywrightTest("page-fill.spec.ts", "should be able to clear using clear()")]
-    public async Task ShouldBeAbleToClearUsingClear()
-    {
-        await Page.GotoAsync(Server.Prefix + "/input/textarea.html");
-        await Page.FillAsync("input", "some value");
-        Assert.AreEqual("some value", await Page.EvaluateAsync<string>("() => result"));
-        await Page.ClearAsync("input");
         Assert.IsEmpty(await Page.EvaluateAsync<string>("() => result"));
     }
 

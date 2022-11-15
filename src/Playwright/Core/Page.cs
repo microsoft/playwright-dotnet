@@ -43,7 +43,6 @@ internal class Page : ChannelOwnerBase, IChannelOwner<Page>, IPage
     private readonly PageChannel _channel;
     private readonly List<Frame> _frames = new();
     private readonly List<(IEvent PageEvent, TaskCompletionSource<bool> WaitTcs)> _waitForCancellationTcs = new();
-    private readonly object _fileChooserEventLock = new();
     private readonly IAccessibility _accessibility;
     private readonly IMouse _mouse;
     private readonly IKeyboard _keyboard;
@@ -53,8 +52,6 @@ internal class Page : ChannelOwnerBase, IChannelOwner<Page>, IPage
     internal readonly List<Worker> _workers = new();
     internal readonly TimeoutSettings _timeoutSettings;
     private List<RouteHandler> _routes = new();
-    private EventHandler<IFileChooser> _fileChooserEventHandler;
-    private bool _fileChooserIntercepted;
     private Video _video;
 
     internal Page(IChannelOwner parent, string guid, PageInitializer initializer) : base(parent, guid)
@@ -118,7 +115,7 @@ internal class Page : ChannelOwnerBase, IChannelOwner<Page>, IPage
         };
         _channel.Video += (_, artifact) => ForceVideo().ArtifactReady(artifact);
 
-        _channel.FileChooser += (_, e) => _fileChooserEventHandler?.Invoke(this, new FileChooser(this, e.Element.Object, e.IsMultiple));
+        _channel.FileChooser += (_, e) => _fileChooserImpl?.Invoke(this, new FileChooser(this, e.Element.Object, e.IsMultiple));
         _channel.Worker += (_, worker) =>
         {
             _workers.Add(worker);
@@ -132,19 +129,45 @@ internal class Page : ChannelOwnerBase, IChannelOwner<Page>, IPage
         Crash += (_, _) => ClosedOrCrashedTcs.TrySetResult(true);
     }
 
+    private event EventHandler<IRequest> _requestImpl;
+
+    private event EventHandler<IResponse> _responseImpl;
+
+    private event EventHandler<IRequest> _requestFinishedImpl;
+
+    private event EventHandler<IRequest> _requestFailedImpl;
+
+    private event EventHandler<IFileChooser> _fileChooserImpl;
+
     public event EventHandler<IConsoleMessage> Console;
 
     public event EventHandler<IPage> Popup;
 
-    public event EventHandler<IRequest> Request;
+    public event EventHandler<IRequest> Request
+    {
+        add => this._requestImpl = UpdateEventHandler("request", this._requestImpl, value, true);
+        remove => this._requestImpl = UpdateEventHandler("request", this._requestImpl, value, false);
+    }
 
     public event EventHandler<IWebSocket> WebSocket;
 
-    public event EventHandler<IResponse> Response;
+    public event EventHandler<IResponse> Response
+    {
+        add => this._responseImpl = UpdateEventHandler("response", this._responseImpl, value, true);
+        remove => this._responseImpl = UpdateEventHandler("response", this._responseImpl, value, false);
+    }
 
-    public event EventHandler<IRequest> RequestFinished;
+    public event EventHandler<IRequest> RequestFinished
+    {
+        add => this._requestFinishedImpl = UpdateEventHandler("requestFinished", this._requestFinishedImpl, value, true);
+        remove => this._requestFinishedImpl = UpdateEventHandler("requestFinished", this._requestFinishedImpl, value, false);
+    }
 
-    public event EventHandler<IRequest> RequestFailed;
+    public event EventHandler<IRequest> RequestFailed
+    {
+        add => this._requestFailedImpl = UpdateEventHandler("requestFailed", this._requestFailedImpl, value, true);
+        remove => this._requestFailedImpl = UpdateEventHandler("requestFailed", this._requestFailedImpl, value, false);
+    }
 
     public event EventHandler<IDialog> Dialog;
 
@@ -156,29 +179,8 @@ internal class Page : ChannelOwnerBase, IChannelOwner<Page>, IPage
 
     public event EventHandler<IFileChooser> FileChooser
     {
-        add
-        {
-            lock (_fileChooserEventLock)
-            {
-                _fileChooserEventHandler += value;
-                _fileChooserIntercepted = true;
-                _channel.SetFileChooserInterceptedNoReplyAsync(true).IgnoreException();
-            }
-        }
-
-        remove
-        {
-            lock (_fileChooserEventLock)
-            {
-                _fileChooserEventHandler -= value;
-
-                if (_fileChooserIntercepted)
-                {
-                    _fileChooserIntercepted = false;
-                    _channel.SetFileChooserInterceptedNoReplyAsync(false).IgnoreException();
-                }
-            }
-        }
+        add => this._fileChooserImpl = UpdateEventHandler("fileChooser", this._fileChooserImpl, value, true);
+        remove => this._fileChooserImpl = UpdateEventHandler("fileChooser", this._fileChooserImpl, value, false);
     }
 
     public event EventHandler<IPage> Load;
@@ -479,9 +481,6 @@ internal class Page : ChannelOwnerBase, IChannelOwner<Page>, IPage
 
     public Task FillAsync(string selector, string value, PageFillOptions options = default)
         => MainFrame.FillAsync(selector, value, new() { NoWaitAfter = options?.NoWaitAfter, Timeout = options?.Timeout, Force = options?.Force, Strict = options?.Strict });
-
-    public Task ClearAsync(string selector, PageClearOptions options = null)
-        => MainFrame.ClearAsync(selector, new() { NoWaitAfter = options?.NoWaitAfter, Timeout = options?.Timeout, Force = options?.Force, Strict = options?.Strict });
 
     public Task SetInputFilesAsync(string selector, string files, PageSetInputFilesOptions options = default)
         => MainFrame.SetInputFilesAsync(selector, files, Map(options));
@@ -974,13 +973,13 @@ internal class Page : ChannelOwnerBase, IChannelOwner<Page>, IPage
     internal void OnFrameNavigated(Frame frame)
         => FrameNavigated?.Invoke(this, frame);
 
-    internal void FireRequest(IRequest request) => Request?.Invoke(this, request);
+    internal void FireRequest(IRequest request) => _requestImpl?.Invoke(this, request);
 
-    internal void FireRequestFailed(IRequest request) => RequestFailed?.Invoke(this, request);
+    internal void FireRequestFailed(IRequest request) => _requestFailedImpl?.Invoke(this, request);
 
-    internal void FireRequestFinished(IRequest request) => RequestFinished?.Invoke(this, request);
+    internal void FireRequestFinished(IRequest request) => _requestFinishedImpl?.Invoke(this, request);
 
-    internal void FireResponse(IResponse response) => Response?.Invoke(this, response);
+    internal void FireResponse(IResponse response) => _responseImpl?.Invoke(this, response);
 
     internal void FireLoad() => Load?.Invoke(this, this);
 
