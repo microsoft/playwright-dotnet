@@ -93,7 +93,29 @@ internal class ChannelOwnerBase : IChannelOwner
 
     public Task WrapApiBoundaryAsync(Func<Task> action) => _connection.WrapApiBoundaryAsync(action);
 
-    internal void UpdateEventSubscription(string eventName, bool enabled)
+    internal EventHandler<T> UpdateEventHandler<T>(string eventName, EventHandler<T> handlers, EventHandler<T> handler, bool add)
+    {
+        if (add)
+        {
+            if ((handlers?.GetInvocationList().Length ?? 0) == 0)
+            {
+                UpdateEventSubscription(eventName, true);
+            }
+            handlers += handler;
+        }
+        else
+        {
+            handlers -= handler;
+            if ((handlers?.GetInvocationList().Length ?? 0) == 0)
+            {
+                UpdateEventSubscription(eventName, false);
+            }
+        }
+        // We need to return the new reference since += and -= operators return a new delegate.
+        return handlers;
+    }
+
+    private void UpdateEventSubscription(string eventName, bool enabled)
     {
         _connection.SendMessageToServerAsync(
             Guid,

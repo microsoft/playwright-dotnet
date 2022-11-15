@@ -54,16 +54,6 @@ internal class Page : ChannelOwnerBase, IChannelOwner<Page>, IPage
     private List<RouteHandler> _routes = new();
     private Video _video;
 
-    private EventHandler<IRequest> _requestImpl;
-
-    private EventHandler<IResponse> _responseImpl;
-
-    private EventHandler<IRequest> _requestFinishedImpl;
-
-    private EventHandler<IRequest> _requestFailedImpl;
-
-    private EventHandler<IFileChooser> _fileChooserImpl;
-
     internal Page(IChannelOwner parent, string guid, PageInitializer initializer) : base(parent, guid)
     {
         Context = (BrowserContext)parent;
@@ -139,94 +129,44 @@ internal class Page : ChannelOwnerBase, IChannelOwner<Page>, IPage
         Crash += (_, _) => ClosedOrCrashedTcs.TrySetResult(true);
     }
 
+    private event EventHandler<IRequest> _requestImpl;
+
+    private event EventHandler<IResponse> _responseImpl;
+
+    private event EventHandler<IRequest> _requestFinishedImpl;
+
+    private event EventHandler<IRequest> _requestFailedImpl;
+
+    private event EventHandler<IFileChooser> _fileChooserImpl;
+
     public event EventHandler<IConsoleMessage> Console;
 
     public event EventHandler<IPage> Popup;
 
     public event EventHandler<IRequest> Request
     {
-        add
-        {
-            if ((this._requestImpl?.GetInvocationList().Count() ?? 0) == 0)
-            {
-                UpdateEventSubscription("request", true);
-            }
-            _requestImpl += value;
-        }
-
-        remove
-        {
-            _requestImpl -= value;
-            if ((this._requestImpl?.GetInvocationList().Count() ?? 0) == 0)
-            {
-                UpdateEventSubscription("request", false);
-            }
-        }
+        add => this._requestImpl = UpdateEventHandler("request", this._requestImpl, value, true);
+        remove => this._requestImpl = UpdateEventHandler("request", this._requestImpl, value, false);
     }
 
     public event EventHandler<IWebSocket> WebSocket;
 
     public event EventHandler<IResponse> Response
     {
-        add
-        {
-            if ((this._responseImpl?.GetInvocationList().Count() ?? 0) == 0)
-            {
-                UpdateEventSubscription("response", true);
-            }
-            _responseImpl += value;
-        }
-
-        remove
-        {
-            _responseImpl -= value;
-            if ((this._responseImpl?.GetInvocationList().Count() ?? 0) == 0)
-            {
-                UpdateEventSubscription("response", false);
-            }
-        }
+        add => this._responseImpl = UpdateEventHandler("response", this._responseImpl, value, true);
+        remove => this._responseImpl = UpdateEventHandler("response", this._responseImpl, value, false);
     }
 
     public event EventHandler<IRequest> RequestFinished
     {
-        add
-        {
-            if ((this._requestFinishedImpl?.GetInvocationList().Count() ?? 0) == 0)
-            {
-                UpdateEventSubscription("requestFinished", true);
-            }
-            _requestFinishedImpl += value;
-        }
-
-        remove
-        {
-            _requestFinishedImpl -= value;
-            if ((this._requestFinishedImpl?.GetInvocationList().Count() ?? 0) == 0)
-            {
-                UpdateEventSubscription("requestFinished", false);
-            }
-        }
+        add => this._requestFinishedImpl = UpdateEventHandler("requestFinished", this._requestFinishedImpl, value, true);
+        remove => this._requestFinishedImpl = UpdateEventHandler("requestFinished", this._requestFinishedImpl, value, false);
     }
 
     public event EventHandler<IRequest> RequestFailed
     {
-        add
-        {
-            if ((this._requestFailedImpl?.GetInvocationList().Count() ?? 0) == 0)
-            {
-                UpdateEventSubscription("requestFailed", true);
-            }
-            _requestFailedImpl += value;
-        }
-
-        remove
-        {
-            _requestFailedImpl -= value;
-            if ((this._requestFailedImpl?.GetInvocationList().Count() ?? 0) == 0)
-            {
-                UpdateEventSubscription("requestFailed", false);
-            }
-        }
+        add => this._requestFailedImpl = UpdateEventHandler("requestFailed", this._requestFailedImpl, value, true);
+        remove => this._requestFailedImpl = UpdateEventHandler("requestFailed", this._requestFailedImpl, value, false);
     }
 
     public event EventHandler<IDialog> Dialog;
@@ -239,23 +179,8 @@ internal class Page : ChannelOwnerBase, IChannelOwner<Page>, IPage
 
     public event EventHandler<IFileChooser> FileChooser
     {
-        add
-        {
-            if ((this._fileChooserImpl?.GetInvocationList().Count() ?? 0) == 0)
-            {
-                UpdateEventSubscription("fileChooser", true);
-            }
-            _fileChooserImpl += value;
-        }
-
-        remove
-        {
-            _fileChooserImpl -= value;
-            if ((this._fileChooserImpl?.GetInvocationList().Count() ?? 0) == 0)
-            {
-                UpdateEventSubscription("fileChooser", false);
-            }
-        }
+        add => this._fileChooserImpl = UpdateEventHandler("fileChooser", this._fileChooserImpl, value, true);
+        remove => this._fileChooserImpl = UpdateEventHandler("fileChooser", this._fileChooserImpl, value, false);
     }
 
     public event EventHandler<IPage> Load;
