@@ -40,9 +40,10 @@ public class APIRequestContextOptions
             return;
         }
 
-        DataString = clone.DataString;
+        Data = clone.Data;
         DataByte = clone.DataByte;
         DataObject = clone.DataObject;
+        DataString = clone.DataString;
         FailOnStatusCode = clone.FailOnStatusCode;
         Form = clone.Form;
         Headers = clone.Headers;
@@ -62,8 +63,8 @@ public class APIRequestContextOptions
     /// if not explicitly set.
     /// </para>
     /// </summary>
-    [JsonPropertyName("dataString")]
-    public string? DataString { get; set; }
+    [JsonPropertyName("data")]
+    public string? Data { get; set; }
 
     /// <summary>
     /// <para>
@@ -86,6 +87,17 @@ public class APIRequestContextOptions
     /// </summary>
     [JsonPropertyName("dataObject")]
     public object? DataObject { get; set; }
+
+    /// <summary>
+    /// <para>
+    /// Allows to set post data of the request. If the data parameter is an object, it will
+    /// be serialized to json string and <c>content-type</c> header will be set to <c>application/json</c>
+    /// if not explicitly set. Otherwise the <c>content-type</c> header will be set to <c>application/octet-stream</c>
+    /// if not explicitly set.
+    /// </para>
+    /// </summary>
+    [JsonPropertyName("dataString")]
+    public string? DataString { get; set; }
 
     /// <summary>
     /// <para>

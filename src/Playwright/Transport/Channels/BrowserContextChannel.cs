@@ -247,13 +247,14 @@ internal class BrowserContextChannel : Channel<BrowserContext>
     internal async Task<string> HarStartAsync(
         Page page,
         string path,
+        string recordHarUrlFilter,
         string recordHarUrlFilterString,
         Regex recordHarUrlFilterRegex)
     {
         var args = new Dictionary<string, object>
             {
                 { "page", page?.Channel },
-                { "options", BrowserChannel.PrepareHarOptions(HarContentPolicy.Attach, HarMode.Minimal, path, null, recordHarUrlFilterString, recordHarUrlFilterRegex) },
+                { "options", BrowserChannel.PrepareHarOptions(HarContentPolicy.Attach, HarMode.Minimal, path, null, recordHarUrlFilter, recordHarUrlFilterString, recordHarUrlFilterRegex) },
             };
         var result = await Connection.SendMessageToServerAsync(
         Guid,

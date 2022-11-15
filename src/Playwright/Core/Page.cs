@@ -326,6 +326,7 @@ internal class Page : ChannelOwnerBase, IChannelOwner<Page>, IPage
     public Task<IResponse> WaitForNavigationAsync(PageWaitForNavigationOptions options = default)
         => MainFrame.WaitForNavigationAsync(new()
         {
+            Url = options?.Url,
             UrlString = options?.UrlString,
             UrlRegex = options?.UrlRegex,
             UrlFunc = options?.UrlFunc,
@@ -336,6 +337,7 @@ internal class Page : ChannelOwnerBase, IChannelOwner<Page>, IPage
     public Task<IResponse> RunAndWaitForNavigationAsync(Func<Task> action, PageRunAndWaitForNavigationOptions options = default)
         => MainFrame.RunAndWaitForNavigationAsync(action, new()
         {
+            Url = options?.Url,
             UrlString = options?.UrlString,
             UrlRegex = options?.UrlRegex,
             UrlFunc = options?.UrlFunc,
@@ -466,6 +468,7 @@ internal class Page : ChannelOwnerBase, IChannelOwner<Page>, IPage
         => MainFrame.Locator(selector, new()
         {
             Has = options?.Has,
+            HasText = options?.HasText,
             HasTextString = options?.HasTextString,
             HasTextRegex = options?.HasTextRegex,
         });
@@ -1151,6 +1154,7 @@ internal class Page : ChannelOwnerBase, IChannelOwner<Page>, IPage
             await Context.RecordIntoHarAsync(har, this, new()
             {
                 NotFound = options?.NotFound,
+                Url = options?.Url,
                 UrlString = options?.UrlString,
                 UrlRegex = options?.UrlRegex,
             }).ConfigureAwait(false);
@@ -1159,6 +1163,7 @@ internal class Page : ChannelOwnerBase, IChannelOwner<Page>, IPage
         var harRouter = await HarRouter.CreateAsync(Channel.Connection.LocalUtils, har, options?.NotFound ?? HarNotFound.Abort, new()
         {
             UrlRegex = options?.UrlRegex,
+            Url = options?.Url,
             UrlString = options?.UrlString,
         }).ConfigureAwait(false);
         await harRouter.AddPageRouteAsync(this).ConfigureAwait(false);

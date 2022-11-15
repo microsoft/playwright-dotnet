@@ -81,7 +81,7 @@ internal class FrameLocator : IFrameLocator
 
     IFrameLocator IFrameLocator.FrameLocator(string selector) => new FrameLocator(_frame, $"{_frameSelector} >> internal:control=enter-frame  >> {selector}");
 
-    public ILocator Locator(string selector, FrameLocatorLocatorOptions options = null) => new Locator(_frame, $"{_frameSelector} >> internal:control=enter-frame  >> {selector}", new() { HasTextRegex = options?.HasTextRegex, HasTextString = options?.HasTextString });
+    public ILocator Locator(string selector, FrameLocatorLocatorOptions options = null) => new Locator(_frame, $"{_frameSelector} >> internal:control=enter-frame  >> {selector}", new() { HasText = options?.HasText, HasTextRegex = options?.HasTextRegex, HasTextString = options?.HasTextString });
 
     public IFrameLocator Nth(int index) => new FrameLocator(_frame, $"{_frameSelector} >> nth={index}");
 }

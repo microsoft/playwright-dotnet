@@ -75,8 +75,9 @@ public class BrowserTypeLaunchPersistentContextOptions
         RecordHarMode = clone.RecordHarMode;
         RecordHarOmitContent = clone.RecordHarOmitContent;
         RecordHarPath = clone.RecordHarPath;
-        RecordHarUrlFilterString = clone.RecordHarUrlFilterString;
+        RecordHarUrlFilter = clone.RecordHarUrlFilter;
         RecordHarUrlFilterRegex = clone.RecordHarUrlFilterRegex;
+        RecordHarUrlFilterString = clone.RecordHarUrlFilterString;
         RecordVideoDir = clone.RecordVideoDir;
         RecordVideoSize = clone.RecordVideoSize;
         ReducedMotion = clone.ReducedMotion;
@@ -359,11 +360,14 @@ public class BrowserTypeLaunchPersistentContextOptions
     [JsonPropertyName("recordHarPath")]
     public string? RecordHarPath { get; set; }
 
-    [JsonPropertyName("recordHarUrlFilterString")]
-    public string? RecordHarUrlFilterString { get; set; }
+    [JsonPropertyName("recordHarUrlFilter")]
+    public string? RecordHarUrlFilter { get; set; }
 
     [JsonPropertyName("recordHarUrlFilterRegex")]
     public Regex? RecordHarUrlFilterRegex { get; set; }
+
+    [JsonPropertyName("recordHarUrlFilterString")]
+    public string? RecordHarUrlFilterString { get; set; }
 
     /// <summary>
     /// <para>

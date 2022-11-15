@@ -48,6 +48,7 @@ internal class BrowserChannel : Channel<Browser>
         HarMode? recordHarMode,
         string recordHarPath,
         bool? recordHarOmitContent,
+        string recordHarUrlFilter,
         string recordHarUrlFilterString,
         Regex recordHarUrlFilterRegex)
     {
@@ -65,7 +66,11 @@ internal class BrowserChannel : Channel<Browser>
         {
             recordHarArgs["content"] = HarContentPolicy.Omit;
         }
-        if (!string.IsNullOrEmpty(recordHarUrlFilterString))
+        if (!string.IsNullOrEmpty(recordHarUrlFilter))
+        {
+            recordHarArgs["urlGlob"] = recordHarUrlFilter;
+        }
+        else if (!string.IsNullOrEmpty(recordHarUrlFilterString))
         {
             recordHarArgs["urlGlob"] = recordHarUrlFilterString;
         }
@@ -118,6 +123,7 @@ internal class BrowserChannel : Channel<Browser>
         HarMode? recordHarMode = default,
         string recordHarPath = default,
         bool? recordHarOmitContent = default,
+        string recordHarUrlFilter = default,
         string recordHarUrlFilterString = default,
         Regex recordHarUrlFilterRegex = default,
         Dictionary<string, object> recordVideo = null,
@@ -165,6 +171,7 @@ internal class BrowserChannel : Channel<Browser>
             recordHarMode: recordHarMode,
             recordHarPath: recordHarPath,
             recordHarOmitContent: recordHarOmitContent,
+            recordHarUrlFilter: recordHarUrlFilter,
             recordHarUrlFilterString: recordHarUrlFilterString,
             recordHarUrlFilterRegex: recordHarUrlFilterRegex);
         if (recordHarOptions != null)

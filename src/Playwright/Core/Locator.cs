@@ -56,6 +56,10 @@ internal class Locator : ILocator
         {
             _selector += $" >> internal:has-text={EscapeForTextSelector(options.HasTextRegex, false)}";
         }
+        else if (options?.HasText != null)
+        {
+            _selector += $" >> internal:has-text={EscapeForTextSelector(options.HasText, false)}";
+        }
         else if (options?.HasTextString != null)
         {
             _selector += $" >> internal:has-text={EscapeForTextSelector(options.HasTextString, false)}";
@@ -149,6 +153,7 @@ internal class Locator : ILocator
         new Locator(_frame, _selector, new()
         {
             Has = options?.Has,
+            HasText = options?.HasText,
             HasTextString = options?.HasTextString,
             HasTextRegex = options?.HasTextRegex,
         });
@@ -452,7 +457,11 @@ internal class Locator : ILocator
         {
             props.Add(new List<string> { "level", options.Level.ToString() });
         }
-        if (options.NameString != null)
+        if (options.Name != null)
+        {
+            props.Add(new List<string> { "name", EscapeForAttributeSelector(options.Name, false) });
+        }
+        else if (options.NameString != null)
         {
             props.Add(new List<string> { "name", EscapeForAttributeSelector(options.NameString, false) });
         }
@@ -515,6 +524,7 @@ internal class ByRoleOptions
         Expanded = clone.Expanded;
         IncludeHidden = clone.IncludeHidden;
         Level = clone.Level;
+        Name = clone.Name;
         NameString = clone.NameString;
         NameRegex = clone.NameRegex;
         Pressed = clone.Pressed;
@@ -532,6 +542,7 @@ internal class ByRoleOptions
         Expanded = clone.Expanded;
         IncludeHidden = clone.IncludeHidden;
         Level = clone.Level;
+        Name = clone.Name;
         NameString = clone.NameString;
         NameRegex = clone.NameRegex;
         Pressed = clone.Pressed;
@@ -549,6 +560,7 @@ internal class ByRoleOptions
         Expanded = clone.Expanded;
         IncludeHidden = clone.IncludeHidden;
         Level = clone.Level;
+        Name = clone.Name;
         NameString = clone.NameString;
         NameRegex = clone.NameRegex;
         Pressed = clone.Pressed;
@@ -566,6 +578,7 @@ internal class ByRoleOptions
         Expanded = clone.Expanded;
         IncludeHidden = clone.IncludeHidden;
         Level = clone.Level;
+        Name = clone.Name;
         NameString = clone.NameString;
         NameRegex = clone.NameRegex;
         Pressed = clone.Pressed;
@@ -581,6 +594,8 @@ internal class ByRoleOptions
     public bool? IncludeHidden { get; set; }
 
     public int? Level { get; set; }
+
+    public string Name { get; set; }
 
     public string NameString { get; set; }
 

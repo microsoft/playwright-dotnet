@@ -41,8 +41,9 @@ public class PageLocatorOptions
         }
 
         Has = clone.Has;
-        HasTextString = clone.HasTextString;
+        HasText = clone.HasText;
         HasTextRegex = clone.HasTextRegex;
+        HasTextString = clone.HasTextString;
     }
 
     /// <summary>
@@ -66,8 +67,8 @@ public class PageLocatorOptions
     /// and searches for a substring. For example, <c>"Playwright"</c> matches <c>&lt;article&gt;&lt;div&gt;Playwright&lt;/div&gt;&lt;/article&gt;</c>.
     /// </para>
     /// </summary>
-    [JsonPropertyName("hasTextString")]
-    public string? HasTextString { get; set; }
+    [JsonPropertyName("hasText")]
+    public string? HasText { get; set; }
 
     /// <summary>
     /// <para>
@@ -78,6 +79,16 @@ public class PageLocatorOptions
     /// </summary>
     [JsonPropertyName("hasTextRegex")]
     public Regex? HasTextRegex { get; set; }
+
+    /// <summary>
+    /// <para>
+    /// Matches elements containing specified text somewhere inside, possibly in a child
+    /// or a descendant element. When passed a <see cref="string"/>, matching is case-insensitive
+    /// and searches for a substring. For example, <c>"Playwright"</c> matches <c>&lt;article&gt;&lt;div&gt;Playwright&lt;/div&gt;&lt;/article&gt;</c>.
+    /// </para>
+    /// </summary>
+    [JsonPropertyName("hasTextString")]
+    public string? HasTextString { get; set; }
 }
 
 #nullable disable

@@ -354,7 +354,7 @@ public class BrowserContextFetchTests : PageTestEx
             using StreamReader reader = new(request.Body, System.Text.Encoding.UTF8);
             return (request.Method, request.Path, reader.ReadToEndAsync().GetAwaiter().GetResult());
         }),
-            Context.APIRequest.HeadAsync(Server.Prefix + "/simple.json", new() { Method = "POST", DataString = "My request" })
+            Context.APIRequest.HeadAsync(Server.Prefix + "/simple.json", new() { Method = "POST", Data = "My request" })
         );
         Assert.AreEqual("HEAD", requestMethod);
         Assert.AreEqual("My request", requestBody);

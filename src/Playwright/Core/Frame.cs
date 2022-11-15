@@ -199,7 +199,8 @@ internal class Frame : ChannelOwnerBase, IChannelOwner<Frame>, IFrame
     {
         WaitUntilState waitUntil2 = options?.WaitUntil ?? WaitUntilState.Load;
         using var waiter = SetupNavigationWaiter("frame.WaitForNavigationAsync", options?.Timeout);
-        string toUrl = !string.IsNullOrEmpty(options?.UrlString) ? $" to \"{options?.UrlString}\"" : string.Empty;
+        string urlString = !string.IsNullOrEmpty(options?.Url) ? options?.Url : options?.UrlString;
+        string toUrl = !string.IsNullOrEmpty(urlString) ? $" to \"{urlString}\"" : string.Empty;
 
         waiter.Log($"waiting for navigation{toUrl} until \"{waitUntil2}\"");
 
@@ -215,7 +216,8 @@ internal class Frame : ChannelOwnerBase, IChannelOwner<Frame>, IFrame
                 }
 
                 waiter.Log($"  navigated to \"{e.Url}\"");
-                return UrlMatches(e.Url, options?.UrlString, options?.UrlRegex, options?.UrlFunc);
+                string urlString = !string.IsNullOrEmpty(options?.Url) ? options?.Url : options?.UrlString;
+                return UrlMatches(e.Url, urlString, options?.UrlRegex, options?.UrlFunc);
             });
 
         var navigatedEvent = await navigatedEventTask.ConfigureAwait(false);
@@ -250,6 +252,7 @@ internal class Frame : ChannelOwnerBase, IChannelOwner<Frame>, IFrame
     {
         var result = WaitForNavigationAsync(new()
         {
+            Url = options?.Url,
             UrlString = options?.UrlString,
             UrlRegex = options?.UrlRegex,
             UrlFunc = options?.UrlFunc,
@@ -529,6 +532,7 @@ internal class Frame : ChannelOwnerBase, IChannelOwner<Frame>, IFrame
         new Locator(this, selector, new()
         {
             Has = options?.Has,
+            HasText = options?.HasText,
             HasTextString = options?.HasTextString,
             HasTextRegex = options?.HasTextRegex,
         });

@@ -251,12 +251,12 @@ public class SelectorsRoleTests : PageTestEx
         Assert.AreEqual(await Page.GetByRole(AriaRole.Button, new() { NameRegex = new Regex("h.*o", RegexOptions.IgnoreCase) }).EvaluateAllAsync<string[]>("els => els.map(e => e.outerHTML)"), new string[] { "<div role=\"button\" aria-label=\"Hello\"></div>", "<div role=\"button\" aria-label=\"Hallo\"></div>" });
 
         Assert.AreEqual(await Page.Locator("role=button[name=Hello][include-hidden]").EvaluateAllAsync<string[]>("els => els.map(e => e.outerHTML)"), new string[] { "<div role=\"button\" aria-label=\"Hello\"></div>", "<div role=\"button\" aria-label=\"Hello\" aria-hidden=\"true\"></div>" });
-        Assert.AreEqual(await Page.GetByRole(AriaRole.Button, new() { NameString = "Hello", IncludeHidden = true }).EvaluateAllAsync<string[]>("els => els.map(e => e.outerHTML)"), new string[] { "<div role=\"button\" aria-label=\"Hello\"></div>", "<div role=\"button\" aria-label=\"Hello\" aria-hidden=\"true\"></div>" });
+        Assert.AreEqual(await Page.GetByRole(AriaRole.Button, new() { Name = "Hello", IncludeHidden = true }).EvaluateAllAsync<string[]>("els => els.map(e => e.outerHTML)"), new string[] { "<div role=\"button\" aria-label=\"Hello\"></div>", "<div role=\"button\" aria-label=\"Hello\" aria-hidden=\"true\"></div>" });
         Assert.AreEqual(await Page.GetByRole(AriaRole.Button, new() { NameString = "hello", IncludeHidden = true }).EvaluateAllAsync<string[]>("els => els.map(e => e.outerHTML)"), new string[] { "<div role=\"button\" aria-label=\"Hello\"></div>", "<div role=\"button\" aria-label=\"Hello\" aria-hidden=\"true\"></div>" });
 
         Assert.AreEqual(await Page.Locator("role=button[name=Hello]").EvaluateAllAsync<string[]>("els => els.map(e => e.outerHTML)"), new string[] { "<div role=\"button\" aria-label=\"Hello\"></div>" });
         Assert.AreEqual(await Page.Locator("role=button[name=123][include-hidden]").EvaluateAllAsync<string[]>("els => els.map(e => e.outerHTML)"), new string[] { "<div role=\"button\" aria-label=\"123\" aria-hidden=\"true\"></div>" });
-        Assert.AreEqual(await Page.GetByRole(AriaRole.Button, new() { NameString = "123", IncludeHidden = true }).EvaluateAllAsync<string[]>("els => els.map(e => e.outerHTML)"), new string[] { "<div role=\"button\" aria-label=\"123\" aria-hidden=\"true\"></div>" });
+        Assert.AreEqual(await Page.GetByRole(AriaRole.Button, new() { Name = "123", IncludeHidden = true }).EvaluateAllAsync<string[]>("els => els.map(e => e.outerHTML)"), new string[] { "<div role=\"button\" aria-label=\"123\" aria-hidden=\"true\"></div>" });
     }
 
 
