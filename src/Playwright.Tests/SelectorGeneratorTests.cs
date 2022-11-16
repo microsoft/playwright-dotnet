@@ -22,15 +22,34 @@
  * SOFTWARE.
  */
 
-using System;
-using System.Threading;
-using System.Threading.Tasks;
+namespace Microsoft.Playwright.Tests;
 
-namespace Microsoft.Playwright.Transport;
-
-/// <summary>
-/// Delegate for scheduling of long-running transport tasks.
-/// </summary>
-/// <param name="func">Reader func.</param>
-/// <param name="cancellationToken">Cancellation token for the task to be scheduled.</param>
-public delegate void TransportTaskScheduler(Func<CancellationToken, Task> func, CancellationToken cancellationToken);
+public class SelectorGeneratorTests : PageTestEx
+{
+    [PlaywrightTest("selector-generator.spec.ts", "should use data-testid in strict errors")]
+    public async Task ShouldUseDataTestIdInStrictErrors()
+    {
+        Playwright.Selectors.SetTestIdAttribute("data-custom-id");
+        await Page.SetContentAsync(@"
+      <div>
+        <div></div>
+        <div>
+          <div></div>
+          <div></div>
+        </div>
+      </div>
+      <div>
+        <div class='foo bar:0' data-custom-id='One'>
+        </div>
+        <div class='foo bar:1' data-custom-id='Two'>
+        </div>
+      </div>
+    ");
+        var error = await PlaywrightAssert.ThrowsAsync<PlaywrightException>(() => Page.Locator(".foo").HoverAsync());
+        StringAssert.Contains("strict mode violation", error.Message);
+        StringAssert.Contains("<div class=\"foo bar:0", error.Message);
+        StringAssert.Contains("<div class=\"foo bar:1", error.Message);
+        StringAssert.Contains("aka GetByTestId(\"One\")", error.Message);
+        StringAssert.Contains("aka GetByTestId(\"Two\")", error.Message);
+    }
+}

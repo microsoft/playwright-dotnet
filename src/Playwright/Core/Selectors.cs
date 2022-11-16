@@ -22,15 +22,17 @@
  * SOFTWARE.
  */
 
+using System.Collections.Generic;
 using System.Threading.Tasks;
+using Microsoft.Playwright.Helpers;
 using Microsoft.Playwright.Transport;
 using Microsoft.Playwright.Transport.Channels;
 
 namespace Microsoft.Playwright.Core;
 
-internal class Selectors : ChannelOwnerBase, IChannelOwner<Selectors>, ISelectors
+internal class Selectors : ChannelOwnerBase, IChannelOwner<Selectors>
 {
-    private readonly SelectorsChannel _channel;
+    internal readonly SelectorsChannel _channel;
 
     internal Selectors(IChannelOwner parent, string guid) : base(parent, guid)
     {
@@ -40,14 +42,52 @@ internal class Selectors : ChannelOwnerBase, IChannelOwner<Selectors>, ISelector
     ChannelBase IChannelOwner.Channel => _channel;
 
     IChannel<Selectors> IChannelOwner<Selectors>.Channel => _channel;
+}
+
+internal class SelectorsAPI : ISelectors
+{
+    private readonly HashSet<Selectors> _channels = new();
+    private readonly List<SelectorsRegisterParams> _registrations = new();
 
     public async Task RegisterAsync(string name, SelectorsRegisterOptions options = default)
     {
         options ??= new SelectorsRegisterOptions();
-
-        var script = ScriptsHelper.EvaluationScript(options?.Script, options?.Path);
-        await _channel.RegisterAsync(name, script, options?.ContentScript).ConfigureAwait(false);
+        var source = ScriptsHelper.EvaluationScript(options.Script, options.Path);
+        SelectorsRegisterParams @params = new()
+        {
+            Name = name,
+            Source = source,
+            ContentScript = options?.ContentScript,
+        };
+        foreach (var channel in _channels)
+        {
+            await channel._channel.RegisterAsync(@params).ConfigureAwait(false);
+        }
+        _registrations.Add(@params);
     }
 
-    public void SetTestIdAttribute(string attributeName) => Locator.SetTestIdAttribute(attributeName);
+    public void SetTestIdAttribute(string attributeName)
+    {
+        Locator.SetTestIdAttribute(attributeName);
+        foreach (var channel in _channels)
+        {
+            channel._channel.SetTestIdAttributeAsync(attributeName).IgnoreException();
+        }
+    }
+
+    internal void AddChannel(Selectors channel)
+    {
+        _channels.Add(channel);
+        foreach (var @params in _registrations)
+        {
+            // This should not fail except for connection closure, but just in case we catch.
+            channel._channel.RegisterAsync(@params).IgnoreException();
+            channel._channel.SetTestIdAttributeAsync(Locator.TestIdAttributeName()).IgnoreException();
+        }
+    }
+
+    internal void RemoveChannel(Selectors channel)
+    {
+        _channels.Remove(channel);
+    }
 }

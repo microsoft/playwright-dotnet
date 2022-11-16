@@ -688,7 +688,7 @@ internal class Frame : ChannelOwnerBase, IChannelOwner<Frame>, IFrame
         => Locator(Core.Locator.GetByRoleSelector(role, new(options)));
 
     public ILocator GetByTestId(string testId)
-        => Locator(Core.Locator.GetByTestIdSelector(testId));
+        => Locator(Core.Locator.GetByTestIdSelector(Core.Locator.TestIdAttributeName(), testId));
 
     public ILocator GetByText(string text, FrameGetByTextOptions options = null)
         => Locator(Core.Locator.GetByTextSelector(text, options?.Exact));

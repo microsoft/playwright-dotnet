@@ -22,6 +22,7 @@
 * SOFTWARE.
 */
 
+using System.Collections.Generic;
 using System.Text.Json;
 using System.Threading.Tasks;
 using Microsoft.Playwright.Core;
@@ -34,18 +35,31 @@ internal class SelectorsChannel : Channel<Selectors>
     {
     }
 
-    internal async Task RegisterAsync(
-        string name,
-        string source,
-        bool? contentScript)
+    internal async Task RegisterAsync(SelectorsRegisterParams @params)
         => await Connection.SendMessageToServerAsync<JsonElement>(
             Guid,
             "register",
             new
             {
-                name = name,
-                source = source,
-                contentScript = contentScript,
+                name = @params.Name,
+                source = @params.Source,
+                contentScript = @params.ContentScript,
             })
             .ConfigureAwait(false);
+
+    internal Task SetTestIdAttributeAsync(string name)
+        => Connection.SendMessageToServerAsync<JsonElement>(
+            Guid,
+            "setTestIdAttributeName",
+            new Dictionary<string, object>
+            {
+                ["testIdAttributeName"] = name,
+            });
+}
+
+internal record SelectorsRegisterParams
+{
+    internal string Name;
+    internal string Source;
+    internal bool? ContentScript;
 }
