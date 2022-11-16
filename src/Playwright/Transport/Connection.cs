@@ -527,3 +527,8 @@ internal class Connection : IDisposable
         }
     }
 }
+
+internal class ConnectionCallback
+{
+    public TaskCompletionSource<JsonElement?> TaskCompletionSource { get; set; }
+}
