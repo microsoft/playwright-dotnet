@@ -38,7 +38,7 @@ namespace Microsoft.Playwright.Core;
 /// <summary>
 /// <see cref="IRoute"/>.
 /// </summary>
-internal partial class Route : ChannelOwnerBase, IChannelOwner<Route>, IRoute
+internal class Route : ChannelOwnerBase, IChannelOwner<Route>, IRoute
 {
     private readonly RouteChannel _channel;
     private readonly RouteInitializer _initializer;
