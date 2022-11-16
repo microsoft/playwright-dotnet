@@ -126,7 +126,7 @@ public class LocatorFrameTests : PageTestEx
     {
         await Page.GotoAsync(Server.EmptyPage);
         var error = await Page.FrameLocator("iframe").Locator("span").ClickAsync(new() { Timeout = 1000 }).ContinueWith(t => t.Exception.InnerException);
-        StringAssert.Contains("waiting for frameLocator('iframe')", error.Message);
+        StringAssert.Contains("waiting for FrameLocator(\"iframe\")", error.Message);
     }
 
     [PlaywrightTest("locator-frame.spec.ts", "should wait for frame 2")]

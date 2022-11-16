@@ -374,7 +374,7 @@ internal class Locator : ILocator
         => ((ILocator)this).Locator(GetByRoleSelector(role, new(options)));
 
     public ILocator GetByTestId(string testId)
-        => ((ILocator)this).Locator(GetByTestIdSelector(testId));
+        => ((ILocator)this).Locator(GetByTestIdSelector(TestIdAttributeName(), testId));
 
     public ILocator GetByText(string text, LocatorGetByTextOptions options = null)
         => ((ILocator)this).Locator(GetByTextSelector(text, options?.Exact));
@@ -388,11 +388,13 @@ internal class Locator : ILocator
     public ILocator GetByTitle(Regex text, LocatorGetByTitleOptions options = null)
         => ((ILocator)this).Locator(GetByTitleSelector(text, options?.Exact));
 
+    internal static string TestIdAttributeName() => _testIdAttributeName;
+
     internal static void SetTestIdAttribute(string attributeName)
         => _testIdAttributeName = attributeName;
 
-    internal static string GetByTestIdSelector(string testId)
-        => GetByAttributeTextSelector(_testIdAttributeName, testId, exact: true);
+    internal static string GetByTestIdSelector(string testIdAttributeName, string testId)
+        => $"internal:testid=[{testIdAttributeName}={EscapeForAttributeSelector(testId, true)}]";
 
     internal static string GetByAttributeTextSelector(string attrName, string text, bool? exact)
         => $"internal:attr=[{attrName}={EscapeForAttributeSelector(text, exact ?? false)}]";
@@ -459,11 +461,11 @@ internal class Locator : ILocator
         }
         if (options.Name != null)
         {
-            props.Add(new List<string> { "name", EscapeForAttributeSelector(options.Name, false) });
+            props.Add(new List<string> { "name", EscapeForAttributeSelector(options.Name, options?.Exact ?? false) });
         }
         else if (options.NameString != null)
         {
-            props.Add(new List<string> { "name", EscapeForAttributeSelector(options.NameString, false) });
+            props.Add(new List<string> { "name", EscapeForAttributeSelector(options.NameString, options?.Exact ?? false) });
         }
         else if (options.NameRegex != null)
         {
@@ -529,6 +531,7 @@ internal class ByRoleOptions
         NameRegex = clone.NameRegex;
         Pressed = clone.Pressed;
         Selected = clone.Selected;
+        Exact = clone.Exact;
     }
 
     public ByRoleOptions(FrameLocatorGetByRoleOptions clone)
@@ -547,6 +550,7 @@ internal class ByRoleOptions
         NameRegex = clone.NameRegex;
         Pressed = clone.Pressed;
         Selected = clone.Selected;
+        Exact = clone.Exact;
     }
 
     public ByRoleOptions(PageGetByRoleOptions clone)
@@ -565,6 +569,7 @@ internal class ByRoleOptions
         NameRegex = clone.NameRegex;
         Pressed = clone.Pressed;
         Selected = clone.Selected;
+        Exact = clone.Exact;
     }
 
     public ByRoleOptions(LocatorGetByRoleOptions clone)
@@ -583,6 +588,7 @@ internal class ByRoleOptions
         NameRegex = clone.NameRegex;
         Pressed = clone.Pressed;
         Selected = clone.Selected;
+        Exact = clone.Exact;
     }
 
     public bool? Checked { get; set; }
@@ -604,4 +610,6 @@ internal class ByRoleOptions
     public bool? Pressed { get; set; }
 
     public bool? Selected { get; set; }
+
+    public bool? Exact { get; set; }
 }

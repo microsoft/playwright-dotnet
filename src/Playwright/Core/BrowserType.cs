@@ -227,6 +227,7 @@ internal class BrowserType : ChannelOwnerBase, IChannelOwner<BrowserType>, IBrow
                 ClosePipe();
                 throw new ArgumentException("Malformed endpoint. Did you use launchServer method?");
             }
+            playwright.SetSelectors(this.Playwright._selectors);
             browser = playwright.PreLaunchedBrowser;
             browser.ShouldCloseConnectionOnClose = true;
             browser.Disconnected += (_, _) => ClosePipe();

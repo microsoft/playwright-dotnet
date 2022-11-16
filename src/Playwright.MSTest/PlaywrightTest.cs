@@ -73,6 +73,7 @@ public class PlaywrightTest
         {
             _currentWorker = new();
         }
+        Playwright.Selectors.SetTestIdAttribute("data-testid");
     }
 
     [ClassInitialize(InheritanceBehavior.BeforeEachDerivedClass)]

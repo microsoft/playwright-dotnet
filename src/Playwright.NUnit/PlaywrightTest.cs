@@ -43,6 +43,7 @@ public class PlaywrightTest : WorkerAwareTest
         Playwright = await _playwrightTask.ConfigureAwait(false);
         BrowserName = PlaywrightSettingsProvider.BrowserName;
         BrowserType = Playwright[BrowserName];
+        Playwright.Selectors.SetTestIdAttribute("data-testid");
     }
 
     public ILocatorAssertions Expect(ILocator locator) => Assertions.Expect(locator);

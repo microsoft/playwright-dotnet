@@ -22,22 +22,34 @@
  * SOFTWARE.
  */
 
-using Microsoft.Playwright.Tests.TestServer;
-
 namespace Microsoft.Playwright.Tests;
 
-public class PlaywrightTestEx : PlaywrightTest
+public class SelectorGeneratorTests : PageTestEx
 {
-    public SimpleServer Server { get; internal set; }
-    public SimpleServer HttpsServer { get; internal set; }
-
-    [SetUp]
-    public async Task HttpSetup()
+    [PlaywrightTest("selector-generator.spec.ts", "should use data-testid in strict errors")]
+    public async Task ShouldUseDataTestIdInStrictErrors()
     {
-        var http = await HttpService.Register(this);
-        Server = http.Server;
-        HttpsServer = http.HttpsServer;
-        TestConstants.BrowserName = BrowserName;
-        Playwright.Selectors.SetTestIdAttribute("data-testid");
+        Playwright.Selectors.SetTestIdAttribute("data-custom-id");
+        await Page.SetContentAsync(@"
+      <div>
+        <div></div>
+        <div>
+          <div></div>
+          <div></div>
+        </div>
+      </div>
+      <div>
+        <div class='foo bar:0' data-custom-id='One'>
+        </div>
+        <div class='foo bar:1' data-custom-id='Two'>
+        </div>
+      </div>
+    ");
+        var error = await PlaywrightAssert.ThrowsAsync<PlaywrightException>(() => Page.Locator(".foo").HoverAsync());
+        StringAssert.Contains("strict mode violation", error.Message);
+        StringAssert.Contains("<div class=\"foo bar:0", error.Message);
+        StringAssert.Contains("<div class=\"foo bar:1", error.Message);
+        StringAssert.Contains("aka GetByTestId(\"One\")", error.Message);
+        StringAssert.Contains("aka GetByTestId(\"Two\")", error.Message);
     }
 }
