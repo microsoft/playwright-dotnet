@@ -41,9 +41,9 @@ namespace Microsoft.Playwright.Transport.Channels
                 Guid,
                 "reject",
                 new
-                    {
-                        error = error.ToObject(),
-                    })
+                {
+                    error = error.ToObject(),
+                })
                 .ConfigureAwait(false);
 
         internal async Task ResolveAsync(object result)
@@ -51,9 +51,9 @@ namespace Microsoft.Playwright.Transport.Channels
                 Guid,
                 "resolve",
                 new
-                    {
-                        result = result,
-                    })
+                {
+                    result = result,
+                })
                 .ConfigureAwait(false);
     }
 }

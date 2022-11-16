@@ -42,11 +42,11 @@ namespace Microsoft.Playwright.Transport.Channels
                 Guid,
                 "register",
                 new
-                    {
-                        name = name,
-                        source = source,
-                        contentScript = contentScript,
-                    })
+                {
+                    name = name,
+                    source = source,
+                    contentScript = contentScript,
+                })
                 .ConfigureAwait(false);
     }
 }
