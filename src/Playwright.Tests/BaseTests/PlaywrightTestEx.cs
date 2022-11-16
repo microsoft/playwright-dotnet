@@ -38,5 +38,6 @@ public class PlaywrightTestEx : PlaywrightTest
         Server = http.Server;
         HttpsServer = http.HttpsServer;
         TestConstants.BrowserName = BrowserName;
+        Playwright.Selectors.SetTestIdAttribute("data-testid");
     }
 }
