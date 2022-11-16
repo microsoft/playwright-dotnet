@@ -22,19 +22,59 @@
  * SOFTWARE.
  */
 
+using System;
 using System.Text.Json;
+using System.Threading.Tasks;
+using Microsoft.Playwright.Core;
+using Microsoft.Playwright.Helpers;
 
 namespace Microsoft.Playwright.Transport.Channels;
 
-internal partial class WorkerChannel
+internal class WorkerChannel : Channel<Worker>
 {
+    public WorkerChannel(string guid, Connection connection, Worker owner) : base(guid, connection, owner)
+    {
+    }
+
+    internal event EventHandler Close;
+
     internal override void OnMessage(string method, JsonElement? serverParams)
     {
         switch (method)
         {
             case "close":
-                OnClose();
+                Close?.Invoke(this, new());
                 break;
         }
     }
+
+    internal virtual async Task<JsonElement> EvaluateExpressionAsync(
+        string expression,
+        bool? isFunction,
+        object arg)
+            => (await Connection.SendMessageToServerAsync<JsonElement>(
+                Guid,
+                "evaluateExpression",
+                new
+                {
+                    expression = expression,
+                    isFunction = isFunction,
+                    arg = arg,
+                })
+                .ConfigureAwait(false)).GetProperty("value");
+
+    internal virtual async Task<JSHandle> EvaluateExpressionHandleAsync(
+        string expression,
+        bool? isFunction,
+        object arg)
+        => (await Connection.SendMessageToServerAsync<JsonElement>(
+            Guid,
+            "evaluateExpressionHandle",
+            new
+            {
+                expression = expression,
+                isFunction = isFunction,
+                arg = arg,
+            })
+            .ConfigureAwait(false)).GetObject<JSHandle>("handle", Connection);
 }

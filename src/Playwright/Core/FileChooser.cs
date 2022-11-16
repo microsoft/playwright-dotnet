@@ -29,7 +29,7 @@ namespace Microsoft.Playwright.Core;
 /// <summary>
 /// see <see cref="IPage.FileChooser"/> arguments.
 /// </summary>
-internal partial class FileChooser : IFileChooser
+internal class FileChooser : IFileChooser
 {
     /// <summary>
     /// Initializes a new instance of the <see cref="FileChooser"/> class.

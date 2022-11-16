@@ -34,7 +34,7 @@ using Microsoft.Playwright.Transport.Protocol;
 
 namespace Microsoft.Playwright.Core;
 
-internal partial class ElementHandle : JSHandle, IElementHandle, IChannelOwner<ElementHandle>
+internal class ElementHandle : JSHandle, IElementHandle, IChannelOwner<ElementHandle>
 {
     private readonly ElementHandleChannel _channel;
 

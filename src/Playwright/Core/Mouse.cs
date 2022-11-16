@@ -27,7 +27,7 @@ using Microsoft.Playwright.Transport.Channels;
 
 namespace Microsoft.Playwright.Core;
 
-internal partial class Mouse : IMouse
+internal class Mouse : IMouse
 {
     private readonly PageChannel _channel;
 
