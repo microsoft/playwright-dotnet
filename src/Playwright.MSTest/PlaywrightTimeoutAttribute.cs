@@ -24,7 +24,9 @@
 
 using System;
 using System.Diagnostics;
+using System.Globalization;
 using System.Linq;
+using System.Reflection;
 using System.Threading.Tasks;
 using Microsoft.Playwright.TestAdapter;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -47,46 +49,8 @@ internal class PlaywrightTimeoutAttribute : TestMethodAttribute
             return result;
         }
 
-        return ExecuteWithTimeoutAsync(testMethod, timeout.Value).GetAwaiter().GetResult();
-    }
-
-    private async Task<TestResult[]> ExecuteWithTimeoutAsync(ITestMethod testMethod, int timeout)
-    {
-        // 1. Race Test execution against the specified timeout.
-        // In MSTest base.Execute will internally run the TestInitialize and TestCleanup. In case of a timeout, we don't
-        // run TestCleanup, only TestInitialize. To get good error messages, we close the browser context inside ContextCloseHookOnTimeoutAsync.
-        var testExecutionTask = Task.Run(() => base.Execute(testMethod));
-        var timeoutTask = Task.Delay(timeout);
-        await Task.WhenAny(testExecutionTask, timeoutTask);
-
-        // 2. Close the BrowserContext
-        if (ContextCloseHookOnTimeoutAsync != null)
-        {
-            await ContextCloseHookOnTimeoutAsync().ConfigureAwait(false);
-        }
-
-        // 3. If timeout was reached, we need to wait for the test execution to finish, since Page.Click could hang.
-        if (timeoutTask.IsCompleted)
-        {
-            // 3.1 Wait for the test execution to complete (let e.g. Page.ClickAsync throw)
-            // and give the test 5 seconds to finish.
-            await Task.WhenAny(testExecutionTask, Task.Delay(5000));
-        }
-
-        // 4. If the test execution is still running, we know it was a timeout.
-        if (!testExecutionTask.IsCompleted)
-        {
-            return new TestResult[]
-            {
-                new TestResult()
-                {
-                    Outcome = UnitTestOutcome.Timeout,
-                    TestFailureException = new Exception($"Test timed out after {timeout}ms.")
-                },
-            };
-        }
-
-        return await testExecutionTask;
+        Console.WriteLine("Playwright timeout: {0}", timeout.Value);
+        return base.Execute(new TimeoutTestMethod(testMethod, timeout.Value));
     }
 
     private TestResult[]? EnsureThatPlaywrightTimeoutIsSmallerThanNUnitTimeout(ITestMethod testMethod, int playwrightTestTimeout)
@@ -110,5 +74,97 @@ internal class PlaywrightTimeoutAttribute : TestMethodAttribute
             };
         }
         return null;
+    }
+
+    internal class TimeoutTestMethod : ITestMethod
+    {
+        private readonly ITestMethod _testMethod;
+        private readonly int _timeout;
+        private readonly TimeoutMethodInfo _timeoutMethodInfo;
+
+        // Proxy from the passed ITestMethod:
+        public string TestMethodName => _testMethod.TestMethodName;
+        public string TestClassName => _testMethod.TestClassName;
+        public Type ReturnType => _testMethod.ReturnType;
+        public object[] Arguments => _testMethod.Arguments;
+        public ParameterInfo[] ParameterTypes => _testMethod.ParameterTypes;
+        public Attribute[] GetAllAttributes(bool inherit) => _testMethod.GetAllAttributes(inherit);
+        public AttributeType[] GetAttributes<AttributeType>(bool inherit) where AttributeType : Attribute => _testMethod.GetAttributes<AttributeType>(inherit);
+        public TestResult Invoke(object[] arguments) => _testMethod.Invoke(arguments);
+
+        // Custom overriden MethodInfo via TimeoutMethodInfo class:
+        public MethodInfo MethodInfo => _timeoutMethodInfo;
+
+        public TimeoutTestMethod(ITestMethod testMethod, int timeout)
+        {
+            _testMethod = testMethod;
+            _timeout = timeout;
+            _timeoutMethodInfo = new TimeoutMethodInfo(testMethod.MethodInfo, timeout);
+        }
+    }
+
+    class TimeoutMethodInfo : MethodInfo
+    {
+        private readonly MethodInfo _parent;
+        private readonly int _timeout;
+
+        // Proxy from the passed MethodInfo:
+        public override ICustomAttributeProvider ReturnTypeCustomAttributes => _parent.ReturnTypeCustomAttributes;
+        public override MethodAttributes Attributes => _parent.Attributes;
+        public override RuntimeMethodHandle MethodHandle => _parent.MethodHandle;
+        public override Type DeclaringType => _parent.DeclaringType;
+        public override string Name => _parent.Name;
+        public override Type ReflectedType => _parent.ReflectedType;
+        public override MethodInfo GetBaseDefinition() => _parent.GetBaseDefinition();
+        public override object[] GetCustomAttributes(bool inherit) => _parent.GetCustomAttributes(inherit);
+        public override object[] GetCustomAttributes(Type attributeType, bool inherit) => _parent.GetCustomAttributes(attributeType, inherit);
+        public override MethodImplAttributes GetMethodImplementationFlags() => _parent.GetMethodImplementationFlags();
+        public override ParameterInfo[] GetParameters() => _parent.GetParameters();
+        public override bool IsDefined(Type attributeType, bool inherit) => _parent.IsDefined(attributeType, inherit);
+
+        // Custom overriden Invoke and race against the timeout:
+        public override object Invoke(object obj, BindingFlags invokeAttr, Binder binder, object[] parameters, CultureInfo culture)
+        {
+            Console.WriteLine("heyhoPlaywright timeout: {0}", _timeout);
+            var result = _parent.Invoke(obj, invokeAttr, binder, parameters, culture);
+            if (!(result is Task))
+                return result;
+            Console.WriteLine($"Waiting for test to finish within {_timeout}ms");
+            using(System.IO.StreamWriter sw = System.IO.File.AppendText("/Users/maxschmitt/Developer/playwright-dotnet/log.txt"))
+            {
+                sw.WriteLine("GeeksforGeek1s");
+            }
+            return InvokeAsync((Task<object>)result).GetAwaiter().GetResult();
+        }
+
+        private async Task<object> InvokeAsync(Task<object> testExecutionTask)
+        {
+            using(System.IO.StreamWriter sw = System.IO.File.AppendText("/Users/maxschmitt/Developer/playwright-dotnet/log.txt"))
+            {
+                sw.WriteLine("GeeksforGeeks");
+            }
+            var timeoutTask = Task.Delay(_timeout);
+            await Task.WhenAny(testExecutionTask, timeoutTask);
+
+            // 2. Close the BrowserContext
+            if (ContextCloseHookOnTimeoutAsync != null)
+            {
+                await ContextCloseHookOnTimeoutAsync().ConfigureAwait(false);
+            }
+            // 3. If timeout was reached, we need to wait for the test execution to finish, since Page.Click could hang.
+            if (!timeoutTask.IsCompleted)
+            {
+                throw new TimeoutException($"Test timed out after {_timeout}ms.");
+            }
+            // 3.1 Wait for the test execution to complete (let e.g. Page.ClickAsync throw)
+            // and give the test 5 seconds to finish.
+            return await testExecutionTask;
+        }
+
+        public TimeoutMethodInfo(MethodInfo parent, int timeout)
+        {
+            this._parent = parent;
+            this._timeout = timeout;
+        }
     }
 }
