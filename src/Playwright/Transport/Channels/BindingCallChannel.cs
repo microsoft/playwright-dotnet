@@ -28,32 +28,31 @@ using System.Threading.Tasks;
 using Microsoft.Playwright.Core;
 using Microsoft.Playwright.Helpers;
 
-namespace Microsoft.Playwright.Transport.Channels
+namespace Microsoft.Playwright.Transport.Channels;
+
+internal class BindingCallChannel : Channel<BindingCall>
 {
-    internal class BindingCallChannel : Channel<BindingCall>
+    public BindingCallChannel(string guid, Connection connection, BindingCall owner) : base(guid, connection, owner)
     {
-        public BindingCallChannel(string guid, Connection connection, BindingCall owner) : base(guid, connection, owner)
-        {
-        }
-
-        internal async Task RejectAsync(Exception error)
-            => await Connection.SendMessageToServerAsync<JsonElement>(
-                Guid,
-                "reject",
-                new
-                {
-                    error = error.ToObject(),
-                })
-                .ConfigureAwait(false);
-
-        internal async Task ResolveAsync(object result)
-            => await Connection.SendMessageToServerAsync<JsonElement>(
-                Guid,
-                "resolve",
-                new
-                {
-                    result = result,
-                })
-                .ConfigureAwait(false);
     }
+
+    internal async Task RejectAsync(Exception error)
+        => await Connection.SendMessageToServerAsync<JsonElement>(
+            Guid,
+            "reject",
+            new
+            {
+                error = error.ToObject(),
+            })
+            .ConfigureAwait(false);
+
+    internal async Task ResolveAsync(object result)
+        => await Connection.SendMessageToServerAsync<JsonElement>(
+            Guid,
+            "resolve",
+            new
+            {
+                result = result,
+            })
+            .ConfigureAwait(false);
 }

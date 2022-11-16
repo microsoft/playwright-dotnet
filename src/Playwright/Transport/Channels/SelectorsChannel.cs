@@ -26,27 +26,26 @@ using System.Text.Json;
 using System.Threading.Tasks;
 using Microsoft.Playwright.Core;
 
-namespace Microsoft.Playwright.Transport.Channels
-{
-    internal class SelectorsChannel : Channel<Selectors>
-    {
-        public SelectorsChannel(string guid, Connection connection, Selectors owner) : base(guid, connection, owner)
-        {
-        }
+namespace Microsoft.Playwright.Transport.Channels;
 
-        internal async Task RegisterAsync(
-            string name,
-            string source,
-            bool? contentScript)
-            => await Connection.SendMessageToServerAsync<JsonElement>(
-                Guid,
-                "register",
-                new
-                {
-                    name = name,
-                    source = source,
-                    contentScript = contentScript,
-                })
-                .ConfigureAwait(false);
+internal class SelectorsChannel : Channel<Selectors>
+{
+    public SelectorsChannel(string guid, Connection connection, Selectors owner) : base(guid, connection, owner)
+    {
     }
+
+    internal async Task RegisterAsync(
+        string name,
+        string source,
+        bool? contentScript)
+        => await Connection.SendMessageToServerAsync<JsonElement>(
+            Guid,
+            "register",
+            new
+            {
+                name = name,
+                source = source,
+                contentScript = contentScript,
+            })
+            .ConfigureAwait(false);
 }
