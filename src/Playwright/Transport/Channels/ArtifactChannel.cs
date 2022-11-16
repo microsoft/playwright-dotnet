@@ -35,14 +35,14 @@ namespace Microsoft.Playwright.Transport.Channels
         {
         }
 
-        internal virtual async Task<string> PathAfterFinishedAsync()
+        internal async Task<string> PathAfterFinishedAsync()
             => (await Connection.SendMessageToServerAsync<JsonElement?>(
                 Guid,
                 "pathAfterFinished",
                 null)
                 .ConfigureAwait(false)).GetString("value", true);
 
-        internal virtual async Task SaveAsAsync(string path)
+        internal async Task SaveAsAsync(string path)
             => await Connection.SendMessageToServerAsync<JsonElement>(
                 Guid,
                 "saveAs",
@@ -52,35 +52,35 @@ namespace Microsoft.Playwright.Transport.Channels
                 })
                 .ConfigureAwait(false);
 
-        internal virtual async Task<Stream> SaveAsStreamAsync()
+        internal async Task<Stream> SaveAsStreamAsync()
             => (await Connection.SendMessageToServerAsync<JsonElement>(
                 Guid,
                 "saveAsStream",
                 null)
                 .ConfigureAwait(false)).GetObject<Stream>("stream", Connection);
 
-        internal virtual async Task<string> FailureAsync()
+        internal async Task<string> FailureAsync()
             => (await Connection.SendMessageToServerAsync<JsonElement?>(
                 Guid,
                 "failure",
                 null)
                 .ConfigureAwait(false)).GetString("error", true);
 
-        internal virtual async Task<Stream> StreamAsync()
+        internal async Task<Stream> StreamAsync()
             => (await Connection.SendMessageToServerAsync<JsonElement?>(
                 Guid,
                 "stream",
                 null)
                 .ConfigureAwait(false))?.GetObject<Stream>("stream", Connection);
 
-        internal virtual async Task CancelAsync()
+        internal async Task CancelAsync()
             => await Connection.SendMessageToServerAsync<JsonElement>(
                 Guid,
                 "cancel",
                 null)
                 .ConfigureAwait(false);
 
-        internal virtual async Task DeleteAsync()
+        internal async Task DeleteAsync()
             => await Connection.SendMessageToServerAsync<JsonElement>(
                 Guid,
                 "delete",

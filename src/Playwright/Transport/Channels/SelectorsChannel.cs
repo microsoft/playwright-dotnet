@@ -34,7 +34,7 @@ namespace Microsoft.Playwright.Transport.Channels
         {
         }
 
-        internal virtual async Task RegisterAsync(
+        internal async Task RegisterAsync(
             string name,
             string source,
             bool? contentScript)

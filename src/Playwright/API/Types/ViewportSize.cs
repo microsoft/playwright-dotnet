@@ -27,7 +27,7 @@ namespace Microsoft.Playwright;
 /// <summary>
 /// View port data.
 /// </summary>
-public class ViewportSize
+public partial class ViewportSize
 {
     /// <summary>
     /// Disables the viewport.

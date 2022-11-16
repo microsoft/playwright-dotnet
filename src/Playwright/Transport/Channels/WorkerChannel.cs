@@ -48,7 +48,7 @@ internal class WorkerChannel : Channel<Worker>
         }
     }
 
-    internal virtual async Task<JsonElement> EvaluateExpressionAsync(
+    internal async Task<JsonElement> EvaluateExpressionAsync(
         string expression,
         bool? isFunction,
         object arg)
@@ -63,7 +63,7 @@ internal class WorkerChannel : Channel<Worker>
                 })
                 .ConfigureAwait(false)).GetProperty("value");
 
-    internal virtual async Task<JSHandle> EvaluateExpressionHandleAsync(
+    internal async Task<JSHandle> EvaluateExpressionHandleAsync(
         string expression,
         bool? isFunction,
         object arg)

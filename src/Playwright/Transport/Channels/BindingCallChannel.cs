@@ -36,7 +36,7 @@ namespace Microsoft.Playwright.Transport.Channels
         {
         }
 
-        internal virtual async Task RejectAsync(Exception error)
+        internal async Task RejectAsync(Exception error)
             => await Connection.SendMessageToServerAsync<JsonElement>(
                 Guid,
                 "reject",
@@ -46,7 +46,7 @@ namespace Microsoft.Playwright.Transport.Channels
                     })
                 .ConfigureAwait(false);
 
-        internal virtual async Task ResolveAsync(object result)
+        internal async Task ResolveAsync(object result)
             => await Connection.SendMessageToServerAsync<JsonElement>(
                 Guid,
                 "resolve",
