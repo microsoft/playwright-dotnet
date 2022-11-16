@@ -37,6 +37,7 @@ internal class PlaywrightImpl : ChannelOwnerBase, IPlaywright, IChannelOwner<Pla
     private readonly PlaywrightInitializer _initializer;
     internal readonly PlaywrightChannel _channel;
     private readonly Connection _connection;
+    internal SelectorsAPI _selectors;
 
     private readonly Dictionary<string, BrowserNewContextOptions> _devices = new(StringComparer.InvariantCultureIgnoreCase);
 
@@ -56,6 +57,11 @@ internal class PlaywrightImpl : ChannelOwnerBase, IPlaywright, IChannelOwner<Pla
         _initializer.Firefox.Playwright = this;
         _initializer.Webkit.Playwright = this;
         APIRequest = new APIRequest(this);
+
+        _selectors = new SelectorsAPI();
+        var selectorsOwner = this._initializer.Selectors;
+        _selectors.AddChannel(selectorsOwner);
+        this._connection.Close += (_, _) => _selectors.RemoveChannel(selectorsOwner);
     }
 
     ~PlaywrightImpl() => Dispose(false);
@@ -72,7 +78,7 @@ internal class PlaywrightImpl : ChannelOwnerBase, IPlaywright, IChannelOwner<Pla
 
     public IBrowserType Webkit { get => _initializer.Webkit; set => throw new NotSupportedException(); }
 
-    public ISelectors Selectors => _initializer.Selectors;
+    public ISelectors Selectors => _selectors;
 
     public IReadOnlyDictionary<string, BrowserNewContextOptions> Devices => _devices;
 
@@ -95,6 +101,14 @@ internal class PlaywrightImpl : ChannelOwnerBase, IPlaywright, IChannelOwner<Pla
             global::Microsoft.Playwright.BrowserType.Webkit => Webkit,
             _ => null,
         };
+
+    internal void SetSelectors(SelectorsAPI selectors)
+    {
+        var selectorsOwner = this._initializer.Selectors;
+        _selectors.RemoveChannel(selectorsOwner);
+        _selectors = selectors;
+        _selectors.AddChannel(selectorsOwner);
+    }
 
     public void Dispose()
     {

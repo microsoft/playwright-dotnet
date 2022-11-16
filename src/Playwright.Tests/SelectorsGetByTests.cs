@@ -172,4 +172,40 @@ public class SelectorsGetByTests : PageTestEx
         await Expect(Page.GetByAltText("hello my\nworld")).ToHaveAttributeAsync("id", "control");
         await Expect(Page.GetByTitle("hello my\nworld")).ToHaveAttributeAsync("id", "control");
     }
+
+    [PlaywrightTest("selector-get-by.spec.ts", "getByRole escaping")]
+    public async Task GetByRoleEscaping()
+    {
+        await Page.SetContentAsync(@"
+            <a href=""https://playwright.dev"">issues 123</a>
+            <a href=""https://playwright.dev"">he llo 56</a>
+            <button>Click me</button>
+        ");
+        Assert.AreEqual(
+            new[] { "<button>Click me</button>" },
+            await Page.GetByRole(AriaRole.Button).EvaluateAllAsync<string[]>("els => els.map(e => e.outerHTML)"));
+        Assert.AreEqual(
+            new[] { "<a href=\"https://playwright.dev\">issues 123</a>", "<a href=\"https://playwright.dev\">he llo 56</a>" },
+            await Page.GetByRole(AriaRole.Link).EvaluateAllAsync<string[]>("els => els.map(e => e.outerHTML)"));
+
+        Assert.AreEqual(
+            new[] { "<a href=\"https://playwright.dev\">issues 123</a>" },
+            await Page.GetByRole(AriaRole.Link, new() { NameString = "issues 123" }).EvaluateAllAsync<string[]>("els => els.map(e => e.outerHTML)"));
+        Assert.AreEqual(
+            new[] { "<a href=\"https://playwright.dev\">issues 123</a>" },
+            await Page.GetByRole(AriaRole.Link, new() { NameString = "sues" }).EvaluateAllAsync<string[]>("els => els.map(e => e.outerHTML)"));
+        Assert.AreEqual(
+            new[] { "<a href=\"https://playwright.dev\">he llo 56</a>" },
+            await Page.GetByRole(AriaRole.Link, new() { NameString = "  he    \n  llo " }).EvaluateAllAsync<string[]>("els => els.map(e => e.outerHTML)"));
+        Assert.AreEqual(
+            new string[0],
+            await Page.GetByRole(AriaRole.Button, new() { NameString = "issues" }).EvaluateAllAsync<string[]>("els => els.map(e => e.outerHTML)"));
+
+        Assert.AreEqual(
+            new string[0],
+            await Page.GetByRole(AriaRole.Link, new() { NameString = "sues", Exact = true }).EvaluateAllAsync<string[]>("els => els.map(e => e.outerHTML)"));
+        Assert.AreEqual(
+            new[] { "<a href=\"https://playwright.dev\">he llo 56</a>" },
+            await Page.GetByRole(AriaRole.Link, new() { NameString = "   he \n llo 56 ", Exact = true }).EvaluateAllAsync<string[]>("els => els.map(e => e.outerHTML)"));
+    }
 }
