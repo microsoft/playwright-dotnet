@@ -38,8 +38,7 @@ internal class TracingChannel : Channel<Tracing>
     }
 
     internal Task TracingStartAsync(string name, string title, bool? screenshots, bool? snapshots, bool? sources)
-        => Connection.SendMessageToServerAsync(
-            Guid,
+        => Object.SendMessageToServerAsync(
             "tracingStart",
             new Dictionary<string, object>
             {
@@ -51,19 +50,18 @@ internal class TracingChannel : Channel<Tracing>
             });
 
     internal Task TracingStopAsync()
-        => Connection.SendMessageToServerAsync(
-            Guid,
+        => Object.SendMessageToServerAsync(
             "tracingStop");
 
     internal Task StartChunkAsync(string title = null)
-        => Connection.SendMessageToServerAsync(Guid, "tracingStartChunk", new Dictionary<string, object>
+        => Object.SendMessageToServerAsync("tracingStartChunk", new Dictionary<string, object>
         {
             ["title"] = title,
         });
 
     internal async Task<(Artifact Artifact, List<NameValue> SourceEntries)> StopChunkAsync(string mode)
     {
-        var result = await Connection.SendMessageToServerAsync(Guid, "tracingStopChunk", new Dictionary<string, object>
+        var result = await Object.SendMessageToServerAsync("tracingStopChunk", new Dictionary<string, object>
         {
             ["mode"] = mode,
         }).ConfigureAwait(false);

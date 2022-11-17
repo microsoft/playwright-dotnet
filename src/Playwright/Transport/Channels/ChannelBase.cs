@@ -34,7 +34,7 @@ internal class ChannelBase
         Connection = connection;
     }
 
-    public string Guid { get; }
+    internal string Guid { get; }
 
     public Connection Connection { get; }
 

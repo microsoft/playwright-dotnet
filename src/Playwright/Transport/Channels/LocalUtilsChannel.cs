@@ -38,7 +38,7 @@ internal class LocalUtilsChannel : Channel<LocalUtils>
     }
 
     internal Task ZipAsync(string zipFile, List<NameValue> entries) =>
-        Connection.SendMessageToServerAsync(Guid, "zip", new Dictionary<string, object>
+        Object.SendMessageToServerAsync("zip", new Dictionary<string, object>
         {
                   { "zipFile", zipFile },
                   { "entries", entries },
@@ -46,7 +46,7 @@ internal class LocalUtilsChannel : Channel<LocalUtils>
 
     internal async Task<(string HarId, string Error)> HarOpenAsync(string file)
     {
-        var response = await Connection.SendMessageToServerAsync(Guid, "harOpen", new Dictionary<string, object>
+        var response = await Object.SendMessageToServerAsync("harOpen", new Dictionary<string, object>
             {
                   { "file", file },
             }).ConfigureAwait(false);
@@ -61,7 +61,7 @@ internal class LocalUtilsChannel : Channel<LocalUtils>
         byte[] postData,
         bool isNavigationRequest)
     {
-        var response = await Connection.SendMessageToServerAsync<LocalUtilsHarLookupResult>(Guid, "harLookup", new Dictionary<string, object>
+        var response = await Object.SendMessageToServerAsync<LocalUtilsHarLookupResult>("harLookup", new Dictionary<string, object>
             {
                 { "harId", harId },
                 { "url", url },
@@ -74,13 +74,13 @@ internal class LocalUtilsChannel : Channel<LocalUtils>
     }
 
     internal Task HarCloseAsync(string harId) =>
-        Connection.SendMessageToServerAsync(Guid, "HarCloseAsync", new Dictionary<string, object>
+        Object.SendMessageToServerAsync("HarCloseAsync", new Dictionary<string, object>
         {
                   { "harId", harId },
         });
 
     internal Task HarUnzipAsync(string zipFile, string harFile) =>
-        Connection.SendMessageToServerAsync(Guid, "harUnzip", new Dictionary<string, object>
+        Object.SendMessageToServerAsync("harUnzip", new Dictionary<string, object>
         {
                   { "zipFile", zipFile },
                   { "harFile", harFile },
@@ -95,6 +95,6 @@ internal class LocalUtilsChannel : Channel<LocalUtils>
                 { "slowMo", slowMo },
                 { "timeout", timeout },
             };
-        return Connection.SendMessageToServerAsync<JsonPipeChannel>(Guid, "connect", args);
+        return Object.SendMessageToServerAsync<JsonPipeChannel>("connect", args);
     }
 }

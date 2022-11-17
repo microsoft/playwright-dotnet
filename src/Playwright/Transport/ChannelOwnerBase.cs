@@ -25,6 +25,7 @@
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Text.Json;
 using System.Threading.Tasks;
 using Microsoft.Playwright.Helpers;
 using Microsoft.Playwright.Transport.Channels;
@@ -63,7 +64,7 @@ internal class ChannelOwnerBase : IChannelOwner
     /// <inheritdoc/>
     ConcurrentDictionary<string, IChannelOwner> IChannelOwner.Objects => _objects;
 
-    internal string Guid { get; set; }
+    private string Guid { get; set; }
 
     internal IChannelOwner Parent { get; set; }
 
@@ -92,6 +93,10 @@ internal class ChannelOwnerBase : IChannelOwner
     public Task WrapApiCallAsync(Func<Task> action, bool isInternal = false) => _connection.WrapApiCallAsync(action, isInternal);
 
     public Task WrapApiBoundaryAsync(Func<Task> action) => _connection.WrapApiBoundaryAsync(action);
+
+    public Task<JsonElement?> SendMessageToServerAsync(string method, Dictionary<string, object> args = null) => _connection.SendMessageToServerAsync(Guid, method, args);
+
+    public Task<T> SendMessageToServerAsync<T>(string method, Dictionary<string, object> args = null) => _connection.SendMessageToServerAsync<T>(Guid, method, args);
 
     internal EventHandler<T> UpdateEventHandler<T>(string eventName, EventHandler<T> handlers, EventHandler<T> handler, bool add)
     {

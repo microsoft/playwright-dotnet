@@ -73,7 +73,7 @@ internal class FrameChannel : Channel<Frame>
             ["strict"] = strict,
         };
 
-        return Connection.SendMessageToServerAsync<ElementHandleChannel>(Guid, "querySelector", args);
+        return Object.SendMessageToServerAsync<ElementHandleChannel>("querySelector", args);
     }
 
     internal Task<ResponseChannel> GotoAsync(string url, float? timeout, WaitUntilState? waitUntil, string referer)
@@ -85,15 +85,14 @@ internal class FrameChannel : Channel<Frame>
             ["waitUntil"] = waitUntil,
             ["referer"] = referer,
         };
-        return Connection.SendMessageToServerAsync<ResponseChannel>(Guid, "goto", args);
+        return Object.SendMessageToServerAsync<ResponseChannel>("goto", args);
     }
 
     internal Task<JSHandleChannel> EvaluateExpressionHandleAsync(
         string script,
         object arg)
     {
-        return Connection.SendMessageToServerAsync<JSHandleChannel>(
-            Guid,
+        return Object.SendMessageToServerAsync<JSHandleChannel>(
             "evaluateExpressionHandle",
             new Dictionary<string, object>
             {
@@ -115,8 +114,7 @@ internal class FrameChannel : Channel<Frame>
             ["timeout"] = timeout,
             ["pollingInterval"] = polling,
         };
-        return Connection.SendMessageToServerAsync<JSHandleChannel>(
-            Guid,
+        return Object.SendMessageToServerAsync<JSHandleChannel>(
             "waitForFunction",
             args);
     }
@@ -125,8 +123,7 @@ internal class FrameChannel : Channel<Frame>
         string script,
         object arg)
     {
-        return Connection.SendMessageToServerAsync<JsonElement?>(
-            Guid,
+        return Object.SendMessageToServerAsync<JsonElement?>(
             "evaluateExpression",
             new Dictionary<string, object>
             {
@@ -136,8 +133,7 @@ internal class FrameChannel : Channel<Frame>
     }
 
     internal Task<JsonElement?> EvalOnSelectorAsync(string selector, string script, object arg, bool? strict)
-        => Connection.SendMessageToServerAsync<JsonElement?>(
-            Guid,
+        => Object.SendMessageToServerAsync<JsonElement?>(
             "evalOnSelector",
             new Dictionary<string, object>
             {
@@ -148,8 +144,7 @@ internal class FrameChannel : Channel<Frame>
             });
 
     internal Task<JsonElement?> EvalOnSelectorAllAsync(string selector, string script, object arg)
-        => Connection.SendMessageToServerAsync<JsonElement?>(
-            Guid,
+        => Object.SendMessageToServerAsync<JsonElement?>(
             "evalOnSelectorAll",
             new Dictionary<string, object>
             {
@@ -158,10 +153,10 @@ internal class FrameChannel : Channel<Frame>
                 ["arg"] = arg,
             });
 
-    internal Task<ElementHandleChannel> FrameElementAsync() => Connection.SendMessageToServerAsync<ElementHandleChannel>(Guid, "frameElement");
+    internal Task<ElementHandleChannel> FrameElementAsync() => Object.SendMessageToServerAsync<ElementHandleChannel>("frameElement");
 
     internal async Task<string> TitleAsync()
-        => (await Connection.SendMessageToServerAsync(Guid, "title", null).ConfigureAwait(false))?.GetProperty("value").ToString();
+        => (await Object.SendMessageToServerAsync("title", null).ConfigureAwait(false))?.GetProperty("value").ToString();
 
     internal Task<ElementHandleChannel> WaitForSelectorAsync(string selector, WaitForSelectorState? state, float? timeout, bool? strict, bool? omitReturnValue = default)
     {
@@ -173,8 +168,7 @@ internal class FrameChannel : Channel<Frame>
             ["strict"] = strict,
             ["omitReturnValue"] = omitReturnValue,
         };
-        return Connection.SendMessageToServerAsync<ElementHandleChannel>(
-            Guid,
+        return Object.SendMessageToServerAsync<ElementHandleChannel>(
             "waitForSelector",
             args);
     }
@@ -185,8 +179,7 @@ internal class FrameChannel : Channel<Frame>
         {
             ["timeout"] = timeout,
         };
-        return Connection.SendMessageToServerAsync<ElementHandleChannel>(
-            Guid,
+        return Object.SendMessageToServerAsync<ElementHandleChannel>(
             "waitForTimeout",
             args);
     }
@@ -200,7 +193,7 @@ internal class FrameChannel : Channel<Frame>
             ["content"] = content,
             ["type"] = type,
         };
-        return Connection.SendMessageToServerAsync<ElementHandleChannel>(Guid, "addScriptTag", args);
+        return Object.SendMessageToServerAsync<ElementHandleChannel>("addScriptTag", args);
     }
 
     internal Task BlurAsync(string selector, bool strict, float? timeout)
@@ -211,7 +204,7 @@ internal class FrameChannel : Channel<Frame>
             ["strict"] = strict,
             ["timeout"] = timeout,
         };
-        return Connection.SendMessageToServerAsync(Guid, "blur", args);
+        return Object.SendMessageToServerAsync("blur", args);
     }
 
     internal Task<ElementHandleChannel> AddStyleTagAsync(string url, string path, string content)
@@ -222,7 +215,7 @@ internal class FrameChannel : Channel<Frame>
             ["path"] = path,
             ["content"] = content,
         };
-        return Connection.SendMessageToServerAsync<ElementHandleChannel>(Guid, "addStyleTag", args);
+        return Object.SendMessageToServerAsync<ElementHandleChannel>("addStyleTag", args);
     }
 
     internal Task<ResponseChannel> WaitForNavigationAsync(LoadState? waitUntil, string url, float? timeout)
@@ -234,7 +227,7 @@ internal class FrameChannel : Channel<Frame>
             ["waitUntil"] = waitUntil,
         };
 
-        return Connection.SendMessageToServerAsync<ResponseChannel>(Guid, "waitForNavigation", args);
+        return Object.SendMessageToServerAsync<ResponseChannel>("waitForNavigation", args);
     }
 
     internal Task WaitForLoadStateAsync(LoadState? state, float? timeout)
@@ -245,8 +238,7 @@ internal class FrameChannel : Channel<Frame>
             ["state"] = state,
         };
 
-        return Connection.SendMessageToServerAsync(
-            Guid,
+        return Object.SendMessageToServerAsync(
             "waitForLoadState",
             args);
     }
@@ -258,7 +250,7 @@ internal class FrameChannel : Channel<Frame>
             ["selector"] = selector,
         };
 
-        var result = await Connection.SendMessageToServerAsync(Guid, "queryCount", args).ConfigureAwait(false);
+        var result = await Object.SendMessageToServerAsync("queryCount", args).ConfigureAwait(false);
         return result.Value.GetProperty("value").GetInt32();
     }
 
@@ -271,7 +263,7 @@ internal class FrameChannel : Channel<Frame>
             ["timeout"] = timeout,
         };
 
-        return Connection.SendMessageToServerAsync(Guid, "setContent", args);
+        return Object.SendMessageToServerAsync("setContent", args);
     }
 
     internal Task ClickAsync(
@@ -302,7 +294,7 @@ internal class FrameChannel : Channel<Frame>
             ["strict"] = strict,
         };
 
-        return Connection.SendMessageToServerAsync<ElementHandleChannel>(Guid, "click", args);
+        return Object.SendMessageToServerAsync<ElementHandleChannel>("click", args);
     }
 
     internal Task DblClickAsync(
@@ -331,12 +323,11 @@ internal class FrameChannel : Channel<Frame>
             ["strict"] = strict,
         };
 
-        return Connection.SendMessageToServerAsync<ElementHandleChannel>(Guid, "dblclick", args);
+        return Object.SendMessageToServerAsync<ElementHandleChannel>("dblclick", args);
     }
 
     internal Task<ElementHandleChannel> QuerySelectorAsync(string selector)
-        => Connection.SendMessageToServerAsync<ElementHandleChannel>(
-            Guid,
+        => Object.SendMessageToServerAsync<ElementHandleChannel>(
             "querySelector",
             new Dictionary<string, object>
             {
@@ -344,8 +335,7 @@ internal class FrameChannel : Channel<Frame>
             });
 
     internal Task<ChannelBase[]> QuerySelectorAllAsync(string selector)
-        => Connection.SendMessageToServerAsync<ChannelBase[]>(
-            Guid,
+        => Object.SendMessageToServerAsync<ChannelBase[]>(
             "querySelectorAll",
             new Dictionary<string, object>
             {
@@ -364,7 +354,7 @@ internal class FrameChannel : Channel<Frame>
             ["strict"] = strict,
         };
 
-        return Connection.SendMessageToServerAsync(Guid, "fill", args);
+        return Object.SendMessageToServerAsync("fill", args);
     }
 
     internal Task CheckAsync(string selector, Position position, float? timeout, bool? force, bool? noWaitAfter, bool? trial, bool? strict)
@@ -380,7 +370,7 @@ internal class FrameChannel : Channel<Frame>
             ["strict"] = strict,
         };
 
-        return Connection.SendMessageToServerAsync<ElementHandleChannel>(Guid, "check", args);
+        return Object.SendMessageToServerAsync<ElementHandleChannel>("check", args);
     }
 
     internal Task UncheckAsync(string selector, Position position, float? timeout, bool? force, bool? noWaitAfter, bool? trial, bool? strict)
@@ -396,7 +386,7 @@ internal class FrameChannel : Channel<Frame>
             ["strict"] = strict,
         };
 
-        return Connection.SendMessageToServerAsync<ElementHandleChannel>(Guid, "uncheck", args);
+        return Object.SendMessageToServerAsync<ElementHandleChannel>("uncheck", args);
     }
 
     internal Task DispatchEventAsync(string selector, string type, object eventInit, float? timeout, bool? strict)
@@ -410,7 +400,7 @@ internal class FrameChannel : Channel<Frame>
             ["strict"] = strict,
         };
 
-        return Connection.SendMessageToServerAsync(Guid, "dispatchEvent", args);
+        return Object.SendMessageToServerAsync("dispatchEvent", args);
     }
 
     internal Task HoverAsync(
@@ -435,7 +425,7 @@ internal class FrameChannel : Channel<Frame>
             ["noWaitAfter"] = noWaitAfter,
         };
 
-        return Connection.SendMessageToServerAsync(Guid, "hover", args);
+        return Object.SendMessageToServerAsync("hover", args);
     }
 
     internal Task PressAsync(string selector, string text, float? delay, float? timeout, bool? noWaitAfter, bool? strict)
@@ -450,7 +440,7 @@ internal class FrameChannel : Channel<Frame>
             ["strict"] = strict,
         };
 
-        return Connection.SendMessageToServerAsync(Guid, "press", args);
+        return Object.SendMessageToServerAsync("press", args);
     }
 
     internal async Task<string[]> SelectOptionAsync(string selector, IEnumerable<SelectOptionValue> values, bool? noWaitAfter, bool? strict, bool? force, float? timeout)
@@ -465,7 +455,7 @@ internal class FrameChannel : Channel<Frame>
             ["timeout"] = timeout,
         };
 
-        return (await Connection.SendMessageToServerAsync(Guid, "selectOption", args).ConfigureAwait(false))?.GetProperty("values").ToObject<string[]>();
+        return (await Object.SendMessageToServerAsync("selectOption", args).ConfigureAwait(false))?.GetProperty("values").ToObject<string[]>();
     }
 
     internal async Task<string[]> SelectOptionAsync(string selector, IEnumerable<ElementHandle> values, bool? noWaitAfter, bool? strict, bool? force, float? timeout)
@@ -480,7 +470,7 @@ internal class FrameChannel : Channel<Frame>
             ["timeout"] = timeout,
         };
 
-        return (await Connection.SendMessageToServerAsync(Guid, "selectOption", args).ConfigureAwait(false))?.GetProperty("values").ToObject<string[]>();
+        return (await Object.SendMessageToServerAsync("selectOption", args).ConfigureAwait(false))?.GetProperty("values").ToObject<string[]>();
     }
 
     internal async Task<string> GetAttributeAsync(string selector, string name, float? timeout, bool? strict)
@@ -494,7 +484,7 @@ internal class FrameChannel : Channel<Frame>
         };
 
         JsonElement retValue = default;
-        if ((await Connection.SendMessageToServerAsync(Guid, "getAttribute", args).ConfigureAwait(false))?.TryGetProperty("value", out retValue) ?? false)
+        if ((await Object.SendMessageToServerAsync("getAttribute", args).ConfigureAwait(false))?.TryGetProperty("value", out retValue) ?? false)
         {
             return retValue.ToString();
         }
@@ -511,7 +501,7 @@ internal class FrameChannel : Channel<Frame>
             ["strict"] = strict,
         };
 
-        return (await Connection.SendMessageToServerAsync(Guid, "innerHTML", args).ConfigureAwait(false))?.GetProperty("value").ToString();
+        return (await Object.SendMessageToServerAsync("innerHTML", args).ConfigureAwait(false))?.GetProperty("value").ToString();
     }
 
     internal Task TypeAsync(string selector, string text, float? delay, float? timeout, bool? noWaitAfter, bool? strict)
@@ -526,11 +516,11 @@ internal class FrameChannel : Channel<Frame>
             ["strict"] = strict,
         };
 
-        return Connection.SendMessageToServerAsync(Guid, "type", args);
+        return Object.SendMessageToServerAsync("type", args);
     }
 
     internal async Task<string> ContentAsync()
-        => (await Connection.SendMessageToServerAsync(Guid, "content").ConfigureAwait(false))?.GetProperty("value").ToString();
+        => (await Object.SendMessageToServerAsync("content").ConfigureAwait(false))?.GetProperty("value").ToString();
 
     internal Task FocusAsync(string selector, float? timeout, bool? strict)
     {
@@ -541,7 +531,7 @@ internal class FrameChannel : Channel<Frame>
             ["strict"] = strict,
         };
 
-        return Connection.SendMessageToServerAsync(Guid, "focus", args);
+        return Object.SendMessageToServerAsync("focus", args);
     }
 
     internal async Task<string> InnerTextAsync(string selector, float? timeout, bool? strict)
@@ -553,7 +543,7 @@ internal class FrameChannel : Channel<Frame>
             ["strict"] = strict,
         };
 
-        return (await Connection.SendMessageToServerAsync(Guid, "innerText", args).ConfigureAwait(false))?.GetProperty("value").ToString();
+        return (await Object.SendMessageToServerAsync("innerText", args).ConfigureAwait(false))?.GetProperty("value").ToString();
     }
 
     internal Task SetInputFilesAsync(string selector, IEnumerable<InputFilesList> files, bool? noWaitAfter, float? timeout, bool? strict)
@@ -567,7 +557,7 @@ internal class FrameChannel : Channel<Frame>
             ["strict"] = strict,
         };
 
-        return Connection.SendMessageToServerAsync(Guid, "setInputFiles", args);
+        return Object.SendMessageToServerAsync("setInputFiles", args);
     }
 
     internal Task SetInputFilePathsAsync(string selector, IEnumerable<string> localPaths, IEnumerable<WritableStream> streams, bool? noWaitAfter, float? timeout, bool? strict)
@@ -582,7 +572,7 @@ internal class FrameChannel : Channel<Frame>
             ["strict"] = strict,
         };
 
-        return Connection.SendMessageToServerAsync(Guid, "setInputFilePaths", args);
+        return Object.SendMessageToServerAsync("setInputFilePaths", args);
     }
 
     internal async Task<string> TextContentAsync(string selector, float? timeout, bool? strict)
@@ -594,7 +584,7 @@ internal class FrameChannel : Channel<Frame>
             ["strict"] = strict,
         };
 
-        return (await Connection.SendMessageToServerAsync(Guid, "textContent", args).ConfigureAwait(false))?.GetProperty("value").ToString();
+        return (await Object.SendMessageToServerAsync("textContent", args).ConfigureAwait(false))?.GetProperty("value").ToString();
     }
 
     internal Task TapAsync(
@@ -619,7 +609,7 @@ internal class FrameChannel : Channel<Frame>
             ["strict"] = strict,
         };
 
-        return Connection.SendMessageToServerAsync(Guid, "tap", args);
+        return Object.SendMessageToServerAsync("tap", args);
     }
 
     internal async Task<bool> IsCheckedAsync(string selector, float? timeout, bool? strict)
@@ -631,7 +621,7 @@ internal class FrameChannel : Channel<Frame>
             ["strict"] = strict,
         };
 
-        return (await Connection.SendMessageToServerAsync(Guid, "isChecked", args).ConfigureAwait(false))?.GetProperty("value").GetBoolean() ?? default;
+        return (await Object.SendMessageToServerAsync("isChecked", args).ConfigureAwait(false))?.GetProperty("value").GetBoolean() ?? default;
     }
 
     internal async Task<bool> IsDisabledAsync(string selector, float? timeout, bool? strict)
@@ -643,7 +633,7 @@ internal class FrameChannel : Channel<Frame>
             ["strict"] = strict,
         };
 
-        return (await Connection.SendMessageToServerAsync(Guid, "isDisabled", args).ConfigureAwait(false))?.GetProperty("value").GetBoolean() ?? default;
+        return (await Object.SendMessageToServerAsync("isDisabled", args).ConfigureAwait(false))?.GetProperty("value").GetBoolean() ?? default;
     }
 
     internal async Task<bool> IsEditableAsync(string selector, float? timeout, bool? strict)
@@ -655,7 +645,7 @@ internal class FrameChannel : Channel<Frame>
             ["strict"] = strict,
         };
 
-        return (await Connection.SendMessageToServerAsync(Guid, "isEditable", args).ConfigureAwait(false))?.GetProperty("value").GetBoolean() ?? default;
+        return (await Object.SendMessageToServerAsync("isEditable", args).ConfigureAwait(false))?.GetProperty("value").GetBoolean() ?? default;
     }
 
     internal async Task<bool> IsEnabledAsync(string selector, float? timeout, bool? strict)
@@ -667,7 +657,7 @@ internal class FrameChannel : Channel<Frame>
             ["strict"] = strict,
         };
 
-        return (await Connection.SendMessageToServerAsync(Guid, "isEnabled", args).ConfigureAwait(false))?.GetProperty("value").GetBoolean() ?? default;
+        return (await Object.SendMessageToServerAsync("isEnabled", args).ConfigureAwait(false))?.GetProperty("value").GetBoolean() ?? default;
     }
 
     internal async Task<bool> IsHiddenAsync(string selector, float? timeout, bool? strict)
@@ -679,7 +669,7 @@ internal class FrameChannel : Channel<Frame>
             ["strict"] = strict,
         };
 
-        return (await Connection.SendMessageToServerAsync(Guid, "isHidden", args).ConfigureAwait(false))?.GetProperty("value").GetBoolean() ?? default;
+        return (await Object.SendMessageToServerAsync("isHidden", args).ConfigureAwait(false))?.GetProperty("value").GetBoolean() ?? default;
     }
 
     internal async Task<bool> IsVisibleAsync(string selector, float? timeout, bool? strict)
@@ -691,7 +681,7 @@ internal class FrameChannel : Channel<Frame>
             ["strict"] = strict,
         };
 
-        return (await Connection.SendMessageToServerAsync(Guid, "isVisible", args).ConfigureAwait(false))?.GetProperty("value").GetBoolean() ?? default;
+        return (await Object.SendMessageToServerAsync("isVisible", args).ConfigureAwait(false))?.GetProperty("value").GetBoolean() ?? default;
     }
 
     internal async Task<string> InputValueAsync(string selector, float? timeout, bool? strict)
@@ -703,7 +693,7 @@ internal class FrameChannel : Channel<Frame>
             ["strict"] = strict,
         };
 
-        return (await Connection.SendMessageToServerAsync(Guid, "inputValue", args).ConfigureAwait(false))?.GetProperty("value").ToString();
+        return (await Object.SendMessageToServerAsync("inputValue", args).ConfigureAwait(false))?.GetProperty("value").ToString();
     }
 
     internal Task DragAndDropAsync(string source, string target, bool? force, bool? noWaitAfter, float? timeout, bool? trial, bool? strict, SourcePosition sourcePosition, TargetPosition targetPosition)
@@ -721,7 +711,7 @@ internal class FrameChannel : Channel<Frame>
             ["targetPosition"] = targetPosition,
         };
 
-        return Connection.SendMessageToServerAsync(Guid, "dragAndDrop", args);
+        return Object.SendMessageToServerAsync("dragAndDrop", args);
     }
 
     internal async Task<FrameExpectResult> ExpectAsync(string selector, string expression, object expressionArg, ExpectedTextValue[] expectedText, int? expectedNumber, object expectedValue, bool? useInnerText, bool? isNot, float? timeout)
@@ -738,7 +728,7 @@ internal class FrameChannel : Channel<Frame>
             ["isNot"] = isNot,
             ["timeout"] = timeout,
         };
-        var result = await Connection.SendMessageToServerAsync(Guid, "expect", args).ConfigureAwait(false);
+        var result = await Object.SendMessageToServerAsync("expect", args).ConfigureAwait(false);
         var parsed = result.Value.ToObject<FrameExpectResult>();
         if (result.Value.TryGetProperty("received", out var received))
         {
@@ -755,6 +745,6 @@ internal class FrameChannel : Channel<Frame>
             ["selector"] = selector,
         };
 
-        await Connection.SendMessageToServerAsync(Guid, "highlight", args).ConfigureAwait(false);
+        await Object.SendMessageToServerAsync("highlight", args).ConfigureAwait(false);
     }
 }

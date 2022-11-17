@@ -36,7 +36,7 @@ internal class APIRequestContextChannel : Channel<APIRequestContext>
     {
     }
 
-    internal Task DisposeAsync() => Connection.SendMessageToServerAsync(Guid, "dispose");
+    internal Task DisposeAsync() => Object.SendMessageToServerAsync("dispose");
 
     internal async Task<IAPIResponse> FetchAsync(
         string url,
@@ -68,16 +68,16 @@ internal class APIRequestContextChannel : Channel<APIRequestContext>
             ["multipartData"] = multipartData?.ToProtocol(),
         };
 
-        var response = await Connection.SendMessageToServerAsync(Guid, "fetch", message).ConfigureAwait(false);
+        var response = await Object.SendMessageToServerAsync("fetch", message).ConfigureAwait(false);
         return new Core.APIResponse(Object, response?.GetProperty("response").ToObject<Protocol.APIResponse>());
     }
 
     internal Task<StorageState> StorageStateAsync()
-        => Connection.SendMessageToServerAsync<StorageState>(Guid, "storageState", null);
+        => Object.SendMessageToServerAsync<StorageState>("storageState", null);
 
     internal async Task<string> FetchResponseBodyAsync(string fetchUid)
     {
-        var response = await Connection.SendMessageToServerAsync(Guid, "fetchResponseBody", new Dictionary<string, object> { ["fetchUid"] = fetchUid }).ConfigureAwait(false);
+        var response = await Object.SendMessageToServerAsync("fetchResponseBody", new Dictionary<string, object> { ["fetchUid"] = fetchUid }).ConfigureAwait(false);
         if (response?.TryGetProperty("binary", out var binary) == true)
         {
             return binary.ToString();
@@ -87,10 +87,10 @@ internal class APIRequestContextChannel : Channel<APIRequestContext>
 
     internal async Task<List<string>> FetchResponseLogAsync(string fetchUid)
     {
-        var response = await Connection.SendMessageToServerAsync(Guid, "fetchLog", new Dictionary<string, object> { ["fetchUid"] = fetchUid }).ConfigureAwait(false);
+        var response = await Object.SendMessageToServerAsync("fetchLog", new Dictionary<string, object> { ["fetchUid"] = fetchUid }).ConfigureAwait(false);
         return response.Value.GetProperty("log").ToObject<List<string>>();
     }
 
     internal Task DisposeAPIResponseAsync(string fetchUid)
-        => Connection.SendMessageToServerAsync(Guid, "disposeAPIResponse", new Dictionary<string, object> { ["fetchUid"] = fetchUid });
+        => Object.SendMessageToServerAsync("disposeAPIResponse", new Dictionary<string, object> { ["fetchUid"] = fetchUid });
 }

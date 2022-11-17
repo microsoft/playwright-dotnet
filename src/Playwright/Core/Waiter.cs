@@ -58,7 +58,7 @@ internal class Waiter : IDisposable
                 ["phase"] = "before",
             },
         };
-        _channelOwner.Connection.SendMessageToServerAsync(_channelOwner.Channel.Guid, "waitForEventInfo", beforeArgs).IgnoreException();
+        _channelOwner.SendMessageToServerAsync("waitForEventInfo", beforeArgs).IgnoreException();
     }
 
     public void Dispose()
@@ -80,7 +80,7 @@ internal class Waiter : IDisposable
                     ["error"] = _error,
                 },
             };
-            _channelOwner.WrapApiCallAsync(() => _channelOwner.Connection.SendMessageToServerAsync(_channelOwner.Channel.Guid, "waitForEventInfo", afterArgs), true).IgnoreException();
+            _channelOwner.WrapApiCallAsync(() => _channelOwner.SendMessageToServerAsync("waitForEventInfo", afterArgs), true).IgnoreException();
 
             _cts.Cancel();
             _cts.Dispose();
@@ -100,7 +100,7 @@ internal class Waiter : IDisposable
                 ["message"] = log,
             },
         };
-        _channelOwner.WrapApiCallAsync(() => _channelOwner.Connection.SendMessageToServerAsync(_channelOwner.Channel.Guid, "waitForEventInfo", logArgs), true).IgnoreException();
+        _channelOwner.WrapApiCallAsync(() => _channelOwner.SendMessageToServerAsync("waitForEventInfo", logArgs), true).IgnoreException();
     }
 
     internal void RejectImmediately(Exception exception)

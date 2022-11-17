@@ -36,8 +36,7 @@ internal class StreamChannel : Channel<Stream>
 
     internal async Task<byte[]> ReadAsync(int size)
     {
-        var response = await Connection.SendMessageToServerAsync(
-            Guid,
+        var response = await Object.SendMessageToServerAsync(
             "read",
             new Dictionary<string, object>
             {
@@ -46,5 +45,5 @@ internal class StreamChannel : Channel<Stream>
         return response.Value.GetProperty("binary").GetBytesFromBase64();
     }
 
-    internal Task CloseAsync() => Connection.SendMessageToServerAsync(Guid, "close");
+    internal Task CloseAsync() => Object.SendMessageToServerAsync("close");
 }

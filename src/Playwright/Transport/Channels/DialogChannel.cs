@@ -35,13 +35,12 @@ internal class DialogChannel : Channel<Dialog>
     }
 
     internal Task AcceptAsync(string promptText)
-        => Connection.SendMessageToServerAsync<PageChannel>(
-            Guid,
+        => Object.SendMessageToServerAsync<PageChannel>(
             "accept",
             new Dictionary<string, object>
             {
                 ["promptText"] = promptText,
             });
 
-    internal Task DismissAsync() => Connection.SendMessageToServerAsync<PageChannel>(Guid, "dismiss");
+    internal Task DismissAsync() => Object.SendMessageToServerAsync<PageChannel>("dismiss");
 }

@@ -72,8 +72,7 @@ internal class PlaywrightChannel : Channel<PlaywrightImpl>
             args.Add("storageState", JsonSerializer.Deserialize<StorageState>(storageState, Helpers.JsonExtensions.DefaultJsonSerializerOptions));
         }
 
-        var response = await Connection.SendMessageToServerAsync<APIRequestContextChannel>(
-            Guid,
+        var response = await Object.SendMessageToServerAsync<APIRequestContextChannel>(
             "newRequest",
             args).ConfigureAwait(false);
         return response.Object;

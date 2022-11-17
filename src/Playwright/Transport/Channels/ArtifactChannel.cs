@@ -37,15 +37,13 @@ internal class ArtifactChannel : Channel<Artifact>
     }
 
     internal async Task<string> PathAfterFinishedAsync()
-        => (await Connection.SendMessageToServerAsync<JsonElement?>(
-            Guid,
+        => (await Object.SendMessageToServerAsync<JsonElement?>(
             "pathAfterFinished",
             null)
             .ConfigureAwait(false)).GetString("value", true);
 
     internal Task SaveAsAsync(string path)
-        => Connection.SendMessageToServerAsync<JsonElement>(
-            Guid,
+        => Object.SendMessageToServerAsync<JsonElement>(
             "saveAs",
             new Dictionary<string, object>
             {
@@ -53,33 +51,28 @@ internal class ArtifactChannel : Channel<Artifact>
             });
 
     internal async Task<Stream> SaveAsStreamAsync()
-        => (await Connection.SendMessageToServerAsync<JsonElement>(
-            Guid,
+        => (await Object.SendMessageToServerAsync<JsonElement>(
             "saveAsStream",
             null)
             .ConfigureAwait(false)).GetObject<Stream>("stream", Connection);
 
     internal async Task<string> FailureAsync()
-        => (await Connection.SendMessageToServerAsync<JsonElement?>(
-            Guid,
+        => (await Object.SendMessageToServerAsync<JsonElement?>(
             "failure",
             null)
             .ConfigureAwait(false)).GetString("error", true);
 
     internal async Task<Stream> StreamAsync()
-        => (await Connection.SendMessageToServerAsync<JsonElement?>(
-            Guid,
+        => (await Object.SendMessageToServerAsync<JsonElement?>(
             "stream",
             null)
             .ConfigureAwait(false))?.GetObject<Stream>("stream", Connection);
 
     internal Task CancelAsync()
-        => Connection.SendMessageToServerAsync<JsonElement>(
-            Guid,
+        => Object.SendMessageToServerAsync<JsonElement>(
             "cancel");
 
     internal Task DeleteAsync()
-        => Connection.SendMessageToServerAsync<JsonElement>(
-            Guid,
+        => Object.SendMessageToServerAsync<JsonElement>(
             "delete");
 }

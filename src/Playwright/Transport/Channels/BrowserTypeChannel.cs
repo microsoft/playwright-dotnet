@@ -78,8 +78,7 @@ internal class BrowserTypeChannel : Channel<Core.BrowserType>
                 { "timeout", timeout },
             };
 
-        return Connection.SendMessageToServerAsync<BrowserChannel>(
-            Guid,
+        return Object.SendMessageToServerAsync<BrowserChannel>(
             "launch",
             args);
     }
@@ -197,7 +196,7 @@ internal class BrowserTypeChannel : Channel<Core.BrowserType>
             channelArgs.Add("viewport", viewportSize);
         }
 
-        return Connection.SendMessageToServerAsync<BrowserContextChannel>(Guid, "launchPersistentContext", channelArgs);
+        return Object.SendMessageToServerAsync<BrowserContextChannel>("launchPersistentContext", channelArgs);
     }
 
     internal Task<JsonElement> ConnectOverCDPAsync(string endpointURL, IEnumerable<KeyValuePair<string, string>> headers = default, float? slowMo = default, float? timeout = default)
@@ -209,6 +208,6 @@ internal class BrowserTypeChannel : Channel<Core.BrowserType>
                 { "slowMo", slowMo },
                 { "timeout", timeout },
             };
-        return Connection.SendMessageToServerAsync<JsonElement>(Guid, "connectOverCDP", channelArgs);
+        return Object.SendMessageToServerAsync<JsonElement>("connectOverCDP", channelArgs);
     }
 }

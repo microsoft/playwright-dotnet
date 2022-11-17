@@ -198,13 +198,12 @@ internal class BrowserChannel : Channel<Browser>
             args.Add("screen", screenSize);
         }
 
-        return Connection.SendMessageToServerAsync<BrowserContextChannel>(
-            Guid,
+        return Object.SendMessageToServerAsync<BrowserContextChannel>(
             "newContext",
             args);
     }
 
-    internal Task CloseAsync() => Connection.SendMessageToServerAsync<BrowserContextChannel>(Guid, "close", null);
+    internal Task CloseAsync() => Object.SendMessageToServerAsync<BrowserContextChannel>("close", null);
 
     internal Task StartTracingAsync(IPage page, bool screenshots, string path, IEnumerable<string> categories)
     {
@@ -216,9 +215,9 @@ internal class BrowserChannel : Channel<Browser>
             ["categories"] = categories,
         };
 
-        return Connection.SendMessageToServerAsync(Guid, "crStartTracing", args);
+        return Object.SendMessageToServerAsync("crStartTracing", args);
     }
 
     internal async Task<string> StopTracingAsync()
-        => (await Connection.SendMessageToServerAsync(Guid, "crStopTracing", null).ConfigureAwait(false))?.GetProperty("binary").ToString();
+        => (await Object.SendMessageToServerAsync("crStopTracing", null).ConfigureAwait(false))?.GetProperty("binary").ToString();
 }

@@ -24,6 +24,8 @@
 
 using System;
 using System.Collections.Concurrent;
+using System.Collections.Generic;
+using System.Text.Json;
 using System.Threading.Tasks;
 
 namespace Microsoft.Playwright.Transport.Channels;
@@ -58,6 +60,10 @@ internal interface IChannelOwner
     Task<T> WrapApiCallAsync<T>(Func<Task<T>> action, bool isInternal = false);
 
     Task WrapApiBoundaryAsync(Func<Task> action);
+
+    public Task<JsonElement?> SendMessageToServerAsync(string method, Dictionary<string, object> args = null);
+
+    public Task<T> SendMessageToServerAsync<T>(string method, Dictionary<string, object> args = null);
 }
 
 /// <summary>

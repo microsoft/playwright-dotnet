@@ -64,15 +64,13 @@ internal class ElementHandleChannel : JSHandleChannel, IChannel<ElementHandle>
             ["strict"] = strict,
         };
 
-        return Connection.SendMessageToServerAsync<ElementHandleChannel>(
-            Guid,
+        return Object.SendMessageToServerAsync<ElementHandleChannel>(
             "waitForSelector",
             args);
     }
 
     internal Task<ElementHandleChannel> QuerySelectorAsync(string selector)
-        => Connection.SendMessageToServerAsync<ElementHandleChannel>(
-            Guid,
+        => Object.SendMessageToServerAsync<ElementHandleChannel>(
             "querySelector",
             new Dictionary<string, object>
             {
@@ -87,12 +85,11 @@ internal class ElementHandleChannel : JSHandleChannel, IChannel<ElementHandle>
             ["timeout"] = timeout,
         };
 
-        return Connection.SendMessageToServerAsync<ElementHandleChannel>(Guid, "waitForElementState", args);
+        return Object.SendMessageToServerAsync<ElementHandleChannel>("waitForElementState", args);
     }
 
     internal Task<ChannelBase[]> QuerySelectorAllAsync(string selector)
-        => Connection.SendMessageToServerAsync<ChannelBase[]>(
-            Guid,
+        => Object.SendMessageToServerAsync<ChannelBase[]>(
             "querySelectorAll",
             new Dictionary<string, object>
             {
@@ -121,12 +118,11 @@ internal class ElementHandleChannel : JSHandleChannel, IChannel<ElementHandle>
             }).ToArray();
         }
 
-        return (await Connection.SendMessageToServerAsync(Guid, "screenshot", args).ConfigureAwait(false))?.GetProperty("binary").GetBytesFromBase64();
+        return (await Object.SendMessageToServerAsync("screenshot", args).ConfigureAwait(false))?.GetProperty("binary").GetBytesFromBase64();
     }
 
     internal Task<JsonElement?> EvalOnSelectorAsync(string selector, string script, object arg)
-        => Connection.SendMessageToServerAsync<JsonElement?>(
-            Guid,
+        => Object.SendMessageToServerAsync<JsonElement?>(
             "evalOnSelector",
             new Dictionary<string, object>
             {
@@ -136,8 +132,7 @@ internal class ElementHandleChannel : JSHandleChannel, IChannel<ElementHandle>
             });
 
     internal Task<JsonElement?> EvalOnSelectorAllAsync(string selector, string script, object arg)
-        => Connection.SendMessageToServerAsync<JsonElement?>(
-            Guid,
+        => Object.SendMessageToServerAsync<JsonElement?>(
             "evalOnSelectorAll",
             new Dictionary<string, object>
             {
@@ -146,9 +141,9 @@ internal class ElementHandleChannel : JSHandleChannel, IChannel<ElementHandle>
                 ["arg"] = arg,
             });
 
-    internal Task<FrameChannel> ContentFrameAsync() => Connection.SendMessageToServerAsync<FrameChannel>(Guid, "contentFrame", null);
+    internal Task<FrameChannel> ContentFrameAsync() => Object.SendMessageToServerAsync<FrameChannel>("contentFrame", null);
 
-    internal Task<FrameChannel> OwnerFrameAsync() => Connection.SendMessageToServerAsync<FrameChannel>(Guid, "ownerFrame", null);
+    internal Task<FrameChannel> OwnerFrameAsync() => Object.SendMessageToServerAsync<FrameChannel>("ownerFrame", null);
 
     internal Task HoverAsync(
         IEnumerable<KeyboardModifier> modifiers,
@@ -168,10 +163,10 @@ internal class ElementHandleChannel : JSHandleChannel, IChannel<ElementHandle>
             ["noWaitAfter"] = noWaitAfter,
         };
 
-        return Connection.SendMessageToServerAsync<JsonElement?>(Guid, "hover", args);
+        return Object.SendMessageToServerAsync<JsonElement?>("hover", args);
     }
 
-    internal Task FocusAsync() => Connection.SendMessageToServerAsync(Guid, "focus", null);
+    internal Task FocusAsync() => Object.SendMessageToServerAsync("focus", null);
 
     internal Task ClickAsync(
         float? delay,
@@ -197,7 +192,7 @@ internal class ElementHandleChannel : JSHandleChannel, IChannel<ElementHandle>
             ["modifiers"] = modifiers?.Select(m => m.ToValueString()),
         };
 
-        return Connection.SendMessageToServerAsync(Guid, "click", args);
+        return Object.SendMessageToServerAsync("click", args);
     }
 
     internal Task DblClickAsync(
@@ -222,12 +217,12 @@ internal class ElementHandleChannel : JSHandleChannel, IChannel<ElementHandle>
             ["modifiers"] = modifiers?.Select(m => m.ToValueString()),
         };
 
-        return Connection.SendMessageToServerAsync(Guid, "dblclick", args);
+        return Object.SendMessageToServerAsync("dblclick", args);
     }
 
     internal async Task<ElementHandleBoundingBoxResult> BoundingBoxAsync()
     {
-        var result = (await Connection.SendMessageToServerAsync(Guid, "boundingBox", null).ConfigureAwait(false)).Value;
+        var result = (await Object.SendMessageToServerAsync("boundingBox", null).ConfigureAwait(false)).Value;
 
         if (result.TryGetProperty("value", out var value))
         {
@@ -244,7 +239,7 @@ internal class ElementHandleChannel : JSHandleChannel, IChannel<ElementHandle>
             ["timeout"] = timeout,
         };
 
-        return Connection.SendMessageToServerAsync<ElementHandleChannel>(Guid, "scrollIntoViewIfNeeded", args);
+        return Object.SendMessageToServerAsync<ElementHandleChannel>("scrollIntoViewIfNeeded", args);
     }
 
     internal Task FillAsync(string value, bool? noWaitAfter, bool? force, float? timeout)
@@ -257,7 +252,7 @@ internal class ElementHandleChannel : JSHandleChannel, IChannel<ElementHandle>
             ["noWaitAfter"] = noWaitAfter,
         };
 
-        return Connection.SendMessageToServerAsync(Guid, "fill", args);
+        return Object.SendMessageToServerAsync("fill", args);
     }
 
     internal Task DispatchEventAsync(string type, object eventInit)
@@ -268,7 +263,7 @@ internal class ElementHandleChannel : JSHandleChannel, IChannel<ElementHandle>
             ["eventInit"] = eventInit,
         };
 
-        return Connection.SendMessageToServerAsync<ElementHandleChannel>(Guid, "dispatchEvent", args);
+        return Object.SendMessageToServerAsync<ElementHandleChannel>("dispatchEvent", args);
     }
 
     internal Task SetInputFilesAsync(IEnumerable<InputFilesList> files, bool? noWaitAfter, float? timeout)
@@ -280,7 +275,7 @@ internal class ElementHandleChannel : JSHandleChannel, IChannel<ElementHandle>
             ["noWaitAfter"] = noWaitAfter,
         };
 
-        return Connection.SendMessageToServerAsync(Guid, "setInputFiles", args);
+        return Object.SendMessageToServerAsync("setInputFiles", args);
     }
 
     internal Task SetInputFilePathsAsync(IEnumerable<string> localPaths, IEnumerable<WritableStream> streams, bool? noWaitAfter, float? timeout)
@@ -293,7 +288,7 @@ internal class ElementHandleChannel : JSHandleChannel, IChannel<ElementHandle>
             ["noWaitAfter"] = noWaitAfter,
         };
 
-        return Connection.SendMessageToServerAsync(Guid, "setInputFilePaths", args);
+        return Object.SendMessageToServerAsync("setInputFilePaths", args);
     }
 
     internal async Task<string> GetAttributeAsync(string name)
@@ -303,17 +298,17 @@ internal class ElementHandleChannel : JSHandleChannel, IChannel<ElementHandle>
             ["name"] = name,
         };
 
-        return (await Connection.SendMessageToServerAsync(Guid, "getAttribute", args).ConfigureAwait(false))?.GetProperty("value").ToString();
+        return (await Object.SendMessageToServerAsync("getAttribute", args).ConfigureAwait(false))?.GetProperty("value").ToString();
     }
 
     internal async Task<string> InnerHTMLAsync()
-        => (await Connection.SendMessageToServerAsync(Guid, "innerHTML").ConfigureAwait(false))?.GetProperty("value").ToString();
+        => (await Object.SendMessageToServerAsync("innerHTML").ConfigureAwait(false))?.GetProperty("value").ToString();
 
     internal async Task<string> InnerTextAsync()
-        => (await Connection.SendMessageToServerAsync(Guid, "innerText").ConfigureAwait(false))?.GetProperty("value").ToString();
+        => (await Object.SendMessageToServerAsync("innerText").ConfigureAwait(false))?.GetProperty("value").ToString();
 
     internal async Task<string> TextContentAsync()
-        => (await Connection.SendMessageToServerAsync(Guid, "textContent").ConfigureAwait(false))?.GetProperty("value").ToString();
+        => (await Object.SendMessageToServerAsync("textContent").ConfigureAwait(false))?.GetProperty("value").ToString();
 
     internal Task SelectTextAsync(bool? force = null, float? timeout = null)
     {
@@ -323,7 +318,7 @@ internal class ElementHandleChannel : JSHandleChannel, IChannel<ElementHandle>
             ["timeout"] = timeout,
         };
 
-        return Connection.SendMessageToServerAsync<ElementHandleChannel>(Guid, "selectText", args);
+        return Object.SendMessageToServerAsync<ElementHandleChannel>("selectText", args);
     }
 
     internal async Task<IReadOnlyList<string>> SelectOptionAsync(object values, bool? noWaitAfter = null, bool? force = null, float? timeout = null)
@@ -343,23 +338,23 @@ internal class ElementHandleChannel : JSHandleChannel, IChannel<ElementHandle>
         args["timeout"] = timeout;
         args["noWaitAfter"] = noWaitAfter;
 
-        return (await Connection.SendMessageToServerAsync(Guid, "selectOption", args).ConfigureAwait(false))?.GetProperty("values").ToObject<List<string>>().AsReadOnly();
+        return (await Object.SendMessageToServerAsync("selectOption", args).ConfigureAwait(false))?.GetProperty("values").ToObject<List<string>>().AsReadOnly();
     }
 
     internal async Task<bool> IsVisibleAsync()
-        => (await Connection.SendMessageToServerAsync(Guid, "isVisible", null).ConfigureAwait(false))?.GetProperty("value").GetBoolean() ?? default;
+        => (await Object.SendMessageToServerAsync("isVisible", null).ConfigureAwait(false))?.GetProperty("value").GetBoolean() ?? default;
 
     internal async Task<bool> IsHiddenAsync()
-        => (await Connection.SendMessageToServerAsync(Guid, "isHidden", null).ConfigureAwait(false))?.GetProperty("value").GetBoolean() ?? default;
+        => (await Object.SendMessageToServerAsync("isHidden", null).ConfigureAwait(false))?.GetProperty("value").GetBoolean() ?? default;
 
     internal async Task<bool> IsEnabledAsync()
-        => (await Connection.SendMessageToServerAsync(Guid, "isEnabled", null).ConfigureAwait(false))?.GetProperty("value").GetBoolean() ?? default;
+        => (await Object.SendMessageToServerAsync("isEnabled", null).ConfigureAwait(false))?.GetProperty("value").GetBoolean() ?? default;
 
     internal async Task<bool> IsEditableAsync()
-        => (await Connection.SendMessageToServerAsync(Guid, "isEditable", null).ConfigureAwait(false))?.GetProperty("value").GetBoolean() ?? default;
+        => (await Object.SendMessageToServerAsync("isEditable", null).ConfigureAwait(false))?.GetProperty("value").GetBoolean() ?? default;
 
     internal async Task<bool> IsDisabledAsync()
-        => (await Connection.SendMessageToServerAsync(Guid, "isDisabled", null).ConfigureAwait(false))?.GetProperty("value").GetBoolean() ?? default;
+        => (await Object.SendMessageToServerAsync("isDisabled", null).ConfigureAwait(false))?.GetProperty("value").GetBoolean() ?? default;
 
     internal async Task<string> InputValueAsync(float? timeout)
     {
@@ -368,11 +363,11 @@ internal class ElementHandleChannel : JSHandleChannel, IChannel<ElementHandle>
                 { "timeout", timeout },
             };
 
-        return (await Connection.SendMessageToServerAsync(Guid, "inputValue", args).ConfigureAwait(false))?.GetProperty("value").GetString();
+        return (await Object.SendMessageToServerAsync("inputValue", args).ConfigureAwait(false))?.GetProperty("value").GetString();
     }
 
     internal async Task<bool> IsCheckedAsync()
-        => (await Connection.SendMessageToServerAsync(Guid, "isChecked", null).ConfigureAwait(false))?.GetProperty("value").GetBoolean() ?? default;
+        => (await Object.SendMessageToServerAsync("isChecked", null).ConfigureAwait(false))?.GetProperty("value").GetBoolean() ?? default;
 
     internal Task CheckAsync(Position position, float? timeout, bool? force, bool? noWaitAfter, bool? trial)
     {
@@ -385,7 +380,7 @@ internal class ElementHandleChannel : JSHandleChannel, IChannel<ElementHandle>
             ["noWaitAfter"] = noWaitAfter,
         };
 
-        return Connection.SendMessageToServerAsync<ElementHandleChannel>(Guid, "check", args);
+        return Object.SendMessageToServerAsync<ElementHandleChannel>("check", args);
     }
 
     internal Task UncheckAsync(Position position, float? timeout, bool? force, bool? noWaitAfter, bool? trial)
@@ -399,7 +394,7 @@ internal class ElementHandleChannel : JSHandleChannel, IChannel<ElementHandle>
             ["noWaitAfter"] = noWaitAfter,
         };
 
-        return Connection.SendMessageToServerAsync<ElementHandleChannel>(Guid, "uncheck", args);
+        return Object.SendMessageToServerAsync<ElementHandleChannel>("uncheck", args);
     }
 
     internal Task TypeAsync(string text, float? delay, float? timeout, bool? noWaitAfter)
@@ -412,7 +407,7 @@ internal class ElementHandleChannel : JSHandleChannel, IChannel<ElementHandle>
             ["noWaitAfter"] = noWaitAfter,
         };
 
-        return Connection.SendMessageToServerAsync(Guid, "type", args);
+        return Object.SendMessageToServerAsync("type", args);
     }
 
     internal Task PressAsync(string key, float? delay, float? timeout, bool? noWaitAfter)
@@ -425,7 +420,7 @@ internal class ElementHandleChannel : JSHandleChannel, IChannel<ElementHandle>
             ["noWaitAfter"] = noWaitAfter,
         };
 
-        return Connection.SendMessageToServerAsync(Guid, "press", args);
+        return Object.SendMessageToServerAsync("press", args);
     }
 
     internal Task TapAsync(
@@ -446,6 +441,6 @@ internal class ElementHandleChannel : JSHandleChannel, IChannel<ElementHandle>
             ["timeout"] = timeout,
         };
 
-        return Connection.SendMessageToServerAsync(Guid, "tap", args);
+        return Object.SendMessageToServerAsync("tap", args);
     }
 }

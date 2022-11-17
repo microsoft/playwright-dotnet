@@ -37,8 +37,7 @@ internal class JSHandleChannel : Channel<JSHandle>
     }
 
     internal Task<JsonElement?> EvaluateExpressionAsync(string script, object arg)
-        => Connection.SendMessageToServerAsync<JsonElement?>(
-            Guid,
+        => Object.SendMessageToServerAsync<JsonElement?>(
             "evaluateExpression",
             new Dictionary<string, object>
             {
@@ -47,8 +46,7 @@ internal class JSHandleChannel : Channel<JSHandle>
             });
 
     internal Task<JSHandleChannel> EvaluateExpressionHandleAsync(string script, object arg)
-        => Connection.SendMessageToServerAsync<JSHandleChannel>(
-            Guid,
+        => Object.SendMessageToServerAsync<JSHandleChannel>(
             "evaluateExpressionHandle",
             new Dictionary<string, object>
             {
@@ -56,13 +54,12 @@ internal class JSHandleChannel : Channel<JSHandle>
                 ["arg"] = arg,
             });
 
-    internal Task<JsonElement> JsonValueAsync() => Connection.SendMessageToServerAsync<JsonElement>(Guid, "jsonValue");
+    internal Task<JsonElement> JsonValueAsync() => Object.SendMessageToServerAsync<JsonElement>("jsonValue");
 
-    internal Task DisposeAsync() => Connection.SendMessageToServerAsync(Guid, "dispose");
+    internal Task DisposeAsync() => Object.SendMessageToServerAsync("dispose");
 
     internal Task<JSHandleChannel> GetPropertyAsync(string propertyName)
-        => Connection.SendMessageToServerAsync<JSHandleChannel>(
-            Guid,
+        => Object.SendMessageToServerAsync<JSHandleChannel>(
             "getProperty",
             new Dictionary<string, object>
             {
@@ -70,7 +67,7 @@ internal class JSHandleChannel : Channel<JSHandle>
             });
 
     internal async Task<List<JSElementProperty>> GetPropertiesAsync()
-        => (await Connection.SendMessageToServerAsync(Guid, "getPropertyList", null).ConfigureAwait(false))?
+        => (await Object.SendMessageToServerAsync("getPropertyList", null).ConfigureAwait(false))?
             .GetProperty("properties").ToObject<List<JSElementProperty>>(Connection.DefaultJsonSerializerOptions);
 
     internal class JSElementProperty

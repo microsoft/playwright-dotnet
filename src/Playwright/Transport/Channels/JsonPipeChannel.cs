@@ -63,10 +63,10 @@ internal class JsonPipeChannel : Channel<JsonPipe>
     }
 
     internal Task SendAsync(object message) =>
-        Connection.SendMessageToServerAsync(Guid, "send", new Dictionary<string, object>
+        Object.SendMessageToServerAsync("send", new Dictionary<string, object>
         {
                 { "message", message },
         });
 
-    internal Task CloseAsync() => Connection.SendMessageToServerAsync(Guid, "close");
+    internal Task CloseAsync() => Object.SendMessageToServerAsync("close");
 }
