@@ -46,7 +46,7 @@ internal class RouteChannel : Channel<Route>
                 ["errorCode"] = string.IsNullOrEmpty(errorCode) ? RequestAbortErrorCode.Failed : errorCode,
             });
 
-    public Task FulfillAsync(IDictionary<string, object> args)
+    public Task FulfillAsync(Dictionary<string, object> args)
         => Connection.SendMessageToServerAsync(
             Guid,
             "fulfill",

@@ -49,7 +49,15 @@ internal class Waiter : IDisposable
     {
         _channelOwner = channelOwner;
 
-        var beforeArgs = new { info = new { @event = @event, waitId = _waitId, phase = "before" } };
+        var beforeArgs = new Dictionary<string, object>
+        {
+            ["info"] = new Dictionary<string, object>
+            {
+                ["event"] = @event,
+                ["waitId"] = _waitId,
+                ["phase"] = "before",
+            },
+        };
         _channelOwner.Connection.SendMessageToServerAsync(_channelOwner.Channel.Guid, "waitForEventInfo", beforeArgs).IgnoreException();
     }
 
@@ -63,7 +71,15 @@ internal class Waiter : IDisposable
                 dispose();
             }
 
-            var afterArgs = new { info = new { waitId = _waitId, phase = "after", error = _error } };
+            var afterArgs = new Dictionary<string, object>
+            {
+                ["info"] = new Dictionary<string, object>
+                {
+                    ["waitId"] = _waitId,
+                    ["phase"] = "after",
+                    ["error"] = _error,
+                },
+            };
             _channelOwner.WrapApiCallAsync(() => _channelOwner.Connection.SendMessageToServerAsync(_channelOwner.Channel.Guid, "waitForEventInfo", afterArgs), true).IgnoreException();
 
             _cts.Cancel();
@@ -75,7 +91,15 @@ internal class Waiter : IDisposable
     {
         _logs.Add(log);
 
-        var logArgs = new { info = new { waitId = _waitId, phase = "log", message = log } };
+        var logArgs = new Dictionary<string, object>
+        {
+            ["info"] = new Dictionary<string, object>
+            {
+                ["waitId"] = _waitId,
+                ["phase"] = "log",
+                ["message"] = log,
+            },
+        };
         _channelOwner.WrapApiCallAsync(() => _channelOwner.Connection.SendMessageToServerAsync(_channelOwner.Channel.Guid, "waitForEventInfo", logArgs), true).IgnoreException();
     }
 

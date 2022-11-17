@@ -23,6 +23,7 @@
 */
 
 using System;
+using System.Collections.Generic;
 using System.Text.Json;
 using System.Threading.Tasks;
 using Microsoft.Playwright.Core;
@@ -40,9 +41,9 @@ internal class BindingCallChannel : Channel<BindingCall>
         => await Connection.SendMessageToServerAsync<JsonElement>(
             Guid,
             "reject",
-            new
+            new Dictionary<string, object>
             {
-                error = error.ToObject(),
+                ["error"] = error.ToObject(),
             })
             .ConfigureAwait(false);
 
@@ -50,9 +51,9 @@ internal class BindingCallChannel : Channel<BindingCall>
         => await Connection.SendMessageToServerAsync<JsonElement>(
             Guid,
             "resolve",
-            new
+            new Dictionary<string, object>
             {
-                result = result,
+                ["result"] = result,
             })
             .ConfigureAwait(false);
 }

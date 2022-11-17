@@ -48,7 +48,7 @@ internal class PlaywrightChannel : Channel<PlaywrightImpl>
         string storageState = null,
         string storageStatePath = null)
     {
-        IDictionary<string, object> args = new Dictionary<string, object>()
+        var args = new Dictionary<string, object>()
         {
             ["baseURL"] = baseURL,
             ["userAgent"] = userAgent,
