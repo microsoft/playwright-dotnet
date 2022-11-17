@@ -22,6 +22,7 @@
  * SOFTWARE.
  */
 
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.Playwright.Core;
 using Microsoft.Playwright.Helpers;
@@ -39,9 +40,9 @@ internal class Root : ChannelOwnerBase
 
     internal async Task<PlaywrightImpl> InitializeAsync()
     {
-        var args = new
+        var args = new Dictionary<string, object>
         {
-            sdkLanguage = "csharp",
+            ["sdkLanguage"] = "csharp",
         };
 
         var jsonElement = await _connection.SendMessageToServerAsync(string.Empty, "initialize", args).ConfigureAwait(false);

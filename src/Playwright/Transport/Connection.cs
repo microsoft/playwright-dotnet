@@ -27,7 +27,6 @@
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Diagnostics;
 using System.Linq;
 using System.Text.Json;
@@ -90,18 +89,18 @@ internal class Connection : IDisposable
     internal Task<JsonElement?> SendMessageToServerAsync(
         string guid,
         string method,
-        object args = null)
+        Dictionary<string, object> args = null)
         => SendMessageToServerAsync<JsonElement?>(guid, method, args);
 
     internal Task<T> SendMessageToServerAsync<T>(
         string guid,
         string method,
-        object args = null) => WrapApiCallAsync(() => InnerSendMessageToServerAsync<T>(guid, method, args));
+        Dictionary<string, object> args = null) => WrapApiCallAsync(() => InnerSendMessageToServerAsync<T>(guid, method, args));
 
     private async Task<T> InnerSendMessageToServerAsync<T>(
         string guid,
         string method,
-        object args = null)
+        Dictionary<string, object> dictionary = null)
     {
         if (!string.IsNullOrEmpty(_closedErrorMessage))
         {
@@ -118,30 +117,11 @@ internal class Connection : IDisposable
         _callbacks.TryAdd(id, callback);
 
         var sanitizedArgs = new Dictionary<string, object>();
-        if (args != null)
+        if (dictionary != null && dictionary.Keys.Any(f => f != null))
         {
-            if (args is IDictionary<string, object> dictionary && dictionary.Keys.Any(f => f != null))
-            {
-                foreach (var kv in dictionary)
-                {
-                    if (kv.Value != null)
-                    {
-                        sanitizedArgs.Add(kv.Key, kv.Value);
-                    }
-                }
-            }
-            else
-            {
-                foreach (PropertyDescriptor propertyDescriptor in TypeDescriptor.GetProperties(args))
-                {
-                    object obj = propertyDescriptor.GetValue(args);
-                    if (obj != null)
-                    {
-                        string name = propertyDescriptor.Name.Substring(0, 1).ToLowerInvariant() + propertyDescriptor.Name.Substring(1);
-                        sanitizedArgs.Add(name, obj);
-                    }
-                }
-            }
+            sanitizedArgs = dictionary
+                .Where(f => f.Value != null)
+                .ToDictionary(f => f.Key, f => f.Value);
         }
 
         await _queue.EnqueueAsync(() =>

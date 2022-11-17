@@ -120,7 +120,7 @@ internal class Route : ChannelOwnerBase, IChannelOwner<Route>, IRoute
         }
     }
 
-    private async Task<IDictionary<string, object>> NormalizeFulfillParametersAsync(
+    private async Task<Dictionary<string, object>> NormalizeFulfillParametersAsync(
         int? status,
         IEnumerable<KeyValuePair<string, string>> headers,
         string contentType,

@@ -23,6 +23,7 @@
  */
 
 using System;
+using System.Collections.Generic;
 using System.Text.Json;
 using System.Threading.Tasks;
 using Microsoft.Playwright.Core;
@@ -55,11 +56,11 @@ internal class WorkerChannel : Channel<Worker>
             => (await Connection.SendMessageToServerAsync<JsonElement>(
                 Guid,
                 "evaluateExpression",
-                new
+                new Dictionary<string, object>
                 {
-                    expression = expression,
-                    isFunction = isFunction,
-                    arg = arg,
+                    ["expression"] = expression,
+                    ["isFunction"] = isFunction,
+                    ["arg"] = arg,
                 })
                 .ConfigureAwait(false)).GetProperty("value");
 
@@ -70,11 +71,11 @@ internal class WorkerChannel : Channel<Worker>
         => (await Connection.SendMessageToServerAsync<JsonElement>(
             Guid,
             "evaluateExpressionHandle",
-            new
+            new Dictionary<string, object>
             {
-                expression = expression,
-                isFunction = isFunction,
-                arg = arg,
+                ["expression"] = expression,
+                ["isFunction"] = isFunction,
+                ["arg"] = arg,
             })
             .ConfigureAwait(false)).GetObject<JSHandle>("handle", Connection);
 }

@@ -22,6 +22,7 @@
 * SOFTWARE.
 */
 
+using System.Collections.Generic;
 using System.Text.Json;
 using System.Threading.Tasks;
 using Microsoft.Playwright.Core;
@@ -46,9 +47,9 @@ internal class ArtifactChannel : Channel<Artifact>
         => await Connection.SendMessageToServerAsync<JsonElement>(
             Guid,
             "saveAs",
-            new
+            new Dictionary<string, object>
             {
-                path = path,
+                ["path"] = path,
             })
             .ConfigureAwait(false);
 

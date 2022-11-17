@@ -39,11 +39,11 @@ internal class SelectorsChannel : Channel<Selectors>
         => await Connection.SendMessageToServerAsync<JsonElement>(
             Guid,
             "register",
-            new
+            new Dictionary<string, object>
             {
-                name = @params.Name,
-                source = @params.Source,
-                contentScript = @params.ContentScript,
+                ["name"] = @params.Name,
+                ["source"] = @params.Source,
+                ["contentScript"] = @params.ContentScript,
             })
             .ConfigureAwait(false);
 
