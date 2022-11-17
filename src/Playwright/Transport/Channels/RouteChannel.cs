@@ -58,16 +58,9 @@ internal class RouteChannel : Channel<Route>
         {
             ["url"] = url,
             ["method"] = method,
+            ["postData"] = postData != null ? Convert.ToBase64String(postData) : null,
+            ["headers"] = headers?.Select(kv => new HeaderEntry { Name = kv.Key, Value = kv.Value }).ToArray(),
         };
-        if (postData != null)
-        {
-            args["postData"] = Convert.ToBase64String(postData);
-        }
-
-        if (headers != null)
-        {
-            args["headers"] = headers.Select(kv => new HeaderEntry { Name = kv.Key, Value = kv.Value }).ToArray();
-        }
 
         return Connection.SendMessageToServerAsync(
             Guid,

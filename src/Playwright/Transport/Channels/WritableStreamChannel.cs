@@ -45,5 +45,5 @@ internal class WritableStreamChannel : Channel<WritableStream>
             }).ConfigureAwait(false);
     }
 
-    internal Task CloseAsync() => Connection.SendMessageToServerAsync(Guid, "close", null);
+    internal Task CloseAsync() => Connection.SendMessageToServerAsync(Guid, "close");
 }

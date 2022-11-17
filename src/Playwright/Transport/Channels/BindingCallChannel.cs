@@ -37,23 +37,21 @@ internal class BindingCallChannel : Channel<BindingCall>
     {
     }
 
-    internal async Task RejectAsync(Exception error)
-        => await Connection.SendMessageToServerAsync<JsonElement>(
+    internal Task RejectAsync(Exception error)
+        => Connection.SendMessageToServerAsync<JsonElement>(
             Guid,
             "reject",
             new Dictionary<string, object>
             {
                 ["error"] = error.ToObject(),
-            })
-            .ConfigureAwait(false);
+            });
 
-    internal async Task ResolveAsync(object result)
-        => await Connection.SendMessageToServerAsync<JsonElement>(
+    internal Task ResolveAsync(object result)
+        => Connection.SendMessageToServerAsync<JsonElement>(
             Guid,
             "resolve",
             new Dictionary<string, object>
             {
                 ["result"] = result,
-            })
-            .ConfigureAwait(false);
+            });
 }

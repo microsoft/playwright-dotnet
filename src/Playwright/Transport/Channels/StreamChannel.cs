@@ -46,5 +46,5 @@ internal class StreamChannel : Channel<Stream>
         return response.Value.GetProperty("binary").GetBytesFromBase64();
     }
 
-    internal Task CloseAsync() => Connection.SendMessageToServerAsync(Guid, "close", null);
+    internal Task CloseAsync() => Connection.SendMessageToServerAsync(Guid, "close");
 }

@@ -56,9 +56,9 @@ internal class JSHandleChannel : Channel<JSHandle>
                 ["arg"] = arg,
             });
 
-    internal Task<JsonElement> JsonValueAsync() => Connection.SendMessageToServerAsync<JsonElement>(Guid, "jsonValue", null);
+    internal Task<JsonElement> JsonValueAsync() => Connection.SendMessageToServerAsync<JsonElement>(Guid, "jsonValue");
 
-    internal Task DisposeAsync() => Connection.SendMessageToServerAsync(Guid, "dispose", null);
+    internal Task DisposeAsync() => Connection.SendMessageToServerAsync(Guid, "dispose");
 
     internal Task<JSHandleChannel> GetPropertyAsync(string propertyName)
         => Connection.SendMessageToServerAsync<JSHandleChannel>(

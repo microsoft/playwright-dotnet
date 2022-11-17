@@ -136,42 +136,57 @@ internal class BrowserTypeChannel : Channel<Core.BrowserType>
         bool? strictSelectors = default)
     {
         var channelArgs = new Dictionary<string, object>
-            {
-                { "userDataDir", userDataDir },
-                { "headless", headless },
-                { "channel", channel },
-                { "executablePath", executablePath },
-                { "args", args },
-                { "downloadsPath", downloadsPath },
-                { "tracesDir", tracesDir },
-                { "proxy", proxy },
-                { "chromiumSandbox", chromiumSandbox },
-                { "handleSIGINT", handleSIGINT },
-                { "handleSIGTERM", handleSIGTERM },
-                { "handleSIGHUP", handleSIGHUP },
-                { "timeout", timeout },
-                { "env", env.ToProtocol() },
-                { "devtools", devtools },
-                { "slowMo", slowMo },
-                { "acceptDownloads", acceptDownloads },
-                { "ignoreHTTPSErrors", ignoreHTTPSErrors },
-                { "bypassCSP", bypassCSP },
-                { "strictSelectors", strictSelectors },
-                { "serviceWorkers", serviceWorkers },
-            };
-
-        var recordHarOptions = BrowserChannel.PrepareHarOptions(
-            recordHarContent: recordHarContent,
-            recordHarMode: recordHarMode,
-            recordHarPath: recordHarPath,
-            recordHarOmitContent: recordHarOmitContent,
-            recordHarUrlFilter: recordHarUrlFilter,
-            recordHarUrlFilterString: recordHarUrlFilterString,
-            recordHarUrlFilterRegex: recordHarUrlFilterRegex);
-        if (recordHarOptions != null)
         {
-            channelArgs["recordHar"] = recordHarOptions;
-        }
+            ["userDataDir"] = userDataDir,
+            ["headless"] = headless,
+            ["channel"] = channel,
+            ["executablePath"] = executablePath,
+            ["args"] = args,
+            ["downloadsPath"] = downloadsPath,
+            ["tracesDir"] = tracesDir,
+            ["proxy"] = proxy,
+            ["chromiumSandbox"] = chromiumSandbox,
+            ["handleSIGINT"] = handleSIGINT,
+            ["handleSIGTERM"] = handleSIGTERM,
+            ["handleSIGHUP"] = handleSIGHUP,
+            ["timeout"] = timeout,
+            ["env"] = env.ToProtocol(),
+            ["devtools"] = devtools,
+            ["slowMo"] = slowMo,
+            ["acceptDownloads"] = acceptDownloads,
+            ["ignoreHTTPSErrors"] = ignoreHTTPSErrors,
+            ["bypassCSP"] = bypassCSP,
+            ["strictSelectors"] = strictSelectors,
+            ["serviceWorkers"] = serviceWorkers,
+            ["screensize"] = screenSize,
+            ["userAgent"] = userAgent,
+            ["deviceScaleFactor"] = deviceScaleFactor,
+            ["isMobile"] = isMobile,
+            ["hasTouch"] = hasTouch,
+            ["javaScriptEnabled"] = javaScriptEnabled,
+            ["timezoneId"] = timezoneId,
+            ["geolocation"] = geolocation,
+            ["locale"] = locale,
+            ["permissions"] = permissions,
+            ["extraHTTPHeaders"] = extraHTTPHeaders.ToProtocol(),
+            ["offline"] = offline,
+            ["httpCredentials"] = httpCredentials,
+            ["colorScheme"] = colorScheme == ColorScheme.Null ? "no-override" : colorScheme,
+            ["reducedMotion"] = reducedMotion == ReducedMotion.Null ? "no-override" : reducedMotion,
+            ["forcedColors"] = forcedColors == ForcedColors.Null ? "no-override" : forcedColors,
+            ["recordVideo"] = recordVideo,
+            ["ignoreDefaultArgs"] = ignoreDefaultArgs,
+            ["ignoreAllDefaultArgs"] = ignoreAllDefaultArgs,
+            ["baseURL"] = baseUrl,
+            ["recordHar"] = BrowserChannel.PrepareHarOptions(
+                    recordHarContent: recordHarContent,
+                    recordHarMode: recordHarMode,
+                    recordHarPath: recordHarPath,
+                    recordHarOmitContent: recordHarOmitContent,
+                    recordHarUrlFilter: recordHarUrlFilter,
+                    recordHarUrlFilterString: recordHarUrlFilterString,
+                    recordHarUrlFilterRegex: recordHarUrlFilterRegex),
+        };
 
         if (viewportSize?.Width == -1)
         {
@@ -181,32 +196,6 @@ internal class BrowserTypeChannel : Channel<Core.BrowserType>
         {
             channelArgs.Add("viewport", viewportSize);
         }
-
-        channelArgs.Add("screensize", screenSize);
-        channelArgs.Add("userAgent", userAgent);
-        channelArgs.Add("deviceScaleFactor", deviceScaleFactor);
-        channelArgs.Add("isMobile", isMobile);
-        channelArgs.Add("hasTouch", hasTouch);
-        channelArgs.Add("javaScriptEnabled", javaScriptEnabled);
-        channelArgs.Add("timezoneId", timezoneId);
-        channelArgs.Add("geolocation", geolocation);
-        channelArgs.Add("locale", locale);
-        channelArgs.Add("permissions", permissions);
-        channelArgs.Add("extraHTTPHeaders", extraHTTPHeaders.ToProtocol());
-        channelArgs.Add("offline", offline);
-        channelArgs.Add("httpCredentials", httpCredentials);
-        channelArgs.Add("colorScheme", colorScheme == ColorScheme.Null ? "no-override" : colorScheme);
-        channelArgs.Add("reducedMotion", reducedMotion == ReducedMotion.Null ? "no-override" : reducedMotion);
-        channelArgs.Add("forcedColors", forcedColors == ForcedColors.Null ? "no-override" : forcedColors);
-
-        if (recordVideo != null)
-        {
-            channelArgs.Add("recordVideo", recordVideo);
-        }
-
-        channelArgs.Add("ignoreDefaultArgs", ignoreDefaultArgs);
-        channelArgs.Add("ignoreAllDefaultArgs", ignoreAllDefaultArgs);
-        channelArgs.Add("baseURL", baseUrl);
 
         return Connection.SendMessageToServerAsync<BrowserContextChannel>(Guid, "launchPersistentContext", channelArgs);
     }

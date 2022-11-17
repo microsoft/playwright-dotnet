@@ -386,15 +386,12 @@ internal class PageChannel : Channel<Page>
             ["caret"] = caret,
             ["scale"] = scale,
             ["quality"] = quality,
-        };
-        if (mask != null)
-        {
-            args["mask"] = mask.Select(locator => new Dictionary<string, object>
+            ["mask"] = mask?.Select(locator => new Dictionary<string, object>
             {
                 ["frame"] = ((Locator)locator)._frame._channel,
                 ["selector"] = ((Locator)locator)._selector,
-            }).ToArray();
-        }
+            }).ToArray(),
+        };
         return (await Connection.SendMessageToServerAsync(Guid, "screenshot", args).ConfigureAwait(false))?.GetProperty("binary").GetBytesFromBase64();
     }
 

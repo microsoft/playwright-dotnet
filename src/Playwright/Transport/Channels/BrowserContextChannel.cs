@@ -115,7 +115,7 @@ internal class BrowserContextChannel : Channel<BrowserContext>
     internal Task CloseAsync() => Connection.SendMessageToServerAsync(Guid, "close");
 
     internal Task PauseAsync()
-        => Connection.SendMessageToServerAsync(Guid, "pause", null);
+        => Connection.SendMessageToServerAsync(Guid, "pause");
 
     internal Task SetDefaultNavigationTimeoutNoReplyAsync(float timeout)
         => Connection.SendMessageToServerAsync<PageChannel>(
@@ -197,17 +197,12 @@ internal class BrowserContextChannel : Channel<BrowserContext>
         var args = new Dictionary<string, object>
         {
             ["permissions"] = permissions?.ToArray(),
+            ["origin"] = origin,
         };
-
-        if (origin != null)
-        {
-            args["origin"] = origin;
-        }
-
         return Connection.SendMessageToServerAsync<PageChannel>(Guid, "grantPermissions", args);
     }
 
-    internal Task ClearPermissionsAsync() => Connection.SendMessageToServerAsync<PageChannel>(Guid, "clearPermissions", null);
+    internal Task ClearPermissionsAsync() => Connection.SendMessageToServerAsync<PageChannel>(Guid, "clearPermissions");
 
     internal Task SetGeolocationAsync(Geolocation geolocation)
         => Connection.SendMessageToServerAsync<PageChannel>(
@@ -218,7 +213,7 @@ internal class BrowserContextChannel : Channel<BrowserContext>
                 ["geolocation"] = geolocation,
             });
 
-    internal Task ClearCookiesAsync() => Connection.SendMessageToServerAsync<PageChannel>(Guid, "clearCookies", null);
+    internal Task ClearCookiesAsync() => Connection.SendMessageToServerAsync<PageChannel>(Guid, "clearCookies");
 
     internal Task SetExtraHTTPHeadersAsync(IEnumerable<KeyValuePair<string, string>> headers)
         => Connection.SendMessageToServerAsync(
@@ -256,20 +251,17 @@ internal class BrowserContextChannel : Channel<BrowserContext>
                 { "page", page?.Channel },
                 { "options", BrowserChannel.PrepareHarOptions(HarContentPolicy.Attach, HarMode.Minimal, path, null, recordHarUrlFilter, recordHarUrlFilterString, recordHarUrlFilterRegex) },
             };
-        var result = await Connection.SendMessageToServerAsync(
-        Guid,
-        "harStart",
-        args).ConfigureAwait(false);
+        var result = await Connection.SendMessageToServerAsync(Guid, "harStart", args).ConfigureAwait(false);
         return result.GetString("harId", false);
     }
 
     internal async Task<WritableStream> CreateTempFileAsync(string name)
     {
-        var channelArgs = new Dictionary<string, object>
+        var args = new Dictionary<string, object>
             {
                 { "name", name },
             };
-        var result = await Connection.SendMessageToServerAsync(Guid, "createTempFile", channelArgs).ConfigureAwait(false);
+        var result = await Connection.SendMessageToServerAsync(Guid, "createTempFile", args).ConfigureAwait(false);
         return result.GetObject<WritableStream>("writableStream", Connection);
     }
 }

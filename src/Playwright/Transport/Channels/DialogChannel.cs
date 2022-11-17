@@ -43,5 +43,5 @@ internal class DialogChannel : Channel<Dialog>
                 ["promptText"] = promptText,
             });
 
-    internal Task DismissAsync() => Connection.SendMessageToServerAsync<PageChannel>(Guid, "dismiss", null);
+    internal Task DismissAsync() => Connection.SendMessageToServerAsync<PageChannel>(Guid, "dismiss");
 }

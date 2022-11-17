@@ -158,7 +158,7 @@ internal class FrameChannel : Channel<Frame>
                 ["arg"] = arg,
             });
 
-    internal Task<ElementHandleChannel> FrameElementAsync() => Connection.SendMessageToServerAsync<ElementHandleChannel>(Guid, "frameElement", null);
+    internal Task<ElementHandleChannel> FrameElementAsync() => Connection.SendMessageToServerAsync<ElementHandleChannel>(Guid, "frameElement");
 
     internal async Task<string> TitleAsync()
         => (await Connection.SendMessageToServerAsync(Guid, "title", null).ConfigureAwait(false))?.GetProperty("value").ToString();
@@ -227,19 +227,19 @@ internal class FrameChannel : Channel<Frame>
 
     internal Task<ResponseChannel> WaitForNavigationAsync(LoadState? waitUntil, string url, float? timeout)
     {
-        var param = new Dictionary<string, object>
+        var args = new Dictionary<string, object>
         {
             ["timeout"] = timeout,
             ["url"] = url,
             ["waitUntil"] = waitUntil,
         };
 
-        return Connection.SendMessageToServerAsync<ResponseChannel>(Guid, "waitForNavigation", param);
+        return Connection.SendMessageToServerAsync<ResponseChannel>(Guid, "waitForNavigation", args);
     }
 
     internal Task WaitForLoadStateAsync(LoadState? state, float? timeout)
     {
-        var param = new Dictionary<string, object>
+        var args = new Dictionary<string, object>
         {
             ["timeout"] = timeout,
             ["state"] = state,
@@ -248,7 +248,7 @@ internal class FrameChannel : Channel<Frame>
         return Connection.SendMessageToServerAsync(
             Guid,
             "waitForLoadState",
-            param);
+            args);
     }
 
     internal async Task<int> QueryCountAsync(string selector)
@@ -530,10 +530,7 @@ internal class FrameChannel : Channel<Frame>
     }
 
     internal async Task<string> ContentAsync()
-        => (await Connection.SendMessageToServerAsync(
-            Guid,
-            "content",
-            null).ConfigureAwait(false))?.GetProperty("value").ToString();
+        => (await Connection.SendMessageToServerAsync(Guid, "content").ConfigureAwait(false))?.GetProperty("value").ToString();
 
     internal Task FocusAsync(string selector, float? timeout, bool? strict)
     {
