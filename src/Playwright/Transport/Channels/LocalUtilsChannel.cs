@@ -88,13 +88,13 @@ internal class LocalUtilsChannel : Channel<LocalUtils>
 
     internal Task<JsonPipeChannel> ConnectAsync(string wsEndpoint, IEnumerable<KeyValuePair<string, string>> headers, float? slowMo, float? timeout)
     {
-        var channelArgs = new Dictionary<string, object>
+        var args = new Dictionary<string, object>
             {
                 { "wsEndpoint", wsEndpoint },
                 { "headers", headers },
                 { "slowMo", slowMo },
                 { "timeout", timeout },
             };
-        return Connection.SendMessageToServerAsync<JsonPipeChannel>(Guid, "connect", channelArgs);
+        return Connection.SendMessageToServerAsync<JsonPipeChannel>(Guid, "connect", args);
     }
 }

@@ -36,7 +36,7 @@ internal class RequestChannel : Channel<Request>
     {
     }
 
-    internal Task<ResponseChannel> GetResponseAsync() => Connection.SendMessageToServerAsync<ResponseChannel>(Guid, "response", null);
+    internal Task<ResponseChannel> GetResponseAsync() => Connection.SendMessageToServerAsync<ResponseChannel>(Guid, "response");
 
     internal async Task<List<NameValue>> GetRawRequestHeadersAsync() =>
         (await Connection.SendMessageToServerAsync(Guid, "rawRequestHeaders", null).ConfigureAwait(false))?.GetProperty("headers").ToObject<List<NameValue>>();

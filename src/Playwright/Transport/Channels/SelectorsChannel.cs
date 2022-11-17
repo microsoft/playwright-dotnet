@@ -35,8 +35,8 @@ internal class SelectorsChannel : Channel<Selectors>
     {
     }
 
-    internal async Task RegisterAsync(SelectorsRegisterParams @params)
-        => await Connection.SendMessageToServerAsync<JsonElement>(
+    internal Task RegisterAsync(SelectorsRegisterParams @params)
+        => Connection.SendMessageToServerAsync<JsonElement>(
             Guid,
             "register",
             new Dictionary<string, object>
@@ -44,8 +44,7 @@ internal class SelectorsChannel : Channel<Selectors>
                 ["name"] = @params.Name,
                 ["source"] = @params.Source,
                 ["contentScript"] = @params.ContentScript,
-            })
-            .ConfigureAwait(false);
+            });
 
     internal Task SetTestIdAttributeAsync(string name)
         => Connection.SendMessageToServerAsync<JsonElement>(

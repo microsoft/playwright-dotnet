@@ -138,51 +138,40 @@ internal class BrowserChannel : Channel<Browser>
         bool? strictSelectors = default)
     {
         var args = new Dictionary<string, object>
-            {
-                { "acceptDownloads", acceptDownloads },
-                { "bypassCSP", bypassCSP },
-                { "deviceScaleFactor", deviceScaleFactor },
-                { "serviceWorkers", serviceWorkers },
-            };
-
-        if (extraHTTPHeaders != null)
         {
-            args["extraHTTPHeaders"] = extraHTTPHeaders.Select(kv => new HeaderEntry { Name = kv.Key, Value = kv.Value }).ToArray();
-        }
+            ["acceptDownloads"] = acceptDownloads,
+            ["bypassCSP"] = bypassCSP,
+            ["deviceScaleFactor"] = deviceScaleFactor,
+            ["serviceWorkers"] = serviceWorkers,
+            ["geolocation"] = geolocation,
+            ["hasTouch"] = hasTouch,
+            ["httpCredentials"] = httpCredentials,
+            ["ignoreHTTPSErrors"] = ignoreHTTPSErrors,
+            ["isMobile"] = isMobile,
+            ["javaScriptEnabled"] = javaScriptEnabled,
+            ["locale"] = locale,
+            ["offline"] = offline,
+            ["permissions"] = permissions,
+            ["proxy"] = proxy,
+            ["strictSelectors"] = strictSelectors,
+            ["colorScheme"] = colorScheme == ColorScheme.Null ? "no-override" : colorScheme,
+            ["reducedMotion"] = reducedMotion == ReducedMotion.Null ? "no-override" : reducedMotion,
+            ["forcedColors"] = forcedColors == ForcedColors.Null ? "no-override" : forcedColors,
+            ["extraHTTPHeaders"] = extraHTTPHeaders?.Select(kv => new HeaderEntry { Name = kv.Key, Value = kv.Value }).ToArray(),
+            ["recordHar"] = PrepareHarOptions(
+                    recordHarContent: recordHarContent,
+                    recordHarMode: recordHarMode,
+                    recordHarPath: recordHarPath,
+                    recordHarOmitContent: recordHarOmitContent,
+                    recordHarUrlFilter: recordHarUrlFilter,
+                    recordHarUrlFilterString: recordHarUrlFilterString,
+                    recordHarUrlFilterRegex: recordHarUrlFilterRegex),
+            ["recordVideo"] = recordVideo,
+            ["timezoneId"] = timezoneId,
+            ["userAgent"] = userAgent,
+            ["baseURL"] = baseUrl,
+        };
 
-        args.Add("geolocation", geolocation);
-        args.Add("hasTouch", hasTouch);
-        args.Add("httpCredentials", httpCredentials);
-        args.Add("ignoreHTTPSErrors", ignoreHTTPSErrors);
-        args.Add("isMobile", isMobile);
-        args.Add("javaScriptEnabled", javaScriptEnabled);
-        args.Add("locale", locale);
-        args.Add("offline", offline);
-        args.Add("permissions", permissions);
-        args.Add("proxy", proxy);
-        args.Add("strictSelectors", strictSelectors);
-
-        args.Add("colorScheme", colorScheme == ColorScheme.Null ? "no-override" : colorScheme);
-        args.Add("reducedMotion", reducedMotion == ReducedMotion.Null ? "no-override" : reducedMotion);
-        args.Add("forcedColors", forcedColors == ForcedColors.Null ? "no-override" : forcedColors);
-
-        var recordHarOptions = PrepareHarOptions(
-            recordHarContent: recordHarContent,
-            recordHarMode: recordHarMode,
-            recordHarPath: recordHarPath,
-            recordHarOmitContent: recordHarOmitContent,
-            recordHarUrlFilter: recordHarUrlFilter,
-            recordHarUrlFilterString: recordHarUrlFilterString,
-            recordHarUrlFilterRegex: recordHarUrlFilterRegex);
-        if (recordHarOptions != null)
-        {
-            args["recordHar"] = recordHarOptions;
-        }
-
-        if (recordVideo != null)
-        {
-            args.Add("recordVideo", recordVideo);
-        }
 
         if (!string.IsNullOrEmpty(storageStatePath))
         {
@@ -199,9 +188,6 @@ internal class BrowserChannel : Channel<Browser>
             args.Add("storageState", JsonSerializer.Deserialize<StorageState>(storageState, Helpers.JsonExtensions.DefaultJsonSerializerOptions));
         }
 
-        args.Add("timezoneId", timezoneId);
-        args.Add("userAgent", userAgent);
-
         if (viewportSize?.Width == -1)
         {
             args.Add("noDefaultViewport", true);
@@ -211,8 +197,6 @@ internal class BrowserChannel : Channel<Browser>
             args.Add("viewport", viewportSize);
             args.Add("screen", screenSize);
         }
-
-        args.Add("baseURL", baseUrl);
 
         return Connection.SendMessageToServerAsync<BrowserContextChannel>(
             Guid,
