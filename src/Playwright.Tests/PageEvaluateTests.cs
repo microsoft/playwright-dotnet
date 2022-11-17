@@ -571,6 +571,22 @@ public class PageEvaluateTests : PageTestEx
         Assert.AreEqual(date, result);
     }
 
+    [PlaywrightTest("page-evaluate.spec.ts", "should roundtrip Guid")]
+    public async Task ShouldRoundtripGuid()
+    {
+        {
+            var guid = Guid.Parse("{08d15efd-bd4f-4244-b46e-2238964e0e36}");
+            await Page.PauseAsync();
+            var result = await Page.EvaluateAsync<Guid>("guid => guid", guid);
+            Assert.AreEqual(guid, result);
+        }
+        {
+            var guid = Guid.Parse("08d15efd-bd4f-4244-b46e-2238964e0e36");
+            var result = await Page.EvaluateAsync<Guid>("guid => guid", guid);
+            Assert.AreEqual(guid, result);
+        }
+    }
+
     [PlaywrightTest("page-evaluate.spec.ts", "should evaluate url")]
     public async Task ShouldEvaluateUrl()
     {
