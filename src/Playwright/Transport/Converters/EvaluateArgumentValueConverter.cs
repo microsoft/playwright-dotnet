@@ -118,6 +118,11 @@ internal static class EvaluateArgumentValueConverter
             return new { r = new { p = regex.ToString(), f = regex.Options.GetInlineFlags() } };
         }
 
+        if (value is Guid guid)
+        {
+            return new { s = guid.ToString() };
+        }
+
         if (value is ExpandoObject)
         {
             var o = new List<object>();

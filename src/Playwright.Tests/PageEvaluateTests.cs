@@ -182,13 +182,6 @@ public class PageEvaluateTests : PageTestEx
         Assert.AreEqual(42, result);
     }
 
-    [PlaywrightTest("page-evaluate.spec.ts", "should work with GUID")]
-    public async Task ShouldWorkWithGUID()
-    {
-        Guid result = await Page.EvaluateAsync<Guid>("() => '{08d15efd-bd4f-4244-b46e-2238964e0e36}'");
-        Assert.AreEqual(Guid.Parse("{08d15efd-bd4f-4244-b46e-2238964e0e36}"), result);
-    }
-
     [PlaywrightTest("page-evaluate.spec.ts", "should throw when evaluation triggers reload")]
     public async Task ShouldThrowWhenEvaluationTriggersReload()
     {
@@ -576,6 +569,22 @@ public class PageEvaluateTests : PageTestEx
         var date = new DateTime(2020, 05, 27, 1, 31, 38, 506, DateTimeKind.Utc);
         var result = await Page.EvaluateAsync<DateTime>(@"date => date", date);
         Assert.AreEqual(date, result);
+    }
+
+    [PlaywrightTest("page-evaluate.spec.ts", "should roundtrip Guid")]
+    public async Task ShouldRoundtripGuid()
+    {
+        {
+            var guid = Guid.Parse("{08d15efd-bd4f-4244-b46e-2238964e0e36}");
+            await Page.PauseAsync();
+            var result = await Page.EvaluateAsync<Guid>("guid => guid", guid);
+            Assert.AreEqual(guid, result);
+        }
+        {
+            var guid = Guid.Parse("08d15efd-bd4f-4244-b46e-2238964e0e36");
+            var result = await Page.EvaluateAsync<Guid>("guid => guid", guid);
+            Assert.AreEqual(guid, result);
+        }
     }
 
     [PlaywrightTest("page-evaluate.spec.ts", "should evaluate url")]
