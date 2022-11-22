@@ -40,9 +40,9 @@ internal class StdIOTransport : IDisposable
     private readonly List<byte> _data = new();
     private int? _currentMessageSize;
 
-    internal StdIOTransport(Dictionary<string, string> additionalEnvironmentVariables)
+    internal StdIOTransport(PlaywrightCreateOptions playwrightCreateOptions)
     {
-        _process = GetProcess(additionalEnvironmentVariables);
+        _process = GetProcess(playwrightCreateOptions);
         _process.StartInfo.Arguments = "run-driver";
         _process.Start();
         _process.Exited += (_, _) => Close("Process exited");
@@ -110,7 +110,7 @@ internal class StdIOTransport : IDisposable
         }
     }
 
-    private static Process GetProcess(Dictionary<string, string> additionalEnvironmentVariables)
+    private static Process GetProcess(PlaywrightCreateOptions playwrightCreateOptions)
     {
         var startInfo = new ProcessStartInfo(Driver.GetExecutablePath())
         {
@@ -122,9 +122,9 @@ internal class StdIOTransport : IDisposable
         };
 
         var environmentVariables = Driver.GetEnvironmentVariables().AsEnumerable();
-        if (additionalEnvironmentVariables is not null)
+        if (playwrightCreateOptions is not null)
         {
-            environmentVariables = environmentVariables.Union(additionalEnvironmentVariables);
+            environmentVariables = environmentVariables.Union(playwrightCreateOptions.BuildEnvironmentVariables());
         }
 
         foreach (var pair in environmentVariables)
