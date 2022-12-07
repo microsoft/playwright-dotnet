@@ -511,7 +511,16 @@ internal class FrameChannel : Channel<Frame>
             ["strict"] = strict,
         };
 
-        return (await Connection.SendMessageToServerAsync(Guid, "innerHTML", args).ConfigureAwait(false))?.GetProperty("value").ToString();
+        var jsonElement = await Connection.SendMessageToServerAsync(Guid, "innerHTML", args).ConfigureAwait(false);
+        if (jsonElement is null)
+        {
+            return null;
+        }
+
+        var jsonText = jsonElement.ToString();
+        dynamic json = Newtonsoft.Json.JsonConvert.DeserializeObject(jsonText);
+        var value = json.value.ToString();
+        return value;
     }
 
     internal Task TypeAsync(string selector, string text, float? delay, float? timeout, bool? noWaitAfter, bool? strict)
