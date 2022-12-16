@@ -101,6 +101,7 @@ public partial interface IElementHandle : IJSHandle
     /// Assuming the page is static, it is safe to use bounding box coordinates to perform
     /// input. For example, the following snippet should click the center of the element.
     /// </para>
+    /// <para>**Usage**</para>
     /// <code>
     /// var box = await elementHandle.BoundingBoxAsync();<br/>
     /// await page.Mouse.ClickAsync(box.X + box.Width / 2, box.Y + box.Height / 2);
@@ -221,6 +222,7 @@ public partial interface IElementHandle : IJSHandle
     /// the visibility state of the element, <c>click</c> is dispatched. This is equivalent
     /// to calling <a href="https://developer.mozilla.org/en-US/docs/Web/API/HTMLElement/click">element.click()</a>.
     /// </para>
+    /// <para>**Usage**</para>
     /// <code>await elementHandle.DispatchEventAsync("click");</code>
     /// <para>
     /// Under the hood, it creates an instance of an event based on the given <paramref
@@ -260,25 +262,21 @@ public partial interface IElementHandle : IJSHandle
     /// <para>Returns the return value of <paramref name="expression"/>.</para>
     /// <para>
     /// The method finds an element matching the specified selector in the <c>ElementHandle</c>s
-    /// subtree and passes it as a first argument to <paramref name="expression"/>. See
-    /// <a href="https://playwright.dev/dotnet/docs/selectors">Working with selectors</a>
-    /// for more details. If no elements match the selector, the method throws an error.
+    /// subtree and passes it as a first argument to <paramref name="expression"/>. If no
+    /// elements match the selector, the method throws an error.
     /// </para>
     /// <para>
     /// If <paramref name="expression"/> returns a <see cref="Task"/>, then <see cref="IElementHandle.EvalOnSelectorAsync"/>
     /// would wait for the promise to resolve and return its value.
     /// </para>
-    /// <para>Examples:</para>
+    /// <para>**Usage**</para>
     /// <code>
     /// var tweetHandle = await page.QuerySelectorAsync(".tweet");<br/>
     /// Assert.AreEqual("100", await tweetHandle.EvalOnSelectorAsync(".like", "node =&gt; node.innerText"));<br/>
     /// Assert.AreEqual("10", await tweetHandle.EvalOnSelectorAsync(".retweets", "node =&gt; node.innerText"));
     /// </code>
     /// </summary>
-    /// <param name="selector">
-    /// A selector to query for. See <a href="https://playwright.dev/dotnet/docs/selectors">working
-    /// with selectors</a> for more details.
-    /// </param>
+    /// <param name="selector">A selector to query for.</param>
     /// <param name="expression">
     /// JavaScript expression to be evaluated in the browser context. If the expression
     /// evaluates to a function, the function is automatically invoked.
@@ -291,23 +289,19 @@ public partial interface IElementHandle : IJSHandle
     /// <para>
     /// The method finds all elements matching the specified selector in the <c>ElementHandle</c>'s
     /// subtree and passes an array of matched elements as a first argument to <paramref
-    /// name="expression"/>. See <a href="https://playwright.dev/dotnet/docs/selectors">Working
-    /// with selectors</a> for more details.
+    /// name="expression"/>.
     /// </para>
     /// <para>
     /// If <paramref name="expression"/> returns a <see cref="Task"/>, then <see cref="IElementHandle.EvalOnSelectorAllAsync"/>
     /// would wait for the promise to resolve and return its value.
     /// </para>
-    /// <para>Examples:</para>
+    /// <para>**Usage**</para>
     /// <code>
     /// var feedHandle = await page.QuerySelectorAsync(".feed");<br/>
     /// Assert.AreEqual(new [] { "Hello!", "Hi!" }, await feedHandle.EvalOnSelectorAllAsync&lt;string[]&gt;(".tweet", "nodes =&gt; nodes.map(n =&gt; n.innerText)"));
     /// </code>
     /// </summary>
-    /// <param name="selector">
-    /// A selector to query for. See <a href="https://playwright.dev/dotnet/docs/selectors">working
-    /// with selectors</a> for more details.
-    /// </param>
+    /// <param name="selector">A selector to query for.</param>
     /// <param name="expression">
     /// JavaScript expression to be evaluated in the browser context. If the expression
     /// evaluates to a function, the function is automatically invoked.
@@ -467,28 +461,19 @@ public partial interface IElementHandle : IJSHandle
     /// <summary>
     /// <para>
     /// The method finds an element matching the specified selector in the <c>ElementHandle</c>'s
-    /// subtree. See <a href="https://playwright.dev/dotnet/docs/selectors">Working with
-    /// selectors</a> for more details. If no elements match the selector, returns <c>null</c>.
+    /// subtree. If no elements match the selector, returns <c>null</c>.
     /// </para>
     /// </summary>
-    /// <param name="selector">
-    /// A selector to query for. See <a href="https://playwright.dev/dotnet/docs/selectors">working
-    /// with selectors</a> for more details.
-    /// </param>
+    /// <param name="selector">A selector to query for.</param>
     Task<IElementHandle?> QuerySelectorAsync(string selector);
 
     /// <summary>
     /// <para>
     /// The method finds all elements matching the specified selector in the <c>ElementHandle</c>s
-    /// subtree. See <a href="https://playwright.dev/dotnet/docs/selectors">Working with
-    /// selectors</a> for more details. If no elements match the selector, returns empty
-    /// array.
+    /// subtree. If no elements match the selector, returns empty array.
     /// </para>
     /// </summary>
-    /// <param name="selector">
-    /// A selector to query for. See <a href="https://playwright.dev/dotnet/docs/selectors">working
-    /// with selectors</a> for more details.
-    /// </param>
+    /// <param name="selector">A selector to query for.</param>
     Task<IReadOnlyList<IElementHandle>> QuerySelectorAllAsync(string selector);
 
     /// <summary>
@@ -540,6 +525,7 @@ public partial interface IElementHandle : IJSHandle
     /// Triggers a <c>change</c> and <c>input</c> event once all the provided options have
     /// been selected.
     /// </para>
+    /// <para>**Usage**</para>
     /// <code>
     /// // single selection matching the value<br/>
     /// await handle.SelectOptionAsync(new[] { "blue" });<br/>
@@ -557,7 +543,7 @@ public partial interface IElementHandle : IJSHandle
     /// <param name="values">
     /// Options to select. If the <c>&lt;select&gt;</c> has the <c>multiple</c> attribute,
     /// all matching options are selected, otherwise only the first option matching one
-    /// of the passed options is selected. String values are equivalent to <c>{value:'string'}</c>.
+    /// of the passed options is selected. String values are matching both values and labels.
     /// Option is considered matching if all specified properties match.
     /// </param>
     /// <param name="options">Call options</param>
@@ -580,6 +566,7 @@ public partial interface IElementHandle : IJSHandle
     /// Triggers a <c>change</c> and <c>input</c> event once all the provided options have
     /// been selected.
     /// </para>
+    /// <para>**Usage**</para>
     /// <code>
     /// // single selection matching the value<br/>
     /// await handle.SelectOptionAsync(new[] { "blue" });<br/>
@@ -597,7 +584,7 @@ public partial interface IElementHandle : IJSHandle
     /// <param name="values">
     /// Options to select. If the <c>&lt;select&gt;</c> has the <c>multiple</c> attribute,
     /// all matching options are selected, otherwise only the first option matching one
-    /// of the passed options is selected. String values are equivalent to <c>{value:'string'}</c>.
+    /// of the passed options is selected. String values are matching both values and labels.
     /// Option is considered matching if all specified properties match.
     /// </param>
     /// <param name="options">Call options</param>
@@ -620,6 +607,7 @@ public partial interface IElementHandle : IJSHandle
     /// Triggers a <c>change</c> and <c>input</c> event once all the provided options have
     /// been selected.
     /// </para>
+    /// <para>**Usage**</para>
     /// <code>
     /// // single selection matching the value<br/>
     /// await handle.SelectOptionAsync(new[] { "blue" });<br/>
@@ -637,7 +625,7 @@ public partial interface IElementHandle : IJSHandle
     /// <param name="values">
     /// Options to select. If the <c>&lt;select&gt;</c> has the <c>multiple</c> attribute,
     /// all matching options are selected, otherwise only the first option matching one
-    /// of the passed options is selected. String values are equivalent to <c>{value:'string'}</c>.
+    /// of the passed options is selected. String values are matching both values and labels.
     /// Option is considered matching if all specified properties match.
     /// </param>
     /// <param name="options">Call options</param>
@@ -660,6 +648,7 @@ public partial interface IElementHandle : IJSHandle
     /// Triggers a <c>change</c> and <c>input</c> event once all the provided options have
     /// been selected.
     /// </para>
+    /// <para>**Usage**</para>
     /// <code>
     /// // single selection matching the value<br/>
     /// await handle.SelectOptionAsync(new[] { "blue" });<br/>
@@ -677,7 +666,7 @@ public partial interface IElementHandle : IJSHandle
     /// <param name="values">
     /// Options to select. If the <c>&lt;select&gt;</c> has the <c>multiple</c> attribute,
     /// all matching options are selected, otherwise only the first option matching one
-    /// of the passed options is selected. String values are equivalent to <c>{value:'string'}</c>.
+    /// of the passed options is selected. String values are matching both values and labels.
     /// Option is considered matching if all specified properties match.
     /// </param>
     /// <param name="options">Call options</param>
@@ -700,6 +689,7 @@ public partial interface IElementHandle : IJSHandle
     /// Triggers a <c>change</c> and <c>input</c> event once all the provided options have
     /// been selected.
     /// </para>
+    /// <para>**Usage**</para>
     /// <code>
     /// // single selection matching the value<br/>
     /// await handle.SelectOptionAsync(new[] { "blue" });<br/>
@@ -717,7 +707,7 @@ public partial interface IElementHandle : IJSHandle
     /// <param name="values">
     /// Options to select. If the <c>&lt;select&gt;</c> has the <c>multiple</c> attribute,
     /// all matching options are selected, otherwise only the first option matching one
-    /// of the passed options is selected. String values are equivalent to <c>{value:'string'}</c>.
+    /// of the passed options is selected. String values are matching both values and labels.
     /// Option is considered matching if all specified properties match.
     /// </param>
     /// <param name="options">Call options</param>
@@ -740,6 +730,7 @@ public partial interface IElementHandle : IJSHandle
     /// Triggers a <c>change</c> and <c>input</c> event once all the provided options have
     /// been selected.
     /// </para>
+    /// <para>**Usage**</para>
     /// <code>
     /// // single selection matching the value<br/>
     /// await handle.SelectOptionAsync(new[] { "blue" });<br/>
@@ -757,7 +748,7 @@ public partial interface IElementHandle : IJSHandle
     /// <param name="values">
     /// Options to select. If the <c>&lt;select&gt;</c> has the <c>multiple</c> attribute,
     /// all matching options are selected, otherwise only the first option matching one
-    /// of the passed options is selected. String values are equivalent to <c>{value:'string'}</c>.
+    /// of the passed options is selected. String values are matching both values and labels.
     /// Option is considered matching if all specified properties match.
     /// </param>
     /// <param name="options">Call options</param>
@@ -922,6 +913,7 @@ public partial interface IElementHandle : IJSHandle
     /// and <c>keyup</c> event for each character in the text.
     /// </para>
     /// <para>To press a special key, like <c>Control</c> or <c>ArrowDown</c>, use <see cref="IElementHandle.PressAsync"/>.</para>
+    /// <para>**Usage**</para>
     /// <code>
     /// await elementHandle.TypeAsync("Hello"); // Types instantly<br/>
     /// await elementHandle.TypeAsync("World", new() { Delay = 100 }); // Types slower, like a user
@@ -1017,6 +1009,7 @@ public partial interface IElementHandle : IJSHandle
     /// the condition for the <paramref name="timeout"/> milliseconds, the function will
     /// throw.
     /// </para>
+    /// <para>**Usage**</para>
     /// <code>
     /// await page.SetContentAsync("&lt;div&gt;&lt;span&gt;&lt;/span&gt;&lt;/div&gt;");<br/>
     /// var div = await page.QuerySelectorAsync("div");<br/>
@@ -1030,10 +1023,7 @@ public partial interface IElementHandle : IJSHandle
     /// instead.
     /// </para>
     /// </remarks>
-    /// <param name="selector">
-    /// A selector to query for. See <a href="https://playwright.dev/dotnet/docs/selectors">working
-    /// with selectors</a> for more details.
-    /// </param>
+    /// <param name="selector">A selector to query for.</param>
     /// <param name="options">Call options</param>
     Task<IElementHandle?> WaitForSelectorAsync(string selector, ElementHandleWaitForSelectorOptions? options = default);
 }

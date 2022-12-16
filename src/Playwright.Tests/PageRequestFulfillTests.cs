@@ -324,4 +324,28 @@ public class RequestFulfillTests : PageTestEx
         var cookie = await Page.EvaluateAsync<string[]>("() => document.cookie.split(';').map(s => s.trim()).sort()");
         Assert.AreEqual(cookie, new[] { "a=b", "c=d" });
     }
+
+    [PlaywrightTest("page-request-fulfill.spec.ts", "should fulfill json")]
+    public async Task ShouldFulfillJson()
+    {
+        await Page.RouteAsync("**/*", async (route) =>
+        {
+            await route.FulfillAsync(new()
+            {
+                Status = 201,
+                Headers = new Dictionary<string, string>
+                {
+                    ["foo"] = "bar"
+                },
+                Json = new Dictionary<string, string>
+                {
+                    ["bar"] = "baz"
+                }
+            });
+        });
+        var response = await Page.GotoAsync(Server.EmptyPage);
+        Assert.AreEqual(response.Status, 201);
+        Assert.AreEqual((await response.AllHeadersAsync())["content-type"], "application/json");
+        Assert.AreEqual(await Page.EvaluateAsync<string>("() => document.body.textContent"), "{\"bar\":\"baz\"}");
+    }
 }

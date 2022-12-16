@@ -62,7 +62,7 @@ public partial interface IJSHandle
     /// If <paramref name="expression"/> returns a <see cref="Task"/>, then <c>handle.evaluate</c>
     /// would wait for the promise to resolve and return its value.
     /// </para>
-    /// <para>Examples:</para>
+    /// <para>**Usage**</para>
     /// <code>
     /// var tweetHandle = await page.QuerySelectorAsync(".tweet .retweets");<br/>
     /// Assert.AreEqual("10 retweets", await tweetHandle.EvaluateAsync("node =&gt; node.innerText"));
@@ -101,6 +101,7 @@ public partial interface IJSHandle
     /// The method returns a map with **own property names** as keys and JSHandle instances
     /// for the property values.
     /// </para>
+    /// <para>**Usage**</para>
     /// <code>
     /// var handle = await page.EvaluateHandleAsync("() =&gt; ({window, document}");<br/>
     /// var properties = await handle.GetPropertiesAsync();<br/>

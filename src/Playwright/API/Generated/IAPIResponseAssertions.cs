@@ -46,7 +46,10 @@ public partial interface IAPIResponseAssertions
     /// </summary>
     public IAPIResponseAssertions Not { get; }
 
-    /// <summary><para>Ensures the response status code is within <c>200..299</c> range.</para></summary>
+    /// <summary>
+    /// <para>Ensures the response status code is within <c>200..299</c> range.</para>
+    /// <para>**Usage**</para>
+    /// </summary>
     Task ToBeOKAsync();
 }
 

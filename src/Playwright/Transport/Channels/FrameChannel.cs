@@ -26,6 +26,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.Json;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 using Microsoft.Playwright.Core;
 using Microsoft.Playwright.Helpers;
@@ -756,5 +757,33 @@ internal class FrameChannel : Channel<Frame>
         };
 
         await Connection.SendMessageToServerAsync(Guid, "highlight", args).ConfigureAwait(false);
+    }
+}
+
+internal class SelectOptionValueProtocol
+{
+
+#nullable enable
+    [JsonPropertyName("value")]
+    public string? Value { get; set; }
+
+    [JsonPropertyName("valueOrLabel")]
+    public string? ValueOrLabel { get; set; }
+
+    [JsonPropertyName("label")]
+    public string? Label { get; set; }
+
+    [JsonPropertyName("index")]
+    public int? Index { get; set; }
+#nullable disable
+
+    internal static SelectOptionValueProtocol From(SelectOptionValue value)
+    {
+        return new SelectOptionValueProtocol
+        {
+            Value = value.Value,
+            Label = value.Label,
+            Index = value.Index,
+        };
     }
 }

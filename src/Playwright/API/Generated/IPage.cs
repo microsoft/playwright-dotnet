@@ -213,7 +213,7 @@ public partial interface IPage
     /// <code>
     /// var popup = await page.RunAndWaitForPopupAsync(async () =&gt;<br/>
     /// {<br/>
-    ///     await page.EvaluateAsync("() =&gt; window.open('https://microsoft.com')");<br/>
+    ///     await page.GetByText("open the popup").ClickAsync();<br/>
     /// });<br/>
     /// Console.WriteLine(await popup.EvaluateAsync&lt;string&gt;("location.href"));
     /// </code>
@@ -278,10 +278,9 @@ public partial interface IPage
 
     /// <summary>
     /// <para>
-    /// **DEPRECATED** This property is deprecated. Please use other libraries such as <a
-    /// href="https://www.deque.com/axe/">Axe</a> if you need to test page accessibility.
-    /// See our Node.js <a href="https://playwright.dev/docs/accessibility-testing">guide</a>
-    /// for integration with Axe.
+    ///  **DEPRECATED** This property is discouraged. Please use other libraries such as↵[Axe](https://www.deque.com/axe/)
+    ///  if you need to test page accessibility. See our Node.js [guide](https://playwright.dev/docs/accessibility-testing)
+    ///  for integration with Axe.
     /// </para>
     /// </summary>
     [System.Obsolete]
@@ -300,8 +299,9 @@ public partial interface IPage
     /// The script is evaluated after the document was created but before any of its scripts
     /// were run. This is useful to amend the JavaScript environment, e.g. to seed <c>Math.random</c>.
     /// </para>
+    /// <para>**Usage**</para>
     /// <para>An example of overriding <c>Math.random</c> before the page loads:</para>
-    /// <code>await page.AddInitScriptAsync(new PageAddInitScriptOption { ScriptPath = "./preload.js" });</code>
+    /// <code>await page.AddInitScriptAsync("./preload.js");</code>
     /// </summary>
     /// <remarks>
     /// <para>
@@ -319,7 +319,6 @@ public partial interface IPage
     /// Returns the added tag when the script's onload fires or when the script content
     /// was injected into frame.
     /// </para>
-    /// <para>Shortcut for main frame's <see cref="IFrame.AddScriptTagAsync"/>.</para>
     /// </summary>
     /// <param name="options">Call options</param>
     Task<IElementHandle> AddScriptTagAsync(PageAddScriptTagOptions? options = default);
@@ -331,7 +330,6 @@ public partial interface IPage
     /// tag when the stylesheet's onload fires or when the CSS content was injected into
     /// frame.
     /// </para>
-    /// <para>Shortcut for main frame's <see cref="IFrame.AddStyleTagAsync"/>.</para>
     /// </summary>
     /// <param name="options">Call options</param>
     Task<IElementHandle> AddStyleTagAsync(PageAddStyleTagOptions? options = default);
@@ -371,12 +369,10 @@ public partial interface IPage
     /// this method throws a <see cref="TimeoutException"/>. Passing zero timeout disables
     /// this.
     /// </para>
-    /// <para>Shortcut for main frame's <see cref="IFrame.CheckAsync"/>.</para>
     /// </summary>
     /// <param name="selector">
     /// A selector to search for an element. If there are multiple elements satisfying the
-    /// selector, the first will be used. See <a href="https://playwright.dev/dotnet/docs/selectors">working
-    /// with selectors</a> for more details.
+    /// selector, the first will be used.
     /// </param>
     /// <param name="options">Call options</param>
     Task CheckAsync(string selector, PageCheckOptions? options = default);
@@ -411,12 +407,10 @@ public partial interface IPage
     /// this method throws a <see cref="TimeoutException"/>. Passing zero timeout disables
     /// this.
     /// </para>
-    /// <para>Shortcut for main frame's <see cref="IFrame.ClickAsync"/>.</para>
     /// </summary>
     /// <param name="selector">
     /// A selector to search for an element. If there are multiple elements satisfying the
-    /// selector, the first will be used. See <a href="https://playwright.dev/dotnet/docs/selectors">working
-    /// with selectors</a> for more details.
+    /// selector, the first will be used.
     /// </param>
     /// <param name="options">Call options</param>
     Task ClickAsync(string selector, PageClickOptions? options = default);
@@ -476,7 +470,6 @@ public partial interface IPage
     /// this method throws a <see cref="TimeoutException"/>. Passing zero timeout disables
     /// this.
     /// </para>
-    /// <para>Shortcut for main frame's <see cref="IFrame.DblClickAsync"/>.</para>
     /// </summary>
     /// <remarks>
     /// <para>
@@ -486,8 +479,7 @@ public partial interface IPage
     /// </remarks>
     /// <param name="selector">
     /// A selector to search for an element. If there are multiple elements satisfying the
-    /// selector, the first will be used. See <a href="https://playwright.dev/dotnet/docs/selectors">working
-    /// with selectors</a> for more details.
+    /// selector, the first will be used.
     /// </param>
     /// <param name="options">Call options</param>
     Task DblClickAsync(string selector, PageDblClickOptions? options = default);
@@ -498,6 +490,7 @@ public partial interface IPage
     /// the visibility state of the element, <c>click</c> is dispatched. This is equivalent
     /// to calling <a href="https://developer.mozilla.org/en-US/docs/Web/API/HTMLElement/click">element.click()</a>.
     /// </para>
+    /// <para>**Usage**</para>
     /// <code>await page.DispatchEventAsync("button#submit", "click");</code>
     /// <para>
     /// Under the hood, it creates an instance of an event based on the given <paramref
@@ -528,8 +521,7 @@ public partial interface IPage
     /// </summary>
     /// <param name="selector">
     /// A selector to search for an element. If there are multiple elements satisfying the
-    /// selector, the first will be used. See <a href="https://playwright.dev/dotnet/docs/selectors">working
-    /// with selectors</a> for more details.
+    /// selector, the first will be used.
     /// </param>
     /// <param name="type">DOM event type: <c>"click"</c>, <c>"dragstart"</c>, etc.</param>
     /// <param name="eventInit">Optional event-specific initialization properties.</param>
@@ -542,6 +534,7 @@ public partial interface IPage
     /// the source element, perform a <c>mousedown</c>, then move to the target element
     /// and perform a <c>mouseup</c>.
     /// </para>
+    /// <para>**Usage**</para>
     /// <code>
     /// await Page.DragAndDropAsync("#source", "#target");<br/>
     /// // or specify exact positions relative to the top-left corners of the elements:<br/>
@@ -554,13 +547,11 @@ public partial interface IPage
     /// </summary>
     /// <param name="source">
     /// A selector to search for an element to drag. If there are multiple elements satisfying
-    /// the selector, the first will be used. See <a href="https://playwright.dev/dotnet/docs/selectors">working
-    /// with selectors</a> for more details.
+    /// the selector, the first will be used.
     /// </param>
     /// <param name="target">
     /// A selector to search for an element to drop onto. If there are multiple elements
-    /// satisfying the selector, the first will be used. See <a href="https://playwright.dev/dotnet/docs/selectors">working
-    /// with selectors</a> for more details.
+    /// satisfying the selector, the first will be used.
     /// </param>
     /// <param name="options">Call options</param>
     Task DragAndDropAsync(string source, string target, PageDragAndDropOptions? options = default);
@@ -571,6 +562,7 @@ public partial interface IPage
     /// and/or the <c>'prefers-colors-scheme'</c> media feature, using the <c>colorScheme</c>
     /// argument.
     /// </para>
+    /// <para>**Usage**</para>
     /// <code>
     /// await page.EvaluateAsync("() =&gt; matchMedia('screen').matches");<br/>
     /// // → true<br/>
@@ -612,25 +604,14 @@ public partial interface IPage
     /// If <paramref name="expression"/> returns a <see cref="Task"/>, then <see cref="IPage.EvalOnSelectorAsync"/>
     /// would wait for the promise to resolve and return its value.
     /// </para>
-    /// <para>Examples:</para>
+    /// <para>**Usage**</para>
     /// <code>
     /// var searchValue = await page.EvalOnSelectorAsync&lt;string&gt;("#search", "el =&gt; el.value");<br/>
     /// var preloadHref = await page.EvalOnSelectorAsync&lt;string&gt;("link[rel=preload]", "el =&gt; el.href");<br/>
     /// var html = await page.EvalOnSelectorAsync(".main-container", "(e, suffix) =&gt; e.outerHTML + suffix", "hello");
     /// </code>
-    /// <para>Shortcut for main frame's <see cref="IFrame.EvalOnSelectorAsync"/>.</para>
     /// </summary>
-    /// <remarks>
-    /// <para>
-    /// This method does not wait for the element to pass actionability checks and therefore
-    /// can lead to the flaky tests. Use <see cref="ILocator.EvaluateAsync"/>, other <see
-    /// cref="ILocator"/> helper methods or web-first assertions instead.
-    /// </para>
-    /// </remarks>
-    /// <param name="selector">
-    /// A selector to query for. See <a href="https://playwright.dev/dotnet/docs/selectors">working
-    /// with selectors</a> for more details.
-    /// </param>
+    /// <param name="selector">A selector to query for.</param>
     /// <param name="expression">
     /// JavaScript expression to be evaluated in the browser context. If the expression
     /// evaluates to a function, the function is automatically invoked.
@@ -649,19 +630,10 @@ public partial interface IPage
     /// If <paramref name="expression"/> returns a <see cref="Task"/>, then <see cref="IPage.EvalOnSelectorAllAsync"/>
     /// would wait for the promise to resolve and return its value.
     /// </para>
-    /// <para>Examples:</para>
+    /// <para>**Usage**</para>
     /// <code>var divsCount = await page.EvalOnSelectorAllAsync&lt;bool&gt;("div", "(divs, min) =&gt; divs.length &gt;= min", 10);</code>
     /// </summary>
-    /// <remarks>
-    /// <para>
-    /// In most cases, <see cref="ILocator.EvaluateAllAsync"/>, other <see cref="ILocator"/>
-    /// helper methods and web-first assertions do a better job.
-    /// </para>
-    /// </remarks>
-    /// <param name="selector">
-    /// A selector to query for. See <a href="https://playwright.dev/dotnet/docs/selectors">working
-    /// with selectors</a> for more details.
-    /// </param>
+    /// <param name="selector">A selector to query for.</param>
     /// <param name="expression">
     /// JavaScript expression to be evaluated in the browser context. If the expression
     /// evaluates to a function, the function is automatically invoked.
@@ -682,6 +654,7 @@ public partial interface IPage
     /// <c>undefined</c>. Playwright also supports transferring some additional values that
     /// are not serializable by <c>JSON</c>: <c>-0</c>, <c>NaN</c>, <c>Infinity</c>, <c>-Infinity</c>.
     /// </para>
+    /// <para>**Usage**</para>
     /// <para>Passing argument to <paramref name="expression"/>:</para>
     /// <code>
     /// var result = await page.EvaluateAsync&lt;int&gt;("([x, y]) =&gt; Promise.resolve(x * y)", new[] { 7, 8 });<br/>
@@ -698,7 +671,6 @@ public partial interface IPage
     /// var html = await page.EvaluateAsync&lt;string&gt;("([body, suffix]) =&gt; body.innerHTML + suffix", new object [] { bodyHandle, "hello" });<br/>
     /// await bodyHandle.DisposeAsync();
     /// </code>
-    /// <para>Shortcut for main frame's <see cref="IFrame.EvaluateAsync"/>.</para>
     /// </summary>
     /// <param name="expression">
     /// JavaScript expression to be evaluated in the browser context. If the expression
@@ -718,6 +690,7 @@ public partial interface IPage
     /// <see cref="Task"/>, then <see cref="IPage.EvaluateHandleAsync"/> would wait for
     /// the promise to resolve and return its value.
     /// </para>
+    /// <para>**Usage**</para>
     /// <code>
     /// // Handle for the window object.<br/>
     /// var aWindowHandle = await page.EvaluateHandleAsync("() =&gt; Promise.resolve(window)");
@@ -753,6 +726,7 @@ public partial interface IPage
     /// }</c>.
     /// </para>
     /// <para>See <see cref="IBrowserContext.ExposeBindingAsync"/> for the context-wide version.</para>
+    /// <para>**Usage**</para>
     /// <para>An example of exposing page URL to all frames in a page:</para>
     /// <code>
     /// using Microsoft.Playwright;<br/>
@@ -815,6 +789,7 @@ public partial interface IPage
     /// </para>
     /// <para>If the <paramref name="callback"/> returns a <see cref="Task"/>, it will be awaited.</para>
     /// <para>See <see cref="IBrowserContext.ExposeFunctionAsync"/> for context-wide exposed function.</para>
+    /// <para>**Usage**</para>
     /// <para>An example of adding a <c>sha256</c> function to the page:</para>
     /// <code>
     /// using Microsoft.Playwright;<br/>
@@ -872,12 +847,10 @@ public partial interface IPage
     /// the control will be filled instead.
     /// </para>
     /// <para>To send fine-grained keyboard events, use <see cref="IPage.TypeAsync"/>.</para>
-    /// <para>Shortcut for main frame's <see cref="IFrame.FillAsync"/>.</para>
     /// </summary>
     /// <param name="selector">
     /// A selector to search for an element. If there are multiple elements satisfying the
-    /// selector, the first will be used. See <a href="https://playwright.dev/dotnet/docs/selectors">working
-    /// with selectors</a> for more details.
+    /// selector, the first will be used.
     /// </param>
     /// <param name="value">
     /// Value to fill for the <c>&lt;input&gt;</c>, <c>&lt;textarea&gt;</c> or <c>[contenteditable]</c>
@@ -892,12 +865,10 @@ public partial interface IPage
     /// If there's no element matching <paramref name="selector"/>, the method waits until
     /// a matching element appears in the DOM.
     /// </para>
-    /// <para>Shortcut for main frame's <see cref="IFrame.FocusAsync"/>.</para>
     /// </summary>
     /// <param name="selector">
     /// A selector to search for an element. If there are multiple elements satisfying the
-    /// selector, the first will be used. See <a href="https://playwright.dev/dotnet/docs/selectors">working
-    /// with selectors</a> for more details.
+    /// selector, the first will be used.
     /// </param>
     /// <param name="options">Call options</param>
     Task FocusAsync(string selector, PageFocusOptions? options = default);
@@ -907,6 +878,7 @@ public partial interface IPage
     /// Returns frame matching the specified criteria. Either <c>name</c> or <c>url</c>
     /// must be specified.
     /// </para>
+    /// <para>**Usage**</para>
     /// <code>var frame = page.Frame("frame-name");</code>
     /// <code>var frame = page.FrameByUrl(".*domain.*");</code>
     /// </summary>
@@ -937,18 +909,19 @@ public partial interface IPage
     /// <summary>
     /// <para>
     /// When working with iframes, you can create a frame locator that will enter the iframe
-    /// and allow selecting elements in that iframe. Following snippet locates element with
-    /// text "Submit" in the iframe with id <c>my-frame</c>, like <c>&lt;iframe id="my-frame"&gt;</c>:
+    /// and allow selecting elements in that iframe.
+    /// </para>
+    /// <para>**Usage**</para>
+    /// <para>
+    /// Following snippet locates element with text "Submit" in the iframe with id <c>my-frame</c>,
+    /// like <c>&lt;iframe id="my-frame"&gt;</c>:
     /// </para>
     /// <code>
     /// var locator = page.FrameLocator("#my-iframe").GetByText("Submit");<br/>
     /// await locator.ClickAsync();
     /// </code>
     /// </summary>
-    /// <param name="selector">
-    /// A selector to use when resolving DOM element. See <a href="https://playwright.dev/dotnet/docs/selectors">working
-    /// with selectors</a> for more details.
-    /// </param>
+    /// <param name="selector">A selector to use when resolving DOM element.</param>
     IFrameLocator FrameLocator(string selector);
 
     /// <summary><para>An array of all frames attached to the page.</para></summary>
@@ -957,8 +930,7 @@ public partial interface IPage
     /// <summary><para>Returns element attribute value.</para></summary>
     /// <param name="selector">
     /// A selector to search for an element. If there are multiple elements satisfying the
-    /// selector, the first will be used. See <a href="https://playwright.dev/dotnet/docs/selectors">working
-    /// with selectors</a> for more details.
+    /// selector, the first will be used.
     /// </param>
     /// <param name="name">Attribute name to get the value for.</param>
     /// <param name="options">Call options</param>
@@ -1053,6 +1025,16 @@ public partial interface IPage
     /// </summary>
     /// <param name="testId">Id to locate the element by.</param>
     ILocator GetByTestId(string testId);
+
+    /// <summary>
+    /// <para>
+    /// Locate element by the test id. By default, the <c>data-testid</c> attribute is used
+    /// as a test id. Use <see cref="ISelectors.SetTestIdAttribute"/> to configure a different
+    /// test id attribute if necessary.
+    /// </para>
+    /// </summary>
+    /// <param name="testId">Id to locate the element by.</param>
+    ILocator GetByTestId(Regex testId);
 
     /// <summary>
     /// <para>Allows locating elements that contain given text. Consider the following DOM structure:</para>
@@ -1194,7 +1176,6 @@ public partial interface IPage
     /// the remote server, including 404 "Not Found" and 500 "Internal Server Error".  The
     /// status code for such responses can be retrieved by calling <see cref="IResponse.Status"/>.
     /// </para>
-    /// <para>Shortcut for main frame's <see cref="IFrame.GotoAsync"/></para>
     /// </summary>
     /// <remarks>
     /// <para>
@@ -1246,12 +1227,10 @@ public partial interface IPage
     /// this method throws a <see cref="TimeoutException"/>. Passing zero timeout disables
     /// this.
     /// </para>
-    /// <para>Shortcut for main frame's <see cref="IFrame.HoverAsync"/>.</para>
     /// </summary>
     /// <param name="selector">
     /// A selector to search for an element. If there are multiple elements satisfying the
-    /// selector, the first will be used. See <a href="https://playwright.dev/dotnet/docs/selectors">working
-    /// with selectors</a> for more details.
+    /// selector, the first will be used.
     /// </param>
     /// <param name="options">Call options</param>
     Task HoverAsync(string selector, PageHoverOptions? options = default);
@@ -1259,8 +1238,7 @@ public partial interface IPage
     /// <summary><para>Returns <c>element.innerHTML</c>.</para></summary>
     /// <param name="selector">
     /// A selector to search for an element. If there are multiple elements satisfying the
-    /// selector, the first will be used. See <a href="https://playwright.dev/dotnet/docs/selectors">working
-    /// with selectors</a> for more details.
+    /// selector, the first will be used.
     /// </param>
     /// <param name="options">Call options</param>
     Task<string> InnerHTMLAsync(string selector, PageInnerHTMLOptions? options = default);
@@ -1268,8 +1246,7 @@ public partial interface IPage
     /// <summary><para>Returns <c>element.innerText</c>.</para></summary>
     /// <param name="selector">
     /// A selector to search for an element. If there are multiple elements satisfying the
-    /// selector, the first will be used. See <a href="https://playwright.dev/dotnet/docs/selectors">working
-    /// with selectors</a> for more details.
+    /// selector, the first will be used.
     /// </param>
     /// <param name="options">Call options</param>
     Task<string> InnerTextAsync(string selector, PageInnerTextOptions? options = default);
@@ -1287,8 +1264,7 @@ public partial interface IPage
     /// </summary>
     /// <param name="selector">
     /// A selector to search for an element. If there are multiple elements satisfying the
-    /// selector, the first will be used. See <a href="https://playwright.dev/dotnet/docs/selectors">working
-    /// with selectors</a> for more details.
+    /// selector, the first will be used.
     /// </param>
     /// <param name="options">Call options</param>
     Task<string> InputValueAsync(string selector, PageInputValueOptions? options = default);
@@ -1301,8 +1277,7 @@ public partial interface IPage
     /// </summary>
     /// <param name="selector">
     /// A selector to search for an element. If there are multiple elements satisfying the
-    /// selector, the first will be used. See <a href="https://playwright.dev/dotnet/docs/selectors">working
-    /// with selectors</a> for more details.
+    /// selector, the first will be used.
     /// </param>
     /// <param name="options">Call options</param>
     Task<bool> IsCheckedAsync(string selector, PageIsCheckedOptions? options = default);
@@ -1313,8 +1288,7 @@ public partial interface IPage
     /// <summary><para>Returns whether the element is disabled, the opposite of <a href="https://playwright.dev/dotnet/docs/actionability#enabled">enabled</a>.</para></summary>
     /// <param name="selector">
     /// A selector to search for an element. If there are multiple elements satisfying the
-    /// selector, the first will be used. See <a href="https://playwright.dev/dotnet/docs/selectors">working
-    /// with selectors</a> for more details.
+    /// selector, the first will be used.
     /// </param>
     /// <param name="options">Call options</param>
     Task<bool> IsDisabledAsync(string selector, PageIsDisabledOptions? options = default);
@@ -1322,8 +1296,7 @@ public partial interface IPage
     /// <summary><para>Returns whether the element is <a href="https://playwright.dev/dotnet/docs/actionability#editable">editable</a>.</para></summary>
     /// <param name="selector">
     /// A selector to search for an element. If there are multiple elements satisfying the
-    /// selector, the first will be used. See <a href="https://playwright.dev/dotnet/docs/selectors">working
-    /// with selectors</a> for more details.
+    /// selector, the first will be used.
     /// </param>
     /// <param name="options">Call options</param>
     Task<bool> IsEditableAsync(string selector, PageIsEditableOptions? options = default);
@@ -1331,8 +1304,7 @@ public partial interface IPage
     /// <summary><para>Returns whether the element is <a href="https://playwright.dev/dotnet/docs/actionability#enabled">enabled</a>.</para></summary>
     /// <param name="selector">
     /// A selector to search for an element. If there are multiple elements satisfying the
-    /// selector, the first will be used. See <a href="https://playwright.dev/dotnet/docs/selectors">working
-    /// with selectors</a> for more details.
+    /// selector, the first will be used.
     /// </param>
     /// <param name="options">Call options</param>
     Task<bool> IsEnabledAsync(string selector, PageIsEnabledOptions? options = default);
@@ -1345,8 +1317,7 @@ public partial interface IPage
     /// </summary>
     /// <param name="selector">
     /// A selector to search for an element. If there are multiple elements satisfying the
-    /// selector, the first will be used. See <a href="https://playwright.dev/dotnet/docs/selectors">working
-    /// with selectors</a> for more details.
+    /// selector, the first will be used.
     /// </param>
     /// <param name="options">Call options</param>
     Task<bool> IsHiddenAsync(string selector, PageIsHiddenOptions? options = default);
@@ -1359,8 +1330,7 @@ public partial interface IPage
     /// </summary>
     /// <param name="selector">
     /// A selector to search for an element. If there are multiple elements satisfying the
-    /// selector, the first will be used. See <a href="https://playwright.dev/dotnet/docs/selectors">working
-    /// with selectors</a> for more details.
+    /// selector, the first will be used.
     /// </param>
     /// <param name="options">Call options</param>
     Task<bool> IsVisibleAsync(string selector, PageIsVisibleOptions? options = default);
@@ -1376,10 +1346,7 @@ public partial interface IPage
     /// </para>
     /// <para><a href="https://playwright.dev/dotnet/docs/locators">Learn more about locators</a>.</para>
     /// </summary>
-    /// <param name="selector">
-    /// A selector to use when resolving DOM element. See <a href="https://playwright.dev/dotnet/docs/selectors">working
-    /// with selectors</a> for more details.
-    /// </param>
+    /// <param name="selector">A selector to use when resolving DOM element.</param>
     /// <param name="options">Call options</param>
     ILocator Locator(string selector, PageLocatorOptions? options = default);
 
@@ -1427,6 +1394,7 @@ public partial interface IPage
     /// a pdf with <c>screen</c> media, call <see cref="IPage.EmulateMediaAsync"/> before
     /// calling <c>page.pdf()</c>:
     /// </para>
+    /// <para>**Usage**</para>
     /// <code>
     /// // Generates a PDF with 'screen' media type<br/>
     /// await page.EmulateMediaAsync(new PageEmulateMediaOptions { Media = Media.Screen });<br/>
@@ -1512,6 +1480,7 @@ public partial interface IPage
     /// as well. When specified with the modifier, modifier is pressed and being held while
     /// the subsequent key is being pressed.
     /// </para>
+    /// <para>**Usage**</para>
     /// <code>
     /// var page = await browser.NewPageAsync();<br/>
     /// await page.GotoAsync("https://keycode.info");<br/>
@@ -1525,8 +1494,7 @@ public partial interface IPage
     /// </summary>
     /// <param name="selector">
     /// A selector to search for an element. If there are multiple elements satisfying the
-    /// selector, the first will be used. See <a href="https://playwright.dev/dotnet/docs/selectors">working
-    /// with selectors</a> for more details.
+    /// selector, the first will be used.
     /// </param>
     /// <param name="key">
     /// Name of the key to press or a character to generate, such as <c>ArrowLeft</c> or
@@ -1541,18 +1509,8 @@ public partial interface IPage
     /// no elements match the selector, the return value resolves to <c>null</c>. To wait
     /// for an element on the page, use <see cref="ILocator.WaitForAsync"/>.
     /// </para>
-    /// <para>Shortcut for main frame's <see cref="IFrame.QuerySelectorAsync"/>.</para>
     /// </summary>
-    /// <remarks>
-    /// <para>
-    /// The use of <see cref="IElementHandle"/> is discouraged, use <see cref="ILocator"/>
-    /// objects and web-first assertions instead.
-    /// </para>
-    /// </remarks>
-    /// <param name="selector">
-    /// A selector to query for. See <a href="https://playwright.dev/dotnet/docs/selectors">working
-    /// with selectors</a> for more details.
-    /// </param>
+    /// <param name="selector">A selector to query for.</param>
     /// <param name="options">Call options</param>
     Task<IElementHandle?> QuerySelectorAsync(string selector, PageQuerySelectorOptions? options = default);
 
@@ -1561,18 +1519,8 @@ public partial interface IPage
     /// The method finds all elements matching the specified selector within the page. If
     /// no elements match the selector, the return value resolves to <c>[]</c>.
     /// </para>
-    /// <para>Shortcut for main frame's <see cref="IFrame.QuerySelectorAllAsync"/>.</para>
     /// </summary>
-    /// <remarks>
-    /// <para>
-    /// The use of <see cref="IElementHandle"/> is discouraged, use <see cref="ILocator"/>
-    /// objects and web-first assertions instead.
-    /// </para>
-    /// </remarks>
-    /// <param name="selector">
-    /// A selector to query for. See <a href="https://playwright.dev/dotnet/docs/selectors">working
-    /// with selectors</a> for more details.
-    /// </param>
+    /// <param name="selector">A selector to query for.</param>
     Task<IReadOnlyList<IElementHandle>> QuerySelectorAllAsync(string selector);
 
     /// <summary>
@@ -1600,6 +1548,7 @@ public partial interface IPage
     /// Once routing is enabled, every request matching the url pattern will stall unless
     /// it's continued, fulfilled or aborted.
     /// </para>
+    /// <para>**Usage**</para>
     /// <para>An example of a naive handler that aborts all image requests:</para>
     /// <code>
     /// var page = await browser.NewPageAsync();<br/>
@@ -1657,6 +1606,7 @@ public partial interface IPage
     /// Once routing is enabled, every request matching the url pattern will stall unless
     /// it's continued, fulfilled or aborted.
     /// </para>
+    /// <para>**Usage**</para>
     /// <para>An example of a naive handler that aborts all image requests:</para>
     /// <code>
     /// var page = await browser.NewPageAsync();<br/>
@@ -1714,6 +1664,7 @@ public partial interface IPage
     /// Once routing is enabled, every request matching the url pattern will stall unless
     /// it's continued, fulfilled or aborted.
     /// </para>
+    /// <para>**Usage**</para>
     /// <para>An example of a naive handler that aborts all image requests:</para>
     /// <code>
     /// var page = await browser.NewPageAsync();<br/>
@@ -1808,6 +1759,7 @@ public partial interface IPage
     /// Triggers a <c>change</c> and <c>input</c> event once all the provided options have
     /// been selected.
     /// </para>
+    /// <para>**Usage**</para>
     /// <code>
     /// // single selection matching the value<br/>
     /// await page.SelectOptionAsync("select#colors", new[] { "blue" });<br/>
@@ -1816,17 +1768,15 @@ public partial interface IPage
     /// // multiple<br/>
     /// await page.SelectOptionAsync("select#colors", new[] { "red", "green", "blue" });
     /// </code>
-    /// <para>Shortcut for main frame's <see cref="IFrame.SelectOptionAsync"/>.</para>
     /// </summary>
     /// <param name="selector">
     /// A selector to search for an element. If there are multiple elements satisfying the
-    /// selector, the first will be used. See <a href="https://playwright.dev/dotnet/docs/selectors">working
-    /// with selectors</a> for more details.
+    /// selector, the first will be used.
     /// </param>
     /// <param name="values">
     /// Options to select. If the <c>&lt;select&gt;</c> has the <c>multiple</c> attribute,
     /// all matching options are selected, otherwise only the first option matching one
-    /// of the passed options is selected. String values are equivalent to <c>{value:'string'}</c>.
+    /// of the passed options is selected. String values are matching both values and labels.
     /// Option is considered matching if all specified properties match.
     /// </param>
     /// <param name="options">Call options</param>
@@ -1850,6 +1800,7 @@ public partial interface IPage
     /// Triggers a <c>change</c> and <c>input</c> event once all the provided options have
     /// been selected.
     /// </para>
+    /// <para>**Usage**</para>
     /// <code>
     /// // single selection matching the value<br/>
     /// await page.SelectOptionAsync("select#colors", new[] { "blue" });<br/>
@@ -1858,17 +1809,15 @@ public partial interface IPage
     /// // multiple<br/>
     /// await page.SelectOptionAsync("select#colors", new[] { "red", "green", "blue" });
     /// </code>
-    /// <para>Shortcut for main frame's <see cref="IFrame.SelectOptionAsync"/>.</para>
     /// </summary>
     /// <param name="selector">
     /// A selector to search for an element. If there are multiple elements satisfying the
-    /// selector, the first will be used. See <a href="https://playwright.dev/dotnet/docs/selectors">working
-    /// with selectors</a> for more details.
+    /// selector, the first will be used.
     /// </param>
     /// <param name="values">
     /// Options to select. If the <c>&lt;select&gt;</c> has the <c>multiple</c> attribute,
     /// all matching options are selected, otherwise only the first option matching one
-    /// of the passed options is selected. String values are equivalent to <c>{value:'string'}</c>.
+    /// of the passed options is selected. String values are matching both values and labels.
     /// Option is considered matching if all specified properties match.
     /// </param>
     /// <param name="options">Call options</param>
@@ -1892,6 +1841,7 @@ public partial interface IPage
     /// Triggers a <c>change</c> and <c>input</c> event once all the provided options have
     /// been selected.
     /// </para>
+    /// <para>**Usage**</para>
     /// <code>
     /// // single selection matching the value<br/>
     /// await page.SelectOptionAsync("select#colors", new[] { "blue" });<br/>
@@ -1900,17 +1850,15 @@ public partial interface IPage
     /// // multiple<br/>
     /// await page.SelectOptionAsync("select#colors", new[] { "red", "green", "blue" });
     /// </code>
-    /// <para>Shortcut for main frame's <see cref="IFrame.SelectOptionAsync"/>.</para>
     /// </summary>
     /// <param name="selector">
     /// A selector to search for an element. If there are multiple elements satisfying the
-    /// selector, the first will be used. See <a href="https://playwright.dev/dotnet/docs/selectors">working
-    /// with selectors</a> for more details.
+    /// selector, the first will be used.
     /// </param>
     /// <param name="values">
     /// Options to select. If the <c>&lt;select&gt;</c> has the <c>multiple</c> attribute,
     /// all matching options are selected, otherwise only the first option matching one
-    /// of the passed options is selected. String values are equivalent to <c>{value:'string'}</c>.
+    /// of the passed options is selected. String values are matching both values and labels.
     /// Option is considered matching if all specified properties match.
     /// </param>
     /// <param name="options">Call options</param>
@@ -1934,6 +1882,7 @@ public partial interface IPage
     /// Triggers a <c>change</c> and <c>input</c> event once all the provided options have
     /// been selected.
     /// </para>
+    /// <para>**Usage**</para>
     /// <code>
     /// // single selection matching the value<br/>
     /// await page.SelectOptionAsync("select#colors", new[] { "blue" });<br/>
@@ -1942,17 +1891,15 @@ public partial interface IPage
     /// // multiple<br/>
     /// await page.SelectOptionAsync("select#colors", new[] { "red", "green", "blue" });
     /// </code>
-    /// <para>Shortcut for main frame's <see cref="IFrame.SelectOptionAsync"/>.</para>
     /// </summary>
     /// <param name="selector">
     /// A selector to search for an element. If there are multiple elements satisfying the
-    /// selector, the first will be used. See <a href="https://playwright.dev/dotnet/docs/selectors">working
-    /// with selectors</a> for more details.
+    /// selector, the first will be used.
     /// </param>
     /// <param name="values">
     /// Options to select. If the <c>&lt;select&gt;</c> has the <c>multiple</c> attribute,
     /// all matching options are selected, otherwise only the first option matching one
-    /// of the passed options is selected. String values are equivalent to <c>{value:'string'}</c>.
+    /// of the passed options is selected. String values are matching both values and labels.
     /// Option is considered matching if all specified properties match.
     /// </param>
     /// <param name="options">Call options</param>
@@ -1976,6 +1923,7 @@ public partial interface IPage
     /// Triggers a <c>change</c> and <c>input</c> event once all the provided options have
     /// been selected.
     /// </para>
+    /// <para>**Usage**</para>
     /// <code>
     /// // single selection matching the value<br/>
     /// await page.SelectOptionAsync("select#colors", new[] { "blue" });<br/>
@@ -1984,17 +1932,15 @@ public partial interface IPage
     /// // multiple<br/>
     /// await page.SelectOptionAsync("select#colors", new[] { "red", "green", "blue" });
     /// </code>
-    /// <para>Shortcut for main frame's <see cref="IFrame.SelectOptionAsync"/>.</para>
     /// </summary>
     /// <param name="selector">
     /// A selector to search for an element. If there are multiple elements satisfying the
-    /// selector, the first will be used. See <a href="https://playwright.dev/dotnet/docs/selectors">working
-    /// with selectors</a> for more details.
+    /// selector, the first will be used.
     /// </param>
     /// <param name="values">
     /// Options to select. If the <c>&lt;select&gt;</c> has the <c>multiple</c> attribute,
     /// all matching options are selected, otherwise only the first option matching one
-    /// of the passed options is selected. String values are equivalent to <c>{value:'string'}</c>.
+    /// of the passed options is selected. String values are matching both values and labels.
     /// Option is considered matching if all specified properties match.
     /// </param>
     /// <param name="options">Call options</param>
@@ -2018,6 +1964,7 @@ public partial interface IPage
     /// Triggers a <c>change</c> and <c>input</c> event once all the provided options have
     /// been selected.
     /// </para>
+    /// <para>**Usage**</para>
     /// <code>
     /// // single selection matching the value<br/>
     /// await page.SelectOptionAsync("select#colors", new[] { "blue" });<br/>
@@ -2026,17 +1973,15 @@ public partial interface IPage
     /// // multiple<br/>
     /// await page.SelectOptionAsync("select#colors", new[] { "red", "green", "blue" });
     /// </code>
-    /// <para>Shortcut for main frame's <see cref="IFrame.SelectOptionAsync"/>.</para>
     /// </summary>
     /// <param name="selector">
     /// A selector to search for an element. If there are multiple elements satisfying the
-    /// selector, the first will be used. See <a href="https://playwright.dev/dotnet/docs/selectors">working
-    /// with selectors</a> for more details.
+    /// selector, the first will be used.
     /// </param>
     /// <param name="values">
     /// Options to select. If the <c>&lt;select&gt;</c> has the <c>multiple</c> attribute,
     /// all matching options are selected, otherwise only the first option matching one
-    /// of the passed options is selected. String values are equivalent to <c>{value:'string'}</c>.
+    /// of the passed options is selected. String values are matching both values and labels.
     /// Option is considered matching if all specified properties match.
     /// </param>
     /// <param name="options">Call options</param>
@@ -2075,12 +2020,10 @@ public partial interface IPage
     /// this method throws a <see cref="TimeoutException"/>. Passing zero timeout disables
     /// this.
     /// </para>
-    /// <para>Shortcut for main frame's <see cref="IFrame.SetCheckedAsync"/>.</para>
     /// </summary>
     /// <param name="selector">
     /// A selector to search for an element. If there are multiple elements satisfying the
-    /// selector, the first will be used. See <a href="https://playwright.dev/dotnet/docs/selectors">working
-    /// with selectors</a> for more details.
+    /// selector, the first will be used.
     /// </param>
     /// <param name="checkedState">Whether to check or uncheck the checkbox.</param>
     /// <param name="options">Call options</param>
@@ -2152,8 +2095,7 @@ public partial interface IPage
     /// </summary>
     /// <param name="selector">
     /// A selector to search for an element. If there are multiple elements satisfying the
-    /// selector, the first will be used. See <a href="https://playwright.dev/dotnet/docs/selectors">working
-    /// with selectors</a> for more details.
+    /// selector, the first will be used.
     /// </param>
     /// <param name="files">
     /// </param>
@@ -2175,8 +2117,7 @@ public partial interface IPage
     /// </summary>
     /// <param name="selector">
     /// A selector to search for an element. If there are multiple elements satisfying the
-    /// selector, the first will be used. See <a href="https://playwright.dev/dotnet/docs/selectors">working
-    /// with selectors</a> for more details.
+    /// selector, the first will be used.
     /// </param>
     /// <param name="files">
     /// </param>
@@ -2198,8 +2139,7 @@ public partial interface IPage
     /// </summary>
     /// <param name="selector">
     /// A selector to search for an element. If there are multiple elements satisfying the
-    /// selector, the first will be used. See <a href="https://playwright.dev/dotnet/docs/selectors">working
-    /// with selectors</a> for more details.
+    /// selector, the first will be used.
     /// </param>
     /// <param name="files">
     /// </param>
@@ -2221,8 +2161,7 @@ public partial interface IPage
     /// </summary>
     /// <param name="selector">
     /// A selector to search for an element. If there are multiple elements satisfying the
-    /// selector, the first will be used. See <a href="https://playwright.dev/dotnet/docs/selectors">working
-    /// with selectors</a> for more details.
+    /// selector, the first will be used.
     /// </param>
     /// <param name="files">
     /// </param>
@@ -2242,6 +2181,7 @@ public partial interface IPage
     /// size, use <see cref="IBrowser.NewContextAsync"/> with <c>screen</c> and <c>viewport</c>
     /// parameters if you need better control of these properties.
     /// </para>
+    /// <para>**Usage**</para>
     /// <code>
     /// var page = await browser.NewPageAsync();<br/>
     /// await page.SetViewportSizeAsync(640, 480);<br/>
@@ -2284,7 +2224,6 @@ public partial interface IPage
     /// this method throws a <see cref="TimeoutException"/>. Passing zero timeout disables
     /// this.
     /// </para>
-    /// <para>Shortcut for main frame's <see cref="IFrame.TapAsync"/>.</para>
     /// </summary>
     /// <remarks>
     /// <para>
@@ -2294,8 +2233,7 @@ public partial interface IPage
     /// </remarks>
     /// <param name="selector">
     /// A selector to search for an element. If there are multiple elements satisfying the
-    /// selector, the first will be used. See <a href="https://playwright.dev/dotnet/docs/selectors">working
-    /// with selectors</a> for more details.
+    /// selector, the first will be used.
     /// </param>
     /// <param name="options">Call options</param>
     Task TapAsync(string selector, PageTapOptions? options = default);
@@ -2303,13 +2241,12 @@ public partial interface IPage
     /// <summary><para>Returns <c>element.textContent</c>.</para></summary>
     /// <param name="selector">
     /// A selector to search for an element. If there are multiple elements satisfying the
-    /// selector, the first will be used. See <a href="https://playwright.dev/dotnet/docs/selectors">working
-    /// with selectors</a> for more details.
+    /// selector, the first will be used.
     /// </param>
     /// <param name="options">Call options</param>
     Task<string?> TextContentAsync(string selector, PageTextContentOptions? options = default);
 
-    /// <summary><para>Returns the page's title. Shortcut for main frame's <see cref="IFrame.TitleAsync"/>.</para></summary>
+    /// <summary><para>Returns the page's title.</para></summary>
     Task<string> TitleAsync();
 
     public ITouchscreen Touchscreen { get; }
@@ -2321,16 +2258,15 @@ public partial interface IPage
     /// events. To fill values in form fields, use <see cref="IPage.FillAsync"/>.
     /// </para>
     /// <para>To press a special key, like <c>Control</c> or <c>ArrowDown</c>, use <see cref="IKeyboard.PressAsync"/>.</para>
+    /// <para>**Usage**</para>
     /// <code>
     /// await page.TypeAsync("#mytextarea", "hello"); // types instantly<br/>
     /// await page.TypeAsync("#mytextarea", "world", new() { Delay = 100 }); // types slower, like a user
     /// </code>
-    /// <para>Shortcut for main frame's <see cref="IFrame.TypeAsync"/>.</para>
     /// </summary>
     /// <param name="selector">
     /// A selector to search for an element. If there are multiple elements satisfying the
-    /// selector, the first will be used. See <a href="https://playwright.dev/dotnet/docs/selectors">working
-    /// with selectors</a> for more details.
+    /// selector, the first will be used.
     /// </param>
     /// <param name="text">A text to type into a focused element.</param>
     /// <param name="options">Call options</param>
@@ -2368,12 +2304,10 @@ public partial interface IPage
     /// this method throws a <see cref="TimeoutException"/>. Passing zero timeout disables
     /// this.
     /// </para>
-    /// <para>Shortcut for main frame's <see cref="IFrame.UncheckAsync"/>.</para>
     /// </summary>
     /// <param name="selector">
     /// A selector to search for an element. If there are multiple elements satisfying the
-    /// selector, the first will be used. See <a href="https://playwright.dev/dotnet/docs/selectors">working
-    /// with selectors</a> for more details.
+    /// selector, the first will be used.
     /// </param>
     /// <param name="options">Call options</param>
     Task UncheckAsync(string selector, PageUncheckOptions? options = default);
@@ -2417,7 +2351,6 @@ public partial interface IPage
     /// <param name="handler">Optional handler function to route the request.</param>
     Task UnrouteAsync(Func<string, bool> url, Action<IRoute>? handler = default);
 
-    /// <summary><para>Shortcut for main frame's <see cref="IFrame.Url"/>.</para></summary>
     string Url { get; }
 
     /// <summary><para>Video object associated with this page.</para></summary>
@@ -2501,6 +2434,7 @@ public partial interface IPage
     /// Returns when the <paramref name="expression"/> returns a truthy value. It resolves
     /// to a JSHandle of the truthy value.
     /// </para>
+    /// <para>**Usage**</para>
     /// <para>
     /// The <see cref="IPage.WaitForFunctionAsync"/> can be used to observe viewport size
     /// change:
@@ -2529,7 +2463,6 @@ public partial interface IPage
     /// var selector = ".foo";<br/>
     /// await page.WaitForFunctionAsync("selector =&gt; !!document.querySelector(selector)", selector);
     /// </code>
-    /// <para>Shortcut for main frame's <see cref="IFrame.WaitForFunctionAsync"/>.</para>
     /// </summary>
     /// <param name="expression">
     /// JavaScript expression to be evaluated in the browser context. If the expression
@@ -2546,19 +2479,20 @@ public partial interface IPage
     /// The navigation must have been committed when this method is called. If current document
     /// has already reached the required state, resolves immediately.
     /// </para>
+    /// <para>**Usage**</para>
     /// <code>
-    /// await page.GetByRole("button").ClickAsync(); // Click triggers navigation.<br/>
+    /// await page.GetByRole(AriaRole.Button).ClickAsync(); // Click triggers navigation.<br/>
     /// await page.WaitForLoadStateAsync(); // The promise resolves after 'load' event.
     /// </code>
     /// <code>
     /// var popup = await page.RunAndWaitForPopupAsync(async () =&gt;<br/>
     /// {<br/>
-    ///     await page.GetByRole("button").ClickAsync(); // click triggers the popup/<br/>
+    ///     await page.GetByRole(AriaRole.Button).ClickAsync(); // click triggers the popup<br/>
     /// });<br/>
+    /// // Wait for the "DOMContentLoaded" event.<br/>
     /// await popup.WaitForLoadStateAsync(LoadState.DOMContentLoaded);<br/>
     /// Console.WriteLine(await popup.TitleAsync()); // popup is ready to use.
     /// </code>
-    /// <para>Shortcut for main frame's <see cref="IFrame.WaitForLoadStateAsync"/>.</para>
     /// </summary>
     /// <param name="state">
     /// Optional load state to wait for, defaults to <c>load</c>. If the state has been
@@ -2583,6 +2517,7 @@ public partial interface IPage
     /// redirect. In case of navigation to a different anchor or navigation due to History
     /// API usage, the navigation will resolve with <c>null</c>.
     /// </para>
+    /// <para>**Usage**</para>
     /// <para>
     /// This resolves when the page navigates to a new URL or reloads. It is useful for
     /// when you run code which will indirectly cause the page to navigate. e.g. The click
@@ -2592,13 +2527,12 @@ public partial interface IPage
     /// <code>
     /// await page.RunAndWaitForNavigationAsync(async () =&gt;<br/>
     /// {<br/>
-    ///     // Clicking the link will indirectly cause a navigation.<br/>
-    ///     await page.ClickAsync("a.delayed-navigation");<br/>
+    ///     // This action triggers the navigation after a timeout.<br/>
+    ///     await page.GetByText("Navigate after timeout").ClickAsync();<br/>
     /// });<br/>
     /// <br/>
     /// // The method continues after navigation has finished
     /// </code>
-    /// <para>Shortcut for main frame's <see cref="IFrame.RunAndWaitForNavigationAsync"/>.</para>
     /// </summary>
     /// <remarks>
     /// <para>
@@ -2616,6 +2550,7 @@ public partial interface IPage
     /// redirect. In case of navigation to a different anchor or navigation due to History
     /// API usage, the navigation will resolve with <c>null</c>.
     /// </para>
+    /// <para>**Usage**</para>
     /// <para>
     /// This resolves when the page navigates to a new URL or reloads. It is useful for
     /// when you run code which will indirectly cause the page to navigate. e.g. The click
@@ -2625,13 +2560,12 @@ public partial interface IPage
     /// <code>
     /// await page.RunAndWaitForNavigationAsync(async () =&gt;<br/>
     /// {<br/>
-    ///     // Clicking the link will indirectly cause a navigation.<br/>
-    ///     await page.ClickAsync("a.delayed-navigation");<br/>
+    ///     // This action triggers the navigation after a timeout.<br/>
+    ///     await page.GetByText("Navigate after timeout").ClickAsync();<br/>
     /// });<br/>
     /// <br/>
     /// // The method continues after navigation has finished
     /// </code>
-    /// <para>Shortcut for main frame's <see cref="IFrame.RunAndWaitForNavigationAsync"/>.</para>
     /// </summary>
     /// <remarks>
     /// <para>
@@ -2671,17 +2605,18 @@ public partial interface IPage
     /// Waits for the matching request and returns it. See <a href="https://playwright.dev/dotnet/docs/events#waiting-for-event">waiting
     /// for event</a> for more details about events.
     /// </para>
+    /// <para>**Usage**</para>
     /// <code>
     /// // Waits for the next request with the specified url.<br/>
     /// await page.RunAndWaitForRequestAsync(async () =&gt;<br/>
     /// {<br/>
-    ///     await page.ClickAsync("button");<br/>
+    ///     await page.GetByText("trigger request").ClickAsync();<br/>
     /// }, "http://example.com/resource");<br/>
     /// <br/>
     /// // Alternative way with a predicate.<br/>
     /// await page.RunAndWaitForRequestAsync(async () =&gt;<br/>
     /// {<br/>
-    ///     await page.ClickAsync("button");<br/>
+    ///     await page.GetByText("trigger request").ClickAsync();<br/>
     /// }, request =&gt; request.Url == "https://example.com" &amp;&amp; request.Method == "GET");
     /// </code>
     /// </summary>
@@ -2699,17 +2634,18 @@ public partial interface IPage
     /// Waits for the matching request and returns it. See <a href="https://playwright.dev/dotnet/docs/events#waiting-for-event">waiting
     /// for event</a> for more details about events.
     /// </para>
+    /// <para>**Usage**</para>
     /// <code>
     /// // Waits for the next request with the specified url.<br/>
     /// await page.RunAndWaitForRequestAsync(async () =&gt;<br/>
     /// {<br/>
-    ///     await page.ClickAsync("button");<br/>
+    ///     await page.GetByText("trigger request").ClickAsync();<br/>
     /// }, "http://example.com/resource");<br/>
     /// <br/>
     /// // Alternative way with a predicate.<br/>
     /// await page.RunAndWaitForRequestAsync(async () =&gt;<br/>
     /// {<br/>
-    ///     await page.ClickAsync("button");<br/>
+    ///     await page.GetByText("trigger request").ClickAsync();<br/>
     /// }, request =&gt; request.Url == "https://example.com" &amp;&amp; request.Method == "GET");
     /// </code>
     /// </summary>
@@ -2727,17 +2663,18 @@ public partial interface IPage
     /// Waits for the matching request and returns it. See <a href="https://playwright.dev/dotnet/docs/events#waiting-for-event">waiting
     /// for event</a> for more details about events.
     /// </para>
+    /// <para>**Usage**</para>
     /// <code>
     /// // Waits for the next request with the specified url.<br/>
     /// await page.RunAndWaitForRequestAsync(async () =&gt;<br/>
     /// {<br/>
-    ///     await page.ClickAsync("button");<br/>
+    ///     await page.GetByText("trigger request").ClickAsync();<br/>
     /// }, "http://example.com/resource");<br/>
     /// <br/>
     /// // Alternative way with a predicate.<br/>
     /// await page.RunAndWaitForRequestAsync(async () =&gt;<br/>
     /// {<br/>
-    ///     await page.ClickAsync("button");<br/>
+    ///     await page.GetByText("trigger request").ClickAsync();<br/>
     /// }, request =&gt; request.Url == "https://example.com" &amp;&amp; request.Method == "GET");
     /// </code>
     /// </summary>
@@ -2755,17 +2692,18 @@ public partial interface IPage
     /// Waits for the matching request and returns it. See <a href="https://playwright.dev/dotnet/docs/events#waiting-for-event">waiting
     /// for event</a> for more details about events.
     /// </para>
+    /// <para>**Usage**</para>
     /// <code>
     /// // Waits for the next request with the specified url.<br/>
     /// await page.RunAndWaitForRequestAsync(async () =&gt;<br/>
     /// {<br/>
-    ///     await page.ClickAsync("button");<br/>
+    ///     await page.GetByText("trigger request").ClickAsync();<br/>
     /// }, "http://example.com/resource");<br/>
     /// <br/>
     /// // Alternative way with a predicate.<br/>
     /// await page.RunAndWaitForRequestAsync(async () =&gt;<br/>
     /// {<br/>
-    ///     await page.ClickAsync("button");<br/>
+    ///     await page.GetByText("trigger request").ClickAsync();<br/>
     /// }, request =&gt; request.Url == "https://example.com" &amp;&amp; request.Method == "GET");
     /// </code>
     /// </summary>
@@ -2784,17 +2722,18 @@ public partial interface IPage
     /// Waits for the matching request and returns it. See <a href="https://playwright.dev/dotnet/docs/events#waiting-for-event">waiting
     /// for event</a> for more details about events.
     /// </para>
+    /// <para>**Usage**</para>
     /// <code>
     /// // Waits for the next request with the specified url.<br/>
     /// await page.RunAndWaitForRequestAsync(async () =&gt;<br/>
     /// {<br/>
-    ///     await page.ClickAsync("button");<br/>
+    ///     await page.GetByText("trigger request").ClickAsync();<br/>
     /// }, "http://example.com/resource");<br/>
     /// <br/>
     /// // Alternative way with a predicate.<br/>
     /// await page.RunAndWaitForRequestAsync(async () =&gt;<br/>
     /// {<br/>
-    ///     await page.ClickAsync("button");<br/>
+    ///     await page.GetByText("trigger request").ClickAsync();<br/>
     /// }, request =&gt; request.Url == "https://example.com" &amp;&amp; request.Method == "GET");
     /// </code>
     /// </summary>
@@ -2813,17 +2752,18 @@ public partial interface IPage
     /// Waits for the matching request and returns it. See <a href="https://playwright.dev/dotnet/docs/events#waiting-for-event">waiting
     /// for event</a> for more details about events.
     /// </para>
+    /// <para>**Usage**</para>
     /// <code>
     /// // Waits for the next request with the specified url.<br/>
     /// await page.RunAndWaitForRequestAsync(async () =&gt;<br/>
     /// {<br/>
-    ///     await page.ClickAsync("button");<br/>
+    ///     await page.GetByText("trigger request").ClickAsync();<br/>
     /// }, "http://example.com/resource");<br/>
     /// <br/>
     /// // Alternative way with a predicate.<br/>
     /// await page.RunAndWaitForRequestAsync(async () =&gt;<br/>
     /// {<br/>
-    ///     await page.ClickAsync("button");<br/>
+    ///     await page.GetByText("trigger request").ClickAsync();<br/>
     /// }, request =&gt; request.Url == "https://example.com" &amp;&amp; request.Method == "GET");
     /// </code>
     /// </summary>
@@ -2867,17 +2807,18 @@ public partial interface IPage
     /// Returns the matched response. See <a href="https://playwright.dev/dotnet/docs/events#waiting-for-event">waiting
     /// for event</a> for more details about events.
     /// </para>
+    /// <para>**Usage**</para>
     /// <code>
     /// // Waits for the next response with the specified url.<br/>
     /// await page.RunAndWaitForResponseAsync(async () =&gt;<br/>
     /// {<br/>
-    ///     await page.ClickAsync("button.triggers-response");<br/>
+    ///     await page.GetByText("trigger response").ClickAsync();<br/>
     /// }, "http://example.com/resource");<br/>
     /// <br/>
     /// // Alternative way with a predicate.<br/>
     /// await page.RunAndWaitForResponseAsync(async () =&gt;<br/>
     /// {<br/>
-    ///     await page.ClickAsync("button");<br/>
+    ///     await page.GetByText("trigger response").ClickAsync();<br/>
     /// }, response =&gt; response.Url == "https://example.com" &amp;&amp; response.Status == 200);
     /// </code>
     /// </summary>
@@ -2895,17 +2836,18 @@ public partial interface IPage
     /// Returns the matched response. See <a href="https://playwright.dev/dotnet/docs/events#waiting-for-event">waiting
     /// for event</a> for more details about events.
     /// </para>
+    /// <para>**Usage**</para>
     /// <code>
     /// // Waits for the next response with the specified url.<br/>
     /// await page.RunAndWaitForResponseAsync(async () =&gt;<br/>
     /// {<br/>
-    ///     await page.ClickAsync("button.triggers-response");<br/>
+    ///     await page.GetByText("trigger response").ClickAsync();<br/>
     /// }, "http://example.com/resource");<br/>
     /// <br/>
     /// // Alternative way with a predicate.<br/>
     /// await page.RunAndWaitForResponseAsync(async () =&gt;<br/>
     /// {<br/>
-    ///     await page.ClickAsync("button");<br/>
+    ///     await page.GetByText("trigger response").ClickAsync();<br/>
     /// }, response =&gt; response.Url == "https://example.com" &amp;&amp; response.Status == 200);
     /// </code>
     /// </summary>
@@ -2923,17 +2865,18 @@ public partial interface IPage
     /// Returns the matched response. See <a href="https://playwright.dev/dotnet/docs/events#waiting-for-event">waiting
     /// for event</a> for more details about events.
     /// </para>
+    /// <para>**Usage**</para>
     /// <code>
     /// // Waits for the next response with the specified url.<br/>
     /// await page.RunAndWaitForResponseAsync(async () =&gt;<br/>
     /// {<br/>
-    ///     await page.ClickAsync("button.triggers-response");<br/>
+    ///     await page.GetByText("trigger response").ClickAsync();<br/>
     /// }, "http://example.com/resource");<br/>
     /// <br/>
     /// // Alternative way with a predicate.<br/>
     /// await page.RunAndWaitForResponseAsync(async () =&gt;<br/>
     /// {<br/>
-    ///     await page.ClickAsync("button");<br/>
+    ///     await page.GetByText("trigger response").ClickAsync();<br/>
     /// }, response =&gt; response.Url == "https://example.com" &amp;&amp; response.Status == 200);
     /// </code>
     /// </summary>
@@ -2951,17 +2894,18 @@ public partial interface IPage
     /// Returns the matched response. See <a href="https://playwright.dev/dotnet/docs/events#waiting-for-event">waiting
     /// for event</a> for more details about events.
     /// </para>
+    /// <para>**Usage**</para>
     /// <code>
     /// // Waits for the next response with the specified url.<br/>
     /// await page.RunAndWaitForResponseAsync(async () =&gt;<br/>
     /// {<br/>
-    ///     await page.ClickAsync("button.triggers-response");<br/>
+    ///     await page.GetByText("trigger response").ClickAsync();<br/>
     /// }, "http://example.com/resource");<br/>
     /// <br/>
     /// // Alternative way with a predicate.<br/>
     /// await page.RunAndWaitForResponseAsync(async () =&gt;<br/>
     /// {<br/>
-    ///     await page.ClickAsync("button");<br/>
+    ///     await page.GetByText("trigger response").ClickAsync();<br/>
     /// }, response =&gt; response.Url == "https://example.com" &amp;&amp; response.Status == 200);
     /// </code>
     /// </summary>
@@ -2980,17 +2924,18 @@ public partial interface IPage
     /// Returns the matched response. See <a href="https://playwright.dev/dotnet/docs/events#waiting-for-event">waiting
     /// for event</a> for more details about events.
     /// </para>
+    /// <para>**Usage**</para>
     /// <code>
     /// // Waits for the next response with the specified url.<br/>
     /// await page.RunAndWaitForResponseAsync(async () =&gt;<br/>
     /// {<br/>
-    ///     await page.ClickAsync("button.triggers-response");<br/>
+    ///     await page.GetByText("trigger response").ClickAsync();<br/>
     /// }, "http://example.com/resource");<br/>
     /// <br/>
     /// // Alternative way with a predicate.<br/>
     /// await page.RunAndWaitForResponseAsync(async () =&gt;<br/>
     /// {<br/>
-    ///     await page.ClickAsync("button");<br/>
+    ///     await page.GetByText("trigger response").ClickAsync();<br/>
     /// }, response =&gt; response.Url == "https://example.com" &amp;&amp; response.Status == 200);
     /// </code>
     /// </summary>
@@ -3009,17 +2954,18 @@ public partial interface IPage
     /// Returns the matched response. See <a href="https://playwright.dev/dotnet/docs/events#waiting-for-event">waiting
     /// for event</a> for more details about events.
     /// </para>
+    /// <para>**Usage**</para>
     /// <code>
     /// // Waits for the next response with the specified url.<br/>
     /// await page.RunAndWaitForResponseAsync(async () =&gt;<br/>
     /// {<br/>
-    ///     await page.ClickAsync("button.triggers-response");<br/>
+    ///     await page.GetByText("trigger response").ClickAsync();<br/>
     /// }, "http://example.com/resource");<br/>
     /// <br/>
     /// // Alternative way with a predicate.<br/>
     /// await page.RunAndWaitForResponseAsync(async () =&gt;<br/>
     /// {<br/>
-    ///     await page.ClickAsync("button");<br/>
+    ///     await page.GetByText("trigger response").ClickAsync();<br/>
     /// }, response =&gt; response.Url == "https://example.com" &amp;&amp; response.Status == 200);
     /// </code>
     /// </summary>
@@ -3045,6 +2991,7 @@ public partial interface IPage
     /// the method will return immediately. If the selector doesn't satisfy the condition
     /// for the <paramref name="timeout"/> milliseconds, the function will throw.
     /// </para>
+    /// <para>**Usage**</para>
     /// <para>This method works across navigations:</para>
     /// <code>
     /// using Microsoft.Playwright;<br/>
@@ -3077,10 +3024,7 @@ public partial interface IPage
     /// Using <see cref="ILocator"/> objects and web-first assertions makes the code wait-for-selector-free.
     /// </para>
     /// </remarks>
-    /// <param name="selector">
-    /// A selector to query for. See <a href="https://playwright.dev/dotnet/docs/selectors">working
-    /// with selectors</a> for more details.
-    /// </param>
+    /// <param name="selector">A selector to query for.</param>
     /// <param name="options">Call options</param>
     Task<IElementHandle?> WaitForSelectorAsync(string selector, PageWaitForSelectorOptions? options = default);
 
@@ -3091,22 +3035,22 @@ public partial interface IPage
     /// using the timer in production are going to be flaky. Use signals such as network
     /// events, selectors becoming visible and others instead.
     /// </para>
+    /// <para>**Usage**</para>
     /// <code>
     /// // Wait for 1 second<br/>
     /// await page.WaitForTimeoutAsync(1000);
     /// </code>
-    /// <para>Shortcut for main frame's <see cref="IFrame.WaitForTimeoutAsync"/>.</para>
     /// </summary>
     /// <param name="timeout">A timeout to wait for</param>
     Task WaitForTimeoutAsync(float timeout);
 
     /// <summary>
     /// <para>Waits for the main frame to navigate to the given URL.</para>
+    /// <para>**Usage**</para>
     /// <code>
     /// await page.ClickAsync("a.delayed-navigation"); // clicking the link will indirectly cause a navigation<br/>
     /// await page.WaitForURLAsync("**/target.html");
     /// </code>
-    /// <para>Shortcut for main frame's <see cref="IFrame.WaitForURLAsync"/>.</para>
     /// </summary>
     /// <param name="url">
     /// A glob pattern, regex pattern or predicate receiving <see cref="URL"/> to match
@@ -3119,11 +3063,11 @@ public partial interface IPage
 
     /// <summary>
     /// <para>Waits for the main frame to navigate to the given URL.</para>
+    /// <para>**Usage**</para>
     /// <code>
     /// await page.ClickAsync("a.delayed-navigation"); // clicking the link will indirectly cause a navigation<br/>
     /// await page.WaitForURLAsync("**/target.html");
     /// </code>
-    /// <para>Shortcut for main frame's <see cref="IFrame.WaitForURLAsync"/>.</para>
     /// </summary>
     /// <param name="url">
     /// A glob pattern, regex pattern or predicate receiving <see cref="URL"/> to match
@@ -3136,11 +3080,11 @@ public partial interface IPage
 
     /// <summary>
     /// <para>Waits for the main frame to navigate to the given URL.</para>
+    /// <para>**Usage**</para>
     /// <code>
     /// await page.ClickAsync("a.delayed-navigation"); // clicking the link will indirectly cause a navigation<br/>
     /// await page.WaitForURLAsync("**/target.html");
     /// </code>
-    /// <para>Shortcut for main frame's <see cref="IFrame.WaitForURLAsync"/>.</para>
     /// </summary>
     /// <param name="url">
     /// A glob pattern, regex pattern or predicate receiving <see cref="URL"/> to match

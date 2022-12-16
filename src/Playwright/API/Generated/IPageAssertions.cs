@@ -69,6 +69,7 @@ public partial interface IPageAssertions
 
     /// <summary>
     /// <para>Ensures the page has the given title.</para>
+    /// <para>**Usage**</para>
     /// <code>await Expect(page).ToHaveTitle("Playwright");</code>
     /// </summary>
     /// <param name="titleOrRegExp">Expected title or RegExp.</param>
@@ -77,6 +78,7 @@ public partial interface IPageAssertions
 
     /// <summary>
     /// <para>Ensures the page has the given title.</para>
+    /// <para>**Usage**</para>
     /// <code>await Expect(page).ToHaveTitle("Playwright");</code>
     /// </summary>
     /// <param name="titleOrRegExp">Expected title or RegExp.</param>
@@ -85,6 +87,7 @@ public partial interface IPageAssertions
 
     /// <summary>
     /// <para>Ensures the page is navigated to the given URL.</para>
+    /// <para>**Usage**</para>
     /// <code>await Expect(page).ToHaveURL(new Regex(".*checkout"));</code>
     /// </summary>
     /// <param name="urlOrRegExp">Expected URL string or RegExp.</param>
@@ -93,6 +96,7 @@ public partial interface IPageAssertions
 
     /// <summary>
     /// <para>Ensures the page is navigated to the given URL.</para>
+    /// <para>**Usage**</para>
     /// <code>await Expect(page).ToHaveURL(new Regex(".*checkout"));</code>
     /// </summary>
     /// <param name="urlOrRegExp">Expected URL string or RegExp.</param>

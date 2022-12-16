@@ -22,45 +22,17 @@
  * SOFTWARE.
  */
 
-using System.Text.Json.Serialization;
+namespace Microsoft.Playwright.Tests.Locator;
 
-#nullable enable
-
-namespace Microsoft.Playwright;
-
-public class PageIsHiddenOptions
+public class LocatorListTests : PageTestEx
 {
-    public PageIsHiddenOptions() { }
-
-    public PageIsHiddenOptions(PageIsHiddenOptions clone)
+    [PlaywrightTest("locator-list.spec.ts", "locator.all should work")]
+    public async Task ShouldWork()
     {
-        if (clone == null)
-        {
-            return;
-        }
-
-        Strict = clone.Strict;
-        Timeout = clone.Timeout;
+        await Page.SetContentAsync("<div><p>A</p><p>B</p><p>C</p></div>");
+        var texts = new List<string>();
+        foreach (var p in await Page.Locator("div >> p").AllAsync())
+            texts.Add(await p.TextContentAsync());
+        Assert.AreEqual(new[] { "A", "B", "C" }, texts);
     }
-
-    /// <summary>
-    /// <para>
-    /// When true, the call requires selector to resolve to a single element. If given selector
-    /// resolves to more than one element, the call throws an exception.
-    /// </para>
-    /// </summary>
-    [JsonPropertyName("strict")]
-    public bool? Strict { get; set; }
-
-    /// <summary>
-    /// <para>
-    ///  **DEPRECATED** This option is ignored. [`method: Page.isHidden`] does not wait for
-    ///  the↵element to become hidden and returns immediately.
-    /// </para>
-    /// </summary>
-    [JsonPropertyName("timeout")]
-    [System.Obsolete]
-    public float? Timeout { get; set; }
 }
-
-#nullable disable

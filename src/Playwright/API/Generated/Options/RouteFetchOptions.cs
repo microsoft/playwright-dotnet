@@ -22,45 +22,45 @@
  * SOFTWARE.
  */
 
+using System.Collections.Generic;
 using System.Text.Json.Serialization;
 
 #nullable enable
 
 namespace Microsoft.Playwright;
 
-public class PageIsHiddenOptions
+public class RouteFetchOptions
 {
-    public PageIsHiddenOptions() { }
+    public RouteFetchOptions() { }
 
-    public PageIsHiddenOptions(PageIsHiddenOptions clone)
+    public RouteFetchOptions(RouteFetchOptions clone)
     {
         if (clone == null)
         {
             return;
         }
 
-        Strict = clone.Strict;
-        Timeout = clone.Timeout;
+        Headers = clone.Headers;
+        Method = clone.Method;
+        PostData = clone.PostData;
+        Url = clone.Url;
     }
 
-    /// <summary>
-    /// <para>
-    /// When true, the call requires selector to resolve to a single element. If given selector
-    /// resolves to more than one element, the call throws an exception.
-    /// </para>
-    /// </summary>
-    [JsonPropertyName("strict")]
-    public bool? Strict { get; set; }
+    /// <summary><para>If set changes the request HTTP headers. Header values will be converted to a string.</para></summary>
+    [JsonPropertyName("headers")]
+    public IEnumerable<KeyValuePair<string, string>>? Headers { get; set; }
 
-    /// <summary>
-    /// <para>
-    ///  **DEPRECATED** This option is ignored. [`method: Page.isHidden`] does not wait for
-    ///  the↵element to become hidden and returns immediately.
-    /// </para>
-    /// </summary>
-    [JsonPropertyName("timeout")]
-    [System.Obsolete]
-    public float? Timeout { get; set; }
+    /// <summary><para>If set changes the request method (e.g. GET or POST).</para></summary>
+    [JsonPropertyName("method")]
+    public string? Method { get; set; }
+
+    /// <summary><para>If set changes the post data of request.</para></summary>
+    [JsonPropertyName("postData")]
+    public byte[]? PostData { get; set; }
+
+    /// <summary><para>If set changes the request URL. New URL must have same protocol as original one.</para></summary>
+    [JsonPropertyName("url")]
+    public string? Url { get; set; }
 }
 
 #nullable disable

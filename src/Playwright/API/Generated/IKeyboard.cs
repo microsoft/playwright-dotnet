@@ -124,6 +124,7 @@ public partial interface IKeyboard
     /// Dispatches only <c>input</c> event, does not emit the <c>keydown</c>, <c>keyup</c>
     /// or <c>keypress</c> events.
     /// </para>
+    /// <para>**Usage**</para>
     /// <code>await page.Keyboard.PressAsync("嗨");</code>
     /// </summary>
     /// <remarks>
@@ -166,6 +167,7 @@ public partial interface IKeyboard
     /// as well. When specified with the modifier, modifier is pressed and being held while
     /// the subsequent key is being pressed.
     /// </para>
+    /// <para>**Usage**</para>
     /// <code>
     /// await page.GotoAsync("https://keycode.info");<br/>
     /// await page.Keyboard.PressAsync("A");<br/>
@@ -191,6 +193,7 @@ public partial interface IKeyboard
     /// each character in the text.
     /// </para>
     /// <para>To press a special key, like <c>Control</c> or <c>ArrowDown</c>, use <see cref="IKeyboard.PressAsync"/>.</para>
+    /// <para>**Usage**</para>
     /// <code>
     /// await page.Keyboard.TypeAsync("Hello"); // types instantly<br/>
     /// await page.Keyboard.TypeAsync("World", new KeyboardTypeOptions { Delay = 100 }); // types slower, like a user

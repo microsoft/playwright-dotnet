@@ -44,6 +44,7 @@ public class RouteFulfillOptions
         BodyBytes = clone.BodyBytes;
         ContentType = clone.ContentType;
         Headers = clone.Headers;
+        Json = clone.Json;
         Path = clone.Path;
         Response = clone.Response;
         Status = clone.Status;
@@ -64,6 +65,27 @@ public class RouteFulfillOptions
     /// <summary><para>Response headers. Header values will be converted to a string.</para></summary>
     [JsonPropertyName("headers")]
     public IEnumerable<KeyValuePair<string, string>>? Headers { get; set; }
+
+    /// <summary>
+    /// <para>
+    /// JSON response. This method will set the content type to <c>application/json</c>
+    /// if not set.
+    /// </para>
+    /// <para>
+    /// JSON response. This method will set the content type to <c>application/json</c>
+    /// if not set.
+    /// </para>
+    /// <para>**Usage**</para>
+    /// <code>
+    /// await page.RouteAsync("https://dog.ceo/api/breeds/list/all", async route =&gt;<br/>
+    /// {<br/>
+    ///     var json = /* JsonElement with test payload */;<br/>
+    ///     await route.FulfillAsync(new() { Json: json });<br/>
+    /// });
+    /// </code>
+    /// </summary>
+    [JsonPropertyName("json")]
+    public object? Json { get; set; }
 
     /// <summary>
     /// <para>

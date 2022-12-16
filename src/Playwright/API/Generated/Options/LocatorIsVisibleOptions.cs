@@ -44,8 +44,8 @@ public class LocatorIsVisibleOptions
 
     /// <summary>
     /// <para>
-    /// **DEPRECATED** This option is ignored. <see cref="ILocator.IsVisibleAsync"/> does
-    /// not wait for the element to become visible and returns immediately.
+    ///  **DEPRECATED** This option is ignored. [`method: Locator.isVisible`] does not wait
+    ///  for the element to become visible and returns immediately.
     /// </para>
     /// </summary>
     [JsonPropertyName("timeout")]

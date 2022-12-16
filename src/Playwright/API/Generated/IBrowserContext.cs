@@ -83,7 +83,7 @@ public partial interface IBrowserContext
     /// <code>
     /// var popup = await context.RunAndWaitForPageAsync(async =&gt;<br/>
     /// {<br/>
-    ///     await page.Locator("a").ClickAsync();<br/>
+    ///     await page.GetByText("open new page").ClickAsync();<br/>
     /// });<br/>
     /// Console.WriteLine(await popup.EvaluateAsync&lt;string&gt;("location.href"));
     /// </code>
@@ -149,6 +149,7 @@ public partial interface IBrowserContext
     /// Adds cookies into this browser context. All pages within this context will have
     /// these cookies installed. Cookies can be obtained via <see cref="IBrowserContext.CookiesAsync"/>.
     /// </para>
+    /// <para>**Usage**</para>
     /// <code>await context.AddCookiesAsync(new[] { cookie1, cookie2 });</code>
     /// </summary>
     /// <param name="cookies">
@@ -168,6 +169,7 @@ public partial interface IBrowserContext
     /// The script is evaluated after the document was created but before any of its scripts
     /// were run. This is useful to amend the JavaScript environment, e.g. to seed <c>Math.random</c>.
     /// </para>
+    /// <para>**Usage**</para>
     /// <para>An example of overriding <c>Math.random</c> before the page loads:</para>
     /// <code>await context.AddInitScriptAsync(new BrowserContextAddInitScriptOptions { ScriptPath = "preload.js" });</code>
     /// </summary>
@@ -194,6 +196,7 @@ public partial interface IBrowserContext
 
     /// <summary>
     /// <para>Clears all permission overrides for the browser context.</para>
+    /// <para>**Usage**</para>
     /// <code>
     /// var context = await browser.NewContextAsync();<br/>
     /// await context.GrantPermissionsAsync(new[] { "clipboard-read" });<br/>
@@ -237,6 +240,7 @@ public partial interface IBrowserContext
     /// }</c>.
     /// </para>
     /// <para>See <see cref="IPage.ExposeBindingAsync"/> for page-only version.</para>
+    /// <para>**Usage**</para>
     /// <para>An example of exposing page URL to all frames in all pages in the context:</para>
     /// <code>
     /// using Microsoft.Playwright;<br/>
@@ -254,7 +258,7 @@ public partial interface IBrowserContext
     /// "&lt;/script&gt;\n" +<br/>
     /// "&lt;button onclick=\"onClick()\"&gt;Click me&lt;/button&gt;\n" +<br/>
     /// "&lt;div&gt;&lt;/div&gt;");<br/>
-    /// await page.GetByRole("button").ClickAsync();
+    /// await page.GetByRole(AriaRole.Button).ClickAsync();
     /// </code>
     /// <para>An example of passing an element handle:</para>
     /// <code>
@@ -291,6 +295,7 @@ public partial interface IBrowserContext
     /// </para>
     /// <para>If the <paramref name="callback"/> returns a <see cref="Task"/>, it will be awaited.</para>
     /// <para>See <see cref="IPage.ExposeFunctionAsync"/> for page-only version.</para>
+    /// <para>**Usage**</para>
     /// <para>An example of adding a <c>sha256</c> function to all pages in the context:</para>
     /// <code>
     /// using Microsoft.Playwright;<br/>
@@ -321,7 +326,7 @@ public partial interface IBrowserContext
     ///         "&lt;button onclick=\"onClick()\"&gt;Click me&lt;/button&gt;\n" +<br/>
     ///         "&lt;div&gt;&lt;/div&gt;");<br/>
     /// <br/>
-    ///         await page.GetByRole("button").ClickAsync();<br/>
+    ///         await page.GetByRole(AriaRole.Button).ClickAsync();<br/>
     ///         Console.WriteLine(await page.TextContentAsync("div"));<br/>
     ///     }<br/>
     /// }
@@ -381,6 +386,7 @@ public partial interface IBrowserContext
     /// page in the browser context. Once route is enabled, every request matching the url
     /// pattern will stall unless it's continued, fulfilled or aborted.
     /// </para>
+    /// <para>**Usage**</para>
     /// <para>An example of a naive handler that aborts all image requests:</para>
     /// <code>
     /// var context = await browser.NewContextAsync();<br/>
@@ -441,6 +447,7 @@ public partial interface IBrowserContext
     /// page in the browser context. Once route is enabled, every request matching the url
     /// pattern will stall unless it's continued, fulfilled or aborted.
     /// </para>
+    /// <para>**Usage**</para>
     /// <para>An example of a naive handler that aborts all image requests:</para>
     /// <code>
     /// var context = await browser.NewContextAsync();<br/>
@@ -501,6 +508,7 @@ public partial interface IBrowserContext
     /// page in the browser context. Once route is enabled, every request matching the url
     /// pattern will stall unless it's continued, fulfilled or aborted.
     /// </para>
+    /// <para>**Usage**</para>
     /// <para>An example of a naive handler that aborts all image requests:</para>
     /// <code>
     /// var context = await browser.NewContextAsync();<br/>
@@ -641,6 +649,7 @@ public partial interface IBrowserContext
     /// Sets the context's geolocation. Passing <c>null</c> or <c>undefined</c> emulates
     /// position unavailable.
     /// </para>
+    /// <para>**Usage**</para>
     /// <code>
     /// await context.SetGeolocationAsync(new Geolocation()<br/>
     /// {<br/>

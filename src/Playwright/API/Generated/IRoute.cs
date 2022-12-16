@@ -74,6 +74,7 @@ public partial interface IRoute
 
     /// <summary>
     /// <para>Continues route's request with optional overrides.</para>
+    /// <para>**Usage**</para>
     /// <code>
     /// await page.RouteAsync("**/*", route =&gt;<br/>
     /// {<br/>
@@ -94,6 +95,7 @@ public partial interface IRoute
     /// then it'll fall back to the previous one and in the end will be aborted by the first
     /// registered route.
     /// </para>
+    /// <para>**Usage**</para>
     /// <code>
     /// await page.RouteAsync("**/*", route =&gt; {<br/>
     ///     // Runs last.<br/>
@@ -153,16 +155,38 @@ public partial interface IRoute
     Task FallbackAsync(RouteFallbackOptions? options = default);
 
     /// <summary>
+    /// <para>
+    /// Performs the request and fetches result without fulfilling it, so that the response
+    /// could be modified and then fulfilled.
+    /// </para>
+    /// <para>**Usage**</para>
+    /// <code>
+    /// await page.RouteAsync("https://dog.ceo/api/breeds/list/all", async route =&gt;<br/>
+    /// {<br/>
+    ///     var response = await route.FetchAsync();<br/>
+    ///     dynamic json = await response.JsonAsync();<br/>
+    ///     json.message.big_red_dog = new string[] {};<br/>
+    ///     await route.FulfillAsync(new() { Response = response, Json = json });<br/>
+    /// });
+    /// </code>
+    /// </summary>
+    /// <param name="options">Call options</param>
+    Task<IAPIResponse> FetchAsync(RouteFetchOptions? options = default);
+
+    /// <summary>
     /// <para>Fulfills route's request with given response.</para>
+    /// <para>**Usage**</para>
     /// <para>An example of fulfilling all requests with 404 responses:</para>
     /// <code>
-    /// await page.RouteAsync("**/*", route =&gt; route.FulfillAsync(<br/>
-    ///     status: 404,<br/>
-    ///     contentType: "text/plain",<br/>
-    ///     body: "Not Found!"));
+    /// await page.RouteAsync("**/*", route =&gt; route.FulfillAsync(new()<br/>
+    /// {<br/>
+    ///     Status = 404,<br/>
+    ///     ContentType = "text/plain",<br/>
+    ///     Body = "Not Found!")<br/>
+    /// });
     /// </code>
     /// <para>An example of serving static file:</para>
-    /// <code>await page.RouteAsync("**/xhr_endpoint", route =&gt; route.FulfillAsync(new RouteFulfillOptions { Path = "mock_data.json" }));</code>
+    /// <code>await page.RouteAsync("**/xhr_endpoint", route =&gt; route.FulfillAsync(new() { Path = "mock_data.json" }));</code>
     /// </summary>
     /// <param name="options">Call options</param>
     Task FulfillAsync(RouteFulfillOptions? options = default);

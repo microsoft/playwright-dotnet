@@ -141,8 +141,7 @@ public partial interface IFrame
     /// </summary>
     /// <param name="selector">
     /// A selector to search for an element. If there are multiple elements satisfying the
-    /// selector, the first will be used. See <a href="https://playwright.dev/dotnet/docs/selectors">working
-    /// with selectors</a> for more details.
+    /// selector, the first will be used.
     /// </param>
     /// <param name="options">Call options</param>
     Task CheckAsync(string selector, FrameCheckOptions? options = default);
@@ -182,8 +181,7 @@ public partial interface IFrame
     /// </summary>
     /// <param name="selector">
     /// A selector to search for an element. If there are multiple elements satisfying the
-    /// selector, the first will be used. See <a href="https://playwright.dev/dotnet/docs/selectors">working
-    /// with selectors</a> for more details.
+    /// selector, the first will be used.
     /// </param>
     /// <param name="options">Call options</param>
     Task ClickAsync(string selector, FrameClickOptions? options = default);
@@ -231,8 +229,7 @@ public partial interface IFrame
     /// </remarks>
     /// <param name="selector">
     /// A selector to search for an element. If there are multiple elements satisfying the
-    /// selector, the first will be used. See <a href="https://playwright.dev/dotnet/docs/selectors">working
-    /// with selectors</a> for more details.
+    /// selector, the first will be used.
     /// </param>
     /// <param name="options">Call options</param>
     Task DblClickAsync(string selector, FrameDblClickOptions? options = default);
@@ -243,6 +240,7 @@ public partial interface IFrame
     /// the visibility state of the element, <c>click</c> is dispatched. This is equivalent
     /// to calling <a href="https://developer.mozilla.org/en-US/docs/Web/API/HTMLElement/click">element.click()</a>.
     /// </para>
+    /// <para>**Usage**</para>
     /// <code>await frame.DispatchEventAsync("button#submit", "click");</code>
     /// <para>
     /// Under the hood, it creates an instance of an event based on the given <paramref
@@ -274,8 +272,7 @@ public partial interface IFrame
     /// </summary>
     /// <param name="selector">
     /// A selector to search for an element. If there are multiple elements satisfying the
-    /// selector, the first will be used. See <a href="https://playwright.dev/dotnet/docs/selectors">working
-    /// with selectors</a> for more details.
+    /// selector, the first will be used.
     /// </param>
     /// <param name="type">DOM event type: <c>"click"</c>, <c>"dragstart"</c>, etc.</param>
     /// <param name="eventInit">Optional event-specific initialization properties.</param>
@@ -284,13 +281,11 @@ public partial interface IFrame
 
     /// <param name="source">
     /// A selector to search for an element to drag. If there are multiple elements satisfying
-    /// the selector, the first will be used. See <a href="https://playwright.dev/dotnet/docs/selectors">working
-    /// with selectors</a> for more details.
+    /// the selector, the first will be used.
     /// </param>
     /// <param name="target">
     /// A selector to search for an element to drop onto. If there are multiple elements
-    /// satisfying the selector, the first will be used. See <a href="https://playwright.dev/dotnet/docs/selectors">working
-    /// with selectors</a> for more details.
+    /// satisfying the selector, the first will be used.
     /// </param>
     /// <param name="options">Call options</param>
     Task DragAndDropAsync(string source, string target, FrameDragAndDropOptions? options = default);
@@ -299,32 +294,21 @@ public partial interface IFrame
     /// <para>Returns the return value of <paramref name="expression"/>.</para>
     /// <para>
     /// The method finds an element matching the specified selector within the frame and
-    /// passes it as a first argument to <paramref name="expression"/>. See <a href="https://playwright.dev/dotnet/docs/selectors">Working
-    /// with selectors</a> for more details. If no elements match the selector, the method
-    /// throws an error.
+    /// passes it as a first argument to <paramref name="expression"/>. If no elements match
+    /// the selector, the method throws an error.
     /// </para>
     /// <para>
     /// If <paramref name="expression"/> returns a <see cref="Task"/>, then <see cref="IFrame.EvalOnSelectorAsync"/>
     /// would wait for the promise to resolve and return its value.
     /// </para>
-    /// <para>Examples:</para>
+    /// <para>**Usage**</para>
     /// <code>
     /// var searchValue = await frame.EvalOnSelectorAsync&lt;string&gt;("#search", "el =&gt; el.value");<br/>
     /// var preloadHref = await frame.EvalOnSelectorAsync&lt;string&gt;("link[rel=preload]", "el =&gt; el.href");<br/>
     /// var html = await frame.EvalOnSelectorAsync(".main-container", "(e, suffix) =&gt; e.outerHTML + suffix", "hello");
     /// </code>
     /// </summary>
-    /// <remarks>
-    /// <para>
-    /// This method does not wait for the element to pass actionability checks and therefore
-    /// can lead to the flaky tests. Use <see cref="ILocator.EvaluateAsync"/>, other <see
-    /// cref="ILocator"/> helper methods or web-first assertions instead.
-    /// </para>
-    /// </remarks>
-    /// <param name="selector">
-    /// A selector to query for. See <a href="https://playwright.dev/dotnet/docs/selectors">working
-    /// with selectors</a> for more details.
-    /// </param>
+    /// <param name="selector">A selector to query for.</param>
     /// <param name="expression">
     /// JavaScript expression to be evaluated in the browser context. If the expression
     /// evaluates to a function, the function is automatically invoked.
@@ -338,26 +322,15 @@ public partial interface IFrame
     /// <para>
     /// The method finds all elements matching the specified selector within the frame and
     /// passes an array of matched elements as a first argument to <paramref name="expression"/>.
-    /// See <a href="https://playwright.dev/dotnet/docs/selectors">Working with selectors</a>
-    /// for more details.
     /// </para>
     /// <para>
     /// If <paramref name="expression"/> returns a <see cref="Task"/>, then <see cref="IFrame.EvalOnSelectorAllAsync"/>
     /// would wait for the promise to resolve and return its value.
     /// </para>
-    /// <para>Examples:</para>
+    /// <para>**Usage**</para>
     /// <code>var divsCount = await frame.EvalOnSelectorAllAsync&lt;bool&gt;("div", "(divs, min) =&gt; divs.length &gt;= min", 10);</code>
     /// </summary>
-    /// <remarks>
-    /// <para>
-    /// In most cases, <see cref="ILocator.EvaluateAllAsync"/>, other <see cref="ILocator"/>
-    /// helper methods and web-first assertions do a better job.
-    /// </para>
-    /// </remarks>
-    /// <param name="selector">
-    /// A selector to query for. See <a href="https://playwright.dev/dotnet/docs/selectors">working
-    /// with selectors</a> for more details.
-    /// </param>
+    /// <param name="selector">A selector to query for.</param>
     /// <param name="expression">
     /// JavaScript expression to be evaluated in the browser context. If the expression
     /// evaluates to a function, the function is automatically invoked.
@@ -378,6 +351,7 @@ public partial interface IFrame
     /// Playwright also supports transferring some additional values that are not serializable
     /// by <c>JSON</c>: <c>-0</c>, <c>NaN</c>, <c>Infinity</c>, <c>-Infinity</c>.
     /// </para>
+    /// <para>**Usage**</para>
     /// <code>
     /// var result = await frame.EvaluateAsync&lt;int&gt;("([x, y]) =&gt; Promise.resolve(x * y)", new[] { 7, 8 });<br/>
     /// Console.WriteLine(result);
@@ -412,6 +386,7 @@ public partial interface IFrame
     /// a <see cref="Task"/>, then <see cref="IFrame.EvaluateHandleAsync"/> would wait for
     /// the promise to resolve and return its value.
     /// </para>
+    /// <para>**Usage**</para>
     /// <code>
     /// // Handle for the window object.<br/>
     /// var aWindowHandle = await frame.EvaluateHandleAsync("() =&gt; Promise.resolve(window)");
@@ -450,8 +425,7 @@ public partial interface IFrame
     /// </summary>
     /// <param name="selector">
     /// A selector to search for an element. If there are multiple elements satisfying the
-    /// selector, the first will be used. See <a href="https://playwright.dev/dotnet/docs/selectors">working
-    /// with selectors</a> for more details.
+    /// selector, the first will be used.
     /// </param>
     /// <param name="value">
     /// Value to fill for the <c>&lt;input&gt;</c>, <c>&lt;textarea&gt;</c> or <c>[contenteditable]</c>
@@ -469,8 +443,7 @@ public partial interface IFrame
     /// </summary>
     /// <param name="selector">
     /// A selector to search for an element. If there are multiple elements satisfying the
-    /// selector, the first will be used. See <a href="https://playwright.dev/dotnet/docs/selectors">working
-    /// with selectors</a> for more details.
+    /// selector, the first will be used.
     /// </param>
     /// <param name="options">Call options</param>
     Task FocusAsync(string selector, FrameFocusOptions? options = default);
@@ -488,6 +461,7 @@ public partial interface IFrame
     /// This method throws an error if the frame has been detached before <c>frameElement()</c>
     /// returns.
     /// </para>
+    /// <para>**Usage**</para>
     /// <code>
     /// var frameElement = await frame.FrameElementAsync();<br/>
     /// var contentFrame = await frameElement.ContentFrameAsync();<br/>
@@ -499,25 +473,25 @@ public partial interface IFrame
     /// <summary>
     /// <para>
     /// When working with iframes, you can create a frame locator that will enter the iframe
-    /// and allow selecting elements in that iframe. Following snippet locates element with
-    /// text "Submit" in the iframe with id <c>my-frame</c>, like <c>&lt;iframe id="my-frame"&gt;</c>:
+    /// and allow selecting elements in that iframe.
+    /// </para>
+    /// <para>**Usage**</para>
+    /// <para>
+    /// Following snippet locates element with text "Submit" in the iframe with id <c>my-frame</c>,
+    /// like <c>&lt;iframe id="my-frame"&gt;</c>:
     /// </para>
     /// <code>
     /// var locator = frame.FrameLocator("#my-iframe").GetByText("Submit");<br/>
     /// await locator.ClickAsync();
     /// </code>
     /// </summary>
-    /// <param name="selector">
-    /// A selector to use when resolving DOM element. See <a href="https://playwright.dev/dotnet/docs/selectors">working
-    /// with selectors</a> for more details.
-    /// </param>
+    /// <param name="selector">A selector to use when resolving DOM element.</param>
     IFrameLocator FrameLocator(string selector);
 
     /// <summary><para>Returns element attribute value.</para></summary>
     /// <param name="selector">
     /// A selector to search for an element. If there are multiple elements satisfying the
-    /// selector, the first will be used. See <a href="https://playwright.dev/dotnet/docs/selectors">working
-    /// with selectors</a> for more details.
+    /// selector, the first will be used.
     /// </param>
     /// <param name="name">Attribute name to get the value for.</param>
     /// <param name="options">Call options</param>
@@ -612,6 +586,16 @@ public partial interface IFrame
     /// </summary>
     /// <param name="testId">Id to locate the element by.</param>
     ILocator GetByTestId(string testId);
+
+    /// <summary>
+    /// <para>
+    /// Locate element by the test id. By default, the <c>data-testid</c> attribute is used
+    /// as a test id. Use <see cref="ISelectors.SetTestIdAttribute"/> to configure a different
+    /// test id attribute if necessary.
+    /// </para>
+    /// </summary>
+    /// <param name="testId">Id to locate the element by.</param>
+    ILocator GetByTestId(Regex testId);
 
     /// <summary>
     /// <para>Allows locating elements that contain given text. Consider the following DOM structure:</para>
@@ -780,8 +764,7 @@ public partial interface IFrame
     /// </summary>
     /// <param name="selector">
     /// A selector to search for an element. If there are multiple elements satisfying the
-    /// selector, the first will be used. See <a href="https://playwright.dev/dotnet/docs/selectors">working
-    /// with selectors</a> for more details.
+    /// selector, the first will be used.
     /// </param>
     /// <param name="options">Call options</param>
     Task HoverAsync(string selector, FrameHoverOptions? options = default);
@@ -789,8 +772,7 @@ public partial interface IFrame
     /// <summary><para>Returns <c>element.innerHTML</c>.</para></summary>
     /// <param name="selector">
     /// A selector to search for an element. If there are multiple elements satisfying the
-    /// selector, the first will be used. See <a href="https://playwright.dev/dotnet/docs/selectors">working
-    /// with selectors</a> for more details.
+    /// selector, the first will be used.
     /// </param>
     /// <param name="options">Call options</param>
     Task<string> InnerHTMLAsync(string selector, FrameInnerHTMLOptions? options = default);
@@ -798,8 +780,7 @@ public partial interface IFrame
     /// <summary><para>Returns <c>element.innerText</c>.</para></summary>
     /// <param name="selector">
     /// A selector to search for an element. If there are multiple elements satisfying the
-    /// selector, the first will be used. See <a href="https://playwright.dev/dotnet/docs/selectors">working
-    /// with selectors</a> for more details.
+    /// selector, the first will be used.
     /// </param>
     /// <param name="options">Call options</param>
     Task<string> InnerTextAsync(string selector, FrameInnerTextOptions? options = default);
@@ -817,8 +798,7 @@ public partial interface IFrame
     /// </summary>
     /// <param name="selector">
     /// A selector to search for an element. If there are multiple elements satisfying the
-    /// selector, the first will be used. See <a href="https://playwright.dev/dotnet/docs/selectors">working
-    /// with selectors</a> for more details.
+    /// selector, the first will be used.
     /// </param>
     /// <param name="options">Call options</param>
     Task<string> InputValueAsync(string selector, FrameInputValueOptions? options = default);
@@ -831,8 +811,7 @@ public partial interface IFrame
     /// </summary>
     /// <param name="selector">
     /// A selector to search for an element. If there are multiple elements satisfying the
-    /// selector, the first will be used. See <a href="https://playwright.dev/dotnet/docs/selectors">working
-    /// with selectors</a> for more details.
+    /// selector, the first will be used.
     /// </param>
     /// <param name="options">Call options</param>
     Task<bool> IsCheckedAsync(string selector, FrameIsCheckedOptions? options = default);
@@ -843,8 +822,7 @@ public partial interface IFrame
     /// <summary><para>Returns whether the element is disabled, the opposite of <a href="https://playwright.dev/dotnet/docs/actionability#enabled">enabled</a>.</para></summary>
     /// <param name="selector">
     /// A selector to search for an element. If there are multiple elements satisfying the
-    /// selector, the first will be used. See <a href="https://playwright.dev/dotnet/docs/selectors">working
-    /// with selectors</a> for more details.
+    /// selector, the first will be used.
     /// </param>
     /// <param name="options">Call options</param>
     Task<bool> IsDisabledAsync(string selector, FrameIsDisabledOptions? options = default);
@@ -852,8 +830,7 @@ public partial interface IFrame
     /// <summary><para>Returns whether the element is <a href="https://playwright.dev/dotnet/docs/actionability#editable">editable</a>.</para></summary>
     /// <param name="selector">
     /// A selector to search for an element. If there are multiple elements satisfying the
-    /// selector, the first will be used. See <a href="https://playwright.dev/dotnet/docs/selectors">working
-    /// with selectors</a> for more details.
+    /// selector, the first will be used.
     /// </param>
     /// <param name="options">Call options</param>
     Task<bool> IsEditableAsync(string selector, FrameIsEditableOptions? options = default);
@@ -861,8 +838,7 @@ public partial interface IFrame
     /// <summary><para>Returns whether the element is <a href="https://playwright.dev/dotnet/docs/actionability#enabled">enabled</a>.</para></summary>
     /// <param name="selector">
     /// A selector to search for an element. If there are multiple elements satisfying the
-    /// selector, the first will be used. See <a href="https://playwright.dev/dotnet/docs/selectors">working
-    /// with selectors</a> for more details.
+    /// selector, the first will be used.
     /// </param>
     /// <param name="options">Call options</param>
     Task<bool> IsEnabledAsync(string selector, FrameIsEnabledOptions? options = default);
@@ -875,8 +851,7 @@ public partial interface IFrame
     /// </summary>
     /// <param name="selector">
     /// A selector to search for an element. If there are multiple elements satisfying the
-    /// selector, the first will be used. See <a href="https://playwright.dev/dotnet/docs/selectors">working
-    /// with selectors</a> for more details.
+    /// selector, the first will be used.
     /// </param>
     /// <param name="options">Call options</param>
     Task<bool> IsHiddenAsync(string selector, FrameIsHiddenOptions? options = default);
@@ -889,8 +864,7 @@ public partial interface IFrame
     /// </summary>
     /// <param name="selector">
     /// A selector to search for an element. If there are multiple elements satisfying the
-    /// selector, the first will be used. See <a href="https://playwright.dev/dotnet/docs/selectors">working
-    /// with selectors</a> for more details.
+    /// selector, the first will be used.
     /// </param>
     /// <param name="options">Call options</param>
     Task<bool> IsVisibleAsync(string selector, FrameIsVisibleOptions? options = default);
@@ -905,10 +879,7 @@ public partial interface IFrame
     /// <para><a href="https://playwright.dev/dotnet/docs/locators">Learn more about locators</a>.</para>
     /// <para><a href="https://playwright.dev/dotnet/docs/locators">Learn more about locators</a>.</para>
     /// </summary>
-    /// <param name="selector">
-    /// A selector to use when resolving DOM element. See <a href="https://playwright.dev/dotnet/docs/selectors">working
-    /// with selectors</a> for more details.
-    /// </param>
+    /// <param name="selector">A selector to use when resolving DOM element.</param>
     /// <param name="options">Call options</param>
     ILocator Locator(string selector, FrameLocatorOptions? options = default);
 
@@ -964,8 +935,7 @@ public partial interface IFrame
     /// </summary>
     /// <param name="selector">
     /// A selector to search for an element. If there are multiple elements satisfying the
-    /// selector, the first will be used. See <a href="https://playwright.dev/dotnet/docs/selectors">working
-    /// with selectors</a> for more details.
+    /// selector, the first will be used.
     /// </param>
     /// <param name="key">
     /// Name of the key to press or a character to generate, such as <c>ArrowLeft</c> or
@@ -977,9 +947,8 @@ public partial interface IFrame
     /// <summary>
     /// <para>Returns the ElementHandle pointing to the frame element.</para>
     /// <para>
-    /// The method finds an element matching the specified selector within the frame. See
-    /// <a href="https://playwright.dev/dotnet/docs/selectors">Working with selectors</a>
-    /// for more details. If no elements match the selector, returns <c>null</c>.
+    /// The method finds an element matching the specified selector within the frame. If
+    /// no elements match the selector, returns <c>null</c>.
     /// </para>
     /// </summary>
     /// <remarks>
@@ -988,10 +957,7 @@ public partial interface IFrame
     /// objects and web-first assertions instead.
     /// </para>
     /// </remarks>
-    /// <param name="selector">
-    /// A selector to query for. See <a href="https://playwright.dev/dotnet/docs/selectors">working
-    /// with selectors</a> for more details.
-    /// </param>
+    /// <param name="selector">A selector to query for.</param>
     /// <param name="options">Call options</param>
     Task<IElementHandle?> QuerySelectorAsync(string selector, FrameQuerySelectorOptions? options = default);
 
@@ -999,8 +965,7 @@ public partial interface IFrame
     /// <para>Returns the ElementHandles pointing to the frame elements.</para>
     /// <para>
     /// The method finds all elements matching the specified selector within the frame.
-    /// See <a href="https://playwright.dev/dotnet/docs/selectors">Working with selectors</a>
-    /// for more details. If no elements match the selector, returns empty array.
+    /// If no elements match the selector, returns empty array.
     /// </para>
     /// </summary>
     /// <remarks>
@@ -1009,10 +974,7 @@ public partial interface IFrame
     /// objects instead.
     /// </para>
     /// </remarks>
-    /// <param name="selector">
-    /// A selector to query for. See <a href="https://playwright.dev/dotnet/docs/selectors">working
-    /// with selectors</a> for more details.
-    /// </param>
+    /// <param name="selector">A selector to query for.</param>
     Task<IReadOnlyList<IElementHandle>> QuerySelectorAllAsync(string selector);
 
     /// <summary>
@@ -1033,6 +995,7 @@ public partial interface IFrame
     /// Triggers a <c>change</c> and <c>input</c> event once all the provided options have
     /// been selected.
     /// </para>
+    /// <para>**Usage**</para>
     /// <code>
     /// // single selection matching the value<br/>
     /// await frame.SelectOptionAsync("select#colors", new[] { "blue" });<br/>
@@ -1042,14 +1005,11 @@ public partial interface IFrame
     /// await frame.SelectOptionAsync("select#colors", new[] { "red", "green", "blue" });
     /// </code>
     /// </summary>
-    /// <param name="selector">
-    /// A selector to query for. See <a href="https://playwright.dev/dotnet/docs/selectors">working
-    /// with selectors</a> for more details.
-    /// </param>
+    /// <param name="selector">A selector to query for.</param>
     /// <param name="values">
     /// Options to select. If the <c>&lt;select&gt;</c> has the <c>multiple</c> attribute,
     /// all matching options are selected, otherwise only the first option matching one
-    /// of the passed options is selected. String values are equivalent to <c>{value:'string'}</c>.
+    /// of the passed options is selected. String values are matching both values and labels.
     /// Option is considered matching if all specified properties match.
     /// </param>
     /// <param name="options">Call options</param>
@@ -1073,6 +1033,7 @@ public partial interface IFrame
     /// Triggers a <c>change</c> and <c>input</c> event once all the provided options have
     /// been selected.
     /// </para>
+    /// <para>**Usage**</para>
     /// <code>
     /// // single selection matching the value<br/>
     /// await frame.SelectOptionAsync("select#colors", new[] { "blue" });<br/>
@@ -1082,14 +1043,11 @@ public partial interface IFrame
     /// await frame.SelectOptionAsync("select#colors", new[] { "red", "green", "blue" });
     /// </code>
     /// </summary>
-    /// <param name="selector">
-    /// A selector to query for. See <a href="https://playwright.dev/dotnet/docs/selectors">working
-    /// with selectors</a> for more details.
-    /// </param>
+    /// <param name="selector">A selector to query for.</param>
     /// <param name="values">
     /// Options to select. If the <c>&lt;select&gt;</c> has the <c>multiple</c> attribute,
     /// all matching options are selected, otherwise only the first option matching one
-    /// of the passed options is selected. String values are equivalent to <c>{value:'string'}</c>.
+    /// of the passed options is selected. String values are matching both values and labels.
     /// Option is considered matching if all specified properties match.
     /// </param>
     /// <param name="options">Call options</param>
@@ -1113,6 +1071,7 @@ public partial interface IFrame
     /// Triggers a <c>change</c> and <c>input</c> event once all the provided options have
     /// been selected.
     /// </para>
+    /// <para>**Usage**</para>
     /// <code>
     /// // single selection matching the value<br/>
     /// await frame.SelectOptionAsync("select#colors", new[] { "blue" });<br/>
@@ -1122,14 +1081,11 @@ public partial interface IFrame
     /// await frame.SelectOptionAsync("select#colors", new[] { "red", "green", "blue" });
     /// </code>
     /// </summary>
-    /// <param name="selector">
-    /// A selector to query for. See <a href="https://playwright.dev/dotnet/docs/selectors">working
-    /// with selectors</a> for more details.
-    /// </param>
+    /// <param name="selector">A selector to query for.</param>
     /// <param name="values">
     /// Options to select. If the <c>&lt;select&gt;</c> has the <c>multiple</c> attribute,
     /// all matching options are selected, otherwise only the first option matching one
-    /// of the passed options is selected. String values are equivalent to <c>{value:'string'}</c>.
+    /// of the passed options is selected. String values are matching both values and labels.
     /// Option is considered matching if all specified properties match.
     /// </param>
     /// <param name="options">Call options</param>
@@ -1153,6 +1109,7 @@ public partial interface IFrame
     /// Triggers a <c>change</c> and <c>input</c> event once all the provided options have
     /// been selected.
     /// </para>
+    /// <para>**Usage**</para>
     /// <code>
     /// // single selection matching the value<br/>
     /// await frame.SelectOptionAsync("select#colors", new[] { "blue" });<br/>
@@ -1162,14 +1119,11 @@ public partial interface IFrame
     /// await frame.SelectOptionAsync("select#colors", new[] { "red", "green", "blue" });
     /// </code>
     /// </summary>
-    /// <param name="selector">
-    /// A selector to query for. See <a href="https://playwright.dev/dotnet/docs/selectors">working
-    /// with selectors</a> for more details.
-    /// </param>
+    /// <param name="selector">A selector to query for.</param>
     /// <param name="values">
     /// Options to select. If the <c>&lt;select&gt;</c> has the <c>multiple</c> attribute,
     /// all matching options are selected, otherwise only the first option matching one
-    /// of the passed options is selected. String values are equivalent to <c>{value:'string'}</c>.
+    /// of the passed options is selected. String values are matching both values and labels.
     /// Option is considered matching if all specified properties match.
     /// </param>
     /// <param name="options">Call options</param>
@@ -1193,6 +1147,7 @@ public partial interface IFrame
     /// Triggers a <c>change</c> and <c>input</c> event once all the provided options have
     /// been selected.
     /// </para>
+    /// <para>**Usage**</para>
     /// <code>
     /// // single selection matching the value<br/>
     /// await frame.SelectOptionAsync("select#colors", new[] { "blue" });<br/>
@@ -1202,14 +1157,11 @@ public partial interface IFrame
     /// await frame.SelectOptionAsync("select#colors", new[] { "red", "green", "blue" });
     /// </code>
     /// </summary>
-    /// <param name="selector">
-    /// A selector to query for. See <a href="https://playwright.dev/dotnet/docs/selectors">working
-    /// with selectors</a> for more details.
-    /// </param>
+    /// <param name="selector">A selector to query for.</param>
     /// <param name="values">
     /// Options to select. If the <c>&lt;select&gt;</c> has the <c>multiple</c> attribute,
     /// all matching options are selected, otherwise only the first option matching one
-    /// of the passed options is selected. String values are equivalent to <c>{value:'string'}</c>.
+    /// of the passed options is selected. String values are matching both values and labels.
     /// Option is considered matching if all specified properties match.
     /// </param>
     /// <param name="options">Call options</param>
@@ -1233,6 +1185,7 @@ public partial interface IFrame
     /// Triggers a <c>change</c> and <c>input</c> event once all the provided options have
     /// been selected.
     /// </para>
+    /// <para>**Usage**</para>
     /// <code>
     /// // single selection matching the value<br/>
     /// await frame.SelectOptionAsync("select#colors", new[] { "blue" });<br/>
@@ -1242,14 +1195,11 @@ public partial interface IFrame
     /// await frame.SelectOptionAsync("select#colors", new[] { "red", "green", "blue" });
     /// </code>
     /// </summary>
-    /// <param name="selector">
-    /// A selector to query for. See <a href="https://playwright.dev/dotnet/docs/selectors">working
-    /// with selectors</a> for more details.
-    /// </param>
+    /// <param name="selector">A selector to query for.</param>
     /// <param name="values">
     /// Options to select. If the <c>&lt;select&gt;</c> has the <c>multiple</c> attribute,
     /// all matching options are selected, otherwise only the first option matching one
-    /// of the passed options is selected. String values are equivalent to <c>{value:'string'}</c>.
+    /// of the passed options is selected. String values are matching both values and labels.
     /// Option is considered matching if all specified properties match.
     /// </param>
     /// <param name="options">Call options</param>
@@ -1291,8 +1241,7 @@ public partial interface IFrame
     /// </summary>
     /// <param name="selector">
     /// A selector to search for an element. If there are multiple elements satisfying the
-    /// selector, the first will be used. See <a href="https://playwright.dev/dotnet/docs/selectors">working
-    /// with selectors</a> for more details.
+    /// selector, the first will be used.
     /// </param>
     /// <param name="checkedState">Whether to check or uncheck the checkbox.</param>
     /// <param name="options">Call options</param>
@@ -1317,8 +1266,7 @@ public partial interface IFrame
     /// </summary>
     /// <param name="selector">
     /// A selector to search for an element. If there are multiple elements satisfying the
-    /// selector, the first will be used. See <a href="https://playwright.dev/dotnet/docs/selectors">working
-    /// with selectors</a> for more details.
+    /// selector, the first will be used.
     /// </param>
     /// <param name="files">
     /// </param>
@@ -1340,8 +1288,7 @@ public partial interface IFrame
     /// </summary>
     /// <param name="selector">
     /// A selector to search for an element. If there are multiple elements satisfying the
-    /// selector, the first will be used. See <a href="https://playwright.dev/dotnet/docs/selectors">working
-    /// with selectors</a> for more details.
+    /// selector, the first will be used.
     /// </param>
     /// <param name="files">
     /// </param>
@@ -1363,8 +1310,7 @@ public partial interface IFrame
     /// </summary>
     /// <param name="selector">
     /// A selector to search for an element. If there are multiple elements satisfying the
-    /// selector, the first will be used. See <a href="https://playwright.dev/dotnet/docs/selectors">working
-    /// with selectors</a> for more details.
+    /// selector, the first will be used.
     /// </param>
     /// <param name="files">
     /// </param>
@@ -1386,8 +1332,7 @@ public partial interface IFrame
     /// </summary>
     /// <param name="selector">
     /// A selector to search for an element. If there are multiple elements satisfying the
-    /// selector, the first will be used. See <a href="https://playwright.dev/dotnet/docs/selectors">working
-    /// with selectors</a> for more details.
+    /// selector, the first will be used.
     /// </param>
     /// <param name="files">
     /// </param>
@@ -1433,8 +1378,7 @@ public partial interface IFrame
     /// </remarks>
     /// <param name="selector">
     /// A selector to search for an element. If there are multiple elements satisfying the
-    /// selector, the first will be used. See <a href="https://playwright.dev/dotnet/docs/selectors">working
-    /// with selectors</a> for more details.
+    /// selector, the first will be used.
     /// </param>
     /// <param name="options">Call options</param>
     Task TapAsync(string selector, FrameTapOptions? options = default);
@@ -1442,8 +1386,7 @@ public partial interface IFrame
     /// <summary><para>Returns <c>element.textContent</c>.</para></summary>
     /// <param name="selector">
     /// A selector to search for an element. If there are multiple elements satisfying the
-    /// selector, the first will be used. See <a href="https://playwright.dev/dotnet/docs/selectors">working
-    /// with selectors</a> for more details.
+    /// selector, the first will be used.
     /// </param>
     /// <param name="options">Call options</param>
     Task<string?> TextContentAsync(string selector, FrameTextContentOptions? options = default);
@@ -1458,6 +1401,7 @@ public partial interface IFrame
     /// events. To fill values in form fields, use <see cref="IFrame.FillAsync"/>.
     /// </para>
     /// <para>To press a special key, like <c>Control</c> or <c>ArrowDown</c>, use <see cref="IKeyboard.PressAsync"/>.</para>
+    /// <para>**Usage**</para>
     /// <code>
     /// await frame.TypeAsync("#mytextarea", "hello"); // types instantly<br/>
     /// await frame.TypeAsync("#mytextarea", "world", new() { Delay = 100 }); // types slower, like a user
@@ -1465,8 +1409,7 @@ public partial interface IFrame
     /// </summary>
     /// <param name="selector">
     /// A selector to search for an element. If there are multiple elements satisfying the
-    /// selector, the first will be used. See <a href="https://playwright.dev/dotnet/docs/selectors">working
-    /// with selectors</a> for more details.
+    /// selector, the first will be used.
     /// </param>
     /// <param name="text">A text to type into a focused element.</param>
     /// <param name="options">Call options</param>
@@ -1507,8 +1450,7 @@ public partial interface IFrame
     /// </summary>
     /// <param name="selector">
     /// A selector to search for an element. If there are multiple elements satisfying the
-    /// selector, the first will be used. See <a href="https://playwright.dev/dotnet/docs/selectors">working
-    /// with selectors</a> for more details.
+    /// selector, the first will be used.
     /// </param>
     /// <param name="options">Call options</param>
     Task UncheckAsync(string selector, FrameUncheckOptions? options = default);
@@ -1521,6 +1463,7 @@ public partial interface IFrame
     /// Returns when the <paramref name="expression"/> returns a truthy value, returns that
     /// value.
     /// </para>
+    /// <para>**Usage**</para>
     /// <para>
     /// The <see cref="IFrame.WaitForFunctionAsync"/> can be used to observe viewport size
     /// change:
@@ -1562,6 +1505,7 @@ public partial interface IFrame
     /// The navigation must have been committed when this method is called. If current document
     /// has already reached the required state, resolves immediately.
     /// </para>
+    /// <para>**Usage**</para>
     /// <code>
     /// await frame.ClickAsync("button");<br/>
     /// await frame.WaitForLoadStateAsync(); // Defaults to LoadState.Load
@@ -1590,6 +1534,7 @@ public partial interface IFrame
     /// In case of navigation to a different anchor or navigation due to History API usage,
     /// the navigation will resolve with <c>null</c>.
     /// </para>
+    /// <para>**Usage**</para>
     /// <para>
     /// This method waits for the frame to navigate to a new URL. It is useful for when
     /// you run code which will indirectly cause the frame to navigate. Consider this example:
@@ -1620,6 +1565,7 @@ public partial interface IFrame
     /// In case of navigation to a different anchor or navigation due to History API usage,
     /// the navigation will resolve with <c>null</c>.
     /// </para>
+    /// <para>**Usage**</para>
     /// <para>
     /// This method waits for the frame to navigate to a new URL. It is useful for when
     /// you run code which will indirectly cause the frame to navigate. Consider this example:
@@ -1656,6 +1602,7 @@ public partial interface IFrame
     /// the method will return immediately. If the selector doesn't satisfy the condition
     /// for the <paramref name="timeout"/> milliseconds, the function will throw.
     /// </para>
+    /// <para>**Usage**</para>
     /// <para>This method works across navigations:</para>
     /// <code>
     /// using Microsoft.Playwright;<br/>
@@ -1686,10 +1633,7 @@ public partial interface IFrame
     /// Using <see cref="ILocator"/> objects and web-first assertions make the code wait-for-selector-free.
     /// </para>
     /// </remarks>
-    /// <param name="selector">
-    /// A selector to query for. See <a href="https://playwright.dev/dotnet/docs/selectors">working
-    /// with selectors</a> for more details.
-    /// </param>
+    /// <param name="selector">A selector to query for.</param>
     /// <param name="options">Call options</param>
     Task<IElementHandle?> WaitForSelectorAsync(string selector, FrameWaitForSelectorOptions? options = default);
 
@@ -1706,6 +1650,7 @@ public partial interface IFrame
 
     /// <summary>
     /// <para>Waits for the frame to navigate to the given URL.</para>
+    /// <para>**Usage**</para>
     /// <code>
     /// await frame.ClickAsync("a.delayed-navigation"); // clicking the link will indirectly cause a navigation<br/>
     /// await frame.WaitForURLAsync("**/target.html");
@@ -1722,6 +1667,7 @@ public partial interface IFrame
 
     /// <summary>
     /// <para>Waits for the frame to navigate to the given URL.</para>
+    /// <para>**Usage**</para>
     /// <code>
     /// await frame.ClickAsync("a.delayed-navigation"); // clicking the link will indirectly cause a navigation<br/>
     /// await frame.WaitForURLAsync("**/target.html");
@@ -1738,6 +1684,7 @@ public partial interface IFrame
 
     /// <summary>
     /// <para>Waits for the frame to navigate to the given URL.</para>
+    /// <para>**Usage**</para>
     /// <code>
     /// await frame.ClickAsync("a.delayed-navigation"); // clicking the link will indirectly cause a navigation<br/>
     /// await frame.WaitForURLAsync("**/target.html");

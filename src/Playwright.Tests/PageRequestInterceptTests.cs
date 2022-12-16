@@ -22,6 +22,8 @@
  * SOFTWARE.
  */
 
+using System.Text;
+using System.Text.Json;
 using Microsoft.AspNetCore.Http;
 
 namespace Microsoft.Playwright.Tests;
@@ -200,5 +202,51 @@ public class PageRequestInterceptTests : PageTestEx
             {
                 Response = response,
             }));
+    }
+
+    [PlaywrightTest("page-request-intercept.spec.ts", "should fulfill intercepted response using alias")]
+    public async Task ShouldFulfillInterceptedResponseUsingAlias()
+    {
+        await Page.RouteAsync("**/*", async (route) =>
+        {
+            var response = await Page.APIRequest.FetchAsync(route.Request);
+            await route.FulfillAsync(new() { Response = response });
+        });
+        var response = await Page.GotoAsync(Server.EmptyPage);
+        Assert.AreEqual(200, response.Status);
+        Assert.True(response.Headers["content-type"].Contains("text/html"));
+    }
+
+    [PlaywrightTest("page-request-intercept.spec.ts", "should intercept with url override")]
+    public async Task ShouldInterceptWithUrlOverride()
+    {
+        await Page.RouteAsync("**/*.html", async (route) =>
+        {
+            var response = await route.FetchAsync(new() { Url = Server.Prefix + "/one-style.html" });
+            await route.FulfillAsync(new() { Response = response });
+        });
+        var response = await Page.GotoAsync(Server.EmptyPage);
+        Assert.AreEqual(200, response.Status);
+        StringAssert.Contains("one-style.css", await response.TextAsync());
+    }
+
+    [PlaywrightTest("page-request-intercept.spec.ts", "should intercept with post data override")]
+    public async Task ShouldInterceptWithPostDataOverride()
+    {
+        var requestBodyPromise = Server.WaitForRequest("/empty.html", request => {
+            using StreamReader reader = new(request.Body, System.Text.Encoding.UTF8);
+            return reader.ReadToEndAsync().GetAwaiter().GetResult();
+        });
+        await Page.RouteAsync("**/*.html", async (route) =>
+        {
+            var response = await Page.APIRequest.FetchAsync(route.Request, new()
+            {
+                DataObject = new Dictionary<string, object>() { { "foo", "bar" } }
+            });
+            await route.FulfillAsync(new() { Response = response });
+        });
+        await Page.GotoAsync(Server.EmptyPage);
+        var requestBody = await requestBodyPromise;
+        Assert.AreEqual(requestBody, JsonSerializer.Serialize(new Dictionary<string, object>() { { "foo", "bar" } }));
     }
 }

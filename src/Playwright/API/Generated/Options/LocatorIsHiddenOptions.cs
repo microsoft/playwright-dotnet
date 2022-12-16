@@ -44,8 +44,8 @@ public class LocatorIsHiddenOptions
 
     /// <summary>
     /// <para>
-    /// **DEPRECATED** This option is ignored. <see cref="ILocator.IsHiddenAsync"/> does
-    /// not wait for the element to become hidden and returns immediately.
+    ///  **DEPRECATED** This option is ignored. [`method: Locator.isHidden`] does not wait
+    ///  for the element to become hidden and returns immediately.
     /// </para>
     /// </summary>
     [JsonPropertyName("timeout")]

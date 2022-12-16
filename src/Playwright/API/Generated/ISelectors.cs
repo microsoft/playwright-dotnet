@@ -30,13 +30,14 @@ namespace Microsoft.Playwright;
 
 /// <summary>
 /// <para>
-/// Selectors can be used to install custom selector engines. See <a href="https://playwright.dev/dotnet/docs/selectors">Working
-/// with selectors</a> for more information.
+/// Selectors can be used to install custom selector engines. See <a href="https://playwright.dev/dotnet/docs/extensibility">extensibility</a>
+/// for more information.
 /// </para>
 /// </summary>
 public partial interface ISelectors
 {
     /// <summary>
+    /// <para>**Usage**</para>
     /// <para>An example of registering selector engine that queries elements based on a tag name:</para>
     /// <code>
     /// using Microsoft.Playwright;<br/>

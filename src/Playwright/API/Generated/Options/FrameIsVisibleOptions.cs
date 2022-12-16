@@ -54,8 +54,8 @@ public class FrameIsVisibleOptions
 
     /// <summary>
     /// <para>
-    /// **DEPRECATED** This option is ignored. <see cref="IFrame.IsVisibleAsync"/> does
-    /// not wait for the element to become visible and returns immediately.
+    ///  **DEPRECATED** This option is ignored. [`method: Frame.isVisible`] does not wait
+    ///  for the element to become visible and returns immediately.
     /// </para>
     /// </summary>
     [JsonPropertyName("timeout")]

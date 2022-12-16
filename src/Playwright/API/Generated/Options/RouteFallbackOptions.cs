@@ -50,11 +50,11 @@ public class RouteFallbackOptions
     [JsonPropertyName("headers")]
     public IEnumerable<KeyValuePair<string, string>>? Headers { get; set; }
 
-    /// <summary><para>If set changes the request method (e.g. GET or POST)</para></summary>
+    /// <summary><para>If set changes the request method (e.g. GET or POST).</para></summary>
     [JsonPropertyName("method")]
     public string? Method { get; set; }
 
-    /// <summary><para>If set changes the post data of request</para></summary>
+    /// <summary><para>If set changes the post data of request.</para></summary>
     [JsonPropertyName("postData")]
     public byte[]? PostData { get; set; }
 

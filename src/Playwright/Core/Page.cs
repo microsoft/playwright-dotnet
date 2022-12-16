@@ -1193,6 +1193,9 @@ internal class Page : ChannelOwnerBase, IChannelOwner<Page>, IPage
     public ILocator GetByTestId(string testId)
         => MainFrame.GetByTestId(testId);
 
+    public ILocator GetByTestId(Regex testId)
+        => MainFrame.GetByTestId(testId);
+
     public ILocator GetByText(string text, PageGetByTextOptions options = null)
         => MainFrame.GetByText(text, new() { Exact = options?.Exact });
 
