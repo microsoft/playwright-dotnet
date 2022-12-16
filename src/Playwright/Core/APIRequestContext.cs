@@ -57,7 +57,7 @@ internal class APIRequestContext : ChannelOwnerBase, IChannelOwner<APIRequestCon
     public Task<IAPIResponse> FetchAsync(IRequest request, APIRequestContextOptions options = null)
         => InnerFetchAsync(request, null, options);
 
-    public async Task<IAPIResponse> InnerFetchAsync(IRequest request, string urlOverride, APIRequestContextOptions options = null)
+    internal async Task<IAPIResponse> InnerFetchAsync(IRequest request, string urlOverride, APIRequestContextOptions options = null)
     {
         options ??= new APIRequestContextOptions();
         if (string.IsNullOrEmpty(options.Method))

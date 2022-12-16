@@ -22,7 +22,6 @@
  * SOFTWARE.
  */
 
-using System.Text;
 using System.Text.Json;
 using Microsoft.AspNetCore.Http;
 
@@ -233,7 +232,8 @@ public class PageRequestInterceptTests : PageTestEx
     [PlaywrightTest("page-request-intercept.spec.ts", "should intercept with post data override")]
     public async Task ShouldInterceptWithPostDataOverride()
     {
-        var requestBodyPromise = Server.WaitForRequest("/empty.html", request => {
+        var requestBodyPromise = Server.WaitForRequest("/empty.html", request =>
+        {
             using StreamReader reader = new(request.Body, System.Text.Encoding.UTF8);
             return reader.ReadToEndAsync().GetAwaiter().GetResult();
         });

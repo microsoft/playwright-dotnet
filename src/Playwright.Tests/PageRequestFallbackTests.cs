@@ -288,11 +288,7 @@ public class PageRequestFallbackTests : PageTestEx
         string postData = null;
         await Page.RouteAsync("**/*", async (route) =>
         {
-            var json = route.Request.PostDataJSON();
-            if (json != null) 
-            {
-                postData = JsonObject.Create((System.Text.Json.JsonElement)json).ToJsonString();
-            }
+            postData = JsonObject.Create((System.Text.Json.JsonElement)route.Request.PostDataJSON()).ToJsonString();
             await route.ContinueAsync();
         });
         await Page.RouteAsync("**/*", route => route.FallbackAsync(new() { PostData = Encoding.UTF8.GetBytes("{\"foo\":\"bar\"}") }));
