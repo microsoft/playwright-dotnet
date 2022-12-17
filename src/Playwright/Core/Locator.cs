@@ -499,7 +499,7 @@ internal class Locator : ILocator
         {
             return $"\"{text.Replace("\"", "\\\"")}\"";
         }
-        if (text.Contains("\"") || text.Contains(">>") || text[0] == '/')
+        if (text.Contains('"') || text.Contains(">>") || text[0] == '/')
         {
             return $"/{new Regex(@"\s+").Replace(EscapeForRegex(text), "\\s+")}/i";
         }
