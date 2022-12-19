@@ -23,6 +23,7 @@
  */
 
 using System.Net;
+using System.Text.Json.Serialization;
 using System.Text.RegularExpressions;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.Features;
@@ -70,11 +71,18 @@ public class PageNetworkResponseTests : PageTestEx
         Assert.AreEqual("{\"foo\": \"bar\"}", (await response.JsonAsync())?.GetRawText());
     }
 
+    [PlaywrightTest("page-network-response.spec.ts", "should work with generics")]
     public async Task ShouldWorkWithGenerics()
     {
         var response = await Page.GotoAsync(Server.Prefix + "/simple.json");
-        var root = await response.JsonAsync();
-        Assert.AreEqual("bar", root?.GetProperty("foo").GetString());
+        var root = await response.JsonAsync<SimpleObject>();
+        Assert.AreEqual("bar", root.Foo);
+    }
+
+    record SimpleObject
+    {
+        [JsonPropertyName("foo")]
+        public string Foo { get; set; }
     }
 
     [PlaywrightTest("page-network-response.spec.ts", "should return status text")]
