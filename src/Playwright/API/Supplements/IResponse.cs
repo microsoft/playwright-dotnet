@@ -22,12 +22,11 @@
  * SOFTWARE.
  */
 
-using System;
 using System.Threading.Tasks;
 
 namespace Microsoft.Playwright;
 
-public partial interface IAPIResponse : IAsyncDisposable
+public partial interface IResponse
 {
     Task<T> JsonAsync<T>();
 }

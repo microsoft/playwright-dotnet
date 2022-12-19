@@ -93,6 +93,9 @@ internal class Response : ChannelOwnerBase, IChannelOwner<Response>, IResponse
         return JsonDocument.Parse(content).RootElement;
     }
 
+    public async Task<T> JsonAsync<T>()
+        => JsonSerializer.Deserialize<T>(await BodyAsync().ConfigureAwait(false));
+
     public Task<ResponseSecurityDetailsResult> SecurityDetailsAsync() => _channel.SecurityDetailsAsync();
 
     public Task<ResponseServerAddrResult> ServerAddrAsync() => _channel.ServerAddrAsync();

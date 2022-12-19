@@ -76,6 +76,8 @@ internal class APIResponse : IAPIResponse
 
     public async Task<JsonElement?> JsonAsync() => JsonSerializer.Deserialize<JsonElement>(await BodyAsync().ConfigureAwait(false));
 
+    public async Task<T> JsonAsync<T>() => JsonSerializer.Deserialize<T>(await BodyAsync().ConfigureAwait(false));
+
     public async Task<string> TextAsync()
     {
         var buffer = await BodyAsync().ConfigureAwait(false);

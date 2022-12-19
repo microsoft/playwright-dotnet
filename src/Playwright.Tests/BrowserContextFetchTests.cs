@@ -23,6 +23,7 @@
  */
 
 using System.Text.Json;
+using System.Text.Json.Serialization;
 using Microsoft.AspNetCore.Http;
 
 namespace Microsoft.Playwright.Tests;
@@ -740,6 +741,20 @@ public class BrowserContextFetchTests : PageTestEx
         Assert.AreEqual(contextState, requestState);
         var pageState = await Page.APIRequest.StorageStateAsync();
         Assert.AreEqual(contextState, pageState);
+    }
+
+    [PlaywrightTest("", "should parse response JSON while passing a type")]
+    public async Task ShouldParseResponseJSONWhilePassingAType()
+    {
+        var response = await Context.APIRequest.GetAsync(Server.Prefix + "/simple.json");
+        var json = await response.JsonAsync<SimpleObject>();
+        Assert.AreEqual("bar", json.Foo);
+    }
+
+    record SimpleObject
+    {
+        [JsonPropertyName("foo")]
+        public string Foo { get; set; }
     }
 
     [PlaywrightTest("browsercontext-fetch.spec.ts", "should accept bool and numeric params")]
