@@ -71,18 +71,6 @@ public class RouteFulfillOptions
     /// JSON response. This method will set the content type to <c>application/json</c>
     /// if not set.
     /// </para>
-    /// <para>
-    /// JSON response. This method will set the content type to <c>application/json</c>
-    /// if not set.
-    /// </para>
-    /// <para>**Usage**</para>
-    /// <code>
-    /// await page.RouteAsync("https://dog.ceo/api/breeds/list/all", async route =&gt;<br/>
-    /// {<br/>
-    ///     var json = /* JsonElement with test payload */;<br/>
-    ///     await route.FulfillAsync(new() { Json: json });<br/>
-    /// });
-    /// </code>
     /// </summary>
     [JsonPropertyName("json")]
     public object? Json { get; set; }
