@@ -54,8 +54,8 @@ public class FrameIsHiddenOptions
 
     /// <summary>
     /// <para>
-    ///  **DEPRECATED** This option is ignored. [`method: Frame.isHidden`] does not wait
-    ///  for the element to become hidden and returns immediately.
+    ///  **DEPRECATED** This option is ignored. <see cref="IFrame.IsHiddenAsync"/> does not
+    ///  wait for the element to become hidden and returns immediately.
     /// </para>
     /// </summary>
     [JsonPropertyName("timeout")]

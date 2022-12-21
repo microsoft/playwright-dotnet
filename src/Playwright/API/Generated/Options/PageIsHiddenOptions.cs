@@ -54,8 +54,8 @@ public class PageIsHiddenOptions
 
     /// <summary>
     /// <para>
-    ///  **DEPRECATED** This option is ignored. [`method: Page.isHidden`] does not wait for
-    ///  the↵element to become hidden and returns immediately.
+    ///  **DEPRECATED** This option is ignored. <see cref="IPage.IsHiddenAsync"/> does not
+    ///  wait for the element to become hidden and returns immediately.
     /// </para>
     /// </summary>
     [JsonPropertyName("timeout")]

@@ -278,9 +278,10 @@ public partial interface IPage
 
     /// <summary>
     /// <para>
-    ///  **DEPRECATED** This property is discouraged. Please use other libraries such as↵[Axe](https://www.deque.com/axe/)
-    ///  if you need to test page accessibility. See our Node.js [guide](https://playwright.dev/docs/accessibility-testing)
-    ///  for integration with Axe.
+    ///  **DEPRECATED** This property is discouraged. Please use other libraries such as
+    ///  [Axe](https://www.deque.com/axe/) if you need to test page accessibility. See our
+    ///  Node.js [guide](https://playwright.dev/docs/accessibility-testing) for integration
+    ///  with Axe.
     /// </para>
     /// </summary>
     [System.Obsolete]
