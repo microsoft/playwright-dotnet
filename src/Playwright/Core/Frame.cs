@@ -130,7 +130,7 @@ internal class Frame : ChannelOwnerBase, IChannelOwner<Frame>, IFrame
         => SelectOptionAsync(selector, new[] { values }, options);
 
     public Task<IReadOnlyList<string>> SelectOptionAsync(string selector, IEnumerable<string> values, FrameSelectOptionOptions options = default)
-        => SelectOptionAsync(selector, values.Select(x => new SelectOptionValue() { Value = x }), options);
+        => SelectOptionAsync(selector, values.Select(valueOrLabel => new SelectOptionValueProtocol() { ValueOrLabel = valueOrLabel }), options);
 
     public Task<IReadOnlyList<string>> SelectOptionAsync(string selector, IElementHandle values, FrameSelectOptionOptions options = default)
         => SelectOptionAsync(selector, new[] { values }, options);
@@ -147,7 +147,10 @@ internal class Frame : ChannelOwnerBase, IChannelOwner<Frame>, IFrame
     public Task<IReadOnlyList<string>> SelectOptionAsync(string selector, SelectOptionValue values, FrameSelectOptionOptions options = default)
         => SelectOptionAsync(selector, new[] { values }, options);
 
-    public async Task<IReadOnlyList<string>> SelectOptionAsync(string selector, IEnumerable<SelectOptionValue> values, FrameSelectOptionOptions options = default)
+    public Task<IReadOnlyList<string>> SelectOptionAsync(string selector, IEnumerable<SelectOptionValue> values, FrameSelectOptionOptions options = default)
+        => SelectOptionAsync(selector, values.Select(value => SelectOptionValueProtocol.From(value)), options);
+
+    internal async Task<IReadOnlyList<string>> SelectOptionAsync(string selector, IEnumerable<SelectOptionValueProtocol> values, FrameSelectOptionOptions options = default)
         => (await _channel.SelectOptionAsync(
             selector,
             values,

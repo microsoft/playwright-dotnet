@@ -454,7 +454,7 @@ internal class FrameChannel : Channel<Frame>
         return Connection.SendMessageToServerAsync(Guid, "press", args);
     }
 
-    internal async Task<string[]> SelectOptionAsync(string selector, IEnumerable<SelectOptionValue> values, bool? noWaitAfter, bool? strict, bool? force, float? timeout)
+    internal async Task<string[]> SelectOptionAsync(string selector, IEnumerable<SelectOptionValueProtocol> values, bool? noWaitAfter, bool? strict, bool? force, float? timeout)
     {
         var args = new Dictionary<string, object>
         {

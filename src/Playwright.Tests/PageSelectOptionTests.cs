@@ -44,6 +44,23 @@ public class PageSelectOptionTests : PageTestEx
         Assert.AreEqual(new[] { "blue" }, await Page.EvaluateAsync<string[]>("() => result.onChange"));
     }
 
+    [PlaywrightTest("page-select-option.spec.ts", "should fall back to selecting by label")]
+    public async Task ShouldFallBackToSelectingByLabel()
+    {
+        {
+            await Page.GotoAsync(Server.Prefix + "/input/select.html");
+            await Page.SelectOptionAsync("select", "Blue");
+            Assert.AreEqual(new[] { "blue" }, await Page.EvaluateAsync<string[]>("() => result.onInput"));
+            Assert.AreEqual(new[] { "blue" }, await Page.EvaluateAsync<string[]>("() => result.onChange"));
+        }
+        {
+            await Page.GotoAsync(Server.Prefix + "/input/select.html");
+            await Page.SelectOptionAsync("select", new string[] { "Blue" });
+            Assert.AreEqual(new[] { "blue" }, await Page.EvaluateAsync<string[]>("() => result.onInput"));
+            Assert.AreEqual(new[] { "blue" }, await Page.EvaluateAsync<string[]>("() => result.onChange"));
+        }
+    }
+
     [PlaywrightTest("page-select-option.spec.ts", "should select single option by label")]
     public async Task ShouldSelectSingleOptionByLabel()
     {
