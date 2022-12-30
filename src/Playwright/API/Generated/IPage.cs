@@ -24,6 +24,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Text.Json;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
@@ -444,6 +445,8 @@ public partial interface IPage
 
     /// <summary><para>Get the browser context that the page belongs to.</para></summary>
     IBrowserContext Context { get; }
+
+    ICoverage Coverage { get; }
 
     /// <summary>
     /// <para>

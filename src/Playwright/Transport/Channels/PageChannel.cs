@@ -398,7 +398,7 @@ internal class PageChannel : Channel<Page>
     internal Task StartCSSCoverageAsync(bool resetOnNavigation)
         => Connection.SendMessageToServerAsync(
             Guid,
-            "crStartCSSCoverage",
+            "startCSSCoverage",
             new Dictionary<string, object>
             {
                 ["resetOnNavigation"] = resetOnNavigation,
@@ -407,12 +407,38 @@ internal class PageChannel : Channel<Page>
     internal Task StartJSCoverageAsync(bool resetOnNavigation, bool reportAnonymousScripts)
         => Connection.SendMessageToServerAsync(
             Guid,
-            "crStartJSCoverage",
+            "startJSCoverage",
             new Dictionary<string, object>
             {
                 ["resetOnNavigation"] = resetOnNavigation,
                 ["reportAnonymousScripts"] = reportAnonymousScripts,
             });
+
+    internal async Task<List<PageStopCSSCoverageResult>> StopCSSCoverageAsync()
+    {
+        var result = await Connection.SendMessageToServerAsync(Guid, "stopCSSCoverage").ConfigureAwait(false);
+
+        if (result.HasValue)
+        {
+            return result.Value.ToObject<PageStopCSSCoverageResults>().Entries;
+        }
+
+        return new List<PageStopCSSCoverageResult>();
+    }
+
+
+    internal async Task<List<PageStopJSCoverageResult>> StopJSCoverageAsync()
+    {
+        var result = await Connection.SendMessageToServerAsync(Guid, "stopJSCoverage").ConfigureAwait(false);
+
+        if (result.HasValue)
+        {
+            return result.Value.ToObject<PageStopJSCoverageResults>().Entries;
+        }
+
+        return new List<PageStopJSCoverageResult>();
+    }
+
 
     internal async Task<byte[]> PdfAsync(
         float? scale,

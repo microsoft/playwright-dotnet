@@ -60,6 +60,7 @@ internal class Page : ChannelOwnerBase, IChannelOwner<Page>, IPage
         _timeoutSettings = new(Context._timeoutSettings);
 
         _channel = new(guid, parent.Connection, this);
+        Coverage = new Coverage(_channel);
 
         MainFrame = initializer.MainFrame;
         MainFrame.Page = this;
@@ -210,6 +211,10 @@ internal class Page : ChannelOwnerBase, IChannelOwner<Page>, IPage
     IBrowserContext IPage.Context => Context;
 
     public BrowserContext Context { get; set; }
+
+    ICoverage IPage.Coverage => Coverage;
+
+    public Coverage Coverage { get; }
 
     public PageViewportSizeResult ViewportSize { get; private set; }
 
