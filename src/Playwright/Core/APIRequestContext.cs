@@ -66,7 +66,8 @@ internal class APIRequestContext : ChannelOwnerBase, IChannelOwner<APIRequestCon
         }
         if (options.Headers == null)
         {
-            options.Headers = await request.AllHeadersAsync().ConfigureAwait(false);
+            // Cannot call allHeaders() here as the request may be paused inside route handler.
+            options.Headers = request.Headers;
         }
         if (options.Data == null && options.DataByte == null && options.DataObject == null && options.DataString == null && options.Form == null && options.Multipart == null)
         {
