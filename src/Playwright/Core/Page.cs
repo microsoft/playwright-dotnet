@@ -60,7 +60,7 @@ internal class Page : ChannelOwnerBase, IChannelOwner<Page>, IPage
         _timeoutSettings = new(Context._timeoutSettings);
 
         _channel = new(guid, parent.Connection, this);
-        Coverage = new Coverage(_channel);
+        Coverage = new Coverage(Context, _channel);
 
         MainFrame = initializer.MainFrame;
         MainFrame.Page = this;

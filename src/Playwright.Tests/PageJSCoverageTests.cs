@@ -29,7 +29,22 @@ namespace Microsoft.Playwright.Tests;
 
 public class PageJSCoverageTests : PageTestEx
 {
+    [PlaywrightTest]
+    [Skip(SkipAttribute.Targets.Chromium)]
+    public void ShouldThrowNotSupportedExceptionWhenStartingCoverageForNonChromeBrowser()
+    {
+        Assert.ThrowsAsync<NotSupportedException>(async () => await Page.Coverage.StartJSCoverageAsync());
+    }
+
+    [PlaywrightTest]
+    [Skip(SkipAttribute.Targets.Chromium)]
+    public void ShouldThrowNotSupportedExceptionWhenStoppingCoverageForNonChromeBrowser()
+    {
+        Assert.ThrowsAsync<NotSupportedException>(async () => await Page.Coverage.StopJSCoverageAsync());
+    }
+
     [PlaywrightTest("chromium/js-coverage.spec.ts", "should work")]
+    [Skip(SkipAttribute.Targets.Firefox, SkipAttribute.Targets.Webkit)]
     public async Task ShouldWork()
     {
         await Page.Coverage.StartJSCoverageAsync();
@@ -44,6 +59,7 @@ public class PageJSCoverageTests : PageTestEx
     }
 
     [PlaywrightTest("chromium/js-coverage.spec.ts", "should report sourceURLs")]
+    [Skip(SkipAttribute.Targets.Firefox, SkipAttribute.Targets.Webkit)]
     public async Task ShouldReportSourceURLs()
     {
         await Page.Coverage.StartJSCoverageAsync();
@@ -55,6 +71,7 @@ public class PageJSCoverageTests : PageTestEx
     }
 
     [PlaywrightTest("chromium/js-coverage.spec.ts", "should ignore eval() scripts by default")]
+    [Skip(SkipAttribute.Targets.Firefox, SkipAttribute.Targets.Webkit)]
     public async Task ShouldIgnoreEvalScriptsByDefault()
     {
         await Page.Coverage.StartJSCoverageAsync();
@@ -65,6 +82,7 @@ public class PageJSCoverageTests : PageTestEx
     }
 
     [PlaywrightTest("chromium/js-coverage.spec.ts", "shouldn't ignore eval() scripts if reportAnonymousScripts is true")]
+    [Skip(SkipAttribute.Targets.Firefox, SkipAttribute.Targets.Webkit)]
     public async Task ShouldNotIgnoreEvalScriptsIfReportAnonymouseScriptsIsTrue()
     {
         await Page.Coverage.StartJSCoverageAsync(new PageStartJSCoverageOptions { ReportAnonymousScripts = true });
@@ -76,6 +94,7 @@ public class PageJSCoverageTests : PageTestEx
     }
 
     [PlaywrightTest("chromium/js-coverage.spec.ts", "should report multiple scripts")]
+    [Skip(SkipAttribute.Targets.Firefox, SkipAttribute.Targets.Webkit)]
     public async Task ShouldReportMultipleScripts()
     {
         await Page.Coverage.StartJSCoverageAsync();
@@ -89,6 +108,7 @@ public class PageJSCoverageTests : PageTestEx
     }
 
     [PlaywrightTest("chromium/js-coverage.spec.ts", "should report scripts across navigations when disabled")]
+    [Skip(SkipAttribute.Targets.Firefox, SkipAttribute.Targets.Webkit)]
     public async Task ShouldReportScriptsAcrossNavigationsWhenDisabled()
     {
         await Page.Coverage.StartJSCoverageAsync(new PageStartJSCoverageOptions { ResetOnNavigation = false });
@@ -100,6 +120,7 @@ public class PageJSCoverageTests : PageTestEx
     }
 
     [PlaywrightTest("chromium/js-coverage.spec.ts", "should NOT report scripts across navigations when enabled")]
+    [Skip(SkipAttribute.Targets.Firefox, SkipAttribute.Targets.Webkit)]
     public async Task ShouldNotReportScriptsAcrossNavigationsWhenEnabled()
     {
         await Page.Coverage.StartJSCoverageAsync(); // Enabled by default
@@ -111,6 +132,7 @@ public class PageJSCoverageTests : PageTestEx
     }
 
     [PlaywrightTest("chromium/js-coverage.spec.ts", "should not hang when there is a debugger statement")]
+    [Skip(SkipAttribute.Targets.Firefox, SkipAttribute.Targets.Webkit)]
     public async Task ShouldNotHangWhenThereIsADebuggerStatement()
     {
         await Page.Coverage.StartJSCoverageAsync();

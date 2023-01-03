@@ -36,7 +36,22 @@ namespace Microsoft.Playwright.Tests;
 
 public class PageCSSCoverageTests : PageTestEx
 {
+    [PlaywrightTest]
+    [Skip(SkipAttribute.Targets.Chromium)]
+    public void ShouldThrowNotSupportedExceptionWhenStartingCoverageForNonChromeBrowser()
+    {
+        Assert.ThrowsAsync<NotSupportedException>(async () => await Page.Coverage.StartCSSCoverageAsync());
+    }
+
+    [PlaywrightTest]
+    [Skip(SkipAttribute.Targets.Chromium)]
+    public void ShouldThrowNotSupportedExceptionWhenStoppingCoverageForNonChromeBrowser()
+    {
+        Assert.ThrowsAsync<NotSupportedException>(async () => await Page.Coverage.StopCSSCoverageAsync());
+    }
+
     [PlaywrightTest("chromium/css-coverage.spec.ts", "should work")]
+    [Skip(SkipAttribute.Targets.Firefox, SkipAttribute.Targets.Webkit)]
     public async Task ShouldWork()
     {
         await Page.Coverage.StartCSSCoverageAsync();
@@ -53,6 +68,7 @@ public class PageCSSCoverageTests : PageTestEx
     }
 
     [PlaywrightTest("chromium/js-coverage.spec.ts", "should report sourceURLs")]
+    [Skip(SkipAttribute.Targets.Firefox, SkipAttribute.Targets.Webkit)]
     public async Task ShouldReportSourceURLs()
     {
         await Page.Coverage.StartCSSCoverageAsync();
@@ -64,6 +80,7 @@ public class PageCSSCoverageTests : PageTestEx
     }
 
     [PlaywrightTest("chromium/js-coverage.spec.ts", "should report multiple stylesheets")]
+    [Skip(SkipAttribute.Targets.Firefox, SkipAttribute.Targets.Webkit)]
     public async Task ShouldReportMultipleStylesSheets()
     {
         await Page.Coverage.StartCSSCoverageAsync();
@@ -77,6 +94,7 @@ public class PageCSSCoverageTests : PageTestEx
     }
 
     [PlaywrightTest("chromium/js-coverage.spec.ts", "should report stylesheets that have no coverage")]
+    [Skip(SkipAttribute.Targets.Firefox, SkipAttribute.Targets.Webkit)]
     public async Task ShouldReportStyleSheetsThatHaveNoCoverage()
     {
         await Page.Coverage.StartCSSCoverageAsync();
@@ -89,6 +107,7 @@ public class PageCSSCoverageTests : PageTestEx
     }
 
     [PlaywrightTest("chromium/js-coverage.spec.ts", "should work with media queries")]
+    [Skip(SkipAttribute.Targets.Firefox, SkipAttribute.Targets.Webkit)]
     public async Task ShouldWorkWithMediaQueries()
     {
         if (ChromiumVersionLessThan(Browser.Version, "110.0.5451.0"))
@@ -109,6 +128,7 @@ public class PageCSSCoverageTests : PageTestEx
     }
 
     [PlaywrightTest("chromium/js-coverage.spec.ts", "should work with complicated usecases")]
+    [Skip(SkipAttribute.Targets.Firefox, SkipAttribute.Targets.Webkit)]
     public async Task ShouldWorkWithComplicatedUsecases()
     {
         if (ChromiumVersionLessThan(Browser.Version, "110.0.5451.0"))
@@ -129,6 +149,7 @@ public class PageCSSCoverageTests : PageTestEx
     }
 
     [PlaywrightTest("chromium/js-coverage.spec.ts", "should ignore injected stylesheets")]
+    [Skip(SkipAttribute.Targets.Firefox, SkipAttribute.Targets.Webkit)]
     public async Task ShouldIgnoreInjectedStyleSheets()
     {
         await Page.Coverage.StartCSSCoverageAsync();
@@ -143,6 +164,7 @@ public class PageCSSCoverageTests : PageTestEx
     }
 
     [PlaywrightTest("chromium/js-coverage.spec.ts", "should report stylesheets across navigations")]
+    [Skip(SkipAttribute.Targets.Firefox, SkipAttribute.Targets.Webkit)]
     public async Task ShouldReportStyleSheetsAcrossNavigations()
     {
         await Page.Coverage.StartCSSCoverageAsync(new PageStartCSSCoverageOptions { ResetOnNavigation = false });
@@ -154,6 +176,7 @@ public class PageCSSCoverageTests : PageTestEx
     }
 
     [PlaywrightTest("chromium/js-coverage.spec.ts", "should NOT report scripts across navigations")]
+    [Skip(SkipAttribute.Targets.Firefox, SkipAttribute.Targets.Webkit)]
     public async Task ShouldNOTReportScriptsAcrossNavigations()
     {
         await Page.Coverage.StartCSSCoverageAsync(); // Enabled by default
@@ -165,6 +188,7 @@ public class PageCSSCoverageTests : PageTestEx
     }
 
     [PlaywrightTest("chromium/js-coverage.spec.ts", "should work with a recently loaded stylesheet")]
+    [Skip(SkipAttribute.Targets.Firefox, SkipAttribute.Targets.Webkit)]
     public async Task ShouldWorkWithRecentlyLoadedStyleSheet()
     {
         await Page.Coverage.StartCSSCoverageAsync();
