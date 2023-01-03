@@ -69,6 +69,7 @@ public partial interface IAccessibility
     /// Captures the current state of the accessibility tree. The returned object represents
     /// the root accessible node of the page.
     /// </para>
+    /// <para>**Usage**</para>
     /// <para>An example of dumping the entire accessibility tree:</para>
     /// <code>
     /// var accessibilitySnapshot = await page.Accessibility.SnapshotAsync();<br/>

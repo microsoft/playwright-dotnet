@@ -55,6 +55,7 @@ internal class Request : ChannelOwnerBase, IChannelOwner<Request>, IRequest
         }
 
         _provisionalHeaders = new RawHeaders(initializer.Headers.ConvertAll(x => new NameValue() { Name = x.Name, Value = x.Value }).ToList());
+        _fallbackOverrides.PostData = initializer.PostData;
     }
 
     ChannelBase IChannelOwner.Channel => _channel;
@@ -99,7 +100,7 @@ internal class Request : ChannelOwnerBase, IChannelOwner<Request>, IRequest
             {
                 return Encoding.UTF8.GetString(_fallbackOverrides.PostData);
             }
-            return PostDataBuffer == null ? null : Encoding.UTF8.GetString(PostDataBuffer);
+            return null;
         }
     }
 
@@ -108,11 +109,7 @@ internal class Request : ChannelOwnerBase, IChannelOwner<Request>, IRequest
     {
         get
         {
-            if (_fallbackOverrides.PostData != null)
-            {
-                return _fallbackOverrides.PostData;
-            }
-            return _initializer.PostData;
+            return _fallbackOverrides.PostData;
         }
     }
 
@@ -131,6 +128,8 @@ internal class Request : ChannelOwnerBase, IChannelOwner<Request>, IRequest
     public RequestSizesResult Sizes { get; internal set; }
 
     public IWorker ServiceWorker => _initializer.ServiceWorker;
+
+    internal BrowserContext _context => (BrowserContext)Frame.Page.Context;
 
     public async Task<IResponse> ResponseAsync() => (await _channel.GetResponseAsync().ConfigureAwait(false))?.Object;
 

@@ -82,9 +82,10 @@ public partial interface IAPIRequestContext
     /// <para>
     /// Sends HTTP(S) request and returns its response. The method will populate request
     /// cookies from the context and update context cookies from the response. The method
-    /// will automatically follow redirects.
+    /// will automatically follow redirects. JSON objects can be passed directly to the
+    /// request.
     /// </para>
-    /// <para>JSON objects can be passed directly to the request:</para>
+    /// <para>**Usage**</para>
     /// <code>
     /// var data = new Dictionary&lt;string, object&gt;() {<br/>
     ///   { "title", "Book Title" },<br/>
@@ -117,9 +118,10 @@ public partial interface IAPIRequestContext
     /// <para>
     /// Sends HTTP(S) request and returns its response. The method will populate request
     /// cookies from the context and update context cookies from the response. The method
-    /// will automatically follow redirects.
+    /// will automatically follow redirects. JSON objects can be passed directly to the
+    /// request.
     /// </para>
-    /// <para>JSON objects can be passed directly to the request:</para>
+    /// <para>**Usage**</para>
     /// <code>
     /// var data = new Dictionary&lt;string, object&gt;() {<br/>
     ///   { "title", "Book Title" },<br/>
@@ -155,6 +157,7 @@ public partial interface IAPIRequestContext
     /// the context and update context cookies from the response. The method will automatically
     /// follow redirects.
     /// </para>
+    /// <para>**Usage**</para>
     /// <para>
     /// Request parameters can be configured with <c>params</c> option, they will be serialized
     /// into the URL search parameters:
@@ -203,6 +206,7 @@ public partial interface IAPIRequestContext
     /// the context and update context cookies from the response. The method will automatically
     /// follow redirects.
     /// </para>
+    /// <para>**Usage**</para>
     /// <para>JSON objects can be passed directly to the request:</para>
     /// <code>
     /// var data = new Dictionary&lt;string, object&gt;() {<br/>

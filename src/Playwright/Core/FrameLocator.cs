@@ -67,6 +67,9 @@ internal class FrameLocator : IFrameLocator
     public ILocator GetByTestId(string testId)
         => Locator(Core.Locator.GetByTestIdSelector(Core.Locator.TestIdAttributeName(), testId));
 
+    public ILocator GetByTestId(Regex testId)
+        => Locator(Core.Locator.GetByTestIdSelector(Core.Locator.TestIdAttributeName(), testId));
+
     public ILocator GetByText(string text, FrameLocatorGetByTextOptions options = null)
         => Locator(Core.Locator.GetByTextSelector(text, options?.Exact));
 

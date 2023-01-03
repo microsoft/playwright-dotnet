@@ -540,7 +540,7 @@ internal class Page : ChannelOwnerBase, IChannelOwner<Page>, IPage
         => SelectOptionAsync(selector, new[] { values }, options);
 
     public Task<IReadOnlyList<string>> SelectOptionAsync(string selector, IEnumerable<string> values, PageSelectOptionOptions options = default)
-        => SelectOptionAsync(selector, values.Select(x => new SelectOptionValue() { Value = x }), options);
+        => SelectOptionAsync(selector, values.Select(x => new SelectOptionValueProtocol() { ValueOrLabel = x }), options);
 
     public Task<IReadOnlyList<string>> SelectOptionAsync(string selector, IElementHandle values, PageSelectOptionOptions options = default)
         => SelectOptionAsync(selector, new[] { values }, options);
@@ -558,6 +558,9 @@ internal class Page : ChannelOwnerBase, IChannelOwner<Page>, IPage
         => SelectOptionAsync(selector, new[] { values }, options);
 
     public Task<IReadOnlyList<string>> SelectOptionAsync(string selector, IEnumerable<SelectOptionValue> values, PageSelectOptionOptions options = default)
+        => SelectOptionAsync(selector, values.Select(x => SelectOptionValueProtocol.From(x)), options);
+
+    internal Task<IReadOnlyList<string>> SelectOptionAsync(string selector, IEnumerable<SelectOptionValueProtocol> values, PageSelectOptionOptions options = default)
         => MainFrame.SelectOptionAsync(selector, values, new()
         {
             NoWaitAfter = options?.NoWaitAfter,
@@ -1191,6 +1194,9 @@ internal class Page : ChannelOwnerBase, IChannelOwner<Page>, IPage
         => Locator(Core.Locator.GetByRoleSelector(role, new(options)));
 
     public ILocator GetByTestId(string testId)
+        => MainFrame.GetByTestId(testId);
+
+    public ILocator GetByTestId(Regex testId)
         => MainFrame.GetByTestId(testId);
 
     public ILocator GetByText(string text, PageGetByTextOptions options = null)

@@ -58,6 +58,7 @@ public partial interface ITracing
 {
     /// <summary>
     /// <para>Start tracing.</para>
+    /// <para>**Usage**</para>
     /// <code>
     /// await using var browser = playwright.Chromium.LaunchAsync();<br/>
     /// await using var context = await browser.NewContextAsync();<br/>
@@ -83,6 +84,7 @@ public partial interface ITracing
     /// cref="IBrowserContext"/>, use <see cref="ITracing.StartAsync"/> once, and then create
     /// multiple trace chunks with <see cref="ITracing.StartChunkAsync"/> and <see cref="ITracing.StopChunkAsync"/>.
     /// </para>
+    /// <para>**Usage**</para>
     /// <code>
     /// await using var browser = playwright.Chromium.LaunchAsync();<br/>
     /// await using var context = await browser.NewContextAsync();<br/>

@@ -376,6 +376,9 @@ internal class Locator : ILocator
     public ILocator GetByTestId(string testId)
         => ((ILocator)this).Locator(GetByTestIdSelector(TestIdAttributeName(), testId));
 
+    public ILocator GetByTestId(Regex testId)
+        => ((ILocator)this).Locator(GetByTestIdSelector(TestIdAttributeName(), testId));
+
     public ILocator GetByText(string text, LocatorGetByTextOptions options = null)
         => ((ILocator)this).Locator(GetByTextSelector(text, options?.Exact));
 
@@ -395,6 +398,9 @@ internal class Locator : ILocator
 
     internal static string GetByTestIdSelector(string testIdAttributeName, string testId)
         => $"internal:testid=[{testIdAttributeName}={EscapeForAttributeSelector(testId, true)}]";
+
+    internal static string GetByTestIdSelector(string testIdAttributeName, Regex testId)
+        => $"internal:testid=[{testIdAttributeName}={EscapeForTextSelector(testId, true)}]";
 
     internal static string GetByAttributeTextSelector(string attrName, string text, bool? exact)
         => $"internal:attr=[{attrName}={EscapeForAttributeSelector(text, exact ?? false)}]";
@@ -511,6 +517,9 @@ internal class Locator : ILocator
         var patern = new Regex(@"[.*+?^>${}()|[\]\\]");
         return patern.Replace(text, "\\$&");
     }
+
+    async Task<IReadOnlyList<ILocator>> ILocator.AllAsync()
+        => Enumerable.Range(0, await CountAsync()).Select(Nth).ToArray();
 }
 
 internal class ByRoleOptions

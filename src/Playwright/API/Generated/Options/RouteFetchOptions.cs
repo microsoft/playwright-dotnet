@@ -29,11 +29,11 @@ using System.Text.Json.Serialization;
 
 namespace Microsoft.Playwright;
 
-public class RouteFallbackOptions
+public class RouteFetchOptions
 {
-    public RouteFallbackOptions() { }
+    public RouteFetchOptions() { }
 
-    public RouteFallbackOptions(RouteFallbackOptions clone)
+    public RouteFetchOptions(RouteFetchOptions clone)
     {
         if (clone == null)
         {
@@ -58,13 +58,7 @@ public class RouteFallbackOptions
     [JsonPropertyName("postData")]
     public byte[]? PostData { get; set; }
 
-    /// <summary>
-    /// <para>
-    /// If set changes the request URL. New URL must have same protocol as original one.
-    /// Changing the URL won't affect the route matching, all the routes are matched using
-    /// the original request URL.
-    /// </para>
-    /// </summary>
+    /// <summary><para>If set changes the request URL. New URL must have same protocol as original one.</para></summary>
     [JsonPropertyName("url")]
     public string? Url { get; set; }
 }

@@ -117,15 +117,22 @@ public class SelectorsRoleTests : PageTestEx
     public async Task ShouldSupportExpanded()
     {
         await Page.SetContentAsync(@"
-        <button>Hi</button>
-        <button aria-expanded=""true"">Hello</button>
-        <button aria-expanded=""false"">Bye</button>
+            <div role=""treeitem"">Hi</div>
+            <div role=""treeitem"" aria-expanded=""true"">Hello</div>
+            <div role=""treeitem"" aria-expanded=""false"">Bye</div>
         ");
-        Assert.AreEqual(await Page.Locator("role=button[expanded]").EvaluateAllAsync<string[]>("els => els.map(e => e.outerHTML)"), new string[] { "<button aria-expanded=\"true\">Hello</button>" });
-        Assert.AreEqual(await Page.Locator("role=button[expanded=true]").EvaluateAllAsync<string[]>("els => els.map(e => e.outerHTML)"), new string[] { "<button aria-expanded=\"true\">Hello</button>" });
-        Assert.AreEqual(await Page.GetByRole(AriaRole.Button, new() { Expanded = true }).EvaluateAllAsync<string[]>("els => els.map(e => e.outerHTML)"), new string[] { "<button aria-expanded=\"true\">Hello</button>" });
-        Assert.AreEqual(await Page.Locator("role=button[expanded=false]").EvaluateAllAsync<string[]>("els => els.map(e => e.outerHTML)"), new string[] { "<button>Hi</button>", "<button aria-expanded=\"false\">Bye</button>" });
-        Assert.AreEqual(await Page.GetByRole(AriaRole.Button, new() { Expanded = false }).EvaluateAllAsync<string[]>("els => els.map(e => e.outerHTML)"), new string[] { "<button>Hi</button>", "<button aria-expanded=\"false\">Bye</button>" });
+        Assert.AreEqual(await Page.Locator("role=treeitem").EvaluateAllAsync<string[]>("els => els.map(e => e.outerHTML)"), new string[] { "<div role=\"treeitem\">Hi</div>", "<div role=\"treeitem\" aria-expanded=\"true\">Hello</div>", "<div role=\"treeitem\" aria-expanded=\"false\">Bye</div>" });
+        Assert.AreEqual(await Page.GetByRole(AriaRole.Treeitem).EvaluateAllAsync<string[]>("els => els.map(e => e.outerHTML)"), new string[] { "<div role=\"treeitem\">Hi</div>", "<div role=\"treeitem\" aria-expanded=\"true\">Hello</div>", "<div role=\"treeitem\" aria-expanded=\"false\">Bye</div>" });
+
+        Assert.AreEqual(await Page.Locator("role=treeitem[expanded]").EvaluateAllAsync<string[]>("els => els.map(e => e.outerHTML)"), new string[] { "<div role=\"treeitem\" aria-expanded=\"true\">Hello</div>" });
+        Assert.AreEqual(await Page.Locator("role=treeitem[expanded=true]").EvaluateAllAsync<string[]>("els => els.map(e => e.outerHTML)"), new string[] { "<div role=\"treeitem\" aria-expanded=\"true\">Hello</div>" });
+        Assert.AreEqual(await Page.GetByRole(AriaRole.Treeitem, new() { Expanded = true }).EvaluateAllAsync<string[]>("els => els.map(e => e.outerHTML)"), new string[] { "<div role=\"treeitem\" aria-expanded=\"true\">Hello</div>" });
+
+        Assert.AreEqual(await Page.Locator("role=treeitem[expanded=false]").EvaluateAllAsync<string[]>("els => els.map(e => e.outerHTML)"), new string[] { "<div role=\"treeitem\" aria-expanded=\"false\">Bye</div>" });
+        Assert.AreEqual(await Page.GetByRole(AriaRole.Treeitem, new() { Expanded = false }).EvaluateAllAsync<string[]>("els => els.map(e => e.outerHTML)"), new string[] { "<div role=\"treeitem\" aria-expanded=\"false\">Bye</div>" });
+
+        // Workaround for expanded="none".
+        Assert.AreEqual(await Page.Locator("[role=treeitem]:not([aria-expanded])").EvaluateAllAsync<string[]>("els => els.map(e => e.outerHTML)"), new string[] { "<div role=\"treeitem\">Hi</div>" });
     }
 
     [PlaywrightTest("selectors-role.spec.ts", "should support disabled")]

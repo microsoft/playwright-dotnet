@@ -41,6 +41,19 @@ namespace Microsoft.Playwright;
 /// </summary>
 public partial interface ILocator
 {
+    /// <summary>
+    /// <para>
+    /// When locator points to a list of elements, returns array of locators, pointing to
+    /// respective elements.
+    /// </para>
+    /// <para>**Usage**</para>
+    /// <code>
+    /// foreach (var li in await page.GetByRole('listitem').AllAsync())<br/>
+    ///   await li.ClickAsync();
+    /// </code>
+    /// </summary>
+    Task<IReadOnlyList<ILocator>> AllAsync();
+
     /// <summary><para>Returns an array of <c>node.innerText</c> values for all matching nodes.</para></summary>
     Task<IReadOnlyList<string>> AllInnerTextsAsync();
 
@@ -74,6 +87,7 @@ public partial interface ILocator
     /// Assuming the page is static, it is safe to use bounding box coordinates to perform
     /// input. For example, the following snippet should click the center of the element.
     /// </para>
+    /// <para>**Usage**</para>
     /// <code>
     /// var box = await element.BoundingBoxAsync();<br/>
     /// await page.Mouse.ClickAsync(box.X + box.Width / 2, box.Y + box.Height / 2);
@@ -131,6 +145,8 @@ public partial interface ILocator
     Task ClearAsync(LocatorClearOptions? options = default);
 
     /// <summary>
+    /// <para>Click an element.</para>
+    /// <para>**Details**</para>
     /// <para>This method clicks the element by performing the following steps:</para>
     /// <list type="ordinal">
     /// <item><description>
@@ -206,6 +222,7 @@ public partial interface ILocator
     /// the visibility state of the element, <c>click</c> is dispatched. This is equivalent
     /// to calling <a href="https://developer.mozilla.org/en-US/docs/Web/API/HTMLElement/click">element.click()</a>.
     /// </para>
+    /// <para>**Usage**</para>
     /// <code>await element.DispatchEventAsync("click");</code>
     /// <para>
     /// Under the hood, it creates an instance of an event based on the given <paramref
@@ -248,6 +265,7 @@ public partial interface ILocator
     /// first move to the source element, perform a <c>mousedown</c>, then move to the target
     /// element or position and perform a <c>mouseup</c>.
     /// </para>
+    /// <para>**Usage**</para>
     /// <code>
     /// var source = Page.Locator("#source");<br/>
     /// var target = Page.Locator("#target");<br/>
@@ -285,7 +303,7 @@ public partial interface ILocator
     /// If <paramref name="expression"/> returns a <see cref="Task"/>, then <c>handle.evaluate</c>
     /// would wait for the promise to resolve and return its value.
     /// </para>
-    /// <para>Examples:</para>
+    /// <para>**Usage**</para>
     /// <code>
     /// var tweets = page.Locator(".tweet .retweets");<br/>
     /// Assert.AreEqual("10 retweets", await tweets.EvaluateAsync("node =&gt; node.innerText"));
@@ -309,10 +327,10 @@ public partial interface ILocator
     /// If <paramref name="expression"/> returns a <see cref="Task"/>, then <see cref="ILocator.EvaluateAllAsync"/>
     /// would wait for the promise to resolve and return its value.
     /// </para>
-    /// <para>Examples:</para>
+    /// <para>**Usage**</para>
     /// <code>
     /// var elements = page.Locator("div");<br/>
-    /// var divsCount = await elements.EvaluateAll&lt;bool&gt;("(divs, min) =&gt; divs.length &gt;= min", 10);
+    /// var divsCount = await elements.EvaluateAllAsync&lt;bool&gt;("(divs, min) =&gt; divs.length &gt;= min", 10);
     /// </code>
     /// </summary>
     /// <param name="expression">
@@ -370,13 +388,14 @@ public partial interface ILocator
     /// This method narrows existing locator according to the options, for example filters
     /// by text. It can be chained to filter multiple times.
     /// </para>
+    /// <para>**Usage**</para>
     /// <code>
     /// var rowLocator = page.Locator("tr");<br/>
     /// // ...<br/>
     /// await rowLocator<br/>
     ///     .Filter(new LocatorFilterOptions { HasText = "text in column 1" })<br/>
     ///     .Filter(new LocatorFilterOptions {<br/>
-    ///         Has = page.GetByRole("button", new() { Name = "column 2 button" } )<br/>
+    ///         Has = page.GetByRole(AriaRole.Button, new() { Name = "column 2 button" } )<br/>
     ///     })<br/>
     ///     .ScreenshotAsync();
     /// </code>
@@ -397,6 +416,7 @@ public partial interface ILocator
     Task FocusAsync(LocatorFocusOptions? options = default);
 
     /// <summary>
+    /// <para>**Usage**</para>
     /// <para>
     /// When working with iframes, you can create a frame locator that will enter the iframe
     /// and allow selecting elements in that iframe:
@@ -406,10 +426,7 @@ public partial interface ILocator
     /// await locator.ClickAsync();
     /// </code>
     /// </summary>
-    /// <param name="selector">
-    /// A selector to use when resolving DOM element. See <a href="https://playwright.dev/dotnet/docs/selectors">working
-    /// with selectors</a> for more details.
-    /// </param>
+    /// <param name="selector">A selector to use when resolving DOM element.</param>
     IFrameLocator FrameLocator(string selector);
 
     /// <summary><para>Returns element attribute value.</para></summary>
@@ -506,6 +523,16 @@ public partial interface ILocator
     /// </summary>
     /// <param name="testId">Id to locate the element by.</param>
     ILocator GetByTestId(string testId);
+
+    /// <summary>
+    /// <para>
+    /// Locate element by the test id. By default, the <c>data-testid</c> attribute is used
+    /// as a test id. Use <see cref="ISelectors.SetTestIdAttribute"/> to configure a different
+    /// test id attribute if necessary.
+    /// </para>
+    /// </summary>
+    /// <param name="testId">Id to locate the element by.</param>
+    ILocator GetByTestId(Regex testId);
 
     /// <summary>
     /// <para>Allows locating elements that contain given text. Consider the following DOM structure:</para>
@@ -706,10 +733,7 @@ public partial interface ILocator
     /// </para>
     /// <para><a href="https://playwright.dev/dotnet/docs/locators">Learn more about locators</a>.</para>
     /// </summary>
-    /// <param name="selector">
-    /// A selector to use when resolving DOM element. See <a href="https://playwright.dev/dotnet/docs/selectors">working
-    /// with selectors</a> for more details.
-    /// </param>
+    /// <param name="selector">A selector to use when resolving DOM element.</param>
     /// <param name="options">Call options</param>
     ILocator Locator(string selector, LocatorLocatorOptions? options = default);
 
@@ -796,6 +820,8 @@ public partial interface ILocator
     Task ScrollIntoViewIfNeededAsync(LocatorScrollIntoViewIfNeededOptions? options = default);
 
     /// <summary>
+    /// <para>Selects option or options in <c>&lt;select&gt;</c>.</para>
+    /// <para>**Details**</para>
     /// <para>
     /// This method waits for <a href="https://playwright.dev/dotnet/docs/actionability">actionability</a>
     /// checks, waits until all specified options are present in the <c>&lt;select&gt;</c>
@@ -812,30 +838,28 @@ public partial interface ILocator
     /// Triggers a <c>change</c> and <c>input</c> event once all the provided options have
     /// been selected.
     /// </para>
+    /// <para>**Usage**</para>
     /// <code>
-    /// // single selection matching the value<br/>
+    /// // single selection matching the value or label<br/>
     /// await element.SelectOptionAsync(new[] { "blue" });<br/>
     /// // single selection matching the label<br/>
     /// await element.SelectOptionAsync(new[] { new SelectOptionValue() { Label = "blue" } });<br/>
-    /// // multiple selection<br/>
-    /// await element.SelectOptionAsync(new[] { "red", "green", "blue" });<br/>
     /// // multiple selection for blue, red and second option<br/>
-    /// await element.SelectOptionAsync(new[] {<br/>
-    ///     new SelectOptionValue() { Label = "blue" },<br/>
-    ///     new SelectOptionValue() { Index = 2 },<br/>
-    ///     new SelectOptionValue() { Value = "red" }});
+    /// await element.SelectOptionAsync(new[] { "red", "green", "blue" });
     /// </code>
     /// </summary>
     /// <param name="values">
     /// Options to select. If the <c>&lt;select&gt;</c> has the <c>multiple</c> attribute,
     /// all matching options are selected, otherwise only the first option matching one
-    /// of the passed options is selected. String values are equivalent to <c>{value:'string'}</c>.
+    /// of the passed options is selected. String values are matching both values and labels.
     /// Option is considered matching if all specified properties match.
     /// </param>
     /// <param name="options">Call options</param>
     Task<IReadOnlyList<string>> SelectOptionAsync(string values, LocatorSelectOptionOptions? options = default);
 
     /// <summary>
+    /// <para>Selects option or options in <c>&lt;select&gt;</c>.</para>
+    /// <para>**Details**</para>
     /// <para>
     /// This method waits for <a href="https://playwright.dev/dotnet/docs/actionability">actionability</a>
     /// checks, waits until all specified options are present in the <c>&lt;select&gt;</c>
@@ -852,30 +876,28 @@ public partial interface ILocator
     /// Triggers a <c>change</c> and <c>input</c> event once all the provided options have
     /// been selected.
     /// </para>
+    /// <para>**Usage**</para>
     /// <code>
-    /// // single selection matching the value<br/>
+    /// // single selection matching the value or label<br/>
     /// await element.SelectOptionAsync(new[] { "blue" });<br/>
     /// // single selection matching the label<br/>
     /// await element.SelectOptionAsync(new[] { new SelectOptionValue() { Label = "blue" } });<br/>
-    /// // multiple selection<br/>
-    /// await element.SelectOptionAsync(new[] { "red", "green", "blue" });<br/>
     /// // multiple selection for blue, red and second option<br/>
-    /// await element.SelectOptionAsync(new[] {<br/>
-    ///     new SelectOptionValue() { Label = "blue" },<br/>
-    ///     new SelectOptionValue() { Index = 2 },<br/>
-    ///     new SelectOptionValue() { Value = "red" }});
+    /// await element.SelectOptionAsync(new[] { "red", "green", "blue" });
     /// </code>
     /// </summary>
     /// <param name="values">
     /// Options to select. If the <c>&lt;select&gt;</c> has the <c>multiple</c> attribute,
     /// all matching options are selected, otherwise only the first option matching one
-    /// of the passed options is selected. String values are equivalent to <c>{value:'string'}</c>.
+    /// of the passed options is selected. String values are matching both values and labels.
     /// Option is considered matching if all specified properties match.
     /// </param>
     /// <param name="options">Call options</param>
     Task<IReadOnlyList<string>> SelectOptionAsync(IElementHandle values, LocatorSelectOptionOptions? options = default);
 
     /// <summary>
+    /// <para>Selects option or options in <c>&lt;select&gt;</c>.</para>
+    /// <para>**Details**</para>
     /// <para>
     /// This method waits for <a href="https://playwright.dev/dotnet/docs/actionability">actionability</a>
     /// checks, waits until all specified options are present in the <c>&lt;select&gt;</c>
@@ -892,30 +914,28 @@ public partial interface ILocator
     /// Triggers a <c>change</c> and <c>input</c> event once all the provided options have
     /// been selected.
     /// </para>
+    /// <para>**Usage**</para>
     /// <code>
-    /// // single selection matching the value<br/>
+    /// // single selection matching the value or label<br/>
     /// await element.SelectOptionAsync(new[] { "blue" });<br/>
     /// // single selection matching the label<br/>
     /// await element.SelectOptionAsync(new[] { new SelectOptionValue() { Label = "blue" } });<br/>
-    /// // multiple selection<br/>
-    /// await element.SelectOptionAsync(new[] { "red", "green", "blue" });<br/>
     /// // multiple selection for blue, red and second option<br/>
-    /// await element.SelectOptionAsync(new[] {<br/>
-    ///     new SelectOptionValue() { Label = "blue" },<br/>
-    ///     new SelectOptionValue() { Index = 2 },<br/>
-    ///     new SelectOptionValue() { Value = "red" }});
+    /// await element.SelectOptionAsync(new[] { "red", "green", "blue" });
     /// </code>
     /// </summary>
     /// <param name="values">
     /// Options to select. If the <c>&lt;select&gt;</c> has the <c>multiple</c> attribute,
     /// all matching options are selected, otherwise only the first option matching one
-    /// of the passed options is selected. String values are equivalent to <c>{value:'string'}</c>.
+    /// of the passed options is selected. String values are matching both values and labels.
     /// Option is considered matching if all specified properties match.
     /// </param>
     /// <param name="options">Call options</param>
     Task<IReadOnlyList<string>> SelectOptionAsync(IEnumerable<string> values, LocatorSelectOptionOptions? options = default);
 
     /// <summary>
+    /// <para>Selects option or options in <c>&lt;select&gt;</c>.</para>
+    /// <para>**Details**</para>
     /// <para>
     /// This method waits for <a href="https://playwright.dev/dotnet/docs/actionability">actionability</a>
     /// checks, waits until all specified options are present in the <c>&lt;select&gt;</c>
@@ -932,30 +952,28 @@ public partial interface ILocator
     /// Triggers a <c>change</c> and <c>input</c> event once all the provided options have
     /// been selected.
     /// </para>
+    /// <para>**Usage**</para>
     /// <code>
-    /// // single selection matching the value<br/>
+    /// // single selection matching the value or label<br/>
     /// await element.SelectOptionAsync(new[] { "blue" });<br/>
     /// // single selection matching the label<br/>
     /// await element.SelectOptionAsync(new[] { new SelectOptionValue() { Label = "blue" } });<br/>
-    /// // multiple selection<br/>
-    /// await element.SelectOptionAsync(new[] { "red", "green", "blue" });<br/>
     /// // multiple selection for blue, red and second option<br/>
-    /// await element.SelectOptionAsync(new[] {<br/>
-    ///     new SelectOptionValue() { Label = "blue" },<br/>
-    ///     new SelectOptionValue() { Index = 2 },<br/>
-    ///     new SelectOptionValue() { Value = "red" }});
+    /// await element.SelectOptionAsync(new[] { "red", "green", "blue" });
     /// </code>
     /// </summary>
     /// <param name="values">
     /// Options to select. If the <c>&lt;select&gt;</c> has the <c>multiple</c> attribute,
     /// all matching options are selected, otherwise only the first option matching one
-    /// of the passed options is selected. String values are equivalent to <c>{value:'string'}</c>.
+    /// of the passed options is selected. String values are matching both values and labels.
     /// Option is considered matching if all specified properties match.
     /// </param>
     /// <param name="options">Call options</param>
     Task<IReadOnlyList<string>> SelectOptionAsync(SelectOptionValue values, LocatorSelectOptionOptions? options = default);
 
     /// <summary>
+    /// <para>Selects option or options in <c>&lt;select&gt;</c>.</para>
+    /// <para>**Details**</para>
     /// <para>
     /// This method waits for <a href="https://playwright.dev/dotnet/docs/actionability">actionability</a>
     /// checks, waits until all specified options are present in the <c>&lt;select&gt;</c>
@@ -972,30 +990,28 @@ public partial interface ILocator
     /// Triggers a <c>change</c> and <c>input</c> event once all the provided options have
     /// been selected.
     /// </para>
+    /// <para>**Usage**</para>
     /// <code>
-    /// // single selection matching the value<br/>
+    /// // single selection matching the value or label<br/>
     /// await element.SelectOptionAsync(new[] { "blue" });<br/>
     /// // single selection matching the label<br/>
     /// await element.SelectOptionAsync(new[] { new SelectOptionValue() { Label = "blue" } });<br/>
-    /// // multiple selection<br/>
-    /// await element.SelectOptionAsync(new[] { "red", "green", "blue" });<br/>
     /// // multiple selection for blue, red and second option<br/>
-    /// await element.SelectOptionAsync(new[] {<br/>
-    ///     new SelectOptionValue() { Label = "blue" },<br/>
-    ///     new SelectOptionValue() { Index = 2 },<br/>
-    ///     new SelectOptionValue() { Value = "red" }});
+    /// await element.SelectOptionAsync(new[] { "red", "green", "blue" });
     /// </code>
     /// </summary>
     /// <param name="values">
     /// Options to select. If the <c>&lt;select&gt;</c> has the <c>multiple</c> attribute,
     /// all matching options are selected, otherwise only the first option matching one
-    /// of the passed options is selected. String values are equivalent to <c>{value:'string'}</c>.
+    /// of the passed options is selected. String values are matching both values and labels.
     /// Option is considered matching if all specified properties match.
     /// </param>
     /// <param name="options">Call options</param>
     Task<IReadOnlyList<string>> SelectOptionAsync(IEnumerable<IElementHandle> values, LocatorSelectOptionOptions? options = default);
 
     /// <summary>
+    /// <para>Selects option or options in <c>&lt;select&gt;</c>.</para>
+    /// <para>**Details**</para>
     /// <para>
     /// This method waits for <a href="https://playwright.dev/dotnet/docs/actionability">actionability</a>
     /// checks, waits until all specified options are present in the <c>&lt;select&gt;</c>
@@ -1012,24 +1028,20 @@ public partial interface ILocator
     /// Triggers a <c>change</c> and <c>input</c> event once all the provided options have
     /// been selected.
     /// </para>
+    /// <para>**Usage**</para>
     /// <code>
-    /// // single selection matching the value<br/>
+    /// // single selection matching the value or label<br/>
     /// await element.SelectOptionAsync(new[] { "blue" });<br/>
     /// // single selection matching the label<br/>
     /// await element.SelectOptionAsync(new[] { new SelectOptionValue() { Label = "blue" } });<br/>
-    /// // multiple selection<br/>
-    /// await element.SelectOptionAsync(new[] { "red", "green", "blue" });<br/>
     /// // multiple selection for blue, red and second option<br/>
-    /// await element.SelectOptionAsync(new[] {<br/>
-    ///     new SelectOptionValue() { Label = "blue" },<br/>
-    ///     new SelectOptionValue() { Index = 2 },<br/>
-    ///     new SelectOptionValue() { Value = "red" }});
+    /// await element.SelectOptionAsync(new[] { "red", "green", "blue" });
     /// </code>
     /// </summary>
     /// <param name="values">
     /// Options to select. If the <c>&lt;select&gt;</c> has the <c>multiple</c> attribute,
     /// all matching options are selected, otherwise only the first option matching one
-    /// of the passed options is selected. String values are equivalent to <c>{value:'string'}</c>.
+    /// of the passed options is selected. String values are matching both values and labels.
     /// Option is considered matching if all specified properties match.
     /// </param>
     /// <param name="options">Call options</param>
@@ -1198,6 +1210,7 @@ public partial interface ILocator
     /// and <c>keyup</c> event for each character in the text.
     /// </para>
     /// <para>To press a special key, like <c>Control</c> or <c>ArrowDown</c>, use <see cref="ILocator.PressAsync"/>.</para>
+    /// <para>**Usage**</para>
     /// <code>
     /// await element.TypeAsync("Hello"); // Types instantly<br/>
     /// await element.TypeAsync("World", new() { Delay = 100 }); // Types slower, like a user
@@ -1255,6 +1268,7 @@ public partial interface ILocator
     /// Otherwise, waits for up to <paramref name="timeout"/> milliseconds until the condition
     /// is met.
     /// </para>
+    /// <para>**Usage**</para>
     /// <code>
     /// var orderSent = page.Locator("#order-sent");<br/>
     /// orderSent.WaitForAsync();

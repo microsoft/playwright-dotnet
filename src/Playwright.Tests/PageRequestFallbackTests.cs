@@ -23,6 +23,7 @@
  */
 
 using System.Text;
+using System.Text.Json.Nodes;
 
 namespace Microsoft.Playwright.Tests;
 
@@ -278,5 +279,27 @@ public class PageRequestFallbackTests : PageTestEx
             Page.EvaluateAsync("() => fetch('/sleep.zzz', { method: 'POST', body: 'birdy' })"));
         Assert.AreEqual("doggo", postData);
         Assert.AreEqual("doggo", serverRequestBody);
+    }
+
+    [PlaywrightTest("page-request-fallback.spec.ts", "should amend json post data")]
+    public async Task ShouldAmendJsonPostData()
+    {
+        await Page.GotoAsync(Server.EmptyPage);
+        string postData = null;
+        await Page.RouteAsync("**/*", async (route) =>
+        {
+            postData = JsonObject.Create((System.Text.Json.JsonElement)route.Request.PostDataJSON()).ToJsonString();
+            await route.ContinueAsync();
+        });
+        await Page.RouteAsync("**/*", route => route.FallbackAsync(new() { PostData = Encoding.UTF8.GetBytes("{\"foo\":\"bar\"}") }));
+        var (serverRequestBody, _) = await TaskUtils.WhenAll(
+            Server.WaitForRequest("/sleep.zzz", request =>
+            {
+                using StreamReader reader = new(request.Body, System.Text.Encoding.UTF8);
+                return reader.ReadToEndAsync().GetAwaiter().GetResult();
+            }),
+            Page.EvaluateAsync("() => fetch('/sleep.zzz', { method: 'POST', body: 'birdy' })"));
+        Assert.AreEqual("{\"foo\":\"bar\"}", postData);
+        Assert.AreEqual("{\"foo\":\"bar\"}", serverRequestBody);
     }
 }

@@ -91,6 +91,7 @@ public partial interface IBrowser
     /// Returns an array of all open browser contexts. In a newly created browser, this
     /// will return zero browser contexts.
     /// </para>
+    /// <para>**Usage**</para>
     /// <code>
     /// using var playwright = await Playwright.CreateAsync();<br/>
     /// var browser = await playwright.Webkit.LaunchAsync();<br/>
@@ -106,6 +107,7 @@ public partial interface IBrowser
 
     /// <summary>
     /// <para>Creates a new browser context. It won't share cookies/cache with other browser contexts.</para>
+    /// <para>**Usage**</para>
     /// <code>
     /// using var playwright = await Playwright.CreateAsync();<br/>
     /// var browser = await playwright.Firefox.LaunchAsync();<br/>

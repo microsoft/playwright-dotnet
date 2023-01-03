@@ -54,22 +54,26 @@ internal class APIRequestContext : ChannelOwnerBase, IChannelOwner<APIRequestCon
 
     public ValueTask DisposeAsync() => new(_channel.DisposeAsync());
 
-    public async Task<IAPIResponse> FetchAsync(IRequest urlOrRequest, APIRequestContextOptions options = null)
+    public Task<IAPIResponse> FetchAsync(IRequest request, APIRequestContextOptions options = null)
+        => InnerFetchAsync(request, null, options);
+
+    internal async Task<IAPIResponse> InnerFetchAsync(IRequest request, string urlOverride, APIRequestContextOptions options = null)
     {
         options ??= new APIRequestContextOptions();
         if (string.IsNullOrEmpty(options.Method))
         {
-            options.Method = urlOrRequest.Method;
+            options.Method = request.Method;
         }
         if (options.Headers == null)
         {
-            options.Headers = await urlOrRequest.AllHeadersAsync().ConfigureAwait(false);
+            // Cannot call allHeaders() here as the request may be paused inside route handler.
+            options.Headers = request.Headers;
         }
         if (options.Data == null && options.DataByte == null && options.DataObject == null && options.DataString == null && options.Form == null && options.Multipart == null)
         {
-            options.DataByte = urlOrRequest.PostDataBuffer;
+            options.DataByte = request.PostDataBuffer;
         }
-        return await FetchAsync(urlOrRequest.Url, options).ConfigureAwait(false);
+        return await FetchAsync(urlOverride ?? request.Url, options).ConfigureAwait(false);
     }
 
     public async Task<IAPIResponse> FetchAsync(string url, APIRequestContextOptions options = null)

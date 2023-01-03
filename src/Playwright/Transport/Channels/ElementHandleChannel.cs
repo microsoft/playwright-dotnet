@@ -326,24 +326,30 @@ internal class ElementHandleChannel : JSHandleChannel, IChannel<ElementHandle>
         return Connection.SendMessageToServerAsync<ElementHandleChannel>(Guid, "selectText", args);
     }
 
-    internal async Task<IReadOnlyList<string>> SelectOptionAsync(object values, bool? noWaitAfter = null, bool? force = null, float? timeout = null)
+    internal async Task<IReadOnlyList<string>> SelectOptionAsync(IEnumerable<SelectOptionValueProtocol> values, bool? noWaitAfter, bool? force, float? timeout)
     {
-        var args = new Dictionary<string, object>();
-
-        if (values is IElementHandle[])
+        var args = new Dictionary<string, object>
         {
-            args["elements"] = values;
-        }
-        else
+            ["options"] = values,
+            ["noWaitAfter"] = noWaitAfter,
+            ["force"] = force,
+            ["timeout"] = timeout,
+        };
+
+        return (await Connection.SendMessageToServerAsync(Guid, "selectOption", args).ConfigureAwait(false))?.GetProperty("values").ToObject<string[]>();
+    }
+
+    internal async Task<IReadOnlyList<string>> SelectOptionAsync(IEnumerable<IElementHandle> values, bool? noWaitAfter, bool? force, float? timeout)
+    {
+        var args = new Dictionary<string, object>
         {
-            args["options"] = values;
-        }
+            ["elements"] = values,
+            ["noWaitAfter"] = noWaitAfter,
+            ["force"] = force,
+            ["timeout"] = timeout,
+        };
 
-        args["force"] = force;
-        args["timeout"] = timeout;
-        args["noWaitAfter"] = noWaitAfter;
-
-        return (await Connection.SendMessageToServerAsync(Guid, "selectOption", args).ConfigureAwait(false))?.GetProperty("values").ToObject<List<string>>().AsReadOnly();
+        return (await Connection.SendMessageToServerAsync(Guid, "selectOption", args).ConfigureAwait(false))?.GetProperty("values").ToObject<string[]>();
     }
 
     internal async Task<bool> IsVisibleAsync()

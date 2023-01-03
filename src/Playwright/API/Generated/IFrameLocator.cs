@@ -46,10 +46,10 @@ namespace Microsoft.Playwright;
 /// </para>
 /// <code>
 /// // Throws if there are several frames in DOM:<br/>
-/// await page.FrameLocator(".result-frame").GetByRole("button").ClickAsync();<br/>
+/// await page.FrameLocator(".result-frame").GetByRole(AriaRole.Button).ClickAsync();<br/>
 /// <br/>
 /// // Works because we explicitly tell locator to pick the first frame:<br/>
-/// await page.FrameLocator(".result-frame").First.getByRole("button").ClickAsync();
+/// await page.FrameLocator(".result-frame").First.getByRole(AriaRole.Button).ClickAsync();
 /// </code>
 /// <para>**Converting Locator to FrameLocator**</para>
 /// <para>
@@ -70,10 +70,7 @@ public partial interface IFrameLocator
     /// and allow selecting elements in that iframe.
     /// </para>
     /// </summary>
-    /// <param name="selector">
-    /// A selector to use when resolving DOM element. See <a href="https://playwright.dev/dotnet/docs/selectors">working
-    /// with selectors</a> for more details.
-    /// </param>
+    /// <param name="selector">A selector to use when resolving DOM element.</param>
     IFrameLocator FrameLocator(string selector);
 
     /// <summary>
@@ -165,6 +162,16 @@ public partial interface IFrameLocator
     /// </summary>
     /// <param name="testId">Id to locate the element by.</param>
     ILocator GetByTestId(string testId);
+
+    /// <summary>
+    /// <para>
+    /// Locate element by the test id. By default, the <c>data-testid</c> attribute is used
+    /// as a test id. Use <see cref="ISelectors.SetTestIdAttribute"/> to configure a different
+    /// test id attribute if necessary.
+    /// </para>
+    /// </summary>
+    /// <param name="testId">Id to locate the element by.</param>
+    ILocator GetByTestId(Regex testId);
 
     /// <summary>
     /// <para>Allows locating elements that contain given text. Consider the following DOM structure:</para>
@@ -276,10 +283,7 @@ public partial interface IFrameLocator
     /// </para>
     /// <para><a href="https://playwright.dev/dotnet/docs/locators">Learn more about locators</a>.</para>
     /// </summary>
-    /// <param name="selector">
-    /// A selector to use when resolving DOM element. See <a href="https://playwright.dev/dotnet/docs/selectors">working
-    /// with selectors</a> for more details.
-    /// </param>
+    /// <param name="selector">A selector to use when resolving DOM element.</param>
     /// <param name="options">Call options</param>
     ILocator Locator(string selector, FrameLocatorLocatorOptions? options = default);
 

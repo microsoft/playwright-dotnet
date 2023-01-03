@@ -57,6 +57,15 @@ public class SelectorsGetByTests : PageTestEx
         await Expect(Page.Locator("div").GetByTestId("He\"llo")).ToHaveTextAsync("Hello world");
     }
 
+    [PlaywrightTest("selector-get-by.spec.ts", "getByTestId should work for regex")]
+    public async Task GetByTestIdShouldWorkForRegex()
+    {
+        await Page.SetContentAsync("<div><div data-testid=\"Hello\">Hello world</div></div>");
+        await Expect(Page.GetByTestId(new Regex("He[l]*o"))).ToHaveTextAsync("Hello world");
+        await Expect(Page.MainFrame.GetByTestId("Hello")).ToHaveTextAsync("Hello world");
+        await Expect(Page.Locator("div").GetByTestId("Hello")).ToHaveTextAsync("Hello world");
+    }
+
     [PlaywrightTest("selector-get-by.spec.ts", "getByText should work")]
     public async Task GetByTextShouldWork()
     {

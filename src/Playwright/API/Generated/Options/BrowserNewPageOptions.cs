@@ -337,10 +337,11 @@ public class BrowserNewPageOptions
 
     /// <summary>
     /// <para>
-    /// If specified, enables strict selectors mode for this context. In the strict selectors
+    /// If set to true, enables strict selectors mode for this context. In the strict selectors
     /// mode all operations on selectors that imply single target DOM element will throw
-    /// when more than one element matches the selector. See <see cref="ILocator"/> to learn
-    /// more about the strict mode.
+    /// when more than one element matches the selector. This option does not affect any
+    /// Locator APIs (Locators are always strict). See <see cref="ILocator"/> to learn more
+    /// about the strict mode.
     /// </para>
     /// </summary>
     [JsonPropertyName("strictSelectors")]

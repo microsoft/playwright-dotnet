@@ -61,12 +61,16 @@ namespace Microsoft.Playwright;
 /// </summary>
 public partial interface IPlaywrightAssertions
 {
-    /// <summary><para>Creates a <see cref="IAPIResponseAssertions"/> object for the given <see cref="IAPIResponse"/>.</para></summary>
+    /// <summary>
+    /// <para>Creates a <see cref="IAPIResponseAssertions"/> object for the given <see cref="IAPIResponse"/>.</para>
+    /// <para>**Usage**</para>
+    /// </summary>
     /// <param name="response"><see cref="IAPIResponse"/> object to use for assertions.</param>
     IAPIResponseAssertions Expect(IAPIResponse response);
 
     /// <summary>
     /// <para>Creates a <see cref="ILocatorAssertions"/> object for the given <see cref="ILocator"/>.</para>
+    /// <para>**Usage**</para>
     /// <code>await Expect(locator).ToBeVisibleAsync();</code>
     /// </summary>
     /// <param name="locator"><see cref="ILocator"/> object to use for assertions.</param>
@@ -74,6 +78,7 @@ public partial interface IPlaywrightAssertions
 
     /// <summary>
     /// <para>Creates a <see cref="IPageAssertions"/> object for the given <see cref="IPage"/>.</para>
+    /// <para>**Usage**</para>
     /// <code>await Expect(page).ToHaveTitleAsync("News");</code>
     /// </summary>
     /// <param name="page"><see cref="IPage"/> object to use for assertions.</param>

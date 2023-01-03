@@ -100,8 +100,8 @@ public partial interface IPlaywright
 
     /// <summary>
     /// <para>
-    /// Selectors can be used to install custom selector engines. See <a href="https://playwright.dev/dotnet/docs/selectors">Working
-    /// with selectors</a> for more information.
+    /// Selectors can be used to install custom selector engines. See <a href="https://playwright.dev/dotnet/docs/extensibility">extensibility</a>
+    /// for more information.
     /// </para>
     /// </summary>
     public ISelectors Selectors { get; }

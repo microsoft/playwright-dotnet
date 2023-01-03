@@ -114,6 +114,25 @@ public class LocatorMisc1Tests : PageTestEx
         CollectionAssert.AreEqual(new string[] { "blue" }, await Page.EvaluateAsync<string[]>("() => window['result'].onChange"));
     }
 
+    [PlaywrightTest("locator-misc-1.spec.ts", "should fall back to selecting by label")]
+    public async Task ShouldFallBackToSelectingByLabel()
+    {
+        {
+            await Page.GotoAsync(Server.Prefix + "/input/select.html");
+            var select = Page.Locator("select");
+            await select.SelectOptionAsync("Blue");
+            Assert.AreEqual(new[] { "blue" }, await Page.EvaluateAsync<string[]>("() => result.onInput"));
+            Assert.AreEqual(new[] { "blue" }, await Page.EvaluateAsync<string[]>("() => result.onChange"));
+        }
+        {
+            await Page.GotoAsync(Server.Prefix + "/input/select.html");
+            var select = Page.Locator("select");
+            await select.SelectOptionAsync(new string[] { "Blue" });
+            Assert.AreEqual(new[] { "blue" }, await Page.EvaluateAsync<string[]>("() => result.onInput"));
+            Assert.AreEqual(new[] { "blue" }, await Page.EvaluateAsync<string[]>("() => result.onChange"));
+        }
+    }
+
     [PlaywrightTest("locator-misc-1.spec.ts", "should focus and blur a button")]
     public async Task ShouldFocusAndBlurAButton()
     {

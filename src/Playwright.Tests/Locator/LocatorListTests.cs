@@ -22,35 +22,17 @@
  * SOFTWARE.
  */
 
-using System.Threading.Tasks;
+namespace Microsoft.Playwright.Tests.Locator;
 
-#nullable enable
-
-namespace Microsoft.Playwright;
-
-/// <summary>
-/// <para>
-/// The <see cref="IAPIResponseAssertions"/> class provides assertion methods that can
-/// be used to make assertions about the <see cref="IAPIResponse"/> in the tests. A
-/// new instance of <see cref="IAPIResponseAssertions"/> is created by calling <see
-/// cref="IPlaywrightAssertions.Expect"/>:
-/// </para>
-/// </summary>
-public partial interface IAPIResponseAssertions
+public class LocatorListTests : PageTestEx
 {
-    /// <summary>
-    /// <para>
-    /// Makes the assertion check for the opposite condition. For example, this code tests
-    /// that the response status is not successful:
-    /// </para>
-    /// </summary>
-    public IAPIResponseAssertions Not { get; }
-
-    /// <summary>
-    /// <para>Ensures the response status code is within <c>200..299</c> range.</para>
-    /// <para>**Usage**</para>
-    /// </summary>
-    Task ToBeOKAsync();
+    [PlaywrightTest("locator-list.spec.ts", "locator.all should work")]
+    public async Task ShouldWork()
+    {
+        await Page.SetContentAsync("<div><p>A</p><p>B</p><p>C</p></div>");
+        var texts = new List<string>();
+        foreach (var p in await Page.Locator("div >> p").AllAsync())
+            texts.Add(await p.TextContentAsync());
+        Assert.AreEqual(new[] { "A", "B", "C" }, texts);
+    }
 }
-
-#nullable disable

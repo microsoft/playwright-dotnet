@@ -77,6 +77,7 @@ public partial interface IRequest
     /// The method returns <c>null</c> unless this request has failed, as reported by <c>requestfailed</c>
     /// event.
     /// </para>
+    /// <para>**Usage**</para>
     /// <para>Example of logging of all the failed requests:</para>
     /// <code>
     /// page.RequestFailed += (_, request) =&gt;<br/>
@@ -133,6 +134,7 @@ public partial interface IRequest
     /// methods. When multiple server redirects has happened, it is possible to construct
     /// the whole redirect chain by repeatedly calling <c>redirectedFrom()</c>.
     /// </para>
+    /// <para>**Usage**</para>
     /// <para>For example, if the website <c>http://example.com</c> redirects to <c>https://example.com</c>:</para>
     /// <code>
     /// var response = await page.GotoAsync("http://www.microsoft.com");<br/>
@@ -148,6 +150,7 @@ public partial interface IRequest
 
     /// <summary>
     /// <para>New request issued by the browser if the server responded with redirect.</para>
+    /// <para>**Usage**</para>
     /// <para>This method is the opposite of <see cref="IRequest.RedirectedFrom"/>:</para>
     /// <code>Console.WriteLine(request.RedirectedFrom?.RedirectedTo == request); // True</code>
     /// </summary>
@@ -181,6 +184,7 @@ public partial interface IRequest
     /// finishes. Find more information at <a href="https://developer.mozilla.org/en-US/docs/Web/API/PerformanceResourceTiming">Resource
     /// Timing API</a>.
     /// </para>
+    /// <para>**Usage**</para>
     /// <code>
     /// var request = await page.RunAndWaitForRequestFinishedAsync(async () =&gt;<br/>
     /// {<br/>

@@ -51,7 +51,7 @@ namespace Microsoft.Playwright;
 ///     public async Task StatusBecomesSubmitted()<br/>
 ///     {<br/>
 ///         // ..<br/>
-///         await Page.GetByRole("button").ClickAsync();<br/>
+///         await Page.GetByRole(AriaRole.Button).ClickAsync();<br/>
 ///         await Expect(Page.Locator(".status")).ToHaveTextAsync("Submitted");<br/>
 ///     }<br/>
 /// }
@@ -70,6 +70,7 @@ public partial interface ILocatorAssertions
 
     /// <summary>
     /// <para>Ensures the <see cref="ILocator"/> points to a checked input.</para>
+    /// <para>**Usage**</para>
     /// <code>
     /// var locator = Page.GetByLabel("Subscribe to newsletter");<br/>
     /// await Expect(locator).ToBeCheckedAsync();
@@ -87,6 +88,7 @@ public partial interface ILocatorAssertions
     /// setting "disabled" attribute. "disabled" attribute on other elements is ignored
     /// by the browser.
     /// </para>
+    /// <para>**Usage**</para>
     /// <code>
     /// var locator = Page.Locator("button.submit");<br/>
     /// await Expect(locator).ToBeDisabledAsync();
@@ -97,8 +99,9 @@ public partial interface ILocatorAssertions
 
     /// <summary>
     /// <para>Ensures the <see cref="ILocator"/> points to an editable element.</para>
+    /// <para>**Usage**</para>
     /// <code>
-    /// var locator = Page.GetByRole("textbox");<br/>
+    /// var locator = Page.GetByRole(AriaRole.Textbox);<br/>
     /// await Expect(locator).ToBeEditableAsync();
     /// </code>
     /// </summary>
@@ -110,6 +113,7 @@ public partial interface ILocatorAssertions
     /// Ensures the <see cref="ILocator"/> points to an empty editable element or to a DOM
     /// node that has no text.
     /// </para>
+    /// <para>**Usage**</para>
     /// <code>
     /// var locator = Page.Locator("div.warning");<br/>
     /// await Expect(locator).ToBeEmptyAsync();
@@ -120,6 +124,7 @@ public partial interface ILocatorAssertions
 
     /// <summary>
     /// <para>Ensures the <see cref="ILocator"/> points to an enabled element.</para>
+    /// <para>**Usage**</para>
     /// <code>
     /// var locator = Page.Locator("button.submit");<br/>
     /// await Expect(locator).toBeEnabledAsync();
@@ -130,8 +135,9 @@ public partial interface ILocatorAssertions
 
     /// <summary>
     /// <para>Ensures the <see cref="ILocator"/> points to a focused DOM node.</para>
+    /// <para>**Usage**</para>
     /// <code>
-    /// var locator = Page.GetByRole("textbox");<br/>
+    /// var locator = Page.GetByRole(AriaRole.Textbox);<br/>
     /// await Expect(locator).ToBeFocusedAsync();
     /// </code>
     /// </summary>
@@ -141,9 +147,10 @@ public partial interface ILocatorAssertions
     /// <summary>
     /// <para>
     /// Ensures that <see cref="ILocator"/> either does not resolve to any DOM node, or
-    /// resolves to a <a href="https://playwright.dev/dotnet/docs/api/actionability#visible">non-visible</a>
+    /// resolves to a <a href="https://playwright.dev/dotnet/docs/actionability#visible">non-visible</a>
     /// one.
     /// </para>
+    /// <para>**Usage**</para>
     /// <code>
     /// var locator = Page.Locator(".my-element");<br/>
     /// await Expect(locator).ToBeHiddenAsync();
@@ -154,10 +161,11 @@ public partial interface ILocatorAssertions
 
     /// <summary>
     /// <para>
-    /// Ensures that <see cref="ILocator"/> points to an <a href="https://playwright.dev/dotnet/docs/api/actionability#attached">attached</a>
-    /// and <a href="https://playwright.dev/dotnet/docs/api/actionability#visible">visible</a>
+    /// Ensures that <see cref="ILocator"/> points to an <a href="https://playwright.dev/dotnet/docs/actionability#attached">attached</a>
+    /// and <a href="https://playwright.dev/dotnet/docs/actionability#visible">visible</a>
     /// DOM node.
     /// </para>
+    /// <para>**Usage**</para>
     /// <code>
     /// var locator = Page.Locator(".my-element");<br/>
     /// await Expect(locator).ToBeVisibleAsync();
@@ -171,6 +179,7 @@ public partial interface ILocatorAssertions
     /// Ensures the <see cref="ILocator"/> points to an element that contains the given
     /// text. You can use regular expressions for the value as well.
     /// </para>
+    /// <para>**Usage**</para>
     /// <code>
     /// var locator = Page.Locator(".title");<br/>
     /// await Expect(locator).ToContainTextAsync("substring");<br/>
@@ -208,6 +217,7 @@ public partial interface ILocatorAssertions
     /// Ensures the <see cref="ILocator"/> points to an element that contains the given
     /// text. You can use regular expressions for the value as well.
     /// </para>
+    /// <para>**Usage**</para>
     /// <code>
     /// var locator = Page.Locator(".title");<br/>
     /// await Expect(locator).ToContainTextAsync("substring");<br/>
@@ -245,6 +255,7 @@ public partial interface ILocatorAssertions
     /// Ensures the <see cref="ILocator"/> points to an element that contains the given
     /// text. You can use regular expressions for the value as well.
     /// </para>
+    /// <para>**Usage**</para>
     /// <code>
     /// var locator = Page.Locator(".title");<br/>
     /// await Expect(locator).ToContainTextAsync("substring");<br/>
@@ -282,6 +293,7 @@ public partial interface ILocatorAssertions
     /// Ensures the <see cref="ILocator"/> points to an element that contains the given
     /// text. You can use regular expressions for the value as well.
     /// </para>
+    /// <para>**Usage**</para>
     /// <code>
     /// var locator = Page.Locator(".title");<br/>
     /// await Expect(locator).ToContainTextAsync("substring");<br/>
@@ -316,6 +328,7 @@ public partial interface ILocatorAssertions
 
     /// <summary>
     /// <para>Ensures the <see cref="ILocator"/> points to an element with given attribute.</para>
+    /// <para>**Usage**</para>
     /// <code>
     /// var locator = Page.Locator("input");<br/>
     /// await Expect(locator).ToHaveAttributeAsync("type", "text");
@@ -328,6 +341,7 @@ public partial interface ILocatorAssertions
 
     /// <summary>
     /// <para>Ensures the <see cref="ILocator"/> points to an element with given attribute.</para>
+    /// <para>**Usage**</para>
     /// <code>
     /// var locator = Page.Locator("input");<br/>
     /// await Expect(locator).ToHaveAttributeAsync("type", "text");
@@ -343,6 +357,7 @@ public partial interface ILocatorAssertions
     /// Ensures the <see cref="ILocator"/> points to an element with given CSS classes.
     /// This needs to be a full match or using a relaxed regular expression.
     /// </para>
+    /// <para>**Usage**</para>
     /// <code>
     /// var locator = Page.Locator("#component");<br/>
     /// await Expect(locator).ToHaveClassAsync(new Regex("selected"));<br/>
@@ -366,6 +381,7 @@ public partial interface ILocatorAssertions
     /// Ensures the <see cref="ILocator"/> points to an element with given CSS classes.
     /// This needs to be a full match or using a relaxed regular expression.
     /// </para>
+    /// <para>**Usage**</para>
     /// <code>
     /// var locator = Page.Locator("#component");<br/>
     /// await Expect(locator).ToHaveClassAsync(new Regex("selected"));<br/>
@@ -389,6 +405,7 @@ public partial interface ILocatorAssertions
     /// Ensures the <see cref="ILocator"/> points to an element with given CSS classes.
     /// This needs to be a full match or using a relaxed regular expression.
     /// </para>
+    /// <para>**Usage**</para>
     /// <code>
     /// var locator = Page.Locator("#component");<br/>
     /// await Expect(locator).ToHaveClassAsync(new Regex("selected"));<br/>
@@ -412,6 +429,7 @@ public partial interface ILocatorAssertions
     /// Ensures the <see cref="ILocator"/> points to an element with given CSS classes.
     /// This needs to be a full match or using a relaxed regular expression.
     /// </para>
+    /// <para>**Usage**</para>
     /// <code>
     /// var locator = Page.Locator("#component");<br/>
     /// await Expect(locator).ToHaveClassAsync(new Regex("selected"));<br/>
@@ -432,6 +450,7 @@ public partial interface ILocatorAssertions
 
     /// <summary>
     /// <para>Ensures the <see cref="ILocator"/> resolves to an exact number of DOM nodes.</para>
+    /// <para>**Usage**</para>
     /// <code>
     /// var locator = Page.Locator("list &gt; .component");<br/>
     /// await Expect(locator).ToHaveCountAsync(3);
@@ -446,8 +465,9 @@ public partial interface ILocatorAssertions
     /// Ensures the <see cref="ILocator"/> resolves to an element with the given computed
     /// CSS style.
     /// </para>
+    /// <para>**Usage**</para>
     /// <code>
-    /// var locator = Page.GetByRole("button");<br/>
+    /// var locator = Page.GetByRole(AriaRole.Button);<br/>
     /// await Expect(locator).ToHaveCSSAsync("display", "flex");
     /// </code>
     /// </summary>
@@ -461,8 +481,9 @@ public partial interface ILocatorAssertions
     /// Ensures the <see cref="ILocator"/> resolves to an element with the given computed
     /// CSS style.
     /// </para>
+    /// <para>**Usage**</para>
     /// <code>
-    /// var locator = Page.GetByRole("button");<br/>
+    /// var locator = Page.GetByRole(AriaRole.Button);<br/>
     /// await Expect(locator).ToHaveCSSAsync("display", "flex");
     /// </code>
     /// </summary>
@@ -476,8 +497,9 @@ public partial interface ILocatorAssertions
     /// Ensures the <see cref="ILocator"/> points to an element with the given DOM Node
     /// ID.
     /// </para>
+    /// <para>**Usage**</para>
     /// <code>
-    /// var locator = Page.GetByRole("textbox");<br/>
+    /// var locator = Page.GetByRole(AriaRole.Textbox);<br/>
     /// await Expect(locator).ToHaveIdAsync("lastname");
     /// </code>
     /// </summary>
@@ -490,8 +512,9 @@ public partial interface ILocatorAssertions
     /// Ensures the <see cref="ILocator"/> points to an element with the given DOM Node
     /// ID.
     /// </para>
+    /// <para>**Usage**</para>
     /// <code>
-    /// var locator = Page.GetByRole("textbox");<br/>
+    /// var locator = Page.GetByRole(AriaRole.Textbox);<br/>
     /// await Expect(locator).ToHaveIdAsync("lastname");
     /// </code>
     /// </summary>
@@ -505,6 +528,7 @@ public partial interface ILocatorAssertions
     /// Note that this property can be of a primitive type as well as a plain serializable
     /// JavaScript object.
     /// </para>
+    /// <para>**Usage**</para>
     /// <code>
     /// var locator = Page.Locator(".component");<br/>
     /// await Expect(locator).ToHaveJSPropertyAsync("loaded", true);
@@ -520,6 +544,7 @@ public partial interface ILocatorAssertions
     /// Ensures the <see cref="ILocator"/> points to an element with the given text. You
     /// can use regular expressions for the value as well.
     /// </para>
+    /// <para>**Usage**</para>
     /// <code>
     /// var locator = Page.Locator(".title");<br/>
     /// await Expect(locator).ToHaveTextAsync(new Regex("Welcome, Test User"));<br/>
@@ -550,7 +575,7 @@ public partial interface ILocatorAssertions
     /// await Expect(Page.Locator("ul")).ToHaveTextAsync(new string[] {"Text 1", "Text 2", "Text 3"});
     /// </code>
     /// </summary>
-    /// <param name="expected">Expected substring or RegExp or a list of those.</param>
+    /// <param name="expected">Expected string or RegExp or a list of those.</param>
     /// <param name="options">Call options</param>
     Task ToHaveTextAsync(string expected, LocatorAssertionsToHaveTextOptions? options = default);
 
@@ -559,6 +584,7 @@ public partial interface ILocatorAssertions
     /// Ensures the <see cref="ILocator"/> points to an element with the given text. You
     /// can use regular expressions for the value as well.
     /// </para>
+    /// <para>**Usage**</para>
     /// <code>
     /// var locator = Page.Locator(".title");<br/>
     /// await Expect(locator).ToHaveTextAsync(new Regex("Welcome, Test User"));<br/>
@@ -589,7 +615,7 @@ public partial interface ILocatorAssertions
     /// await Expect(Page.Locator("ul")).ToHaveTextAsync(new string[] {"Text 1", "Text 2", "Text 3"});
     /// </code>
     /// </summary>
-    /// <param name="expected">Expected substring or RegExp or a list of those.</param>
+    /// <param name="expected">Expected string or RegExp or a list of those.</param>
     /// <param name="options">Call options</param>
     Task ToHaveTextAsync(Regex expected, LocatorAssertionsToHaveTextOptions? options = default);
 
@@ -598,6 +624,7 @@ public partial interface ILocatorAssertions
     /// Ensures the <see cref="ILocator"/> points to an element with the given text. You
     /// can use regular expressions for the value as well.
     /// </para>
+    /// <para>**Usage**</para>
     /// <code>
     /// var locator = Page.Locator(".title");<br/>
     /// await Expect(locator).ToHaveTextAsync(new Regex("Welcome, Test User"));<br/>
@@ -628,7 +655,7 @@ public partial interface ILocatorAssertions
     /// await Expect(Page.Locator("ul")).ToHaveTextAsync(new string[] {"Text 1", "Text 2", "Text 3"});
     /// </code>
     /// </summary>
-    /// <param name="expected">Expected substring or RegExp or a list of those.</param>
+    /// <param name="expected">Expected string or RegExp or a list of those.</param>
     /// <param name="options">Call options</param>
     Task ToHaveTextAsync(IEnumerable<string> expected, LocatorAssertionsToHaveTextOptions? options = default);
 
@@ -637,6 +664,7 @@ public partial interface ILocatorAssertions
     /// Ensures the <see cref="ILocator"/> points to an element with the given text. You
     /// can use regular expressions for the value as well.
     /// </para>
+    /// <para>**Usage**</para>
     /// <code>
     /// var locator = Page.Locator(".title");<br/>
     /// await Expect(locator).ToHaveTextAsync(new Regex("Welcome, Test User"));<br/>
@@ -667,7 +695,7 @@ public partial interface ILocatorAssertions
     /// await Expect(Page.Locator("ul")).ToHaveTextAsync(new string[] {"Text 1", "Text 2", "Text 3"});
     /// </code>
     /// </summary>
-    /// <param name="expected">Expected substring or RegExp or a list of those.</param>
+    /// <param name="expected">Expected string or RegExp or a list of those.</param>
     /// <param name="options">Call options</param>
     Task ToHaveTextAsync(IEnumerable<Regex> expected, LocatorAssertionsToHaveTextOptions? options = default);
 
@@ -676,6 +704,7 @@ public partial interface ILocatorAssertions
     /// Ensures the <see cref="ILocator"/> points to an element with the given input value.
     /// You can use regular expressions for the value as well.
     /// </para>
+    /// <para>**Usage**</para>
     /// <code>
     /// var locator = Page.Locator("input[type=number]");<br/>
     /// await Expect(locator).ToHaveValueAsync(new Regex("[0-9]"));
@@ -690,6 +719,7 @@ public partial interface ILocatorAssertions
     /// Ensures the <see cref="ILocator"/> points to an element with the given input value.
     /// You can use regular expressions for the value as well.
     /// </para>
+    /// <para>**Usage**</para>
     /// <code>
     /// var locator = Page.Locator("input[type=number]");<br/>
     /// await Expect(locator).ToHaveValueAsync(new Regex("[0-9]"));
@@ -704,6 +734,7 @@ public partial interface ILocatorAssertions
     /// Ensures the <see cref="ILocator"/> points to multi-select/combobox (i.e. a <c>select</c>
     /// with the <c>multiple</c> attribute) and the specified values are selected.
     /// </para>
+    /// <para>**Usage**</para>
     /// <para>For example, given the following element:</para>
     /// <code>
     /// var locator = Page.Locator("id=favorite-colors");<br/>
@@ -720,6 +751,7 @@ public partial interface ILocatorAssertions
     /// Ensures the <see cref="ILocator"/> points to multi-select/combobox (i.e. a <c>select</c>
     /// with the <c>multiple</c> attribute) and the specified values are selected.
     /// </para>
+    /// <para>**Usage**</para>
     /// <para>For example, given the following element:</para>
     /// <code>
     /// var locator = Page.Locator("id=favorite-colors");<br/>

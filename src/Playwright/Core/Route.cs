@@ -27,6 +27,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Text.Json;
 using System.Threading.Tasks;
 using Microsoft.Playwright.Helpers;
 using Microsoft.Playwright.Transport;
@@ -68,6 +69,7 @@ internal class Route : ChannelOwnerBase, IChannelOwner<Route>, IRoute
             options.ContentType,
             options.Body,
             options.BodyBytes,
+            options.Json,
             options.Path,
             options.Response).ConfigureAwait(false);
 
@@ -126,10 +128,20 @@ internal class Route : ChannelOwnerBase, IChannelOwner<Route>, IRoute
         string contentType,
         string body,
         byte[] bodyContent,
+        object json,
         string path,
         IAPIResponse response)
     {
         string fetchResponseUid = null;
+
+        if (json != null)
+        {
+            if (body != null || bodyContent != null || path != null)
+            {
+                throw new ArgumentException("Cannot provide both 'json' and 'body', 'bodyBytes' or 'path'");
+            }
+            body = JsonSerializer.Serialize(json);
+        }
 
         if (response != null)
         {
@@ -186,6 +198,10 @@ internal class Route : ChannelOwnerBase, IChannelOwner<Route>, IRoute
         {
             resultHeaders["content-type"] = contentType;
         }
+        else if (json != null)
+        {
+            resultHeaders["content-type"] = "application/json";
+        }
         else if (!string.IsNullOrEmpty(path))
         {
             resultHeaders["content-type"] = path.GetContentType();
@@ -241,4 +257,17 @@ internal class Route : ChannelOwnerBase, IChannelOwner<Route>, IRoute
         _handlingTask = null;
         chain.SetResult(handled);
     }
+
+    public Task<IAPIResponse> FetchAsync(RouteFetchOptions options)
+        => _request._context.Channel.Connection.WrapApiCallAsync(
+            () =>
+            {
+                var context = _request._context;
+                return ((APIRequestContext)context.APIRequest).InnerFetchAsync(_request, options.Url, new()
+                {
+                    Headers = options.Headers,
+                    Method = options.Method,
+                    DataByte = options.PostData,
+                });
+            });
 }

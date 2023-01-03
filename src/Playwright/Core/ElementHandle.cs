@@ -218,23 +218,23 @@ internal class ElementHandle : JSHandle, IElementHandle, IChannelOwner<ElementHa
     public Task SelectTextAsync(ElementHandleSelectTextOptions options = default)
         => _channel.SelectTextAsync(options?.Force, options?.Timeout);
 
-    public Task<IReadOnlyList<string>> SelectOptionAsync(string values, ElementHandleSelectOptionOptions options = default)
-        => _channel.SelectOptionAsync(new[] { new SelectOptionValue() { Value = values } }, options?.NoWaitAfter, options?.Force, options?.Timeout);
+    public Task<IReadOnlyList<string>> SelectOptionAsync(string value, ElementHandleSelectOptionOptions options = default)
+        => _channel.SelectOptionAsync(new[] { new SelectOptionValueProtocol() { ValueOrLabel = value } }, options?.NoWaitAfter, options?.Force, options?.Timeout);
 
     public Task<IReadOnlyList<string>> SelectOptionAsync(IElementHandle values, ElementHandleSelectOptionOptions options = default)
         => _channel.SelectOptionAsync(new[] { values }, options?.NoWaitAfter, options?.Force, options?.Timeout);
 
     public Task<IReadOnlyList<string>> SelectOptionAsync(IEnumerable<string> values, ElementHandleSelectOptionOptions options = default)
-        => _channel.SelectOptionAsync(values.Select(x => new SelectOptionValue() { Value = x }), options?.NoWaitAfter, options?.Force, options?.Timeout);
+        => _channel.SelectOptionAsync(values.Select(x => new SelectOptionValueProtocol() { ValueOrLabel = x }), options?.NoWaitAfter, options?.Force, options?.Timeout);
 
     public Task<IReadOnlyList<string>> SelectOptionAsync(SelectOptionValue values, ElementHandleSelectOptionOptions options = default)
-        => _channel.SelectOptionAsync(new[] { values }, options?.NoWaitAfter, options?.Force, options?.Timeout);
+        => _channel.SelectOptionAsync(new[] { SelectOptionValueProtocol.From(values) }, options?.NoWaitAfter, options?.Force, options?.Timeout);
 
     public Task<IReadOnlyList<string>> SelectOptionAsync(IEnumerable<IElementHandle> values, ElementHandleSelectOptionOptions options = default)
         => _channel.SelectOptionAsync(values, options?.NoWaitAfter, options?.Force, options?.Timeout);
 
     public Task<IReadOnlyList<string>> SelectOptionAsync(IEnumerable<SelectOptionValue> values, ElementHandleSelectOptionOptions options = default)
-        => _channel.SelectOptionAsync(values, options?.NoWaitAfter, options?.Force, options?.Timeout);
+        => _channel.SelectOptionAsync(values.Select(v => SelectOptionValueProtocol.From(v)), options?.NoWaitAfter, options?.Force, options?.Timeout);
 
     public Task CheckAsync(ElementHandleCheckOptions options = default)
         => _channel.CheckAsync(

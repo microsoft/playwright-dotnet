@@ -73,6 +73,7 @@ public partial interface IBrowserType
     /// DevTools Protocol.
     /// </para>
     /// <para>The default browser context is accessible via <see cref="IBrowser.Contexts"/>.</para>
+    /// <para>**Usage**</para>
     /// <code>
     /// var browser = await playwright.Chromium.ConnectOverCDPAsync("http://localhost:9222");<br/>
     /// var defaultContext = browser.Contexts[0];<br/>
@@ -97,6 +98,7 @@ public partial interface IBrowserType
 
     /// <summary>
     /// <para>Returns the browser instance.</para>
+    /// <para>**Usage**</para>
     /// <para>
     /// You can use <paramref name="ignoreDefaultArgs"/> to filter out <c>--mute-audio</c>
     /// from default arguments:

@@ -44,6 +44,7 @@ public class RouteFulfillOptions
         BodyBytes = clone.BodyBytes;
         ContentType = clone.ContentType;
         Headers = clone.Headers;
+        Json = clone.Json;
         Path = clone.Path;
         Response = clone.Response;
         Status = clone.Status;
@@ -64,6 +65,15 @@ public class RouteFulfillOptions
     /// <summary><para>Response headers. Header values will be converted to a string.</para></summary>
     [JsonPropertyName("headers")]
     public IEnumerable<KeyValuePair<string, string>>? Headers { get; set; }
+
+    /// <summary>
+    /// <para>
+    /// JSON response. This method will set the content type to <c>application/json</c>
+    /// if not set.
+    /// </para>
+    /// </summary>
+    [JsonPropertyName("json")]
+    public object? Json { get; set; }
 
     /// <summary>
     /// <para>
