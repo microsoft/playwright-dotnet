@@ -31,9 +31,9 @@ namespace Microsoft.Playwright;
 
 /// <summary>
 /// <para>
-///  **DEPRECATED** This class is deprecated. Please use other libraries such as [Axe](https://www.deque.com/axe/)
-///  if you need to test page accessibility. See our Node.js [guide](https://playwright.dev/docs/accessibility-testing)
-///  for integration with Axe.
+/// **DEPRECATED** This class is deprecated. Please use other libraries such as <a href="https://www.deque.com/axe/">Axe</a>
+/// if you need to test page accessibility. See our Node.js <a href="https://playwright.dev/docs/accessibility-testing">guide</a>
+/// for integration with Axe.
 /// </para>
 /// <para>
 /// The Accessibility class provides methods for inspecting Chromium's accessibility
@@ -60,9 +60,10 @@ public partial interface IAccessibility
 {
     /// <summary>
     /// <para>
-    ///  **DEPRECATED** This method is deprecated. Please use other libraries such as [Axe](https://www.deque.com/axe/)
-    ///  if you need to test page accessibility. See our Node.js [guide](https://playwright.dev/docs/accessibility-testing)
-    ///  for integration with Axe.
+    /// **DEPRECATED** This method is deprecated. Please use other libraries such as <a
+    /// href="https://www.deque.com/axe/">Axe</a> if you need to test page accessibility.
+    /// See our Node.js <a href="https://playwright.dev/docs/accessibility-testing">guide</a>
+    /// for integration with Axe.
     /// </para>
     /// <para>
     /// Captures the current state of the accessibility tree. The returned object represents

@@ -178,7 +178,7 @@ public partial interface IRoute
     /// <para>**Usage**</para>
     /// <para>An example of fulfilling all requests with 404 responses:</para>
     /// <code>
-    /// await page.RouteAsync("**/*", route =&gt; route.FulfillAsync(new()<br/>
+    /// await page.RouteAsync("**/*", route =&gt; route.FulfillAsync(new ()<br/>
     /// {<br/>
     ///     Status = 404,<br/>
     ///     ContentType = "text/plain",<br/>

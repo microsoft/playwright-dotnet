@@ -278,10 +278,10 @@ public partial interface IPage
 
     /// <summary>
     /// <para>
-    ///  **DEPRECATED** This property is discouraged. Please use other libraries such as
-    ///  [Axe](https://www.deque.com/axe/) if you need to test page accessibility. See our
-    ///  Node.js [guide](https://playwright.dev/docs/accessibility-testing) for integration
-    ///  with Axe.
+    /// **DEPRECATED** This property is discouraged. Please use other libraries such as
+    /// <a href="https://www.deque.com/axe/">Axe</a> if you need to test page accessibility.
+    /// See our Node.js <a href="https://playwright.dev/docs/accessibility-testing">guide</a>
+    /// for integration with Axe.
     /// </para>
     /// </summary>
     [System.Obsolete]
@@ -340,6 +340,10 @@ public partial interface IPage
 
     /// <summary>
     /// <para>
+    /// Use locator-based <see cref="ILocator.CheckAsync"/> instead. Read more about <a
+    /// href="https://playwright.dev/dotnet/docs/locators">locators</a>.
+    /// </para>
+    /// <para>
     /// This method checks an element matching <paramref name="selector"/> by performing
     /// the following steps:
     /// </para>
@@ -379,6 +383,10 @@ public partial interface IPage
     Task CheckAsync(string selector, PageCheckOptions? options = default);
 
     /// <summary>
+    /// <para>
+    /// Use locator-based <see cref="ILocator.ClickAsync"/> instead. Read more about <a
+    /// href="https://playwright.dev/dotnet/docs/locators">locators</a>.
+    /// </para>
     /// <para>
     /// This method clicks an element matching <paramref name="selector"/> by performing
     /// the following steps:
@@ -442,6 +450,10 @@ public partial interface IPage
 
     /// <summary>
     /// <para>
+    /// Use locator-based <see cref="ILocator.DblClickAsync"/> instead. Read more about
+    /// <a href="https://playwright.dev/dotnet/docs/locators">locators</a>.
+    /// </para>
+    /// <para>
     /// This method double clicks an element matching <paramref name="selector"/> by performing
     /// the following steps:
     /// </para>
@@ -486,6 +498,10 @@ public partial interface IPage
     Task DblClickAsync(string selector, PageDblClickOptions? options = default);
 
     /// <summary>
+    /// <para>
+    /// Use locator-based <see cref="ILocator.DispatchEventAsync"/> instead. Read more about
+    /// <a href="https://playwright.dev/dotnet/docs/locators">locators</a>.
+    /// </para>
     /// <para>
     /// The snippet below dispatches the <c>click</c> event on the element. Regardless of
     /// the visibility state of the element, <c>click</c> is dispatched. This is equivalent
@@ -597,6 +613,11 @@ public partial interface IPage
 
     /// <summary>
     /// <para>
+    /// This method does not wait for the element to pass actionability checks and therefore
+    /// can lead to the flaky tests. Use <see cref="ILocator.EvaluateAsync"/>, other <see
+    /// cref="ILocator"/> helper methods or web-first assertions instead.
+    /// </para>
+    /// <para>
     /// The method finds an element matching the specified selector within the page and
     /// passes it as a first argument to <paramref name="expression"/>. If no elements match
     /// the selector, the method throws an error. Returns the value of <paramref name="expression"/>.
@@ -622,6 +643,10 @@ public partial interface IPage
     Task<T> EvalOnSelectorAsync<T>(string selector, string expression, object? arg = default, PageEvalOnSelectorOptions? options = default);
 
     /// <summary>
+    /// <para>
+    /// In most cases, <see cref="ILocator.EvaluateAllAsync"/>, other <see cref="ILocator"/>
+    /// helper methods and web-first assertions do a better job.
+    /// </para>
     /// <para>
     /// The method finds all elements matching the specified selector within the page and
     /// passes an array of matched elements as a first argument to <paramref name="expression"/>.
@@ -835,6 +860,7 @@ public partial interface IPage
     Task ExposeFunctionAsync(string name, Action callback);
 
     /// <summary>
+    /// <para>Use locator-based <see cref="ILocator.FillAsync"/> instead. Read more about <a href="https://playwright.dev/dotnet/docs/locators">locators</a>.</para>
     /// <para>
     /// This method waits for an element matching <paramref name="selector"/>, waits for
     /// <a href="https://playwright.dev/dotnet/docs/actionability">actionability</a> checks,
@@ -861,6 +887,10 @@ public partial interface IPage
     Task FillAsync(string selector, string value, PageFillOptions? options = default);
 
     /// <summary>
+    /// <para>
+    /// Use locator-based <see cref="ILocator.FocusAsync"/> instead. Read more about <a
+    /// href="https://playwright.dev/dotnet/docs/locators">locators</a>.
+    /// </para>
     /// <para>
     /// This method fetches an element with <paramref name="selector"/> and focuses it.
     /// If there's no element matching <paramref name="selector"/>, the method waits until
@@ -928,7 +958,13 @@ public partial interface IPage
     /// <summary><para>An array of all frames attached to the page.</para></summary>
     IReadOnlyList<IFrame> Frames { get; }
 
-    /// <summary><para>Returns element attribute value.</para></summary>
+    /// <summary>
+    /// <para>
+    /// Use locator-based <see cref="ILocator.GetAttributeAsync"/> instead. Read more about
+    /// <a href="https://playwright.dev/dotnet/docs/locators">locators</a>.
+    /// </para>
+    /// <para>Returns element attribute value.</para>
+    /// </summary>
     /// <param name="selector">
     /// A selector to search for an element. If there are multiple elements satisfying the
     /// selector, the first will be used.
@@ -1200,6 +1236,10 @@ public partial interface IPage
 
     /// <summary>
     /// <para>
+    /// Use locator-based <see cref="ILocator.HoverAsync"/> instead. Read more about <a
+    /// href="https://playwright.dev/dotnet/docs/locators">locators</a>.
+    /// </para>
+    /// <para>
     /// This method hovers over an element matching <paramref name="selector"/> by performing
     /// the following steps:
     /// </para>
@@ -1236,7 +1276,13 @@ public partial interface IPage
     /// <param name="options">Call options</param>
     Task HoverAsync(string selector, PageHoverOptions? options = default);
 
-    /// <summary><para>Returns <c>element.innerHTML</c>.</para></summary>
+    /// <summary>
+    /// <para>
+    /// Use locator-based <see cref="ILocator.InnerHTMLAsync"/> instead. Read more about
+    /// <a href="https://playwright.dev/dotnet/docs/locators">locators</a>.
+    /// </para>
+    /// <para>Returns <c>element.innerHTML</c>.</para>
+    /// </summary>
     /// <param name="selector">
     /// A selector to search for an element. If there are multiple elements satisfying the
     /// selector, the first will be used.
@@ -1244,7 +1290,13 @@ public partial interface IPage
     /// <param name="options">Call options</param>
     Task<string> InnerHTMLAsync(string selector, PageInnerHTMLOptions? options = default);
 
-    /// <summary><para>Returns <c>element.innerText</c>.</para></summary>
+    /// <summary>
+    /// <para>
+    /// Use locator-based <see cref="ILocator.InnerTextAsync"/> instead. Read more about
+    /// <a href="https://playwright.dev/dotnet/docs/locators">locators</a>.
+    /// </para>
+    /// <para>Returns <c>element.innerText</c>.</para>
+    /// </summary>
     /// <param name="selector">
     /// A selector to search for an element. If there are multiple elements satisfying the
     /// selector, the first will be used.
@@ -1253,6 +1305,10 @@ public partial interface IPage
     Task<string> InnerTextAsync(string selector, PageInnerTextOptions? options = default);
 
     /// <summary>
+    /// <para>
+    /// Use locator-based <see cref="ILocator.InputValueAsync"/> instead. Read more about
+    /// <a href="https://playwright.dev/dotnet/docs/locators">locators</a>.
+    /// </para>
     /// <para>
     /// Returns <c>input.value</c> for the selected <c>&lt;input&gt;</c> or <c>&lt;textarea&gt;</c>
     /// or <c>&lt;select&gt;</c> element.
@@ -1272,6 +1328,10 @@ public partial interface IPage
 
     /// <summary>
     /// <para>
+    /// Use locator-based <see cref="ILocator.IsCheckedAsync"/> instead. Read more about
+    /// <a href="https://playwright.dev/dotnet/docs/locators">locators</a>.
+    /// </para>
+    /// <para>
     /// Returns whether the element is checked. Throws if the element is not a checkbox
     /// or radio input.
     /// </para>
@@ -1286,7 +1346,13 @@ public partial interface IPage
     /// <summary><para>Indicates that the page has been closed.</para></summary>
     bool IsClosed { get; }
 
-    /// <summary><para>Returns whether the element is disabled, the opposite of <a href="https://playwright.dev/dotnet/docs/actionability#enabled">enabled</a>.</para></summary>
+    /// <summary>
+    /// <para>
+    /// Use locator-based <see cref="ILocator.IsDisabledAsync"/> instead. Read more about
+    /// <a href="https://playwright.dev/dotnet/docs/locators">locators</a>.
+    /// </para>
+    /// <para>Returns whether the element is disabled, the opposite of <a href="https://playwright.dev/dotnet/docs/actionability#enabled">enabled</a>.</para>
+    /// </summary>
     /// <param name="selector">
     /// A selector to search for an element. If there are multiple elements satisfying the
     /// selector, the first will be used.
@@ -1294,7 +1360,13 @@ public partial interface IPage
     /// <param name="options">Call options</param>
     Task<bool> IsDisabledAsync(string selector, PageIsDisabledOptions? options = default);
 
-    /// <summary><para>Returns whether the element is <a href="https://playwright.dev/dotnet/docs/actionability#editable">editable</a>.</para></summary>
+    /// <summary>
+    /// <para>
+    /// Use locator-based <see cref="ILocator.IsEditableAsync"/> instead. Read more about
+    /// <a href="https://playwright.dev/dotnet/docs/locators">locators</a>.
+    /// </para>
+    /// <para>Returns whether the element is <a href="https://playwright.dev/dotnet/docs/actionability#editable">editable</a>.</para>
+    /// </summary>
     /// <param name="selector">
     /// A selector to search for an element. If there are multiple elements satisfying the
     /// selector, the first will be used.
@@ -1302,7 +1374,13 @@ public partial interface IPage
     /// <param name="options">Call options</param>
     Task<bool> IsEditableAsync(string selector, PageIsEditableOptions? options = default);
 
-    /// <summary><para>Returns whether the element is <a href="https://playwright.dev/dotnet/docs/actionability#enabled">enabled</a>.</para></summary>
+    /// <summary>
+    /// <para>
+    /// Use locator-based <see cref="ILocator.IsEnabledAsync"/> instead. Read more about
+    /// <a href="https://playwright.dev/dotnet/docs/locators">locators</a>.
+    /// </para>
+    /// <para>Returns whether the element is <a href="https://playwright.dev/dotnet/docs/actionability#enabled">enabled</a>.</para>
+    /// </summary>
     /// <param name="selector">
     /// A selector to search for an element. If there are multiple elements satisfying the
     /// selector, the first will be used.
@@ -1311,6 +1389,10 @@ public partial interface IPage
     Task<bool> IsEnabledAsync(string selector, PageIsEnabledOptions? options = default);
 
     /// <summary>
+    /// <para>
+    /// Use locator-based <see cref="ILocator.IsHiddenAsync"/> instead. Read more about
+    /// <a href="https://playwright.dev/dotnet/docs/locators">locators</a>.
+    /// </para>
     /// <para>
     /// Returns whether the element is hidden, the opposite of <a href="https://playwright.dev/dotnet/docs/actionability#visible">visible</a>.
     /// <paramref name="selector"/> that does not match any elements is considered hidden.
@@ -1324,6 +1406,10 @@ public partial interface IPage
     Task<bool> IsHiddenAsync(string selector, PageIsHiddenOptions? options = default);
 
     /// <summary>
+    /// <para>
+    /// Use locator-based <see cref="ILocator.IsVisibleAsync"/> instead. Read more about
+    /// <a href="https://playwright.dev/dotnet/docs/locators">locators</a>.
+    /// </para>
     /// <para>
     /// Returns whether the element is <a href="https://playwright.dev/dotnet/docs/actionability#visible">visible</a>.
     /// <paramref name="selector"/> that does not match any elements is considered not visible.
@@ -1450,6 +1536,10 @@ public partial interface IPage
     Task<byte[]> PdfAsync(PagePdfOptions? options = default);
 
     /// <summary>
+    /// <para>
+    /// Use locator-based <see cref="ILocator.PressAsync"/> instead. Read more about <a
+    /// href="https://playwright.dev/dotnet/docs/locators">locators</a>.
+    /// </para>
     /// <para>Focuses the element, and then uses <see cref="IKeyboard.DownAsync"/> and <see cref="IKeyboard.UpAsync"/>.</para>
     /// <para>
     /// <paramref name="key"/> can specify the intended <a href="https://developer.mozilla.org/en-US/docs/Web/API/KeyboardEvent/key">keyboardEvent.key</a>
@@ -1505,6 +1595,7 @@ public partial interface IPage
     Task PressAsync(string selector, string key, PagePressOptions? options = default);
 
     /// <summary>
+    /// <para>Use locator-based <see cref="IPage.Locator"/> instead. Read more about <a href="https://playwright.dev/dotnet/docs/locators">locators</a>.</para>
     /// <para>
     /// The method finds an element matching the specified selector within the page. If
     /// no elements match the selector, the return value resolves to <c>null</c>. To wait
@@ -1516,6 +1607,7 @@ public partial interface IPage
     Task<IElementHandle?> QuerySelectorAsync(string selector, PageQuerySelectorOptions? options = default);
 
     /// <summary>
+    /// <para>Use locator-based <see cref="IPage.Locator"/> instead. Read more about <a href="https://playwright.dev/dotnet/docs/locators">locators</a>.</para>
     /// <para>
     /// The method finds all elements matching the specified selector within the page. If
     /// no elements match the selector, the return value resolves to <c>[]</c>.
@@ -1744,6 +1836,10 @@ public partial interface IPage
 
     /// <summary>
     /// <para>
+    /// Use locator-based <see cref="ILocator.SelectOptionAsync"/> instead. Read more about
+    /// <a href="https://playwright.dev/dotnet/docs/locators">locators</a>.
+    /// </para>
+    /// <para>
     /// This method waits for an element matching <paramref name="selector"/>, waits for
     /// <a href="https://playwright.dev/dotnet/docs/actionability">actionability</a> checks,
     /// waits until all specified options are present in the <c>&lt;select&gt;</c> element
@@ -1784,6 +1880,10 @@ public partial interface IPage
     Task<IReadOnlyList<string>> SelectOptionAsync(string selector, string values, PageSelectOptionOptions? options = default);
 
     /// <summary>
+    /// <para>
+    /// Use locator-based <see cref="ILocator.SelectOptionAsync"/> instead. Read more about
+    /// <a href="https://playwright.dev/dotnet/docs/locators">locators</a>.
+    /// </para>
     /// <para>
     /// This method waits for an element matching <paramref name="selector"/>, waits for
     /// <a href="https://playwright.dev/dotnet/docs/actionability">actionability</a> checks,
@@ -1826,6 +1926,10 @@ public partial interface IPage
 
     /// <summary>
     /// <para>
+    /// Use locator-based <see cref="ILocator.SelectOptionAsync"/> instead. Read more about
+    /// <a href="https://playwright.dev/dotnet/docs/locators">locators</a>.
+    /// </para>
+    /// <para>
     /// This method waits for an element matching <paramref name="selector"/>, waits for
     /// <a href="https://playwright.dev/dotnet/docs/actionability">actionability</a> checks,
     /// waits until all specified options are present in the <c>&lt;select&gt;</c> element
@@ -1866,6 +1970,10 @@ public partial interface IPage
     Task<IReadOnlyList<string>> SelectOptionAsync(string selector, IEnumerable<string> values, PageSelectOptionOptions? options = default);
 
     /// <summary>
+    /// <para>
+    /// Use locator-based <see cref="ILocator.SelectOptionAsync"/> instead. Read more about
+    /// <a href="https://playwright.dev/dotnet/docs/locators">locators</a>.
+    /// </para>
     /// <para>
     /// This method waits for an element matching <paramref name="selector"/>, waits for
     /// <a href="https://playwright.dev/dotnet/docs/actionability">actionability</a> checks,
@@ -1908,6 +2016,10 @@ public partial interface IPage
 
     /// <summary>
     /// <para>
+    /// Use locator-based <see cref="ILocator.SelectOptionAsync"/> instead. Read more about
+    /// <a href="https://playwright.dev/dotnet/docs/locators">locators</a>.
+    /// </para>
+    /// <para>
     /// This method waits for an element matching <paramref name="selector"/>, waits for
     /// <a href="https://playwright.dev/dotnet/docs/actionability">actionability</a> checks,
     /// waits until all specified options are present in the <c>&lt;select&gt;</c> element
@@ -1949,6 +2061,10 @@ public partial interface IPage
 
     /// <summary>
     /// <para>
+    /// Use locator-based <see cref="ILocator.SelectOptionAsync"/> instead. Read more about
+    /// <a href="https://playwright.dev/dotnet/docs/locators">locators</a>.
+    /// </para>
+    /// <para>
     /// This method waits for an element matching <paramref name="selector"/>, waits for
     /// <a href="https://playwright.dev/dotnet/docs/actionability">actionability</a> checks,
     /// waits until all specified options are present in the <c>&lt;select&gt;</c> element
@@ -1989,6 +2105,10 @@ public partial interface IPage
     Task<IReadOnlyList<string>> SelectOptionAsync(string selector, IEnumerable<SelectOptionValue> values, PageSelectOptionOptions? options = default);
 
     /// <summary>
+    /// <para>
+    /// Use locator-based <see cref="ILocator.SetCheckedAsync"/> instead. Read more about
+    /// <a href="https://playwright.dev/dotnet/docs/locators">locators</a>.
+    /// </para>
     /// <para>
     /// This method checks or unchecks an element matching <paramref name="selector"/> by
     /// performing the following steps:
@@ -2083,6 +2203,10 @@ public partial interface IPage
 
     /// <summary>
     /// <para>
+    /// Use locator-based <see cref="ILocator.SetInputFilesAsync"/> instead. Read more about
+    /// <a href="https://playwright.dev/dotnet/docs/locators">locators</a>.
+    /// </para>
+    /// <para>
     /// Sets the value of the file input to these file paths or files. If some of the <c>filePaths</c>
     /// are relative paths, then they are resolved relative to the current working directory.
     /// For empty array, clears the selected files.
@@ -2104,6 +2228,10 @@ public partial interface IPage
     Task SetInputFilesAsync(string selector, string files, PageSetInputFilesOptions? options = default);
 
     /// <summary>
+    /// <para>
+    /// Use locator-based <see cref="ILocator.SetInputFilesAsync"/> instead. Read more about
+    /// <a href="https://playwright.dev/dotnet/docs/locators">locators</a>.
+    /// </para>
     /// <para>
     /// Sets the value of the file input to these file paths or files. If some of the <c>filePaths</c>
     /// are relative paths, then they are resolved relative to the current working directory.
@@ -2127,6 +2255,10 @@ public partial interface IPage
 
     /// <summary>
     /// <para>
+    /// Use locator-based <see cref="ILocator.SetInputFilesAsync"/> instead. Read more about
+    /// <a href="https://playwright.dev/dotnet/docs/locators">locators</a>.
+    /// </para>
+    /// <para>
     /// Sets the value of the file input to these file paths or files. If some of the <c>filePaths</c>
     /// are relative paths, then they are resolved relative to the current working directory.
     /// For empty array, clears the selected files.
@@ -2148,6 +2280,10 @@ public partial interface IPage
     Task SetInputFilesAsync(string selector, FilePayload files, PageSetInputFilesOptions? options = default);
 
     /// <summary>
+    /// <para>
+    /// Use locator-based <see cref="ILocator.SetInputFilesAsync"/> instead. Read more about
+    /// <a href="https://playwright.dev/dotnet/docs/locators">locators</a>.
+    /// </para>
     /// <para>
     /// Sets the value of the file input to these file paths or files. If some of the <c>filePaths</c>
     /// are relative paths, then they are resolved relative to the current working directory.
@@ -2196,6 +2332,7 @@ public partial interface IPage
     Task SetViewportSizeAsync(int width, int height);
 
     /// <summary>
+    /// <para>Use locator-based <see cref="ILocator.TapAsync"/> instead. Read more about <a href="https://playwright.dev/dotnet/docs/locators">locators</a>.</para>
     /// <para>
     /// This method taps an element matching <paramref name="selector"/> by performing the
     /// following steps:
@@ -2239,7 +2376,13 @@ public partial interface IPage
     /// <param name="options">Call options</param>
     Task TapAsync(string selector, PageTapOptions? options = default);
 
-    /// <summary><para>Returns <c>element.textContent</c>.</para></summary>
+    /// <summary>
+    /// <para>
+    /// Use locator-based <see cref="ILocator.TextContentAsync"/> instead. Read more about
+    /// <a href="https://playwright.dev/dotnet/docs/locators">locators</a>.
+    /// </para>
+    /// <para>Returns <c>element.textContent</c>.</para>
+    /// </summary>
     /// <param name="selector">
     /// A selector to search for an element. If there are multiple elements satisfying the
     /// selector, the first will be used.
@@ -2253,6 +2396,7 @@ public partial interface IPage
     public ITouchscreen Touchscreen { get; }
 
     /// <summary>
+    /// <para>Use locator-based <see cref="ILocator.TypeAsync"/> instead. Read more about <a href="https://playwright.dev/dotnet/docs/locators">locators</a>.</para>
     /// <para>
     /// Sends a <c>keydown</c>, <c>keypress</c>/<c>input</c>, and <c>keyup</c> event for
     /// each character in the text. <c>page.type</c> can be used to send fine-grained keyboard
@@ -2274,6 +2418,10 @@ public partial interface IPage
     Task TypeAsync(string selector, string text, PageTypeOptions? options = default);
 
     /// <summary>
+    /// <para>
+    /// Use locator-based <see cref="ILocator.UncheckAsync"/> instead. Read more about <a
+    /// href="https://playwright.dev/dotnet/docs/locators">locators</a>.
+    /// </para>
     /// <para>
     /// This method unchecks an element matching <paramref name="selector"/> by performing
     /// the following steps:
