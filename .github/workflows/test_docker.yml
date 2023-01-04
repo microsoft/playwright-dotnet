@@ -10,9 +10,6 @@ on:
       - main
       - release-*
   pull_request:
-    paths:
-      - '.github/workflows/test_docker.yml'
-      - '**/*Dockerfile.*'
     branches:
       - main
       - release-*
