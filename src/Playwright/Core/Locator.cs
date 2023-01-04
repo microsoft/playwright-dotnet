@@ -519,7 +519,7 @@ internal class Locator : ILocator
     }
 
     async Task<IReadOnlyList<ILocator>> ILocator.AllAsync()
-        => Enumerable.Range(0, await CountAsync().ConfigureAwait(false).Select(Nth).ToArray();
+        => Enumerable.Range(0, await CountAsync().ConfigureAwait(false)).Select(Nth).ToArray();
 }
 
 internal class ByRoleOptions
