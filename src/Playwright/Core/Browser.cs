@@ -223,4 +223,7 @@ internal class Browser : ChannelOwnerBase, IChannelOwner<Browser>, IBrowser
         Disconnected?.Invoke(this, this);
         _closedTcs.TrySetResult(true);
     }
+
+    public async Task<ICDPSession> NewBrowserCDPSessionAsync()
+        => (await Channel.NewBrowserCDPSessionAsync().ConfigureAwait(false)).Object;
 }

@@ -46,6 +46,9 @@ internal enum ChannelOwnerType
     [EnumMember(Value = "consoleMessage")]
     ConsoleMessage,
 
+    [EnumMember(Value = "cdpsession")]
+    CDPSession,
+
     [EnumMember(Value = "dialog")]
     Dialog,
 

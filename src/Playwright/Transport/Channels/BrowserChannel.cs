@@ -101,6 +101,11 @@ internal class BrowserChannel : Channel<Browser>
         }
     }
 
+    internal Task<CDPChannel> NewBrowserCDPSessionAsync()
+    => Connection.SendMessageToServerAsync<CDPChannel>(
+        Guid,
+        "newBrowserCDPSession");
+
     internal Task<BrowserContextChannel> NewContextAsync(
         bool? acceptDownloads = null,
         bool? bypassCSP = null,

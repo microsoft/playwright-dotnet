@@ -366,6 +366,22 @@ public partial interface IBrowserContext
     /// <param name="options">Call options</param>
     Task GrantPermissionsAsync(IEnumerable<string> permissions, BrowserContextGrantPermissionsOptions? options = default);
 
+    /// <summary><para>Returns the newly created session.</para></summary>
+    /// <remarks><para>CDP sessions are only supported on Chromium-based browsers.</para></remarks>
+    /// <param name="page">
+    /// Target to create new session for. For backwards-compatibility, this parameter is
+    /// named <c>page</c>, but it can be a <c>Page</c> or <c>Frame</c> type.
+    /// </param>
+    Task<ICDPSession> NewCDPSessionAsync(IPage page);
+
+    /// <summary><para>Returns the newly created session.</para></summary>
+    /// <remarks><para>CDP sessions are only supported on Chromium-based browsers.</para></remarks>
+    /// <param name="page">
+    /// Target to create new session for. For backwards-compatibility, this parameter is
+    /// named <c>page</c>, but it can be a <c>Page</c> or <c>Frame</c> type.
+    /// </param>
+    Task<ICDPSession> NewCDPSessionAsync(IFrame page);
+
     /// <summary><para>Creates a new page in the browser context.</para></summary>
     Task<IPage> NewPageAsync();
 

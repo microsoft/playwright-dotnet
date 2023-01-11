@@ -280,6 +280,9 @@ internal class Connection : IDisposable
                 var browserContextInitializer = initializer?.ToObject<BrowserContextInitializer>(DefaultJsonSerializerOptions);
                 result = new BrowserContext(parent, guid, browserContextInitializer);
                 break;
+            case ChannelOwnerType.CDPSession:
+                result = new CDPSession(parent, guid);
+                break;
             case ChannelOwnerType.ConsoleMessage:
                 result = new ConsoleMessage(parent, guid, initializer?.ToObject<ConsoleMessageInitializer>(DefaultJsonSerializerOptions));
                 break;

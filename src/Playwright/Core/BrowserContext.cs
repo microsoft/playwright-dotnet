@@ -269,6 +269,12 @@ internal class BrowserContext : ChannelOwnerBase, IChannelOwner<BrowserContext>,
     public Task GrantPermissionsAsync(IEnumerable<string> permissions, BrowserContextGrantPermissionsOptions options = default)
         => Channel.GrantPermissionsAsync(permissions, options?.Origin);
 
+    public async Task<ICDPSession> NewCDPSessionAsync(IPage page)
+        => (await Channel.NewCDPSessionAsync(page as Page).ConfigureAwait(false)).Object;
+
+    public async Task<ICDPSession> NewCDPSessionAsync(IFrame frame)
+        => (await Channel.NewCDPSessionAsync(frame as Frame).ConfigureAwait(false)).Object;
+
     public async Task<IPage> NewPageAsync()
     {
         if (OwnerPage != null)
