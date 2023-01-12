@@ -50,11 +50,11 @@ public class SessionTests : PageTestEx
         await client.SendAsync("Network.enable");
 
         var events = new List<object>();
-        client.On("Network.requestWillBeSent", (eventArgs) =>
+        client.AddEventListener("Network.requestWillBeSent", (eventArgs) =>
         {
             events.Add(eventArgs);
         });
-
+        
         await Page.GotoAsync(Server.EmptyPage);
 
         Assert.AreEqual(1, events.Count);
@@ -64,26 +64,18 @@ public class SessionTests : PageTestEx
     [Skip(SkipAttribute.Targets.Firefox, SkipAttribute.Targets.Webkit)]
     public async Task ShouldDetachSession()
     {
-        bool threwException = false;
         var client = await Page.Context.NewCDPSessionAsync(Page);
         await client.SendAsync("Runtime.enable");
         var evalResponse = await client.SendAsync("Runtime.evaluate", new Dictionary<string, object> { { "expression", "1 + 2" }, { "returnByValue", true } });
 
-        // TODO: Why is the result nested in a result?
-        Assert.AreEqual(3, (int)evalResponse.Value.Deserialize<JsonNode>()["result"]["result"]["value"]);
+        Assert.AreEqual(3, (int)evalResponse.Value.Deserialize<JsonNode>()["result"]["value"]);
 
         await client.DetachAsync();
 
-        try
-        {
-            await client.SendAsync("Runtime.evaluate", new Dictionary<string, object> { { "expression", "1 + 2" }, { "returnByValue", "true" } });
-        }
-        catch (PlaywrightException ex)
-        {
-            threwException = true;
-            Assert.AreEqual("Target page, context or browser has been closed", ex.Message);
-        }
-        Assert.IsTrue(threwException);
+
+        var exceptions = await PlaywrightAssert.ThrowsAsync<PlaywrightException>(
+            () => client.SendAsync("Runtime.evaluate", new Dictionary<string, object> { { "expression", "'1 + 2'" }, { "returnByValue", "true" } }));
+        StringAssert.Contains("Target page, context or browser has been closed", exceptions.Message);
     }
 
     [PlaywrightTest("chromium/session.spec.ts", "should throw nice errors")]
@@ -92,15 +84,9 @@ public class SessionTests : PageTestEx
     {
         var client = await Page.Context.NewCDPSessionAsync(Page);
 
-        try
-        {
-            await TheSourceOfTheProblem();
-        }
-        catch (PlaywrightException ex)
-        {
-            Assert.IsTrue(ex.StackTrace.Contains("TheSourceOfTheProblem", StringComparison.InvariantCultureIgnoreCase), "StackTrace does not contain 'TheSourceOfTheProblem'");
-            Assert.IsTrue(ex.Message.Contains("ThisCommand.DoesNotExist", StringComparison.InvariantCultureIgnoreCase), "Exception message does not contain 'ThisCommand.DoesNotExist'");
-        }
+        var exception = await PlaywrightAssert.ThrowsAsync<PlaywrightException>(() => TheSourceOfTheProblem());
+        StringAssert.Contains("TheSourceOfTheProblem", exception.StackTrace);
+        StringAssert.Contains("ThisCommand.DoesNotExist", exception.Message);
 
         async Task TheSourceOfTheProblem()
         {
@@ -124,21 +110,12 @@ public class SessionTests : PageTestEx
     [Skip(SkipAttribute.Targets.Firefox, SkipAttribute.Targets.Webkit)]
     public async Task ShouldThrowIfTargetIsPartOfMain()
     {
-        var thewException = false;
         await Page.GotoAsync(Server.Prefix + "/frames/one-frame.html");
-        Assert.IsTrue(Page.Frames[0].Url.Contains("/frames/one-frame.html"));
-        Assert.IsTrue(Page.Frames[1].Url.Contains("/frames/frame.html"));
+        StringAssert.Contains("/frames/one-frame.html", Page.Frames[0].Url);
+        StringAssert.Contains("/frames/frame.html", Page.Frames[1].Url);
 
-        try
-        {
-            await Page.Context.NewCDPSessionAsync(Page.Frames[1]);
-        }
-        catch (PlaywrightException ex)
-        {
-            thewException = true;
-            Assert.IsTrue(ex.Message.Contains("This frame does not have a separate CDP session, it is a part of the parent frame's session"));
-        }
-        Assert.IsTrue(thewException);
+        var exception = await PlaywrightAssert.ThrowsAsync<PlaywrightException>(() => Page.Context.NewCDPSessionAsync(Page.Frames[1]));
+        StringAssert.Contains("This frame does not have a separate CDP session, it is a part of the parent frame's session", exception.Message);
     }
 
     [PlaywrightTest("chromium/session.spec.ts", "should not break page.close()")]
@@ -153,6 +130,20 @@ public class SessionTests : PageTestEx
         await context.CloseAsync();
     }
 
+    [PlaywrightTest("chromium/session.spec.ts", "should detach when page closes")]
+    [Skip(SkipAttribute.Targets.Firefox, SkipAttribute.Targets.Webkit)]
+    public async Task ShouldDetachWhenPageCloses()
+    {
+        var context = await Browser.NewContextAsync();
+        var page = await context.NewPageAsync();
+        var session = await page.Context.NewCDPSessionAsync(page);
+        await page.CloseAsync();
+
+        var exception = await PlaywrightAssert.ThrowsAsync<PlaywrightException>(() => session.DetachAsync());
+        StringAssert.Contains("Target page, context or browser has been closed", exception.Message);
+        await context.CloseAsync();
+    }
+
     [PlaywrightTest("chromium/session.spec.ts", "should work with newBrowserCDPSession")]
     [Skip(SkipAttribute.Targets.Firefox, SkipAttribute.Targets.Webkit)]
     public async Task ShouldWorkWithNewBrowserCDPSession()
@@ -160,10 +151,10 @@ public class SessionTests : PageTestEx
         var session = await Browser.NewBrowserCDPSessionAsync();
 
         var version = await session.SendAsync("Browser.getVersion");
-        Assert.NotNull(version.Value.Deserialize<JsonNode>()["result"]["userAgent"]);
+        Assert.NotNull(version.Value.Deserialize<JsonNode>()["userAgent"]);
 
         var gotEvent = false;
-        session.On("Target.targetCreated", (_) => gotEvent = true);
+        session.AddEventListener("Target.targetCreated", (_) => gotEvent = true);
         await session.SendAsync("Target.setDiscoverTargets", new() { { "discover", true } });
         var page = await Browser.NewPageAsync();
 
@@ -172,5 +163,44 @@ public class SessionTests : PageTestEx
         await page.CloseAsync();
         await session.DetachAsync();
     }
+
+    [PlaywrightTest]
+    [Skip(SkipAttribute.Targets.Firefox, SkipAttribute.Targets.Webkit)]
+    public async Task ShouldAddMultipleEventListeners()
+    {
+        var client = await Page.Context.NewCDPSessionAsync(Page);
+        await client.SendAsync("Network.enable");
+
+        var events = new List<object>();
+        client.AddEventListener("Network.requestWillBeSent", eventHandler);
+        client.AddEventListener("Network.requestWillBeSent", eventHandler);
+
+        await Page.GotoAsync(Server.EmptyPage);
+        Assert.AreEqual(2, events.Count);
+
+        void eventHandler(JsonElement? eventArgs) => events.Add(eventArgs); 
+    }
+
+    [PlaywrightTest]
+    [Skip(SkipAttribute.Targets.Firefox, SkipAttribute.Targets.Webkit)]
+    public async Task ShouldRemoveEventListeners()
+    {
+        var client = await Page.Context.NewCDPSessionAsync(Page);
+        await client.SendAsync("Network.enable");
+
+        var events = new List<object>();
+        client.AddEventListener("Network.requestWillBeSent", eventHandler);
+        client.AddEventListener("Network.requestWillBeSent", eventHandler);
+
+        await Page.GotoAsync(Server.EmptyPage);
+        Assert.AreEqual(2, events.Count);
+
+        client.RemoveEventListener("Network.requestWillBeSent", eventHandler);
+        events.Clear();
+
+        await Page.GotoAsync(Server.EmptyPage);
+        Assert.AreEqual(1, events.Count);
+
+        void eventHandler(JsonElement? eventArgs) => events.Add(eventArgs);
+    }
 }
-;

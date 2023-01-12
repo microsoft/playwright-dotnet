@@ -45,6 +45,15 @@ namespace Microsoft.Playwright;
 /// </description></item>
 /// <item><description>Getting Started with DevTools Protocol: https://github.com/aslushnikov/getting-started-with-cdp/blob/master/README.md</description></item>
 /// </list>
+/// <code>
+/// var client = await Page.Context.NewCDPSessionAsync(Page);<br/>
+/// await client.SendAsync("Runtime.enable");<br/>
+/// client.AddEventListener("Animation.animationCreated", (_) =&gt; Console.WriteLine("Animation created!"));<br/>
+/// var response = await client.SendAsync("Animation.getPlaybackRate");<br/>
+/// var playbackRate = response.Value.Deserialize&lt;JsonNode&gt;()["result"]["playbackRate"].GetValue&lt;decimal&gt;();<br/>
+/// Console.WriteLine("playback rate is " + playbackRate);<br/>
+/// await client.SendAsync("Animation.setPlaybackRate", new() { { "playbackRate", playbackRate / 2 } });
+/// </code>
 /// </summary>
 public partial interface ICDPSession
 {
@@ -60,7 +69,19 @@ public partial interface ICDPSession
     /// <param name="args">Optional method parameters.</param>
     Task<JsonElement?> SendAsync(string method, Dictionary<string, object>? args = default);
 
-    void On(string eventName, Action<JsonElement?> handler);
+    /// <summary><para>Adds a listener for a named CDP event</para></summary>
+    /// <param name="eventName">
+    /// </param>
+    /// <param name="eventHandler">
+    /// </param>
+    void AddEventListener(string eventName, Action<JsonElement?> eventHandler);
+
+    /// <summary><para>Removes a listener for a named CDP event</para></summary>
+    /// <param name="eventName">
+    /// </param>
+    /// <param name="eventHandler">
+    /// </param>
+    void RemoveEventListener(string eventName, Action<JsonElement?> eventHandler);
 }
 
 #nullable disable

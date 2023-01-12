@@ -1,8 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2020 Darío Kondratiuk
- * Modifications copyright (c) Microsoft Corporation.
+ * Copyright (c) Microsoft Corporation.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -53,17 +52,18 @@ internal class CDPChannel : Channel<CDPSession>
            "detach");
     }
 
-    internal Task<JsonElement?> SendAsync(string method, Dictionary<string, object>? args = null)
+    internal async Task<JsonElement?> SendAsync(string method, Dictionary<string, object>? args = null)
     {
         var newArgs = new Dictionary<string, object>() { { "method", method } };
         if (args != null)
         {
             newArgs["params"] = args;
         }
-        return Connection.SendMessageToServerAsync(
+        var result = await Connection.SendMessageToServerAsync(
            Guid,
            "send",
-           newArgs);
+           newArgs).ConfigureAwait(false);
+        return result?.GetProperty("result");
     }
 }
 #nullable disable

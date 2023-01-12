@@ -36,7 +36,7 @@ namespace Microsoft.Playwright.Core;
 internal class CDPSession : ChannelOwnerBase, ICDPSession, IChannelOwner<CDPSession>
 {
     private readonly CDPChannel _channel;
-    private readonly Dictionary<string, List<Action<JsonElement?>>> _eventListeners;
+    private readonly Dictionary<string, Action<JsonElement?>> _eventListeners;
 
     public CDPSession(IChannelOwner parent, string guid) : base(parent, guid)
     {
@@ -62,29 +62,38 @@ internal class CDPSession : ChannelOwnerBase, ICDPSession, IChannelOwner<CDPSess
 
     private void OnCDPEvent(object sender, CDPChannelEventArgs e)
     {
-        if (_eventListeners.ContainsKey(e.EventName))
+        if (_eventListeners.TryGetValue(e.EventName, out Action<JsonElement?> listener))
         {
-            foreach (var listener in _eventListeners[e.EventName])
-            {
-                listener(e.EventParams);
-            }
+            listener(e.EventParams);
         }
     }
 
-    public void On(string eventName, Action<JsonElement?> handler)
+    public void AddEventListener(string eventName, Action<JsonElement?> eventHandler)
     {
-        if (_eventListeners.ContainsKey(eventName))
+        if (_eventListeners.TryGetValue(eventName, out Action<JsonElement?> listener))
         {
-            _eventListeners[eventName].Add(handler);
+            _eventListeners[eventName] += eventHandler;
         }
         else
         {
-            _eventListeners.Add(eventName, new() { handler });
+            _eventListeners.Add(eventName, eventHandler);
         }
     }
 
-    public Task<JsonElement> Send2Async(string method, Dictionary<string, object>? args = null) => throw new NotImplementedException();
-
-    public Task<T?> Send2Async<T>(string method, Dictionary<string, object>? args = null) => throw new NotImplementedException();
+    public void RemoveEventListener(string eventName, Action<JsonElement?> eventHandler)
+    {
+        if (_eventListeners.TryGetValue(eventName, out Action<JsonElement?>? listener))
+        {
+            listener -= eventHandler;
+            if (listener != null)
+            {
+                _eventListeners[eventName] = listener;
+            }
+            else
+            {
+                _eventListeners.Remove(eventName);
+            }
+        }
+    }
 }
 #nullable disable
