@@ -67,7 +67,7 @@ public class SessionTests : PageTestEx
         bool threwException = false;
         var client = await Page.Context.NewCDPSessionAsync(Page);
         await client.SendAsync("Runtime.enable");
-        var evalResponse = (await client.SendAsync("Runtime.evaluate", new Dictionary<string, object> { { "expression", "1 + 2" }, { "returnByValue", true } }));
+        var evalResponse = await client.SendAsync("Runtime.evaluate", new Dictionary<string, object> { { "expression", "1 + 2" }, { "returnByValue", true } });
 
         // TODO: Why is the result nested in a result?
         Assert.AreEqual(3, (int)evalResponse.Value.Deserialize<JsonNode>()["result"]["result"]["value"]);
