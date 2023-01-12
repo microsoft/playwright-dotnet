@@ -76,7 +76,7 @@ public class SessionTests : PageTestEx
 
         try
         {
-            await client.SendAsync("Runtime.evaluate", new Dictionary<string, object> { { "expression", "'1 + 2'" }, { "returnByValue", "true" } });
+            await client.SendAsync("Runtime.evaluate", new Dictionary<string, object> { { "expression", "1 + 2" }, { "returnByValue", "true" } });
         }
         catch (PlaywrightException ex)
         {
