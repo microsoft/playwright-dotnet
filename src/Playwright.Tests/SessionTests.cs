@@ -54,7 +54,7 @@ public class SessionTests : PageTestEx
         {
             events.Add(eventArgs);
         });
-        
+
         await Page.GotoAsync(Server.EmptyPage);
 
         Assert.AreEqual(1, events.Count);
@@ -178,7 +178,7 @@ public class SessionTests : PageTestEx
         await Page.GotoAsync(Server.EmptyPage);
         Assert.AreEqual(2, events.Count);
 
-        void eventHandler(JsonElement? eventArgs) => events.Add(eventArgs); 
+        void eventHandler(JsonElement? eventArgs) => events.Add(eventArgs);
     }
 
     [PlaywrightTest]
