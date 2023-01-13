@@ -26,7 +26,7 @@ using System.Text.Json.Serialization;
 
 namespace Microsoft.Playwright.Transport.Channels;
 
-public class CDPChannelEventArgs
+internal class CDPChannelEventArgs
 {
     [JsonPropertyName("method")]
     public string EventName { get; set; }
