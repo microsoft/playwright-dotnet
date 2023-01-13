@@ -25,7 +25,7 @@
 using System.Text.Json;
 using System.Text.Json.Nodes;
 
-namespace Microsoft.Playwright.Tests.Chromium;
+namespace Microsoft.Playwright.Tests;
 
 ///<playwright-file>chromium/session.spec.ts</playwright-file>
 public class SessionTests : PageTestEx
