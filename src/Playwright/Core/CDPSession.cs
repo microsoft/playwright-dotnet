@@ -95,5 +95,10 @@ internal class CDPSession : ChannelOwnerBase, ICDPSession, IChannelOwner<CDPSess
             }
         }
     }
+
+    public async ValueTask DisposeAsync()
+    {
+        await DetachAsync();
+    }
 }
 #nullable disable
