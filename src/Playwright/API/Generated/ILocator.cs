@@ -1525,15 +1525,6 @@ public partial interface ILocator
 
     /// <summary>
     /// <para>
-    /// Returns the ratio of intersection between viewport and the element, according to
-    /// the <a href="https://developer.mozilla.org/en-US/docs/Web/API/Intersection_Observer_API">intersection
-    /// observer API</a>.
-    /// </para>
-    /// </summary>
-    Task<float> ViewportRatioAsync();
-
-    /// <summary>
-    /// <para>
     /// Returns when element specified by locator satisfies the <paramref name="state"/>
     /// option.
     /// </para>
