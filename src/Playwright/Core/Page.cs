@@ -941,7 +941,7 @@ internal class Page : ChannelOwnerBase, IChannelOwner<Page>, IPage
         });
 #pragma warning restore CS0612 // Type or member is obsolete
 
-    public Task PauseAsync() => Context.Channel.PauseAsync();
+    public Task PauseAsync() => Task.WhenAny(Context.Channel.PauseAsync(), ClosedOrCrashedTcs.Task);
 
     public void SetDefaultNavigationTimeout(float timeout)
     {
