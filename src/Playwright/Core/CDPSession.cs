@@ -37,6 +37,7 @@ internal class CDPSession : ChannelOwnerBase, ICDPSession, IChannelOwner<CDPSess
 {
     private readonly CDPChannel _channel;
     private readonly Dictionary<string, Action<JsonElement?>> _eventListeners;
+    private readonly Dictionary<string, CDPNamedEvent> _cdpNamedEvents = new();
 
     public CDPSession(IChannelOwner parent, string guid) : base(parent, guid)
     {
@@ -62,9 +63,23 @@ internal class CDPSession : ChannelOwnerBase, ICDPSession, IChannelOwner<CDPSess
 
     private void OnCDPEvent(object sender, CDPChannelEventArgs e)
     {
-        if (_eventListeners.TryGetValue(e.EventName, out Action<JsonElement?> listener))
+        if (_cdpNamedEvents.TryGetValue(e.EventName, out CDPNamedEvent cdpNamedEvent))
         {
-            listener(e.EventParams);
+            cdpNamedEvent.RaiseEvent(e.EventParams);
+        }
+    }
+
+    public ICDPNamedEvent Event(string eventName)
+    {
+        if (_cdpNamedEvents.TryGetValue(eventName, out var cdpNamedEvent))
+        {
+            return cdpNamedEvent;
+        }
+        else
+        {
+            cdpNamedEvent = new CDPNamedEvent(eventName);
+            _cdpNamedEvents.Add(eventName, cdpNamedEvent);
+            return cdpNamedEvent;
         }
     }
 

@@ -50,10 +50,11 @@ public class SessionTests : PageTestEx
         await client.SendAsync("Network.enable");
 
         var events = new List<object>();
-        client.AddEventListener("Network.requestWillBeSent", (eventArgs) =>
-        {
-            events.Add(eventArgs);
-        });
+        client.Event("Network.requestWillBeSent").OnEvent +=
+            (_, eventArgs) =>
+            {
+                events.Add(eventArgs);
+            };
 
         await Page.GotoAsync(Server.EmptyPage);
 
@@ -154,7 +155,9 @@ public class SessionTests : PageTestEx
         Assert.NotNull(version.Value.Deserialize<JsonNode>()["userAgent"]);
 
         var gotEvent = false;
-        session.AddEventListener("Target.targetCreated", (_) => gotEvent = true);
+        session.Event("Target.targetCreated").OnEvent +=
+            (_, _) => gotEvent = true;
+
         await session.SendAsync("Target.setDiscoverTargets", new() { { "discover", true } });
         var page = await Browser.NewPageAsync();
 
@@ -172,13 +175,13 @@ public class SessionTests : PageTestEx
         await client.SendAsync("Network.enable");
 
         var events = new List<object>();
-        client.AddEventListener("Network.requestWillBeSent", eventHandler);
-        client.AddEventListener("Network.requestWillBeSent", eventHandler);
+        client.Event("Network.requestWillBeSent").OnEvent += eventHandler;
+        client.Event("Network.requestWillBeSent").OnEvent += eventHandler;
 
         await Page.GotoAsync(Server.EmptyPage);
         Assert.AreEqual(2, events.Count);
 
-        void eventHandler(JsonElement? eventArgs) => events.Add(eventArgs);
+        void eventHandler(object sender, JsonElement? eventArgs) => events.Add(eventArgs);
     }
 
     [PlaywrightTest]
@@ -189,18 +192,19 @@ public class SessionTests : PageTestEx
         await client.SendAsync("Network.enable");
 
         var events = new List<object>();
-        client.AddEventListener("Network.requestWillBeSent", eventHandler);
-        client.AddEventListener("Network.requestWillBeSent", eventHandler);
+        client.Event("Network.requestWillBeSent").OnEvent += eventHandler;
+        client.Event("Network.requestWillBeSent").OnEvent += eventHandler;
+       
 
         await Page.GotoAsync(Server.EmptyPage);
         Assert.AreEqual(2, events.Count);
 
-        client.RemoveEventListener("Network.requestWillBeSent", eventHandler);
+        client.Event("Network.requestWillBeSent").OnEvent -= eventHandler;
         events.Clear();
 
         await Page.GotoAsync(Server.EmptyPage);
         Assert.AreEqual(1, events.Count);
 
-        void eventHandler(JsonElement? eventArgs) => events.Add(eventArgs);
+        void eventHandler(object sender, JsonElement? eventArgs) => events.Add(eventArgs);
     }
 }

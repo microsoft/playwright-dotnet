@@ -22,7 +22,6 @@
  * SOFTWARE.
  */
 
-using System;
 using System.Collections.Generic;
 using System.Text.Json;
 using System.Threading.Tasks;
@@ -69,19 +68,9 @@ public partial interface ICDPSession
     /// <param name="args">Optional method parameters.</param>
     Task<JsonElement?> SendAsync(string method, Dictionary<string, object>? args = default);
 
-    /// <summary><para>Adds a listener for a named CDP event</para></summary>
     /// <param name="eventName">
     /// </param>
-    /// <param name="eventHandler">
-    /// </param>
-    void AddEventListener(string eventName, Action<JsonElement?> eventHandler);
-
-    /// <summary><para>Removes a listener for a named CDP event</para></summary>
-    /// <param name="eventName">
-    /// </param>
-    /// <param name="eventHandler">
-    /// </param>
-    void RemoveEventListener(string eventName, Action<JsonElement?> eventHandler);
+    ICDPNamedEvent Event(string eventName);
 }
 
 #nullable disable
