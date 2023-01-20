@@ -6,7 +6,7 @@
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
- * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * to use, copy, modify, merge, publish, distribute, sublicense, and / or sell
  * copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions:
  *
@@ -27,13 +27,26 @@ using System.Text.Json;
 
 #nullable enable
 
-namespace Microsoft.Playwright;
+namespace Microsoft.Playwright.Core;
 
-public partial interface ICDPNamedEvent
+internal class CDPSessionEvent : ICDPSessionEvent
 {
+    public CDPSessionEvent(string eventName)
+    {
+        this.EventName = eventName;
+    }
+
+    public event EventHandler<JsonElement?>? OnEvent;
+
     public string EventName { get; }
 
-    event EventHandler<JsonElement?> OnEvent;
+    internal void RaiseEvent(JsonElement? eventParams)
+    {
+        var onEvent = OnEvent;
+        if (onEvent != null)
+        {
+            onEvent(this, eventParams);
+        }
+    }
 }
-
 #nullable disable

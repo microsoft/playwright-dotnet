@@ -47,7 +47,7 @@ namespace Microsoft.Playwright;
 /// <code>
 /// var client = await Page.Context.NewCDPSessionAsync(Page);<br/>
 /// await client.SendAsync("Runtime.enable");<br/>
-/// client.AddEventListener("Animation.animationCreated", (_) =&gt; Console.WriteLine("Animation created!"));<br/>
+/// client.Event("Animation.animationCreated").OnEvent += (_, _) =&gt; Console.WriteLine("Animation created!"));<br/>
 /// var response = await client.SendAsync("Animation.getPlaybackRate");<br/>
 /// var playbackRate = response.Value.Deserialize&lt;JsonNode&gt;()["result"]["playbackRate"].GetValue&lt;decimal&gt;();<br/>
 /// Console.WriteLine("playback rate is " + playbackRate);<br/>
@@ -70,7 +70,7 @@ public partial interface ICDPSession
 
     /// <param name="eventName">
     /// </param>
-    ICDPNamedEvent Event(string eventName);
+    ICDPSessionEvent Event(string eventName);
 }
 
 #nullable disable

@@ -22,7 +22,6 @@
  * SOFTWARE.
  */
 
-using System;
 using System.Collections.Generic;
 using System.Text.Json;
 using System.Threading.Tasks;
@@ -36,12 +35,10 @@ namespace Microsoft.Playwright.Core;
 internal class CDPSession : ChannelOwnerBase, ICDPSession, IChannelOwner<CDPSession>
 {
     private readonly CDPChannel _channel;
-    private readonly Dictionary<string, Action<JsonElement?>> _eventListeners;
-    private readonly Dictionary<string, CDPNamedEvent> _cdpNamedEvents = new();
+    private readonly Dictionary<string, CDPSessionEvent> _cdpSessionEvents = new();
 
     public CDPSession(IChannelOwner parent, string guid) : base(parent, guid)
     {
-        _eventListeners = new();
         _channel = new(guid, parent.Connection, this);
 
         _channel.CDPEvent += OnCDPEvent;
@@ -63,51 +60,23 @@ internal class CDPSession : ChannelOwnerBase, ICDPSession, IChannelOwner<CDPSess
 
     private void OnCDPEvent(object sender, CDPChannelEventArgs e)
     {
-        if (_cdpNamedEvents.TryGetValue(e.EventName, out CDPNamedEvent cdpNamedEvent))
+        if (_cdpSessionEvents.TryGetValue(e.EventName, out CDPSessionEvent cdpNamedEvent))
         {
             cdpNamedEvent.RaiseEvent(e.EventParams);
         }
     }
 
-    public ICDPNamedEvent Event(string eventName)
+    public ICDPSessionEvent Event(string eventName)
     {
-        if (_cdpNamedEvents.TryGetValue(eventName, out var cdpNamedEvent))
+        if (_cdpSessionEvents.TryGetValue(eventName, out var cdpNamedEvent))
         {
             return cdpNamedEvent;
         }
         else
         {
-            cdpNamedEvent = new CDPNamedEvent(eventName);
-            _cdpNamedEvents.Add(eventName, cdpNamedEvent);
+            cdpNamedEvent = new CDPSessionEvent(eventName);
+            _cdpSessionEvents.Add(eventName, cdpNamedEvent);
             return cdpNamedEvent;
-        }
-    }
-
-    public void AddEventListener(string eventName, Action<JsonElement?> eventHandler)
-    {
-        if (_eventListeners.TryGetValue(eventName, out Action<JsonElement?> listener))
-        {
-            _eventListeners[eventName] += eventHandler;
-        }
-        else
-        {
-            _eventListeners.Add(eventName, eventHandler);
-        }
-    }
-
-    public void RemoveEventListener(string eventName, Action<JsonElement?> eventHandler)
-    {
-        if (_eventListeners.TryGetValue(eventName, out Action<JsonElement?>? listener))
-        {
-            listener -= eventHandler;
-            if (listener != null)
-            {
-                _eventListeners[eventName] = listener;
-            }
-            else
-            {
-                _eventListeners.Remove(eventName);
-            }
         }
     }
 

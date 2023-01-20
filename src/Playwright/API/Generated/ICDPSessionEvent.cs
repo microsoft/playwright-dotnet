@@ -6,7 +6,7 @@
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
- * to use, copy, modify, merge, publish, distribute, sublicense, and / or sell
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
  * copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions:
  *
@@ -27,26 +27,23 @@ using System.Text.Json;
 
 #nullable enable
 
-namespace Microsoft.Playwright.Core;
+namespace Microsoft.Playwright;
 
-internal class CDPNamedEvent : ICDPNamedEvent
+/// <summary>
+/// <para>
+/// <see cref="ICDPSessionEvent"/> objects are returned by page via the <see cref="ICDPSession.Event"/>
+/// method.
+/// </para>
+/// <para>
+/// Each object represents a named event and allows handling of the event when it is
+/// raised.
+/// </para>
+/// </summary>
+public partial interface ICDPSessionEvent
 {
-    public CDPNamedEvent(string eventName)
-    {
-        this.EventName = eventName;
-    }
-
-    public event EventHandler<JsonElement?>? OnEvent;
-
     public string EventName { get; }
 
-    internal void RaiseEvent(JsonElement? eventParams)
-    {
-        var onEvent = OnEvent;
-        if (onEvent != null)
-        {
-            onEvent(this, eventParams);
-        }
-    }
+    event EventHandler<JsonElement?> OnEvent;
 }
+
 #nullable disable
