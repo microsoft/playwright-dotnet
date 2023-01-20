@@ -194,7 +194,7 @@ public class SessionTests : PageTestEx
         var events = new List<object>();
         client.Event("Network.requestWillBeSent").OnEvent += eventHandler;
         client.Event("Network.requestWillBeSent").OnEvent += eventHandler;
-       
+
 
         await Page.GotoAsync(Server.EmptyPage);
         Assert.AreEqual(2, events.Count);
