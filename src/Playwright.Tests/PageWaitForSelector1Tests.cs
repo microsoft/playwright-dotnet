@@ -81,7 +81,7 @@ public class PageWaitForSelector1Tests : PageTestEx
 
         await Page.GotoAsync(Server.EmptyPage);
         var exception = await PlaywrightAssert.ThrowsAsync<PlaywrightException>(() => task);
-        StringAssert.Contains("Error: frame navigated while waiting for Locator(\"span\")", exception.Message);
+        StringAssert.Contains("waiting for Locator(\"span\") to be visible", exception.Message);
     }
 
     [PlaywrightTest("page-wait-for-selector-1.spec.ts", "should work with removed MutationObserver")]
@@ -146,7 +146,6 @@ public class PageWaitForSelector1Tests : PageTestEx
         StringAssert.Contains("Timeout 5000ms", exception.Message);
         StringAssert.Contains("waiting for Locator(\"div\") to be visible", exception.Message);
         StringAssert.Contains("locator resolved to hidden <div id=\"mydiv\" class=\"foo bar\" foo=\"1234567890123456…>abcdefghijklmnopqrstuvwyxzabcdefghijklmnopqrstuvw…</div>", exception.Message);
-        StringAssert.Contains("locator did not resolve to any element", exception.Message);
         StringAssert.Contains("locator resolved to hidden <div class=\"another\"></div>", exception.Message);
     }
 

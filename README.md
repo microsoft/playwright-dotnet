@@ -3,7 +3,7 @@
 
 |          | Linux | macOS | Windows |
 |   :---   | :---: | :---: | :---:   |
-| Chromium <!-- GEN:chromium-version -->109.0.5414.74<!-- GEN:stop --> | ✅ | ✅ | ✅ |
+| Chromium <!-- GEN:chromium-version -->110.0.5481.38<!-- GEN:stop --> | ✅ | ✅ | ✅ |
 | WebKit <!-- GEN:webkit-version -->16.4<!-- GEN:stop --> | ✅ | ✅ | ✅ |
 | Firefox <!-- GEN:firefox-version -->108.0.2<!-- GEN:stop --> | ✅ | ✅ | ✅ |
 
