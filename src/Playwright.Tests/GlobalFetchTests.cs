@@ -77,10 +77,10 @@ public class GlobalFetchTests : PlaywrightTestEx
     [PlaywrightTest("global-fetch.spec.ts", "should support global timeout option")]
     public async Task ShouldSupportGlobalTimeoutOption()
     {
-        var request = await Playwright.APIRequest.NewContextAsync(new() { Timeout = 1 });
+        var request = await Playwright.APIRequest.NewContextAsync(new() { Timeout = 100 });
         Server.SetRoute("/empty.html", async request => await Task.Delay(5_000));
         var exception = Assert.ThrowsAsync<PlaywrightException>(() => request.GetAsync(Server.EmptyPage));
-        StringAssert.Contains("Request timed out after 1ms", exception.Message);
+        StringAssert.Contains("Request timed out after 100ms", exception.Message);
     }
 
     [PlaywrightTest("global-fetch.spec.ts", "should propagate extra http headers with redirects")]
