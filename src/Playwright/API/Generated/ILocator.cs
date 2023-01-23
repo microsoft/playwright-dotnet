@@ -54,10 +54,18 @@ public partial interface ILocator
     /// </summary>
     Task<IReadOnlyList<ILocator>> AllAsync();
 
-    /// <summary><para>Returns an array of <c>node.innerText</c> values for all matching nodes.</para></summary>
+    /// <summary>
+    /// <para>Returns an array of <c>node.innerText</c> values for all matching nodes.</para>
+    /// <para>**Usage**</para>
+    /// <code>var texts = await page.GetByRole(AriaRole.Link).AllInnerTextsAsync();</code>
+    /// </summary>
     Task<IReadOnlyList<string>> AllInnerTextsAsync();
 
-    /// <summary><para>Returns an array of <c>node.textContent</c> values for all matching nodes.</para></summary>
+    /// <summary>
+    /// <para>Returns an array of <c>node.textContent</c> values for all matching nodes.</para>
+    /// <para>**Usage**</para>
+    /// <code>var texts = await page.GetByRole(AriaRole.Link).AllTextContentsAsync();</code>
+    /// </summary>
     Task<IReadOnlyList<string>> AllTextContentsAsync();
 
     /// <summary>
@@ -71,10 +79,11 @@ public partial interface ILocator
 
     /// <summary>
     /// <para>
-    /// This method returns the bounding box of the element, or <c>null</c> if the element
-    /// is not visible. The bounding box is calculated relative to the main frame viewport
-    /// - which is usually the same as the browser window.
+    /// This method returns the bounding box of the element matching the locator, or <c>null</c>
+    /// if the element is not visible. The bounding box is calculated relative to the main
+    /// frame viewport - which is usually the same as the browser window.
     /// </para>
+    /// <para>**Details**</para>
     /// <para>
     /// Scrolling affects the returned bounding box, similarly to <a href="https://developer.mozilla.org/en-US/docs/Web/API/Element/getBoundingClientRect">Element.getBoundingClientRect</a>.
     /// That means <c>x</c> and/or <c>y</c> may be negative.
@@ -89,7 +98,7 @@ public partial interface ILocator
     /// </para>
     /// <para>**Usage**</para>
     /// <code>
-    /// var box = await element.BoundingBoxAsync();<br/>
+    /// var box = await page.GetByRole(AriaRole.Button).BoundingBoxAsync();<br/>
     /// await page.Mouse.ClickAsync(box.X + box.Width / 2, box.Y + box.Height / 2);
     /// </code>
     /// </summary>
@@ -97,7 +106,9 @@ public partial interface ILocator
     Task<LocatorBoundingBoxResult?> BoundingBoxAsync(LocatorBoundingBoxOptions? options = default);
 
     /// <summary>
-    /// <para>This method checks the element by performing the following steps:</para>
+    /// <para>Ensure that checkbox or radio element is checked.</para>
+    /// <para>**Details**</para>
+    /// <para>Performs the following steps:</para>
     /// <list type="ordinal">
     /// <item><description>
     /// Ensure that element is a checkbox or a radio input. If not, this method throws.
@@ -124,11 +135,15 @@ public partial interface ILocator
     /// this method throws a <see cref="TimeoutException"/>. Passing zero timeout disables
     /// this.
     /// </para>
+    /// <para>**Usage**</para>
+    /// <code>await page.GetByRole(AriaRole.Checkbox).CheckAsync();</code>
     /// </summary>
     /// <param name="options">Call options</param>
     Task CheckAsync(LocatorCheckOptions? options = default);
 
     /// <summary>
+    /// <para>Clear the input field.</para>
+    /// <para>**Details**</para>
     /// <para>
     /// This method waits for <a href="https://playwright.dev/dotnet/docs/actionability">actionability</a>
     /// checks, focuses the element, clears it and triggers an <c>input</c> event after
@@ -140,6 +155,8 @@ public partial interface ILocator
     /// is inside the <c>&lt;label&gt;</c> element that has an associated <a href="https://developer.mozilla.org/en-US/docs/Web/API/HTMLLabelElement/control">control</a>,
     /// the control will be cleared instead.
     /// </para>
+    /// <para>**Usage**</para>
+    /// <code>await page.GetByRole(AriaRole.Textbox).ClearAsync();</code>
     /// </summary>
     /// <param name="options">Call options</param>
     Task ClearAsync(LocatorClearOptions? options = default);
@@ -172,14 +189,31 @@ public partial interface ILocator
     /// this method throws a <see cref="TimeoutException"/>. Passing zero timeout disables
     /// this.
     /// </para>
+    /// <para>**Usage**</para>
+    /// <para>Click a button:</para>
+    /// <code>await page.GetByRole(AriaRole.Button).ClickAsync();</code>
+    /// <para>Shift-right-click at a specific position on a canvas:</para>
+    /// <code>
+    /// await page.Locator("canvas").ClickAsync(new() {<br/>
+    ///   Button = MouseButton.Right,<br/>
+    ///   Modifiers = new[] { KeyboardModifier.Shift },<br/>
+    ///   Position = new Position { X = 0, Y = 0 }<br/>
+    /// });
+    /// </code>
     /// </summary>
     /// <param name="options">Call options</param>
     Task ClickAsync(LocatorClickOptions? options = default);
 
-    /// <summary><para>Returns the number of elements matching given selector.</para></summary>
+    /// <summary>
+    /// <para>Returns the number of elements matching the locator.</para>
+    /// <para>**Usage**</para>
+    /// <code>int count = await page.GetByRole(AriaRole.Listitem).CountAsync();</code>
+    /// </summary>
     Task<int> CountAsync();
 
     /// <summary>
+    /// <para>Double-click an element.</para>
+    /// <para>**Details**</para>
     /// <para>This method double clicks the element by performing the following steps:</para>
     /// <list type="ordinal">
     /// <item><description>
@@ -217,13 +251,15 @@ public partial interface ILocator
     Task DblClickAsync(LocatorDblClickOptions? options = default);
 
     /// <summary>
+    /// <para>Programmaticaly dispatch an event on the matching element.</para>
+    /// <para>**Usage**</para>
+    /// <code>await locator.DispatchEventAsync("click");</code>
+    /// <para>**Details**</para>
     /// <para>
-    /// The snippet below dispatches the <c>click</c> event on the element. Regardless of
+    /// The snippet above dispatches the <c>click</c> event on the element. Regardless of
     /// the visibility state of the element, <c>click</c> is dispatched. This is equivalent
     /// to calling <a href="https://developer.mozilla.org/en-US/docs/Web/API/HTMLElement/click">element.click()</a>.
     /// </para>
-    /// <para>**Usage**</para>
-    /// <code>await element.DispatchEventAsync("click");</code>
     /// <para>
     /// Under the hood, it creates an instance of an event based on the given <paramref
     /// name="type"/>, initializes it with <paramref name="eventInit"/> properties and dispatches
@@ -243,12 +279,12 @@ public partial interface ILocator
     /// <item><description><a href="https://developer.mozilla.org/en-US/docs/Web/API/Event/Event">Event</a></description></item>
     /// </list>
     /// <para>
-    /// You can also specify <c>JSHandle</c> as the property value if you want live objects
-    /// to be passed into the event:
+    /// You can also specify <see cref="IJSHandle"/> as the property value if you want live
+    /// objects to be passed into the event:
     /// </para>
     /// <code>
     /// var dataTransfer = await page.EvaluateHandleAsync("() =&gt; new DataTransfer()");<br/>
-    /// await element.DispatchEventAsync("dragstart", new Dictionary&lt;string, object&gt;<br/>
+    /// await locator.DispatchEventAsync("dragstart", new Dictionary&lt;string, object&gt;<br/>
     /// {<br/>
     ///     { "dataTransfer", dataTransfer }<br/>
     /// });
@@ -260,6 +296,8 @@ public partial interface ILocator
     Task DispatchEventAsync(string type, object? eventInit = default, LocatorDispatchEventOptions? options = default);
 
     /// <summary>
+    /// <para>Drag the source element towards the target element and drop it.</para>
+    /// <para>**Details**</para>
     /// <para>
     /// This method drags the locator to another target locator or target position. It will
     /// first move to the source element, perform a <c>mousedown</c>, then move to the target
@@ -285,24 +323,41 @@ public partial interface ILocator
 
     /// <summary>
     /// <para>
-    /// Resolves given locator to the first matching DOM element. If no elements matching
-    /// the query are visible, waits for them up to a given timeout. If multiple elements
-    /// match the selector, throws.
+    /// Always prefer using <see cref="ILocator"/>s and web assertions over <see cref="IElementHandle"/>s
+    /// because latter are inherently racy.
+    /// </para>
+    /// <para>
+    /// Resolves given locator to the first matching DOM element. If there are no matching
+    /// elements, waits for one. If multiple elements match the locator, throws.
     /// </para>
     /// </summary>
     /// <param name="options">Call options</param>
     Task<IElementHandle> ElementHandleAsync(LocatorElementHandleOptions? options = default);
 
-    /// <summary><para>Resolves given locator to all matching DOM elements.</para></summary>
+    /// <summary>
+    /// <para>
+    /// Always prefer using <see cref="ILocator"/>s and web assertions over <see cref="IElementHandle"/>s
+    /// because latter are inherently racy.
+    /// </para>
+    /// <para>
+    /// Resolves given locator to all matching DOM elements. If there are no matching elements,
+    /// returns an empty list.
+    /// </para>
+    /// </summary>
     Task<IReadOnlyList<IElementHandle>> ElementHandlesAsync();
 
     /// <summary>
-    /// <para>Returns the return value of <paramref name="expression"/>.</para>
-    /// <para>This method passes this handle as the first argument to <paramref name="expression"/>.</para>
+    /// <para>Execute JavaScript code in the page, taking the matching element as an argument.</para>
+    /// <para>**Details**</para>
     /// <para>
-    /// If <paramref name="expression"/> returns a <see cref="Task"/>, then <c>handle.evaluate</c>
-    /// would wait for the promise to resolve and return its value.
+    /// Returns the return value of <paramref name="expression"/>, called with the matching
+    /// element as a first argument, and <paramref name="arg"/> as a second argument.
     /// </para>
+    /// <para>
+    /// If <paramref name="expression"/> returns a <see cref="Task"/>, this method will
+    /// wait for the promise to resolve and return its value.
+    /// </para>
+    /// <para>If <paramref name="expression"/> throws or rejects, this method throws.</para>
     /// <para>**Usage**</para>
     /// <code>
     /// var tweets = page.Locator(".tweet .retweets");<br/>
@@ -318,19 +373,22 @@ public partial interface ILocator
     Task<T> EvaluateAsync<T>(string expression, object? arg = default, LocatorEvaluateOptions? options = default);
 
     /// <summary>
+    /// <para>Execute JavaScript code in the page, taking all matching elements as an argument.</para>
+    /// <para>**Details**</para>
     /// <para>
-    /// The method finds all elements matching the specified locator and passes an array
-    /// of matched elements as a first argument to <paramref name="expression"/>. Returns
-    /// the result of <paramref name="expression"/> invocation.
+    /// Returns the return value of <paramref name="expression"/>, called with an array
+    /// of all matching elements as a first argument, and <paramref name="arg"/> as a second
+    /// argument.
     /// </para>
     /// <para>
-    /// If <paramref name="expression"/> returns a <see cref="Task"/>, then <see cref="ILocator.EvaluateAllAsync"/>
-    /// would wait for the promise to resolve and return its value.
+    /// If <paramref name="expression"/> returns a <see cref="Task"/>, this method will
+    /// wait for the promise to resolve and return its value.
     /// </para>
+    /// <para>If <paramref name="expression"/> throws or rejects, this method throws.</para>
     /// <para>**Usage**</para>
     /// <code>
-    /// var elements = page.Locator("div");<br/>
-    /// var divsCount = await elements.EvaluateAllAsync&lt;bool&gt;("(divs, min) =&gt; divs.length &gt;= min", 10);
+    /// var locator = page.Locator("div");<br/>
+    /// var moreThanTen = await locator.EvaluateAllAsync&lt;bool&gt;("(divs, min) =&gt; divs.length &gt; min", 10);
     /// </code>
     /// </summary>
     /// <param name="expression">
@@ -341,17 +399,25 @@ public partial interface ILocator
     Task<T> EvaluateAllAsync<T>(string expression, object? arg = default);
 
     /// <summary>
-    /// <para>Returns the return value of <paramref name="expression"/> as a <see cref="IJSHandle"/>.</para>
-    /// <para>This method passes this handle as the first argument to <paramref name="expression"/>.</para>
+    /// <para>
+    /// Execute JavaScript code in the page, taking the matching element as an argument,
+    /// and return a <see cref="IJSHandle"/> with the result.
+    /// </para>
+    /// <para>**Details**</para>
+    /// <para>
+    /// Returns the return value of <paramref name="expression"/> as a<see cref="IJSHandle"/>,
+    /// called with the matching element as a first argument, and <paramref name="arg"/>
+    /// as a second argument.
+    /// </para>
     /// <para>
     /// The only difference between <see cref="ILocator.EvaluateAsync"/> and <see cref="ILocator.EvaluateHandleAsync"/>
     /// is that <see cref="ILocator.EvaluateHandleAsync"/> returns <see cref="IJSHandle"/>.
     /// </para>
     /// <para>
-    /// If the function passed to the <see cref="ILocator.EvaluateHandleAsync"/> returns
-    /// a <see cref="Task"/>, then <see cref="ILocator.EvaluateHandleAsync"/> would wait
-    /// for the promise to resolve and return its value.
+    /// If <paramref name="expression"/> returns a <see cref="Task"/>, this method will
+    /// wait for the promise to resolve and return its value.
     /// </para>
+    /// <para>If <paramref name="expression"/> throws or rejects, this method throws.</para>
     /// <para>See <see cref="IPage.EvaluateHandleAsync"/> for more details.</para>
     /// </summary>
     /// <param name="expression">
@@ -363,6 +429,10 @@ public partial interface ILocator
     Task<IJSHandle> EvaluateHandleAsync(string expression, object? arg = default, LocatorEvaluateHandleOptions? options = default);
 
     /// <summary>
+    /// <para>Set a value to the input field.</para>
+    /// <para>**Usage**</para>
+    /// <code>await page.GetByRole(AriaRole.Textbox).FillAsync("example value");</code>
+    /// <para>**Details**</para>
     /// <para>
     /// This method waits for <a href="https://playwright.dev/dotnet/docs/actionability">actionability</a>
     /// checks, focuses the element, fills it and triggers an <c>input</c> event after filling.
@@ -409,18 +479,18 @@ public partial interface ILocator
     /// <summary>
     /// <para>
     /// Calls <a href="https://developer.mozilla.org/en-US/docs/Web/API/HTMLElement/focus">focus</a>
-    /// on the element.
+    /// on the matching element.
     /// </para>
     /// </summary>
     /// <param name="options">Call options</param>
     Task FocusAsync(LocatorFocusOptions? options = default);
 
     /// <summary>
-    /// <para>**Usage**</para>
     /// <para>
     /// When working with iframes, you can create a frame locator that will enter the iframe
-    /// and allow selecting elements in that iframe:
+    /// and allow locating elements in that iframe:
     /// </para>
+    /// <para>**Usage**</para>
     /// <code>
     /// var locator = page.FrameLocator("iframe").GetByText("Submit");<br/>
     /// await locator.ClickAsync();
@@ -429,66 +499,82 @@ public partial interface ILocator
     /// <param name="selector">A selector to use when resolving DOM element.</param>
     IFrameLocator FrameLocator(string selector);
 
-    /// <summary><para>Returns element attribute value.</para></summary>
+    /// <summary><para>Returns the matching element's attribute value.</para></summary>
     /// <param name="name">Attribute name to get the value for.</param>
     /// <param name="options">Call options</param>
     Task<string?> GetAttributeAsync(string name, LocatorGetAttributeOptions? options = default);
 
     /// <summary>
-    /// <para>
-    /// Allows locating elements by their alt text. For example, this method will find the
-    /// image by alt text "Castle":
-    /// </para>
+    /// <para>Allows locating elements by their alt text.</para>
+    /// <para>**Usage**</para>
+    /// <para>For example, this method will find the image by alt text "Playwright logo":</para>
+    /// <code>await page.GetByAltText("Playwright logo").ClickAsync();</code>
     /// </summary>
     /// <param name="text">Text to locate the element for.</param>
     /// <param name="options">Call options</param>
     ILocator GetByAltText(string text, LocatorGetByAltTextOptions? options = default);
 
     /// <summary>
-    /// <para>
-    /// Allows locating elements by their alt text. For example, this method will find the
-    /// image by alt text "Castle":
-    /// </para>
+    /// <para>Allows locating elements by their alt text.</para>
+    /// <para>**Usage**</para>
+    /// <para>For example, this method will find the image by alt text "Playwright logo":</para>
+    /// <code>await page.GetByAltText("Playwright logo").ClickAsync();</code>
     /// </summary>
     /// <param name="text">Text to locate the element for.</param>
     /// <param name="options">Call options</param>
     ILocator GetByAltText(Regex text, LocatorGetByAltTextOptions? options = default);
 
     /// <summary>
+    /// <para>Allows locating input elements by the text of the associated label.</para>
+    /// <para>**Usage**</para>
     /// <para>
-    /// Allows locating input elements by the text of the associated label. For example,
-    /// this method will find the input by label text "Password" in the following DOM:
+    /// For example, this method will find the input by label text "Password" in the following
+    /// DOM:
     /// </para>
+    /// <code>await page.GetByLabel("Password").FillAsync("secret");</code>
     /// </summary>
     /// <param name="text">Text to locate the element for.</param>
     /// <param name="options">Call options</param>
     ILocator GetByLabel(string text, LocatorGetByLabelOptions? options = default);
 
     /// <summary>
+    /// <para>Allows locating input elements by the text of the associated label.</para>
+    /// <para>**Usage**</para>
     /// <para>
-    /// Allows locating input elements by the text of the associated label. For example,
-    /// this method will find the input by label text "Password" in the following DOM:
+    /// For example, this method will find the input by label text "Password" in the following
+    /// DOM:
     /// </para>
+    /// <code>await page.GetByLabel("Password").FillAsync("secret");</code>
     /// </summary>
     /// <param name="text">Text to locate the element for.</param>
     /// <param name="options">Call options</param>
     ILocator GetByLabel(Regex text, LocatorGetByLabelOptions? options = default);
 
     /// <summary>
-    /// <para>
-    /// Allows locating input elements by the placeholder text. For example, this method
-    /// will find the input by placeholder "Country":
-    /// </para>
+    /// <para>Allows locating input elements by the placeholder text.</para>
+    /// <para>**Usage**</para>
+    /// <para>For example, consider the following DOM structure.</para>
+    /// <para>You can fill the input after locating it by the placeholder text:</para>
+    /// <code>
+    /// await page<br/>
+    ///     .GetByPlaceholder("name@example.com")<br/>
+    ///     .FillAsync("playwright@microsoft.com");
+    /// </code>
     /// </summary>
     /// <param name="text">Text to locate the element for.</param>
     /// <param name="options">Call options</param>
     ILocator GetByPlaceholder(string text, LocatorGetByPlaceholderOptions? options = default);
 
     /// <summary>
-    /// <para>
-    /// Allows locating input elements by the placeholder text. For example, this method
-    /// will find the input by placeholder "Country":
-    /// </para>
+    /// <para>Allows locating input elements by the placeholder text.</para>
+    /// <para>**Usage**</para>
+    /// <para>For example, consider the following DOM structure.</para>
+    /// <para>You can fill the input after locating it by the placeholder text:</para>
+    /// <code>
+    /// await page<br/>
+    ///     .GetByPlaceholder("name@example.com")<br/>
+    ///     .FillAsync("playwright@microsoft.com");
+    /// </code>
     /// </summary>
     /// <param name="text">Text to locate the element for.</param>
     /// <param name="options">Call options</param>
@@ -499,11 +585,32 @@ public partial interface ILocator
     /// Allows locating elements by their <a href="https://www.w3.org/TR/wai-aria-1.2/#roles">ARIA
     /// role</a>, <a href="https://www.w3.org/TR/wai-aria-1.2/#aria-attributes">ARIA attributes</a>
     /// and <a href="https://w3c.github.io/accname/#dfn-accessible-name">accessible name</a>.
-    /// Note that role selector **does not replace** accessibility audits and conformance
-    /// tests, but rather gives early feedback about the ARIA guidelines.
+    /// </para>
+    /// <para>**Usage**</para>
+    /// <para>Consider the following DOM structure.</para>
+    /// <para>You can locate each element by it's implicit role:</para>
+    /// <code>
+    /// await Expect(page<br/>
+    ///     .GetByRole(AriaRole.Heading, new() { Name = "Sign up" }))<br/>
+    ///     .ToBeVisibleAsync();<br/>
+    /// <br/>
+    /// await page<br/>
+    ///     .GetByRole(AriaRole.Checkbox, new() { Name = "Subscribe" })<br/>
+    ///     .CheckAsync();<br/>
+    /// <br/>
+    /// await page<br/>
+    ///     .GetByRole(AriaRole.Button, new() {<br/>
+    ///         NameRegex = new Regex("submit", RegexOptions.IgnoreCase)<br/>
+    ///     })<br/>
+    ///     .ClickAsync();
+    /// </code>
+    /// <para>**Details**</para>
+    /// <para>
+    /// Role selector **does not replace** accessibility audits and conformance tests, but
+    /// rather gives early feedback about the ARIA guidelines.
     /// </para>
     /// <para>
-    /// Note that many html elements have an implicitly <a href="https://w3c.github.io/html-aam/#html-element-role-mappings">defined
+    /// Many html elements have an implicitly <a href="https://w3c.github.io/html-aam/#html-element-role-mappings">defined
     /// role</a> that is recognized by the role selector. You can find all the <a href="https://www.w3.org/TR/wai-aria-1.2/#role_definitions">supported
     /// roles here</a>. ARIA guidelines **do not recommend** duplicating implicit roles
     /// and attributes by setting <c>role</c> and/or <c>aria-*</c> attributes to default
@@ -515,27 +622,43 @@ public partial interface ILocator
     ILocator GetByRole(AriaRole role, LocatorGetByRoleOptions? options = default);
 
     /// <summary>
+    /// <para>Locate element by the test id.</para>
+    /// <para>**Usage**</para>
+    /// <para>Consider the following DOM structure.</para>
+    /// <para>You can locate the element by it's test id:</para>
+    /// <code>await page.GetByTestId("directions").ClickAsync();</code>
+    /// <para>**Details**</para>
     /// <para>
-    /// Locate element by the test id. By default, the <c>data-testid</c> attribute is used
-    /// as a test id. Use <see cref="ISelectors.SetTestIdAttribute"/> to configure a different
-    /// test id attribute if necessary.
+    /// By default, the <c>data-testid</c> attribute is used as a test id. Use <see cref="ISelectors.SetTestIdAttribute"/>
+    /// to configure a different test id attribute if necessary.
     /// </para>
     /// </summary>
     /// <param name="testId">Id to locate the element by.</param>
     ILocator GetByTestId(string testId);
 
     /// <summary>
+    /// <para>Locate element by the test id.</para>
+    /// <para>**Usage**</para>
+    /// <para>Consider the following DOM structure.</para>
+    /// <para>You can locate the element by it's test id:</para>
+    /// <code>await page.GetByTestId("directions").ClickAsync();</code>
+    /// <para>**Details**</para>
     /// <para>
-    /// Locate element by the test id. By default, the <c>data-testid</c> attribute is used
-    /// as a test id. Use <see cref="ISelectors.SetTestIdAttribute"/> to configure a different
-    /// test id attribute if necessary.
+    /// By default, the <c>data-testid</c> attribute is used as a test id. Use <see cref="ISelectors.SetTestIdAttribute"/>
+    /// to configure a different test id attribute if necessary.
     /// </para>
     /// </summary>
     /// <param name="testId">Id to locate the element by.</param>
     ILocator GetByTestId(Regex testId);
 
     /// <summary>
-    /// <para>Allows locating elements that contain given text. Consider the following DOM structure:</para>
+    /// <para>Allows locating elements that contain given text.</para>
+    /// <para>
+    /// See also <see cref="ILocator.Filter"/> that allows to match by another criteria,
+    /// like an accessible role, and then filter by the text content.
+    /// </para>
+    /// <para>**Usage**</para>
+    /// <para>Consider the following DOM structure:</para>
     /// <para>You can locate by text substring, exact string, or a regular expression:</para>
     /// <code>
     /// // Matches &lt;span&gt;<br/>
@@ -553,12 +676,7 @@ public partial interface ILocator
     /// // Matches second &lt;div&gt;<br/>
     /// page.GetByText(new Regex("^hello$", RegexOptions.IgnoreCase))
     /// </code>
-    /// <para>
-    /// See also <see cref="ILocator.Filter"/> that allows to match by another criteria,
-    /// like an accessible role, and then filter by the text content.
-    /// </para>
-    /// </summary>
-    /// <remarks>
+    /// <para>**Details**</para>
     /// <para>
     /// Matching by text always normalizes whitespace, even with exact match. For example,
     /// it turns multiple spaces into one, turns line breaks into spaces and ignores leading
@@ -569,13 +687,19 @@ public partial interface ILocator
     /// <c>value</c> instead of the text content. For example, locating by text <c>"Log
     /// in"</c> matches <c>&lt;input type=button value="Log in"&gt;</c>.
     /// </para>
-    /// </remarks>
+    /// </summary>
     /// <param name="text">Text to locate the element for.</param>
     /// <param name="options">Call options</param>
     ILocator GetByText(string text, LocatorGetByTextOptions? options = default);
 
     /// <summary>
-    /// <para>Allows locating elements that contain given text. Consider the following DOM structure:</para>
+    /// <para>Allows locating elements that contain given text.</para>
+    /// <para>
+    /// See also <see cref="ILocator.Filter"/> that allows to match by another criteria,
+    /// like an accessible role, and then filter by the text content.
+    /// </para>
+    /// <para>**Usage**</para>
+    /// <para>Consider the following DOM structure:</para>
     /// <para>You can locate by text substring, exact string, or a regular expression:</para>
     /// <code>
     /// // Matches &lt;span&gt;<br/>
@@ -593,12 +717,7 @@ public partial interface ILocator
     /// // Matches second &lt;div&gt;<br/>
     /// page.GetByText(new Regex("^hello$", RegexOptions.IgnoreCase))
     /// </code>
-    /// <para>
-    /// See also <see cref="ILocator.Filter"/> that allows to match by another criteria,
-    /// like an accessible role, and then filter by the text content.
-    /// </para>
-    /// </summary>
-    /// <remarks>
+    /// <para>**Details**</para>
     /// <para>
     /// Matching by text always normalizes whitespace, even with exact match. For example,
     /// it turns multiple spaces into one, turns line breaks into spaces and ignores leading
@@ -609,26 +728,28 @@ public partial interface ILocator
     /// <c>value</c> instead of the text content. For example, locating by text <c>"Log
     /// in"</c> matches <c>&lt;input type=button value="Log in"&gt;</c>.
     /// </para>
-    /// </remarks>
+    /// </summary>
     /// <param name="text">Text to locate the element for.</param>
     /// <param name="options">Call options</param>
     ILocator GetByText(Regex text, LocatorGetByTextOptions? options = default);
 
     /// <summary>
-    /// <para>
-    /// Allows locating elements by their title. For example, this method will find the
-    /// button by its title "Place the order":
-    /// </para>
+    /// <para>Allows locating elements by their title attribute.</para>
+    /// <para>**Usage**</para>
+    /// <para>Consider the following DOM structure.</para>
+    /// <para>You can check the issues count after locating it by the title text:</para>
+    /// <code>await Expect(page.GetByTitle("Issues count")).toHaveText("25 issues");</code>
     /// </summary>
     /// <param name="text">Text to locate the element for.</param>
     /// <param name="options">Call options</param>
     ILocator GetByTitle(string text, LocatorGetByTitleOptions? options = default);
 
     /// <summary>
-    /// <para>
-    /// Allows locating elements by their title. For example, this method will find the
-    /// button by its title "Place the order":
-    /// </para>
+    /// <para>Allows locating elements by their title attribute.</para>
+    /// <para>**Usage**</para>
+    /// <para>Consider the following DOM structure.</para>
+    /// <para>You can check the issues count after locating it by the title text:</para>
+    /// <code>await Expect(page.GetByTitle("Issues count")).toHaveText("25 issues");</code>
     /// </summary>
     /// <param name="text">Text to locate the element for.</param>
     /// <param name="options">Call options</param>
@@ -643,6 +764,10 @@ public partial interface ILocator
     Task HighlightAsync();
 
     /// <summary>
+    /// <para>Hover over the matching element.</para>
+    /// <para>**Usage**</para>
+    /// <code>await page.GetByRole(AriaRole.Link).HoverAsync();</code>
+    /// <para>**Details**</para>
     /// <para>This method hovers over the element by performing the following steps:</para>
     /// <list type="ordinal">
     /// <item><description>
@@ -672,22 +797,25 @@ public partial interface ILocator
     /// <param name="options">Call options</param>
     Task HoverAsync(LocatorHoverOptions? options = default);
 
-    /// <summary><para>Returns the <c>element.innerHTML</c>.</para></summary>
+    /// <summary><para>Returns the <a href="https://developer.mozilla.org/en-US/docs/Web/API/Element/innerHTML"><c>element.innerHTML</c></a>.</para></summary>
     /// <param name="options">Call options</param>
     Task<string> InnerHTMLAsync(LocatorInnerHTMLOptions? options = default);
 
-    /// <summary><para>Returns the <c>element.innerText</c>.</para></summary>
+    /// <summary><para>Returns the <a href="https://developer.mozilla.org/en-US/docs/Web/API/HTMLElement/innerText"><c>element.innerText</c></a>.</para></summary>
     /// <param name="options">Call options</param>
     Task<string> InnerTextAsync(LocatorInnerTextOptions? options = default);
 
     /// <summary>
     /// <para>
-    /// Returns <c>input.value</c> for the selected <c>&lt;input&gt;</c> or <c>&lt;textarea&gt;</c>
+    /// Returns the value for the matching <c>&lt;input&gt;</c> or <c>&lt;textarea&gt;</c>
     /// or <c>&lt;select&gt;</c> element.
     /// </para>
+    /// <para>**Usage**</para>
+    /// <code>String value = await page.GetByRole(AriaRole.Textbox).InputValueAsync();</code>
+    /// <para>**Details**</para>
     /// <para>
-    /// Throws for non-input elements. However, if the element is inside the <c>&lt;label&gt;</c>
-    /// element that has an associated <a href="https://developer.mozilla.org/en-US/docs/Web/API/HTMLLabelElement/control">control</a>,
+    /// Throws elements that are not an input, textarea or a select. However, if the element
+    /// is inside the <c>&lt;label&gt;</c> element that has an associated <a href="https://developer.mozilla.org/en-US/docs/Web/API/HTMLLabelElement/control">control</a>,
     /// returns the value of the control.
     /// </para>
     /// </summary>
@@ -699,31 +827,57 @@ public partial interface ILocator
     /// Returns whether the element is checked. Throws if the element is not a checkbox
     /// or radio input.
     /// </para>
+    /// <para>**Usage**</para>
+    /// <code>Boolean checked = await page.GetByRole(AriaRole.Checkbox).IsCheckedAsync();</code>
     /// </summary>
     /// <param name="options">Call options</param>
     Task<bool> IsCheckedAsync(LocatorIsCheckedOptions? options = default);
 
-    /// <summary><para>Returns whether the element is disabled, the opposite of <a href="https://playwright.dev/dotnet/docs/actionability#enabled">enabled</a>.</para></summary>
+    /// <summary>
+    /// <para>Returns whether the element is disabled, the opposite of <a href="https://playwright.dev/dotnet/docs/actionability#enabled">enabled</a>.</para>
+    /// <para>**Usage**</para>
+    /// <code>Boolean disabled = await page.GetByRole(AriaRole.Button).IsDisabledAsync();</code>
+    /// </summary>
     /// <param name="options">Call options</param>
     Task<bool> IsDisabledAsync(LocatorIsDisabledOptions? options = default);
 
-    /// <summary><para>Returns whether the element is <a href="https://playwright.dev/dotnet/docs/actionability#editable">editable</a>.</para></summary>
+    /// <summary>
+    /// <para>Returns whether the element is <a href="https://playwright.dev/dotnet/docs/actionability#editable">editable</a>.</para>
+    /// <para>**Usage**</para>
+    /// <code>Boolean editable = await page.GetByRole(AriaRole.Textbox).IsEditableAsync();</code>
+    /// </summary>
     /// <param name="options">Call options</param>
     Task<bool> IsEditableAsync(LocatorIsEditableOptions? options = default);
 
-    /// <summary><para>Returns whether the element is <a href="https://playwright.dev/dotnet/docs/actionability#enabled">enabled</a>.</para></summary>
+    /// <summary>
+    /// <para>Returns whether the element is <a href="https://playwright.dev/dotnet/docs/actionability#enabled">enabled</a>.</para>
+    /// <para>**Usage**</para>
+    /// <code>Boolean enabled = await page.GetByRole(AriaRole.Button).IsEnabledAsync();</code>
+    /// </summary>
     /// <param name="options">Call options</param>
     Task<bool> IsEnabledAsync(LocatorIsEnabledOptions? options = default);
 
-    /// <summary><para>Returns whether the element is hidden, the opposite of <a href="https://playwright.dev/dotnet/docs/actionability#visible">visible</a>.</para></summary>
+    /// <summary>
+    /// <para>Returns whether the element is hidden, the opposite of <a href="https://playwright.dev/dotnet/docs/actionability#visible">visible</a>.</para>
+    /// <para>**Usage**</para>
+    /// <code>Boolean hidden = await page.GetByRole(AriaRole.Button).IsHiddenAsync();</code>
+    /// </summary>
     /// <param name="options">Call options</param>
     Task<bool> IsHiddenAsync(LocatorIsHiddenOptions? options = default);
 
-    /// <summary><para>Returns whether the element is <a href="https://playwright.dev/dotnet/docs/actionability#visible">visible</a>.</para></summary>
+    /// <summary>
+    /// <para>Returns whether the element is <a href="https://playwright.dev/dotnet/docs/actionability#visible">visible</a>.</para>
+    /// <para>**Usage**</para>
+    /// <code>Boolean visible = await page.GetByRole(AriaRole.Button).IsVisibleAsync();</code>
+    /// </summary>
     /// <param name="options">Call options</param>
     Task<bool> IsVisibleAsync(LocatorIsVisibleOptions? options = default);
 
-    /// <summary><para>Returns locator to the last matching element.</para></summary>
+    /// <summary>
+    /// <para>Returns locator to the last matching element.</para>
+    /// <para>**Usage**</para>
+    /// <code>var banana = await page.GetByRole(AriaRole.Listitem).Last(1);</code>
+    /// </summary>
     ILocator Last { get; }
 
     /// <summary>
@@ -742,6 +896,8 @@ public partial interface ILocator
     /// Returns locator to the n-th matching element. It's zero based, <c>nth(0)</c> selects
     /// the first element.
     /// </para>
+    /// <para>**Usage**</para>
+    /// <code>var banana = await page.GetByRole(AriaRole.Listitem).Nth(2);</code>
     /// </summary>
     /// <param name="index">
     /// </param>
@@ -751,6 +907,10 @@ public partial interface ILocator
     IPage Page { get; }
 
     /// <summary>
+    /// <para>Focuses the mathing element and presses a combintation of the keys.</para>
+    /// <para>**Usage**</para>
+    /// <code>await page.GetByRole(AriaRole.Textbox).PressAsync("Backspace");</code>
+    /// <para>**Details**</para>
     /// <para>Focuses the element, and then uses <see cref="IKeyboard.DownAsync"/> and <see cref="IKeyboard.UpAsync"/>.</para>
     /// <para>
     /// <paramref name="key"/> can specify the intended <a href="https://developer.mozilla.org/en-US/docs/Web/API/KeyboardEvent/key">keyboardEvent.key</a>
@@ -791,6 +951,17 @@ public partial interface ILocator
     Task PressAsync(string key, LocatorPressOptions? options = default);
 
     /// <summary>
+    /// <para>Take a screenshot of the element matching the locator.</para>
+    /// <para>**Usage**</para>
+    /// <code>await page.GetByRole(AriaRole.Link).ScreenshotAsync();</code>
+    /// <para>Disable animations and save screenshot to a file:</para>
+    /// <code>
+    /// await page.GetByRole(AriaRole.Link).ScreenshotAsync(new() {<br/>
+    ///   Animations = ScreenshotAnimations.Disabled,<br/>
+    ///   Path = "link.png"<br/>
+    /// });
+    /// </code>
+    /// <para>**Details**</para>
     /// <para>
     /// This method captures a screenshot of the page, clipped to the size and position
     /// of a particular element matching the locator. If the element is covered by other
@@ -1062,6 +1233,10 @@ public partial interface ILocator
     Task SelectTextAsync(LocatorSelectTextOptions? options = default);
 
     /// <summary>
+    /// <para>Set the state of a checkbox or a radio element.</para>
+    /// <para>**Usage**</para>
+    /// <code>await page.GetByRole(AriaRole.Checkbox).SetCheckedAsync(true);</code>
+    /// <para>**Details**</para>
     /// <para>This method checks or unchecks an element by performing the following steps:</para>
     /// <list type="ordinal">
     /// <item><description>
@@ -1093,6 +1268,27 @@ public partial interface ILocator
     Task SetCheckedAsync(bool checkedState, LocatorSetCheckedOptions? options = default);
 
     /// <summary>
+    /// <para>Upload file or multiple files into <c>&lt;input type=file&gt;</c>.</para>
+    /// <para>**Usage**</para>
+    /// <code>
+    /// // Select one file<br/>
+    /// await page.GetByLabel("Upload file").SetInputFilesAsync("myfile.pdf");<br/>
+    /// <br/>
+    /// // Select multiple files<br/>
+    /// await page.GetByLabel("Upload files").SetInputFilesAsync(new[] { "file1.txt", "file12.txt" });<br/>
+    /// <br/>
+    /// // Remove all the selected files<br/>
+    /// await page.GetByLabel("Upload file").SetInputFilesAsync(new[] {});<br/>
+    /// <br/>
+    /// // Upload buffer from memory<br/>
+    /// await page.GetByLabel("Upload file").SetInputFilesAsync(new FilePayload<br/>
+    /// {<br/>
+    ///     Name = "file.txt",<br/>
+    ///     MimeType = "text/plain",<br/>
+    ///     Buffer = System.Text.Encoding.UTF8.GetBytes("this is a test"),<br/>
+    /// });
+    /// </code>
+    /// <para>**Details**</para>
     /// <para>
     /// Sets the value of the file input to these file paths or files. If some of the <c>filePaths</c>
     /// are relative paths, then they are resolved relative to the current working directory.
@@ -1111,6 +1307,27 @@ public partial interface ILocator
     Task SetInputFilesAsync(string files, LocatorSetInputFilesOptions? options = default);
 
     /// <summary>
+    /// <para>Upload file or multiple files into <c>&lt;input type=file&gt;</c>.</para>
+    /// <para>**Usage**</para>
+    /// <code>
+    /// // Select one file<br/>
+    /// await page.GetByLabel("Upload file").SetInputFilesAsync("myfile.pdf");<br/>
+    /// <br/>
+    /// // Select multiple files<br/>
+    /// await page.GetByLabel("Upload files").SetInputFilesAsync(new[] { "file1.txt", "file12.txt" });<br/>
+    /// <br/>
+    /// // Remove all the selected files<br/>
+    /// await page.GetByLabel("Upload file").SetInputFilesAsync(new[] {});<br/>
+    /// <br/>
+    /// // Upload buffer from memory<br/>
+    /// await page.GetByLabel("Upload file").SetInputFilesAsync(new FilePayload<br/>
+    /// {<br/>
+    ///     Name = "file.txt",<br/>
+    ///     MimeType = "text/plain",<br/>
+    ///     Buffer = System.Text.Encoding.UTF8.GetBytes("this is a test"),<br/>
+    /// });
+    /// </code>
+    /// <para>**Details**</para>
     /// <para>
     /// Sets the value of the file input to these file paths or files. If some of the <c>filePaths</c>
     /// are relative paths, then they are resolved relative to the current working directory.
@@ -1129,6 +1346,27 @@ public partial interface ILocator
     Task SetInputFilesAsync(IEnumerable<string> files, LocatorSetInputFilesOptions? options = default);
 
     /// <summary>
+    /// <para>Upload file or multiple files into <c>&lt;input type=file&gt;</c>.</para>
+    /// <para>**Usage**</para>
+    /// <code>
+    /// // Select one file<br/>
+    /// await page.GetByLabel("Upload file").SetInputFilesAsync("myfile.pdf");<br/>
+    /// <br/>
+    /// // Select multiple files<br/>
+    /// await page.GetByLabel("Upload files").SetInputFilesAsync(new[] { "file1.txt", "file12.txt" });<br/>
+    /// <br/>
+    /// // Remove all the selected files<br/>
+    /// await page.GetByLabel("Upload file").SetInputFilesAsync(new[] {});<br/>
+    /// <br/>
+    /// // Upload buffer from memory<br/>
+    /// await page.GetByLabel("Upload file").SetInputFilesAsync(new FilePayload<br/>
+    /// {<br/>
+    ///     Name = "file.txt",<br/>
+    ///     MimeType = "text/plain",<br/>
+    ///     Buffer = System.Text.Encoding.UTF8.GetBytes("this is a test"),<br/>
+    /// });
+    /// </code>
+    /// <para>**Details**</para>
     /// <para>
     /// Sets the value of the file input to these file paths or files. If some of the <c>filePaths</c>
     /// are relative paths, then they are resolved relative to the current working directory.
@@ -1147,6 +1385,27 @@ public partial interface ILocator
     Task SetInputFilesAsync(FilePayload files, LocatorSetInputFilesOptions? options = default);
 
     /// <summary>
+    /// <para>Upload file or multiple files into <c>&lt;input type=file&gt;</c>.</para>
+    /// <para>**Usage**</para>
+    /// <code>
+    /// // Select one file<br/>
+    /// await page.GetByLabel("Upload file").SetInputFilesAsync("myfile.pdf");<br/>
+    /// <br/>
+    /// // Select multiple files<br/>
+    /// await page.GetByLabel("Upload files").SetInputFilesAsync(new[] { "file1.txt", "file12.txt" });<br/>
+    /// <br/>
+    /// // Remove all the selected files<br/>
+    /// await page.GetByLabel("Upload file").SetInputFilesAsync(new[] {});<br/>
+    /// <br/>
+    /// // Upload buffer from memory<br/>
+    /// await page.GetByLabel("Upload file").SetInputFilesAsync(new FilePayload<br/>
+    /// {<br/>
+    ///     Name = "file.txt",<br/>
+    ///     MimeType = "text/plain",<br/>
+    ///     Buffer = System.Text.Encoding.UTF8.GetBytes("this is a test"),<br/>
+    /// });
+    /// </code>
+    /// <para>**Details**</para>
     /// <para>
     /// Sets the value of the file input to these file paths or files. If some of the <c>filePaths</c>
     /// are relative paths, then they are resolved relative to the current working directory.
@@ -1165,6 +1424,8 @@ public partial interface ILocator
     Task SetInputFilesAsync(IEnumerable<FilePayload> files, LocatorSetInputFilesOptions? options = default);
 
     /// <summary>
+    /// <para>Perform a tap gesture on the element matching the locator.</para>
+    /// <para>**Details**</para>
     /// <para>This method taps the element by performing the following steps:</para>
     /// <list type="ordinal">
     /// <item><description>
@@ -1200,7 +1461,7 @@ public partial interface ILocator
     /// <param name="options">Call options</param>
     Task TapAsync(LocatorTapOptions? options = default);
 
-    /// <summary><para>Returns the <c>node.textContent</c>.</para></summary>
+    /// <summary><para>Returns the <a href="https://developer.mozilla.org/en-US/docs/Web/API/Node/textContent"><c>node.textContent</c></a>.</para></summary>
     /// <param name="options">Call options</param>
     Task<string?> TextContentAsync(LocatorTextContentOptions? options = default);
 
@@ -1227,7 +1488,11 @@ public partial interface ILocator
     Task TypeAsync(string text, LocatorTypeOptions? options = default);
 
     /// <summary>
-    /// <para>This method checks the element by performing the following steps:</para>
+    /// <para>Ensure that checkbox or radio element is unchecked.</para>
+    /// <para>**Usage**</para>
+    /// <code>await page.GetByRole(AriaRole.Checkbox).UncheckAsync();</code>
+    /// <para>**Details**</para>
+    /// <para>This method unchecks the element by performing the following steps:</para>
     /// <list type="ordinal">
     /// <item><description>
     /// Ensure that element is a checkbox or a radio input. If not, this method throws.

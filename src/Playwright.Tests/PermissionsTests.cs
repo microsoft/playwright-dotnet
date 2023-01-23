@@ -151,7 +151,11 @@ public class PermissionsTests : PageTestEx
             new[] { "prompt", "denied", "granted" },
             await Page.EvaluateAsync<string[]>("window.events"));
         await Context.ClearPermissionsAsync();
+
+        // Note: Chromium 110 stopped triggering "onchange" when clearing permissions.
         Assert.AreEqual(
+            (BrowserName == "chromium" && BrowserMajorVersion >= 110) ?
+            new[] { "prompt", "denied", "granted" } :
             new[] { "prompt", "denied", "granted", "prompt" },
             await Page.EvaluateAsync<string[]>("window.events"));
     }

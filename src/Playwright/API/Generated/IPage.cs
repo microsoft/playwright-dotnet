@@ -974,60 +974,76 @@ public partial interface IPage
     Task<string?> GetAttributeAsync(string selector, string name, PageGetAttributeOptions? options = default);
 
     /// <summary>
-    /// <para>
-    /// Allows locating elements by their alt text. For example, this method will find the
-    /// image by alt text "Castle":
-    /// </para>
+    /// <para>Allows locating elements by their alt text.</para>
+    /// <para>**Usage**</para>
+    /// <para>For example, this method will find the image by alt text "Playwright logo":</para>
+    /// <code>await page.GetByAltText("Playwright logo").ClickAsync();</code>
     /// </summary>
     /// <param name="text">Text to locate the element for.</param>
     /// <param name="options">Call options</param>
     ILocator GetByAltText(string text, PageGetByAltTextOptions? options = default);
 
     /// <summary>
-    /// <para>
-    /// Allows locating elements by their alt text. For example, this method will find the
-    /// image by alt text "Castle":
-    /// </para>
+    /// <para>Allows locating elements by their alt text.</para>
+    /// <para>**Usage**</para>
+    /// <para>For example, this method will find the image by alt text "Playwright logo":</para>
+    /// <code>await page.GetByAltText("Playwright logo").ClickAsync();</code>
     /// </summary>
     /// <param name="text">Text to locate the element for.</param>
     /// <param name="options">Call options</param>
     ILocator GetByAltText(Regex text, PageGetByAltTextOptions? options = default);
 
     /// <summary>
+    /// <para>Allows locating input elements by the text of the associated label.</para>
+    /// <para>**Usage**</para>
     /// <para>
-    /// Allows locating input elements by the text of the associated label. For example,
-    /// this method will find the input by label text "Password" in the following DOM:
+    /// For example, this method will find the input by label text "Password" in the following
+    /// DOM:
     /// </para>
+    /// <code>await page.GetByLabel("Password").FillAsync("secret");</code>
     /// </summary>
     /// <param name="text">Text to locate the element for.</param>
     /// <param name="options">Call options</param>
     ILocator GetByLabel(string text, PageGetByLabelOptions? options = default);
 
     /// <summary>
+    /// <para>Allows locating input elements by the text of the associated label.</para>
+    /// <para>**Usage**</para>
     /// <para>
-    /// Allows locating input elements by the text of the associated label. For example,
-    /// this method will find the input by label text "Password" in the following DOM:
+    /// For example, this method will find the input by label text "Password" in the following
+    /// DOM:
     /// </para>
+    /// <code>await page.GetByLabel("Password").FillAsync("secret");</code>
     /// </summary>
     /// <param name="text">Text to locate the element for.</param>
     /// <param name="options">Call options</param>
     ILocator GetByLabel(Regex text, PageGetByLabelOptions? options = default);
 
     /// <summary>
-    /// <para>
-    /// Allows locating input elements by the placeholder text. For example, this method
-    /// will find the input by placeholder "Country":
-    /// </para>
+    /// <para>Allows locating input elements by the placeholder text.</para>
+    /// <para>**Usage**</para>
+    /// <para>For example, consider the following DOM structure.</para>
+    /// <para>You can fill the input after locating it by the placeholder text:</para>
+    /// <code>
+    /// await page<br/>
+    ///     .GetByPlaceholder("name@example.com")<br/>
+    ///     .FillAsync("playwright@microsoft.com");
+    /// </code>
     /// </summary>
     /// <param name="text">Text to locate the element for.</param>
     /// <param name="options">Call options</param>
     ILocator GetByPlaceholder(string text, PageGetByPlaceholderOptions? options = default);
 
     /// <summary>
-    /// <para>
-    /// Allows locating input elements by the placeholder text. For example, this method
-    /// will find the input by placeholder "Country":
-    /// </para>
+    /// <para>Allows locating input elements by the placeholder text.</para>
+    /// <para>**Usage**</para>
+    /// <para>For example, consider the following DOM structure.</para>
+    /// <para>You can fill the input after locating it by the placeholder text:</para>
+    /// <code>
+    /// await page<br/>
+    ///     .GetByPlaceholder("name@example.com")<br/>
+    ///     .FillAsync("playwright@microsoft.com");
+    /// </code>
     /// </summary>
     /// <param name="text">Text to locate the element for.</param>
     /// <param name="options">Call options</param>
@@ -1038,11 +1054,32 @@ public partial interface IPage
     /// Allows locating elements by their <a href="https://www.w3.org/TR/wai-aria-1.2/#roles">ARIA
     /// role</a>, <a href="https://www.w3.org/TR/wai-aria-1.2/#aria-attributes">ARIA attributes</a>
     /// and <a href="https://w3c.github.io/accname/#dfn-accessible-name">accessible name</a>.
-    /// Note that role selector **does not replace** accessibility audits and conformance
-    /// tests, but rather gives early feedback about the ARIA guidelines.
+    /// </para>
+    /// <para>**Usage**</para>
+    /// <para>Consider the following DOM structure.</para>
+    /// <para>You can locate each element by it's implicit role:</para>
+    /// <code>
+    /// await Expect(page<br/>
+    ///     .GetByRole(AriaRole.Heading, new() { Name = "Sign up" }))<br/>
+    ///     .ToBeVisibleAsync();<br/>
+    /// <br/>
+    /// await page<br/>
+    ///     .GetByRole(AriaRole.Checkbox, new() { Name = "Subscribe" })<br/>
+    ///     .CheckAsync();<br/>
+    /// <br/>
+    /// await page<br/>
+    ///     .GetByRole(AriaRole.Button, new() {<br/>
+    ///         NameRegex = new Regex("submit", RegexOptions.IgnoreCase)<br/>
+    ///     })<br/>
+    ///     .ClickAsync();
+    /// </code>
+    /// <para>**Details**</para>
+    /// <para>
+    /// Role selector **does not replace** accessibility audits and conformance tests, but
+    /// rather gives early feedback about the ARIA guidelines.
     /// </para>
     /// <para>
-    /// Note that many html elements have an implicitly <a href="https://w3c.github.io/html-aam/#html-element-role-mappings">defined
+    /// Many html elements have an implicitly <a href="https://w3c.github.io/html-aam/#html-element-role-mappings">defined
     /// role</a> that is recognized by the role selector. You can find all the <a href="https://www.w3.org/TR/wai-aria-1.2/#role_definitions">supported
     /// roles here</a>. ARIA guidelines **do not recommend** duplicating implicit roles
     /// and attributes by setting <c>role</c> and/or <c>aria-*</c> attributes to default
@@ -1054,27 +1091,43 @@ public partial interface IPage
     ILocator GetByRole(AriaRole role, PageGetByRoleOptions? options = default);
 
     /// <summary>
+    /// <para>Locate element by the test id.</para>
+    /// <para>**Usage**</para>
+    /// <para>Consider the following DOM structure.</para>
+    /// <para>You can locate the element by it's test id:</para>
+    /// <code>await page.GetByTestId("directions").ClickAsync();</code>
+    /// <para>**Details**</para>
     /// <para>
-    /// Locate element by the test id. By default, the <c>data-testid</c> attribute is used
-    /// as a test id. Use <see cref="ISelectors.SetTestIdAttribute"/> to configure a different
-    /// test id attribute if necessary.
+    /// By default, the <c>data-testid</c> attribute is used as a test id. Use <see cref="ISelectors.SetTestIdAttribute"/>
+    /// to configure a different test id attribute if necessary.
     /// </para>
     /// </summary>
     /// <param name="testId">Id to locate the element by.</param>
     ILocator GetByTestId(string testId);
 
     /// <summary>
+    /// <para>Locate element by the test id.</para>
+    /// <para>**Usage**</para>
+    /// <para>Consider the following DOM structure.</para>
+    /// <para>You can locate the element by it's test id:</para>
+    /// <code>await page.GetByTestId("directions").ClickAsync();</code>
+    /// <para>**Details**</para>
     /// <para>
-    /// Locate element by the test id. By default, the <c>data-testid</c> attribute is used
-    /// as a test id. Use <see cref="ISelectors.SetTestIdAttribute"/> to configure a different
-    /// test id attribute if necessary.
+    /// By default, the <c>data-testid</c> attribute is used as a test id. Use <see cref="ISelectors.SetTestIdAttribute"/>
+    /// to configure a different test id attribute if necessary.
     /// </para>
     /// </summary>
     /// <param name="testId">Id to locate the element by.</param>
     ILocator GetByTestId(Regex testId);
 
     /// <summary>
-    /// <para>Allows locating elements that contain given text. Consider the following DOM structure:</para>
+    /// <para>Allows locating elements that contain given text.</para>
+    /// <para>
+    /// See also <see cref="ILocator.Filter"/> that allows to match by another criteria,
+    /// like an accessible role, and then filter by the text content.
+    /// </para>
+    /// <para>**Usage**</para>
+    /// <para>Consider the following DOM structure:</para>
     /// <para>You can locate by text substring, exact string, or a regular expression:</para>
     /// <code>
     /// // Matches &lt;span&gt;<br/>
@@ -1092,12 +1145,7 @@ public partial interface IPage
     /// // Matches second &lt;div&gt;<br/>
     /// page.GetByText(new Regex("^hello$", RegexOptions.IgnoreCase))
     /// </code>
-    /// <para>
-    /// See also <see cref="ILocator.Filter"/> that allows to match by another criteria,
-    /// like an accessible role, and then filter by the text content.
-    /// </para>
-    /// </summary>
-    /// <remarks>
+    /// <para>**Details**</para>
     /// <para>
     /// Matching by text always normalizes whitespace, even with exact match. For example,
     /// it turns multiple spaces into one, turns line breaks into spaces and ignores leading
@@ -1108,13 +1156,19 @@ public partial interface IPage
     /// <c>value</c> instead of the text content. For example, locating by text <c>"Log
     /// in"</c> matches <c>&lt;input type=button value="Log in"&gt;</c>.
     /// </para>
-    /// </remarks>
+    /// </summary>
     /// <param name="text">Text to locate the element for.</param>
     /// <param name="options">Call options</param>
     ILocator GetByText(string text, PageGetByTextOptions? options = default);
 
     /// <summary>
-    /// <para>Allows locating elements that contain given text. Consider the following DOM structure:</para>
+    /// <para>Allows locating elements that contain given text.</para>
+    /// <para>
+    /// See also <see cref="ILocator.Filter"/> that allows to match by another criteria,
+    /// like an accessible role, and then filter by the text content.
+    /// </para>
+    /// <para>**Usage**</para>
+    /// <para>Consider the following DOM structure:</para>
     /// <para>You can locate by text substring, exact string, or a regular expression:</para>
     /// <code>
     /// // Matches &lt;span&gt;<br/>
@@ -1132,12 +1186,7 @@ public partial interface IPage
     /// // Matches second &lt;div&gt;<br/>
     /// page.GetByText(new Regex("^hello$", RegexOptions.IgnoreCase))
     /// </code>
-    /// <para>
-    /// See also <see cref="ILocator.Filter"/> that allows to match by another criteria,
-    /// like an accessible role, and then filter by the text content.
-    /// </para>
-    /// </summary>
-    /// <remarks>
+    /// <para>**Details**</para>
     /// <para>
     /// Matching by text always normalizes whitespace, even with exact match. For example,
     /// it turns multiple spaces into one, turns line breaks into spaces and ignores leading
@@ -1148,26 +1197,28 @@ public partial interface IPage
     /// <c>value</c> instead of the text content. For example, locating by text <c>"Log
     /// in"</c> matches <c>&lt;input type=button value="Log in"&gt;</c>.
     /// </para>
-    /// </remarks>
+    /// </summary>
     /// <param name="text">Text to locate the element for.</param>
     /// <param name="options">Call options</param>
     ILocator GetByText(Regex text, PageGetByTextOptions? options = default);
 
     /// <summary>
-    /// <para>
-    /// Allows locating elements by their title. For example, this method will find the
-    /// button by its title "Place the order":
-    /// </para>
+    /// <para>Allows locating elements by their title attribute.</para>
+    /// <para>**Usage**</para>
+    /// <para>Consider the following DOM structure.</para>
+    /// <para>You can check the issues count after locating it by the title text:</para>
+    /// <code>await Expect(page.GetByTitle("Issues count")).toHaveText("25 issues");</code>
     /// </summary>
     /// <param name="text">Text to locate the element for.</param>
     /// <param name="options">Call options</param>
     ILocator GetByTitle(string text, PageGetByTitleOptions? options = default);
 
     /// <summary>
-    /// <para>
-    /// Allows locating elements by their title. For example, this method will find the
-    /// button by its title "Place the order":
-    /// </para>
+    /// <para>Allows locating elements by their title attribute.</para>
+    /// <para>**Usage**</para>
+    /// <para>Consider the following DOM structure.</para>
+    /// <para>You can check the issues count after locating it by the title text:</para>
+    /// <code>await Expect(page.GetByTitle("Issues count")).toHaveText("25 issues");</code>
     /// </summary>
     /// <param name="text">Text to locate the element for.</param>
     /// <param name="options">Call options</param>
@@ -2661,6 +2712,10 @@ public partial interface IPage
 
     /// <summary>
     /// <para>
+    /// **DEPRECATED** This method is inherently racy, please use <see cref="IPage.WaitForURLAsync"/>
+    /// instead.
+    /// </para>
+    /// <para>
     /// Waits for the main frame navigation and returns the main resource response. In case
     /// of multiple redirects, the navigation will resolve with the response of the last
     /// redirect. In case of navigation to a different anchor or navigation due to History
@@ -2690,9 +2745,14 @@ public partial interface IPage
     /// </para>
     /// </remarks>
     /// <param name="options">Call options</param>
+    [System.Obsolete]
     Task<IResponse?> WaitForNavigationAsync(PageWaitForNavigationOptions? options = default);
 
     /// <summary>
+    /// <para>
+    /// **DEPRECATED** This method is inherently racy, please use <see cref="IPage.WaitForURLAsync"/>
+    /// instead.
+    /// </para>
     /// <para>
     /// Waits for the main frame navigation and returns the main resource response. In case
     /// of multiple redirects, the navigation will resolve with the response of the last
@@ -2724,6 +2784,7 @@ public partial interface IPage
     /// </remarks>
     /// <param name="action">Action that triggers the event.</param>
     /// <param name="options">Call options</param>
+    [System.Obsolete]
     Task<IResponse?> RunAndWaitForNavigationAsync(Func<Task> action, PageRunAndWaitForNavigationOptions? options = default);
 
     /// <summary>
