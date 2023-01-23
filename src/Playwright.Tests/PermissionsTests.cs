@@ -154,7 +154,7 @@ public class PermissionsTests : PageTestEx
 
         // Note: Chromium 110 stopped triggering "onchange" when clearing permissions.
         Assert.AreEqual(
-            (BrowserName == "chromium" && BrowserMajorVersion >= 110 ) ? 
+            (BrowserName == "chromium" && BrowserMajorVersion >= 110) ?
             new[] { "prompt", "denied", "granted" } :
             new[] { "prompt", "denied", "granted", "prompt" },
             await Page.EvaluateAsync<string[]>("window.events"));
