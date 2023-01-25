@@ -50,7 +50,7 @@ public class PageFillTests : PageTestEx
         {
             await Page.EvalOnSelectorAsync("input", "(input, type) => input.setAttribute('type', type)", type);
             var exception = await PlaywrightAssert.ThrowsAsync<PlaywrightException>(() => Page.FillAsync("input", string.Empty));
-            StringAssert.Contains($"input of type \"{type}\" cannot be filled", exception.Message);
+            StringAssert.Contains($"Input of type \"{type}\" cannot be filled", exception.Message);
         }
     }
 
