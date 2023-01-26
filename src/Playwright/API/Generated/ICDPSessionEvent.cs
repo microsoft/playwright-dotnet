@@ -41,9 +41,9 @@ namespace Microsoft.Playwright;
 /// </summary>
 public partial interface ICDPSessionEvent
 {
-    public string EventName { get; }
-
     event EventHandler<JsonElement?> OnEvent;
+
+    public string EventName { get; }
 }
 
 #nullable disable

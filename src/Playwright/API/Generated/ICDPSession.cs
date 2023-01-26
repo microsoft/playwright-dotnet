@@ -47,9 +47,9 @@ namespace Microsoft.Playwright;
 /// <code>
 /// var client = await Page.Context.NewCDPSessionAsync(Page);<br/>
 /// await client.SendAsync("Runtime.enable");<br/>
-/// client.Event("Animation.animationCreated").OnEvent += (_, _) =&gt; Console.WriteLine("Animation created!"));<br/>
+/// client.Event("Animation.animationCreated").OnEvent += (_, _) =&gt; Console.WriteLine("Animation created!");<br/>
 /// var response = await client.SendAsync("Animation.getPlaybackRate");<br/>
-/// var playbackRate = response.Value.Deserialize&lt;JsonNode&gt;()["result"]["playbackRate"].GetValue&lt;decimal&gt;();<br/>
+/// var playbackRate = response.Value.GetProperty("playbackRate").GetDouble();<br/>
 /// Console.WriteLine("playback rate is " + playbackRate);<br/>
 /// await client.SendAsync("Animation.setPlaybackRate", new() { { "playbackRate", playbackRate / 2 } });
 /// </code>
@@ -68,8 +68,8 @@ public partial interface ICDPSession
     /// <param name="args">Optional method parameters.</param>
     Task<JsonElement?> SendAsync(string method, Dictionary<string, object>? args = default);
 
-    /// <param name="eventName">
-    /// </param>
+    /// <summary><para>Returns an event emitter for the given CDP event name.</para></summary>
+    /// <param name="eventName">CDP event name.</param>
     ICDPSessionEvent Event(string eventName);
 }
 

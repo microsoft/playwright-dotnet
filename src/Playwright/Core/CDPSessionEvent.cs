@@ -33,7 +33,7 @@ internal class CDPSessionEvent : ICDPSessionEvent
 {
     public CDPSessionEvent(string eventName)
     {
-        this.EventName = eventName;
+        EventName = eventName;
     }
 
     public event EventHandler<JsonElement?>? OnEvent;
@@ -42,11 +42,6 @@ internal class CDPSessionEvent : ICDPSessionEvent
 
     internal void RaiseEvent(JsonElement? eventParams)
     {
-        var onEvent = OnEvent;
-        if (onEvent != null)
-        {
-            onEvent(this, eventParams);
-        }
+        OnEvent?.Invoke(this, eventParams);
     }
 }
-#nullable disable
