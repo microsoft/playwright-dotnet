@@ -50,12 +50,12 @@ internal class CDPSession : ChannelOwnerBase, ICDPSession, IChannelOwner<CDPSess
 
     public async Task DetachAsync()
     {
-        await _channel.DetachAsync();
+        await _channel.DetachAsync().ConfigureAwait(false);
     }
 
     public async Task<JsonElement?> SendAsync(string method, Dictionary<string, object>? args = null)
     {
-        return await _channel.SendAsync(method, args);
+        return await _channel.SendAsync(method, args).ConfigureAwait(false);
     }
 
     private void OnCDPEvent(object sender, CDPChannelEventArgs e)
@@ -82,6 +82,6 @@ internal class CDPSession : ChannelOwnerBase, ICDPSession, IChannelOwner<CDPSess
 
     public async ValueTask DisposeAsync()
     {
-        await DetachAsync();
+        await DetachAsync().ConfigureAwait(false);
     }
 }
