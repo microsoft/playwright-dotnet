@@ -106,6 +106,24 @@ internal class BrowserContextChannel : Channel<BrowserContext>
         }
     }
 
+    internal Task<CDPChannel> NewCDPSessionAsync(Page page)
+    => Connection.SendMessageToServerAsync<CDPChannel>(
+        Guid,
+        "newCDPSession",
+        new Dictionary<string, object>
+        {
+            ["page"] = new { guid = page.Guid },
+        });
+
+    internal Task<CDPChannel> NewCDPSessionAsync(Frame frame)
+    => Connection.SendMessageToServerAsync<CDPChannel>(
+        Guid,
+        "newCDPSession",
+        new Dictionary<string, object>
+        {
+            ["frame"] = new { guid = frame.Guid },
+        });
+
     internal Task<PageChannel> NewPageAsync()
         => Connection.SendMessageToServerAsync<PageChannel>(
             Guid,

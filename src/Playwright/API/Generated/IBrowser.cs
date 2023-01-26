@@ -105,6 +105,10 @@ public partial interface IBrowser
     /// <summary><para>Indicates that the browser is connected.</para></summary>
     bool IsConnected { get; }
 
+    /// <summary><para>Returns the newly created browser session.</para></summary>
+    /// <remarks><para>CDP Sessions are only supported on Chromium-based browsers.</para></remarks>
+    Task<ICDPSession> NewBrowserCDPSessionAsync();
+
     /// <summary>
     /// <para>Creates a new browser context. It won't share cookies/cache with other browser contexts.</para>
     /// <para>**Usage**</para>
