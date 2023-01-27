@@ -48,15 +48,10 @@ internal class CDPSession : ChannelOwnerBase, ICDPSession, IChannelOwner<CDPSess
 
     IChannel<CDPSession> IChannelOwner<CDPSession>.Channel => _channel;
 
-    public async Task DetachAsync()
-    {
-        await _channel.DetachAsync();
-    }
+    public Task DetachAsync() => _channel.DetachAsync();
 
-    public async Task<JsonElement?> SendAsync(string method, Dictionary<string, object>? args = null)
-    {
-        return await _channel.SendAsync(method, args);
-    }
+    public Task<JsonElement?> SendAsync(string method, Dictionary<string, object>? args = null)
+        => _channel.SendAsync(method, args);
 
     private void OnCDPEvent(object sender, CDPChannelEventArgs e)
     {
@@ -82,6 +77,6 @@ internal class CDPSession : ChannelOwnerBase, ICDPSession, IChannelOwner<CDPSess
 
     public async ValueTask DisposeAsync()
     {
-        await DetachAsync();
+        await DetachAsync().ConfigureAwait(false);
     }
 }
