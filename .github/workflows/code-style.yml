@@ -21,3 +21,5 @@ jobs:
       run: dotnet tool install --global dotnet-format
     - name: Check formatting
       run: dotnet-format -f ./src/ --check -v:diag
+    - name: Build projects (runs .NET analyzers)
+      run: dotnet build ./src
