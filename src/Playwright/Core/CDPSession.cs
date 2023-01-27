@@ -48,8 +48,7 @@ internal class CDPSession : ChannelOwnerBase, ICDPSession, IChannelOwner<CDPSess
 
     IChannel<CDPSession> IChannelOwner<CDPSession>.Channel => _channel;
 
-    public Task DetachAsync()
-        => _channel.DetachAsync();
+    public Task DetachAsync() => _channel.DetachAsync();
 
     public Task<JsonElement?> SendAsync(string method, Dictionary<string, object>? args = null)
         => _channel.SendAsync(method, args);
