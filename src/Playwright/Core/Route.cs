@@ -102,17 +102,12 @@ internal class Route : ChannelOwnerBase, IChannelOwner<Route>, IRoute
 
     private async Task RaceWithTargetCloseAsync(Task task)
     {
-        var serviceWorkerOrPageClosedTask = ((Worker)((Request)Request).ServiceWorker)?.ClosedTcs.Task ?? ((Page)Request.Frame.Page)?.ClosedOrCrashedTcs.Task;
-        if (serviceWorkerOrPageClosedTask == null)
-        {
-            task.IgnoreException();
-            return;
-        }
+        var targetClosedTask = ((Request)Request).TargetClosedAsync();
 
         // When page closes or crashes, we catch any potential rejects from this Route.
         // Note that page could be missing when routing popup's initial request that
         // does not have a Page initialized just yet.
-        if (task != await Task.WhenAny(task, serviceWorkerOrPageClosedTask).ConfigureAwait(false))
+        if (task != await Task.WhenAny(task, targetClosedTask).ConfigureAwait(false))
         {
             task.IgnoreException();
         }

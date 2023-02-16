@@ -173,6 +173,63 @@ public class PageNetworkResponseTests : PageTestEx
         Assert.AreEqual("hello world!", await responseText);
     }
 
+    [PlaywrightTest("page-network-response.spec.ts", "should reject response.finished if page closes")]
+    public async Task ShouldRejectResponseFinishedIfPageCloses()
+    {
+        var neverCompletes = new TaskCompletionSource<bool>();
+
+        await Page.GotoAsync(Server.EmptyPage);
+        Server.SetRoute("/get", context =>
+        {
+            context.Response.Headers["Content-Type"] = "text/plain; charset=utf-8";
+            context.Response.WriteAsync("hello ");
+            return neverCompletes.Task;
+        });
+
+        // send request and wait for server response
+        var (pageResponse, _) = await TaskUtils.WhenAll(
+            Page.WaitForResponseAsync("**/*"),
+            Page.EvaluateAsync("fetch('./get', { method: 'GET'})")
+        );
+
+        var exception = await PlaywrightAssert.ThrowsAsync<PlaywrightException>(async () =>
+        {
+            var finishedTask = pageResponse.FinishedAsync();
+            await Page.CloseAsync();
+            await finishedTask;
+        });
+        StringAssert.Contains("closed", exception.Message);
+    }
+
+
+    [PlaywrightTest("page-network-response.spec.ts", "should reject response.finished if context closes")]
+    public async Task ShouldRejectResponseFinishedIfContextCloses()
+    {
+        var neverCompletes = new TaskCompletionSource<bool>();
+
+        await Page.GotoAsync(Server.EmptyPage);
+        Server.SetRoute("/get", context =>
+        {
+            context.Response.Headers["Content-Type"] = "text/plain; charset=utf-8";
+            context.Response.WriteAsync("hello ");
+            return neverCompletes.Task;
+        });
+
+        // send request and wait for server response
+        var (pageResponse, _) = await TaskUtils.WhenAll(
+            Page.WaitForResponseAsync("**/*"),
+            Page.EvaluateAsync("fetch('./get', { method: 'GET'})")
+        );
+
+        var exception = await PlaywrightAssert.ThrowsAsync<PlaywrightException>(async () =>
+        {
+            var finishedTask = pageResponse.FinishedAsync();
+            await Page.Context.CloseAsync();
+            await finishedTask;
+        });
+        StringAssert.Contains("closed", exception.Message);
+    }
+
     [PlaywrightTest("har.spec.ts", "should return security details directly from response")]
     [Skip(SkipAttribute.Targets.Webkit | SkipAttribute.Targets.Linux)]
     public async Task ShouldReturnSecurityDetails()
