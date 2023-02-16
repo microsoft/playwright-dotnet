@@ -491,7 +491,7 @@ internal class Locator : ILocator
         // However, our attribute selectors do not conform to CSS parsing spec,
         // so we escape them differently.
         var exactFlag = (exact == true) ? string.Empty : "i";
-        return $"\"{value.Replace("\"", "\\\"")}\"{exactFlag}";
+        return $"\"{value.Replace("\\", "\\\\").Replace("\"", "\\\"")}\"{exactFlag}";
     }
 
     private static string EscapeForTextSelector(Regex text, bool? exact)
