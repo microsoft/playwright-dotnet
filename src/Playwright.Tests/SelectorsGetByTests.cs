@@ -180,6 +180,11 @@ public class SelectorsGetByTests : PageTestEx
         await Expect(Page.GetByPlaceholder("hello my\nworld")).ToHaveAttributeAsync("id", "control");
         await Expect(Page.GetByAltText("hello my\nworld")).ToHaveAttributeAsync("id", "control");
         await Expect(Page.GetByTitle("hello my\nworld")).ToHaveAttributeAsync("id", "control");
+
+        await Page.SetContentAsync("<div id=target title='my title'>Text here</div>");
+        await Expect(Page.GetByTitle("my title", new() { Exact = true })).ToHaveCountAsync(1, new() { Timeout = 500 });
+        await Expect(Page.GetByTitle("my t\\itle", new() { Exact = true })).ToHaveCountAsync(0, new() { Timeout = 500 });
+        await Expect(Page.GetByTitle("my t\\\\itle", new() { Exact = true })).ToHaveCountAsync(0, new() { Timeout = 500 });
     }
 
     [PlaywrightTest("selector-get-by.spec.ts", "getByRole escaping")]
@@ -216,5 +221,15 @@ public class SelectorsGetByTests : PageTestEx
         Assert.AreEqual(
             new[] { "<a href=\"https://playwright.dev\">he llo 56</a>" },
             await Page.GetByRole(AriaRole.Link, new() { NameString = "   he \n llo 56 ", Exact = true }).EvaluateAllAsync<string[]>("els => els.map(e => e.outerHTML)"));
+
+        Assert.AreEqual(
+            new[] { "<button>Click me</button>" },
+            await Page.GetByRole(AriaRole.Button, new() { NameString = "Click me", Exact = true }).EvaluateAllAsync<string[]>("els => els.map(e => e.outerHTML)"));
+        Assert.AreEqual(
+            new string[0],
+            await Page.GetByRole(AriaRole.Button, new() { NameString = "Click \\me", Exact = true }).EvaluateAllAsync<string[]>("els => els.map(e => e.outerHTML)"));
+        Assert.AreEqual(
+            new string[0],
+            await Page.GetByRole(AriaRole.Button, new() { NameString = "Click \\\\me", Exact = true }).EvaluateAllAsync<string[]>("els => els.map(e => e.outerHTML)"));
     }
 }
