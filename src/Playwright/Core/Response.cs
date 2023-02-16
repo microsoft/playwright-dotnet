@@ -76,7 +76,15 @@ internal class Response : ChannelOwnerBase, IChannelOwner<Response>, IResponse
 
     public Task<byte[]> BodyAsync() => _channel.GetBodyAsync();
 
-    public Task<string> FinishedAsync() => _finishedTask.Task;
+    public async Task<string> FinishedAsync()
+    {
+        var targetClosedTask = _initializer.Request.TargetClosedAsync();
+        if (targetClosedTask == await Task.WhenAny(_finishedTask.Task, targetClosedTask).ConfigureAwait(false))
+        {
+            throw new PlaywrightException("Target page, context or browser has been closed");
+        }
+        return await _finishedTask.Task.ConfigureAwait(false);
+    }
 
     public async Task<IReadOnlyList<Header>> HeadersArrayAsync()
         => (await GetRawHeadersAsync().ConfigureAwait(false)).HeadersArray;

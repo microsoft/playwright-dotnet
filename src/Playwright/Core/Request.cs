@@ -211,6 +211,12 @@ internal class Request : ChannelOwnerBase, IChannelOwner<Request>, IRequest
 
     internal RouteFallbackOptions FallbackOverridesForContinue() => _fallbackOverrides;
 
+    internal Task<bool> TargetClosedAsync()
+    {
+        var result = ((Worker)ServiceWorker)?.ClosedTcs.Task ?? ((Page)Frame.Page)?.ClosedOrCrashedTcs.Task;
+        return result ?? new TaskCompletionSource<bool>().Task;
+    }
+
     internal void SetResponseEndTiming(float responseEndTiming)
     {
         Timing.ResponseEnd = responseEndTiming;
