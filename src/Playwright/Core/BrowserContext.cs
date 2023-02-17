@@ -405,7 +405,7 @@ internal class BrowserContext : ChannelOwnerBase, IChannelOwner<BrowserContext>,
             var handled = await routeHandler.HandleAsync(route).ConfigureAwait(false);
             if (_routes.Count == 0)
             {
-                await DisableInterceptionAsync().ConfigureAwait(false);
+                await UpdateInterceptionAsync().ConfigureAwait(false);
             }
             if (handled)
             {
@@ -414,11 +414,6 @@ internal class BrowserContext : ChannelOwnerBase, IChannelOwner<BrowserContext>,
         }
 
         await route.InnerContinueAsync(true).ConfigureAwait(false);
-    }
-
-    internal async Task DisableInterceptionAsync()
-    {
-        await Channel.SetNetworkInterceptionEnabledAsync(false).ConfigureAwait(false);
     }
 
     internal bool UrlMatches(string url, string glob)
@@ -455,13 +450,7 @@ internal class BrowserContext : ChannelOwnerBase, IChannelOwner<BrowserContext>,
     private Task RouteAsync(RouteHandler setting)
     {
         _routes.Insert(0, setting);
-
-        if (_routes.Count == 1)
-        {
-            return Channel.SetNetworkInterceptionEnabledAsync(true);
-        }
-
-        return Task.CompletedTask;
+        return UpdateInterceptionAsync();
     }
 
     private Task UnrouteAsync(Regex urlRegex, Func<string, bool> urlFunc, Delegate handler = null)
@@ -480,13 +469,13 @@ internal class BrowserContext : ChannelOwnerBase, IChannelOwner<BrowserContext>,
             (setting.Function != null && r.Function != setting.Function) ||
             (setting.Handler != null && r.Handler != setting.Handler)));
         _routes = newRoutes;
+        return UpdateInterceptionAsync();
+    }
 
-        if (_routes.Count == 0)
-        {
-            return Channel.SetNetworkInterceptionEnabledAsync(false);
-        }
-
-        return Task.CompletedTask;
+    private Task UpdateInterceptionAsync()
+    {
+        var patterns = RouteHandler.PrepareInterceptionPatterns(_routes);
+        return Channel.SetNetworkInterceptionPatternsAsync(patterns);
     }
 
     internal void OnClose()

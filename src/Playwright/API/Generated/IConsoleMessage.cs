@@ -35,17 +35,17 @@ namespace Microsoft.Playwright;
 /// event in the Playwright context.
 /// </para>
 /// <code>
-/// // Listen for all System.out.printlns<br/>
+/// // Listen for all console messages and print them to the standard output.<br/>
 /// page.Console += (_, msg) =&gt; Console.WriteLine(msg.Text);<br/>
 /// <br/>
-/// // Listen for all console events and handle errors<br/>
+/// // Listen for all console messages and print errors to the standard output.<br/>
 /// page.Console += (_, msg) =&gt;<br/>
 /// {<br/>
 ///     if ("error".Equals(msg.Type))<br/>
 ///         Console.WriteLine("Error text: " + msg.Text);<br/>
 /// };<br/>
 /// <br/>
-/// // Get the next System.out.println<br/>
+/// // Get the next console message<br/>
 /// var waitForMessageTask = page.WaitForConsoleMessageAsync();<br/>
 /// await page.EvaluateAsync("console.log('hello', 42, { foo: 'bar' });");<br/>
 /// var message = await waitForMessageTask;<br/>

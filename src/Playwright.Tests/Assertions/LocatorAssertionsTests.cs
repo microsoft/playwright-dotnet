@@ -506,4 +506,34 @@ public class LocatorAssertionsTests : PageTestEx
             StringAssert.Contains("Not a select element with a multiple attribute", exception.Message);
         }
     }
+
+    [PlaywrightTest("page/expect-misc.spec.ts", "toBeInViewport > should work")]
+    public async Task ToBeInViewportShouldWork()
+    {
+        await Page.SetContentAsync(@"
+            <div id=big style='height: 10000px;'></div>
+            <div id=small>foo</div>");
+        await Expect(Page.Locator("#big")).ToBeInViewportAsync();
+        await Expect(Page.Locator("#small")).Not.ToBeInViewportAsync();
+        await Page.Locator("#small").ScrollIntoViewIfNeededAsync();
+        await Expect(Page.Locator("#small")).ToBeInViewportAsync();
+    }
+
+    [PlaywrightTest("page/expect-misc.spec.ts", "toBeInViewport > should respect ratio option")]
+    public async Task ToBeInViewportShouldRespectRatioOption()
+    {
+        await Page.SetContentAsync(@"
+            <style>body, div, html { padding: 0; margin: 0; }</style>
+            <div id=big style='height: 400vh;'></div>");
+        await Expect(Page.Locator("div")).ToBeInViewportAsync();
+        await Expect(Page.Locator("div")).ToBeInViewportAsync(new() { Ratio = 0.1f });
+        await Expect(Page.Locator("div")).ToBeInViewportAsync(new() { Ratio = 0.2f });
+        await Expect(Page.Locator("div")).ToBeInViewportAsync(new() { Ratio = 0.24f });
+        // In this test, element's ratio is 0.25.
+        await Expect(Page.Locator("div")).ToBeInViewportAsync(new() { Ratio = 0.25f });
+        await Expect(Page.Locator("div")).Not.ToBeInViewportAsync(new() { Ratio = 0.26f });
+        await Expect(Page.Locator("div")).Not.ToBeInViewportAsync(new() { Ratio = 0.3f });
+        await Expect(Page.Locator("div")).Not.ToBeInViewportAsync(new() { Ratio = 0.7f });
+        await Expect(Page.Locator("div")).Not.ToBeInViewportAsync(new() { Ratio = 0.8f });
+    }
 }

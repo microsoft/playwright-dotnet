@@ -725,7 +725,7 @@ internal class FrameChannel : Channel<Frame>
         return Connection.SendMessageToServerAsync(Guid, "dragAndDrop", args);
     }
 
-    internal async Task<FrameExpectResult> ExpectAsync(string selector, string expression, object expressionArg, ExpectedTextValue[] expectedText, int? expectedNumber, object expectedValue, bool? useInnerText, bool? isNot, float? timeout)
+    internal async Task<FrameExpectResult> ExpectAsync(string selector, string expression, object expressionArg, ExpectedTextValue[] expectedText, float? expectedNumber, object expectedValue, bool? useInnerText, bool? isNot, float? timeout)
     {
         var args = new Dictionary<string, object>
         {

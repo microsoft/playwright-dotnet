@@ -204,14 +204,11 @@ internal class PageChannel : Channel<Page>
         return Connection.SendMessageToServerAsync<ResponseChannel>(Guid, "reload", args);
     }
 
-    internal Task SetNetworkInterceptionEnabledAsync(bool enabled)
-        => Connection.SendMessageToServerAsync<PageChannel>(
+    internal Task SetNetworkInterceptionPatternsAsync(Dictionary<string, object> args)
+        => Connection.SendMessageToServerAsync(
             Guid,
-            "setNetworkInterceptionEnabled",
-            new Dictionary<string, object>
-            {
-                ["enabled"] = enabled,
-            });
+            "setNetworkInterceptionPatterns",
+            args);
 
     internal async Task<JsonElement?> AccessibilitySnapshotAsync(bool? interestingOnly, IChannel<ElementHandle> root)
     {

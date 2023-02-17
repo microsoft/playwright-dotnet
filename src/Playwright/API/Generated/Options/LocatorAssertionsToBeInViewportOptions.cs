@@ -22,38 +22,39 @@
  * SOFTWARE.
  */
 
-using System.Threading.Tasks;
+using System.Text.Json.Serialization;
 
 #nullable enable
 
 namespace Microsoft.Playwright;
 
-/// <summary>
-/// <para>
-/// The Touchscreen class operates in main-frame CSS pixels relative to the top-left
-/// corner of the viewport. Methods on the touchscreen can only be used in browser contexts
-/// that have been initialized with <c>hasTouch</c> set to true.
-/// </para>
-/// </summary>
-public partial interface ITouchscreen
+public class LocatorAssertionsToBeInViewportOptions
 {
+    public LocatorAssertionsToBeInViewportOptions() { }
+
+    public LocatorAssertionsToBeInViewportOptions(LocatorAssertionsToBeInViewportOptions clone)
+    {
+        if (clone == null)
+        {
+            return;
+        }
+
+        Ratio = clone.Ratio;
+        Timeout = clone.Timeout;
+    }
+
     /// <summary>
     /// <para>
-    /// Dispatches a <c>touchstart</c> and <c>touchend</c> event with a single touch at
-    /// the position (<paramref name="x"/>,<paramref name="y"/>).
+    /// The minimal ratio of the element to intersect viewport. If equals to <c>0</c>, then
+    /// element should intersect viewport at any positive ratio. Defaults to <c>0</c>.
     /// </para>
     /// </summary>
-    /// <remarks>
-    /// <para>
-    /// <see cref="IPage.TapAsync"/> the method will throw if <paramref name="hasTouch"/>
-    /// option of the browser context is false.
-    /// </para>
-    /// </remarks>
-    /// <param name="x">
-    /// </param>
-    /// <param name="y">
-    /// </param>
-    Task TapAsync(float x, float y);
+    [JsonPropertyName("ratio")]
+    public float? Ratio { get; set; }
+
+    /// <summary><para>Time to retry the assertion for.</para></summary>
+    [JsonPropertyName("timeout")]
+    public float? Timeout { get; set; }
 }
 
 #nullable disable

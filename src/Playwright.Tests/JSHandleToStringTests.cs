@@ -75,6 +75,5 @@ public class JSHandleToStringTests : PageTestEx
         Assert.AreEqual("WeakMap", (await Page.EvaluateHandleAsync("new WeakMap()")).ToString());
         Assert.AreEqual("WeakSet", (await Page.EvaluateHandleAsync("new WeakSet()")).ToString());
         StringAssert.Contains("Error", (await Page.EvaluateHandleAsync("new Error()")).ToString());
-        Assert.AreEqual("Proxy", (await Page.EvaluateHandleAsync("new Proxy({}, {})")).ToString());
     }
 }

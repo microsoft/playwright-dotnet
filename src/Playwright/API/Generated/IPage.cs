@@ -2416,8 +2416,8 @@ public partial interface IPage
     /// </summary>
     /// <remarks>
     /// <para>
-    /// <see cref="IPage.TapAsync"/> requires that the <paramref name="hasTouch"/> option
-    /// of the browser context be set to true.
+    /// <see cref="IPage.TapAsync"/> the method will throw if <paramref name="hasTouch"/>
+    /// option of the browser context is false.
     /// </para>
     /// </remarks>
     /// <param name="selector">

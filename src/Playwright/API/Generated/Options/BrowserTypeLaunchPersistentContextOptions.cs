@@ -472,9 +472,16 @@ public class BrowserTypeLaunchPersistentContextOptions
     /// <summary>
     /// <para>
     /// Emulates consistent viewport for each page. Defaults to an 1280x720 viewport. Use
-    /// <c>ViewportSize.NoViewport</c> to disable the default viewport.
+    /// <c>ViewportSize.NoViewport</c> to disable the consistent viewport emulation.
     /// </para>
     /// </summary>
+    /// <remarks>
+    /// <para>
+    /// The <c>ViewportSize.NoViewport</c> value opts out from the default presets, makes
+    /// viewport depend on the host window size defined by the operating system. It makes
+    /// the execution of the tests non-deterministic.
+    /// </para>
+    /// </remarks>
     [JsonPropertyName("viewport")]
     public ViewportSize? ViewportSize { get; set; }
 }

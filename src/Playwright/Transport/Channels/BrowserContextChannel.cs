@@ -172,14 +172,11 @@ internal class BrowserContextChannel : Channel<BrowserContext>
                 ["source"] = script,
             });
 
-    internal Task SetNetworkInterceptionEnabledAsync(bool enabled)
-        => Connection.SendMessageToServerAsync<PageChannel>(
+    internal Task SetNetworkInterceptionPatternsAsync(Dictionary<string, object> args)
+        => Connection.SendMessageToServerAsync(
             Guid,
-            "setNetworkInterceptionEnabled",
-            new Dictionary<string, object>
-            {
-                ["enabled"] = enabled,
-            });
+            "setNetworkInterceptionPatterns",
+            args);
 
     internal Task SetOfflineAsync(bool offline)
         => Connection.SendMessageToServerAsync<PageChannel>(

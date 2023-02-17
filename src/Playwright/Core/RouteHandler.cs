@@ -23,8 +23,10 @@
  */
 
 using System;
+using System.Collections.Generic;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using Microsoft.Playwright.Helpers;
 
 namespace Microsoft.Playwright.Core;
 
@@ -39,6 +41,41 @@ internal class RouteHandler
     public int? Times { get; internal set; }
 
     public int HandledCount { get; set; }
+
+    public static Dictionary<string, object> PrepareInterceptionPatterns(List<RouteHandler> handlers)
+    {
+        bool all = false;
+        var patterns = new List<Dictionary<string, object>>();
+        foreach (var handler in handlers)
+        {
+            var pattern = new Dictionary<string, object>();
+            patterns.Add(pattern);
+
+            if (handler.Regex != null)
+            {
+                pattern["regexSource"] = handler.Regex.ToString();
+                pattern["regexFlags"] = handler.Regex.Options.GetInlineFlags();
+            }
+
+            if (handler.Function != null)
+            {
+                all = true;
+            }
+        }
+
+        if (all)
+        {
+            var allPattern = new Dictionary<string, object>();
+            allPattern["glob"] = "**/*";
+
+            patterns.Clear();
+            patterns.Add(allPattern);
+        }
+
+        var result = new Dictionary<string, object>();
+        result["patterns"] = patterns;
+        return result;
+    }
 
     public async Task<bool> HandleAsync(Route route)
     {

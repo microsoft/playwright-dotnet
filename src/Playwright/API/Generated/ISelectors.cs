@@ -37,6 +37,7 @@ namespace Microsoft.Playwright;
 public partial interface ISelectors
 {
     /// <summary>
+    /// <para>Selectors must be registered before creating the page.</para>
     /// <para>**Usage**</para>
     /// <para>An example of registering selector engine that queries elements based on a tag name:</para>
     /// <code>
@@ -63,8 +64,8 @@ public partial interface ISelectors
     /// await page.SetContentAsync("&lt;div&gt;&lt;button&gt;Click me&lt;/button&gt;&lt;/div&gt;");<br/>
     /// // Use the selector prefixed with its name.<br/>
     /// var button = page.Locator("tag=button");<br/>
-    /// // Combine it with other selector engines.<br/>
-    /// await page.Locator("tag=div &gt;&gt; text=\"Click me\"").ClickAsync();<br/>
+    /// // Combine it with built-in locators.<br/>
+    /// await page.Locator("tag=div").GetByText("Click me").ClickAsync();<br/>
     /// // Can use it in any methods supporting selectors.<br/>
     /// int buttonCount = await page.Locator("tag=button").CountAsync();
     /// </code>

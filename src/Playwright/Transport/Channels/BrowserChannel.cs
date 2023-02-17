@@ -76,7 +76,7 @@ internal class BrowserChannel : Channel<Browser>
         }
         else if (recordHarUrlFilterRegex != null)
         {
-            recordHarArgs["urlRegex"] = recordHarUrlFilterRegex;
+            recordHarArgs["urlRegexSource"] = recordHarUrlFilterRegex.ToString();
             recordHarArgs["urlRegexFlags"] = recordHarUrlFilterRegex.Options.GetInlineFlags();
         }
         if (recordHarMode.HasValue)

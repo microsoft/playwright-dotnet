@@ -1003,13 +1003,7 @@ internal class Page : ChannelOwnerBase, IChannelOwner<Page>, IPage
     private Task RouteAsync(RouteHandler setting)
     {
         _routes.Insert(0, setting);
-
-        if (_routes.Count == 1)
-        {
-            return _channel.SetNetworkInterceptionEnabledAsync(true);
-        }
-
-        return Task.CompletedTask;
+        return UpdateInterceptionAsync();
     }
 
     private Task UnrouteAsync(Regex urlRegex, Func<string, bool> urlFunc, Delegate handler = null)
@@ -1028,13 +1022,13 @@ internal class Page : ChannelOwnerBase, IChannelOwner<Page>, IPage
             (setting.Function != null && r.Function != setting.Function) ||
             (setting.Handler != null && r.Handler != setting.Handler)));
         _routes = newRoutes;
+        return UpdateInterceptionAsync();
+    }
 
-        if (_routes.Count == 0)
-        {
-            return DisableInterceptionAsync();
-        }
-
-        return Task.CompletedTask;
+    private Task UpdateInterceptionAsync()
+    {
+        var patterns = RouteHandler.PrepareInterceptionPatterns(_routes);
+        return Channel.SetNetworkInterceptionPatternsAsync(patterns);
     }
 
     internal void OnClose()
@@ -1077,7 +1071,7 @@ internal class Page : ChannelOwnerBase, IChannelOwner<Page>, IPage
             var handled = await routeHandler.HandleAsync(route).ConfigureAwait(false);
             if (_routes.Count == 0)
             {
-                await DisableInterceptionAsync().ConfigureAwait(false);
+                await UpdateInterceptionAsync().ConfigureAwait(false);
             }
             if (handled)
             {
@@ -1086,11 +1080,6 @@ internal class Page : ChannelOwnerBase, IChannelOwner<Page>, IPage
         }
 
         await Context.OnRouteAsync(route).ConfigureAwait(false);
-    }
-
-    internal async Task DisableInterceptionAsync()
-    {
-        await Channel.SetNetworkInterceptionEnabledAsync(false).ConfigureAwait(false);
     }
 
     private void Channel_FrameDetached(object sender, IFrame args)
