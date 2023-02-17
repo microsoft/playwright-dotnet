@@ -251,7 +251,7 @@ public partial interface ILocator
     Task DblClickAsync(LocatorDblClickOptions? options = default);
 
     /// <summary>
-    /// <para>Programmaticaly dispatch an event on the matching element.</para>
+    /// <para>Programmatically dispatch an event on the matching element.</para>
     /// <para>**Usage**</para>
     /// <code>await locator.DispatchEventAsync("click");</code>
     /// <para>**Details**</para>
@@ -907,7 +907,7 @@ public partial interface ILocator
     IPage Page { get; }
 
     /// <summary>
-    /// <para>Focuses the mathing element and presses a combintation of the keys.</para>
+    /// <para>Focuses the matching element and presses a combination of the keys.</para>
     /// <para>**Usage**</para>
     /// <code>await page.GetByRole(AriaRole.Textbox).PressAsync("Backspace");</code>
     /// <para>**Details**</para>

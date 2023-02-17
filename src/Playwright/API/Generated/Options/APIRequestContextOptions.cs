@@ -120,7 +120,12 @@ public class APIRequestContextOptions
     [JsonPropertyName("form")]
     public IFormData? Form { get; set; }
 
-    /// <summary><para>Allows to set HTTP headers.</para></summary>
+    /// <summary>
+    /// <para>
+    /// Allows to set HTTP headers. These headers will apply to the fetched request as well
+    /// as any redirects initiated by it.
+    /// </para>
+    /// </summary>
     [JsonPropertyName("headers")]
     public IEnumerable<KeyValuePair<string, string>>? Headers { get; set; }
 

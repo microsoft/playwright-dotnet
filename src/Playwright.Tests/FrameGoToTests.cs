@@ -52,7 +52,7 @@ public class FrameGoToTests : PageTestEx
         await waitForRequestTask;
         await Page.EvalOnSelectorAsync("iframe", "frame => frame.remove()");
         var exception = await PlaywrightAssert.ThrowsAsync<PlaywrightException>(() => navigationTask);
-        StringAssert.Contains("frame was detached", exception.Message);
+        Assert.True(exception.Message.Contains("frame was detached") || exception.Message.Contains("net::ERR_ABORTED"));
     }
 
     [PlaywrightTest("frame-goto.spec.ts", "should continue after client redirect")]

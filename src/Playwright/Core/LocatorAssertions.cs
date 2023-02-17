@@ -66,6 +66,16 @@ internal class LocatorAssertions : AssertionsBase, ILocatorAssertions
 
     public Task ToBeHiddenAsync(LocatorAssertionsToBeHiddenOptions options = null) => ExpectTrueAsync("to.be.hidden", "Locator expected to be hidden", ConvertToFrameExpectOptions(options));
 
+    public Task ToBeInViewportAsync(LocatorAssertionsToBeInViewportOptions options = null)
+    {
+        var frameExpectOptions = ConvertToFrameExpectOptions(options);
+        if (options != null && options.Ratio != null)
+        {
+            frameExpectOptions.ExpectedNumber = (float)options.Ratio;
+        }
+        return ExpectTrueAsync("to.be.in.viewport", $"Locator expected to be in viewport", frameExpectOptions);
+    }
+
     public Task ToBeVisibleAsync(LocatorAssertionsToBeVisibleOptions options = null)
     {
         var visible = options == null || options.Visible == null || options.Visible == true;

@@ -32,8 +32,7 @@ namespace Microsoft.Playwright;
 /// <summary>
 /// <para>
 /// The <see cref="IPageAssertions"/> class provides assertion methods that can be used
-/// to make assertions about the <see cref="IPage"/> state in the tests. A new instance
-/// of <see cref="IPageAssertions"/> is created by calling <see cref="IPlaywrightAssertions.Expect"/>:
+/// to make assertions about the <see cref="IPage"/> state in the tests.
 /// </para>
 /// <code>
 /// using System.Text.RegularExpressions;<br/>

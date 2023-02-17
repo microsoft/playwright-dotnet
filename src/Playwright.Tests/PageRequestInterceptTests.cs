@@ -216,6 +216,23 @@ public class PageRequestInterceptTests : PageTestEx
         Assert.True(response.Headers["content-type"].Contains("text/html"));
     }
 
+    [PlaywrightTest("page-request-intercept.spec.ts", "should not follow redirects when maxRedirects is set to 0 in route.fetch")]
+    public async Task ShouldNotFollowRedirectsInRouteFetch()
+    {
+        Server.SetRedirect("/foo", "/empty.html");
+        await Page.RouteAsync("**/*", async (route) =>
+        {
+            var response = await route.FetchAsync(new() { MaxRedirects = 0 });
+            Assert.AreEqual("/empty.html", response.Headers["location"]);
+            Assert.AreEqual(302, response.Status);
+            await route.FulfillAsync(new() { Body = "hello" });
+        });
+
+        await Page.GotoAsync($"{Server.Prefix}/foo");
+        var content = await Page.ContentAsync();
+        Assert.True(content.Contains("hello"));
+    }
+
     [PlaywrightTest("page-request-intercept.spec.ts", "should intercept with url override")]
     public async Task ShouldInterceptWithUrlOverride()
     {

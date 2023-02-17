@@ -263,6 +263,7 @@ internal class Route : ChannelOwnerBase, IChannelOwner<Route>, IRoute
                     Headers = options.Headers,
                     Method = options.Method,
                     DataByte = options.PostData,
+                    MaxRedirects = options.MaxRedirects,
                 });
             });
 }

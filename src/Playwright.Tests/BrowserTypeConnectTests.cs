@@ -113,7 +113,7 @@ public class BrowserTypeConnectTests : PlaywrightTestEx
     public async Task ShouldTimeoutInConnectWhileConnecting()
     {
         var exception = await PlaywrightAssert.ThrowsAsync<TimeoutException>(async () => await BrowserType.ConnectAsync($"ws://localhost:{Server.Port}/ws", new BrowserTypeConnectOptions { Timeout = 100 }));
-        StringAssert.Contains("BrowserType.ConnectAsync: Timeout 100ms exceeded", exception.Message);
+        StringAssert.Contains("Timeout 100ms exceeded", exception.Message);
     }
 
     [PlaywrightTest("browsertype-connect.spec.ts", "should support slowmo option")]

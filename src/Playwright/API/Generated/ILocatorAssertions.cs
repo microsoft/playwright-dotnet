@@ -33,8 +33,7 @@ namespace Microsoft.Playwright;
 /// <summary>
 /// <para>
 /// The <see cref="ILocatorAssertions"/> class provides assertion methods that can be
-/// used to make assertions about the <see cref="ILocator"/> state in the tests. A new
-/// instance of <see cref="ILocatorAssertions"/> is created by calling <see cref="IPlaywrightAssertions.Expect"/>:
+/// used to make assertions about the <see cref="ILocator"/> state in the tests.
 /// </para>
 /// <code>
 /// using System.Text.RegularExpressions;<br/>
@@ -158,6 +157,26 @@ public partial interface ILocatorAssertions
     /// </summary>
     /// <param name="options">Call options</param>
     Task ToBeHiddenAsync(LocatorAssertionsToBeHiddenOptions? options = default);
+
+    /// <summary>
+    /// <para>
+    /// Ensures the <see cref="ILocator"/> points to an element that intersects viewport,
+    /// according to the <a href="https://developer.mozilla.org/en-US/docs/Web/API/Intersection_Observer_API">intersection
+    /// observer API</a>.
+    /// </para>
+    /// <para>**Usage**</para>
+    /// <code>
+    /// var locator = Page.Locator("button.submit");<br/>
+    /// // Make sure at least some part of element intersects viewport.<br/>
+    /// await Expect(locator).ToBeInViewportAsync();<br/>
+    /// // Make sure element is fully outside of viewport.<br/>
+    /// await Expect(locator).Not.ToBeInViewportAsync();<br/>
+    /// // Make sure that at least half of the element intersects viewport.<br/>
+    /// await Expect(locator).ToBeInViewportAsync(new() { Ratio = 0.5 });
+    /// </code>
+    /// </summary>
+    /// <param name="options">Call options</param>
+    Task ToBeInViewportAsync(LocatorAssertionsToBeInViewportOptions? options = default);
 
     /// <summary>
     /// <para>

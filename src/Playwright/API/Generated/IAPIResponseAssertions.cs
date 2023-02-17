@@ -31,9 +31,7 @@ namespace Microsoft.Playwright;
 /// <summary>
 /// <para>
 /// The <see cref="IAPIResponseAssertions"/> class provides assertion methods that can
-/// be used to make assertions about the <see cref="IAPIResponse"/> in the tests. A
-/// new instance of <see cref="IAPIResponseAssertions"/> is created by calling <see
-/// cref="IPlaywrightAssertions.Expect"/>:
+/// be used to make assertions about the <see cref="IAPIResponse"/> in the tests.
 /// </para>
 /// </summary>
 public partial interface IAPIResponseAssertions

@@ -30,7 +30,7 @@ internal class FrameExpectOptions
 
     public ExpectedTextValue[] ExpectedText { get; set; }
 
-    public int ExpectedNumber { get; set; }
+    public float ExpectedNumber { get; set; }
 
     public object ExpectedValue { get; set; }
 

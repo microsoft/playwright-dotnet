@@ -127,6 +127,18 @@ public partial interface IRequest
     byte[]? PostDataBuffer { get; }
 
     /// <summary>
+    /// <para>
+    /// Returns parsed request's body for <c>form-urlencoded</c> and JSON as a fallback
+    /// if any.
+    /// </para>
+    /// <para>
+    /// When the response is <c>application/x-www-form-urlencoded</c> then a key/value object
+    /// of the values will be returned. Otherwise it will be parsed as JSON.
+    /// </para>
+    /// </summary>
+    JsonElement? PostDataJSON();
+
+    /// <summary>
     /// <para>Request that was redirected by the server to this one, if any.</para>
     /// <para>
     /// When the server responds with a redirect, Playwright creates a new <see cref="IRequest"/>
@@ -197,18 +209,6 @@ public partial interface IRequest
 
     /// <summary><para>URL of the request.</para></summary>
     string Url { get; }
-
-    /// <summary>
-    /// <para>
-    /// Returns parsed request's body for <c>form-urlencoded</c> and JSON as a fallback
-    /// if any.
-    /// </para>
-    /// <para>
-    /// When the response is <c>application/x-www-form-urlencoded</c> then a key/value object
-    /// of the values will be returned. Otherwise it will be parsed as JSON.
-    /// </para>
-    /// </summary>
-    JsonElement? PostDataJSON();
 }
 
 #nullable disable

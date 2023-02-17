@@ -69,6 +69,7 @@ function roll_driver() {
   echo "Generating transport channels..."
   rm -rf "src/Playwright/Transport/Protocol/Generated/"
   node "$upstream_repo_path/utils/generate_dotnet_channels.js" "src/Playwright"
+  echo "Formatting source code..."
   dotnet format src/Playwright
 
   download_driver

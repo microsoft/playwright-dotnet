@@ -41,6 +41,7 @@ public class RouteFetchOptions
         }
 
         Headers = clone.Headers;
+        MaxRedirects = clone.MaxRedirects;
         Method = clone.Method;
         PostData = clone.PostData;
         Url = clone.Url;
@@ -49,6 +50,16 @@ public class RouteFetchOptions
     /// <summary><para>If set changes the request HTTP headers. Header values will be converted to a string.</para></summary>
     [JsonPropertyName("headers")]
     public IEnumerable<KeyValuePair<string, string>>? Headers { get; set; }
+
+    /// <summary>
+    /// <para>
+    /// Maximum number of request redirects that will be followed automatically. An error
+    /// will be thrown if the number is exceeded. Defaults to <c>20</c>. Pass <c>0</c> to
+    /// not follow redirects.
+    /// </para>
+    /// </summary>
+    [JsonPropertyName("maxRedirects")]
+    public int? MaxRedirects { get; set; }
 
     /// <summary><para>If set changes the request method (e.g. GET or POST).</para></summary>
     [JsonPropertyName("method")]
