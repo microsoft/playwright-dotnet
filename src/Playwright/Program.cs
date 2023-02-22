@@ -52,6 +52,7 @@ public class Program
         var playwrightStartInfo = new ProcessStartInfo(pwPath, allArgs)
         {
             UseShellExecute = false,
+            CreateNoWindow = true,
         };
         foreach (var pair in Driver.GetEnvironmentVariables())
         {
