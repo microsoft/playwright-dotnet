@@ -34,8 +34,12 @@ internal static class Driver
 {
     internal static string GetExecutablePath()
     {
-        DirectoryInfo assemblyDirectory = new(AppContext.BaseDirectory);
-        if (!assemblyDirectory.Exists || !File.Exists(Path.Combine(assemblyDirectory.FullName, "Microsoft.Playwright.dll")))
+        DirectoryInfo assemblyDirectory = null;
+        if (!string.IsNullOrEmpty(AppContext.BaseDirectory))
+        {
+            assemblyDirectory = new(AppContext.BaseDirectory);
+        }
+        if (assemblyDirectory == null || !assemblyDirectory.Exists || !File.Exists(Path.Combine(assemblyDirectory.FullName, "Microsoft.Playwright.dll")))
         {
             string assemblyLocation;
             var assembly = typeof(Playwright).Assembly;
