@@ -52,7 +52,7 @@ public class PlaywrightSettingsXml
                     BrowserName = reader.Value;
                     break;
                 case "LaunchOptions":
-                    LaunchOptions = ParseXmlIntoClass<BrowserTypeLaunchOptions>(typeof(BrowserTypeLaunchOptions), reader);
+                    LaunchOptions = (BrowserTypeLaunchOptions)ParseXmlIntoClass(typeof(BrowserTypeLaunchOptions), reader);
                     break;
                 case "ExpectTimeout":
                     reader.Read();
@@ -69,7 +69,7 @@ public class PlaywrightSettingsXml
         }
     }
 
-    private static T ParseXmlIntoClass<T>(Type classType, XmlReader reader)
+    private static object ParseXmlIntoClass(Type classType, XmlReader reader)
     {
         var endTag = reader.Name;
         var options = Activator.CreateInstance(classType);
@@ -101,11 +101,11 @@ public class PlaywrightSettingsXml
                 }
                 else
                 {
-                    property.SetValue(options, ParseXmlIntoClass<object>(type, reader));
+                    property.SetValue(options, ParseXmlIntoClass(type, reader));
                 }
             }
         }
-        return (T)options;
+        return options;
     }
 
     private static void ApplyParameter(string key, string value, object options)
