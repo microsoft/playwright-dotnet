@@ -84,7 +84,7 @@ internal static class Driver
         else if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
         {
             runnerName = "playwright.sh";
-            platformId = "mac";
+            platformId = RuntimeInformation.ProcessArchitecture == Architecture.Arm64 ? "darwin-arm64" : "darwin-x64";
         }
         else if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
         {
