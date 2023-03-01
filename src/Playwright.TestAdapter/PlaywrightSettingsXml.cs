@@ -52,7 +52,7 @@ public class PlaywrightSettingsXml
                     BrowserName = reader.Value;
                     break;
                 case "LaunchOptions":
-                    LaunchOptions = ParseXmlIntoClass<BrowserTypeLaunchOptions>(reader);
+                    LaunchOptions = (BrowserTypeLaunchOptions)ParseXmlIntoClass(typeof(BrowserTypeLaunchOptions), reader);
                     break;
                 case "ExpectTimeout":
                     reader.Read();
@@ -63,16 +63,16 @@ public class PlaywrightSettingsXml
                     Retries = int.Parse(reader.Value, CultureInfo.InvariantCulture);
                     break;
                 default:
-                    Console.Error.WriteLine($"Playwright RunSettings Parsing Error: Playwright>{reader.Name} is not implemented");
+                    Console.WriteLine($"Playwright RunSettings Parsing Error: Playwright>{reader.Name} is not implemented");
                     break;
             }
         }
     }
 
-    private static T ParseXmlIntoClass<T>(XmlReader reader) where T : class, new()
+    private static object ParseXmlIntoClass(Type classType, XmlReader reader)
     {
         var endTag = reader.Name;
-        var options = new T();
+        var options = Activator.CreateInstance(classType);
         while (reader.Read())
         {
             if (reader.NodeType == XmlNodeType.EndElement && reader.Name == endTag)
@@ -82,13 +82,27 @@ public class PlaywrightSettingsXml
             if (reader.NodeType == XmlNodeType.Element)
             {
                 var key = reader.Name;
-                reader.Read();
-                if (reader.NodeType != XmlNodeType.Text)
+                var property = classType.GetProperty(key);
+                if (property == null)
                 {
-                    Console.Error.WriteLine($"Playwright RunSettings Parsing Error: Playwright>{endTag}>{key} is not supported");
+                    Console.WriteLine($"Playwright RunSettings Parsing Error: Playwright>{endTag}>{key} is not supported");
                     continue;
                 }
-                ApplyParameter(key, reader.Value, options);
+                var type = Nullable.GetUnderlyingType(property.PropertyType) ?? property.PropertyType;
+                if (type.IsPrimitive || type == typeof(string))
+                {
+                    reader.Read();
+                    if (reader.NodeType != XmlNodeType.Text)
+                    {
+                        Console.WriteLine($"Playwright RunSettings Parsing Error: Playwright>{endTag}>{key} is not supported");
+                        continue;
+                    }
+                    ApplyParameter(key, reader.Value, options);
+                }
+                else
+                {
+                    property.SetValue(options, ParseXmlIntoClass(type, reader));
+                }
             }
         }
         return options;

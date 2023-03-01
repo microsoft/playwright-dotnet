@@ -22,7 +22,9 @@
  * SOFTWARE.
  */
 
+import http from 'http';
 import { test, expect } from '../baseTest';
+import httpProxy from 'http-proxy';
 
 test('should be able to forward DEBUG=pw:api env var', async ({ runTest }) => {
   const result = await runTest({
@@ -216,6 +218,72 @@ test('should be able to to parse BrowserName and LaunchOptions.Headless from run
   expect(result.total).toBe(1);
   expect(result.stdout).toContain("BrowserName: firefox")
   expect(result.stdout).not.toContain("Headless")
+});
+
+test('should be able to to parse LaunchOptions.Proxy from runsettings', async ({ runTest }) => {
+  const httpServer = http.createServer((req, res) => {
+    res.end('hello world!')
+  }).listen(3129);
+  const proxyServer = httpProxy.createProxyServer({
+    auth: 'user:pwd',
+    target: 'http://localhost:3129',
+  }).listen(3128);
+
+  const waitForProxyRequest = new Promise<[string, string]>((resolve) => {
+    proxyServer.once('proxyReq', (proxyReq, req, res, options) => {
+      const authHeader = proxyReq.getHeader('authorization') as string;
+      const auth = Buffer.from(authHeader.split(' ')[1], 'base64').toString();
+      resolve([req.url, auth]);
+    });
+  })
+
+  const result = await runTest({
+    'ExampleTests.cs': `
+      using System;
+      using System.Threading.Tasks;
+      using Microsoft.Playwright.NUnit;
+      using NUnit.Framework;
+
+      namespace Playwright.TestingHarnessTest.NUnit;
+
+      public class <class-name> : PageTest
+      {
+          [Test]
+          public async Task Test()
+          {
+              Console.WriteLine("User-Agent: " + await Page.EvaluateAsync<string>("() => navigator.userAgent"));
+              await Page.GotoAsync("http://example.com");
+          }
+      }`,
+      '.runsettings': `
+        <?xml version="1.0" encoding="utf-8"?>
+        <RunSettings>
+            <Playwright>
+                <BrowserName>chromium</BrowserName>
+                <LaunchOptions>
+                    <Headless>false</Headless>
+                    <Proxy>
+                        <Server>http://127.0.0.1:3128</Server>
+                        <Username>user</Username>
+                        <Password>pwd</Password>
+                    </Proxy>
+                </LaunchOptions>
+            </Playwright>
+        </RunSettings>
+      `,
+  }, 'dotnet test --settings=.runsettings');
+  expect(result.passed).toBe(1);
+  expect(result.failed).toBe(0);
+  expect(result.total).toBe(1);
+
+  expect(result.stdout).not.toContain("Headless");
+
+  const [url, auth] = await waitForProxyRequest;
+  expect(url).toBe('http://example.com/');
+  expect(auth).toBe('user:pwd');
+
+  proxyServer.close();
+  httpServer.close();
 });
 
 test('should be able to override context options', async ({ runTest }) => {
