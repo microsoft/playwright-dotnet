@@ -243,6 +243,7 @@ dotnet_diagnostic.SA1629.severity = none
 [Playwright.Tests/**.cs]
 dotnet_diagnostic.CA2007.severity = none
 dotnet_diagnostic.IDE0066.severity = none
+dotnet_diagnostic.CS0612.severity = none # We can test [Obsolete] methods
 
 [Playwright.TestingHarnessTest/**.cs]
 dotnet_diagnostic.CA2007.severity = none
