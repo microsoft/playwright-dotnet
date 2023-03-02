@@ -395,7 +395,8 @@ public class PageGotoTests : PageTestEx
         }
         else
         {
-            StringAssert.Contains("NS_BINDING_ABORTED", exception.Message);
+            // Firefox might yield either NS_BINDING_ABORTED or 'navigation interrupted by another one'
+            Assert.True(exception.Message.Contains("NS_BINDING_ABORTED") || exception.Message.Contains("Navigation interrupted by another one"));
         }
     }
 

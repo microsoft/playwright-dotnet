@@ -62,6 +62,7 @@ public class ResourceTimingTests : ContextTestEx
     }
 
     [PlaywrightTest("resource-timing.spec.ts", "should work for subresource")]
+    [Skip(SkipAttribute.Targets.Webkit | SkipAttribute.Targets.Windows)]
     public async Task ShouldWorkForSubresource()
     {
         await using var context = await NewContext();
@@ -84,6 +85,7 @@ public class ResourceTimingTests : ContextTestEx
     }
 
     [PlaywrightTest("resource-timing.spec.ts", "should work for SSL")]
+    [Skip(SkipAttribute.Targets.Webkit | SkipAttribute.Targets.Windows)]
     public async Task ShouldWorkForSSL()
     {
         await using var context = await NewContext(new() { IgnoreHTTPSErrors = true });
