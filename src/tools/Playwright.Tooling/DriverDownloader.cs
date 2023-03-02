@@ -42,6 +42,7 @@ internal class DriverDownloader
     private static readonly string[] _platforms = new[]
     {
             "mac",
+            "mac-arm64",
             "linux",
             "linux-arm64",
             "win32_x64",
