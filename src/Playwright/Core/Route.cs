@@ -258,12 +258,12 @@ internal class Route : ChannelOwnerBase, IChannelOwner<Route>, IRoute
             () =>
             {
                 var context = _request._context;
-                return ((APIRequestContext)context.APIRequest).InnerFetchAsync(_request, options.Url, new()
+                return ((APIRequestContext)context.APIRequest).InnerFetchAsync(_request, options?.Url, new()
                 {
-                    Headers = options.Headers,
-                    Method = options.Method,
-                    DataByte = options.PostData,
-                    MaxRedirects = options.MaxRedirects,
+                    Headers = options?.Headers,
+                    Method = options?.Method,
+                    DataByte = options?.PostData,
+                    MaxRedirects = options?.MaxRedirects,
                 });
             });
 }

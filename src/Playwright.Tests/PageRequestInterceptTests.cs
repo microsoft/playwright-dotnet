@@ -266,4 +266,15 @@ public class PageRequestInterceptTests : PageTestEx
         var requestBody = await requestBodyPromise;
         Assert.AreEqual(requestBody, JsonSerializer.Serialize(new Dictionary<string, object>() { { "foo", "bar" } }));
     }
+
+    [PlaywrightTest("page-request-intercept.spec.ts", "")]
+    public async Task ShouldBeAbleToCallRouteFetchWithoutParameters()
+    {
+        await Page.RouteAsync("**/*", async (route) =>
+        {
+            var response = await route.FetchAsync();
+            await route.FulfillAsync(new() { Response = response });
+        });
+        await Page.GotoAsync($"{Server.Prefix}/empty.html");
+    }
 }
