@@ -167,6 +167,10 @@ internal class StdIOTransport : IDisposable
                 }
             }
         }
+        catch (OperationCanceledException)
+        {
+            // Ignore
+        }
         catch (Exception ex)
         {
             Close(ex);
