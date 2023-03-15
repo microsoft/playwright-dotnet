@@ -359,16 +359,19 @@ public class GlobalFetchTests : PlaywrightTestEx
             var response = await request.FetchAsync(Server.Prefix + "/echo", options);
             await Expect(response).ToBeOKAsync();
             Assert.AreEqual("GET", await response.TextAsync());
+            Assert.IsNull(options.Method);
         }
         {
             var response = await request.DeleteAsync(Server.Prefix + "/echo", options);
             await Expect(response).ToBeOKAsync();
             Assert.AreEqual("DELETE", await response.TextAsync());
+            Assert.IsNull(options.Method);
         }
         {
             var response = await request.PutAsync(Server.Prefix + "/echo", options);
             await Expect(response).ToBeOKAsync();
             Assert.AreEqual("PUT", await response.TextAsync());
+            Assert.IsNull(options.Method);
         }
         await request.DisposeAsync();
     }
