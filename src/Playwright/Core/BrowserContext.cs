@@ -539,8 +539,10 @@ internal class BrowserContext : ChannelOwnerBase, IChannelOwner<BrowserContext>,
             har,
             options?.Url,
             options?.UrlString,
-            options?.UrlRegex).ConfigureAwait(false);
-        _harRecorders.Add(harId, new() { Path = har, Content = HarContentPolicy.Attach });
+            options?.UrlRegex,
+            options?.Content,
+            options?.Mode).ConfigureAwait(false);
+        _harRecorders.Add(harId, new() { Path = har, Content = options?.Content ?? HarContentPolicy.Attach });
     }
 
     public async Task RouteFromHARAsync(string har, BrowserContextRouteFromHAROptions options = null)

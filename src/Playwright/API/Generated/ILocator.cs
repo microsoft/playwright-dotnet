@@ -46,6 +46,12 @@ public partial interface ILocator
     /// When locator points to a list of elements, returns array of locators, pointing to
     /// respective elements.
     /// </para>
+    /// <para>
+    /// Note that <see cref="ILocator.AllAsync"/> does not wait for elements to match the
+    /// locator, and instead immediately returns whatever is present in the page. To avoid
+    /// flakiness when elements are loaded dynamically, wait for the loading to finish before
+    /// calling <see cref="ILocator.AllAsync"/>.
+    /// </para>
     /// <para>**Usage**</para>
     /// <code>
     /// foreach (var li in await page.GetByRole('listitem').AllAsync())<br/>
@@ -887,9 +893,20 @@ public partial interface ILocator
     /// </para>
     /// <para><a href="https://playwright.dev/dotnet/docs/locators">Learn more about locators</a>.</para>
     /// </summary>
-    /// <param name="selector">A selector to use when resolving DOM element.</param>
+    /// <param name="selectorOrLocator">A selector or locator to use when resolving DOM element.</param>
     /// <param name="options">Call options</param>
-    ILocator Locator(string selector, LocatorLocatorOptions? options = default);
+    ILocator Locator(string selectorOrLocator, LocatorLocatorOptions? options = default);
+
+    /// <summary>
+    /// <para>
+    /// The method finds an element matching the specified selector in the locator's subtree.
+    /// It also accepts filter options, similar to <see cref="ILocator.Filter"/> method.
+    /// </para>
+    /// <para><a href="https://playwright.dev/dotnet/docs/locators">Learn more about locators</a>.</para>
+    /// </summary>
+    /// <param name="selectorOrLocator">A selector or locator to use when resolving DOM element.</param>
+    /// <param name="options">Call options</param>
+    ILocator Locator(ILocator selectorOrLocator, LocatorLocatorOptions? options = default);
 
     /// <summary>
     /// <para>

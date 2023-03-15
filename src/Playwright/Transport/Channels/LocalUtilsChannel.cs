@@ -37,11 +37,14 @@ internal class LocalUtilsChannel : Channel<LocalUtils>
     {
     }
 
-    internal Task ZipAsync(string zipFile, List<NameValue> entries) =>
+    internal Task ZipAsync(string zipFile, List<NameValue> entries, string mode, List<ClientSideCallMetadata> metadata, bool includeSources) =>
         Connection.SendMessageToServerAsync(Guid, "zip", new Dictionary<string, object>
         {
-                  { "zipFile", zipFile },
-                  { "entries", entries },
+                { "zipFile", zipFile },
+                { "entries", entries },
+                { "mode", mode },
+                { "metadata", metadata },
+                { "includeSources", includeSources },
         });
 
     internal async Task<(string HarId, string Error)> HarOpenAsync(string file)

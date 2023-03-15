@@ -55,9 +55,10 @@ public class FrameWaitForFunctionOptions
 
     /// <summary>
     /// <para>
-    /// maximum time to wait for in milliseconds. Defaults to <c>30000</c> (30 seconds).
+    /// Maximum time to wait for in milliseconds. Defaults to <c>30000</c> (30 seconds).
     /// Pass <c>0</c> to disable timeout. The default value can be changed by using the
-    /// <see cref="IBrowserContext.SetDefaultTimeout"/>.
+    /// <see cref="IBrowserContext.SetDefaultTimeout"/> or <see cref="IPage.SetDefaultTimeout"/>
+    /// methods.
     /// </para>
     /// </summary>
     [JsonPropertyName("timeout")]

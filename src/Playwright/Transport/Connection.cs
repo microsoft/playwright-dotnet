@@ -45,6 +45,7 @@ internal class Connection : IDisposable
     private readonly ConcurrentDictionary<int, ConnectionCallback> _callbacks = new();
     private readonly Root _rootObject;
     private readonly TaskQueue _queue = new();
+    private readonly HashSet<List<ClientSideCallMetadata>> _stackCollectors = new();
     private int _lastId;
     private string _closedErrorMessage = string.Empty;
 
@@ -86,6 +87,16 @@ internal class Connection : IDisposable
         GC.SuppressFinalize(this);
     }
 
+    internal void StartCollectingCallMetadata(List<ClientSideCallMetadata> collector)
+    {
+        _stackCollectors.Add(collector);
+    }
+
+    internal void StopCollectingCallMetadata(List<ClientSideCallMetadata> collector)
+    {
+        _stackCollectors.Remove(collector);
+    }
+
     internal Task<JsonElement?> SendMessageToServerAsync(
         string guid,
         string method,
@@ -123,6 +134,33 @@ internal class Connection : IDisposable
                 .Where(f => f.Value != null)
                 .ToDictionary(f => f.Key, f => f.Value);
         }
+        var (apiName, frames) = (ApiZone.Value[0].ApiName, ApiZone.Value[0].Frames);
+        foreach (var collector in _stackCollectors)
+        {
+            collector.Add(new()
+            {
+                Id = id,
+                Stack = frames,
+            });
+        }
+        var metadata = new Dictionary<string, object>
+        {
+            ["internal"] = string.IsNullOrEmpty(apiName),
+            ["wallTime"] = DateTimeOffset.Now.ToUnixTimeMilliseconds(),
+        };
+        if (!string.IsNullOrEmpty(apiName))
+        {
+            metadata["apiName"] = apiName;
+        }
+        if (frames.Count > 0)
+        {
+            metadata["location"] = new Dictionary<string, object>
+            {
+                ["file"] = frames[0].File,
+                ["line"] = frames[0].Line,
+                ["column"] = frames[0].Column,
+            };
+        }
 
         await _queue.EnqueueAsync(() =>
         {
@@ -132,7 +170,7 @@ internal class Connection : IDisposable
                 Guid = guid,
                 Method = method,
                 Params = sanitizedArgs,
-                Metadata = ApiZone.Value[0],
+                Metadata = metadata,
             };
 
             TraceMessage("pw:channel:command", message);
@@ -460,7 +498,7 @@ internal class Connection : IDisposable
         {
             if (!string.IsNullOrEmpty(apiName))
             {
-                ApiZone.Value[0] = new() { ApiName = isInternal ? null : apiName, Stack = stack, Internal = isInternal };
+                ApiZone.Value[0] = new() { ApiName = isInternal ? null : apiName, Frames = stack };
             }
             return await action().ConfigureAwait(false);
         }

@@ -22,19 +22,21 @@
  * SOFTWARE.
  */
 
-using System.Collections.Generic;
 using System.Text.Json.Serialization;
 
 namespace Microsoft.Playwright.Transport.Protocol;
 
 internal class Metadata
 {
-    [JsonPropertyName("stack")]
-    public List<StackFrame> Stack { get; set; }
+    [JsonPropertyName("location")]
+    public MetadataLocation Location { get; set; }
 
     [JsonPropertyName("apiName")]
     public string ApiName { get; set; }
 
     [JsonPropertyName("internal")]
     public bool Internal { get; set; }
+
+    [JsonPropertyName("wallTime")]
+    public int? WallTime { get; set; }
 }

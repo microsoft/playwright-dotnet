@@ -40,12 +40,35 @@ public class BrowserContextRouteFromHAROptions
             return;
         }
 
+        Content = clone.Content;
+        Mode = clone.Mode;
         NotFound = clone.NotFound;
         Update = clone.Update;
         Url = clone.Url;
         UrlRegex = clone.UrlRegex;
         UrlString = clone.UrlString;
     }
+
+    /// <summary>
+    /// <para>
+    /// Optional setting to control resource content management. If <c>omit</c> is specified,
+    /// content is not persisted. If <c>attach</c> is specified, resources are persisted
+    /// as separate files or entries in the ZIP archive. If <c>embed</c> is specified, content
+    /// is stored inline the HAR file
+    /// </para>
+    /// </summary>
+    [JsonPropertyName("content")]
+    public HarContentPolicy? Content { get; set; }
+
+    /// <summary>
+    /// <para>
+    /// When set to <c>minimal</c>, only record information necessary for routing from HAR.
+    /// This omits sizes, timing, page, cookies, security and other types of HAR information
+    /// that are not used when replaying from HAR. Defaults to <c>minimal</c>.
+    /// </para>
+    /// </summary>
+    [JsonPropertyName("mode")]
+    public HarMode? Mode { get; set; }
 
     /// <summary>
     /// <list type="bullet">

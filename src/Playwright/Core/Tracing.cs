@@ -22,15 +22,19 @@
  * SOFTWARE.
  */
 
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.Playwright.Transport;
 using Microsoft.Playwright.Transport.Channels;
+using Microsoft.Playwright.Transport.Protocol;
 
 namespace Microsoft.Playwright.Core;
 
 internal class Tracing : ChannelOwnerBase, IChannelOwner<Tracing>, ITracing
 {
     private readonly TracingChannel _channel;
+    private bool _includeSources;
+    private List<ClientSideCallMetadata> _metadataCollector;
 
     public Tracing(IChannelOwner parent, string guid) : base(parent, guid)
     {
@@ -43,6 +47,7 @@ internal class Tracing : ChannelOwnerBase, IChannelOwner<Tracing>, ITracing
 
     public async Task StartAsync(TracingStartOptions options = default)
     {
+        _includeSources = options?.Sources == true;
         await _channel.Connection.WrapApiCallAsync(async () =>
         {
             await _channel.TracingStartAsync(
@@ -53,9 +58,16 @@ internal class Tracing : ChannelOwnerBase, IChannelOwner<Tracing>, ITracing
                     sources: options?.Sources).ConfigureAwait(false);
             await _channel.StartChunkAsync(options?.Title).ConfigureAwait(false);
         }).ConfigureAwait(false);
+        _metadataCollector = new();
+        _channel.Connection.StartCollectingCallMetadata(_metadataCollector);
     }
 
-    public Task StartChunkAsync(TracingStartChunkOptions options = default) => _channel.StartChunkAsync(title: options?.Title);
+    public async Task StartChunkAsync(TracingStartChunkOptions options = default)
+    {
+        await _channel.StartChunkAsync(title: options?.Title).ConfigureAwait(false);
+        _metadataCollector = new();
+        _channel.Connection.StartCollectingCallMetadata(_metadataCollector);
+    }
 
     public Task StopChunkAsync(TracingStopChunkOptions options = default) => DoStopChunkAsync(filePath: options?.Path);
 
@@ -70,28 +82,27 @@ internal class Tracing : ChannelOwnerBase, IChannelOwner<Tracing>, ITracing
 
     private async Task DoStopChunkAsync(string filePath)
     {
-        bool isLocal = !_channel.Connection.IsRemote;
+        _channel.Connection.StopCollectingCallMetadata(_metadataCollector);
+        var metadata = _metadataCollector;
+        _metadataCollector = new();
 
-        var mode = "doNotSave";
-        if (!string.IsNullOrEmpty(filePath))
-        {
-            if (isLocal)
-            {
-                mode = "compressTraceAndSources";
-            }
-            else
-            {
-                mode = "compressTrace";
-            }
-        }
-
-        var (artifact, sourceEntries) = await _channel.StopChunkAsync(mode).ConfigureAwait(false);
-
-        // Not interested in artifacts.
         if (string.IsNullOrEmpty(filePath))
         {
+            await _channel.TracingStopChunkAsync("discard").ConfigureAwait(false);
+            // Not interested in artifacts.
             return;
         }
+
+        bool isLocal = !_channel.Connection.IsRemote;
+
+        if (isLocal)
+        {
+            var (_, sourceEntries) = await _channel.TracingStopChunkAsync("entries").ConfigureAwait(false);
+            await _channel.Connection.LocalUtils.ZipAsync(filePath, sourceEntries, "write", metadata, _includeSources).ConfigureAwait(false);
+            return;
+        }
+
+        var (artifact, entries) = await _channel.TracingStopChunkAsync("archive").ConfigureAwait(false);
 
         // The artifact may be missing if the browser closed while stopping tracing.
         if (artifact == null)
@@ -104,9 +115,9 @@ internal class Tracing : ChannelOwnerBase, IChannelOwner<Tracing>, ITracing
         await artifact.DeleteAsync().ConfigureAwait(false);
 
         // Add local sources to the remote trace if necessary.
-        if (sourceEntries.Count > 0)
+        if (metadata.Count > 0)
         {
-            await _channel.Connection.LocalUtils.ZipAsync(filePath, sourceEntries).ConfigureAwait(false);
+            await _channel.Connection.LocalUtils.ZipAsync(filePath, new(), "append", metadata, _includeSources).ConfigureAwait(false);
         }
     }
 }

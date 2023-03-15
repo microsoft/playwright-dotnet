@@ -86,5 +86,15 @@ internal class FrameLocator : IFrameLocator
 
     public ILocator Locator(string selector, FrameLocatorLocatorOptions options = null) => new Locator(_frame, $"{_frameSelector} >> internal:control=enter-frame  >> {selector}", new() { HasText = options?.HasText, HasTextRegex = options?.HasTextRegex, HasTextString = options?.HasTextString });
 
+    public ILocator Locator(ILocator locator, FrameLocatorLocatorOptions options = null)
+    {
+        var locatorImpl = (Locator)locator;
+        if (locatorImpl._frame != _frame)
+        {
+            throw new PlaywrightException("Locators must belong to the same frame.");
+        }
+        return new Locator(_frame, $"{_frameSelector} >> internal:control=enter-frame  >> {locatorImpl._selector}", new() { HasText = options?.HasText, HasTextRegex = options?.HasTextRegex, HasTextString = options?.HasTextString });
+    }
+
     public IFrameLocator Nth(int index) => new FrameLocator(_frame, $"{_frameSelector} >> nth={index}");
 }

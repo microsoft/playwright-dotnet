@@ -32,10 +32,10 @@ internal class StackFrame
     public string File { get; set; }
 
     [JsonPropertyName("line")]
-    public int? Line { get; set; }
+    public int Line { get; set; }
 
     [JsonPropertyName("column")]
-    public int? Column { get; set; }
+    public int Column { get; set; }
 
     [JsonPropertyName("function")]
     public string Function { get; set; }

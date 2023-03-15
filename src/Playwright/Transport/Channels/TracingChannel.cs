@@ -61,7 +61,7 @@ internal class TracingChannel : Channel<Tracing>
             ["title"] = title,
         });
 
-    internal async Task<(Artifact Artifact, List<NameValue> SourceEntries)> StopChunkAsync(string mode)
+    internal async Task<(Artifact Artifact, List<NameValue> Entries)> TracingStopChunkAsync(string mode)
     {
         var result = await Connection.SendMessageToServerAsync(Guid, "tracingStopChunk", new Dictionary<string, object>
         {
@@ -69,19 +69,19 @@ internal class TracingChannel : Channel<Tracing>
         }).ConfigureAwait(false);
 
         var artifact = result.GetObject<Artifact>("artifact", Connection);
-        List<NameValue> sourceEntries = new() { };
-        if (result.Value.TryGetProperty("sourceEntries", out var sourceEntriesElement))
+        List<NameValue> entries = new() { };
+        if (result.Value.TryGetProperty("entries", out var entriesElement))
         {
-            var sourceEntriesEnumerator = sourceEntriesElement.EnumerateArray();
-            while (sourceEntriesEnumerator.MoveNext())
+            var entriesEnumerator = entriesElement.EnumerateArray();
+            while (entriesEnumerator.MoveNext())
             {
-                JsonElement current = sourceEntriesEnumerator.Current;
-                sourceEntries.Add(current.Deserialize<NameValue>(new JsonSerializerOptions()
+                JsonElement current = entriesEnumerator.Current;
+                entries.Add(current.Deserialize<NameValue>(new JsonSerializerOptions()
                 {
                     PropertyNameCaseInsensitive = true,
                 }));
             }
         }
-        return (artifact, sourceEntries);
+        return (artifact, entries);
     }
 }

@@ -334,9 +334,20 @@ public partial interface IFrameLocator
     /// </para>
     /// <para><a href="https://playwright.dev/dotnet/docs/locators">Learn more about locators</a>.</para>
     /// </summary>
-    /// <param name="selector">A selector to use when resolving DOM element.</param>
+    /// <param name="selectorOrLocator">A selector or locator to use when resolving DOM element.</param>
     /// <param name="options">Call options</param>
-    ILocator Locator(string selector, FrameLocatorLocatorOptions? options = default);
+    ILocator Locator(string selectorOrLocator, FrameLocatorLocatorOptions? options = default);
+
+    /// <summary>
+    /// <para>
+    /// The method finds an element matching the specified selector in the locator's subtree.
+    /// It also accepts filter options, similar to <see cref="ILocator.Filter"/> method.
+    /// </para>
+    /// <para><a href="https://playwright.dev/dotnet/docs/locators">Learn more about locators</a>.</para>
+    /// </summary>
+    /// <param name="selectorOrLocator">A selector or locator to use when resolving DOM element.</param>
+    /// <param name="options">Call options</param>
+    ILocator Locator(ILocator selectorOrLocator, FrameLocatorLocatorOptions? options = default);
 
     /// <summary>
     /// <para>

@@ -166,7 +166,7 @@ public partial interface ILocatorAssertions
     /// </para>
     /// <para>**Usage**</para>
     /// <code>
-    /// var locator = Page.Locator("button.submit");<br/>
+    /// var locator = Page.GetByRole(AriaRole.Button);<br/>
     /// // Make sure at least some part of element intersects viewport.<br/>
     /// await Expect(locator).ToBeInViewportAsync();<br/>
     /// // Make sure element is fully outside of viewport.<br/>
