@@ -46,8 +46,8 @@ public class FrameGoToTests : PageTestEx
     public async Task ShouldRejectWhenFrameDetaches()
     {
         await Page.GotoAsync(Server.Prefix + "/frames/one-frame.html");
-        Server.SetRoute("/empty.html", _ => Task.Delay(10000));
-        var waitForRequestTask = Server.WaitForRequest("/empty.html");
+        Server.SetRoute("/one-style.css", _ => Task.Delay(10000));
+        var waitForRequestTask = Server.WaitForRequest("/one-style.css");
         var navigationTask = Page.FirstChildFrame().GotoAsync(Server.EmptyPage);
         await waitForRequestTask;
         await Page.EvalOnSelectorAsync("iframe", "frame => frame.remove()");
