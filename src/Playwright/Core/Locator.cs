@@ -146,6 +146,16 @@ internal class Locator : ILocator
     ILocator ILocator.Locator(string selector, LocatorLocatorOptions options)
         => new Locator(_frame, $"{_selector} >> {selector}", options);
 
+    ILocator ILocator.Locator(ILocator locator, LocatorLocatorOptions options)
+    {
+        var locatorImpl = (Locator)locator;
+        if (locatorImpl._frame != _frame)
+        {
+            throw new ArgumentException("Locators must belong to the same frame.");
+        }
+        return new Locator(_frame, $"{_selector} >> {locatorImpl._selector}", options);
+    }
+
     IFrameLocator ILocator.FrameLocator(string selector) =>
         new FrameLocator(_frame, $"{_selector} >> {selector}");
 

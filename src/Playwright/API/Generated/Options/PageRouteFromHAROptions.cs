@@ -40,12 +40,20 @@ public class PageRouteFromHAROptions
             return;
         }
 
+        Content = clone.Content;
+        Mode = clone.Mode;
         NotFound = clone.NotFound;
         Update = clone.Update;
         Url = clone.Url;
         UrlRegex = clone.UrlRegex;
         UrlString = clone.UrlString;
     }
+
+    [JsonPropertyName("content")]
+    public HarContentPolicy? Content { get; set; }
+
+    [JsonPropertyName("mode")]
+    public HarMode? Mode { get; set; }
 
     /// <summary>
     /// <list type="bullet">

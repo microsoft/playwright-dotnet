@@ -1722,6 +1722,10 @@ public partial interface IFrame
 
     /// <summary>
     /// <para>
+    /// **DEPRECATED** This method is inherently racy, please use <see cref="IFrame.WaitForURLAsync"/>
+    /// instead.
+    /// </para>
+    /// <para>
     /// Waits for the frame navigation and returns the main resource response. In case of
     /// multiple redirects, the navigation will resolve with the response of the last redirect.
     /// In case of navigation to a different anchor or navigation due to History API usage,
@@ -1749,9 +1753,14 @@ public partial interface IFrame
     /// </para>
     /// </remarks>
     /// <param name="options">Call options</param>
+    [System.Obsolete]
     Task<IResponse?> WaitForNavigationAsync(FrameWaitForNavigationOptions? options = default);
 
     /// <summary>
+    /// <para>
+    /// **DEPRECATED** This method is inherently racy, please use <see cref="IFrame.WaitForURLAsync"/>
+    /// instead.
+    /// </para>
     /// <para>
     /// Waits for the frame navigation and returns the main resource response. In case of
     /// multiple redirects, the navigation will resolve with the response of the last redirect.
@@ -1781,6 +1790,7 @@ public partial interface IFrame
     /// </remarks>
     /// <param name="action">Action that triggers the event.</param>
     /// <param name="options">Call options</param>
+    [System.Obsolete]
     Task<IResponse?> RunAndWaitForNavigationAsync(Func<Task> action, FrameRunAndWaitForNavigationOptions? options = default);
 
     /// <summary>

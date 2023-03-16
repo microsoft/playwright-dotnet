@@ -68,7 +68,7 @@ public class BrowserContextHarTests : ContextTestEx
     }
 
     [PlaywrightTest("browsercontext-har.spec.ts", "by default should abort requests not found in har")]
-    public async Task ByDefaultshouldAbortRequestsNotFoundInHar()
+    public async Task ByDefaultShouldAbortRequestsNotFoundInHar()
     {
         var path = TestUtils.GetAsset("har-fulfill.har");
 
@@ -451,6 +451,26 @@ public class BrowserContextHarTests : ContextTestEx
         await page2.GotoAsync(Server.Prefix + "/one-style.html");
         StringAssert.Contains("hello, world", await page2.ContentAsync());
         await Expect(page2.Locator("body")).ToHaveCSSAsync("background-color", "rgb(255, 192, 203)");
+    }
+
+    [PlaywrightTest("browsercontext-har.spec.ts", "should update har.zip for page with different options")]
+    public async Task ShouldUpdateHarZipForPagewithDifferentOptions()
+    {
+        using var tmpDir = new TempDirectory();
+        var harPath = Path.Join(tmpDir.Path, "har.zip");
+        var context1 = await Browser.NewContextAsync();
+        var page1 = await context1.NewPageAsync();
+        await page1.RouteFromHARAsync(harPath, new() { Update = true, Content = HarContentPolicy.Embed, Mode = HarMode.Full });
+        await page1.GotoAsync(Server.Prefix + "/one-style.html");
+        await context1.CloseAsync();
+
+        var context2 = await Browser.NewContextAsync();
+        var page2 = await context2.NewPageAsync();
+        await page2.RouteFromHARAsync(harPath, new() { NotFound = HarNotFound.Abort });
+        await page2.GotoAsync(Server.Prefix + "/one-style.html");
+        StringAssert.Contains("hello, world", await page2.ContentAsync());
+        await Expect(page2.Locator("body")).ToHaveCSSAsync("background-color", "rgb(255, 192, 203)");
+        await context2.CloseAsync();
     }
 
     [PlaywrightTest("browsercontext-har.spec.ts", "should update extracted har.zip for page")]

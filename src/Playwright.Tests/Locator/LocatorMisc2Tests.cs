@@ -101,7 +101,7 @@ public class LocatorMisc2Tests : PageTestEx
         await textarea.EvaluateAsync<string>("textarea => textarea.value = 'some value'");
 
         await textarea.SelectTextAsync();
-        if (TestConstants.IsFirefox)
+        if (TestConstants.IsFirefox || TestConstants.IsWebKit)
         {
             Assert.AreEqual(0, await textarea.EvaluateAsync<int>("el => el.selectionStart"));
             Assert.AreEqual(10, await textarea.EvaluateAsync<int>("el => el.selectionEnd"));
@@ -197,5 +197,23 @@ public class LocatorMisc2Tests : PageTestEx
         await Page.EvaluateAsync("Map = 1");
         await Page.Locator("#searchResultTableDiv .x-grid3-row").CountAsync();
         await Expect(Page.Locator("#searchResultTableDiv .x-grid3-row")).ToHaveCountAsync(0);
+    }
+
+    [PlaywrightTest("locator-misc-2.spec.ts", "Locator.Locator() and FrameLocator.Locator() should accept locator")]
+    public async Task LocatorLocatorAndFrameLocatorLocatorShouldAcceptLocator()
+    {
+        await Page.SetContentAsync(@"
+            <div><input value=outer></div>
+            <iframe srcdoc=""<div><input value=inner></div>""></iframe>
+        ");
+        var inputLocator = Page.Locator("input");
+        Assert.AreEqual("outer", await inputLocator.InputValueAsync());
+        Assert.AreEqual("outer", await Page.Locator("div").Locator(inputLocator).InputValueAsync());
+        Assert.AreEqual("inner", await Page.FrameLocator("iframe").Locator(inputLocator).InputValueAsync());
+        Assert.AreEqual("inner", await Page.FrameLocator("iframe").Locator("div").Locator(inputLocator).InputValueAsync());
+
+        var divLocator = Page.Locator("div");
+        Assert.AreEqual("outer", await divLocator.Locator("input").InputValueAsync());
+        Assert.AreEqual("inner", await Page.FrameLocator("iframe").Locator(divLocator).Locator("input").InputValueAsync());
     }
 }

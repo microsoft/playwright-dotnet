@@ -33,7 +33,5 @@ internal class ApiZone
     [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
     public string ApiName { get; set; }
 
-    public bool Internal { get; set; }
-
-    public List<StackFrame> Stack { get; set; }
+    public List<StackFrame> Frames { get; set; }
 }

@@ -259,12 +259,14 @@ internal class BrowserContextChannel : Channel<BrowserContext>
         string path,
         string recordHarUrlFilter,
         string recordHarUrlFilterString,
-        Regex recordHarUrlFilterRegex)
+        Regex recordHarUrlFilterRegex,
+        HarContentPolicy? harContentPolicy,
+        HarMode? harMode)
     {
         var args = new Dictionary<string, object>
             {
                 { "page", page?.Channel },
-                { "options", BrowserChannel.PrepareHarOptions(HarContentPolicy.Attach, HarMode.Minimal, path, null, recordHarUrlFilter, recordHarUrlFilterString, recordHarUrlFilterRegex) },
+                { "options", BrowserChannel.PrepareHarOptions(harContentPolicy ?? HarContentPolicy.Attach, harMode ?? HarMode.Minimal, path, null, recordHarUrlFilter, recordHarUrlFilterString, recordHarUrlFilterRegex) },
             };
         var result = await Connection.SendMessageToServerAsync(Guid, "harStart", args).ConfigureAwait(false);
         return result.GetString("harId", false);

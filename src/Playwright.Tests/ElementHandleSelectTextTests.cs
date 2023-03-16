@@ -34,7 +34,7 @@ public class ElementHandleSelectTextTests : PageTestEx
         await textarea.EvaluateAsync("textarea => textarea.value = 'some value'");
         await textarea.SelectTextAsync();
 
-        if (TestConstants.IsFirefox)
+        if (TestConstants.IsFirefox || TestConstants.IsWebKit)
         {
             Assert.AreEqual(0, await textarea.EvaluateAsync<int>("el => el.selectionStart"));
             Assert.AreEqual(10, await textarea.EvaluateAsync<int>("el => el.selectionEnd"));
@@ -53,7 +53,7 @@ public class ElementHandleSelectTextTests : PageTestEx
         await input.EvaluateAsync("input => input.value = 'some value'");
         await input.SelectTextAsync();
 
-        if (TestConstants.IsFirefox)
+        if (TestConstants.IsFirefox || TestConstants.IsWebKit)
         {
             Assert.AreEqual(0, await input.EvaluateAsync<int>("el => el.selectionStart"));
             Assert.AreEqual(10, await input.EvaluateAsync<int>("el => el.selectionEnd"));

@@ -44,8 +44,8 @@ internal class LocalUtils : ChannelOwnerBase, IChannelOwner<LocalUtils>
 
     IChannel<LocalUtils> IChannelOwner<LocalUtils>.Channel => _channel;
 
-    internal Task ZipAsync(string zipFile, List<NameValue> entries)
-        => _channel.ZipAsync(zipFile, entries);
+    internal Task ZipAsync(string zipFile, List<NameValue> entries, string mode, List<ClientSideCallMetadata> metadata, bool includeSources)
+        => _channel.ZipAsync(zipFile, entries, mode, metadata, includeSources);
 
     internal Task<(string HarId, string Error)> HarOpenAsync(string file)
         => _channel.HarOpenAsync(file);
