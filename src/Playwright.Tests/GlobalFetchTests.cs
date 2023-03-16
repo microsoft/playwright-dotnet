@@ -47,6 +47,7 @@ public class GlobalFetchTests : PlaywrightTestEx
             Assert.AreEqual(1, response.HeadersArray.Where(x => x.Name == "Content-Type" && x.Value == "application/json; charset=utf-8").Count());
             Assert.AreEqual(method == "head" ? "" : "{\"foo\": \"bar\"}\n", await response.TextAsync());
         }
+        await request.DisposeAsync();
     }
 
     [PlaywrightTest("global-fetch.spec.ts", "should dispose global request")]
@@ -72,6 +73,7 @@ public class GlobalFetchTests : PlaywrightTestEx
         Assert.AreEqual(true, response.Ok);
         Assert.AreEqual(Server.EmptyPage, response.Url);
         Assert.AreEqual("My Agent", receivedUserAgent);
+        await request.DisposeAsync();
     }
 
     [PlaywrightTest("global-fetch.spec.ts", "should support global timeout option")]
@@ -81,6 +83,7 @@ public class GlobalFetchTests : PlaywrightTestEx
         Server.SetRoute("/empty.html", async request => await Task.Delay(5_000));
         var exception = Assert.ThrowsAsync<PlaywrightException>(() => request.GetAsync(Server.EmptyPage));
         StringAssert.Contains("Request timed out after 100ms", exception.Message);
+        await request.DisposeAsync();
     }
 
     [PlaywrightTest("global-fetch.spec.ts", "should propagate extra http headers with redirects")]
@@ -338,6 +341,37 @@ public class GlobalFetchTests : PlaywrightTestEx
         {
             var exception = await PlaywrightAssert.ThrowsAsync<PlaywrightException>(() => request.FetchAsync($"{Server.Prefix}/a/redirect1", new() { Method = method, MaxRedirects = -1 }));
             StringAssert.Contains("'maxRedirects' should be greater than or equal to '0'", exception.Message);
+        }
+        await request.DisposeAsync();
+    }
+
+    [PlaywrightTest("global-fetch.spec.ts", "should not modify request method in options")]
+    public async Task ShouldNotModifyRequestMethodInOptions()
+    {
+        var request = await Playwright.APIRequest.NewContextAsync();
+        Server.SetRoute("/echo", (ctx) =>
+        {
+            ctx.Response.StatusCode = 200;
+            return ctx.Response.WriteAsync(ctx.Request.Method);
+        });
+        var options = new APIRequestContextOptions();
+        {
+            var response = await request.FetchAsync(Server.Prefix + "/echo", options);
+            await Expect(response).ToBeOKAsync();
+            Assert.AreEqual("GET", await response.TextAsync());
+            Assert.IsNull(options.Method);
+        }
+        {
+            var response = await request.DeleteAsync(Server.Prefix + "/echo", options);
+            await Expect(response).ToBeOKAsync();
+            Assert.AreEqual("DELETE", await response.TextAsync());
+            Assert.IsNull(options.Method);
+        }
+        {
+            var response = await request.PutAsync(Server.Prefix + "/echo", options);
+            await Expect(response).ToBeOKAsync();
+            Assert.AreEqual("PUT", await response.TextAsync());
+            Assert.IsNull(options.Method);
         }
         await request.DisposeAsync();
     }

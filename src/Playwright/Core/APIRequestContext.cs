@@ -160,7 +160,7 @@ internal class APIRequestContext : ChannelOwnerBase, IChannelOwner<APIRequestCon
 
     private APIRequestContextOptions WithMethod(APIRequestContextOptions options, string method)
     {
-        options ??= new APIRequestContextOptions();
+        options = ClassUtils.Clone<APIRequestContextOptions>(options);
         options.Method = method;
         return options;
     }

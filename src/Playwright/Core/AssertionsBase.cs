@@ -103,29 +103,7 @@ internal class AssertionsBase
         return textValue;
     }
 
-    internal T ConvertToType<T>(object source)
-        where T : new()
-    {
-        T target = new();
-        if (source == null)
-        {
-            return target;
-        }
-
-        var sourceType = source.GetType();
-        var targetType = target.GetType();
-        foreach (var sourceProperty in sourceType.GetProperties())
-        {
-            var targetProperty = targetType.GetProperty(sourceProperty.Name);
-            if (targetProperty != null)
-            {
-                targetProperty.SetValue(target, sourceProperty.GetValue(source));
-            }
-        }
-        return target;
-    }
-
-    internal FrameExpectOptions ConvertToFrameExpectOptions(object source) => ConvertToType<FrameExpectOptions>(source);
+    internal FrameExpectOptions ConvertToFrameExpectOptions(object source) => ClassUtils.Clone<FrameExpectOptions>(source);
 
     private string FormatValue(object value)
     {
