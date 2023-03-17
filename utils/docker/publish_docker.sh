@@ -62,7 +62,7 @@ publish_docker_images_with_arch_suffix() {
   if [[ "$FLAVOR" == "focal" ]]; then
     TAGS=("${FOCAL_TAGS[@]}")
   elif [[ "$FLAVOR" == "jammy" ]]; then
-    TAGS=("$JAMMY_TAGS[@]}")
+    TAGS=("${JAMMY_TAGS[@]}")
   else
     echo "ERROR: unknown flavor - $FLAVOR. Must be either 'focal' or 'jammy'"
     exit 1
