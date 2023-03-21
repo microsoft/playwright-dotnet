@@ -26,6 +26,7 @@ using System.Diagnostics;
 using System.IO.Compression;
 using System.Text;
 using System.Text.Json;
+using System.Text.RegularExpressions;
 using Microsoft.Playwright.Helpers;
 
 namespace Microsoft.Playwright.Tests;
@@ -199,7 +200,7 @@ public class TracingTests : ContextTestEx
 
         var (events, resources) = ParseTrace(tracePath);
         var sourceNames = resources.Keys.Where(key => key.EndsWith(".txt")).ToArray();
-        Assert.AreEqual(sourceNames.Count(), 1);
+        Assert.AreEqual(1, sourceNames.Count());
 
         var sourceTraceFileContent = resources[sourceNames[0]];
         var currentFileContent = File.ReadAllText(new StackTrace(true).GetFrame(0).GetFileName());
@@ -290,6 +291,49 @@ public class TracingTests : ContextTestEx
                 "Page.WaitForLoadStateAsync"
             };
         Assert.AreEqual(expectedActionApiNames, actualActionApiNames);
+    }
+
+    [PlaywrightTest("tracing.spec.ts", "should respect tracesDir and name")]
+    public async Task ShouldRespectTracesDirAndName()
+    {
+        using var tracesDir = new TempDirectory();
+        var browser = await BrowserType.LaunchAsync(new() { TracesDir = tracesDir.Path });
+        var context = await browser.NewContextAsync();
+        var page = await context.NewPageAsync();
+
+        await context.Tracing.StartAsync(new() { Name = "name1", Snapshots = true });
+        await page.GotoAsync(Server.Prefix + "/one-style.html");
+        await context.Tracing.StopChunkAsync(new() { Path = Path.Combine(tracesDir.Path, "trace1.zip") });
+        Assert.True(File.Exists(Path.Combine(tracesDir.Path, "name1.trace")));
+        Assert.True(File.Exists(Path.Combine(tracesDir.Path, "name1.network")));
+
+        await context.Tracing.StartChunkAsync(new() { Name = "name2" });
+        await page.GotoAsync(Server.Prefix + "/har.html");
+        await context.Tracing.StopAsync(new() { Path = Path.Combine(tracesDir.Path, "trace2.zip") });
+        Assert.True(File.Exists(Path.Combine(tracesDir.Path, "name2.trace")));
+        Assert.True(File.Exists(Path.Combine(tracesDir.Path, "name2.network")));
+
+        await browser.CloseAsync();
+
+        Dictionary<string, byte[]> ResourceNames(Dictionary<string, byte[]> resources)
+        {
+            return resources.Keys
+                .Select(file => Regex.Replace(file, @"^resources/.*\.(html|css)$", "resources/XXX.$1"))
+                .OrderBy(file => file)
+                .ToDictionary(file => file, file => resources[file]);
+        }
+
+        {
+            var (events, resources) = ParseTrace(Path.Combine(tracesDir.Path, "trace1.zip"));
+            Assert.AreEqual(new[] { "Page.GotoAsync" }, GetActions(events));
+            Assert.AreEqual(new[] { "resources/XXX.css", "resources/XXX.html", "trace.network", "trace.stacks", "trace.trace" }, ResourceNames(resources).Keys);
+        }
+
+        {
+            var (events, resources) = ParseTrace(Path.Combine(tracesDir.Path, "trace2.zip"));
+            Assert.AreEqual(new[] { "Page.GotoAsync" }, GetActions(events));
+            Assert.AreEqual(new[] { "resources/XXX.css", "resources/XXX.html", "resources/XXX.html", "trace.network", "trace.stacks", "trace.trace" }, ResourceNames(resources).Keys);
+        }
     }
 
     private static (IReadOnlyList<TraceEventEntry> Events, Dictionary<string, byte[]> Resources) ParseTrace(string path)

@@ -45,7 +45,7 @@ internal class Connection : IDisposable
     private readonly ConcurrentDictionary<int, ConnectionCallback> _callbacks = new();
     private readonly Root _rootObject;
     private readonly TaskQueue _queue = new();
-    private readonly HashSet<List<ClientSideCallMetadata>> _stackCollectors = new();
+    private int _tracingCount;
     private int _lastId;
     private string _closedErrorMessage = string.Empty;
 
@@ -87,14 +87,16 @@ internal class Connection : IDisposable
         GC.SuppressFinalize(this);
     }
 
-    internal void StartCollectingCallMetadata(List<ClientSideCallMetadata> collector)
+    internal void SetIsTracing(bool isTracing)
     {
-        _stackCollectors.Add(collector);
-    }
-
-    internal void StopCollectingCallMetadata(List<ClientSideCallMetadata> collector)
-    {
-        _stackCollectors.Remove(collector);
+        if (isTracing)
+        {
+            _tracingCount++;
+        }
+        else
+        {
+            _tracingCount--;
+        }
     }
 
     internal Task<JsonElement?> SendMessageToServerAsync(
@@ -135,14 +137,6 @@ internal class Connection : IDisposable
                 .ToDictionary(f => f.Key, f => f.Value);
         }
         var (apiName, frames) = (ApiZone.Value[0].ApiName, ApiZone.Value[0].Frames);
-        foreach (var collector in _stackCollectors)
-        {
-            collector.Add(new()
-            {
-                Id = id,
-                Stack = frames,
-            });
-        }
         var metadata = new Dictionary<string, object>
         {
             ["internal"] = string.IsNullOrEmpty(apiName),
@@ -177,6 +171,11 @@ internal class Connection : IDisposable
 
             return OnMessage(message);
         }).ConfigureAwait(false);
+
+        if (_tracingCount > 0 && frames.Count > 0 && guid != "localUtils")
+        {
+            LocalUtils.AddStackToTracingNoReply(frames, id);
+        }
 
         var result = await tcs.Task.ConfigureAwait(false);
 

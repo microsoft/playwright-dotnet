@@ -37,13 +37,13 @@ internal class LocalUtilsChannel : Channel<LocalUtils>
     {
     }
 
-    internal Task ZipAsync(string zipFile, List<NameValue> entries, string mode, List<ClientSideCallMetadata> metadata, bool includeSources) =>
+    internal Task ZipAsync(string zipFile, List<NameValue> entries, string mode, string stacksId, bool includeSources) =>
         Connection.SendMessageToServerAsync(Guid, "zip", new Dictionary<string, object>
         {
                 { "zipFile", zipFile },
                 { "entries", entries },
                 { "mode", mode },
-                { "metadata", metadata },
+                { "stacksId", stacksId },
                 { "includeSources", includeSources },
         });
 
@@ -99,5 +99,33 @@ internal class LocalUtilsChannel : Channel<LocalUtils>
                 { "timeout", timeout },
             };
         return Connection.SendMessageToServerAsync<JsonPipeChannel>(Guid, "connect", args);
+    }
+
+    internal void AddStackToTracingNoReply(List<StackFrame> frames, int id)
+        => Connection.SendMessageToServerAsync(Guid, "addStackToTracingNoReply", new Dictionary<string, object>
+        {
+            {
+                "callData", new ClientSideCallMetadata()
+                {
+                    Id = id,
+                    Stack = frames,
+                }
+            },
+        }).IgnoreException();
+
+    internal Task TraceDiscardedAsync(string stacksId)
+        => Connection.SendMessageToServerAsync(Guid, "traceDiscarded", new Dictionary<string, object>
+        {
+            { "stacksId", stacksId },
+        });
+
+    internal async Task<string> TracingStartedAsync(string tracesDir, string traceName)
+    {
+        var response = await Connection.SendMessageToServerAsync(Guid, "tracingStarted", new Dictionary<string, object>
+        {
+            { "tracesDir", tracesDir },
+            { "traceName", traceName },
+        }).ConfigureAwait(false);
+        return response.GetString("stacksId", true);
     }
 }

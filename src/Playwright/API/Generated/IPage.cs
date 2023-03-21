@@ -51,7 +51,7 @@ namespace Microsoft.Playwright;
 ///         await using var browser = await playwright.Webkit.LaunchAsync();<br/>
 ///         var page = await browser.NewPageAsync();<br/>
 ///         await page.GotoAsync("https://www.theverge.com");<br/>
-///         await page.ScreenshotAsync(new PageScreenshotOptions { Path = "theverge.png" });<br/>
+///         await page.ScreenshotAsync(new() { Path = "theverge.png" });<br/>
 ///     }<br/>
 /// }
 /// </code>
@@ -302,7 +302,7 @@ public partial interface IPage
     /// </para>
     /// <para>**Usage**</para>
     /// <para>An example of overriding <c>Math.random</c> before the page loads:</para>
-    /// <code>await page.AddInitScriptAsync("./preload.js");</code>
+    /// <code>await page.AddInitScriptAsync(scriptPath: "./preload.js");</code>
     /// </summary>
     /// <remarks>
     /// <para>
@@ -586,20 +586,20 @@ public partial interface IPage
     /// await page.EvaluateAsync("() =&gt; matchMedia('print').matches");<br/>
     /// // → false<br/>
     /// <br/>
-    /// await page.EmulateMediaAsync(new PageEmulateMediaOptions { Media = Media.Print });<br/>
+    /// await page.EmulateMediaAsync(new() { Media = Media.Print });<br/>
     /// await page.EvaluateAsync("() =&gt; matchMedia('screen').matches");<br/>
     /// // → false<br/>
     /// await page.EvaluateAsync("() =&gt; matchMedia('print').matches");<br/>
     /// // → true<br/>
     /// <br/>
-    /// await page.EmulateMediaAsync(new PageEmulateMediaOptions { Media = Media.Screen });<br/>
+    /// await page.EmulateMediaAsync(new() { Media = Media.Screen });<br/>
     /// await page.EvaluateAsync("() =&gt; matchMedia('screen').matches");<br/>
     /// // → true<br/>
     /// await page.EvaluateAsync("() =&gt; matchMedia('print').matches");<br/>
     /// // → false
     /// </code>
     /// <code>
-    /// await page.EmulateMediaAsync(new PageEmulateMediaOptions { ColorScheme = ColorScheme.Dark });<br/>
+    /// await page.EmulateMediaAsync(new() { ColorScheme = ColorScheme.Dark });<br/>
     /// await page.EvaluateAsync("matchMedia('(prefers-color-scheme: dark)').matches");<br/>
     /// // → true<br/>
     /// await page.EvaluateAsync("matchMedia('(prefers-color-scheme: light)').matches");<br/>
@@ -994,26 +994,38 @@ public partial interface IPage
     ILocator GetByAltText(Regex text, PageGetByAltTextOptions? options = default);
 
     /// <summary>
-    /// <para>Allows locating input elements by the text of the associated label.</para>
+    /// <para>
+    /// Allows locating input elements by the text of the associated <c>&lt;label&gt;</c>
+    /// or <c>aria-labelledby</c> element, or by the <c>aria-label</c> attribute.
+    /// </para>
     /// <para>**Usage**</para>
     /// <para>
-    /// For example, this method will find the input by label text "Password" in the following
-    /// DOM:
+    /// For example, this method will find inputs by label "Username" and "Password" in
+    /// the following DOM:
     /// </para>
-    /// <code>await page.GetByLabel("Password").FillAsync("secret");</code>
+    /// <code>
+    /// await page.GetByLabel("Username").FillAsync("john");<br/>
+    /// await page.GetByLabel("Password").FillAsync("secret");
+    /// </code>
     /// </summary>
     /// <param name="text">Text to locate the element for.</param>
     /// <param name="options">Call options</param>
     ILocator GetByLabel(string text, PageGetByLabelOptions? options = default);
 
     /// <summary>
-    /// <para>Allows locating input elements by the text of the associated label.</para>
+    /// <para>
+    /// Allows locating input elements by the text of the associated <c>&lt;label&gt;</c>
+    /// or <c>aria-labelledby</c> element, or by the <c>aria-label</c> attribute.
+    /// </para>
     /// <para>**Usage**</para>
     /// <para>
-    /// For example, this method will find the input by label text "Password" in the following
-    /// DOM:
+    /// For example, this method will find inputs by label "Username" and "Password" in
+    /// the following DOM:
     /// </para>
-    /// <code>await page.GetByLabel("Password").FillAsync("secret");</code>
+    /// <code>
+    /// await page.GetByLabel("Username").FillAsync("john");<br/>
+    /// await page.GetByLabel("Password").FillAsync("secret");
+    /// </code>
     /// </summary>
     /// <param name="text">Text to locate the element for.</param>
     /// <param name="options">Call options</param>
@@ -1535,8 +1547,8 @@ public partial interface IPage
     /// <para>**Usage**</para>
     /// <code>
     /// // Generates a PDF with 'screen' media type<br/>
-    /// await page.EmulateMediaAsync(new PageEmulateMediaOptions { Media = Media.Screen });<br/>
-    /// await page.PdfAsync(new PagePdfOptions { Path = "page.pdf" });
+    /// await page.EmulateMediaAsync(new() { Media = Media.Screen });<br/>
+    /// await page.PdfAsync(new() { Path = "page.pdf" });
     /// </code>
     /// <para>
     /// The <paramref name="width"/>, <paramref name="height"/>, and <paramref name="margin"/>
@@ -1627,11 +1639,11 @@ public partial interface IPage
     /// var page = await browser.NewPageAsync();<br/>
     /// await page.GotoAsync("https://keycode.info");<br/>
     /// await page.PressAsync("body", "A");<br/>
-    /// await page.ScreenshotAsync(new PageScreenshotOptions { Path = "A.png" });<br/>
+    /// await page.ScreenshotAsync(new() { Path = "A.png" });<br/>
     /// await page.PressAsync("body", "ArrowLeft");<br/>
-    /// await page.ScreenshotAsync(new PageScreenshotOptions { Path = "ArrowLeft.png" });<br/>
+    /// await page.ScreenshotAsync(new() { Path = "ArrowLeft.png" });<br/>
     /// await page.PressAsync("body", "Shift+O");<br/>
-    /// await page.ScreenshotAsync(new PageScreenshotOptions { Path = "O.png" });
+    /// await page.ScreenshotAsync(new() { Path = "O.png" });
     /// </code>
     /// </summary>
     /// <param name="selector">
@@ -1713,7 +1725,7 @@ public partial interface IPage
     /// await page.RouteAsync("/api/**", async r =&gt;<br/>
     /// {<br/>
     ///   if (r.Request.PostData.Contains("my-string"))<br/>
-    ///       await r.FulfillAsync(new RouteFulfillOptions { Body = "mocked-data" });<br/>
+    ///       await r.FulfillAsync(new() { Body = "mocked-data" });<br/>
     ///   else<br/>
     ///       await r.ContinueAsync();<br/>
     /// });
@@ -1771,7 +1783,7 @@ public partial interface IPage
     /// await page.RouteAsync("/api/**", async r =&gt;<br/>
     /// {<br/>
     ///   if (r.Request.PostData.Contains("my-string"))<br/>
-    ///       await r.FulfillAsync(new RouteFulfillOptions { Body = "mocked-data" });<br/>
+    ///       await r.FulfillAsync(new() { Body = "mocked-data" });<br/>
     ///   else<br/>
     ///       await r.ContinueAsync();<br/>
     /// });
@@ -1829,7 +1841,7 @@ public partial interface IPage
     /// await page.RouteAsync("/api/**", async r =&gt;<br/>
     /// {<br/>
     ///   if (r.Request.PostData.Contains("my-string"))<br/>
-    ///       await r.FulfillAsync(new RouteFulfillOptions { Body = "mocked-data" });<br/>
+    ///       await r.FulfillAsync(new() { Body = "mocked-data" });<br/>
     ///   else<br/>
     ///       await r.ContinueAsync();<br/>
     /// });

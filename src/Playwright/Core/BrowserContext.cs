@@ -532,17 +532,31 @@ internal class BrowserContext : ChannelOwnerBase, IChannelOwner<BrowserContext>,
         return Channel.ExposeBindingAsync(name, handle);
     }
 
+    private HarContentPolicy? RouteFromHarUpdateContentPolicyToHarContentPolicy(RouteFromHarUpdateContentPolicy? policy)
+    {
+        switch (policy)
+        {
+            case RouteFromHarUpdateContentPolicy.Attach:
+                return HarContentPolicy.Attach;
+            case RouteFromHarUpdateContentPolicy.Embed:
+                return HarContentPolicy.Embed;
+            default:
+                return null;
+        }
+    }
+
     internal async Task RecordIntoHarAsync(string har, Page page, BrowserContextRouteFromHAROptions options)
     {
+        var contentPolicy = RouteFromHarUpdateContentPolicyToHarContentPolicy(options?.UpdateContent);
         var harId = await Channel.HarStartAsync(
             page,
             har,
             options?.Url,
             options?.UrlString,
             options?.UrlRegex,
-            options?.Content,
-            options?.Mode).ConfigureAwait(false);
-        _harRecorders.Add(harId, new() { Path = har, Content = options?.Content ?? HarContentPolicy.Attach });
+            contentPolicy,
+            options?.UpdateMode).ConfigureAwait(false);
+        _harRecorders.Add(harId, new() { Path = har, Content = contentPolicy ?? HarContentPolicy.Attach });
     }
 
     public async Task RouteFromHARAsync(string har, BrowserContextRouteFromHAROptions options = null)

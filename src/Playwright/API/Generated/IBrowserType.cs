@@ -104,7 +104,7 @@ public partial interface IBrowserType
     /// from default arguments:
     /// </para>
     /// <code>
-    /// var browser = await playwright.Chromium.LaunchAsync(new BrowserTypeLaunchOptions {<br/>
+    /// var browser = await playwright.Chromium.LaunchAsync(new() {<br/>
     ///     IgnoreDefaultArgs = new[] { "--mute-audio" }<br/>
     /// })
     /// </code>

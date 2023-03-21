@@ -44,8 +44,8 @@ internal class LocalUtils : ChannelOwnerBase, IChannelOwner<LocalUtils>
 
     IChannel<LocalUtils> IChannelOwner<LocalUtils>.Channel => _channel;
 
-    internal Task ZipAsync(string zipFile, List<NameValue> entries, string mode, List<ClientSideCallMetadata> metadata, bool includeSources)
-        => _channel.ZipAsync(zipFile, entries, mode, metadata, includeSources);
+    internal Task ZipAsync(string zipFile, List<NameValue> entries, string mode, string stacksId, bool includeSources)
+        => _channel.ZipAsync(zipFile, entries, mode, stacksId, includeSources);
 
     internal Task<(string HarId, string Error)> HarOpenAsync(string file)
         => _channel.HarOpenAsync(file);
@@ -67,6 +67,15 @@ internal class LocalUtils : ChannelOwnerBase, IChannelOwner<LocalUtils>
 
     internal Task<JsonPipeChannel> ConnectAsync(string wsEndpoint = default, IEnumerable<KeyValuePair<string, string>> headers = default, float? slowMo = default, float? timeout = default)
          => _channel.ConnectAsync(wsEndpoint, headers, slowMo, timeout);
+
+    internal void AddStackToTracingNoReply(List<StackFrame> stack, int id)
+         => _channel.AddStackToTracingNoReply(stack, id);
+
+    internal Task TraceDiscardedAsync(string stacksId)
+        => _channel.TraceDiscardedAsync(stacksId);
+
+    internal Task<string> TracingStartedAsync(string tracesDir, string traceName)
+        => _channel.TracingStartedAsync(tracesDir, traceName);
 }
 
 internal class LocalUtilsHarLookupResult
