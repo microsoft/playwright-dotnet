@@ -36,6 +36,7 @@ internal class Browser : ChannelOwnerBase, IChannelOwner<Browser>, IBrowser
     private readonly BrowserInitializer _initializer;
     private readonly TaskCompletionSource<bool> _closedTcs = new();
     internal readonly List<BrowserContext> _contexts = new();
+    internal BrowserType _browserType;
 
     internal Browser(IChannelOwner parent, string guid, BrowserInitializer initializer) : base(parent, guid)
     {
@@ -61,16 +62,7 @@ internal class Browser : ChannelOwnerBase, IChannelOwner<Browser>, IBrowser
 
     internal BrowserChannel Channel { get; }
 
-    public IBrowserType BrowserType { get; private set; }
-
-    internal void SetBrowserType(BrowserType browserType)
-    {
-        BrowserType = browserType;
-        foreach (var context in _contexts)
-        {
-            context.SetBrowserType(browserType);
-        }
-    }
+    public IBrowserType BrowserType => _browserType;
 
     public async Task CloseAsync()
     {
@@ -130,11 +122,7 @@ internal class Browser : ChannelOwnerBase, IChannelOwner<Browser>, IBrowser
             baseUrl: options.BaseURL,
             strictSelectors: options.StrictSelectors,
             forcedColors: options.ForcedColors).ConfigureAwait(false)).Object;
-
-        context.Options = options;
-
-        _contexts.Add(context);
-        context.SetBrowserType((BrowserType)this.BrowserType);
+        _browserType.DidCreateContext(context, options, null);
         return context;
     }
 

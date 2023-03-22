@@ -30,6 +30,7 @@ namespace Microsoft.Playwright.Core;
 
 internal class Tracing : ChannelOwnerBase, IChannelOwner<Tracing>, ITracing
 {
+    internal string _tracesDir;
     private readonly TracingChannel _channel;
     private bool _includeSources;
     private string _stacksId;
@@ -73,7 +74,7 @@ internal class Tracing : ChannelOwnerBase, IChannelOwner<Tracing>, ITracing
             _isTracing = true;
             _channel.Connection.SetIsTracing(true);
         }
-        _stacksId = await _channel.Connection.LocalUtils.TracingStartedAsync(tracesDir: "/Users/maxschmitt/Developer/playwright-dotnet/tmp", traceName: traceName).ConfigureAwait(false);
+        _stacksId = await _channel.Connection.LocalUtils.TracingStartedAsync(tracesDir: _tracesDir, traceName: traceName).ConfigureAwait(false);
     }
 
     public Task StopChunkAsync(TracingStopChunkOptions options = default) => DoStopChunkAsync(filePath: options?.Path);
