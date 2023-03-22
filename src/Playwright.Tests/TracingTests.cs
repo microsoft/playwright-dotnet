@@ -357,14 +357,9 @@ public class TracingTests : ContextTestEx
                 var @event = JsonSerializer.Deserialize<TraceEventEntry>(line, new JsonSerializerOptions() { PropertyNameCaseInsensitive = true });
                 if (@event.Type == "before")
                 {
-                    var action = new TraceEventEntry()
-                    {
-                        Type = "action",
-                        ApiName = @event.ApiName,
-                        StartTime = @event.StartTime
-                    };
-                    events.Add(action);
-                    actionMap[@event.CallID] = action;
+                    @event.Type = "action";
+                    events.Add(@event);
+                    actionMap[@event.CallID] = @event;
                 }
                 else if (@event.Type == "input")
                 {
