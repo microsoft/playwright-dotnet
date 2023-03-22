@@ -42,17 +42,21 @@ internal class BrowserContext : ChannelOwnerBase, IChannelOwner<BrowserContext>,
     private readonly TaskCompletionSource<bool> _closeTcs = new();
     private readonly Dictionary<string, Delegate> _bindings = new();
     private readonly BrowserContextInitializer _initializer;
-    internal readonly ITracing _tracing;
+    internal readonly Tracing _tracing;
     internal readonly IAPIRequestContext _request;
     private readonly IDictionary<string, HarRecorder> _harRecorders = new Dictionary<string, HarRecorder>();
     internal readonly List<IWorker> _serviceWorkers = new();
     private List<RouteHandler> _routes = new();
     internal readonly List<Page> _pages = new();
+    private readonly Browser _browser;
+    private bool _closeWasCalled;
 
     internal TimeoutSettings _timeoutSettings = new();
 
     internal BrowserContext(IChannelOwner parent, string guid, BrowserContextInitializer initializer) : base(parent, guid)
     {
+        _browser = parent as Browser;
+        _browser?._contexts.Add(this);
         Channel = new(guid, parent.Connection, this);
         Channel.Close += (_, _) => OnClose();
         Channel.Page += Channel_OnPage;
@@ -95,7 +99,6 @@ internal class BrowserContext : ChannelOwnerBase, IChannelOwner<BrowserContext>,
         _tracing = initializer.Tracing;
         _request = initializer.RequestContext;
         _initializer = initializer;
-        Browser = parent as IBrowser;
     }
 
     private event EventHandler<IRequest> _requestImpl;
@@ -146,7 +149,7 @@ internal class BrowserContext : ChannelOwnerBase, IChannelOwner<BrowserContext>,
 
     IChannel<BrowserContext> IChannelOwner<BrowserContext>.Channel => Channel;
 
-    public IBrowser Browser { get; }
+    public IBrowser Browser => _browser;
 
     public IReadOnlyList<IPage> Pages => _pages;
 
@@ -180,7 +183,13 @@ internal class BrowserContext : ChannelOwnerBase, IChannelOwner<BrowserContext>,
 
     public async Task CloseAsync()
     {
-        try
+        if (_closeWasCalled)
+        {
+            return;
+        }
+        _closeWasCalled = true;
+        await WrapApiCallAsync(
+            async () =>
         {
             foreach (var harRecorder in _harRecorders)
             {
@@ -199,21 +208,20 @@ internal class BrowserContext : ChannelOwnerBase, IChannelOwner<BrowserContext>,
                 }
                 await artifact.DeleteAsync().ConfigureAwait(false);
             }
-            await Channel.CloseAsync().ConfigureAwait(false);
-            await _closeTcs.Task.ConfigureAwait(false);
-        }
-        catch (Exception e) when (DriverMessages.IsSafeCloseError(e))
-        {
-            // Swallow exception
-        }
+        },
+            true).ConfigureAwait(false);
+        await Channel.CloseAsync().ConfigureAwait(false);
+        await _closeTcs.Task.ConfigureAwait(false);
     }
 
-    internal void SetBrowserType(BrowserType browserType)
+    internal void SetOptions(BrowserNewContextOptions contextOptions, string tracesDir)
     {
+        Options = contextOptions;
         if (!string.IsNullOrEmpty(Options?.RecordHarPath))
         {
             _harRecorders.Add(string.Empty, new() { Path = Options.RecordHarPath, Content = Options.RecordHarContent });
         }
+        _tracing._tracesDir = tracesDir;
     }
 
     public Task<IReadOnlyList<BrowserContextCookiesResult>> CookiesAsync(IEnumerable<string> urls = null) => Channel.CookiesAsync(urls);
@@ -532,17 +540,31 @@ internal class BrowserContext : ChannelOwnerBase, IChannelOwner<BrowserContext>,
         return Channel.ExposeBindingAsync(name, handle);
     }
 
+    private HarContentPolicy? RouteFromHarUpdateContentPolicyToHarContentPolicy(RouteFromHarUpdateContentPolicy? policy)
+    {
+        switch (policy)
+        {
+            case RouteFromHarUpdateContentPolicy.Attach:
+                return HarContentPolicy.Attach;
+            case RouteFromHarUpdateContentPolicy.Embed:
+                return HarContentPolicy.Embed;
+            default:
+                return null;
+        }
+    }
+
     internal async Task RecordIntoHarAsync(string har, Page page, BrowserContextRouteFromHAROptions options)
     {
+        var contentPolicy = RouteFromHarUpdateContentPolicyToHarContentPolicy(options?.UpdateContent);
         var harId = await Channel.HarStartAsync(
             page,
             har,
             options?.Url,
             options?.UrlString,
             options?.UrlRegex,
-            options?.Content,
-            options?.Mode).ConfigureAwait(false);
-        _harRecorders.Add(harId, new() { Path = har, Content = options?.Content ?? HarContentPolicy.Attach });
+            contentPolicy,
+            options?.UpdateMode).ConfigureAwait(false);
+        _harRecorders.Add(harId, new() { Path = har, Content = contentPolicy ?? HarContentPolicy.Attach });
     }
 
     public async Task RouteFromHARAsync(string har, BrowserContextRouteFromHAROptions options = null)

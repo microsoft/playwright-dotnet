@@ -43,7 +43,7 @@ namespace Microsoft.Playwright;
 /// </para>
 /// <code>
 /// using var playwright = await Playwright.CreateAsync();<br/>
-/// var browser = await playwright.Firefox.LaunchAsync(new BrowserTypeLaunchOptions { Headless = false });<br/>
+/// var browser = await playwright.Firefox.LaunchAsync(new() { Headless = false });<br/>
 /// // Create a new incognito browser context<br/>
 /// var context = await browser.NewContextAsync();<br/>
 /// // Create a new page inside context.<br/>
@@ -171,7 +171,7 @@ public partial interface IBrowserContext
     /// </para>
     /// <para>**Usage**</para>
     /// <para>An example of overriding <c>Math.random</c> before the page loads:</para>
-    /// <code>await context.AddInitScriptAsync(new BrowserContextAddInitScriptOptions { ScriptPath = "preload.js" });</code>
+    /// <code>await context.AddInitScriptAsync(scriptPath: "preload.js");</code>
     /// </summary>
     /// <remarks>
     /// <para>
@@ -246,7 +246,7 @@ public partial interface IBrowserContext
     /// using Microsoft.Playwright;<br/>
     /// <br/>
     /// using var playwright = await Playwright.CreateAsync();<br/>
-    /// var browser = await playwright.Webkit.LaunchAsync(new BrowserTypeLaunchOptions { Headless = false });<br/>
+    /// var browser = await playwright.Webkit.LaunchAsync(new() { Headless = false });<br/>
     /// var context = await browser.NewContextAsync();<br/>
     /// <br/>
     /// await context.ExposeBindingAsync("pageURL", source =&gt; source.Page.Url);<br/>
@@ -308,7 +308,7 @@ public partial interface IBrowserContext
     ///     public static async Task Main()<br/>
     ///     {<br/>
     ///         using var playwright = await Playwright.CreateAsync();<br/>
-    ///         var browser = await playwright.Webkit.LaunchAsync(new BrowserTypeLaunchOptions { Headless = false });<br/>
+    ///         var browser = await playwright.Webkit.LaunchAsync(new() { Headless = false });<br/>
     ///         var context = await browser.NewContextAsync();<br/>
     /// <br/>
     ///         await context.ExposeFunctionAsync("sha256", (string input) =&gt;<br/>

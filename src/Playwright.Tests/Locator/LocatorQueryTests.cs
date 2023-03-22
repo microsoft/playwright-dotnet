@@ -167,15 +167,17 @@ public class LocatorQueryTests : PageTestEx
     {
         await Page.SetContentAsync("<div><span>hello</span></div><div><span>world</span></div>");
         await Expect(Page.Locator("div", new() { Has = Page.Locator("text=world") })).ToHaveCountAsync(1);
-        Assert.AreEqual("<div><span>world</span></div>", await Page.Locator("div", new() { Has = Page.Locator("text=world") }).EvaluateAsync<string>("e => e.outerHTML"));
+        Assert.AreEqual("<div><span>world</span></div>", RemoveHighlight(await Page.Locator("div", new() { Has = Page.Locator("text=world") }).EvaluateAsync<string>("e => e.outerHTML")));
         await Expect(Page.Locator("div", new() { Has = Page.Locator("text=hello") })).ToHaveCountAsync(1);
-        Assert.AreEqual("<div><span>hello</span></div>", await Page.Locator("div", new() { Has = Page.Locator("text=hello") }).EvaluateAsync<string>("e => e.outerHTML"));
+        Assert.AreEqual("<div><span>hello</span></div>", RemoveHighlight(await Page.Locator("div", new() { Has = Page.Locator("text=hello") }).EvaluateAsync<string>("e => e.outerHTML")));
         await Expect(Page.Locator("div", new() { Has = Page.Locator("xpath=./span") })).ToHaveCountAsync(2);
         await Expect(Page.Locator("div", new() { Has = Page.Locator("span") })).ToHaveCountAsync(2);
         await Expect(Page.Locator("div", new() { Has = Page.Locator("span", new() { HasTextString = "wor" }) })).ToHaveCountAsync(1);
-        Assert.AreEqual("<div><span>world</span></div>", await Page.Locator("div", new() { Has = Page.Locator("span", new() { HasTextString = "wor" }) }).EvaluateAsync<string>("e => e.outerHTML"));
+        Assert.AreEqual("<div><span>world</span></div>", RemoveHighlight(await Page.Locator("div", new() { Has = Page.Locator("span", new() { HasTextString = "wor" }) }).EvaluateAsync<string>("e => e.outerHTML")));
         await Expect(Page.Locator("div", new() { HasTextString = "wor", Has = Page.Locator("span") })).ToHaveCountAsync(1);
     }
+
+    private string RemoveHighlight(string markup) => Regex.Replace(markup, @"\s__playwright_target__=""[^""]+""", "");
 
     [PlaywrightTest("locator-query.spec.ts", "should support locator.filter")]
     public async Task ShouldSupportLocatorFilter()

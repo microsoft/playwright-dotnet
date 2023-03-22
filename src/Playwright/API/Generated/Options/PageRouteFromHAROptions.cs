@@ -40,20 +40,14 @@ public class PageRouteFromHAROptions
             return;
         }
 
-        Content = clone.Content;
-        Mode = clone.Mode;
         NotFound = clone.NotFound;
         Update = clone.Update;
+        UpdateContent = clone.UpdateContent;
+        UpdateMode = clone.UpdateMode;
         Url = clone.Url;
         UrlRegex = clone.UrlRegex;
         UrlString = clone.UrlString;
     }
-
-    [JsonPropertyName("content")]
-    public HarContentPolicy? Content { get; set; }
-
-    [JsonPropertyName("mode")]
-    public HarMode? Mode { get; set; }
 
     /// <summary>
     /// <list type="bullet">
@@ -74,6 +68,26 @@ public class PageRouteFromHAROptions
     /// </summary>
     [JsonPropertyName("update")]
     public bool? Update { get; set; }
+
+    /// <summary>
+    /// <para>
+    /// Optional setting to control resource content management. If <c>attach</c> is specified,
+    /// resources are persisted as separate files or entries in the ZIP archive. If <c>embed</c>
+    /// is specified, content is stored inline the HAR file.
+    /// </para>
+    /// </summary>
+    [JsonPropertyName("updateContent")]
+    public RouteFromHarUpdateContentPolicy? UpdateContent { get; set; }
+
+    /// <summary>
+    /// <para>
+    /// When set to <c>minimal</c>, only record information necessary for routing from HAR.
+    /// This omits sizes, timing, page, cookies, security and other types of HAR information
+    /// that are not used when replaying from HAR. Defaults to <c>full</c>.
+    /// </para>
+    /// </summary>
+    [JsonPropertyName("updateMode")]
+    public HarMode? UpdateMode { get; set; }
 
     /// <summary>
     /// <para>

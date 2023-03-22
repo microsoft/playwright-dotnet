@@ -171,11 +171,11 @@ public partial interface IKeyboard
     /// <code>
     /// await page.GotoAsync("https://keycode.info");<br/>
     /// await page.Keyboard.PressAsync("A");<br/>
-    /// await page.ScreenshotAsync(new PageScreenshotOptions { Path = "A.png" });<br/>
+    /// await page.ScreenshotAsync(new() { Path = "A.png" });<br/>
     /// await page.Keyboard.PressAsync("ArrowLeft");<br/>
-    /// await page.ScreenshotAsync(new PageScreenshotOptions { Path = "ArrowLeft.png" });<br/>
+    /// await page.ScreenshotAsync(new() { Path = "ArrowLeft.png" });<br/>
     /// await page.Keyboard.PressAsync("Shift+O");<br/>
-    /// await page.ScreenshotAsync(new PageScreenshotOptions { Path = "O.png" });<br/>
+    /// await page.ScreenshotAsync(new() { Path = "O.png" });<br/>
     /// await browser.CloseAsync();
     /// </code>
     /// <para>Shortcut for <see cref="IKeyboard.DownAsync"/> and <see cref="IKeyboard.UpAsync"/>.</para>
@@ -196,7 +196,7 @@ public partial interface IKeyboard
     /// <para>**Usage**</para>
     /// <code>
     /// await page.Keyboard.TypeAsync("Hello"); // types instantly<br/>
-    /// await page.Keyboard.TypeAsync("World", new KeyboardTypeOptions { Delay = 100 }); // types slower, like a user
+    /// await page.Keyboard.TypeAsync("World", new() { Delay = 100 }); // types slower, like a user
     /// </code>
     /// </summary>
     /// <remarks>

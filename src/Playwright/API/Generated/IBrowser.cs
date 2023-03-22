@@ -40,7 +40,7 @@ namespace Microsoft.Playwright;
 /// <br/>
 /// using var playwright = await Playwright.CreateAsync();<br/>
 /// var firefox = playwright.Firefox;<br/>
-/// var browser = await firefox.LaunchAsync(new BrowserTypeLaunchOptions { Headless = false });<br/>
+/// var browser = await firefox.LaunchAsync(new() { Headless = false });<br/>
 /// var page = await browser.NewPageAsync();<br/>
 /// await page.GotoAsync("https://www.bing.com");<br/>
 /// await browser.CloseAsync();

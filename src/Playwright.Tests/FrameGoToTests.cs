@@ -46,10 +46,9 @@ public class FrameGoToTests : PageTestEx
     public async Task ShouldRejectWhenFrameDetaches()
     {
         await Page.GotoAsync(Server.Prefix + "/frames/one-frame.html");
-        Server.SetRoute("/one-style.css", _ => Task.Delay(10000));
-        var waitForRequestTask = Server.WaitForRequest("/one-style.css");
-        var navigationTask = Page.FirstChildFrame().GotoAsync(Server.EmptyPage);
-        await waitForRequestTask;
+        Server.SetRoute("/one-style.css", _ => Task.Delay(-1));
+        var navigationTask = Page.FirstChildFrame().GotoAsync(Server.Prefix + "/one-style.html");
+        await Server.WaitForRequest("/one-style.css");
         await Page.EvalOnSelectorAsync("iframe", "frame => frame.remove()");
         var exception = await PlaywrightAssert.ThrowsAsync<PlaywrightException>(() => navigationTask);
         Assert.True(exception.Message.Contains("frame was detached") || exception.Message.Contains("net::ERR_ABORTED"));

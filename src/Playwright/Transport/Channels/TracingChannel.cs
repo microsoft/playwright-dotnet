@@ -55,11 +55,12 @@ internal class TracingChannel : Channel<Tracing>
             Guid,
             "tracingStop");
 
-    internal Task StartChunkAsync(string title = null)
-        => Connection.SendMessageToServerAsync(Guid, "tracingStartChunk", new Dictionary<string, object>
+    internal async Task<string> StartChunkAsync(string title = null, string name = null)
+        => (await Connection.SendMessageToServerAsync(Guid, "tracingStartChunk", new Dictionary<string, object>
         {
             ["title"] = title,
-        });
+            ["name"] = name,
+        }).ConfigureAwait(false))?.GetProperty("traceName").ToString();
 
     internal async Task<(Artifact Artifact, List<NameValue> Entries)> TracingStopChunkAsync(string mode)
     {

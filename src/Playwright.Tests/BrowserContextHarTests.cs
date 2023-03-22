@@ -460,7 +460,7 @@ public class BrowserContextHarTests : ContextTestEx
         var harPath = Path.Join(tmpDir.Path, "har.zip");
         var context1 = await Browser.NewContextAsync();
         var page1 = await context1.NewPageAsync();
-        await page1.RouteFromHARAsync(harPath, new() { Update = true, Content = HarContentPolicy.Embed, Mode = HarMode.Full });
+        await page1.RouteFromHARAsync(harPath, new() { Update = true, UpdateContent = RouteFromHarUpdateContentPolicy.Embed, UpdateMode = HarMode.Full });
         await page1.GotoAsync(Server.Prefix + "/one-style.html");
         await context1.CloseAsync();
 

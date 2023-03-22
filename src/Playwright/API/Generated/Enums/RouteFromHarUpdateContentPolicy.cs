@@ -22,39 +22,18 @@
  * SOFTWARE.
  */
 
-using System.Text.Json.Serialization;
+using System.Runtime.Serialization;
 
 #nullable enable
 
 namespace Microsoft.Playwright;
 
-public class TracingStartChunkOptions
+public enum RouteFromHarUpdateContentPolicy
 {
-    public TracingStartChunkOptions() { }
-
-    public TracingStartChunkOptions(TracingStartChunkOptions clone)
-    {
-        if (clone == null)
-        {
-            return;
-        }
-
-        Name = clone.Name;
-        Title = clone.Title;
-    }
-
-    /// <summary>
-    /// <para>
-    /// If specified, the trace is going to be saved into the file with the given name inside
-    /// the <paramref name="tracesDir"/> folder specified in <see cref="IBrowserType.LaunchAsync"/>.
-    /// </para>
-    /// </summary>
-    [JsonPropertyName("name")]
-    public string? Name { get; set; }
-
-    /// <summary><para>Trace name to be shown in the Trace Viewer.</para></summary>
-    [JsonPropertyName("title")]
-    public string? Title { get; set; }
+    [EnumMember(Value = "embed")]
+    Embed,
+    [EnumMember(Value = "attach")]
+    Attach,
 }
 
 #nullable disable

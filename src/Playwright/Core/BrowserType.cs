@@ -77,7 +77,7 @@ internal class BrowserType : ChannelOwnerBase, IChannelOwner<BrowserType>, IBrow
             slowMo: options.SlowMo,
             ignoreDefaultArgs: options.IgnoreDefaultArgs,
             ignoreAllDefaultArgs: options.IgnoreAllDefaultArgs).ConfigureAwait(false)).Object;
-        browser.SetBrowserType(this);
+        DidLaunchBrowser(browser);
         return browser;
     }
 
@@ -135,19 +135,21 @@ internal class BrowserType : ChannelOwnerBase, IChannelOwner<BrowserType>, IBrow
             forcedColors: options.ForcedColors).ConfigureAwait(false)).Object;
 
         // TODO: unite with a single browser context options type which is derived from channels
-        context.Options = new()
-        {
-            RecordVideoDir = options.RecordVideoDir,
-            RecordVideoSize = options.RecordVideoSize,
-            RecordHarContent = options.RecordHarContent,
-            RecordHarMode = options.RecordHarMode,
-            RecordHarOmitContent = options.RecordHarOmitContent,
-            RecordHarPath = options.RecordHarPath,
-            RecordHarUrlFilter = options.RecordHarUrlFilter,
-            RecordHarUrlFilterString = options.RecordHarUrlFilterString,
-            RecordHarUrlFilterRegex = options.RecordHarUrlFilterRegex,
-        };
-        context.SetBrowserType(this);
+        DidCreateContext(
+            context,
+            new()
+            {
+                RecordVideoDir = options.RecordVideoDir,
+                RecordVideoSize = options.RecordVideoSize,
+                RecordHarContent = options.RecordHarContent,
+                RecordHarMode = options.RecordHarMode,
+                RecordHarOmitContent = options.RecordHarOmitContent,
+                RecordHarPath = options.RecordHarPath,
+                RecordHarUrlFilter = options.RecordHarUrlFilter,
+                RecordHarUrlFilterString = options.RecordHarUrlFilterString,
+                RecordHarUrlFilterRegex = options.RecordHarUrlFilterRegex,
+            },
+            options?.TracesDir);
 
         return context;
     }
@@ -231,7 +233,7 @@ internal class BrowserType : ChannelOwnerBase, IChannelOwner<BrowserType>, IBrow
             browser = playwright.PreLaunchedBrowser;
             browser.ShouldCloseConnectionOnClose = true;
             browser.Disconnected += (_, _) => ClosePipe();
-            browser.SetBrowserType(this);
+            DidLaunchBrowser(browser);
             return playwright.PreLaunchedBrowser;
         }
         var task = CreateBrowserAsync();
@@ -248,11 +250,22 @@ internal class BrowserType : ChannelOwnerBase, IChannelOwner<BrowserType>, IBrow
         options ??= new BrowserTypeConnectOverCDPOptions();
         JsonElement result = await _channel.ConnectOverCDPAsync(endpointURL, headers: options.Headers, slowMo: options.SlowMo, timeout: options.Timeout).ConfigureAwait(false);
         Browser browser = result.GetProperty("browser").ToObject<Browser>(_channel.Connection.DefaultJsonSerializerOptions);
+        DidLaunchBrowser(browser);
         if (result.TryGetProperty("defaultContext", out JsonElement defaultContextValue))
         {
-            browser._contexts.Add(defaultContextValue.ToObject<BrowserContext>(_channel.Connection.DefaultJsonSerializerOptions));
+            var defaultContext = defaultContextValue.ToObject<BrowserContext>(_channel.Connection.DefaultJsonSerializerOptions);
+            DidCreateContext(defaultContext, new(), null);
         }
-        browser.SetBrowserType(this);
         return browser;
+    }
+
+    internal void DidLaunchBrowser(Browser browser)
+    {
+        browser._browserType = this;
+    }
+
+    internal void DidCreateContext(BrowserContext context, BrowserNewContextOptions contextOptions, string tracesDir)
+    {
+        context.SetOptions(contextOptions, tracesDir);
     }
 }

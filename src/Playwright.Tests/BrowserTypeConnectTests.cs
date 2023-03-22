@@ -292,34 +292,6 @@ public class BrowserTypeConnectTests : PlaywrightTestEx
         await browser.CloseAsync();
     }
 
-    [PlaywrightTest("browsertype-connect.spec.ts", "should not throw on context.close after disconnect")]
-    public async Task ShouldNotThrowOnContextCloseAfterDisconnect()
-    {
-        var browser = await BrowserType.ConnectAsync(_remoteServer.WSEndpoint);
-        var context = await browser.NewContextAsync();
-        await context.NewPageAsync();
-
-        var tcs = new TaskCompletionSource<bool>();
-        browser.Disconnected += (_, e) => tcs.SetResult(true);
-        _remoteServer.Close();
-        await tcs.Task;
-        await context.CloseAsync();
-    }
-
-    [PlaywrightTest("browsertype-connect.spec.ts", "should not throw on page.close after disconnect")]
-    public async Task ShouldNotThrowOnPageCloseAfterDisconnect()
-    {
-        var browser = await BrowserType.ConnectAsync(_remoteServer.WSEndpoint);
-        var context = await browser.NewContextAsync();
-        var page = await context.NewPageAsync();
-
-        var tcs = new TaskCompletionSource<bool>();
-        browser.Disconnected += (_, e) => tcs.SetResult(true);
-        _remoteServer.Close();
-        await tcs.Task;
-        await page.CloseAsync();
-    }
-
     [PlaywrightTest("browsertype-connect.spec.ts", "should saveAs videos from remote browser")]
     public async Task ShouldSaveAsVideosFromRemoteBrowser()
     {

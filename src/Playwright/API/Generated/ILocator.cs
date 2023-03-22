@@ -469,8 +469,8 @@ public partial interface ILocator
     /// var rowLocator = page.Locator("tr");<br/>
     /// // ...<br/>
     /// await rowLocator<br/>
-    ///     .Filter(new LocatorFilterOptions { HasText = "text in column 1" })<br/>
-    ///     .Filter(new LocatorFilterOptions {<br/>
+    ///     .Filter(new() { HasText = "text in column 1" })<br/>
+    ///     .Filter(new() {<br/>
     ///         Has = page.GetByRole(AriaRole.Button, new() { Name = "column 2 button" } )<br/>
     ///     })<br/>
     ///     .ScreenshotAsync();
@@ -531,26 +531,38 @@ public partial interface ILocator
     ILocator GetByAltText(Regex text, LocatorGetByAltTextOptions? options = default);
 
     /// <summary>
-    /// <para>Allows locating input elements by the text of the associated label.</para>
+    /// <para>
+    /// Allows locating input elements by the text of the associated <c>&lt;label&gt;</c>
+    /// or <c>aria-labelledby</c> element, or by the <c>aria-label</c> attribute.
+    /// </para>
     /// <para>**Usage**</para>
     /// <para>
-    /// For example, this method will find the input by label text "Password" in the following
-    /// DOM:
+    /// For example, this method will find inputs by label "Username" and "Password" in
+    /// the following DOM:
     /// </para>
-    /// <code>await page.GetByLabel("Password").FillAsync("secret");</code>
+    /// <code>
+    /// await page.GetByLabel("Username").FillAsync("john");<br/>
+    /// await page.GetByLabel("Password").FillAsync("secret");
+    /// </code>
     /// </summary>
     /// <param name="text">Text to locate the element for.</param>
     /// <param name="options">Call options</param>
     ILocator GetByLabel(string text, LocatorGetByLabelOptions? options = default);
 
     /// <summary>
-    /// <para>Allows locating input elements by the text of the associated label.</para>
+    /// <para>
+    /// Allows locating input elements by the text of the associated <c>&lt;label&gt;</c>
+    /// or <c>aria-labelledby</c> element, or by the <c>aria-label</c> attribute.
+    /// </para>
     /// <para>**Usage**</para>
     /// <para>
-    /// For example, this method will find the input by label text "Password" in the following
-    /// DOM:
+    /// For example, this method will find inputs by label "Username" and "Password" in
+    /// the following DOM:
     /// </para>
-    /// <code>await page.GetByLabel("Password").FillAsync("secret");</code>
+    /// <code>
+    /// await page.GetByLabel("Username").FillAsync("john");<br/>
+    /// await page.GetByLabel("Password").FillAsync("secret");
+    /// </code>
     /// </summary>
     /// <param name="text">Text to locate the element for.</param>
     /// <param name="options">Call options</param>
