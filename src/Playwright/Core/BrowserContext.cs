@@ -48,6 +48,7 @@ internal class BrowserContext : ChannelOwnerBase, IChannelOwner<BrowserContext>,
     internal readonly List<IWorker> _serviceWorkers = new();
     private List<RouteHandler> _routes = new();
     internal readonly List<Page> _pages = new();
+    private bool _closeWasCalled;
 
     internal TimeoutSettings _timeoutSettings = new();
 
@@ -180,7 +181,13 @@ internal class BrowserContext : ChannelOwnerBase, IChannelOwner<BrowserContext>,
 
     public async Task CloseAsync()
     {
-        try
+        if (_closeWasCalled)
+        {
+            return;
+        }
+        _closeWasCalled = true;
+        await WrapApiCallAsync(
+            async () =>
         {
             foreach (var harRecorder in _harRecorders)
             {
@@ -199,13 +206,10 @@ internal class BrowserContext : ChannelOwnerBase, IChannelOwner<BrowserContext>,
                 }
                 await artifact.DeleteAsync().ConfigureAwait(false);
             }
-            await Channel.CloseAsync().ConfigureAwait(false);
-            await _closeTcs.Task.ConfigureAwait(false);
-        }
-        catch (Exception e) when (DriverMessages.IsSafeCloseError(e))
-        {
-            // Swallow exception
-        }
+        },
+            true).ConfigureAwait(false);
+        await Channel.CloseAsync().ConfigureAwait(false);
+        await _closeTcs.Task.ConfigureAwait(false);
     }
 
     internal void SetBrowserType(BrowserType browserType)

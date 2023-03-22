@@ -451,7 +451,7 @@ internal class Page : ChannelOwnerBase, IChannelOwner<Page>, IPage
                 await OwnedContext.CloseAsync().ConfigureAwait(false);
             }
         }
-        catch (Exception e) when (DriverMessages.IsSafeCloseError(e))
+        catch (Exception e) when (DriverMessages.IsSafeCloseError(e) && options?.RunBeforeUnload != true)
         {
             // Swallow exception
         }
