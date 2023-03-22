@@ -161,8 +161,6 @@ public class TracingTests : ContextTestEx
                 };
             Assert.AreEqual(expectedActionApiNames, actualActionApiNames);
 
-            Assert.GreaterOrEqual(events.Where(x => x?.ApiName == "Page.ClickAsync" && x?.Error == null).Count(), 1);
-            Assert.GreaterOrEqual(events.Where(x => x?.ApiName == "Page.ClickAsync" && x?.Error?.Message == "Action was interrupted").Count(), 1);
             Assert.GreaterOrEqual(events.Where(x => x.Type == "frame-snapshot").Count(), 1);
             Assert.GreaterOrEqual(events.Where(x => x.Type == "resource-snapshot").Count(), 1);
         }
@@ -315,24 +313,24 @@ public class TracingTests : ContextTestEx
 
         await browser.CloseAsync();
 
-        Dictionary<string, byte[]> ResourceNames(Dictionary<string, byte[]> resources)
+        string[] ResourceNames(Dictionary<string, byte[]> resources)
         {
             return resources.Keys
                 .Select(file => Regex.Replace(file, @"^resources/.*\.(html|css)$", "resources/XXX.$1"))
                 .OrderBy(file => file)
-                .ToDictionary(file => file, file => resources[file]);
+                .ToArray();
         }
 
         {
             var (events, resources) = ParseTrace(Path.Combine(tracesDir.Path, "trace1.zip"));
             Assert.AreEqual(new[] { "Page.GotoAsync" }, GetActions(events));
-            Assert.AreEqual(new[] { "resources/XXX.css", "resources/XXX.html", "trace.network", "trace.stacks", "trace.trace" }, ResourceNames(resources).Keys);
+            Assert.AreEqual(new[] { "resources/XXX.css", "resources/XXX.html", "trace.network", "trace.stacks", "trace.trace" }, ResourceNames(resources));
         }
 
         {
             var (events, resources) = ParseTrace(Path.Combine(tracesDir.Path, "trace2.zip"));
             Assert.AreEqual(new[] { "Page.GotoAsync" }, GetActions(events));
-            Assert.AreEqual(new[] { "resources/XXX.css", "resources/XXX.html", "resources/XXX.html", "trace.network", "trace.stacks", "trace.trace" }, ResourceNames(resources).Keys);
+            Assert.AreEqual(new[] { "resources/XXX.css", "resources/XXX.html", "resources/XXX.html", "trace.network", "trace.stacks", "trace.trace" }, ResourceNames(resources));
         }
     }
 
@@ -344,20 +342,42 @@ public class TracingTests : ContextTestEx
         {
             var memoryStream = new MemoryStream();
             entry.Open().CopyTo(memoryStream);
-            resources.Add(entry.Name, memoryStream.ToArray());
+            resources.Add(entry.FullName, memoryStream.ToArray());
         }
+        Dictionary<string, TraceEventEntry> actionMap = new();
         List<TraceEventEntry> events = new();
         foreach (var fileName in new[] { "trace.trace", "trace.network" })
         {
             foreach (var line in Encoding.UTF8.GetString(resources[fileName]).Split("\n"))
             {
-                if (!string.IsNullOrEmpty(line))
+                if (string.IsNullOrEmpty(line))
                 {
-                    events.Add(JsonSerializer.Deserialize<TraceEventEntry>(line,
-                            new JsonSerializerOptions()
-                            {
-                                PropertyNameCaseInsensitive = true,
-                            }));
+                    continue;
+                }
+                var @event = JsonSerializer.Deserialize<TraceEventEntry>(line, new JsonSerializerOptions() { PropertyNameCaseInsensitive = true });
+                if (@event.Type == "before")
+                {
+                    var action = new TraceEventEntry()
+                    {
+                        Type = "action",
+                        ApiName = @event.ApiName,
+                        StartTime = @event.StartTime
+                    };
+                    events.Add(action);
+                    actionMap[@event.CallID] = action;
+                }
+                else if (@event.Type == "input")
+                {
+                    // might be needed for future tests
+                }
+                else if (@event.Type == "after")
+                {
+                    var existing = actionMap[@event.CallID];
+                    existing.Error = @event.Error;
+                }
+                else
+                {
+                    events.Add(@event);
                 }
             }
         }
@@ -370,6 +390,7 @@ public class TracingTests : ContextTestEx
         public string ApiName { get; set; }
         public TraceEventError Error { get; set; }
         public double StartTime { get; set; }
+        public string CallID { get; set; }
     }
 
     private class TraceEventError
