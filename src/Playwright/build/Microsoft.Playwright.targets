@@ -12,25 +12,23 @@
       <PlaywrightPlatform Condition="'$(PlaywrightPlatform)' == '' AND $([MSBuild]::IsOSPlatform('OSX')) AND '$([System.Runtime.InteropServices.RuntimeInformation]::OSArchitecture)' == 'Arm64'">osx-arm64</PlaywrightPlatform>
     </PropertyGroup>
     <ItemGroup Condition="'$(PlaywrightPlatform)' != 'none'">
+      <_PlaywrightPlatforms Include="$(PlaywrightPlatform)" />
        <!-- 'linux' to stay backwards compatible -->
-      <_PlaywrightCopyItems Include="$(MSBuildThisFileDirectory)..\.playwright\node\linux-x64\**" Condition="$(PlaywrightPlatform.Contains('linux')) OR $(PlaywrightPlatform.Contains('linux-x64'))">
+      <_PlaywrightCopyItems Include="$(MSBuildThisFileDirectory)..\.playwright\node\linux-x64\**" Condition="'%(_PlaywrightPlatforms.Identity)' == 'linux' OR '%(_PlaywrightPlatforms.Identity)' == 'linux-x64'">
         <PlaywrightFolder>node\linux-x64\</PlaywrightFolder>
       </_PlaywrightCopyItems>
-      <_PlaywrightCopyItems Include="$(MSBuildThisFileDirectory)..\.playwright\node\linux-arm64\**" Condition="$(PlaywrightPlatform.Contains('linux-arm64'))">
+      <_PlaywrightCopyItems Include="$(MSBuildThisFileDirectory)..\.playwright\node\linux-arm64\**" Condition="'%(_PlaywrightPlatforms.Identity)' == 'linux-arm64'">
         <PlaywrightFolder>node\linux-arm64\</PlaywrightFolder>
       </_PlaywrightCopyItems>
       <!-- 'osx' to stay backwards compatible -->
-      <_PlaywrightCopyItems Include="$(MSBuildThisFileDirectory)..\.playwright\node\mac-x64\**" Condition="$(PlaywrightPlatform.Contains('osx')) OR $(PlaywrightPlatform.Contains('osx-x64'))">
-        <PlaywrightFolder>node\mac-x64\</PlaywrightFolder>
+      <_PlaywrightCopyItems Include="$(MSBuildThisFileDirectory)..\.playwright\node\darwin-x64\**" Condition="'%(_PlaywrightPlatforms.Identity)' == 'osx' OR '%(_PlaywrightPlatforms.Identity)' == 'osx-x64'">
+        <PlaywrightFolder>node\darwin-x64\</PlaywrightFolder>
       </_PlaywrightCopyItems>
-      <_PlaywrightCopyItems Include="$(MSBuildThisFileDirectory)..\.playwright\node\mac-arm64\**" Condition="$(PlaywrightPlatform.Contains('osx-arm64'))">
-        <PlaywrightFolder>node\mac-arm64\</PlaywrightFolder>
+      <_PlaywrightCopyItems Include="$(MSBuildThisFileDirectory)..\.playwright\node\darwin-arm64\**" Condition="'%(_PlaywrightPlatforms.Identity)' == 'osx-arm64'">
+        <PlaywrightFolder>node\darwin-arm64\</PlaywrightFolder>
       </_PlaywrightCopyItems>
-      <_PlaywrightCopyItems Include="$(MSBuildThisFileDirectory)..\.playwright\node\win32_x64\**" Condition="$(PlaywrightPlatform.Contains('win'))">
+      <_PlaywrightCopyItems Include="$(MSBuildThisFileDirectory)..\.playwright\node\win32_x64\**" Condition="'%(_PlaywrightPlatforms.Identity)' == 'win'">
         <PlaywrightFolder>node\win32_x64\</PlaywrightFolder>
-      </_PlaywrightCopyItems>
-      <_PlaywrightCopyItems Include="$(MSBuildThisFileDirectory)..\.playwright\node\mac\**" Condition="$(PlaywrightPlatform.Contains('osx'))">
-        <PlaywrightFolder>node\mac\</PlaywrightFolder>
       </_PlaywrightCopyItems>
       <_PlaywrightCopyItems Include="$(MSBuildThisFileDirectory)..\.playwright\node\**" Condition="'@(_PlaywrightCopyItems->Count())' == '0'">
         <PlaywrightFolder>node\</PlaywrightFolder>
