@@ -25,6 +25,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using System.Reflection;
 using System.Text.Json.Serialization;
 using Microsoft.Playwright.Core;
@@ -34,16 +35,7 @@ internal static class DictionaryExtensions
 {
     public static Dictionary<string, T> FilterNullValues<T>(this Dictionary<string, T> dictionary)
     {
-        var newDict = new Dictionary<string, T>();
-        foreach (var key in dictionary.Keys)
-        {
-            if (dictionary[key] is null)
-            {
-                continue;
-            }
-            newDict.Add(key.ToString(), (T)FilterNullValuesInternal(dictionary[key]));
-        }
-        return newDict;
+        return dictionary.Where(x => x.Value != null).ToDictionary(x => x.Key, x => FilterNullValuesInternal(x.Value)) as Dictionary<string, T>;
     }
 
     private static object FilterNullValuesInternal(object value)
@@ -55,12 +47,7 @@ internal static class DictionaryExtensions
 
         if (value is IEnumerable<WritableStream> streams)
         {
-            var newDict = new List<Dictionary<string, string>>();
-            foreach (var stream in streams)
-            {
-                newDict.Add(new Dictionary<string, string>() { { "guid", stream.Channel.Guid } });
-            }
-            return newDict;
+            return streams.Select(stream => new Dictionary<string, string>() { { "guid", stream.Channel.Guid } }).ToList();
         }
 
         if (value is null)
@@ -73,35 +60,19 @@ internal static class DictionaryExtensions
         }
         if (value is IDictionary dictionary)
         {
-            var newDict = new Dictionary<string, object>();
-            foreach (var key in dictionary.Keys)
-            {
-                if (dictionary[key] is null)
-                {
-                    continue;
-                }
-                newDict.Add(key.ToString(), FilterNullValuesInternal(dictionary[key]));
-            }
-            return newDict;
+            return dictionary.Keys.Cast<string>().Where(key => dictionary[key] != null).ToDictionary(key => key, key => FilterNullValuesInternal(dictionary[key]));
         }
         if (value is IEnumerable array)
         {
-            var newArray = new List<object>();
-            foreach (var item in array)
-            {
-                newArray.Add(FilterNullValuesInternal(item));
-            }
-            return newArray;
+            return array.Cast<object>().Select(item => FilterNullValuesInternal(item)).ToList();
         }
         if (value.GetType().IsEnum)
         {
             return value;
         }
-
         if (value is object obj)
         {
-            var type = obj.GetType();
-            var properties = type.GetProperties();
+            var properties = obj.GetType().GetProperties();
             var newDict = new Dictionary<string, object>();
             foreach (var property in properties)
             {
