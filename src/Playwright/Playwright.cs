@@ -52,7 +52,7 @@ public static class Playwright
             writer.WriteLine(log);
         };
         transport.TransportClosed += (_, reason) => connection.DoClose(reason);
-        connection.OnMessage = (message) => transport.SendAsync(JsonSerializer.SerializeToUtf8Bytes(message, connection.DefaultJsonSerializerOptions));
+        connection.OnMessage = (message, keepNulls) => transport.SendAsync(JsonSerializer.SerializeToUtf8Bytes(message, keepNulls ? connection.DefaultJsonSerializerOptionsKeepNulls : connection.DefaultJsonSerializerOptions));
         connection.Close += (_, reason) => transport.Close(reason);
         var playwright = await connection.InitializePlaywrightAsync().ConfigureAwait(false);
         return playwright;

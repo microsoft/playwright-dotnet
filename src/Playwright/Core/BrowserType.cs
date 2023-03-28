@@ -191,7 +191,7 @@ internal class BrowserType : ChannelOwnerBase, IChannelOwner<BrowserType>, IBrow
             connection.DoClose(closeError ?? DriverMessages.BrowserClosedExceptionMessage);
         }
         pipe.Closed += (_, _) => OnPipeClosed();
-        connection.OnMessage = async (object message) =>
+        connection.OnMessage = async (object message, bool _) =>
         {
             try
             {
