@@ -92,7 +92,6 @@ internal static class JsonExtensions
         => new()
         {
             PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
-            DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull,
             Converters =
             {
                     new JsonStringEnumMemberConverter(),

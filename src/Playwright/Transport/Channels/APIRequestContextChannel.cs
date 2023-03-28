@@ -24,6 +24,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Playwright.Core;
 using Microsoft.Playwright.Helpers;
@@ -62,13 +63,15 @@ internal class APIRequestContextChannel : Channel<APIRequestContext>
             ["timeout"] = timeout,
             ["params"] = parameters?.ToProtocol(),
             ["headers"] = headers?.ToProtocol(),
-            ["jsonData"] = jsonData,
             ["postData"] = postData != null ? Convert.ToBase64String(postData) : null,
             ["formData"] = formData?.ToProtocol(),
             ["multipartData"] = multipartData?.ToProtocol(),
-        };
-
-        var response = await Connection.SendMessageToServerAsync(Guid, "fetch", message).ConfigureAwait(false);
+        }.FilterNullValues();
+        if (jsonData != null)
+        {
+            message["jsonData"] = jsonData;
+        }
+        var response = await Connection.SendMessageToServerAsync(Guid, "fetch", message, doNotFilterNullValues: true).ConfigureAwait(false);
         return new Core.APIResponse(Object, response?.GetProperty("response").ToObject<Protocol.APIResponse>());
     }
 

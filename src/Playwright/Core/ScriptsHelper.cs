@@ -67,10 +67,14 @@ internal static class ScriptsHelper
         return (T)parsed;
     }
 
-    internal static object SerializedArgument(object arg)
+    internal static Dictionary<string, object> SerializedArgument(object arg)
     {
         var handles = new List<EvaluateArgumentGuidElement>();
-        return new { value = EvaluateArgumentValueConverter.Serialize(arg, handles, new()), handles };
+        return new Dictionary<string, object>
+        {
+            { "handles", handles },
+            { "value", EvaluateArgumentValueConverter.Serialize(arg, handles, new()) },
+        };
     }
 
     internal static string EvaluationScript(string content, string path)

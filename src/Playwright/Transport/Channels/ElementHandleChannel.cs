@@ -133,7 +133,8 @@ internal class ElementHandleChannel : JSHandleChannel, IChannel<ElementHandle>
                 ["selector"] = selector,
                 ["expression"] = script,
                 ["arg"] = arg,
-            });
+            },
+            doNotFilterNullValues: true);
 
     internal Task<JsonElement?> EvalOnSelectorAllAsync(string selector, string script, object arg)
         => Connection.SendMessageToServerAsync<JsonElement?>(
@@ -144,7 +145,8 @@ internal class ElementHandleChannel : JSHandleChannel, IChannel<ElementHandle>
                 ["selector"] = selector,
                 ["expression"] = script,
                 ["arg"] = arg,
-            });
+            },
+            doNotFilterNullValues: true);
 
     internal Task<FrameChannel> ContentFrameAsync() => Connection.SendMessageToServerAsync<FrameChannel>(Guid, "contentFrame", null);
 

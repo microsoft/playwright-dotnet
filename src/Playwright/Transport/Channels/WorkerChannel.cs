@@ -53,16 +53,23 @@ internal class WorkerChannel : Channel<Worker>
         string expression,
         bool? isFunction,
         object arg)
-            => (await Connection.SendMessageToServerAsync<JsonElement>(
+    {
+        var messageArgs = new Dictionary<string, object>
+        {
+            ["expression"] = expression,
+            ["arg"] = arg,
+        };
+        if (isFunction != null)
+        {
+            messageArgs["isFunction"] = isFunction;
+        }
+        return (await Connection.SendMessageToServerAsync<JsonElement>(
                 Guid,
                 "evaluateExpression",
-                new Dictionary<string, object>
-                {
-                    ["expression"] = expression,
-                    ["isFunction"] = isFunction,
-                    ["arg"] = arg,
-                })
+                messageArgs,
+                doNotFilterNullValues: true)
                 .ConfigureAwait(false)).GetProperty("value");
+    }
 
     internal async Task<JSHandle> EvaluateExpressionHandleAsync(
         string expression,

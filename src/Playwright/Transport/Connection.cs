@@ -102,18 +102,21 @@ internal class Connection : IDisposable
     internal Task<JsonElement?> SendMessageToServerAsync(
         string guid,
         string method,
-        Dictionary<string, object> args = null)
-        => SendMessageToServerAsync<JsonElement?>(guid, method, args);
+        Dictionary<string, object> args = null,
+        bool doNotFilterNullValues = false)
+        => SendMessageToServerAsync<JsonElement?>(guid, method, args, doNotFilterNullValues);
 
     internal Task<T> SendMessageToServerAsync<T>(
         string guid,
         string method,
-        Dictionary<string, object> args = null) => WrapApiCallAsync(() => InnerSendMessageToServerAsync<T>(guid, method, args));
+        Dictionary<string, object> args = null,
+        bool doNotFilterNullValues = false) => WrapApiCallAsync(() => InnerSendMessageToServerAsync<T>(guid, method, args, doNotFilterNullValues));
 
     private async Task<T> InnerSendMessageToServerAsync<T>(
         string guid,
         string method,
-        Dictionary<string, object> dictionary = null)
+        Dictionary<string, object> dictionary = null,
+        bool doNotFilterNullValues = false)
     {
         if (!string.IsNullOrEmpty(_closedErrorMessage))
         {
@@ -129,13 +132,6 @@ internal class Connection : IDisposable
 
         _callbacks.TryAdd(id, callback);
 
-        var sanitizedArgs = new Dictionary<string, object>();
-        if (dictionary != null && dictionary.Keys.Any(f => f != null))
-        {
-            sanitizedArgs = dictionary
-                .Where(f => f.Value != null)
-                .ToDictionary(f => f.Key, f => f.Value);
-        }
         var (apiName, frames) = (ApiZone.Value[0].ApiName, ApiZone.Value[0].Frames);
         var metadata = new Dictionary<string, object>
         {
@@ -163,7 +159,7 @@ internal class Connection : IDisposable
                 Id = id,
                 Guid = guid,
                 Method = method,
-                Params = sanitizedArgs,
+                Params = PrepareMessageParams(dictionary, doNotFilterNullValues),
                 Metadata = metadata,
             };
 
@@ -199,6 +195,19 @@ internal class Connection : IDisposable
         {
             return result.Value.ToObject<T>(DefaultJsonSerializerOptions);
         }
+    }
+
+    private object PrepareMessageParams(Dictionary<string, object> dictionary, bool doNotFilterNullValues)
+    {
+        if (dictionary == null)
+        {
+            return new Dictionary<string, object>();
+        }
+        if (doNotFilterNullValues)
+        {
+            return dictionary;
+        }
+        return dictionary.FilterNullValues();
     }
 
     internal IChannelOwner GetObject(string guid)

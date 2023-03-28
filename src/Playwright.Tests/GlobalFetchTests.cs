@@ -375,4 +375,15 @@ public class GlobalFetchTests : PlaywrightTestEx
         }
         await request.DisposeAsync();
     }
+
+    [PlaywrightTest("global-fetch.spec.ts", "should serialize null values in JSON")]
+    public async Task ShouldSerializeNullValuesInJSON()
+    {
+        var request = await Playwright.APIRequest.NewContextAsync();
+        Server.SetRoute("/echo", ctx => ctx.Request.Body.CopyToAsync(ctx.Response.Body));
+        var response = await request.PostAsync(Server.Prefix + "/echo", new() { DataObject = new { foo = (object)null } });
+        await Expect(response).ToBeOKAsync();
+        Assert.AreEqual("{\"foo\":null}", await response.TextAsync());
+        await request.DisposeAsync();
+    }
 }

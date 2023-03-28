@@ -44,7 +44,8 @@ internal class JSHandleChannel : Channel<JSHandle>
             {
                 ["expression"] = script,
                 ["arg"] = arg,
-            });
+            },
+            doNotFilterNullValues: true);
 
     internal Task<JSHandleChannel> EvaluateExpressionHandleAsync(string script, object arg)
         => Connection.SendMessageToServerAsync<JSHandleChannel>(

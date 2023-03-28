@@ -32,5 +32,5 @@ public partial class ViewportSize
     /// <summary>
     /// Disables the viewport.
     /// </summary>
-    public static ViewportSize NoViewport => new() { Height = -1, Width = -1 };
+    public static readonly ViewportSize NoViewport = new() { Height = -1, Width = -1 };
 }

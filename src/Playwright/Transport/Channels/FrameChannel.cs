@@ -100,7 +100,8 @@ internal class FrameChannel : Channel<Frame>
             {
                 ["expression"] = script,
                 ["arg"] = arg,
-            });
+            },
+            doNotFilterNullValues: true);
     }
 
     internal Task<JSHandleChannel> WaitForFunctionAsync(
@@ -133,7 +134,8 @@ internal class FrameChannel : Channel<Frame>
             {
                 ["expression"] = script,
                 ["arg"] = arg,
-            });
+            },
+            doNotFilterNullValues: true);
     }
 
     internal Task<JsonElement?> EvalOnSelectorAsync(string selector, string script, object arg, bool? strict)
@@ -146,7 +148,8 @@ internal class FrameChannel : Channel<Frame>
                 ["expression"] = script,
                 ["arg"] = arg,
                 ["strict"] = strict,
-            });
+            }.FilterNullValues(),
+            doNotFilterNullValues: true);
 
     internal Task<JsonElement?> EvalOnSelectorAllAsync(string selector, string script, object arg)
         => Connection.SendMessageToServerAsync<JsonElement?>(
@@ -157,7 +160,8 @@ internal class FrameChannel : Channel<Frame>
                 ["selector"] = selector,
                 ["expression"] = script,
                 ["arg"] = arg,
-            });
+            },
+            doNotFilterNullValues: true);
 
     internal Task<ElementHandleChannel> FrameElementAsync() => Connection.SendMessageToServerAsync<ElementHandleChannel>(Guid, "frameElement");
 
@@ -474,7 +478,7 @@ internal class FrameChannel : Channel<Frame>
         var args = new Dictionary<string, object>
         {
             ["selector"] = selector,
-            ["elements"] = values,
+            ["elements"] = values.Select(e => e.ElementChannel),
             ["noWaitAfter"] = noWaitAfter,
             ["strict"] = strict,
             ["force"] = force,
@@ -738,8 +742,8 @@ internal class FrameChannel : Channel<Frame>
             ["useInnerText"] = useInnerText,
             ["isNot"] = isNot,
             ["timeout"] = timeout,
-        };
-        var result = await Connection.SendMessageToServerAsync(Guid, "expect", args).ConfigureAwait(false);
+        }.FilterNullValues();
+        var result = await Connection.SendMessageToServerAsync(Guid, "expect", args, doNotFilterNullValues: true).ConfigureAwait(false);
         var parsed = result.Value.ToObject<FrameExpectResult>();
         if (result.Value.TryGetProperty("received", out var received))
         {
