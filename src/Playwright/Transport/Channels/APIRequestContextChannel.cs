@@ -68,7 +68,7 @@ internal class APIRequestContextChannel : Channel<APIRequestContext>
             ["multipartData"] = multipartData?.ToProtocol(),
         };
 
-        var response = await Connection.SendMessageToServerAsync(Guid, "fetch", message).ConfigureAwait(false);
+        var response = await Connection.SendMessageToServerAsync(Guid, "fetch", message, keepNulls: true).ConfigureAwait(false);
         return new Core.APIResponse(Object, response?.GetProperty("response").ToObject<Protocol.APIResponse>());
     }
 

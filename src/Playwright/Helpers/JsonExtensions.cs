@@ -34,7 +34,7 @@ namespace Microsoft.Playwright.Helpers;
 /// </summary>
 internal static class JsonExtensions
 {
-    static JsonExtensions() => DefaultJsonSerializerOptions = GetNewDefaultSerializerOptions();
+    static JsonExtensions() => DefaultJsonSerializerOptions = GetNewDefaultSerializerOptions(false);
 
     /// <summary>
     /// Base serialization options used by Microsoft.Playwright.
@@ -88,14 +88,20 @@ internal static class JsonExtensions
         return document.RootElement.ToObject<T>(options ?? DefaultJsonSerializerOptions);
     }
 
-    internal static JsonSerializerOptions GetNewDefaultSerializerOptions()
-        => new()
+    internal static JsonSerializerOptions GetNewDefaultSerializerOptions(bool keepNulls)
+    {
+        var options = new JsonSerializerOptions()
         {
             PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
-            DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull,
             Converters =
             {
                     new JsonStringEnumMemberConverter(),
             },
         };
+        if (!keepNulls)
+        {
+            options.DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull;
+        }
+        return options;
+    }
 }

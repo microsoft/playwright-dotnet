@@ -54,14 +54,20 @@ internal class Connection : IDisposable
         _rootObject = new(null, this, string.Empty);
         LocalUtils = localUtils;
 
-        DefaultJsonSerializerOptions = JsonExtensions.GetNewDefaultSerializerOptions();
-        DefaultJsonSerializerOptions.Converters.Add(new ChannelToGuidConverter(this));
-        DefaultJsonSerializerOptions.Converters.Add(new ChannelOwnerToGuidConverter<JSHandle>(this));
-        DefaultJsonSerializerOptions.Converters.Add(new ChannelOwnerToGuidConverter<ElementHandle>(this));
-        DefaultJsonSerializerOptions.Converters.Add(new ChannelOwnerToGuidConverter<IChannelOwner>(this));
+        JsonSerializerOptions NewJsonSerializerOptions(bool keepNulls)
+        {
+            var options = JsonExtensions.GetNewDefaultSerializerOptions(keepNulls);
+            options.Converters.Add(new ChannelToGuidConverter(this));
+            options.Converters.Add(new ChannelOwnerToGuidConverter<JSHandle>(this));
+            options.Converters.Add(new ChannelOwnerToGuidConverter<ElementHandle>(this));
+            options.Converters.Add(new ChannelOwnerToGuidConverter<IChannelOwner>(this));
 
-        // Workaround for https://github.com/dotnet/runtime/issues/46522
-        DefaultJsonSerializerOptions.Converters.Add(new ChannelOwnerListToGuidListConverter<WritableStream>(this));
+            // Workaround for https://github.com/dotnet/runtime/issues/46522
+            options.Converters.Add(new ChannelOwnerListToGuidListConverter<WritableStream>(this));
+            return options;
+        }
+        DefaultJsonSerializerOptions = NewJsonSerializerOptions(false);
+        DefaultJsonSerializerOptionsKeepNulls = NewJsonSerializerOptions(true);
     }
 
     /// <inheritdoc cref="IDisposable.Dispose"/>
@@ -77,9 +83,11 @@ internal class Connection : IDisposable
 
     internal LocalUtils LocalUtils { get; private set; }
 
-    internal Func<object, Task> OnMessage { get; set; }
+    internal Func<object, bool, Task> OnMessage { get; set; }
 
     internal JsonSerializerOptions DefaultJsonSerializerOptions { get; }
+
+    internal JsonSerializerOptions DefaultJsonSerializerOptionsKeepNulls { get; }
 
     public void Dispose()
     {
@@ -102,18 +110,21 @@ internal class Connection : IDisposable
     internal Task<JsonElement?> SendMessageToServerAsync(
         string guid,
         string method,
-        Dictionary<string, object> args = null)
-        => SendMessageToServerAsync<JsonElement?>(guid, method, args);
+        Dictionary<string, object> args = null,
+        bool keepNulls = false)
+        => SendMessageToServerAsync<JsonElement?>(guid, method, args, keepNulls);
 
     internal Task<T> SendMessageToServerAsync<T>(
         string guid,
         string method,
-        Dictionary<string, object> args = null) => WrapApiCallAsync(() => InnerSendMessageToServerAsync<T>(guid, method, args));
+        Dictionary<string, object> args = null,
+        bool keepNulls = false) => WrapApiCallAsync(() => InnerSendMessageToServerAsync<T>(guid, method, args, keepNulls));
 
     private async Task<T> InnerSendMessageToServerAsync<T>(
         string guid,
         string method,
-        Dictionary<string, object> dictionary = null)
+        Dictionary<string, object> dictionary = null,
+        bool keepNulls = false)
     {
         if (!string.IsNullOrEmpty(_closedErrorMessage))
         {
@@ -169,7 +180,7 @@ internal class Connection : IDisposable
 
             TraceMessage("pw:channel:command", message);
 
-            return OnMessage(message);
+            return OnMessage(message, keepNulls);
         }).ConfigureAwait(false);
 
         if (_tracingCount > 0 && frames.Count > 0 && guid != "localUtils")
