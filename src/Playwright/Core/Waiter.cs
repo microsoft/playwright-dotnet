@@ -37,7 +37,8 @@ internal class Waiter : IDisposable
     private readonly List<string> _logs = new();
     private readonly List<Task> _failures = new();
     private readonly List<Action> _dispose = new();
-    private readonly CancellationTokenSource _cts = new();
+    private readonly CancellationTokenSource _onDisposeCts = new();
+    private readonly CancellationTokenSource _manualCts = new();
     private readonly string _waitId = Guid.NewGuid().ToString();
     private readonly IChannelOwner _channelOwner;
     private Exception _immediateError;
@@ -58,6 +59,7 @@ internal class Waiter : IDisposable
                 ["phase"] = "before",
             },
         };
+        _failures.Add(Task.Delay(-1, _manualCts.Token));
         _channelOwner.Connection.SendMessageToServerAsync(_channelOwner.Channel.Guid, "waitForEventInfo", beforeArgs).IgnoreException();
     }
 
@@ -82,8 +84,10 @@ internal class Waiter : IDisposable
             };
             _channelOwner.WrapApiCallAsync(() => _channelOwner.Connection.SendMessageToServerAsync(_channelOwner.Channel.Guid, "waitForEventInfo", afterArgs), true).IgnoreException();
 
-            _cts.Cancel();
-            _cts.Dispose();
+            _onDisposeCts.Cancel();
+            _onDisposeCts.Dispose();
+            _manualCts.Cancel();
+            _manualCts.Dispose();
         }
     }
 
@@ -121,7 +125,7 @@ internal class Waiter : IDisposable
 
         var (task, dispose) = GetWaitForEventTask(eventSource, e, predicate);
         RejectOn(
-            task.ContinueWith(_ => throw navigationException, _cts.Token, TaskContinuationOptions.RunContinuationsAsynchronously, TaskScheduler.Current),
+            task.ContinueWith(_ => throw navigationException, _onDisposeCts.Token, TaskContinuationOptions.RunContinuationsAsynchronously, TaskScheduler.Current),
             dispose);
     }
 
@@ -190,8 +194,15 @@ internal class Waiter : IDisposable
             {
                 throw _immediateError;
             }
+
             var firstTask = await Task.WhenAny(Enumerable.Repeat(task, 1).Concat(_failures)).ConfigureAwait(false);
             dispose?.Invoke();
+
+            if (_manualCts.IsCancellationRequested)
+            {
+                return default;
+            }
+
             await firstTask.ConfigureAwait(false);
             return await task.ConfigureAwait(false);
         }
@@ -211,7 +222,28 @@ internal class Waiter : IDisposable
         }
     }
 
-    private string FormatLogRecording(List<string> logs)
+    internal async Task CancelWaitOnExceptionAsync(Task waitForEventTask, Func<Task> action)
+    {
+        await Task.Yield();
+        var actionTask = WrapActionAsync(action, _manualCts);
+
+        await Task.WhenAll(waitForEventTask, actionTask).ConfigureAwait(false);
+    }
+
+    private static async Task WrapActionAsync(Func<Task> action, CancellationTokenSource cts)
+    {
+        try
+        {
+            await action().ConfigureAwait(false);
+        }
+        catch
+        {
+            cts.Cancel();
+            throw;
+        }
+    }
+
+    private static string FormatLogRecording(List<string> logs)
     {
         if (logs.Count == 0)
         {

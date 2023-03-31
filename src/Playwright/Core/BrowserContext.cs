@@ -369,7 +369,7 @@ internal class BrowserContext : ChannelOwnerBase, IChannelOwner<BrowserContext>,
         var result = waiter.WaitForEventAsync(this, playwrightEvent.Name, predicate);
         if (action != null)
         {
-            await WrapApiBoundaryAsync(() => TaskHelper.ExceptionExtractingWhenAll(result, action)).ConfigureAwait(false);
+            await WrapApiBoundaryAsync(() => waiter.CancelWaitOnExceptionAsync(result, action)).ConfigureAwait(false);
         }
 
         return await result.ConfigureAwait(false);

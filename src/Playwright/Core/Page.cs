@@ -30,6 +30,7 @@ using System.IO;
 using System.Linq;
 using System.Text.Json;
 using System.Text.RegularExpressions;
+using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Playwright.Helpers;
 using Microsoft.Playwright.Transport;
@@ -432,14 +433,14 @@ internal class Page : ChannelOwnerBase, IChannelOwner<Page>, IPage
             waiter.RejectOnEvent<IPage>(this, PageEvent.Close.Name, new("Page closed"));
         }
 
-        var result = waiter.WaitForEventAsync(this, pageEvent.Name, predicate);
+        var waitForEventTask = waiter.WaitForEventAsync(this, pageEvent.Name, predicate);
         if (action != null)
         {
-            await WrapApiBoundaryAsync(() => TaskHelper.ExceptionExtractingWhenAll(result, action))
+            await WrapApiBoundaryAsync(() => waiter.CancelWaitOnExceptionAsync(waitForEventTask, action))
                 .ConfigureAwait(false);
         }
 
-        return await result.ConfigureAwait(false);
+        return await waitForEventTask.ConfigureAwait(false);
     }
 
     public async Task CloseAsync(PageCloseOptions options = default)
