@@ -22,6 +22,8 @@
  * SOFTWARE.
  */
 
+using System.Text.RegularExpressions;
+
 namespace Microsoft.Playwright.Tests;
 
 public class PageWaitForResponseTests : PageTestEx
@@ -90,5 +92,92 @@ public class PageWaitForResponseTests : PageTestEx
                 }, 50)")
         );
         Assert.AreEqual(Server.Prefix + "/digits/2.png", response.Url);
+    }
+
+    [PlaywrightTest("page-wait-for-response.spec.ts", "should work with url match")]
+    public async Task ShouldWorkWithUrlMatch()
+    {
+        await Page.GotoAsync(Server.EmptyPage);
+        var task = Page.WaitForResponseAsync(new Regex(@"/digits/\d.png"));
+        var (response, _) = await TaskUtils.WhenAll(
+            task,
+            Page.EvaluateAsync<string>(@"() => {
+                    fetch('/digits/1.png');
+                }")
+        );
+        Assert.AreEqual(Server.Prefix + "/digits/1.png", response.Url);
+    }
+}
+
+
+
+public class PageRunAndWaitForResponseTests : PageTestEx
+{
+    [PlaywrightTest("page-wait-for-response.spec.ts", "should work")]
+    public async Task ShouldWork()
+    {
+        await Page.GotoAsync(Server.EmptyPage);
+        var response = await Page.RunAndWaitForResponseAsync(() => Page.EvaluateAsync<string>(@"() => {
+                    fetch('/digits/1.png');
+                    fetch('/digits/2.png');
+                    fetch('/digits/3.png');
+                }"), Server.Prefix + "/digits/2.png");
+
+        Assert.AreEqual(Server.Prefix + "/digits/2.png", response.Url);
+    }
+
+    [PlaywrightTest("page-wait-for-response.spec.ts", "should respect timeout")]
+    public Task ShouldRespectTimeout()
+    {
+        return PlaywrightAssert.ThrowsAsync<TimeoutException>(
+            () => Page.RunAndWaitForResponseAsync(()=>Task.CompletedTask, _ => false, new()
+            {
+                Timeout = 1,
+            }));
+    }
+
+    [PlaywrightTest("page-wait-for-response.spec.ts", "should respect default timeout")]
+    public Task ShouldRespectDefaultTimeout()
+    {
+        Page.SetDefaultTimeout(1);
+        return PlaywrightAssert.ThrowsAsync<TimeoutException>(
+            () => Page.RunAndWaitForResponseAsync(() => Task.CompletedTask, _ => false));
+    }
+
+    [PlaywrightTest("page-wait-for-response.spec.ts", "should work with predicate")]
+    public async Task ShouldWorkWithPredicate()
+    {
+        await Page.GotoAsync(Server.EmptyPage);
+        var response = await Page.RunAndWaitForResponseAsync(()=> Page.EvaluateAsync<string>(@"() => {
+                    fetch('/digits/1.png');
+                    fetch('/digits/2.png');
+                    fetch('/digits/3.png');
+                }"), e => e.Url == Server.Prefix + "/digits/2.png");
+
+        Assert.AreEqual(Server.Prefix + "/digits/2.png", response.Url);
+    }
+
+    [PlaywrightTest("page-wait-for-response.spec.ts", "should work with no timeout")]
+    public async Task ShouldWorkWithNoTimeout()
+    {
+        await Page.GotoAsync(Server.EmptyPage);
+        var response = await Page.RunAndWaitForResponseAsync(()=> Page.EvaluateAsync(@"() => setTimeout(() => {
+                    fetch('/digits/1.png');
+                    fetch('/digits/2.png');
+                    fetch('/digits/3.png');
+                }, 50)"), Server.Prefix + "/digits/2.png", new() { Timeout = 0 });
+
+        Assert.AreEqual(Server.Prefix + "/digits/2.png", response.Url);
+    }
+
+    [PlaywrightTest("page-wait-for-response.spec.ts", "should work with url match")]
+    public async Task ShouldWorkWithUrlMatch()
+    {
+        await Page.GotoAsync(Server.EmptyPage);
+        var response = await Page.RunAndWaitForResponseAsync(()=> Page.EvaluateAsync<string>(@"() => {
+                    fetch('/digits/1.png');
+                }"), new Regex(@"/digits/\d.png"));
+
+        Assert.AreEqual(Server.Prefix + "/digits/1.png", response.Url);
     }
 }

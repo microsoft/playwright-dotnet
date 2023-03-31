@@ -106,3 +106,73 @@ public class PageWaitForRequestTests : PageTestEx
         Assert.AreEqual(Server.Prefix + "/digits/1.png", request.Url);
     }
 }
+
+
+public class PageRunAndWaitForRequestTests : PageTestEx
+{
+    [PlaywrightTest("page-wait-for-request.spec.ts", "should work")]
+    public async Task ShouldWork()
+    {
+        await Page.GotoAsync(Server.EmptyPage);
+        var request = await Page.RunAndWaitForRequestAsync(()=> Page.EvaluateAsync(@"() => {
+                  fetch('/digits/1.png');
+                  fetch('/digits/2.png');
+                  fetch('/digits/3.png');
+                }"), Server.Prefix + "/digits/2.png");
+
+        Assert.AreEqual(Server.Prefix + "/digits/2.png", request.Url);
+    }
+
+    [PlaywrightTest("page-wait-for-request.spec.ts", "should work with predicate")]
+    public async Task ShouldWorkWithPredicate()
+    {
+        await Page.GotoAsync(Server.EmptyPage);
+        var request = await Page.RunAndWaitForRequestAsync(()=> Page.EvaluateAsync<string>(@"() => {
+                    fetch('/digits/1.png');
+                    fetch('/digits/2.png');
+                    fetch('/digits/3.png');
+                }"), e => e.Url == Server.Prefix + "/digits/2.png");
+
+        Assert.AreEqual(Server.Prefix + "/digits/2.png", request.Url);
+    }
+
+    [PlaywrightTest("page-wait-for-request.spec.ts", "should respect timeout")]
+    public Task ShouldRespectTimeout()
+    {
+        return PlaywrightAssert.ThrowsAsync<TimeoutException>(
+            () => Page.RunAndWaitForRequestAsync(() => Task.CompletedTask, _ => false, new() { Timeout = 1 }));
+    }
+
+    [PlaywrightTest("page-wait-for-request.spec.ts", "should respect default timeout")]
+    public async Task ShouldRespectDefaultTimeout()
+    {
+        Page.SetDefaultTimeout(1);
+        var exception = await PlaywrightAssert.ThrowsAsync<TimeoutException>(
+            () => Page.RunAndWaitForRequestAsync(() => Task.CompletedTask, _ => false));
+        StringAssert.Contains(exception.Message, "Timeout 1ms exceeded while waiting for event \"Request\"");
+    }
+
+    [PlaywrightTest("page-wait-for-request.spec.ts", "should work with no timeout")]
+    public async Task ShouldWorkWithNoTimeout()
+    {
+        await Page.GotoAsync(Server.EmptyPage);
+        var request = await Page.RunAndWaitForRequestAsync(() => Page.EvaluateAsync(@"() => setTimeout(() => {
+                    fetch('/digits/1.png');
+                    fetch('/digits/2.png');
+                    fetch('/digits/3.png');
+                }, 50)"), Server.Prefix + "/digits/2.png", new() { Timeout = 0 });
+
+        Assert.AreEqual(Server.Prefix + "/digits/2.png", request.Url);
+    }
+
+    [PlaywrightTest("page-wait-for-request.spec.ts", "should work with url match")]
+    public async Task ShouldWorkWithUrlMatch()
+    {
+        await Page.GotoAsync(Server.EmptyPage);
+        var request = await Page.RunAndWaitForRequestAsync(()=> Page.EvaluateAsync<string>(@"() => {
+                    fetch('/digits/1.png');
+                }"), new Regex(@"/digits/\d.png"));
+
+        Assert.AreEqual(Server.Prefix + "/digits/1.png", request.Url);
+    }
+}
