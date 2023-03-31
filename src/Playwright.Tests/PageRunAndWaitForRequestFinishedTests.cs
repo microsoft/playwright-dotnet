@@ -6,7 +6,7 @@
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
- * to use, copy, modify, merge, publish, distribute, sublicense, and / or sell
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
  * copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions:
  *
@@ -24,13 +24,13 @@
 
 namespace Microsoft.Playwright.Tests;
 
-public class PageWaitForRequestFinishedTests : PageTestEx
+public class PageRunAndWaitForRequestFinishedTests : PageTestEx
 {
     [PlaywrightTest("page-wait-for-response.spec.ts", "should respect timeout")]
     public Task ShouldRespectTimeout()
     {
         return PlaywrightAssert.ThrowsAsync<TimeoutException>(
-            () => Page.WaitForRequestFinishedAsync(new() { Predicate = _ => false, Timeout = 1, }));
+            () => Page.RunAndWaitForRequestFinishedAsync(() => Task.CompletedTask, new() { Predicate = _ => false, Timeout = 1, }));
     }
 
     [PlaywrightTest("page-wait-for-response.spec.ts", "should respect default timeout")]
@@ -38,25 +38,19 @@ public class PageWaitForRequestFinishedTests : PageTestEx
     {
         Page.SetDefaultTimeout(1);
         return PlaywrightAssert.ThrowsAsync<TimeoutException>(
-            () => Page.WaitForRequestFinishedAsync(new() { Predicate = _ => false }));
+            () => Page.RunAndWaitForRequestFinishedAsync(() => Task.CompletedTask, new() { Predicate = _ => false }));
     }
 
     [PlaywrightTest("page-wait-for-response.spec.ts", "should work with predicate")]
     public async Task ShouldWorkWithPredicate()
     {
         await Page.GotoAsync(Server.EmptyPage);
-        var task = Page.WaitForRequestFinishedAsync(new()
-        {
-            Predicate = e => e.Url == Server.Prefix + "/digits/2.png"
-        });
-        var (request, _) = await TaskUtils.WhenAll(
-            task,
-            Page.EvaluateAsync<string>(@"() => {
+        var request = await Page.RunAndWaitForRequestFinishedAsync(() => Page.EvaluateAsync<string>(@"() => {
                     fetch('/digits/1.png').then((response) => response.blob());
                     fetch('/digits/2.png').then((response) => response.blob());
                     fetch('/digits/3.png').then((response) => response.blob());
-                }")
-        );
+                }"), new() { Predicate = e => e.Url == Server.Prefix + "/digits/2.png" });
+
         Assert.AreEqual(Server.Prefix + "/digits/2.png", request.Url);
     }
 
@@ -64,15 +58,12 @@ public class PageWaitForRequestFinishedTests : PageTestEx
     public async Task ShouldWorkWithNoTimeout()
     {
         await Page.GotoAsync(Server.EmptyPage);
-        var task = Page.WaitForRequestFinishedAsync(new() { Predicate = e => e.Url == Server.Prefix + "/digits/2.png", Timeout = 0 });
-        var (request, _) = await TaskUtils.WhenAll(
-            task,
-            Page.EvaluateAsync(@"() => setTimeout(() => {
+        var request = await Page.RunAndWaitForRequestFinishedAsync(() => Page.EvaluateAsync(@"() => setTimeout(() => {
                     fetch('/digits/1.png').then((response) => response.blob());
                     fetch('/digits/2.png').then((response) => response.blob());
                     fetch('/digits/3.png').then((response) => response.blob());
-                }, 50)")
-        );
+                }, 50)"), new() { Predicate = e => e.Url == Server.Prefix + "/digits/2.png", Timeout = 0 });
+
         Assert.AreEqual(Server.Prefix + "/digits/2.png", request.Url);
     }
 }
