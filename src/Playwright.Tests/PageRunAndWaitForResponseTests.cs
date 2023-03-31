@@ -45,10 +45,7 @@ public class PageRunAndWaitForResponseTests : PageTestEx
     public Task ShouldRespectTimeout()
     {
         return PlaywrightAssert.ThrowsAsync<TimeoutException>(
-            () => Page.RunAndWaitForResponseAsync(() => Task.CompletedTask, _ => false, new()
-            {
-                Timeout = 1,
-            }));
+            () => Page.RunAndWaitForResponseAsync(() => Task.CompletedTask, _ => false, new() { Timeout = 1, }));
     }
 
     [PlaywrightTest("page-wait-for-response.spec.ts", "should respect default timeout")]
@@ -57,6 +54,14 @@ public class PageRunAndWaitForResponseTests : PageTestEx
         Page.SetDefaultTimeout(1);
         return PlaywrightAssert.ThrowsAsync<TimeoutException>(
             () => Page.RunAndWaitForResponseAsync(() => Task.CompletedTask, _ => false));
+    }
+
+    [PlaywrightTest("page-wait-for-response.spec.ts", "should exception preempt timeout")]
+    public Task ShouldExceptionPreemptTimeout()
+    {
+        return PlaywrightAssert.ThrowsAsync<InvalidOperationException>(
+            () => Page.RunAndWaitForResponseAsync(() => throw new InvalidOperationException("Custom exception"),
+                _ => false, new() { Timeout = 1 }));
     }
 
     [PlaywrightTest("page-wait-for-response.spec.ts", "should work with predicate")]

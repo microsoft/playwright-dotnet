@@ -41,6 +41,14 @@ public class PageRunAndWaitForRequestFinishedTests : PageTestEx
             () => Page.RunAndWaitForRequestFinishedAsync(() => Task.CompletedTask, new() { Predicate = _ => false }));
     }
 
+    [PlaywrightTest("page-wait-for-response.spec.ts", "should exception preempt timeout")]
+    public Task ShouldExceptionPreemptTimeout()
+    {
+        return PlaywrightAssert.ThrowsAsync<InvalidOperationException>(
+            () => Page.RunAndWaitForRequestFinishedAsync(() => throw new InvalidOperationException("Custom exception"),
+                new() { Predicate = _ => false, Timeout = 1, }));
+    }
+
     [PlaywrightTest("page-wait-for-response.spec.ts", "should work with predicate")]
     public async Task ShouldWorkWithPredicate()
     {

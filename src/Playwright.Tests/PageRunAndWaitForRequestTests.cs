@@ -70,6 +70,14 @@ public class PageRunAndWaitForRequestTests : PageTestEx
         StringAssert.Contains(exception.Message, "Timeout 1ms exceeded while waiting for event \"Request\"");
     }
 
+    [PlaywrightTest("page-wait-for-request.spec.ts", "should exception preempt timeout")]
+    public Task ShouldExceptionPreemptTimeout()
+    {
+        return PlaywrightAssert.ThrowsAsync<InvalidOperationException>(
+            () => Page.RunAndWaitForRequestAsync(() => throw new InvalidOperationException("Custom exception"),
+                _ => false, new() { Timeout = 1 }));
+    }
+
     [PlaywrightTest("page-wait-for-request.spec.ts", "should work with no timeout")]
     public async Task ShouldWorkWithNoTimeout()
     {
