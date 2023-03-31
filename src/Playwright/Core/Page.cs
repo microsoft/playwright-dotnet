@@ -435,7 +435,8 @@ internal class Page : ChannelOwnerBase, IChannelOwner<Page>, IPage
         var result = waiter.WaitForEventAsync(this, pageEvent.Name, predicate);
         if (action != null)
         {
-            await WrapApiBoundaryAsync(() => Task.WhenAll(result, action())).ConfigureAwait(false);
+            await WrapApiBoundaryAsync(() => TaskHelper.ExceptionExtractingWhenAll(result, action))
+                .ConfigureAwait(false);
         }
 
         return await result.ConfigureAwait(false);

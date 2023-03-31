@@ -264,7 +264,7 @@ internal class Frame : ChannelOwnerBase, IChannelOwner<Frame>, IFrame
         });
         if (action != null)
         {
-            await WrapApiBoundaryAsync(() => Task.WhenAll(result, action())).ConfigureAwait(false);
+            await WrapApiBoundaryAsync(() => TaskHelper.ExceptionExtractingWhenAll(result, action)).ConfigureAwait(false);
         }
 
         return await result.ConfigureAwait(false);

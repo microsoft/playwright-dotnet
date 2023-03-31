@@ -25,6 +25,7 @@
 
 using System;
 using System.Diagnostics.CodeAnalysis;
+using System.Runtime.ExceptionServices;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -205,5 +206,21 @@ internal static class TaskHelper
     public static void IgnoreException(this Task task)
     {
         _ = task.ContinueWith(t => t.Exception.Handle(_ => true), CancellationToken.None, TaskContinuationOptions.OnlyOnFaulted, TaskScheduler.Default);
+    }
+
+    internal static Task ExceptionExtractingWhenAll(Task waitForEventTask, Func<Task> action)
+    {
+        return Task.WhenAll(waitForEventTask, action().ContinueWith(
+            t =>
+            {
+                if (t.Exception != null)
+                {
+                    var exceptionDispatchInfo = ExceptionDispatchInfo.Capture(t.Exception);
+                    exceptionDispatchInfo.Throw();
+                }
+            },
+            CancellationToken.None,
+            TaskContinuationOptions.OnlyOnFaulted,
+            TaskScheduler.Default));
     }
 }
