@@ -49,7 +49,7 @@ public class PageWaitForRequestTests : PageTestEx
     {
         await Page.GotoAsync(Server.EmptyPage);
         var task = Page.WaitForRequestAsync(e => e.Url == Server.Prefix + "/digits/2.png");
-        var (requestEvent, _) = await TaskUtils.WhenAll(
+        var (request, _) = await TaskUtils.WhenAll(
             task,
             Page.EvaluateAsync<string>(@"() => {
                     fetch('/digits/1.png');
@@ -57,7 +57,7 @@ public class PageWaitForRequestTests : PageTestEx
                     fetch('/digits/3.png');
                 }")
         );
-        Assert.AreEqual(Server.Prefix + "/digits/2.png", requestEvent.Url);
+        Assert.AreEqual(Server.Prefix + "/digits/2.png", request.Url);
     }
 
     [PlaywrightTest("page-wait-for-request.spec.ts", "should respect timeout")]

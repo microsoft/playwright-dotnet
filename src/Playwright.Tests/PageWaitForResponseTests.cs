@@ -65,7 +65,7 @@ public class PageWaitForResponseTests : PageTestEx
     {
         await Page.GotoAsync(Server.EmptyPage);
         var task = Page.WaitForResponseAsync(e => e.Url == Server.Prefix + "/digits/2.png");
-        var (responseEvent, _) = await TaskUtils.WhenAll(
+        var (response, _) = await TaskUtils.WhenAll(
             task,
             Page.EvaluateAsync<string>(@"() => {
                     fetch('/digits/1.png');
@@ -73,7 +73,7 @@ public class PageWaitForResponseTests : PageTestEx
                     fetch('/digits/3.png');
                 }")
         );
-        Assert.AreEqual(Server.Prefix + "/digits/2.png", responseEvent.Url);
+        Assert.AreEqual(Server.Prefix + "/digits/2.png", response.Url);
     }
 
     [PlaywrightTest("page-wait-for-response.spec.ts", "should work with no timeout")]
