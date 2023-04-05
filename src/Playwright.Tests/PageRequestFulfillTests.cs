@@ -72,7 +72,6 @@ public class RequestFulfillTests : PageTestEx
     }
 
     [PlaywrightTest("page-request-fulfill.spec.ts", "should allow mocking binary responses")]
-    [Ignore("We need screenshots for this")]
     public async Task ShouldAllowMockingBinaryResponses()
     {
         await Page.RouteAsync("**/*", (route) =>
@@ -101,7 +100,6 @@ public class RequestFulfillTests : PageTestEx
     }
 
     [PlaywrightTest("page-request-fulfill.spec.ts", "should work with file path")]
-    [Ignore("We need screenshots for this")]
     public async Task ShouldWorkWithFilePath()
     {
         await Page.RouteAsync("**/*", (route) =>
