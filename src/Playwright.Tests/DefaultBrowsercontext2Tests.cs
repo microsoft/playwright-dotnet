@@ -99,6 +99,7 @@ public class DefaultBrowsercontext2Tests : PlaywrightTestEx
         var (tmp, context, page) = await LaunchAsync(new()
         {
             TimezoneId = "America/Jamaica",
+            Locale = "en-US"
         });
 
         Assert.AreEqual("Sat Nov 19 2016 13:12:34 GMT-0500 (Eastern Standard Time)", await page.EvaluateAsync<string>("() => new Date(1479579154987).toString()"));
