@@ -204,6 +204,6 @@ internal static class TaskHelper
 
     public static void IgnoreException(this Task task)
     {
-        _ = task.ContinueWith(t => t.Exception.Handle(_ => true), CancellationToken.None, TaskContinuationOptions.OnlyOnFaulted, TaskScheduler.Default);
+        _ = task.ContinueWith(t => t.Exception!.Handle(_ => true), CancellationToken.None, TaskContinuationOptions.OnlyOnFaulted, TaskScheduler.Default);
     }
 }
