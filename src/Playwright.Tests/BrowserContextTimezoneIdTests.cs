@@ -32,7 +32,7 @@ public class BrowserContextTimezoneIdTests : BrowserTestEx
         await using var browser = await Playwright[TestConstants.BrowserName].LaunchAsync();
 
         const string func = "() => new Date(1479579154987).toString()";
-        await using (var context = await browser.NewContextAsync(new() { TimezoneId = "America/Jamaica" }))
+        await using (var context = await browser.NewContextAsync(new() { TimezoneId = "America/Jamaica", Locale = "en-US" }))
         {
             var page = await context.NewPageAsync();
             string result = await page.EvaluateAsync<string>(func);
@@ -41,7 +41,7 @@ public class BrowserContextTimezoneIdTests : BrowserTestEx
                 result);
         }
 
-        await using (var context = await browser.NewContextAsync(new() { TimezoneId = "Pacific/Honolulu" }))
+        await using (var context = await browser.NewContextAsync(new() { TimezoneId = "Pacific/Honolulu", Locale = "en-US" }))
         {
             var page = await context.NewPageAsync();
             Assert.AreEqual(
@@ -49,7 +49,7 @@ public class BrowserContextTimezoneIdTests : BrowserTestEx
                 await page.EvaluateAsync<string>(func));
         }
 
-        await using (var context = await browser.NewContextAsync(new() { TimezoneId = "America/Buenos_Aires" }))
+        await using (var context = await browser.NewContextAsync(new() { TimezoneId = "America/Buenos_Aires", Locale = "en-US" }))
         {
             var page = await context.NewPageAsync();
             Assert.AreEqual(
@@ -57,7 +57,7 @@ public class BrowserContextTimezoneIdTests : BrowserTestEx
                 await page.EvaluateAsync<string>(func));
         }
 
-        await using (var context = await browser.NewContextAsync(new() { TimezoneId = "Europe/Berlin" }))
+        await using (var context = await browser.NewContextAsync(new() { TimezoneId = "Europe/Berlin", Locale = "en-US" }))
         {
             var page = await context.NewPageAsync();
             Assert.AreEqual(
