@@ -40,18 +40,17 @@ internal class Locator : ILocator
 {
     internal readonly Frame _frame;
     internal readonly string _selector;
+    private static readonly JsonSerializerOptions _locatorSerializerOptions = new()
+    {
+        Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping,
+    };
+
     private static string _testIdAttributeName = "data-testid";
 
     public Locator(Frame parent, string selector, LocatorLocatorOptions options = null)
     {
         _frame = parent;
         _selector = selector;
-
-        var serializerOptions = new JsonSerializerOptions
-        {
-            Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping,
-        };
-
         if (options?.HasTextRegex != null)
         {
             _selector += $" >> internal:has-text={EscapeForTextSelector(options.HasTextRegex, false)}";
@@ -72,7 +71,8 @@ internal class Locator : ILocator
             {
                 throw new ArgumentException("Inner \"Has\" locator must belong to the same frame.");
             }
-            _selector += " >> internal:has=" + JsonSerializer.Serialize(locator._selector, serializerOptions);
+
+            _selector += " >> internal:has=" + JsonSerializer.Serialize(locator._selector, _locatorSerializerOptions);
         }
     }
 
