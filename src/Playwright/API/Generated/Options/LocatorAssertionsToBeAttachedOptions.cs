@@ -22,28 +22,33 @@
  * SOFTWARE.
  */
 
-using System.ComponentModel.DataAnnotations;
 using System.Text.Json.Serialization;
 
 #nullable enable
 
 namespace Microsoft.Playwright;
 
-public partial class HttpCredentials
+public class LocatorAssertionsToBeAttachedOptions
 {
-    /// <summary><para></para></summary>
-    [Required]
-    [JsonPropertyName("username")]
-    public string Username { get; set; } = default!;
+    public LocatorAssertionsToBeAttachedOptions() { }
 
-    /// <summary><para></para></summary>
-    [Required]
-    [JsonPropertyName("password")]
-    public string Password { get; set; } = default!;
+    public LocatorAssertionsToBeAttachedOptions(LocatorAssertionsToBeAttachedOptions clone)
+    {
+        if (clone == null)
+        {
+            return;
+        }
 
-    /// <summary><para>Restrain sending http credentials on specific origin (scheme://host:port).</para></summary>
-    [JsonPropertyName("origin")]
-    public string? Origin { get; set; }
+        Attached = clone.Attached;
+        Timeout = clone.Timeout;
+    }
+
+    [JsonPropertyName("attached")]
+    public bool? Attached { get; set; }
+
+    /// <summary><para>Time to retry the assertion for.</para></summary>
+    [JsonPropertyName("timeout")]
+    public float? Timeout { get; set; }
 }
 
 #nullable disable

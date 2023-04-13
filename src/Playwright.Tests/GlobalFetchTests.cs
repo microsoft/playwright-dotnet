@@ -22,6 +22,7 @@
  * SOFTWARE.
  */
 
+using System.Globalization;
 using System.Text;
 using System.Text.Json;
 using Microsoft.AspNetCore.Http;
@@ -126,6 +127,60 @@ public class GlobalFetchTests : PlaywrightTestEx
         Assert.AreEqual(401, response.Status);
         await request.DisposeAsync();
     }
+
+    [PlaywrightTest("global-fetch.spec.ts", "should work with correct credentials and matching origin")]
+    public async Task ShouldWorkWithCorrectCredentialsAndMatchingOrigin()
+    {
+        Server.SetAuth("/empty.html", "user", "pass");
+        var request = await Playwright.APIRequest.NewContextAsync(new() { HttpCredentials = new() { Username = "user", Password = "pass", Origin = Server.Prefix } });
+        var response = await request.GetAsync(Server.EmptyPage);
+        Assert.AreEqual(200, response.Status);
+        await request.DisposeAsync();
+    }
+
+    [PlaywrightTest("global-fetch.spec.ts", "should work with correct credentials and matching origin case insensitive")]
+    public async Task ShouldWorkWithCorrectCredentialsAndMatchingOriginCaseInsensitive()
+    {
+        Server.SetAuth("/empty.html", "user", "pass");
+        var request = await Playwright.APIRequest.NewContextAsync(new() { HttpCredentials = new() { Username = "user", Password = "pass", Origin = Server.Prefix.ToUpperInvariant() } });
+        var response = await request.GetAsync(Server.EmptyPage);
+        Assert.AreEqual(200, response.Status);
+        await request.DisposeAsync();
+    }
+
+    [PlaywrightTest("global-fetch.spec.ts", "should return error with correct credentials and mismatching scheme")]
+    public async Task ShouldReturnErrorWithCorrectCredentialsAndMismatchingScheme()
+    {
+        Server.SetAuth("/empty.html", "user", "pass");
+        var request = await Playwright.APIRequest.NewContextAsync(new() { HttpCredentials = new() { Username = "user", Password = "pass", Origin = Server.Prefix.Replace("http://", "https://") } });
+        var response = await request.GetAsync(Server.EmptyPage);
+        Assert.AreEqual(401, response.Status);
+        await request.DisposeAsync();
+    }
+
+    [PlaywrightTest("global-fetch.spec.ts", "should return error with correct credentials and mismatching hostname")]
+    public async Task ShouldReturnErrorWithCorrectCredentialsandMismatchingHostname()
+    {
+        Server.SetAuth("/empty.html", "user", "pass");
+        var hostname = new Uri(Server.Prefix).Host;
+        var origin = Server.Prefix.Replace(hostname, "mismatching-hostname");
+        var request = await Playwright.APIRequest.NewContextAsync(new() { HttpCredentials = new() { Username = "user", Password = "pass", Origin = origin } });
+        var response = await request.GetAsync(Server.EmptyPage);
+        Assert.AreEqual(401, response.Status);
+        await request.DisposeAsync();
+    }
+
+    [PlaywrightTest("global-fetch.spec.ts", "should return error with correct credentials and mismatching port")]
+    public async Task ShouldReturnErrorWithCorrectCredentialsAndMismatchingPort()
+    {
+        Server.SetAuth("/empty.html", "user", "pass");
+        var origin = Server.Prefix.Replace(Server.Port.ToString(CultureInfo.InvariantCulture), (Server.Port + 1).ToString(CultureInfo.InvariantCulture));
+        var request = await Playwright.APIRequest.NewContextAsync(new() { HttpCredentials = new() { Username = "user", Password = "pass", Origin = origin } });
+        var response = await request.GetAsync(Server.EmptyPage);
+        Assert.AreEqual(401, response.Status);
+        await request.DisposeAsync();
+    }
+
 
     [PlaywrightTest("global-fetch.spec.ts", "should use proxy")]
     [Ignore("Fetch API is using the CONNECT Http proxy server method all the time")]

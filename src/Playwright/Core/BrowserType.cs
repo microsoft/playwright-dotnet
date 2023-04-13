@@ -162,7 +162,7 @@ internal class BrowserType : ChannelOwnerBase, IChannelOwner<BrowserType>, IBrow
                 new KeyValuePair<string, string>("x-playwright-browser", Name),
             }.ToDictionary(pair => pair.Key, pair => pair.Value);
         var localUtils = _channel.Connection.LocalUtils;
-        JsonPipe pipe = (await localUtils.ConnectAsync(wsEndpoint: wsEndpoint, headers: headers, slowMo: options.SlowMo, timeout: options.Timeout).ConfigureAwait(false)).Object;
+        var pipe = await localUtils.ConnectAsync(wsEndpoint: wsEndpoint, headers: headers, slowMo: options.SlowMo, timeout: options.Timeout).ConfigureAwait(false);
 
         void ClosePipe()
         {

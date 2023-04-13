@@ -66,8 +66,9 @@ public class PageGoBackOptions
     /// fired.
     /// </description></item>
     /// <item><description>
-    /// <c>'networkidle'</c> - consider operation to be finished when there are no network
-    /// connections for at least <c>500</c> ms.
+    /// <c>'networkidle'</c> - **DISCOURAGED** consider operation to be finished when there
+    /// are no network connections for at least <c>500</c> ms. Don't use this method for
+    /// testing, rely on web assertions to assess readiness instead.
     /// </description></item>
     /// <item><description>
     /// <c>'commit'</c> - consider operation to be finished when network response is received

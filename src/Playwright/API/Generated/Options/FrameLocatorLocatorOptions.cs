@@ -41,6 +41,10 @@ public class FrameLocatorLocatorOptions
         }
 
         Has = clone.Has;
+        HasNot = clone.HasNot;
+        HasNotText = clone.HasNotText;
+        HasNotTextRegex = clone.HasNotTextRegex;
+        HasNotTextString = clone.HasNotTextString;
         HasText = clone.HasText;
         HasTextRegex = clone.HasTextRegex;
         HasTextString = clone.HasTextString;
@@ -59,6 +63,50 @@ public class FrameLocatorLocatorOptions
     /// </summary>
     [JsonPropertyName("has")]
     public ILocator? Has { get; set; }
+
+    /// <summary>
+    /// <para>
+    /// Matches elements that do not contain an element that matches an inner locator. Inner
+    /// locator is queried against the outer one. For example, <c>article</c> that does
+    /// not have <c>div</c> matches <c>&lt;article&gt;&lt;span&gt;Playwright&lt;/span&gt;&lt;/article&gt;</c>.
+    /// </para>
+    /// <para>
+    /// Note that outer and inner locators must belong to the same frame. Inner locator
+    /// must not contain <see cref="IFrameLocator"/>s.
+    /// </para>
+    /// </summary>
+    [JsonPropertyName("hasNot")]
+    public ILocator? HasNot { get; set; }
+
+    /// <summary>
+    /// <para>
+    /// Matches elements that do not contain specified text somewhere inside, possibly in
+    /// a child or a descendant element. When passed a <see cref="string"/>, matching is
+    /// case-insensitive and searches for a substring.
+    /// </para>
+    /// </summary>
+    [JsonPropertyName("hasNotText")]
+    public string? HasNotText { get; set; }
+
+    /// <summary>
+    /// <para>
+    /// Matches elements that do not contain specified text somewhere inside, possibly in
+    /// a child or a descendant element. When passed a <see cref="string"/>, matching is
+    /// case-insensitive and searches for a substring.
+    /// </para>
+    /// </summary>
+    [JsonPropertyName("hasNotTextRegex")]
+    public Regex? HasNotTextRegex { get; set; }
+
+    /// <summary>
+    /// <para>
+    /// Matches elements that do not contain specified text somewhere inside, possibly in
+    /// a child or a descendant element. When passed a <see cref="string"/>, matching is
+    /// case-insensitive and searches for a substring.
+    /// </para>
+    /// </summary>
+    [JsonPropertyName("hasNotTextString")]
+    public string? HasNotTextString { get; set; }
 
     /// <summary>
     /// <para>

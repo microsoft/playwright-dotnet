@@ -102,9 +102,9 @@ public partial class RequestTimingResult
 
     /// <summary>
     /// <para>
-    /// Time immediately after the browser starts requesting the resource from the server,
-    /// cache, or local resource. The value is given in milliseconds relative to <c>startTime</c>,
-    /// -1 if not available.
+    /// Time immediately after the browser receives the first byte of the response from
+    /// the server, cache, or local resource. The value is given in milliseconds relative
+    /// to <c>startTime</c>, -1 if not available.
     /// </para>
     /// </summary>
     [Required]

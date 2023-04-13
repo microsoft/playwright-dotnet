@@ -22,6 +22,7 @@
  * SOFTWARE.
  */
 
+using System.Globalization;
 using System.Net;
 
 namespace Microsoft.Playwright.Tests;
@@ -94,5 +95,103 @@ public class BrowserContextCredentialsTests : BrowserTestEx
         Assert.AreEqual((int)HttpStatusCode.OK, response.Status);
         Assert.AreEqual("Playground", await page.TitleAsync());
         StringAssert.Contains("Playground", await response.TextAsync());
+    }
+
+    [PlaywrightTest("browsercontext-credentials.spec.ts", "should work with correct credentials and matching origin")]
+    public async Task ShouldWorkWithCorrectCredentialsAndMatchingOrigin()
+    {
+        Server.SetAuth("/empty.html", "user", "pass");
+        await using var context = await Browser.NewContextAsync(new()
+        {
+            HttpCredentials = new()
+            {
+                Username = "user",
+                Password = "pass",
+                Origin = Server.Prefix
+            },
+        });
+
+        var page = await context.NewPageAsync();
+        var response = await page.GotoAsync(Server.EmptyPage);
+        Assert.AreEqual((int)HttpStatusCode.OK, response.Status);
+    }
+
+    [PlaywrightTest("browsercontext-credentials.spec.ts", "should work with correct credentials and matching origin case insensitive")]
+    public async Task ShouldWorkWithCorrectCredentialsAndMatchingOriginCaseInsensitive()
+    {
+        Server.SetAuth("/empty.html", "user", "pass");
+        await using var context = await Browser.NewContextAsync(new()
+        {
+            HttpCredentials = new()
+            {
+                Username = "user",
+                Password = "pass",
+                Origin = Server.Prefix.ToUpperInvariant()
+            },
+        });
+
+        var page = await context.NewPageAsync();
+        var response = await page.GotoAsync(Server.EmptyPage);
+        Assert.AreEqual((int)HttpStatusCode.OK, response.Status);
+    }
+
+    [PlaywrightTest("browsercontext-credentials.spec.ts", "should fail with correct credentials and mismatching scheme")]
+    public async Task ShouldFailWithCorrectCredentialsAndMismatchingScheme()
+    {
+        Server.SetAuth("/empty.html", "user", "pass");
+        await using var context = await Browser.NewContextAsync(new()
+        {
+            HttpCredentials = new()
+            {
+                Username = "user",
+                Password = "pass",
+                Origin = Server.Prefix.Replace("http://", "https://")
+            },
+        });
+
+        var page = await context.NewPageAsync();
+        var response = await page.GotoAsync(Server.EmptyPage);
+        Assert.AreEqual((int)HttpStatusCode.Unauthorized, response.Status);
+    }
+
+    [PlaywrightTest("browsercontext-credentials.spec.ts", "should fail with correct credentials and mismatching hostname")]
+    public async Task ShouldFailWithCorrectCredentialsAndMismatchingHostname()
+    {
+        Server.SetAuth("/empty.html", "user", "pass");
+        var hostname = new Uri(Server.Prefix).Host;
+        var origin = Server.Prefix.Replace(hostname, "mismatching-hostname");
+        await using var context = await Browser.NewContextAsync(new()
+        {
+            HttpCredentials = new()
+            {
+                Username = "user",
+                Password = "pass",
+                Origin = origin
+            },
+        });
+
+        var page = await context.NewPageAsync();
+        var response = await page.GotoAsync(Server.EmptyPage);
+        Assert.AreEqual((int)HttpStatusCode.Unauthorized, response.Status);
+    }
+
+    [PlaywrightTest("browsercontext-credentials.spec.ts", "should fail with correct credentials and mismatching port")]
+    public async Task ShouldFailWithCorrectCredentialsAndMismatchingPort()
+    {
+        Server.SetAuth("/empty.html", "user", "pass");
+        var origin = Server.Prefix.Replace(Server.Port.ToString(CultureInfo.InvariantCulture), (Server.Port + 1).ToString(CultureInfo.InvariantCulture));
+        await using var context = await Browser.NewContextAsync(new()
+        {
+            HttpCredentials = new()
+            {
+                Username = "user",
+                Password = "pass",
+                Origin = origin
+            },
+        });
+
+        var page = await context.NewPageAsync();
+        var response = await page.GotoAsync(Server.EmptyPage);
+        Assert.AreEqual((int)HttpStatusCode.Unauthorized, response.Status);
     }
 }

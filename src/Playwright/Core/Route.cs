@@ -72,7 +72,7 @@ internal class Route : ChannelOwnerBase, IChannelOwner<Route>, IRoute
             options.Json,
             options.Path,
             options.Response).ConfigureAwait(false);
-
+        normalized["requestUrl"] = _request._initializer.Url;
         await RaceWithTargetCloseAsync(_channel.FulfillAsync(normalized)).ConfigureAwait(false);
         ReportHandled(true);
     }
@@ -80,7 +80,7 @@ internal class Route : ChannelOwnerBase, IChannelOwner<Route>, IRoute
     public async Task AbortAsync(string errorCode = RequestAbortErrorCode.Failed)
     {
         CheckNotHandled();
-        await RaceWithTargetCloseAsync(_channel.AbortAsync(errorCode)).ConfigureAwait(false);
+        await RaceWithTargetCloseAsync(_channel.AbortAsync(_request._initializer.Url, errorCode)).ConfigureAwait(false);
         ReportHandled(true);
     }
 
@@ -96,7 +96,7 @@ internal class Route : ChannelOwnerBase, IChannelOwner<Route>, IRoute
     {
         var options = _request.FallbackOverridesForContinue();
         await _channel.Connection.WrapApiCallAsync(
-            () => RaceWithTargetCloseAsync(_channel.ContinueAsync(url: options.Url, method: options.Method, postData: options.PostData, headers: options.Headers)),
+            () => RaceWithTargetCloseAsync(_channel.ContinueAsync(requestUrl: _request._initializer.Url, url: options.Url, method: options.Method, postData: options.PostData, headers: options.Headers)),
             @internal).ConfigureAwait(false);
     }
 

@@ -64,6 +64,19 @@ internal class Locator : ILocator
             _selector += $" >> internal:has-text={EscapeForTextSelector(options.HasTextString, false)}";
         }
 
+        if (options?.HasNotTextRegex != null)
+        {
+            _selector += $" >> internal:has-not-text={EscapeForTextSelector(options.HasNotTextRegex, false)}";
+        }
+        else if (options?.HasNotText != null)
+        {
+            _selector += $" >> internal:has-not-text={EscapeForTextSelector(options.HasNotText, false)}";
+        }
+        else if (options?.HasNotTextString != null)
+        {
+            _selector += $" >> internal:has-not-text={EscapeForTextSelector(options.HasNotTextString, false)}";
+        }
+
         if (options?.Has != null)
         {
             var locator = (Locator)options.Has;
@@ -73,6 +86,17 @@ internal class Locator : ILocator
             }
 
             _selector += " >> internal:has=" + JsonSerializer.Serialize(locator._selector, _locatorSerializerOptions);
+        }
+
+        if (options?.HasNot != null)
+        {
+            var locator = (Locator)options.HasNot;
+            if (locator._frame != _frame)
+            {
+                throw new ArgumentException("Inner \"HasNot\" locator must belong to the same frame.");
+            }
+
+            _selector += $" >> internal:has-not={JsonSerializer.Serialize(locator._selector, _locatorSerializerOptions)}";
         }
     }
 
@@ -163,9 +187,13 @@ internal class Locator : ILocator
         new Locator(_frame, _selector, new()
         {
             Has = options?.Has,
+            HasNot = options?.HasNot,
             HasText = options?.HasText,
             HasTextString = options?.HasTextString,
             HasTextRegex = options?.HasTextRegex,
+            HasNotText = options?.HasNotText,
+            HasNotTextString = options?.HasNotTextString,
+            HasNotTextRegex = options?.HasNotTextRegex,
         });
 
     public Task<IElementHandle> ElementHandleAsync(LocatorElementHandleOptions options = null)
@@ -177,6 +205,15 @@ internal class Locator : ILocator
         => _frame.QuerySelectorAllAsync(_selector);
 
     public ILocator Nth(int index) => new Locator(_frame, $"{_selector} >> nth={index}");
+
+    public ILocator Or(ILocator locator)
+    {
+        if ((locator as Locator)._frame != this._frame)
+        {
+            throw new ArgumentException("Locators must belong to the same frame.");
+        }
+        return new Locator(this._frame, this._selector + $" >> internal:or={JsonSerializer.Serialize((locator as Locator)._selector, _locatorSerializerOptions)}");
+    }
 
     public Task FocusAsync(LocatorFocusOptions options = null)
         => _frame.FocusAsync(_selector, ConvertOptions<FrameFocusOptions>(options));

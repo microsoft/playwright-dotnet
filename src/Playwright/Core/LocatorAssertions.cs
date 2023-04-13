@@ -38,6 +38,12 @@ internal class LocatorAssertions : AssertionsBase, ILocatorAssertions
 
     public ILocatorAssertions Not => new LocatorAssertions(ActualLocator, !IsNot);
 
+    public Task ToBeAttachedAsync(LocatorAssertionsToBeAttachedOptions options = null)
+    {
+        var attached = options == null || options.Attached == null || options.Attached == true;
+        return ExpectTrueAsync(attached ? "to.be.attached" : "to.be.detached", $"Locator expected {(!attached ? "not " : string.Empty)}to be attached", ConvertToFrameExpectOptions(options));
+    }
+
     public Task ToBeCheckedAsync(LocatorAssertionsToBeCheckedOptions options = null)
     {
         var isChecked = options == null || options.Checked == null || options.Checked == true;

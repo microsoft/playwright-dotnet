@@ -2714,8 +2714,9 @@ public partial interface IPage
     /// <item><description><c>'load'</c> - wait for the <c>load</c> event to be fired.</description></item>
     /// <item><description><c>'domcontentloaded'</c> - wait for the <c>DOMContentLoaded</c> event to be fired.</description></item>
     /// <item><description>
-    /// <c>'networkidle'</c> - wait until there are no network connections for at least
-    /// <c>500</c> ms.
+    /// <c>'networkidle'</c> - **DISCOURAGED** wait until there are no network connections
+    /// for at least <c>500</c> ms. Don't use this method for testing, rely on web assertions
+    /// to assess readiness instead.
     /// </description></item>
     /// </list>
     /// </param>
@@ -3203,6 +3204,10 @@ public partial interface IPage
 
     /// <summary>
     /// <para>
+    /// Use web assertions that assert visibility or a locator-based <see cref="ILocator.WaitForAsync"/>
+    /// instead. Read more about <a href="https://playwright.dev/dotnet/docs/locators">locators</a>.
+    /// </para>
+    /// <para>
     /// Returns when element specified by selector satisfies <paramref name="state"/> option.
     /// Returns <c>null</c> if waiting for <c>hidden</c> or <c>detached</c>.
     /// </para>
@@ -3251,6 +3256,10 @@ public partial interface IPage
     Task<IElementHandle?> WaitForSelectorAsync(string selector, PageWaitForSelectorOptions? options = default);
 
     /// <summary>
+    /// <para>
+    /// Never wait for timeout in production. Tests that wait for time are inherently flaky.
+    /// Use <see cref="ILocator"/> actions and web assertions that wait automatically.
+    /// </para>
     /// <para>Waits for the given <paramref name="timeout"/> in milliseconds.</para>
     /// <para>
     /// Note that <c>page.waitForTimeout()</c> should only be used for debugging. Tests

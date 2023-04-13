@@ -41,7 +41,7 @@ public partial interface IWebSocket
     event EventHandler<IWebSocketFrame> FrameSent;
 
     /// <summary><para>Fired when the websocket has an error.</para></summary>
-    event EventHandler<String> SocketError;
+    event EventHandler<string> SocketError;
 
     /// <summary><para>Indicates that the web socket has been closed.</para></summary>
     bool IsClosed { get; }

@@ -932,6 +932,26 @@ public partial interface ILocator
     /// </param>
     ILocator Nth(int index);
 
+    /// <summary>
+    /// <para>Creates a locator that matches either of the two locators.</para>
+    /// <para>**Usage**</para>
+    /// <para>
+    /// Consider a scenario where you'd like to click on a "New email" button, but sometimes
+    /// a security settings dialog shows up instead. In this case, you can wait for either
+    /// a "New email" button, or a dialog and act accordingly.
+    /// </para>
+    /// <code>
+    /// var newEmail = page.GetByRole(AriaRole.Button, new() { Name = "New" });<br/>
+    /// var dialog = page.GetByText("Confirm security settings");<br/>
+    /// await Expect(newEmail.Or(dialog)).ToBeVisibleAsync();<br/>
+    /// if (await dialog.IsVisibleAsync())<br/>
+    ///   await page.GetByRole(AriaRole.Button, new() { Name = "Dismiss" }).ClickAsync();<br/>
+    /// await newEmail.ClickAsync();
+    /// </code>
+    /// </summary>
+    /// <param name="locator">Alternative locator to match.</param>
+    ILocator Or(ILocator locator);
+
     /// <summary><para>A page this locator belongs to.</para></summary>
     IPage Page { get; }
 

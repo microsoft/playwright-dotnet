@@ -37,7 +37,7 @@ namespace Microsoft.Playwright.Core;
 internal class Request : ChannelOwnerBase, IChannelOwner<Request>, IRequest
 {
     private readonly RequestChannel _channel;
-    private readonly RequestInitializer _initializer;
+    internal readonly RequestInitializer _initializer;
     private readonly RawHeaders _provisionalHeaders;
     private readonly RouteFallbackOptions _fallbackOverrides = new();
     private Task<RawHeaders> _rawHeadersTask;
