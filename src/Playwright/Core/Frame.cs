@@ -535,9 +535,13 @@ internal class Frame : ChannelOwnerBase, IChannelOwner<Frame>, IFrame
         new Locator(this, selector, new()
         {
             Has = options?.Has,
+            HasNot = options?.HasNot,
             HasText = options?.HasText,
             HasTextString = options?.HasTextString,
             HasTextRegex = options?.HasTextRegex,
+            HasNotText = options?.HasNotText,
+            HasNotTextString = options?.HasNotTextString,
+            HasNotTextRegex = options?.HasNotTextRegex,
         });
 
     public async Task<IElementHandle> QuerySelectorAsync(string selector, FrameQuerySelectorOptions options = null)

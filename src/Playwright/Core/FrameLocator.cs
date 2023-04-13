@@ -84,7 +84,18 @@ internal class FrameLocator : IFrameLocator
 
     IFrameLocator IFrameLocator.FrameLocator(string selector) => new FrameLocator(_frame, $"{_frameSelector} >> internal:control=enter-frame  >> {selector}");
 
-    public ILocator Locator(string selector, FrameLocatorLocatorOptions options = null) => new Locator(_frame, $"{_frameSelector} >> internal:control=enter-frame  >> {selector}", new() { HasText = options?.HasText, HasTextRegex = options?.HasTextRegex, HasTextString = options?.HasTextString });
+    public ILocator Locator(string selector, FrameLocatorLocatorOptions options = null)
+        => new Locator(_frame, $"{_frameSelector} >> internal:control=enter-frame  >> {selector}", new()
+        {
+            Has = options?.Has,
+            HasNot = options?.HasNot,
+            HasText = options?.HasText,
+            HasTextRegex = options?.HasTextRegex,
+            HasTextString = options?.HasTextString,
+            HasNotText = options?.HasNotText,
+            HasNotTextRegex = options?.HasNotTextRegex,
+            HasNotTextString = options?.HasNotTextString,
+        });
 
     public ILocator Locator(ILocator locator, FrameLocatorLocatorOptions options = null)
     {
@@ -93,7 +104,17 @@ internal class FrameLocator : IFrameLocator
         {
             throw new PlaywrightException("Locators must belong to the same frame.");
         }
-        return new Locator(_frame, $"{_frameSelector} >> internal:control=enter-frame  >> {locatorImpl._selector}", new() { HasText = options?.HasText, HasTextRegex = options?.HasTextRegex, HasTextString = options?.HasTextString });
+        return new Locator(_frame, $"{_frameSelector} >> internal:control=enter-frame  >> {locatorImpl._selector}", new()
+        {
+            Has = options?.Has,
+            HasNot = options?.HasNot,
+            HasText = options?.HasText,
+            HasTextRegex = options?.HasTextRegex,
+            HasTextString = options?.HasTextString,
+            HasNotText = options?.HasNotText,
+            HasNotTextRegex = options?.HasNotTextRegex,
+            HasNotTextString = options?.HasNotTextString,
+        });
     }
 
     public IFrameLocator Nth(int index) => new FrameLocator(_frame, $"{_frameSelector} >> nth={index}");

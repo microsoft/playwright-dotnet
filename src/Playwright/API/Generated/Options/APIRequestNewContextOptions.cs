@@ -82,7 +82,8 @@ public class APIRequestNewContextOptions
     /// <summary>
     /// <para>
     /// Credentials for <a href="https://developer.mozilla.org/en-US/docs/Web/HTTP/Authentication">HTTP
-    /// authentication</a>.
+    /// authentication</a>. If no origin is specified, the username and password are sent
+    /// to any servers upon unauthorized responses.
     /// </para>
     /// </summary>
     [JsonPropertyName("httpCredentials")]

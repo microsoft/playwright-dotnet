@@ -156,4 +156,15 @@ public class SelectorMiscTests : PageTestEx
         var error5 = await PlaywrightAssert.ThrowsAsync<PlaywrightException>(async () => await Page.QuerySelectorAsync("div >> left-of=\"span\",3,4"));
         StringAssert.Contains("Malformed selector: left-of=\"span\",3,4", error5.Message);
     }
+
+    [PlaywrightTest("queryselector.spec.ts", "should work with internal:has-not=")]
+    public async Task ShouldWorkWithInternalHasNot()
+    {
+        await Page.SetContentAsync("<section><span></span><div></div></section><section><br></section>");
+        Assert.AreEqual(await Page.EvalOnSelectorAllAsync<int>("section >> internal:has-not=\"span\"", "els => els.length"), 1);
+        Assert.AreEqual(await Page.EvalOnSelectorAllAsync<int>("section >> internal:has-not=\"span, div, br\"", "els => els.length"), 0);
+        Assert.AreEqual(await Page.EvalOnSelectorAllAsync<int>("section >> internal:has-not=\"br\"", "els => els.length"), 1);
+        Assert.AreEqual(await Page.EvalOnSelectorAllAsync<int>("section >> internal:has-not=\"span, div\"", "els => els.length"), 1);
+        Assert.AreEqual(await Page.EvalOnSelectorAllAsync<int>("section >> internal:has-not=\"article\"", "els => els.length"), 2);
+    }
 }

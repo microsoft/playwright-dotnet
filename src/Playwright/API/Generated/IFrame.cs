@@ -1724,8 +1724,9 @@ public partial interface IFrame
     /// <item><description><c>'load'</c> - wait for the <c>load</c> event to be fired.</description></item>
     /// <item><description><c>'domcontentloaded'</c> - wait for the <c>DOMContentLoaded</c> event to be fired.</description></item>
     /// <item><description>
-    /// <c>'networkidle'</c> - wait until there are no network connections for at least
-    /// <c>500</c> ms.
+    /// <c>'networkidle'</c> - **DISCOURAGED** wait until there are no network connections
+    /// for at least <c>500</c> ms. Don't use this method for testing, rely on web assertions
+    /// to assess readiness instead.
     /// </description></item>
     /// </list>
     /// </param>
@@ -1806,6 +1807,10 @@ public partial interface IFrame
     Task<IResponse?> RunAndWaitForNavigationAsync(Func<Task> action, FrameRunAndWaitForNavigationOptions? options = default);
 
     /// <summary>
+    /// <para>
+    /// Use web assertions that assert visibility or a locator-based <see cref="ILocator.WaitForAsync"/>
+    /// instead. Read more about <a href="https://playwright.dev/dotnet/docs/locators">locators</a>.
+    /// </para>
     /// <para>
     /// Returns when element specified by selector satisfies <paramref name="state"/> option.
     /// Returns <c>null</c> if waiting for <c>hidden</c> or <c>detached</c>.

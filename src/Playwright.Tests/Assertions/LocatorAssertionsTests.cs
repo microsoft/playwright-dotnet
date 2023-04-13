@@ -47,6 +47,131 @@ public class LocatorAssertionsTests : PageTestEx
         StringAssert.Contains("LocatorAssertions.ToBeCheckedAsync with timeout 300ms", exception.Message);
     }
 
+    [PlaywrightTest("page/expect-boolean.spec.ts", "toBeAttached > default")]
+    public async Task ToBeAttachedDefault()
+    {
+        await Page.SetContentAsync("<input></input>");
+        var locator = Page.Locator("input");
+        await Expect(locator).ToBeAttachedAsync();
+    }
+
+    [PlaywrightTest("page/expect-boolean.spec.ts", "toBeAttached > with hidden element")]
+    public async Task ToBeAttachedWithHiddenElement()
+    {
+        await Page.SetContentAsync("<button style=\"display:none\">hello</button>");
+        var locator = Page.Locator("button");
+        await Expect(locator).ToBeAttachedAsync();
+    }
+
+    [PlaywrightTest("page/expect-boolean.spec.ts", "toBeAttached > with not")]
+    public async Task ToBeAttachedWithNot()
+    {
+        await Page.SetContentAsync("<button>hello</button>");
+        var locator = Page.Locator("input");
+        await Expect(locator).Not.ToBeAttachedAsync();
+    }
+
+    [PlaywrightTest("page/expect-boolean.spec.ts", "toBeAttached > with attached:true")]
+    public async Task ToBeAttachedWithAttachedTrue()
+    {
+        await Page.SetContentAsync("<button>hello</button>");
+        var locator = Page.Locator("button");
+        await Expect(locator).ToBeAttachedAsync(new() { Attached = true });
+    }
+
+    [PlaywrightTest("page/expect-boolean.spec.ts", "toBeAttached > with attached:false")]
+    public async Task ToBeAttachedWithAttachedFalse()
+    {
+        await Page.SetContentAsync("<button>hello</button>");
+        var locator = Page.Locator("input");
+        await Expect(locator).ToBeAttachedAsync(new() { Attached = false });
+    }
+
+    [PlaywrightTest("page/expect-boolean.spec.ts", "toBeAttached > with not and attached:false")]
+    public async Task ToBeAttachedWithNotAndAttachedFalse()
+    {
+        await Page.SetContentAsync("<button>hello</button>");
+        var locator = Page.Locator("button");
+        await Expect(locator).Not.ToBeAttachedAsync(new() { Attached = false });
+    }
+
+    [PlaywrightTest("page/expect-boolean.spec.ts", "toBeAttached > eventually")]
+    public async Task ToBeAttachedEventually()
+    {
+        await Page.SetContentAsync("<div></div>");
+        var locator = Page.Locator("span");
+        await Page.EvaluateAsync("() => setTimeout(() => document.querySelector('div').innerHTML = '<span>Hello</span>', 0)");
+        await Expect(locator).ToBeAttachedAsync();
+    }
+
+    [PlaywrightTest("page/expect-boolean.spec.ts", "toBeAttached > eventually with not")]
+    public async Task ToBeAttachedEventuallyWithNot()
+    {
+        await Page.SetContentAsync("<div><span>Hello</span></div>");
+        var locator = Page.Locator("span");
+        await Page.EvaluateAsync("() => setTimeout(() => document.querySelector('div').textContent = '', 0)");
+        await Expect(locator).Not.ToBeAttachedAsync();
+    }
+
+    [PlaywrightTest("page/expect-boolean.spec.ts", "toBeAttached > fail")]
+    public async Task ToBeAttachedFail()
+    {
+        await Page.SetContentAsync("<button>Hello</button>");
+        var locator = Page.Locator("input");
+        var exception = await PlaywrightAssert.ThrowsAsync<PlaywrightException>(() => Expect(locator).ToBeAttachedAsync(new() { Timeout = 1000 }));
+        StringAssert.DoesNotContain("locator resolved to", exception.Message);
+    }
+
+    [PlaywrightTest("page/expect-boolean.spec.ts", "toBeAttached > fail with not")]
+    public async Task ToBeAttachedFailWithNot()
+    {
+        await Page.SetContentAsync("<input></input>");
+        var locator = Page.Locator("input");
+        var exception = await PlaywrightAssert.ThrowsAsync<PlaywrightException>(() => Expect(locator).Not.ToBeAttachedAsync(new() { Timeout = 1000 }));
+        StringAssert.Contains("locator resolved to <input/>", exception.Message);
+    }
+
+    [PlaywrightTest("page/expect-boolean.spec.ts", "toBeAttached > fail with impossible timeout")]
+    public async Task ToBeAttachedFailWithImpossibleTimeout()
+    {
+        await Page.SetContentAsync("<div id=\"node\">Text content</div>");
+        await Expect(Page.Locator("#node")).ToBeAttachedAsync(new() { Timeout = 1 });
+    }
+
+    [PlaywrightTest("page/expect-boolean.spec.ts", "toBeAttached > fail with impossible timeout .not")]
+    public async Task ToBeAttachedFailWithImpossibleTimeoutNot()
+    {
+        await Page.SetContentAsync("<div id=\"node\">Text content</div>");
+        await Expect(Page.Locator("no-such-thing")).Not.ToBeAttachedAsync(new() { Timeout = 1 });
+    }
+
+    [PlaywrightTest("page/expect-boolean.spec.ts", "toBeAttached > with frameLocator")]
+    public async Task ToBeAttachedWithFrameLocator()
+    {
+        await Page.SetContentAsync("<div></div>");
+        var locator = Page.FrameLocator("iframe").Locator("input");
+        bool done = false;
+        var promise = Expect(locator).ToBeAttachedAsync().ContinueWith(_ => done = true);
+        await Page.WaitForTimeoutAsync(1000);
+        Assert.False(done);
+        await Page.SetContentAsync("<iframe srcdoc=\"<input>\"></iframe>");
+        await promise;
+        Assert.True(done);
+    }
+
+    [PlaywrightTest("page/expect-boolean.spec.ts", "toBeAttached > over navigation")]
+    public async Task ToBeAttachedOverNavigation()
+    {
+        await Page.GotoAsync(Server.EmptyPage);
+        bool done = false;
+        var promise = Expect(Page.Locator("input")).ToBeAttachedAsync().ContinueWith(_ => done = true);
+        await Page.WaitForTimeoutAsync(1000);
+        Assert.False(done);
+        await Page.GotoAsync(Server.Prefix + "/input/checkbox.html");
+        await promise;
+        Assert.True(done);
+    }
+
     [PlaywrightTest("playwright-test/playwright.expect.spec.ts", "should support toBeEditable")]
     public async Task ShouldSupportToBeEditable()
     {

@@ -68,6 +68,17 @@ public partial interface ILocatorAssertions
     public ILocatorAssertions Not { get; }
 
     /// <summary>
+    /// <para>
+    /// Ensures that <see cref="ILocator"/> points to an <a href="https://playwright.dev/dotnet/docs/actionability#attached">attached</a>
+    /// DOM node.
+    /// </para>
+    /// <para>**Usage**</para>
+    /// <code>await Expect(Page.GetByText("Hidden text")).ToBeAttachedAsync();</code>
+    /// </summary>
+    /// <param name="options">Call options</param>
+    Task ToBeAttachedAsync(LocatorAssertionsToBeAttachedOptions? options = default);
+
+    /// <summary>
     /// <para>Ensures the <see cref="ILocator"/> points to a checked input.</para>
     /// <para>**Usage**</para>
     /// <code>
@@ -185,10 +196,7 @@ public partial interface ILocatorAssertions
     /// DOM node.
     /// </para>
     /// <para>**Usage**</para>
-    /// <code>
-    /// var locator = Page.Locator(".my-element");<br/>
-    /// await Expect(locator).ToBeVisibleAsync();
-    /// </code>
+    /// <code>await Expect(Page.GetByText("Welcome")).ToBeVisibleAsync();</code>
     /// </summary>
     /// <param name="options">Call options</param>
     Task ToBeVisibleAsync(LocatorAssertionsToBeVisibleOptions? options = default);

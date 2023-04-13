@@ -89,7 +89,7 @@ internal class LocalUtilsChannel : Channel<LocalUtils>
                   { "harFile", harFile },
         });
 
-    internal Task<JsonPipeChannel> ConnectAsync(string wsEndpoint, IEnumerable<KeyValuePair<string, string>> headers, float? slowMo, float? timeout)
+    internal async Task<JsonPipe> ConnectAsync(string wsEndpoint, IEnumerable<KeyValuePair<string, string>> headers, float? slowMo, float? timeout)
     {
         var args = new Dictionary<string, object>
             {
@@ -98,7 +98,7 @@ internal class LocalUtilsChannel : Channel<LocalUtils>
                 { "slowMo", slowMo },
                 { "timeout", timeout },
             };
-        return Connection.SendMessageToServerAsync<JsonPipeChannel>(Guid, "connect", args);
+        return (await Connection.SendMessageToServerAsync(Guid, "connect", args).ConfigureAwait(false)).Value.GetObject<JsonPipe>("pipe", Connection);
     }
 
     internal void AddStackToTracingNoReply(List<StackFrame> frames, int id)

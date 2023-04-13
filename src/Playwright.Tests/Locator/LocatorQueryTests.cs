@@ -167,17 +167,15 @@ public class LocatorQueryTests : PageTestEx
     {
         await Page.SetContentAsync("<div><span>hello</span></div><div><span>world</span></div>");
         await Expect(Page.Locator("div", new() { Has = Page.Locator("text=world") })).ToHaveCountAsync(1);
-        Assert.AreEqual("<div><span>world</span></div>", RemoveHighlight(await Page.Locator("div", new() { Has = Page.Locator("text=world") }).EvaluateAsync<string>("e => e.outerHTML")));
+        Assert.AreEqual("<div><span>world</span></div>", await Page.Locator("div", new() { Has = Page.Locator("text=world") }).EvaluateAsync<string>("e => e.outerHTML"));
         await Expect(Page.Locator("div", new() { Has = Page.Locator("text=hello") })).ToHaveCountAsync(1);
-        Assert.AreEqual("<div><span>hello</span></div>", RemoveHighlight(await Page.Locator("div", new() { Has = Page.Locator("text=hello") }).EvaluateAsync<string>("e => e.outerHTML")));
+        Assert.AreEqual("<div><span>hello</span></div>", await Page.Locator("div", new() { Has = Page.Locator("text=hello") }).EvaluateAsync<string>("e => e.outerHTML"));
         await Expect(Page.Locator("div", new() { Has = Page.Locator("xpath=./span") })).ToHaveCountAsync(2);
         await Expect(Page.Locator("div", new() { Has = Page.Locator("span") })).ToHaveCountAsync(2);
         await Expect(Page.Locator("div", new() { Has = Page.Locator("span", new() { HasTextString = "wor" }) })).ToHaveCountAsync(1);
-        Assert.AreEqual("<div><span>world</span></div>", RemoveHighlight(await Page.Locator("div", new() { Has = Page.Locator("span", new() { HasTextString = "wor" }) }).EvaluateAsync<string>("e => e.outerHTML")));
+        Assert.AreEqual("<div><span>world</span></div>", await Page.Locator("div", new() { Has = Page.Locator("span", new() { HasTextString = "wor" }) }).EvaluateAsync<string>("e => e.outerHTML"));
         await Expect(Page.Locator("div", new() { HasTextString = "wor", Has = Page.Locator("span") })).ToHaveCountAsync(1);
     }
-
-    private string RemoveHighlight(string markup) => Regex.Replace(markup, @"\s__playwright_target__=""[^""]+""", "");
 
     [PlaywrightTest("locator-query.spec.ts", "should support locator.filter")]
     public async Task ShouldSupportLocatorFilter()
@@ -191,6 +189,27 @@ public class LocatorQueryTests : PageTestEx
         await Expect(Page.Locator("div").Filter(new() { Has = Page.Locator("span", new() { HasText = "world" }) })).ToHaveCountAsync(1);
         await Expect(Page.Locator("div").Filter(new() { Has = Page.Locator("span") })).ToHaveCountAsync(2);
         await Expect(Page.Locator("div").Filter(new() { Has = Page.Locator("span"), HasText = "world" })).ToHaveCountAsync(1);
+
+        await Expect(Page.Locator("div").Filter(new() { HasNot = Page.Locator("span", new() { HasText = "world" }) })).ToHaveCountAsync(1);
+        await Expect(Page.Locator("div").Filter(new() { HasNot = Page.Locator("section") })).ToHaveCountAsync(2);
+        await Expect(Page.Locator("div").Filter(new() { HasNot = Page.Locator("span") })).ToHaveCountAsync(0);
+
+        await Expect(Page.Locator("div").Filter(new() { HasNotTextString = "hello" })).ToHaveCountAsync(1);
+        await Expect(Page.Locator("div").Filter(new() { HasNotTextString = "foo" })).ToHaveCountAsync(2);
+    }
+
+    [PlaywrightTest("locator-query.spec.ts", "should support locator.or")]
+    public async Task ShouldSupportLocatorOr()
+    {
+        await Page.SetContentAsync("<div>hello</div><span>world</span>");
+        await Expect(Page.Locator("div").Or(Page.Locator("span"))).ToHaveCountAsync(2);
+        await Expect(Page.Locator("div").Or(Page.Locator("span"))).ToHaveTextAsync(new[] { "hello", "world" });
+        await Expect(Page.Locator("span").Or(Page.Locator("article")).Or(Page.Locator("div"))).ToHaveTextAsync(new[] { "hello", "world" });
+        await Expect(Page.Locator("article").Or(Page.Locator("someting"))).ToHaveCountAsync(0);
+        await Expect(Page.Locator("article").Or(Page.Locator("div"))).ToHaveTextAsync("hello");
+        await Expect(Page.Locator("article").Or(Page.Locator("span"))).ToHaveTextAsync("world");
+        await Expect(Page.Locator("div").Or(Page.Locator("article"))).ToHaveTextAsync("hello");
+        await Expect(Page.Locator("span").Or(Page.Locator("article"))).ToHaveTextAsync("world");
     }
 
     [PlaywrightTest("locator-query.spec.ts", "should enforce same frame for has:locator'")]
