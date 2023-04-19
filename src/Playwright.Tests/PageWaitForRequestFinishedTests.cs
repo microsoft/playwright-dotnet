@@ -22,36 +22,15 @@
  * SOFTWARE.
  */
 
-using System.Text.RegularExpressions;
-
 namespace Microsoft.Playwright.Tests;
 
-public class PageWaitForResponseTests : PageTestEx
+public class PageWaitForRequestFinishedTests : PageTestEx
 {
-    [PlaywrightTest("page-wait-for-response.spec.ts", "should work")]
-    public async Task ShouldWork()
-    {
-        await Page.GotoAsync(Server.EmptyPage);
-        var task = Page.WaitForResponseAsync(Server.Prefix + "/digits/2.png");
-        var (response, _) = await TaskUtils.WhenAll(
-            task,
-            Page.EvaluateAsync<string>(@"() => {
-                    fetch('/digits/1.png');
-                    fetch('/digits/2.png');
-                    fetch('/digits/3.png');
-                }")
-        );
-        Assert.AreEqual(Server.Prefix + "/digits/2.png", response.Url);
-    }
-
     [PlaywrightTest("page-wait-for-response.spec.ts", "should respect timeout")]
     public Task ShouldRespectTimeout()
     {
         return PlaywrightAssert.ThrowsAsync<TimeoutException>(
-            () => Page.WaitForResponseAsync(_ => false, new()
-            {
-                Timeout = 1,
-            }));
+            () => Page.WaitForRequestFinishedAsync(new() { Predicate = _ => false, Timeout = 1, }));
     }
 
     [PlaywrightTest("page-wait-for-response.spec.ts", "should respect default timeout")]
@@ -59,52 +38,41 @@ public class PageWaitForResponseTests : PageTestEx
     {
         Page.SetDefaultTimeout(1);
         return PlaywrightAssert.ThrowsAsync<TimeoutException>(
-            () => Page.WaitForResponseAsync(_ => false));
+            () => Page.WaitForRequestFinishedAsync(new() { Predicate = _ => false }));
     }
 
     [PlaywrightTest("page-wait-for-response.spec.ts", "should work with predicate")]
     public async Task ShouldWorkWithPredicate()
     {
         await Page.GotoAsync(Server.EmptyPage);
-        var task = Page.WaitForResponseAsync(e => e.Url == Server.Prefix + "/digits/2.png");
-        var (response, _) = await TaskUtils.WhenAll(
+        var task = Page.WaitForRequestFinishedAsync(new()
+        {
+            Predicate = e => e.Url == Server.Prefix + "/digits/2.png"
+        });
+        var (request, _) = await TaskUtils.WhenAll(
             task,
             Page.EvaluateAsync<string>(@"() => {
-                    fetch('/digits/1.png');
-                    fetch('/digits/2.png');
-                    fetch('/digits/3.png');
+                    fetch('/digits/1.png').then((response) => response.blob());
+                    fetch('/digits/2.png').then((response) => response.blob());
+                    fetch('/digits/3.png').then((response) => response.blob());
                 }")
         );
-        Assert.AreEqual(Server.Prefix + "/digits/2.png", response.Url);
+        Assert.AreEqual(Server.Prefix + "/digits/2.png", request.Url);
     }
 
     [PlaywrightTest("page-wait-for-response.spec.ts", "should work with no timeout")]
     public async Task ShouldWorkWithNoTimeout()
     {
         await Page.GotoAsync(Server.EmptyPage);
-        var task = Page.WaitForResponseAsync(Server.Prefix + "/digits/2.png", new() { Timeout = 0 });
-        var (response, _) = await TaskUtils.WhenAll(
+        var task = Page.WaitForRequestFinishedAsync(new() { Predicate = e => e.Url == Server.Prefix + "/digits/2.png", Timeout = 0 });
+        var (request, _) = await TaskUtils.WhenAll(
             task,
             Page.EvaluateAsync(@"() => setTimeout(() => {
-                    fetch('/digits/1.png');
-                    fetch('/digits/2.png');
-                    fetch('/digits/3.png');
+                    fetch('/digits/1.png').then((response) => response.blob());
+                    fetch('/digits/2.png').then((response) => response.blob());
+                    fetch('/digits/3.png').then((response) => response.blob());
                 }, 50)")
         );
-        Assert.AreEqual(Server.Prefix + "/digits/2.png", response.Url);
-    }
-
-    [PlaywrightTest("page-wait-for-response.spec.ts", "should work with url match")]
-    public async Task ShouldWorkWithUrlMatch()
-    {
-        await Page.GotoAsync(Server.EmptyPage);
-        var task = Page.WaitForResponseAsync(new Regex(@"/digits/\d.png"));
-        var (response, _) = await TaskUtils.WhenAll(
-            task,
-            Page.EvaluateAsync<string>(@"() => {
-                    fetch('/digits/1.png');
-                }")
-        );
-        Assert.AreEqual(Server.Prefix + "/digits/1.png", response.Url);
+        Assert.AreEqual(Server.Prefix + "/digits/2.png", request.Url);
     }
 }

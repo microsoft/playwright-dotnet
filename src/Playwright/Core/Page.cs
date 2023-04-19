@@ -432,13 +432,14 @@ internal class Page : ChannelOwnerBase, IChannelOwner<Page>, IPage
             waiter.RejectOnEvent<IPage>(this, PageEvent.Close.Name, new("Page closed"));
         }
 
-        var result = waiter.WaitForEventAsync(this, pageEvent.Name, predicate);
+        var waitForEventTask = waiter.WaitForEventAsync(this, pageEvent.Name, predicate);
         if (action != null)
         {
-            await WrapApiBoundaryAsync(() => Task.WhenAll(result, action())).ConfigureAwait(false);
+            await WrapApiBoundaryAsync(() => waiter.CancelWaitOnExceptionAsync(waitForEventTask, action))
+                .ConfigureAwait(false);
         }
 
-        return await result.ConfigureAwait(false);
+        return await waitForEventTask.ConfigureAwait(false);
     }
 
     public async Task CloseAsync(PageCloseOptions options = default)

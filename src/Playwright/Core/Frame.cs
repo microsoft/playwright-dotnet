@@ -198,14 +198,46 @@ internal class Frame : ChannelOwnerBase, IChannelOwner<Frame>, IFrame
         }
     }
 
-    public async Task<IResponse> WaitForNavigationAsync(FrameWaitForNavigationOptions options = default)
+    public Task<IResponse> WaitForNavigationAsync(FrameWaitForNavigationOptions options = default)
     {
-        WaitUntilState waitUntil2 = options?.WaitUntil ?? WaitUntilState.Load;
+        return RunAndWaitForNavigationAsync(null, new()
+        {
+            Url = options?.Url,
+            UrlString = options?.UrlString,
+            UrlRegex = options?.UrlRegex,
+            UrlFunc = options?.UrlFunc,
+            WaitUntil = options?.WaitUntil,
+            Timeout = options?.Timeout,
+        });
+    }
+
+    public async Task<IResponse> RunAndWaitForNavigationAsync(Func<Task> action, FrameRunAndWaitForNavigationOptions options = default)
+    {
         using var waiter = SetupNavigationWaiter("frame.WaitForNavigationAsync", options?.Timeout);
-        string urlString = !string.IsNullOrEmpty(options?.Url) ? options?.Url : options?.UrlString;
+        var result = WaitForNavigationInternalAsync(waiter, options?.Url, options?.UrlFunc, options?.UrlRegex, options?.UrlString, options?.WaitUntil);
+
+        if (action != null)
+        {
+            await WrapApiBoundaryAsync(() => waiter.CancelWaitOnExceptionAsync(result, action))
+                .ConfigureAwait(false);
+        }
+
+        return await result.ConfigureAwait(false);
+    }
+
+    private async Task<IResponse> WaitForNavigationInternalAsync(
+        Waiter waiter,
+        string url,
+        Func<string, bool> urlFunc,
+        Regex urlRegex,
+        string urlString,
+        WaitUntilState? waitUntil)
+    {
+        WaitUntilState waitUntilNormalized = waitUntil ?? WaitUntilState.Load;
+        string urlStringNormalized = !string.IsNullOrEmpty(url) ? url! : urlString!;
         string toUrl = !string.IsNullOrEmpty(urlString) ? $" to \"{urlString}\"" : string.Empty;
 
-        waiter.Log($"waiting for navigation{toUrl} until \"{waitUntil2}\"");
+        waiter.Log($"waiting for navigation{toUrl} until \"{waitUntilNormalized}\"");
 
         var navigatedEventTask = waiter.WaitForEventAsync<FrameNavigatedEventArgs>(
             this,
@@ -219,8 +251,7 @@ internal class Frame : ChannelOwnerBase, IChannelOwner<Frame>, IFrame
                 }
 
                 waiter.Log($"  navigated to \"{e.Url}\"");
-                string urlString = !string.IsNullOrEmpty(options?.Url) ? options?.Url : options?.UrlString;
-                return UrlMatches(e.Url, urlString, options?.UrlRegex, options?.UrlFunc);
+                return UrlMatches(e.Url, urlStringNormalized, urlRegex, urlFunc);
             });
 
         var navigatedEvent = await navigatedEventTask.ConfigureAwait(false);
@@ -231,7 +262,7 @@ internal class Frame : ChannelOwnerBase, IChannelOwner<Frame>, IFrame
             await waiter.WaitForPromiseAsync(Task.FromException<object>(ex)).ConfigureAwait(false);
         }
 
-        if (!_loadStates.Select(s => s.ToValueString()).Contains(waitUntil2.ToValueString()))
+        if (!_loadStates.Select(s => s.ToValueString()).Contains(waitUntilNormalized.ToValueString()))
         {
             await waiter.WaitForEventAsync<WaitUntilState>(
                 this,
@@ -239,7 +270,7 @@ internal class Frame : ChannelOwnerBase, IChannelOwner<Frame>, IFrame
                 e =>
                 {
                     waiter.Log($"  \"{e}\" event fired");
-                    return e.ToValueString() == waitUntil2.ToValueString();
+                    return e.ToValueString() == waitUntilNormalized.ToValueString();
                 }).ConfigureAwait(false);
         }
 
@@ -249,25 +280,6 @@ internal class Frame : ChannelOwnerBase, IChannelOwner<Frame>, IFrame
             : null;
 
         return response;
-    }
-
-    public async Task<IResponse> RunAndWaitForNavigationAsync(Func<Task> action, FrameRunAndWaitForNavigationOptions options = default)
-    {
-        var result = WaitForNavigationAsync(new()
-        {
-            Url = options?.Url,
-            UrlString = options?.UrlString,
-            UrlRegex = options?.UrlRegex,
-            UrlFunc = options?.UrlFunc,
-            WaitUntil = options?.WaitUntil,
-            Timeout = options?.Timeout,
-        });
-        if (action != null)
-        {
-            await WrapApiBoundaryAsync(() => Task.WhenAll(result, action())).ConfigureAwait(false);
-        }
-
-        return await result.ConfigureAwait(false);
     }
 
     public Task TapAsync(string selector, FrameTapOptions options = default)
