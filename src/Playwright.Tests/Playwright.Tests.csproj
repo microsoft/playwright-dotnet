@@ -14,24 +14,24 @@
     <Import Project="build/Playwright.Tests.targets" />
     <ItemGroup>
         <PackageReference Include="CommandLineParser" Version="2.9.1" />
-        <PackageReference Include="coverlet.collector" Version="3.1.2">
+        <PackageReference Include="coverlet.collector" Version="3.2.0">
           <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
           <PrivateAssets>all</PrivateAssets>
         </PackageReference>
-        <PackageReference Include="coverlet.msbuild" Version="3.1.2">
+        <PackageReference Include="coverlet.msbuild" Version="3.2.0">
           <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
           <PrivateAssets>all</PrivateAssets>
         </PackageReference>
-        <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.2.0" />
+        <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.5.0" />
         <PackageReference Include="NUnit" Version="3.13.3" />
-        <PackageReference Include="NUnit3TestAdapter" Version="4.2.1" />
+        <PackageReference Include="NUnit3TestAdapter" Version="4.4.2" />
         <PackageReference Include="Mono.Posix.NETStandard" Version="1.0.0" />
-        <PackageReference Include="SixLabors.ImageSharp" Version="2.1.3" />
+        <PackageReference Include="SixLabors.ImageSharp" Version="2.1.4" />
         <PackageReference Include="NETStandard.Library" Version="2.0.3" />
         <PackageReference Include="System.CodeDom" Version="6.0.0" />
         <PackageReference Include="System.Net.Http" Version="4.3.4" />
         <PackageReference Include="Microsoft.CSharp" Version="4.7.0" />
-        <PackageReference Include="CompareNETObjects" Version="4.77.0" />
+        <PackageReference Include="CompareNETObjects" Version="4.79.0" />
         <Compile Include="..\Playwright\Helpers\StringExtensions.cs" Link="StringExtensions.cs" />
         <Compile Include="..\Playwright\Helpers\DoubleExtensions.cs" Link="DoubleExtensions.cs" />
         <Compile Include="..\Playwright\Helpers\RegexOptionsExtensions.cs" Link="RegexOptionsExtensions.cs" />
