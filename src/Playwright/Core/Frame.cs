@@ -233,11 +233,11 @@ internal class Frame : ChannelOwnerBase, IChannelOwner<Frame>, IFrame
         string urlString,
         WaitUntilState? waitUntil)
     {
-        WaitUntilState waitUntil2 = waitUntil ?? WaitUntilState.Load;
-        string urlString2 = !string.IsNullOrEmpty(url) ? url! : urlString!;
+        WaitUntilState waitUntilNormalized = waitUntil ?? WaitUntilState.Load;
+        string urlStringNormalized = !string.IsNullOrEmpty(url) ? url! : urlString!;
         string toUrl = !string.IsNullOrEmpty(urlString) ? $" to \"{urlString}\"" : string.Empty;
 
-        waiter.Log($"waiting for navigation{toUrl} until \"{waitUntil2}\"");
+        waiter.Log($"waiting for navigation{toUrl} until \"{waitUntilNormalized}\"");
 
         var navigatedEventTask = waiter.WaitForEventAsync<FrameNavigatedEventArgs>(
             this,
@@ -251,7 +251,7 @@ internal class Frame : ChannelOwnerBase, IChannelOwner<Frame>, IFrame
                 }
 
                 waiter.Log($"  navigated to \"{e.Url}\"");
-                return UrlMatches(e.Url, urlString2, urlRegex, urlFunc);
+                return UrlMatches(e.Url, urlStringNormalized, urlRegex, urlFunc);
             });
 
         var navigatedEvent = await navigatedEventTask.ConfigureAwait(false);
@@ -262,7 +262,7 @@ internal class Frame : ChannelOwnerBase, IChannelOwner<Frame>, IFrame
             await waiter.WaitForPromiseAsync(Task.FromException<object>(ex)).ConfigureAwait(false);
         }
 
-        if (!_loadStates.Select(s => s.ToValueString()).Contains(waitUntil2.ToValueString()))
+        if (!_loadStates.Select(s => s.ToValueString()).Contains(waitUntilNormalized.ToValueString()))
         {
             await waiter.WaitForEventAsync<WaitUntilState>(
                 this,
@@ -270,7 +270,7 @@ internal class Frame : ChannelOwnerBase, IChannelOwner<Frame>, IFrame
                 e =>
                 {
                     waiter.Log($"  \"{e}\" event fired");
-                    return e.ToValueString() == waitUntil2.ToValueString();
+                    return e.ToValueString() == waitUntilNormalized.ToValueString();
                 }).ConfigureAwait(false);
         }
 
