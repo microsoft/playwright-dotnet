@@ -44,6 +44,7 @@ public class RouteFetchOptions
         MaxRedirects = clone.MaxRedirects;
         Method = clone.Method;
         PostData = clone.PostData;
+        Timeout = clone.Timeout;
         Url = clone.Url;
     }
 
@@ -68,6 +69,15 @@ public class RouteFetchOptions
     /// <summary><para>If set changes the post data of request.</para></summary>
     [JsonPropertyName("postData")]
     public byte[]? PostData { get; set; }
+
+    /// <summary>
+    /// <para>
+    /// Request timeout in milliseconds. Defaults to <c>30000</c> (30 seconds). Pass <c>0</c>
+    /// to disable timeout.
+    /// </para>
+    /// </summary>
+    [JsonPropertyName("timeout")]
+    public float? Timeout { get; set; }
 
     /// <summary><para>If set changes the request URL. New URL must have same protocol as original one.</para></summary>
     [JsonPropertyName("url")]
