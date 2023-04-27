@@ -46,18 +46,21 @@ public partial interface ILocator
     /// When locator points to a list of elements, returns array of locators, pointing to
     /// respective elements.
     /// </para>
-    /// <para>
-    /// Note that <see cref="ILocator.AllAsync"/> does not wait for elements to match the
-    /// locator, and instead immediately returns whatever is present in the page. To avoid
-    /// flakiness when elements are loaded dynamically, wait for the loading to finish before
-    /// calling <see cref="ILocator.AllAsync"/>.
-    /// </para>
     /// <para>**Usage**</para>
     /// <code>
     /// foreach (var li in await page.GetByRole('listitem').AllAsync())<br/>
     ///   await li.ClickAsync();
     /// </code>
     /// </summary>
+    /// <remarks>
+    /// <para>
+    /// <see cref="ILocator.AllAsync"/> does not wait for elements to match the locator,
+    /// and instead immediately returns whatever is present in the page.  When the list
+    /// of elements changes dynamically, <see cref="ILocator.AllAsync"/> will produce unpredictable
+    /// and flaky results.  When the list of elements is stable, but loaded dynamically,
+    /// wait for the full list to finish loading before calling <see cref="ILocator.AllAsync"/>.
+    /// </para>
+    /// </remarks>
     Task<IReadOnlyList<ILocator>> AllAsync();
 
     /// <summary>

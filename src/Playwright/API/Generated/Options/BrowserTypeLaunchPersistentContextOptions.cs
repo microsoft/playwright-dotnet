@@ -165,7 +165,13 @@ public class BrowserTypeLaunchPersistentContextOptions
     [JsonPropertyName("colorScheme")]
     public ColorScheme? ColorScheme { get; set; }
 
-    /// <summary><para>Specify device scale factor (can be thought of as dpr). Defaults to <c>1</c>.</para></summary>
+    /// <summary>
+    /// <para>
+    /// Specify device scale factor (can be thought of as dpr). Defaults to <c>1</c>. Learn
+    /// more about <a href="https://playwright.dev/dotnet/docs/emulation#devices">emulating
+    /// devices with device scale factor</a>.
+    /// </para>
+    /// </summary>
     [JsonPropertyName("deviceScaleFactor")]
     public float? DeviceScaleFactor { get; set; }
 
@@ -233,7 +239,12 @@ public class BrowserTypeLaunchPersistentContextOptions
     [JsonPropertyName("handleSIGTERM")]
     public bool? HandleSIGTERM { get; set; }
 
-    /// <summary><para>Specifies if viewport supports touch events. Defaults to false.</para></summary>
+    /// <summary>
+    /// <para>
+    /// Specifies if viewport supports touch events. Defaults to false. Learn more about
+    /// <a href="https://playwright.dev/dotnet/docs/emulation#devices">mobile emulation</a>.
+    /// </para>
+    /// </summary>
     [JsonPropertyName("hasTouch")]
     public bool? HasTouch { get; set; }
 
@@ -283,13 +294,21 @@ public class BrowserTypeLaunchPersistentContextOptions
     /// <summary>
     /// <para>
     /// Whether the <c>meta viewport</c> tag is taken into account and touch events are
-    /// enabled. Defaults to <c>false</c>. Not supported in Firefox.
+    /// enabled. isMobile is a part of device, so you don't actually need to set it manually.
+    /// Defaults to <c>false</c> and is not supported in Firefox. Learn more about <a href="https://playwright.dev/dotnet/docs/emulation#isMobile">mobile
+    /// emulation</a>.
     /// </para>
     /// </summary>
     [JsonPropertyName("isMobile")]
     public bool? IsMobile { get; set; }
 
-    /// <summary><para>Whether or not to enable JavaScript in the context. Defaults to <c>true</c>.</para></summary>
+    /// <summary>
+    /// <para>
+    /// Whether or not to enable JavaScript in the context. Defaults to <c>true</c>. Learn
+    /// more about <a href="https://playwright.dev/dotnet/docs/emulation#javascript-enabled">disabling
+    /// JavaScript</a>.
+    /// </para>
+    /// </summary>
     [JsonPropertyName("javaScriptEnabled")]
     public bool? JavaScriptEnabled { get; set; }
 
@@ -297,13 +316,19 @@ public class BrowserTypeLaunchPersistentContextOptions
     /// <para>
     /// Specify user locale, for example <c>en-GB</c>, <c>de-DE</c>, etc. Locale will affect
     /// <c>navigator.language</c> value, <c>Accept-Language</c> request header value as
-    /// well as number and date formatting rules.
+    /// well as number and date formatting rules. Learn more about emulation in our <a href="https://playwright.dev/dotnet/docs/emulation#locale--timezone">emulation
+    /// guide</a>.
     /// </para>
     /// </summary>
     [JsonPropertyName("locale")]
     public string? Locale { get; set; }
 
-    /// <summary><para>Whether to emulate network being offline. Defaults to <c>false</c>.</para></summary>
+    /// <summary>
+    /// <para>
+    /// Whether to emulate network being offline. Defaults to <c>false</c>. Learn more about
+    /// <a href="https://playwright.dev/dotnet/docs/emulation#offline">network emulation</a>.
+    /// </para>
+    /// </summary>
     [JsonPropertyName("offline")]
     public bool? Offline { get; set; }
 
@@ -473,7 +498,9 @@ public class BrowserTypeLaunchPersistentContextOptions
     /// <summary>
     /// <para>
     /// Emulates consistent viewport for each page. Defaults to an 1280x720 viewport. Use
-    /// <c>ViewportSize.NoViewport</c> to disable the consistent viewport emulation.
+    /// <c>ViewportSize.NoViewport</c> to disable the consistent viewport emulation. Learn
+    /// more about <a href="https://playwright.dev/dotnet/docs/emulation#viewport">viewport
+    /// emulation</a>.
     /// </para>
     /// </summary>
     /// <remarks>

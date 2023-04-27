@@ -72,7 +72,7 @@ internal class Artifact : ChannelOwnerBase, IChannelOwner<Artifact>
         {
             using (var fileStream = new FileStream(path, FileMode.Create, FileAccess.Write))
             {
-                await stream.StreamImpl.CopyToAsync(fileStream).ConfigureAwait(false);
+                await stream.StreamImpl.CopyToAsync(fileStream, bufferSize: 1024 * 1024).ConfigureAwait(false);
             }
         }
     }

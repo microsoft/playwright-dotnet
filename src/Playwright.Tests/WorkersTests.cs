@@ -155,6 +155,7 @@ public class WorkersTests : PageTestEx
     }
 
     [PlaywrightTest("workers.spec.ts", "should report network activity")]
+    [Skip(SkipAttribute.Targets.Firefox)] // https://github.com/microsoft/playwright/issues/21760
     public async Task ShouldReportNetworkActivity()
     {
         var (worker, _) = await TaskUtils.WhenAll(
@@ -176,6 +177,7 @@ public class WorkersTests : PageTestEx
     }
 
     [PlaywrightTest("workers.spec.ts", "should report network activity on worker creation")]
+    [Skip(SkipAttribute.Targets.Firefox)] // https://github.com/microsoft/playwright/issues/21760
     public async Task ShouldReportNetworkActivityOnWorkerCreation()
     {
         await Page.GotoAsync(Server.EmptyPage);
