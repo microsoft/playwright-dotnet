@@ -22,8 +22,6 @@
  * SOFTWARE.
  */
 
-using System.Drawing;
-
 namespace Microsoft.Playwright.Tests;
 
 public class PageClickTests : PageTestEx
@@ -501,15 +499,18 @@ public class PageClickTests : PageTestEx
         await page.ClickAsync("button", new() { Position = new() { X = 20, Y = 10 } });
         Assert.AreEqual("Clicked", await page.EvaluateAsync<string>("window.result"));
 
-        var point = BrowserName switch
+        void AssertCloseTo(int expected, int actual)
         {
-            "chromium" => new(27, 18),
-            "webkit" => new(26, 17),
-            _ => new Point(28, 18),
-        };
+            if (Math.Abs(expected - actual) > 2)
+            {
+                throw new AssertionException($"Expected {expected}, received {actual}");
+            }
+        }
 
-        Assert.AreEqual(point.X, Convert.ToInt32(await page.EvaluateAsync<decimal>("pageX")));
-        Assert.AreEqual(point.Y, Convert.ToInt32(await page.EvaluateAsync<decimal>("pageY")));
+        // Expect 20;10 + 8px of border in each direction. Allow some delta as different
+        // browsers round up or down differently during css -> dip -> css conversion.
+        AssertCloseTo(28, await page.EvaluateAsync<int>("pageX"));
+        AssertCloseTo(18, await page.EvaluateAsync<int>("pageY"));
     }
 
     [PlaywrightTest("page-click.spec.ts", "should wait for stable position")]
@@ -684,7 +685,15 @@ public class PageClickTests : PageTestEx
     [PlaywrightTest("page-click.spec.ts", "should wait for select to be enabled")]
     public async Task ShouldWaitForSelectToBeEnabled()
     {
-        await Page.SetContentAsync("<select onclick=\"javascript: window.__CLICKED = true;\" disabled><option selected>Hello</option></select>");
+        await Page.SetContentAsync(@"
+            <select disabled><option selected>Hello</option></select>
+            <script>
+            document.querySelector('select').addEventListener('mousedown', event => {
+                window.__CLICKED=true;
+                event.preventDefault();
+            });
+            </script>
+        ");
         var clickTask = Page.ClickAsync("select");
         await GiveItAChanceToClick(Page);
         Assert.Null(await Page.EvaluateAsync<bool?>("window.__CLICKED"));
