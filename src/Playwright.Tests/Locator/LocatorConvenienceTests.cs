@@ -52,6 +52,15 @@ public class LocatorConvenienceTests : PageTestEx
         Assert.IsNull(await locator.GetAttributeAsync("foo"));
         Assert.AreEqual("value", await Page.GetAttributeAsync("#outer", "name"));
         Assert.IsNull(await Page.GetAttributeAsync("#outer", "foo"));
+        Assert.IsNull(await Page.GetAttributeAsync("#outer", "foo"));
+    }
+
+    [PlaywrightTest("locator-convenience.spec.ts", "getAttribute should work when attribute does not exist")]
+    public async Task GetAttributeShouldWorkWhenAttributeDoesNotExist()
+    {
+        await Page.GotoAsync(Server.EmptyPage);
+        await Page.SetContentAsync("<div></div>");
+        Assert.IsNull(await (await Page.QuerySelectorAsync("div")).GetAttributeAsync("foo"));
     }
 
     [PlaywrightTest("locator-convenience.spec.ts", "inputValue should work")]
