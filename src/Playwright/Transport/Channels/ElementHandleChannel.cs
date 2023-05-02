@@ -303,7 +303,11 @@ internal class ElementHandleChannel : JSHandleChannel, IChannel<ElementHandle>
             ["name"] = name,
         };
 
-        return (await Connection.SendMessageToServerAsync(Guid, "getAttribute", args).ConfigureAwait(false))?.GetProperty("value").ToString();
+        if ((await Connection.SendMessageToServerAsync(Guid, "getAttribute", args).ConfigureAwait(false))?.TryGetProperty("value", out var value) ?? false)
+        {
+            return value.ToString();
+        }
+        return null;
     }
 
     internal async Task<string> InnerHTMLAsync()
