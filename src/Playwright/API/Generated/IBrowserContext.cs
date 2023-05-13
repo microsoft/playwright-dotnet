@@ -132,7 +132,7 @@ public partial interface IBrowserContext
     /// page, use <see cref="IPage.RequestFinished"/>.
     /// </para>
     /// </summary>
-    event EventHandler<IRequest> RequestFinished;
+    event EventHandler<IResponse> RequestFinished;
 
     /// <summary>
     /// <para>

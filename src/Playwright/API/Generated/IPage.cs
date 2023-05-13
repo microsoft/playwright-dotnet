@@ -254,7 +254,7 @@ public partial interface IPage
     /// and <c>requestfinished</c>.
     /// </para>
     /// </summary>
-    event EventHandler<IRequest> RequestFinished;
+    event EventHandler<IResponse> RequestFinished;
 
     /// <summary>
     /// <para>
@@ -3002,20 +3002,20 @@ public partial interface IPage
 
     /// <summary>
     /// <para>
-    /// Performs action and waits for a <see cref="IRequest"/> to finish loading. If predicate
-    /// is provided, it passes <see cref="IRequest"/> value into the <c>predicate</c> function
+    /// Waits for a <see cref="IRequest"/> to finish loading. If predicate
+    /// is provided, it passes <see cref="IResponse"/> value into the <c>predicate</c> function
     /// and waits for <c>predicate(request)</c> to return a truthy value. Will throw an
     /// error if the page is closed before the <see cref="IPage.RequestFinished"/> event
     /// is fired.
     /// </para>
     /// </summary>
     /// <param name="options">Call options</param>
-    Task<IRequest> WaitForRequestFinishedAsync(PageWaitForRequestFinishedOptions? options = default);
+    Task<IResponse> WaitForRequestFinishedAsync(PageWaitForRequestFinishedOptions? options = default);
 
     /// <summary>
     /// <para>
     /// Performs action and waits for a <see cref="IRequest"/> to finish loading. If predicate
-    /// is provided, it passes <see cref="IRequest"/> value into the <c>predicate</c> function
+    /// is provided, it passes <see cref="IResponse"/> value into the <c>predicate</c> function
     /// and waits for <c>predicate(request)</c> to return a truthy value. Will throw an
     /// error if the page is closed before the <see cref="IPage.RequestFinished"/> event
     /// is fired.
@@ -3023,7 +3023,7 @@ public partial interface IPage
     /// </summary>
     /// <param name="action">Action that triggers the event.</param>
     /// <param name="options">Call options</param>
-    Task<IRequest> RunAndWaitForRequestFinishedAsync(Func<Task> action, PageRunAndWaitForRequestFinishedOptions? options = default);
+    Task<IResponse> RunAndWaitForRequestFinishedAsync(Func<Task> action, PageRunAndWaitForRequestFinishedOptions? options = default);
 
     /// <summary>
     /// <para>

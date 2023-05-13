@@ -46,12 +46,12 @@ public class PageRunAndWaitForRequestFinishedOptions
 
     /// <summary>
     /// <para>
-    /// Receives the <see cref="IRequest"/> object and resolves to truthy value when the
+    /// Receives the <see cref="IResponse"/> object and resolves to truthy value when the
     /// waiting should resolve.
     /// </para>
     /// </summary>
     [JsonPropertyName("predicate")]
-    public Func<IRequest, bool>? Predicate { get; set; }
+    public Func<IResponse, bool>? Predicate { get; set; }
 
     /// <summary>
     /// <para>

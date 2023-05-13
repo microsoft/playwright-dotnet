@@ -79,8 +79,8 @@ internal class BrowserContext : ChannelOwnerBase, IChannelOwner<BrowserContext>,
         {
             e.Request.SetResponseEndTiming(e.ResponseEndTiming);
             e.Request.Sizes = e.RequestSizes;
-            _requestFinishedImpl?.Invoke(this, e.Request);
-            e.Page?.FireRequestFinished(e.Request);
+            _requestFinishedImpl?.Invoke(this, e.Response);
+            e.Page?.FireRequestFinished(e.Response);
             e.Response?.ReportFinished();
         };
         Channel.Response += (_, e) =>
@@ -105,7 +105,7 @@ internal class BrowserContext : ChannelOwnerBase, IChannelOwner<BrowserContext>,
 
     private event EventHandler<IResponse> _responseImpl;
 
-    private event EventHandler<IRequest> _requestFinishedImpl;
+    private event EventHandler<IResponse> _requestFinishedImpl;
 
     private event EventHandler<IRequest> _requestFailedImpl;
 
@@ -125,7 +125,7 @@ internal class BrowserContext : ChannelOwnerBase, IChannelOwner<BrowserContext>,
         remove => this._responseImpl = UpdateEventHandler("response", this._responseImpl, value, false);
     }
 
-    public event EventHandler<IRequest> RequestFinished
+    public event EventHandler<IResponse> RequestFinished
     {
         add => this._requestFinishedImpl = UpdateEventHandler("requestFinished", this._requestFinishedImpl, value, true);
         remove => this._requestFinishedImpl = UpdateEventHandler("requestFinished", this._requestFinishedImpl, value, false);

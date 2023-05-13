@@ -48,11 +48,11 @@ public class ResourceTimingTests : ContextTestEx
     {
         await using var context = await NewContext();
         var page = await context.NewPageAsync();
-        var (request, _) = await TaskUtils.WhenAll(
+        var (response, _) = await TaskUtils.WhenAll(
             page.WaitForRequestFinishedAsync(),
             page.GotoAsync(Server.EmptyPage));
 
-        var timing = request.Timing;
+        var timing = response.Request.Timing;
 
         VerifyConnectionTimingConsistency(timing);
         Assert.GreaterOrEqual(timing.RequestStart, timing.ConnectEnd);
@@ -67,14 +67,14 @@ public class ResourceTimingTests : ContextTestEx
     {
         await using var context = await NewContext();
         var page = await context.NewPageAsync();
-        var requests = new List<IRequest>();
+        var responses = new List<IResponse>();
 
-        page.RequestFinished += (_, e) => requests.Add(e);
+        page.RequestFinished += (_, e) => responses.Add(e);
         await page.GotoAsync(Server.Prefix + "/one-style.html");
 
-        Assert.AreEqual(2, requests.Count);
+        Assert.AreEqual(2, responses.Count);
 
-        var timing = requests[1].Timing;
+        var timing = responses[1].Request.Timing;
 
         VerifyConnectionTimingConsistency(timing);
 
@@ -90,11 +90,11 @@ public class ResourceTimingTests : ContextTestEx
     {
         await using var context = await NewContext(new() { IgnoreHTTPSErrors = true });
         var page = await context.NewPageAsync();
-        var (request, _) = await TaskUtils.WhenAll(
+        var (response, _) = await TaskUtils.WhenAll(
             page.WaitForRequestFinishedAsync(),
             page.GotoAsync(HttpsServer.Prefix + "/empty.html"));
 
-        var timing = request.Timing;
+        var timing = response.Request.Timing;
         VerifyConnectionTimingConsistency(timing);
         Assert.GreaterOrEqual(timing.RequestStart, timing.ConnectEnd);
         Assert.GreaterOrEqual(timing.ResponseStart, timing.RequestStart);

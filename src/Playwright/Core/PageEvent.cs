@@ -34,7 +34,7 @@ internal static class PageEvent
     /// <summary>
     /// <see cref="PlaywrightEvent{T}"/> representing a <see cref="IPage.RequestFinished"/>.
     /// </summary>
-    public static PlaywrightEvent<IRequest> RequestFinished { get; } = new() { Name = "RequestFinished" };
+    public static PlaywrightEvent<IResponse> RequestFinished { get; } = new() { Name = "RequestFinished" };
 
     /// <summary>
     /// <see cref="PlaywrightEvent{T}"/> representing a <see cref="IPage.Crash"/>.

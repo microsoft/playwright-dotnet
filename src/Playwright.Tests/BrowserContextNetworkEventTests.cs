@@ -106,14 +106,15 @@ public class BrowserContextNetworkEventTests : BrowserTestEx
         await using var context = await Browser.NewContextAsync();
         var page = await context.NewPageAsync();
 
-        var request = await page.RunAndWaitForRequestFinishedAsync(() => page.GotoAsync(Server.EmptyPage));
-        Assert.AreEqual(Server.EmptyPage, request.Url);
+        var response = await page.RunAndWaitForRequestFinishedAsync(() => page.GotoAsync(Server.EmptyPage));
+        Assert.AreEqual(Server.EmptyPage, response.Url);
 
-        var response = await request.ResponseAsync();
         Assert.NotNull(response);
-        Assert.NotNull(request.Frame);
-        Assert.AreEqual(Server.EmptyPage, request.Frame.Url);
-        Assert.IsNull(request.Failure);
+        Assert.NotNull(response.Frame);
+        Assert.NotNull(response.Request.Frame);
+        Assert.AreEqual(Server.EmptyPage, response.Frame.Url);
+        Assert.AreEqual(Server.EmptyPage, response.Request.Frame.Url);
+        Assert.IsNull(response.Request.Failure);
     }
 
     /// <playwright-file>browsercontext-network-event.spec.ts</playwright-file>
