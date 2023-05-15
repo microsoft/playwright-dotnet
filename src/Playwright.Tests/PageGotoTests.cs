@@ -235,6 +235,11 @@ public class PageGotoTests : PageTestEx
     {
         Page.Request += (_, e) => Assert.NotNull(e);
         Page.RequestFinished += (_, e) => Assert.NotNull(e);
+        Page.ResponseFinished += (_, e) =>
+        {
+            Assert.NotNull(e.Request);
+            Assert.NotNull(e.Response);
+        };
         Page.RequestFailed += (_, e) => Assert.NotNull(e);
 
         var exception = await PlaywrightAssert.ThrowsAsync<PlaywrightException>(() => Page.GotoAsync(HttpsServer.Prefix + "/empty.html"));

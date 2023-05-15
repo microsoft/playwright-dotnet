@@ -68,11 +68,14 @@ public class ResourceTimingTests : ContextTestEx
         await using var context = await NewContext();
         var page = await context.NewPageAsync();
         var requests = new List<IRequest>();
+        var responses = new List<IResponse>();
 
         page.RequestFinished += (_, e) => requests.Add(e);
+        page.ResponseFinished += (_, e) => responses.Add(e.Response);
         await page.GotoAsync(Server.Prefix + "/one-style.html");
 
         Assert.AreEqual(2, requests.Count);
+        Assert.AreEqual(2, responses.Count);
 
         var timing = requests[1].Timing;
 
@@ -82,6 +85,15 @@ public class ResourceTimingTests : ContextTestEx
         Assert.GreaterOrEqual(timing.ResponseStart, timing.RequestStart);
         Assert.GreaterOrEqual(timing.ResponseEnd, timing.ResponseStart);
         Assert.Less(timing.ResponseEnd, 10000);
+
+        var timingFromResponse = responses[1].Request.Timing;
+
+        VerifyConnectionTimingConsistency(timingFromResponse);
+
+        Assert.GreaterOrEqual(timingFromResponse.RequestStart, 0);
+        Assert.GreaterOrEqual(timingFromResponse.ResponseStart, timingFromResponse.RequestStart);
+        Assert.GreaterOrEqual(timingFromResponse.ResponseEnd, timingFromResponse.ResponseStart);
+        Assert.Less(timingFromResponse.ResponseEnd, 10000);
     }
 
     [PlaywrightTest("resource-timing.spec.ts", "should work for SSL")]

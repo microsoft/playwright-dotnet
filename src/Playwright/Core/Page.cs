@@ -135,6 +135,8 @@ internal class Page : ChannelOwnerBase, IChannelOwner<Page>, IPage
 
     private event EventHandler<IRequest> _requestFinishedImpl;
 
+    private event EventHandler<(IRequest Request, IResponse Response)> _responseFinishedImpl;
+
     private event EventHandler<IRequest> _requestFailedImpl;
 
     private event EventHandler<IFileChooser> _fileChooserImpl;
@@ -161,6 +163,13 @@ internal class Page : ChannelOwnerBase, IChannelOwner<Page>, IPage
     {
         add => this._requestFinishedImpl = UpdateEventHandler("requestFinished", this._requestFinishedImpl, value, true);
         remove => this._requestFinishedImpl = UpdateEventHandler("requestFinished", this._requestFinishedImpl, value, false);
+    }
+
+    // Response finished is an artificial event - actual is the requestFinished
+    public event EventHandler<(IRequest Request, IResponse Response)> ResponseFinished
+    {
+        add => this._responseFinishedImpl = UpdateEventHandler("requestFinished", this._responseFinishedImpl, value, true);
+        remove => this._responseFinishedImpl = UpdateEventHandler("requestFinished", this._responseFinishedImpl, value, false);
     }
 
     public event EventHandler<IRequest> RequestFailed
@@ -357,6 +366,9 @@ internal class Page : ChannelOwnerBase, IChannelOwner<Page>, IPage
     public Task<IRequest> WaitForRequestFinishedAsync(PageWaitForRequestFinishedOptions options = default)
         => InnerWaitForEventAsync(PageEvent.RequestFinished, null, options?.Predicate, options?.Timeout);
 
+    public Task<(IRequest Request, IResponse Response)> WaitForResponseFinishedAsync(PageWaitForResponseFinishedOptions options = default)
+        => InnerWaitForEventAsync(PageEvent.ResponseFinished, null, options?.Predicate, options?.Timeout);
+
     public Task<IResponse> WaitForResponseAsync(string urlOrPredicate, PageWaitForResponseOptions options = default)
         => InnerWaitForEventAsync(PageEvent.Response, null, e => Context.UrlMatches(e.Url, urlOrPredicate), options?.Timeout);
 
@@ -383,6 +395,9 @@ internal class Page : ChannelOwnerBase, IChannelOwner<Page>, IPage
 
     public Task<IRequest> RunAndWaitForRequestFinishedAsync(Func<Task> action, PageRunAndWaitForRequestFinishedOptions options = default)
         => InnerWaitForEventAsync(PageEvent.RequestFinished, action, options?.Predicate, options?.Timeout);
+
+    public Task<(IRequest Request, IResponse Response)> RunAndWaitForResponseFinishedAsync(Func<Task> action, PageRunAndWaitForResponseFinishedOptions options = default)
+        => InnerWaitForEventAsync(PageEvent.ResponseFinished, action, options?.Predicate, options?.Timeout);
 
     public Task<IWebSocket> RunAndWaitForWebSocketAsync(Func<Task> action, PageRunAndWaitForWebSocketOptions options = default)
         => InnerWaitForEventAsync(PageEvent.WebSocket, action, options?.Predicate, options?.Timeout);
@@ -985,6 +1000,8 @@ internal class Page : ChannelOwnerBase, IChannelOwner<Page>, IPage
     internal void FireRequestFailed(IRequest request) => _requestFailedImpl?.Invoke(this, request);
 
     internal void FireRequestFinished(IRequest request) => _requestFinishedImpl?.Invoke(this, request);
+
+    internal void FireResponseFinished(IRequest request, IResponse response) => _responseFinishedImpl?.Invoke(this, (request, response));
 
     internal void FireResponse(IResponse response) => _responseImpl?.Invoke(this, response);
 

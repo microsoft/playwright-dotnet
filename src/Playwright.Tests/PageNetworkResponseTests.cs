@@ -152,6 +152,8 @@ public class PageNetworkResponseTests : PageTestEx
         // Setup page to trap response.
         bool requestFinished = false;
         Page.RequestFinished += (_, e) => requestFinished = requestFinished || e.Url.Contains("/get");
+        bool responseFinished = false;
+        Page.ResponseFinished+= (_, e) => responseFinished = responseFinished || e.Response.Url.Contains("/get");
         // send request and wait for server response
         var (pageResponse, _) = await TaskUtils.WhenAll(
             Page.WaitForResponseAsync("**/*"),
@@ -163,6 +165,7 @@ public class PageNetworkResponseTests : PageTestEx
         Assert.NotNull(pageResponse);
         Assert.AreEqual((int)HttpStatusCode.OK, pageResponse.Status);
         Assert.False(requestFinished);
+        Assert.False(responseFinished);
 
         var responseText = pageResponse.TextAsync();
         // Write part of the response and wait for it to be flushed.

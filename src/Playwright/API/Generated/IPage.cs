@@ -258,6 +258,15 @@ public partial interface IPage
 
     /// <summary>
     /// <para>
+    /// Emitted after request finishes successfully after downloading the response body to filter by response.
+    /// For a successful response, the sequence of events is <c>request</c>, <c>response</c>
+    /// and <c>requestfinished</c>.
+    /// </para>
+    /// </summary>
+    event EventHandler<(IRequest Request, IResponse? Response)> ResponseFinished;
+
+    /// <summary>
+    /// <para>
     /// Emitted when <see cref="response"/> status and headers are received for a request.
     /// For a successful response, the sequence of events is <c>request</c>, <c>response</c>
     /// and <c>requestfinished</c>.
@@ -3024,6 +3033,31 @@ public partial interface IPage
     /// <param name="action">Action that triggers the event.</param>
     /// <param name="options">Call options</param>
     Task<IRequest> RunAndWaitForRequestFinishedAsync(Func<Task> action, PageRunAndWaitForRequestFinishedOptions? options = default);
+
+    /// <summary>
+    /// <para>
+    /// Waits for a <see cref="IRequest"/> to finish loading. If predicate
+    /// is provided, it passes <see cref="IRequest"/> and <see cref="IResponse"/> value into the <c>predicate</c> function
+    /// and waits for <c>predicate(request)</c> to return a truthy value. Will throw an
+    /// error if the page is closed before the <see cref="IPage.ResponseFinished"/> event
+    /// is fired.
+    /// </para>
+    /// </summary>
+    /// <param name="options">Call options</param>
+    Task<(IRequest Request, IResponse Response)> WaitForResponseFinishedAsync(PageWaitForRequestFinishedOptions? options = default);
+
+    /// <summary>
+    /// <para>
+    /// Performs action and waits for a <see cref="IRequest"/> to finish loading. If predicate
+    /// is provided, it passes <see cref="IRequest"/> and <see cref="IResponse"/> value into the <c>predicate</c> function
+    /// and waits for <c>predicate(request)</c> to return a truthy value. Will throw an
+    /// error if the page is closed before the <see cref="IPage.ResponseFinished"/> event
+    /// is fired.
+    /// </para>
+    /// </summary>
+    /// <param name="action">Action that triggers the event.</param>
+    /// <param name="options">Call options</param>
+    Task<(IRequest Request, IResponse Response)> RunAndWaitForResponseFinishedAsync(Func<Task> action, PageRunAndWaitForRequestFinishedOptions? options = default);
 
     /// <summary>
     /// <para>

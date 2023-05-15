@@ -128,6 +128,7 @@ public class PageEventNetworkTests : PageTestEx
         Page.Request += (_, e) => events[e.Url].Add(e.Method);
         Page.Response += (_, e) => events[e.Url].Add(e.Status.ToString(CultureInfo.InvariantCulture));
         Page.RequestFinished += (_, e) => events[e.Url].Add("DONE");
+        Page.ResponseFinished += (_, e) => events[e.Response.Url].Add("DONE_2");
         Page.RequestFailed += (_, e) => events[e.Url].Add("FAIL");
         Server.SetRedirect("/foo.html", "/empty.html");
         var response = await Page.GotoAsync(FOO_URL);
@@ -135,8 +136,8 @@ public class PageEventNetworkTests : PageTestEx
 
         var expected = new Dictionary<string, List<string>>
         {
-            [FOO_URL] = new() { "GET", "302", "DONE" },
-            [EMPTY_URL] = new() { "GET", "200", "DONE" }
+            [FOO_URL] = new() { "GET", "302", "DONE", "DONE_2" },
+            [EMPTY_URL] = new() { "GET", "200", "DONE", "DONE_2" }
         };
 
         Assert.AreEqual(expected, events);

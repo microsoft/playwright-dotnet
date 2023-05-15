@@ -82,6 +82,7 @@ internal class BrowserContext : ChannelOwnerBase, IChannelOwner<BrowserContext>,
             _requestFinishedImpl?.Invoke(this, e.Request);
             e.Page?.FireRequestFinished(e.Request);
             e.Response?.ReportFinished();
+            e.Page?.FireResponseFinished(e.Request, e.Response);
         };
         Channel.Response += (_, e) =>
         {
