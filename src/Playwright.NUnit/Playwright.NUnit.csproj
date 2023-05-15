@@ -24,6 +24,7 @@
 
   <Import Project="../Common/Version.props" />
   <Import Project="../Common/SignAssembly.props" />
+  <Import Project="../Common/SignFiles.props" />
   <ItemGroup>
     <ProjectReference Include="..\Playwright\Playwright.csproj" />
     <ProjectReference Include="..\Playwright.TestAdapter\Playwright.TestAdapter.csproj" />
