@@ -23,6 +23,7 @@
 
   <Import Project="../Common/Version.props" />
   <Import Project="../Common/SignAssembly.props" />
+  <Import Project="../Common/SignFiles.props" />
 
   <ItemGroup>
     <PackageReference Include="Microsoft.TestPlatform.ObjectModel" Version="17.3.0" />
