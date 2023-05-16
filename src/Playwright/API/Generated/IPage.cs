@@ -3044,7 +3044,7 @@ public partial interface IPage
     /// </para>
     /// </summary>
     /// <param name="options">Call options</param>
-    Task<(IRequest Request, IResponse Response)> WaitForResponseFinishedAsync(PageWaitForRequestFinishedOptions? options = default);
+    Task<(IRequest Request, IResponse Response)> WaitForResponseFinishedAsync(PageWaitForResponseFinishedOptions? options = default);
 
     /// <summary>
     /// <para>
@@ -3057,7 +3057,7 @@ public partial interface IPage
     /// </summary>
     /// <param name="action">Action that triggers the event.</param>
     /// <param name="options">Call options</param>
-    Task<(IRequest Request, IResponse Response)> RunAndWaitForResponseFinishedAsync(Func<Task> action, PageRunAndWaitForRequestFinishedOptions? options = default);
+    Task<(IRequest Request, IResponse Response)> RunAndWaitForResponseFinishedAsync(Func<Task> action, PageRunAndWaitForResponseFinishedOptions? options = default);
 
     /// <summary>
     /// <para>
