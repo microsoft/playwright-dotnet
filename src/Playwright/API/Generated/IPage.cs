@@ -3011,7 +3011,7 @@ public partial interface IPage
 
     /// <summary>
     /// <para>
-    /// Performs action and waits for a <see cref="IRequest"/> to finish loading. If predicate
+    /// Waits for a <see cref="IRequest"/> to finish loading. If predicate
     /// is provided, it passes <see cref="IRequest"/> value into the <c>predicate</c> function
     /// and waits for <c>predicate(request)</c> to return a truthy value. Will throw an
     /// error if the page is closed before the <see cref="IPage.RequestFinished"/> event
@@ -3038,8 +3038,8 @@ public partial interface IPage
     /// <para>
     /// Waits for a <see cref="IRequest"/> to finish loading. If predicate
     /// is provided, it passes <see cref="IRequest"/> and <see cref="IResponse"/> value into the <c>predicate</c> function
-    /// and waits for <c>predicate(request)</c> to return a truthy value. Will throw an
-    /// error if the page is closed before the <see cref="IPage.ResponseFinished"/> event
+    /// and waits for <c>predicate(request, response)</c> to return a truthy value. Will throw an
+    /// error if the page is closed before the <see cref="IPage.RequestFinished"/> event
     /// is fired.
     /// </para>
     /// </summary>
@@ -3050,8 +3050,8 @@ public partial interface IPage
     /// <para>
     /// Performs action and waits for a <see cref="IRequest"/> to finish loading. If predicate
     /// is provided, it passes <see cref="IRequest"/> and <see cref="IResponse"/> value into the <c>predicate</c> function
-    /// and waits for <c>predicate(request)</c> to return a truthy value. Will throw an
-    /// error if the page is closed before the <see cref="IPage.ResponseFinished"/> event
+    /// and waits for <c>predicate(request, response)</c> to return a truthy value. Will throw an
+    /// error if the page is closed before the <see cref="IPage.RequestFinished"/> event
     /// is fired.
     /// </para>
     /// </summary>
