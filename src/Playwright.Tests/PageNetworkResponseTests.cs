@@ -153,7 +153,7 @@ public class PageNetworkResponseTests : PageTestEx
         bool requestFinished = false;
         Page.RequestFinished += (_, e) => requestFinished = requestFinished || e.Url.Contains("/get");
         bool responseFinished = false;
-        Page.ResponseFinished+= (_, e) => responseFinished = responseFinished || e.Response.Url.Contains("/get");
+        Page.ResponseFinished += (_, e) => responseFinished = responseFinished || e.Response.Url.Contains("/get");
         // send request and wait for server response
         var (pageResponse, _) = await TaskUtils.WhenAll(
             Page.WaitForResponseAsync("**/*"),
