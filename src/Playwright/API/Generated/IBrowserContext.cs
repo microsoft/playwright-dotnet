@@ -70,6 +70,51 @@ public partial interface IBrowserContext
 
     /// <summary>
     /// <para>
+    /// Emitted when JavaScript within the page calls one of console API methods, e.g. <c>console.log</c>
+    /// or <c>console.dir</c>. Also emitted if the page throws an error or a warning.
+    /// </para>
+    /// <para>
+    /// The arguments passed into <c>console.log</c> and the page are available on the <see
+    /// cref="IConsoleMessage"/> event handler argument.
+    /// </para>
+    /// <para>**Usage**</para>
+    /// <code>
+    /// context.Console += async (_, msg) =&gt;<br/>
+    /// {<br/>
+    ///     foreach (var arg in msg.Args)<br/>
+    ///         Console.WriteLine(await arg.JsonValueAsync&lt;object&gt;());<br/>
+    /// };<br/>
+    /// <br/>
+    /// await page.EvaluateAsync("console.log('hello', 5, { foo: 'bar' })");
+    /// </code>
+    /// </summary>
+    event EventHandler<IConsoleMessage> Console;
+
+    /// <summary>
+    /// <para>
+    /// Emitted when a JavaScript dialog appears, such as <c>alert</c>, <c>prompt</c>, <c>confirm</c>
+    /// or <c>beforeunload</c>. Listener **must** either <see cref="IDialog.AcceptAsync"/>
+    /// or <see cref="IDialog.DismissAsync"/> the dialog - otherwise the page will <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/EventLoop#never_blocking">freeze</a>
+    /// waiting for the dialog, and actions like click will never finish.
+    /// </para>
+    /// <para>**Usage**</para>
+    /// <code>
+    /// context.RequestFailed += (_, request) =&gt;<br/>
+    /// {<br/>
+    ///     Console.WriteLine(request.Url + " " + request.Failure);<br/>
+    /// };
+    /// </code>
+    /// </summary>
+    /// <remarks>
+    /// <para>
+    /// When no <see cref="IPage.Dialog"/> or <see cref="IBrowserContext.Dialog"/> listeners
+    /// are present, all dialogs are automatically dismissed.
+    /// </para>
+    /// </remarks>
+    event EventHandler<IDialog> Dialog;
+
+    /// <summary>
+    /// <para>
     /// The event is emitted when a new Page is created in the BrowserContext. The page
     /// may still be loading. The event will also fire for popup pages. See also <see cref="IPage.Popup"/>
     /// to receive events about popups relevant to a specific page.
@@ -153,6 +198,9 @@ public partial interface IBrowserContext
     /// <code>await context.AddCookiesAsync(new[] { cookie1, cookie2 });</code>
     /// </summary>
     /// <param name="cookies">
+    /// Adds cookies to the browser context.
+    /// For the cookie to apply to all subdomains as well, prefix domain with a dot, like
+    /// this: ".example.com".
     /// </param>
     Task AddCookiesAsync(IEnumerable<Cookie> cookies);
 
@@ -736,6 +784,52 @@ public partial interface IBrowserContext
     /// </param>
     /// <param name="handler">Optional handler function used to register a routing with <see cref="IBrowserContext.RouteAsync"/>.</param>
     Task UnrouteAsync(Func<string, bool> url, Action<IRoute>? handler = default);
+
+    /// <summary>
+    /// <para>
+    /// Performs action and waits for a <see cref="IDialog"/> to be created by in the context.
+    /// If predicate is provided, it passes <see cref="IDialog"/> value into the <c>predicate</c>
+    /// function and waits for <c>predicate(message)</c> to return a truthy value.
+    /// </para>
+    /// </summary>
+    /// <param name="options">Call options</param>
+    Task<IDialog> WaitForDialogAsync(BrowserContextWaitForDialogOptions? options = default);
+
+    /// <summary>
+    /// <para>
+    /// Performs action and waits for a <see cref="IDialog"/> to be created by in the context.
+    /// If predicate is provided, it passes <see cref="IDialog"/> value into the <c>predicate</c>
+    /// function and waits for <c>predicate(message)</c> to return a truthy value.
+    /// </para>
+    /// </summary>
+    /// <param name="action">Action that triggers the event.</param>
+    /// <param name="options">Call options</param>
+    Task<IDialog> RunAndWaitForDialogAsync(Func<Task> action, BrowserContextRunAndWaitForDialogOptions? options = default);
+
+    /// <summary>
+    /// <para>
+    /// Performs action and waits for a <see cref="IConsoleMessage"/> to be logged by in
+    /// the pages in the context. If predicate is provided, it passes <see cref="IConsoleMessage"/>
+    /// value into the <c>predicate</c> function and waits for <c>predicate(message)</c>
+    /// to return a truthy value. Will throw an error if the page is closed before the <see
+    /// cref="IBrowserContext.Console"/> event is fired.
+    /// </para>
+    /// </summary>
+    /// <param name="options">Call options</param>
+    Task<IConsoleMessage> WaitForConsoleMessageAsync(BrowserContextWaitForConsoleMessageOptions? options = default);
+
+    /// <summary>
+    /// <para>
+    /// Performs action and waits for a <see cref="IConsoleMessage"/> to be logged by in
+    /// the pages in the context. If predicate is provided, it passes <see cref="IConsoleMessage"/>
+    /// value into the <c>predicate</c> function and waits for <c>predicate(message)</c>
+    /// to return a truthy value. Will throw an error if the page is closed before the <see
+    /// cref="IBrowserContext.Console"/> event is fired.
+    /// </para>
+    /// </summary>
+    /// <param name="action">Action that triggers the event.</param>
+    /// <param name="options">Call options</param>
+    Task<IConsoleMessage> RunAndWaitForConsoleMessageAsync(Func<Task> action, BrowserContextRunAndWaitForConsoleMessageOptions? options = default);
 
     /// <summary>
     /// <para>

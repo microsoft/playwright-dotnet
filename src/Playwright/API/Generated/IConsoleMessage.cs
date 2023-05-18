@@ -67,6 +67,9 @@ public partial interface IConsoleMessage
     /// </summary>
     string Location { get; }
 
+    /// <summary><para>The page that produced this console message, if any.</para></summary>
+    IPage? Page { get; }
+
     /// <summary><para>The text of the console message.</para></summary>
     string Text { get; }
 

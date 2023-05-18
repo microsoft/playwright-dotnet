@@ -1858,6 +1858,10 @@ public partial interface IFrame
     Task<IElementHandle?> WaitForSelectorAsync(string selector, FrameWaitForSelectorOptions? options = default);
 
     /// <summary>
+    /// <para>
+    /// Never wait for timeout in production. Tests that wait for time are inherently flaky.
+    /// Use <see cref="ILocator"/> actions and web assertions that wait automatically.
+    /// </para>
     /// <para>Waits for the given <paramref name="timeout"/> in milliseconds.</para>
     /// <para>
     /// Note that <c>frame.waitForTimeout()</c> should only be used for debugging. Tests

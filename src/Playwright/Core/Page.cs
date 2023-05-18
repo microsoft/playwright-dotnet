@@ -83,25 +83,6 @@ internal class Page : ChannelOwnerBase, IChannelOwner<Page>, IPage
         _channel.Route += (_, route) => OnRouteAsync(route).ConfigureAwait(false);
         _channel.FrameAttached += Channel_FrameAttached;
         _channel.FrameDetached += Channel_FrameDetached;
-        _channel.Dialog += (_, e) =>
-        {
-            if (Dialog == null)
-            {
-                if ("beforeunload".Equals(e.Type, StringComparison.Ordinal))
-                {
-                    e.AcceptAsync(null).IgnoreException();
-                }
-                else
-                {
-                    e.DismissAsync().IgnoreException();
-                }
-            }
-            else
-            {
-                Dialog?.Invoke(this, e);
-            }
-        };
-        _channel.Console += (_, e) => Console?.Invoke(this, e);
         _channel.Download += (_, e) => Download?.Invoke(this, new Download(this, e.Url, e.SuggestedFilename, e.Artifact.Object));
         _channel.PageError += (_, e) =>
         {
@@ -139,7 +120,15 @@ internal class Page : ChannelOwnerBase, IChannelOwner<Page>, IPage
 
     private event EventHandler<IFileChooser> _fileChooserImpl;
 
-    public event EventHandler<IConsoleMessage> Console;
+    private event EventHandler<IConsoleMessage> _consoleImpl;
+
+    private event EventHandler<IDialog> _dialogImpl;
+
+    public event EventHandler<IConsoleMessage> Console
+    {
+        add => this._consoleImpl = UpdateEventHandler("console", this._consoleImpl, value, true);
+        remove => this._consoleImpl = UpdateEventHandler("console", this._consoleImpl, value, false);
+    }
 
     public event EventHandler<IPage> Popup;
 
@@ -169,7 +158,11 @@ internal class Page : ChannelOwnerBase, IChannelOwner<Page>, IPage
         remove => this._requestFailedImpl = UpdateEventHandler("requestFailed", this._requestFailedImpl, value, false);
     }
 
-    public event EventHandler<IDialog> Dialog;
+    public event EventHandler<IDialog> Dialog
+    {
+        add => this._dialogImpl = UpdateEventHandler("dialog", this._dialogImpl, value, true);
+        remove => this._dialogImpl = UpdateEventHandler("dialog", this._dialogImpl, value, false);
+    }
 
     public event EventHandler<IFrame> FrameAttached;
 
@@ -310,6 +303,12 @@ internal class Page : ChannelOwnerBase, IChannelOwner<Page>, IPage
 
     public Task<IConsoleMessage> WaitForConsoleMessageAsync(PageWaitForConsoleMessageOptions options = default)
         => InnerWaitForEventAsync(PageEvent.Console, null, options?.Predicate, options?.Timeout);
+
+    public Task<IDialog> WaitForDialogAsync(PageWaitForDialogOptions options = default)
+        => InnerWaitForEventAsync(PageEvent.Dialog, null, options?.Predicate, options?.Timeout);
+
+    public Task<IDialog> RunAndWaitForDialogAsync(Func<Task> action, PageRunAndWaitForDialogOptions options = default)
+        => InnerWaitForEventAsync(PageEvent.Dialog, action, options?.Predicate, options?.Timeout);
 
     public Task<IFileChooser> WaitForFileChooserAsync(PageWaitForFileChooserOptions options = default)
         => InnerWaitForEventAsync(PageEvent.FileChooser, null, options?.Predicate, options?.Timeout);
@@ -979,6 +978,12 @@ internal class Page : ChannelOwnerBase, IChannelOwner<Page>, IPage
 
     internal void OnFrameNavigated(Frame frame)
         => FrameNavigated?.Invoke(this, frame);
+
+    internal void FireConsole(IConsoleMessage message) => _consoleImpl?.Invoke(this, message);
+
+    internal void FireDialog(IDialog dialog) => _dialogImpl?.Invoke(this, dialog);
+
+    internal bool HasDialogListenersAttached() => _dialogImpl?.GetInvocationList().Length > 0;
 
     internal void FireRequest(IRequest request) => _requestImpl?.Invoke(this, request);
 

@@ -83,6 +83,9 @@ public partial interface IDialog
     /// <summary><para>A message displayed in the dialog.</para></summary>
     string Message { get; }
 
+    /// <summary><para>The page that initiated this dialog, if available.</para></summary>
+    IPage? Page { get; }
+
     /// <summary>
     /// <para>
     /// Returns dialog's type, can be one of <c>alert</c>, <c>beforeunload</c>, <c>confirm</c>

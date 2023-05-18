@@ -78,6 +78,15 @@ public partial interface ILocator
     Task<IReadOnlyList<string>> AllTextContentsAsync();
 
     /// <summary>
+    /// <para>Creates a locator that matches both this locator and the argument locator.</para>
+    /// <para>**Usage**</para>
+    /// <para>The following example finds a button with a specific title.</para>
+    /// <code>var button = page.GetByRole(AriaRole.Button).And(page.GetByTitle("Subscribe"));</code>
+    /// </summary>
+    /// <param name="locator">Additional locator to match.</param>
+    ILocator And(ILocator locator);
+
+    /// <summary>
     /// <para>
     /// Calls <a href="https://developer.mozilla.org/en-US/docs/Web/API/HTMLElement/blur">blur</a>
     /// on the element.

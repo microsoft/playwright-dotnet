@@ -59,6 +59,38 @@ internal class BrowserContext : ChannelOwnerBase, IChannelOwner<BrowserContext>,
         _browser?._contexts.Add(this);
         Channel = new(guid, parent.Connection, this);
         Channel.Close += (_, _) => OnClose();
+        Channel.Console += (_, consoleMessage) =>
+        {
+            _consoleImpl?.Invoke(this, consoleMessage);
+            if (consoleMessage.Page != null)
+            {
+                (consoleMessage.Page as Page).FireConsole(consoleMessage);
+            }
+        };
+        Channel.Dialog += (_, dialog) =>
+        {
+            bool hasListeners = _dialogImpl?.GetInvocationList().Length > 0 || ((dialog?.Page as Page)?.HasDialogListenersAttached() ?? false);
+            if (!hasListeners)
+            {
+                // Although we do similar handling on the server side, we still need this logic
+                // on the client side due to a possible race condition between two async calls:
+                // a) removing "dialog" listener subscription (client->server)
+                // b) actual "dialog" event (server->client)
+                if ("beforeunload".Equals(dialog.Type, StringComparison.Ordinal))
+                {
+                    dialog.AcceptAsync().IgnoreException();
+                }
+                else
+                {
+                    dialog.DismissAsync().IgnoreException();
+                }
+            }
+            else
+            {
+                _dialogImpl?.Invoke(this, dialog);
+                (dialog.Page as Page)?.FireDialog(dialog);
+            }
+        };
         Channel.Page += Channel_OnPage;
         Channel.BindingCall += Channel_BindingCall;
         Channel.Route += Channel_Route;
@@ -109,7 +141,23 @@ internal class BrowserContext : ChannelOwnerBase, IChannelOwner<BrowserContext>,
 
     private event EventHandler<IRequest> _requestFailedImpl;
 
+    private event EventHandler<IConsoleMessage> _consoleImpl;
+
+    private event EventHandler<IDialog> _dialogImpl;
+
     public event EventHandler<IBrowserContext> Close;
+
+    public event EventHandler<IConsoleMessage> Console
+    {
+        add => this._consoleImpl = UpdateEventHandler("console", this._consoleImpl, value, true);
+        remove => this._consoleImpl = UpdateEventHandler("console", this._consoleImpl, value, false);
+    }
+
+    public event EventHandler<IDialog> Dialog
+    {
+        add => this._dialogImpl = UpdateEventHandler("dialog", this._dialogImpl, value, true);
+        remove => this._dialogImpl = UpdateEventHandler("dialog", this._dialogImpl, value, false);
+    }
 
     public event EventHandler<IPage> Page;
 
@@ -380,6 +428,18 @@ internal class BrowserContext : ChannelOwnerBase, IChannelOwner<BrowserContext>,
 
     public Task<IPage> RunAndWaitForPageAsync(Func<Task> action, BrowserContextRunAndWaitForPageOptions options = default)
         => InnerWaitForEventAsync(BrowserContextEvent.Page, action, options?.Predicate, options?.Timeout);
+
+    public Task<IConsoleMessage> WaitForConsoleMessageAsync(BrowserContextWaitForConsoleMessageOptions options = default)
+        => InnerWaitForEventAsync(PageEvent.Console, null, options?.Predicate, options?.Timeout);
+
+    public Task<IConsoleMessage> RunAndWaitForConsoleMessageAsync(Func<Task> action, BrowserContextRunAndWaitForConsoleMessageOptions options = default)
+        => InnerWaitForEventAsync(PageEvent.Console, action, options?.Predicate, options?.Timeout);
+
+    public Task<IDialog> WaitForDialogAsync(BrowserContextWaitForDialogOptions options = default)
+        => InnerWaitForEventAsync(PageEvent.Dialog, null, options?.Predicate, options?.Timeout);
+
+    public Task<IDialog> RunAndWaitForDialogAsync(Func<Task> action, BrowserContextRunAndWaitForDialogOptions options = default)
+        => InnerWaitForEventAsync(PageEvent.Dialog, action, options?.Predicate, options?.Timeout);
 
     public ValueTask DisposeAsync() => new(CloseAsync());
 

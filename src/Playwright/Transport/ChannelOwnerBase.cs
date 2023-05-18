@@ -117,13 +117,15 @@ internal class ChannelOwnerBase : IChannelOwner
 
     private void UpdateEventSubscription(string eventName, bool enabled)
     {
-        _connection.SendMessageToServerAsync(
+        WrapApiCallAsync(
+            () => _connection.SendMessageToServerAsync(
             Guid,
             "updateSubscription",
             new Dictionary<string, object>
             {
                 ["event"] = eventName,
                 ["enabled"] = enabled,
-            }).IgnoreException();
+            }),
+            true).IgnoreException();
     }
 }

@@ -46,6 +46,10 @@ internal class Dialog : ChannelOwnerBase, IChannelOwner<Dialog>, IDialog
 
     public string Message => _initializer.Message;
 
+    // Note: dialogs that open early during page initialization block it.
+    // Therefore, we must report the dialog without a page to be able to handle it.
+    public IPage Page => _initializer.Page;
+
     ChannelBase IChannelOwner.Channel => _channel;
 
     IChannel<Dialog> IChannelOwner<Dialog>.Channel => _channel;

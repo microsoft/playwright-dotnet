@@ -55,10 +55,6 @@ internal class PageChannel : Channel<Page>
 
     internal event EventHandler<IFrame> FrameDetached;
 
-    internal event EventHandler<IDialog> Dialog;
-
-    internal event EventHandler<IConsoleMessage> Console;
-
     internal event EventHandler<PageDownloadEvent> Download;
 
     internal event EventHandler<SerializedError> PageError;
@@ -102,12 +98,6 @@ internal class PageChannel : Channel<Page>
                 break;
             case "frameDetached":
                 FrameDetached?.Invoke(this, serverParams?.GetProperty("frame").ToObject<FrameChannel>(Connection.DefaultJsonSerializerOptions).Object);
-                break;
-            case "dialog":
-                Dialog?.Invoke(this, serverParams?.GetProperty("dialog").ToObject<DialogChannel>(Connection.DefaultJsonSerializerOptions).Object);
-                break;
-            case "console":
-                Console?.Invoke(this, serverParams?.GetProperty("message").ToObject<ConsoleMessage>(Connection.DefaultJsonSerializerOptions));
                 break;
             case "webSocket":
                 WebSocket?.Invoke(this, serverParams?.GetProperty("webSocket").ToObject<WebSocketChannel>(Connection.DefaultJsonSerializerOptions).Object);
