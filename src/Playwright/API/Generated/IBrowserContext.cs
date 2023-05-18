@@ -98,12 +98,7 @@ public partial interface IBrowserContext
     /// waiting for the dialog, and actions like click will never finish.
     /// </para>
     /// <para>**Usage**</para>
-    /// <code>
-    /// context.RequestFailed += (_, request) =&gt;<br/>
-    /// {<br/>
-    ///     Console.WriteLine(request.Url + " " + request.Failure);<br/>
-    /// };
-    /// </code>
+    /// <code>context.Dialog += (_, dialog) =&gt; dialog.AcceptAsync();</code>
     /// </summary>
     /// <remarks>
     /// <para>
@@ -784,27 +779,6 @@ public partial interface IBrowserContext
     /// </param>
     /// <param name="handler">Optional handler function used to register a routing with <see cref="IBrowserContext.RouteAsync"/>.</param>
     Task UnrouteAsync(Func<string, bool> url, Action<IRoute>? handler = default);
-
-    /// <summary>
-    /// <para>
-    /// Performs action and waits for a <see cref="IDialog"/> to be created by in the context.
-    /// If predicate is provided, it passes <see cref="IDialog"/> value into the <c>predicate</c>
-    /// function and waits for <c>predicate(message)</c> to return a truthy value.
-    /// </para>
-    /// </summary>
-    /// <param name="options">Call options</param>
-    Task<IDialog> WaitForDialogAsync(BrowserContextWaitForDialogOptions? options = default);
-
-    /// <summary>
-    /// <para>
-    /// Performs action and waits for a <see cref="IDialog"/> to be created by in the context.
-    /// If predicate is provided, it passes <see cref="IDialog"/> value into the <c>predicate</c>
-    /// function and waits for <c>predicate(message)</c> to return a truthy value.
-    /// </para>
-    /// </summary>
-    /// <param name="action">Action that triggers the event.</param>
-    /// <param name="options">Call options</param>
-    Task<IDialog> RunAndWaitForDialogAsync(Func<Task> action, BrowserContextRunAndWaitForDialogOptions? options = default);
 
     /// <summary>
     /// <para>

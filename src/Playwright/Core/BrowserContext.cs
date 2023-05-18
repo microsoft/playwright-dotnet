@@ -435,12 +435,6 @@ internal class BrowserContext : ChannelOwnerBase, IChannelOwner<BrowserContext>,
     public Task<IConsoleMessage> RunAndWaitForConsoleMessageAsync(Func<Task> action, BrowserContextRunAndWaitForConsoleMessageOptions options = default)
         => InnerWaitForEventAsync(PageEvent.Console, action, options?.Predicate, options?.Timeout);
 
-    public Task<IDialog> WaitForDialogAsync(BrowserContextWaitForDialogOptions options = default)
-        => InnerWaitForEventAsync(PageEvent.Dialog, null, options?.Predicate, options?.Timeout);
-
-    public Task<IDialog> RunAndWaitForDialogAsync(Func<Task> action, BrowserContextRunAndWaitForDialogOptions options = default)
-        => InnerWaitForEventAsync(PageEvent.Dialog, action, options?.Predicate, options?.Timeout);
-
     public ValueTask DisposeAsync() => new(CloseAsync());
 
     public void SetDefaultNavigationTimeout(float timeout)

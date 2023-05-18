@@ -304,12 +304,6 @@ internal class Page : ChannelOwnerBase, IChannelOwner<Page>, IPage
     public Task<IConsoleMessage> WaitForConsoleMessageAsync(PageWaitForConsoleMessageOptions options = default)
         => InnerWaitForEventAsync(PageEvent.Console, null, options?.Predicate, options?.Timeout);
 
-    public Task<IDialog> WaitForDialogAsync(PageWaitForDialogOptions options = default)
-        => InnerWaitForEventAsync(PageEvent.Dialog, null, options?.Predicate, options?.Timeout);
-
-    public Task<IDialog> RunAndWaitForDialogAsync(Func<Task> action, PageRunAndWaitForDialogOptions options = default)
-        => InnerWaitForEventAsync(PageEvent.Dialog, action, options?.Predicate, options?.Timeout);
-
     public Task<IFileChooser> WaitForFileChooserAsync(PageWaitForFileChooserOptions options = default)
         => InnerWaitForEventAsync(PageEvent.FileChooser, null, options?.Predicate, options?.Timeout);
 

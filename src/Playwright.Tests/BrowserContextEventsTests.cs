@@ -97,8 +97,8 @@ public class BrowserContextEventsTests : PageTestEx
     {
         var task = Page.EvaluateAsync<string>("() => prompt('hey?')");
         var (dialog1, dialog2) = await TaskUtils.WhenAll(
-            Page.Context.WaitForDialogAsync(),
-            Page.WaitForDialogAsync()
+            WaitForContextDialog(Page.Context),
+            WaitForPageDialog(Page)
         );
         Assert.AreEqual(dialog1, dialog2);
         Assert.AreEqual("hey?", dialog1.Message);
@@ -115,7 +115,7 @@ public class BrowserContextEventsTests : PageTestEx
             return win.prompt('hey?');
         }");
         var (dialog, popup) = await TaskUtils.WhenAll(
-            Page.Context.WaitForDialogAsync(),
+            WaitForContextDialog(Page.Context),
             Page.WaitForPopupAsync()
         );
         Assert.AreEqual("hey?", dialog.Message);
@@ -131,7 +131,7 @@ public class BrowserContextEventsTests : PageTestEx
         var task = Page.EvaluateAsync(@"() => {
             window.open('javascript:prompt(""hey?"")');
         }");
-        var dialog = await Page.Context.WaitForDialogAsync();
+        var dialog = await WaitForContextDialog(Page.Context);
 
         Assert.AreEqual("hey?", dialog.Message);
         Assert.AreEqual(null, dialog.Page);
@@ -149,7 +149,7 @@ public class BrowserContextEventsTests : PageTestEx
             return result;
         }");
         var (dialog, popup) = await TaskUtils.WhenAll(
-            Page.Context.WaitForDialogAsync(),
+            WaitForContextDialog(Page.Context),
             Page.WaitForPopupAsync()
         );
 
@@ -173,7 +173,7 @@ public class BrowserContextEventsTests : PageTestEx
 
         var promise = Page.ClickAsync("a");
         var (dialog, popup) = await TaskUtils.WhenAll(
-            Page.Context.WaitForDialogAsync(),
+            WaitForContextDialog(Page.Context),
             Page.Context.WaitForPageAsync()
         );
 
@@ -182,5 +182,29 @@ public class BrowserContextEventsTests : PageTestEx
         await dialog.AcceptAsync("hello");
         await promise;
         Assert.AreEqual("hello", await popup.EvaluateAsync<string>("window.result"));
+    }
+
+    async Task<IDialog> WaitForPageDialog(IPage page)
+    {
+        var tsc = new TaskCompletionSource<IDialog>();
+        void dialogHandler(object sender, IDialog e)
+        {
+            page.Dialog -= dialogHandler;
+            tsc.TrySetResult(e);
+        }
+        page.Dialog += dialogHandler;
+        return await tsc.Task;
+    }
+
+    async Task<IDialog> WaitForContextDialog(IBrowserContext context)
+    {
+        var tsc = new TaskCompletionSource<IDialog>();
+        void dialogHandler(object sender, IDialog e)
+        {
+            context.Dialog -= dialogHandler;
+            tsc.TrySetResult(e);
+        }
+        context.Dialog += dialogHandler;
+        return await tsc.Task;
     }
 }

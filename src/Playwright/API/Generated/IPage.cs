@@ -2601,27 +2601,6 @@ public partial interface IPage
 
     /// <summary>
     /// <para>
-    /// Performs action and waits for a <see cref="IDialog"/> to be created by in the context.
-    /// If predicate is provided, it passes <see cref="IDialog"/> value into the <c>predicate</c>
-    /// function and waits for <c>predicate(message)</c> to return a truthy value.
-    /// </para>
-    /// </summary>
-    /// <param name="options">Call options</param>
-    Task<IDialog> WaitForDialogAsync(PageWaitForDialogOptions? options = default);
-
-    /// <summary>
-    /// <para>
-    /// Performs action and waits for a <see cref="IDialog"/> to be created by in the context.
-    /// If predicate is provided, it passes <see cref="IDialog"/> value into the <c>predicate</c>
-    /// function and waits for <c>predicate(message)</c> to return a truthy value.
-    /// </para>
-    /// </summary>
-    /// <param name="action">Action that triggers the event.</param>
-    /// <param name="options">Call options</param>
-    Task<IDialog> RunAndWaitForDialogAsync(Func<Task> action, PageRunAndWaitForDialogOptions? options = default);
-
-    /// <summary>
-    /// <para>
     /// Performs action and waits for a new <see cref="IDownload"/>. If predicate is provided,
     /// it passes <see cref="IDownload"/> value into the <c>predicate</c> function and waits
     /// for <c>predicate(download)</c> to return a truthy value. Will throw an error if
