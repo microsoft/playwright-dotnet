@@ -83,8 +83,11 @@ public partial interface IPage
     /// Emitted when JavaScript within the page calls one of console API methods, e.g. <c>console.log</c>
     /// or <c>console.dir</c>. Also emitted if the page throws an error or a warning.
     /// </para>
-    /// <para>The arguments passed into <c>console.log</c> appear as arguments on the event handler.</para>
-    /// <para>An example of handling <c>console</c> event:</para>
+    /// <para>
+    /// The arguments passed into <c>console.log</c> are available on the <see cref="IConsoleMessage"/>
+    /// event handler argument.
+    /// </para>
+    /// <para>**Usage**</para>
     /// <code>
     /// page.Console += async (_, msg) =&gt;<br/>
     /// {<br/>
@@ -123,6 +126,7 @@ public partial interface IPage
     /// or <see cref="IDialog.DismissAsync"/> the dialog - otherwise the page will <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/EventLoop#never_blocking">freeze</a>
     /// waiting for the dialog, and actions like click will never finish.
     /// </para>
+    /// <para>**Usage**</para>
     /// <code>
     /// page.RequestFailed += (_, request) =&gt;<br/>
     /// {<br/>
@@ -132,8 +136,8 @@ public partial interface IPage
     /// </summary>
     /// <remarks>
     /// <para>
-    /// When no <see cref="IPage.Dialog"/> listeners are present, all dialogs are automatically
-    /// dismissed.
+    /// When no <see cref="IPage.Dialog"/> or <see cref="IBrowserContext.Dialog"/> listeners
+    /// are present, all dialogs are automatically dismissed.
     /// </para>
     /// </remarks>
     event EventHandler<IDialog> Dialog;

@@ -167,4 +167,19 @@ public class SelectorMiscTests : PageTestEx
         Assert.AreEqual(await Page.EvalOnSelectorAllAsync<int>("section >> internal:has-not=\"span, div\"", "els => els.length"), 1);
         Assert.AreEqual(await Page.EvalOnSelectorAllAsync<int>("section >> internal:has-not=\"article\"", "els => els.length"), 2);
     }
+
+    [PlaywrightTest("queryselector.spec.ts", "should work with internal:and=")]
+    public async Task ShouldWorkWithInternalAnd()
+    {
+        await Page.SetContentAsync(@"
+            <div class=foo>hello</div><div class=bar>world</div>
+            <span class=foo>hello2</span><span class=bar>world2</span>
+        ");
+        Assert.AreEqual(await Page.EvalOnSelectorAllAsync<string[]>("div >> internal:and=\"span\"", "els => els.map(e => e.textContent)"), Array.Empty<string>());
+        Assert.AreEqual(await Page.EvalOnSelectorAllAsync<string[]>("div >> internal:and=\".foo\"", "els => els.map(e => e.textContent)"), new[] { "hello" });
+        Assert.AreEqual(await Page.EvalOnSelectorAllAsync<string[]>("div >> internal:and=\".bar\"", "els => els.map(e => e.textContent)"), new[] { "world" });
+        Assert.AreEqual(await Page.EvalOnSelectorAllAsync<string[]>("span >> internal:and=\"span\"", "els => els.map(e => e.textContent)"), new[] { "hello2", "world2" });
+        Assert.AreEqual(await Page.EvalOnSelectorAllAsync<string[]>(".foo >> internal:and=\"div\"", "els => els.map(e => e.textContent)"), new[] { "hello" });
+        Assert.AreEqual(await Page.EvalOnSelectorAllAsync<string[]>(".bar >> internal:and=\"span\"", "els => els.map(e => e.textContent)"), new[] { "world2" });
+    }
 }

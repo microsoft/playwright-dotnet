@@ -198,6 +198,21 @@ public class LocatorQueryTests : PageTestEx
         await Expect(Page.Locator("div").Filter(new() { HasNotTextString = "foo" })).ToHaveCountAsync(2);
     }
 
+    [PlaywrightTest("locator-query.spec.ts", "should support locator.and")]
+    public async Task ShouldSupportLocatorAnd()
+    {
+        await Page.SetContentAsync(@"
+            <div data-testid=foo>hello</div><div data-testid=bar>world</div>
+            <span data-testid=foo>hello2</span><span data-testid=bar>world2</span>
+        ");
+        await Expect(Page.Locator("div").And(Page.Locator("div"))).ToHaveCountAsync(2);
+        await Expect(Page.Locator("div").And(Page.GetByTestId("foo"))).ToHaveTextAsync(new string[] { "hello" });
+        await Expect(Page.Locator("div").And(Page.GetByTestId("bar"))).ToHaveTextAsync(new string[] { "world" });
+        await Expect(Page.GetByTestId("foo").And(Page.Locator("div"))).ToHaveTextAsync(new string[] { "hello" });
+        await Expect(Page.GetByTestId("bar").And(Page.Locator("span"))).ToHaveTextAsync(new string[] { "world2" });
+        await Expect(Page.Locator("span").And(Page.GetByTestId(new Regex("bar|foo")))).ToHaveCountAsync(2);
+    }
+
     [PlaywrightTest("locator-query.spec.ts", "should support locator.or")]
     public async Task ShouldSupportLocatorOr()
     {

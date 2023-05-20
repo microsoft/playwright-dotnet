@@ -28,6 +28,9 @@ namespace Microsoft.Playwright.Transport.Protocol;
 
 internal class DialogInitializer
 {
+    [JsonPropertyName("page")]
+    public Core.Page Page { get; set; }
+
     [JsonPropertyName("type")]
     public string Type { get; set; }
 

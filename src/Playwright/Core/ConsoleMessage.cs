@@ -52,4 +52,9 @@ internal class ConsoleMessage : ChannelOwnerBase, IChannelOwner<ConsoleMessage>,
     public string Location => _initializer.Location.ToString();
 
     public string Text => _initializer.Text;
+
+    // Note: currently, we only report console messages for pages and they always have a page.
+    // However, in the future we might report console messages for service workers or something else,
+    // where page() would be null.
+    public IPage Page => _initializer.Page;
 }

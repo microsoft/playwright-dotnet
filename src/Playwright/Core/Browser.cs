@@ -171,11 +171,14 @@ internal class Browser : ChannelOwnerBase, IChannelOwner<Browser>, IBrowser
 
         var context = (BrowserContext)await NewContextAsync(contextOptions).ConfigureAwait(false);
 
-        var page = (Page)await context.NewPageAsync().ConfigureAwait(false);
-        page.OwnedContext = context;
-        context.Options = contextOptions;
-        context.OwnerPage = page;
-        return page;
+        return await WrapApiCallAsync(async () =>
+        {
+            var page = (Page)await context.NewPageAsync().ConfigureAwait(false);
+            page.OwnedContext = context;
+            context.Options = contextOptions;
+            context.OwnerPage = page;
+            return page;
+        }).ConfigureAwait(false);
     }
 
     public ValueTask DisposeAsync() => new ValueTask(CloseAsync());

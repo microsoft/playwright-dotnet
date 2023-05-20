@@ -215,6 +215,15 @@ internal class Locator : ILocator
         return new Locator(this._frame, this._selector + $" >> internal:or={JsonSerializer.Serialize((locator as Locator)._selector, _locatorSerializerOptions)}");
     }
 
+    public ILocator And(ILocator locator)
+    {
+        if ((locator as Locator)._frame != this._frame)
+        {
+            throw new ArgumentException("Locators must belong to the same frame.");
+        }
+        return new Locator(this._frame, this._selector + $" >> internal:and={JsonSerializer.Serialize((locator as Locator)._selector, _locatorSerializerOptions)}");
+    }
+
     public Task FocusAsync(LocatorFocusOptions options = null)
         => _frame.FocusAsync(_selector, ConvertOptions<FrameFocusOptions>(options));
 

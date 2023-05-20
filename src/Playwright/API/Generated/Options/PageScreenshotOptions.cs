@@ -82,12 +82,7 @@ public class PageScreenshotOptions
     [JsonPropertyName("caret")]
     public ScreenshotCaret? Caret { get; set; }
 
-    /// <summary>
-    /// <para>
-    /// An object which specifies clipping of the resulting image. Should have the following
-    /// fields:
-    /// </para>
-    /// </summary>
+    /// <summary><para>An object which specifies clipping of the resulting image.</para></summary>
     [JsonPropertyName("clip")]
     public Clip? Clip { get; set; }
 
