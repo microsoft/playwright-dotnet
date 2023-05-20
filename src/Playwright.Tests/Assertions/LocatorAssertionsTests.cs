@@ -459,6 +459,14 @@ public class LocatorAssertionsTests : PageTestEx
         await Expect(locator).ToHaveAttributeAsync("checked", new Regex(".*"));
     }
 
+    [PlaywrightTest("playwright-test/playwright.expect.spec.ts", "should support toHaveAttribute")]
+    public async Task ShouldSupportToHaveAttribute_RegexIgnoreCase()
+    {
+        await Page.SetContentAsync("<img src=\"https://PLAYWRIGHT.dEV/mEDIa/photo.JPG?queryString=true\"/>");
+        var locator = Page.Locator("img");
+        await Expect(locator).ToHaveAttributeAsync("src", new Regex("https://playwright.dev/media/photo", RegexOptions.IgnoreCase));
+    }
+
     [PlaywrightTest("playwright-test/playwright.expect.spec.ts", "should support toHaveCSS")]
     public async Task ShouldSupportToHaveCSS()
     {

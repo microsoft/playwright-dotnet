@@ -100,6 +100,7 @@ internal class AssertionsBase
         ExpectedTextValue textValue = options ?? new() { };
         textValue.RegexSource = pattern.ToString();
         textValue.RegexFlags = pattern.Options.GetInlineFlags();
+        textValue.IgnoreCase |= pattern.Options.HasFlag(RegexOptions.IgnoreCase);
         return textValue;
     }
 
