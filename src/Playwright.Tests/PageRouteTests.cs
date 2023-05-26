@@ -87,12 +87,12 @@ public class PageRouteTests : PageTestEx
             route.FallbackAsync();
         };
 
-        await Page.RouteAsync("**/empty.html", handler4);
+        await Page.RouteAsync(new Regex("/empty.html"), handler4);
         await Page.GotoAsync(Server.EmptyPage);
         Assert.AreEqual(new[] { 4, 3, 2, 1 }, intercepted.ToArray());
 
         intercepted.Clear();
-        await Page.UnrouteAsync("**/empty.html", handler4);
+        await Page.UnrouteAsync(new Regex("/empty.html"), handler4);
         await Page.GotoAsync(Server.EmptyPage);
         Assert.AreEqual(new[] { 3, 2, 1 }, intercepted.ToArray());
 
