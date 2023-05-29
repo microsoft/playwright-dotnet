@@ -47,7 +47,7 @@ internal static class SetInputFilesHelpers
                 {
                     var stream = await context.Channel.CreateTempFileAsync(Path.GetFileName(f)).ConfigureAwait(false);
                     using var fileStream = File.OpenRead(f);
-                    await fileStream.CopyToAsync(stream.WritableStreamImpl).ConfigureAwait(false);
+                    await fileStream.CopyToAsync(stream.AsSystemIOStream).ConfigureAwait(false);
                     return stream;
                 }).ConfigureAwait(false);
                 return new() { Streams = streams.ToArray() };

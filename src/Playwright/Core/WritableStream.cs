@@ -44,7 +44,7 @@ internal class WritableStream : ChannelOwnerBase, IChannelOwner<WritableStream>,
 
     public WritableStreamChannel Channel { get; }
 
-    public WritableStreamImpl WritableStreamImpl => new(this);
+    public System.IO.Stream AsSystemIOStream => new WritableStreamWrapper(this);
 
     public Task WriteAsync(string binary) => Channel.WriteAsync(binary);
 
@@ -53,42 +53,51 @@ internal class WritableStream : ChannelOwnerBase, IChannelOwner<WritableStream>,
     public Task CloseAsync() => Channel.CloseAsync();
 }
 
-internal class WritableStreamImpl : System.IO.Stream
+internal class WritableStreamWrapper : System.IO.Stream
 {
     private readonly WritableStream _stream;
 
-    internal WritableStreamImpl(WritableStream stream)
+    internal WritableStreamWrapper(WritableStream stream)
     {
         _stream = stream;
     }
 
-    public override bool CanRead => throw new NotImplementedException();
+    public override bool CanRead => false;
 
-    public override bool CanSeek => throw new NotImplementedException();
+    public override bool CanSeek => false;
 
     public override bool CanWrite => true;
 
-    public override long Length => throw new NotImplementedException();
+    public override long Length => throw new NotSupportedException();
 
-    public override long Position { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+    public override long Position { get => throw new NotSupportedException(); set => throw new NotSupportedException(); }
 
-    public override void Flush() => throw new NotImplementedException();
+    public override void Flush()
+    {
+    }
 
-    public override int Read(byte[] buffer, int offset, int count) => throw new NotImplementedException();
+    public override int Read(byte[] buffer, int offset, int count) => throw new NotSupportedException();
 
     public override Task<int> ReadAsync(byte[] buffer, int offset, int count, CancellationToken cancellationToken) =>
-        throw new NotImplementedException();
+        throw new NotSupportedException();
 
-    public override void Close() => _stream.CloseAsync().ConfigureAwait(false);
-
-    public override long Seek(long offset, SeekOrigin origin) => throw new NotImplementedException();
-
-    public override void SetLength(long value) => throw new NotImplementedException();
-
-    public override void Write(byte[] buffer, int offset, int count) => throw new NotImplementedException();
-
-    public override async Task WriteAsync(byte[] buffer, int offset, int count, CancellationToken cancellationToken)
+    protected override void Dispose(bool disposing)
     {
-        await this._stream.WriteAsync(Convert.ToBase64String(buffer)).ConfigureAwait(false);
+        if (disposing)
+        {
+            _stream.CloseAsync().ConfigureAwait(false).GetAwaiter().GetResult();
+        }
+
+        base.Dispose(disposing);
     }
+
+    public override long Seek(long offset, SeekOrigin origin) => throw new NotSupportedException();
+
+    public override void SetLength(long value) => throw new NotSupportedException();
+
+    public override void Write(byte[] buffer, int offset, int count) =>
+        WriteAsync(buffer, offset, count, default).ConfigureAwait(false).GetAwaiter().GetResult();
+
+    public override async Task WriteAsync(byte[] buffer, int offset, int count, CancellationToken cancellationToken) =>
+        await _stream.WriteAsync(Convert.ToBase64String(buffer)).ConfigureAwait(false);
 }

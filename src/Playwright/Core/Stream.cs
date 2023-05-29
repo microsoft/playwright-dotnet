@@ -44,7 +44,7 @@ internal class Stream : ChannelOwnerBase, IChannelOwner<Stream>, IAsyncDisposabl
 
     public StreamChannel Channel { get; }
 
-    public StreamImpl StreamImpl => new(this);
+    public System.IO.Stream AsSystemIOStream => new StreamWrapper(this);
 
     public Task<byte[]> ReadAsync(int size) => Channel.ReadAsync(size);
 
@@ -53,11 +53,11 @@ internal class Stream : ChannelOwnerBase, IChannelOwner<Stream>, IAsyncDisposabl
     public Task CloseAsync() => Channel.CloseAsync();
 }
 
-internal class StreamImpl : System.IO.Stream
+internal class StreamWrapper : System.IO.Stream
 {
     private readonly Stream _stream;
 
-    internal StreamImpl(Stream stream)
+    internal StreamWrapper(Stream stream)
     {
         _stream = stream;
     }
@@ -66,15 +66,18 @@ internal class StreamImpl : System.IO.Stream
 
     public override bool CanSeek => false;
 
-    public override bool CanWrite => throw new NotImplementedException();
+    public override bool CanWrite => false;
 
-    public override long Length => throw new NotImplementedException();
+    public override long Length => throw new NotSupportedException();
 
-    public override long Position { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+    public override long Position { get => throw new NotSupportedException(); set => throw new NotSupportedException(); }
 
-    public override void Flush() => throw new NotImplementedException();
+    public override void Flush()
+    {
+    }
 
-    public override int Read(byte[] buffer, int offset, int count) => throw new NotImplementedException();
+    public override int Read(byte[] buffer, int offset, int count) => ReadAsync(buffer, offset, count, default)
+        .ConfigureAwait(false).GetAwaiter().GetResult();
 
     public override async Task<int> ReadAsync(byte[] buffer, int offset, int count, CancellationToken cancellationToken)
     {
@@ -83,11 +86,19 @@ internal class StreamImpl : System.IO.Stream
         return result.Length;
     }
 
-    public override void Close() => _stream.CloseAsync().ConfigureAwait(false);
+    protected override void Dispose(bool disposing)
+    {
+        if (disposing)
+        {
+            _stream.CloseAsync().ConfigureAwait(false).GetAwaiter().GetResult();
+        }
 
-    public override long Seek(long offset, SeekOrigin origin) => throw new NotImplementedException();
+        base.Dispose(disposing);
+    }
 
-    public override void SetLength(long value) => throw new NotImplementedException();
+    public override long Seek(long offset, SeekOrigin origin) => throw new NotSupportedException();
 
-    public override void Write(byte[] buffer, int offset, int count) => throw new NotImplementedException();
+    public override void SetLength(long value) => throw new NotSupportedException();
+
+    public override void Write(byte[] buffer, int offset, int count) => throw new NotSupportedException();
 }

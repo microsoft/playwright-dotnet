@@ -72,7 +72,7 @@ internal class Artifact : ChannelOwnerBase, IChannelOwner<Artifact>
         {
             using (var fileStream = new FileStream(path, FileMode.Create, FileAccess.Write))
             {
-                await stream.StreamImpl.CopyToAsync(fileStream, bufferSize: 1024 * 1024).ConfigureAwait(false);
+                await stream.AsSystemIOStream.CopyToAsync(fileStream, bufferSize: 1024 * 1024).ConfigureAwait(false);
             }
         }
     }
@@ -80,7 +80,7 @@ internal class Artifact : ChannelOwnerBase, IChannelOwner<Artifact>
     public async Task<System.IO.Stream> CreateReadStreamAsync()
     {
         var stream = await _channel.StreamAsync().ConfigureAwait(false);
-        return stream.StreamImpl;
+        return stream.AsSystemIOStream;
     }
 
     internal Task CancelAsync() => _channel.CancelAsync();
