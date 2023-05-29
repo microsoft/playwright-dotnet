@@ -80,7 +80,7 @@ internal class Page : ChannelOwnerBase, IChannelOwner<Page>, IPage
         _channel.Popup += (_, page) => Popup?.Invoke(this, page);
         _channel.WebSocket += (_, e) => WebSocket?.Invoke(this, e);
         _channel.BindingCall += Channel_BindingCall;
-        _channel.Route += (_, route) => OnRouteAsync(route).ConfigureAwait(false);
+        _channel.Route += Channel_Route;
         _channel.FrameAttached += Channel_FrameAttached;
         _channel.FrameDetached += Channel_FrameDetached;
         _channel.Download += (_, e) => Download?.Invoke(this, new Download(this, e.Url, e.SuggestedFilename, e.Artifact.Object));
@@ -1052,6 +1052,8 @@ internal class Page : ChannelOwnerBase, IChannelOwner<Page>, IPage
             _ = bindingCall.CallAsync(binding);
         }
     }
+
+    private void Channel_Route(object sender, Route route) => _ = OnRouteAsync(route).ConfigureAwait(false);
 
     private async Task OnRouteAsync(Route route)
     {

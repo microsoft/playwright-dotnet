@@ -36,6 +36,7 @@ internal class StdIOTransport : IDisposable
     private const int DefaultBufferSize = 1024;  // Byte buffer size
     private readonly Process _process;
     private readonly CancellationTokenSource _readerCancellationSource = new();
+    private readonly Task _getResponseTask;
     private readonly List<byte> _data = new();
     private int? _currentMessageSize;
 
@@ -54,7 +55,7 @@ internal class StdIOTransport : IDisposable
         };
         _process.BeginErrorReadLine();
 
-        ScheduleTransportTask(GetResponseAsync, _readerCancellationSource.Token);
+        _getResponseTask = ScheduleTransportTaskAsync(GetResponseAsync, _readerCancellationSource.Token);
     }
 
     ~StdIOTransport() => Dispose(false);
@@ -78,7 +79,7 @@ internal class StdIOTransport : IDisposable
         if (!IsClosed)
         {
             IsClosed = true;
-            TransportClosed.Invoke(this, closeReason);
+            TransportClosed?.Invoke(this, closeReason);
             _readerCancellationSource?.Cancel();
             _process.StandardInput.Close();
             _process.WaitForExit();
@@ -129,7 +130,7 @@ internal class StdIOTransport : IDisposable
         };
     }
 
-    private static void ScheduleTransportTask(Func<CancellationToken, Task> func, CancellationToken cancellationToken)
+    private static Task ScheduleTransportTaskAsync(Func<CancellationToken, Task> func, CancellationToken cancellationToken)
         => Task.Factory.StartNew(() => func(cancellationToken), cancellationToken, TaskCreationOptions.LongRunning, TaskScheduler.Current);
 
     private void Close(Exception ex)
@@ -147,6 +148,7 @@ internal class StdIOTransport : IDisposable
 
         _readerCancellationSource?.Dispose();
         _process?.Dispose();
+        _getResponseTask?.Dispose();
     }
 
     private async Task GetResponseAsync(CancellationToken token)

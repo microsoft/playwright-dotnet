@@ -572,7 +572,7 @@ internal class BrowserContext : ChannelOwnerBase, IChannelOwner<BrowserContext>,
         }
     }
 
-    private void Channel_Route(object sender, Route route) => OnRouteAsync(route).ConfigureAwait(false);
+    private void Channel_Route(object sender, Route route) => _ = OnRouteAsync(route).ConfigureAwait(false);
 
     private Task ExposeBindingAsync(string name, Delegate callback, bool handle = false)
     {
