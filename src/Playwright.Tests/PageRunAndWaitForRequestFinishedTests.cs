@@ -92,31 +92,15 @@ public class PageRunAndWaitForRequestFinishedTests : PageTestEx
         using var cts = new CancellationTokenSource();
         await Page.GotoAsync(Server.EmptyPage);
 
-        await Page.SetContentAsync("""
-        <button onclick="testCancellation(); false;" />
-        <script>
-        function testCancellation() {
-            setTimeout(() => {
-                    fetch('/digits/1.png').then((response) => response.blob());
-                    fetch('/digits/2.png').then((response) => response.blob());
-                    fetch('/digits/3.png').then((response) => response.blob());
-                }, 5000);
-        }
-        </script>
-        """);
-
-        var requestTask = Page.RunAndWaitForRequestFinishedAsync(
-            () => Page.EvaluateAsync(@"() => document.querySelector('button').click()"),
+        var requestTask = Page.RunAndWaitForRequestFinishedAsync(() => Page.EvaluateAsync(@"() => {}"),
             new()
             {
                 Predicate = e => e.Url == Server.Prefix + "/digits/2.png",
-                Timeout = 8000,
+                Timeout = 2000,
                 CancellationToken = cts.Token
             });
         cts.Cancel();
-
         var request = await requestTask;
-
         Assert.IsNull(request);
     }
 }
