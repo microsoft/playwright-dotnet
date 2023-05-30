@@ -24,6 +24,7 @@
 
 using System;
 using System.Runtime.CompilerServices;
+using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Playwright.Helpers;
 using Microsoft.Playwright.Transport;
@@ -89,9 +90,10 @@ internal class Worker : ChannelOwnerBase, IChannelOwner<Worker>, IWorker
         .ConfigureAwait(false);
 
     [MethodImpl(MethodImplOptions.NoInlining)]
-    public async Task<IWorker> WaitForCloseAsync(Func<Task> action = default, float? timeout = default)
+    public async Task<IWorker> WaitForCloseAsync(Func<Task> action = default, float? timeout = default, CancellationToken cancellationToken = default)
     {
         using var waiter = new Waiter(this, "worker.WaitForCloseAsync");
+        waiter.RejectOnCancellation(cancellationToken);
         var waiterResult = waiter.GetWaitForEventTask<IWorker>(this, nameof(Close), null);
         var result = waiterResult.Task.WithTimeout(Convert.ToInt32(timeout ?? 0));
         if (action != null)

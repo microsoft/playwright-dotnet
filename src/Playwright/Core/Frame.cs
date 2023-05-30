@@ -31,6 +31,7 @@ using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text.Json;
 using System.Text.RegularExpressions;
+using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Playwright.Helpers;
 using Microsoft.Playwright.Transport;
@@ -189,7 +190,7 @@ internal class Frame : ChannelOwnerBase, IChannelOwner<Frame>, IFrame
         }
         try
         {
-            waiter = SetupNavigationWaiter("frame.WaitForLoadStateAsync", options?.Timeout);
+            waiter = SetupNavigationWaiter("frame.WaitForLoadStateAsync", options?.Timeout, options?.CancellationToken ?? default);
 
             if (_loadStates.Contains(loadState))
             {
@@ -227,7 +228,7 @@ internal class Frame : ChannelOwnerBase, IChannelOwner<Frame>, IFrame
     [MethodImpl(MethodImplOptions.NoInlining)]
     public async Task<IResponse> RunAndWaitForNavigationAsync(Func<Task> action, FrameRunAndWaitForNavigationOptions options = default)
     {
-        using var waiter = SetupNavigationWaiter("frame.WaitForNavigationAsync", options?.Timeout);
+        using var waiter = SetupNavigationWaiter("frame.WaitForNavigationAsync", options?.Timeout, options?.CancellationToken ?? default);
         var result = WaitForNavigationInternalAsync(waiter, options?.Url, options?.UrlFunc, options?.UrlRegex, options?.UrlString, options?.WaitUntil);
 
         if (action != null)
@@ -699,9 +700,10 @@ internal class Frame : ChannelOwnerBase, IChannelOwner<Frame>, IFrame
         };
     }
 
-    private Waiter SetupNavigationWaiter(string @event, float? timeout)
+    private Waiter SetupNavigationWaiter(string @event, float? timeout, CancellationToken cancellationToken)
     {
         var waiter = new Waiter(this.Page as Page, @event);
+        waiter.RejectOnCancellation(cancellationToken);
         if (this.Page.IsClosed)
         {
             waiter.RejectImmediately(new PlaywrightException("Navigation failed because page was closed!"));

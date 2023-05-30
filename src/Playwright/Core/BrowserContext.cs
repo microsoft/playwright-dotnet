@@ -30,6 +30,7 @@ using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text.Json;
 using System.Text.RegularExpressions;
+using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Playwright.Helpers;
 using Microsoft.Playwright.Transport;
@@ -442,7 +443,7 @@ internal class BrowserContext : ChannelOwnerBase, IChannelOwner<BrowserContext>,
         => UnrouteAsync(null, urlFunc, handler);
 
     [MethodImpl(MethodImplOptions.NoInlining)]
-    public async Task<T> InnerWaitForEventAsync<T>(PlaywrightEvent<T> playwrightEvent, Func<Task> action = default, Func<T, bool> predicate = default, float? timeout = default)
+    public async Task<T> InnerWaitForEventAsync<T>(PlaywrightEvent<T> playwrightEvent, Func<Task> action = default, Func<T, bool> predicate = default, float? timeout = default, CancellationToken cancellationToken = default)
     {
         if (playwrightEvent == null)
         {
@@ -451,6 +452,7 @@ internal class BrowserContext : ChannelOwnerBase, IChannelOwner<BrowserContext>,
 
         timeout = _timeoutSettings.Timeout(timeout);
         using var waiter = new Waiter(this, $"context.WaitForEventAsync(\"{playwrightEvent.Name}\")");
+        waiter.RejectOnCancellation(cancellationToken);
         waiter.RejectOnTimeout(Convert.ToInt32(timeout, CultureInfo.InvariantCulture), $"Timeout {timeout}ms exceeded while waiting for event \"{playwrightEvent.Name}\"");
 
         if (playwrightEvent.Name != BrowserContextEvent.Close.Name)
@@ -469,19 +471,19 @@ internal class BrowserContext : ChannelOwnerBase, IChannelOwner<BrowserContext>,
 
     [MethodImpl(MethodImplOptions.NoInlining)]
     public Task<IPage> WaitForPageAsync(BrowserContextWaitForPageOptions options = default)
-        => InnerWaitForEventAsync(BrowserContextEvent.Page, null, options?.Predicate, options?.Timeout);
+        => InnerWaitForEventAsync(BrowserContextEvent.Page, null, options?.Predicate, options?.Timeout, options?.CancellationToken ?? default);
 
     [MethodImpl(MethodImplOptions.NoInlining)]
     public Task<IPage> RunAndWaitForPageAsync(Func<Task> action, BrowserContextRunAndWaitForPageOptions options = default)
-        => InnerWaitForEventAsync(BrowserContextEvent.Page, action, options?.Predicate, options?.Timeout);
+        => InnerWaitForEventAsync(BrowserContextEvent.Page, action, options?.Predicate, options?.Timeout, options?.CancellationToken ?? default);
 
     [MethodImpl(MethodImplOptions.NoInlining)]
     public Task<IConsoleMessage> WaitForConsoleMessageAsync(BrowserContextWaitForConsoleMessageOptions options = default)
-        => InnerWaitForEventAsync(PageEvent.Console, null, options?.Predicate, options?.Timeout);
+        => InnerWaitForEventAsync(PageEvent.Console, null, options?.Predicate, options?.Timeout, options?.CancellationToken ?? default);
 
     [MethodImpl(MethodImplOptions.NoInlining)]
     public Task<IConsoleMessage> RunAndWaitForConsoleMessageAsync(Func<Task> action, BrowserContextRunAndWaitForConsoleMessageOptions options = default)
-        => InnerWaitForEventAsync(PageEvent.Console, action, options?.Predicate, options?.Timeout);
+        => InnerWaitForEventAsync(PageEvent.Console, action, options?.Predicate, options?.Timeout, options?.CancellationToken ?? default);
 
     [MethodImpl(MethodImplOptions.NoInlining)]
     public ValueTask DisposeAsync() => new(CloseAsync());

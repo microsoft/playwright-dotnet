@@ -23,6 +23,7 @@
  */
 
 using System.Text.Json.Serialization;
+using System.Threading;
 
 #nullable enable
 
@@ -40,6 +41,7 @@ public class PageWaitForRequestOptions
         }
 
         Timeout = clone.Timeout;
+        CancellationToken = clone.CancellationToken;
     }
 
     /// <summary>
@@ -51,6 +53,14 @@ public class PageWaitForRequestOptions
     /// </summary>
     [JsonPropertyName("timeout")]
     public float? Timeout { get; set; }
+
+    /// <summary>
+    /// <para>
+    /// Cancellation token to provide cancellation of waiting for Request
+    /// </para>
+    /// </summary>
+    [JsonPropertyName("cancellationToken")]
+    public CancellationToken CancellationToken { get; set; }
 }
 
 #nullable disable

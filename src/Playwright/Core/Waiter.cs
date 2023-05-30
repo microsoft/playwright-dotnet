@@ -117,6 +117,12 @@ internal class Waiter : IDisposable
         _immediateError = exception;
     }
 
+    internal void RejectOnCancellation(CancellationToken cancellationToken)
+    {
+        var cancelledTask = Task.FromCanceled(cancellationToken);
+        RejectOn(cancelledTask, () => cancelledTask.Dispose());
+    }
+
     internal void RejectOnEvent<T>(
         object eventSource,
         string e,

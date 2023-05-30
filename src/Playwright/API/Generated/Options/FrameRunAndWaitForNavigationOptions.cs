@@ -25,6 +25,7 @@
 using System;
 using System.Text.Json.Serialization;
 using System.Text.RegularExpressions;
+using System.Threading;
 
 #nullable enable
 
@@ -47,6 +48,7 @@ public class FrameRunAndWaitForNavigationOptions
         UrlRegex = clone.UrlRegex;
         UrlString = clone.UrlString;
         WaitUntil = clone.WaitUntil;
+        CancellationToken = clone.CancellationToken;
     }
 
     /// <summary>
@@ -128,6 +130,14 @@ public class FrameRunAndWaitForNavigationOptions
     /// </summary>
     [JsonPropertyName("waitUntil")]
     public WaitUntilState? WaitUntil { get; set; }
+
+    /// <summary>
+    /// <para>
+    /// Cancellation token to provide cancellation of waiting for navigation
+    /// </para>
+    /// </summary>
+    [JsonPropertyName("cancellationToken")]
+    public CancellationToken CancellationToken { get; set; }
 }
 
 #nullable disable
