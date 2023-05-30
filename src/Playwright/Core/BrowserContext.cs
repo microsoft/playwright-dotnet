@@ -76,7 +76,7 @@ internal class BrowserContext : ChannelOwnerBase, IChannelOwner<BrowserContext>,
                 // on the client side due to a possible race condition between two async calls:
                 // a) removing "dialog" listener subscription (client->server)
                 // b) actual "dialog" event (server->client)
-                if ("beforeunload".Equals(dialog.Type, StringComparison.Ordinal))
+                if (string.Equals("beforeunload", dialog.Type, StringComparison.Ordinal))
                 {
                     dialog.AcceptAsync().IgnoreException();
                 }
@@ -231,6 +231,9 @@ internal class BrowserContext : ChannelOwnerBase, IChannelOwner<BrowserContext>,
 
     public async Task CloseAsync()
     {
+        const string zipExt = ".zip";
+        const string tmpExt = ".tmp";
+
         if (_closeWasCalled)
         {
             return;
@@ -243,12 +246,12 @@ internal class BrowserContext : ChannelOwnerBase, IChannelOwner<BrowserContext>,
             {
                 Artifact artifact = await Channel.HarExportAsync(harRecorder.Key).ConfigureAwait(false);
                 // Server side will compress artifact if content is attach or if file is .zip.
-                var isCompressed = harRecorder.Value.Content == HarContentPolicy.Attach || harRecorder.Value.Path.EndsWith(".zip", StringComparison.Ordinal);
-                var needCompressed = harRecorder.Value.Path.EndsWith(".zip", StringComparison.Ordinal);
+                var isCompressed = harRecorder.Value.Content == HarContentPolicy.Attach || harRecorder.Value.Path.EndsWith(zipExt, StringComparison.Ordinal);
+                var needCompressed = harRecorder.Value.Path.EndsWith(zipExt, StringComparison.Ordinal);
                 if (isCompressed && !needCompressed)
                 {
-                    await artifact.SaveAsAsync(harRecorder.Value.Path + ".tmp").ConfigureAwait(false);
-                    await Channel.Connection.LocalUtils.HarUnzipAsync(harRecorder.Value.Path + ".tmp", harRecorder.Value.Path).ConfigureAwait(false);
+                    await artifact.SaveAsAsync(harRecorder.Value.Path + tmpExt).ConfigureAwait(false);
+                    await Channel.Connection.LocalUtils.HarUnzipAsync(harRecorder.Value.Path + tmpExt, harRecorder.Value.Path).ConfigureAwait(false);
                 }
                 else
                 {

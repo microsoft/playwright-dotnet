@@ -61,7 +61,7 @@ internal class RawHeaders
             return null;
         }
 
-        return string.Join("set-cookie".Equals(name, StringComparison.OrdinalIgnoreCase) ? "\n" : ", ", values);
+        return string.Join(string.Equals("set-cookie", name, StringComparison.OrdinalIgnoreCase) ? "\n" : ", ", values);
     }
 
     public string[] GetAll(string name)
