@@ -93,23 +93,24 @@ public class PageRunAndWaitForRequestFinishedTests : PageTestEx
         await Page.GotoAsync(Server.EmptyPage);
 
         await Page.SetContentAsync("""
-<button onclick="testCancellation(); false;" />
-<script>
-function testCancellation() {
-    setTimeout(() => {
-            fetch('/digits/1.png').then((response) => response.blob());
-            fetch('/digits/2.png').then((response) => response.blob());
-            fetch('/digits/3.png').then((response) => response.blob());
-        }, 5000);
-}
-</script>
-""");
+        <button onclick="testCancellation(); false;" />
+        <script>
+        function testCancellation() {
+            setTimeout(() => {
+                    fetch('/digits/1.png').then((response) => response.blob());
+                    fetch('/digits/2.png').then((response) => response.blob());
+                    fetch('/digits/3.png').then((response) => response.blob());
+                }, 5000);
+        }
+        </script>
+        """);
 
         var requestTask = Page.RunAndWaitForRequestFinishedAsync(
             () => Page.EvaluateAsync(@"() => document.querySelector('button').click()"),
             new()
             {
-                Predicate = e => e.Url == Server.Prefix + "/digits/2.png", Timeout = 8000,
+                Predicate = e => e.Url == Server.Prefix + "/digits/2.png",
+                Timeout = 8000,
                 CancellationToken = cts.Token
             });
         cts.Cancel();
