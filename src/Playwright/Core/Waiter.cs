@@ -34,6 +34,8 @@ namespace Microsoft.Playwright.Core;
 
 internal class Waiter : IDisposable
 {
+    private const int InfiniteWait = -1;
+
     private readonly List<string> _logs = new();
     private readonly List<Task> _failures = new();
     private readonly List<Action> _dispose = new();
@@ -59,7 +61,7 @@ internal class Waiter : IDisposable
                 ["phase"] = "before",
             },
         };
-        _failures.Add(Task.Delay(-1, _manualCts.Token));
+        _failures.Add(Task.Delay(InfiniteWait, _manualCts.Token));
         _channelOwner.Connection.SendMessageToServerAsync(_channelOwner.Channel.Guid, "waitForEventInfo", beforeArgs).IgnoreException();
     }
 
@@ -119,7 +121,7 @@ internal class Waiter : IDisposable
 
     internal void RejectOnCancellation(CancellationToken cancellationToken)
     {
-        var cancelledTask = Task.Delay(-1, cancellationToken);
+        var cancelledTask = Task.Delay(InfiniteWait, cancellationToken);
         RejectOn(cancelledTask, () => cancelledTask.Dispose());
     }
 
