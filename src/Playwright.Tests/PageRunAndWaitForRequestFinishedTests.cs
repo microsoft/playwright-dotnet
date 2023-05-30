@@ -61,12 +61,13 @@ public class PageRunAndWaitForRequestFinishedTests : PageTestEx
     [PlaywrightTest("page-wait-for-response.spec.ts", "should work with predicate")]
     public async Task ShouldWorkWithPredicate()
     {
+        using var cts = new CancellationTokenSource();
         await Page.GotoAsync(Server.EmptyPage);
         var request = await Page.RunAndWaitForRequestFinishedAsync(() => Page.EvaluateAsync<string>(@"() => {
                     fetch('/digits/1.png').then((response) => response.blob());
                     fetch('/digits/2.png').then((response) => response.blob());
                     fetch('/digits/3.png').then((response) => response.blob());
-                }"), new() { Predicate = e => e.Url == Server.Prefix + "/digits/2.png" });
+                }"), new() { Predicate = e => e.Url == Server.Prefix + "/digits/2.png", CancellationToken = cts.Token });
 
         Assert.AreEqual(Server.Prefix + "/digits/2.png", request.Url);
     }
@@ -74,13 +75,47 @@ public class PageRunAndWaitForRequestFinishedTests : PageTestEx
     [PlaywrightTest("page-wait-for-response.spec.ts", "should work with no timeout")]
     public async Task ShouldWorkWithNoTimeout()
     {
+        using var cts = new CancellationTokenSource();
         await Page.GotoAsync(Server.EmptyPage);
         var request = await Page.RunAndWaitForRequestFinishedAsync(() => Page.EvaluateAsync(@"() => setTimeout(() => {
                     fetch('/digits/1.png').then((response) => response.blob());
                     fetch('/digits/2.png').then((response) => response.blob());
                     fetch('/digits/3.png').then((response) => response.blob());
-                }, 50)"), new() { Predicate = e => e.Url == Server.Prefix + "/digits/2.png", Timeout = 0 });
+                }, 50)"), new() { Predicate = e => e.Url == Server.Prefix + "/digits/2.png", Timeout = 0, CancellationToken = cts.Token });
 
         Assert.AreEqual(Server.Prefix + "/digits/2.png", request.Url);
+    }
+
+    [PlaywrightTest("page-wait-for-response.spec.ts", "should cancel work")]
+    public async Task ShouldCancelWorkWithDelay()
+    {
+        using var cts = new CancellationTokenSource();
+        await Page.GotoAsync(Server.EmptyPage);
+
+        await Page.SetContentAsync("""
+<button onclick="testCancellation(); false;" />
+<script>
+function testCancellation() {
+    setTimeout(() => {
+            fetch('/digits/1.png').then((response) => response.blob());
+            fetch('/digits/2.png').then((response) => response.blob());
+            fetch('/digits/3.png').then((response) => response.blob());
+        }, 5000);
+}
+</script>
+""");
+
+        var requestTask = Page.RunAndWaitForRequestFinishedAsync(
+            () => Page.EvaluateAsync(@"() => document.querySelector('button').click()"),
+            new()
+            {
+                Predicate = e => e.Url == Server.Prefix + "/digits/2.png", Timeout = 8000,
+                CancellationToken = cts.Token
+            });
+        cts.Cancel();
+
+        var request = await requestTask;
+
+        Assert.IsNull(request);
     }
 }

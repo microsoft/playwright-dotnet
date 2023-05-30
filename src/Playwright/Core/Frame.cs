@@ -233,8 +233,7 @@ internal class Frame : ChannelOwnerBase, IChannelOwner<Frame>, IFrame
 
         if (action != null)
         {
-            await WrapApiBoundaryAsync(() => waiter.CancelWaitOnExceptionAsync(result, action))
-                .ConfigureAwait(false);
+            await WrapApiBoundaryAsync(() => waiter.CancelWaitOnExceptionAsync(result, action)).ConfigureAwait(false);
         }
 
         return await result.ConfigureAwait(false);

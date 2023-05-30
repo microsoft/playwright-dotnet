@@ -34,8 +34,6 @@ namespace Microsoft.Playwright.Core;
 
 internal class Waiter : IDisposable
 {
-    private const int InfiniteWait = -1;
-
     private readonly List<string> _logs = new();
     private readonly List<Task> _failures = new();
     private readonly List<Action> _dispose = new();
@@ -61,7 +59,7 @@ internal class Waiter : IDisposable
                 ["phase"] = "before",
             },
         };
-        _failures.Add(Task.Delay(InfiniteWait, _manualCts.Token));
+        _failures.Add(Task.Delay(Timeout.Infinite, _manualCts.Token));
         _channelOwner.Connection.SendMessageToServerAsync(_channelOwner.Channel.Guid, "waitForEventInfo", beforeArgs).IgnoreException();
     }
 
@@ -121,8 +119,14 @@ internal class Waiter : IDisposable
 
     internal void RejectOnCancellation(CancellationToken cancellationToken)
     {
-        var cancelledTask = Task.Delay(InfiniteWait, cancellationToken);
-        RejectOn(cancelledTask, () => cancelledTask.Dispose());
+        if (!cancellationToken.CanBeCanceled)
+        {
+            return;
+        }
+
+        var cts = new TaskCompletionSource<bool>();
+        var registration = cancellationToken.Register(cts.SetCanceled, false);
+        RejectOn(cts.Task, () => registration.Dispose());
     }
 
     internal void RejectOnEvent<T>(
@@ -226,6 +230,13 @@ internal class Waiter : IDisposable
             Dispose();
             throw new TimeoutException(ex.Message + FormatLogRecording(_logs), ex);
         }
+        catch (TaskCanceledException ex)
+        {
+            dispose?.Invoke();
+            _error = ex.ToString();
+            Dispose();
+            return default;
+        }
         catch (Exception ex)
         {
             dispose?.Invoke();
@@ -251,7 +262,11 @@ internal class Waiter : IDisposable
         }
         catch
         {
-            cts.Cancel();
+            if (!cts.IsCancellationRequested)
+            {
+                cts.Cancel();
+            }
+
             throw;
         }
     }
