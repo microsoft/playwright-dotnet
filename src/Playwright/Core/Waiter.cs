@@ -119,7 +119,7 @@ internal class Waiter : IDisposable
 
     internal void RejectOnCancellation(CancellationToken cancellationToken)
     {
-        var cancelledTask = Task.FromCanceled(cancellationToken);
+        var cancelledTask = Task.Delay(-1, cancellationToken);
         RejectOn(cancelledTask, () => cancelledTask.Dispose());
     }
 
