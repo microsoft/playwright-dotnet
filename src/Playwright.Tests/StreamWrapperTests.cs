@@ -38,9 +38,9 @@ public class StreamWrapperTests
     [SetUp]
     public void SetUp()
     {
-        Connection conn = new ();
+        Connection conn = new();
         conn.OnMessage = (_, _) => Task.CompletedTask;
-        Root owner = new (null, conn, "");
+        Root owner = new(null, conn, "");
         Stream stream = new(owner, "");
         _instance = new(stream);
     }
