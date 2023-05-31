@@ -84,7 +84,9 @@ public class PageWaitForRequestFinishedTests : PageTestEx
 
         var task = Page.WaitForRequestFinishedAsync(new()
         {
-            Predicate = e => e.Url == Server.Prefix + "/digits/2.png", Timeout = 2000, CancellationToken = cts.Token
+            Predicate = e => e.Url == Server.Prefix + "/digits/2.png",
+            Timeout = 2000,
+            CancellationToken = cts.Token
         });
         var requestTaskPair = TaskUtils.WhenAll(
             task,
