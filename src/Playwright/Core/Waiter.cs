@@ -233,13 +233,6 @@ internal class Waiter : IDisposable
             Dispose();
             throw new TimeoutException(ex.Message + FormatLogRecording(_logs), ex);
         }
-        catch (TaskCanceledException ex)
-        {
-            dispose?.Invoke();
-            _error = ex.ToString();
-            Dispose();
-            throw;
-        }
         catch (OperationCanceledException ex)
         {
             dispose?.Invoke();
