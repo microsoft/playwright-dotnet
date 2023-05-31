@@ -121,11 +121,14 @@ internal class Waiter : IDisposable
     {
         if (!cancellationToken.CanBeCanceled)
         {
-            return;
+            cancellationToken.ThrowIfCancellationRequested();
         }
 
         var cts = new TaskCompletionSource<bool>();
-        var registration = cancellationToken.Register(cts.SetCanceled, false);
+        var registration = cancellationToken.Register(
+            state => cts.TrySetCanceled((CancellationToken)state),
+            cancellationToken,
+            false);
         RejectOn(cts.Task, () => registration.Dispose());
     }
 
@@ -235,7 +238,14 @@ internal class Waiter : IDisposable
             dispose?.Invoke();
             _error = ex.ToString();
             Dispose();
-            return default;
+            throw;
+        }
+        catch (OperationCanceledException ex)
+        {
+            dispose?.Invoke();
+            _error = ex.ToString();
+            Dispose();
+            throw;
         }
         catch (Exception ex)
         {

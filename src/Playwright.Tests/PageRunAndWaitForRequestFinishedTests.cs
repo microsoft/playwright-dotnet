@@ -100,7 +100,6 @@ public class PageRunAndWaitForRequestFinishedTests : PageTestEx
                 CancellationToken = cts.Token
             });
         cts.Cancel();
-        var request = await requestTask;
-        Assert.IsNull(request);
+        await PlaywrightAssert.ThrowsAsync<TaskCanceledException>(() => requestTask);
     }
 }

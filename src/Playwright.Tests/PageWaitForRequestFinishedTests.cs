@@ -75,4 +75,22 @@ public class PageWaitForRequestFinishedTests : PageTestEx
         );
         Assert.AreEqual(Server.Prefix + "/digits/2.png", request.Url);
     }
+
+    [PlaywrightTest("page-wait-for-response.spec.ts", "should cancel work")]
+    public async Task ShouldCancelWorkWithDelay()
+    {
+        using var cts = new CancellationTokenSource();
+        await Page.GotoAsync(Server.EmptyPage);
+
+        var task = Page.WaitForRequestFinishedAsync(new()
+        {
+            Predicate = e => e.Url == Server.Prefix + "/digits/2.png", Timeout = 2000, CancellationToken = cts.Token
+        });
+        var requestTaskPair = TaskUtils.WhenAll(
+            task,
+            Page.EvaluateAsync(@"() => {}")
+        );
+        cts.Cancel();
+        await PlaywrightAssert.ThrowsAsync<TaskCanceledException>(() => requestTaskPair);
+    }
 }
