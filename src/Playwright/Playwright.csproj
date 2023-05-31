@@ -59,4 +59,7 @@
   <Target Name="EnsurePrerequisitsRan" BeforeTargets="DedupeDriver">
     <Error Text="Playwright prerequisites are missing. Ensure you've ran `dotnet run --project ./src/tools/Playwright.Tooling/Playwright.Tooling.csproj -- download-drivers --basepath .`" Condition="!Exists('$(MSBuildProjectDirectory)\.drivers')" />
   </Target>
+  <ItemGroup>
+    <InternalsVisibleTo Include="Microsoft.Playwright.Tests" Key="$(AssemblyPublicKey)" />
+  </ItemGroup>
 </Project>
