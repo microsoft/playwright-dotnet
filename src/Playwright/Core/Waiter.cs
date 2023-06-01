@@ -121,8 +121,10 @@ internal class Waiter : IDisposable
     {
         if (!cancellationToken.CanBeCanceled)
         {
-            cancellationToken.ThrowIfCancellationRequested();
+            return; // don't add a cancellation registration if the cancellationToken can never be cancelled (e.g. CancellationToken.None / default)
         }
+
+        cancellationToken.ThrowIfCancellationRequested(); // if the cancellation token is already cancelled then throw immediately
 
         var cts = new TaskCompletionSource<bool>();
         var registration = cancellationToken.Register(
