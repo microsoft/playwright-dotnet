@@ -2,9 +2,9 @@
   "name": "playwright.testingharnesstest",
   "private": true,
   "devDependencies": {
-    "@playwright/test": "^1.23.4",
-    "@types/http-proxy": "^1.17.10",
-    "fast-xml-parser": "^4.0.9",
+    "@playwright/test": "^1.34.3",
+    "@types/http-proxy": "^1.17.11",
+    "fast-xml-parser": "^4.2.2",
     "http-proxy": "^1.18.1"
   }
 }
