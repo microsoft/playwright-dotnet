@@ -286,6 +286,41 @@ test('should be able to to parse LaunchOptions.Proxy from runsettings', async ({
   httpServer.close();
 });
 
+test('should be able to to parse LaunchOptions.Args from runsettings', async ({ runTest }) => {
+  const result = await runTest({
+    'ExampleTests.cs': `
+      using System;
+      using System.Threading.Tasks;
+      using NUnit.Framework;
+      using Microsoft.Playwright.NUnit;
+
+      namespace Playwright.TestingHarnessTest.NUnit;
+
+      public class <class-name> : PageTest
+      {
+          [Test]
+          public async Task Test()
+          {
+              Console.WriteLine("User-Agent: " + await Page.EvaluateAsync<string>("() => navigator.userAgent"));
+          }
+      }`,
+      '.runsettings': `
+        <?xml version="1.0" encoding="utf-8"?>
+        <RunSettings>
+            <Playwright>
+              <LaunchOptions>
+                <Args>['--user-agent=hello']</Args>
+              </LaunchOptions>
+            </Playwright>
+        </RunSettings>
+      `,
+  }, 'dotnet test --settings=.runsettings');
+  expect(result.passed).toBe(1);
+  expect(result.failed).toBe(0);
+  expect(result.total).toBe(1);
+  expect(result.stdout).toContain("User-Agent: hello")
+});
+
 test('should be able to override context options', async ({ runTest }) => {
   const result = await runTest({
     'ExampleTests.cs': `

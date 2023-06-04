@@ -89,7 +89,8 @@ public class PlaywrightSettingsXml
                     continue;
                 }
                 var type = Nullable.GetUnderlyingType(property.PropertyType) ?? property.PropertyType;
-                if (type.IsPrimitive || type == typeof(string))
+                var isArrayLike = type.IsArray || (type.IsGenericType && type.GetGenericTypeDefinition() == typeof(IEnumerable<>));
+                if (type.IsPrimitive || type == typeof(string) || isArrayLike)
                 {
                     reader.Read();
                     if (reader.NodeType != XmlNodeType.Text)
