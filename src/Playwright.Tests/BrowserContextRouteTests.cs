@@ -24,6 +24,7 @@
 
 using System.Net;
 using System.Text;
+using System.Text.RegularExpressions;
 
 namespace Microsoft.Playwright.Tests;
 
@@ -92,13 +93,13 @@ public class BrowserContextRouteTests : BrowserTestEx
             intercepted.Add(4);
             route.ContinueAsync();
         };
-        await context.RouteAsync("**/empty.html", handler4);
+        await context.RouteAsync(new Regex("/empty.html"), handler4);
 
         await page.GotoAsync(Server.EmptyPage);
         Assert.AreEqual(new List<int>() { 4 }, intercepted);
 
         intercepted.Clear();
-        await context.UnrouteAsync("**/empty.html", handler4);
+        await context.UnrouteAsync(new Regex("/empty.html"), handler4);
         await page.GotoAsync(Server.EmptyPage);
         Assert.AreEqual(new List<int>() { 3 }, intercepted);
 
