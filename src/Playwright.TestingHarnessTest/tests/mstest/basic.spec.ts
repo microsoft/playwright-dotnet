@@ -222,7 +222,7 @@ test('should be able to to parse BrowserName and LaunchOptions.Headless from run
   expect(result.stdout).not.toContain("Headless")
 });
 
-test('should be able to to parse LaunchOptions.Proxy from runsettings', async ({ runTest }) => {
+test('should be able to parse LaunchOptions.Proxy from runsettings', async ({ runTest }) => {
   const httpServer = http.createServer((req, res) => {
     res.end('hello world!')
   }).listen(3129);
@@ -289,7 +289,7 @@ test('should be able to to parse LaunchOptions.Proxy from runsettings', async ({
   httpServer.close();
 });
 
-test('should be able to to parse LaunchOptions.Args from runsettings', async ({ runTest }) => {
+test('should be able to parse LaunchOptions.Args from runsettings', async ({ runTest }) => {
   const result = await runTest({
     'ExampleTests.cs': `
       using System;
