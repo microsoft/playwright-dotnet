@@ -38,8 +38,8 @@ internal static class SetInputFilesHelpers
 
     public static async Task<SetInputFilesFiles> ConvertInputFilesAsync(IEnumerable<string> files, BrowserContext context)
     {
-        var hasLargeFile = files.Any(f => new FileInfo(f).Length > SizeLimitInBytes);
-        if (hasLargeFile)
+        var totalFileSizeExceedsLimit = files.Select(f => new FileInfo(f)).Sum(f => f.Length) > SizeLimitInBytes;
+        if (totalFileSizeExceedsLimit)
         {
             if (context.Channel.Connection.IsRemote)
             {
@@ -71,8 +71,8 @@ internal static class SetInputFilesHelpers
 
     public static SetInputFilesFiles ConvertInputFiles(IEnumerable<FilePayload> files)
     {
-        var hasLargeBuffer = files.Any(f => f.Buffer?.Length > SizeLimitInBytes);
-        if (hasLargeBuffer)
+        var totalBufferSizeExceedsLimit = files.Sum(f => f.Buffer.Length) > SizeLimitInBytes;
+        if (totalBufferSizeExceedsLimit)
         {
             throw new NotSupportedException("Cannot set buffer larger than 50Mb, please write it to a file and pass its path instead.");
         }

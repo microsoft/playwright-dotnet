@@ -437,13 +437,17 @@ internal class BrowserContext : ChannelOwnerBase, IChannelOwner<BrowserContext>,
 
     public ValueTask DisposeAsync() => new(CloseAsync());
 
-    public void SetDefaultNavigationTimeout(float timeout)
+    public void SetDefaultNavigationTimeout(float timeout) => SetDefaultNavigationTimeoutImpl(timeout);
+
+    internal void SetDefaultNavigationTimeoutImpl(float? timeout)
     {
         _timeoutSettings.SetDefaultNavigationTimeout(timeout);
         WrapApiCallAsync(() => Channel.SetDefaultNavigationTimeoutNoReplyAsync(timeout), true).IgnoreException();
     }
 
-    public void SetDefaultTimeout(float timeout)
+    public void SetDefaultTimeout(float timeout) => SetDefaultTimeoutImpl(timeout);
+
+    internal void SetDefaultTimeoutImpl(float? timeout)
     {
         _timeoutSettings.SetDefaultTimeout(timeout);
         WrapApiCallAsync(() => Channel.SetDefaultTimeoutNoReplyAsync(timeout), true).IgnoreException();

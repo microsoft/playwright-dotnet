@@ -42,7 +42,7 @@ public class LocatorAssertionsToHaveJSPropertyOptions
         Timeout = clone.Timeout;
     }
 
-    /// <summary><para>Time to retry the assertion for.</para></summary>
+    /// <summary><para>Time to retry the assertion for in milliseconds. Defaults to <c>5000</c>.</para></summary>
     [JsonPropertyName("timeout")]
     public float? Timeout { get; set; }
 }

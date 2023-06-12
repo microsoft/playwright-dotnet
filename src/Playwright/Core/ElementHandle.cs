@@ -84,6 +84,7 @@ internal class ElementHandle : JSHandle, IElementHandle, IChannelOwner<ElementHa
             options.Type,
             options.Quality,
             options.Mask,
+            options.MaskColor,
             options.Animations,
             options.Caret,
             options.Scale,

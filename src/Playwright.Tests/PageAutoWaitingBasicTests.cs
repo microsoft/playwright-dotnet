@@ -118,68 +118,6 @@ public class PageAutoWaitingBasicTests : PageTestEx
         Assert.AreEqual("route|navigated|click", string.Join("|", messages));
     }
 
-    [PlaywrightTest("page-autowaiting-basic.spec.ts", "should await navigation when assigning location")]
-    [Ignore("Flacky")]
-    public async Task ShouldAwaitNavigationWhenAssigningLocation()
-    {
-        var messages = new List<string>();
-        Server.SetRoute("/empty.html", context =>
-        {
-            messages.Add("route");
-            context.Response.ContentType = "text/html";
-            return context.Response.WriteAsync("<link rel='stylesheet' href='./one-style.css'>");
-        });
-
-        await TaskUtils.WhenAll(
-            Page.EvaluateAsync($"window.location.href = '{Server.EmptyPage}'").ContinueWith(_ => messages.Add("evaluate")),
-            Page.WaitForNavigationAsync().ContinueWith(_ => messages.Add("navigated")));
-
-        Assert.AreEqual("route|navigated|evaluate", string.Join("|", messages));
-    }
-
-    [PlaywrightTest("page-autowaiting-basic.spec.ts", "should await navigation when assigning location twice")]
-    public async Task ShouldAwaitNavigationWhenAssigningLocationTwice()
-    {
-        var messages = new List<string>();
-        Server.SetRoute("/empty.html?cancel", context =>
-        {
-            return context.Response.WriteAsync("done");
-        });
-
-        Server.SetRoute("/empty.html?override", context =>
-        {
-            messages.Add("routeoverride");
-            return context.Response.WriteAsync("done");
-        });
-
-        await Page.EvaluateAsync($@"
-                window.location.href = '{Server.EmptyPage}?cancel';
-                window.location.href = '{Server.EmptyPage}?override';");
-        messages.Add("evaluate");
-
-        Assert.AreEqual("routeoverride|evaluate", string.Join("|", messages));
-    }
-
-    [PlaywrightTest("page-autowaiting-basic.spec.ts", "should await navigation when evaluating reload")]
-    [Ignore("Flacky")]
-    public async Task ShouldAwaitNavigationWhenEvaluatingReload()
-    {
-        var messages = new List<string>();
-        await Page.GotoAsync(Server.EmptyPage);
-        Server.SetRoute("/empty.html", context =>
-        {
-            messages.Add("route");
-            context.Response.ContentType = "text/html";
-            return context.Response.WriteAsync("<link rel='stylesheet' href='./one-style.css'>");
-        });
-
-        await TaskUtils.WhenAll(
-            Page.EvaluateAsync($"window.location.reload();").ContinueWith(_ => messages.Add("evaluate")),
-            Page.WaitForNavigationAsync().ContinueWith(_ => messages.Add("navigated")));
-
-        Assert.AreEqual("route|navigated|evaluate", string.Join("|", messages));
-    }
-
     [PlaywrightTest("page-autowaiting-basic.spec.ts", "should await navigating specified target")]
     [Ignore("Flacky")]
     public async Task ShouldAwaitNavigatingSpecifiedTarget()

@@ -591,6 +591,7 @@ internal class Page : ChannelOwnerBase, IChannelOwner<Page>, IPage
             type: options.Type,
             quality: options.Quality,
             mask: options.Mask,
+            maskColor: options.MaskColor,
             animations: options.Animations,
             caret: options.Caret,
             scale: options.Scale,
@@ -935,7 +936,23 @@ internal class Page : ChannelOwnerBase, IChannelOwner<Page>, IPage
         });
 #pragma warning restore CS0612 // Type or member is obsolete
 
-    public Task PauseAsync() => Task.WhenAny(Context.Channel.PauseAsync(), ClosedOrCrashedTcs.Task);
+    public async Task PauseAsync()
+    {
+        var defaultNavigationTimeout = _timeoutSettings.DefaultNavigationTimeout;
+        var defaultTimeout = _timeoutSettings.DefaultTimeout;
+        _timeoutSettings.SetDefaultNavigationTimeout(0);
+        _timeoutSettings.SetDefaultTimeout(0);
+        try
+        {
+            await Task.WhenAny(Context.Channel.PauseAsync(), ClosedOrCrashedTcs.Task).ConfigureAwait(false);
+        }
+        finally
+        {
+            Context.SetDefaultNavigationTimeoutImpl(defaultNavigationTimeout);
+            Context.SetDefaultTimeoutImpl(defaultTimeout);
+        }
+    }
+
 
     public void SetDefaultNavigationTimeout(float timeout)
     {

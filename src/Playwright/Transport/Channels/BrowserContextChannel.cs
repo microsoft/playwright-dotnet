@@ -145,7 +145,7 @@ internal class BrowserContextChannel : Channel<BrowserContext>
     internal Task PauseAsync()
         => Connection.SendMessageToServerAsync(Guid, "pause");
 
-    internal Task SetDefaultNavigationTimeoutNoReplyAsync(float timeout)
+    internal Task SetDefaultNavigationTimeoutNoReplyAsync(float? timeout)
         => Connection.SendMessageToServerAsync<PageChannel>(
             Guid,
             "setDefaultNavigationTimeoutNoReply",
@@ -154,7 +154,7 @@ internal class BrowserContextChannel : Channel<BrowserContext>
                 ["timeout"] = timeout,
             });
 
-    internal Task SetDefaultTimeoutNoReplyAsync(float timeout)
+    internal Task SetDefaultTimeoutNoReplyAsync(float? timeout)
         => Connection.SendMessageToServerAsync<PageChannel>(
             Guid,
             "setDefaultTimeoutNoReply",
