@@ -75,7 +75,12 @@ public class APIRequestNewContextOptions
     [JsonPropertyName("baseURL")]
     public string? BaseURL { get; set; }
 
-    /// <summary><para>An object containing additional HTTP headers to be sent with every request.</para></summary>
+    /// <summary>
+    /// <para>
+    /// An object containing additional HTTP headers to be sent with every request. Defaults
+    /// to none.
+    /// </para>
+    /// </summary>
     [JsonPropertyName("extraHTTPHeaders")]
     public IEnumerable<KeyValuePair<string, string>>? ExtraHTTPHeaders { get; set; }
 

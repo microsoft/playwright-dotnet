@@ -356,6 +356,7 @@ internal class PageChannel : Channel<Page>
         ScreenshotType? type,
         int? quality,
         IEnumerable<ILocator> mask,
+        string maskColor,
         ScreenshotAnimations? animations,
         ScreenshotCaret? caret,
         ScreenshotScale? scale,
@@ -373,6 +374,7 @@ internal class PageChannel : Channel<Page>
             ["caret"] = caret,
             ["scale"] = scale,
             ["quality"] = quality,
+            ["maskColor"] = maskColor,
             ["mask"] = mask?.Select(locator => new Dictionary<string, object>
             {
                 ["frame"] = ((Locator)locator)._frame._channel,

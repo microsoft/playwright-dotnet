@@ -386,4 +386,42 @@ public class PageSetInputFilesTests : PageTestEx
         Assert.AreEqual("200MB", file0Name);
         Assert.AreEqual(200 * 1024 * 1024, file0Size);
     }
+
+    [PlaywrightTest("page-set-input-files.spec.ts", "should upload multiple large files")]
+    public async Task ShouldUploadMultipleLargeFiles()
+    {
+        var filesCount = 10;
+        await Page.GotoAsync(Server.Prefix + "/input/fileupload-multi.html");
+        var uploadFile = Path.Combine(Path.GetTempPath(), "50MB_1.zip");
+        using (var stream = File.OpenWrite(uploadFile))
+        {
+            var str = new string('A', 1024);
+            // 49 is close to the actual limit
+            for (var i = 0; i < 49 * 1024; i++)
+            {
+                await stream.WriteAsync(Encoding.UTF8.GetBytes(str));
+            }
+        }
+        var input = Page.Locator("input[type=file]");
+        var uploadFiles = new List<string> { uploadFile };
+        using var tmpDir = new TempDirectory();
+        for (var i = 2; i <= filesCount; i++)
+        {
+            var dstFile = Path.Combine(tmpDir.Path, $"50MB_{i}.zip");
+            File.Copy(uploadFile, dstFile);
+            uploadFiles.Add(dstFile);
+        }
+        var fileChooser = await TaskUtils.WhenAll(
+           Page.WaitForFileChooserAsync(),
+           input.ClickAsync()
+        );
+        await fileChooser.SetFilesAsync(uploadFiles);
+        var filesLen = await Page.EvaluateAsync<int>("document.getElementsByTagName(\"input\")[0].files.length");
+        Assert.True(fileChooser.IsMultiple);
+        Assert.AreEqual(filesCount, filesLen);
+        foreach (var file in uploadFiles)
+        {
+            File.Delete(file);
+        }
+    }
 }

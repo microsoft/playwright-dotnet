@@ -96,7 +96,7 @@ internal class Route : ChannelOwnerBase, IChannelOwner<Route>, IRoute
     {
         var options = _request.FallbackOverridesForContinue();
         await _channel.Connection.WrapApiCallAsync(
-            () => RaceWithTargetCloseAsync(_channel.ContinueAsync(requestUrl: _request._initializer.Url, url: options.Url, method: options.Method, postData: options.PostData, headers: options.Headers)),
+            () => RaceWithTargetCloseAsync(_channel.ContinueAsync(requestUrl: _request._initializer.Url, url: options.Url, method: options.Method, postData: options.PostData, headers: options.Headers, isFallback: @internal)),
             @internal).ConfigureAwait(false);
     }
 

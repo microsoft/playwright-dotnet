@@ -115,7 +115,7 @@ public class BrowserTypeLaunchPersistentContextOptions
     /// When using <see cref="IPage.GotoAsync"/>, <see cref="IPage.RouteAsync"/>, <see cref="IPage.WaitForURLAsync"/>,
     /// <see cref="IPage.RunAndWaitForRequestAsync"/>, or <see cref="IPage.RunAndWaitForResponseAsync"/>
     /// it takes the base URL in consideration by using the <a href="https://developer.mozilla.org/en-US/docs/Web/API/URL/URL"><c>URL()</c></a>
-    /// constructor for building the corresponding URL. Examples:
+    /// constructor for building the corresponding URL. Unset by default. Examples:
     /// </para>
     /// <list type="bullet">
     /// <item><description>
@@ -135,7 +135,7 @@ public class BrowserTypeLaunchPersistentContextOptions
     [JsonPropertyName("baseURL")]
     public string? BaseURL { get; set; }
 
-    /// <summary><para>Toggles bypassing page's Content-Security-Policy.</para></summary>
+    /// <summary><para>Toggles bypassing page's Content-Security-Policy. Defaults to <c>false</c>.</para></summary>
     [JsonPropertyName("bypassCSP")]
     public bool? BypassCSP { get; set; }
 
@@ -210,7 +210,12 @@ public class BrowserTypeLaunchPersistentContextOptions
     [JsonPropertyName("executablePath")]
     public string? ExecutablePath { get; set; }
 
-    /// <summary><para>An object containing additional HTTP headers to be sent with every request.</para></summary>
+    /// <summary>
+    /// <para>
+    /// An object containing additional HTTP headers to be sent with every request. Defaults
+    /// to none.
+    /// </para>
+    /// </summary>
     [JsonPropertyName("extraHTTPHeaders")]
     public IEnumerable<KeyValuePair<string, string>>? ExtraHTTPHeaders { get; set; }
 
@@ -316,7 +321,8 @@ public class BrowserTypeLaunchPersistentContextOptions
     /// <para>
     /// Specify user locale, for example <c>en-GB</c>, <c>de-DE</c>, etc. Locale will affect
     /// <c>navigator.language</c> value, <c>Accept-Language</c> request header value as
-    /// well as number and date formatting rules. Learn more about emulation in our <a href="https://playwright.dev/dotnet/docs/emulation#locale--timezone">emulation
+    /// well as number and date formatting rules. Defaults to the system default locale.
+    /// Learn more about emulation in our <a href="https://playwright.dev/dotnet/docs/emulation#locale--timezone">emulation
     /// guide</a>.
     /// </para>
     /// </summary>
@@ -335,7 +341,7 @@ public class BrowserTypeLaunchPersistentContextOptions
     /// <summary>
     /// <para>
     /// A list of permissions to grant to all pages in this context. See <see cref="IBrowserContext.GrantPermissionsAsync"/>
-    /// for more details.
+    /// for more details. Defaults to none.
     /// </para>
     /// </summary>
     [JsonPropertyName("permissions")]
@@ -462,8 +468,8 @@ public class BrowserTypeLaunchPersistentContextOptions
     /// If set to true, enables strict selectors mode for this context. In the strict selectors
     /// mode all operations on selectors that imply single target DOM element will throw
     /// when more than one element matches the selector. This option does not affect any
-    /// Locator APIs (Locators are always strict). See <see cref="ILocator"/> to learn more
-    /// about the strict mode.
+    /// Locator APIs (Locators are always strict). Defaults to <c>false</c>. See <see cref="ILocator"/>
+    /// to learn more about the strict mode.
     /// </para>
     /// </summary>
     [JsonPropertyName("strictSelectors")]
@@ -481,7 +487,7 @@ public class BrowserTypeLaunchPersistentContextOptions
     /// <summary>
     /// <para>
     /// Changes the timezone of the context. See <a href="https://cs.chromium.org/chromium/src/third_party/icu/source/data/misc/metaZones.txt?rcl=faee8bc70570192d82d2978a71e2a615788597d1">ICU's
-    /// metaZones.txt</a> for a list of supported timezone IDs.
+    /// metaZones.txt</a> for a list of supported timezone IDs. Defaults to the system timezone.
     /// </para>
     /// </summary>
     [JsonPropertyName("timezoneId")]
