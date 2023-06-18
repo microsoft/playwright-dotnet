@@ -29,6 +29,7 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
@@ -462,6 +463,7 @@ internal class Connection : IDisposable
         }
     }
 
+    [MethodImpl(MethodImplOptions.NoInlining)]
     internal async Task<T> WrapApiCallAsync<T>(Func<Task<T>> action, bool isInternal = false)
     {
         EnsureApiZoneExists();
@@ -536,6 +538,7 @@ internal class Connection : IDisposable
             namespaceName.StartsWith("Microsoft.Playwright.Helpers", StringComparison.InvariantCultureIgnoreCase));
     }
 
+    [MethodImpl(MethodImplOptions.NoInlining)] // This method is also a stacktrace marker.
     internal async Task WrapApiBoundaryAsync(Func<Task> action)
     {
         EnsureApiZoneExists();
