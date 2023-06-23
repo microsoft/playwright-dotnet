@@ -5,7 +5,7 @@ namespace Microsoft.Playwright.Tests;
 
 public class ConventionTests
 {
-    // To ensure that public method are not inlined by the nwe PGO guided tiered JIT,
+    // To ensure that public method are not inlined by the new tiered PGO JIT mode,
     // we need to mark them with [MethodImpl(MethodImplOptions.NoInlining)]
     [Test]
     public void EnsurePublicMethodsAreNotInlined()
