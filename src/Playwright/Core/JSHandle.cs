@@ -23,6 +23,7 @@
  */
 
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 using System.Text.Json;
 using System.Threading.Tasks;
 using Microsoft.Playwright.Transport;
@@ -47,27 +48,34 @@ internal class JSHandle : ChannelOwnerBase, IChannelOwner<JSHandle>, IJSHandle
 
     internal string Preview { get; set; }
 
+    [MethodImpl(MethodImplOptions.NoInlining)]
     public IElementHandle AsElement() => this as IElementHandle;
 
+    [MethodImpl(MethodImplOptions.NoInlining)]
     public async Task<JsonElement?> EvaluateAsync(string expression, object arg = null)
         => ScriptsHelper.ParseEvaluateResult<JsonElement?>(await _channel.EvaluateExpressionAsync(
             script: expression,
             arg: ScriptsHelper.SerializedArgument(arg)).ConfigureAwait(false));
 
+    [MethodImpl(MethodImplOptions.NoInlining)]
     public async Task<IJSHandle> EvaluateHandleAsync(string expression, object arg = null)
         => (await _channel.EvaluateExpressionHandleAsync(
             script: expression,
             arg: ScriptsHelper.SerializedArgument(arg)).ConfigureAwait(false))?.Object;
 
+    [MethodImpl(MethodImplOptions.NoInlining)]
     public async Task<T> EvaluateAsync<T>(string expression, object arg = null)
         => ScriptsHelper.ParseEvaluateResult<T>(await _channel.EvaluateExpressionAsync(
             script: expression,
             arg: ScriptsHelper.SerializedArgument(arg)).ConfigureAwait(false));
 
+    [MethodImpl(MethodImplOptions.NoInlining)]
     public async Task<T> JsonValueAsync<T>() => ScriptsHelper.ParseEvaluateResult<T>(await _channel.JsonValueAsync().ConfigureAwait(false));
 
+    [MethodImpl(MethodImplOptions.NoInlining)]
     public async Task<IJSHandle> GetPropertyAsync(string propertyName) => (await _channel.GetPropertyAsync(propertyName).ConfigureAwait(false))?.Object;
 
+    [MethodImpl(MethodImplOptions.NoInlining)]
     public async Task<Dictionary<string, IJSHandle>> GetPropertiesAsync()
     {
         var result = new Dictionary<string, IJSHandle>();

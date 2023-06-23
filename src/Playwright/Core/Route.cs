@@ -27,6 +27,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text.Json;
 using System.Threading.Tasks;
 using Microsoft.Playwright.Helpers;
@@ -59,6 +60,7 @@ internal class Route : ChannelOwnerBase, IChannelOwner<Route>, IRoute
 
     IChannel<Route> IChannelOwner<Route>.Channel => _channel;
 
+    [MethodImpl(MethodImplOptions.NoInlining)]
     public async Task FulfillAsync(RouteFulfillOptions options = default)
     {
         CheckNotHandled();
@@ -77,6 +79,7 @@ internal class Route : ChannelOwnerBase, IChannelOwner<Route>, IRoute
         ReportHandled(true);
     }
 
+    [MethodImpl(MethodImplOptions.NoInlining)]
     public async Task AbortAsync(string errorCode = RequestAbortErrorCode.Failed)
     {
         CheckNotHandled();
@@ -84,6 +87,7 @@ internal class Route : ChannelOwnerBase, IChannelOwner<Route>, IRoute
         ReportHandled(true);
     }
 
+    [MethodImpl(MethodImplOptions.NoInlining)]
     public async Task ContinueAsync(RouteContinueOptions options = default)
     {
         CheckNotHandled();
@@ -217,6 +221,7 @@ internal class Route : ChannelOwnerBase, IChannelOwner<Route>, IRoute
         };
     }
 
+    [MethodImpl(MethodImplOptions.NoInlining)]
     public Task FallbackAsync(RouteFallbackOptions options = null)
     {
         CheckNotHandled();
@@ -253,6 +258,7 @@ internal class Route : ChannelOwnerBase, IChannelOwner<Route>, IRoute
         chain.SetResult(handled);
     }
 
+    [MethodImpl(MethodImplOptions.NoInlining)]
     public Task<IAPIResponse> FetchAsync(RouteFetchOptions options)
         => _request._context.Channel.Connection.WrapApiCallAsync(
             () =>

@@ -22,6 +22,7 @@
  * SOFTWARE.
  */
 
+using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using Microsoft.Playwright.Transport;
 using Microsoft.Playwright.Transport.Channels;
@@ -45,6 +46,7 @@ internal class Tracing : ChannelOwnerBase, IChannelOwner<Tracing>, ITracing
 
     IChannel<Tracing> IChannelOwner<Tracing>.Channel => _channel;
 
+    [MethodImpl(MethodImplOptions.NoInlining)]
     public async Task StartAsync(TracingStartOptions options = default)
     {
         _includeSources = options?.Sources == true;
@@ -61,6 +63,7 @@ internal class Tracing : ChannelOwnerBase, IChannelOwner<Tracing>, ITracing
         await StartCollectingStacksAsync(traceName).ConfigureAwait(false);
     }
 
+    [MethodImpl(MethodImplOptions.NoInlining)]
     public async Task StartChunkAsync(TracingStartChunkOptions options = default)
     {
         var traceName = await _channel.StartChunkAsync(title: options?.Title, name: options?.Name).ConfigureAwait(false);
@@ -77,8 +80,10 @@ internal class Tracing : ChannelOwnerBase, IChannelOwner<Tracing>, ITracing
         _stacksId = await _channel.Connection.LocalUtils.TracingStartedAsync(tracesDir: _tracesDir, traceName: traceName).ConfigureAwait(false);
     }
 
+    [MethodImpl(MethodImplOptions.NoInlining)]
     public Task StopChunkAsync(TracingStopChunkOptions options = default) => DoStopChunkAsync(filePath: options?.Path);
 
+    [MethodImpl(MethodImplOptions.NoInlining)]
     public async Task StopAsync(TracingStopOptions options = default)
     {
         await _channel.Connection.WrapApiCallAsync(async () =>

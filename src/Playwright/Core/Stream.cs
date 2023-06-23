@@ -24,6 +24,7 @@
 
 using System;
 using System.IO;
+using System.Runtime.CompilerServices;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Playwright.Transport;
@@ -46,10 +47,12 @@ internal class Stream : ChannelOwnerBase, IChannelOwner<Stream>, IAsyncDisposabl
 
     public StreamImpl StreamImpl => new(this);
 
+    [MethodImpl(MethodImplOptions.NoInlining)]
     public Task<byte[]> ReadAsync(int size) => Channel.ReadAsync(size);
 
     public ValueTask DisposeAsync() => new ValueTask(CloseAsync());
 
+    [MethodImpl(MethodImplOptions.NoInlining)]
     public Task CloseAsync() => Channel.CloseAsync();
 }
 

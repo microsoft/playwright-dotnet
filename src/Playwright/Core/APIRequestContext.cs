@@ -26,6 +26,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text.Json;
 using System.Threading.Tasks;
 using Microsoft.Playwright.Helpers;
@@ -54,6 +55,7 @@ internal class APIRequestContext : ChannelOwnerBase, IChannelOwner<APIRequestCon
 
     public ValueTask DisposeAsync() => new(_channel.DisposeAsync());
 
+    [MethodImpl(MethodImplOptions.NoInlining)]
     public Task<IAPIResponse> FetchAsync(IRequest request, APIRequestContextOptions options = null)
         => InnerFetchAsync(request, null, options);
 
@@ -76,6 +78,7 @@ internal class APIRequestContext : ChannelOwnerBase, IChannelOwner<APIRequestCon
         return await FetchAsync(urlOverride ?? request.Url, options).ConfigureAwait(false);
     }
 
+    [MethodImpl(MethodImplOptions.NoInlining)]
     public async Task<IAPIResponse> FetchAsync(string url, APIRequestContextOptions options = null)
     {
         options ??= new APIRequestContextOptions();
@@ -146,16 +149,22 @@ internal class APIRequestContext : ChannelOwnerBase, IChannelOwner<APIRequestCon
         return contentType.Value.Contains("application/json");
     }
 
+    [MethodImpl(MethodImplOptions.NoInlining)]
     public Task<IAPIResponse> DeleteAsync(string url, APIRequestContextOptions options = null) => FetchAsync(url, WithMethod(options, "DELETE"));
 
+    [MethodImpl(MethodImplOptions.NoInlining)]
     public Task<IAPIResponse> GetAsync(string url, APIRequestContextOptions options = null) => FetchAsync(url, WithMethod(options, "GET"));
 
+    [MethodImpl(MethodImplOptions.NoInlining)]
     public Task<IAPIResponse> HeadAsync(string url, APIRequestContextOptions options = null) => FetchAsync(url, WithMethod(options, "HEAD"));
 
+    [MethodImpl(MethodImplOptions.NoInlining)]
     public Task<IAPIResponse> PatchAsync(string url, APIRequestContextOptions options = null) => FetchAsync(url, WithMethod(options, "PATCH"));
 
+    [MethodImpl(MethodImplOptions.NoInlining)]
     public Task<IAPIResponse> PostAsync(string url, APIRequestContextOptions options = null) => FetchAsync(url, WithMethod(options, "POST"));
 
+    [MethodImpl(MethodImplOptions.NoInlining)]
     public Task<IAPIResponse> PutAsync(string url, APIRequestContextOptions options = null) => FetchAsync(url, WithMethod(options, "PUT"));
 
     private APIRequestContextOptions WithMethod(APIRequestContextOptions options, string method)
@@ -165,6 +174,7 @@ internal class APIRequestContext : ChannelOwnerBase, IChannelOwner<APIRequestCon
         return options;
     }
 
+    [MethodImpl(MethodImplOptions.NoInlining)]
     public async Task<string> StorageStateAsync(APIRequestContextStorageStateOptions options = null)
     {
         string state = JsonSerializer.Serialize(

@@ -23,6 +23,7 @@
  */
 
 using System;
+using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using Microsoft.Playwright.Helpers;
 using Microsoft.Playwright.Transport;
@@ -72,12 +73,14 @@ internal class Worker : ChannelOwnerBase, IChannelOwner<Worker>, IWorker
 
     internal TaskCompletionSource<bool> ClosedTcs { get; } = new();
 
+    [MethodImpl(MethodImplOptions.NoInlining)]
     public async Task<T> EvaluateAsync<T>(string expression, object arg = null)
         => ScriptsHelper.ParseEvaluateResult<T>(await _channel.EvaluateExpressionAsync(
             expression,
             null,
             ScriptsHelper.SerializedArgument(arg)).ConfigureAwait(false));
 
+    [MethodImpl(MethodImplOptions.NoInlining)]
     public async Task<IJSHandle> EvaluateHandleAsync(string expression, object arg = null)
         => await _channel.EvaluateExpressionHandleAsync(
             expression,
@@ -85,6 +88,7 @@ internal class Worker : ChannelOwnerBase, IChannelOwner<Worker>, IWorker
             ScriptsHelper.SerializedArgument(arg))
         .ConfigureAwait(false);
 
+    [MethodImpl(MethodImplOptions.NoInlining)]
     public async Task<IWorker> WaitForCloseAsync(Func<Task> action = default, float? timeout = default)
     {
         using var waiter = new Waiter(this, "worker.WaitForCloseAsync");

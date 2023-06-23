@@ -23,6 +23,7 @@
  */
 
 using System;
+using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using Microsoft.Playwright.Transport;
 using Microsoft.Playwright.Transport.Channels;
@@ -51,7 +52,9 @@ internal class JsonPipe : ChannelOwnerBase, IChannelOwner<JsonPipe>
 
     IChannel<JsonPipe> IChannelOwner<JsonPipe>.Channel => _channel;
 
+    [MethodImpl(MethodImplOptions.NoInlining)]
     public Task CloseAsync() => _channel.CloseAsync();
 
+    [MethodImpl(MethodImplOptions.NoInlining)]
     public Task SendAsync(object message) => _channel.SendAsync(message);
 }

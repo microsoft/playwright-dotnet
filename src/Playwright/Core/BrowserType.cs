@@ -25,6 +25,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text.Json;
 using System.Threading.Tasks;
 using Microsoft.Playwright.Helpers;
@@ -55,6 +56,7 @@ internal class BrowserType : ChannelOwnerBase, IChannelOwner<BrowserType>, IBrow
 
     public string Name => _initializer.Name;
 
+    [MethodImpl(MethodImplOptions.NoInlining)]
     public async Task<IBrowser> LaunchAsync(BrowserTypeLaunchOptions options = default)
     {
         options ??= new BrowserTypeLaunchOptions();
@@ -81,6 +83,7 @@ internal class BrowserType : ChannelOwnerBase, IChannelOwner<BrowserType>, IBrow
         return browser;
     }
 
+    [MethodImpl(MethodImplOptions.NoInlining)]
     public async Task<IBrowserContext> LaunchPersistentContextAsync(string userDataDir, BrowserTypeLaunchPersistentContextOptions options = default)
     {
         options ??= new BrowserTypeLaunchPersistentContextOptions();
@@ -154,6 +157,7 @@ internal class BrowserType : ChannelOwnerBase, IChannelOwner<BrowserType>, IBrow
         return context;
     }
 
+    [MethodImpl(MethodImplOptions.NoInlining)]
     public async Task<IBrowser> ConnectAsync(string wsEndpoint, BrowserTypeConnectOptions options = null)
     {
         options ??= new BrowserTypeConnectOptions();
@@ -241,6 +245,7 @@ internal class BrowserType : ChannelOwnerBase, IChannelOwner<BrowserType>, IBrow
         return await task.WithTimeout(timeout, _ => throw new TimeoutException($"BrowserType.ConnectAsync: Timeout {options.Timeout}ms exceeded")).ConfigureAwait(false);
     }
 
+    [MethodImpl(MethodImplOptions.NoInlining)]
     public async Task<IBrowser> ConnectOverCDPAsync(string endpointURL, BrowserTypeConnectOverCDPOptions options = null)
     {
         if (Name != "chromium")
