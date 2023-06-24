@@ -1,5 +1,6 @@
+using System.Globalization;
 using System.Reflection;
-using System.Runtime.CompilerServices;
+using System.Text;
 
 namespace Microsoft.Playwright.Tests;
 
@@ -16,6 +17,8 @@ public class ConventionTests
             .Where(t => t.IsClass && !t.IsAbstract)
             .Where(t => t.BaseType != null && t.BaseType.Name == "ChannelOwnerBase");
 
+        var failedAssertions = new StringBuilder();
+
         foreach (var type in types)
         {
             var methods = type
@@ -25,8 +28,16 @@ public class ConventionTests
 
             foreach (var method in methods)
             {
-                Assert.True(method.MethodImplementationFlags.HasFlag(MethodImplAttributes.NoInlining), $"{type.Name}.{method.Name} is not marked with [MethodImpl(MethodImplOptions.NoInlining)]");
+                if (!method.MethodImplementationFlags.HasFlag(MethodImplAttributes.NoInlining))
+                {
+                    failedAssertions.AppendLine(CultureInfo.InvariantCulture, $"{type.Name}.{method.Name} is not marked with [MethodImpl(MethodImplOptions.NoInlining)]");
+                }
             }
+        }
+
+        if (failedAssertions.Length > 0)
+        {
+            throw new AssertionException(failedAssertions.ToString());
         }
     }
 }
