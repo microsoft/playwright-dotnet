@@ -24,7 +24,7 @@ public class ConventionTests
             var methods = type
                 .GetMethods(BindingFlags.Public | BindingFlags.Instance | BindingFlags.DeclaredOnly)
                 .Where(m => !m.IsSpecialName)
-                .Where(m => m.Name != "Dispose" && m.Name != "DisposeAsync" && m.Name != "ToString");
+                .Where(m => m.Name != "Dispose" && m.Name != "ToString");
 
             foreach (var method in methods)
             {

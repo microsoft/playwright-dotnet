@@ -53,6 +53,7 @@ internal class APIRequestContext : ChannelOwnerBase, IChannelOwner<APIRequestCon
 
     IChannel<APIRequestContext> IChannelOwner<APIRequestContext>.Channel => _channel;
 
+    [MethodImpl(MethodImplOptions.NoInlining)]
     public ValueTask DisposeAsync() => new(_channel.DisposeAsync());
 
     [MethodImpl(MethodImplOptions.NoInlining)]

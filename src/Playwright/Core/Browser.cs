@@ -185,6 +185,7 @@ internal class Browser : ChannelOwnerBase, IChannelOwner<Browser>, IBrowser
         }).ConfigureAwait(false);
     }
 
+    [MethodImpl(MethodImplOptions.NoInlining)]
     public ValueTask DisposeAsync() => new ValueTask(CloseAsync());
 
     internal static Dictionary<string, object> GetVideoArgs(string recordVideoDir, RecordVideoSize recordVideoSize)

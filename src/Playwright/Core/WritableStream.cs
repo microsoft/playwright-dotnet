@@ -50,6 +50,7 @@ internal class WritableStream : ChannelOwnerBase, IChannelOwner<WritableStream>,
     [MethodImpl(MethodImplOptions.NoInlining)]
     public Task WriteAsync(string binary) => Channel.WriteAsync(binary);
 
+    [MethodImpl(MethodImplOptions.NoInlining)]
     public ValueTask DisposeAsync() => new ValueTask(CloseAsync());
 
     [MethodImpl(MethodImplOptions.NoInlining)]

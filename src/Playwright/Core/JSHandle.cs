@@ -89,6 +89,7 @@ internal class JSHandle : ChannelOwnerBase, IChannelOwner<JSHandle>, IJSHandle
         return result;
     }
 
+    [MethodImpl(MethodImplOptions.NoInlining)]
     public async ValueTask DisposeAsync() => await _channel.DisposeAsync().ConfigureAwait(false);
 
     public override string ToString() => Preview;

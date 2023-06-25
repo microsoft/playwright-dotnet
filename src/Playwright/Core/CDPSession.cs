@@ -79,6 +79,7 @@ internal class CDPSession : ChannelOwnerBase, ICDPSession, IChannelOwner<CDPSess
         }
     }
 
+    [MethodImpl(MethodImplOptions.NoInlining)]
     public async ValueTask DisposeAsync()
     {
         await DetachAsync().ConfigureAwait(false);

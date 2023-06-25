@@ -483,6 +483,7 @@ internal class BrowserContext : ChannelOwnerBase, IChannelOwner<BrowserContext>,
     public Task<IConsoleMessage> RunAndWaitForConsoleMessageAsync(Func<Task> action, BrowserContextRunAndWaitForConsoleMessageOptions options = default)
         => InnerWaitForEventAsync(PageEvent.Console, action, options?.Predicate, options?.Timeout);
 
+    [MethodImpl(MethodImplOptions.NoInlining)]
     public ValueTask DisposeAsync() => new(CloseAsync());
 
     [MethodImpl(MethodImplOptions.NoInlining)]

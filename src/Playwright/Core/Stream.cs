@@ -50,6 +50,7 @@ internal class Stream : ChannelOwnerBase, IChannelOwner<Stream>, IAsyncDisposabl
     [MethodImpl(MethodImplOptions.NoInlining)]
     public Task<byte[]> ReadAsync(int size) => Channel.ReadAsync(size);
 
+    [MethodImpl(MethodImplOptions.NoInlining)]
     public ValueTask DisposeAsync() => new ValueTask(CloseAsync());
 
     [MethodImpl(MethodImplOptions.NoInlining)]
