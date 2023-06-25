@@ -52,6 +52,9 @@ public class Program
         var playwrightStartInfo = new ProcessStartInfo(pwPath, allArgs)
         {
             UseShellExecute = false,
+            // This works after net8.0-preview-4
+            // https://github.com/dotnet/runtime/pull/82662
+            WindowStyle = ProcessWindowStyle.Hidden,
         };
         foreach (var pair in Driver.GetEnvironmentVariables())
         {
