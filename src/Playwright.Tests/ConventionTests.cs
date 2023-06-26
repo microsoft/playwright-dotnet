@@ -8,6 +8,7 @@ public class ConventionTests
 {
     // To ensure that public method are not inlined by the new tiered PGO JIT mode,
     // we need to mark them with [MethodImpl(MethodImplOptions.NoInlining)]
+    // See https://github.com/microsoft/playwright-dotnet/issues/2617
     [Test]
     public void EnsurePublicMethodsAreNotInlined()
     {
