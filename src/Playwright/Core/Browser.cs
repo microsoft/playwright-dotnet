@@ -24,6 +24,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using Microsoft.Playwright.Transport;
 using Microsoft.Playwright.Transport.Channels;
@@ -64,6 +65,7 @@ internal class Browser : ChannelOwnerBase, IChannelOwner<Browser>, IBrowser
 
     public IBrowserType BrowserType => _browserType;
 
+    [MethodImpl(MethodImplOptions.NoInlining)]
     public async Task CloseAsync()
     {
         try
@@ -84,6 +86,7 @@ internal class Browser : ChannelOwnerBase, IChannelOwner<Browser>, IBrowser
         }
     }
 
+    [MethodImpl(MethodImplOptions.NoInlining)]
     public async Task<IBrowserContext> NewContextAsync(BrowserNewContextOptions options = default)
     {
         options ??= new();
@@ -126,6 +129,7 @@ internal class Browser : ChannelOwnerBase, IChannelOwner<Browser>, IBrowser
         return context;
     }
 
+    [MethodImpl(MethodImplOptions.NoInlining)]
     public async Task<IPage> NewPageAsync(BrowserNewPageOptions options = default)
     {
         options ??= new();
@@ -181,6 +185,7 @@ internal class Browser : ChannelOwnerBase, IChannelOwner<Browser>, IBrowser
         }).ConfigureAwait(false);
     }
 
+    [MethodImpl(MethodImplOptions.NoInlining)]
     public ValueTask DisposeAsync() => new ValueTask(CloseAsync());
 
     internal static Dictionary<string, object> GetVideoArgs(string recordVideoDir, RecordVideoSize recordVideoSize)
@@ -215,6 +220,7 @@ internal class Browser : ChannelOwnerBase, IChannelOwner<Browser>, IBrowser
         _closedTcs.TrySetResult(true);
     }
 
+    [MethodImpl(MethodImplOptions.NoInlining)]
     public async Task<ICDPSession> NewBrowserCDPSessionAsync()
         => (await Channel.NewBrowserCDPSessionAsync().ConfigureAwait(false)).Object;
 }

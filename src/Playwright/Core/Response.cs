@@ -24,6 +24,7 @@
 
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
@@ -71,11 +72,14 @@ internal class Response : ChannelOwnerBase, IChannelOwner<Response>, IResponse
 
     IChannel<Response> IChannelOwner<Response>.Channel => _channel;
 
+    [MethodImpl(MethodImplOptions.NoInlining)]
     public async Task<Dictionary<string, string>> AllHeadersAsync()
         => (await GetRawHeadersAsync().ConfigureAwait(false)).Headers;
 
+    [MethodImpl(MethodImplOptions.NoInlining)]
     public Task<byte[]> BodyAsync() => _channel.GetBodyAsync();
 
+    [MethodImpl(MethodImplOptions.NoInlining)]
     public async Task<string> FinishedAsync()
     {
         var targetClosedTask = _initializer.Request.TargetClosedAsync();
@@ -86,28 +90,36 @@ internal class Response : ChannelOwnerBase, IChannelOwner<Response>, IResponse
         return await _finishedTask.Task.ConfigureAwait(false);
     }
 
+    [MethodImpl(MethodImplOptions.NoInlining)]
     public async Task<IReadOnlyList<Header>> HeadersArrayAsync()
         => (await GetRawHeadersAsync().ConfigureAwait(false)).HeadersArray;
 
+    [MethodImpl(MethodImplOptions.NoInlining)]
     public async Task<string> HeaderValueAsync(string name)
         => (await GetRawHeadersAsync().ConfigureAwait(false)).Get(name);
 
+    [MethodImpl(MethodImplOptions.NoInlining)]
     public async Task<IReadOnlyList<string>> HeaderValuesAsync(string name)
         => (await GetRawHeadersAsync().ConfigureAwait(false)).GetAll(name);
 
+    [MethodImpl(MethodImplOptions.NoInlining)]
     public async Task<JsonElement?> JsonAsync()
     {
         byte[] content = await BodyAsync().ConfigureAwait(false);
         return JsonDocument.Parse(content).RootElement;
     }
 
+    [MethodImpl(MethodImplOptions.NoInlining)]
     public async Task<T> JsonAsync<T>()
         => JsonSerializer.Deserialize<T>(await BodyAsync().ConfigureAwait(false));
 
+    [MethodImpl(MethodImplOptions.NoInlining)]
     public Task<ResponseSecurityDetailsResult> SecurityDetailsAsync() => _channel.SecurityDetailsAsync();
 
+    [MethodImpl(MethodImplOptions.NoInlining)]
     public Task<ResponseServerAddrResult> ServerAddrAsync() => _channel.ServerAddrAsync();
 
+    [MethodImpl(MethodImplOptions.NoInlining)]
     public async Task<string> TextAsync()
     {
         byte[] content = await BodyAsync().ConfigureAwait(false);

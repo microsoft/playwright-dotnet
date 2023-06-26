@@ -28,6 +28,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text.Json;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
@@ -115,26 +116,34 @@ internal class Frame : ChannelOwnerBase, IChannelOwner<Frame>, IFrame
 
     public bool IsDetached { get; internal set; }
 
+    [MethodImpl(MethodImplOptions.NoInlining)]
     public async Task<IElementHandle> FrameElementAsync()
         => (await _channel.FrameElementAsync().ConfigureAwait(false)).Object;
 
+    [MethodImpl(MethodImplOptions.NoInlining)]
     public IFrameLocator FrameLocator(string selector)
         => new FrameLocator(this, selector);
 
+    [MethodImpl(MethodImplOptions.NoInlining)]
     public Task<string> TitleAsync() => _channel.TitleAsync();
 
+    [MethodImpl(MethodImplOptions.NoInlining)]
     public Task WaitForTimeoutAsync(float timeout)
         => _channel.WaitForTimeoutAsync(timeout);
 
+    [MethodImpl(MethodImplOptions.NoInlining)]
     public Task<IReadOnlyList<string>> SelectOptionAsync(string selector, string values, FrameSelectOptionOptions options = default)
         => SelectOptionAsync(selector, new[] { values }, options);
 
+    [MethodImpl(MethodImplOptions.NoInlining)]
     public Task<IReadOnlyList<string>> SelectOptionAsync(string selector, IEnumerable<string> values, FrameSelectOptionOptions options = default)
         => SelectOptionAsync(selector, values.Select(valueOrLabel => new SelectOptionValueProtocol() { ValueOrLabel = valueOrLabel }), options);
 
+    [MethodImpl(MethodImplOptions.NoInlining)]
     public Task<IReadOnlyList<string>> SelectOptionAsync(string selector, IElementHandle values, FrameSelectOptionOptions options = default)
         => SelectOptionAsync(selector, new[] { values }, options);
 
+    [MethodImpl(MethodImplOptions.NoInlining)]
     public async Task<IReadOnlyList<string>> SelectOptionAsync(string selector, IEnumerable<IElementHandle> values, FrameSelectOptionOptions options = default)
         => (await _channel.SelectOptionAsync(
             selector,
@@ -144,9 +153,11 @@ internal class Frame : ChannelOwnerBase, IChannelOwner<Frame>, IFrame
             force: options?.Force,
             timeout: options?.Timeout).ConfigureAwait(false)).ToList().AsReadOnly();
 
+    [MethodImpl(MethodImplOptions.NoInlining)]
     public Task<IReadOnlyList<string>> SelectOptionAsync(string selector, SelectOptionValue values, FrameSelectOptionOptions options = default)
         => SelectOptionAsync(selector, new[] { values }, options);
 
+    [MethodImpl(MethodImplOptions.NoInlining)]
     public Task<IReadOnlyList<string>> SelectOptionAsync(string selector, IEnumerable<SelectOptionValue> values, FrameSelectOptionOptions options = default)
         => SelectOptionAsync(selector, values.Select(value => SelectOptionValueProtocol.From(value)), options);
 
@@ -159,6 +170,7 @@ internal class Frame : ChannelOwnerBase, IChannelOwner<Frame>, IFrame
             force: options?.Force,
             timeout: options?.Timeout).ConfigureAwait(false)).ToList().AsReadOnly();
 
+    [MethodImpl(MethodImplOptions.NoInlining)]
     public async Task WaitForLoadStateAsync(LoadState? state = default, FrameWaitForLoadStateOptions options = default)
     {
         Waiter waiter = null;
@@ -198,6 +210,7 @@ internal class Frame : ChannelOwnerBase, IChannelOwner<Frame>, IFrame
         }
     }
 
+    [MethodImpl(MethodImplOptions.NoInlining)]
     public Task<IResponse> WaitForNavigationAsync(FrameWaitForNavigationOptions options = default)
     {
         return RunAndWaitForNavigationAsync(null, new()
@@ -211,6 +224,7 @@ internal class Frame : ChannelOwnerBase, IChannelOwner<Frame>, IFrame
         });
     }
 
+    [MethodImpl(MethodImplOptions.NoInlining)]
     public async Task<IResponse> RunAndWaitForNavigationAsync(Func<Task> action, FrameRunAndWaitForNavigationOptions options = default)
     {
         using var waiter = SetupNavigationWaiter("frame.WaitForNavigationAsync", options?.Timeout);
@@ -282,6 +296,7 @@ internal class Frame : ChannelOwnerBase, IChannelOwner<Frame>, IFrame
         return response;
     }
 
+    [MethodImpl(MethodImplOptions.NoInlining)]
     public Task TapAsync(string selector, FrameTapOptions options = default)
         => _channel.TapAsync(
             selector,
@@ -296,11 +311,14 @@ internal class Frame : ChannelOwnerBase, IChannelOwner<Frame>, IFrame
     internal Task<int> QueryCountAsync(string selector)
         => _channel.QueryCountAsync(selector);
 
+    [MethodImpl(MethodImplOptions.NoInlining)]
     public Task<string> ContentAsync() => _channel.ContentAsync();
 
+    [MethodImpl(MethodImplOptions.NoInlining)]
     public Task FocusAsync(string selector, FrameFocusOptions options = default)
         => _channel.FocusAsync(selector, options?.Timeout, options?.Strict);
 
+    [MethodImpl(MethodImplOptions.NoInlining)]
     public Task TypeAsync(string selector, string text, FrameTypeOptions options = default)
         => _channel.TypeAsync(
             selector,
@@ -310,18 +328,23 @@ internal class Frame : ChannelOwnerBase, IChannelOwner<Frame>, IFrame
             noWaitAfter: options?.NoWaitAfter,
             strict: options?.Strict);
 
+    [MethodImpl(MethodImplOptions.NoInlining)]
     public Task<string> GetAttributeAsync(string selector, string name, FrameGetAttributeOptions options = default)
         => _channel.GetAttributeAsync(selector, name, options?.Timeout, options?.Strict);
 
+    [MethodImpl(MethodImplOptions.NoInlining)]
     public Task<string> InnerHTMLAsync(string selector, FrameInnerHTMLOptions options = default)
         => _channel.InnerHTMLAsync(selector, options?.Timeout, options?.Strict);
 
+    [MethodImpl(MethodImplOptions.NoInlining)]
     public Task<string> InnerTextAsync(string selector, FrameInnerTextOptions options = default)
         => _channel.InnerTextAsync(selector, options?.Timeout, options?.Strict);
 
+    [MethodImpl(MethodImplOptions.NoInlining)]
     public Task<string> TextContentAsync(string selector, FrameTextContentOptions options = default)
         => _channel.TextContentAsync(selector, options?.Timeout, options?.Strict);
 
+    [MethodImpl(MethodImplOptions.NoInlining)]
     public Task HoverAsync(string selector, FrameHoverOptions options = default)
         => _channel.HoverAsync(
             selector,
@@ -333,6 +356,7 @@ internal class Frame : ChannelOwnerBase, IChannelOwner<Frame>, IFrame
             trial: options?.Trial,
             strict: options?.Strict);
 
+    [MethodImpl(MethodImplOptions.NoInlining)]
     public Task PressAsync(string selector, string key, FramePressOptions options = default)
         => _channel.PressAsync(
             selector,
@@ -342,6 +366,7 @@ internal class Frame : ChannelOwnerBase, IChannelOwner<Frame>, IFrame
             noWaitAfter: options?.NoWaitAfter,
             strict: options?.Strict);
 
+    [MethodImpl(MethodImplOptions.NoInlining)]
     public Task DispatchEventAsync(string selector, string type, object eventInit = default, FrameDispatchEventOptions options = default)
         => _channel.DispatchEventAsync(
                 selector,
@@ -350,9 +375,11 @@ internal class Frame : ChannelOwnerBase, IChannelOwner<Frame>, IFrame
                 options?.Timeout,
                 options?.Strict);
 
+    [MethodImpl(MethodImplOptions.NoInlining)]
     public Task FillAsync(string selector, string value, FrameFillOptions options = default)
         => _channel.FillAsync(selector, value, force: options?.Force, timeout: options?.Timeout, noWaitAfter: options?.NoWaitAfter, options?.Strict);
 
+    [MethodImpl(MethodImplOptions.NoInlining)]
     public async Task<IElementHandle> AddScriptTagAsync(FrameAddScriptTagOptions options = default)
     {
         var content = options?.Content;
@@ -365,6 +392,7 @@ internal class Frame : ChannelOwnerBase, IChannelOwner<Frame>, IFrame
         return (await _channel.AddScriptTagAsync(options?.Url, options?.Path, content, options?.Type).ConfigureAwait(false)).Object;
     }
 
+    [MethodImpl(MethodImplOptions.NoInlining)]
     public async Task<IElementHandle> AddStyleTagAsync(FrameAddStyleTagOptions options = default)
     {
         var content = options?.Content;
@@ -377,9 +405,11 @@ internal class Frame : ChannelOwnerBase, IChannelOwner<Frame>, IFrame
         return (await _channel.AddStyleTagAsync(options?.Url, options?.Path, content).ConfigureAwait(false)).Object;
     }
 
+    [MethodImpl(MethodImplOptions.NoInlining)]
     public Task SetInputFilesAsync(string selector, string files, FrameSetInputFilesOptions options = default)
         => SetInputFilesAsync(selector, new[] { files }, options);
 
+    [MethodImpl(MethodImplOptions.NoInlining)]
     public async Task SetInputFilesAsync(string selector, IEnumerable<string> files, FrameSetInputFilesOptions options = default)
     {
         var converted = await SetInputFilesHelpers.ConvertInputFilesAsync(files, (BrowserContext)Page.Context).ConfigureAwait(false);
@@ -393,15 +423,18 @@ internal class Frame : ChannelOwnerBase, IChannelOwner<Frame>, IFrame
         }
     }
 
+    [MethodImpl(MethodImplOptions.NoInlining)]
     public Task SetInputFilesAsync(string selector, FilePayload files, FrameSetInputFilesOptions options = default)
         => SetInputFilesAsync(selector, new[] { files }, options);
 
+    [MethodImpl(MethodImplOptions.NoInlining)]
     public async Task SetInputFilesAsync(string selector, IEnumerable<FilePayload> files, FrameSetInputFilesOptions options = default)
     {
         var converted = SetInputFilesHelpers.ConvertInputFiles(files);
         await _channel.SetInputFilesAsync(selector, converted.Files, noWaitAfter: options?.NoWaitAfter, timeout: options?.Timeout, options?.Strict).ConfigureAwait(false);
     }
 
+    [MethodImpl(MethodImplOptions.NoInlining)]
     public Task ClickAsync(string selector, FrameClickOptions options = default)
         => _channel.ClickAsync(
             selector,
@@ -416,6 +449,7 @@ internal class Frame : ChannelOwnerBase, IChannelOwner<Frame>, IFrame
             trial: options?.Trial,
             strict: options?.Strict);
 
+    [MethodImpl(MethodImplOptions.NoInlining)]
     public Task DblClickAsync(string selector, FrameDblClickOptions options = default)
         => _channel.DblClickAsync(
             selector,
@@ -429,6 +463,7 @@ internal class Frame : ChannelOwnerBase, IChannelOwner<Frame>, IFrame
             trial: options?.Trial,
             strict: options?.Strict);
 
+    [MethodImpl(MethodImplOptions.NoInlining)]
     public Task CheckAsync(string selector, FrameCheckOptions options = default)
         => _channel.CheckAsync(
             selector,
@@ -439,6 +474,7 @@ internal class Frame : ChannelOwnerBase, IChannelOwner<Frame>, IFrame
             trial: options?.Trial,
             strict: options?.Strict);
 
+    [MethodImpl(MethodImplOptions.NoInlining)]
     public Task UncheckAsync(string selector, FrameUncheckOptions options = default)
         => _channel.UncheckAsync(
             selector,
@@ -449,6 +485,7 @@ internal class Frame : ChannelOwnerBase, IChannelOwner<Frame>, IFrame
             trial: options?.Trial,
             strict: options?.Strict);
 
+    [MethodImpl(MethodImplOptions.NoInlining)]
     public Task SetCheckedAsync(string selector, bool checkedState, FrameSetCheckedOptions options = null)
         => checkedState ?
         _channel.CheckAsync(
@@ -468,18 +505,23 @@ internal class Frame : ChannelOwnerBase, IChannelOwner<Frame>, IFrame
             trial: options?.Trial,
             strict: options?.Strict);
 
+    [MethodImpl(MethodImplOptions.NoInlining)]
     public Task SetContentAsync(string html, FrameSetContentOptions options = default)
         => _channel.SetContentAsync(html, timeout: options?.Timeout, waitUntil: options?.WaitUntil);
 
+    [MethodImpl(MethodImplOptions.NoInlining)]
     public Task<string> InputValueAsync(string selector, FrameInputValueOptions options = null)
         => _channel.InputValueAsync(selector, options?.Timeout, options?.Strict);
 
+    [MethodImpl(MethodImplOptions.NoInlining)]
     public async Task<IElementHandle> QuerySelectorAsync(string selector)
         => (await _channel.QuerySelectorAsync(selector).ConfigureAwait(false))?.Object;
 
+    [MethodImpl(MethodImplOptions.NoInlining)]
     public async Task<IReadOnlyList<IElementHandle>> QuerySelectorAllAsync(string selector)
         => (await _channel.QuerySelectorAllAsync(selector).ConfigureAwait(false)).Select(c => ((ElementHandleChannel)c).Object).ToList().AsReadOnly();
 
+    [MethodImpl(MethodImplOptions.NoInlining)]
     public async Task<IJSHandle> WaitForFunctionAsync(string expression, object arg = default, FrameWaitForFunctionOptions options = default)
          => (await _channel.WaitForFunctionAsync(
             expression: expression,
@@ -487,6 +529,7 @@ internal class Frame : ChannelOwnerBase, IChannelOwner<Frame>, IFrame
             timeout: options?.Timeout,
             polling: options?.PollingInterval).ConfigureAwait(false)).Object;
 
+    [MethodImpl(MethodImplOptions.NoInlining)]
     public async Task<IElementHandle> WaitForSelectorAsync(string selector, FrameWaitForSelectorOptions options = default)
         => (await _channel.WaitForSelectorAsync(
             selector: selector,
@@ -495,21 +538,25 @@ internal class Frame : ChannelOwnerBase, IChannelOwner<Frame>, IFrame
             strict: options?.Strict,
             omitReturnValue: false).ConfigureAwait(false))?.Object;
 
+    [MethodImpl(MethodImplOptions.NoInlining)]
     public async Task<IJSHandle> EvaluateHandleAsync(string script, object args = null)
         => (await _channel.EvaluateExpressionHandleAsync(
             script,
             arg: ScriptsHelper.SerializedArgument(args)).ConfigureAwait(false))?.Object;
 
+    [MethodImpl(MethodImplOptions.NoInlining)]
     public async Task<JsonElement?> EvaluateAsync(string script, object arg = null)
         => ScriptsHelper.ParseEvaluateResult<JsonElement?>(await _channel.EvaluateExpressionAsync(
             script,
             arg: ScriptsHelper.SerializedArgument(arg)).ConfigureAwait(false));
 
+    [MethodImpl(MethodImplOptions.NoInlining)]
     public async Task<T> EvaluateAsync<T>(string script, object arg = null)
         => ScriptsHelper.ParseEvaluateResult<T>(await _channel.EvaluateExpressionAsync(
             script,
             arg: ScriptsHelper.SerializedArgument(arg)).ConfigureAwait(false));
 
+    [MethodImpl(MethodImplOptions.NoInlining)]
     public async Task<JsonElement?> EvalOnSelectorAsync(string selector, string script, object arg = null)
         => ScriptsHelper.ParseEvaluateResult<JsonElement?>(await _channel.EvalOnSelectorAsync(
             selector: selector,
@@ -517,6 +564,7 @@ internal class Frame : ChannelOwnerBase, IChannelOwner<Frame>, IFrame
             arg: ScriptsHelper.SerializedArgument(arg),
             strict: null).ConfigureAwait(false));
 
+    [MethodImpl(MethodImplOptions.NoInlining)]
     public async Task<T> EvalOnSelectorAsync<T>(string selector, string script, object arg = null)
         => ScriptsHelper.ParseEvaluateResult<T>(await _channel.EvalOnSelectorAsync(
             selector: selector,
@@ -524,6 +572,7 @@ internal class Frame : ChannelOwnerBase, IChannelOwner<Frame>, IFrame
             arg: ScriptsHelper.SerializedArgument(arg),
             strict: null).ConfigureAwait(false));
 
+    [MethodImpl(MethodImplOptions.NoInlining)]
     public async Task<T> EvalOnSelectorAsync<T>(string selector, string expression, object arg = null, FrameEvalOnSelectorOptions options = null)
         => ScriptsHelper.ParseEvaluateResult<T>(await _channel.EvalOnSelectorAsync(
             selector: selector,
@@ -531,18 +580,21 @@ internal class Frame : ChannelOwnerBase, IChannelOwner<Frame>, IFrame
             arg: ScriptsHelper.SerializedArgument(arg),
             strict: options?.Strict).ConfigureAwait(false));
 
+    [MethodImpl(MethodImplOptions.NoInlining)]
     public async Task<JsonElement?> EvalOnSelectorAllAsync(string selector, string script, object arg = null)
         => ScriptsHelper.ParseEvaluateResult<JsonElement?>(await _channel.EvalOnSelectorAllAsync(
             selector: selector,
             script,
             arg: ScriptsHelper.SerializedArgument(arg)).ConfigureAwait(false));
 
+    [MethodImpl(MethodImplOptions.NoInlining)]
     public async Task<T> EvalOnSelectorAllAsync<T>(string selector, string script, object arg = null)
         => ScriptsHelper.ParseEvaluateResult<T>(await _channel.EvalOnSelectorAllAsync(
             selector: selector,
             script,
             arg: ScriptsHelper.SerializedArgument(arg)).ConfigureAwait(false));
 
+    [MethodImpl(MethodImplOptions.NoInlining)]
     public ILocator Locator(string selector, FrameLocatorOptions options = null) =>
         new Locator(this, selector, new()
         {
@@ -556,9 +608,11 @@ internal class Frame : ChannelOwnerBase, IChannelOwner<Frame>, IFrame
             HasNotTextRegex = options?.HasNotTextRegex,
         });
 
+    [MethodImpl(MethodImplOptions.NoInlining)]
     public async Task<IElementHandle> QuerySelectorAsync(string selector, FrameQuerySelectorOptions options = null)
         => (await _channel.QuerySelectorAsync(selector, options?.Strict).ConfigureAwait(false))?.Object;
 
+    [MethodImpl(MethodImplOptions.NoInlining)]
     public async Task<IResponse> GotoAsync(string url, FrameGotoOptions options = default)
         => (await _channel.GotoAsync(
             url,
@@ -566,35 +620,45 @@ internal class Frame : ChannelOwnerBase, IChannelOwner<Frame>, IFrame
             waitUntil: options?.WaitUntil,
             referer: options?.Referer).ConfigureAwait(false))?.Object;
 
+    [MethodImpl(MethodImplOptions.NoInlining)]
     public Task<bool> IsCheckedAsync(string selector, FrameIsCheckedOptions options = default)
         => _channel.IsCheckedAsync(selector, timeout: options?.Timeout, options?.Strict);
 
+    [MethodImpl(MethodImplOptions.NoInlining)]
     public Task<bool> IsDisabledAsync(string selector, FrameIsDisabledOptions options = default)
         => _channel.IsDisabledAsync(selector, timeout: options?.Timeout, options?.Strict);
 
+    [MethodImpl(MethodImplOptions.NoInlining)]
     public Task<bool> IsEditableAsync(string selector, FrameIsEditableOptions options = default)
         => _channel.IsEditableAsync(selector, timeout: options?.Timeout, options?.Strict);
 
+    [MethodImpl(MethodImplOptions.NoInlining)]
     public Task<bool> IsEnabledAsync(string selector, FrameIsEnabledOptions options = default)
         => _channel.IsEnabledAsync(selector, timeout: options?.Timeout, options?.Strict);
 
 #pragma warning disable CS0612 // Type or member is obsolete
+    [MethodImpl(MethodImplOptions.NoInlining)]
     public Task<bool> IsHiddenAsync(string selector, FrameIsHiddenOptions options = default)
         => _channel.IsHiddenAsync(selector, timeout: options?.Timeout, options?.Strict);
 
+    [MethodImpl(MethodImplOptions.NoInlining)]
     public Task<bool> IsVisibleAsync(string selector, FrameIsVisibleOptions options = default)
         => _channel.IsVisibleAsync(selector, timeout: options?.Timeout, options?.Strict);
 #pragma warning restore CS0612 // Type or member is obsolete
 
+    [MethodImpl(MethodImplOptions.NoInlining)]
     public Task WaitForURLAsync(string url, FrameWaitForURLOptions options = default)
         => WaitForURLAsync(url, null, null, options);
 
+    [MethodImpl(MethodImplOptions.NoInlining)]
     public Task WaitForURLAsync(Regex url, FrameWaitForURLOptions options = default)
         => WaitForURLAsync(null, url, null, options);
 
+    [MethodImpl(MethodImplOptions.NoInlining)]
     public Task WaitForURLAsync(Func<string, bool> url, FrameWaitForURLOptions options = default)
         => WaitForURLAsync(null, null, url, options);
 
+    [MethodImpl(MethodImplOptions.NoInlining)]
     public Task DragAndDropAsync(string source, string target, FrameDragAndDropOptions options = null)
         => _channel.DragAndDropAsync(source, target, options?.Force, options?.NoWaitAfter, options?.Timeout, options?.Trial, options?.Strict, options?.SourcePosition, options?.TargetPosition);
 
@@ -685,42 +749,55 @@ internal class Frame : ChannelOwnerBase, IChannelOwner<Frame>, IFrame
     internal Task HighlightAsync(string selector)
         => _channel.HighlightAsync(selector);
 
+    [MethodImpl(MethodImplOptions.NoInlining)]
     public ILocator GetByAltText(string text, FrameGetByAltTextOptions options = null)
         => Locator(Core.Locator.GetByAltTextSelector(text, options?.Exact));
 
+    [MethodImpl(MethodImplOptions.NoInlining)]
     public ILocator GetByAltText(Regex text, FrameGetByAltTextOptions options = null)
         => Locator(Core.Locator.GetByAltTextSelector(text, options?.Exact));
 
+    [MethodImpl(MethodImplOptions.NoInlining)]
     public ILocator GetByLabel(string text, FrameGetByLabelOptions options = null)
         => Locator(Core.Locator.GetByLabelSelector(text, options?.Exact));
 
+    [MethodImpl(MethodImplOptions.NoInlining)]
     public ILocator GetByLabel(Regex text, FrameGetByLabelOptions options = null)
         => Locator(Core.Locator.GetByLabelSelector(text, options?.Exact));
 
+    [MethodImpl(MethodImplOptions.NoInlining)]
     public ILocator GetByPlaceholder(string text, FrameGetByPlaceholderOptions options = null)
         => Locator(Core.Locator.GetByPlaceholderSelector(text, options?.Exact));
 
+    [MethodImpl(MethodImplOptions.NoInlining)]
     public ILocator GetByPlaceholder(Regex text, FrameGetByPlaceholderOptions options = null)
         => Locator(Core.Locator.GetByPlaceholderSelector(text, options?.Exact));
 
+    [MethodImpl(MethodImplOptions.NoInlining)]
     public ILocator GetByRole(AriaRole role, FrameGetByRoleOptions options = null)
         => Locator(Core.Locator.GetByRoleSelector(role, new(options)));
 
+    [MethodImpl(MethodImplOptions.NoInlining)]
     public ILocator GetByTestId(string testId)
         => Locator(Core.Locator.GetByTestIdSelector(Core.Locator.TestIdAttributeName(), testId));
 
+    [MethodImpl(MethodImplOptions.NoInlining)]
     public ILocator GetByTestId(Regex testId)
         => Locator(Core.Locator.GetByTestIdSelector(Core.Locator.TestIdAttributeName(), testId));
 
+    [MethodImpl(MethodImplOptions.NoInlining)]
     public ILocator GetByText(string text, FrameGetByTextOptions options = null)
         => Locator(Core.Locator.GetByTextSelector(text, options?.Exact));
 
+    [MethodImpl(MethodImplOptions.NoInlining)]
     public ILocator GetByText(Regex text, FrameGetByTextOptions options = null)
         => Locator(Core.Locator.GetByTextSelector(text, options?.Exact));
 
+    [MethodImpl(MethodImplOptions.NoInlining)]
     public ILocator GetByTitle(string text, FrameGetByTitleOptions options = null)
         => Locator(Core.Locator.GetByTitleSelector(text, options?.Exact));
 
+    [MethodImpl(MethodImplOptions.NoInlining)]
     public ILocator GetByTitle(Regex text, FrameGetByTitleOptions options = null)
         => Locator(Core.Locator.GetByTitleSelector(text, options?.Exact));
 }

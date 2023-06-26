@@ -23,6 +23,7 @@
  */
 
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 using System.Text.Json;
 using System.Threading.Tasks;
 using Microsoft.Playwright.Transport;
@@ -48,8 +49,10 @@ internal class CDPSession : ChannelOwnerBase, ICDPSession, IChannelOwner<CDPSess
 
     IChannel<CDPSession> IChannelOwner<CDPSession>.Channel => _channel;
 
+    [MethodImpl(MethodImplOptions.NoInlining)]
     public Task DetachAsync() => _channel.DetachAsync();
 
+    [MethodImpl(MethodImplOptions.NoInlining)]
     public Task<JsonElement?> SendAsync(string method, Dictionary<string, object>? args = null)
         => _channel.SendAsync(method, args);
 
@@ -61,6 +64,7 @@ internal class CDPSession : ChannelOwnerBase, ICDPSession, IChannelOwner<CDPSess
         }
     }
 
+    [MethodImpl(MethodImplOptions.NoInlining)]
     public ICDPSessionEvent Event(string eventName)
     {
         if (_cdpSessionEvents.TryGetValue(eventName, out var cdpNamedEvent))
@@ -75,6 +79,7 @@ internal class CDPSession : ChannelOwnerBase, ICDPSession, IChannelOwner<CDPSess
         }
     }
 
+    [MethodImpl(MethodImplOptions.NoInlining)]
     public async ValueTask DisposeAsync()
     {
         await DetachAsync().ConfigureAwait(false);

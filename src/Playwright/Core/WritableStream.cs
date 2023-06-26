@@ -24,6 +24,7 @@
 
 using System;
 using System.IO;
+using System.Runtime.CompilerServices;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Playwright.Transport;
@@ -46,10 +47,13 @@ internal class WritableStream : ChannelOwnerBase, IChannelOwner<WritableStream>,
 
     public WritableStreamImpl WritableStreamImpl => new(this);
 
+    [MethodImpl(MethodImplOptions.NoInlining)]
     public Task WriteAsync(string binary) => Channel.WriteAsync(binary);
 
+    [MethodImpl(MethodImplOptions.NoInlining)]
     public ValueTask DisposeAsync() => new ValueTask(CloseAsync());
 
+    [MethodImpl(MethodImplOptions.NoInlining)]
     public Task CloseAsync() => Channel.CloseAsync();
 }
 

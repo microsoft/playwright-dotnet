@@ -22,6 +22,7 @@
  * SOFTWARE.
  */
 
+using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using Microsoft.Playwright.Transport;
 using Microsoft.Playwright.Transport.Channels;
@@ -54,7 +55,9 @@ internal class Dialog : ChannelOwnerBase, IChannelOwner<Dialog>, IDialog
 
     IChannel<Dialog> IChannelOwner<Dialog>.Channel => _channel;
 
+    [MethodImpl(MethodImplOptions.NoInlining)]
     public Task AcceptAsync(string promptText) => _channel.AcceptAsync(promptText ?? string.Empty);
 
+    [MethodImpl(MethodImplOptions.NoInlining)]
     public Task DismissAsync() => _channel.DismissAsync();
 }

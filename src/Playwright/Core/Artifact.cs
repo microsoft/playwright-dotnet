@@ -23,6 +23,7 @@
  */
 
 using System.IO;
+using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using Microsoft.Playwright.Transport;
 using Microsoft.Playwright.Transport.Channels;
@@ -50,6 +51,7 @@ internal class Artifact : ChannelOwnerBase, IChannelOwner<Artifact>
 
     internal string AbsolutePath { get; }
 
+    [MethodImpl(MethodImplOptions.NoInlining)]
     public async Task<string> PathAfterFinishedAsync()
     {
         if (_connection.IsRemote)
@@ -59,6 +61,7 @@ internal class Artifact : ChannelOwnerBase, IChannelOwner<Artifact>
         return await _channel.PathAfterFinishedAsync().ConfigureAwait(false);
     }
 
+    [MethodImpl(MethodImplOptions.NoInlining)]
     public async Task SaveAsAsync(string path)
     {
         if (!_connection.IsRemote)
@@ -77,6 +80,7 @@ internal class Artifact : ChannelOwnerBase, IChannelOwner<Artifact>
         }
     }
 
+    [MethodImpl(MethodImplOptions.NoInlining)]
     public async Task<System.IO.Stream> CreateReadStreamAsync()
     {
         var stream = await _channel.StreamAsync().ConfigureAwait(false);

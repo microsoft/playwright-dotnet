@@ -25,6 +25,7 @@
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using Microsoft.Playwright.Helpers;
 using Microsoft.Playwright.Transport.Channels;
@@ -91,6 +92,7 @@ internal class ChannelOwnerBase : IChannelOwner
 
     public Task WrapApiCallAsync(Func<Task> action, bool isInternal = false) => _connection.WrapApiCallAsync(action, isInternal);
 
+    [MethodImpl(MethodImplOptions.NoInlining)]
     public Task WrapApiBoundaryAsync(Func<Task> action) => _connection.WrapApiBoundaryAsync(action);
 
     internal EventHandler<T> UpdateEventHandler<T>(string eventName, EventHandler<T> handlers, EventHandler<T> handler, bool add)
