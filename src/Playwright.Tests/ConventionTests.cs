@@ -30,9 +30,11 @@ public class ConventionTests
             {
                 if (!method.MethodImplementationFlags.HasFlag(MethodImplAttributes.NoInlining))
                 {
-#pragma warning disable CA1305
-                    failedAssertions.AppendLine($"{type.Name}.{method.Name} is not marked with [MethodImpl(MethodImplOptions.NoInlining)]");
-#pragma warning restore CA1305
+                    failedAssertions.AppendLine(
+                        ((FormattableString)
+                            $"{type.Name}.{method.Name} is not marked with [MethodImpl(MethodImplOptions.NoInlining)]")
+                        .ToString(CultureInfo.InvariantCulture)
+                    );
                 }
             }
         }
