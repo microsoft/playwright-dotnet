@@ -35,7 +35,9 @@ public class ExtensionTests
         Assert.AreEqual(new Regex("foo", RegexOptions.IgnoreCase).Options.GetInlineFlags(), "i");
         Assert.AreEqual(new Regex("foo", RegexOptions.Multiline).Options.GetInlineFlags(), "m");
         Assert.AreEqual(new Regex("foo", RegexOptions.Singleline).Options.GetInlineFlags(), "s");
+        Assert.AreEqual(new Regex("foo", RegexOptions.Compiled).Options.GetInlineFlags(), "");
         Assert.AreEqual(new Regex("foo", RegexOptions.IgnoreCase | RegexOptions.Multiline | RegexOptions.Singleline).Options.GetInlineFlags(), "ism");
+        Assert.AreEqual(new Regex("foo", RegexOptions.IgnoreCase | RegexOptions.Multiline | RegexOptions.Singleline | RegexOptions.Compiled).Options.GetInlineFlags(), "ism");
         Assert.Throws<System.ArgumentException>(() =>
         {
             Assert.AreEqual(new Regex("foo", RegexOptions.IgnorePatternWhitespace).Options.GetInlineFlags(), "ism");
