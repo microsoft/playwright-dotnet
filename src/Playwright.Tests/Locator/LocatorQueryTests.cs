@@ -146,6 +146,13 @@ public class LocatorQueryTests : PageTestEx
         await Expect(Page.Locator("div", new() { HasTextRegex = new Regex("^first/\\\".*\\\"second\\\\$", RegexOptions.IgnoreCase | RegexOptions.Singleline) })).ToHaveClassAsync("test");
     }
 
+    [PlaywrightTest("locator-query.spec.ts", "should support filter by compiled regex")]
+    public async Task ShouldSupportFilterByCompiledRegex()
+    {
+        await Page.SetContentAsync("<div>Foobar</div><div>Bar</div>");
+        StringAssert.Contains(await Page.Locator("div", new() { HasTextRegex = new Regex("Foo.*", RegexOptions.Compiled) }).InnerTextAsync(), "Foobar");
+    }
+
     [PlaywrightTest("locator-query.spec.ts", "")]
     public async Task ShouldNotEncodeUnicode()
     {

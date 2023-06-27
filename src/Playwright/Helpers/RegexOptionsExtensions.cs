@@ -47,7 +47,7 @@ internal static class RegexOptionsExtensions
         {
             flags += "m";
         }
-        if ((options & ~(RegexOptions.IgnoreCase | RegexOptions.Singleline | RegexOptions.Multiline)) != 0)
+        if ((options & ~(RegexOptions.IgnoreCase | RegexOptions.Singleline | RegexOptions.Multiline | RegexOptions.Compiled)) != 0)
         {
             throw new ArgumentException("Unsupported RegularExpression flags");
         }
