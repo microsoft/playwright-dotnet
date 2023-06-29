@@ -54,31 +54,31 @@ internal class AXNode
     public string Valuetext { get; set; }
 
     [JsonPropertyName("disabled")]
-    public bool Disabled { get; set; }
+    public bool? Disabled { get; set; }
 
     [JsonPropertyName("expanded")]
-    public bool Expanded { get; set; }
+    public bool? Expanded { get; set; }
 
     [JsonPropertyName("focused")]
-    public bool Focused { get; set; }
+    public bool? Focused { get; set; }
 
     [JsonPropertyName("modal")]
-    public bool Modal { get; set; }
+    public bool? Modal { get; set; }
 
     [JsonPropertyName("multiline")]
-    public bool Multiline { get; set; }
+    public bool? Multiline { get; set; }
 
     [JsonPropertyName("multiselectable")]
-    public bool Multiselectable { get; set; }
+    public bool? Multiselectable { get; set; }
 
     [JsonPropertyName("readonly")]
-    public bool Readonly { get; set; }
+    public bool? Readonly { get; set; }
 
     [JsonPropertyName("required")]
-    public bool Required { get; set; }
+    public bool? Required { get; set; }
 
     [JsonPropertyName("selected")]
-    public bool Selected { get; set; }
+    public bool? Selected { get; set; }
 
     [JsonPropertyName("checked")]
     public string Checked { get; set; }

@@ -35,7 +35,7 @@ internal class Metadata
     public string ApiName { get; set; }
 
     [JsonPropertyName("internal")]
-    public bool Internal { get; set; }
+    public bool? Internal { get; set; }
 
     [JsonPropertyName("wallTime")]
     public int? WallTime { get; set; }
