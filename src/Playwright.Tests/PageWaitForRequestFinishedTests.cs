@@ -64,7 +64,7 @@ public class PageWaitForRequestFinishedTests : PageTestEx
     public async Task ShouldWorkWithNoTimeout()
     {
         await Page.GotoAsync(Server.EmptyPage);
-        var task = Page.WaitForRequestFinishedAsync(new() { Predicate = e => e.Url == Server.Prefix + "/digits/2.png", Timeout = 0 });
+        var task = Page.WaitForRequestFinishedAsync(new() { Predicate = e => e.Url == Server.Prefix + "/digits/2.png", Timeout = 0, });
         var (request, _) = await TaskUtils.WhenAll(
             task,
             Page.EvaluateAsync(@"() => setTimeout(() => {
@@ -82,12 +82,8 @@ public class PageWaitForRequestFinishedTests : PageTestEx
         using var cts = new CancellationTokenSource();
         await Page.GotoAsync(Server.EmptyPage);
 
-        var task = Page.WaitForRequestFinishedAsync(new()
-        {
-            Predicate = e => e.Url == Server.Prefix + "/digits/2.png",
-            Timeout = 2000,
-            CancellationToken = cts.Token
-        });
+        var task = Page.WaitForRequestFinishedAsync(
+            new() { Predicate = e => e.Url == Server.Prefix + "/digits/2.png", Timeout = 2000, }, cts.Token);
         var requestTaskPair = TaskUtils.WhenAll(
             task,
             Page.EvaluateAsync(@"() => {}")
