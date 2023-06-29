@@ -38,11 +38,11 @@ internal class ExpectedTextValue
     public string RegexFlags { get; set; }
 
     [JsonPropertyName("matchSubstring")]
-    public bool MatchSubstring { get; set; }
+    public bool? MatchSubstring { get; set; }
 
     [JsonPropertyName("ignoreCase")]
-    public bool IgnoreCase { get; set; }
+    public bool? IgnoreCase { get; set; }
 
     [JsonPropertyName("normalizeWhiteSpace")]
-    public bool NormalizeWhiteSpace { get; set; }
+    public bool? NormalizeWhiteSpace { get; set; }
 }

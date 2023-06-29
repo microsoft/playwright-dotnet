@@ -29,16 +29,16 @@ namespace Microsoft.Playwright.Transport.Protocol;
 internal class AndroidSelector
 {
     [JsonPropertyName("checkable")]
-    public bool Checkable { get; set; }
+    public bool? Checkable { get; set; }
 
     [JsonPropertyName("checked")]
-    public bool Checked { get; set; }
+    public bool? Checked { get; set; }
 
     [JsonPropertyName("clazz")]
     public string Clazz { get; set; }
 
     [JsonPropertyName("clickable")]
-    public bool Clickable { get; set; }
+    public bool? Clickable { get; set; }
 
     [JsonPropertyName("depth")]
     public int? Depth { get; set; }
@@ -47,13 +47,13 @@ internal class AndroidSelector
     public string Desc { get; set; }
 
     [JsonPropertyName("enabled")]
-    public bool Enabled { get; set; }
+    public bool? Enabled { get; set; }
 
     [JsonPropertyName("focusable")]
-    public bool Focusable { get; set; }
+    public bool? Focusable { get; set; }
 
     [JsonPropertyName("focused")]
-    public bool Focused { get; set; }
+    public bool? Focused { get; set; }
 
     [JsonPropertyName("hasChild")]
     public AndroidSelectorHasChild HasChild { get; set; }
@@ -62,7 +62,7 @@ internal class AndroidSelector
     public AndroidSelectorHasDescendant HasDescendant { get; set; }
 
     [JsonPropertyName("longClickable")]
-    public bool LongClickable { get; set; }
+    public bool? LongClickable { get; set; }
 
     [JsonPropertyName("pkg")]
     public string Pkg { get; set; }
@@ -71,10 +71,10 @@ internal class AndroidSelector
     public string Res { get; set; }
 
     [JsonPropertyName("scrollable")]
-    public bool Scrollable { get; set; }
+    public bool? Scrollable { get; set; }
 
     [JsonPropertyName("selected")]
-    public bool Selected { get; set; }
+    public bool? Selected { get; set; }
 
     [JsonPropertyName("text")]
     public string Text { get; set; }

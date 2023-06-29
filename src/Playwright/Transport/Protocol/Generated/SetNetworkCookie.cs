@@ -47,10 +47,10 @@ internal class SetNetworkCookie
     public int? Expires { get; set; }
 
     [JsonPropertyName("httpOnly")]
-    public bool HttpOnly { get; set; }
+    public bool? HttpOnly { get; set; }
 
     [JsonPropertyName("secure")]
-    public bool Secure { get; set; }
+    public bool? Secure { get; set; }
 
     [JsonPropertyName("sameSite")]
     public string SameSite { get; set; }
