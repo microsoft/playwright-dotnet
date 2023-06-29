@@ -1733,7 +1733,7 @@ public partial interface IFrame
     /// </param>
     /// <param name="options">Call options</param>
     /// <param name="cancellationToken">Cancellation token to provide cancellation of waiting for load state</param>
-    Task WaitForLoadStateAsync(LoadState? state = default, FrameWaitForLoadStateOptions? options = default, CancellationToken? cancellationToken = default);
+    Task WaitForLoadStateAsync(LoadState? state = default, FrameWaitForLoadStateOptions? options = default, CancellationToken cancellationToken = default);
 
     /// <summary>
     /// <para>
@@ -1770,7 +1770,7 @@ public partial interface IFrame
     /// <param name="options">Call options</param>
     /// <param name="cancellationToken">Cancellation token to provide cancellation of waiting for navigation</param>
     [System.Obsolete]
-    Task<IResponse?> WaitForNavigationAsync(FrameWaitForNavigationOptions? options = default, CancellationToken? cancellationToken = default);
+    Task<IResponse?> WaitForNavigationAsync(FrameWaitForNavigationOptions? options = default, CancellationToken cancellationToken = default);
 
     /// <summary>
     /// <para>
@@ -1808,7 +1808,7 @@ public partial interface IFrame
     /// <param name="options">Call options</param>
     /// <param name="cancellationToken">Cancellation token to provide cancellation of waiting for navigation</param>
     [System.Obsolete]
-    Task<IResponse?> RunAndWaitForNavigationAsync(Func<Task> action, FrameRunAndWaitForNavigationOptions? options = default, CancellationToken? cancellationToken = default);
+    Task<IResponse?> RunAndWaitForNavigationAsync(Func<Task> action, FrameRunAndWaitForNavigationOptions? options = default, CancellationToken cancellationToken = default);
 
     /// <summary>
     /// <para>
