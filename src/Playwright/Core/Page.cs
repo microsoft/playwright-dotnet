@@ -317,23 +317,23 @@ internal class Page : ChannelOwnerBase, IChannelOwner<Page>, IPage
 
     [MethodImpl(MethodImplOptions.NoInlining)]
     public Task<IConsoleMessage> WaitForConsoleMessageAsync(PageWaitForConsoleMessageOptions options = default)
-        => InnerWaitForEventAsync(PageEvent.Console, null, options?.Predicate, options?.Timeout, options?.CancellationToken ?? default);
+        => InnerWaitForEventAsync(PageEvent.Console, null, options?.Predicate, options?.Timeout, cancellationToken);
 
     [MethodImpl(MethodImplOptions.NoInlining)]
     public Task<IFileChooser> WaitForFileChooserAsync(PageWaitForFileChooserOptions options = default)
-        => InnerWaitForEventAsync(PageEvent.FileChooser, null, options?.Predicate, options?.Timeout, options?.CancellationToken ?? default);
+        => InnerWaitForEventAsync(PageEvent.FileChooser, null, options?.Predicate, options?.Timeout, cancellationToken);
 
     [MethodImpl(MethodImplOptions.NoInlining)]
     public Task<IPage> WaitForPopupAsync(PageWaitForPopupOptions options = default)
-        => InnerWaitForEventAsync(PageEvent.Popup, null, options?.Predicate, options?.Timeout, options?.CancellationToken ?? default);
+        => InnerWaitForEventAsync(PageEvent.Popup, null, options?.Predicate, options?.Timeout, cancellationToken);
 
     [MethodImpl(MethodImplOptions.NoInlining)]
     public Task<IWebSocket> WaitForWebSocketAsync(PageWaitForWebSocketOptions options = default)
-        => InnerWaitForEventAsync(PageEvent.WebSocket, null, options?.Predicate, options?.Timeout, options?.CancellationToken ?? default);
+        => InnerWaitForEventAsync(PageEvent.WebSocket, null, options?.Predicate, options?.Timeout, cancellationToken);
 
     [MethodImpl(MethodImplOptions.NoInlining)]
     public Task<IWorker> WaitForWorkerAsync(PageWaitForWorkerOptions options = default)
-        => InnerWaitForEventAsync(PageEvent.Worker, null, options?.Predicate, options?.Timeout, options?.CancellationToken ?? default);
+        => InnerWaitForEventAsync(PageEvent.Worker, null, options?.Predicate, options?.Timeout, cancellationToken);
 
     [MethodImpl(MethodImplOptions.NoInlining)]
     public Task<IResponse> WaitForNavigationAsync(PageWaitForNavigationOptions options = default)
@@ -360,88 +360,88 @@ internal class Page : ChannelOwnerBase, IChannelOwner<Page>, IPage
         });
 
     [MethodImpl(MethodImplOptions.NoInlining)]
-    public Task<IRequest> WaitForRequestAsync(string urlOrPredicate, PageWaitForRequestOptions options = default)
-        => InnerWaitForEventAsync(PageEvent.Request, null, e => Context.UrlMatches(e.Url, urlOrPredicate), options?.Timeout, options?.CancellationToken ?? default);
+    public Task<IRequest> WaitForRequestAsync(string urlOrPredicate, PageWaitForRequestOptions options = default, CancellationToken cancellationToken = default)
+        => InnerWaitForEventAsync(PageEvent.Request, null, e => Context.UrlMatches(e.Url, urlOrPredicate), options?.Timeout, cancellationToken);
 
     [MethodImpl(MethodImplOptions.NoInlining)]
-    public Task<IRequest> WaitForRequestAsync(Regex urlOrPredicate, PageWaitForRequestOptions options = default)
-        => InnerWaitForEventAsync(PageEvent.Request, null, e => urlOrPredicate.IsMatch(e.Url), options?.Timeout, options?.CancellationToken ?? default);
+    public Task<IRequest> WaitForRequestAsync(Regex urlOrPredicate, PageWaitForRequestOptions options = default, CancellationToken cancellationToken = default)
+        => InnerWaitForEventAsync(PageEvent.Request, null, e => urlOrPredicate.IsMatch(e.Url), options?.Timeout, cancellationToken);
 
     [MethodImpl(MethodImplOptions.NoInlining)]
-    public Task<IRequest> WaitForRequestAsync(Func<IRequest, bool> urlOrPredicate, PageWaitForRequestOptions options = default)
-        => InnerWaitForEventAsync(PageEvent.Request, null, e => urlOrPredicate(e), options?.Timeout, options?.CancellationToken ?? default);
+    public Task<IRequest> WaitForRequestAsync(Func<IRequest, bool> urlOrPredicate, PageWaitForRequestOptions options = default, CancellationToken cancellationToken = default)
+        => InnerWaitForEventAsync(PageEvent.Request, null, e => urlOrPredicate(e), options?.Timeout, cancellationToken);
 
     [MethodImpl(MethodImplOptions.NoInlining)]
-    public Task<IRequest> WaitForRequestFinishedAsync(PageWaitForRequestFinishedOptions options = default)
-        => InnerWaitForEventAsync(PageEvent.RequestFinished, null, options?.Predicate, options?.Timeout, options?.CancellationToken ?? default);
+    public Task<IRequest> WaitForRequestFinishedAsync(PageWaitForRequestFinishedOptions options = default, CancellationToken cancellationToken = default)
+        => InnerWaitForEventAsync(PageEvent.RequestFinished, null, options?.Predicate, options?.Timeout, cancellationToken);
 
     [MethodImpl(MethodImplOptions.NoInlining)]
-    public Task<IResponse> WaitForResponseAsync(string urlOrPredicate, PageWaitForResponseOptions options = default)
-        => InnerWaitForEventAsync(PageEvent.Response, null, e => Context.UrlMatches(e.Url, urlOrPredicate), options?.Timeout, options?.CancellationToken ?? default);
+    public Task<IResponse> WaitForResponseAsync(string urlOrPredicate, PageWaitForResponseOptions options = default, CancellationToken cancellationToken = default)
+        => InnerWaitForEventAsync(PageEvent.Response, null, e => Context.UrlMatches(e.Url, urlOrPredicate), options?.Timeout, cancellationToken);
 
     [MethodImpl(MethodImplOptions.NoInlining)]
-    public Task<IResponse> WaitForResponseAsync(Regex urlOrPredicate, PageWaitForResponseOptions options = default)
-        => InnerWaitForEventAsync(PageEvent.Response, null, e => urlOrPredicate.IsMatch(e.Url), options?.Timeout, options?.CancellationToken ?? default);
+    public Task<IResponse> WaitForResponseAsync(Regex urlOrPredicate, PageWaitForResponseOptions options = default, CancellationToken cancellationToken = default)
+        => InnerWaitForEventAsync(PageEvent.Response, null, e => urlOrPredicate.IsMatch(e.Url), options?.Timeout, cancellationToken);
 
     [MethodImpl(MethodImplOptions.NoInlining)]
-    public Task<IResponse> WaitForResponseAsync(Func<IResponse, bool> urlOrPredicate, PageWaitForResponseOptions options = default)
-        => InnerWaitForEventAsync(PageEvent.Response, null, e => urlOrPredicate(e), options?.Timeout, options?.CancellationToken ?? default);
+    public Task<IResponse> WaitForResponseAsync(Func<IResponse, bool> urlOrPredicate, PageWaitForResponseOptions options = default, CancellationToken cancellationToken = default)
+        => InnerWaitForEventAsync(PageEvent.Response, null, e => urlOrPredicate(e), options?.Timeout, cancellationToken);
 
     [MethodImpl(MethodImplOptions.NoInlining)]
-    public Task<IConsoleMessage> RunAndWaitForConsoleMessageAsync(Func<Task> action, PageRunAndWaitForConsoleMessageOptions options = default)
-        => InnerWaitForEventAsync(PageEvent.Console, action, options?.Predicate, options?.Timeout, options?.CancellationToken ?? default);
+    public Task<IConsoleMessage> RunAndWaitForConsoleMessageAsync(Func<Task> action, PageRunAndWaitForConsoleMessageOptions options = default, CancellationToken cancellationToken = default)
+        => InnerWaitForEventAsync(PageEvent.Console, action, options?.Predicate, options?.Timeout, cancellationToken);
 
     [MethodImpl(MethodImplOptions.NoInlining)]
-    public Task<IDownload> WaitForDownloadAsync(PageWaitForDownloadOptions options = default)
-        => InnerWaitForEventAsync(PageEvent.Download, null, options?.Predicate, options?.Timeout, options?.CancellationToken ?? default);
+    public Task<IDownload> WaitForDownloadAsync(PageWaitForDownloadOptions options = default, CancellationToken cancellationToken = default)
+        => InnerWaitForEventAsync(PageEvent.Download, null, options?.Predicate, options?.Timeout, cancellationToken);
 
     [MethodImpl(MethodImplOptions.NoInlining)]
-    public Task<IDownload> RunAndWaitForDownloadAsync(Func<Task> action, PageRunAndWaitForDownloadOptions options = default)
-        => InnerWaitForEventAsync(PageEvent.Download, action, options?.Predicate, options?.Timeout, options?.CancellationToken ?? default);
+    public Task<IDownload> RunAndWaitForDownloadAsync(Func<Task> action, PageRunAndWaitForDownloadOptions options = default, CancellationToken cancellationToken = default)
+        => InnerWaitForEventAsync(PageEvent.Download, action, options?.Predicate, options?.Timeout, cancellationToken);
 
     [MethodImpl(MethodImplOptions.NoInlining)]
-    public Task<IFileChooser> RunAndWaitForFileChooserAsync(Func<Task> action, PageRunAndWaitForFileChooserOptions options = default)
-        => InnerWaitForEventAsync(PageEvent.FileChooser, action, options?.Predicate, options?.Timeout, options?.CancellationToken ?? default);
+    public Task<IFileChooser> RunAndWaitForFileChooserAsync(Func<Task> action, PageRunAndWaitForFileChooserOptions options = default, CancellationToken cancellationToken = default)
+        => InnerWaitForEventAsync(PageEvent.FileChooser, action, options?.Predicate, options?.Timeout, cancellationToken);
 
     [MethodImpl(MethodImplOptions.NoInlining)]
-    public Task<IPage> RunAndWaitForPopupAsync(Func<Task> action, PageRunAndWaitForPopupOptions options = default)
-        => InnerWaitForEventAsync(PageEvent.Popup, action, options?.Predicate, options?.Timeout, options?.CancellationToken ?? default);
+    public Task<IPage> RunAndWaitForPopupAsync(Func<Task> action, PageRunAndWaitForPopupOptions options = default, CancellationToken cancellationToken = default)
+        => InnerWaitForEventAsync(PageEvent.Popup, action, options?.Predicate, options?.Timeout, cancellationToken);
 
     [MethodImpl(MethodImplOptions.NoInlining)]
-    public Task<IRequest> RunAndWaitForRequestFinishedAsync(Func<Task> action, PageRunAndWaitForRequestFinishedOptions options = default)
-        => InnerWaitForEventAsync(PageEvent.RequestFinished, action, options?.Predicate, options?.Timeout, options?.CancellationToken ?? default);
+    public Task<IRequest> RunAndWaitForRequestFinishedAsync(Func<Task> action, PageRunAndWaitForRequestFinishedOptions options = default, CancellationToken cancellationToken = default)
+        => InnerWaitForEventAsync(PageEvent.RequestFinished, action, options?.Predicate, options?.Timeout, cancellationToken);
 
     [MethodImpl(MethodImplOptions.NoInlining)]
-    public Task<IWebSocket> RunAndWaitForWebSocketAsync(Func<Task> action, PageRunAndWaitForWebSocketOptions options = default)
-        => InnerWaitForEventAsync(PageEvent.WebSocket, action, options?.Predicate, options?.Timeout, options?.CancellationToken ?? default);
+    public Task<IWebSocket> RunAndWaitForWebSocketAsync(Func<Task> action, PageRunAndWaitForWebSocketOptions options = default, CancellationToken cancellationToken = default)
+        => InnerWaitForEventAsync(PageEvent.WebSocket, action, options?.Predicate, options?.Timeout, cancellationToken);
 
     [MethodImpl(MethodImplOptions.NoInlining)]
-    public Task<IWorker> RunAndWaitForWorkerAsync(Func<Task> action, PageRunAndWaitForWorkerOptions options = default)
-        => InnerWaitForEventAsync(PageEvent.Worker, action, options?.Predicate, options?.Timeout, options?.CancellationToken ?? default);
+    public Task<IWorker> RunAndWaitForWorkerAsync(Func<Task> action, PageRunAndWaitForWorkerOptions options = default, CancellationToken cancellationToken = default)
+        => InnerWaitForEventAsync(PageEvent.Worker, action, options?.Predicate, options?.Timeout, cancellationToken);
 
     [MethodImpl(MethodImplOptions.NoInlining)]
-    public Task<IRequest> RunAndWaitForRequestAsync(Func<Task> action, string urlOrPredicate, PageRunAndWaitForRequestOptions options = default)
-        => InnerWaitForEventAsync(PageEvent.Request, action, e => Context.UrlMatches(e.Url, urlOrPredicate), options?.Timeout, options?.CancellationToken ?? default);
+    public Task<IRequest> RunAndWaitForRequestAsync(Func<Task> action, string urlOrPredicate, PageRunAndWaitForRequestOptions options = default, CancellationToken cancellationToken = default)
+        => InnerWaitForEventAsync(PageEvent.Request, action, e => Context.UrlMatches(e.Url, urlOrPredicate), options?.Timeout, cancellationToken);
 
     [MethodImpl(MethodImplOptions.NoInlining)]
-    public Task<IRequest> RunAndWaitForRequestAsync(Func<Task> action, Regex urlOrPredicate, PageRunAndWaitForRequestOptions options = default)
-        => InnerWaitForEventAsync(PageEvent.Request, action, e => urlOrPredicate.IsMatch(e.Url), options?.Timeout, options?.CancellationToken ?? default);
+    public Task<IRequest> RunAndWaitForRequestAsync(Func<Task> action, Regex urlOrPredicate, PageRunAndWaitForRequestOptions options = default, CancellationToken cancellationToken = default)
+        => InnerWaitForEventAsync(PageEvent.Request, action, e => urlOrPredicate.IsMatch(e.Url), options?.Timeout, cancellationToken);
 
     [MethodImpl(MethodImplOptions.NoInlining)]
-    public Task<IRequest> RunAndWaitForRequestAsync(Func<Task> action, Func<IRequest, bool> urlOrPredicate, PageRunAndWaitForRequestOptions options = default)
-        => InnerWaitForEventAsync(PageEvent.Request, action, e => urlOrPredicate(e), options?.Timeout, options?.CancellationToken ?? default);
+    public Task<IRequest> RunAndWaitForRequestAsync(Func<Task> action, Func<IRequest, bool> urlOrPredicate, PageRunAndWaitForRequestOptions options = default, CancellationToken cancellationToken = default)
+        => InnerWaitForEventAsync(PageEvent.Request, action, e => urlOrPredicate(e), options?.Timeout, cancellationToken);
 
     [MethodImpl(MethodImplOptions.NoInlining)]
-    public Task<IResponse> RunAndWaitForResponseAsync(Func<Task> action, string urlOrPredicate, PageRunAndWaitForResponseOptions options = default)
-        => InnerWaitForEventAsync(PageEvent.Response, action, e => Context.UrlMatches(e.Url, urlOrPredicate), options?.Timeout, options?.CancellationToken ?? default);
+    public Task<IResponse> RunAndWaitForResponseAsync(Func<Task> action, string urlOrPredicate, PageRunAndWaitForResponseOptions options = default, CancellationToken cancellationToken = default)
+        => InnerWaitForEventAsync(PageEvent.Response, action, e => Context.UrlMatches(e.Url, urlOrPredicate), options?.Timeout, cancellationToken);
 
     [MethodImpl(MethodImplOptions.NoInlining)]
-    public Task<IResponse> RunAndWaitForResponseAsync(Func<Task> action, Regex urlOrPredicate, PageRunAndWaitForResponseOptions options = default)
-        => InnerWaitForEventAsync(PageEvent.Response, action, e => urlOrPredicate.IsMatch(e.Url), options?.Timeout, options?.CancellationToken ?? default);
+    public Task<IResponse> RunAndWaitForResponseAsync(Func<Task> action, Regex urlOrPredicate, PageRunAndWaitForResponseOptions options = default, CancellationToken cancellationToken = default)
+        => InnerWaitForEventAsync(PageEvent.Response, action, e => urlOrPredicate.IsMatch(e.Url), options?.Timeout, cancellationToken);
 
     [MethodImpl(MethodImplOptions.NoInlining)]
-    public Task<IResponse> RunAndWaitForResponseAsync(Func<Task> action, Func<IResponse, bool> urlOrPredicate, PageRunAndWaitForResponseOptions options = default)
-        => InnerWaitForEventAsync(PageEvent.Response, action, e => urlOrPredicate(e), options?.Timeout, options?.CancellationToken ?? default);
+    public Task<IResponse> RunAndWaitForResponseAsync(Func<Task> action, Func<IResponse, bool> urlOrPredicate, PageRunAndWaitForResponseOptions options = default, CancellationToken cancellationToken = default)
+        => InnerWaitForEventAsync(PageEvent.Response, action, e => urlOrPredicate(e), options?.Timeout, cancellationToken);
 
     [MethodImpl(MethodImplOptions.NoInlining)]
     public Task<IJSHandle> WaitForFunctionAsync(string expression, object arg = default, PageWaitForFunctionOptions options = default)

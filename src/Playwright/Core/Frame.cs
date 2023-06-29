@@ -172,7 +172,7 @@ internal class Frame : ChannelOwnerBase, IChannelOwner<Frame>, IFrame
             timeout: options?.Timeout).ConfigureAwait(false)).ToList().AsReadOnly();
 
     [MethodImpl(MethodImplOptions.NoInlining)]
-    public async Task WaitForLoadStateAsync(LoadState? state = default, FrameWaitForLoadStateOptions options = default)
+    public async Task WaitForLoadStateAsync(LoadState? state = default, FrameWaitForLoadStateOptions options = default, CancellationToken cancellationToken = default)
     {
         Waiter waiter = null;
         WaitUntilState loadState = Microsoft.Playwright.WaitUntilState.Load;
@@ -190,7 +190,7 @@ internal class Frame : ChannelOwnerBase, IChannelOwner<Frame>, IFrame
         }
         try
         {
-            waiter = SetupNavigationWaiter("frame.WaitForLoadStateAsync", options?.Timeout, options?.CancellationToken ?? default);
+            waiter = SetupNavigationWaiter("frame.WaitForLoadStateAsync", options?.Timeout, cancellationToken);
 
             if (_loadStates.Contains(loadState))
             {
@@ -212,7 +212,7 @@ internal class Frame : ChannelOwnerBase, IChannelOwner<Frame>, IFrame
     }
 
     [MethodImpl(MethodImplOptions.NoInlining)]
-    public Task<IResponse> WaitForNavigationAsync(FrameWaitForNavigationOptions options = default)
+    public Task<IResponse> WaitForNavigationAsync(FrameWaitForNavigationOptions options = default, CancellationToken cancellationToken = default)
     {
         return RunAndWaitForNavigationAsync(null, new()
         {
@@ -226,9 +226,9 @@ internal class Frame : ChannelOwnerBase, IChannelOwner<Frame>, IFrame
     }
 
     [MethodImpl(MethodImplOptions.NoInlining)]
-    public async Task<IResponse> RunAndWaitForNavigationAsync(Func<Task> action, FrameRunAndWaitForNavigationOptions options = default)
+    public async Task<IResponse> RunAndWaitForNavigationAsync(Func<Task> action, FrameRunAndWaitForNavigationOptions options = default, CancellationToken cancellationToken = default)
     {
-        using var waiter = SetupNavigationWaiter("frame.WaitForNavigationAsync", options?.Timeout, options?.CancellationToken ?? default);
+        using var waiter = SetupNavigationWaiter("frame.WaitForNavigationAsync", options?.Timeout, cancellationToken);
         var result = WaitForNavigationInternalAsync(waiter, options?.Url, options?.UrlFunc, options?.UrlRegex, options?.UrlString, options?.WaitUntil);
 
         if (action != null)
