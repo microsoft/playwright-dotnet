@@ -2769,8 +2769,9 @@ public partial interface IPage
     /// </para>
     /// </remarks>
     /// <param name="options">Call options</param>
+    /// <param name="cancellationToken">Cancellation token to provide cancellation of waiting for navigation</param>
     [System.Obsolete]
-    Task<IResponse?> WaitForNavigationAsync(PageWaitForNavigationOptions? options = default);
+    Task<IResponse?> WaitForNavigationAsync(PageWaitForNavigationOptions? options = default, CancellationToken cancellationToken = default);
 
     /// <summary>
     /// <para>
@@ -2808,8 +2809,9 @@ public partial interface IPage
     /// </remarks>
     /// <param name="action">Action that triggers the event.</param>
     /// <param name="options">Call options</param>
+    /// <param name="cancellationToken">Cancellation token to provide cancellation of waiting for navigation</param>
     [System.Obsolete]
-    Task<IResponse?> RunAndWaitForNavigationAsync(Func<Task> action, PageRunAndWaitForNavigationOptions? options = default);
+    Task<IResponse?> RunAndWaitForNavigationAsync(Func<Task> action, PageRunAndWaitForNavigationOptions? options = default, CancellationToken cancellationToken = default);
 
     /// <summary>
     /// <para>

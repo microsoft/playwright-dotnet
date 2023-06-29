@@ -470,20 +470,20 @@ internal class BrowserContext : ChannelOwnerBase, IChannelOwner<BrowserContext>,
     }
 
     [MethodImpl(MethodImplOptions.NoInlining)]
-    public Task<IPage> WaitForPageAsync(BrowserContextWaitForPageOptions options = default)
-        => InnerWaitForEventAsync(BrowserContextEvent.Page, null, options?.Predicate, options?.Timeout, options?.CancellationToken ?? default);
+    public Task<IPage> WaitForPageAsync(BrowserContextWaitForPageOptions options = default, CancellationToken cancellationToken = default)
+        => InnerWaitForEventAsync(BrowserContextEvent.Page, null, options?.Predicate, options?.Timeout, cancellationToken);
 
     [MethodImpl(MethodImplOptions.NoInlining)]
-    public Task<IPage> RunAndWaitForPageAsync(Func<Task> action, BrowserContextRunAndWaitForPageOptions options = default)
-        => InnerWaitForEventAsync(BrowserContextEvent.Page, action, options?.Predicate, options?.Timeout, options?.CancellationToken ?? default);
+    public Task<IPage> RunAndWaitForPageAsync(Func<Task> action, BrowserContextRunAndWaitForPageOptions options = default, CancellationToken cancellationToken = default)
+        => InnerWaitForEventAsync(BrowserContextEvent.Page, action, options?.Predicate, options?.Timeout, cancellationToken);
 
     [MethodImpl(MethodImplOptions.NoInlining)]
-    public Task<IConsoleMessage> WaitForConsoleMessageAsync(BrowserContextWaitForConsoleMessageOptions options = default)
-        => InnerWaitForEventAsync(PageEvent.Console, null, options?.Predicate, options?.Timeout, options?.CancellationToken ?? default);
+    public Task<IConsoleMessage> WaitForConsoleMessageAsync(BrowserContextWaitForConsoleMessageOptions options = default, CancellationToken cancellationToken = default)
+        => InnerWaitForEventAsync(PageEvent.Console, null, options?.Predicate, options?.Timeout, cancellationToken);
 
     [MethodImpl(MethodImplOptions.NoInlining)]
-    public Task<IConsoleMessage> RunAndWaitForConsoleMessageAsync(Func<Task> action, BrowserContextRunAndWaitForConsoleMessageOptions options = default)
-        => InnerWaitForEventAsync(PageEvent.Console, action, options?.Predicate, options?.Timeout, options?.CancellationToken ?? default);
+    public Task<IConsoleMessage> RunAndWaitForConsoleMessageAsync(Func<Task> action, BrowserContextRunAndWaitForConsoleMessageOptions options = default, CancellationToken cancellationToken = default)
+        => InnerWaitForEventAsync(PageEvent.Console, action, options?.Predicate, options?.Timeout, cancellationToken);
 
     [MethodImpl(MethodImplOptions.NoInlining)]
     public ValueTask DisposeAsync() => new(CloseAsync());

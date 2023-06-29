@@ -214,15 +214,18 @@ internal class Frame : ChannelOwnerBase, IChannelOwner<Frame>, IFrame
     [MethodImpl(MethodImplOptions.NoInlining)]
     public Task<IResponse> WaitForNavigationAsync(FrameWaitForNavigationOptions options = default, CancellationToken cancellationToken = default)
     {
-        return RunAndWaitForNavigationAsync(null, new()
-        {
-            Url = options?.Url,
-            UrlString = options?.UrlString,
-            UrlRegex = options?.UrlRegex,
-            UrlFunc = options?.UrlFunc,
-            WaitUntil = options?.WaitUntil,
-            Timeout = options?.Timeout,
-        });
+        return RunAndWaitForNavigationAsync(
+            null,
+            new()
+            {
+                Url = options?.Url,
+                UrlString = options?.UrlString,
+                UrlRegex = options?.UrlRegex,
+                UrlFunc = options?.UrlFunc,
+                WaitUntil = options?.WaitUntil,
+                Timeout = options?.Timeout,
+            },
+            cancellationToken);
     }
 
     [MethodImpl(MethodImplOptions.NoInlining)]

@@ -316,48 +316,53 @@ internal class Page : ChannelOwnerBase, IChannelOwner<Page>, IPage
         => MainFrame.WaitForURLAsync(url, new() { WaitUntil = options?.WaitUntil, Timeout = options?.Timeout });
 
     [MethodImpl(MethodImplOptions.NoInlining)]
-    public Task<IConsoleMessage> WaitForConsoleMessageAsync(PageWaitForConsoleMessageOptions options = default)
+    public Task<IConsoleMessage> WaitForConsoleMessageAsync(PageWaitForConsoleMessageOptions options = default, CancellationToken cancellationToken = default)
         => InnerWaitForEventAsync(PageEvent.Console, null, options?.Predicate, options?.Timeout, cancellationToken);
 
     [MethodImpl(MethodImplOptions.NoInlining)]
-    public Task<IFileChooser> WaitForFileChooserAsync(PageWaitForFileChooserOptions options = default)
+    public Task<IFileChooser> WaitForFileChooserAsync(PageWaitForFileChooserOptions options = default, CancellationToken cancellationToken = default)
         => InnerWaitForEventAsync(PageEvent.FileChooser, null, options?.Predicate, options?.Timeout, cancellationToken);
 
     [MethodImpl(MethodImplOptions.NoInlining)]
-    public Task<IPage> WaitForPopupAsync(PageWaitForPopupOptions options = default)
+    public Task<IPage> WaitForPopupAsync(PageWaitForPopupOptions options = default, CancellationToken cancellationToken = default)
         => InnerWaitForEventAsync(PageEvent.Popup, null, options?.Predicate, options?.Timeout, cancellationToken);
 
     [MethodImpl(MethodImplOptions.NoInlining)]
-    public Task<IWebSocket> WaitForWebSocketAsync(PageWaitForWebSocketOptions options = default)
+    public Task<IWebSocket> WaitForWebSocketAsync(PageWaitForWebSocketOptions options = default, CancellationToken cancellationToken = default)
         => InnerWaitForEventAsync(PageEvent.WebSocket, null, options?.Predicate, options?.Timeout, cancellationToken);
 
     [MethodImpl(MethodImplOptions.NoInlining)]
-    public Task<IWorker> WaitForWorkerAsync(PageWaitForWorkerOptions options = default)
+    public Task<IWorker> WaitForWorkerAsync(PageWaitForWorkerOptions options = default, CancellationToken cancellationToken = default)
         => InnerWaitForEventAsync(PageEvent.Worker, null, options?.Predicate, options?.Timeout, cancellationToken);
 
     [MethodImpl(MethodImplOptions.NoInlining)]
-    public Task<IResponse> WaitForNavigationAsync(PageWaitForNavigationOptions options = default)
-        => MainFrame.WaitForNavigationAsync(new()
-        {
-            Url = options?.Url,
-            UrlString = options?.UrlString,
-            UrlRegex = options?.UrlRegex,
-            UrlFunc = options?.UrlFunc,
-            WaitUntil = options?.WaitUntil,
-            Timeout = options?.Timeout,
-        });
+    public Task<IResponse> WaitForNavigationAsync(PageWaitForNavigationOptions options = default, CancellationToken cancellationToken = default)
+        => MainFrame.WaitForNavigationAsync(
+            new()
+            {
+                Url = options?.Url,
+                UrlString = options?.UrlString,
+                UrlRegex = options?.UrlRegex,
+                UrlFunc = options?.UrlFunc,
+                WaitUntil = options?.WaitUntil,
+                Timeout = options?.Timeout,
+            },
+            cancellationToken);
 
     [MethodImpl(MethodImplOptions.NoInlining)]
-    public Task<IResponse> RunAndWaitForNavigationAsync(Func<Task> action, PageRunAndWaitForNavigationOptions options = default)
-        => MainFrame.RunAndWaitForNavigationAsync(action, new()
-        {
-            Url = options?.Url,
-            UrlString = options?.UrlString,
-            UrlRegex = options?.UrlRegex,
-            UrlFunc = options?.UrlFunc,
-            WaitUntil = options?.WaitUntil,
-            Timeout = options?.Timeout,
-        });
+    public Task<IResponse> RunAndWaitForNavigationAsync(Func<Task> action, PageRunAndWaitForNavigationOptions options = default, CancellationToken cancellationToken = default)
+        => MainFrame.RunAndWaitForNavigationAsync(
+            action,
+            new()
+            {
+                Url = options?.Url,
+                UrlString = options?.UrlString,
+                UrlRegex = options?.UrlRegex,
+                UrlFunc = options?.UrlFunc,
+                WaitUntil = options?.WaitUntil,
+                Timeout = options?.Timeout,
+            },
+            cancellationToken);
 
     [MethodImpl(MethodImplOptions.NoInlining)]
     public Task<IRequest> WaitForRequestAsync(string urlOrPredicate, PageWaitForRequestOptions options = default, CancellationToken cancellationToken = default)
