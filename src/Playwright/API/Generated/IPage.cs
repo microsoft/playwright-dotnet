@@ -25,6 +25,7 @@
 using System;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
+using System.Threading;
 using System.Threading.Tasks;
 
 #nullable enable
@@ -2583,8 +2584,9 @@ public partial interface IPage
     /// event is fired.
     /// </para>
     /// </summary>
+    /// <param name="cancellationToken = default">Cancellation token to provide cancellation of waiting for console message</param>
     /// <param name="options">Call options</param>
-    Task<IConsoleMessage> WaitForConsoleMessageAsync(PageWaitForConsoleMessageOptions? options = default);
+    Task<IConsoleMessage> WaitForConsoleMessageAsync(CancellationToken cancellationToken = default, PageWaitForConsoleMessageOptions? options = default);
 
     /// <summary>
     /// <para>
@@ -2596,8 +2598,9 @@ public partial interface IPage
     /// </para>
     /// </summary>
     /// <param name="action">Action that triggers the event.</param>
+    /// <param name="cancellationToken = default">Cancellation token to provide cancellation of waiting for console message</param>
     /// <param name="options">Call options</param>
-    Task<IConsoleMessage> RunAndWaitForConsoleMessageAsync(Func<Task> action, PageRunAndWaitForConsoleMessageOptions? options = default);
+    Task<IConsoleMessage> RunAndWaitForConsoleMessageAsync(Func<Task> action, CancellationToken cancellationToken = default, PageRunAndWaitForConsoleMessageOptions? options = default);
 
     /// <summary>
     /// <para>
@@ -2607,8 +2610,9 @@ public partial interface IPage
     /// the page is closed before the download event is fired.
     /// </para>
     /// </summary>
+    /// <param name="cancellationToken = default">Cancellation token to provide cancellation of waiting for download</param>
     /// <param name="options">Call options</param>
-    Task<IDownload> WaitForDownloadAsync(PageWaitForDownloadOptions? options = default);
+    Task<IDownload> WaitForDownloadAsync(CancellationToken cancellationToken = default, PageWaitForDownloadOptions? options = default);
 
     /// <summary>
     /// <para>
@@ -2619,8 +2623,9 @@ public partial interface IPage
     /// </para>
     /// </summary>
     /// <param name="action">Action that triggers the event.</param>
+    /// <param name="cancellationToken = default">Cancellation token to provide cancellation of waiting for download</param>
     /// <param name="options">Call options</param>
-    Task<IDownload> RunAndWaitForDownloadAsync(Func<Task> action, PageRunAndWaitForDownloadOptions? options = default);
+    Task<IDownload> RunAndWaitForDownloadAsync(Func<Task> action, CancellationToken cancellationToken = default, PageRunAndWaitForDownloadOptions? options = default);
 
     /// <summary>
     /// <para>
@@ -2630,8 +2635,9 @@ public partial interface IPage
     /// throw an error if the page is closed before the file chooser is opened.
     /// </para>
     /// </summary>
+    /// <param name="cancellationToken = default">Cancellation token to provide cancellation of waiting for file chooser</param>
     /// <param name="options">Call options</param>
-    Task<IFileChooser> WaitForFileChooserAsync(PageWaitForFileChooserOptions? options = default);
+    Task<IFileChooser> WaitForFileChooserAsync(CancellationToken cancellationToken = default, PageWaitForFileChooserOptions? options = default);
 
     /// <summary>
     /// <para>
@@ -2642,8 +2648,9 @@ public partial interface IPage
     /// </para>
     /// </summary>
     /// <param name="action">Action that triggers the event.</param>
+    /// <param name="cancellationToken = default">Cancellation token to provide cancellation of waiting for file chooser</param>
     /// <param name="options">Call options</param>
-    Task<IFileChooser> RunAndWaitForFileChooserAsync(Func<Task> action, PageRunAndWaitForFileChooserOptions? options = default);
+    Task<IFileChooser> RunAndWaitForFileChooserAsync(Func<Task> action, CancellationToken cancellationToken = default, PageRunAndWaitForFileChooserOptions? options = default);
 
     /// <summary>
     /// <para>
@@ -2812,8 +2819,9 @@ public partial interface IPage
     /// page is closed before the popup event is fired.
     /// </para>
     /// </summary>
+    /// <param name="cancellationToken = default">Cancellation token to provide cancellation of waiting for popup</param>
     /// <param name="options">Call options</param>
-    Task<IPage> WaitForPopupAsync(PageWaitForPopupOptions? options = default);
+    Task<IPage> WaitForPopupAsync(CancellationToken cancellationToken = default, PageWaitForPopupOptions? options = default);
 
     /// <summary>
     /// <para>
@@ -2824,8 +2832,9 @@ public partial interface IPage
     /// </para>
     /// </summary>
     /// <param name="action">Action that triggers the event.</param>
+    /// <param name="cancellationToken = default">Cancellation token to provide cancellation of waiting for popup</param>
     /// <param name="options">Call options</param>
-    Task<IPage> RunAndWaitForPopupAsync(Func<Task> action, PageRunAndWaitForPopupOptions? options = default);
+    Task<IPage> RunAndWaitForPopupAsync(Func<Task> action, CancellationToken cancellationToken = default, PageRunAndWaitForPopupOptions? options = default);
 
     /// <summary>
     /// <para>
@@ -2853,8 +2862,9 @@ public partial interface IPage
     /// URL is a path, it gets merged via the <a href="https://developer.mozilla.org/en-US/docs/Web/API/URL/URL"><c>new
     /// URL()</c></a> constructor.
     /// </param>
+    /// <param name="cancellationToken = default">Cancellation token to provide cancellation of waiting for request</param>
     /// <param name="options">Call options</param>
-    Task<IRequest> WaitForRequestAsync(string urlOrPredicate, PageWaitForRequestOptions? options = default);
+    Task<IRequest> WaitForRequestAsync(string urlOrPredicate, CancellationToken cancellationToken = default, PageWaitForRequestOptions? options = default);
 
     /// <summary>
     /// <para>
@@ -2882,8 +2892,9 @@ public partial interface IPage
     /// URL is a path, it gets merged via the <a href="https://developer.mozilla.org/en-US/docs/Web/API/URL/URL"><c>new
     /// URL()</c></a> constructor.
     /// </param>
+    /// <param name="cancellationToken = default">Cancellation token to provide cancellation of waiting for request</param>
     /// <param name="options">Call options</param>
-    Task<IRequest> WaitForRequestAsync(Regex urlOrPredicate, PageWaitForRequestOptions? options = default);
+    Task<IRequest> WaitForRequestAsync(Regex urlOrPredicate, CancellationToken cancellationToken = default, PageWaitForRequestOptions? options = default);
 
     /// <summary>
     /// <para>
@@ -2911,38 +2922,9 @@ public partial interface IPage
     /// URL is a path, it gets merged via the <a href="https://developer.mozilla.org/en-US/docs/Web/API/URL/URL"><c>new
     /// URL()</c></a> constructor.
     /// </param>
+    /// <param name="cancellationToken = default">Cancellation token to provide cancellation of waiting for request</param>
     /// <param name="options">Call options</param>
-    Task<IRequest> WaitForRequestAsync(Func<IRequest, bool> urlOrPredicate, PageWaitForRequestOptions? options = default);
-
-    /// <summary>
-    /// <para>
-    /// Waits for the matching request and returns it. See <a href="https://playwright.dev/dotnet/docs/events#waiting-for-event">waiting
-    /// for event</a> for more details about events.
-    /// </para>
-    /// <para>**Usage**</para>
-    /// <code>
-    /// // Waits for the next request with the specified url.<br/>
-    /// await page.RunAndWaitForRequestAsync(async () =&gt;<br/>
-    /// {<br/>
-    ///     await page.GetByText("trigger request").ClickAsync();<br/>
-    /// }, "http://example.com/resource");<br/>
-    /// <br/>
-    /// // Alternative way with a predicate.<br/>
-    /// await page.RunAndWaitForRequestAsync(async () =&gt;<br/>
-    /// {<br/>
-    ///     await page.GetByText("trigger request").ClickAsync();<br/>
-    /// }, request =&gt; request.Url == "https://example.com" &amp;&amp; request.Method == "GET");
-    /// </code>
-    /// </summary>
-    /// <param name="action">Action that triggers the event.</param>
-    /// <param name="urlOrPredicate">
-    /// Request URL string, regex or predicate receiving <see cref="IRequest"/> object.
-    /// When a <paramref name="baseURL"/> via the context options was provided and the passed
-    /// URL is a path, it gets merged via the <a href="https://developer.mozilla.org/en-US/docs/Web/API/URL/URL"><c>new
-    /// URL()</c></a> constructor.
-    /// </param>
-    /// <param name="options">Call options</param>
-    Task<IRequest> RunAndWaitForRequestAsync(Func<Task> action, string urlOrPredicate, PageRunAndWaitForRequestOptions? options = default);
+    Task<IRequest> WaitForRequestAsync(Func<IRequest, bool> urlOrPredicate, CancellationToken cancellationToken = default, PageWaitForRequestOptions? options = default);
 
     /// <summary>
     /// <para>
@@ -2971,8 +2953,9 @@ public partial interface IPage
     /// URL is a path, it gets merged via the <a href="https://developer.mozilla.org/en-US/docs/Web/API/URL/URL"><c>new
     /// URL()</c></a> constructor.
     /// </param>
+    /// <param name="cancellationToken = default">Cancellation token to provide cancellation of waiting for request</param>
     /// <param name="options">Call options</param>
-    Task<IRequest> RunAndWaitForRequestAsync(Func<Task> action, Regex urlOrPredicate, PageRunAndWaitForRequestOptions? options = default);
+    Task<IRequest> RunAndWaitForRequestAsync(Func<Task> action, string urlOrPredicate, CancellationToken cancellationToken = default, PageRunAndWaitForRequestOptions? options = default);
 
     /// <summary>
     /// <para>
@@ -3001,8 +2984,40 @@ public partial interface IPage
     /// URL is a path, it gets merged via the <a href="https://developer.mozilla.org/en-US/docs/Web/API/URL/URL"><c>new
     /// URL()</c></a> constructor.
     /// </param>
+    /// <param name="cancellationToken = default">Cancellation token to provide cancellation of waiting for request</param>
     /// <param name="options">Call options</param>
-    Task<IRequest> RunAndWaitForRequestAsync(Func<Task> action, Func<IRequest, bool> urlOrPredicate, PageRunAndWaitForRequestOptions? options = default);
+    Task<IRequest> RunAndWaitForRequestAsync(Func<Task> action, Regex urlOrPredicate, CancellationToken cancellationToken = default, PageRunAndWaitForRequestOptions? options = default);
+
+    /// <summary>
+    /// <para>
+    /// Waits for the matching request and returns it. See <a href="https://playwright.dev/dotnet/docs/events#waiting-for-event">waiting
+    /// for event</a> for more details about events.
+    /// </para>
+    /// <para>**Usage**</para>
+    /// <code>
+    /// // Waits for the next request with the specified url.<br/>
+    /// await page.RunAndWaitForRequestAsync(async () =&gt;<br/>
+    /// {<br/>
+    ///     await page.GetByText("trigger request").ClickAsync();<br/>
+    /// }, "http://example.com/resource");<br/>
+    /// <br/>
+    /// // Alternative way with a predicate.<br/>
+    /// await page.RunAndWaitForRequestAsync(async () =&gt;<br/>
+    /// {<br/>
+    ///     await page.GetByText("trigger request").ClickAsync();<br/>
+    /// }, request =&gt; request.Url == "https://example.com" &amp;&amp; request.Method == "GET");
+    /// </code>
+    /// </summary>
+    /// <param name="action">Action that triggers the event.</param>
+    /// <param name="urlOrPredicate">
+    /// Request URL string, regex or predicate receiving <see cref="IRequest"/> object.
+    /// When a <paramref name="baseURL"/> via the context options was provided and the passed
+    /// URL is a path, it gets merged via the <a href="https://developer.mozilla.org/en-US/docs/Web/API/URL/URL"><c>new
+    /// URL()</c></a> constructor.
+    /// </param>
+    /// <param name="cancellationToken = default">Cancellation token to provide cancellation of waiting for request</param>
+    /// <param name="options">Call options</param>
+    Task<IRequest> RunAndWaitForRequestAsync(Func<Task> action, Func<IRequest, bool> urlOrPredicate, CancellationToken cancellationToken = default, PageRunAndWaitForRequestOptions? options = default);
 
     /// <summary>
     /// <para>
@@ -3013,8 +3028,9 @@ public partial interface IPage
     /// is fired.
     /// </para>
     /// </summary>
+    /// <param name="cancellationToken = default">Cancellation token to provide cancellation of waiting for request finished</param>
     /// <param name="options">Call options</param>
-    Task<IRequest> WaitForRequestFinishedAsync(PageWaitForRequestFinishedOptions? options = default);
+    Task<IRequest> WaitForRequestFinishedAsync(CancellationToken cancellationToken = default, PageWaitForRequestFinishedOptions? options = default);
 
     /// <summary>
     /// <para>
@@ -3026,8 +3042,9 @@ public partial interface IPage
     /// </para>
     /// </summary>
     /// <param name="action">Action that triggers the event.</param>
+    /// <param name="cancellationToken = default">Cancellation token to provide cancellation of waiting for request finished</param>
     /// <param name="options">Call options</param>
-    Task<IRequest> RunAndWaitForRequestFinishedAsync(Func<Task> action, PageRunAndWaitForRequestFinishedOptions? options = default);
+    Task<IRequest> RunAndWaitForRequestFinishedAsync(Func<Task> action, CancellationToken cancellationToken = default, PageRunAndWaitForRequestFinishedOptions? options = default);
 
     /// <summary>
     /// <para>
@@ -3055,8 +3072,9 @@ public partial interface IPage
     /// URL is a path, it gets merged via the <a href="https://developer.mozilla.org/en-US/docs/Web/API/URL/URL"><c>new
     /// URL()</c></a> constructor.
     /// </param>
+    /// <param name="cancellationToken = default">Cancellation token to provide cancellation of waiting for response</param>
     /// <param name="options">Call options</param>
-    Task<IResponse> WaitForResponseAsync(string urlOrPredicate, PageWaitForResponseOptions? options = default);
+    Task<IResponse> WaitForResponseAsync(string urlOrPredicate, CancellationToken cancellationToken = default, PageWaitForResponseOptions? options = default);
 
     /// <summary>
     /// <para>
@@ -3084,8 +3102,9 @@ public partial interface IPage
     /// URL is a path, it gets merged via the <a href="https://developer.mozilla.org/en-US/docs/Web/API/URL/URL"><c>new
     /// URL()</c></a> constructor.
     /// </param>
+    /// <param name="cancellationToken = default">Cancellation token to provide cancellation of waiting for response</param>
     /// <param name="options">Call options</param>
-    Task<IResponse> WaitForResponseAsync(Regex urlOrPredicate, PageWaitForResponseOptions? options = default);
+    Task<IResponse> WaitForResponseAsync(Regex urlOrPredicate, CancellationToken cancellationToken = default, PageWaitForResponseOptions? options = default);
 
     /// <summary>
     /// <para>
@@ -3113,38 +3132,9 @@ public partial interface IPage
     /// URL is a path, it gets merged via the <a href="https://developer.mozilla.org/en-US/docs/Web/API/URL/URL"><c>new
     /// URL()</c></a> constructor.
     /// </param>
+    /// <param name="cancellationToken = default">Cancellation token to provide cancellation of waiting for response</param>
     /// <param name="options">Call options</param>
-    Task<IResponse> WaitForResponseAsync(Func<IResponse, bool> urlOrPredicate, PageWaitForResponseOptions? options = default);
-
-    /// <summary>
-    /// <para>
-    /// Returns the matched response. See <a href="https://playwright.dev/dotnet/docs/events#waiting-for-event">waiting
-    /// for event</a> for more details about events.
-    /// </para>
-    /// <para>**Usage**</para>
-    /// <code>
-    /// // Waits for the next response with the specified url.<br/>
-    /// await page.RunAndWaitForResponseAsync(async () =&gt;<br/>
-    /// {<br/>
-    ///     await page.GetByText("trigger response").ClickAsync();<br/>
-    /// }, "http://example.com/resource");<br/>
-    /// <br/>
-    /// // Alternative way with a predicate.<br/>
-    /// await page.RunAndWaitForResponseAsync(async () =&gt;<br/>
-    /// {<br/>
-    ///     await page.GetByText("trigger response").ClickAsync();<br/>
-    /// }, response =&gt; response.Url == "https://example.com" &amp;&amp; response.Status == 200);
-    /// </code>
-    /// </summary>
-    /// <param name="action">Action that triggers the event.</param>
-    /// <param name="urlOrPredicate">
-    /// Request URL string, regex or predicate receiving <see cref="IResponse"/> object.
-    /// When a <paramref name="baseURL"/> via the context options was provided and the passed
-    /// URL is a path, it gets merged via the <a href="https://developer.mozilla.org/en-US/docs/Web/API/URL/URL"><c>new
-    /// URL()</c></a> constructor.
-    /// </param>
-    /// <param name="options">Call options</param>
-    Task<IResponse> RunAndWaitForResponseAsync(Func<Task> action, string urlOrPredicate, PageRunAndWaitForResponseOptions? options = default);
+    Task<IResponse> WaitForResponseAsync(Func<IResponse, bool> urlOrPredicate, CancellationToken cancellationToken = default, PageWaitForResponseOptions? options = default);
 
     /// <summary>
     /// <para>
@@ -3173,8 +3163,9 @@ public partial interface IPage
     /// URL is a path, it gets merged via the <a href="https://developer.mozilla.org/en-US/docs/Web/API/URL/URL"><c>new
     /// URL()</c></a> constructor.
     /// </param>
+    /// <param name="cancellationToken = default">Cancellation token to provide cancellation of waiting for response</param>
     /// <param name="options">Call options</param>
-    Task<IResponse> RunAndWaitForResponseAsync(Func<Task> action, Regex urlOrPredicate, PageRunAndWaitForResponseOptions? options = default);
+    Task<IResponse> RunAndWaitForResponseAsync(Func<Task> action, string urlOrPredicate, CancellationToken cancellationToken = default, PageRunAndWaitForResponseOptions? options = default);
 
     /// <summary>
     /// <para>
@@ -3203,8 +3194,40 @@ public partial interface IPage
     /// URL is a path, it gets merged via the <a href="https://developer.mozilla.org/en-US/docs/Web/API/URL/URL"><c>new
     /// URL()</c></a> constructor.
     /// </param>
+    /// <param name="cancellationToken = default">Cancellation token to provide cancellation of waiting for response</param>
     /// <param name="options">Call options</param>
-    Task<IResponse> RunAndWaitForResponseAsync(Func<Task> action, Func<IResponse, bool> urlOrPredicate, PageRunAndWaitForResponseOptions? options = default);
+    Task<IResponse> RunAndWaitForResponseAsync(Func<Task> action, Regex urlOrPredicate, CancellationToken cancellationToken = default, PageRunAndWaitForResponseOptions? options = default);
+
+    /// <summary>
+    /// <para>
+    /// Returns the matched response. See <a href="https://playwright.dev/dotnet/docs/events#waiting-for-event">waiting
+    /// for event</a> for more details about events.
+    /// </para>
+    /// <para>**Usage**</para>
+    /// <code>
+    /// // Waits for the next response with the specified url.<br/>
+    /// await page.RunAndWaitForResponseAsync(async () =&gt;<br/>
+    /// {<br/>
+    ///     await page.GetByText("trigger response").ClickAsync();<br/>
+    /// }, "http://example.com/resource");<br/>
+    /// <br/>
+    /// // Alternative way with a predicate.<br/>
+    /// await page.RunAndWaitForResponseAsync(async () =&gt;<br/>
+    /// {<br/>
+    ///     await page.GetByText("trigger response").ClickAsync();<br/>
+    /// }, response =&gt; response.Url == "https://example.com" &amp;&amp; response.Status == 200);
+    /// </code>
+    /// </summary>
+    /// <param name="action">Action that triggers the event.</param>
+    /// <param name="urlOrPredicate">
+    /// Request URL string, regex or predicate receiving <see cref="IResponse"/> object.
+    /// When a <paramref name="baseURL"/> via the context options was provided and the passed
+    /// URL is a path, it gets merged via the <a href="https://developer.mozilla.org/en-US/docs/Web/API/URL/URL"><c>new
+    /// URL()</c></a> constructor.
+    /// </param>
+    /// <param name="cancellationToken = default">Cancellation token to provide cancellation of waiting for response</param>
+    /// <param name="options">Call options</param>
+    Task<IResponse> RunAndWaitForResponseAsync(Func<Task> action, Func<IResponse, bool> urlOrPredicate, CancellationToken cancellationToken = default, PageRunAndWaitForResponseOptions? options = default);
 
     /// <summary>
     /// <para>
@@ -3338,8 +3361,9 @@ public partial interface IPage
     /// if the page is closed before the WebSocket event is fired.
     /// </para>
     /// </summary>
+    /// <param name="cancellationToken = default">Cancellation token to provide cancellation of waiting for web socket</param>
     /// <param name="options">Call options</param>
-    Task<IWebSocket> WaitForWebSocketAsync(PageWaitForWebSocketOptions? options = default);
+    Task<IWebSocket> WaitForWebSocketAsync(CancellationToken cancellationToken = default, PageWaitForWebSocketOptions? options = default);
 
     /// <summary>
     /// <para>
@@ -3350,8 +3374,9 @@ public partial interface IPage
     /// </para>
     /// </summary>
     /// <param name="action">Action that triggers the event.</param>
+    /// <param name="cancellationToken = default">Cancellation token to provide cancellation of waiting for web socket</param>
     /// <param name="options">Call options</param>
-    Task<IWebSocket> RunAndWaitForWebSocketAsync(Func<Task> action, PageRunAndWaitForWebSocketOptions? options = default);
+    Task<IWebSocket> RunAndWaitForWebSocketAsync(Func<Task> action, CancellationToken cancellationToken = default, PageRunAndWaitForWebSocketOptions? options = default);
 
     /// <summary>
     /// <para>
@@ -3361,8 +3386,9 @@ public partial interface IPage
     /// page is closed before the worker event is fired.
     /// </para>
     /// </summary>
+    /// <param name="cancellationToken = default">Cancellation token to provide cancellation of waiting for worker</param>
     /// <param name="options">Call options</param>
-    Task<IWorker> WaitForWorkerAsync(PageWaitForWorkerOptions? options = default);
+    Task<IWorker> WaitForWorkerAsync(CancellationToken cancellationToken = default, PageWaitForWorkerOptions? options = default);
 
     /// <summary>
     /// <para>
@@ -3373,8 +3399,9 @@ public partial interface IPage
     /// </para>
     /// </summary>
     /// <param name="action">Action that triggers the event.</param>
+    /// <param name="cancellationToken = default">Cancellation token to provide cancellation of waiting for worker</param>
     /// <param name="options">Call options</param>
-    Task<IWorker> RunAndWaitForWorkerAsync(Func<Task> action, PageRunAndWaitForWorkerOptions? options = default);
+    Task<IWorker> RunAndWaitForWorkerAsync(Func<Task> action, CancellationToken cancellationToken = default, PageRunAndWaitForWorkerOptions? options = default);
 
     /// <summary>
     /// <para>

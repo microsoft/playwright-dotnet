@@ -25,6 +25,7 @@
 using System;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
+using System.Threading;
 using System.Threading.Tasks;
 
 #nullable enable
@@ -789,8 +790,9 @@ public partial interface IBrowserContext
     /// cref="IBrowserContext.Console"/> event is fired.
     /// </para>
     /// </summary>
+    /// <param name="cancellationToken = default">Cancellation token to provide cancellation of waiting for console message</param>
     /// <param name="options">Call options</param>
-    Task<IConsoleMessage> WaitForConsoleMessageAsync(BrowserContextWaitForConsoleMessageOptions? options = default);
+    Task<IConsoleMessage> WaitForConsoleMessageAsync(CancellationToken cancellationToken = default, BrowserContextWaitForConsoleMessageOptions? options = default);
 
     /// <summary>
     /// <para>
@@ -802,8 +804,9 @@ public partial interface IBrowserContext
     /// </para>
     /// </summary>
     /// <param name="action">Action that triggers the event.</param>
+    /// <param name="cancellationToken = default">Cancellation token to provide cancellation of waiting for console message</param>
     /// <param name="options">Call options</param>
-    Task<IConsoleMessage> RunAndWaitForConsoleMessageAsync(Func<Task> action, BrowserContextRunAndWaitForConsoleMessageOptions? options = default);
+    Task<IConsoleMessage> RunAndWaitForConsoleMessageAsync(Func<Task> action, CancellationToken cancellationToken = default, BrowserContextRunAndWaitForConsoleMessageOptions? options = default);
 
     /// <summary>
     /// <para>
@@ -813,8 +816,9 @@ public partial interface IBrowserContext
     /// an error if the context closes before new <see cref="IPage"/> is created.
     /// </para>
     /// </summary>
+    /// <param name="cancellationToken = default">Cancellation token to provide cancellation of waiting for page</param>
     /// <param name="options">Call options</param>
-    Task<IPage> WaitForPageAsync(BrowserContextWaitForPageOptions? options = default);
+    Task<IPage> WaitForPageAsync(CancellationToken cancellationToken = default, BrowserContextWaitForPageOptions? options = default);
 
     /// <summary>
     /// <para>
@@ -825,8 +829,9 @@ public partial interface IBrowserContext
     /// </para>
     /// </summary>
     /// <param name="action">Action that triggers the event.</param>
+    /// <param name="cancellationToken = default">Cancellation token to provide cancellation of waiting for page</param>
     /// <param name="options">Call options</param>
-    Task<IPage> RunAndWaitForPageAsync(Func<Task> action, BrowserContextRunAndWaitForPageOptions? options = default);
+    Task<IPage> RunAndWaitForPageAsync(Func<Task> action, CancellationToken cancellationToken = default, BrowserContextRunAndWaitForPageOptions? options = default);
 }
 
 #nullable disable

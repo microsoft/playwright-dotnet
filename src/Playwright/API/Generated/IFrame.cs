@@ -25,6 +25,7 @@
 using System;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
+using System.Threading;
 using System.Threading.Tasks;
 
 #nullable enable
@@ -1730,8 +1731,9 @@ public partial interface IFrame
     /// </description></item>
     /// </list>
     /// </param>
+    /// <param name="cancellationToken = default">Cancellation token to provide cancellation of waiting for load state</param>
     /// <param name="options">Call options</param>
-    Task WaitForLoadStateAsync(LoadState? state = default, FrameWaitForLoadStateOptions? options = default);
+    Task WaitForLoadStateAsync(LoadState? state = default, CancellationToken cancellationToken = default, FrameWaitForLoadStateOptions? options = default);
 
     /// <summary>
     /// <para>
@@ -1765,9 +1767,10 @@ public partial interface IFrame
     /// API</a> to change the URL is considered a navigation.
     /// </para>
     /// </remarks>
+    /// <param name="cancellationToken = default">Cancellation token to provide cancellation of waiting for navigation</param>
     /// <param name="options">Call options</param>
     [System.Obsolete]
-    Task<IResponse?> WaitForNavigationAsync(FrameWaitForNavigationOptions? options = default);
+    Task<IResponse?> WaitForNavigationAsync(CancellationToken cancellationToken = default, FrameWaitForNavigationOptions? options = default);
 
     /// <summary>
     /// <para>
@@ -1802,9 +1805,10 @@ public partial interface IFrame
     /// </para>
     /// </remarks>
     /// <param name="action">Action that triggers the event.</param>
+    /// <param name="cancellationToken = default">Cancellation token to provide cancellation of waiting for navigation</param>
     /// <param name="options">Call options</param>
     [System.Obsolete]
-    Task<IResponse?> RunAndWaitForNavigationAsync(Func<Task> action, FrameRunAndWaitForNavigationOptions? options = default);
+    Task<IResponse?> RunAndWaitForNavigationAsync(Func<Task> action, CancellationToken cancellationToken = default, FrameRunAndWaitForNavigationOptions? options = default);
 
     /// <summary>
     /// <para>

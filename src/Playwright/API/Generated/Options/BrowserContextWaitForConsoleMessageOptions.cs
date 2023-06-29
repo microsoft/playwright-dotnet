@@ -24,7 +24,6 @@
 
 using System;
 using System.Text.Json.Serialization;
-using System.Threading;
 
 #nullable enable
 
@@ -43,7 +42,6 @@ public class BrowserContextWaitForConsoleMessageOptions
 
         Predicate = clone.Predicate;
         Timeout = clone.Timeout;
-        CancellationToken = clone.CancellationToken;
     }
 
     /// <summary>
@@ -64,14 +62,6 @@ public class BrowserContextWaitForConsoleMessageOptions
     /// </summary>
     [JsonPropertyName("timeout")]
     public float? Timeout { get; set; }
-
-    /// <summary>
-    /// <para>
-    /// Cancellation token to provide cancellation of waiting for console message
-    /// </para>
-    /// </summary>
-    [JsonPropertyName("cancellationToken")]
-    public CancellationToken CancellationToken { get; set; }
 }
 
 #nullable disable

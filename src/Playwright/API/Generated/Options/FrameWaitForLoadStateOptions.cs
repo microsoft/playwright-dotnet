@@ -23,7 +23,6 @@
  */
 
 using System.Text.Json.Serialization;
-using System.Threading;
 
 #nullable enable
 
@@ -41,7 +40,6 @@ public class FrameWaitForLoadStateOptions
         }
 
         Timeout = clone.Timeout;
-        CancellationToken = clone.CancellationToken;
     }
 
     /// <summary>
@@ -54,14 +52,6 @@ public class FrameWaitForLoadStateOptions
     /// </summary>
     [JsonPropertyName("timeout")]
     public float? Timeout { get; set; }
-
-    /// <summary>
-    /// <para>
-    /// Cancellation token to provide cancellation of waiting for load state
-    /// </para>
-    /// </summary>
-    [JsonPropertyName("cancellationToken")]
-    public CancellationToken CancellationToken { get; set; }
 }
 
 #nullable disable
