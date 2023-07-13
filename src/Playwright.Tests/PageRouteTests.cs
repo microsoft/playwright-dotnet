@@ -102,6 +102,29 @@ public class PageRouteTests : PageTestEx
         Assert.AreEqual(new[] { 1 }, intercepted.ToArray());
     }
 
+    [PlaywrightTest("page-route.spec.ts", "should support ? in glob pattern")]
+    public async Task ShouldSupportInGlobPattern()
+    {
+        Server.SetRoute("/index", context => context.Response.WriteAsync("index-no-hello"));
+        Server.SetRoute("/index123hello", context => context.Response.WriteAsync("index123hello"));
+        Server.SetRoute("/index?hello", context => context.Response.WriteAsync("index?hello"));
+
+        await Page.RouteAsync("**/index?hello", (route) => route.FulfillAsync(new() { Body = "intercepted any character" }));
+        await Page.RouteAsync("**/index\\?hello", (route) => route.FulfillAsync(new() { Body = "intercepted question mark" }));
+
+        await Page.GotoAsync(Server.Prefix + "/index?hello");
+        StringAssert.Contains("intercepted question mark", await Page.ContentAsync());
+
+        await Page.GotoAsync(Server.Prefix + "/index");
+        StringAssert.Contains("index-no-hello", await Page.ContentAsync());
+
+        await Page.GotoAsync(Server.Prefix + "/index1hello");
+        StringAssert.Contains("intercepted any character", await Page.ContentAsync());
+
+        await Page.GotoAsync(Server.Prefix + "/index123hello");
+        StringAssert.Contains("index123hello", await Page.ContentAsync());
+    }
+
     [PlaywrightTest("page-route.spec.ts", "should work when POST is redirected with 302")]
     public async Task ShouldWorkWhenPostIsRedirectedWith302()
     {
@@ -686,21 +709,6 @@ public class PageRouteTests : PageTestEx
             }");
 
         Assert.AreEqual(new[] { "DELETE", "electric", "cars" }, resp);
-    }
-
-    [PlaywrightTest]
-    public void ShouldThrowOnInvalidRouteUrl()
-    {
-        var regexParseExceptionType = typeof(Regex).Assembly
-                .GetType("System.Text.RegularExpressions.RegexParseException", throwOnError: true);
-
-
-        Assert.Throws(regexParseExceptionType, () =>
-            Page.RouteAsync("[", route =>
-            {
-                route.ContinueAsync();
-            })
-        );
     }
 
     [PlaywrightTest("page-route.spec.ts", "should support the times parameter with route matching")]

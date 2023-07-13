@@ -391,12 +391,12 @@ public class PageGotoTests : PageTestEx
         }
         else if (TestConstants.IsWebKit)
         {
-            StringAssert.Contains("Navigation interrupted by another one", exception.Message);
+            StringAssert.Contains("is interrupted by another navigation to", exception.Message);
         }
         else
         {
             // Firefox might yield either NS_BINDING_ABORTED or 'navigation interrupted by another one'
-            Assert.True(exception.Message.Contains("NS_BINDING_ABORTED") || exception.Message.Contains("Navigation interrupted by another one"));
+            Assert.True(exception.Message.Contains("NS_BINDING_ABORTED") || exception.Message.Contains("is interrupted by another navigation to"));
         }
     }
 

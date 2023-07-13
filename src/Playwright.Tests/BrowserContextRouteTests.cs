@@ -179,22 +179,6 @@ public class BrowserContextRouteTests : BrowserTestEx
         Assert.AreEqual("context", await response.TextAsync());
     }
 
-    [PlaywrightTest]
-    public async Task ShouldThrowOnInvalidRouteUrl()
-    {
-        await using var context = await Browser.NewContextAsync();
-
-        var regexParseExceptionType = typeof(System.Text.RegularExpressions.Regex).Assembly
-            .GetType("System.Text.RegularExpressions.RegexParseException", throwOnError: true);
-
-        Assert.Throws(regexParseExceptionType, () =>
-            context.RouteAsync("[", route =>
-            {
-                route.ContinueAsync();
-            })
-        );
-    }
-
     [PlaywrightTest("browsercontext-route.spec.ts", "should support the times parameter with route matching")]
     public async Task ShouldSupportTheTimesParameterWithRouteMatching()
     {
