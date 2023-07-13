@@ -163,12 +163,12 @@ public partial interface IAPIRequestContext
     /// into the URL search parameters:
     /// </para>
     /// <code>
-    /// var params = new Dictionary&lt;string, object&gt;()<br/>
+    /// var queryParams = new Dictionary&lt;string, object&gt;()<br/>
     /// {<br/>
     ///   { "isbn", "1234" },<br/>
     ///   { "page", 23 },<br/>
-    /// }<br/>
-    /// await request.GetAsync("https://example.com/api/getText", new() { Params = params });
+    /// };<br/>
+    /// await request.GetAsync("https://example.com/api/getText", new() { Params = queryParams });
     /// </code>
     /// </summary>
     /// <param name="url">Target URL.</param>

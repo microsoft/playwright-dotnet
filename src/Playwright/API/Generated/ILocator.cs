@@ -48,7 +48,7 @@ public partial interface ILocator
     /// </para>
     /// <para>**Usage**</para>
     /// <code>
-    /// foreach (var li in await page.GetByRole('listitem').AllAsync())<br/>
+    /// foreach (var li in await page.GetByRole("listitem").AllAsync())<br/>
     ///   await li.ClickAsync();
     /// </code>
     /// </summary>
@@ -692,19 +692,19 @@ public partial interface ILocator
     /// <para>You can locate by text substring, exact string, or a regular expression:</para>
     /// <code>
     /// // Matches &lt;span&gt;<br/>
-    /// page.GetByText("world")<br/>
+    /// page.GetByText("world");<br/>
     /// <br/>
     /// // Matches first &lt;div&gt;<br/>
-    /// page.GetByText("Hello world")<br/>
+    /// page.GetByText("Hello world");<br/>
     /// <br/>
     /// // Matches second &lt;div&gt;<br/>
-    /// page.GetByText("Hello", new() { Exact: true })<br/>
+    /// page.GetByText("Hello", new() { Exact = true });<br/>
     /// <br/>
     /// // Matches both &lt;div&gt;s<br/>
-    /// page.GetByText(new Regex("Hello"))<br/>
+    /// page.GetByText(new Regex("Hello"));<br/>
     /// <br/>
     /// // Matches second &lt;div&gt;<br/>
-    /// page.GetByText(new Regex("^hello$", RegexOptions.IgnoreCase))
+    /// page.GetByText(new Regex("^hello$", RegexOptions.IgnoreCase));
     /// </code>
     /// <para>**Details**</para>
     /// <para>
@@ -733,19 +733,19 @@ public partial interface ILocator
     /// <para>You can locate by text substring, exact string, or a regular expression:</para>
     /// <code>
     /// // Matches &lt;span&gt;<br/>
-    /// page.GetByText("world")<br/>
+    /// page.GetByText("world");<br/>
     /// <br/>
     /// // Matches first &lt;div&gt;<br/>
-    /// page.GetByText("Hello world")<br/>
+    /// page.GetByText("Hello world");<br/>
     /// <br/>
     /// // Matches second &lt;div&gt;<br/>
-    /// page.GetByText("Hello", new() { Exact: true })<br/>
+    /// page.GetByText("Hello", new() { Exact = true });<br/>
     /// <br/>
     /// // Matches both &lt;div&gt;s<br/>
-    /// page.GetByText(new Regex("Hello"))<br/>
+    /// page.GetByText(new Regex("Hello"));<br/>
     /// <br/>
     /// // Matches second &lt;div&gt;<br/>
-    /// page.GetByText(new Regex("^hello$", RegexOptions.IgnoreCase))
+    /// page.GetByText(new Regex("^hello$", RegexOptions.IgnoreCase));
     /// </code>
     /// <para>**Details**</para>
     /// <para>
@@ -858,7 +858,7 @@ public partial interface ILocator
     /// or radio input.
     /// </para>
     /// <para>**Usage**</para>
-    /// <code>Boolean checked = await page.GetByRole(AriaRole.Checkbox).IsCheckedAsync();</code>
+    /// <code>var isChecked = await page.GetByRole(AriaRole.Checkbox).IsCheckedAsync();</code>
     /// </summary>
     /// <param name="options">Call options</param>
     Task<bool> IsCheckedAsync(LocatorIsCheckedOptions? options = default);

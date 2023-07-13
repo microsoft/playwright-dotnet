@@ -43,14 +43,14 @@ namespace Microsoft.Playwright;
 /// await using var context = await browser.NewContextAsync();<br/>
 /// await context.Tracing.StartAsync(new()<br/>
 /// {<br/>
-///   Screenshots: true,<br/>
-///   Snapshots: true<br/>
+///   Screenshots = true,<br/>
+///   Snapshots = true<br/>
 /// });<br/>
 /// var page = context.NewPageAsync();<br/>
 /// await page.GotoAsync("https://playwright.dev");<br/>
 /// await context.Tracing.StopAsync(new()<br/>
 /// {<br/>
-///   Path: "trace.zip"<br/>
+///   Path = "trace.zip"<br/>
 /// });
 /// </code>
 /// </summary>
@@ -64,14 +64,14 @@ public partial interface ITracing
     /// await using var context = await browser.NewContextAsync();<br/>
     /// await context.Tracing.StartAsync(new()<br/>
     /// {<br/>
-    ///   Screenshots: true,<br/>
-    ///   Snapshots: true<br/>
+    ///   Screenshots = true,<br/>
+    ///   Snapshots = true<br/>
     /// });<br/>
     /// var page = context.NewPageAsync();<br/>
     /// await page.GotoAsync("https://playwright.dev");<br/>
     /// await context.Tracing.StopAsync(new()<br/>
     /// {<br/>
-    ///   Path: "trace.zip"<br/>
+    ///   Path = "trace.zip"<br/>
     /// });
     /// </code>
     /// </summary>
@@ -90,8 +90,8 @@ public partial interface ITracing
     /// await using var context = await browser.NewContextAsync();<br/>
     /// await context.Tracing.StartAsync(new()<br/>
     /// {<br/>
-    ///   Screenshots: true,<br/>
-    ///   Snapshots: true<br/>
+    ///   Screenshots = true,<br/>
+    ///   Snapshots = true<br/>
     /// });<br/>
     /// var page = context.NewPageAsync();<br/>
     /// await page.GotoAsync("https://playwright.dev");<br/>
@@ -101,7 +101,7 @@ public partial interface ITracing
     /// // Everything between StartChunkAsync and StopChunkAsync will be recorded in the trace.<br/>
     /// await context.Tracing.StopChunkAsync(new()<br/>
     /// {<br/>
-    ///   Path: "trace1.zip"<br/>
+    ///   Path = "trace1.zip"<br/>
     /// });<br/>
     /// <br/>
     /// await context.Tracing.StartChunkAsync();<br/>
@@ -109,7 +109,7 @@ public partial interface ITracing
     /// // Save a second trace file with different actions.<br/>
     /// await context.Tracing.StopChunkAsync(new()<br/>
     /// {<br/>
-    ///   Path: "trace2.zip"<br/>
+    ///   Path = "trace2.zip"<br/>
     /// });
     /// </code>
     /// </summary>

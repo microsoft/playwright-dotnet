@@ -197,8 +197,8 @@ public partial interface IRoute
     /// {<br/>
     ///     Status = 404,<br/>
     ///     ContentType = "text/plain",<br/>
-    ///     Body = "Not Found!")<br/>
-    /// });
+    ///     Body = "Not Found!"<br/>
+    /// }));
     /// </code>
     /// <para>An example of serving static file:</para>
     /// <code>await page.RouteAsync("**/xhr_endpoint", route =&gt; route.FulfillAsync(new() { Path = "mock_data.json" }));</code>
