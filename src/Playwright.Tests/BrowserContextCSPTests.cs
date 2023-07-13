@@ -57,7 +57,7 @@ public class BrowserContextCSPTests : BrowserTestEx
         {
             var page = await context.NewPageAsync();
             await page.GotoAsync(Server.EmptyPage);
-            var exception = await PlaywrightAssert.ThrowsAsync<PlaywrightException>(() => page.AddScriptTagAsync(new() { Content = "window.__injected = 42;" }));
+            await PlaywrightAssert.ThrowsAsync<PlaywrightException>(() => page.AddScriptTagAsync(new() { Content = "window.__injected = 42;" }));
             Assert.Null(await page.EvaluateAsync("window.__injected"));
         }
 
