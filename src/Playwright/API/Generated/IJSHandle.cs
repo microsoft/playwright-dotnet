@@ -103,7 +103,7 @@ public partial interface IJSHandle
     /// </para>
     /// <para>**Usage**</para>
     /// <code>
-    /// var handle = await page.EvaluateHandleAsync("() =&gt; ({window, document}");<br/>
+    /// var handle = await page.EvaluateHandleAsync("() =&gt; ({ window, document }");<br/>
     /// var properties = await handle.GetPropertiesAsync();<br/>
     /// var windowHandle = properties["window"];<br/>
     /// var documentHandle = properties["document"];<br/>

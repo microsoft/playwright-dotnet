@@ -769,7 +769,7 @@ public partial interface IPage
     ///         using var playwright = await Playwright.CreateAsync();<br/>
     ///         await using var browser = await playwright.Webkit.LaunchAsync(new()<br/>
     ///         {<br/>
-    ///             Headless: false<br/>
+    ///             Headless = false,<br/>
     ///         });<br/>
     ///         var page = await browser.NewPageAsync();<br/>
     /// <br/>
@@ -834,7 +834,7 @@ public partial interface IPage
     ///         using var playwright = await Playwright.CreateAsync();<br/>
     ///         await using var browser = await playwright.Webkit.LaunchAsync(new()<br/>
     ///         {<br/>
-    ///             Headless: false<br/>
+    ///             Headless = false<br/>
     ///         });<br/>
     ///         var page = await browser.NewPageAsync();<br/>
     /// <br/>
@@ -1147,19 +1147,19 @@ public partial interface IPage
     /// <para>You can locate by text substring, exact string, or a regular expression:</para>
     /// <code>
     /// // Matches &lt;span&gt;<br/>
-    /// page.GetByText("world")<br/>
+    /// page.GetByText("world");<br/>
     /// <br/>
     /// // Matches first &lt;div&gt;<br/>
-    /// page.GetByText("Hello world")<br/>
+    /// page.GetByText("Hello world");<br/>
     /// <br/>
     /// // Matches second &lt;div&gt;<br/>
-    /// page.GetByText("Hello", new() { Exact: true })<br/>
+    /// page.GetByText("Hello", new() { Exact = true });<br/>
     /// <br/>
     /// // Matches both &lt;div&gt;s<br/>
-    /// page.GetByText(new Regex("Hello"))<br/>
+    /// page.GetByText(new Regex("Hello"));<br/>
     /// <br/>
     /// // Matches second &lt;div&gt;<br/>
-    /// page.GetByText(new Regex("^hello$", RegexOptions.IgnoreCase))
+    /// page.GetByText(new Regex("^hello$", RegexOptions.IgnoreCase));
     /// </code>
     /// <para>**Details**</para>
     /// <para>
@@ -1188,19 +1188,19 @@ public partial interface IPage
     /// <para>You can locate by text substring, exact string, or a regular expression:</para>
     /// <code>
     /// // Matches &lt;span&gt;<br/>
-    /// page.GetByText("world")<br/>
+    /// page.GetByText("world");<br/>
     /// <br/>
     /// // Matches first &lt;div&gt;<br/>
-    /// page.GetByText("Hello world")<br/>
+    /// page.GetByText("Hello world");<br/>
     /// <br/>
     /// // Matches second &lt;div&gt;<br/>
-    /// page.GetByText("Hello", new() { Exact: true })<br/>
+    /// page.GetByText("Hello", new() { Exact = true });<br/>
     /// <br/>
     /// // Matches both &lt;div&gt;s<br/>
-    /// page.GetByText(new Regex("Hello"))<br/>
+    /// page.GetByText(new Regex("Hello"));<br/>
     /// <br/>
     /// // Matches second &lt;div&gt;<br/>
-    /// page.GetByText(new Regex("^hello$", RegexOptions.IgnoreCase))
+    /// page.GetByText(new Regex("^hello$", RegexOptions.IgnoreCase));
     /// </code>
     /// <para>**Details**</para>
     /// <para>

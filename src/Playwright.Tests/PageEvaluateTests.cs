@@ -24,6 +24,7 @@
 
 using System.ComponentModel;
 using System.Dynamic;
+using System.Numerics;
 using System.Text.Json;
 using System.Text.RegularExpressions;
 
@@ -70,6 +71,13 @@ public class PageEvaluateTests : PageTestEx
     {
         double result = await Page.EvaluateAsync<double>("a => a", double.NegativeInfinity);
         Assert.AreEqual(double.NegativeInfinity, result);
+    }
+
+    [PlaywrightTest("page-evaluate.spec.ts", "should transfer bigint")]
+    public async Task ShouldTransferBigInt()
+    {
+        Assert.AreEqual(new BigInteger(42), await Page.EvaluateAsync<BigInteger>("() => 42n"));
+        Assert.AreEqual(new BigInteger(17), await Page.EvaluateAsync<BigInteger>("a => a", new BigInteger(17)));
     }
 
     [PlaywrightTest("page-evaluate.spec.ts", "should roundtrip unserializable values")]

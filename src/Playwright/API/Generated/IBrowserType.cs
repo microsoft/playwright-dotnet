@@ -106,7 +106,7 @@ public partial interface IBrowserType
     /// <code>
     /// var browser = await playwright.Chromium.LaunchAsync(new() {<br/>
     ///     IgnoreDefaultArgs = new[] { "--mute-audio" }<br/>
-    /// })
+    /// });
     /// </code>
     /// <para>
     /// > **Chromium-only** Playwright can also be used to control the Google Chrome or

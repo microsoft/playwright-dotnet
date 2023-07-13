@@ -765,7 +765,7 @@ public partial interface ILocatorAssertions
     /// <para>For example, given the following element:</para>
     /// <code>
     /// var locator = Page.Locator("id=favorite-colors");<br/>
-    /// await locator.SelectOptionAsync(new string[] { "R", "G" })<br/>
+    /// await locator.SelectOptionAsync(new string[] { "R", "G" });<br/>
     /// await Expect(locator).ToHaveValuesAsync(new Regex[] { new Regex("R"), new Regex("G") });
     /// </code>
     /// </summary>
@@ -782,7 +782,7 @@ public partial interface ILocatorAssertions
     /// <para>For example, given the following element:</para>
     /// <code>
     /// var locator = Page.Locator("id=favorite-colors");<br/>
-    /// await locator.SelectOptionAsync(new string[] { "R", "G" })<br/>
+    /// await locator.SelectOptionAsync(new string[] { "R", "G" });<br/>
     /// await Expect(locator).ToHaveValuesAsync(new Regex[] { new Regex("R"), new Regex("G") });
     /// </code>
     /// </summary>

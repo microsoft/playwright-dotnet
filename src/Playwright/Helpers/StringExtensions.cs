@@ -37,7 +37,8 @@ namespace Microsoft.Playwright.Helpers;
 /// </summary>
 internal static class StringExtensions
 {
-    private static readonly char[] _escapeGlobChars = new[] { '/', '$', '^', '+', '.', '(', ')', '=', '!', '|' };
+    // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Regular_expressions#escaping
+    private static readonly char[] _escapeGlobChars = new[] { '$', '^', '+', '.', '*', '(', ')', '|', '\\', '?', '{', '}', '[', ']' };
 
     private static readonly IDictionary<string, string> _mappings = new Dictionary<string, string>(StringComparer.InvariantCultureIgnoreCase)
         {
@@ -643,31 +644,30 @@ internal static class StringExtensions
             return null;
         }
 
-        List<string> tokens = new List<string> { "^" };
+        List<string> tokens = new() { "^" };
         bool inGroup = false;
 
         for (int i = 0; i < glob.Length; ++i)
         {
-            char c = glob[i];
-            if (_escapeGlobChars.Contains(c))
+            var c = glob[i];
+            if (c == '\\' && i + 1 < glob.Length)
             {
-                tokens.Add("\\" + c);
+                var @char = glob[++i];
+                tokens.Add(_escapeGlobChars.Contains(@char) ? "\\" + @char : @char.ToString());
                 continue;
             }
-
             if (c == '*')
             {
-                char? beforeDeep = i == 0 ? (char?)null : glob[i - 1];
+                char? beforeDeep = i == 0 ? null : glob[i - 1];
                 int starCount = 1;
-
                 while (i < glob.Length - 1 && glob[i + 1] == '*')
                 {
                     starCount++;
                     i++;
                 }
 
-                char? afterDeep = i >= glob.Length - 1 ? (char?)null : glob[i + 1];
-                bool isDeep = starCount > 1 &&
+                char? afterDeep = i >= glob.Length - 1 ? null : glob[i + 1];
+                var isDeep = starCount > 1 &&
                     (beforeDeep == '/' || beforeDeep == null) &&
                     (afterDeep == '/' || afterDeep == null);
                 if (isDeep)
@@ -679,7 +679,6 @@ internal static class StringExtensions
                 {
                     tokens.Add("([^/]*)");
                 }
-
                 continue;
             }
 
@@ -706,7 +705,7 @@ internal static class StringExtensions
                     tokens.Add("\\" + c);
                     break;
                 default:
-                    tokens.Add(c.ToString());
+                    tokens.Add(_escapeGlobChars.Contains(c) ? "\\" + c : c.ToString());
                     break;
             }
         }

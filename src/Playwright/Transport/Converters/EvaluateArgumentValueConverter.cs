@@ -29,6 +29,7 @@ using System.ComponentModel;
 using System.Dynamic;
 using System.Globalization;
 using System.Linq;
+using System.Numerics;
 using System.Runtime.Serialization;
 using System.Text.Json;
 using System.Text.RegularExpressions;
@@ -111,6 +112,11 @@ internal static class EvaluateArgumentValueConverter
         if (value is Uri uri)
         {
             return new { u = uri.ToString() };
+        }
+
+        if (value is BigInteger bigInteger)
+        {
+            return new { bi = bigInteger.ToString() };
         }
 
         if (value is Regex regex)
@@ -317,6 +323,11 @@ internal static class EvaluateArgumentValueConverter
         if (result.TryGetProperty("u", out var url))
         {
             return url.ToObject<Uri>();
+        }
+
+        if (result.TryGetProperty("bi", out var bigInt))
+        {
+            return BigInteger.Parse(bigInt.ToObject<string>());
         }
 
         if (result.TryGetProperty("r", out var regex))

@@ -34,8 +34,7 @@ public class BrowserContextCSPTests : BrowserTestEx
         {
             var page = await context.NewPageAsync();
             await page.GotoAsync(Server.Prefix + "/csp.html");
-            var exception = await PlaywrightAssert.ThrowsAsync<PlaywrightException>(() => page.AddScriptTagAsync(new() { Content = "window.__injected = 42;" }));
-            TestUtils.AssertCSPError(exception.Message);
+            await PlaywrightAssert.ThrowsAsync<PlaywrightException>(() => page.AddScriptTagAsync(new() { Content = "window.__injected = 42;" }));
             Assert.Null(await page.EvaluateAsync("window.__injected"));
         }
         // By-pass CSP and try one more time.
@@ -58,8 +57,7 @@ public class BrowserContextCSPTests : BrowserTestEx
         {
             var page = await context.NewPageAsync();
             await page.GotoAsync(Server.EmptyPage);
-            var exception = await PlaywrightAssert.ThrowsAsync<PlaywrightException>(() => page.AddScriptTagAsync(new() { Content = "window.__injected = 42;" }));
-            TestUtils.AssertCSPError(exception.Message);
+            await PlaywrightAssert.ThrowsAsync<PlaywrightException>(() => page.AddScriptTagAsync(new() { Content = "window.__injected = 42;" }));
             Assert.Null(await page.EvaluateAsync("window.__injected"));
         }
 
@@ -97,8 +95,7 @@ public class BrowserContextCSPTests : BrowserTestEx
 
             // Make sure CSP prohibits addScriptTag in an iframe.
             var frame = await FrameUtils.AttachFrameAsync(page, "frame1", Server.Prefix + "/csp.html");
-            var exception = await PlaywrightAssert.ThrowsAsync<PlaywrightException>(() => frame.AddScriptTagAsync(new() { Content = "window.__injected = 42;" }));
-            TestUtils.AssertCSPError(exception.Message);
+            await PlaywrightAssert.ThrowsAsync<PlaywrightException>(() => frame.AddScriptTagAsync(new() { Content = "window.__injected = 42;" }));
             Assert.Null(await frame.EvaluateAsync<int?>("() => window.__injected"));
         }
 
