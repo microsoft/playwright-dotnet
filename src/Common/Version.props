@@ -1,7 +1,7 @@
 <Project>
   <PropertyGroup>
     <AssemblyVersion>1.36.0</AssemblyVersion>
-    <PackageVersion>$(AssemblyVersion)-beta-1</PackageVersion>
+    <PackageVersion>$(AssemblyVersion)</PackageVersion>
     <DriverVersion>1.36.0</DriverVersion>
     <ReleaseVersion>$(AssemblyVersion)</ReleaseVersion>
     <FileVersion>$(AssemblyVersion)</FileVersion>
