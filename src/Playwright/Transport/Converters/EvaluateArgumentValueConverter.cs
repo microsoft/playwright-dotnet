@@ -116,7 +116,7 @@ internal static class EvaluateArgumentValueConverter
 
         if (value is BigInteger bigInteger)
         {
-            return new { bi = bigInteger.ToString() };
+            return new { bi = bigInteger.ToString(CultureInfo.InvariantCulture) };
         }
 
         if (value is Regex regex)
@@ -327,7 +327,7 @@ internal static class EvaluateArgumentValueConverter
 
         if (result.TryGetProperty("bi", out var bigInt))
         {
-            return BigInteger.Parse(bigInt.ToObject<string>());
+            return BigInteger.Parse(bigInt.ToObject<string>(), CultureInfo.InvariantCulture);
         }
 
         if (result.TryGetProperty("r", out var regex))
