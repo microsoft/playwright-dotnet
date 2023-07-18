@@ -67,7 +67,7 @@ public class PageRunAndWaitForRequestFinishedTests : PageTestEx
                     fetch('/digits/1.png').then((response) => response.blob());
                     fetch('/digits/2.png').then((response) => response.blob());
                     fetch('/digits/3.png').then((response) => response.blob());
-                }"), new() { Predicate = e => e.Url == Server.Prefix + "/digits/2.png", }, cts.Token);
+                }"), new() { Predicate = e => e.Url == Server.Prefix + "/digits/2.png", CancellationToken = cts.Token });
 
         Assert.AreEqual(Server.Prefix + "/digits/2.png", request.Url);
     }
@@ -81,7 +81,7 @@ public class PageRunAndWaitForRequestFinishedTests : PageTestEx
                     fetch('/digits/1.png').then((response) => response.blob());
                     fetch('/digits/2.png').then((response) => response.blob());
                     fetch('/digits/3.png').then((response) => response.blob());
-                }, 50)"), new() { Predicate = e => e.Url == Server.Prefix + "/digits/2.png", Timeout = 0, }, cts.Token);
+                }, 50)"), new() { Predicate = e => e.Url == Server.Prefix + "/digits/2.png", Timeout = 0, CancellationToken = cts.Token });
 
         Assert.AreEqual(Server.Prefix + "/digits/2.png", request.Url);
     }
@@ -93,7 +93,12 @@ public class PageRunAndWaitForRequestFinishedTests : PageTestEx
         await Page.GotoAsync(Server.EmptyPage);
 
         var requestTask = Page.RunAndWaitForRequestFinishedAsync(() => Page.EvaluateAsync(@"() => {}"),
-            new() { Predicate = e => e.Url == Server.Prefix + "/digits/2.png", Timeout = 2000, }, cts.Token);
+            new()
+            {
+                Predicate = e => e.Url == Server.Prefix + "/digits/2.png",
+                Timeout = 2000,
+                CancellationToken = cts.Token
+            });
         cts.Cancel();
         await PlaywrightAssert.ThrowsAsync<TaskCanceledException>(() => requestTask);
     }

@@ -212,7 +212,7 @@ internal class Frame : ChannelOwnerBase, IChannelOwner<Frame>, IFrame
     }
 
     [MethodImpl(MethodImplOptions.NoInlining)]
-    public Task<IResponse> WaitForNavigationAsync(FrameWaitForNavigationOptions options = default, CancellationToken cancellationToken = default)
+    public Task<IResponse> WaitForNavigationAsync(FrameWaitForNavigationOptions options = default)
     {
         return RunAndWaitForNavigationAsync(
             null,
@@ -224,12 +224,12 @@ internal class Frame : ChannelOwnerBase, IChannelOwner<Frame>, IFrame
                 UrlFunc = options?.UrlFunc,
                 WaitUntil = options?.WaitUntil,
                 Timeout = options?.Timeout,
-            },
-            cancellationToken);
+                CancellationToken = options?.CancellationToken ?? default,
+            });
     }
 
     [MethodImpl(MethodImplOptions.NoInlining)]
-    public async Task<IResponse> RunAndWaitForNavigationAsync(Func<Task> action, FrameRunAndWaitForNavigationOptions options = default, CancellationToken cancellationToken = default)
+    public async Task<IResponse> RunAndWaitForNavigationAsync(Func<Task> action, FrameRunAndWaitForNavigationOptions options = default)
     {
         using var waiter = SetupNavigationWaiter("frame.WaitForNavigationAsync", options?.Timeout, options?.CancellationToken ?? default);
         var result = WaitForNavigationInternalAsync(waiter, options?.Url, options?.UrlFunc, options?.UrlRegex, options?.UrlString, options?.WaitUntil);

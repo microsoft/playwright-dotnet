@@ -25,6 +25,7 @@
 using System;
 using System.Text.Json.Serialization;
 using System.Text.RegularExpressions;
+using System.Threading;
 
 #nullable enable
 
@@ -41,6 +42,7 @@ public class PageRunAndWaitForNavigationOptions
             return;
         }
 
+        CancellationToken = clone.CancellationToken;
         Timeout = clone.Timeout;
         Url = clone.Url;
         UrlFunc = clone.UrlFunc;
@@ -48,6 +50,10 @@ public class PageRunAndWaitForNavigationOptions
         UrlString = clone.UrlString;
         WaitUntil = clone.WaitUntil;
     }
+
+    /// <summary><para>Cancellation token to provide cancellation of waiting for navigation</para></summary>
+    [JsonPropertyName("cancellationToken")]
+    public CancellationToken CancellationToken { get; set; } = default!;
 
     /// <summary>
     /// <para>

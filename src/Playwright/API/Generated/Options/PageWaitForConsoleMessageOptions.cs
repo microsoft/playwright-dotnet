@@ -24,6 +24,7 @@
 
 using System;
 using System.Text.Json.Serialization;
+using System.Threading;
 
 #nullable enable
 
@@ -40,9 +41,14 @@ public class PageWaitForConsoleMessageOptions
             return;
         }
 
+        CancellationToken = clone.CancellationToken;
         Predicate = clone.Predicate;
         Timeout = clone.Timeout;
     }
+
+    /// <summary><para>Cancellation token to provide cancellation of waiting for console message</para></summary>
+    [JsonPropertyName("cancellationToken")]
+    public CancellationToken CancellationToken { get; set; } = default!;
 
     /// <summary>
     /// <para>
