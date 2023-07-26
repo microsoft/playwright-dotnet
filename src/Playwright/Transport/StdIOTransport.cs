@@ -25,6 +25,7 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Playwright.Helpers;
@@ -44,7 +45,7 @@ internal class StdIOTransport : IDisposable
     {
         _process = GetProcess();
         _process.StartInfo.Arguments = "run-driver";
-        _process.Start();
+        StartProcessWithUTF8IOEncoding(_process);
         _process.Exited += (_, _) => Close("Process exited");
         _process.ErrorDataReceived += (_, error) =>
         {
@@ -128,6 +129,34 @@ internal class StdIOTransport : IDisposable
         {
             StartInfo = startInfo,
         };
+    }
+
+    /// <summary>
+    /// Starts the given process with UTF8-encoding for input and output without
+    /// BOM which breaks driver transport otherwise.
+    /// This function backports https://github.com/dotnet/runtime/issues/22051 to .NET Framework.
+    /// See also https://github.com/microsoft/playwright-dotnet/issues/2517.
+    /// </summary>
+    /// <param name="process">The process to start.</param>
+    private static void StartProcessWithUTF8IOEncoding(Process process)
+    {
+        var encoding = new UTF8Encoding(false);
+        var originalInputEncoding = Console.InputEncoding;
+        var originalOutputEncoding = Console.OutputEncoding;
+
+        Console.InputEncoding = encoding;
+        Console.OutputEncoding = encoding;
+
+        try
+        {
+            process.Start();
+        }
+        finally
+        {
+            // Restore the original encodings
+            Console.InputEncoding = originalInputEncoding;
+            Console.OutputEncoding = originalOutputEncoding;
+        }
     }
 
     private static Task ScheduleTransportTaskAsync(Func<CancellationToken, Task> func, CancellationToken cancellationToken)
