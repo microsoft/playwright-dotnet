@@ -136,7 +136,8 @@ internal class StdIOTransport : IDisposable
     /// BOM which breaks driver transport otherwise.
     /// This function backports https://github.com/dotnet/runtime/issues/22051 to .NET Framework.
     /// See also https://github.com/microsoft/playwright-dotnet/issues/2517.
-    /// Can be removed after netstandard2.1+ where StandardInputEncoding is available.
+    /// See also https://stackoverflow.com/a/37258056/6512681.
+    /// Can be removed after netstandard2.1+ where ProcessStartInfo.StandardInputEncoding is available.
     /// </summary>
     /// <param name="process">The process to start.</param>
     private static void StartProcessWithUTF8IOEncoding(Process process)
