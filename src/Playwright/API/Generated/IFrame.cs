@@ -1424,6 +1424,12 @@ public partial interface IFrame
     /// <param name="options">Call options</param>
     Task SetCheckedAsync(string selector, bool checkedState, FrameSetCheckedOptions? options = default);
 
+    /// <summary>
+    /// <para>
+    /// This method internally calls <a href="https://developer.mozilla.org/en-US/docs/Web/API/Document/write">document.write()</a>,
+    /// inheriting all its specific characteristics and behaviors.
+    /// </para>
+    /// </summary>
     /// <param name="html">HTML markup to assign to the page.</param>
     /// <param name="options">Call options</param>
     Task SetContentAsync(string html, FrameSetContentOptions? options = default);

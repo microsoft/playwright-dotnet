@@ -687,6 +687,12 @@ internal static class StringExtensions
                 case '?':
                     tokens.Add(".");
                     break;
+                case '[':
+                    tokens.Add("[");
+                    break;
+                case ']':
+                    tokens.Add("]");
+                    break;
                 case '{':
                     inGroup = true;
                     tokens.Add("(");

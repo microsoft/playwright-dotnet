@@ -1879,7 +1879,7 @@ public partial interface IPage
     /// <summary>
     /// <para>
     /// If specified the network requests that are made in the page will be served from
-    /// the HAR file. Read more about <a href="https://playwright.dev/dotnet/docs/network#replaying-from-har">Replaying
+    /// the HAR file. Read more about <a href="https://playwright.dev/dotnet/docs/mock#replaying-from-har">Replaying
     /// from HAR</a>.
     /// </para>
     /// <para>
@@ -2217,6 +2217,12 @@ public partial interface IPage
     /// <param name="options">Call options</param>
     Task SetCheckedAsync(string selector, bool checkedState, PageSetCheckedOptions? options = default);
 
+    /// <summary>
+    /// <para>
+    /// This method internally calls <a href="https://developer.mozilla.org/en-US/docs/Web/API/Document/write">document.write()</a>,
+    /// inheriting all its specific characteristics and behaviors.
+    /// </para>
+    /// </summary>
     /// <param name="html">HTML markup to assign to the page.</param>
     /// <param name="options">Call options</param>
     Task SetContentAsync(string html, PageSetContentOptions? options = default);

@@ -65,8 +65,8 @@ internal class LocalUtils : ChannelOwnerBase, IChannelOwner<LocalUtils>
     internal Task HarUnzipAsync(string zipFile, string harFile)
          => _channel.HarUnzipAsync(zipFile, harFile);
 
-    internal Task<JsonPipe> ConnectAsync(string wsEndpoint = default, IEnumerable<KeyValuePair<string, string>> headers = default, float? slowMo = default, float? timeout = default)
-         => _channel.ConnectAsync(wsEndpoint, headers, slowMo, timeout);
+    internal Task<JsonPipe> ConnectAsync(string wsEndpoint = default, IEnumerable<KeyValuePair<string, string>> headers = default, float? slowMo = default, float? timeout = default, string exposeNetwork = default)
+         => _channel.ConnectAsync(wsEndpoint, headers, slowMo, timeout, exposeNetwork);
 
     internal void AddStackToTracingNoReply(List<StackFrame> stack, int id)
          => _channel.AddStackToTracingNoReply(stack, id);
