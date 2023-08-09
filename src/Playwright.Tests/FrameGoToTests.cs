@@ -51,7 +51,14 @@ public class FrameGoToTests : PageTestEx
         await Server.WaitForRequest("/one-style.css");
         await Page.EvalOnSelectorAsync("iframe", "frame => frame.remove()");
         var exception = await PlaywrightAssert.ThrowsAsync<PlaywrightException>(() => navigationTask);
-        Assert.True(exception.Message.Contains("frame was detached") || exception.Message.Contains("net::ERR_ABORTED"));
+        if (BrowserName == "chromium")
+        {
+            Assert.True(exception.Message.Contains("net::ERR_ABORTED") || exception.Message.ToLowerInvariant().Contains("frame was detached"));
+        }
+        else
+        {
+            Assert.True(exception.Message.ToLowerInvariant().Contains("frame was detached"));
+        }
     }
 
     [PlaywrightTest("frame-goto.spec.ts", "should continue after client redirect")]

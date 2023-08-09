@@ -177,7 +177,7 @@ internal class Locator : ILocator
         {
             throw new ArgumentException("Locators must belong to the same frame.");
         }
-        return new Locator(_frame, $"{_selector} >> {locatorImpl._selector}", options);
+        return new Locator(_frame, $"{_selector} >> internal:chain={JsonSerializer.Serialize(locatorImpl._selector, _locatorSerializerOptions)}", options);
     }
 
     IFrameLocator ILocator.FrameLocator(string selector) =>

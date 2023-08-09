@@ -89,7 +89,7 @@ internal class LocalUtilsChannel : Channel<LocalUtils>
                   { "harFile", harFile },
         });
 
-    internal async Task<JsonPipe> ConnectAsync(string wsEndpoint, IEnumerable<KeyValuePair<string, string>> headers, float? slowMo, float? timeout)
+    internal async Task<JsonPipe> ConnectAsync(string wsEndpoint, IEnumerable<KeyValuePair<string, string>> headers, float? slowMo, float? timeout, string exposeNetwork)
     {
         var args = new Dictionary<string, object>
             {
@@ -97,6 +97,7 @@ internal class LocalUtilsChannel : Channel<LocalUtils>
                 { "headers", headers },
                 { "slowMo", slowMo },
                 { "timeout", timeout },
+                { "exposeNetwork", exposeNetwork },
             };
         return (await Connection.SendMessageToServerAsync(Guid, "connect", args).ConfigureAwait(false)).Value.GetObject<JsonPipe>("pipe", Connection);
     }

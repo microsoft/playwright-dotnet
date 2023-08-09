@@ -234,6 +234,23 @@ public class LocatorQueryTests : PageTestEx
         await Expect(Page.Locator("span").Or(Page.Locator("article"))).ToHaveTextAsync("world");
     }
 
+    [PlaywrightTest("locator-query.spec.ts", "should support locator.locator with and/or")]
+    public async Task ShouldSupportLocatorLocatorWithAndOr()
+    {
+        await Page.SetContentAsync(@"
+            <div>one <span>two</span> <button>three</button> </div>
+            <span>four</span>
+            <button>five</button>
+        ");
+
+        await Expect(Page.Locator("div").Locator(Page.Locator("button"))).ToHaveTextAsync(new[] { "three" });
+        await Expect(Page.Locator("div").Locator(Page.Locator("button").Or(Page.Locator("span")))).ToHaveTextAsync(new[] { "two", "three" });
+        await Expect(Page.Locator("button").Or(Page.Locator("span"))).ToHaveTextAsync(new[] { "two", "three", "four", "five" });
+
+        await Expect(Page.Locator("div").Locator(Page.Locator("button").And(Page.GetByRole(AriaRole.Button)))).ToHaveTextAsync(new[] { "three" });
+        await Expect(Page.Locator("button").And(Page.GetByRole(AriaRole.Button))).ToHaveTextAsync(new[] { "three", "five" });
+    }
+
     [PlaywrightTest("locator-query.spec.ts", "should enforce same frame for has:locator'")]
     public async Task ShouldEnforceSameFrameForHasLocator()
     {

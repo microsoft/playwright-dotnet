@@ -50,12 +50,14 @@ public class GlobTests : PageTestEx
         Assert.That("http://localhost:3000/signin-oidc/foo", Does.Not.Match(StringExtensions.GlobToRegex("http://localhost:3000/signin-oidc*")));
         Assert.That("http://localhost:3000/signin-oidcnice", Does.Match(StringExtensions.GlobToRegex("http://localhost:3000/signin-oidc*")));
 
+        Assert.That("http://mydomain:8080/blah/blah/three-columns/settings.html?id=settings-e3c58efe-02e9-44b0-97ac-dd138100cf7c&blah", Does.Match(StringExtensions.GlobToRegex("**/three-columns/settings.html?**id=[a-z]**")));
+
         Assert.AreEqual("^\\?$", StringExtensions.GlobToRegex("\\?"));
         Assert.AreEqual("^\\\\$", StringExtensions.GlobToRegex("\\"));
         Assert.AreEqual("^\\\\$", StringExtensions.GlobToRegex("\\\\"));
         Assert.AreEqual("^\\[$", StringExtensions.GlobToRegex("\\["));
-        Assert.AreEqual("^\\[$", StringExtensions.GlobToRegex("["));
-        Assert.AreEqual("^\\$\\^\\+\\.\\*\\(\\)\\|\\?\\{\\}\\[\\]$", StringExtensions.GlobToRegex("$^+.\\*()|\\?\\{\\}[]"));
+        Assert.AreEqual("^[a-z]$", StringExtensions.GlobToRegex("[a-z]"));
+        Assert.AreEqual(@"^\$\^\+\.\*\(\)\|\?\{\}\[\]$", StringExtensions.GlobToRegex("$^+.\\*()|\\?\\{\\}\\[\\]"));
     }
 
     [PlaywrightTest("interception.spec.ts", "should work with ignoreHTTPSErrors")]

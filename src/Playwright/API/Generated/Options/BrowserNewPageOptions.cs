@@ -186,7 +186,7 @@ public class BrowserNewPageOptions
     /// <para>
     /// Whether the <c>meta viewport</c> tag is taken into account and touch events are
     /// enabled. isMobile is a part of device, so you don't actually need to set it manually.
-    /// Defaults to <c>false</c> and is not supported in Firefox. Learn more about <a href="https://playwright.dev/dotnet/docs/emulation#isMobile">mobile
+    /// Defaults to <c>false</c> and is not supported in Firefox. Learn more about <a href="https://playwright.dev/dotnet/docs/emulation#ismobile">mobile
     /// emulation</a>.
     /// </para>
     /// </summary>

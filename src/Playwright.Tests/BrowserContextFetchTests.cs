@@ -66,7 +66,7 @@ public class BrowserContextFetchTests : PageTestEx
             return Task.CompletedTask;
         });
         var error = await PlaywrightAssert.ThrowsAsync<PlaywrightException>(async () => await Context.APIRequest.GetAsync(Server.Prefix + "/test"));
-        StringAssert.Contains("socket hang up", error.Message);
+        Assert.True(error.Message.Contains("read ECONNRESET") || error.Message.Contains("socket hang up"));
     }
 
     [PlaywrightTest("browsercontext-fetch.spec.ts", "should throw on network error after redirect")]
@@ -79,7 +79,7 @@ public class BrowserContextFetchTests : PageTestEx
             return Task.CompletedTask;
         });
         var error = await PlaywrightAssert.ThrowsAsync<PlaywrightException>(async () => await Context.APIRequest.GetAsync(Server.Prefix + "/redirect"));
-        StringAssert.Contains("socket hang up", error.Message);
+        Assert.True(error.Message.Contains("read ECONNRESET") || error.Message.Contains("socket hang up"));
     }
 
     [PlaywrightTest("browsercontext-fetch.spec.ts", "should add session cookies to request")]

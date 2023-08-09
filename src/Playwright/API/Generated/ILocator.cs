@@ -35,7 +35,7 @@ namespace Microsoft.Playwright;
 /// <para>
 /// Locators are the central piece of Playwright's auto-waiting and retry-ability. In
 /// a nutshell, locators represent a way to find element(s) on the page at any moment.
-/// Locator can be created with the <see cref="IPage.Locator"/> method.
+/// A locator can be created with the <see cref="IPage.Locator"/> method.
 /// </para>
 /// <para><a href="https://playwright.dev/dotnet/docs/locators">Learn more about locators</a>.</para>
 /// </summary>
@@ -43,8 +43,8 @@ public partial interface ILocator
 {
     /// <summary>
     /// <para>
-    /// When locator points to a list of elements, returns array of locators, pointing to
-    /// respective elements.
+    /// When the locator points to a list of elements, this returns an array of locators,
+    /// pointing to their respective elements.
     /// </para>
     /// <para>**Usage**</para>
     /// <code>
@@ -1544,6 +1544,12 @@ public partial interface ILocator
     /// await element.PressAsync("Enter");
     /// </code>
     /// </summary>
+    /// <remarks>
+    /// <para>
+    /// In most cases, you should use <see cref="ILocator.FillAsync"/> instead. You only
+    /// need to type characters if there is special keyboard handling on the page.
+    /// </para>
+    /// </remarks>
     /// <param name="text">A text to type into a focused element.</param>
     /// <param name="options">Call options</param>
     Task TypeAsync(string text, LocatorTypeOptions? options = default);

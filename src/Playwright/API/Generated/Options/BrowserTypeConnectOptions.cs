@@ -40,10 +40,41 @@ public class BrowserTypeConnectOptions
             return;
         }
 
+        ExposeNetwork = clone.ExposeNetwork;
         Headers = clone.Headers;
         SlowMo = clone.SlowMo;
         Timeout = clone.Timeout;
     }
+
+    /// <summary>
+    /// <para>
+    /// This option exposes network available on the connecting client to the browser being
+    /// connected to. Consists of a list of rules separated by comma.
+    /// </para>
+    /// <para>Available rules:</para>
+    /// <list type="ordinal">
+    /// <item><description>
+    /// Hostname pattern, for example: <c>example.com</c>, <c>*.org:99</c>, <c>x.*.y.com</c>,
+    /// <c>*foo.org</c>.
+    /// </description></item>
+    /// <item><description>IP literal, for example: <c>127.0.0.1</c>, <c>0.0.0.0:99</c>, <c>[::1]</c>, <c>[0:0::1]:99</c>.</description></item>
+    /// <item><description>
+    /// <c>&lt;loopback&gt;</c> that matches local loopback interfaces: <c>localhost</c>,
+    /// <c>*.localhost</c>, <c>127.0.0.1</c>, <c>[::1]</c>.
+    /// </description></item>
+    /// </list>
+    /// <para>Some common examples:</para>
+    /// <list type="ordinal">
+    /// <item><description><c>"*"</c> to expose all network.</description></item>
+    /// <item><description><c>"&lt;loopback&gt;"</c> to expose localhost network.</description></item>
+    /// <item><description>
+    /// <c>"*.test.internal-domain,*.staging.internal-domain,&lt;loopback&gt;"</c> to expose
+    /// test/staging deployments and localhost.
+    /// </description></item>
+    /// </list>
+    /// </summary>
+    [JsonPropertyName("exposeNetwork")]
+    public string? ExposeNetwork { get; set; }
 
     /// <summary><para>Additional HTTP headers to be sent with web socket connect request. Optional.</para></summary>
     [JsonPropertyName("headers")]

@@ -625,7 +625,7 @@ public partial interface IBrowserContext
     /// <summary>
     /// <para>
     /// If specified the network requests that are made in the context will be served from
-    /// the HAR file. Read more about <a href="https://playwright.dev/dotnet/docs/network#replaying-from-har">Replaying
+    /// the HAR file. Read more about <a href="https://playwright.dev/dotnet/docs/mock#replaying-from-har">Replaying
     /// from HAR</a>.
     /// </para>
     /// <para>
