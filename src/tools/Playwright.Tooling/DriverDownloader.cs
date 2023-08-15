@@ -113,6 +113,7 @@ internal class DriverDownloader
         }
 
         using var client = new HttpClient();
+        client.Timeout = TimeSpan.FromMinutes(5);
         // Azure seems to not like requests without a user agent.
         client.DefaultRequestHeaders.Add("User-Agent", "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/105.0.0.0 Safari/537.36");
         string url = $"{cdn}/playwright-{driverVersion}-{platform}.zip";
