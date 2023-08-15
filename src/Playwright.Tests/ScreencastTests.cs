@@ -179,14 +179,14 @@ public class ScreencastTests : BrowserTestEx
         using var userDirectory = new TempDirectory();
         using var tempDirectory = new TempDirectory();
 
-        await using var context = await BrowserType.LaunchPersistentContextAsync(userDirectory.Path, new()
+        var context = await BrowserType.LaunchPersistentContextAsync(userDirectory.Path, new()
         {
             RecordVideoDir = tempDirectory.Path,
             Headless = false
         });
 
         var page = await context.NewPageAsync();
-        await page.CloseAsync();
+        await context.CloseAsync();
 
         try
         {
