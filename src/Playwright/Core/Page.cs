@@ -100,7 +100,7 @@ internal class Page : ChannelOwnerBase, IChannelOwner<Page>, IPage
 
         if (Context.Options.RecordVideoDir != null)
         {
-            _video = new Video(this,  _channel.Connection);
+            _video = new Video(this, _channel.Connection);
         }
 
         _channel.FileChooser += (_, e) => _fileChooserImpl?.Invoke(this, new FileChooser(this, e.Element.Object, e.IsMultiple));
