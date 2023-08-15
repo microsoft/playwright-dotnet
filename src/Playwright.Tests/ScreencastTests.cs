@@ -178,7 +178,7 @@ public class ScreencastTests : BrowserTestEx
     {
         using var tempDirectory = new TempDirectory();
 
-        var chrome = await Playwright.Chromium.LaunchAsync(new BrowserTypeLaunchOptions
+        await using var chrome = await Playwright.Chromium.LaunchAsync(new BrowserTypeLaunchOptions
         {
             Headless = false
         });
