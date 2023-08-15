@@ -171,4 +171,33 @@ public class ScreencastTests : BrowserTestEx
 
         Assert.IsNotEmpty(new DirectoryInfo(tempDirectory.Path).GetFiles("*.webm"));
     }
+
+    [PlaywrightTest("screencast.spec.ts", "Video does not hang if page not interacted with")]
+    [Timeout(30_000)]
+    public async Task VideoDoesNotHangIfNotHeadlessAndPageNotInteractedWith()
+    {
+        using var tempDirectory = new TempDirectory();
+
+        var chrome = await Playwright.Chromium.LaunchAsync(new BrowserTypeLaunchOptions
+        {
+            Headless = false
+        });
+
+        var context = await chrome.NewContextAsync(new BrowserNewContextOptions
+        {
+            RecordVideoDir = tempDirectory.Path,
+        });
+
+        var page = await context.NewPageAsync();
+        await page.CloseAsync();
+
+        try
+        {
+            await page.Video!.PathAsync();
+        }
+        catch (TaskCanceledException)
+        {
+            // Ignored
+        }
+    }
 }
