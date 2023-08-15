@@ -35,8 +35,14 @@ internal class Video : IVideo
     public Video(Page page, Connection connection)
     {
         _isRemote = connection.IsRemote;
+
         page.Close += (_, _) => _artifactTcs.TrySetCanceled();
         page.Crash += (_, _) => _artifactTcs.TrySetCanceled();
+
+        if (page.ClosedOrCrashedTcs.Task.IsCompleted)
+        {
+            _artifactTcs.TrySetCanceled();
+        }
     }
 
     public async Task DeleteAsync()

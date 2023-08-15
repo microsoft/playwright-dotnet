@@ -95,13 +95,7 @@ internal class Page : ChannelOwnerBase, IChannelOwner<Page>, IPage
 
             PageError?.Invoke(this, $"{e.Error.Name}: {e.Error.Message}");
         };
-
-        _channel.Video += (_, artifact) => _video.ArtifactReady(artifact);
-
-        if (Context.Options.RecordVideoDir != null)
-        {
-            _video = new Video(this, _channel.Connection);
-        }
+        _channel.Video += (_, artifact) => ForceVideo().ArtifactReady(artifact);
 
         _channel.FileChooser += (_, e) => _fileChooserImpl?.Invoke(this, new FileChooser(this, e.Element.Object, e.IsMultiple));
         _channel.Worker += (_, worker) =>
@@ -243,7 +237,15 @@ internal class Page : ChannelOwnerBase, IChannelOwner<Page>, IPage
 
     public IVideo Video
     {
-        get => _video;
+        get
+        {
+            if (Context.Options.RecordVideoDir == null)
+            {
+                return null;
+            }
+
+            return ForceVideo();
+        }
         set => _video = value as Video;
     }
 
@@ -1273,6 +1275,8 @@ internal class Page : ChannelOwnerBase, IChannelOwner<Page>, IPage
 
         return _channel.ExposeBindingAsync(name, handle);
     }
+
+    private Video ForceVideo() => _video ??= new(this, _channel.Connection);
 
     private FrameSetInputFilesOptions Map(PageSetInputFilesOptions options)
     {

@@ -176,16 +176,13 @@ public class ScreencastTests : BrowserTestEx
     [Timeout(30_000)]
     public async Task VideoDoesNotHangIfNotHeadlessAndPageNotInteractedWith()
     {
+        using var userDirectory = new TempDirectory();
         using var tempDirectory = new TempDirectory();
 
-        await using var chrome = await Playwright.Chromium.LaunchAsync(new BrowserTypeLaunchOptions
-        {
-            Headless = false
-        });
-
-        var context = await chrome.NewContextAsync(new BrowserNewContextOptions
+        await using var context = await BrowserType.LaunchPersistentContextAsync(userDirectory.Path, new()
         {
             RecordVideoDir = tempDirectory.Path,
+            Headless = false
         });
 
         var page = await context.NewPageAsync();
