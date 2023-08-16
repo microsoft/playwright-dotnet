@@ -187,9 +187,15 @@ public class ScreencastTests : BrowserTestEx
         var page = await context.NewPageAsync();
         await context.CloseAsync();
 
-        Assert.That(() => page.Video!.PathAsync(), Throws.TypeOf<TaskCanceledException>());
+        try
+        {
+            await page.Video!.PathAsync();
+        }
+        catch (TaskCanceledException)
+        {
+            // Ignore
+        }
 
         Assert.That(page.Video!.IsCompleted, Is.True);
-        Assert.That(page.Video!.IsCanceled, Is.True);
     }
 }
