@@ -36,13 +36,7 @@ internal class Video : IVideo
     {
         _isRemote = connection.IsRemote;
 
-        page.Close += (_, _) => _artifactTcs.TrySetCanceled();
-        page.Crash += (_, _) => _artifactTcs.TrySetCanceled();
-
-        if (page.ClosedOrCrashedTcs.Task.IsCompleted)
-        {
-            _artifactTcs.TrySetCanceled();
-        }
+        TrySetCanceledOnPageClose(page);
     }
 
     public async Task DeleteAsync()
@@ -68,4 +62,6 @@ internal class Video : IVideo
     }
 
     internal void ArtifactReady(Artifact artifact) => _artifactTcs.TrySetResult(artifact);
+
+    private void TrySetCanceledOnPageClose(Page page) => page.ClosedOrCrashedTcs.Task.ContinueWith(_ => _artifactTcs.TrySetCanceled(), TaskScheduler.Default);
 }
