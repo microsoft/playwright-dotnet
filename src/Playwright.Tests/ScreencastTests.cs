@@ -174,27 +174,20 @@ public class ScreencastTests : BrowserTestEx
 
     [PlaywrightTest("screencast.spec.ts", "Video does not hang if page not interacted with")]
     [Timeout(30_000)]
-    public async Task VideoDoesNotHangIfNotHeadlessAndPageNotInteractedWith()
+    public async Task VideoDoesNotHangIfPageNotInteractedWith()
     {
         using var userDirectory = new TempDirectory();
         using var tempDirectory = new TempDirectory();
 
         var context = await BrowserType.LaunchPersistentContextAsync(userDirectory.Path, new()
         {
-            RecordVideoDir = tempDirectory.Path,
-            Headless = false
+            RecordVideoDir = tempDirectory.Path
         });
 
         var page = await context.NewPageAsync();
         await context.CloseAsync();
 
-        try
-        {
-            await page.Video!.PathAsync();
-        }
-        catch (TaskCanceledException)
-        {
-            // Ignored
-        }
+        Assert.That(page.Video!.IsCompleted, Is.True);
+        Assert.That(page.Video!.IsCanceled, Is.True);
     }
 }

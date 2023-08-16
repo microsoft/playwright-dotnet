@@ -61,6 +61,10 @@ internal class Video : IVideo
         await artifact.SaveAsAsync(path).ConfigureAwait(false);
     }
 
+    public bool IsCompleted() => _artifactTcs.Task.IsCompleted;
+
+    public bool IsCanceled() => _artifactTcs.Task.IsCanceled;
+
     internal void ArtifactReady(Artifact artifact) => _artifactTcs.TrySetResult(artifact);
 
     private void TrySetCanceledOnPageClose(Page page) => page.ClosedOrCrashedTcs.Task.ContinueWith(_ => _artifactTcs.TrySetCanceled(), TaskScheduler.Default);

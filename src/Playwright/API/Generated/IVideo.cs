@@ -58,6 +58,12 @@ public partial interface IVideo
     /// </summary>
     /// <param name="path">Path where the video should be saved.</param>
     Task SaveAsAsync(string path);
+
+    /// <summary><para>True if the video file is not waiting for completion.</para></summary>
+    bool IsCompleted();
+
+    /// <summary><para>True if the video file was canceled.</para></summary>
+    bool IsCanceled();
 }
 
 #nullable disable
