@@ -146,8 +146,21 @@ internal class StdIOTransport : IDisposable
         var originalInputEncoding = Console.InputEncoding;
         var originalOutputEncoding = Console.OutputEncoding;
 
-        Console.InputEncoding = encoding;
-        Console.OutputEncoding = encoding;
+        var hasConsole = true;
+        try
+        {
+            var height = Console.WindowHeight;
+        }
+        catch
+        {
+            hasConsole = false;
+        }
+
+        if (hasConsole)
+        {
+            Console.InputEncoding = encoding;
+            Console.OutputEncoding = encoding;
+        }
 
         try
         {
@@ -155,9 +168,12 @@ internal class StdIOTransport : IDisposable
         }
         finally
         {
-            // Restore the original encodings
-            Console.InputEncoding = originalInputEncoding;
-            Console.OutputEncoding = originalOutputEncoding;
+            if (hasConsole)
+            {
+                // Restore the original encodings
+                Console.InputEncoding = originalInputEncoding;
+                Console.OutputEncoding = originalOutputEncoding;
+            }
         }
     }
 
