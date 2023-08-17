@@ -703,6 +703,21 @@ public class BrowserContextFetchTests : PageTestEx
         Assert.AreEqual(200, response.Status);
     }
 
+    [PlaywrightTest("browsercontext-fetch.spec.ts", "should not allow file payloads in Form parameter")]
+    public async Task ShouldNotAllowFilePayloadsInFormParameter()
+    {
+        var file = new FilePayload()
+        {
+            Name = "f.js",
+            MimeType = "text/javascript",
+            Buffer = Array.Empty<byte>()
+        };
+        var formData = Context.APIRequest.CreateFormData();
+        formData.Set("file", file);
+        var exception = await PlaywrightAssert.ThrowsAsync<PlaywrightException>(() => Context.APIRequest.PostAsync(Server.EmptyPage, new() { Form = formData }));
+        StringAssert.Contains("Form requests don't support file payloads, use MultiPart=formData instead.", exception.Message);
+    }
+
     [PlaywrightTest("browsercontext-fetch.spec.ts", "should serialize data to json regardless of content-type")]
     public async Task ShouldSerializeDatatoJsonRegardlessOfContentType()
     {

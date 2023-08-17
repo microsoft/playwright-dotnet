@@ -51,13 +51,17 @@ public class FormData : IFormData
 
     public IFormData Set(string name, FilePayload value) => SetImpl(name, value);
 
-    internal IList<object> ToProtocol()
+    internal IList<object> ToProtocol(bool throwWhenSerializingFilePayloads = false)
     {
         var output = new List<object>();
         foreach (var kvp in Values)
         {
             if (kvp.Value is FilePayload file)
             {
+                if (throwWhenSerializingFilePayloads)
+                {
+                    throw new PlaywrightException("Form requests don't support file payloads, use MultiPart=formData instead.");
+                }
                 output.Add(new Dictionary<string, object>()
                 {
                     ["name"] = kvp.Key,
