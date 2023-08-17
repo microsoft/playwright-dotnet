@@ -64,7 +64,7 @@ internal class APIRequestContextChannel : Channel<APIRequestContext>
             ["headers"] = headers?.ToProtocol(),
             ["jsonData"] = jsonData,
             ["postData"] = postData != null ? Convert.ToBase64String(postData) : null,
-            ["formData"] = formData?.ToProtocol(),
+            ["formData"] = formData?.ToProtocol(throwWhenSerializingFilePayloads: true),
             ["multipartData"] = multipartData?.ToProtocol(),
         };
 
