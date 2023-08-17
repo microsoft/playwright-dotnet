@@ -715,7 +715,7 @@ public class BrowserContextFetchTests : PageTestEx
         var formData = Context.APIRequest.CreateFormData();
         formData.Set("file", file);
         var exception = await PlaywrightAssert.ThrowsAsync<PlaywrightException>(() => Context.APIRequest.PostAsync(Server.EmptyPage, new() { Form = formData }));
-        StringAssert.Contains("Form requests don't support file payloads, use MultiPart=formData instead.", exception.Message);
+        StringAssert.Contains("Form requests don't support file payloads, use Multipart=formData instead.", exception.Message);
     }
 
     [PlaywrightTest("browsercontext-fetch.spec.ts", "should serialize data to json regardless of content-type")]

@@ -60,7 +60,7 @@ public class FormData : IFormData
             {
                 if (throwWhenSerializingFilePayloads)
                 {
-                    throw new PlaywrightException("Form requests don't support file payloads, use MultiPart=formData instead.");
+                    throw new PlaywrightException("Form requests don't support file payloads, use Multipart=formData instead.");
                 }
                 output.Add(new Dictionary<string, object>()
                 {
