@@ -35,14 +35,21 @@ internal class Video : IVideo
     public Video(Page page, Connection connection)
     {
         _isRemote = connection.IsRemote;
-        page.Close += (_, _) => _artifactTcs.TrySetCanceled();
-        page.Crash += (_, _) => _artifactTcs.TrySetCanceled();
+        if (page.IsClosed)
+        {
+            _artifactTcs.TrySetResult(null);
+        }
+        page.Close += (_, _) => _artifactTcs.TrySetResult(null);
+        page.Crash += (_, _) => _artifactTcs.TrySetResult(null);
     }
 
     public async Task DeleteAsync()
     {
         var artifact = await _artifactTcs.Task.ConfigureAwait(false);
-        await artifact.DeleteAsync().ConfigureAwait(false);
+        if (artifact != null)
+        {
+            await artifact.DeleteAsync().ConfigureAwait(false);
+        }
     }
 
     public async Task<string> PathAsync()
@@ -52,12 +59,20 @@ internal class Video : IVideo
             throw new PlaywrightException("Path is not available when connecting remotely. Use SaveAsAsync() to save a local copy.");
         }
         var artifact = await _artifactTcs.Task.ConfigureAwait(false);
+        if (artifact == null)
+        {
+            throw new PlaywrightException("Page did not produce any video frames.");
+        }
         return artifact.AbsolutePath;
     }
 
     public async Task SaveAsAsync(string path)
     {
         var artifact = await _artifactTcs.Task.ConfigureAwait(false);
+        if (artifact == null)
+        {
+            throw new PlaywrightException("Page did not produce any video frames.");
+        }
         await artifact.SaveAsAsync(path).ConfigureAwait(false);
     }
 

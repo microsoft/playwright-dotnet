@@ -171,4 +171,25 @@ public class ScreencastTests : BrowserTestEx
 
         Assert.IsNotEmpty(new DirectoryInfo(tempDirectory.Path).GetFiles("*.webm"));
     }
+
+
+    [PlaywrightTest("screencast.spec.ts", "video.path()/saveAs() does not hang immediately after launchPersistentContext and context.close()")]
+    [Timeout(30_000)]
+    public async Task VideoPathSaveAsDoesNotHangImmediatelyAfterLaunchPersistentContextAndContextClose()
+    {
+        using var userDirectory = new TempDirectory();
+        using var tempDirectory = new TempDirectory();
+
+        var context = await BrowserType.LaunchPersistentContextAsync(userDirectory.Path, new()
+        {
+            RecordVideoDir = tempDirectory.Path
+        });
+        var page = context.Pages[0];
+        await context.CloseAsync();
+        var exception = await PlaywrightAssert.ThrowsAsync<PlaywrightException>(() => page.Video.PathAsync());
+        Assert.AreEqual("Page did not produce any video frames.", exception.Message);
+        exception = await PlaywrightAssert.ThrowsAsync<PlaywrightException>(() => page.Video.SaveAsAsync(""));
+        Assert.AreEqual("Page did not produce any video frames.", exception.Message);
+        await page.Video.DeleteAsync();
+    }
 }
