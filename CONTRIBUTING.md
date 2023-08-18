@@ -109,13 +109,13 @@ The resulting code will follow our style guides. This is also enforced in our CI
 Tests can either be executed in their entirety:
 
 ```bash
-dotnet test ./src/Playwright.Tests/Playwright.Tests.csproj --logger:"console;verbosity=detailed"
+dotnet test -f net6.0 ./src/Playwright.Tests/Playwright.Tests.csproj --logger:"console;verbosity=detailed"
 ```
 
 You can also specify a single test to run:
 
 ```bash
-dotnet test ./src/Playwright.Tests/Playwright.Tests.csproj --logger:"console;verbosity=detailed" --filter Playwright.Tests.TapTests
+dotnet test -f net6.0 ./src/Playwright.Tests/Playwright.Tests.csproj --logger:"console;verbosity=detailed" --filter Playwright.Tests.TapTests
 ```
 
 Additionally, you can use the Test Explorer if you're using Visual Studio.
@@ -137,7 +137,7 @@ This will re-generate the neccessary files for the new driver version.
 ```shell
 dotnet tool install -g dotnet-reportgenerator-globaltool
 
-dotnet test ./src/Playwright.Tests/Playwright.Tests.csproj --logger:"console;verbosity=detailed" -p:CollectCoverage=true -p:CoverletOutputFormat=cobertura -p:CoverletOutput="coverage.xml" --filter "Playwright.Tests.Assertions.PageAssertionsTests"
+dotnet test -f net6.0 ./src/Playwright.Tests/Playwright.Tests.csproj --logger:"console;verbosity=detailed" -p:CollectCoverage=true -p:CoverletOutputFormat=cobertura -p:CoverletOutput="coverage.xml" --filter "Playwright.Tests.Assertions.PageAssertionsTests"
 reportgenerator -reports:src/Playwright.Tests/coverage.net6.0.xml -targetdir:coverage-report -reporttypes:HTML
 open coverage-report/index.html
 ```
