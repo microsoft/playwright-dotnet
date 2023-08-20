@@ -146,15 +146,7 @@ internal class StdIOTransport : IDisposable
         var originalInputEncoding = Console.InputEncoding;
         var originalOutputEncoding = Console.OutputEncoding;
 
-        var hasConsole = true;
-        try
-        {
-            var height = Console.WindowHeight;
-        }
-        catch
-        {
-            hasConsole = false;
-        }
+        var hasConsole = (Console.CursorLeft != 0) || (Console.CursorTop != 0);
 
         if (hasConsole)
         {
