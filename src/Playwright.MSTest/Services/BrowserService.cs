@@ -22,6 +22,10 @@
  * SOFTWARE.
  */
 
+using System;
+using System.Collections.Generic;
+using System.Globalization;
+using System.Text.Json;
 using System.Threading.Tasks;
 using Microsoft.Playwright.TestAdapter;
 
@@ -37,6 +41,33 @@ internal class BrowserService : IWorkerService
 
     public async Task BuildAsync(PlaywrightTest parentTest)
     {
-        Browser = await parentTest!.BrowserType!.LaunchAsync(PlaywrightSettingsProvider.LaunchOptions).ConfigureAwait(false);
+        var accessKey = Environment.GetEnvironmentVariable("PLAYWRIGHT_SERVICE_ACCESS_KEY");
+        var serviceUrl = Environment.GetEnvironmentVariable("PLAYWRIGHT_SERVICE_URL");
+
+        if (string.IsNullOrEmpty(accessKey) || string.IsNullOrEmpty(serviceUrl))
+        {
+            Browser = await parentTest!.BrowserType!.LaunchAsync(PlaywrightSettingsProvider.LaunchOptions).ConfigureAwait(false);
+        }
+        else
+        {
+            var exposeNetwork = Environment.GetEnvironmentVariable("PLAYWRIGHT_SERVICE_EXPOSE_NETWORK") ?? "<loopback>";
+            var caps = new Dictionary<string, string>
+            {
+                ["os"] = Environment.GetEnvironmentVariable("PLAYWRIGHT_SERVICE_OS") ?? "linux",
+                ["runId"] = Environment.GetEnvironmentVariable("PLAYWRIGHT_SERVICE_RUN_ID") ?? DateTime.Now.ToUniversalTime().ToString("yyyy-MM-ddTHH:mm:ss", CultureInfo.InvariantCulture),
+            };
+            var wsEndpoint = $"{serviceUrl}?cap={JsonSerializer.Serialize(caps)}";
+            var connectOptions = new BrowserTypeConnectOptions
+            {
+                Timeout = 3 * 60 * 1000,
+                ExposeNetwork = exposeNetwork,
+                Headers = new Dictionary<string, string>
+                {
+                    ["x-mpt-access-key"] = accessKey
+                }
+            };
+
+            Browser = await parentTest!.BrowserType!.ConnectAsync(wsEndpoint, connectOptions).ConfigureAwait(false);
+        }
     }
 }
