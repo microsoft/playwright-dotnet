@@ -93,6 +93,13 @@ internal class BrowserContext : ChannelOwnerBase, IChannelOwner<BrowserContext>,
             }
         };
         Channel.Page += Channel_OnPage;
+        Channel.PageError += (_, e) =>
+        {
+            var pageObject = e.Page?.Object;
+            var parsedError = string.IsNullOrEmpty(e.Error.Error.Stack) ? $"{e.Error.Error.Name}: {e.Error.Error.Message}" : e.Error.Error.Stack;
+            PageError?.Invoke(this, new PageError(pageObject, parsedError));
+            pageObject?.FirePageError(parsedError);
+        };
         Channel.BindingCall += Channel_BindingCall;
         Channel.Route += Channel_Route;
         Channel.RequestFailed += (_, e) =>
@@ -161,6 +168,8 @@ internal class BrowserContext : ChannelOwnerBase, IChannelOwner<BrowserContext>,
     }
 
     public event EventHandler<IPage> Page;
+
+    public event EventHandler<IPageError> PageError;
 
     public event EventHandler<IRequest> Request
     {
@@ -506,6 +515,7 @@ internal class BrowserContext : ChannelOwnerBase, IChannelOwner<BrowserContext>,
 
     internal async Task OnRouteAsync(Route route)
     {
+        route._context = this;
         var routeHandlers = _routes.ToArray();
         foreach (var routeHandler in routeHandlers)
         {

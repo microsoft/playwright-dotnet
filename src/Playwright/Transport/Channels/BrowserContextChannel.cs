@@ -54,6 +54,8 @@ internal class BrowserContextChannel : Channel<BrowserContext>
 
     internal event EventHandler<BindingCall> BindingCall;
 
+    internal event EventHandler<(SerializedError Error, PageChannel Page)> PageError;
+
     internal event EventHandler<Route> Route;
 
     internal event EventHandler<BrowserContextChannelRequestEventArgs> Request;
@@ -90,6 +92,9 @@ internal class BrowserContextChannel : Channel<BrowserContext>
                 Page?.Invoke(
                     this,
                     new() { PageChannel = serverParams?.GetProperty("page").ToObject<PageChannel>(Connection.DefaultJsonSerializerOptions) });
+                break;
+            case "pageError":
+                PageError?.Invoke(this, new(serverParams?.GetProperty("error").ToObject<SerializedError>(Connection.DefaultJsonSerializerOptions), serverParams?.GetProperty("page").ToObject<PageChannel>(Connection.DefaultJsonSerializerOptions)));
                 break;
             case "crBackgroundPage":
                 BackgroundPage?.Invoke(

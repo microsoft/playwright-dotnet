@@ -165,6 +165,7 @@ public class PageEventPopupTests : PageTestEx
         var popup = await popupTask.Result;
         Assert.False(await Page.EvaluateAsync<bool>("() => !!window.opener"));
         Assert.True(await popup.EvaluateAsync<bool>("() => !!window.opener"));
+        Assert.AreEqual(popup.MainFrame.Page, popup);
     }
 
     [PlaywrightTest("page-event-popup.spec.ts", "should work with fake-clicking target=_blank and rel=noopener")]

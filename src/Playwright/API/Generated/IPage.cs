@@ -2469,7 +2469,10 @@ public partial interface IPage
     public ITouchscreen Touchscreen { get; }
 
     /// <summary>
-    /// <para>Use locator-based <see cref="ILocator.TypeAsync"/> instead. Read more about <a href="https://playwright.dev/dotnet/docs/locators">locators</a>.</para>
+    /// <para>
+    /// **DEPRECATED** Use locator-based <see cref="ILocator.PressSequentiallyAsync"/> instead.
+    /// Read more about <a href="https://playwright.dev/dotnet/docs/locators">locators</a>.
+    /// </para>
     /// <para>
     /// Sends a <c>keydown</c>, <c>keypress</c>/<c>input</c>, and <c>keyup</c> event for
     /// each character in the text. <c>page.type</c> can be used to send fine-grained keyboard
@@ -2477,10 +2480,6 @@ public partial interface IPage
     /// </para>
     /// <para>To press a special key, like <c>Control</c> or <c>ArrowDown</c>, use <see cref="IKeyboard.PressAsync"/>.</para>
     /// <para>**Usage**</para>
-    /// <code>
-    /// await page.TypeAsync("#mytextarea", "hello"); // types instantly<br/>
-    /// await page.TypeAsync("#mytextarea", "world", new() { Delay = 100 }); // types slower, like a user
-    /// </code>
     /// </summary>
     /// <param name="selector">
     /// A selector to search for an element. If there are multiple elements satisfying the
@@ -2488,6 +2487,7 @@ public partial interface IPage
     /// </param>
     /// <param name="text">A text to type into a focused element.</param>
     /// <param name="options">Call options</param>
+    [System.Obsolete]
     Task TypeAsync(string selector, string text, PageTypeOptions? options = default);
 
     /// <summary>

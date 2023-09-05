@@ -56,6 +56,8 @@ internal class Route : ChannelOwnerBase, IChannelOwner<Route>, IRoute
 
     public IRequest Request => _initializer.Request;
 
+    internal BrowserContext _context { get; set; }
+
     ChannelBase IChannelOwner.Channel => _channel;
 
     IChannel<Route> IChannelOwner<Route>.Channel => _channel;
@@ -260,11 +262,11 @@ internal class Route : ChannelOwnerBase, IChannelOwner<Route>, IRoute
 
     [MethodImpl(MethodImplOptions.NoInlining)]
     public Task<IAPIResponse> FetchAsync(RouteFetchOptions options)
-        => _request._context.Channel.Connection.WrapApiCallAsync(
+        => _channel.Connection.WrapApiCallAsync(
             () =>
             {
-                var context = _request._context;
-                return ((APIRequestContext)context.APIRequest).InnerFetchAsync(_request, options?.Url, new()
+                var apiRequest = (APIRequestContext)_context.APIRequest;
+                return apiRequest.InnerFetchAsync(_request, options?.Url, new()
                 {
                     Headers = options?.Headers,
                     Method = options?.Method,

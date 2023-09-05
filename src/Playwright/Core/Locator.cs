@@ -322,6 +322,9 @@ internal class Locator : ILocator
     public Task TypeAsync(string text, LocatorTypeOptions options = null)
         => _frame.TypeAsync(_selector, text, ConvertOptions<FrameTypeOptions>(options));
 
+    public Task PressSequentiallyAsync(string text, LocatorPressSequentiallyOptions options = null)
+        => TypeAsync(text, ConvertOptions<LocatorTypeOptions>(options));
+
     public Task UncheckAsync(LocatorUncheckOptions options = null)
         => _frame.UncheckAsync(_selector, ConvertOptions<FrameUncheckOptions>(options));
 

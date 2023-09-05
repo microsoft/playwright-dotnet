@@ -57,8 +57,6 @@ internal class PageChannel : Channel<Page>
 
     internal event EventHandler<PageDownloadEvent> Download;
 
-    internal event EventHandler<SerializedError> PageError;
-
     internal event EventHandler<FileChooserChannelEventArgs> FileChooser;
 
     internal event EventHandler<Worker> Worker;
@@ -86,9 +84,6 @@ internal class PageChannel : Channel<Page>
                 break;
             case "popup":
                 Popup?.Invoke(this, serverParams?.GetProperty("page").ToObject<PageChannel>(Connection.DefaultJsonSerializerOptions).Object);
-                break;
-            case "pageError":
-                PageError?.Invoke(this, serverParams?.GetProperty("error").ToObject<SerializedError>(Connection.DefaultJsonSerializerOptions));
                 break;
             case "fileChooser":
                 FileChooser?.Invoke(this, serverParams?.ToObject<FileChooserChannelEventArgs>(Connection.DefaultJsonSerializerOptions));

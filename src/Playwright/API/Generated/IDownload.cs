@@ -40,14 +40,16 @@ namespace Microsoft.Playwright;
 /// </para>
 /// <para>
 /// Download event is emitted once the download starts. Download path becomes available
-/// once download completes:
+/// once download completes.
 /// </para>
 /// <code>
-/// var download = await page.RunAndWaitForDownloadAsync(async () =&gt;<br/>
-/// {<br/>
-///     await page.GetByText("Download file").ClickAsync();<br/>
-/// });<br/>
-/// Console.WriteLine(await download.PathAsync());
+/// // Start the task of waiting for the download before clicking<br/>
+/// var waitForDownloadTask = page.WaitForDownloadAsync();<br/>
+/// await page.GetByText("Download file").ClickAsync();<br/>
+/// var download = await waitForDownloadTask;<br/>
+/// <br/>
+/// // Wait for the download process to complete and save the downloaded file somewhere<br/>
+/// await download.SaveAsAsync("/path/to/save/at/" + download.SuggestedFilename);
 /// </code>
 /// </summary>
 public partial interface IDownload
@@ -89,6 +91,8 @@ public partial interface IDownload
     /// Copy the download to a user-specified path. It is safe to call this method while
     /// the download is still in progress. Will wait for the download to finish if necessary.
     /// </para>
+    /// <para>**Usage**</para>
+    /// <code>await download.SaveAsAsync("/path/to/save/at/" + download.SuggestedFilename);</code>
     /// </summary>
     /// <param name="path">Path where the download should be copied.</param>
     Task SaveAsAsync(string path);

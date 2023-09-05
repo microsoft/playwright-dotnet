@@ -462,7 +462,7 @@ public partial interface ILocator
     /// is inside the <c>&lt;label&gt;</c> element that has an associated <a href="https://developer.mozilla.org/en-US/docs/Web/API/HTMLLabelElement/control">control</a>,
     /// the control will be filled instead.
     /// </para>
-    /// <para>To send fine-grained keyboard events, use <see cref="ILocator.TypeAsync"/>.</para>
+    /// <para>To send fine-grained keyboard events, use <see cref="ILocator.PressSequentiallyAsync"/>.</para>
     /// </summary>
     /// <param name="value">
     /// Value to set for the <c>&lt;input&gt;</c>, <c>&lt;textarea&gt;</c> or <c>[contenteditable]</c>
@@ -1012,6 +1012,34 @@ public partial interface ILocator
     Task PressAsync(string key, LocatorPressOptions? options = default);
 
     /// <summary>
+    /// <para>
+    /// Focuses the element, and then sends a <c>keydown</c>, <c>keypress</c>/<c>input</c>,
+    /// and <c>keyup</c> event for each character in the text.
+    /// </para>
+    /// <para>To press a special key, like <c>Control</c> or <c>ArrowDown</c>, use <see cref="ILocator.PressAsync"/>.</para>
+    /// <para>**Usage**</para>
+    /// <code>
+    /// await locator.PressSequentiallyAsync("Hello"); // Types instantly<br/>
+    /// await locator.PressSequentiallyAsync("World", new() { Delay = 100 }); // Types slower, like a user
+    /// </code>
+    /// <para>An example of typing into a text field and then submitting the form:</para>
+    /// <code>
+    /// var locator = page.GetByLabel("Password");<br/>
+    /// await locator.PressSequentiallyAsync("my password");<br/>
+    /// await locator.PressAsync("Enter");
+    /// </code>
+    /// </summary>
+    /// <remarks>
+    /// <para>
+    /// In most cases, you should use <see cref="ILocator.FillAsync"/> instead. You only
+    /// need to press keys one by one if there is special keyboard handling on the page.
+    /// </para>
+    /// </remarks>
+    /// <param name="text">String of characters to sequentially press into a focused element.</param>
+    /// <param name="options">Call options</param>
+    Task PressSequentiallyAsync(string text, LocatorPressSequentiallyOptions? options = default);
+
+    /// <summary>
     /// <para>Take a screenshot of the element matching the locator.</para>
     /// <para>**Usage**</para>
     /// <code>await page.GetByRole(AriaRole.Link).ScreenshotAsync();</code>
@@ -1528,30 +1556,20 @@ public partial interface ILocator
 
     /// <summary>
     /// <para>
+    /// **DEPRECATED** In most cases, you should use <see cref="ILocator.FillAsync"/> instead.
+    /// You only need to press keys one by one if there is special keyboard handling on
+    /// the page - in this case use <see cref="ILocator.PressSequentiallyAsync"/>.
+    /// </para>
+    /// <para>
     /// Focuses the element, and then sends a <c>keydown</c>, <c>keypress</c>/<c>input</c>,
     /// and <c>keyup</c> event for each character in the text.
     /// </para>
     /// <para>To press a special key, like <c>Control</c> or <c>ArrowDown</c>, use <see cref="ILocator.PressAsync"/>.</para>
     /// <para>**Usage**</para>
-    /// <code>
-    /// await element.TypeAsync("Hello"); // Types instantly<br/>
-    /// await element.TypeAsync("World", new() { Delay = 100 }); // Types slower, like a user
-    /// </code>
-    /// <para>An example of typing into a text field and then submitting the form:</para>
-    /// <code>
-    /// var element = page.GetByLabel("Password");<br/>
-    /// await element.TypeAsync("my password");<br/>
-    /// await element.PressAsync("Enter");
-    /// </code>
     /// </summary>
-    /// <remarks>
-    /// <para>
-    /// In most cases, you should use <see cref="ILocator.FillAsync"/> instead. You only
-    /// need to type characters if there is special keyboard handling on the page.
-    /// </para>
-    /// </remarks>
     /// <param name="text">A text to type into a focused element.</param>
     /// <param name="options">Call options</param>
+    [System.Obsolete]
     Task TypeAsync(string text, LocatorTypeOptions? options = default);
 
     /// <summary>

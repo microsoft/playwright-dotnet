@@ -50,6 +50,12 @@ internal class SerializedValue
     [JsonPropertyName("bi")]
     public string Bi { get; set; }
 
+    [JsonPropertyName("m")]
+    public System.Text.Json.JsonElement M { get; set; }
+
+    [JsonPropertyName("se")]
+    public System.Text.Json.JsonElement Se { get; set; }
+
     [JsonPropertyName("r")]
     public SerializedValueR R { get; set; }
 
