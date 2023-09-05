@@ -293,4 +293,20 @@ public class PageRequestInterceptTests : PageTestEx
         });
         await Page.GotoAsync($"{Server.Prefix}/empty.html");
     }
+
+    [PlaywrightTest("page-request-intercept.spec.ts", "should fulfill popup main request using alias")]
+    public async Task ShouldFulfillPopupMainRequestUsingAlias()
+    {
+        await Page.Context.RouteAsync("**/*", async (route) =>
+        {
+            var response = await route.FetchAsync();
+            await route.FulfillAsync(new() { Response = response, Body = "hello" });
+        });
+        await Page.SetContentAsync("<a target=_blank href=\"" + Server.EmptyPage + "\">click me</a>");
+        var (popup, _) = await TaskUtils.WhenAll(
+            Page.WaitForPopupAsync(),
+            Page.ClickAsync("a").ContinueWith(_ => Task.CompletedTask)
+        );
+        await Expect(popup.Locator("body")).ToHaveTextAsync("hello");
+    }
 }

@@ -138,6 +138,14 @@ public partial interface IBrowserContext
 
     /// <summary>
     /// <para>
+    /// Emitted when unhandled exceptions occur on any pages created through this context.
+    /// To only listen for <c>pageError</c> events from a particular page, use <see cref="IPage.PageError"/>.
+    /// </para>
+    /// </summary>
+    event EventHandler<IPageError> PageError;
+
+    /// <summary>
+    /// <para>
     /// Emitted when a request is issued from any pages created through this context. The
     /// <see cref="request"/> object is read-only. To only listen for requests from a particular
     /// page, use <see cref="IPage.Request"/>.

@@ -1,8 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2020 Darío Kondratiuk
- * Modifications copyright (c) Microsoft Corporation.
+ * Copyright (c) Microsoft Corporation.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -23,25 +22,32 @@
  * SOFTWARE.
  */
 
-using System.Runtime.InteropServices;
 
-[assembly: NUnit.Framework.Timeout(Microsoft.Playwright.Tests.TestConstants.DefaultTestTimeout)]
-[assembly: NUnit.Framework.Parallelizable(NUnit.Framework.ParallelScope.Fixtures)]
+#nullable enable
 
-namespace Microsoft.Playwright.Tests;
+namespace Microsoft.Playwright;
 
-internal static class TestConstants
+/// <summary>
+/// <para>
+/// <see cref="IPageError"/> class represents objects created by context when there
+/// are unhandled execeptions thrown on the pages and dispatched via the <see cref="IBrowserContext.PageError"/>
+/// event.
+/// </para>
+/// <code>
+/// // Log all uncaught errors to the terminal<br/>
+/// context.PageError += (_, pageerror) =&gt;<br/>
+/// {<br/>
+///   Console.WriteLine("Uncaught exception: " + pageerror.Error);<br/>
+/// };
+/// </code>
+/// </summary>
+public partial interface IPageError
 {
-    public static string BrowserName { get; set; } = null!;
+    /// <summary><para>The page that produced this unhandled exception, if any.</para></summary>
+    IPage? Page { get; }
 
-    public const int DefaultTestTimeout = 30_000;
-    public const int SlowTestTimeout = DefaultTestTimeout * 5;
-
-    internal static bool IsChromium => BrowserName == BrowserType.Chromium;
-    internal static bool IsFirefox => BrowserName == BrowserType.Firefox;
-    internal static bool IsWebKit => BrowserName == BrowserType.Webkit;
-
-    internal static readonly bool IsMacOSX = RuntimeInformation.IsOSPlatform(OSPlatform.OSX);
-    internal static readonly bool IsWindows = RuntimeInformation.IsOSPlatform(OSPlatform.Windows);
-    internal static readonly bool IsLinux = RuntimeInformation.IsOSPlatform(OSPlatform.Linux);
+    /// <summary><para>Unhandled error that was thrown.</para></summary>
+    string Error { get; }
 }
+
+#nullable disable

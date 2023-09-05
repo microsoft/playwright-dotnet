@@ -321,7 +321,7 @@ public partial interface IElementHandle : IJSHandle
     /// is inside the <c>&lt;label&gt;</c> element that has an associated <a href="https://developer.mozilla.org/en-US/docs/Web/API/HTMLLabelElement/control">control</a>,
     /// the control will be filled instead.
     /// </para>
-    /// <para>To send fine-grained keyboard events, use <see cref="IElementHandle.TypeAsync"/>.</para>
+    /// <para>To send fine-grained keyboard events, use <see cref="IKeyboard.TypeAsync"/>.</para>
     /// </summary>
     /// <param name="value">
     /// Value to set for the <c>&lt;input&gt;</c>, <c>&lt;textarea&gt;</c> or <c>[contenteditable]</c>
@@ -909,24 +909,19 @@ public partial interface IElementHandle : IJSHandle
 
     /// <summary>
     /// <para>
+    /// **DEPRECATED** Use locator-based <see cref="ILocator.PressSequentiallyAsync"/> instead.
+    /// Read more about <a href="https://playwright.dev/dotnet/docs/locators">locators</a>.
+    /// </para>
+    /// <para>
     /// Focuses the element, and then sends a <c>keydown</c>, <c>keypress</c>/<c>input</c>,
     /// and <c>keyup</c> event for each character in the text.
     /// </para>
     /// <para>To press a special key, like <c>Control</c> or <c>ArrowDown</c>, use <see cref="IElementHandle.PressAsync"/>.</para>
     /// <para>**Usage**</para>
-    /// <code>
-    /// await elementHandle.TypeAsync("Hello"); // Types instantly<br/>
-    /// await elementHandle.TypeAsync("World", new() { Delay = 100 }); // Types slower, like a user
-    /// </code>
-    /// <para>An example of typing into a text field and then submitting the form:</para>
-    /// <code>
-    /// var elementHandle = await page.QuerySelectorAsync("input");<br/>
-    /// await elementHandle.TypeAsync("some text");<br/>
-    /// await elementHandle.PressAsync("Enter");
-    /// </code>
     /// </summary>
     /// <param name="text">A text to type into a focused element.</param>
     /// <param name="options">Call options</param>
+    [System.Obsolete]
     Task TypeAsync(string text, ElementHandleTypeOptions? options = default);
 
     /// <summary>

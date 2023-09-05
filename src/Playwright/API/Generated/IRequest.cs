@@ -88,7 +88,24 @@ public partial interface IRequest
     /// </summary>
     string? Failure { get; }
 
-    /// <summary><para>Returns the <see cref="IFrame"/> that initiated this request.</para></summary>
+    /// <summary>
+    /// <para>Returns the <see cref="IFrame"/> that initiated this request.</para>
+    /// <para>**Usage**</para>
+    /// <code>var frameUrl = request.Frame.Url;</code>
+    /// <para>**Details**</para>
+    /// <para>Note that in some cases the frame is not available, and this method will throw.</para>
+    /// <list type="bullet">
+    /// <item><description>
+    /// When request originates in the Service Worker. You can use <c>request.serviceWorker()</c>
+    /// to check that.
+    /// </description></item>
+    /// <item><description>
+    /// When navigation request is issued before the corresponding frame is created. You
+    /// can use <see cref="IRequest.IsNavigationRequest"/> to check that.
+    /// </description></item>
+    /// </list>
+    /// <para>Here is an example that handles all the cases:</para>
+    /// </summary>
     IFrame Frame { get; }
 
     /// <summary>
@@ -114,7 +131,13 @@ public partial interface IRequest
     /// <param name="name">Name of the header.</param>
     Task<string?> HeaderValueAsync(string name);
 
-    /// <summary><para>Whether this request is driving frame's navigation.</para></summary>
+    /// <summary>
+    /// <para>Whether this request is driving frame's navigation.</para>
+    /// <para>
+    /// Some navigation requests are issued before the corresponding frame is created, and
+    /// therefore do not have <see cref="IRequest.Frame"/> available.
+    /// </para>
+    /// </summary>
     bool IsNavigationRequest { get; }
 
     /// <summary><para>Request's method (GET, POST, etc.)</para></summary>

@@ -85,16 +85,6 @@ internal class Page : ChannelOwnerBase, IChannelOwner<Page>, IPage
         _channel.FrameAttached += Channel_FrameAttached;
         _channel.FrameDetached += Channel_FrameDetached;
         _channel.Download += (_, e) => Download?.Invoke(this, new Download(this, e.Url, e.SuggestedFilename, e.Artifact.Object));
-        _channel.PageError += (_, e) =>
-        {
-            if (!string.IsNullOrEmpty(e.Error.Stack))
-            {
-                PageError?.Invoke(this, e.Error.Stack);
-                return;
-            }
-
-            PageError?.Invoke(this, $"{e.Error.Name}: {e.Error.Message}");
-        };
         _channel.Video += (_, artifact) => ForceVideo().ArtifactReady(artifact);
 
         _channel.FileChooser += (_, e) => _fileChooserImpl?.Invoke(this, new FileChooser(this, e.Element.Object, e.IsMultiple));
@@ -1143,6 +1133,8 @@ internal class Page : ChannelOwnerBase, IChannelOwner<Page>, IPage
 
     internal void FireDOMContentLoaded() => DOMContentLoaded?.Invoke(this, this);
 
+    internal void FirePageError(string error) => PageError?.Invoke(this, error);
+
     private Task RouteAsync(Regex urlRegex, Func<string, bool> urlFunc, Delegate handler, PageRouteOptions options)
         => RouteAsync(new()
         {
@@ -1209,6 +1201,7 @@ internal class Page : ChannelOwnerBase, IChannelOwner<Page>, IPage
 
     private async Task OnRouteAsync(Route route)
     {
+        route._context = Context;
         var routeHandlers = _routes.ToArray();
         foreach (var routeHandler in routeHandlers)
         {

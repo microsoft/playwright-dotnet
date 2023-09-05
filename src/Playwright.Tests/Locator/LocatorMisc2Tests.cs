@@ -120,6 +120,14 @@ public class LocatorMisc2Tests : PageTestEx
         Assert.AreEqual("hello", await Page.EvalOnSelectorAsync<string>("input", "input => input.value"));
     }
 
+    [PlaywrightTest("locator-misc-2.spec.ts", "should pressSequentiallye")]
+    public async Task ShouldPressSequentially()
+    {
+        await Page.SetContentAsync("<input type='text' />");
+        await Page.Locator("input").PressSequentiallyAsync("hello");
+        Assert.AreEqual("hello", await Page.EvalOnSelectorAsync<string>("input", "input => input.value"));
+    }
+
     [PlaywrightTest("locator-misc-2.spec.ts", "should take screenshot")]
     public async Task ShouldTakeScreenshot()
     {

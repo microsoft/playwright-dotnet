@@ -144,7 +144,6 @@ internal class BrowserChannel : Channel<Browser>
     {
         var args = new Dictionary<string, object>
         {
-            ["acceptDownloads"] = acceptDownloads,
             ["bypassCSP"] = bypassCSP,
             ["deviceScaleFactor"] = deviceScaleFactor,
             ["serviceWorkers"] = serviceWorkers,
@@ -176,6 +175,11 @@ internal class BrowserChannel : Channel<Browser>
             ["userAgent"] = userAgent,
             ["baseURL"] = baseUrl,
         };
+
+        if (acceptDownloads.HasValue)
+        {
+            args.Add("acceptDownloads", acceptDownloads.Value ? "accept" : "deny");
+        }
 
 
         if (!string.IsNullOrEmpty(storageStatePath))

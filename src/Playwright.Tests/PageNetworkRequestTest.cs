@@ -332,4 +332,30 @@ fetch('/headers', {
         Assert.AreEqual("value-a, value-a-1, value-a-2", await req.HeaderValueAsync("header-a"));
         Assert.IsNull(await req.HeaderValueAsync("not-there"));
     }
+
+    [PlaywrightTest("page-network-request.spec.ts", "should not allow to access frame on popup main request")]
+    public async Task ShouldNotAllowToAccessFrameOnPopupMainRequest()
+    {
+
+        await Page.SetContentAsync("<a target=_blank href=\"" + Server.EmptyPage + "\">click me</a>");
+        var requestPromise = new TaskCompletionSource<IRequest>();
+        Context.Request += (_, e) => requestPromise.SetResult(e);
+        var popupPromise = Page.Context.WaitForPageAsync();
+        var clicked = Page.GetByText("click me").ClickAsync();
+        var request = await requestPromise.Task;
+
+        Assert.True(request.IsNavigationRequest);
+
+        var exception = await PlaywrightAssert.ThrowsAsync<PlaywrightException>(() =>
+        {
+            var frame = request.Frame;
+            return Task.CompletedTask;
+        });
+        Assert.True(exception.Message.Contains("Frame for this navigation request is not available"));
+
+        var response = await request.ResponseAsync();
+        await response.FinishedAsync();
+        await popupPromise;
+        await clicked;
+    }
 }

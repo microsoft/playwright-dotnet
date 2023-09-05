@@ -73,7 +73,17 @@ internal class Request : ChannelOwnerBase, IChannelOwner<Request>, IRequest
             {
                 throw new PlaywrightException("Service Worker requests do not have an associated frame.");
             }
-            return _initializer.Frame;
+            var frame = _initializer.Frame;
+            if (frame.Page == null)
+            {
+                throw new PlaywrightException(string.Join("\n", new string[]
+                {
+                    "Frame for this navigation request is not available, because the request",
+                    "was issued before the frame is created. You can check whether the request",
+                    "is a navigation request by calling isNavigationRequest() method.",
+                }));
+            }
+            return frame;
         }
     }
 
@@ -220,7 +230,8 @@ internal class Request : ChannelOwnerBase, IChannelOwner<Request>, IRequest
 
     internal Task<bool> TargetClosedAsync()
     {
-        var result = ((Worker)ServiceWorker)?.ClosedTcs.Task ?? ((Page)Frame.Page)?.ClosedOrCrashedTcs.Task;
+        var frame = _initializer.Frame;
+        var result = ((Worker)ServiceWorker)?.ClosedTcs.Task ?? (frame?.Page as Page)?.ClosedOrCrashedTcs.Task;
         return result ?? new TaskCompletionSource<bool>().Task;
     }
 

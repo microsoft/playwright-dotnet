@@ -153,7 +153,6 @@ internal class BrowserTypeChannel : Channel<Core.BrowserType>
             ["env"] = env.ToProtocol(),
             ["devtools"] = devtools,
             ["slowMo"] = slowMo,
-            ["acceptDownloads"] = acceptDownloads,
             ["ignoreHTTPSErrors"] = ignoreHTTPSErrors,
             ["bypassCSP"] = bypassCSP,
             ["strictSelectors"] = strictSelectors,
@@ -187,6 +186,11 @@ internal class BrowserTypeChannel : Channel<Core.BrowserType>
                     recordHarUrlFilterString: recordHarUrlFilterString,
                     recordHarUrlFilterRegex: recordHarUrlFilterRegex),
         };
+
+        if (acceptDownloads.HasValue)
+        {
+            channelArgs.Add("acceptDownloads", acceptDownloads.Value ? "accept" : "deny");
+        }
 
         if (viewportSize?.Width == -1)
         {
