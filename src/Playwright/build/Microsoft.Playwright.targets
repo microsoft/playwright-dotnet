@@ -27,7 +27,7 @@
       <_PlaywrightCopyItems Include="$(MSBuildThisFileDirectory)..\.playwright\node\darwin-arm64\**" Condition="'%(_PlaywrightPlatforms.Identity)' == 'osx-arm64'">
         <PlaywrightFolder>node\darwin-arm64\</PlaywrightFolder>
       </_PlaywrightCopyItems>
-      <_PlaywrightCopyItems Include="$(MSBuildThisFileDirectory)..\.playwright\node\win32_x64\**" Condition="'%(_PlaywrightPlatforms.Identity)' == 'win'">
+      <_PlaywrightCopyItems Include="$(MSBuildThisFileDirectory)..\.playwright\node\win32_x64\**" Condition="'%(_PlaywrightPlatforms.Identity)' == 'win' OR '%(_PlaywrightPlatforms.Identity)' == 'win-x64' OR '%(_PlaywrightPlatforms.Identity)' == 'win-x86'">
         <PlaywrightFolder>node\win32_x64\</PlaywrightFolder>
       </_PlaywrightCopyItems>
       <_PlaywrightCopyItems Include="$(MSBuildThisFileDirectory)..\.playwright\node\**" Condition="'@(_PlaywrightCopyItems->Count())' == '0'">
