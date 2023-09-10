@@ -37,6 +37,6 @@ RUN mkdir /ms-playwright && \
     ./bin/Debug/net6.0/playwright.ps1 mark-docker-image "${DOCKER_IMAGE_NAME_TEMPLATE}" && \
     rm -rf /var/lib/apt/lists/* && \
     rm -rf /tmp/* && \
-    rm -rf /root/.nuget && \
+    dotnet nuget locals all --clear && rm -rf /root/.nuget && \
     rm -rf /ms-playwright-agent && \
     chmod -R 777 /ms-playwright
