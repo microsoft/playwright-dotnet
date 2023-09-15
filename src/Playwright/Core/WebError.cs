@@ -24,9 +24,9 @@
 
 namespace Microsoft.Playwright.Core;
 
-internal class PageError : IPageError
+internal class WebError : IWebError
 {
-    public PageError(Page page, string error)
+    public WebError(Page page, string error)
     {
         Page = page;
         Error = error;

@@ -447,7 +447,7 @@ public partial interface IFrame
     /// is inside the <c>&lt;label&gt;</c> element that has an associated <a href="https://developer.mozilla.org/en-US/docs/Web/API/HTMLLabelElement/control">control</a>,
     /// the control will be filled instead.
     /// </para>
-    /// <para>To send fine-grained keyboard events, use <see cref="IFrame.TypeAsync"/>.</para>
+    /// <para>To send fine-grained keyboard events, use <see cref="ILocator.PressSequentiallyAsync"/>.</para>
     /// </summary>
     /// <param name="selector">
     /// A selector to search for an element. If there are multiple elements satisfying the
@@ -1602,8 +1602,9 @@ public partial interface IFrame
 
     /// <summary>
     /// <para>
-    /// **DEPRECATED** Use locator-based <see cref="ILocator.PressSequentiallyAsync"/> instead.
-    /// Read more about <a href="https://playwright.dev/dotnet/docs/locators">locators</a>.
+    /// **DEPRECATED** In most cases, you should use <see cref="ILocator.FillAsync"/> instead.
+    /// You only need to press keys one by one if there is special keyboard handling on
+    /// the page - in this case use <see cref="ILocator.PressSequentiallyAsync"/>.
     /// </para>
     /// <para>
     /// Sends a <c>keydown</c>, <c>keypress</c>/<c>input</c>, and <c>keyup</c> event for

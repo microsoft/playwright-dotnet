@@ -146,11 +146,16 @@ public class PageEvaluateTests : PageTestEx
         Assert.True(result);
     }
 
-    [PlaywrightTest("page-evaluate.spec.ts", "should transfer maps as empty objects")]
-    public async Task ShouldTransferMapsAsEmptyObjects()
+    [PlaywrightTest("page-evaluate.spec.ts", "should transfer maps")]
+    public async Task ShouldTransferMaps()
     {
-        dynamic result = await Page.EvaluateAsync<ExpandoObject>("a => a.x.constructor.name + ' ' + JSON.stringify(a.x), {x: new Map([[1, 2]])}");
-        Assert.IsEmpty(TypeDescriptor.GetProperties(result));
+        Assert.AreEqual(await Page.EvaluateAsync<Dictionary<string, object>>("() => new Map([[1, { test: 42n }]])"), new Dictionary<string, object> { });
+    }
+
+    [PlaywrightTest("page-evaluate.spec.ts", "should transfer sets")]
+    public async Task ShouldTransferSets()
+    {
+        Assert.AreEqual(await Page.EvaluateAsync<HashSet<object>>("() => new Set([1, { test: 42n }])"), new HashSet<object> { });
     }
 
     [PlaywrightTest("page-evaluate.spec.ts", "should modify global environment")]

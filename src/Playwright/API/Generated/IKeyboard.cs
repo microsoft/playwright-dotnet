@@ -180,6 +180,7 @@ public partial interface IKeyboard
     /// </code>
     /// <para>Shortcut for <see cref="IKeyboard.DownAsync"/> and <see cref="IKeyboard.UpAsync"/>.</para>
     /// </summary>
+    /// <remarks><para>In most cases, you should use <see cref="ILocator.PressAsync"/> instead.</para></remarks>
     /// <param name="key">
     /// Name of the key to press or a character to generate, such as <c>ArrowLeft</c> or
     /// <c>a</c>.
@@ -200,6 +201,11 @@ public partial interface IKeyboard
     /// </code>
     /// </summary>
     /// <remarks>
+    /// <para>
+    /// In most cases, you should use <see cref="ILocator.FillAsync"/> instead. You only
+    /// need to press keys one by one if there is special keyboard handling on the page
+    /// - in this case use <see cref="ILocator.PressSequentiallyAsync"/>.
+    /// </para>
     /// <para>
     /// Modifier keys DO NOT effect <c>keyboard.type</c>. Holding down <c>Shift</c> will
     /// not type the text in upper case.
