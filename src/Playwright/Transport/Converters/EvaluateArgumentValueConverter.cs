@@ -201,11 +201,14 @@ internal static class EvaluateArgumentValueConverter
             return parsed;
         }
 
-        // User wants Json, serialize/parse. On .NET 6 there is a method that does this w/o full serialization.
+        // User wants Json, serialize to JsonElement.
         if (t == typeof(JsonElement) || t == typeof(JsonElement?))
         {
-            string serialized = JsonSerializer.Serialize(parsed, _evaluateArgumentValueConverterSerializerOptions);
-            return JsonSerializer.Deserialize(serialized, t, _evaluateArgumentValueConverterSerializerOptions);
+            if (t == typeof(JsonElement?) && parsed == null)
+            {
+                return null;
+            }
+            return JsonSerializer.SerializeToElement(parsed, _evaluateArgumentValueConverterSerializerOptions);
         }
 
         // Convert recursively to a requested type.
