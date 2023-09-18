@@ -241,9 +241,9 @@ internal static class EvaluateArgumentValueConverter
             {
                 objResult = Activator.CreateInstance(t);
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                throw new PlaywrightException("Return type mismatch. Expecting " + t.ToString() + ", got Object");
+                throw new PlaywrightException("Return type mismatch. Expecting " + t.ToString() + ", got Object", ex);
             }
             visited.Add(parsed, objResult);
 
