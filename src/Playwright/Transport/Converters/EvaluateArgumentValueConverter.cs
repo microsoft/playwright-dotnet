@@ -41,6 +41,11 @@ namespace Microsoft.Playwright.Transport.Converters;
 
 internal static class EvaluateArgumentValueConverter
 {
+    private static readonly JsonSerializerOptions _evaluateArgumentValueConverterSerializerOptions = new()
+    {
+        ReferenceHandler = System.Text.Json.Serialization.ReferenceHandler.Preserve,
+    };
+
     internal static object Serialize(object value, List<EvaluateArgumentGuidElement> handles, VisitorInfo visitorInfo)
     {
         int id;
@@ -196,15 +201,14 @@ internal static class EvaluateArgumentValueConverter
             return parsed;
         }
 
-        // User wants Json, serialize/parse. On .NET 6 there is a method that does this w/o full serialization.
+        // User wants Json, serialize to JsonElement.
         if (t == typeof(JsonElement) || t == typeof(JsonElement?))
         {
-            var serializerOptions = new JsonSerializerOptions
+            if (t == typeof(JsonElement?) && parsed == null)
             {
-                ReferenceHandler = System.Text.Json.Serialization.ReferenceHandler.Preserve,
-            };
-            string serialized = JsonSerializer.Serialize(parsed, serializerOptions);
-            return JsonSerializer.Deserialize(serialized, t, serializerOptions);
+                return null;
+            }
+            return JsonSerializer.SerializeToElement(parsed, _evaluateArgumentValueConverterSerializerOptions);
         }
 
         // Convert recursively to a requested type.

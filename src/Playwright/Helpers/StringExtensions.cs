@@ -26,9 +26,6 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text.Encodings.Web;
-using System.Text.Json;
-using System.Text.RegularExpressions;
 
 namespace Microsoft.Playwright.Helpers;
 
@@ -749,27 +746,5 @@ internal static class StringExtensions
         }
 
         return path.Substring(index);
-    }
-
-    public static string EscapeWithQuotes(this string text, string character = "\'")
-    {
-        string stringified = JsonSerializer.Serialize(text, new JsonSerializerOptions
-        {
-            Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping,
-        });
-        string escapedText = stringified.Substring(1, stringified.Length - 2).Replace("\\\"", "\"");
-        if (character == "\'")
-        {
-            return character + Regex.Replace(escapedText, "[']", "\\\'") + character;
-        }
-        if (character == "\"")
-        {
-            return character + Regex.Replace(escapedText, "[\"]", "\\\"") + character;
-        }
-        if (character == "`")
-        {
-            return character + Regex.Replace(escapedText, "[`]", "\\`") + character;
-        }
-        throw new ArgumentException("Invalid escape char");
     }
 }

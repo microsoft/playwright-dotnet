@@ -705,6 +705,18 @@ public class PageEvaluateTests : PageTestEx
         Assert.AreEqual("kek", result.ToString());
         result = await Page.EvaluateAsync<JsonElement>("() => 'kek'");
         Assert.AreEqual("kek", result.ToString());
+
+        result = await Page.EvaluateAsync<JsonElement?>("() => null"); // null
+        Assert.Null(result);
+        result = await Page.EvaluateAsync<JsonElement>("() => null");
+        Assert.NotNull(result);
+        Assert.AreEqual(JsonValueKind.Null, result.Value.ValueKind);
+
+        result = await Page.EvaluateAsync<JsonElement?>("() => undefined"); // undefined
+        Assert.Null(result);
+        result = await Page.EvaluateAsync<JsonElement>("() => undefined");
+        Assert.NotNull(result);
+        Assert.AreEqual(JsonValueKind.Null, result.Value.ValueKind);
     }
 
     private class Shape
