@@ -97,7 +97,7 @@ internal class BrowserContext : ChannelOwnerBase, IChannelOwner<BrowserContext>,
         {
             var pageObject = e.Page?.Object;
             var parsedError = string.IsNullOrEmpty(e.Error.Error.Stack) ? $"{e.Error.Error.Name}: {e.Error.Error.Message}" : e.Error.Error.Stack;
-            PageError?.Invoke(this, new PageError(pageObject, parsedError));
+            WebError?.Invoke(this, new WebError(pageObject, parsedError));
             pageObject?.FirePageError(parsedError);
         };
         Channel.BindingCall += Channel_BindingCall;
@@ -169,7 +169,7 @@ internal class BrowserContext : ChannelOwnerBase, IChannelOwner<BrowserContext>,
 
     public event EventHandler<IPage> Page;
 
-    public event EventHandler<IPageError> PageError;
+    public event EventHandler<IWebError> WebError;
 
     public event EventHandler<IRequest> Request
     {

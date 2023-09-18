@@ -207,4 +207,15 @@ public class BrowserContextEventsTests : PageTestEx
         context.Dialog += dialogHandler;
         return await tsc.Task;
     }
+
+    [PlaywrightTest("browsercontext-events.spec.ts", "weberror event should work")]
+    public async Task WebErrorEventShouldWork()
+    {
+        var tsc = new TaskCompletionSource<IWebError>();
+        Context.WebError += (sender, e) => tsc.TrySetResult(e);
+        await Page.SetContentAsync(@"<script>throw new Error(""boom"")</script>");
+        var webError = await tsc.Task;
+        Assert.AreEqual(Page, webError.Page);
+        StringAssert.Contains("boom", webError.Error);
+    }
 }

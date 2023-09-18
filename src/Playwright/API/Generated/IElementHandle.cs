@@ -321,7 +321,7 @@ public partial interface IElementHandle : IJSHandle
     /// is inside the <c>&lt;label&gt;</c> element that has an associated <a href="https://developer.mozilla.org/en-US/docs/Web/API/HTMLLabelElement/control">control</a>,
     /// the control will be filled instead.
     /// </para>
-    /// <para>To send fine-grained keyboard events, use <see cref="IKeyboard.TypeAsync"/>.</para>
+    /// <para>To send fine-grained keyboard events, use <see cref="ILocator.PressSequentiallyAsync"/>.</para>
     /// </summary>
     /// <param name="value">
     /// Value to set for the <c>&lt;input&gt;</c>, <c>&lt;textarea&gt;</c> or <c>[contenteditable]</c>
@@ -909,8 +909,9 @@ public partial interface IElementHandle : IJSHandle
 
     /// <summary>
     /// <para>
-    /// **DEPRECATED** Use locator-based <see cref="ILocator.PressSequentiallyAsync"/> instead.
-    /// Read more about <a href="https://playwright.dev/dotnet/docs/locators">locators</a>.
+    /// **DEPRECATED** In most cases, you should use <see cref="ILocator.FillAsync"/> instead.
+    /// You only need to press keys one by one if there is special keyboard handling on
+    /// the page - in this case use <see cref="ILocator.PressSequentiallyAsync"/>.
     /// </para>
     /// <para>
     /// Focuses the element, and then sends a <c>keydown</c>, <c>keypress</c>/<c>input</c>,

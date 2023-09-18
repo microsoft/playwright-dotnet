@@ -29,19 +29,18 @@ namespace Microsoft.Playwright;
 
 /// <summary>
 /// <para>
-/// <see cref="IPageError"/> class represents objects created by context when there
-/// are unhandled execeptions thrown on the pages and dispatched via the <see cref="IBrowserContext.PageError"/>
-/// event.
+/// <see cref="IWebError"/> class represents an unhandled exeception thrown in the page.
+/// It is dispatched via the <see cref="IBrowserContext.WebError"/> event.
 /// </para>
 /// <code>
 /// // Log all uncaught errors to the terminal<br/>
-/// context.PageError += (_, pageerror) =&gt;<br/>
+/// context.WebError += (_, webError) =&gt;<br/>
 /// {<br/>
-///   Console.WriteLine("Uncaught exception: " + pageerror.Error);<br/>
+///   Console.WriteLine("Uncaught exception: " + webError.Error);<br/>
 /// };
 /// </code>
 /// </summary>
-public partial interface IPageError
+public partial interface IWebError
 {
     /// <summary><para>The page that produced this unhandled exception, if any.</para></summary>
     IPage? Page { get; }
