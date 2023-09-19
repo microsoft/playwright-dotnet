@@ -28,8 +28,8 @@ namespace Microsoft.Playwright.Tests;
 
 public class SelectorsTextTests : PageTestEx
 {
-    [PlaywrightTest("selectors-text.spec.ts", "query")]
-    public async Task Query()
+    [PlaywrightTest("selectors-text.spec.ts", "should work")]
+    public async Task ShouldWork()
     {
         await Page.SetContentAsync("<div>yo</div><div>ya</div><div>\nye  </div>");
         Assert.AreEqual("<div>ya</div>", await Page.EvalOnSelectorAsync<string>("text=ya", "e => e.outerHTML"));
@@ -86,6 +86,7 @@ public class SelectorsTextTests : PageTestEx
 
         await Page.SetContentAsync("<div>Hi&gt;&gt;<span></span></div>");
         Assert.AreEqual("<span></span>", await Page.EvalOnSelectorAsync<string>("text=\"Hi>>\">>span", "e => e.outerHTML"));
+        Assert.AreEqual(await Page.EvalOnSelectorAsync<string>("text=/Hi\\>\\>/ >> span", "e => e.outerHTML"), "<span></span>");
 
         await Page.SetContentAsync("<div>a<br>b</div><div>a</div>");
         Assert.AreEqual("<div>a<br>b</div>", await Page.EvalOnSelectorAsync<string>("text=a", "e => e.outerHTML"));
@@ -111,6 +112,20 @@ public class SelectorsTextTests : PageTestEx
             }");
         Assert.AreEqual("<div>helloworld</div>", await Page.EvalOnSelectorAsync<string>("text=lowo", "e => e.outerHTML"));
         Assert.AreEqual("<div>helloworld</div><span>helloworld</span>", await Page.EvalOnSelectorAllAsync<string>("text=lowo", "els => els.map(e => e.outerHTML).join('')"));
+
+        await Page.SetContentAsync("<span>Sign&nbsp;in</span><span>Hello\n \nworld</span>");
+        Assert.AreEqual(await Page.EvalOnSelectorAsync<string>("text=Sign in", "e => e.outerHTML"), "<span>Sign&nbsp;in</span>");
+        Assert.AreEqual((await Page.QuerySelectorAllAsync("text=Sign \tin")).Count, 1);
+        Assert.AreEqual((await Page.QuerySelectorAllAsync("text=\"Sign in\"")).Count, 1);
+        Assert.AreEqual(await Page.EvalOnSelectorAsync<string>("text=lo wo", "e => e.outerHTML"), "<span>Hello\n \nworld</span>");
+        Assert.AreEqual(await Page.EvalOnSelectorAsync<string>("text=\"Hello world\"", "e => e.outerHTML"), "<span>Hello\n \nworld</span>");
+        Assert.AreEqual(await Page.QuerySelectorAsync("text=\"lo wo\""), null);
+        Assert.AreEqual((await Page.QuerySelectorAllAsync("text=lo \nwo")).Count, 1);
+        Assert.AreEqual((await Page.QuerySelectorAllAsync("text=\"lo \nwo\"")).Count, 0);
+
+        await Page.SetContentAsync("<div>let's<span>hello</span></div>");
+        Assert.AreEqual(await Page.EvalOnSelectorAsync<string>("text=/let's/i >> span", "e => e.outerHTML"), "<span>hello</span>");
+        Assert.AreEqual(await Page.EvalOnSelectorAsync<string>("text=/let\\'s/i >> span", "e => e.outerHTML"), "<span>hello</span>");
     }
 
     [PlaywrightTest("selectors-text.spec.ts", "should be case sensitive if quotes are specified")]
