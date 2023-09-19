@@ -185,6 +185,25 @@ public class SelectorsGetByTests : PageTestEx
         await Expect(Page.GetByTitle("my title", new() { Exact = true })).ToHaveCountAsync(1, new() { Timeout = 500 });
         await Expect(Page.GetByTitle("my t\\itle", new() { Exact = true })).ToHaveCountAsync(0, new() { Timeout = 500 });
         await Expect(Page.GetByTitle("my t\\\\itle", new() { Exact = true })).ToHaveCountAsync(0, new() { Timeout = 500 });
+
+        await Page.SetContentAsync("<label for=target>foo &gt;&gt; bar</label><input id=target>");
+        await Page.EvalOnSelectorAsync("input", @"input => {
+            input.setAttribute('placeholder', 'foo >> bar');
+            input.setAttribute('title', 'foo >> bar');
+            input.setAttribute('alt', 'foo >> bar');
+        }");
+        Assert.AreEqual(await Page.GetByText("foo >> bar").TextContentAsync(), "foo >> bar");
+        await Expect(Page.Locator("label")).ToHaveTextAsync("foo >> bar");
+        await Expect(Page.GetByText("foo >> bar")).ToHaveTextAsync("foo >> bar");
+        Assert.AreEqual(await Page.GetByText(new Regex("foo >> bar")).TextContentAsync(), "foo >> bar");
+        await Expect(Page.GetByLabel("foo >> bar")).ToHaveAttributeAsync("id", "target");
+        await Expect(Page.GetByLabel(new Regex("foo >> bar"))).ToHaveAttributeAsync("id", "target");
+        await Expect(Page.GetByPlaceholder("foo >> bar")).ToHaveAttributeAsync("id", "target");
+        await Expect(Page.GetByAltText("foo >> bar")).ToHaveAttributeAsync("id", "target");
+        await Expect(Page.GetByTitle("foo >> bar")).ToHaveAttributeAsync("id", "target");
+        await Expect(Page.GetByPlaceholder(new Regex("foo >> bar"))).ToHaveAttributeAsync("id", "target");
+        await Expect(Page.GetByAltText(new Regex("foo >> bar"))).ToHaveAttributeAsync("id", "target");
+        await Expect(Page.GetByTitle(new Regex("foo >> bar"))).ToHaveAttributeAsync("id", "target");
     }
 
     [PlaywrightTest("selector-get-by.spec.ts", "getByRole escaping")]
