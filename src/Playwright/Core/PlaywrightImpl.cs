@@ -48,10 +48,7 @@ internal class PlaywrightImpl : ChannelOwnerBase, IPlaywright, IChannelOwner<Pla
         _initializer = initializer;
         _channel = new(guid, parent.Connection, this);
 
-        foreach (var entry in initializer.DeviceDescriptors)
-        {
-            _devices[entry.Name] = entry.Descriptor;
-        }
+        _devices = _connection.LocalUtils?._devices ?? new();
 
         _initializer.Chromium.Playwright = this;
         _initializer.Firefox.Playwright = this;

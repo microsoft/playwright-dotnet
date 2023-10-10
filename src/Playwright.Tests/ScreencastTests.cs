@@ -38,6 +38,7 @@ public class ScreencastTests : BrowserTestEx
         StringAssert.Contains("\"RecordVideoSize\" option requires \"RecordVideoDir\" to be specified", exception.Message);
     }
 
+    [PlaywrightTest()]
     public async Task ShouldWorkWithoutASize()
     {
         using var tempDirectory = new TempDirectory();
@@ -52,6 +53,22 @@ public class ScreencastTests : BrowserTestEx
         await context.CloseAsync();
 
         Assert.IsNotEmpty(new DirectoryInfo(tempDirectory.Path).GetFiles("*.webm"));
+    }
+
+    [PlaywrightTest("screencast.spec.ts", "should work with relative path for recordVideo.dir")]
+    public async Task ShouldWorkWithRelativePathForRecordVideoDir()
+    {
+        using var tempDirectory = new TempDirectory();
+        var context = await Browser.NewContextAsync(new()
+        {
+            RecordVideoDir = Path.Combine(Environment.CurrentDirectory, tempDirectory.Path),
+            RecordVideoSize = new() { Height = 240, Width = 320 }
+        });
+
+        var page = await context.NewPageAsync();
+        var videoPath = await page.Video.PathAsync();
+        await context.CloseAsync();
+        Assert.True(new FileInfo(videoPath).Exists);
     }
 
     [PlaywrightTest("screencast.spec.ts", "should capture static page")]

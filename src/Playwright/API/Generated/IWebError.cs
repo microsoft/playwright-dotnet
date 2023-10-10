@@ -29,7 +29,7 @@ namespace Microsoft.Playwright;
 
 /// <summary>
 /// <para>
-/// <see cref="IWebError"/> class represents an unhandled exeception thrown in the page.
+/// <see cref="IWebError"/> class represents an unhandled exception thrown in the page.
 /// It is dispatched via the <see cref="IBrowserContext.WebError"/> event.
 /// </para>
 /// <code>

@@ -24,37 +24,48 @@
 
 using System.Collections.Generic;
 using System.Linq;
-using Microsoft.Playwright.Transport;
-using Microsoft.Playwright.Transport.Channels;
+using System.Text.Json.Serialization;
 using Microsoft.Playwright.Transport.Protocol;
 
 namespace Microsoft.Playwright.Core;
 
-internal class ConsoleMessage : ChannelOwnerBase, IChannelOwner<ConsoleMessage>, IConsoleMessage
+internal class ConsoleMessage : IConsoleMessage
 {
-    private readonly ConsoleMessageChannel _channel;
-    private readonly ConsoleMessageInitializer _initializer;
+    private readonly BrowserContextConsoleEvent _event;
 
-    internal ConsoleMessage(IChannelOwner parent, string guid, ConsoleMessageInitializer initializer) : base(parent, guid)
+    internal ConsoleMessage(BrowserContextConsoleEvent @event)
     {
-        _channel = new(guid, parent.Connection, this);
-        _initializer = initializer;
+        _event = @event;
     }
 
-    ChannelBase IChannelOwner.Channel => _channel;
+    public string Type => _event.Type;
 
-    IChannel<ConsoleMessage> IChannelOwner<ConsoleMessage>.Channel => _channel;
+    public IReadOnlyList<IJSHandle> Args => _event.Args.Cast<IJSHandle>().ToList().AsReadOnly();
 
-    public string Type => _initializer.Type;
+    public string Location => _event.Location.ToString();
 
-    public IReadOnlyList<IJSHandle> Args => _initializer.Args.Cast<IJSHandle>().ToList().AsReadOnly();
-
-    public string Location => _initializer.Location.ToString();
-
-    public string Text => _initializer.Text;
+    public string Text => _event.Text;
 
     // Note: currently, we only report console messages for pages and they always have a page.
     // However, in the future we might report console messages for service workers or something else,
     // where page() would be null.
-    public IPage Page => _initializer.Page;
+    public IPage Page => _event.Page;
+}
+
+internal class BrowserContextConsoleEvent
+{
+    [JsonPropertyName("page")]
+    public Page Page { get; set; }
+
+    [JsonPropertyName("type")]
+    public string Type { get; set; }
+
+    [JsonPropertyName("text")]
+    public string Text { get; set; }
+
+    [JsonPropertyName("args")]
+    public List<JSHandle> Args { get; set; }
+
+    [JsonPropertyName("location")]
+    public ConsoleMessageLocation Location { get; set; }
 }

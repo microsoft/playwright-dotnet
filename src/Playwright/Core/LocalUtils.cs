@@ -23,7 +23,6 @@
  */
 
 using System.Collections.Generic;
-using System.Text.Json;
 using System.Threading.Tasks;
 using Microsoft.Playwright.Transport;
 using Microsoft.Playwright.Transport.Channels;
@@ -34,10 +33,15 @@ namespace Microsoft.Playwright.Core;
 internal class LocalUtils : ChannelOwnerBase, IChannelOwner<LocalUtils>
 {
     private readonly LocalUtilsChannel _channel;
+    internal readonly Dictionary<string, BrowserNewContextOptions> _devices = new();
 
-    public LocalUtils(IChannelOwner parent, string guid, JsonElement? initializer) : base(parent, guid)
+    public LocalUtils(IChannelOwner parent, string guid, LocalUtilsInitializer initializer) : base(parent, guid)
     {
         _channel = new(guid, parent.Connection, this);
+        foreach (var entry in initializer.DeviceDescriptors)
+        {
+            _devices[entry.Name] = entry.Descriptor;
+        }
     }
 
     ChannelBase IChannelOwner.Channel => _channel;

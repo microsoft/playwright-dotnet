@@ -332,9 +332,6 @@ internal class Connection : IDisposable
             case ChannelOwnerType.CDPSession:
                 result = new CDPSession(parent, guid);
                 break;
-            case ChannelOwnerType.ConsoleMessage:
-                result = new ConsoleMessage(parent, guid, initializer?.ToObject<ConsoleMessageInitializer>(DefaultJsonSerializerOptions));
-                break;
             case ChannelOwnerType.Dialog:
                 result = new Dialog(parent, guid, initializer?.ToObject<DialogInitializer>(DefaultJsonSerializerOptions));
                 break;
@@ -351,7 +348,7 @@ internal class Connection : IDisposable
                 result = new JsonPipe(parent, guid, initializer?.ToObject<JsonPipeInitializer>(DefaultJsonSerializerOptions));
                 break;
             case ChannelOwnerType.LocalUtils:
-                result = new LocalUtils(parent, guid, initializer);
+                result = new LocalUtils(parent, guid, initializer?.ToObject<LocalUtilsInitializer>(DefaultJsonSerializerOptions));
                 if (LocalUtils == null)
                 {
                     LocalUtils = result as LocalUtils;

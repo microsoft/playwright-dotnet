@@ -68,6 +68,13 @@ public partial interface ILocator
     /// <para>**Usage**</para>
     /// <code>var texts = await page.GetByRole(AriaRole.Link).AllInnerTextsAsync();</code>
     /// </summary>
+    /// <remarks>
+    /// <para>
+    /// If you need to assert text on the page, prefer <see cref="ILocatorAssertions.ToHaveTextAsync"/>
+    /// with <paramref name="useInnerText"/> option to avoid flakiness. See <a href="https://playwright.dev/dotnet/docs/test-assertions">assertions
+    /// guide</a> for more details.
+    /// </para>
+    /// </remarks>
     Task<IReadOnlyList<string>> AllInnerTextsAsync();
 
     /// <summary>
@@ -75,6 +82,13 @@ public partial interface ILocator
     /// <para>**Usage**</para>
     /// <code>var texts = await page.GetByRole(AriaRole.Link).AllTextContentsAsync();</code>
     /// </summary>
+    /// <remarks>
+    /// <para>
+    /// If you need to assert text on the page, prefer <see cref="ILocatorAssertions.ToHaveTextAsync"/>
+    /// to avoid flakiness. See <a href="https://playwright.dev/dotnet/docs/test-assertions">assertions
+    /// guide</a> for more details.
+    /// </para>
+    /// </remarks>
     Task<IReadOnlyList<string>> AllTextContentsAsync();
 
     /// <summary>
@@ -227,6 +241,13 @@ public partial interface ILocator
     /// <para>**Usage**</para>
     /// <code>int count = await page.GetByRole(AriaRole.Listitem).CountAsync();</code>
     /// </summary>
+    /// <remarks>
+    /// <para>
+    /// If you need to assert the number of elements on the page, prefer <see cref="ILocatorAssertions.ToHaveCountAsync"/>
+    /// to avoid flakiness. See <a href="https://playwright.dev/dotnet/docs/test-assertions">assertions
+    /// guide</a> for more details.
+    /// </para>
+    /// </remarks>
     Task<int> CountAsync();
 
     /// <summary>
@@ -518,6 +539,13 @@ public partial interface ILocator
     IFrameLocator FrameLocator(string selector);
 
     /// <summary><para>Returns the matching element's attribute value.</para></summary>
+    /// <remarks>
+    /// <para>
+    /// If you need to assert an element's attribute, prefer <see cref="ILocatorAssertions.ToHaveAttributeAsync"/>
+    /// to avoid flakiness. See <a href="https://playwright.dev/dotnet/docs/test-assertions">assertions
+    /// guide</a> for more details.
+    /// </para>
+    /// </remarks>
     /// <param name="name">Attribute name to get the value for.</param>
     /// <param name="options">Call options</param>
     Task<string?> GetAttributeAsync(string name, LocatorGetAttributeOptions? options = default);
@@ -832,6 +860,13 @@ public partial interface ILocator
     Task<string> InnerHTMLAsync(LocatorInnerHTMLOptions? options = default);
 
     /// <summary><para>Returns the <a href="https://developer.mozilla.org/en-US/docs/Web/API/HTMLElement/innerText"><c>element.innerText</c></a>.</para></summary>
+    /// <remarks>
+    /// <para>
+    /// If you need to assert text on the page, prefer <see cref="ILocatorAssertions.ToHaveTextAsync"/>
+    /// with <paramref name="useInnerText"/> option to avoid flakiness. See <a href="https://playwright.dev/dotnet/docs/test-assertions">assertions
+    /// guide</a> for more details.
+    /// </para>
+    /// </remarks>
     /// <param name="options">Call options</param>
     Task<string> InnerTextAsync(LocatorInnerTextOptions? options = default);
 
@@ -849,6 +884,13 @@ public partial interface ILocator
     /// returns the value of the control.
     /// </para>
     /// </summary>
+    /// <remarks>
+    /// <para>
+    /// If you need to assert input value, prefer <see cref="ILocatorAssertions.ToHaveValueAsync"/>
+    /// to avoid flakiness. See <a href="https://playwright.dev/dotnet/docs/test-assertions">assertions
+    /// guide</a> for more details.
+    /// </para>
+    /// </remarks>
     /// <param name="options">Call options</param>
     Task<string> InputValueAsync(LocatorInputValueOptions? options = default);
 
@@ -860,6 +902,13 @@ public partial interface ILocator
     /// <para>**Usage**</para>
     /// <code>var isChecked = await page.GetByRole(AriaRole.Checkbox).IsCheckedAsync();</code>
     /// </summary>
+    /// <remarks>
+    /// <para>
+    /// If you need to assert that checkbox is checked, prefer <see cref="ILocatorAssertions.ToBeCheckedAsync"/>
+    /// to avoid flakiness. See <a href="https://playwright.dev/dotnet/docs/test-assertions">assertions
+    /// guide</a> for more details.
+    /// </para>
+    /// </remarks>
     /// <param name="options">Call options</param>
     Task<bool> IsCheckedAsync(LocatorIsCheckedOptions? options = default);
 
@@ -868,6 +917,13 @@ public partial interface ILocator
     /// <para>**Usage**</para>
     /// <code>Boolean disabled = await page.GetByRole(AriaRole.Button).IsDisabledAsync();</code>
     /// </summary>
+    /// <remarks>
+    /// <para>
+    /// If you need to assert that an element is disabled, prefer <see cref="ILocatorAssertions.ToBeDisabledAsync"/>
+    /// to avoid flakiness. See <a href="https://playwright.dev/dotnet/docs/test-assertions">assertions
+    /// guide</a> for more details.
+    /// </para>
+    /// </remarks>
     /// <param name="options">Call options</param>
     Task<bool> IsDisabledAsync(LocatorIsDisabledOptions? options = default);
 
@@ -876,6 +932,13 @@ public partial interface ILocator
     /// <para>**Usage**</para>
     /// <code>Boolean editable = await page.GetByRole(AriaRole.Textbox).IsEditableAsync();</code>
     /// </summary>
+    /// <remarks>
+    /// <para>
+    /// If you need to assert that an element is editable, prefer <see cref="ILocatorAssertions.ToBeEditableAsync"/>
+    /// to avoid flakiness. See <a href="https://playwright.dev/dotnet/docs/test-assertions">assertions
+    /// guide</a> for more details.
+    /// </para>
+    /// </remarks>
     /// <param name="options">Call options</param>
     Task<bool> IsEditableAsync(LocatorIsEditableOptions? options = default);
 
@@ -884,6 +947,13 @@ public partial interface ILocator
     /// <para>**Usage**</para>
     /// <code>Boolean enabled = await page.GetByRole(AriaRole.Button).IsEnabledAsync();</code>
     /// </summary>
+    /// <remarks>
+    /// <para>
+    /// If you need to assert that an element is enabled, prefer <see cref="ILocatorAssertions.ToBeEnabledAsync"/>
+    /// to avoid flakiness. See <a href="https://playwright.dev/dotnet/docs/test-assertions">assertions
+    /// guide</a> for more details.
+    /// </para>
+    /// </remarks>
     /// <param name="options">Call options</param>
     Task<bool> IsEnabledAsync(LocatorIsEnabledOptions? options = default);
 
@@ -892,6 +962,13 @@ public partial interface ILocator
     /// <para>**Usage**</para>
     /// <code>Boolean hidden = await page.GetByRole(AriaRole.Button).IsHiddenAsync();</code>
     /// </summary>
+    /// <remarks>
+    /// <para>
+    /// If you need to assert that element is hidden, prefer <see cref="ILocatorAssertions.ToBeHiddenAsync"/>
+    /// to avoid flakiness. See <a href="https://playwright.dev/dotnet/docs/test-assertions">assertions
+    /// guide</a> for more details.
+    /// </para>
+    /// </remarks>
     /// <param name="options">Call options</param>
     Task<bool> IsHiddenAsync(LocatorIsHiddenOptions? options = default);
 
@@ -900,6 +977,13 @@ public partial interface ILocator
     /// <para>**Usage**</para>
     /// <code>Boolean visible = await page.GetByRole(AriaRole.Button).IsVisibleAsync();</code>
     /// </summary>
+    /// <remarks>
+    /// <para>
+    /// If you need to assert that element is visible, prefer <see cref="ILocatorAssertions.ToBeVisibleAsync"/>
+    /// to avoid flakiness. See <a href="https://playwright.dev/dotnet/docs/test-assertions">assertions
+    /// guide</a> for more details.
+    /// </para>
+    /// </remarks>
     /// <param name="options">Call options</param>
     Task<bool> IsVisibleAsync(LocatorIsVisibleOptions? options = default);
 
@@ -1551,6 +1635,13 @@ public partial interface ILocator
     Task TapAsync(LocatorTapOptions? options = default);
 
     /// <summary><para>Returns the <a href="https://developer.mozilla.org/en-US/docs/Web/API/Node/textContent"><c>node.textContent</c></a>.</para></summary>
+    /// <remarks>
+    /// <para>
+    /// If you need to assert text on the page, prefer <see cref="ILocatorAssertions.ToHaveTextAsync"/>
+    /// to avoid flakiness. See <a href="https://playwright.dev/dotnet/docs/test-assertions">assertions
+    /// guide</a> for more details.
+    /// </para>
+    /// </remarks>
     /// <param name="options">Call options</param>
     Task<string?> TextContentAsync(LocatorTextContentOptions? options = default);
 

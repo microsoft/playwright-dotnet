@@ -47,19 +47,22 @@ internal class Tracing : ChannelOwnerBase, IChannelOwner<Tracing>, ITracing
     IChannel<Tracing> IChannelOwner<Tracing>.Channel => _channel;
 
     [MethodImpl(MethodImplOptions.NoInlining)]
-    public async Task StartAsync(TracingStartOptions options = default)
+    public async Task StartAsync(
+        TracingStartOptions options = default)
     {
         _includeSources = options?.Sources == true;
-        var traceName = await _channel.Connection.WrapApiCallAsync(async () =>
+        var traceName = await _channel.Connection.WrapApiCallAsync(
+            async () =>
         {
             await _channel.TracingStartAsync(
-                    name: options?.Name,
-                    title: options?.Title,
-                    screenshots: options?.Screenshots,
-                    snapshots: options?.Snapshots,
-                    sources: options?.Sources).ConfigureAwait(false);
+                name: options?.Name,
+                title: options?.Title,
+                screenshots: options?.Screenshots,
+                snapshots: options?.Snapshots,
+                sources: options?.Sources).ConfigureAwait(false);
             return await _channel.StartChunkAsync(title: options?.Title, name: options?.Name).ConfigureAwait(false);
-        }).ConfigureAwait(false);
+        },
+            true).ConfigureAwait(false);
         await StartCollectingStacksAsync(traceName).ConfigureAwait(false);
     }
 
@@ -81,16 +84,18 @@ internal class Tracing : ChannelOwnerBase, IChannelOwner<Tracing>, ITracing
     }
 
     [MethodImpl(MethodImplOptions.NoInlining)]
-    public Task StopChunkAsync(TracingStopChunkOptions options = default) => DoStopChunkAsync(filePath: options?.Path);
+    public Task StopChunkAsync(TracingStopChunkOptions options = default) => _channel.Connection.WrapApiCallAsync(() => DoStopChunkAsync(filePath: options?.Path), true);
 
     [MethodImpl(MethodImplOptions.NoInlining)]
     public async Task StopAsync(TracingStopOptions options = default)
     {
-        await _channel.Connection.WrapApiCallAsync(async () =>
-        {
-            await StopChunkAsync(new() { Path = options?.Path }).ConfigureAwait(false);
-            await _channel.TracingStopAsync().ConfigureAwait(false);
-        }).ConfigureAwait(false);
+        await _channel.Connection.WrapApiCallAsync(
+            async () =>
+            {
+                await StopChunkAsync(new() { Path = options?.Path }).ConfigureAwait(false);
+                await _channel.TracingStopAsync().ConfigureAwait(false);
+            },
+            true).ConfigureAwait(false);
     }
 
     private async Task DoStopChunkAsync(string filePath)

@@ -195,8 +195,22 @@ public partial interface ILocatorAssertions
     /// and <a href="https://playwright.dev/dotnet/docs/actionability#visible">visible</a>
     /// DOM node.
     /// </para>
+    /// <para>To check that at least one element from the list is visible, use <see cref="ILocator.First"/>.</para>
     /// <para>**Usage**</para>
-    /// <code>await Expect(Page.GetByText("Welcome")).ToBeVisibleAsync();</code>
+    /// <code>
+    /// // A specific element is visible.<br/>
+    /// await Expect(Page.GetByText("Welcome")).ToBeVisibleAsync();<br/>
+    /// <br/>
+    /// // At least one item in the list is visible.<br/>
+    /// await Expect(Page.GetByTestId("todo-item").First).ToBeVisibleAsync();<br/>
+    /// <br/>
+    /// // At least one of the two elements is visible, possibly both.<br/>
+    /// await Expect(<br/>
+    ///   Page.GetByRole(AriaRole.Button, new() { Name = "Sign in" })<br/>
+    ///     .Or(Page.GetByRole(AriaRole.Button, new() { Name = "Sign up" }))<br/>
+    ///     .First<br/>
+    /// ).ToBeVisibleAsync();
+    /// </code>
     /// </summary>
     /// <param name="options">Call options</param>
     Task ToBeVisibleAsync(LocatorAssertionsToBeVisibleOptions? options = default);

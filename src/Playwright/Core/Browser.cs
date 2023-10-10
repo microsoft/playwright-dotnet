@@ -201,7 +201,7 @@ internal class Browser : ChannelOwnerBase, IChannelOwner<Browser>, IBrowser
         {
             recordVideoArgs = new()
             {
-                { "dir", recordVideoDir },
+                ["dir"] = System.IO.Path.Combine(Environment.CurrentDirectory, recordVideoDir),
             };
 
             if (recordVideoSize != null)

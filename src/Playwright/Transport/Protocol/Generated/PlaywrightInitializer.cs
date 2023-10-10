@@ -22,7 +22,6 @@
  * SOFTWARE.
  */
 
-using System.Collections.Generic;
 using System.Text.Json.Serialization;
 
 namespace Microsoft.Playwright.Transport.Protocol;
@@ -40,9 +39,6 @@ internal class PlaywrightInitializer
 
     [JsonPropertyName("utils")]
     public Core.LocalUtils Utils { get; set; }
-
-    [JsonPropertyName("deviceDescriptors")]
-    public List<DeviceDescriptorEntry> DeviceDescriptors { get; set; }
 
     [JsonPropertyName("selectors")]
     public Core.Selectors Selectors { get; set; }

@@ -27,7 +27,7 @@ using System.Text.Json;
 namespace Microsoft.Playwright.Tests;
 
 
-public class PageEventConsoleTests2 : PageTestEx
+public class PageEventConsoleTests : PageTestEx
 {
     [PlaywrightTest("page-event-console.spec.ts", "should work")]
     public async Task ShouldWork()
