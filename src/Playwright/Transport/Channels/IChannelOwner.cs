@@ -48,10 +48,7 @@ internal interface IChannelOwner
     /// </summary>
     ConcurrentDictionary<string, IChannelOwner> Objects { get; }
 
-    /// <summary>
-    /// Removes the object from the parent and the connection list.
-    /// </summary>
-    void DisposeOwner();
+    void DisposeOwner(string reason);
 
     void Adopt(ChannelOwnerBase child);
 

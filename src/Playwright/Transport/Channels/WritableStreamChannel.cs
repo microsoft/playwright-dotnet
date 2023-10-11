@@ -37,7 +37,7 @@ internal class WritableStreamChannel : Channel<WritableStream>
     internal async Task WriteAsync(string binary)
     {
         await Connection.SendMessageToServerAsync(
-            Guid,
+            Object,
             "write",
             new Dictionary<string, object>
             {
@@ -45,5 +45,5 @@ internal class WritableStreamChannel : Channel<WritableStream>
             }).ConfigureAwait(false);
     }
 
-    internal Task CloseAsync() => Connection.SendMessageToServerAsync(Guid, "close");
+    internal Task CloseAsync() => Connection.SendMessageToServerAsync(Object, "close");
 }

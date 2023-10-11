@@ -109,20 +109,20 @@ internal class Connection : IDisposable
     }
 
     internal Task<JsonElement?> SendMessageToServerAsync(
-        string guid,
+        ChannelOwnerBase @object,
         string method,
         Dictionary<string, object> args = null,
         bool keepNulls = false)
-        => SendMessageToServerAsync<JsonElement?>(guid, method, args, keepNulls);
+        => SendMessageToServerAsync<JsonElement?>(@object, method, args, keepNulls);
 
     internal Task<T> SendMessageToServerAsync<T>(
-        string guid,
+        ChannelOwnerBase @object,
         string method,
         Dictionary<string, object> args = null,
-        bool keepNulls = false) => WrapApiCallAsync(() => InnerSendMessageToServerAsync<T>(guid, method, args, keepNulls));
+        bool keepNulls = false) => WrapApiCallAsync(() => InnerSendMessageToServerAsync<T>(@object, method, args, keepNulls));
 
     private async Task<T> InnerSendMessageToServerAsync<T>(
-        string guid,
+        ChannelOwnerBase @object,
         string method,
         Dictionary<string, object> dictionary = null,
         bool keepNulls = false)
@@ -130,6 +130,10 @@ internal class Connection : IDisposable
         if (!string.IsNullOrEmpty(_closedErrorMessage))
         {
             throw new PlaywrightException(this._closedErrorMessage);
+        }
+        if (@object._wasCollected)
+        {
+            throw new PlaywrightException("The object has been collected to prevent unbounded heap growth.");
         }
 
         int id = Interlocked.Increment(ref _lastId);
@@ -168,7 +172,7 @@ internal class Connection : IDisposable
             };
         }
 
-        if (_tracingCount > 0 && frames.Count > 0 && guid != "localUtils")
+        if (_tracingCount > 0 && frames.Count > 0 && @object.Guid != "localUtils")
         {
             LocalUtils.AddStackToTracingNoReply(frames, id);
         }
@@ -178,7 +182,7 @@ internal class Connection : IDisposable
             var message = new MessageRequest
             {
                 Id = id,
-                Guid = guid,
+                Guid = @object.Guid,
                 Method = method,
                 Params = sanitizedArgs,
                 Metadata = metadata,
@@ -284,7 +288,7 @@ internal class Connection : IDisposable
 
             if (message.Method == "__dispose__")
             {
-                @object.DisposeOwner();
+                @object.DisposeOwner(message.Params.Value.TryGetProperty("reason", out var reason) ? reason.GetString() : null);
                 return;
             }
 

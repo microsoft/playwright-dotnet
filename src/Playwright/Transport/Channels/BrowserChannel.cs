@@ -103,7 +103,7 @@ internal class BrowserChannel : Channel<Browser>
 
     internal Task<CDPChannel> NewBrowserCDPSessionAsync()
     => Connection.SendMessageToServerAsync<CDPChannel>(
-        Guid,
+        Object,
         "newBrowserCDPSession");
 
     internal Task<BrowserContextChannel> NewContextAsync(
@@ -208,12 +208,12 @@ internal class BrowserChannel : Channel<Browser>
         }
 
         return Connection.SendMessageToServerAsync<BrowserContextChannel>(
-            Guid,
+            Object,
             "newContext",
             args);
     }
 
-    internal Task CloseAsync() => Connection.SendMessageToServerAsync<BrowserContextChannel>(Guid, "close", null);
+    internal Task CloseAsync() => Connection.SendMessageToServerAsync<BrowserContextChannel>(Object, "close", null);
 
     internal Task StartTracingAsync(IPage page, bool screenshots, string path, IEnumerable<string> categories)
     {
@@ -225,9 +225,9 @@ internal class BrowserChannel : Channel<Browser>
             ["categories"] = categories,
         };
 
-        return Connection.SendMessageToServerAsync(Guid, "crStartTracing", args);
+        return Connection.SendMessageToServerAsync(Object, "crStartTracing", args);
     }
 
     internal async Task<string> StopTracingAsync()
-        => (await Connection.SendMessageToServerAsync(Guid, "crStopTracing", null).ConfigureAwait(false))?.GetProperty("binary").ToString();
+        => (await Connection.SendMessageToServerAsync(Object, "crStopTracing", null).ConfigureAwait(false))?.GetProperty("binary").ToString();
 }

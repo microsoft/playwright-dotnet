@@ -34,8 +34,9 @@ namespace Microsoft.Playwright.Transport;
 
 internal class ChannelOwnerBase : IChannelOwner
 {
-    private readonly Connection _connection;
+    internal readonly Connection _connection;
     private readonly ConcurrentDictionary<string, IChannelOwner> _objects = new();
+    internal bool _wasCollected;
 
     internal ChannelOwnerBase(IChannelOwner parent, string guid) : this(parent, null, guid)
     {
@@ -76,14 +77,15 @@ internal class ChannelOwnerBase : IChannelOwner
     }
 
     /// <inheritdoc/>
-    void IChannelOwner.DisposeOwner()
+    void IChannelOwner.DisposeOwner(string reason)
     {
         Parent?.Objects?.TryRemove(Guid, out var _);
         _connection?.Objects.TryRemove(Guid, out var _);
+        _wasCollected = reason == "gc";
 
         foreach (var item in _objects.Values)
         {
-            item.DisposeOwner();
+            item.DisposeOwner(reason);
         }
         _objects.Clear();
     }
@@ -121,7 +123,7 @@ internal class ChannelOwnerBase : IChannelOwner
     {
         WrapApiCallAsync(
             () => _connection.SendMessageToServerAsync(
-            Guid,
+            this,
             "updateSubscription",
             new Dictionary<string, object>
             {

@@ -48,7 +48,7 @@ internal class CDPChannel : Channel<CDPSession>
     internal Task DetachAsync()
     {
         return Connection.SendMessageToServerAsync(
-           Guid,
+           Object,
            "detach");
     }
 
@@ -60,7 +60,7 @@ internal class CDPChannel : Channel<CDPSession>
             newArgs["params"] = args;
         }
         var result = await Connection.SendMessageToServerAsync(
-           Guid,
+           Object,
            "send",
            newArgs).ConfigureAwait(false);
         return result?.GetProperty("result");

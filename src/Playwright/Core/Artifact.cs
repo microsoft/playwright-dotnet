@@ -33,12 +33,10 @@ namespace Microsoft.Playwright.Core;
 
 internal class Artifact : ChannelOwnerBase, IChannelOwner<Artifact>
 {
-    private readonly Connection _connection;
     private readonly ArtifactChannel _channel;
 
     internal Artifact(IChannelOwner parent, string guid, ArtifactInitializer initializer) : base(parent, guid)
     {
-        _connection = parent.Connection;
         _channel = new(guid, parent.Connection, this);
         AbsolutePath = initializer.AbsolutePath;
     }

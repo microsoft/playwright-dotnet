@@ -38,14 +38,14 @@ internal class ArtifactChannel : Channel<Artifact>
 
     internal async Task<string> PathAfterFinishedAsync()
         => (await Connection.SendMessageToServerAsync<JsonElement?>(
-            Guid,
+            Object,
             "pathAfterFinished",
             null)
             .ConfigureAwait(false)).GetString("value", true);
 
     internal Task SaveAsAsync(string path)
         => Connection.SendMessageToServerAsync<JsonElement>(
-            Guid,
+            Object,
             "saveAs",
             new Dictionary<string, object>
             {
@@ -54,32 +54,32 @@ internal class ArtifactChannel : Channel<Artifact>
 
     internal async Task<Stream> SaveAsStreamAsync()
         => (await Connection.SendMessageToServerAsync<JsonElement>(
-            Guid,
+            Object,
             "saveAsStream",
             null)
             .ConfigureAwait(false)).GetObject<Stream>("stream", Connection);
 
     internal async Task<string> FailureAsync()
         => (await Connection.SendMessageToServerAsync<JsonElement?>(
-            Guid,
+            Object,
             "failure",
             null)
             .ConfigureAwait(false)).GetString("error", true);
 
     internal async Task<Stream> StreamAsync()
         => (await Connection.SendMessageToServerAsync<JsonElement?>(
-            Guid,
+            Object,
             "stream",
             null)
             .ConfigureAwait(false))?.GetObject<Stream>("stream", Connection);
 
     internal Task CancelAsync()
         => Connection.SendMessageToServerAsync<JsonElement>(
-            Guid,
+            Object,
             "cancel");
 
     internal Task DeleteAsync()
         => Connection.SendMessageToServerAsync<JsonElement>(
-            Guid,
+            Object,
             "delete");
 }

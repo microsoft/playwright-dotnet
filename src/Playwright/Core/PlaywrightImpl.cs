@@ -36,7 +36,6 @@ internal class PlaywrightImpl : ChannelOwnerBase, IPlaywright, IChannelOwner<Pla
 {
     private readonly PlaywrightInitializer _initializer;
     internal readonly PlaywrightChannel _channel;
-    private readonly Connection _connection;
     internal SelectorsAPI _selectors;
 
     private readonly Dictionary<string, BrowserNewContextOptions> _devices = new(StringComparer.InvariantCultureIgnoreCase);
@@ -44,7 +43,6 @@ internal class PlaywrightImpl : ChannelOwnerBase, IPlaywright, IChannelOwner<Pla
     internal PlaywrightImpl(IChannelOwner parent, string guid, PlaywrightInitializer initializer)
          : base(parent, guid)
     {
-        _connection = parent.Connection;
         _initializer = initializer;
         _channel = new(guid, parent.Connection, this);
 

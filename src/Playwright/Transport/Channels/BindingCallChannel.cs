@@ -39,7 +39,7 @@ internal class BindingCallChannel : Channel<BindingCall>
 
     internal Task RejectAsync(Exception error)
         => Connection.SendMessageToServerAsync<JsonElement>(
-            Guid,
+            Object,
             "reject",
             new Dictionary<string, object>
             {
@@ -48,7 +48,7 @@ internal class BindingCallChannel : Channel<BindingCall>
 
     internal Task ResolveAsync(object result)
         => Connection.SendMessageToServerAsync<JsonElement>(
-            Guid,
+            Object,
             "resolve",
             new Dictionary<string, object>
             {

@@ -37,7 +37,7 @@ internal class SelectorsChannel : Channel<Selectors>
 
     internal Task RegisterAsync(SelectorsRegisterParams @params)
         => Connection.SendMessageToServerAsync<JsonElement>(
-            Guid,
+            Object,
             "register",
             new Dictionary<string, object>
             {
@@ -48,7 +48,7 @@ internal class SelectorsChannel : Channel<Selectors>
 
     internal Task SetTestIdAttributeAsync(string name)
         => Connection.SendMessageToServerAsync<JsonElement>(
-            Guid,
+            Object,
             "setTestIdAttributeName",
             new Dictionary<string, object>
             {

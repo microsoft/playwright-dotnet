@@ -37,19 +37,19 @@ internal class ResponseChannel : Channel<Response>
     }
 
     internal async Task<byte[]> GetBodyAsync()
-        => (await Connection.SendMessageToServerAsync(Guid, "body").ConfigureAwait(false))?.GetProperty("binary").GetBytesFromBase64();
+        => (await Connection.SendMessageToServerAsync(Object, "body").ConfigureAwait(false))?.GetProperty("binary").GetBytesFromBase64();
 
     internal async Task<ResponseServerAddrResult> ServerAddrAsync()
-        => (await Connection.SendMessageToServerAsync(Guid, "serverAddr").ConfigureAwait(false))
+        => (await Connection.SendMessageToServerAsync(Object, "serverAddr").ConfigureAwait(false))
             ?.GetProperty("value").ToObject<ResponseServerAddrResult>(Connection.DefaultJsonSerializerOptions);
 
     internal async Task<ResponseSecurityDetailsResult> SecurityDetailsAsync()
-        => (await Connection.SendMessageToServerAsync(Guid, "securityDetails").ConfigureAwait(false))
+        => (await Connection.SendMessageToServerAsync(Object, "securityDetails").ConfigureAwait(false))
             ?.GetProperty("value").ToObject<ResponseSecurityDetailsResult>(Connection.DefaultJsonSerializerOptions);
 
     internal async Task<RequestSizesResult> SizesAsync() =>
-        (await Connection.SendMessageToServerAsync(Guid, "sizes").ConfigureAwait(false))?.GetProperty("sizes").ToObject<RequestSizesResult>();
+        (await Connection.SendMessageToServerAsync(Object, "sizes").ConfigureAwait(false))?.GetProperty("sizes").ToObject<RequestSizesResult>();
 
     internal async Task<List<NameValue>> GetRawHeadersAsync() =>
-        (await Connection.SendMessageToServerAsync(Guid, "rawResponseHeaders").ConfigureAwait(false))?.GetProperty("headers").ToObject<List<NameValue>>();
+        (await Connection.SendMessageToServerAsync(Object, "rawResponseHeaders").ConfigureAwait(false))?.GetProperty("headers").ToObject<List<NameValue>>();
 }
