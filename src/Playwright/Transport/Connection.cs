@@ -168,6 +168,11 @@ internal class Connection : IDisposable
             };
         }
 
+        if (_tracingCount > 0 && frames.Count > 0 && guid != "localUtils")
+        {
+            LocalUtils.AddStackToTracingNoReply(frames, id);
+        }
+
         await _queue.EnqueueAsync(() =>
         {
             var message = new MessageRequest
@@ -183,11 +188,6 @@ internal class Connection : IDisposable
 
             return OnMessage(message, keepNulls);
         }).ConfigureAwait(false);
-
-        if (_tracingCount > 0 && frames.Count > 0 && guid != "localUtils")
-        {
-            LocalUtils.AddStackToTracingNoReply(frames, id);
-        }
 
         var result = await tcs.Task.ConfigureAwait(false);
 
