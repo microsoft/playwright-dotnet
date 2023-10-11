@@ -54,7 +54,7 @@ internal class WorkerChannel : Channel<Worker>
         bool? isFunction,
         object arg)
             => (await Connection.SendMessageToServerAsync<JsonElement>(
-                Guid,
+                Object,
                 "evaluateExpression",
                 new Dictionary<string, object>
                 {
@@ -69,7 +69,7 @@ internal class WorkerChannel : Channel<Worker>
         bool? isFunction,
         object arg)
         => (await Connection.SendMessageToServerAsync<JsonElement>(
-            Guid,
+            Object,
             "evaluateExpressionHandle",
             new Dictionary<string, object>
             {

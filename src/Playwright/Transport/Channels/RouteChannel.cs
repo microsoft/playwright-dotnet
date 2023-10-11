@@ -39,7 +39,7 @@ internal class RouteChannel : Channel<Route>
 
     public Task AbortAsync(string requestUrl, string errorCode)
         => Connection.SendMessageToServerAsync(
-            Guid,
+            Object,
             "abort",
             new Dictionary<string, object>
             {
@@ -49,7 +49,7 @@ internal class RouteChannel : Channel<Route>
 
     public Task FulfillAsync(Dictionary<string, object> args)
         => Connection.SendMessageToServerAsync(
-            Guid,
+            Object,
             "fulfill",
             args);
 
@@ -66,14 +66,14 @@ internal class RouteChannel : Channel<Route>
         };
 
         return Connection.SendMessageToServerAsync(
-            Guid,
+            Object,
             "continue",
             args);
     }
 
     internal Task RedirectNavigationRequestAsync(string url) =>
         Connection.SendMessageToServerAsync(
-            Guid,
+            Object,
             "redirectNavigationRequest",
             new Dictionary<string, object>
             {

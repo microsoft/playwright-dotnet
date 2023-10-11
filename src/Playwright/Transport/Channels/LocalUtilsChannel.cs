@@ -38,7 +38,7 @@ internal class LocalUtilsChannel : Channel<LocalUtils>
     }
 
     internal Task ZipAsync(string zipFile, List<NameValue> entries, string mode, string stacksId, bool includeSources) =>
-        Connection.SendMessageToServerAsync(Guid, "zip", new Dictionary<string, object>
+        Connection.SendMessageToServerAsync(Object, "zip", new Dictionary<string, object>
         {
                 { "zipFile", zipFile },
                 { "entries", entries },
@@ -49,7 +49,7 @@ internal class LocalUtilsChannel : Channel<LocalUtils>
 
     internal async Task<(string HarId, string Error)> HarOpenAsync(string file)
     {
-        var response = await Connection.SendMessageToServerAsync(Guid, "harOpen", new Dictionary<string, object>
+        var response = await Connection.SendMessageToServerAsync(Object, "harOpen", new Dictionary<string, object>
             {
                   { "file", file },
             }).ConfigureAwait(false);
@@ -64,7 +64,7 @@ internal class LocalUtilsChannel : Channel<LocalUtils>
         byte[] postData,
         bool isNavigationRequest)
     {
-        var response = await Connection.SendMessageToServerAsync<LocalUtilsHarLookupResult>(Guid, "harLookup", new Dictionary<string, object>
+        var response = await Connection.SendMessageToServerAsync<LocalUtilsHarLookupResult>(Object, "harLookup", new Dictionary<string, object>
             {
                 { "harId", harId },
                 { "url", url },
@@ -77,13 +77,13 @@ internal class LocalUtilsChannel : Channel<LocalUtils>
     }
 
     internal Task HarCloseAsync(string harId) =>
-        Connection.SendMessageToServerAsync(Guid, "HarCloseAsync", new Dictionary<string, object>
+        Connection.SendMessageToServerAsync(Object, "HarCloseAsync", new Dictionary<string, object>
         {
                   { "harId", harId },
         });
 
     internal Task HarUnzipAsync(string zipFile, string harFile) =>
-        Connection.SendMessageToServerAsync(Guid, "harUnzip", new Dictionary<string, object>
+        Connection.SendMessageToServerAsync(Object, "harUnzip", new Dictionary<string, object>
         {
                   { "zipFile", zipFile },
                   { "harFile", harFile },
@@ -99,11 +99,11 @@ internal class LocalUtilsChannel : Channel<LocalUtils>
                 { "timeout", timeout },
                 { "exposeNetwork", exposeNetwork },
             };
-        return (await Connection.SendMessageToServerAsync(Guid, "connect", args).ConfigureAwait(false)).Value.GetObject<JsonPipe>("pipe", Connection);
+        return (await Connection.SendMessageToServerAsync(Object, "connect", args).ConfigureAwait(false)).Value.GetObject<JsonPipe>("pipe", Connection);
     }
 
     internal void AddStackToTracingNoReply(List<StackFrame> frames, int id)
-        => Connection.SendMessageToServerAsync(Guid, "addStackToTracingNoReply", new Dictionary<string, object>
+        => Connection.SendMessageToServerAsync(Object, "addStackToTracingNoReply", new Dictionary<string, object>
         {
             {
                 "callData", new ClientSideCallMetadata()
@@ -115,14 +115,14 @@ internal class LocalUtilsChannel : Channel<LocalUtils>
         }).IgnoreException();
 
     internal Task TraceDiscardedAsync(string stacksId)
-        => Connection.SendMessageToServerAsync(Guid, "traceDiscarded", new Dictionary<string, object>
+        => Connection.SendMessageToServerAsync(Object, "traceDiscarded", new Dictionary<string, object>
         {
             { "stacksId", stacksId },
         });
 
     internal async Task<string> TracingStartedAsync(string tracesDir, string traceName)
     {
-        var response = await Connection.SendMessageToServerAsync(Guid, "tracingStarted", new Dictionary<string, object>
+        var response = await Connection.SendMessageToServerAsync(Object, "tracingStarted", new Dictionary<string, object>
         {
             { "tracesDir", tracesDir },
             { "traceName", traceName },

@@ -31,11 +31,8 @@ namespace Microsoft.Playwright.Transport.Channels;
 
 internal class Root : ChannelOwnerBase
 {
-    private readonly Connection _connection;
-
     internal Root(IChannelOwner parent, Connection connection, string guid) : base(parent, connection, guid)
     {
-        _connection = connection;
     }
 
     internal async Task<PlaywrightImpl> InitializeAsync()
@@ -45,7 +42,7 @@ internal class Root : ChannelOwnerBase
             ["sdkLanguage"] = "csharp",
         };
 
-        var jsonElement = await _connection.SendMessageToServerAsync(string.Empty, "initialize", args).ConfigureAwait(false);
+        var jsonElement = await _connection.SendMessageToServerAsync(this, "initialize", args).ConfigureAwait(false);
         return jsonElement.GetObject<PlaywrightImpl>("playwright", _connection);
     }
 }

@@ -28,7 +28,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Playwright.Helpers;
-using Microsoft.Playwright.Transport.Channels;
+using Microsoft.Playwright.Transport;
 
 namespace Microsoft.Playwright.Core;
 
@@ -40,13 +40,13 @@ internal class Waiter : IDisposable
     private readonly CancellationTokenSource _onDisposeCts = new();
     private readonly CancellationTokenSource _manualCts = new();
     private readonly string _waitId = Guid.NewGuid().ToString();
-    private readonly IChannelOwner _channelOwner;
+    private readonly ChannelOwnerBase _channelOwner;
     private Exception _immediateError;
 
     private bool _disposed;
     private string _error;
 
-    internal Waiter(IChannelOwner channelOwner, string @event)
+    internal Waiter(ChannelOwnerBase channelOwner, string @event)
     {
         _channelOwner = channelOwner;
 
@@ -60,7 +60,7 @@ internal class Waiter : IDisposable
             },
         };
         _failures.Add(Task.Delay(-1, _manualCts.Token));
-        _channelOwner.Connection.SendMessageToServerAsync(_channelOwner.Channel.Guid, "waitForEventInfo", beforeArgs).IgnoreException();
+        _channelOwner._connection.SendMessageToServerAsync(_channelOwner, "waitForEventInfo", beforeArgs).IgnoreException();
     }
 
     public void Dispose()
@@ -87,7 +87,7 @@ internal class Waiter : IDisposable
                 ["info"] = info,
             };
 
-            _channelOwner.WrapApiCallAsync(() => _channelOwner.Connection.SendMessageToServerAsync(_channelOwner.Channel.Guid, "waitForEventInfo", afterArgs), true).IgnoreException();
+            _channelOwner.WrapApiCallAsync(() => _channelOwner._connection.SendMessageToServerAsync(_channelOwner, "waitForEventInfo", afterArgs), true).IgnoreException();
 
             _onDisposeCts.Cancel();
             _onDisposeCts.Dispose();
@@ -109,7 +109,7 @@ internal class Waiter : IDisposable
                 ["message"] = log,
             },
         };
-        _channelOwner.WrapApiCallAsync(() => _channelOwner.Connection.SendMessageToServerAsync(_channelOwner.Channel.Guid, "waitForEventInfo", logArgs), true).IgnoreException();
+        _channelOwner.WrapApiCallAsync(() => _channelOwner._connection.SendMessageToServerAsync(_channelOwner, "waitForEventInfo", logArgs), true).IgnoreException();
     }
 
     internal void RejectImmediately(Exception exception)

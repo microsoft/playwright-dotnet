@@ -73,7 +73,7 @@ internal class PlaywrightChannel : Channel<PlaywrightImpl>
         }
 
         var response = await Connection.SendMessageToServerAsync<APIRequestContextChannel>(
-            Guid,
+            Object,
             "newRequest",
             args).ConfigureAwait(false);
         return response.Object;

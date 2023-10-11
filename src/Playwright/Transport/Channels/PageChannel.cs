@@ -113,7 +113,7 @@ internal class PageChannel : Channel<Page>
 
     internal Task SetDefaultTimeoutNoReplyAsync(float timeout)
         => Connection.SendMessageToServerAsync<PageChannel>(
-            Guid,
+            Object,
             "setDefaultTimeoutNoReply",
             new Dictionary<string, object>
             {
@@ -122,7 +122,7 @@ internal class PageChannel : Channel<Page>
 
     internal Task SetDefaultNavigationTimeoutNoReplyAsync(float timeout)
         => Connection.SendMessageToServerAsync<PageChannel>(
-            Guid,
+            Object,
             "setDefaultNavigationTimeoutNoReply",
             new Dictionary<string, object>
             {
@@ -131,7 +131,7 @@ internal class PageChannel : Channel<Page>
 
     internal Task CloseAsync(bool runBeforeUnload)
         => Connection.SendMessageToServerAsync(
-            Guid,
+            Object,
             "close",
             new Dictionary<string, object>
             {
@@ -140,7 +140,7 @@ internal class PageChannel : Channel<Page>
 
     internal Task ExposeBindingAsync(string name, bool needsHandle)
         => Connection.SendMessageToServerAsync<PageChannel>(
-            Guid,
+            Object,
             "exposeBinding",
             new Dictionary<string, object>
             {
@@ -150,14 +150,14 @@ internal class PageChannel : Channel<Page>
 
     internal Task AddInitScriptAsync(string script)
         => Connection.SendMessageToServerAsync<PageChannel>(
-            Guid,
+            Object,
             "addInitScript",
             new Dictionary<string, object>
             {
                 ["source"] = script,
             });
 
-    internal Task BringToFrontAsync() => Connection.SendMessageToServerAsync(Guid, "bringToFront");
+    internal Task BringToFrontAsync() => Connection.SendMessageToServerAsync(Object, "bringToFront");
 
     internal Task<ResponseChannel> GoBackAsync(float? timeout, WaitUntilState? waitUntil)
     {
@@ -166,7 +166,7 @@ internal class PageChannel : Channel<Page>
             ["timeout"] = timeout,
             ["waitUntil"] = waitUntil,
         };
-        return Connection.SendMessageToServerAsync<ResponseChannel>(Guid, "goBack", args);
+        return Connection.SendMessageToServerAsync<ResponseChannel>(Object, "goBack", args);
     }
 
     internal Task<ResponseChannel> GoForwardAsync(float? timeout, WaitUntilState? waitUntil)
@@ -176,7 +176,7 @@ internal class PageChannel : Channel<Page>
             ["timeout"] = timeout,
             ["waitUntil"] = waitUntil,
         };
-        return Connection.SendMessageToServerAsync<ResponseChannel>(Guid, "goForward", args);
+        return Connection.SendMessageToServerAsync<ResponseChannel>(Object, "goForward", args);
     }
 
     internal Task<ResponseChannel> ReloadAsync(float? timeout, WaitUntilState? waitUntil)
@@ -186,12 +186,12 @@ internal class PageChannel : Channel<Page>
             ["timeout"] = timeout,
             ["waitUntil"] = waitUntil,
         };
-        return Connection.SendMessageToServerAsync<ResponseChannel>(Guid, "reload", args);
+        return Connection.SendMessageToServerAsync<ResponseChannel>(Object, "reload", args);
     }
 
     internal Task SetNetworkInterceptionPatternsAsync(Dictionary<string, object> args)
         => Connection.SendMessageToServerAsync(
-            Guid,
+            Object,
             "setNetworkInterceptionPatterns",
             args);
 
@@ -203,7 +203,7 @@ internal class PageChannel : Channel<Page>
             ["root"] = root,
         };
 
-        if ((await Connection.SendMessageToServerAsync(Guid, "accessibilitySnapshot", args).ConfigureAwait(false)).Value.TryGetProperty("rootAXNode", out var jsonElement))
+        if ((await Connection.SendMessageToServerAsync(Object, "accessibilitySnapshot", args).ConfigureAwait(false)).Value.TryGetProperty("rootAXNode", out var jsonElement))
         {
             return jsonElement;
         }
@@ -213,7 +213,7 @@ internal class PageChannel : Channel<Page>
 
     internal Task SetViewportSizeAsync(PageViewportSizeResult viewport)
         => Connection.SendMessageToServerAsync(
-            Guid,
+            Object,
             "setViewportSize",
             new Dictionary<string, object>
             {
@@ -222,7 +222,7 @@ internal class PageChannel : Channel<Page>
 
     internal Task KeyboardDownAsync(string key)
         => Connection.SendMessageToServerAsync(
-            Guid,
+            Object,
             "keyboardDown",
             new Dictionary<string, object>
             {
@@ -230,11 +230,11 @@ internal class PageChannel : Channel<Page>
             });
 
     internal Task EmulateMediaAsync(Dictionary<string, object> args)
-        => Connection.SendMessageToServerAsync(Guid, "emulateMedia", args);
+        => Connection.SendMessageToServerAsync(Object, "emulateMedia", args);
 
     internal Task KeyboardUpAsync(string key)
         => Connection.SendMessageToServerAsync(
-            Guid,
+            Object,
             "keyboardUp",
             new Dictionary<string, object>
             {
@@ -243,7 +243,7 @@ internal class PageChannel : Channel<Page>
 
     internal Task TypeAsync(string text, float? delay)
         => Connection.SendMessageToServerAsync(
-            Guid,
+            Object,
             "keyboardType",
             new Dictionary<string, object>
             {
@@ -253,7 +253,7 @@ internal class PageChannel : Channel<Page>
 
     internal Task PressAsync(string key, float? delay)
         => Connection.SendMessageToServerAsync(
-            Guid,
+            Object,
             "keyboardPress",
             new Dictionary<string, object>
             {
@@ -263,7 +263,7 @@ internal class PageChannel : Channel<Page>
 
     internal Task InsertTextAsync(string text)
         => Connection.SendMessageToServerAsync(
-            Guid,
+            Object,
             "keyboardInsertText",
             new Dictionary<string, object>
             {
@@ -272,7 +272,7 @@ internal class PageChannel : Channel<Page>
 
     internal Task MouseDownAsync(MouseButton? button, int? clickCount)
         => Connection.SendMessageToServerAsync(
-            Guid,
+            Object,
             "mouseDown",
             new Dictionary<string, object>
             {
@@ -282,7 +282,7 @@ internal class PageChannel : Channel<Page>
 
     internal Task MouseMoveAsync(float x, float y, int? steps)
         => Connection.SendMessageToServerAsync(
-            Guid,
+            Object,
             "mouseMove",
             new Dictionary<string, object>
             {
@@ -293,7 +293,7 @@ internal class PageChannel : Channel<Page>
 
     internal Task MouseUpAsync(MouseButton? button, int? clickCount)
         => Connection.SendMessageToServerAsync(
-            Guid,
+            Object,
             "mouseUp",
             new Dictionary<string, object>
             {
@@ -303,7 +303,7 @@ internal class PageChannel : Channel<Page>
 
     internal Task MouseClickAsync(float x, float y, float? delay, MouseButton? button, int? clickCount)
         => Connection.SendMessageToServerAsync(
-            Guid,
+            Object,
             "mouseClick",
             new Dictionary<string, object>
             {
@@ -316,7 +316,7 @@ internal class PageChannel : Channel<Page>
 
     internal Task MouseWheelAsync(float deltaX, float deltaY)
         => Connection.SendMessageToServerAsync(
-            Guid,
+            Object,
             "mouseWheel",
             new Dictionary<string, object>
             {
@@ -326,7 +326,7 @@ internal class PageChannel : Channel<Page>
 
     internal Task TouchscreenTapAsync(float x, float y)
         => Connection.SendMessageToServerAsync(
-            Guid,
+            Object,
             "touchscreenTap",
             new Dictionary<string, object>
             {
@@ -336,7 +336,7 @@ internal class PageChannel : Channel<Page>
 
     internal Task SetExtraHTTPHeadersAsync(IEnumerable<KeyValuePair<string, string>> headers)
         => Connection.SendMessageToServerAsync(
-            Guid,
+            Object,
             "setExtraHTTPHeaders",
             new Dictionary<string, object>
             {
@@ -376,12 +376,12 @@ internal class PageChannel : Channel<Page>
                 ["selector"] = ((Locator)locator)._selector,
             }).ToArray(),
         };
-        return (await Connection.SendMessageToServerAsync(Guid, "screenshot", args).ConfigureAwait(false))?.GetProperty("binary").GetBytesFromBase64();
+        return (await Connection.SendMessageToServerAsync(Object, "screenshot", args).ConfigureAwait(false))?.GetProperty("binary").GetBytesFromBase64();
     }
 
     internal Task StartCSSCoverageAsync(bool resetOnNavigation)
         => Connection.SendMessageToServerAsync(
-            Guid,
+            Object,
             "crStartCSSCoverage",
             new Dictionary<string, object>
             {
@@ -390,7 +390,7 @@ internal class PageChannel : Channel<Page>
 
     internal Task StartJSCoverageAsync(bool resetOnNavigation, bool reportAnonymousScripts)
         => Connection.SendMessageToServerAsync(
-            Guid,
+            Object,
             "crStartJSCoverage",
             new Dictionary<string, object>
             {
@@ -427,6 +427,6 @@ internal class PageChannel : Channel<Page>
             ["format"] = format,
             ["height"] = height,
         };
-        return (await Connection.SendMessageToServerAsync(Guid, "pdf", args).ConfigureAwait(false))?.GetProperty("pdf").GetBytesFromBase64();
+        return (await Connection.SendMessageToServerAsync(Object, "pdf", args).ConfigureAwait(false))?.GetProperty("pdf").GetBytesFromBase64();
     }
 }
