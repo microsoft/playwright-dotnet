@@ -527,7 +527,7 @@ public partial interface IElementHandle : IJSHandle
     /// </para>
     /// <para>**Usage**</para>
     /// <code>
-    /// // single selection matching the value<br/>
+    /// // Single selection matching the value or label<br/>
     /// await handle.SelectOptionAsync(new[] { "blue" });<br/>
     /// // single selection matching the label<br/>
     /// await handle.SelectOptionAsync(new[] { new SelectOptionValue() { Label = "blue" } });<br/>
@@ -568,7 +568,7 @@ public partial interface IElementHandle : IJSHandle
     /// </para>
     /// <para>**Usage**</para>
     /// <code>
-    /// // single selection matching the value<br/>
+    /// // Single selection matching the value or label<br/>
     /// await handle.SelectOptionAsync(new[] { "blue" });<br/>
     /// // single selection matching the label<br/>
     /// await handle.SelectOptionAsync(new[] { new SelectOptionValue() { Label = "blue" } });<br/>
@@ -609,7 +609,7 @@ public partial interface IElementHandle : IJSHandle
     /// </para>
     /// <para>**Usage**</para>
     /// <code>
-    /// // single selection matching the value<br/>
+    /// // Single selection matching the value or label<br/>
     /// await handle.SelectOptionAsync(new[] { "blue" });<br/>
     /// // single selection matching the label<br/>
     /// await handle.SelectOptionAsync(new[] { new SelectOptionValue() { Label = "blue" } });<br/>
@@ -650,7 +650,7 @@ public partial interface IElementHandle : IJSHandle
     /// </para>
     /// <para>**Usage**</para>
     /// <code>
-    /// // single selection matching the value<br/>
+    /// // Single selection matching the value or label<br/>
     /// await handle.SelectOptionAsync(new[] { "blue" });<br/>
     /// // single selection matching the label<br/>
     /// await handle.SelectOptionAsync(new[] { new SelectOptionValue() { Label = "blue" } });<br/>
@@ -691,7 +691,7 @@ public partial interface IElementHandle : IJSHandle
     /// </para>
     /// <para>**Usage**</para>
     /// <code>
-    /// // single selection matching the value<br/>
+    /// // Single selection matching the value or label<br/>
     /// await handle.SelectOptionAsync(new[] { "blue" });<br/>
     /// // single selection matching the label<br/>
     /// await handle.SelectOptionAsync(new[] { new SelectOptionValue() { Label = "blue" } });<br/>
@@ -732,7 +732,7 @@ public partial interface IElementHandle : IJSHandle
     /// </para>
     /// <para>**Usage**</para>
     /// <code>
-    /// // single selection matching the value<br/>
+    /// // Single selection matching the value or label<br/>
     /// await handle.SelectOptionAsync(new[] { "blue" });<br/>
     /// // single selection matching the label<br/>
     /// await handle.SelectOptionAsync(new[] { new SelectOptionValue() { Label = "blue" } });<br/>

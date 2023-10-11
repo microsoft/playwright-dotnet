@@ -1150,7 +1150,7 @@ public partial interface IFrame
     /// </para>
     /// <para>**Usage**</para>
     /// <code>
-    /// // single selection matching the value<br/>
+    /// // Single selection matching the value or label<br/>
     /// await frame.SelectOptionAsync("select#colors", new[] { "blue" });<br/>
     /// // single selection matching both the value and the label<br/>
     /// await frame.SelectOptionAsync("select#colors", new[] { new SelectOptionValue() { Label = "blue" } });<br/>
@@ -1192,7 +1192,7 @@ public partial interface IFrame
     /// </para>
     /// <para>**Usage**</para>
     /// <code>
-    /// // single selection matching the value<br/>
+    /// // Single selection matching the value or label<br/>
     /// await frame.SelectOptionAsync("select#colors", new[] { "blue" });<br/>
     /// // single selection matching both the value and the label<br/>
     /// await frame.SelectOptionAsync("select#colors", new[] { new SelectOptionValue() { Label = "blue" } });<br/>
@@ -1234,7 +1234,7 @@ public partial interface IFrame
     /// </para>
     /// <para>**Usage**</para>
     /// <code>
-    /// // single selection matching the value<br/>
+    /// // Single selection matching the value or label<br/>
     /// await frame.SelectOptionAsync("select#colors", new[] { "blue" });<br/>
     /// // single selection matching both the value and the label<br/>
     /// await frame.SelectOptionAsync("select#colors", new[] { new SelectOptionValue() { Label = "blue" } });<br/>
@@ -1276,7 +1276,7 @@ public partial interface IFrame
     /// </para>
     /// <para>**Usage**</para>
     /// <code>
-    /// // single selection matching the value<br/>
+    /// // Single selection matching the value or label<br/>
     /// await frame.SelectOptionAsync("select#colors", new[] { "blue" });<br/>
     /// // single selection matching both the value and the label<br/>
     /// await frame.SelectOptionAsync("select#colors", new[] { new SelectOptionValue() { Label = "blue" } });<br/>
@@ -1318,7 +1318,7 @@ public partial interface IFrame
     /// </para>
     /// <para>**Usage**</para>
     /// <code>
-    /// // single selection matching the value<br/>
+    /// // Single selection matching the value or label<br/>
     /// await frame.SelectOptionAsync("select#colors", new[] { "blue" });<br/>
     /// // single selection matching both the value and the label<br/>
     /// await frame.SelectOptionAsync("select#colors", new[] { new SelectOptionValue() { Label = "blue" } });<br/>
@@ -1360,7 +1360,7 @@ public partial interface IFrame
     /// </para>
     /// <para>**Usage**</para>
     /// <code>
-    /// // single selection matching the value<br/>
+    /// // Single selection matching the value or label<br/>
     /// await frame.SelectOptionAsync("select#colors", new[] { "blue" });<br/>
     /// // single selection matching both the value and the label<br/>
     /// await frame.SelectOptionAsync("select#colors", new[] { new SelectOptionValue() { Label = "blue" } });<br/>

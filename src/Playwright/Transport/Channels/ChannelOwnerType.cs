@@ -43,9 +43,6 @@ internal enum ChannelOwnerType
     [EnumMember(Value = "browserContext")]
     BrowserContext,
 
-    [EnumMember(Value = "consoleMessage")]
-    ConsoleMessage,
-
     [EnumMember(Value = "cdpsession")]
     CDPSession,
 

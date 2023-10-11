@@ -339,20 +339,6 @@ internal static class EvaluateArgumentValueConverter
             return new Regex(regex.GetProperty("p").ToString(), RegexOptionsExtensions.FromInlineFlags(regex.GetProperty("f").ToString()));
         }
 
-        if (result.TryGetProperty("m", out var map))
-        {
-            var expando = new ExpandoObject();
-            refs.Add(map.GetProperty("id").GetInt32(), expando);
-            return expando;
-        }
-
-        if (result.TryGetProperty("se", out var set))
-        {
-            var expando = new ExpandoObject();
-            refs.Add(set.GetProperty("id").GetInt32(), expando);
-            return expando;
-        }
-
         if (result.TryGetProperty("b", out var boolean))
         {
             return boolean.ToObject<bool>();

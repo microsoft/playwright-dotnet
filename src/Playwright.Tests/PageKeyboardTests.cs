@@ -478,10 +478,6 @@ public class PageKeyboardTests : PageTestEx
 
         if (TestConstants.IsFirefox)
         {
-            Assert.AreEqual("OSLeft", code);
-        }
-        else
-        {
             Assert.AreEqual("MetaLeft", code);
         }
 

@@ -122,7 +122,7 @@ internal class LocatorAssertions : AssertionsBase, ILocatorAssertions
         {
             message += " matching regex";
         }
-        return ExpectImplAsync("to.have.attribute", expectedText, expectedValue, message, commonOptions);
+        return ExpectImplAsync("to.have.attribute.value", expectedText, expectedValue, message, commonOptions);
     }
 
     public Task ToHaveClassAsync(string expected, LocatorAssertionsToHaveClassOptions options = null) =>

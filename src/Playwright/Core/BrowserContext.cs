@@ -60,8 +60,9 @@ internal class BrowserContext : ChannelOwnerBase, IChannelOwner<BrowserContext>,
         _browser?._contexts.Add(this);
         Channel = new(guid, parent.Connection, this);
         Channel.Close += (_, _) => OnClose();
-        Channel.Console += (_, consoleMessage) =>
+        Channel.Console += (_, consoleMessageEvent) =>
         {
+            var consoleMessage = new ConsoleMessage(consoleMessageEvent);
             _consoleImpl?.Invoke(this, consoleMessage);
             if (consoleMessage.Page != null)
             {

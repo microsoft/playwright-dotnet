@@ -42,7 +42,7 @@ internal class BrowserContextChannel : Channel<BrowserContext>
 
     internal event EventHandler Close;
 
-    internal event EventHandler<IConsoleMessage> Console;
+    internal event EventHandler<BrowserContextConsoleEvent> Console;
 
     internal event EventHandler<IDialog> Dialog;
 
@@ -82,7 +82,7 @@ internal class BrowserContextChannel : Channel<BrowserContext>
                 Dialog?.Invoke(this, serverParams?.GetProperty("dialog").ToObject<DialogChannel>(Connection.DefaultJsonSerializerOptions).Object);
                 break;
             case "console":
-                Console?.Invoke(this, serverParams?.GetProperty("message").ToObject<ConsoleMessage>(Connection.DefaultJsonSerializerOptions));
+                Console?.Invoke(this, serverParams?.ToObject<BrowserContextConsoleEvent>(Connection.DefaultJsonSerializerOptions));
                 break;
             case "route":
                 var route = serverParams?.GetProperty("route").ToObject<RouteChannel>(Connection.DefaultJsonSerializerOptions).Object;

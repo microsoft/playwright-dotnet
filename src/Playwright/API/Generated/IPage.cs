@@ -1925,7 +1925,7 @@ public partial interface IPage
     /// </para>
     /// <para>**Usage**</para>
     /// <code>
-    /// // single selection matching the value<br/>
+    /// // Single selection matching the value or label<br/>
     /// await page.SelectOptionAsync("select#colors", new[] { "blue" });<br/>
     /// // single selection matching both the value and the label<br/>
     /// await page.SelectOptionAsync("select#colors", new[] { new SelectOptionValue() { Label = "blue" } });<br/>
@@ -1970,7 +1970,7 @@ public partial interface IPage
     /// </para>
     /// <para>**Usage**</para>
     /// <code>
-    /// // single selection matching the value<br/>
+    /// // Single selection matching the value or label<br/>
     /// await page.SelectOptionAsync("select#colors", new[] { "blue" });<br/>
     /// // single selection matching both the value and the label<br/>
     /// await page.SelectOptionAsync("select#colors", new[] { new SelectOptionValue() { Label = "blue" } });<br/>
@@ -2015,7 +2015,7 @@ public partial interface IPage
     /// </para>
     /// <para>**Usage**</para>
     /// <code>
-    /// // single selection matching the value<br/>
+    /// // Single selection matching the value or label<br/>
     /// await page.SelectOptionAsync("select#colors", new[] { "blue" });<br/>
     /// // single selection matching both the value and the label<br/>
     /// await page.SelectOptionAsync("select#colors", new[] { new SelectOptionValue() { Label = "blue" } });<br/>
@@ -2060,7 +2060,7 @@ public partial interface IPage
     /// </para>
     /// <para>**Usage**</para>
     /// <code>
-    /// // single selection matching the value<br/>
+    /// // Single selection matching the value or label<br/>
     /// await page.SelectOptionAsync("select#colors", new[] { "blue" });<br/>
     /// // single selection matching both the value and the label<br/>
     /// await page.SelectOptionAsync("select#colors", new[] { new SelectOptionValue() { Label = "blue" } });<br/>
@@ -2105,7 +2105,7 @@ public partial interface IPage
     /// </para>
     /// <para>**Usage**</para>
     /// <code>
-    /// // single selection matching the value<br/>
+    /// // Single selection matching the value or label<br/>
     /// await page.SelectOptionAsync("select#colors", new[] { "blue" });<br/>
     /// // single selection matching both the value and the label<br/>
     /// await page.SelectOptionAsync("select#colors", new[] { new SelectOptionValue() { Label = "blue" } });<br/>
@@ -2150,7 +2150,7 @@ public partial interface IPage
     /// </para>
     /// <para>**Usage**</para>
     /// <code>
-    /// // single selection matching the value<br/>
+    /// // Single selection matching the value or label<br/>
     /// await page.SelectOptionAsync("select#colors", new[] { "blue" });<br/>
     /// // single selection matching both the value and the label<br/>
     /// await page.SelectOptionAsync("select#colors", new[] { new SelectOptionValue() { Label = "blue" } });<br/>
