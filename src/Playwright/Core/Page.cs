@@ -211,7 +211,7 @@ internal class Page : ChannelOwnerBase, IChannelOwner<Page>, IPage
 
     public string Url => MainFrame.Url;
 
-    public IReadOnlyList<IFrame> Frames => _frames.AsReadOnly();
+    public IReadOnlyList<IFrame> Frames => _frames.ToList().AsReadOnly();
 
     public IKeyboard Keyboard
     {
