@@ -47,7 +47,7 @@ internal class CDPSession : ChannelOwnerBase, ICDPSession, IChannelOwner<CDPSess
 
     ChannelBase IChannelOwner.Channel => _channel;
 
-    IChannel<CDPSession> IChannelOwner<CDPSession>.Channel => _channel;
+    Channel<CDPSession> IChannelOwner<CDPSession>.Channel => _channel;
 
     [MethodImpl(MethodImplOptions.NoInlining)]
     public Task DetachAsync() => _channel.DetachAsync();

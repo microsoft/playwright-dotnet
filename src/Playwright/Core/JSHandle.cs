@@ -44,7 +44,7 @@ internal class JSHandle : ChannelOwnerBase, IChannelOwner<JSHandle>, IJSHandle
 
     ChannelBase IChannelOwner.Channel => _channel;
 
-    IChannel<JSHandle> IChannelOwner<JSHandle>.Channel => _channel;
+    Channel<JSHandle> IChannelOwner<JSHandle>.Channel => _channel;
 
     internal string Preview { get; set; }
 

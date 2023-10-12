@@ -46,9 +46,9 @@ internal class ElementHandle : JSHandle, IElementHandle, IChannelOwner<ElementHa
 
     ChannelBase IChannelOwner.Channel => _channel;
 
-    IChannel<ElementHandle> IChannelOwner<ElementHandle>.Channel => _channel;
+    Channel<ElementHandle> IChannelOwner<ElementHandle>.Channel => _channel;
 
-    internal IChannel<ElementHandle> ElementChannel => _channel;
+    internal Channel<ElementHandle> ElementChannel => _channel;
 
     public async Task<IElementHandle> WaitForSelectorAsync(string selector, ElementHandleWaitForSelectorOptions options = default)
         => (await _channel.WaitForSelectorAsync(

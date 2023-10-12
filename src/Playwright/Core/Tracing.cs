@@ -44,7 +44,7 @@ internal class Tracing : ChannelOwnerBase, IChannelOwner<Tracing>, ITracing
 
     ChannelBase IChannelOwner.Channel => _channel;
 
-    IChannel<Tracing> IChannelOwner<Tracing>.Channel => _channel;
+    Channel<Tracing> IChannelOwner<Tracing>.Channel => _channel;
 
     [MethodImpl(MethodImplOptions.NoInlining)]
     public async Task StartAsync(

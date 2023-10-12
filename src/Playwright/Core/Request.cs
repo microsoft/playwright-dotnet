@@ -61,7 +61,7 @@ internal class Request : ChannelOwnerBase, IChannelOwner<Request>, IRequest
 
     ChannelBase IChannelOwner.Channel => _channel;
 
-    IChannel<Request> IChannelOwner<Request>.Channel => _channel;
+    Channel<Request> IChannelOwner<Request>.Channel => _channel;
 
     public string Failure { get; internal set; }
 

@@ -45,7 +45,7 @@ internal class Artifact : ChannelOwnerBase, IChannelOwner<Artifact>
 
     ChannelBase IChannelOwner.Channel => _channel;
 
-    IChannel<Artifact> IChannelOwner<Artifact>.Channel => _channel;
+    Channel<Artifact> IChannelOwner<Artifact>.Channel => _channel;
 
     internal string AbsolutePath { get; }
 

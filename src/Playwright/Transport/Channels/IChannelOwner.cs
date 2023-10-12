@@ -67,5 +67,5 @@ internal interface IChannelOwner<T> : IChannelOwner
     /// <summary>
     /// Channel.
     /// </summary>
-    new IChannel<T> Channel { get; }
+    new Channel<T> Channel { get; }
 }

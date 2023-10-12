@@ -30,9 +30,10 @@ using Microsoft.Playwright.Helpers;
 
 namespace Microsoft.Playwright.Transport.Channels;
 
-internal class JSHandleChannel : Channel<JSHandle>
+internal class JSHandleChannel<T> : Channel<T>
+    where T : ChannelOwnerBase, IChannelOwner<T>
 {
-    public JSHandleChannel(string guid, Connection connection, JSHandle owner) : base(guid, connection, owner)
+    public JSHandleChannel(string guid, Connection connection, T owner) : base(guid, connection, owner)
     {
     }
 
@@ -78,5 +79,12 @@ internal class JSHandleChannel : Channel<JSHandle>
         public string Name { get; set; }
 
         public JSHandleChannel Value { get; set; }
+    }
+}
+
+internal class JSHandleChannel : JSHandleChannel<JSHandle>
+{
+    public JSHandleChannel(string guid, Connection connection, JSHandle owner) : base(guid, connection, owner)
+    {
     }
 }

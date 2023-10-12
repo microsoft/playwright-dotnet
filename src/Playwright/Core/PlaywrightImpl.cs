@@ -65,7 +65,7 @@ internal class PlaywrightImpl : ChannelOwnerBase, IPlaywright, IChannelOwner<Pla
 
     ChannelBase IChannelOwner.Channel => _channel;
 
-    IChannel<PlaywrightImpl> IChannelOwner<PlaywrightImpl>.Channel => _channel;
+    Channel<PlaywrightImpl> IChannelOwner<PlaywrightImpl>.Channel => _channel;
 
     public IBrowserType Chromium { get => _initializer.Chromium; set => throw new NotSupportedException(); }
 

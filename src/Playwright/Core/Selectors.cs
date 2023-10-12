@@ -41,7 +41,7 @@ internal class Selectors : ChannelOwnerBase, IChannelOwner<Selectors>
 
     ChannelBase IChannelOwner.Channel => _channel;
 
-    IChannel<Selectors> IChannelOwner<Selectors>.Channel => _channel;
+    Channel<Selectors> IChannelOwner<Selectors>.Channel => _channel;
 }
 
 internal class SelectorsAPI : ISelectors

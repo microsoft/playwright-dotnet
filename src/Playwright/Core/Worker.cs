@@ -65,7 +65,7 @@ internal class Worker : ChannelOwnerBase, IChannelOwner<Worker>, IWorker
 
     ChannelBase IChannelOwner.Channel => _channel;
 
-    IChannel<Worker> IChannelOwner<Worker>.Channel => _channel;
+    Channel<Worker> IChannelOwner<Worker>.Channel => _channel;
 
     internal Page Page { get; set; }
 

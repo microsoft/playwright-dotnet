@@ -50,7 +50,7 @@ internal class BindingCall : ChannelOwnerBase, IChannelOwner<BindingCall>
 
     ChannelBase IChannelOwner.Channel => _channel;
 
-    IChannel<BindingCall> IChannelOwner<BindingCall>.Channel => _channel;
+    Channel<BindingCall> IChannelOwner<BindingCall>.Channel => _channel;
 
     internal async Task CallAsync(Delegate binding)
     {

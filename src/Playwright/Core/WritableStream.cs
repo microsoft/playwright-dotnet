@@ -41,7 +41,7 @@ internal class WritableStream : ChannelOwnerBase, IChannelOwner<WritableStream>,
 
     ChannelBase IChannelOwner.Channel => Channel;
 
-    IChannel<WritableStream> IChannelOwner<WritableStream>.Channel => Channel;
+    Channel<WritableStream> IChannelOwner<WritableStream>.Channel => Channel;
 
     public WritableStreamChannel Channel { get; }
 

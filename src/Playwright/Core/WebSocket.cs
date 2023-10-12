@@ -59,7 +59,7 @@ internal class WebSocket : ChannelOwnerBase, IChannelOwner<WebSocket>, IWebSocke
 
     ChannelBase IChannelOwner.Channel => _channel;
 
-    IChannel<WebSocket> IChannelOwner<WebSocket>.Channel => _channel;
+    Channel<WebSocket> IChannelOwner<WebSocket>.Channel => _channel;
 
     public string Url => _initializer.Url;
 

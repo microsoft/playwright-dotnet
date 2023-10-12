@@ -53,7 +53,7 @@ internal class Dialog : ChannelOwnerBase, IChannelOwner<Dialog>, IDialog
 
     ChannelBase IChannelOwner.Channel => _channel;
 
-    IChannel<Dialog> IChannelOwner<Dialog>.Channel => _channel;
+    Channel<Dialog> IChannelOwner<Dialog>.Channel => _channel;
 
     [MethodImpl(MethodImplOptions.NoInlining)]
     public Task AcceptAsync(string promptText) => _channel.AcceptAsync(promptText ?? string.Empty);

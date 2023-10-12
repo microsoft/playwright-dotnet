@@ -195,7 +195,7 @@ internal class PageChannel : Channel<Page>
             "setNetworkInterceptionPatterns",
             args);
 
-    internal async Task<JsonElement?> AccessibilitySnapshotAsync(bool? interestingOnly, IChannel<ElementHandle> root)
+    internal async Task<JsonElement?> AccessibilitySnapshotAsync(bool? interestingOnly, Channel<ElementHandle> root)
     {
         var args = new Dictionary<string, object>
         {

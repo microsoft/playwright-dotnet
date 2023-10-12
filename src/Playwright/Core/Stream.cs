@@ -41,7 +41,7 @@ internal class Stream : ChannelOwnerBase, IChannelOwner<Stream>, IAsyncDisposabl
 
     ChannelBase IChannelOwner.Channel => Channel;
 
-    IChannel<Stream> IChannelOwner<Stream>.Channel => Channel;
+    Channel<Stream> IChannelOwner<Stream>.Channel => Channel;
 
     public StreamChannel Channel { get; }
 

@@ -100,7 +100,7 @@ internal class Frame : ChannelOwnerBase, IChannelOwner<Frame>, IFrame
 
     ChannelBase IChannelOwner.Channel => _channel;
 
-    IChannel<Frame> IChannelOwner<Frame>.Channel => _channel;
+    Channel<Frame> IChannelOwner<Frame>.Channel => _channel;
 
     public IReadOnlyList<IFrame> ChildFrames => _childFrames;
 

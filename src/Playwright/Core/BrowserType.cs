@@ -48,7 +48,7 @@ internal class BrowserType : ChannelOwnerBase, IChannelOwner<BrowserType>, IBrow
 
     ChannelBase IChannelOwner.Channel => _channel;
 
-    IChannel<BrowserType> IChannelOwner<BrowserType>.Channel => _channel;
+    Channel<BrowserType> IChannelOwner<BrowserType>.Channel => _channel;
 
     internal PlaywrightImpl Playwright { get; set; }
 

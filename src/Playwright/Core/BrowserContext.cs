@@ -206,7 +206,7 @@ internal class BrowserContext : ChannelOwnerBase, IChannelOwner<BrowserContext>,
 
     ChannelBase IChannelOwner.Channel => Channel;
 
-    IChannel<BrowserContext> IChannelOwner<BrowserContext>.Channel => Channel;
+    Channel<BrowserContext> IChannelOwner<BrowserContext>.Channel => Channel;
 
     public IBrowser Browser => _browser;
 

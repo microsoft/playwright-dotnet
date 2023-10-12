@@ -183,7 +183,7 @@ internal class Page : ChannelOwnerBase, IChannelOwner<Page>, IPage
 
     ChannelBase IChannelOwner.Channel => _channel;
 
-    IChannel<Page> IChannelOwner<Page>.Channel => _channel;
+    Channel<Page> IChannelOwner<Page>.Channel => _channel;
 
     public bool IsClosed { get; private set; }
 

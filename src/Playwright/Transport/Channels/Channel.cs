@@ -24,7 +24,7 @@
 
 namespace Microsoft.Playwright.Transport.Channels;
 
-internal class Channel<T> : ChannelBase, IChannel<T>
+internal class Channel<T> : ChannelBase
     where T : ChannelOwnerBase, IChannelOwner<T>
 {
     public Channel(string guid, Connection connection, T owner) : base(guid, connection)

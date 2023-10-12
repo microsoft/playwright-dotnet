@@ -33,7 +33,7 @@ using Microsoft.Playwright.Transport.Protocol;
 
 namespace Microsoft.Playwright.Transport.Channels;
 
-internal class ElementHandleChannel : JSHandleChannel, IChannel<ElementHandle>
+internal class ElementHandleChannel : JSHandleChannel<ElementHandle>
 {
     public ElementHandleChannel(string guid, Connection connection, ElementHandle owner) : base(guid, connection, owner)
     {

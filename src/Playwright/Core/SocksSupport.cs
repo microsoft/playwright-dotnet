@@ -36,5 +36,5 @@ internal class SocksSupport : ChannelOwnerBase, IChannelOwner<SocksSupport>
         _channel = new(guid, parent.Connection, this);
     }
 
-    IChannel<SocksSupport> IChannelOwner<SocksSupport>.Channel => _channel;
+    Channel<SocksSupport> IChannelOwner<SocksSupport>.Channel => _channel;
 }

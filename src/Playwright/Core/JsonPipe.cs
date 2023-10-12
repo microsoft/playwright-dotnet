@@ -50,7 +50,7 @@ internal class JsonPipe : ChannelOwnerBase, IChannelOwner<JsonPipe>
 
     ChannelBase IChannelOwner.Channel => _channel;
 
-    IChannel<JsonPipe> IChannelOwner<JsonPipe>.Channel => _channel;
+    Channel<JsonPipe> IChannelOwner<JsonPipe>.Channel => _channel;
 
     [MethodImpl(MethodImplOptions.NoInlining)]
     public Task CloseAsync() => _channel.CloseAsync();

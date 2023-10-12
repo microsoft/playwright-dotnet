@@ -51,7 +51,7 @@ internal class Browser : ChannelOwnerBase, IChannelOwner<Browser>, IBrowser
 
     ChannelBase IChannelOwner.Channel => Channel;
 
-    IChannel<Browser> IChannelOwner<Browser>.Channel => Channel;
+    Channel<Browser> IChannelOwner<Browser>.Channel => Channel;
 
     public IReadOnlyList<IBrowserContext> Contexts => _contexts.ToArray();
 

@@ -70,7 +70,7 @@ internal class Response : ChannelOwnerBase, IChannelOwner<Response>, IResponse
 
     ChannelBase IChannelOwner.Channel => _channel;
 
-    IChannel<Response> IChannelOwner<Response>.Channel => _channel;
+    Channel<Response> IChannelOwner<Response>.Channel => _channel;
 
     [MethodImpl(MethodImplOptions.NoInlining)]
     public async Task<Dictionary<string, string>> AllHeadersAsync()

@@ -60,7 +60,7 @@ internal class Route : ChannelOwnerBase, IChannelOwner<Route>, IRoute
 
     ChannelBase IChannelOwner.Channel => _channel;
 
-    IChannel<Route> IChannelOwner<Route>.Channel => _channel;
+    Channel<Route> IChannelOwner<Route>.Channel => _channel;
 
     [MethodImpl(MethodImplOptions.NoInlining)]
     public async Task FulfillAsync(RouteFulfillOptions options = default)
