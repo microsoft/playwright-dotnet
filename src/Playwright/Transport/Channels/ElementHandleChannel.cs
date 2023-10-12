@@ -90,8 +90,8 @@ internal class ElementHandleChannel : JSHandleChannel<ElementHandle>
         return Connection.SendMessageToServerAsync<ElementHandleChannel>(Object, "waitForElementState", args);
     }
 
-    internal Task<ChannelBase[]> QuerySelectorAllAsync(string selector)
-        => Connection.SendMessageToServerAsync<ChannelBase[]>(
+    internal Task<Channel[]> QuerySelectorAllAsync(string selector)
+        => Connection.SendMessageToServerAsync<Channel[]>(
             Object,
             "querySelectorAll",
             new Dictionary<string, object>

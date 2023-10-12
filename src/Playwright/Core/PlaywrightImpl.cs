@@ -63,7 +63,7 @@ internal class PlaywrightImpl : ChannelOwnerBase, IPlaywright, IChannelOwner<Pla
 
     Connection IChannelOwner.Connection => _connection;
 
-    ChannelBase IChannelOwner.Channel => _channel;
+    Channel IChannelOwner.Channel => _channel;
 
     Channel<PlaywrightImpl> IChannelOwner<PlaywrightImpl>.Channel => _channel;
 

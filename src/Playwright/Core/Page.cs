@@ -181,7 +181,7 @@ internal class Page : ChannelOwnerBase, IChannelOwner<Page>, IPage
 
     public event EventHandler<IDownload> Download;
 
-    ChannelBase IChannelOwner.Channel => _channel;
+    Channel IChannelOwner.Channel => _channel;
 
     Channel<Page> IChannelOwner<Page>.Channel => _channel;
 

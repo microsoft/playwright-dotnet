@@ -203,7 +203,7 @@ internal class Connection : IDisposable
         {
             return default;
         }
-        else if (typeof(ChannelBase).IsAssignableFrom(typeof(T)) || typeof(ChannelBase[]).IsAssignableFrom(typeof(T)))
+        else if (typeof(Channel).IsAssignableFrom(typeof(T)) || typeof(Channel[]).IsAssignableFrom(typeof(T)))
         {
             var enumerate = result.Value.EnumerateObject();
 

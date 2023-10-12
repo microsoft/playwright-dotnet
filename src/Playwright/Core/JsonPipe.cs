@@ -48,7 +48,7 @@ internal class JsonPipe : ChannelOwnerBase, IChannelOwner<JsonPipe>
 
     public event EventHandler<SerializedError> Closed;
 
-    ChannelBase IChannelOwner.Channel => _channel;
+    Channel IChannelOwner.Channel => _channel;
 
     Channel<JsonPipe> IChannelOwner<JsonPipe>.Channel => _channel;
 

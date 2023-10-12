@@ -41,7 +41,7 @@ internal interface IChannelOwner
     /// <summary>
     /// Channel.
     /// </summary>
-    ChannelBase Channel { get; }
+    Channel Channel { get; }
 
     /// <summary>
     /// Child objects.

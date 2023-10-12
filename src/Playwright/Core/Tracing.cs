@@ -42,7 +42,7 @@ internal class Tracing : ChannelOwnerBase, IChannelOwner<Tracing>, ITracing
         _channel = new(guid, parent.Connection, this);
     }
 
-    ChannelBase IChannelOwner.Channel => _channel;
+    Channel IChannelOwner.Channel => _channel;
 
     Channel<Tracing> IChannelOwner<Tracing>.Channel => _channel;
 

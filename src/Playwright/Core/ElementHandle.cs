@@ -44,7 +44,7 @@ internal class ElementHandle : JSHandle, IElementHandle, IChannelOwner<ElementHa
         _channel.PreviewUpdated += (_, newPreview) => Preview = newPreview;
     }
 
-    ChannelBase IChannelOwner.Channel => _channel;
+    Channel IChannelOwner.Channel => _channel;
 
     Channel<ElementHandle> IChannelOwner<ElementHandle>.Channel => _channel;
 

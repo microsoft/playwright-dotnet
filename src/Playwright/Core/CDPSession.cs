@@ -45,7 +45,7 @@ internal class CDPSession : ChannelOwnerBase, ICDPSession, IChannelOwner<CDPSess
         _channel.CDPEvent += OnCDPEvent;
     }
 
-    ChannelBase IChannelOwner.Channel => _channel;
+    Channel IChannelOwner.Channel => _channel;
 
     Channel<CDPSession> IChannelOwner<CDPSession>.Channel => _channel;
 

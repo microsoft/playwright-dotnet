@@ -60,7 +60,7 @@ internal class ChannelOwnerBase : IChannelOwner
     Connection IChannelOwner.Connection => _connection;
 
     /// <inheritdoc/>
-    ChannelBase IChannelOwner.Channel => null;
+    Channel IChannelOwner.Channel => null;
 
     /// <inheritdoc/>
     ConcurrentDictionary<string, IChannelOwner> IChannelOwner.Objects => _objects;

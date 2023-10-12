@@ -48,7 +48,7 @@ internal class BindingCall : ChannelOwnerBase, IChannelOwner<BindingCall>
 
     public string Name => _initializer.Name;
 
-    ChannelBase IChannelOwner.Channel => _channel;
+    Channel IChannelOwner.Channel => _channel;
 
     Channel<BindingCall> IChannelOwner<BindingCall>.Channel => _channel;
 

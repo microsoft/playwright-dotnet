@@ -68,7 +68,7 @@ internal class Response : ChannelOwnerBase, IChannelOwner<Response>, IResponse
 
     public bool FromServiceWorker => _initializer.FromServiceWorker;
 
-    ChannelBase IChannelOwner.Channel => _channel;
+    Channel IChannelOwner.Channel => _channel;
 
     Channel<Response> IChannelOwner<Response>.Channel => _channel;
 

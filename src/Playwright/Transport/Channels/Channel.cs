@@ -22,9 +22,28 @@
  * SOFTWARE.
  */
 
+using System.Text.Json;
+
 namespace Microsoft.Playwright.Transport.Channels;
 
-internal class Channel<T> : ChannelBase
+internal class Channel
+{
+    public Channel(string guid, Connection connection)
+    {
+        Guid = guid;
+        Connection = connection;
+    }
+
+    public string Guid { get; }
+
+    public Connection Connection { get; }
+
+    internal virtual void OnMessage(string method, JsonElement? serverParams)
+    {
+    }
+}
+
+internal class Channel<T> : Channel
     where T : ChannelOwnerBase, IChannelOwner<T>
 {
     public Channel(string guid, Connection connection, T owner) : base(guid, connection)

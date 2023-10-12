@@ -44,7 +44,7 @@ internal class LocalUtils : ChannelOwnerBase, IChannelOwner<LocalUtils>
         }
     }
 
-    ChannelBase IChannelOwner.Channel => _channel;
+    Channel IChannelOwner.Channel => _channel;
 
     Channel<LocalUtils> IChannelOwner<LocalUtils>.Channel => _channel;
 

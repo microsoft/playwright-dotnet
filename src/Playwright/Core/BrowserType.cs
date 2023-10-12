@@ -46,7 +46,7 @@ internal class BrowserType : ChannelOwnerBase, IChannelOwner<BrowserType>, IBrow
         _channel = new(guid, parent.Connection, this);
     }
 
-    ChannelBase IChannelOwner.Channel => _channel;
+    Channel IChannelOwner.Channel => _channel;
 
     Channel<BrowserType> IChannelOwner<BrowserType>.Channel => _channel;
 

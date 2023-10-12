@@ -344,8 +344,8 @@ internal class FrameChannel : Channel<Frame>
                 ["selector"] = selector,
             });
 
-    internal Task<ChannelBase[]> QuerySelectorAllAsync(string selector)
-        => Connection.SendMessageToServerAsync<ChannelBase[]>(
+    internal Task<Channel[]> QuerySelectorAllAsync(string selector)
+        => Connection.SendMessageToServerAsync<Channel[]>(
             Object,
             "querySelectorAll",
             new Dictionary<string, object>

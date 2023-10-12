@@ -57,7 +57,7 @@ internal class WebSocket : ChannelOwnerBase, IChannelOwner<WebSocket>, IWebSocke
 
     public event EventHandler<string> SocketError;
 
-    ChannelBase IChannelOwner.Channel => _channel;
+    Channel IChannelOwner.Channel => _channel;
 
     Channel<WebSocket> IChannelOwner<WebSocket>.Channel => _channel;
 

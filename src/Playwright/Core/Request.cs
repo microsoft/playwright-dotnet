@@ -59,7 +59,7 @@ internal class Request : ChannelOwnerBase, IChannelOwner<Request>, IRequest
         _fallbackOverrides.PostData = initializer.PostData;
     }
 
-    ChannelBase IChannelOwner.Channel => _channel;
+    Channel IChannelOwner.Channel => _channel;
 
     Channel<Request> IChannelOwner<Request>.Channel => _channel;
 

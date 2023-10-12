@@ -49,7 +49,7 @@ internal class APIRequestContext : ChannelOwnerBase, IChannelOwner<APIRequestCon
         _tracing = initializer.Tracing;
     }
 
-    ChannelBase IChannelOwner.Channel => _channel;
+    Channel IChannelOwner.Channel => _channel;
 
     Channel<APIRequestContext> IChannelOwner<APIRequestContext>.Channel => _channel;
 

@@ -39,7 +39,7 @@ internal class Stream : ChannelOwnerBase, IChannelOwner<Stream>, IAsyncDisposabl
         Channel = new(guid, parent.Connection, this);
     }
 
-    ChannelBase IChannelOwner.Channel => Channel;
+    Channel IChannelOwner.Channel => Channel;
 
     Channel<Stream> IChannelOwner<Stream>.Channel => Channel;
 

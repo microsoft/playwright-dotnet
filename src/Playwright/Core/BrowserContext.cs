@@ -204,7 +204,7 @@ internal class BrowserContext : ChannelOwnerBase, IChannelOwner<BrowserContext>,
         set => throw new NotSupportedException();
     }
 
-    ChannelBase IChannelOwner.Channel => Channel;
+    Channel IChannelOwner.Channel => Channel;
 
     Channel<BrowserContext> IChannelOwner<BrowserContext>.Channel => Channel;
 

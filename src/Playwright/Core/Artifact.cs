@@ -43,7 +43,7 @@ internal class Artifact : ChannelOwnerBase, IChannelOwner<Artifact>
 
     Connection IChannelOwner.Connection => _connection;
 
-    ChannelBase IChannelOwner.Channel => _channel;
+    Channel IChannelOwner.Channel => _channel;
 
     Channel<Artifact> IChannelOwner<Artifact>.Channel => _channel;
 

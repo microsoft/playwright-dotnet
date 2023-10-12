@@ -39,7 +39,7 @@ internal class Selectors : ChannelOwnerBase, IChannelOwner<Selectors>
         _channel = new(guid, parent.Connection, this);
     }
 
-    ChannelBase IChannelOwner.Channel => _channel;
+    Channel IChannelOwner.Channel => _channel;
 
     Channel<Selectors> IChannelOwner<Selectors>.Channel => _channel;
 }

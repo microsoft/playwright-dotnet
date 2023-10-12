@@ -42,7 +42,7 @@ internal class JSHandle : ChannelOwnerBase, IChannelOwner<JSHandle>, IJSHandle
         Preview = initializer.Preview;
     }
 
-    ChannelBase IChannelOwner.Channel => _channel;
+    Channel IChannelOwner.Channel => _channel;
 
     Channel<JSHandle> IChannelOwner<JSHandle>.Channel => _channel;
 

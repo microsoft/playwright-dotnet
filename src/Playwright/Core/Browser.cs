@@ -49,7 +49,7 @@ internal class Browser : ChannelOwnerBase, IChannelOwner<Browser>, IBrowser
 
     public event EventHandler<IBrowser> Disconnected;
 
-    ChannelBase IChannelOwner.Channel => Channel;
+    Channel IChannelOwner.Channel => Channel;
 
     Channel<Browser> IChannelOwner<Browser>.Channel => Channel;
 

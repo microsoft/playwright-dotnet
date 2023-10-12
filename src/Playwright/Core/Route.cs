@@ -58,7 +58,7 @@ internal class Route : ChannelOwnerBase, IChannelOwner<Route>, IRoute
 
     internal BrowserContext _context { get; set; }
 
-    ChannelBase IChannelOwner.Channel => _channel;
+    Channel IChannelOwner.Channel => _channel;
 
     Channel<Route> IChannelOwner<Route>.Channel => _channel;
 

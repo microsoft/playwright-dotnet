@@ -51,7 +51,7 @@ internal class Dialog : ChannelOwnerBase, IChannelOwner<Dialog>, IDialog
     // Therefore, we must report the dialog without a page to be able to handle it.
     public IPage Page => _initializer.Page;
 
-    ChannelBase IChannelOwner.Channel => _channel;
+    Channel IChannelOwner.Channel => _channel;
 
     Channel<Dialog> IChannelOwner<Dialog>.Channel => _channel;
 

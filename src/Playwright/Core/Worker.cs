@@ -63,7 +63,7 @@ internal class Worker : ChannelOwnerBase, IChannelOwner<Worker>, IWorker
 
     public string Url => _initializer.Url;
 
-    ChannelBase IChannelOwner.Channel => _channel;
+    Channel IChannelOwner.Channel => _channel;
 
     Channel<Worker> IChannelOwner<Worker>.Channel => _channel;
 

@@ -98,7 +98,7 @@ internal class Frame : ChannelOwnerBase, IChannelOwner<Frame>, IFrame
     /// </summary>
     public event EventHandler<WaitUntilState> LoadState;
 
-    ChannelBase IChannelOwner.Channel => _channel;
+    Channel IChannelOwner.Channel => _channel;
 
     Channel<Frame> IChannelOwner<Frame>.Channel => _channel;
 

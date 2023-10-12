@@ -39,7 +39,7 @@ internal class WritableStream : ChannelOwnerBase, IChannelOwner<WritableStream>,
         Channel = new(guid, parent.Connection, this);
     }
 
-    ChannelBase IChannelOwner.Channel => Channel;
+    Channel IChannelOwner.Channel => Channel;
 
     Channel<WritableStream> IChannelOwner<WritableStream>.Channel => Channel;
 
