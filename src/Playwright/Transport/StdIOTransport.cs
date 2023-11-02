@@ -121,7 +121,7 @@ internal class StdIOTransport : IDisposable
             RedirectStandardError = true,
             CreateNoWindow = true,
         };
-        foreach (var pair in Driver.GetEnvironmentVariables())
+        foreach (var pair in Driver.EnvironmentVariables)
         {
             startInfo.EnvironmentVariables[pair.Key] = pair.Value;
         }

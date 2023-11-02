@@ -473,7 +473,7 @@ public class BrowserTypeConnectTests : PlaywrightTestEx
                     UseShellExecute = false,
                     RedirectStandardOutput = true,
                 };
-                foreach (var pair in Driver.GetEnvironmentVariables())
+                foreach (var pair in Driver.EnvironmentVariables)
                 {
                     startInfo.EnvironmentVariables[pair.Key] = pair.Value;
                 }

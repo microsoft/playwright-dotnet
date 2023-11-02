@@ -32,6 +32,13 @@ namespace Microsoft.Playwright.Helpers;
 
 internal static class Driver
 {
+    internal static Dictionary<string, string> EnvironmentVariables { get; } = new()
+    {
+        ["PW_LANG_NAME"] = "csharp",
+        ["PW_LANG_NAME_VERSION"] = $"{Environment.Version.Major}.{Environment.Version.Minor}",
+        ["PW_CLI_DISPLAY_VERSION"] = typeof(Driver).Assembly.GetName().Version.ToString(3),
+    };
+
     internal static string GetExecutablePath()
     {
         DirectoryInfo assemblyDirectory = null;
@@ -97,23 +104,5 @@ internal static class Driver
         }
 
         return Path.Combine(driversPath, ".playwright", "node", platformId, runnerName);
-    }
-
-    internal static Dictionary<string, string> GetEnvironmentVariables()
-    {
-        var environmentVariables = new Dictionary<string, string>();
-        environmentVariables.Add("PW_LANG_NAME", "csharp");
-        environmentVariables.Add("PW_LANG_NAME_VERSION", $"{Environment.Version.Major}.{Environment.Version.Minor}");
-        environmentVariables.Add("PW_CLI_DISPLAY_VERSION", GetSemVerPackageVersion());
-        return environmentVariables;
-    }
-
-    private static string GetSemVerPackageVersion()
-    {
-        // AssemblyName.Version returns a 4 digit version number, this method
-        // drops the last number which represents the build revision.
-        string version = typeof(Driver).Assembly.GetName().Version.ToString();
-        string[] versionParts = version.Split('.');
-        return $"{versionParts[0]}.{versionParts[1]}.{versionParts[2]}";
     }
 }

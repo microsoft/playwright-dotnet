@@ -56,7 +56,7 @@ public class Program
             // https://github.com/dotnet/runtime/pull/82662
             WindowStyle = ProcessWindowStyle.Hidden,
         };
-        foreach (var pair in Driver.GetEnvironmentVariables())
+        foreach (var pair in Driver.EnvironmentVariables)
         {
             playwrightStartInfo.EnvironmentVariables[pair.Key] = pair.Value;
         }
