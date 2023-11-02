@@ -316,8 +316,8 @@ public class GlobalFetchTests : PlaywrightTestEx
                 Server.SetRoute("/empty.html", (ctx) =>
                 {
                     ctx.Response.StatusCode = 200;
-                    ctx.Response.Headers.Add("Content-Encoding", encoding);
-                    ctx.Response.Headers.Add("Content-Type", "text/plain");
+                    ctx.Response.Headers.Append("Content-Encoding", encoding);
+                    ctx.Response.Headers.Append("Content-Type", "text/plain");
                     return Task.CompletedTask;
                 });
                 var response = await request.NameToMethod(method)(Server.EmptyPage, null);
@@ -337,8 +337,8 @@ public class GlobalFetchTests : PlaywrightTestEx
             Server.SetRoute("/empty.html", async (ctx) =>
             {
                 ctx.Response.StatusCode = 404;
-                ctx.Response.Headers.Add("Content-Length", "10");
-                ctx.Response.Headers.Add("Content-Type", "text/plain");
+                ctx.Response.Headers.Append("Content-Length", "10");
+                ctx.Response.Headers.Append("Content-Type", "text/plain");
                 await ctx.Response.WriteAsync("Not found.");
             });
             var response = await request.FetchAsync(Server.EmptyPage, new() { Method = method });

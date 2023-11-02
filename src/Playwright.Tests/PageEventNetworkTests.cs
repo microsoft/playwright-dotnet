@@ -62,19 +62,16 @@ public class PageEventNetworkTests : PageTestEx
     [PlaywrightTest("page-event-network.spec.ts", "Page.Events.RequestFailed")]
     public async Task PageEventsRequestFailed()
     {
-        int port = Server.Port + 100;
-        var disposableServer = new SimpleServer(port, Path.Combine(TestUtils.FindParentDirectory("Playwright.Tests.TestServer"), "assets"), false);
-        await disposableServer.StartAsync();
-
-        disposableServer.SetRoute("/one-style.css", async _ =>
+        Server.SetRoute("/one-style.css", ctx =>
         {
-            await disposableServer.StopAsync();
+            ctx.Abort();
+            return Task.CompletedTask;
         });
         var failedRequests = new List<IRequest>();
 
         Page.RequestFailed += (_, e) => failedRequests.Add(e);
 
-        await Page.GotoAsync($"http://localhost:{port}/one-style.html");
+        await Page.GotoAsync(Server.Prefix + "/one-style.html");
 
         Assert.That(failedRequests, Has.Count.EqualTo(1));
         StringAssert.Contains("one-style.css", failedRequests[0].Url);

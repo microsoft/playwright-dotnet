@@ -81,7 +81,7 @@ public class PageRequestInterceptTests : PageTestEx
     {
         Server.SetRoute("/empty.html", async context =>
         {
-            context.Response.Headers.Add("foo", "bar");
+            context.Response.Headers.Append("foo", "bar");
             await context.Response.WriteAsync("my content");
         });
         await Page.RouteAsync("**/*", async (route) =>
@@ -115,7 +115,7 @@ public class PageRequestInterceptTests : PageTestEx
     {
         Server.SetRoute("/sample", async context =>
         {
-            context.Response.Headers.Add("foo", "bar");
+            context.Response.Headers.Append("foo", "bar");
             await context.Response.WriteAsync("Woo-hoo");
         });
         var sampleResponse = await Page.APIRequest.GetAsync(Server.Prefix + "/sample");

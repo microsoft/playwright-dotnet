@@ -22,6 +22,7 @@
  * SOFTWARE.
  */
 
+using System.Text.Json;
 using Microsoft.AspNetCore.Http;
 
 namespace Microsoft.Playwright.Tests;
@@ -297,17 +298,37 @@ public class PageNetworkRequestTest : PageTestEx
         Assert.GreaterOrEqual(sizes.ResponseHeadersSize, 133);
     }
 
-
     [PlaywrightTest("page-network-request.spec.ts", "should report raw headers")]
     public async Task ShouldReportRawHeaders()
     {
-        var expectedHeaders = new Dictionary<string, string>();
+        var expectedHeaders = new List<Header>();
         Server.SetRoute("/headers", async ctx =>
         {
-            expectedHeaders.Clear();
             foreach (var header in ctx.Request.Headers)
             {
-                expectedHeaders.Add(header.Key.ToLowerInvariant(), header.Value);
+                expectedHeaders.Add(new() { Name = header.Key, Value = header.Value });
+            }
+            if (BrowserName == "webkit" && TestConstants.IsWindows)
+            {
+                expectedHeaders = expectedHeaders.Where(h => h.Name != "accept-encoding").ToList();
+                // Convert "value": "en-US, en-US" => "en-US"
+                expectedHeaders = expectedHeaders.Select(e =>
+                {
+                    if (!e.Name.Equals("accept-language", StringComparison.InvariantCultureIgnoreCase))
+                    {
+                        return e;
+                    }
+                    var values = e.Value.Split(',').Select(v => v.Trim()).ToArray();
+                    if (values.Length == 1)
+                    {
+                        return e;
+                    }
+                    if (values[0] != values[1])
+                    {
+                        return e;
+                    }
+                    return new Header { Name = e.Name, Value = values[0] };
+                }).ToList();
             }
 
             await ctx.Response.CompleteAsync();
@@ -328,6 +349,12 @@ fetch('/headers', {
     })
 ");
         await Task.WhenAll(requestTask, evalTask);
+        var headers = (await (await requestTask).HeadersArrayAsync()).ToList();
+        {
+            expectedHeaders.Sort((a, b) => a.Name.CompareTo(b.Name));
+            headers.Sort((a, b) => a.Name.CompareTo(b.Name));
+        }
+        Assert.AreEqual(JsonSerializer.Serialize(expectedHeaders), JsonSerializer.Serialize(headers));
         var req = requestTask.Result;
         Assert.AreEqual("value-a, value-a-1, value-a-2", await req.HeaderValueAsync("header-a"));
         Assert.IsNull(await req.HeaderValueAsync("not-there"));

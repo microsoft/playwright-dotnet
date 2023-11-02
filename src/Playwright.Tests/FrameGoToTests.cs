@@ -87,13 +87,13 @@ public class FrameGoToTests : PageTestEx
         await TaskUtils.WhenAll(matchingData.Select(m => m.FrameTask));
 
         // Navigate all frames to the same URL.
-        var requestHandler = new RequestDelegate(async (context) =>
+        async Task requestHandler(HttpContext context)
         {
             if (int.TryParse(context.Request.Query["index"], out int index))
             {
                 await context.Response.WriteAsync(await matchingData[index].ServerResponseTcs.Task);
             }
-        });
+        };
 
         Server.SetRoute("/one-style.html?index=0", requestHandler);
         Server.SetRoute("/one-style.html?index=1", requestHandler);
