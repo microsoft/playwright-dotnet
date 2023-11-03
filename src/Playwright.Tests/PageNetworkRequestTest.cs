@@ -310,7 +310,7 @@ public class PageNetworkRequestTest : PageTestEx
             }
             if (BrowserName == "webkit" && TestConstants.IsWindows)
             {
-                expectedHeaders = expectedHeaders.Where(h => h.Name != "accept-encoding").ToList();
+                expectedHeaders = expectedHeaders.Where(h => h.Name.ToLowerInvariant() != "accept-encoding").ToList();
                 // Convert "value": "en-US, en-US" => "en-US"
                 expectedHeaders = expectedHeaders.Select(e =>
                 {

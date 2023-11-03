@@ -33,7 +33,10 @@ public class ContextTest : BrowserTest
 
     public virtual BrowserNewContextOptions ContextOptions()
     {
-        return null!;
+        return new() {
+            Locale = "en-US",
+            ColorScheme = ColorScheme.Light,
+        };
     }
 
     [SetUp]
