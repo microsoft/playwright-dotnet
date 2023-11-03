@@ -25,7 +25,6 @@
 
 using System.Globalization;
 using System.Net;
-using Microsoft.Playwright.Tests.TestServer;
 
 namespace Microsoft.Playwright.Tests;
 
