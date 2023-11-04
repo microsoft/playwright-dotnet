@@ -47,10 +47,10 @@ internal class BrowserService : IWorkerService
 
     private static async Task<IBrowser> CreateBrowser(IBrowserType browserType)
     {
-        var accessKey = Environment.GetEnvironmentVariable("PLAYWRIGHT_SERVICE_ACCESS_KEY");
+        var accessToken = Environment.GetEnvironmentVariable("PLAYWRIGHT_SERVICE_ACCESS_TOKEN");
         var serviceUrl = Environment.GetEnvironmentVariable("PLAYWRIGHT_SERVICE_URL");
 
-        if (string.IsNullOrEmpty(accessKey) || string.IsNullOrEmpty(serviceUrl))
+        if (string.IsNullOrEmpty(accessToken) || string.IsNullOrEmpty(serviceUrl))
         {
             return await browserType.LaunchAsync(PlaywrightSettingsProvider.LaunchOptions).ConfigureAwait(false);
         }
@@ -68,7 +68,7 @@ internal class BrowserService : IWorkerService
             ExposeNetwork = exposeNetwork,
             Headers = new Dictionary<string, string>
             {
-                ["x-mpt-access-key"] = accessKey
+                ["x-mpt-access-key"] = accessToken
             }
         };
 
