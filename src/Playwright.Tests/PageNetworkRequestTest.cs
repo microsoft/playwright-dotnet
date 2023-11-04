@@ -335,29 +335,31 @@ public class PageNetworkRequestTest : PageTestEx
         });
 
         await Page.GotoAsync(Server.EmptyPage);
-        //Page.RunAndWaitForRequestFinishedAsync(
-        //    async () => await Page.EvaluateAsync("**/*")
         var requestTask = Page.WaitForRequestAsync("**/*");
-        var evalTask = Page.EvaluateAsync(@"() =>
-fetch('/headers', {
-      headers: [
-        ['header-a', 'value-a'],
-        ['header-b', 'value-b'],
-        ['header-a', 'value-a-1'],
-        ['header-a', 'value-a-2'],
-      ]
-    })
-");
-        await Task.WhenAll(requestTask, evalTask);
-        var headers = (await (await requestTask).HeadersArrayAsync()).ToList();
+        await Page.EvaluateAsync(@"async () =>
+            await fetch('/headers', {
+                headers: [
+                    ['header-a', 'value-a'],
+                    ['header-b', 'value-b'],
+                    ['header-a', 'value-a-1'],
+                    ['header-a', 'value-a-2'],
+                ]
+            })
+        ");
+        var request = await requestTask;
+        var headers = (await request.HeadersArrayAsync()).ToList();
+        {
+            // Kestrel normalizes the Connection header to lowercase, so we do the same.
+            expectedHeaders = expectedHeaders.Select(e => e.Name.ToLowerInvariant() == "connection" ? new Header { Name = "connection", Value = e.Value.ToLowerInvariant() } : e).ToList();
+            headers = headers.Select(e => e.Name.ToLowerInvariant() == "connection" ? new Header { Name = "connection", Value = e.Value.ToLowerInvariant() } : e).ToList();
+        }
         {
             expectedHeaders.Sort((a, b) => a.Name.CompareTo(b.Name));
             headers.Sort((a, b) => a.Name.CompareTo(b.Name));
         }
         Assert.AreEqual(JsonSerializer.Serialize(expectedHeaders), JsonSerializer.Serialize(headers));
-        var req = requestTask.Result;
-        Assert.AreEqual("value-a, value-a-1, value-a-2", await req.HeaderValueAsync("header-a"));
-        Assert.IsNull(await req.HeaderValueAsync("not-there"));
+        Assert.AreEqual("value-a, value-a-1, value-a-2", await request.HeaderValueAsync("header-a"));
+        Assert.IsNull(await request.HeaderValueAsync("not-there"));
     }
 
     [PlaywrightTest("page-network-request.spec.ts", "should not allow to access frame on popup main request")]
