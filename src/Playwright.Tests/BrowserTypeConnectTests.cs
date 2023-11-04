@@ -421,6 +421,37 @@ public class BrowserTypeConnectTests : PlaywrightTestEx
         Assert.AreEqual(1, Directory.GetFiles(Path.Join(tempDirectory.Path, "resources"), "*.txt").Length);
     }
 
+    [PlaywrightTest("browsertype-connect.spec.ts", "should record trace with no directory name")]
+    public async Task ShouldRecordContextTraceWithNoDirectoryName()
+    {
+        using var tempDirectory = new TempDirectory();
+        var tracePath = "trace.zip";
+        var browser = await BrowserType.ConnectAsync(_remoteServer.WSEndpoint);
+        var context = await browser.NewContextAsync();
+        var page = await context.NewPageAsync();
+
+        await context.Tracing.StartAsync(new() { Sources = true });
+        await page.GotoAsync(Server.EmptyPage);
+        await page.SetContentAsync("<button>Click</button>");
+        await page.ClickAsync("button");
+        try
+        {
+            await context.Tracing.StopAsync(new() { Path = tracePath });
+
+            await browser.CloseAsync();
+
+            Assert.That(tracePath, Does.Exist);
+            ZipFile.ExtractToDirectory(tracePath, tempDirectory.Path);
+            Assert.That(tempDirectory.Path + "/trace.trace", Does.Exist);
+            Assert.That(tempDirectory.Path + "/trace.network", Does.Exist);
+            Assert.AreEqual(1, Directory.GetFiles(Path.Join(tempDirectory.Path, "resources"), "*.txt").Length);
+        }
+        finally
+        {
+            File.Delete(tracePath);
+        }
+    }
+
     [PlaywrightTest("browsertype-connect.spec.ts", "should upload large file")]
     [Timeout(TestConstants.SlowTestTimeout)]
     public async Task ShouldUploadLargeFile()

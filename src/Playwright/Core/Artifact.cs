@@ -67,7 +67,7 @@ internal class Artifact : ChannelOwnerBase, IChannelOwner<Artifact>
             await _channel.SaveAsAsync(path).ConfigureAwait(false);
             return;
         }
-        System.IO.Directory.CreateDirectory(Path.GetDirectoryName(path));
+        System.IO.Directory.CreateDirectory(Path.GetDirectoryName(Path.GetFullPath(path)));
         var stream = await _channel.SaveAsStreamAsync().ConfigureAwait(false);
         await using (stream.ConfigureAwait(false))
         {
