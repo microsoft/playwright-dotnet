@@ -573,8 +573,8 @@ public class PageGotoTests : PageTestEx
         Server.SetRoute("/empty.html", async context =>
         {
             context.Response.StatusCode = 200;
-            context.Response.Headers.Add("content-type", "text/html");
-            context.Response.Headers.Add("content-length", (8192 + 7).ToString(CultureInfo.InvariantCulture));
+            context.Response.Headers.Append("content-type", "text/html");
+            context.Response.Headers.Append("content-length", (8192 + 7).ToString(CultureInfo.InvariantCulture));
             // Write enought bytes of the body to trigge response received event.
             var str = "<title>" + new string('a', 8192);
             await context.Response.WriteAsync(str);

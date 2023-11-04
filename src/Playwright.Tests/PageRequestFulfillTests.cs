@@ -308,8 +308,8 @@ public class RequestFulfillTests : PageTestEx
     {
         Server.SetRoute("/empty.html", context =>
         {
-            context.Response.Headers.Add("Set-Cookie", new Extensions.Primitives.StringValues(new[] { "a=b", "c=d" }));
-            context.Response.Headers.Add("Content-Type", "text/html");
+            context.Response.Headers.Append("Set-Cookie", new Extensions.Primitives.StringValues(new[] { "a=b", "c=d" }));
+            context.Response.Headers.Append("Content-Type", "text/html");
             return Task.CompletedTask;
         });
         await Page.RouteAsync("**/empty.html", async (route) =>

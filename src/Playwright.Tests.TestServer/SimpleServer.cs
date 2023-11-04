@@ -50,7 +50,7 @@ public class SimpleServer
 
     private readonly IDictionary<string, Action<HttpContext>> _requestWaits;
     private readonly IList<Action<HttpContext>> _waitForWebSocketConnectionRequestsWaits;
-    private readonly IDictionary<string, RequestDelegate> _routes;
+    private readonly IDictionary<string, Func<HttpContext, Task>> _routes;
     private readonly IDictionary<string, (string username, string password)> _auths;
     private readonly IDictionary<string, string> _csp;
     private readonly IList<string> _gzipRoutes;
@@ -82,7 +82,7 @@ public class SimpleServer
 
         _requestWaits = new ConcurrentDictionary<string, Action<HttpContext>>();
         _waitForWebSocketConnectionRequestsWaits = new List<Action<HttpContext>>();
-        _routes = new ConcurrentDictionary<string, RequestDelegate>();
+        _routes = new ConcurrentDictionary<string, Func<HttpContext, Task>>();
         _auths = new ConcurrentDictionary<string, (string username, string password)>();
         _csp = new ConcurrentDictionary<string, string>();
         _gzipRoutes = new List<string>();
@@ -255,7 +255,7 @@ public class SimpleServer
 
     public void EnableGzip(string path) => _gzipRoutes.Add(path);
 
-    public void SetRoute(string path, RequestDelegate handler) => _routes[path] = handler;
+    public void SetRoute(string path, Func<HttpContext, Task> handler) => _routes[path] = handler;
 
     public void SendOnWebSocketConnection(string data) => _onWebSocketConnectionData = Encoding.UTF8.GetBytes(data);
 
