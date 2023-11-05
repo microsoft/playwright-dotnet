@@ -33,11 +33,6 @@ namespace Microsoft.Playwright.Transport.Channels;
 
 internal class TracingChannel : Channel<Tracing>
 {
-    private static readonly JsonSerializerOptions _tracingChannelSerializerOptions = new()
-    {
-        PropertyNameCaseInsensitive = true,
-    };
-
     public TracingChannel(string guid, Connection connection, Tracing owner) : base(guid, connection, owner)
     {
     }
@@ -75,14 +70,12 @@ internal class TracingChannel : Channel<Tracing>
         }).ConfigureAwait(false);
 
         var artifact = result.GetObject<Artifact>("artifact", Connection);
-        List<NameValue> entries = new() { };
+        List<NameValue> entries = new();
         if (result.Value.TryGetProperty("entries", out var entriesElement))
         {
-            var entriesEnumerator = entriesElement.EnumerateArray();
-            while (entriesEnumerator.MoveNext())
+            foreach (var current in entriesElement.EnumerateArray())
             {
-                JsonElement current = entriesEnumerator.Current;
-                entries.Add(current.Deserialize<NameValue>(_tracingChannelSerializerOptions));
+                entries.Add(current.Deserialize<NameValue>());
             }
         }
         return (artifact, entries);
