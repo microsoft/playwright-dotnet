@@ -126,7 +126,7 @@ internal class Tracing : ChannelOwnerBase, IChannelOwner<Tracing>, ITracing
             return;
         }
 
-        var (artifact, entries) = await _channel.TracingStopChunkAsync("archive").ConfigureAwait(false);
+        var (artifact, _) = await _channel.TracingStopChunkAsync("archive").ConfigureAwait(false);
 
         // The artifact may be missing if the browser closed while stopping tracing.
         if (artifact == null)
