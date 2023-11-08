@@ -26,6 +26,16 @@ namespace Microsoft.Playwright.Tests;
 
 public class ElementHandleQuerySelectorTests : PageTestEx
 {
+    [PlaywrightTest()]
+    public async Task ShouldQuerySpecialCharElement()
+    {
+        await Page.SetContentAsync("<p title=\"曾全网封禁的《𝑭𝒂𝒍𝒍𝒊𝒏𝒈 𝑨𝒈𝒂𝒊𝒏》如今治愈了无数人的心灵\" class=\"title\">曾全网封禁的《𝑭𝒂𝒍𝒍𝒊𝒏𝒈 𝑨𝒈𝒂𝒊𝒏》如今治愈了无数人的心灵</p>");
+
+        var titleA = await Page.QuerySelectorAsync(".title");
+        var innerText = await titleA.InnerTextAsync();
+        Assert.AreEqual("曾全网封禁的《𝑭𝒂𝒍𝒍𝒊𝒏𝒈 𝑨𝒈𝒂𝒊𝒏》如今治愈了无数人的心灵", innerText);
+    }
+
     [PlaywrightTest("elementhandle-query-selector.spec.ts", "should query existing element")]
     public async Task ShouldQueryExistingElement()
     {

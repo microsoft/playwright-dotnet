@@ -26,6 +26,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.Json;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Microsoft.Playwright.Core;
 using Microsoft.Playwright.Helpers;
@@ -49,7 +50,25 @@ internal class ElementHandleChannel : JSHandleChannel, IChannel<ElementHandle>
         switch (method)
         {
             case "previewUpdated":
-                PreviewUpdated?.Invoke(this, serverParams.Value.GetProperty("preview").ToString());
+                var preview = string.Empty;
+                try
+                {
+                    preview = serverParams.Value.GetProperty("preview").ToString();
+                }
+                catch
+                {
+                    var matchResult = Regex.Match(serverParams.Value.ToString(), "\"preview\":\"(.*)\"");
+                    if (matchResult.Success)
+                    {
+                        preview = matchResult.Groups[1].ToString();
+                    }
+                    else
+                    {
+                        preview = serverParams.Value.ToString();
+                    }
+                }
+
+                PreviewUpdated?.Invoke(this, preview);
                 break;
         }
     }
