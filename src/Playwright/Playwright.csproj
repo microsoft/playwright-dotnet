@@ -54,7 +54,7 @@
     <None Include="build\**" Pack="true" PackagePath="build" />
     <None Include="..\Common\icon.png" Pack="true" Visible="false" PackagePath="icon.png" />
   </ItemGroup>
-  <Target Name="EnsurePrerequisitsRan" BeforeTargets="DedupeDriver">
-    <Error Text="Playwright prerequisites are missing. Ensure you've ran `dotnet run --project ./src/tools/Playwright.Tooling/Playwright.Tooling.csproj -- download-drivers --basepath .`" Condition="!Exists('$(MSBuildProjectDirectory)\.drivers')" />
+  <Target Name="EnsurePrerequisitsRan" BeforeTargets="GetCopyToOutputDirectoryItems">
+    <Error Text="Playwright prerequisites are missing. Ensure you've ran `dotnet run --project ./src/tools/Playwright.Tooling/Playwright.Tooling.csproj -- download-drivers`" Condition="!Exists('$(MSBuildProjectDirectory)\.drivers')" />
   </Target>
 </Project>

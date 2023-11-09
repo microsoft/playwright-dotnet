@@ -8,8 +8,8 @@
     </PropertyGroup>
     <Import Project="../../Common/Dependencies.props" />
     <ItemGroup>
-        <PackageReference Include="CommandLineParser" Version="2.9.1" />
         <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="6.0.1" />
         <PackageReference Include="Microsoft.Extensions.Primitives" Version="6.0.0" />
+        <PackageReference Include="Spectre.Console.Cli" Version="0.47.0" />
     </ItemGroup>
 </Project>

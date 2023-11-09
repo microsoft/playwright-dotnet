@@ -24,6 +24,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.IO;
 using System.IO.Compression;
 using System.Linq;
@@ -31,13 +32,17 @@ using System.Net.Http;
 using System.Runtime.InteropServices;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
-using System.Xml;
+using System.Xml.Linq;
+using System.Xml.XPath;
 using DriverDownloader.Linux;
 using Playwright.Tooling.Options;
+using Spectre.Console;
+using Spectre.Console.Cli;
 
 namespace Playwright.Tooling;
 
-internal class DriverDownloader
+[Description("Downloads the playwright drivers for all supported platforms.")]
+internal class DriverDownloader : AsyncCommand<DownloadDriversOptions>
 {
     private static readonly string[] _platforms = new[]
     {
@@ -48,21 +53,11 @@ internal class DriverDownloader
             "win32_x64",
     };
 
-    public string BasePath { get; set; }
+    private readonly IAnsiConsole _console;
 
-    public string DriverVersion { get; set; }
-
-    internal static Task RunAsync(DownloadDriversOptions o)
+    public DriverDownloader(IAnsiConsole console)
     {
-        var props = new XmlDocument();
-        props.Load(Path.Combine(o.BasePath, "src", "Common", "Version.props"));
-        string driverVersion = props.DocumentElement.SelectSingleNode("/Project/PropertyGroup/DriverVersion").FirstChild.Value;
-
-        return new DriverDownloader()
-        {
-            BasePath = o.BasePath,
-            DriverVersion = driverVersion,
-        }.ExecuteAsync();
+        _console = console;
     }
 
     private async Task UpdateBrowserVersionsAsync(string basePath, string driverVersion)
@@ -93,16 +88,14 @@ internal class DriverDownloader
         }
         catch (Exception e)
         {
-            Console.ForegroundColor = ConsoleColor.Yellow;
-            Console.WriteLine("WARNING: Could not update the browser versions in the README file.");
-            Console.WriteLine($"This is usually due to the readme file not yet existing for {driverVersion}.");
-            Console.WriteLine(e.Message);
+            _console.WriteLine("WARNING: Could not update the browser versions in the README file.", Color.Yellow);
+            _console.WriteLine($"This is usually due to the readme file not yet existing for {driverVersion}.", Color.Yellow);
+            _console.WriteLine(e.Message, Color.Yellow);
         }
     }
 
     private async Task DownloadDriverAsync(DirectoryInfo destinationDirectory, string driverVersion, string platform)
     {
-        Console.WriteLine("Downloading driver for " + platform);
         string cdn = "https://playwright.azureedge.net/builds/driver";
         if (
             driverVersion.Contains("-alpha")
@@ -151,20 +144,23 @@ internal class DriverDownloader
                 }
             }
 
-            Console.WriteLine($"Driver for {platform} downloaded");
+            _console.WriteLine($"Driver for {platform} downloaded");
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"Unable to download driver for {driverVersion} using url {url}");
+            _console.WriteLine($"Unable to download driver for {driverVersion} using url {url}");
             throw new($"Unable to download driver for {driverVersion} using url {url}", ex);
         }
     }
 
-    private async Task<bool> ExecuteAsync()
+    public override async Task<int> ExecuteAsync(CommandContext context, DownloadDriversOptions options)
     {
-        var destinationDirectory = new DirectoryInfo(Path.Combine(BasePath, "src", "Playwright", ".drivers"));
-        var dedupeDirectory = new DirectoryInfo(Path.Combine(BasePath, "src", "Playwright", ".playwright"));
-        string driverVersion = DriverVersion;
+        var versionProps = Path.GetFullPath(Path.Combine(options.BasePath, "src", "Common", "Version.props"));
+        var document = XDocument.Load(versionProps);
+        var driverVersion = document.XPathSelectElement("/Project/PropertyGroup/DriverVersion")?.Value ?? throw new($"The DriverVersion element was not found in {versionProps}");
+
+        var destinationDirectory = new DirectoryInfo(Path.Combine(options.BasePath, "src", "Playwright", ".drivers"));
+        var dedupeDirectory = new DirectoryInfo(Path.Combine(options.BasePath, "src", "Playwright", ".playwright"));
 
         var versionFile = new FileInfo(Path.Combine(destinationDirectory.FullName, driverVersion));
 
@@ -189,17 +185,17 @@ internal class DriverDownloader
                 tasks.Add(DownloadDriverAsync(destinationDirectory, driverVersion, platform));
             }
 
-            await Task.WhenAll(tasks).ConfigureAwait(false);
+            await _console.Status().StartAsync($"Downloading drivers for {string.Join(", ", _platforms)}", _ => Task.WhenAll(tasks)).ConfigureAwait(false);
             versionFile.CreateText();
         }
         else
         {
-            Console.WriteLine("Drivers are up-to-date");
+            _console.WriteLine("Drivers are up-to-date");
         }
 
         // update readme
-        await UpdateBrowserVersionsAsync(BasePath, driverVersion).ConfigureAwait(false);
+        await UpdateBrowserVersionsAsync(options.BasePath, driverVersion).ConfigureAwait(false);
 
-        return true;
+        return 0;
     }
 }

@@ -22,13 +22,18 @@
  * SOFTWARE.
  */
 
-using CommandLine;
+using System.ComponentModel;
+using System.IO;
+using System.Runtime.CompilerServices;
+using Spectre.Console.Cli;
 
 namespace Playwright.Tooling.Options;
 
-[Verb("download-drivers")]
-internal class DownloadDriversOptions
+internal class DownloadDriversOptions : CommandSettings
 {
-    [Option(Required = true, HelpText = "Solution path.")]
-    public string BasePath { get; set; }
+    [CommandOption("--basepath")]
+    [Description("Solution path.")]
+    public string BasePath { get; init; } = GetDefaultPath();
+
+    private static string GetDefaultPath([CallerFilePath] string path = "") => Path.GetFullPath(Path.Combine(Path.GetDirectoryName(path)!, "..", "..", "..", ".."));
 }

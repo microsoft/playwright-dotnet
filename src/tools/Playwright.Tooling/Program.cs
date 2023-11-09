@@ -23,16 +23,16 @@
  */
 
 using System.Threading.Tasks;
-using CommandLine;
-using Playwright.Tooling.Options;
+using Spectre.Console.Cli;
 
 namespace Playwright.Tooling;
 
 internal static class Program
 {
-    internal static async Task Main(string[] args)
+    internal static async Task<int> Main(string[] args)
     {
-        ParserResult<DownloadDriversOptions> result = Parser.Default.ParseArguments<DownloadDriversOptions>(args);
-        await result.WithParsedAsync(DriverDownloader.RunAsync).ConfigureAwait(false);
+        var app = new CommandApp();
+        app.Configure(config => config.AddCommand<DriverDownloader>("download-drivers"));
+        return await app.RunAsync(args).ConfigureAwait(false);
     }
 }
