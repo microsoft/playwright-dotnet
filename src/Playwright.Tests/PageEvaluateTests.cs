@@ -728,7 +728,6 @@ public class PageEvaluateTests : PageTestEx
         Assert.AreEqual(400, result.Height);
     }
 
-#if NET6_0_OR_GREATER
     private record ShapeRecord(int Width, int Height);
 
     [PlaywrightTest()]
@@ -737,5 +736,4 @@ public class PageEvaluateTests : PageTestEx
         var exception = await PlaywrightAssert.ThrowsAsync<PlaywrightException>(() => Page.EvaluateAsync<ShapeRecord>("() => ({ width: 600, height: 400 })"));
         Assert.IsInstanceOf<MissingMethodException>(exception.InnerException);
     }
-#endif
 }
