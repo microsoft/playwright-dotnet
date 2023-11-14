@@ -15,7 +15,6 @@
     <ReleaseVersion>0.0.0</ReleaseVersion>
     <BuildFromSource>True</BuildFromSource>
     <AssemblyName>Microsoft.Playwright.TestAdapter</AssemblyName>
-    <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
     <PackageOutputPath>./nupkg</PackageOutputPath>
     <IsPackable>true</IsPackable>
     <Nullable>enable</Nullable>

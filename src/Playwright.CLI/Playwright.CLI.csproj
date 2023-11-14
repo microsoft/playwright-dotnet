@@ -6,7 +6,7 @@
     <Summary>The Playwright CLI dotnet tool.</Summary>
     <Description>Playwright enables reliable end-to-end testing for modern web apps. It is built to enable cross-browser web automation that is ever-green, capable, reliable and fast. Learn more at https://playwright.dev/dotnet/.</Description>
     <PackageIcon>icon.png</PackageIcon>
-    <TargetFramework>netcoreapp3.1</TargetFramework>
+    <TargetFrameworks>net6.0;net7.0;net8.0</TargetFrameworks>
     <PublishRepositoryUrl>true</PublishRepositoryUrl>
     <RunWithWarnings>true</RunWithWarnings>
     <RootNamespace>Microsoft.Playwright.CLI</RootNamespace>
@@ -16,7 +16,6 @@
     <PackAsTool>true</PackAsTool>
     <ToolCommandName>playwright</ToolCommandName>
     <PackageOutputPath>./nupkg</PackageOutputPath>
-    <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
     <IsPackable>true</IsPackable>
     <RollForward>LatestMajor</RollForward>
   </PropertyGroup>

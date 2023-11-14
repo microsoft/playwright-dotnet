@@ -118,7 +118,7 @@ public class SimpleServer
 
                     if (_auths.TryGetValue(context.Request.Path, out var auth) && !Authenticate(auth.username, auth.password, context))
                     {
-                        context.Response.Headers.Add("WWW-Authenticate", "Basic realm=\"Secure Area\"");
+                        context.Response.Headers.Append("WWW-Authenticate", "Basic realm=\"Secure Area\"");
 
                         if (!context.Response.HasStarted)
                         {

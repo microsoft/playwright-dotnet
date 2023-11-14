@@ -25,19 +25,17 @@ jobs:
     - name: Setup .NET Core
       uses: actions/setup-dotnet@v3
       with:
-        dotnet-version: |
-          3.1.x
-          6.0.x
+        dotnet-version: 8.0.x
     - name: Install prerequisites and download drivers
       shell: bash
       run: ./build.sh --download-driver
     - name: Build Docker image
-      run: bash utils/docker/build.sh --amd64 focal playwright-dotnet:localbuild-focal
+      run: bash utils/docker/build.sh --amd64 jammy playwright-dotnet:localbuild-jammy
     - name: Cleanup
       run: dotnet clean src/ || true
     - name: Test
       run: |
-        CONTAINER_ID="$(docker run --rm --ipc=host -v $(pwd):/root/playwright --name playwright-docker-test --workdir /root/playwright/ -d -t playwright-dotnet:localbuild-focal /bin/bash)"
-        docker exec -e BROWSER=chromium "${CONTAINER_ID}" xvfb-run dotnet test ./src/Playwright.Tests/Playwright.Tests.csproj -c Debug -f net6.0 --logger:"console;verbosity=detailed"
-        docker exec -e BROWSER=firefox "${CONTAINER_ID}" xvfb-run dotnet test ./src/Playwright.Tests/Playwright.Tests.csproj -c Debug -f net6.0 --logger:"console;verbosity=detailed"
-        docker exec -e BROWSER=webkit "${CONTAINER_ID}" xvfb-run dotnet test ./src/Playwright.Tests/Playwright.Tests.csproj -c Debug -f net6.0 --logger:"console;verbosity=detailed"
+        CONTAINER_ID="$(docker run --rm --ipc=host -v $(pwd):/root/playwright --name playwright-docker-test --workdir /root/playwright/ -d -t playwright-dotnet:localbuild-jammy /bin/bash)"
+        docker exec -e BROWSER=chromium "${CONTAINER_ID}" xvfb-run dotnet test ./src/Playwright.Tests/Playwright.Tests.csproj -c Debug -f net8.0 --logger:"console;verbosity=detailed"
+        docker exec -e BROWSER=firefox "${CONTAINER_ID}" xvfb-run dotnet test ./src/Playwright.Tests/Playwright.Tests.csproj -c Debug -f net8.0 --logger:"console;verbosity=detailed"
+        docker exec -e BROWSER=webkit "${CONTAINER_ID}" xvfb-run dotnet test ./src/Playwright.Tests/Playwright.Tests.csproj -c Debug -f net8.0 --logger:"console;verbosity=detailed"
