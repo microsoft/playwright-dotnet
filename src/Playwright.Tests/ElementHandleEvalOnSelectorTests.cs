@@ -81,6 +81,6 @@ public class ElementHandleEvalOnSelectorTests : PageTestEx
         await Page.SetContentAsync(htmlContent);
         var elementHandle = await Page.QuerySelectorAsync("#myId");
         var exception = await PlaywrightAssert.ThrowsAsync<PlaywrightException>(() => elementHandle.EvalOnSelectorAsync(".a", "node => node.innerText"));
-        StringAssert.Contains("failed to find element matching selector \".a\"", exception.Message);
+        StringAssert.Contains("Failed to find element matching selector \".a\"", exception.Message);
     }
 }

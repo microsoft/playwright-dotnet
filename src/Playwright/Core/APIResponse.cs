@@ -68,7 +68,7 @@ internal class APIResponse : IAPIResponse
             }
             return Convert.FromBase64String(result);
         }
-        catch (Exception e) when (e.Message == DriverMessages.BrowserOrContextClosedExceptionMessage)
+        catch (Exception e) when (DriverMessages.IsTargetClosedError(e))
         {
             throw new PlaywrightException("Response has been disposed");
         }
@@ -86,7 +86,7 @@ internal class APIResponse : IAPIResponse
 
     internal string FetchUid() => _initializer.FetchUid;
 
-    internal Task<List<string>> FetchLogAsync() => _context._channel.FetchResponseLogAsync(FetchUid());
+    internal Task<string[]> FetchLogAsync() => _context._channel.FetchResponseLogAsync(FetchUid());
 
     public ValueTask DisposeAsync() => new(_context._channel.DisposeAPIResponseAsync(FetchUid()));
 

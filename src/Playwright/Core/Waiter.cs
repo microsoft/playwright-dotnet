@@ -123,6 +123,15 @@ internal class Waiter : IDisposable
         PlaywrightException navigationException,
         Func<T, bool> predicate = null)
     {
+        RejectOnEvent(eventSource, e, () => navigationException, predicate);
+    }
+
+    internal void RejectOnEvent<T>(
+        object eventSource,
+        string e,
+        Func<PlaywrightException> navigationExceptionPredicate,
+        Func<T, bool> predicate = null)
+    {
         if (eventSource == null)
         {
             return;
@@ -130,7 +139,7 @@ internal class Waiter : IDisposable
 
         var (task, dispose) = GetWaitForEventTask(eventSource, e, predicate);
         RejectOn(
-            task.ContinueWith(_ => throw navigationException, _onDisposeCts.Token, TaskContinuationOptions.RunContinuationsAsynchronously, TaskScheduler.Current),
+            task.ContinueWith(_ => throw navigationExceptionPredicate(), _onDisposeCts.Token, TaskContinuationOptions.RunContinuationsAsynchronously, TaskScheduler.Current),
             dispose);
     }
 

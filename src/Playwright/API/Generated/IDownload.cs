@@ -63,7 +63,7 @@ public partial interface IDownload
     Task CancelAsync();
 
     /// <summary><para>Returns readable stream for current download or <c>null</c> if download failed.</para></summary>
-    Task<Stream?> CreateReadStreamAsync();
+    Task<Stream> CreateReadStreamAsync();
 
     /// <summary><para>Deletes the downloaded file. Will wait for the download to finish if necessary.</para></summary>
     Task DeleteAsync();
@@ -84,7 +84,7 @@ public partial interface IDownload
     /// to get suggested file name.
     /// </para>
     /// </summary>
-    Task<string?> PathAsync();
+    Task<string> PathAsync();
 
     /// <summary>
     /// <para>

@@ -38,6 +38,7 @@ internal class Browser : ChannelOwnerBase, IChannelOwner<Browser>, IBrowser
     private readonly TaskCompletionSource<bool> _closedTcs = new();
     internal readonly List<BrowserContext> _contexts = new();
     internal BrowserType _browserType;
+    internal string _closeReason;
 
     internal Browser(IChannelOwner parent, string guid, BrowserInitializer initializer) : base(parent, guid)
     {
@@ -66,21 +67,22 @@ internal class Browser : ChannelOwnerBase, IChannelOwner<Browser>, IBrowser
     public IBrowserType BrowserType => _browserType;
 
     [MethodImpl(MethodImplOptions.NoInlining)]
-    public async Task CloseAsync()
+    public async Task CloseAsync(BrowserCloseOptions options = default)
     {
+        _closeReason = options?.Reason;
         try
         {
             if (ShouldCloseConnectionOnClose)
             {
-                Channel.Connection.DoClose(DriverMessages.BrowserClosedExceptionMessage);
+                Channel.Connection.DoClose();
             }
             else
             {
-                await Channel.CloseAsync().ConfigureAwait(false);
+                await Channel.CloseAsync(options?.Reason).ConfigureAwait(false);
             }
             await _closedTcs.Task.ConfigureAwait(false);
         }
-        catch (Exception e) when (DriverMessages.IsSafeCloseError(e))
+        catch (Exception e) when (DriverMessages.IsTargetClosedError(e))
         {
             // Swallow exception
         }

@@ -145,7 +145,10 @@ internal class BrowserContextChannel : Channel<BrowserContext>
             "newPage",
             null);
 
-    internal Task CloseAsync() => Connection.SendMessageToServerAsync(Object, "close");
+    internal Task CloseAsync(string reason) => Connection.SendMessageToServerAsync(Object, "close", new Dictionary<string, object>
+    {
+        ["reason"] = reason,
+    });
 
     internal Task PauseAsync()
         => Connection.SendMessageToServerAsync(Object, "pause");

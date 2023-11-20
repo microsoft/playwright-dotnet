@@ -68,7 +68,7 @@ internal class APIRequestContextChannel : Channel<APIRequestContext>
             ["multipartData"] = multipartData?.ToProtocol(),
         };
 
-        var response = await Connection.SendMessageToServerAsync(Object, "fetch", message, keepNulls: true).ConfigureAwait(false);
+        var response = await Connection.SendMessageToServerAsync(Object, "fetch", message).ConfigureAwait(false);
         return new Core.APIResponse(Object, response?.GetProperty("response").ToObject<Protocol.APIResponse>());
     }
 
@@ -85,10 +85,10 @@ internal class APIRequestContextChannel : Channel<APIRequestContext>
         return null;
     }
 
-    internal async Task<List<string>> FetchResponseLogAsync(string fetchUid)
+    internal async Task<string[]> FetchResponseLogAsync(string fetchUid)
     {
         var response = await Connection.SendMessageToServerAsync(Object, "fetchLog", new Dictionary<string, object> { ["fetchUid"] = fetchUid }).ConfigureAwait(false);
-        return response.Value.GetProperty("log").ToObject<List<string>>();
+        return response.Value.GetProperty("log").ToObject<string[]>();
     }
 
     internal Task DisposeAPIResponseAsync(string fetchUid)

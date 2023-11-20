@@ -213,7 +213,10 @@ internal class BrowserChannel : Channel<Browser>
             args);
     }
 
-    internal Task CloseAsync() => Connection.SendMessageToServerAsync<BrowserContextChannel>(Object, "close", null);
+    internal Task CloseAsync(string reason) => Connection.SendMessageToServerAsync<BrowserContextChannel>(Object, "close", new Dictionary<string, object>
+    {
+        ["reason"] = reason,
+    });
 
     internal Task StartTracingAsync(IPage page, bool screenshots, string path, IEnumerable<string> categories)
     {

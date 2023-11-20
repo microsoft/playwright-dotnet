@@ -136,7 +136,7 @@ public class EvalOnSelectorTests : PageTestEx
     {
         var exception = await PlaywrightAssert.ThrowsAsync<PlaywrightException>(()
             => Page.EvalOnSelectorAsync("section", "e => e.id"));
-        StringAssert.Contains("failed to find element matching selector \"section\"", exception.Message);
+        StringAssert.Contains("Failed to find element matching selector \"section\"", exception.Message);
     }
 
     [PlaywrightTest("eval-on-selector.spec.ts", "should support >> syntax")]

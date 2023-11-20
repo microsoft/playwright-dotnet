@@ -46,7 +46,7 @@ internal class StdIOTransport : IDisposable
         _process = GetProcess();
         _process.StartInfo.Arguments = "run-driver";
         StartProcessWithUTF8IOEncoding(_process);
-        _process.Exited += (_, _) => Close("Process exited");
+        _process.Exited += (_, _) => Close(new TargetClosedException("Process exited"));
         _process.ErrorDataReceived += (_, error) =>
         {
             if (error.Data != null)
@@ -63,7 +63,7 @@ internal class StdIOTransport : IDisposable
 
     public event EventHandler<byte[]> MessageReceived;
 
-    public event EventHandler<string> TransportClosed;
+    public event EventHandler<Exception> TransportClosed;
 
     public event EventHandler<string> LogReceived;
 
@@ -75,8 +75,9 @@ internal class StdIOTransport : IDisposable
         GC.SuppressFinalize(this);
     }
 
-    public void Close(string closeReason)
+    public void Close(Exception closeReason)
     {
+        Debug.WriteLine(closeReason);
         if (!IsClosed)
         {
             IsClosed = true;
@@ -179,12 +180,6 @@ internal class StdIOTransport : IDisposable
 
     private static Task ScheduleTransportTaskAsync(Func<CancellationToken, Task> func, CancellationToken cancellationToken)
         => Task.Factory.StartNew(() => func(cancellationToken), cancellationToken, TaskCreationOptions.LongRunning, TaskScheduler.Current);
-
-    private void Close(Exception ex)
-    {
-        System.Diagnostics.Debug.WriteLine(ex);
-        Close(ex.ToString());
-    }
 
     private void Dispose(bool disposing)
     {

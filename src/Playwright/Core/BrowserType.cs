@@ -178,7 +178,7 @@ internal class BrowserType : ChannelOwnerBase, IChannelOwner<BrowserType>, IBrow
         connection.MarkAsRemote();
         connection.Close += (_, _) => ClosePipe();
 
-        string closeError = null;
+        Exception closeError = null;
         Browser browser = null;
         void OnPipeClosed()
         {
@@ -192,7 +192,7 @@ internal class BrowserType : ChannelOwnerBase, IChannelOwner<BrowserType>, IBrow
                 context.OnClose();
             }
             browser?.DidClose();
-            connection.DoClose(closeError ?? DriverMessages.BrowserClosedExceptionMessage);
+            connection.DoClose(closeError);
         }
         pipe.Closed += (_, _) => OnPipeClosed();
         connection.OnMessage = async (object message, bool _) =>
@@ -201,7 +201,7 @@ internal class BrowserType : ChannelOwnerBase, IChannelOwner<BrowserType>, IBrow
             {
                 await pipe.SendAsync(message).ConfigureAwait(false);
             }
-            catch (Exception e) when (DriverMessages.IsSafeCloseError(e))
+            catch (Exception e) when (DriverMessages.IsTargetClosedError(e))
             {
                 // swallow exception
             }
@@ -219,7 +219,7 @@ internal class BrowserType : ChannelOwnerBase, IChannelOwner<BrowserType>, IBrow
             }
             catch (Exception ex)
             {
-                closeError = ex.ToString();
+                closeError = ex;
                 _channel.Connection.TraceMessage("pw:dotnet", $"Dispatching error: {ex.Message}\n{ex.StackTrace}");
                 ClosePipe();
             }

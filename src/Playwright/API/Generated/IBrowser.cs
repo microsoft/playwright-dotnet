@@ -84,7 +84,8 @@ public partial interface IBrowser
     /// cref="IBrowser.NewContextAsync"/> **before** calling <see cref="IBrowser.CloseAsync"/>.
     /// </para>
     /// </remarks>
-    Task CloseAsync();
+    /// <param name="options">Call options</param>
+    Task CloseAsync(BrowserCloseOptions? options = default);
 
     /// <summary>
     /// <para>

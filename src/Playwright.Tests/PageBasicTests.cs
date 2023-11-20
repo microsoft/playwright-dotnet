@@ -36,7 +36,7 @@ public class PageBasicTests : PageTestEx
             newPage.EvaluateAsync<string>("() => new Promise(r => { })"),
             newPage.CloseAsync()
         ));
-        StringAssert.Contains("Target closed", exception.Message);
+        StringAssert.Contains(TestConstants.TargetClosedErrorMessage, exception.Message);
     }
 
     [PlaywrightTest("page-basic.spec.ts", "async stacks should work")]
@@ -147,7 +147,7 @@ public class PageBasicTests : PageTestEx
         var task = Page.WaitForDownloadAsync();
         await Page.CloseAsync();
         var exception = await PlaywrightAssert.ThrowsAsync<PlaywrightException>(() => task);
-        StringAssert.Contains("Page closed", exception.Message);
+        StringAssert.Contains(TestConstants.TargetClosedErrorMessage, exception.Message);
     }
 
     [PlaywrightTest("page-basic.spec.ts", "should have sane user agent")]
@@ -245,7 +245,7 @@ public class PageBasicTests : PageTestEx
         for (int i = 0; i < 2; i++)
         {
             string message = exception.Message;
-            StringAssert.Contains("Page closed", message);
+            StringAssert.Contains(TestConstants.TargetClosedErrorMessage, message);
             Assert.That(message, Does.Not.Contain("Timeout"));
         }
     }

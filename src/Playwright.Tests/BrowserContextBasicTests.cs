@@ -189,7 +189,7 @@ public class BrowserContextBasicTests : BrowserTestEx
         var waitTask = context.WaitForPageAsync();
         await context.CloseAsync();
         var exception = await PlaywrightAssert.ThrowsAsync<PlaywrightException>(() => waitTask);
-        Assert.AreEqual("Context closed", exception.Message);
+        Assert.AreEqual(TestConstants.TargetClosedErrorMessage, exception.Message);
     }
 
     [PlaywrightTest("browsercontext-basic.spec.ts", "should not report frameless pages on error")]
