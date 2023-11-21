@@ -266,7 +266,8 @@ public partial interface IBrowserContext
     /// </para>
     /// </summary>
     /// <remarks><para>The default browser context cannot be closed.</para></remarks>
-    Task CloseAsync();
+    /// <param name="options">Call options</param>
+    Task CloseAsync(BrowserContextCloseOptions? options = default);
 
     /// <summary>
     /// <para>

@@ -58,7 +58,7 @@ public class WorkersTests : PageTestEx
         await Page.EvaluateAsync("workerObj => workerObj.terminate()", workerObj);
         Assert.AreEqual(worker, await workerDestroyedTcs.Task);
         var exception = await PlaywrightAssert.ThrowsAsync<PlaywrightException>(() => workerThisObj.GetPropertyAsync("self"));
-        StringAssert.IsMatch("(Worker was closed)|(Target closed)", exception.Message);
+        StringAssert.Contains(TestConstants.TargetClosedErrorMessage, exception.Message);
     }
 
     [PlaywrightTest("workers.spec.ts", "should report console logs")]

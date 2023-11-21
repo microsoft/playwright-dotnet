@@ -6,7 +6,7 @@
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
- * to use, copy, modify, merge, publish, distribute, sublicense, and / or sell
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
  * copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions:
  *
@@ -22,23 +22,29 @@
  * SOFTWARE.
  */
 
-using System.Text.Json;
+using System.Text.Json.Serialization;
 
-namespace Microsoft.Playwright.Transport;
+#nullable enable
 
-internal class PlaywrightServerMessage
+namespace Microsoft.Playwright;
+
+public class BrowserCloseOptions
 {
-    public int? Id { get; set; }
+    public BrowserCloseOptions() { }
 
-    public string Guid { get; set; }
+    public BrowserCloseOptions(BrowserCloseOptions clone)
+    {
+        if (clone == null)
+        {
+            return;
+        }
 
-    public string Method { get; set; }
+        Reason = clone.Reason;
+    }
 
-    public JsonElement? Params { get; set; }
-
-    public JsonElement? Result { get; set; }
-
-    public ErrorEntry Error { get; set; }
-
-    public string[] Log { get; set; }
+    /// <summary><para>The reason to be reported to the operations interrupted by the browser closure.</para></summary>
+    [JsonPropertyName("reason")]
+    public string? Reason { get; set; }
 }
+
+#nullable disable

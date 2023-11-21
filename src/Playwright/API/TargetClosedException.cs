@@ -6,7 +6,7 @@
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
- * to use, copy, modify, merge, publish, distribute, sublicense, and / or sell
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
  * copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions:
  *
@@ -22,23 +22,22 @@
  * SOFTWARE.
  */
 
-using System.Text.Json;
+using System;
+using Microsoft.Playwright.Core;
 
-namespace Microsoft.Playwright.Transport;
+namespace Microsoft.Playwright;
 
-internal class PlaywrightServerMessage
+internal class TargetClosedException : PlaywrightException
 {
-    public int? Id { get; set; }
+    internal TargetClosedException() : base(DriverMessages.TargetClosedExceptionMessage)
+    {
+    }
 
-    public string Guid { get; set; }
+    internal TargetClosedException(string message) : base(message ?? DriverMessages.TargetClosedExceptionMessage)
+    {
+    }
 
-    public string Method { get; set; }
-
-    public JsonElement? Params { get; set; }
-
-    public JsonElement? Result { get; set; }
-
-    public ErrorEntry Error { get; set; }
-
-    public string[] Log { get; set; }
+    internal TargetClosedException(string message, Exception innerException) : base(message, innerException)
+    {
+    }
 }

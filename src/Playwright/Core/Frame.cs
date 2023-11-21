@@ -702,16 +702,16 @@ internal class Frame : ChannelOwnerBase, IChannelOwner<Frame>, IFrame
     private Waiter SetupNavigationWaiter(string @event, float? timeout)
     {
         var waiter = new Waiter(this.Page as Page, @event);
-        if (this.Page.IsClosed)
+        if (Page.IsClosed)
         {
-            waiter.RejectImmediately(new PlaywrightException("Navigation failed because page was closed!"));
+            waiter.RejectImmediately(((Page)Page)._closeErrorWithReason());
         }
-        waiter.RejectOnEvent<IPage>(Page, PageEvent.Close.Name, new("Navigation failed because page was closed!"));
-        waiter.RejectOnEvent<IPage>(Page, PageEvent.Crash.Name, new("Navigation failed because page was crashed!"));
+        waiter.RejectOnEvent<IPage>(Page, PageEvent.Close.Name, () => ((Page)Page)._closeErrorWithReason());
+        waiter.RejectOnEvent<IPage>(Page, PageEvent.Crash.Name, new PlaywrightException("Navigation failed because page was crashed!"));
         waiter.RejectOnEvent<IFrame>(
             Page,
             "FrameDetached",
-            new("Navigating frame was detached!"),
+            new PlaywrightException("Navigating frame was detached!"),
             e => e == this);
         timeout = (Page as Page)?._timeoutSettings.NavigationTimeout(timeout);
         waiter.RejectOnTimeout(Convert.ToInt32(timeout, CultureInfo.InvariantCulture), $"Timeout {timeout}ms exceeded.");

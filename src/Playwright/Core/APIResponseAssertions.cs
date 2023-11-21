@@ -25,6 +25,7 @@
 using System;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using Microsoft.Playwright.Transport;
 
 namespace Microsoft.Playwright.Core;
 
@@ -57,11 +58,7 @@ internal class APIResponseAssertions : IAPIResponseAssertions
             message = message.Replace("expected to", "expected not to");
         }
         var logList = await _actual.FetchLogAsync().ConfigureAwait(false);
-        var log = string.Join("\n", logList);
-        if (logList.Count > 0)
-        {
-            message += $"\nCall log:\n{log}";
-        }
+        message += Connection.FormatCallLog(logList);
 
         var contentType = _actual.Headers.TryGetValue("content-type", out var contentTypeValue) ? contentTypeValue : string.Empty;
         bool isTextEncoding = IsTextualMimeType(contentType);
@@ -75,7 +72,7 @@ internal class APIResponseAssertions : IAPIResponseAssertions
                 responseText = $"\nResponse text:\n{trimmedText}";
             }
         }
-        throw new PlaywrightException(message + log + responseText);
+        throw new PlaywrightException(message + responseText);
     }
 
     private static bool IsTextualMimeType(string contentType)

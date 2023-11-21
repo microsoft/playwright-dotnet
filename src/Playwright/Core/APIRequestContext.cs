@@ -105,7 +105,7 @@ internal class APIRequestContext : ChannelOwnerBase, IChannelOwner<APIRequestCon
         {
             if (IsJsonContentType(options.Headers?.ToDictionary(x => x.Key, x => x.Value)))
             {
-                jsonData = dataString;
+                jsonData = isJsonParsable(dataString) ? dataString : JsonSerializer.Serialize(dataString, _connection.DefaultJsonSerializerOptionsKeepNulls);
             }
             else
             {
@@ -116,9 +116,9 @@ internal class APIRequestContext : ChannelOwnerBase, IChannelOwner<APIRequestCon
         {
             postData = options.DataByte;
         }
-        else
+        else if (options.DataObject != null)
         {
-            jsonData = options.DataObject;
+            jsonData = JsonSerializer.Serialize(options.DataObject, _connection.DefaultJsonSerializerOptionsKeepNulls);
         }
 
         return await _channel.FetchAsync(
@@ -149,6 +149,20 @@ internal class APIRequestContext : ChannelOwnerBase, IChannelOwner<APIRequestCon
         }
         return contentType.Value.Contains("application/json");
     }
+
+    private bool isJsonParsable(string dataString)
+    {
+        try
+        {
+            JsonSerializer.Deserialize<JsonElement>(dataString);
+            return true;
+        }
+        catch (JsonException)
+        {
+            return false;
+        }
+    }
+
 
     [MethodImpl(MethodImplOptions.NoInlining)]
     public Task<IAPIResponse> DeleteAsync(string url, APIRequestContextOptions options = null) => FetchAsync(url, WithMethod(options, "DELETE"));

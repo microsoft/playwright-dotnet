@@ -32,13 +32,13 @@ public class BrowserTests : BrowserTestEx
     {
         var browser = await Playwright[TestConstants.BrowserName].LaunchAsync();
         var page1 = await browser.NewPageAsync();
-        Assert.That(browser.Contexts, Has.Length.EqualTo(1));
+        Assert.AreEqual(1, browser.Contexts.Count);
 
         var page2 = await browser.NewPageAsync();
         Assert.AreEqual(2, browser.Contexts.Count);
 
         await page1.CloseAsync();
-        Assert.That(browser.Contexts, Has.Length.EqualTo(1));
+        Assert.AreEqual(1, browser.Contexts.Count);
 
         await page2.CloseAsync();
         await browser.CloseAsync();

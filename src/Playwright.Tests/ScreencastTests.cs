@@ -217,7 +217,13 @@ public class ScreencastTests : BrowserTestEx
         catch (Exception)
         {
         }
-        await page.Video.DeleteAsync();
+        try
+        {
+            await page.Video.DeleteAsync();
+        }
+        catch (Exception)
+        {
+        }
     }
 
     [PlaywrightTest("screencast.spec.ts", "saveAs should throw when no video frames")]

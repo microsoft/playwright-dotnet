@@ -39,8 +39,13 @@ public class PageCloseOptions
             return;
         }
 
+        Reason = clone.Reason;
         RunBeforeUnload = clone.RunBeforeUnload;
     }
+
+    /// <summary><para>The reason to be reported to the operations interrupted by the page closure.</para></summary>
+    [JsonPropertyName("reason")]
+    public string? Reason { get; set; }
 
     /// <summary>
     /// <para>

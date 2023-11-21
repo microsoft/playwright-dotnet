@@ -51,6 +51,7 @@ internal class BrowserContext : ChannelOwnerBase, IChannelOwner<BrowserContext>,
     internal readonly List<Page> _pages = new();
     private readonly Browser _browser;
     private bool _closeWasCalled;
+    private string _closeReason;
 
     internal TimeoutSettings _timeoutSettings = new();
 
@@ -245,12 +246,13 @@ internal class BrowserContext : ChannelOwnerBase, IChannelOwner<BrowserContext>,
     public Task ClearPermissionsAsync() => Channel.ClearPermissionsAsync();
 
     [MethodImpl(MethodImplOptions.NoInlining)]
-    public async Task CloseAsync()
+    public async Task CloseAsync(BrowserContextCloseOptions options = default)
     {
         if (_closeWasCalled)
         {
             return;
         }
+        _closeReason = options?.Reason;
         _closeWasCalled = true;
         await WrapApiCallAsync(
             async () =>
@@ -274,7 +276,7 @@ internal class BrowserContext : ChannelOwnerBase, IChannelOwner<BrowserContext>,
             }
         },
             true).ConfigureAwait(false);
-        await Channel.CloseAsync().ConfigureAwait(false);
+        await Channel.CloseAsync(options?.Reason).ConfigureAwait(false);
         await _closeTcs.Task.ConfigureAwait(false);
     }
 
@@ -451,6 +453,11 @@ internal class BrowserContext : ChannelOwnerBase, IChannelOwner<BrowserContext>,
     public Task UnrouteAsync(Func<string, bool> urlFunc, Func<IRoute, Task> handler = default)
         => UnrouteAsync(null, urlFunc, handler);
 
+    internal string _effectiveCloseReason()
+    {
+        return _closeReason ?? _browser._closeReason;
+    }
+
     [MethodImpl(MethodImplOptions.NoInlining)]
     public async Task<T> InnerWaitForEventAsync<T>(PlaywrightEvent<T> playwrightEvent, Func<Task> action = default, Func<T, bool> predicate = default, float? timeout = default)
     {
@@ -465,7 +472,7 @@ internal class BrowserContext : ChannelOwnerBase, IChannelOwner<BrowserContext>,
 
         if (playwrightEvent.Name != BrowserContextEvent.Close.Name)
         {
-            waiter.RejectOnEvent<IBrowserContext>(this, BrowserContextEvent.Close.Name, new("Context closed"));
+            waiter.RejectOnEvent<IBrowserContext>(this, BrowserContextEvent.Close.Name, () => new TargetClosedException(_effectiveCloseReason()));
         }
 
         var result = waiter.WaitForEventAsync(this, playwrightEvent.Name, predicate);

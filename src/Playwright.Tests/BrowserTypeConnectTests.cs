@@ -209,7 +209,7 @@ public class BrowserTypeConnectTests : PlaywrightTestEx
 
         Assert.AreEqual(browser.IsConnected, false);
         var exception = await PlaywrightAssert.ThrowsAsync<PlaywrightException>(async () => await page.WaitForNavigationAsync());
-        StringAssert.Contains("Navigation failed because page was closed", exception.Message);
+        StringAssert.Contains(TestConstants.TargetClosedErrorMessage, exception.Message);
     }
 
     [PlaywrightTest("browsertype-connect.spec.ts", "should reject navigation when browser closes")]
@@ -271,7 +271,7 @@ public class BrowserTypeConnectTests : PlaywrightTestEx
         async Task CheckTaskHasException(Task task)
         {
             var exception = await PlaywrightAssert.ThrowsAsync<PlaywrightException>(async () => await task);
-            StringAssert.Contains("Page closed", exception.Message);
+            StringAssert.Contains(TestConstants.TargetClosedErrorMessage, exception.Message);
             StringAssert.DoesNotContain("Timeout", exception.Message);
 
         }

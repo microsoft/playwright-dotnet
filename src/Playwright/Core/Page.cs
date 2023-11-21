@@ -43,7 +43,6 @@ internal class Page : ChannelOwnerBase, IChannelOwner<Page>, IPage
 {
     private readonly PageChannel _channel;
     private readonly List<Frame> _frames = new();
-    private readonly List<(IEvent PageEvent, TaskCompletionSource<bool> WaitTcs)> _waitForCancellationTcs = new();
     private readonly IAccessibility _accessibility;
     private readonly IMouse _mouse;
     private readonly IKeyboard _keyboard;
@@ -54,6 +53,7 @@ internal class Page : ChannelOwnerBase, IChannelOwner<Page>, IPage
     internal readonly TimeoutSettings _timeoutSettings;
     private List<RouteHandler> _routes = new();
     private Video _video;
+    private string _closeReason;
 
     internal Page(IChannelOwner parent, string guid, PageInitializer initializer) : base(parent, guid)
     {
@@ -436,6 +436,11 @@ internal class Page : ChannelOwnerBase, IChannelOwner<Page>, IPage
     public Task<IJSHandle> WaitForFunctionAsync(string expression, object arg = default, PageWaitForFunctionOptions options = default)
         => MainFrame.WaitForFunctionAsync(expression, arg, new() { PollingInterval = options?.PollingInterval, Timeout = options?.Timeout });
 
+    internal TargetClosedException _closeErrorWithReason()
+    {
+        return new TargetClosedException(_closeReason ?? Context._effectiveCloseReason());
+    }
+
     [MethodImpl(MethodImplOptions.NoInlining)]
     public async Task<T> InnerWaitForEventAsync<T>(PlaywrightEvent<T> pageEvent, Func<Task> action = default, Func<T, bool> predicate = default, float? timeout = default)
     {
@@ -450,12 +455,12 @@ internal class Page : ChannelOwnerBase, IChannelOwner<Page>, IPage
 
         if (pageEvent.Name != PageEvent.Crash.Name)
         {
-            waiter.RejectOnEvent<IPage>(this, PageEvent.Crash.Name, new("Page crashed"));
+            waiter.RejectOnEvent<IPage>(this, PageEvent.Crash.Name, new PlaywrightException("Page crashed"));
         }
 
         if (pageEvent.Name != PageEvent.Close.Name)
         {
-            waiter.RejectOnEvent<IPage>(this, PageEvent.Close.Name, new("Page closed"));
+            waiter.RejectOnEvent<IPage>(this, PageEvent.Close.Name, () => _closeErrorWithReason());
         }
 
         var waitForEventTask = waiter.WaitForEventAsync(this, pageEvent.Name, predicate);
@@ -471,6 +476,7 @@ internal class Page : ChannelOwnerBase, IChannelOwner<Page>, IPage
     [MethodImpl(MethodImplOptions.NoInlining)]
     public async Task CloseAsync(PageCloseOptions options = default)
     {
+        _closeReason = options?.Reason;
         try
         {
             await _channel.CloseAsync(options?.RunBeforeUnload ?? false).ConfigureAwait(false);
@@ -479,7 +485,7 @@ internal class Page : ChannelOwnerBase, IChannelOwner<Page>, IPage
                 await OwnedContext.CloseAsync().ConfigureAwait(false);
             }
         }
-        catch (Exception e) when (DriverMessages.IsSafeCloseError(e) && options?.RunBeforeUnload != true)
+        catch (Exception e) when (DriverMessages.IsTargetClosedError(e) && options?.RunBeforeUnload != true)
         {
             // Swallow exception
         }
@@ -1179,13 +1185,11 @@ internal class Page : ChannelOwnerBase, IChannelOwner<Page>, IPage
     {
         IsClosed = true;
         Context?._pages.Remove(this);
-        RejectPendingOperations(false);
         Close?.Invoke(this, this);
     }
 
     private void Channel_Crashed(object sender, EventArgs e)
     {
-        RejectPendingOperations(true);
         Crash?.Invoke(this, this);
     }
 
@@ -1245,16 +1249,6 @@ internal class Page : ChannelOwnerBase, IChannelOwner<Page>, IPage
         _frames.Add(frame);
         frame.ParentFrame?._childFrames?.Add(frame);
         FrameAttached?.Invoke(this, args);
-    }
-
-    private void RejectPendingOperations(bool isCrash)
-    {
-        foreach (var (_, waitTcs) in _waitForCancellationTcs.Where(e => e.PageEvent != (isCrash ? PageEvent.Crash : PageEvent.Close)))
-        {
-            waitTcs.TrySetException(new PlaywrightException(isCrash ? "Page crashed" : "Page closed"));
-        }
-
-        _waitForCancellationTcs.Clear();
     }
 
     private Task InnerExposeBindingAsync(string name, Delegate callback, bool handle = false)

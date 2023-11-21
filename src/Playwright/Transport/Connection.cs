@@ -48,7 +48,7 @@ internal class Connection : IDisposable
     private readonly TaskQueue _queue = new();
     private int _tracingCount;
     private int _lastId;
-    private string _closedErrorMessage = string.Empty;
+    private Exception _closedError;
 
     public Connection(LocalUtils localUtils = null)
     {
@@ -74,7 +74,7 @@ internal class Connection : IDisposable
     /// <inheritdoc cref="IDisposable.Dispose"/>
     ~Connection() => Dispose(false);
 
-    internal event EventHandler<string> Close;
+    internal event EventHandler<Exception> Close;
 
     public ConcurrentDictionary<string, IChannelOwner> Objects { get; } = new();
 
@@ -89,6 +89,19 @@ internal class Connection : IDisposable
     internal JsonSerializerOptions DefaultJsonSerializerOptions { get; }
 
     internal JsonSerializerOptions DefaultJsonSerializerOptionsKeepNulls { get; }
+
+    internal static string FormatCallLog(string[] log)
+    {
+        if (log == null)
+        {
+            return string.Empty;
+        }
+        if (!log.Any(l => l != null))
+        {
+            return string.Empty;
+        }
+        return "\nCall log:\n  - " + string.Join("\n  - ", log);
+    }
 
     public void Dispose()
     {
@@ -127,9 +140,9 @@ internal class Connection : IDisposable
         Dictionary<string, object> dictionary = null,
         bool keepNulls = false)
     {
-        if (!string.IsNullOrEmpty(_closedErrorMessage))
+        if (_closedError != null)
         {
-            throw new PlaywrightException(this._closedErrorMessage);
+            throw _closedError;
         }
         if (@object._wasCollected)
         {
@@ -232,7 +245,7 @@ internal class Connection : IDisposable
 
     internal void Dispatch(PlaywrightServerMessage message)
     {
-        if (!string.IsNullOrEmpty(this._closedErrorMessage))
+        if (_closedError != null)
         {
             return;
         }
@@ -246,9 +259,10 @@ internal class Connection : IDisposable
                 throw new PlaywrightException($"Cannot find command to respond: '{message.Id}'");
             }
 
-            if (message.Error != null)
+            if (message.Error != null && message.Result == null)
             {
-                callback.TaskCompletionSource.TrySetException(CreateException(message.Error.Error));
+                var exception = ParseException(message.Error.Error, FormatCallLog(message.Log));
+                callback.TaskCompletionSource.TrySetException(exception);
             }
             else
             {
@@ -297,7 +311,7 @@ internal class Connection : IDisposable
         catch (Exception ex)
         {
             TraceMessage("pw:dotnet", $"Connection Close: {ex.Message}\n{ex.StackTrace}");
-            DoClose(ex.ToString());
+            DoClose(ex);
         }
     }
 
@@ -399,12 +413,12 @@ internal class Connection : IDisposable
         return result;
     }
 
-    internal void DoClose(string errorMessage)
+    internal void DoClose(Exception cause = null)
     {
-        _closedErrorMessage = errorMessage;
+        _closedError = cause != null ? new TargetClosedException(cause.Message, cause) : new TargetClosedException();
         foreach (var callback in _callbacks)
         {
-            callback.Value.TaskCompletionSource.TrySetException(new PlaywrightException(errorMessage));
+            callback.Value.TaskCompletionSource.TrySetException(_closedError);
             // We need to make sure that the task is handled otherwise it will be reported as unhandled on the caller side.
             // Its still possible to get the exception from the task.
             callback.Value.TaskCompletionSource.Task.IgnoreException();
@@ -414,19 +428,24 @@ internal class Connection : IDisposable
         Dispose();
     }
 
-    private Exception CreateException(PlaywrightServerError error)
+    private Exception ParseException(PlaywrightServerError error, string messageSuffix)
     {
         if (string.IsNullOrEmpty(error.Message))
         {
             return new PlaywrightException(error.Value);
         }
-
         if (error.Name == "TimeoutError")
         {
-            return new TimeoutException(error.Message);
+            return new TimeoutException(error.Message + messageSuffix);
         }
 
-        return new PlaywrightException(error.Message);
+
+        if (error.Name == "TargetClosedError")
+        {
+            return new TargetClosedException(error.Message + messageSuffix);
+        }
+
+        return new PlaywrightException(error.Message + messageSuffix);
     }
 
     private void Dispose(bool disposing)
@@ -437,7 +456,7 @@ internal class Connection : IDisposable
         }
 
         _queue.Dispose();
-        Close.Invoke(this, "Connection disposed");
+        Close.Invoke(this, new TargetClosedException("Connection disposed"));
     }
 
     [Conditional("DEBUG")]
