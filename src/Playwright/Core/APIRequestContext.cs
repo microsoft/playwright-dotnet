@@ -105,7 +105,7 @@ internal class APIRequestContext : ChannelOwnerBase, IChannelOwner<APIRequestCon
         {
             if (IsJsonContentType(options.Headers?.ToDictionary(x => x.Key, x => x.Value)))
             {
-                jsonData = isJsonParsable(dataString) ? dataString : JsonSerializer.Serialize(dataString, _connection.DefaultJsonSerializerOptionsKeepNulls);
+                jsonData = IsJsonParsable(dataString) ? dataString : JsonSerializer.Serialize(dataString, _connection.DefaultJsonSerializerOptionsKeepNulls);
             }
             else
             {
@@ -150,7 +150,7 @@ internal class APIRequestContext : ChannelOwnerBase, IChannelOwner<APIRequestCon
         return contentType.Value.Contains("application/json");
     }
 
-    private bool isJsonParsable(string dataString)
+    private bool IsJsonParsable(string dataString)
     {
         try
         {
