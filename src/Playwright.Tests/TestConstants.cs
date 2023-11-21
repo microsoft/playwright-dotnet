@@ -45,5 +45,5 @@ internal static class TestConstants
     internal static readonly bool IsWindows = RuntimeInformation.IsOSPlatform(OSPlatform.Windows);
     internal static readonly bool IsLinux = RuntimeInformation.IsOSPlatform(OSPlatform.Linux);
 
-    internal static string TargetClosedErrorMessage = "Target page, context or browser has been closed";
+    internal static readonly string TargetClosedErrorMessage = "Target page, context or browser has been closed";
 }
