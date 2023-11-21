@@ -54,6 +54,7 @@ public class BrowserTypeLaunchPersistentContextOptions
         Env = clone.Env;
         ExecutablePath = clone.ExecutablePath;
         ExtraHTTPHeaders = clone.ExtraHTTPHeaders;
+        FirefoxUserPrefs = clone.FirefoxUserPrefs;
         ForcedColors = clone.ForcedColors;
         Geolocation = clone.Geolocation;
         HandleSIGHUP = clone.HandleSIGHUP;
@@ -218,6 +219,10 @@ public class BrowserTypeLaunchPersistentContextOptions
     /// </summary>
     [JsonPropertyName("extraHTTPHeaders")]
     public IEnumerable<KeyValuePair<string, string>>? ExtraHTTPHeaders { get; set; }
+
+    /// <summary><para>Firefox user preferences. Learn more about the Firefox user preferences at <a href="https://support.mozilla.org/en-US/kb/about-config-editor-firefox"><c>about:config</c></a>.</para></summary>
+    [JsonPropertyName("firefoxUserPrefs")]
+    public IEnumerable<KeyValuePair<string, object>>? FirefoxUserPrefs { get; set; }
 
     /// <summary>
     /// <para>

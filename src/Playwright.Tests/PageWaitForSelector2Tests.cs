@@ -209,7 +209,7 @@ public class PageWaitForSelector2Tests : PageTestEx
                 => Page.WaitForSelectorAsync("//div", new() { State = WaitForSelectorState.Attached, Timeout = 3000 }));
 
         StringAssert.Contains("Timeout 3000ms exceeded", exception.Message);
-        StringAssert.Contains("waiting for Locator(\"xpath=//div\")", exception.Message);
+        StringAssert.Contains("waiting for Locator(\"//div\")", exception.Message);
     }
 
     [PlaywrightTest("page-wait-for-selector-2.spec.ts", "should run in specified frame xpath")]

@@ -220,6 +220,12 @@ public partial interface ILocatorAssertions
     /// Ensures the <see cref="ILocator"/> points to an element that contains the given
     /// text. You can use regular expressions for the value as well.
     /// </para>
+    /// <para>**Details**</para>
+    /// <para>
+    /// When <c>expected</c> parameter is a string, Playwright will normalize whitespaces
+    /// and line breaks both in the actual text and in the expected string before matching.
+    /// When regular expression is used, the actual text is matched as is.
+    /// </para>
     /// <para>**Usage**</para>
     /// <code>
     /// var locator = Page.Locator(".title");<br/>
@@ -257,6 +263,12 @@ public partial interface ILocatorAssertions
     /// <para>
     /// Ensures the <see cref="ILocator"/> points to an element that contains the given
     /// text. You can use regular expressions for the value as well.
+    /// </para>
+    /// <para>**Details**</para>
+    /// <para>
+    /// When <c>expected</c> parameter is a string, Playwright will normalize whitespaces
+    /// and line breaks both in the actual text and in the expected string before matching.
+    /// When regular expression is used, the actual text is matched as is.
     /// </para>
     /// <para>**Usage**</para>
     /// <code>
@@ -296,6 +308,12 @@ public partial interface ILocatorAssertions
     /// Ensures the <see cref="ILocator"/> points to an element that contains the given
     /// text. You can use regular expressions for the value as well.
     /// </para>
+    /// <para>**Details**</para>
+    /// <para>
+    /// When <c>expected</c> parameter is a string, Playwright will normalize whitespaces
+    /// and line breaks both in the actual text and in the expected string before matching.
+    /// When regular expression is used, the actual text is matched as is.
+    /// </para>
     /// <para>**Usage**</para>
     /// <code>
     /// var locator = Page.Locator(".title");<br/>
@@ -333,6 +351,12 @@ public partial interface ILocatorAssertions
     /// <para>
     /// Ensures the <see cref="ILocator"/> points to an element that contains the given
     /// text. You can use regular expressions for the value as well.
+    /// </para>
+    /// <para>**Details**</para>
+    /// <para>
+    /// When <c>expected</c> parameter is a string, Playwright will normalize whitespaces
+    /// and line breaks both in the actual text and in the expected string before matching.
+    /// When regular expression is used, the actual text is matched as is.
     /// </para>
     /// <para>**Usage**</para>
     /// <code>
@@ -585,6 +609,12 @@ public partial interface ILocatorAssertions
     /// Ensures the <see cref="ILocator"/> points to an element with the given text. You
     /// can use regular expressions for the value as well.
     /// </para>
+    /// <para>**Details**</para>
+    /// <para>
+    /// When <c>expected</c> parameter is a string, Playwright will normalize whitespaces
+    /// and line breaks both in the actual text and in the expected string before matching.
+    /// When regular expression is used, the actual text is matched as is.
+    /// </para>
     /// <para>**Usage**</para>
     /// <code>
     /// var locator = Page.Locator(".title");<br/>
@@ -624,6 +654,12 @@ public partial interface ILocatorAssertions
     /// <para>
     /// Ensures the <see cref="ILocator"/> points to an element with the given text. You
     /// can use regular expressions for the value as well.
+    /// </para>
+    /// <para>**Details**</para>
+    /// <para>
+    /// When <c>expected</c> parameter is a string, Playwright will normalize whitespaces
+    /// and line breaks both in the actual text and in the expected string before matching.
+    /// When regular expression is used, the actual text is matched as is.
     /// </para>
     /// <para>**Usage**</para>
     /// <code>
@@ -665,6 +701,12 @@ public partial interface ILocatorAssertions
     /// Ensures the <see cref="ILocator"/> points to an element with the given text. You
     /// can use regular expressions for the value as well.
     /// </para>
+    /// <para>**Details**</para>
+    /// <para>
+    /// When <c>expected</c> parameter is a string, Playwright will normalize whitespaces
+    /// and line breaks both in the actual text and in the expected string before matching.
+    /// When regular expression is used, the actual text is matched as is.
+    /// </para>
     /// <para>**Usage**</para>
     /// <code>
     /// var locator = Page.Locator(".title");<br/>
@@ -704,6 +746,12 @@ public partial interface ILocatorAssertions
     /// <para>
     /// Ensures the <see cref="ILocator"/> points to an element with the given text. You
     /// can use regular expressions for the value as well.
+    /// </para>
+    /// <para>**Details**</para>
+    /// <para>
+    /// When <c>expected</c> parameter is a string, Playwright will normalize whitespaces
+    /// and line breaks both in the actual text and in the expected string before matching.
+    /// When regular expression is used, the actual text is matched as is.
     /// </para>
     /// <para>**Usage**</para>
     /// <code>

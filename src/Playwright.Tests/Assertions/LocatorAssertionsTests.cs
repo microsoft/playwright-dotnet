@@ -467,6 +467,15 @@ public class LocatorAssertionsTests : PageTestEx
         await Expect(locator).ToHaveAttributeAsync("src", new Regex("https://playwright.dev/media/photo", RegexOptions.IgnoreCase));
     }
 
+    [PlaywrightTest("playwright-test/playwright.expect.spec.ts", "should support toHaveAttribute > support ignoreCase")]
+    public async Task ShouldSupportToHaveAttribute_ignoreCase()
+    {
+        await Page.SetContentAsync("<div id=NoDe>Text content</div>");
+        var locator = Page.Locator("#NoDe");
+        await Expect(locator).ToHaveAttributeAsync("id", "node", new() { IgnoreCase = true });
+        await Expect(locator).Not.ToHaveAttributeAsync("id", "node");
+    }
+
 
     [PlaywrightTest("playwright-test/playwright.expect.spec.ts", "should support toHaveCSS")]
     public async Task ShouldSupportToHaveCSS()

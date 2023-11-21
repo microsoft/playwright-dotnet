@@ -414,7 +414,7 @@ public class PageEvaluateTests : PageTestEx
         await element.DisposeAsync();
 
         var exception = await PlaywrightAssert.ThrowsAsync<PlaywrightException>(() => Page.EvaluateAsync("e => e.textContent", element));
-        StringAssert.Contains("JSHandle is disposed", exception.Message);
+        StringAssert.Contains("no object with guid", exception.Message);
     }
 
     [PlaywrightTest("page-evaluate.spec.ts", "should simulate a user gesture")]
