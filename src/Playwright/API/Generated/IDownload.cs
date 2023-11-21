@@ -62,7 +62,12 @@ public partial interface IDownload
     /// </summary>
     Task CancelAsync();
 
-    /// <summary><para>Returns readable stream for current download or <c>null</c> if download failed.</para></summary>
+    /// <summary>
+    /// <para>
+    /// Returns a readable stream for a successful download, or throws for a failed/canceled
+    /// download.
+    /// </para>
+    /// </summary>
     Task<Stream> CreateReadStreamAsync();
 
     /// <summary><para>Deletes the downloaded file. Will wait for the download to finish if necessary.</para></summary>
@@ -76,8 +81,9 @@ public partial interface IDownload
 
     /// <summary>
     /// <para>
-    /// Returns path to the downloaded file in case of successful download. The method will
-    /// wait for the download to finish if necessary. The method throws when connected remotely.
+    /// Returns path to the downloaded file for a successful download, or throws for a failed/canceled
+    /// download. The method will wait for the download to finish if necessary. The method
+    /// throws when connected remotely.
     /// </para>
     /// <para>
     /// Note that the download's file name is a random GUID, use <see cref="IDownload.SuggestedFilename"/>

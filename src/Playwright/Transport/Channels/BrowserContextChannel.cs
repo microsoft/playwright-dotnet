@@ -290,11 +290,12 @@ internal class BrowserContextChannel : Channel<BrowserContext>
         return result.GetString("harId", false);
     }
 
-    internal async Task<WritableStream> CreateTempFileAsync(string name)
+    internal async Task<WritableStream> CreateTempFileAsync(string name, long lastModifiedMs)
     {
         var args = new Dictionary<string, object>
             {
                 { "name", name },
+                { "lastModifiedMs", lastModifiedMs },
             };
         var result = await Connection.SendMessageToServerAsync(Object, "createTempFile", args).ConfigureAwait(false);
         return result.GetObject<WritableStream>("writableStream", Connection);

@@ -38,52 +38,45 @@ internal static class SetInputFilesHelpers
 
     public static async Task<SetInputFilesFiles> ConvertInputFilesAsync(IEnumerable<string> files, BrowserContext context)
     {
-        var totalFileSizeExceedsLimit = files.Select(f => new FileInfo(f)).Sum(f => f.Length) > SizeLimitInBytes;
-        if (totalFileSizeExceedsLimit)
+        if (!files.Any())
         {
-            if (context.Channel.Connection.IsRemote)
+            return new()
             {
-                var streams = await files.SelectAsync(async f =>
-                {
-                    var stream = await context.Channel.CreateTempFileAsync(Path.GetFileName(f)).ConfigureAwait(false);
-                    using var fileStream = File.OpenRead(f);
-                    await fileStream.CopyToAsync(stream.WritableStreamImpl).ConfigureAwait(false);
-                    return stream;
-                }).ConfigureAwait(false);
-                return new() { Streams = streams.ToArray() };
-            }
-            return new() { LocalPaths = files.Select(f => Path.GetFullPath(f)).ToArray() };
+                Payloads = Array.Empty<InputFilesList>(),
+            };
         }
-        return new()
+        if (context.Channel.Connection.IsRemote)
         {
-            Files = files.Select(file =>
+            var streams = await files.SelectAsync(async f =>
             {
-                var fileInfo = new FileInfo(file);
-                return new InputFilesList()
-                {
-                    Name = fileInfo.Name,
-                    Buffer = Convert.ToBase64String(File.ReadAllBytes(fileInfo.FullName)),
-                    MimeType = file.MimeType(),
-                };
-            }),
-        };
+                var lastModifiedMs = new DateTimeOffset(File.GetLastWriteTime(f)).ToUnixTimeMilliseconds();
+#pragma warning disable CA2007 // Upstream bug: https://github.com/dotnet/roslyn-analyzers/issues/5712
+                await using var stream = await context.Channel.CreateTempFileAsync(Path.GetFileName(f), lastModifiedMs).ConfigureAwait(false);
+#pragma warning restore CA2007
+                using var fileStream = File.OpenRead(f);
+                await fileStream.CopyToAsync(stream.WritableStreamImpl).ConfigureAwait(false);
+                return stream;
+            }).ConfigureAwait(false);
+            return new() { Streams = streams.ToArray() };
+        }
+        return new() { LocalPaths = files.Select(f => Path.GetFullPath(f)).ToArray() };
     }
 
     public static SetInputFilesFiles ConvertInputFiles(IEnumerable<FilePayload> files)
     {
-        var totalBufferSizeExceedsLimit = files.Sum(f => f.Buffer.Length) > SizeLimitInBytes;
-        if (totalBufferSizeExceedsLimit)
+        var filePayloadExceedsSizeLimit = files.Sum(f => f.Buffer.Length) > SizeLimitInBytes;
+        if (filePayloadExceedsSizeLimit)
         {
             throw new NotSupportedException("Cannot set buffer larger than 50Mb, please write it to a file and pass its path instead.");
         }
         return new()
         {
-            Files = files.Select(f => new InputFilesList
+            Payloads = files.Select(f => new InputFilesList
             {
                 Name = f.Name,
                 Buffer = Convert.ToBase64String(f.Buffer),
                 MimeType = f.MimeType,
-            }),
+            }).ToArray(),
         };
     }
 }

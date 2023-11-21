@@ -490,6 +490,27 @@ public class BrowserTypeConnectTests : PlaywrightTestEx
         Assert.AreEqual(200 * 1024 * 1024, file0Size);
     }
 
+    [PlaywrightTest("browsertype-connect.spec.ts", "setInputFiles should preserve lastModified timestamp")]
+    public async Task SetInputFilesShouldPreserveLastModifiedTimestamp()
+    {
+        var browser = await BrowserType.ConnectAsync(_remoteServer.WSEndpoint);
+        var context = await browser.NewContextAsync();
+        var page = await context.NewPageAsync();
+
+        await page.SetContentAsync("<input type=file multiple=true/>");
+        var input = page.Locator("input");
+        var files = new string[] { "file-to-upload.txt", "file-to-upload-2.txt" };
+        await input.SetInputFilesAsync(files.Select(file => TestUtils.GetAsset(file)));
+        Assert.AreEqual(await input.EvaluateAsync<string[]>("e => [...e.files].map(f => f.name)"), files);
+        var timestamps = await input.EvaluateAsync<long[]>("e => [...e.files].map(f => f.lastModified)");
+        var expectedTimestamps = files.Select(file => new DateTimeOffset(new FileInfo(TestUtils.GetAsset(file)).LastWriteTimeUtc).ToUnixTimeMilliseconds()).ToArray();
+
+        // On Linux browser sometimes reduces the timestamp by 1ms: 1696272058110.0715  -> 1696272058109 or even
+        // rounds it to seconds in WebKit: 1696272058110 -> 1696272058000.
+        for (var i = 0; i < timestamps.Length; i++)
+            Assert.LessOrEqual(Math.Abs(timestamps[i] - expectedTimestamps[i]), 1000);
+    }
+
     private class RemoteServer
     {
         private Process Process { get; set; }

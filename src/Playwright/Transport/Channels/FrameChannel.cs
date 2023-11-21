@@ -557,33 +557,20 @@ internal class FrameChannel : Channel<Frame>
         return (await Connection.SendMessageToServerAsync(Object, "innerText", args).ConfigureAwait(false))?.GetProperty("value").ToString();
     }
 
-    internal Task SetInputFilesAsync(string selector, IEnumerable<InputFilesList> files, bool? noWaitAfter, float? timeout, bool? strict)
+    internal Task SetInputFilesAsync(string selector, SetInputFilesFiles files, bool? noWaitAfter, float? timeout, bool? strict)
     {
         var args = new Dictionary<string, object>
         {
             ["selector"] = selector,
-            ["files"] = files,
+            ["payloads"] = files.Payloads,
+            ["localPaths"] = files.LocalPaths,
+            ["streams"] = files.Streams,
             ["noWaitAfter"] = noWaitAfter,
             ["timeout"] = timeout,
             ["strict"] = strict,
         };
 
         return Connection.SendMessageToServerAsync(Object, "setInputFiles", args);
-    }
-
-    internal Task SetInputFilePathsAsync(string selector, IEnumerable<string> localPaths, IEnumerable<WritableStream> streams, bool? noWaitAfter, float? timeout, bool? strict)
-    {
-        var args = new Dictionary<string, object>
-        {
-            ["selector"] = selector,
-            ["localPaths"] = localPaths,
-            ["streams"] = streams,
-            ["timeout"] = timeout,
-            ["noWaitAfter"] = noWaitAfter,
-            ["strict"] = strict,
-        };
-
-        return Connection.SendMessageToServerAsync(Object, "setInputFilePaths", args);
     }
 
     internal async Task<string> TextContentAsync(string selector, float? timeout, bool? strict)

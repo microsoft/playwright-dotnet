@@ -158,14 +158,7 @@ internal class ElementHandle : JSHandle, IElementHandle, IChannelOwner<ElementHa
             throw new PlaywrightException("Cannot set input files to detached element.");
         }
         var converted = await SetInputFilesHelpers.ConvertInputFilesAsync(files, (BrowserContext)frame.Page.Context).ConfigureAwait(false);
-        if (converted.Files != null)
-        {
-            await _channel.SetInputFilesAsync(converted.Files, options?.NoWaitAfter, options?.Timeout).ConfigureAwait(false);
-        }
-        else
-        {
-            await _channel.SetInputFilePathsAsync(converted?.LocalPaths, converted?.Streams, options?.NoWaitAfter, options?.Timeout).ConfigureAwait(false);
-        }
+        await _channel.SetInputFilesAsync(converted, options?.NoWaitAfter, options?.Timeout).ConfigureAwait(false);
     }
 
     public Task SetInputFilesAsync(FilePayload files, ElementHandleSetInputFilesOptions options = default)
@@ -174,7 +167,7 @@ internal class ElementHandle : JSHandle, IElementHandle, IChannelOwner<ElementHa
     public async Task SetInputFilesAsync(IEnumerable<FilePayload> files, ElementHandleSetInputFilesOptions options = default)
     {
         var converted = SetInputFilesHelpers.ConvertInputFiles(files);
-        await _channel.SetInputFilesAsync(converted.Files, options?.NoWaitAfter, options?.Timeout).ConfigureAwait(false);
+        await _channel.SetInputFilesAsync(converted, options?.NoWaitAfter, options?.Timeout).ConfigureAwait(false);
     }
 
     public async Task<IElementHandle> QuerySelectorAsync(string selector)

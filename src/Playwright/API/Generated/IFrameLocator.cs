@@ -171,7 +171,7 @@ public partial interface IFrameLocator
     /// <para>Consider the following DOM structure.</para>
     /// <para>You can locate each element by it's implicit role:</para>
     /// <code>
-    /// await Expect(page<br/>
+    /// await Expect(Page<br/>
     ///     .GetByRole(AriaRole.Heading, new() { Name = "Sign up" }))<br/>
     ///     .ToBeVisibleAsync();<br/>
     /// <br/>
@@ -319,7 +319,7 @@ public partial interface IFrameLocator
     /// <para>**Usage**</para>
     /// <para>Consider the following DOM structure.</para>
     /// <para>You can check the issues count after locating it by the title text:</para>
-    /// <code>await Expect(page.GetByTitle("Issues count")).toHaveText("25 issues");</code>
+    /// <code>await Expect(Page.GetByTitle("Issues count")).toHaveText("25 issues");</code>
     /// </summary>
     /// <param name="text">Text to locate the element for.</param>
     /// <param name="options">Call options</param>
@@ -330,7 +330,7 @@ public partial interface IFrameLocator
     /// <para>**Usage**</para>
     /// <para>Consider the following DOM structure.</para>
     /// <para>You can check the issues count after locating it by the title text:</para>
-    /// <code>await Expect(page.GetByTitle("Issues count")).toHaveText("25 issues");</code>
+    /// <code>await Expect(Page.GetByTitle("Issues count")).toHaveText("25 issues");</code>
     /// </summary>
     /// <param name="text">Text to locate the element for.</param>
     /// <param name="options">Call options</param>

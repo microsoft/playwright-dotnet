@@ -108,7 +108,7 @@ internal class LocatorAssertions : AssertionsBase, ILocatorAssertions
         ExpectImplAsync("to.contain.text.array", expected.Select(regex => ExpectedRegex(regex, new() { MatchSubstring = true, NormalizeWhiteSpace = true, IgnoreCase = options?.IgnoreCase ?? false })).ToArray(), expected, "Locator expected text matching regex", ConvertToFrameExpectOptions(options));
 
     public Task ToHaveAttributeAsync(string name, string value, LocatorAssertionsToHaveAttributeOptions options = null) =>
-        ToHaveAttributeAsync(name, new() { String = value }, value, options);
+        ToHaveAttributeAsync(name, new() { String = value, IgnoreCase = options?.IgnoreCase }, value, options);
 
     public Task ToHaveAttributeAsync(string name, Regex value, LocatorAssertionsToHaveAttributeOptions options = null) =>
         ToHaveAttributeAsync(name, ExpectedRegex(value), value, options);

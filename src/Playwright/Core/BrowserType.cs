@@ -97,6 +97,7 @@ internal class BrowserType : ChannelOwnerBase, IChannelOwner<BrowserType>, IBrow
             downloadsPath: options.DownloadsPath,
             tracesDir: options.TracesDir,
             chromiumSandbox: options.ChromiumSandbox,
+            firefoxUserPrefs: options.FirefoxUserPrefs,
             handleSIGINT: options.HandleSIGINT,
             handleSIGTERM: options.HandleSIGTERM,
             handleSIGHUP: options.HandleSIGHUP,

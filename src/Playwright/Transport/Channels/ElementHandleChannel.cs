@@ -272,29 +272,18 @@ internal class ElementHandleChannel : JSHandleChannel, IChannel<ElementHandle>
         return Connection.SendMessageToServerAsync<ElementHandleChannel>(Object, "dispatchEvent", args);
     }
 
-    internal Task SetInputFilesAsync(IEnumerable<InputFilesList> files, bool? noWaitAfter, float? timeout)
+    internal Task SetInputFilesAsync(SetInputFilesFiles files, bool? noWaitAfter, float? timeout)
     {
         var args = new Dictionary<string, object>
         {
-            ["files"] = files,
+            ["payloads"] = files.Payloads,
+            ["localPaths"] = files.LocalPaths,
+            ["streams"] = files.Streams,
             ["timeout"] = timeout,
             ["noWaitAfter"] = noWaitAfter,
         };
 
         return Connection.SendMessageToServerAsync(Object, "setInputFiles", args);
-    }
-
-    internal Task SetInputFilePathsAsync(IEnumerable<string> localPaths, IEnumerable<WritableStream> streams, bool? noWaitAfter, float? timeout)
-    {
-        var args = new Dictionary<string, object>
-        {
-            ["localPaths"] = localPaths,
-            ["streams"] = streams,
-            ["timeout"] = timeout,
-            ["noWaitAfter"] = noWaitAfter,
-        };
-
-        return Connection.SendMessageToServerAsync(Object, "setInputFilePaths", args);
     }
 
     internal async Task<string> GetAttributeAsync(string name)

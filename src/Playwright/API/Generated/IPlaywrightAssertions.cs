@@ -78,7 +78,7 @@ public partial interface IPlaywrightAssertions
     /// <summary>
     /// <para>Creates a <see cref="IPageAssertions"/> object for the given <see cref="IPage"/>.</para>
     /// <para>**Usage**</para>
-    /// <code>await Expect(page).ToHaveTitleAsync("News");</code>
+    /// <code>await Expect(Page).ToHaveTitleAsync("News");</code>
     /// </summary>
     /// <param name="page"><see cref="IPage"/> object to use for assertions.</param>
     IPageAssertions Expect(IPage page);

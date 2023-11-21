@@ -274,7 +274,7 @@ public class PageSetInputFilesTests : PageTestEx
                 return picker.files.length;
             }"));
         _ = Page.WaitForFileChooserAsync()
-            .ContinueWith(task => task.Result.Element.SetInputFilesAsync(new string[] { }));
+            .ContinueWith(task => task.Result.SetFilesAsync(new string[] { }));
         Assert.AreEqual(0, await Page.EvalOnSelectorAsync<int>("input", @"async picker => {
                 picker.click();
                 await new Promise(x => picker.oninput = x);
@@ -423,5 +423,24 @@ public class PageSetInputFilesTests : PageTestEx
         {
             File.Delete(file);
         }
+    }
+
+    [PlaywrightTest("browsertype-connect.spec.ts", "should preserve lastModified timestamp")]
+    public async Task ShouldPreserveLastModifiedTimestamp()
+    {
+        await Page.SetContentAsync("<input type=file multiple=true/>");
+        var input = Page.Locator("input");
+        var files = new string[] { "file-to-upload.txt", "file-to-upload-2.txt" };
+        await input.SetInputFilesAsync(files.Select(file => TestUtils.GetAsset(file)));
+        Assert.AreEqual(await input.EvaluateAsync<string[]>("e => [...e.files].map(f => f.name)"), files);
+        var timestamps = await input.EvaluateAsync<long[]>("e => [...e.files].map(f => f.lastModified)");
+        var expectedTimestamps = files.Select(file => new DateTimeOffset(new FileInfo(TestUtils.GetAsset(file)).LastWriteTimeUtc).ToUnixTimeMilliseconds()).ToArray();
+
+        // On Linux browser sometimes reduces the timestamp by 1ms: 1696272058110.0715  -> 1696272058109 or even
+        // rounds it to seconds in WebKit: 1696272058110 -> 1696272058000.
+        Console.WriteLine(timestamps[0]);
+        Console.WriteLine(expectedTimestamps[0]);
+        for (var i = 0; i < timestamps.Length; i++)
+            Assert.LessOrEqual(Math.Abs(timestamps[i] - expectedTimestamps[i]), 1000);
     }
 }

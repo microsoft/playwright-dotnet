@@ -22,14 +22,13 @@
  * SOFTWARE.
  */
 
-using System.Collections.Generic;
 using Microsoft.Playwright.Core;
 
 namespace Microsoft.Playwright.Transport.Protocol;
 
 internal class SetInputFilesFiles
 {
-    public IEnumerable<InputFilesList> Files { get; set; }
+    public InputFilesList[] Payloads { get; set; }
 
     public string[] LocalPaths { get; set; }
 

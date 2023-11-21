@@ -413,14 +413,7 @@ internal class Frame : ChannelOwnerBase, IChannelOwner<Frame>, IFrame
     public async Task SetInputFilesAsync(string selector, IEnumerable<string> files, FrameSetInputFilesOptions options = default)
     {
         var converted = await SetInputFilesHelpers.ConvertInputFilesAsync(files, (BrowserContext)Page.Context).ConfigureAwait(false);
-        if (converted.Files != null)
-        {
-            await _channel.SetInputFilesAsync(selector, converted.Files, options?.NoWaitAfter, options?.Timeout, options?.Strict).ConfigureAwait(false);
-        }
-        else
-        {
-            await _channel.SetInputFilePathsAsync(selector, converted?.LocalPaths, converted?.Streams, options?.NoWaitAfter, options?.Timeout, options?.Strict).ConfigureAwait(false);
-        }
+        await _channel.SetInputFilesAsync(selector, converted, options?.NoWaitAfter, options?.Timeout, options?.Strict).ConfigureAwait(false);
     }
 
     [MethodImpl(MethodImplOptions.NoInlining)]
@@ -431,7 +424,7 @@ internal class Frame : ChannelOwnerBase, IChannelOwner<Frame>, IFrame
     public async Task SetInputFilesAsync(string selector, IEnumerable<FilePayload> files, FrameSetInputFilesOptions options = default)
     {
         var converted = SetInputFilesHelpers.ConvertInputFiles(files);
-        await _channel.SetInputFilesAsync(selector, converted.Files, noWaitAfter: options?.NoWaitAfter, timeout: options?.Timeout, options?.Strict).ConfigureAwait(false);
+        await _channel.SetInputFilesAsync(selector, converted, noWaitAfter: options?.NoWaitAfter, timeout: options?.Timeout, options?.Strict).ConfigureAwait(false);
     }
 
     [MethodImpl(MethodImplOptions.NoInlining)]
