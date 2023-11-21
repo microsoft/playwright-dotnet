@@ -261,8 +261,7 @@ internal class Connection : IDisposable
 
             if (message.Error != null && message.Result == null)
             {
-                var exception = ParseException(message.Error.Error);
-                exception = (Exception)Activator.CreateInstance(exception.GetType(), exception.Message + FormatCallLog(message.Log));
+                var exception = ParseException(message.Error.Error, FormatCallLog(message.Log));
                 callback.TaskCompletionSource.TrySetException(exception);
             }
             else
@@ -429,25 +428,24 @@ internal class Connection : IDisposable
         Dispose();
     }
 
-    private Exception ParseException(PlaywrightServerError error)
+    private Exception ParseException(PlaywrightServerError error, string messageSuffix)
     {
         if (string.IsNullOrEmpty(error.Message))
         {
             return new PlaywrightException(error.Value);
         }
-
         if (error.Name == "TimeoutError")
         {
-            return new TimeoutException(error.Message);
+            return new TimeoutException(error.Message + messageSuffix);
         }
 
 
         if (error.Name == "TargetClosedError")
         {
-            return new TargetClosedException(error.Message);
+            return new TargetClosedException(error.Message + messageSuffix);
         }
 
-        return new PlaywrightException(error.Message);
+        return new PlaywrightException(error.Message + messageSuffix);
     }
 
     private void Dispose(bool disposing)
