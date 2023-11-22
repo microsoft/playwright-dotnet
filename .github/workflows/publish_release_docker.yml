@@ -31,7 +31,7 @@ jobs:
         username: playwright
         password: ${{ secrets.DOCKER_PASSWORD }}
     - name: Set up Docker QEMU for arm64 docker builds
-      uses: docker/setup-qemu-action@v2
+      uses: docker/setup-qemu-action@v3
       with:
         platforms: arm64
     - run: ./utils/docker/publish_docker.sh stable
