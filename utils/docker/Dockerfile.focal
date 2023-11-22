@@ -20,23 +20,15 @@ ENV PLAYWRIGHT_BROWSERS_PATH=/ms-playwright
 
 # 1. Add tip-of-tree Playwright package to install its browsers.
 #    The package should be built beforehand from tip-of-tree Playwright.
-COPY ./dist/* /tmp/
+COPY ./dist/ /tmp/playwright-dotnet
 
 # 2. Bake in browsers & deps.
 #    Browsers will be downloaded in `/ms-playwright`.
 #    Note: make sure to set 777 to the registry so that any user can access
 #    registry.
 RUN mkdir /ms-playwright && \
-    mkdir /ms-playwright-agent && \
-    cd /ms-playwright-agent && \
-    dotnet new console && \
-    echo '<?xml version="1.0" encoding="utf-8"?><configuration><packageSources><add key="local" value="/tmp/"/></packageSources></configuration>' > nuget.config && \
-    dotnet add package Microsoft.Playwright --prerelease && \
-    dotnet build && \
-    ./bin/Debug/net6.0/playwright.ps1 install --with-deps && \
-    ./bin/Debug/net6.0/playwright.ps1 mark-docker-image "${DOCKER_IMAGE_NAME_TEMPLATE}" && \
+    /tmp/playwright-dotnet/playwright.ps1 install --with-deps && \
+    /tmp/playwright-dotnet/playwright.ps1 mark-docker-image "${DOCKER_IMAGE_NAME_TEMPLATE}" && \
     rm -rf /var/lib/apt/lists/* && \
     rm -rf /tmp/* && \
-    dotnet nuget locals all --clear && rm -rf /root/.nuget && \
-    rm -rf /ms-playwright-agent && \
     chmod -R 777 /ms-playwright

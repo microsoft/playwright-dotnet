@@ -8,7 +8,7 @@ on:
 jobs:
   publish-canary:
     name: "Publish canary Docker"
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-22.04
     if: github.repository == 'microsoft/playwright-dotnet'
     steps:
     - uses: actions/checkout@v3
@@ -25,7 +25,7 @@ jobs:
         username: playwright
         password: ${{ secrets.DOCKER_PASSWORD }}
     - name: Set up Docker QEMU for arm64 docker builds
-      uses: docker/setup-qemu-action@v2
+      uses: docker/setup-qemu-action@v3
       with:
         platforms: arm64
     - name: publish docker canary
