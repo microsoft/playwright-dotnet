@@ -139,7 +139,7 @@ internal class DriverDownloader
 
             if (!RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
             {
-                var executables = new[] { "playwright.sh", "node", "package/third_party/ffmpeg/ffmpeg-linux", "package/third_party/ffmpeg/ffmpeg-mac" }
+                var executables = new[] { "playwright.sh", "node" }
                     .Select(f => Path.Combine(directory.FullName, f));
 
                 foreach (string executable in executables)
