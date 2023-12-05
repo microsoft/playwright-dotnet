@@ -63,7 +63,19 @@ internal static class Driver
             assemblyDirectory = new FileInfo(assemblyLocation).Directory;
         }
 
-        string executableFile = GetPath(assemblyDirectory.FullName);
+        string executableFile;
+
+        var driverSearchPath = Environment.GetEnvironmentVariable("PLAYWRIGHT_DRIVER_SEARCH_PATH");
+        if (!string.IsNullOrEmpty(driverSearchPath))
+        {
+            executableFile = GetPath(driverSearchPath);
+            if (File.Exists(executableFile))
+            {
+                return executableFile;
+            }
+        }
+
+        executableFile = GetPath(assemblyDirectory.FullName);
         if (File.Exists(executableFile))
         {
             return executableFile;
