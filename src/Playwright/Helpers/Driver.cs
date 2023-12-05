@@ -39,7 +39,7 @@ internal static class Driver
         ["PW_CLI_DISPLAY_VERSION"] = typeof(Driver).Assembly.GetName().Version.ToString(3),
     };
 
-    internal static string GetExecutablePath()
+    internal static (string ExecutablePath, Func<string, string> GetArgs) GetExecutablePath()
     {
         DirectoryInfo assemblyDirectory = null;
         if (!string.IsNullOrEmpty(AppContext.BaseDirectory))
@@ -64,53 +64,55 @@ internal static class Driver
         }
 
         string executableFile;
+        Func<string, string> getArgs;
 
         // When loading the Assembly via the memory we don't have any references where the driver might be located.
         // To workaround this we pass this env from the .ps1 wrapper over to the Assembly.
         var driverSearchPath = Environment.GetEnvironmentVariable("PLAYWRIGHT_DRIVER_SEARCH_PATH");
         if (!string.IsNullOrEmpty(driverSearchPath))
         {
-            executableFile = GetPath(driverSearchPath);
+            (executableFile, getArgs) = GetPath(driverSearchPath);
             if (!File.Exists(executableFile))
             {
                 throw new PlaywrightException("Couldn't find driver in \"PLAYWRIGHT_DRIVER_SEARCH_PATH\"");
             }
-            return executableFile;
+            return (executableFile, getArgs);
         }
 
-        executableFile = GetPath(assemblyDirectory.FullName);
+        (executableFile, getArgs) = GetPath(assemblyDirectory.FullName);
         if (File.Exists(executableFile))
         {
-            return executableFile;
+            return (executableFile, getArgs);
         }
 
         // if the above fails, we can assume we're in the nuget registry
-        executableFile = GetPath(assemblyDirectory.Parent.Parent.FullName);
+        (executableFile, getArgs) = GetPath(assemblyDirectory.Parent.Parent.FullName);
+        Console.Error.WriteLine(executableFile);
         if (File.Exists(executableFile))
         {
-            return executableFile;
+            return (executableFile, getArgs);
         }
 
         throw new PlaywrightException($"Driver not found: {executableFile}");
     }
 
-    private static string GetPath(string driversPath)
+    private static (string ExecutablePath, Func<string, string> GetArgs) GetPath(string driversPath)
     {
         string platformId;
-        string runnerName;
+        string nodeExecutable;
         if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
         {
             platformId = "win32_x64";
-            runnerName = "playwright.cmd";
+            nodeExecutable = "node.exe";
         }
         else if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
         {
-            runnerName = "playwright.sh";
+            nodeExecutable = "node";
             platformId = RuntimeInformation.ProcessArchitecture == Architecture.Arm64 ? "darwin-arm64" : "darwin-x64";
         }
         else if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
         {
-            runnerName = "playwright.sh";
+            nodeExecutable = "node";
             platformId = RuntimeInformation.ProcessArchitecture == Architecture.Arm64 ? "linux-arm64" : "linux-x64";
         }
         else
@@ -118,6 +120,14 @@ internal static class Driver
             throw new PlaywrightException("Unknown platform");
         }
 
-        return Path.Combine(driversPath, ".playwright", "node", platformId, runnerName);
+        var cliEntrypoint = Path.Combine(driversPath, ".playwright", "package", "lib", "cli", "cli.js");
+        string getArgs(string args)
+        {
+            return !string.IsNullOrEmpty(args) ? $"\"{cliEntrypoint}\" \"{args}\"" : cliEntrypoint;
+        }
+        Console.WriteLine(Path.Combine(driversPath, ".playwright", "node", platformId, nodeExecutable));
+        return (
+            Environment.GetEnvironmentVariable("PLAYWRIGHT_NODEJS_PATH") ?? Path.GetFullPath(Path.Combine(driversPath, ".playwright", "node", platformId, nodeExecutable)),
+            getArgs);
     }
 }

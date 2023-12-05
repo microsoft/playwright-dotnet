@@ -43,8 +43,7 @@ internal class StdIOTransport : IDisposable
 
     internal StdIOTransport()
     {
-        _process = GetProcess();
-        _process.StartInfo.Arguments = "run-driver";
+        _process = GetProcess("run-driver");
         StartProcessWithUTF8IOEncoding(_process);
         _process.Exited += (_, _) => Close(new TargetClosedException("Process exited"));
         _process.ErrorDataReceived += (_, error) =>
@@ -112,9 +111,10 @@ internal class StdIOTransport : IDisposable
         }
     }
 
-    private static Process GetProcess()
+    private static Process GetProcess(string driverArgs)
     {
-        var startInfo = new ProcessStartInfo(Driver.GetExecutablePath())
+        var (executablePath, getArgs) = Driver.GetExecutablePath();
+        var startInfo = new ProcessStartInfo(executablePath, getArgs(driverArgs))
         {
             UseShellExecute = false,
             RedirectStandardOutput = true,
