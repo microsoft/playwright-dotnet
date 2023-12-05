@@ -65,14 +65,17 @@ internal static class Driver
 
         string executableFile;
 
+        // When loading the Assembly via the memory we don't have any references where the driver might be located.
+        // To workaround this we pass this env from the .ps1 wrapper over to the Assembly.
         var driverSearchPath = Environment.GetEnvironmentVariable("PLAYWRIGHT_DRIVER_SEARCH_PATH");
         if (!string.IsNullOrEmpty(driverSearchPath))
         {
             executableFile = GetPath(driverSearchPath);
-            if (File.Exists(executableFile))
+            if (!File.Exists(executableFile))
             {
-                return executableFile;
+                throw new PlaywrightException("Couldn't find driver in \"PLAYWRIGHT_DRIVER_SEARCH_PATH\"");
             }
+            return executableFile;
         }
 
         executableFile = GetPath(assemblyDirectory.FullName);
