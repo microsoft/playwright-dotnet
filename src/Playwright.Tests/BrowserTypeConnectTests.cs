@@ -520,7 +520,8 @@ public class BrowserTypeConnectTests : PlaywrightTestEx
         {
             try
             {
-                var startInfo = new ProcessStartInfo(Driver.GetExecutablePath(), $"launch-server --browser {browserName}")
+                var (executablePath, getArgs) = Driver.GetExecutablePath();
+                var startInfo = new ProcessStartInfo(executablePath, getArgs($"launch-server --browser {browserName}"))
                 {
                     UseShellExecute = false,
                     RedirectStandardOutput = true,

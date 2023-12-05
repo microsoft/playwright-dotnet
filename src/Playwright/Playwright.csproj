@@ -43,11 +43,6 @@
     <None Include=".drivers\mac\node" Link=".playwright\node\darwin-x64\node" CopyToOutputDirectory="PreserveNewest" Pack="true" PackagePath=".playwright\node\darwin-x64" />
     <None Include=".drivers\mac-arm64\node" Link=".playwright\node\darwin-arm64\node" CopyToOutputDirectory="PreserveNewest" Pack="true" PackagePath=".playwright\node\darwin-arm64" />
     <None Include=".drivers\win32_x64\node.exe" Link=".playwright\node\win32_x64\node.exe" CopyToOutputDirectory="PreserveNewest" Pack="true" PackagePath=".playwright\node\win32_x64" />
-    <None Include="Scripts\playwright.sh" Link=".playwright\node\linux-x64\playwright.sh" CopyToOutputDirectory="PreserveNewest" Pack="true" PackagePath=".playwright\node\linux-x64" />
-    <None Include="Scripts\playwright.sh" Link=".playwright\node\linux-arm64\playwright.sh" CopyToOutputDirectory="PreserveNewest" Pack="true" PackagePath=".playwright\node\linux-arm64" />
-    <None Include="Scripts\playwright.sh" Link=".playwright\node\darwin-x64\playwright.sh" CopyToOutputDirectory="PreserveNewest" Pack="true" PackagePath=".playwright\node\darwin-x64" />
-    <None Include="Scripts\playwright.sh" Link=".playwright\node\darwin-arm64\playwright.sh" CopyToOutputDirectory="PreserveNewest" Pack="true" PackagePath=".playwright\node\darwin-arm64" />
-    <None Include="Scripts\playwright.cmd" Link=".playwright\node\win32_x64\playwright.cmd" CopyToOutputDirectory="PreserveNewest" Pack="true" PackagePath=".playwright\node\win32_x64" />
     <None Include="build\playwright.ps1" Link="playwright.ps1" CopyToOutputDirectory="PreserveNewest" />
     <None Include="build\**" Pack="true" PackagePath="buildTransitive" />
     <None Include="build\**" Pack="true" PackagePath="build" />

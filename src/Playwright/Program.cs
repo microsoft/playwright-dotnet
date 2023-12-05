@@ -38,18 +38,18 @@ public class Program
 
     public int Run(string[] args)
     {
-        string pwPath = null;
+        Func<string, string> getArgs;
+        string executablePath;
         try
         {
-            pwPath = Driver.GetExecutablePath();
+            (executablePath, getArgs) = Driver.GetExecutablePath();
         }
         catch
         {
             return PrintError("Microsoft.Playwright assembly was found, but is missing required assets. Please ensure to build your project before running Playwright tool.");
         }
 
-        string allArgs = args != null && args.Length > 0 ? "\"" + string.Join("\" \"", args) + "\"" : string.Empty;
-        var playwrightStartInfo = new ProcessStartInfo(pwPath, allArgs)
+        var playwrightStartInfo = new ProcessStartInfo(executablePath, getArgs(args?.Length > 0 ? "\"" + string.Join("\" \"", args) + "\"" : null))
         {
             UseShellExecute = false,
             // This works after net8.0-preview-4

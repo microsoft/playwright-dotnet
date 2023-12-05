@@ -26,13 +26,10 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.IO.Compression;
-using System.Linq;
 using System.Net.Http;
-using System.Runtime.InteropServices;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Xml;
-using DriverDownloader.Linux;
 using Playwright.Tooling.Options;
 
 namespace Playwright.Tooling;
@@ -136,20 +133,6 @@ internal class DriverDownloader
             }
 
             new ZipArchive(await response.Content.ReadAsStreamAsync().ConfigureAwait(false)).ExtractToDirectory(directory.FullName);
-
-            if (!RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
-            {
-                var executables = new[] { "playwright.sh", "node" }
-                    .Select(f => Path.Combine(directory.FullName, f));
-
-                foreach (string executable in executables)
-                {
-                    if (new FileInfo(executable).Exists && LinuxSysCall.Chmod(executable, LinuxSysCall.ExecutableFilePermissions) != 0)
-                    {
-                        throw new($"Unable to chmod {executable} ({Marshal.GetLastWin32Error()})");
-                    }
-                }
-            }
 
             Console.WriteLine($"Driver for {platform} downloaded");
         }
