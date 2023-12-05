@@ -123,9 +123,8 @@ internal static class Driver
         var cliEntrypoint = Path.Combine(driversPath, ".playwright", "package", "lib", "cli", "cli.js");
         string getArgs(string args)
         {
-            return !string.IsNullOrEmpty(args) ? $"\"{cliEntrypoint}\" \"{args}\"" : cliEntrypoint;
+            return !string.IsNullOrEmpty(args) ? $"\"{cliEntrypoint}\" {args}" : cliEntrypoint;
         }
-        Console.WriteLine(Path.Combine(driversPath, ".playwright", "node", platformId, nodeExecutable));
         return (
             Environment.GetEnvironmentVariable("PLAYWRIGHT_NODEJS_PATH") ?? Path.GetFullPath(Path.Combine(driversPath, ".playwright", "node", platformId, nodeExecutable)),
             getArgs);
