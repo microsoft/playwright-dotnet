@@ -49,7 +49,7 @@ public class Program
             return PrintError("Microsoft.Playwright assembly was found, but is missing required assets. Please ensure to build your project before running Playwright tool.");
         }
 
-        var playwrightStartInfo = new ProcessStartInfo(executablePath, getArgs(string.Join("\" \"", args)))
+        var playwrightStartInfo = new ProcessStartInfo(executablePath, getArgs(args?.Length > 0 ? "\"" + string.Join("\" \"", args) + "\"" : null))
         {
             UseShellExecute = false,
             // This works after net8.0-preview-4

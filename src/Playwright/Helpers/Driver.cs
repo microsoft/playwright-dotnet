@@ -87,7 +87,6 @@ internal static class Driver
 
         // if the above fails, we can assume we're in the nuget registry
         (executableFile, getArgs) = GetPath(assemblyDirectory.Parent.Parent.FullName);
-        Console.Error.WriteLine(executableFile);
         if (File.Exists(executableFile))
         {
             return (executableFile, getArgs);
