@@ -21,7 +21,6 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-using System;
 using System.Collections.Generic;
 using System.Text.Json;
 using System.Threading.Tasks;
@@ -35,13 +34,6 @@ internal class CDPChannel : Channel<CDPSession>
 {
     public CDPChannel(string guid, Connection connection, CDPSession owner) : base(guid, connection, owner)
     {
-    }
-
-    internal event EventHandler<(string EventName, JsonElement? EventParams)>? CDPEvent;
-
-    internal override void OnMessage(string method, JsonElement? serverParams)
-    {
-        CDPEvent?.Invoke(this, (serverParams!.Value.GetProperty("method").ToString(), serverParams.Value.GetProperty("params")));
     }
 
     internal Task DetachAsync()

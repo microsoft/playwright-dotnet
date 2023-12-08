@@ -305,8 +305,7 @@ internal class Connection : IDisposable
                 @object.DisposeOwner(message.Params.Value.TryGetProperty("reason", out var reason) ? reason.GetString() : null);
                 return;
             }
-
-            @object.Channel?.OnMessage(message.Method, message.Params);
+            ((ChannelOwnerBase)@object).OnMessage(message.Method, message.Params);
         }
         catch (Exception ex)
         {

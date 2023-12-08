@@ -41,7 +41,6 @@ internal class ElementHandle : JSHandle, IElementHandle, IChannelOwner<ElementHa
     internal ElementHandle(IChannelOwner parent, string guid, ElementHandleInitializer initializer) : base(parent, guid, initializer)
     {
         _channel = new(guid, parent.Connection, this);
-        _channel.PreviewUpdated += (_, newPreview) => Preview = newPreview;
     }
 
     ChannelBase IChannelOwner.Channel => _channel;
@@ -49,6 +48,16 @@ internal class ElementHandle : JSHandle, IElementHandle, IChannelOwner<ElementHa
     IChannel<ElementHandle> IChannelOwner<ElementHandle>.Channel => _channel;
 
     internal IChannel<ElementHandle> ElementChannel => _channel;
+
+    internal override void OnMessage(string method, JsonElement? serverParams)
+    {
+        switch (method)
+        {
+            case "previewUpdated":
+                Preview = serverParams.Value.GetProperty("preview").ToString();
+                break;
+        }
+    }
 
     public async Task<IElementHandle> WaitForSelectorAsync(string selector, ElementHandleWaitForSelectorOptions options = default)
         => (await _channel.WaitForSelectorAsync(

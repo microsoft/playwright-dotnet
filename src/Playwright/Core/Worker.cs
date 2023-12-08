@@ -24,6 +24,7 @@
 
 using System;
 using System.Runtime.CompilerServices;
+using System.Text.Json;
 using System.Threading.Tasks;
 using Microsoft.Playwright.Helpers;
 using Microsoft.Playwright.Transport;
@@ -41,22 +42,6 @@ internal class Worker : ChannelOwnerBase, IChannelOwner<Worker>, IWorker
     {
         _channel = new(guid, parent.Connection, this);
         _initializer = initializer;
-
-        _channel.Close += (_, _) =>
-        {
-            if (Page != null)
-            {
-                Page._workers.Remove(this);
-            }
-
-            if (Context != null)
-            {
-                Context._serviceWorkers.Remove(this);
-            }
-
-            Close?.Invoke(this, this);
-            ClosedTcs.SetResult(true);
-        };
     }
 
     public event EventHandler<IWorker> Close;
@@ -72,6 +57,32 @@ internal class Worker : ChannelOwnerBase, IChannelOwner<Worker>, IWorker
     internal BrowserContext Context { get; set; }
 
     internal TaskCompletionSource<bool> ClosedTcs { get; } = new();
+
+    internal override void OnMessage(string method, JsonElement? serverParams)
+    {
+        switch (method)
+        {
+            case "close":
+                OnClose();
+                break;
+        }
+    }
+
+    internal void OnClose()
+    {
+        if (Page != null)
+        {
+            Page._workers.Remove(this);
+        }
+
+        if (Context != null)
+        {
+            Context._serviceWorkers.Remove(this);
+        }
+
+        Close?.Invoke(this, this);
+        ClosedTcs.SetResult(true);
+    }
 
     [MethodImpl(MethodImplOptions.NoInlining)]
     public async Task<T> EvaluateAsync<T>(string expression, object arg = null)

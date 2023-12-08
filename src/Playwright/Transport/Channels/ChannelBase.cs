@@ -22,8 +22,6 @@
  * SOFTWARE.
  */
 
-using System.Text.Json;
-
 namespace Microsoft.Playwright.Transport.Channels;
 
 internal class ChannelBase
@@ -37,8 +35,4 @@ internal class ChannelBase
     public string Guid { get; }
 
     public Connection Connection { get; }
-
-    internal virtual void OnMessage(string method, JsonElement? serverParams)
-    {
-    }
 }

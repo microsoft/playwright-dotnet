@@ -26,6 +26,7 @@ using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
+using System.Text.Json;
 using System.Threading.Tasks;
 using Microsoft.Playwright.Helpers;
 using Microsoft.Playwright.Transport.Channels;
@@ -68,6 +69,10 @@ internal class ChannelOwnerBase : IChannelOwner
     internal string Guid { get; set; }
 
     internal IChannelOwner Parent { get; set; }
+
+    internal virtual void OnMessage(string method, JsonElement? serverParams)
+    {
+    }
 
     void IChannelOwner.Adopt(ChannelOwnerBase child)
     {

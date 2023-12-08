@@ -22,7 +22,6 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.Json;
@@ -40,19 +39,7 @@ internal class ElementHandleChannel : JSHandleChannel, IChannel<ElementHandle>
         Object = owner;
     }
 
-    internal event EventHandler<string> PreviewUpdated;
-
     public new ElementHandle Object { get; set; }
-
-    internal override void OnMessage(string method, JsonElement? serverParams)
-    {
-        switch (method)
-        {
-            case "previewUpdated":
-                PreviewUpdated?.Invoke(this, serverParams.Value.GetProperty("preview").ToString());
-                break;
-        }
-    }
 
     internal Task<ElementHandleChannel> WaitForSelectorAsync(string selector, WaitForSelectorState? state, float? timeout, bool? strict)
     {

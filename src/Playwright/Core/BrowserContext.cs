@@ -60,83 +60,6 @@ internal class BrowserContext : ChannelOwnerBase, IChannelOwner<BrowserContext>,
         _browser = parent as Browser;
         _browser?._contexts.Add(this);
         Channel = new(guid, parent.Connection, this);
-        Channel.Close += (_, _) => OnClose();
-        Channel.Console += (_, consoleMessageEvent) =>
-        {
-            var consoleMessage = new ConsoleMessage(consoleMessageEvent);
-            _consoleImpl?.Invoke(this, consoleMessage);
-            if (consoleMessage.Page != null)
-            {
-                (consoleMessage.Page as Page).FireConsole(consoleMessage);
-            }
-        };
-        Channel.Dialog += (_, dialog) =>
-        {
-            bool hasListeners = _dialogImpl?.GetInvocationList().Length > 0 || ((dialog?.Page as Page)?.HasDialogListenersAttached() ?? false);
-            if (!hasListeners)
-            {
-                // Although we do similar handling on the server side, we still need this logic
-                // on the client side due to a possible race condition between two async calls:
-                // a) removing "dialog" listener subscription (client->server)
-                // b) actual "dialog" event (server->client)
-                if ("beforeunload".Equals(dialog.Type, StringComparison.Ordinal))
-                {
-                    dialog.AcceptAsync().IgnoreException();
-                }
-                else
-                {
-                    dialog.DismissAsync().IgnoreException();
-                }
-            }
-            else
-            {
-                _dialogImpl?.Invoke(this, dialog);
-                (dialog.Page as Page)?.FireDialog(dialog);
-            }
-        };
-        Channel.Page += Channel_OnPage;
-        Channel.PageError += (_, e) =>
-        {
-            var pageObject = e.Page?.Object;
-            var parsedError = string.IsNullOrEmpty(e.Error.Error.Stack) ? $"{e.Error.Error.Name}: {e.Error.Error.Message}" : e.Error.Error.Stack;
-            WebError?.Invoke(this, new WebError(pageObject, parsedError));
-            pageObject?.FirePageError(parsedError);
-        };
-        Channel.BindingCall += Channel_BindingCall;
-        Channel.Route += Channel_Route;
-        Channel.RequestFailed += (_, e) =>
-        {
-            e.Request.Failure = e.FailureText;
-            e.Request.SetResponseEndTiming(e.ResponseEndTiming);
-            _requestFailedImpl?.Invoke(this, e.Request);
-            e.Page?.FireRequestFailed(e.Request);
-            e.Response?.ReportFinished(e.FailureText);
-        };
-        Channel.Request += (_, e) =>
-        {
-            _requestImpl?.Invoke(this, e.Request);
-            e.Page?.FireRequest(e.Request);
-        };
-        Channel.RequestFinished += (_, e) =>
-        {
-            e.Request.SetResponseEndTiming(e.ResponseEndTiming);
-            e.Request.Sizes = e.RequestSizes;
-            _requestFinishedImpl?.Invoke(this, e.Request);
-            e.Page?.FireRequestFinished(e.Request);
-            e.Response?.ReportFinished();
-        };
-        Channel.Response += (_, e) =>
-        {
-            _responseImpl?.Invoke(this, e.Response);
-            e.Page?.FireResponse(e.Response);
-        };
-
-        Channel.ServiceWorker += (_, serviceWorker) =>
-        {
-            ((Worker)serviceWorker).Context = this;
-            _serviceWorkers.Add(serviceWorker);
-            ServiceWorker?.Invoke(this, serviceWorker);
-        };
 
         _tracing = initializer.Tracing;
         _request = initializer.RequestContext;
@@ -224,6 +147,117 @@ internal class BrowserContext : ChannelOwnerBase, IChannelOwner<BrowserContext>,
     public IAPIRequestContext APIRequest => _request;
 
     public IReadOnlyList<IWorker> ServiceWorkers => _serviceWorkers;
+
+    internal override void OnMessage(string method, JsonElement? serverParams)
+    {
+        switch (method)
+        {
+            case "close":
+                OnClose();
+                break;
+            case "bindingCall":
+                Channel_BindingCall(
+                    serverParams?.GetProperty("binding").ToObject<BindingCallChannel>(_connection.DefaultJsonSerializerOptions).Object);
+                break;
+            case "dialog":
+                OnDialog(serverParams?.GetProperty("dialog").ToObject<DialogChannel>(_connection.DefaultJsonSerializerOptions).Object);
+                break;
+            case "console":
+                var consoleMessage = new ConsoleMessage(serverParams?.ToObject<BrowserContextConsoleEvent>(_connection.DefaultJsonSerializerOptions));
+                _consoleImpl?.Invoke(this, consoleMessage);
+                if (consoleMessage.Page != null)
+                {
+                    (consoleMessage.Page as Page).FireConsole(consoleMessage);
+                }
+                break;
+            case "route":
+                var route = serverParams?.GetProperty("route").ToObject<RouteChannel>(_connection.DefaultJsonSerializerOptions).Object;
+                Channel_Route(this, route);
+                break;
+            case "page":
+                Channel_OnPage(
+                    this,
+                    serverParams?.GetProperty("page").ToObject<PageChannel>(_connection.DefaultJsonSerializerOptions));
+                break;
+            case "pageError":
+                {
+                    var error = serverParams?.GetProperty("error").ToObject<SerializedError>(_connection.DefaultJsonSerializerOptions);
+                    var pageChannel = serverParams?.GetProperty("page").ToObject<PageChannel>(_connection.DefaultJsonSerializerOptions);
+                    var pageObject = pageChannel?.Object;
+                    var parsedError = string.IsNullOrEmpty(error.Error.Stack) ? $"{error.Error.Name}: {error.Error.Message}" : error.Error.Stack;
+                    WebError?.Invoke(this, new WebError(pageObject, parsedError));
+                    pageObject?.FirePageError(parsedError);
+                    break;
+                }
+            case "serviceWorker":
+                {
+                    var serviceWorker = serverParams?.GetProperty("worker").ToObject<WorkerChannel>(_connection.DefaultJsonSerializerOptions).Object;
+                    ((Worker)serviceWorker).Context = this;
+                    _serviceWorkers.Add(serviceWorker);
+                    ServiceWorker?.Invoke(this, serviceWorker);
+                    break;
+                }
+            case "request":
+                {
+                    var e = serverParams?.ToObject<BrowserContextChannelRequestEventArgs>(_connection.DefaultJsonSerializerOptions);
+                    _requestImpl?.Invoke(this, e.Request);
+                    e.Page?.FireRequest(e.Request);
+                    break;
+                }
+            case "requestFinished":
+                {
+                    var e = serverParams?.ToObject<BrowserContextChannelRequestEventArgs>(_connection.DefaultJsonSerializerOptions);
+                    e.Request.SetResponseEndTiming(e.ResponseEndTiming);
+                    e.Request.Sizes = e.RequestSizes;
+                    _requestFinishedImpl?.Invoke(this, e.Request);
+                    e.Page?.FireRequestFinished(e.Request);
+                    e.Response?.ReportFinished();
+                    break;
+                }
+            case "requestFailed":
+                {
+                    var e = serverParams?.ToObject<BrowserContextChannelRequestEventArgs>(_connection.DefaultJsonSerializerOptions);
+                    e.Request.Failure = e.FailureText;
+                    e.Request.SetResponseEndTiming(e.ResponseEndTiming);
+                    _requestFailedImpl?.Invoke(this, e.Request);
+                    e.Page?.FireRequestFailed(e.Request);
+                    e.Response?.ReportFinished(e.FailureText);
+                }
+                break;
+            case "response":
+                {
+                    var e = serverParams?.ToObject<BrowserContextChannelResponseEventArgs>(_connection.DefaultJsonSerializerOptions);
+                    _responseImpl?.Invoke(this, e.Response);
+                    e.Page?.FireResponse(e.Response);
+                }
+                break;
+        }
+    }
+
+    internal void OnDialog(IDialog dialog)
+    {
+        bool hasListeners = _dialogImpl?.GetInvocationList().Length > 0 || ((dialog?.Page as Page)?.HasDialogListenersAttached() ?? false);
+        if (!hasListeners)
+        {
+            // Although we do similar handling on the server side, we still need this logic
+            // on the client side due to a possible race condition between two async calls:
+            // a) removing "dialog" listener subscription (client->server)
+            // b) actual "dialog" event (server->client)
+            if ("beforeunload".Equals(dialog.Type, StringComparison.Ordinal))
+            {
+                dialog.AcceptAsync().IgnoreException();
+            }
+            else
+            {
+                dialog.DismissAsync().IgnoreException();
+            }
+        }
+        else
+        {
+            _dialogImpl?.Invoke(this, dialog);
+            (dialog.Page as Page)?.FireDialog(dialog);
+        }
+    }
 
     [MethodImpl(MethodImplOptions.NoInlining)]
     public Task AddCookiesAsync(IEnumerable<Cookie> cookies) => Channel.AddCookiesAsync(cookies);
@@ -637,7 +671,7 @@ internal class BrowserContext : ChannelOwnerBase, IChannelOwner<BrowserContext>,
         }
     }
 
-    private void Channel_BindingCall(object sender, BindingCall bindingCall)
+    private void Channel_BindingCall(BindingCall bindingCall)
     {
         if (_bindings.TryGetValue(bindingCall.Name, out var binding))
         {

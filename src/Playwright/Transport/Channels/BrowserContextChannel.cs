@@ -25,7 +25,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text.Json;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Microsoft.Playwright.Core;
@@ -38,87 +37,6 @@ internal class BrowserContextChannel : Channel<BrowserContext>
 {
     public BrowserContextChannel(string guid, Connection connection, BrowserContext owner) : base(guid, connection, owner)
     {
-    }
-
-    internal event EventHandler Close;
-
-    internal event EventHandler<BrowserContextConsoleEvent> Console;
-
-    internal event EventHandler<IDialog> Dialog;
-
-    internal event EventHandler<PageChannel> Page;
-
-    internal event EventHandler<PageChannel> BackgroundPage;
-
-    internal event EventHandler<IWorker> ServiceWorker;
-
-    internal event EventHandler<BindingCall> BindingCall;
-
-    internal event EventHandler<(SerializedError Error, PageChannel Page)> PageError;
-
-    internal event EventHandler<Route> Route;
-
-    internal event EventHandler<BrowserContextChannelRequestEventArgs> Request;
-
-    internal event EventHandler<BrowserContextChannelRequestEventArgs> RequestFinished;
-
-    internal event EventHandler<BrowserContextChannelRequestEventArgs> RequestFailed;
-
-    internal event EventHandler<BrowserContextChannelResponseEventArgs> Response;
-
-    internal override void OnMessage(string method, JsonElement? serverParams)
-    {
-        switch (method)
-        {
-            case "close":
-                Close?.Invoke(this, EventArgs.Empty);
-                break;
-            case "bindingCall":
-                BindingCall?.Invoke(
-                    this,
-                    serverParams?.GetProperty("binding").ToObject<BindingCallChannel>(Connection.DefaultJsonSerializerOptions).Object);
-                break;
-            case "dialog":
-                Dialog?.Invoke(this, serverParams?.GetProperty("dialog").ToObject<DialogChannel>(Connection.DefaultJsonSerializerOptions).Object);
-                break;
-            case "console":
-                Console?.Invoke(this, serverParams?.ToObject<BrowserContextConsoleEvent>(Connection.DefaultJsonSerializerOptions));
-                break;
-            case "route":
-                var route = serverParams?.GetProperty("route").ToObject<RouteChannel>(Connection.DefaultJsonSerializerOptions).Object;
-                Route?.Invoke(this, route);
-                break;
-            case "page":
-                Page?.Invoke(
-                    this,
-                    serverParams?.GetProperty("page").ToObject<PageChannel>(Connection.DefaultJsonSerializerOptions));
-                break;
-            case "pageError":
-                PageError?.Invoke(this, new(serverParams?.GetProperty("error").ToObject<SerializedError>(Connection.DefaultJsonSerializerOptions), serverParams?.GetProperty("page").ToObject<PageChannel>(Connection.DefaultJsonSerializerOptions)));
-                break;
-            case "crBackgroundPage":
-                BackgroundPage?.Invoke(
-                    this,
-                    serverParams?.GetProperty("page").ToObject<PageChannel>(Connection.DefaultJsonSerializerOptions));
-                break;
-            case "serviceWorker":
-                ServiceWorker?.Invoke(
-                    this,
-                    serverParams?.GetProperty("worker").ToObject<WorkerChannel>(Connection.DefaultJsonSerializerOptions).Object);
-                break;
-            case "request":
-                Request?.Invoke(this, serverParams?.ToObject<BrowserContextChannelRequestEventArgs>(Connection.DefaultJsonSerializerOptions));
-                break;
-            case "requestFinished":
-                RequestFinished?.Invoke(this, serverParams?.ToObject<BrowserContextChannelRequestEventArgs>(Connection.DefaultJsonSerializerOptions));
-                break;
-            case "requestFailed":
-                RequestFailed?.Invoke(this, serverParams?.ToObject<BrowserContextChannelRequestEventArgs>(Connection.DefaultJsonSerializerOptions));
-                break;
-            case "response":
-                Response?.Invoke(this, serverParams?.ToObject<BrowserContextChannelResponseEventArgs>(Connection.DefaultJsonSerializerOptions));
-                break;
-        }
     }
 
     internal Task<CDPChannel> NewCDPSessionAsync(Page page)

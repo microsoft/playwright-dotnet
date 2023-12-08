@@ -22,7 +22,6 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.Json;
@@ -40,39 +39,6 @@ internal class FrameChannel : Channel<Frame>
     {
     }
 
-    internal event EventHandler<FrameNavigatedEventArgs> Navigated;
-
-    internal event EventHandler<(WaitUntilState? Add, WaitUntilState? Remove)> LoadState;
-
-    internal override void OnMessage(string method, JsonElement? serverParams)
-    {
-        switch (method)
-        {
-            case "navigated":
-                var e = serverParams?.ToObject<FrameNavigatedEventArgs>(Connection.DefaultJsonSerializerOptions);
-
-                if (serverParams.Value.TryGetProperty("newDocument", out var documentElement))
-                {
-                    e.NewDocument = documentElement.ToObject<NavigateDocument>(Connection.DefaultJsonSerializerOptions);
-                }
-
-                Navigated?.Invoke(this, e);
-                break;
-            case "loadstate":
-                WaitUntilState? add = null;
-                WaitUntilState? remove = null;
-                if (serverParams.Value.TryGetProperty("add", out var addElement))
-                {
-                    add = addElement.ToObject<WaitUntilState>(Connection.DefaultJsonSerializerOptions);
-                }
-                if (serverParams.Value.TryGetProperty("remove", out var removeElement))
-                {
-                    remove = removeElement.ToObject<WaitUntilState>(Connection.DefaultJsonSerializerOptions);
-                }
-                LoadState?.Invoke(this, (add, remove));
-                break;
-        }
-    }
 
     internal Task<ElementHandleChannel> QuerySelectorAsync(string selector, bool? strict)
     {

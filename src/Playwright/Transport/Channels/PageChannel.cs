@@ -22,13 +22,11 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.Json;
 using System.Threading.Tasks;
 using Microsoft.Playwright.Core;
-using Microsoft.Playwright.Helpers;
 using Microsoft.Playwright.Transport.Protocol;
 
 namespace Microsoft.Playwright.Transport.Channels;
@@ -37,78 +35,6 @@ internal class PageChannel : Channel<Page>
 {
     public PageChannel(string guid, Connection connection, Page owner) : base(guid, connection, owner)
     {
-    }
-
-    internal event EventHandler Closed;
-
-    internal event EventHandler Crashed;
-
-    internal event EventHandler<IWebSocket> WebSocket;
-
-    internal event EventHandler<Page> Popup;
-
-    internal event EventHandler<BindingCall> BindingCall;
-
-    internal event EventHandler<Route> Route;
-
-    internal event EventHandler<IFrame> FrameAttached;
-
-    internal event EventHandler<IFrame> FrameDetached;
-
-    internal event EventHandler<(string Url, string SuggestedFilename, ArtifactChannel Artifact)> Download;
-
-    internal event EventHandler<(ElementHandleChannel Element, bool IsMultiple)> FileChooser;
-
-    internal event EventHandler<Worker> Worker;
-
-    internal event EventHandler<Artifact> Video;
-
-    internal override void OnMessage(string method, JsonElement? serverParams)
-    {
-        switch (method)
-        {
-            case "close":
-                Closed?.Invoke(this, EventArgs.Empty);
-                break;
-            case "crash":
-                Crashed?.Invoke(this, EventArgs.Empty);
-                break;
-            case "bindingCall":
-                BindingCall?.Invoke(
-                    this,
-                    serverParams?.GetProperty("binding").ToObject<BindingCallChannel>(Connection.DefaultJsonSerializerOptions).Object);
-                break;
-            case "route":
-                var route = serverParams?.GetProperty("route").ToObject<RouteChannel>(Connection.DefaultJsonSerializerOptions).Object;
-                Route?.Invoke(this, route);
-                break;
-            case "popup":
-                Popup?.Invoke(this, serverParams?.GetProperty("page").ToObject<PageChannel>(Connection.DefaultJsonSerializerOptions).Object);
-                break;
-            case "fileChooser":
-                FileChooser?.Invoke(this, (serverParams.Value.GetProperty("element").ToObject<ElementHandleChannel>(Connection.DefaultJsonSerializerOptions), serverParams.Value.GetProperty("isMultiple").ToObject<bool>(Connection.DefaultJsonSerializerOptions)));
-                break;
-            case "frameAttached":
-                FrameAttached?.Invoke(this, serverParams?.GetProperty("frame").ToObject<FrameChannel>(Connection.DefaultJsonSerializerOptions).Object);
-                break;
-            case "frameDetached":
-                FrameDetached?.Invoke(this, serverParams?.GetProperty("frame").ToObject<FrameChannel>(Connection.DefaultJsonSerializerOptions).Object);
-                break;
-            case "webSocket":
-                WebSocket?.Invoke(this, serverParams?.GetProperty("webSocket").ToObject<WebSocketChannel>(Connection.DefaultJsonSerializerOptions).Object);
-                break;
-            case "download":
-                Download?.Invoke(this, (serverParams.Value.GetProperty("url").ToObject<string>(Connection.DefaultJsonSerializerOptions), serverParams.Value.GetProperty("suggestedFilename").ToObject<string>(Connection.DefaultJsonSerializerOptions), serverParams.Value.GetProperty("artifact").ToObject<ArtifactChannel>(Connection.DefaultJsonSerializerOptions)));
-                break;
-            case "video":
-                Video?.Invoke(this, serverParams?.GetProperty("artifact").ToObject<ArtifactChannel>(Connection.DefaultJsonSerializerOptions).Object);
-                break;
-            case "worker":
-                Worker?.Invoke(
-                    this,
-                    serverParams?.GetProperty("worker").ToObject<WorkerChannel>(Connection.DefaultJsonSerializerOptions).Object);
-                break;
-        }
     }
 
     internal Task SetDefaultTimeoutNoReplyAsync(float timeout)
