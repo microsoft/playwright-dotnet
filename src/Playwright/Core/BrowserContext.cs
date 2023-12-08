@@ -624,9 +624,9 @@ internal class BrowserContext : ChannelOwnerBase, IChannelOwner<BrowserContext>,
         _closeTcs.TrySetResult(true);
     }
 
-    private void Channel_OnPage(object sender, BrowserContextPageEventArgs e)
+    private void Channel_OnPage(object sender, PageChannel pageChannel)
     {
-        var page = e.PageChannel.Object;
+        var page = pageChannel.Object;
         page.Context = this;
         _pages.Add(page);
         Page?.Invoke(this, page);

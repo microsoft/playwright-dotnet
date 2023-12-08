@@ -22,12 +22,11 @@
  * SOFTWARE.
  */
 
-using System;
 using Microsoft.Playwright.Transport.Channels;
 
 namespace Microsoft.Playwright.Core;
 
-internal class FrameNavigatedEventArgs : EventArgs
+internal class FrameNavigatedEventArgs
 {
     public string Name { get; set; }
 
@@ -36,4 +35,9 @@ internal class FrameNavigatedEventArgs : EventArgs
     public string Error { get; set; }
 
     internal NavigateDocument NewDocument { get; set; }
+}
+
+internal class NavigateDocument
+{
+    public RequestChannel Request { get; set; }
 }

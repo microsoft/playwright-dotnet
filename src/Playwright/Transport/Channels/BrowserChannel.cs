@@ -232,5 +232,5 @@ internal class BrowserChannel : Channel<Browser>
     }
 
     internal async Task<string> StopTracingAsync()
-        => (await Connection.SendMessageToServerAsync(Object, "crStopTracing", null).ConfigureAwait(false))?.GetProperty("binary").ToString();
+        => (await Connection.SendMessageToServerAsync(Object, "crStopTracing").ConfigureAwait(false))?.GetProperty("binary").ToString();
 }

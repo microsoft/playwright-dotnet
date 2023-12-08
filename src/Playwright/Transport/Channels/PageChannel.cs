@@ -55,9 +55,9 @@ internal class PageChannel : Channel<Page>
 
     internal event EventHandler<IFrame> FrameDetached;
 
-    internal event EventHandler<PageDownloadEvent> Download;
+    internal event EventHandler<(string Url, string SuggestedFilename, ArtifactChannel Artifact)> Download;
 
-    internal event EventHandler<FileChooserChannelEventArgs> FileChooser;
+    internal event EventHandler<(ElementHandleChannel Element, bool IsMultiple)> FileChooser;
 
     internal event EventHandler<Worker> Worker;
 
@@ -86,7 +86,7 @@ internal class PageChannel : Channel<Page>
                 Popup?.Invoke(this, serverParams?.GetProperty("page").ToObject<PageChannel>(Connection.DefaultJsonSerializerOptions).Object);
                 break;
             case "fileChooser":
-                FileChooser?.Invoke(this, serverParams?.ToObject<FileChooserChannelEventArgs>(Connection.DefaultJsonSerializerOptions));
+                FileChooser?.Invoke(this, (serverParams.Value.GetProperty("element").ToObject<ElementHandleChannel>(Connection.DefaultJsonSerializerOptions), serverParams.Value.GetProperty("isMultiple").ToObject<bool>(Connection.DefaultJsonSerializerOptions)));
                 break;
             case "frameAttached":
                 FrameAttached?.Invoke(this, serverParams?.GetProperty("frame").ToObject<FrameChannel>(Connection.DefaultJsonSerializerOptions).Object);
@@ -98,7 +98,7 @@ internal class PageChannel : Channel<Page>
                 WebSocket?.Invoke(this, serverParams?.GetProperty("webSocket").ToObject<WebSocketChannel>(Connection.DefaultJsonSerializerOptions).Object);
                 break;
             case "download":
-                Download?.Invoke(this, serverParams?.ToObject<PageDownloadEvent>(Connection.DefaultJsonSerializerOptions));
+                Download?.Invoke(this, (serverParams.Value.GetProperty("url").ToObject<string>(Connection.DefaultJsonSerializerOptions), serverParams.Value.GetProperty("suggestedFilename").ToObject<string>(Connection.DefaultJsonSerializerOptions), serverParams.Value.GetProperty("artifact").ToObject<ArtifactChannel>(Connection.DefaultJsonSerializerOptions)));
                 break;
             case "video":
                 Video?.Invoke(this, serverParams?.GetProperty("artifact").ToObject<ArtifactChannel>(Connection.DefaultJsonSerializerOptions).Object);

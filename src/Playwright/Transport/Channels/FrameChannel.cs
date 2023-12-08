@@ -42,7 +42,7 @@ internal class FrameChannel : Channel<Frame>
 
     internal event EventHandler<FrameNavigatedEventArgs> Navigated;
 
-    internal event EventHandler<FrameChannelLoadStateEventArgs> LoadState;
+    internal event EventHandler<(WaitUntilState? Add, WaitUntilState? Remove)> LoadState;
 
     internal override void OnMessage(string method, JsonElement? serverParams)
     {
@@ -59,9 +59,17 @@ internal class FrameChannel : Channel<Frame>
                 Navigated?.Invoke(this, e);
                 break;
             case "loadstate":
-                LoadState?.Invoke(
-                    this,
-                    serverParams?.ToObject<FrameChannelLoadStateEventArgs>(Connection.DefaultJsonSerializerOptions));
+                WaitUntilState? add = null;
+                WaitUntilState? remove = null;
+                if (serverParams.Value.TryGetProperty("add", out var addElement))
+                {
+                    add = addElement.ToObject<WaitUntilState>(Connection.DefaultJsonSerializerOptions);
+                }
+                if (serverParams.Value.TryGetProperty("remove", out var removeElement))
+                {
+                    remove = removeElement.ToObject<WaitUntilState>(Connection.DefaultJsonSerializerOptions);
+                }
+                LoadState?.Invoke(this, (add, remove));
                 break;
         }
     }
@@ -162,7 +170,7 @@ internal class FrameChannel : Channel<Frame>
     internal Task<ElementHandleChannel> FrameElementAsync() => Connection.SendMessageToServerAsync<ElementHandleChannel>(Object, "frameElement");
 
     internal async Task<string> TitleAsync()
-        => (await Connection.SendMessageToServerAsync(Object, "title", null).ConfigureAwait(false))?.GetProperty("value").ToString();
+        => (await Connection.SendMessageToServerAsync(Object, "title").ConfigureAwait(false))?.GetProperty("value").ToString();
 
     internal Task<ElementHandleChannel> WaitForSelectorAsync(string selector, WaitForSelectorState? state, float? timeout, bool? strict, bool? omitReturnValue = default)
     {

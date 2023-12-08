@@ -37,12 +37,11 @@ internal class CDPChannel : Channel<CDPSession>
     {
     }
 
-    internal event EventHandler<CDPChannelEventArgs>? CDPEvent;
+    internal event EventHandler<(string EventName, JsonElement? EventParams)>? CDPEvent;
 
     internal override void OnMessage(string method, JsonElement? serverParams)
     {
-        var eventParams = serverParams!.Value.Deserialize<CDPChannelEventArgs>();
-        CDPEvent?.Invoke(this, new CDPChannelEventArgs { EventName = eventParams?.EventName, EventParams = eventParams?.EventParams });
+        CDPEvent?.Invoke(this, (serverParams!.Value.GetProperty("method").ToString(), serverParams.Value.GetProperty("params")));
     }
 
     internal Task DetachAsync()
