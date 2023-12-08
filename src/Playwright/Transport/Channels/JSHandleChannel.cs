@@ -70,7 +70,7 @@ internal class JSHandleChannel : Channel<JSHandle>
             });
 
     internal async Task<List<JSElementProperty>> GetPropertiesAsync()
-        => (await Connection.SendMessageToServerAsync(Object, "getPropertyList", null).ConfigureAwait(false))?
+        => (await Connection.SendMessageToServerAsync(Object, "getPropertyList").ConfigureAwait(false))?
             .GetProperty("properties").ToObject<List<JSElementProperty>>(Connection.DefaultJsonSerializerOptions);
 
     internal class JSElementProperty

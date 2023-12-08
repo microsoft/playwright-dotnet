@@ -46,9 +46,9 @@ internal class BrowserContextChannel : Channel<BrowserContext>
 
     internal event EventHandler<IDialog> Dialog;
 
-    internal event EventHandler<BrowserContextPageEventArgs> Page;
+    internal event EventHandler<PageChannel> Page;
 
-    internal event EventHandler<BrowserContextPageEventArgs> BackgroundPage;
+    internal event EventHandler<PageChannel> BackgroundPage;
 
     internal event EventHandler<IWorker> ServiceWorker;
 
@@ -91,7 +91,7 @@ internal class BrowserContextChannel : Channel<BrowserContext>
             case "page":
                 Page?.Invoke(
                     this,
-                    new() { PageChannel = serverParams?.GetProperty("page").ToObject<PageChannel>(Connection.DefaultJsonSerializerOptions) });
+                    serverParams?.GetProperty("page").ToObject<PageChannel>(Connection.DefaultJsonSerializerOptions));
                 break;
             case "pageError":
                 PageError?.Invoke(this, new(serverParams?.GetProperty("error").ToObject<SerializedError>(Connection.DefaultJsonSerializerOptions), serverParams?.GetProperty("page").ToObject<PageChannel>(Connection.DefaultJsonSerializerOptions)));
@@ -99,7 +99,7 @@ internal class BrowserContextChannel : Channel<BrowserContext>
             case "crBackgroundPage":
                 BackgroundPage?.Invoke(
                     this,
-                    new() { PageChannel = serverParams?.GetProperty("page").ToObject<PageChannel>(Connection.DefaultJsonSerializerOptions) });
+                    serverParams?.GetProperty("page").ToObject<PageChannel>(Connection.DefaultJsonSerializerOptions));
                 break;
             case "serviceWorker":
                 ServiceWorker?.Invoke(

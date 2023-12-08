@@ -228,7 +228,7 @@ internal class ElementHandleChannel : JSHandleChannel, IChannel<ElementHandle>
 
     internal async Task<ElementHandleBoundingBoxResult> BoundingBoxAsync()
     {
-        var result = (await Connection.SendMessageToServerAsync(Object, "boundingBox", null).ConfigureAwait(false)).Value;
+        var result = (await Connection.SendMessageToServerAsync(Object, "boundingBox").ConfigureAwait(false)).Value;
 
         if (result.TryGetProperty("value", out var value))
         {
@@ -347,19 +347,19 @@ internal class ElementHandleChannel : JSHandleChannel, IChannel<ElementHandle>
     }
 
     internal async Task<bool> IsVisibleAsync()
-        => (await Connection.SendMessageToServerAsync(Object, "isVisible", null).ConfigureAwait(false))?.GetProperty("value").GetBoolean() ?? default;
+        => (await Connection.SendMessageToServerAsync(Object, "isVisible").ConfigureAwait(false))?.GetProperty("value").GetBoolean() ?? default;
 
     internal async Task<bool> IsHiddenAsync()
-        => (await Connection.SendMessageToServerAsync(Object, "isHidden", null).ConfigureAwait(false))?.GetProperty("value").GetBoolean() ?? default;
+        => (await Connection.SendMessageToServerAsync(Object, "isHidden").ConfigureAwait(false))?.GetProperty("value").GetBoolean() ?? default;
 
     internal async Task<bool> IsEnabledAsync()
-        => (await Connection.SendMessageToServerAsync(Object, "isEnabled", null).ConfigureAwait(false))?.GetProperty("value").GetBoolean() ?? default;
+        => (await Connection.SendMessageToServerAsync(Object, "isEnabled").ConfigureAwait(false))?.GetProperty("value").GetBoolean() ?? default;
 
     internal async Task<bool> IsEditableAsync()
-        => (await Connection.SendMessageToServerAsync(Object, "isEditable", null).ConfigureAwait(false))?.GetProperty("value").GetBoolean() ?? default;
+        => (await Connection.SendMessageToServerAsync(Object, "isEditable").ConfigureAwait(false))?.GetProperty("value").GetBoolean() ?? default;
 
     internal async Task<bool> IsDisabledAsync()
-        => (await Connection.SendMessageToServerAsync(Object, "isDisabled", null).ConfigureAwait(false))?.GetProperty("value").GetBoolean() ?? default;
+        => (await Connection.SendMessageToServerAsync(Object, "isDisabled").ConfigureAwait(false))?.GetProperty("value").GetBoolean() ?? default;
 
     internal async Task<string> InputValueAsync(float? timeout)
     {
@@ -372,7 +372,7 @@ internal class ElementHandleChannel : JSHandleChannel, IChannel<ElementHandle>
     }
 
     internal async Task<bool> IsCheckedAsync()
-        => (await Connection.SendMessageToServerAsync(Object, "isChecked", null).ConfigureAwait(false))?.GetProperty("value").GetBoolean() ?? default;
+        => (await Connection.SendMessageToServerAsync(Object, "isChecked").ConfigureAwait(false))?.GetProperty("value").GetBoolean() ?? default;
 
     internal Task CheckAsync(Position position, float? timeout, bool? force, bool? noWaitAfter, bool? trial)
     {

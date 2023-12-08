@@ -22,12 +22,11 @@
  * SOFTWARE.
  */
 
-using System;
 using Microsoft.Playwright.Core;
 
 namespace Microsoft.Playwright.Transport.Channels;
 
-internal class BrowserContextChannelRequestEventArgs : EventArgs
+internal class BrowserContextChannelRequestEventArgs
 {
     public Page Page { get; set; }
 

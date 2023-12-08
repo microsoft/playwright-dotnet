@@ -56,11 +56,11 @@ internal class CDPSession : ChannelOwnerBase, ICDPSession, IChannelOwner<CDPSess
     public Task<JsonElement?> SendAsync(string method, Dictionary<string, object>? args = null)
         => _channel.SendAsync(method, args);
 
-    private void OnCDPEvent(object sender, CDPChannelEventArgs e)
+    private void OnCDPEvent(object sender, (string Name, JsonElement? Params) @event)
     {
-        if (_cdpSessionEvents.TryGetValue(e.EventName, out CDPSessionEvent cdpNamedEvent))
+        if (_cdpSessionEvents.TryGetValue(@event.Name, out var cdpNamedEvent))
         {
-            cdpNamedEvent.RaiseEvent(e.EventParams);
+            cdpNamedEvent.RaiseEvent(@event.Params);
         }
     }
 
@@ -73,7 +73,7 @@ internal class CDPSession : ChannelOwnerBase, ICDPSession, IChannelOwner<CDPSess
         }
         else
         {
-            cdpNamedEvent = new CDPSessionEvent(eventName);
+            cdpNamedEvent = new(eventName);
             _cdpSessionEvents.Add(eventName, cdpNamedEvent);
             return cdpNamedEvent;
         }
