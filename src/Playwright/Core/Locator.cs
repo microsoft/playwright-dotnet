@@ -32,6 +32,7 @@ using System.Text.Json;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Microsoft.Playwright.Helpers;
+using Microsoft.Playwright.Transport.Channels;
 using Microsoft.Playwright.Transport.Protocol;
 
 namespace Microsoft.Playwright.Core;
@@ -228,7 +229,13 @@ internal class Locator : ILocator
         => _frame.FocusAsync(_selector, ConvertOptions<FrameFocusOptions>(options));
 
     public Task BlurAsync(LocatorBlurOptions options = null)
-        => _frame._channel.BlurAsync(_selector, true, options?.Timeout);
+        => _frame.SendMessageToServerAsync(
+            "blur",
+            new Dictionary<string, object>
+            {
+                ["selector"] = _selector,
+                ["options"] = options,
+            });
 
     public Task<int> CountAsync()
         => _frame.QueryCountAsync(_selector);
@@ -335,12 +342,16 @@ internal class Locator : ILocator
         => await _frame.EvalOnSelectorAllAsync<string[]>(_selector, "ee => ee.map(e => e.textContent || '')").ConfigureAwait(false);
 
     public Task WaitForAsync(LocatorWaitForOptions options = null)
-        => _frame._channel.WaitForSelectorAsync(
-            selector: _selector,
-            strict: true,
-            omitReturnValue: true,
-            state: options?.State,
-            timeout: options?.Timeout);
+    {
+        return _frame.SendMessageToServerAsync("waitForSelector", new Dictionary<string, object>
+        {
+            ["selector"] = _selector,
+            ["timeout"] = options?.Timeout,
+            ["state"] = options?.State,
+            ["strict"] = true,
+            ["omitReturnValue"] = true,
+        });
+    }
 
     internal Task<FrameExpectResult> ExpectAsync(string expression, FrameExpectOptions options = null)
         => _frame.ExpectAsync(
@@ -382,7 +393,13 @@ internal class Locator : ILocator
 
         return this._frame.WrapApiCallAsync(async () =>
         {
-            var result = await this._frame._channel.WaitForSelectorAsync(this._selector, state: WaitForSelectorState.Attached, strict: true, timeout: timeout).ConfigureAwait(false);
+            var result = await _frame.SendMessageToServerAsync<ElementHandleChannel>("waitForSelector", new Dictionary<string, object>
+            {
+                ["selector"] = this._selector,
+                ["state"] = WaitForSelectorState.Attached,
+                ["timeout"] = timeout,
+                ["strict"] = true,
+            }).ConfigureAwait(false);
             var handle = result?.Object;
             if (handle == null)
             {
