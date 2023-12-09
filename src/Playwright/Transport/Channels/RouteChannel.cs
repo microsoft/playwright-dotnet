@@ -22,12 +22,7 @@
  * SOFTWARE.
  */
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.Playwright.Core;
-using Microsoft.Playwright.Transport.Protocol;
 
 namespace Microsoft.Playwright.Transport.Channels;
 
@@ -36,47 +31,4 @@ internal class RouteChannel : Channel<Route>
     public RouteChannel(string guid, Connection connection, Route owner) : base(guid, connection, owner)
     {
     }
-
-    public Task AbortAsync(string requestUrl, string errorCode)
-        => Connection.SendMessageToServerAsync(
-            Object,
-            "abort",
-            new Dictionary<string, object>
-            {
-                ["requestUrl"] = requestUrl,
-                ["errorCode"] = string.IsNullOrEmpty(errorCode) ? RequestAbortErrorCode.Failed : errorCode,
-            });
-
-    public Task FulfillAsync(Dictionary<string, object> args)
-        => Connection.SendMessageToServerAsync(
-            Object,
-            "fulfill",
-            args);
-
-    public Task ContinueAsync(string requestUrl, string url, string method, byte[] postData, IEnumerable<KeyValuePair<string, string>> headers, bool isFallback)
-    {
-        var args = new Dictionary<string, object>
-        {
-            ["requestUrl"] = requestUrl,
-            ["url"] = url,
-            ["method"] = method,
-            ["postData"] = postData != null ? Convert.ToBase64String(postData) : null,
-            ["headers"] = headers?.Select(kv => new HeaderEntry { Name = kv.Key, Value = kv.Value }).ToArray(),
-            ["isFallback"] = isFallback,
-        };
-
-        return Connection.SendMessageToServerAsync(
-            Object,
-            "continue",
-            args);
-    }
-
-    internal Task RedirectNavigationRequestAsync(string url) =>
-        Connection.SendMessageToServerAsync(
-            Object,
-            "redirectNavigationRequest",
-            new Dictionary<string, object>
-            {
-                ["url"] = url,
-            });
 }

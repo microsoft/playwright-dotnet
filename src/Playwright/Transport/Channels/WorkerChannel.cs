@@ -22,11 +22,7 @@
  * SOFTWARE.
  */
 
-using System.Collections.Generic;
-using System.Text.Json;
-using System.Threading.Tasks;
 using Microsoft.Playwright.Core;
-using Microsoft.Playwright.Helpers;
 
 namespace Microsoft.Playwright.Transport.Channels;
 
@@ -35,34 +31,4 @@ internal class WorkerChannel : Channel<Worker>
     public WorkerChannel(string guid, Connection connection, Worker owner) : base(guid, connection, owner)
     {
     }
-
-    internal async Task<JsonElement> EvaluateExpressionAsync(
-        string expression,
-        bool? isFunction,
-        object arg)
-            => (await Connection.SendMessageToServerAsync<JsonElement>(
-                Object,
-                "evaluateExpression",
-                new Dictionary<string, object>
-                {
-                    ["expression"] = expression,
-                    ["isFunction"] = isFunction,
-                    ["arg"] = arg,
-                })
-                .ConfigureAwait(false)).GetProperty("value");
-
-    internal async Task<JSHandle> EvaluateExpressionHandleAsync(
-        string expression,
-        bool? isFunction,
-        object arg)
-        => (await Connection.SendMessageToServerAsync<JsonElement>(
-            Object,
-            "evaluateExpressionHandle",
-            new Dictionary<string, object>
-            {
-                ["expression"] = expression,
-                ["isFunction"] = isFunction,
-                ["arg"] = arg,
-            })
-            .ConfigureAwait(false)).GetObject<JSHandle>("handle", Connection);
 }

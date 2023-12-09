@@ -21,9 +21,6 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-using System.Collections.Generic;
-using System.Text.Json;
-using System.Threading.Tasks;
 using Microsoft.Playwright.Core;
 
 #nullable enable
@@ -34,27 +31,6 @@ internal class CDPChannel : Channel<CDPSession>
 {
     public CDPChannel(string guid, Connection connection, CDPSession owner) : base(guid, connection, owner)
     {
-    }
-
-    internal Task DetachAsync()
-    {
-        return Connection.SendMessageToServerAsync(
-           Object,
-           "detach");
-    }
-
-    internal async Task<JsonElement?> SendAsync(string method, Dictionary<string, object>? args = null)
-    {
-        var newArgs = new Dictionary<string, object>() { { "method", method } };
-        if (args != null)
-        {
-            newArgs["params"] = args;
-        }
-        var result = await Connection.SendMessageToServerAsync(
-           Object,
-           "send",
-           newArgs).ConfigureAwait(false);
-        return result?.GetProperty("result");
     }
 }
 #nullable disable

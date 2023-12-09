@@ -136,4 +136,15 @@ internal class ChannelOwnerBase : IChannelOwner
             }),
             true).IgnoreException();
     }
+
+    internal Task<JsonElement?> SendMessageToServerAsync(
+        string method,
+        Dictionary<string, object> args = null,
+        bool keepNulls = false)
+        => SendMessageToServerAsync<JsonElement?>(method, args, keepNulls);
+
+    internal Task<T> SendMessageToServerAsync<T>(
+        string method,
+        Dictionary<string, object> args = null,
+        bool keepNulls = false) => _connection.SendMessageToServerAsync<T>(this, method, args, keepNulls);
 }

@@ -23,6 +23,7 @@
  */
 
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Runtime.CompilerServices;
 using System.Threading;
@@ -48,13 +49,22 @@ internal class Stream : ChannelOwnerBase, IChannelOwner<Stream>, IAsyncDisposabl
     public StreamImpl StreamImpl => new(this);
 
     [MethodImpl(MethodImplOptions.NoInlining)]
-    public Task<byte[]> ReadAsync(int size) => Channel.ReadAsync(size);
+    public async Task<byte[]> ReadAsync(int size)
+    {
+        var response = await SendMessageToServerAsync(
+            "read",
+            new Dictionary<string, object>
+            {
+                ["size"] = size,
+            }).ConfigureAwait(false);
+        return response.Value.GetProperty("binary").GetBytesFromBase64();
+    }
 
     [MethodImpl(MethodImplOptions.NoInlining)]
     public ValueTask DisposeAsync() => new ValueTask(CloseAsync());
 
     [MethodImpl(MethodImplOptions.NoInlining)]
-    public Task CloseAsync() => Channel.CloseAsync();
+    public Task CloseAsync() => SendMessageToServerAsync("close");
 }
 
 internal class StreamImpl : System.IO.Stream

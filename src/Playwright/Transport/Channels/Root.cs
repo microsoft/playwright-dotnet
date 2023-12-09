@@ -22,27 +22,11 @@
  * SOFTWARE.
  */
 
-using System.Collections.Generic;
-using System.Threading.Tasks;
-using Microsoft.Playwright.Core;
-using Microsoft.Playwright.Helpers;
-
 namespace Microsoft.Playwright.Transport.Channels;
 
 internal class Root : ChannelOwnerBase
 {
     internal Root(IChannelOwner parent, Connection connection, string guid) : base(parent, connection, guid)
     {
-    }
-
-    internal async Task<PlaywrightImpl> InitializeAsync()
-    {
-        var args = new Dictionary<string, object>
-        {
-            ["sdkLanguage"] = "csharp",
-        };
-
-        var jsonElement = await _connection.SendMessageToServerAsync(this, "initialize", args).ConfigureAwait(false);
-        return jsonElement.GetObject<PlaywrightImpl>("playwright", _connection);
     }
 }

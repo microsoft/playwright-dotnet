@@ -23,6 +23,7 @@
  */
 
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Runtime.CompilerServices;
 using System.Threading;
@@ -48,13 +49,18 @@ internal class WritableStream : ChannelOwnerBase, IChannelOwner<WritableStream>,
     public WritableStreamImpl WritableStreamImpl => new(this);
 
     [MethodImpl(MethodImplOptions.NoInlining)]
-    public Task WriteAsync(string binary) => Channel.WriteAsync(binary);
+    public Task WriteAsync(string binary) => SendMessageToServerAsync(
+            "write",
+            new Dictionary<string, object>
+            {
+                ["binary"] = binary,
+            });
 
     [MethodImpl(MethodImplOptions.NoInlining)]
     public ValueTask DisposeAsync() => new ValueTask(CloseAsync());
 
     [MethodImpl(MethodImplOptions.NoInlining)]
-    public Task CloseAsync() => Channel.CloseAsync();
+    public Task CloseAsync() => SendMessageToServerAsync("close");
 }
 
 internal class WritableStreamImpl : System.IO.Stream

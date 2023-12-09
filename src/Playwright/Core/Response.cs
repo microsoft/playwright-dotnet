@@ -28,6 +28,7 @@ using System.Runtime.CompilerServices;
 using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
+using Microsoft.Playwright.Helpers;
 using Microsoft.Playwright.Transport;
 using Microsoft.Playwright.Transport.Channels;
 using Microsoft.Playwright.Transport.Protocol;
@@ -77,7 +78,7 @@ internal class Response : ChannelOwnerBase, IChannelOwner<Response>, IResponse
         => (await GetRawHeadersAsync().ConfigureAwait(false)).Headers;
 
     [MethodImpl(MethodImplOptions.NoInlining)]
-    public Task<byte[]> BodyAsync() => _channel.GetBodyAsync();
+    public async Task<byte[]> BodyAsync() => (await SendMessageToServerAsync("body").ConfigureAwait(false))?.GetProperty("binary").GetBytesFromBase64();
 
     [MethodImpl(MethodImplOptions.NoInlining)]
     public async Task<string> FinishedAsync()
@@ -114,10 +115,12 @@ internal class Response : ChannelOwnerBase, IChannelOwner<Response>, IResponse
         => JsonSerializer.Deserialize<T>(await BodyAsync().ConfigureAwait(false));
 
     [MethodImpl(MethodImplOptions.NoInlining)]
-    public Task<ResponseSecurityDetailsResult> SecurityDetailsAsync() => _channel.SecurityDetailsAsync();
+    public async Task<ResponseSecurityDetailsResult> SecurityDetailsAsync() => (await SendMessageToServerAsync("securityDetails").ConfigureAwait(false))
+            ?.GetProperty("value").ToObject<ResponseSecurityDetailsResult>(_connection.DefaultJsonSerializerOptions);
 
     [MethodImpl(MethodImplOptions.NoInlining)]
-    public Task<ResponseServerAddrResult> ServerAddrAsync() => _channel.ServerAddrAsync();
+    public async Task<ResponseServerAddrResult> ServerAddrAsync() => (await SendMessageToServerAsync("serverAddr").ConfigureAwait(false))
+            ?.GetProperty("value").ToObject<ResponseServerAddrResult>(_connection.DefaultJsonSerializerOptions);
 
     [MethodImpl(MethodImplOptions.NoInlining)]
     public async Task<string> TextAsync()
@@ -143,7 +146,6 @@ internal class Response : ChannelOwnerBase, IChannelOwner<Response>, IResponse
 
     private async Task<RawHeaders> GetRawHeadersTaskAsync()
     {
-        var headers = await _channel.GetRawHeadersAsync().ConfigureAwait(false);
-        return new(headers);
+        return new((await SendMessageToServerAsync("rawResponseHeaders").ConfigureAwait(false))?.GetProperty("headers").ToObject<List<NameValue>>());
     }
 }
