@@ -23,6 +23,8 @@
  */
 
 using System;
+using System.Text.Json;
+using Microsoft.Playwright.Helpers;
 using Microsoft.Playwright.Transport;
 using Microsoft.Playwright.Transport.Channels;
 using Microsoft.Playwright.Transport.Protocol;
@@ -31,6 +33,7 @@ namespace Microsoft.Playwright.Core;
 
 internal class WebSocket : ChannelOwnerBase, IChannelOwner<WebSocket>, IWebSocket
 {
+    private const int OpcodeBase64 = 2;
     private readonly WebSocketChannel _channel;
     private readonly WebSocketInitializer _initializer;
 
@@ -38,15 +41,6 @@ internal class WebSocket : ChannelOwnerBase, IChannelOwner<WebSocket>, IWebSocke
     {
         _channel = new(guid, parent.Connection, this);
         _initializer = initializer;
-
-        _channel.Close += (_, _) =>
-        {
-            IsClosed = true;
-            Close?.Invoke(this, this);
-        };
-        _channel.FrameReceived += (_, e) => FrameReceived?.Invoke(this, e);
-        _channel.FrameSent += (_, e) => FrameSent?.Invoke(this, e);
-        _channel.SocketError += (_, e) => SocketError?.Invoke(this, e);
     }
 
     public event EventHandler<IWebSocket> Close;
@@ -64,4 +58,48 @@ internal class WebSocket : ChannelOwnerBase, IChannelOwner<WebSocket>, IWebSocke
     public string Url => _initializer.Url;
 
     public bool IsClosed { get; internal set; }
+
+    internal override void OnMessage(string method, JsonElement? serverParams)
+    {
+        bool IsTextOrBinaryFrame(out int opcode)
+        {
+            opcode = serverParams?.GetProperty("opcode").ToObject<int>() ?? 0;
+            return opcode != 1 && opcode != 2;
+        }
+
+        int opcode;
+        switch (method)
+        {
+            case "close":
+                IsClosed = true;
+                Close?.Invoke(this, this);
+                break;
+            case "frameSent":
+                if (IsTextOrBinaryFrame(out opcode))
+                {
+                    break;
+                }
+
+                FrameSent?.Invoke(
+                    this,
+                    new WebSocketFrame(
+                        serverParams?.GetProperty("data").ToObject<string>(),
+                        opcode == OpcodeBase64));
+                break;
+            case "frameReceived":
+                if (IsTextOrBinaryFrame(out opcode))
+                {
+                    break;
+                }
+                FrameReceived?.Invoke(
+                    this,
+                    new WebSocketFrame(
+                        serverParams?.GetProperty("data").ToObject<string>(),
+                        opcode == OpcodeBase64));
+                break;
+            case "socketError":
+                SocketError?.Invoke(this, serverParams?.GetProperty("error").ToObject<string>());
+                break;
+        }
+    }
 }

@@ -41,13 +41,21 @@ internal class CDPSession : ChannelOwnerBase, ICDPSession, IChannelOwner<CDPSess
     public CDPSession(IChannelOwner parent, string guid) : base(parent, guid)
     {
         _channel = new(guid, parent.Connection, this);
-
-        _channel.CDPEvent += OnCDPEvent;
     }
 
     ChannelBase IChannelOwner.Channel => _channel;
 
     IChannel<CDPSession> IChannelOwner<CDPSession>.Channel => _channel;
+
+    internal override void OnMessage(string method, JsonElement? serverParams)
+    {
+        switch (method)
+        {
+            case "event":
+                OnCDPEvent(serverParams!.Value.GetProperty("method").ToString(), serverParams.Value.GetProperty("params"));
+                break;
+        }
+    }
 
     [MethodImpl(MethodImplOptions.NoInlining)]
     public Task DetachAsync() => _channel.DetachAsync();
@@ -56,11 +64,11 @@ internal class CDPSession : ChannelOwnerBase, ICDPSession, IChannelOwner<CDPSess
     public Task<JsonElement?> SendAsync(string method, Dictionary<string, object>? args = null)
         => _channel.SendAsync(method, args);
 
-    private void OnCDPEvent(object sender, (string Name, JsonElement? Params) @event)
+    private void OnCDPEvent(string name, JsonElement? @params)
     {
-        if (_cdpSessionEvents.TryGetValue(@event.Name, out var cdpNamedEvent))
+        if (_cdpSessionEvents.TryGetValue(name, out var cdpNamedEvent))
         {
-            cdpNamedEvent.RaiseEvent(@event.Params);
+            cdpNamedEvent.RaiseEvent(@params);
         }
     }
 

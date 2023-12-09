@@ -24,7 +24,9 @@
 
 using System;
 using System.Runtime.CompilerServices;
+using System.Text.Json;
 using System.Threading.Tasks;
+using Microsoft.Playwright.Helpers;
 using Microsoft.Playwright.Transport;
 using Microsoft.Playwright.Transport.Channels;
 using Microsoft.Playwright.Transport.Protocol;
@@ -40,8 +42,6 @@ internal class JsonPipe : ChannelOwnerBase, IChannelOwner<JsonPipe>
     {
         _channel = new(guid, parent.Connection, this);
         _initializer = initializer;
-        _channel.Closed += (_, e) => Closed.Invoke(this, e);
-        _channel.Message += (_, e) => Message.Invoke(this, e);
     }
 
     public event EventHandler<PlaywrightServerMessage> Message;
@@ -51,6 +51,26 @@ internal class JsonPipe : ChannelOwnerBase, IChannelOwner<JsonPipe>
     ChannelBase IChannelOwner.Channel => _channel;
 
     IChannel<JsonPipe> IChannelOwner<JsonPipe>.Channel => _channel;
+
+    internal override void OnMessage(string method, JsonElement? serverParams)
+    {
+        switch (method)
+        {
+            case "closed":
+                if (serverParams.Value.TryGetProperty("error", out var error))
+                {
+                    Closed?.Invoke(this, error.ToObject<SerializedError>(_connection.DefaultJsonSerializerOptions));
+                }
+                else
+                {
+                    Closed?.Invoke(this, null);
+                }
+                break;
+            case "message":
+                Message?.Invoke(this, serverParams?.GetProperty("message").ToObject<PlaywrightServerMessage>(_connection.DefaultJsonSerializerOptions));
+                break;
+        }
+    }
 
     [MethodImpl(MethodImplOptions.NoInlining)]
     public Task CloseAsync() => _channel.CloseAsync();

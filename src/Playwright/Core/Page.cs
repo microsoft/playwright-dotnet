@@ -76,24 +76,6 @@ internal class Page : ChannelOwnerBase, IChannelOwner<Page>, IPage
         _touchscreen = new Touchscreen(_channel);
         _mouse = new Mouse(_channel);
         APIRequest = Context._request;
-        _channel.Closed += (_, _) => OnClose();
-        _channel.Crashed += Channel_Crashed;
-        _channel.Popup += (_, page) => Popup?.Invoke(this, page);
-        _channel.WebSocket += (_, e) => WebSocket?.Invoke(this, e);
-        _channel.BindingCall += Channel_BindingCall;
-        _channel.Route += Channel_Route;
-        _channel.FrameAttached += Channel_FrameAttached;
-        _channel.FrameDetached += Channel_FrameDetached;
-        _channel.Download += (_, e) => Download?.Invoke(this, new Download(this, e.Url, e.SuggestedFilename, e.Artifact.Object));
-        _channel.Video += (_, artifact) => ForceVideo().ArtifactReady(artifact);
-
-        _channel.FileChooser += (_, e) => _fileChooserImpl?.Invoke(this, new FileChooser(this, e.Element.Object, e.IsMultiple));
-        _channel.Worker += (_, worker) =>
-        {
-            _workers.Add(worker);
-            worker.Page = this;
-            Worker?.Invoke(this, worker);
-        };
 
         _initializer = initializer;
 
@@ -250,6 +232,55 @@ internal class Page : ChannelOwnerBase, IChannelOwner<Page>, IPage
     internal TaskCompletionSource<bool> ClosedOrCrashedTcs { get; } = new();
 
     public IAPIRequestContext APIRequest { get; }
+
+    internal override void OnMessage(string method, JsonElement? serverParams)
+    {
+        switch (method)
+        {
+            case "close":
+                OnClose();
+                break;
+            case "crash":
+                Channel_Crashed();
+                break;
+            case "bindingCall":
+                Channel_BindingCall(
+                    this,
+                    serverParams?.GetProperty("binding").ToObject<BindingCallChannel>(_connection.DefaultJsonSerializerOptions).Object);
+                break;
+            case "route":
+                var route = serverParams?.GetProperty("route").ToObject<RouteChannel>(_connection.DefaultJsonSerializerOptions).Object;
+                Channel_Route(this, route);
+                break;
+            case "popup":
+                Popup?.Invoke(this, serverParams?.GetProperty("page").ToObject<PageChannel>(_connection.DefaultJsonSerializerOptions).Object);
+                break;
+            case "fileChooser":
+                _fileChooserImpl?.Invoke(this, new FileChooser(this, serverParams.Value.GetProperty("element").ToObject<ElementHandleChannel>(_connection.DefaultJsonSerializerOptions).Object, serverParams.Value.GetProperty("isMultiple").ToObject<bool>(_connection.DefaultJsonSerializerOptions)));
+                break;
+            case "frameAttached":
+                Channel_FrameAttached(this, serverParams?.GetProperty("frame").ToObject<FrameChannel>(_connection.DefaultJsonSerializerOptions).Object);
+                break;
+            case "frameDetached":
+                Channel_FrameDetached(this, serverParams?.GetProperty("frame").ToObject<FrameChannel>(_connection.DefaultJsonSerializerOptions).Object);
+                break;
+            case "webSocket":
+                WebSocket?.Invoke(this, serverParams?.GetProperty("webSocket").ToObject<WebSocketChannel>(_connection.DefaultJsonSerializerOptions).Object);
+                break;
+            case "download":
+                Download?.Invoke(this, new Download(this, serverParams.Value.GetProperty("url").ToObject<string>(_connection.DefaultJsonSerializerOptions), serverParams.Value.GetProperty("suggestedFilename").ToObject<string>(_connection.DefaultJsonSerializerOptions), serverParams.Value.GetProperty("artifact").ToObject<ArtifactChannel>(_connection.DefaultJsonSerializerOptions).Object));
+                break;
+            case "video":
+                ForceVideo().ArtifactReady(serverParams?.GetProperty("artifact").ToObject<ArtifactChannel>(_connection.DefaultJsonSerializerOptions).Object);
+                break;
+            case "worker":
+                var worker = serverParams?.GetProperty("worker").ToObject<WorkerChannel>(_connection.DefaultJsonSerializerOptions).Object;
+                _workers.Add(worker);
+                worker.Page = this;
+                Worker?.Invoke(this, worker);
+                break;
+        }
+    }
 
     [MethodImpl(MethodImplOptions.NoInlining)]
     public IFrame Frame(string name)
@@ -1188,7 +1219,7 @@ internal class Page : ChannelOwnerBase, IChannelOwner<Page>, IPage
         Close?.Invoke(this, this);
     }
 
-    private void Channel_Crashed(object sender, EventArgs e)
+    private void Channel_Crashed()
     {
         Crash?.Invoke(this, this);
     }

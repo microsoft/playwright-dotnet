@@ -25,6 +25,7 @@
 using System;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
+using System.Text.Json;
 using System.Threading.Tasks;
 using Microsoft.Playwright.Transport;
 using Microsoft.Playwright.Transport.Channels;
@@ -44,7 +45,6 @@ internal class Browser : ChannelOwnerBase, IChannelOwner<Browser>, IBrowser
     {
         Channel = new(guid, parent.Connection, this);
         IsConnected = true;
-        Channel.Closed += (_, _) => DidClose();
         _initializer = initializer;
     }
 
@@ -65,6 +65,16 @@ internal class Browser : ChannelOwnerBase, IChannelOwner<Browser>, IBrowser
     internal BrowserChannel Channel { get; }
 
     public IBrowserType BrowserType => _browserType;
+
+    internal override void OnMessage(string method, JsonElement? serverParams)
+    {
+        switch (method)
+        {
+            case "close":
+                DidClose();
+                break;
+        }
+    }
 
     [MethodImpl(MethodImplOptions.NoInlining)]
     public async Task CloseAsync(BrowserCloseOptions options = default)

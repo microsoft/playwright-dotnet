@@ -52,40 +52,6 @@ internal class Frame : ChannelOwnerBase, IChannelOwner<Frame>, IFrame
         Name = initializer.Name;
         ParentFrame = initializer.ParentFrame;
         _loadStates = initializer.LoadStates;
-
-        _channel.LoadState += (_, e) =>
-        {
-            if (e.Add.HasValue)
-            {
-                _loadStates.Add(e.Add.Value);
-                LoadState?.Invoke(this, e.Add.Value);
-            }
-
-            if (e.Remove.HasValue)
-            {
-                _loadStates.Remove(e.Remove.Value);
-            }
-            if (this.ParentFrame == null && e.Add == WaitUntilState.Load && this.Page != null)
-            {
-                (this.Page as Page).FireLoad();
-            }
-            if (this.ParentFrame == null && e.Add == WaitUntilState.DOMContentLoaded && this.Page != null)
-            {
-                (this.Page as Page).FireDOMContentLoaded();
-            }
-        };
-
-        _channel.Navigated += (_, e) =>
-        {
-            Url = e.Url;
-            Name = e.Name;
-            Navigated?.Invoke(this, e);
-
-            if (string.IsNullOrEmpty(e.Error))
-            {
-                ((Page)Page)?.OnFrameNavigated(this);
-            }
-        };
     }
 
     /// <summary>
@@ -115,6 +81,70 @@ internal class Frame : ChannelOwnerBase, IChannelOwner<Frame>, IFrame
     public IPage Page { get; internal set; }
 
     public bool IsDetached { get; internal set; }
+
+    internal override void OnMessage(string method, JsonElement? serverParams)
+    {
+        switch (method)
+        {
+            case "navigated":
+                var e = serverParams?.ToObject<FrameNavigatedEventArgs>(_connection.DefaultJsonSerializerOptions);
+
+                if (serverParams.Value.TryGetProperty("newDocument", out var documentElement))
+                {
+                    e.NewDocument = documentElement.ToObject<NavigateDocument>(_connection.DefaultJsonSerializerOptions);
+                }
+
+                OnNavigated(e);
+                break;
+            case "loadstate":
+                WaitUntilState? add = null;
+                WaitUntilState? remove = null;
+                if (serverParams.Value.TryGetProperty("add", out var addElement))
+                {
+                    add = addElement.ToObject<WaitUntilState>(_connection.DefaultJsonSerializerOptions);
+                }
+                if (serverParams.Value.TryGetProperty("remove", out var removeElement))
+                {
+                    remove = removeElement.ToObject<WaitUntilState>(_connection.DefaultJsonSerializerOptions);
+                }
+                OnLoadState(add, remove);
+                break;
+        }
+    }
+
+    internal void OnLoadState(WaitUntilState? add, WaitUntilState? remove)
+    {
+        if (add.HasValue)
+        {
+            _loadStates.Add(add.Value);
+            LoadState?.Invoke(this, add.Value);
+        }
+
+        if (remove.HasValue)
+        {
+            _loadStates.Remove(remove.Value);
+        }
+        if (this.ParentFrame == null && add == WaitUntilState.Load && this.Page != null)
+        {
+            (this.Page as Page).FireLoad();
+        }
+        if (this.ParentFrame == null && add == WaitUntilState.DOMContentLoaded && this.Page != null)
+        {
+            (this.Page as Page).FireDOMContentLoaded();
+        }
+    }
+
+    internal void OnNavigated(FrameNavigatedEventArgs e)
+    {
+        Url = e.Url;
+        Name = e.Name;
+        Navigated?.Invoke(this, e);
+
+        if (string.IsNullOrEmpty(e.Error))
+        {
+            ((Page)Page)?.OnFrameNavigated(this);
+        }
+    }
 
     [MethodImpl(MethodImplOptions.NoInlining)]
     public async Task<IElementHandle> FrameElementAsync()

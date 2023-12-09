@@ -22,7 +22,6 @@
  * SOFTWARE.
  */
 
-using System;
 using System.Collections.Generic;
 using System.Text.Json;
 using System.Threading.Tasks;
@@ -35,18 +34,6 @@ internal class WorkerChannel : Channel<Worker>
 {
     public WorkerChannel(string guid, Connection connection, Worker owner) : base(guid, connection, owner)
     {
-    }
-
-    internal event EventHandler Close;
-
-    internal override void OnMessage(string method, JsonElement? serverParams)
-    {
-        switch (method)
-        {
-            case "close":
-                Close?.Invoke(this, new());
-                break;
-        }
     }
 
     internal async Task<JsonElement> EvaluateExpressionAsync(

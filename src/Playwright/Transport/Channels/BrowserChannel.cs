@@ -22,7 +22,6 @@
  * SOFTWARE.
  */
 
-using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -40,8 +39,6 @@ internal class BrowserChannel : Channel<Browser>
     public BrowserChannel(string guid, Connection connection, Browser owner) : base(guid, connection, owner)
     {
     }
-
-    internal event EventHandler Closed;
 
     internal static Dictionary<string, object> PrepareHarOptions(
         HarContentPolicy? recordHarContent,
@@ -89,16 +86,6 @@ internal class BrowserChannel : Channel<Browser>
             return recordHarArgs;
         }
         return null;
-    }
-
-    internal override void OnMessage(string method, JsonElement? serverParams)
-    {
-        switch (method)
-        {
-            case "close":
-                Closed?.Invoke(this, EventArgs.Empty);
-                break;
-        }
     }
 
     internal Task<CDPChannel> NewBrowserCDPSessionAsync()
