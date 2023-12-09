@@ -22,7 +22,12 @@
  * SOFTWARE.
  */
 
+using System.Collections.Generic;
+using System.IO;
+using System.Text.Json;
 using System.Threading.Tasks;
+using Microsoft.Playwright.Helpers;
+using Microsoft.Playwright.Transport.Channels;
 
 namespace Microsoft.Playwright.Core;
 
@@ -37,17 +42,34 @@ internal class APIRequest : IAPIRequest
 
     async Task<IAPIRequestContext> IAPIRequest.NewContextAsync(APIRequestNewContextOptions options)
     {
-        var context = await _playwright._channel.NewRequestAsync(
-            options?.BaseURL,
-            options?.UserAgent,
-            options?.IgnoreHTTPSErrors,
-            options?.ExtraHTTPHeaders,
-            options?.HttpCredentials,
-            options?.Proxy,
-            options?.Timeout,
-            options?.StorageState,
-            options?.StorageStatePath)
-        .ConfigureAwait(false);
+        var args = new Dictionary<string, object>()
+        {
+            ["baseURL"] = options?.BaseURL,
+            ["userAgent"] = options?.UserAgent,
+            ["ignoreHTTPSErrors"] = options?.IgnoreHTTPSErrors,
+            ["extraHTTPHeaders"] = options?.ExtraHTTPHeaders?.ToProtocol(),
+            ["httpCredentials"] = options?.HttpCredentials,
+            ["proxy"] = options?.Proxy,
+            ["timeout"] = options?.Timeout,
+        };
+        string storageState = options?.StorageState;
+        if (!string.IsNullOrEmpty(options?.StorageStatePath))
+        {
+            if (!File.Exists(options?.StorageStatePath))
+            {
+                throw new PlaywrightException($"The specified storage state file does not exist: {options?.StorageStatePath}");
+            }
+
+            storageState = File.ReadAllText(options?.StorageStatePath);
+        }
+        if (!string.IsNullOrEmpty(storageState))
+        {
+            args.Add("storageState", JsonSerializer.Deserialize<StorageState>(storageState, Helpers.JsonExtensions.DefaultJsonSerializerOptions));
+        }
+
+        var context = (await _playwright.SendMessageToServerAsync<APIRequestContextChannel>(
+            "newRequest",
+            args).ConfigureAwait(false)).Object;
         context._request = this;
         return context;
     }

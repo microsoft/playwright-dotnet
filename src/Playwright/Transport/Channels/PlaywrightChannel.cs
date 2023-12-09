@@ -22,12 +22,7 @@
  * SOFTWARE.
  */
 
-using System.Collections.Generic;
-using System.IO;
-using System.Text.Json;
-using System.Threading.Tasks;
 using Microsoft.Playwright.Core;
-using Microsoft.Playwright.Helpers;
 
 namespace Microsoft.Playwright.Transport.Channels;
 
@@ -35,47 +30,5 @@ internal class PlaywrightChannel : Channel<PlaywrightImpl>
 {
     public PlaywrightChannel(string guid, Connection connection, PlaywrightImpl owner) : base(guid, connection, owner)
     {
-    }
-
-    internal async Task<APIRequestContext> NewRequestAsync(
-        string baseURL,
-        string userAgent,
-        bool? ignoreHTTPSErrors,
-        IEnumerable<KeyValuePair<string, string>> extraHTTPHeaders,
-        HttpCredentials httpCredentials = null,
-        Proxy proxy = null,
-        float? timeout = null,
-        string storageState = null,
-        string storageStatePath = null)
-    {
-        var args = new Dictionary<string, object>()
-        {
-            ["baseURL"] = baseURL,
-            ["userAgent"] = userAgent,
-            ["ignoreHTTPSErrors"] = ignoreHTTPSErrors,
-            ["extraHTTPHeaders"] = extraHTTPHeaders?.ToProtocol(),
-            ["httpCredentials"] = httpCredentials,
-            ["proxy"] = proxy,
-            ["timeout"] = timeout,
-        };
-        if (!string.IsNullOrEmpty(storageStatePath))
-        {
-            if (!File.Exists(storageStatePath))
-            {
-                throw new PlaywrightException($"The specified storage state file does not exist: {storageStatePath}");
-            }
-
-            storageState = File.ReadAllText(storageStatePath);
-        }
-        if (!string.IsNullOrEmpty(storageState))
-        {
-            args.Add("storageState", JsonSerializer.Deserialize<StorageState>(storageState, Helpers.JsonExtensions.DefaultJsonSerializerOptions));
-        }
-
-        var response = await Connection.SendMessageToServerAsync<APIRequestContextChannel>(
-            Object,
-            "newRequest",
-            args).ConfigureAwait(false);
-        return response.Object;
     }
 }

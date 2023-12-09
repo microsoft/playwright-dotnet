@@ -60,25 +60,29 @@ internal class BrowserType : ChannelOwnerBase, IChannelOwner<BrowserType>, IBrow
     public async Task<IBrowser> LaunchAsync(BrowserTypeLaunchOptions options = default)
     {
         options ??= new BrowserTypeLaunchOptions();
-        Browser browser = (await _channel.LaunchAsync(
-            headless: options.Headless,
-            channel: options.Channel,
-            executablePath: options.ExecutablePath,
-            passedArguments: options.Args,
-            proxy: options.Proxy,
-            downloadsPath: options.DownloadsPath,
-            tracesDir: options.TracesDir,
-            chromiumSandbox: options.ChromiumSandbox,
-            firefoxUserPrefs: options.FirefoxUserPrefs,
-            handleSIGINT: options.HandleSIGINT,
-            handleSIGTERM: options.HandleSIGTERM,
-            handleSIGHUP: options.HandleSIGHUP,
-            timeout: options.Timeout,
-            env: options.Env,
-            devtools: options.Devtools,
-            slowMo: options.SlowMo,
-            ignoreDefaultArgs: options.IgnoreDefaultArgs,
-            ignoreAllDefaultArgs: options.IgnoreAllDefaultArgs).ConfigureAwait(false)).Object;
+        Browser browser = (await SendMessageToServerAsync<BrowserChannel>(
+            "launch",
+            new Dictionary<string, object>
+            {
+                { "channel", options.Channel },
+                { "executablePath", options.ExecutablePath },
+                { "args", options.Args },
+                { "ignoreAllDefaultArgs", options.IgnoreAllDefaultArgs },
+                { "ignoreDefaultArgs", options.IgnoreDefaultArgs },
+                { "handleSIGHUP", options.HandleSIGHUP },
+                { "handleSIGINT", options.HandleSIGINT },
+                { "handleSIGTERM", options.HandleSIGTERM },
+                { "headless", options.Headless },
+                { "devtools", options.Devtools },
+                { "env", options.Env.ToProtocol() },
+                { "proxy", options.Proxy },
+                { "downloadsPath", options.DownloadsPath },
+                { "tracesDir", options.TracesDir },
+                { "firefoxUserPrefs", options.FirefoxUserPrefs },
+                { "chromiumSandbox", options.ChromiumSandbox },
+                { "slowMo", options.ChromiumSandbox },
+                { "timeout", options.Timeout },
+            }).ConfigureAwait(false)).Object;
         DidLaunchBrowser(browser);
         return browser;
     }
@@ -87,56 +91,74 @@ internal class BrowserType : ChannelOwnerBase, IChannelOwner<BrowserType>, IBrow
     public async Task<IBrowserContext> LaunchPersistentContextAsync(string userDataDir, BrowserTypeLaunchPersistentContextOptions options = default)
     {
         options ??= new BrowserTypeLaunchPersistentContextOptions();
-        var context = (await _channel.LaunchPersistentContextAsync(
-            userDataDir,
-            headless: options.Headless,
-            channel: options.Channel,
-            executablePath: options.ExecutablePath,
-            args: options.Args,
-            proxy: options.Proxy,
-            downloadsPath: options.DownloadsPath,
-            tracesDir: options.TracesDir,
-            chromiumSandbox: options.ChromiumSandbox,
-            firefoxUserPrefs: options.FirefoxUserPrefs,
-            handleSIGINT: options.HandleSIGINT,
-            handleSIGTERM: options.HandleSIGTERM,
-            handleSIGHUP: options.HandleSIGHUP,
-            timeout: options.Timeout,
-            env: options.Env,
-            devtools: options.Devtools,
-            slowMo: options.SlowMo,
-            acceptDownloads: options.AcceptDownloads,
-            ignoreHTTPSErrors: options.IgnoreHTTPSErrors,
-            bypassCSP: options.BypassCSP,
-            viewportSize: options.ViewportSize,
-            screenSize: options.ScreenSize,
-            userAgent: options.UserAgent,
-            deviceScaleFactor: options.DeviceScaleFactor,
-            isMobile: options.IsMobile,
-            hasTouch: options.HasTouch,
-            javaScriptEnabled: options.JavaScriptEnabled,
-            timezoneId: options.TimezoneId,
-            geolocation: options.Geolocation,
-            locale: options.Locale,
-            permissions: options.Permissions,
-            extraHTTPHeaders: options.ExtraHTTPHeaders,
-            offline: options.Offline,
-            httpCredentials: options.HttpCredentials,
-            colorScheme: options.ColorScheme,
-            reducedMotion: options.ReducedMotion,
-            recordHarContent: options.RecordHarContent,
-            recordHarMode: options.RecordHarMode,
-            recordHarPath: options.RecordHarPath,
-            recordHarOmitContent: options.RecordHarOmitContent,
-            recordHarUrlFilter: options.RecordHarUrlFilter,
-            recordHarUrlFilterString: options.RecordHarUrlFilterString,
-            recordHarUrlFilterRegex: options.RecordHarUrlFilterRegex,
-            recordVideo: Browser.GetVideoArgs(options.RecordVideoDir, options.RecordVideoSize),
-            serviceWorkers: options.ServiceWorkers,
-            ignoreDefaultArgs: options.IgnoreDefaultArgs,
-            ignoreAllDefaultArgs: options.IgnoreAllDefaultArgs,
-            baseUrl: options.BaseURL,
-            forcedColors: options.ForcedColors).ConfigureAwait(false)).Object;
+        var channelArgs = new Dictionary<string, object>
+        {
+            ["userDataDir"] = userDataDir,
+            ["headless"] = options.Headless,
+            ["channel"] = options.Channel,
+            ["executablePath"] = options.ExecutablePath,
+            ["args"] = options.Args,
+            ["downloadsPath"] = options.DownloadsPath,
+            ["tracesDir"] = options.TracesDir,
+            ["proxy"] = options.Proxy,
+            ["chromiumSandbox"] = options.ChromiumSandbox,
+            ["firefoxUserPrefs"] = options.FirefoxUserPrefs,
+            ["handleSIGINT"] = options.HandleSIGINT,
+            ["handleSIGTERM"] = options.HandleSIGTERM,
+            ["handleSIGHUP"] = options.HandleSIGHUP,
+            ["timeout"] = options.Timeout,
+            ["env"] = options.Env.ToProtocol(),
+            ["devtools"] = options.Devtools,
+            ["slowMo"] = options.SlowMo,
+            ["ignoreHTTPSErrors"] = options.IgnoreHTTPSErrors,
+            ["bypassCSP"] = options.BypassCSP,
+            ["strictSelectors"] = options.StrictSelectors,
+            ["serviceWorkers"] = options.ServiceWorkers,
+            ["screensize"] = options.ScreenSize,
+            ["userAgent"] = options.UserAgent,
+            ["deviceScaleFactor"] = options.DeviceScaleFactor,
+            ["isMobile"] = options.IsMobile,
+            ["hasTouch"] = options.HasTouch,
+            ["javaScriptEnabled"] = options.JavaScriptEnabled,
+            ["timezoneId"] = options.TimezoneId,
+            ["geolocation"] = options.Geolocation,
+            ["locale"] = options.Locale,
+            ["permissions"] = options.Permissions,
+            ["extraHTTPHeaders"] = options.ExtraHTTPHeaders.ToProtocol(),
+            ["offline"] = options.Offline,
+            ["httpCredentials"] = options.HttpCredentials,
+            ["colorScheme"] = options.ColorScheme == ColorScheme.Null ? "no-override" : options.ColorScheme,
+            ["reducedMotion"] = options.ReducedMotion == ReducedMotion.Null ? "no-override" : options.ReducedMotion,
+            ["forcedColors"] = options.ForcedColors == ForcedColors.Null ? "no-override" : options.ForcedColors,
+            ["recordVideo"] = Browser.GetVideoArgs(options.RecordVideoDir, options.RecordVideoSize),
+            ["ignoreDefaultArgs"] = options.IgnoreDefaultArgs,
+            ["ignoreAllDefaultArgs"] = options.IgnoreAllDefaultArgs,
+            ["baseURL"] = options.BaseURL,
+            ["recordHar"] = Browser.PrepareHarOptions(
+                    recordHarContent: options.RecordHarContent,
+                    recordHarMode: options.RecordHarMode,
+                    recordHarPath: options.RecordHarPath,
+                    recordHarOmitContent: options.RecordHarOmitContent,
+                    recordHarUrlFilter: options.RecordHarUrlFilter,
+                    recordHarUrlFilterString: options.RecordHarUrlFilterString,
+                    recordHarUrlFilterRegex: options.RecordHarUrlFilterRegex),
+        };
+
+        if (options.AcceptDownloads.HasValue)
+        {
+            channelArgs.Add("acceptDownloads", options.AcceptDownloads.Value ? "accept" : "deny");
+        }
+
+        if (options.ViewportSize?.Width == -1)
+        {
+            channelArgs.Add("noDefaultViewport", true);
+        }
+        else
+        {
+            channelArgs.Add("viewport", options.ViewportSize);
+        }
+
+        var context = (await SendMessageToServerAsync<BrowserContextChannel>("launchPersistentContext", channelArgs).ConfigureAwait(false)).Object;
 
         // TODO: unite with a single browser context options type which is derived from channels
         DidCreateContext(
@@ -254,7 +276,13 @@ internal class BrowserType : ChannelOwnerBase, IChannelOwner<BrowserType>, IBrow
             throw new ArgumentException("Connecting over CDP is only supported in Chromium.");
         }
         options ??= new BrowserTypeConnectOverCDPOptions();
-        JsonElement result = await _channel.ConnectOverCDPAsync(endpointURL, headers: options.Headers, slowMo: options.SlowMo, timeout: options.Timeout).ConfigureAwait(false);
+        JsonElement result = await SendMessageToServerAsync<JsonElement>("connectOverCDP", new Dictionary<string, object>
+            {
+                { "endpointURL", endpointURL },
+                { "headers", options.Headers.ToProtocol() },
+                { "slowMo", options.SlowMo },
+                { "timeout", options.Timeout },
+            }).ConfigureAwait(false);
         Browser browser = result.GetProperty("browser").ToObject<Browser>(_channel.Connection.DefaultJsonSerializerOptions);
         DidLaunchBrowser(browser);
         if (result.TryGetProperty("defaultContext", out JsonElement defaultContextValue))

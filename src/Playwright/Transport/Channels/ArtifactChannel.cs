@@ -22,11 +22,7 @@
 * SOFTWARE.
 */
 
-using System.Collections.Generic;
-using System.Text.Json;
-using System.Threading.Tasks;
 using Microsoft.Playwright.Core;
-using Microsoft.Playwright.Helpers;
 
 namespace Microsoft.Playwright.Transport.Channels;
 
@@ -35,51 +31,4 @@ internal class ArtifactChannel : Channel<Artifact>
     public ArtifactChannel(string guid, Connection connection, Artifact owner) : base(guid, connection, owner)
     {
     }
-
-    internal async Task<string> PathAfterFinishedAsync()
-        => (await Connection.SendMessageToServerAsync<JsonElement?>(
-            Object,
-            "pathAfterFinished",
-            null)
-            .ConfigureAwait(false)).GetString("value", true);
-
-    internal Task SaveAsAsync(string path)
-        => Connection.SendMessageToServerAsync<JsonElement>(
-            Object,
-            "saveAs",
-            new Dictionary<string, object>
-            {
-                ["path"] = path,
-            });
-
-    internal async Task<Stream> SaveAsStreamAsync()
-        => (await Connection.SendMessageToServerAsync<JsonElement>(
-            Object,
-            "saveAsStream",
-            null)
-            .ConfigureAwait(false)).GetObject<Stream>("stream", Connection);
-
-    internal async Task<string> FailureAsync()
-        => (await Connection.SendMessageToServerAsync<JsonElement?>(
-            Object,
-            "failure",
-            null)
-            .ConfigureAwait(false)).GetString("error", true);
-
-    internal async Task<Stream> StreamAsync()
-        => (await Connection.SendMessageToServerAsync<JsonElement?>(
-            Object,
-            "stream",
-            null)
-            .ConfigureAwait(false))?.GetObject<Stream>("stream", Connection);
-
-    internal Task CancelAsync()
-        => Connection.SendMessageToServerAsync<JsonElement>(
-            Object,
-            "cancel");
-
-    internal Task DeleteAsync()
-        => Connection.SendMessageToServerAsync<JsonElement>(
-            Object,
-            "delete");
 }

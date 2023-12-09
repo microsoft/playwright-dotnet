@@ -22,10 +22,14 @@
  * SOFTWARE.
  */
 
+using System.Collections.Generic;
 using System.Runtime.CompilerServices;
+using System.Text.Json;
 using System.Threading.Tasks;
+using Microsoft.Playwright.Helpers;
 using Microsoft.Playwright.Transport;
 using Microsoft.Playwright.Transport.Channels;
+using Microsoft.Playwright.Transport.Protocol;
 
 namespace Microsoft.Playwright.Core;
 
@@ -54,13 +58,21 @@ internal class Tracing : ChannelOwnerBase, IChannelOwner<Tracing>, ITracing
         var traceName = await _channel.Connection.WrapApiCallAsync(
             async () =>
         {
-            await _channel.TracingStartAsync(
-                name: options?.Name,
-                title: options?.Title,
-                screenshots: options?.Screenshots,
-                snapshots: options?.Snapshots,
-                sources: options?.Sources).ConfigureAwait(false);
-            return await _channel.StartChunkAsync(title: options?.Title, name: options?.Name).ConfigureAwait(false);
+            await SendMessageToServerAsync(
+            "tracingStart",
+            new Dictionary<string, object>
+            {
+                ["name"] = options?.Name,
+                ["title"] = options?.Title,
+                ["screenshots"] = options?.Screenshots,
+                ["snapshots"] = options?.Snapshots,
+                ["sources"] = options?.Sources,
+            }).ConfigureAwait(false);
+            return (await SendMessageToServerAsync("tracingStartChunk", new Dictionary<string, object>
+            {
+                ["title"] = options?.Title,
+                ["name"] = options?.Name,
+            }).ConfigureAwait(false))?.GetProperty("traceName").ToString();
         },
             true).ConfigureAwait(false);
         await StartCollectingStacksAsync(traceName).ConfigureAwait(false);
@@ -69,7 +81,11 @@ internal class Tracing : ChannelOwnerBase, IChannelOwner<Tracing>, ITracing
     [MethodImpl(MethodImplOptions.NoInlining)]
     public async Task StartChunkAsync(TracingStartChunkOptions options = default)
     {
-        var traceName = await _channel.StartChunkAsync(title: options?.Title, name: options?.Name).ConfigureAwait(false);
+        var traceName = (await SendMessageToServerAsync("tracingStartChunk", new Dictionary<string, object>
+        {
+            ["title"] = options?.Title,
+            ["name"] = options?.Name,
+        }).ConfigureAwait(false))?.GetProperty("traceName").ToString();
         await StartCollectingStacksAsync(traceName).ConfigureAwait(false);
     }
 
@@ -93,7 +109,7 @@ internal class Tracing : ChannelOwnerBase, IChannelOwner<Tracing>, ITracing
             async () =>
             {
                 await StopChunkAsync(new() { Path = options?.Path }).ConfigureAwait(false);
-                await _channel.TracingStopAsync().ConfigureAwait(false);
+                await SendMessageToServerAsync("tracingStop").ConfigureAwait(false);
             },
             true).ConfigureAwait(false);
     }
@@ -109,7 +125,7 @@ internal class Tracing : ChannelOwnerBase, IChannelOwner<Tracing>, ITracing
         if (string.IsNullOrEmpty(filePath))
         {
             // Not interested in artifacts.
-            await _channel.TracingStopChunkAsync("discard").ConfigureAwait(false);
+            await _TracingStopChunkAsync("discard").ConfigureAwait(false);
             if (!string.IsNullOrEmpty(_stacksId))
             {
                 await _channel.Connection.LocalUtils.TraceDiscardedAsync(stacksId: _stacksId).ConfigureAwait(false);
@@ -121,12 +137,12 @@ internal class Tracing : ChannelOwnerBase, IChannelOwner<Tracing>, ITracing
 
         if (isLocal)
         {
-            var (_, sourceEntries) = await _channel.TracingStopChunkAsync("entries").ConfigureAwait(false);
+            var (_, sourceEntries) = await _TracingStopChunkAsync("entries").ConfigureAwait(false);
             await _channel.Connection.LocalUtils.ZipAsync(filePath, sourceEntries, "write", _stacksId, _includeSources).ConfigureAwait(false);
             return;
         }
 
-        var (artifact, _) = await _channel.TracingStopChunkAsync("archive").ConfigureAwait(false);
+        var (artifact, _) = await _TracingStopChunkAsync("archive").ConfigureAwait(false);
 
         // The artifact may be missing if the browser closed while stopping tracing.
         if (artifact == null)
@@ -143,5 +159,24 @@ internal class Tracing : ChannelOwnerBase, IChannelOwner<Tracing>, ITracing
         await artifact.DeleteAsync().ConfigureAwait(false);
 
         await _channel.Connection.LocalUtils.ZipAsync(filePath, new(), "append", _stacksId, _includeSources).ConfigureAwait(false);
+    }
+
+    internal async Task<(Artifact Artifact, List<NameValue> Entries)> _TracingStopChunkAsync(string mode)
+    {
+        var result = await SendMessageToServerAsync("tracingStopChunk", new Dictionary<string, object>
+        {
+            ["mode"] = mode,
+        }).ConfigureAwait(false);
+
+        var artifact = result.GetObject<Artifact>("artifact", _connection);
+        List<NameValue> entries = new();
+        if (result.Value.TryGetProperty("entries", out var entriesElement))
+        {
+            foreach (var current in entriesElement.EnumerateArray())
+            {
+                entries.Add(current.Deserialize<NameValue>());
+            }
+        }
+        return (artifact, entries);
     }
 }

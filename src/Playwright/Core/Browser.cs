@@ -24,9 +24,13 @@
 
 using System;
 using System.Collections.Generic;
+using System.IO;
+using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text.Json;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using Microsoft.Playwright.Helpers;
 using Microsoft.Playwright.Transport;
 using Microsoft.Playwright.Transport.Channels;
 using Microsoft.Playwright.Transport.Protocol;
@@ -88,7 +92,10 @@ internal class Browser : ChannelOwnerBase, IChannelOwner<Browser>, IBrowser
             }
             else
             {
-                await Channel.CloseAsync(options?.Reason).ConfigureAwait(false);
+                await SendMessageToServerAsync<BrowserContextChannel>("close", new Dictionary<string, object>
+                {
+                    ["reason"] = options?.Reason,
+                }).ConfigureAwait(false);
             }
             await _closedTcs.Task.ConfigureAwait(false);
         }
@@ -102,41 +109,74 @@ internal class Browser : ChannelOwnerBase, IChannelOwner<Browser>, IBrowser
     public async Task<IBrowserContext> NewContextAsync(BrowserNewContextOptions options = default)
     {
         options ??= new();
-        var context = (await Channel.NewContextAsync(
-            acceptDownloads: options.AcceptDownloads,
-            bypassCSP: options.BypassCSP,
-            colorScheme: options.ColorScheme,
-            reducedMotion: options.ReducedMotion,
-            deviceScaleFactor: options.DeviceScaleFactor,
-            extraHTTPHeaders: options.ExtraHTTPHeaders,
-            geolocation: options.Geolocation,
-            hasTouch: options.HasTouch,
-            httpCredentials: options.HttpCredentials,
-            ignoreHTTPSErrors: options.IgnoreHTTPSErrors,
-            isMobile: options.IsMobile,
-            javaScriptEnabled: options.JavaScriptEnabled,
-            locale: options.Locale,
-            offline: options.Offline,
-            permissions: options.Permissions,
-            proxy: options.Proxy,
-            recordHarContent: options.RecordHarContent,
-            recordHarMode: options.RecordHarMode,
-            recordHarOmitContent: options.RecordHarOmitContent,
-            recordHarPath: options.RecordHarPath,
-            recordHarUrlFilter: options.RecordHarUrlFilter,
-            recordHarUrlFilterString: options.RecordHarUrlFilterString,
-            recordHarUrlFilterRegex: options.RecordHarUrlFilterRegex,
-            recordVideo: GetVideoArgs(options.RecordVideoDir, options.RecordVideoSize),
-            storageState: options.StorageState,
-            storageStatePath: options.StorageStatePath,
-            serviceWorkers: options.ServiceWorkers,
-            timezoneId: options.TimezoneId,
-            userAgent: options.UserAgent,
-            viewportSize: options.ViewportSize,
-            screenSize: options.ScreenSize,
-            baseUrl: options.BaseURL,
-            strictSelectors: options.StrictSelectors,
-            forcedColors: options.ForcedColors).ConfigureAwait(false)).Object;
+
+        var args = new Dictionary<string, object>
+        {
+            ["bypassCSP"] = options.BypassCSP,
+            ["deviceScaleFactor"] = options.DeviceScaleFactor,
+            ["serviceWorkers"] = options.ServiceWorkers,
+            ["geolocation"] = options.Geolocation,
+            ["hasTouch"] = options.HasTouch,
+            ["httpCredentials"] = options.HttpCredentials,
+            ["ignoreHTTPSErrors"] = options.IgnoreHTTPSErrors,
+            ["isMobile"] = options.IsMobile,
+            ["javaScriptEnabled"] = options.JavaScriptEnabled,
+            ["locale"] = options.Locale,
+            ["offline"] = options.Offline,
+            ["permissions"] = options.Permissions,
+            ["proxy"] = options.Proxy,
+            ["strictSelectors"] = options.StrictSelectors,
+            ["colorScheme"] = options.ColorScheme == ColorScheme.Null ? "no-override" : options.ColorScheme,
+            ["reducedMotion"] = options.ReducedMotion == ReducedMotion.Null ? "no-override" : options.ReducedMotion,
+            ["forcedColors"] = options.ForcedColors == ForcedColors.Null ? "no-override" : options.ForcedColors,
+            ["extraHTTPHeaders"] = options.ExtraHTTPHeaders?.Select(kv => new HeaderEntry { Name = kv.Key, Value = kv.Value }).ToArray(),
+            ["recordHar"] = PrepareHarOptions(
+                    recordHarContent: options.RecordHarContent,
+                    recordHarMode: options.RecordHarMode,
+                    recordHarPath: options.RecordHarPath,
+                    recordHarOmitContent: options.RecordHarOmitContent,
+                    recordHarUrlFilter: options.RecordHarUrlFilter,
+                    recordHarUrlFilterString: options.RecordHarUrlFilterString,
+                    recordHarUrlFilterRegex: options.RecordHarUrlFilterRegex),
+            ["recordVideo"] = GetVideoArgs(options.RecordVideoDir, options.RecordVideoSize),
+            ["timezoneId"] = options.TimezoneId,
+            ["userAgent"] = options.UserAgent,
+            ["baseURL"] = options.BaseURL,
+        };
+
+        if (options.AcceptDownloads.HasValue)
+        {
+            args.Add("acceptDownloads", options.AcceptDownloads.Value ? "accept" : "deny");
+        }
+
+        var storageState = options.StorageState;
+        if (!string.IsNullOrEmpty(options.StorageStatePath))
+        {
+            if (!File.Exists(options.StorageStatePath))
+            {
+                throw new PlaywrightException($"The specified storage state file does not exist: {options.StorageStatePath}");
+            }
+
+            storageState = File.ReadAllText(options.StorageStatePath);
+        }
+
+        if (!string.IsNullOrEmpty(storageState))
+        {
+            args.Add("storageState", JsonSerializer.Deserialize<StorageState>(storageState, Helpers.JsonExtensions.DefaultJsonSerializerOptions));
+        }
+
+        if (options.ViewportSize?.Width == -1)
+        {
+            args.Add("noDefaultViewport", true);
+        }
+        else
+        {
+            args.Add("viewport", options.ViewportSize);
+            args.Add("screen", options.ScreenSize);
+        }
+
+        var context = (await SendMessageToServerAsync<BrowserContextChannel>("newContext", args).ConfigureAwait(false)).Object;
+
         _browserType.DidCreateContext(context, options, null);
         return context;
     }
@@ -234,5 +274,54 @@ internal class Browser : ChannelOwnerBase, IChannelOwner<Browser>, IBrowser
 
     [MethodImpl(MethodImplOptions.NoInlining)]
     public async Task<ICDPSession> NewBrowserCDPSessionAsync()
-        => (await Channel.NewBrowserCDPSessionAsync().ConfigureAwait(false)).Object;
+        => (await SendMessageToServerAsync<CDPChannel>(
+        "newBrowserCDPSession").ConfigureAwait(false)).Object;
+
+    internal static Dictionary<string, object> PrepareHarOptions(
+        HarContentPolicy? recordHarContent,
+        HarMode? recordHarMode,
+        string recordHarPath,
+        bool? recordHarOmitContent,
+        string recordHarUrlFilter,
+        string recordHarUrlFilterString,
+        Regex recordHarUrlFilterRegex)
+    {
+        if (string.IsNullOrEmpty(recordHarPath))
+        {
+            return null;
+        }
+        var recordHarArgs = new Dictionary<string, object>();
+        recordHarArgs["path"] = recordHarPath;
+        if (recordHarContent.HasValue)
+        {
+            recordHarArgs["content"] = recordHarContent;
+        }
+        else if (recordHarOmitContent == true)
+        {
+            recordHarArgs["content"] = HarContentPolicy.Omit;
+        }
+        if (!string.IsNullOrEmpty(recordHarUrlFilter))
+        {
+            recordHarArgs["urlGlob"] = recordHarUrlFilter;
+        }
+        else if (!string.IsNullOrEmpty(recordHarUrlFilterString))
+        {
+            recordHarArgs["urlGlob"] = recordHarUrlFilterString;
+        }
+        else if (recordHarUrlFilterRegex != null)
+        {
+            recordHarArgs["urlRegexSource"] = recordHarUrlFilterRegex.ToString();
+            recordHarArgs["urlRegexFlags"] = recordHarUrlFilterRegex.Options.GetInlineFlags();
+        }
+        if (recordHarMode.HasValue)
+        {
+            recordHarArgs["mode"] = recordHarMode;
+        }
+
+        if (recordHarArgs.Keys.Count > 0)
+        {
+            return recordHarArgs;
+        }
+        return null;
+    }
 }

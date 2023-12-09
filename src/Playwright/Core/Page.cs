@@ -1103,7 +1103,7 @@ internal class Page : ChannelOwnerBase, IChannelOwner<Page>, IPage
         _timeoutSettings.SetDefaultTimeout(0);
         try
         {
-            await Task.WhenAny(Context.Channel.PauseAsync(), ClosedOrCrashedTcs.Task).ConfigureAwait(false);
+            await Task.WhenAny(Context.SendMessageToServerAsync("pause"), ClosedOrCrashedTcs.Task).ConfigureAwait(false);
         }
         finally
         {

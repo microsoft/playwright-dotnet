@@ -54,7 +54,7 @@ internal class APIRequestContext : ChannelOwnerBase, IChannelOwner<APIRequestCon
     IChannel<APIRequestContext> IChannelOwner<APIRequestContext>.Channel => _channel;
 
     [MethodImpl(MethodImplOptions.NoInlining)]
-    public ValueTask DisposeAsync() => new(_channel.DisposeAsync());
+    public ValueTask DisposeAsync() => new(SendMessageToServerAsync("dispose"));
 
     [MethodImpl(MethodImplOptions.NoInlining)]
     public Task<IAPIResponse> FetchAsync(IRequest request, APIRequestContextOptions options = null)
@@ -121,19 +121,24 @@ internal class APIRequestContext : ChannelOwnerBase, IChannelOwner<APIRequestCon
             jsonData = JsonSerializer.Serialize(options.DataObject, _connection.DefaultJsonSerializerOptionsKeepNulls);
         }
 
-        return await _channel.FetchAsync(
-            url,
-            queryParams,
-            options.Method,
-            options.Headers,
-            jsonData,
-            postData,
-            (FormData)options.Form,
-            (FormData)options.Multipart,
-            options.Timeout,
-            options?.FailOnStatusCode,
-            options?.IgnoreHTTPSErrors,
-            options?.MaxRedirects).ConfigureAwait(false);
+        var message = new Dictionary<string, object>
+        {
+            ["url"] = url,
+            ["method"] = options?.Method,
+            ["failOnStatusCode"] = options?.FailOnStatusCode,
+            ["ignoreHTTPSErrors"] = options?.IgnoreHTTPSErrors,
+            ["maxRedirects"] = options?.MaxRedirects,
+            ["timeout"] = options.Timeout,
+            ["params"] = queryParams?.ToProtocol(),
+            ["headers"] = options.Headers?.ToProtocol(),
+            ["jsonData"] = jsonData,
+            ["postData"] = postData != null ? Convert.ToBase64String(postData) : null,
+            ["formData"] = ((FormData)options.Form)?.ToProtocol(throwWhenSerializingFilePayloads: true),
+            ["multipartData"] = ((FormData)options.Multipart)?.ToProtocol(),
+        };
+
+        var response = await SendMessageToServerAsync("fetch", message).ConfigureAwait(false);
+        return new APIResponse(this, response?.GetProperty("response").ToObject<Transport.Protocol.APIResponse>());
     }
 
     private bool IsJsonContentType(IDictionary<string, string> headers)
@@ -193,7 +198,7 @@ internal class APIRequestContext : ChannelOwnerBase, IChannelOwner<APIRequestCon
     public async Task<string> StorageStateAsync(APIRequestContextStorageStateOptions options = null)
     {
         string state = JsonSerializer.Serialize(
-            await _channel.StorageStateAsync().ConfigureAwait(false),
+            await SendMessageToServerAsync<StorageState>("storageState").ConfigureAwait(false),
             JsonExtensions.DefaultJsonSerializerOptions);
 
         if (!string.IsNullOrEmpty(options?.Path))

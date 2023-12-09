@@ -22,11 +22,7 @@
  * SOFTWARE.
  */
 
-using System.Collections.Generic;
-using System.Text.Json;
-using System.Threading.Tasks;
 using Microsoft.Playwright.Core;
-using Microsoft.Playwright.Helpers;
 
 namespace Microsoft.Playwright.Transport.Channels;
 
@@ -34,49 +30,5 @@ internal class JSHandleChannel : Channel<JSHandle>
 {
     public JSHandleChannel(string guid, Connection connection, JSHandle owner) : base(guid, connection, owner)
     {
-    }
-
-    internal Task<JsonElement?> EvaluateExpressionAsync(string script, object arg)
-        => Connection.SendMessageToServerAsync<JsonElement?>(
-            Object,
-            "evaluateExpression",
-            new Dictionary<string, object>
-            {
-                ["expression"] = script,
-                ["arg"] = arg,
-            });
-
-    internal Task<JSHandleChannel> EvaluateExpressionHandleAsync(string script, object arg)
-        => Connection.SendMessageToServerAsync<JSHandleChannel>(
-            Object,
-            "evaluateExpressionHandle",
-            new Dictionary<string, object>
-            {
-                ["expression"] = script,
-                ["arg"] = arg,
-            });
-
-    internal Task<JsonElement> JsonValueAsync() => Connection.SendMessageToServerAsync<JsonElement>(Object, "jsonValue");
-
-    internal Task DisposeAsync() => Connection.SendMessageToServerAsync(Object, "dispose");
-
-    internal Task<JSHandleChannel> GetPropertyAsync(string propertyName)
-        => Connection.SendMessageToServerAsync<JSHandleChannel>(
-            Object,
-            "getProperty",
-            new Dictionary<string, object>
-            {
-                ["name"] = propertyName,
-            });
-
-    internal async Task<List<JSElementProperty>> GetPropertiesAsync()
-        => (await Connection.SendMessageToServerAsync(Object, "getPropertyList").ConfigureAwait(false))?
-            .GetProperty("properties").ToObject<List<JSElementProperty>>(Connection.DefaultJsonSerializerOptions);
-
-    internal class JSElementProperty
-    {
-        public string Name { get; set; }
-
-        public JSHandleChannel Value { get; set; }
     }
 }

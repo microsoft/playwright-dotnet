@@ -22,9 +22,12 @@
  * SOFTWARE.
  */
 
+using System.Collections.Generic;
 using System.IO;
 using System.Runtime.CompilerServices;
+using System.Text.Json;
 using System.Threading.Tasks;
+using Microsoft.Playwright.Helpers;
 using Microsoft.Playwright.Transport;
 using Microsoft.Playwright.Transport.Channels;
 using Microsoft.Playwright.Transport.Protocol;
@@ -56,7 +59,8 @@ internal class Artifact : ChannelOwnerBase, IChannelOwner<Artifact>
         {
             throw new PlaywrightException("Path is not available when connecting remotely. Use SaveAsAsync() to save a local copy.");
         }
-        return await _channel.PathAfterFinishedAsync().ConfigureAwait(false);
+        return (await SendMessageToServerAsync<JsonElement?>("pathAfterFinished")
+            .ConfigureAwait(false)).GetString("value", true);
     }
 
     [MethodImpl(MethodImplOptions.NoInlining)]
@@ -64,11 +68,17 @@ internal class Artifact : ChannelOwnerBase, IChannelOwner<Artifact>
     {
         if (!_connection.IsRemote)
         {
-            await _channel.SaveAsAsync(path).ConfigureAwait(false);
+            await SendMessageToServerAsync(
+            "saveAs",
+            new Dictionary<string, object>
+            {
+                ["path"] = path,
+            }).ConfigureAwait(false);
             return;
         }
-        System.IO.Directory.CreateDirectory(Path.GetDirectoryName(Path.GetFullPath(path)));
-        var stream = await _channel.SaveAsStreamAsync().ConfigureAwait(false);
+        Directory.CreateDirectory(Path.GetDirectoryName(Path.GetFullPath(path)));
+        var stream = (await SendMessageToServerAsync("saveAsStream")
+            .ConfigureAwait(false)).GetObject<Stream>("stream", _connection);
         await using (stream.ConfigureAwait(false))
         {
             using (var fileStream = new FileStream(path, FileMode.Create, FileAccess.Write))
@@ -81,13 +91,15 @@ internal class Artifact : ChannelOwnerBase, IChannelOwner<Artifact>
     [MethodImpl(MethodImplOptions.NoInlining)]
     public async Task<System.IO.Stream> CreateReadStreamAsync()
     {
-        var stream = await _channel.StreamAsync().ConfigureAwait(false);
+        var stream = (await SendMessageToServerAsync<JsonElement?>("stream")
+            .ConfigureAwait(false))?.GetObject<Stream>("stream", _connection);
         return stream.StreamImpl;
     }
 
-    internal Task CancelAsync() => _channel.CancelAsync();
+    internal Task CancelAsync() => SendMessageToServerAsync("cancel");
 
-    internal Task<string> FailureAsync() => _channel.FailureAsync();
+    internal async Task<string> FailureAsync() => (await SendMessageToServerAsync<JsonElement?>("failure")
+            .ConfigureAwait(false)).GetString("error", true);
 
-    internal Task DeleteAsync() => _channel.DeleteAsync();
+    internal Task DeleteAsync() => SendMessageToServerAsync("delete");
 }
