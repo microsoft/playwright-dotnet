@@ -301,7 +301,7 @@ internal class Page : ChannelOwnerBase, IChannelOwner<Page>, IPage
     public Task<string> TitleAsync() => MainFrame.TitleAsync();
 
     [MethodImpl(MethodImplOptions.NoInlining)]
-    public Task BringToFrontAsync() => _channel.BringToFrontAsync();
+    public Task BringToFrontAsync() => SendMessageToServerAsync("bringToFront");
 
     [MethodImpl(MethodImplOptions.NoInlining)]
     public Task<IPage> OpenerAsync() => Task.FromResult<IPage>(Opener?.IsClosed == false ? Opener : null);
@@ -316,7 +316,7 @@ internal class Page : ChannelOwnerBase, IChannelOwner<Page>, IPage
             ["reducedMotion"] = options?.ReducedMotion == ReducedMotion.Null ? "no-override" : options?.ReducedMotion,
             ["forcedColors"] = options?.ForcedColors == ForcedColors.Null ? "no-override" : options?.ForcedColors,
         };
-        return _channel.EmulateMediaAsync(args);
+        return SendMessageToServerAsync("emulateMedia", args);
     }
 
     [MethodImpl(MethodImplOptions.NoInlining)]
@@ -510,7 +510,12 @@ internal class Page : ChannelOwnerBase, IChannelOwner<Page>, IPage
         _closeReason = options?.Reason;
         try
         {
-            await _channel.CloseAsync(options?.RunBeforeUnload ?? false).ConfigureAwait(false);
+            await SendMessageToServerAsync(
+            "close",
+            new Dictionary<string, object>
+            {
+                ["runBeforeUnload"] = options?.RunBeforeUnload ?? false,
+            }).ConfigureAwait(false);
             if (OwnedContext != null)
             {
                 await OwnedContext.CloseAsync().ConfigureAwait(false);
@@ -681,19 +686,25 @@ internal class Page : ChannelOwnerBase, IChannelOwner<Page>, IPage
             options.Type = ElementHandle.DetermineScreenshotType(options.Path);
         }
 
-        byte[] result = await _channel.ScreenshotAsync(
-            path: options.Path,
-            fullPage: options.FullPage,
-            clip: options.Clip,
-            omitBackground: options.OmitBackground,
-            type: options.Type,
-            quality: options.Quality,
-            mask: options.Mask,
-            maskColor: options.MaskColor,
-            animations: options.Animations,
-            caret: options.Caret,
-            scale: options.Scale,
-            timeout: options.Timeout).ConfigureAwait(false);
+        var result = (await SendMessageToServerAsync("screenshot", new Dictionary<string, object>
+        {
+            ["fullPage"] = options.FullPage,
+            ["omitBackground"] = options.OmitBackground,
+            ["clip"] = options.Clip,
+            ["path"] = options.Path,
+            ["type"] = options.Type,
+            ["timeout"] = options.Timeout,
+            ["animations"] = options.Animations,
+            ["caret"] = options.Caret,
+            ["scale"] = options.Scale,
+            ["quality"] = options.Quality,
+            ["maskColor"] = options.MaskColor,
+            ["mask"] = options.Mask?.Select(locator => new Dictionary<string, object>
+            {
+                ["frame"] = ((Locator)locator)._frame._channel,
+                ["selector"] = ((Locator)locator)._selector,
+            }).ToArray(),
+        }).ConfigureAwait(false))?.GetProperty("binary").GetBytesFromBase64();
 
         if (!string.IsNullOrEmpty(options.Path))
         {
@@ -713,7 +724,12 @@ internal class Page : ChannelOwnerBase, IChannelOwner<Page>, IPage
 
     [MethodImpl(MethodImplOptions.NoInlining)]
     public Task SetExtraHTTPHeadersAsync(IEnumerable<KeyValuePair<string, string>> headers)
-        => _channel.SetExtraHTTPHeadersAsync(headers);
+        => SendMessageToServerAsync(
+            "setExtraHTTPHeaders",
+            new Dictionary<string, object>
+            {
+                ["headers"] = headers.Select(kv => new HeaderEntry { Name = kv.Key, Value = kv.Value }),
+            });
 
     [MethodImpl(MethodImplOptions.NoInlining)]
     public Task<IElementHandle> QuerySelectorAsync(string selector) => MainFrame.QuerySelectorAsync(selector);
@@ -779,15 +795,27 @@ internal class Page : ChannelOwnerBase, IChannelOwner<Page>, IPage
 
     [MethodImpl(MethodImplOptions.NoInlining)]
     public async Task<IResponse> GoBackAsync(PageGoBackOptions options = default)
-        => (await _channel.GoBackAsync(options?.Timeout, options?.WaitUntil).ConfigureAwait(false))?.Object;
+        => (await SendMessageToServerAsync<ResponseChannel>("goBack", new Dictionary<string, object>
+        {
+            ["timeout"] = options?.Timeout,
+            ["waitUntil"] = options?.WaitUntil,
+        }).ConfigureAwait(false))?.Object;
 
     [MethodImpl(MethodImplOptions.NoInlining)]
     public async Task<IResponse> GoForwardAsync(PageGoForwardOptions options = default)
-        => (await _channel.GoForwardAsync(options?.Timeout, options?.WaitUntil).ConfigureAwait(false))?.Object;
+        => (await SendMessageToServerAsync<ResponseChannel>("goForward", new Dictionary<string, object>
+        {
+            ["timeout"] = options?.Timeout,
+            ["waitUntil"] = options?.WaitUntil,
+        }).ConfigureAwait(false))?.Object;
 
     [MethodImpl(MethodImplOptions.NoInlining)]
     public async Task<IResponse> ReloadAsync(PageReloadOptions options = default)
-        => (await _channel.ReloadAsync(options?.Timeout, options?.WaitUntil).ConfigureAwait(false))?.Object;
+        => (await SendMessageToServerAsync<ResponseChannel>("reload", new Dictionary<string, object>
+        {
+            ["timeout"] = options?.Timeout,
+            ["waitUntil"] = options?.WaitUntil,
+        }).ConfigureAwait(false))?.Object;
 
     [MethodImpl(MethodImplOptions.NoInlining)]
     public Task ExposeBindingAsync(string name, Action callback, PageExposeBindingOptions options = default)
@@ -861,19 +889,21 @@ internal class Page : ChannelOwnerBase, IChannelOwner<Page>, IPage
             throw new NotSupportedException("This browser doesn't support this action.");
         }
 
-        byte[] result = await _channel.PdfAsync(
-            scale: options?.Scale,
-            displayHeaderFooter: options?.DisplayHeaderFooter,
-            headerTemplate: options?.HeaderTemplate,
-            footerTemplate: options?.FooterTemplate,
-            printBackground: options?.PrintBackground,
-            landscape: options?.Landscape,
-            pageRanges: options?.PageRanges,
-            format: options?.Format,
-            width: options?.Width,
-            height: options?.Height,
-            margin: options?.Margin,
-            preferCSSPageSize: options?.PreferCSSPageSize).ConfigureAwait(false);
+        byte[] result = (await SendMessageToServerAsync("pdf", new Dictionary<string, object>
+        {
+            ["scale"] = options.Scale,
+            ["displayHeaderFooter"] = options.DisplayHeaderFooter,
+            ["printBackground"] = options.PrintBackground,
+            ["landscape"] = options.Landscape,
+            ["preferCSSPageSize"] = options.PreferCSSPageSize,
+            ["pageRanges"] = options.PageRanges,
+            ["headerTemplate"] = options.HeaderTemplate,
+            ["footerTemplate"] = options.FooterTemplate,
+            ["margin"] = options.Margin,
+            ["width"] = options.Width,
+            ["format"] = options.Format,
+            ["height"] = options.Height,
+        }).ConfigureAwait(false))?.GetProperty("pdf").GetBytesFromBase64();
 
         if (!string.IsNullOrEmpty(options?.Path))
         {
@@ -886,7 +916,12 @@ internal class Page : ChannelOwnerBase, IChannelOwner<Page>, IPage
 
     [MethodImpl(MethodImplOptions.NoInlining)]
     public Task AddInitScriptAsync(string script, string scriptPath)
-        => _channel.AddInitScriptAsync(ScriptsHelper.EvaluationScript(script, scriptPath));
+        => SendMessageToServerAsync<PageChannel>(
+            "addInitScript",
+            new Dictionary<string, object>
+            {
+                ["source"] = ScriptsHelper.EvaluationScript(script, scriptPath),
+            });
 
     [MethodImpl(MethodImplOptions.NoInlining)]
     public Task RouteAsync(string url, Func<IRoute, Task> handler, PageRouteOptions options = null)
@@ -944,7 +979,12 @@ internal class Page : ChannelOwnerBase, IChannelOwner<Page>, IPage
     public Task SetViewportSizeAsync(int width, int height)
     {
         ViewportSize = new() { Width = width, Height = height };
-        return _channel.SetViewportSizeAsync(ViewportSize);
+        return SendMessageToServerAsync(
+            "setViewportSize",
+            new Dictionary<string, object>
+            {
+                ["viewportSize"] = ViewportSize,
+            });
     }
 
     [MethodImpl(MethodImplOptions.NoInlining)]
@@ -1116,14 +1156,26 @@ internal class Page : ChannelOwnerBase, IChannelOwner<Page>, IPage
     public void SetDefaultNavigationTimeout(float timeout)
     {
         _timeoutSettings.SetDefaultNavigationTimeout(timeout);
-        WrapApiCallAsync(() => Channel.SetDefaultNavigationTimeoutNoReplyAsync(timeout), true).IgnoreException();
+        WrapApiCallAsync(
+            () => SendMessageToServerAsync(
+            "setDefaultNavigationTimeoutNoReply",
+            new Dictionary<string, object>
+            {
+                ["timeout"] = timeout,
+            }),
+            true).IgnoreException();
     }
 
     [MethodImpl(MethodImplOptions.NoInlining)]
     public void SetDefaultTimeout(float timeout)
     {
         _timeoutSettings.SetDefaultTimeout(timeout);
-        WrapApiCallAsync(() => Channel.SetDefaultTimeoutNoReplyAsync(timeout), true).IgnoreException();
+        WrapApiCallAsync(
+            () => SendMessageToServerAsync("setDefaultTimeoutNoReply", new Dictionary<string, object>
+            {
+                ["timeout"] = timeout,
+            }),
+            true).IgnoreException();
     }
 
     [MethodImpl(MethodImplOptions.NoInlining)]
@@ -1209,7 +1261,7 @@ internal class Page : ChannelOwnerBase, IChannelOwner<Page>, IPage
     private Task UpdateInterceptionAsync()
     {
         var patterns = RouteHandler.PrepareInterceptionPatterns(_routes);
-        return Channel.SetNetworkInterceptionPatternsAsync(patterns);
+        return SendMessageToServerAsync("setNetworkInterceptionPatterns", patterns);
     }
 
     internal void OnClose()
@@ -1291,7 +1343,13 @@ internal class Page : ChannelOwnerBase, IChannelOwner<Page>, IPage
 
         Bindings.Add(name, callback);
 
-        return _channel.ExposeBindingAsync(name, handle);
+        return SendMessageToServerAsync<PageChannel>(
+            "exposeBinding",
+            new Dictionary<string, object>
+            {
+                ["name"] = name,
+                ["needsHandle"] = handle,
+            });
     }
 
     private Video ForceVideo() => _video ??= new(this, _channel.Connection);

@@ -21,6 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.Playwright.Transport.Channels;
 
@@ -35,5 +36,12 @@ internal class Touchscreen : ITouchscreen
         _channel = channel;
     }
 
-    public Task TapAsync(float x, float y) => _channel.TouchscreenTapAsync(x, y);
+    public Task TapAsync(float x, float y)
+           => _channel.Object.SendMessageToServerAsync(
+            "touchscreenTap",
+            new Dictionary<string, object>
+            {
+                ["x"] = x,
+                ["y"] = y,
+            });
 }
