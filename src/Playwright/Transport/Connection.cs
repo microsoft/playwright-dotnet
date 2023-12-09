@@ -76,7 +76,7 @@ internal class Connection : IDisposable
 
     internal event EventHandler<Exception> Close;
 
-    public ConcurrentDictionary<string, IChannelOwner> Objects { get; } = new();
+    public ConcurrentDictionary<string, ChannelOwnerBase> Objects { get; } = new();
 
     internal AsyncLocal<List<ApiZone>> ApiZone { get; } = new();
 
@@ -305,7 +305,7 @@ internal class Connection : IDisposable
                 @object.DisposeOwner(message.Params.Value.TryGetProperty("reason", out var reason) ? reason.GetString() : null);
                 return;
             }
-            ((ChannelOwnerBase)@object).OnMessage(message.Method, message.Params);
+            @object.OnMessage(message.Method, message.Params);
         }
         catch (Exception ex)
         {

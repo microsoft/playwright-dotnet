@@ -36,7 +36,7 @@ namespace Microsoft.Playwright.Transport;
 internal class ChannelOwnerBase : IChannelOwner
 {
     internal readonly Connection _connection;
-    private readonly ConcurrentDictionary<string, IChannelOwner> _objects = new();
+    private readonly ConcurrentDictionary<string, ChannelOwnerBase> _objects = new();
     internal bool _wasCollected;
 
     internal ChannelOwnerBase(IChannelOwner parent, string guid) : this(parent, null, guid)
@@ -64,7 +64,7 @@ internal class ChannelOwnerBase : IChannelOwner
     ChannelBase IChannelOwner.Channel => null;
 
     /// <inheritdoc/>
-    ConcurrentDictionary<string, IChannelOwner> IChannelOwner.Objects => _objects;
+    ConcurrentDictionary<string, ChannelOwnerBase> IChannelOwner.Objects => _objects;
 
     internal string Guid { get; set; }
 
@@ -74,15 +74,14 @@ internal class ChannelOwnerBase : IChannelOwner
     {
     }
 
-    void IChannelOwner.Adopt(ChannelOwnerBase child)
+    internal void Adopt(ChannelOwnerBase child)
     {
         child.Parent.Objects.TryRemove(child.Guid, out _);
         _objects[child.Guid] = child;
         child.Parent = this;
     }
 
-    /// <inheritdoc/>
-    void IChannelOwner.DisposeOwner(string reason)
+    internal void DisposeOwner(string reason)
     {
         Parent?.Objects?.TryRemove(Guid, out var _);
         _connection?.Objects.TryRemove(Guid, out var _);

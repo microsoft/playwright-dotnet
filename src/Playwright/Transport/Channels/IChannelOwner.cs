@@ -46,11 +46,7 @@ internal interface IChannelOwner
     /// <summary>
     /// Child objects.
     /// </summary>
-    ConcurrentDictionary<string, IChannelOwner> Objects { get; }
-
-    void DisposeOwner(string reason);
-
-    void Adopt(ChannelOwnerBase child);
+    ConcurrentDictionary<string, ChannelOwnerBase> Objects { get; }
 
     Task<T> WrapApiCallAsync<T>(Func<Task<T>> action, bool isInternal = false);
 
