@@ -51,7 +51,7 @@ internal class CDPSession : ChannelOwnerBase, ICDPSession, IChannelOwner<CDPSess
     {
         switch (method)
         {
-            case "message":
+            case "event":
                 OnCDPEvent(serverParams!.Value.GetProperty("method").ToString(), serverParams.Value.GetProperty("params"));
                 break;
         }
