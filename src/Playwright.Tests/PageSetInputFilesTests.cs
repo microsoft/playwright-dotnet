@@ -438,8 +438,6 @@ public class PageSetInputFilesTests : PageTestEx
 
         // On Linux browser sometimes reduces the timestamp by 1ms: 1696272058110.0715  -> 1696272058109 or even
         // rounds it to seconds in WebKit: 1696272058110 -> 1696272058000.
-        Console.WriteLine(timestamps[0]);
-        Console.WriteLine(expectedTimestamps[0]);
         for (var i = 0; i < timestamps.Length; i++)
             Assert.LessOrEqual(Math.Abs(timestamps[i] - expectedTimestamps[i]), 1000);
     }
