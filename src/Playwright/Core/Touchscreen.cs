@@ -23,21 +23,20 @@
  */
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using Microsoft.Playwright.Transport.Channels;
 
 namespace Microsoft.Playwright.Core;
 
 internal class Touchscreen : ITouchscreen
 {
-    private readonly PageChannel _channel;
+    private readonly Page _page;
 
-    public Touchscreen(PageChannel channel)
+    public Touchscreen(Page page)
     {
-        _channel = channel;
+        _page = page;
     }
 
     public Task TapAsync(float x, float y)
-           => _channel.Object.SendMessageToServerAsync(
+           => _page.SendMessageToServerAsync(
             "touchscreenTap",
             new Dictionary<string, object>
             {

@@ -30,22 +30,19 @@ using System.Text.Json;
 using System.Threading.Tasks;
 using Microsoft.Playwright.Helpers;
 using Microsoft.Playwright.Transport;
-using Microsoft.Playwright.Transport.Channels;
 using Microsoft.Playwright.Transport.Protocol;
 
 namespace Microsoft.Playwright.Core;
 
-internal class Response : ChannelOwnerBase, IChannelOwner<Response>, IResponse
+internal class Response : ChannelOwnerBase, IResponse
 {
-    private readonly ResponseChannel _channel;
     private readonly ResponseInitializer _initializer;
     private readonly TaskCompletionSource<string> _finishedTask;
     private readonly RawHeaders _headers;
     private Task<RawHeaders> _rawHeadersTask;
 
-    internal Response(IChannelOwner parent, string guid, ResponseInitializer initializer) : base(parent, guid)
+    internal Response(ChannelOwnerBase parent, string guid, ResponseInitializer initializer) : base(parent, guid)
     {
-        _channel = new(guid, parent.Connection, this);
         _initializer = initializer;
         _initializer.Request.Timing = _initializer.Timing;
         _finishedTask = new();
@@ -68,10 +65,6 @@ internal class Response : ChannelOwnerBase, IChannelOwner<Response>, IResponse
     public string Url => _initializer.Url;
 
     public bool FromServiceWorker => _initializer.FromServiceWorker;
-
-    ChannelBase IChannelOwner.Channel => _channel;
-
-    IChannel<Response> IChannelOwner<Response>.Channel => _channel;
 
     [MethodImpl(MethodImplOptions.NoInlining)]
     public async Task<Dictionary<string, string>> AllHeadersAsync()

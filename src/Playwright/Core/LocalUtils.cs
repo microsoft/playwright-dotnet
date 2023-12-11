@@ -27,28 +27,21 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.Playwright.Helpers;
 using Microsoft.Playwright.Transport;
-using Microsoft.Playwright.Transport.Channels;
 using Microsoft.Playwright.Transport.Protocol;
 
 namespace Microsoft.Playwright.Core;
 
-internal class LocalUtils : ChannelOwnerBase, IChannelOwner<LocalUtils>
+internal class LocalUtils : ChannelOwnerBase
 {
-    private readonly LocalUtilsChannel _channel;
     internal readonly Dictionary<string, BrowserNewContextOptions> _devices = new();
 
-    public LocalUtils(IChannelOwner parent, string guid, LocalUtilsInitializer initializer) : base(parent, guid)
+    public LocalUtils(ChannelOwnerBase parent, string guid, LocalUtilsInitializer initializer) : base(parent, guid)
     {
-        _channel = new(guid, parent.Connection, this);
         foreach (var entry in initializer.DeviceDescriptors)
         {
             _devices[entry.Name] = entry.Descriptor;
         }
     }
-
-    ChannelBase IChannelOwner.Channel => _channel;
-
-    IChannel<LocalUtils> IChannelOwner<LocalUtils>.Channel => _channel;
 
     internal Task ZipAsync(string zipFile, List<NameValue> entries, string mode, string stacksId, bool includeSources)
         => SendMessageToServerAsync("zip", new Dictionary<string, object>

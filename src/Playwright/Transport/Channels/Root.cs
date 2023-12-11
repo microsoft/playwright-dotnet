@@ -26,7 +26,7 @@ namespace Microsoft.Playwright.Transport.Channels;
 
 internal class Root : ChannelOwnerBase
 {
-    internal Root(IChannelOwner parent, Connection connection, string guid) : base(parent, connection, guid)
+    internal Root(ChannelOwnerBase parent, Connection connection, string guid) : base(parent, connection, guid)
     {
     }
 }

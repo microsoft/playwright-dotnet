@@ -24,21 +24,20 @@
 
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using Microsoft.Playwright.Transport.Channels;
 
 namespace Microsoft.Playwright.Core;
 
 internal class Keyboard : IKeyboard
 {
-    private readonly PageChannel _channel;
+    private readonly Page _page;
 
-    public Keyboard(PageChannel channel)
+    public Keyboard(Page page)
     {
-        _channel = channel;
+        _page = page;
     }
 
     public Task DownAsync(string key)
-          => _channel.Object.SendMessageToServerAsync(
+          => _page.SendMessageToServerAsync(
             "keyboardDown",
             new Dictionary<string, object>
             {
@@ -46,7 +45,7 @@ internal class Keyboard : IKeyboard
             });
 
     public Task UpAsync(string key)
-            => _channel.Object.SendMessageToServerAsync(
+            => _page.SendMessageToServerAsync(
             "keyboardUp",
             new Dictionary<string, object>
             {
@@ -54,7 +53,7 @@ internal class Keyboard : IKeyboard
             });
 
     public Task PressAsync(string key, KeyboardPressOptions options = default)
-       => _channel.Object.SendMessageToServerAsync(
+       => _page.SendMessageToServerAsync(
             "keyboardPress",
             new Dictionary<string, object>
             {
@@ -63,7 +62,7 @@ internal class Keyboard : IKeyboard
             });
 
     public Task TypeAsync(string text, KeyboardTypeOptions options = default)
-        => _channel.Object.SendMessageToServerAsync(
+        => _page.SendMessageToServerAsync(
             "keyboardType",
             new Dictionary<string, object>
             {
@@ -72,7 +71,7 @@ internal class Keyboard : IKeyboard
             });
 
     public Task InsertTextAsync(string text)
-        => _channel.Object.SendMessageToServerAsync(
+        => _page.SendMessageToServerAsync(
             "keyboardInsertText",
             new Dictionary<string, object>
             {

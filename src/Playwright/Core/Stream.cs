@@ -29,22 +29,14 @@ using System.Runtime.CompilerServices;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Playwright.Transport;
-using Microsoft.Playwright.Transport.Channels;
 
 namespace Microsoft.Playwright.Core;
 
-internal class Stream : ChannelOwnerBase, IChannelOwner<Stream>, IAsyncDisposable
+internal class Stream : ChannelOwnerBase, IAsyncDisposable
 {
-    internal Stream(IChannelOwner parent, string guid) : base(parent, guid)
+    internal Stream(ChannelOwnerBase parent, string guid) : base(parent, guid)
     {
-        Channel = new(guid, parent.Connection, this);
     }
-
-    ChannelBase IChannelOwner.Channel => Channel;
-
-    IChannel<Stream> IChannelOwner<Stream>.Channel => Channel;
-
-    public StreamChannel Channel { get; }
 
     public StreamImpl StreamImpl => new(this);
 

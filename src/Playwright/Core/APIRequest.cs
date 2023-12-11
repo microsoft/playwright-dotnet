@@ -27,7 +27,6 @@ using System.IO;
 using System.Text.Json;
 using System.Threading.Tasks;
 using Microsoft.Playwright.Helpers;
-using Microsoft.Playwright.Transport.Channels;
 
 namespace Microsoft.Playwright.Core;
 
@@ -67,9 +66,9 @@ internal class APIRequest : IAPIRequest
             args.Add("storageState", JsonSerializer.Deserialize<StorageState>(storageState, Helpers.JsonExtensions.DefaultJsonSerializerOptions));
         }
 
-        var context = (await _playwright.SendMessageToServerAsync<APIRequestContextChannel>(
+        var context = await _playwright.SendMessageToServerAsync<APIRequestContext>(
             "newRequest",
-            args).ConfigureAwait(false)).Object;
+            args).ConfigureAwait(false);
         context._request = this;
         return context;
     }

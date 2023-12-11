@@ -25,26 +25,25 @@
 using System.Collections.Generic;
 using System.Text.Json;
 using System.Threading.Tasks;
-using Microsoft.Playwright.Transport.Channels;
 
 namespace Microsoft.Playwright.Core;
 
 internal class Accessibility : IAccessibility
 {
-    private readonly PageChannel _channel;
+    private readonly Page _page;
 
-    public Accessibility(PageChannel channel)
+    public Accessibility(Page page)
     {
-        _channel = channel;
+        _page = page;
     }
 
     public async Task<JsonElement?> SnapshotAsync(AccessibilitySnapshotOptions options = default)
     {
         options ??= new();
-        if ((await _channel.Object.SendMessageToServerAsync("accessibilitySnapshot", new Dictionary<string, object>
+        if ((await _page.SendMessageToServerAsync("accessibilitySnapshot", new Dictionary<string, object>
         {
             ["interestingOnly"] = options?.InterestingOnly,
-            ["root"] = (options.Root as ElementHandle)?.ElementChannel,
+            ["root"] = options.Root,
         }).ConfigureAwait(false)).Value.TryGetProperty("rootAXNode", out var jsonElement))
         {
             return jsonElement;

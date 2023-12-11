@@ -30,25 +30,18 @@ using System.Text.Json;
 using System.Threading.Tasks;
 using Microsoft.Playwright.Helpers;
 using Microsoft.Playwright.Transport;
-using Microsoft.Playwright.Transport.Channels;
 using Microsoft.Playwright.Transport.Protocol;
 
 namespace Microsoft.Playwright.Core;
 
-internal class BrowserType : ChannelOwnerBase, IChannelOwner<BrowserType>, IBrowserType
+internal class BrowserType : ChannelOwnerBase, IBrowserType
 {
     private readonly BrowserTypeInitializer _initializer;
-    private readonly BrowserTypeChannel _channel;
 
-    internal BrowserType(IChannelOwner parent, string guid, BrowserTypeInitializer initializer) : base(parent, guid)
+    internal BrowserType(ChannelOwnerBase parent, string guid, BrowserTypeInitializer initializer) : base(parent, guid)
     {
         _initializer = initializer;
-        _channel = new(guid, parent.Connection, this);
     }
-
-    ChannelBase IChannelOwner.Channel => _channel;
-
-    IChannel<BrowserType> IChannelOwner<BrowserType>.Channel => _channel;
 
     internal PlaywrightImpl Playwright { get; set; }
 
@@ -60,7 +53,7 @@ internal class BrowserType : ChannelOwnerBase, IChannelOwner<BrowserType>, IBrow
     public async Task<IBrowser> LaunchAsync(BrowserTypeLaunchOptions options = default)
     {
         options ??= new BrowserTypeLaunchOptions();
-        Browser browser = (await SendMessageToServerAsync<BrowserChannel>(
+        Browser browser = await SendMessageToServerAsync<Browser>(
             "launch",
             new Dictionary<string, object>
             {
@@ -82,7 +75,7 @@ internal class BrowserType : ChannelOwnerBase, IChannelOwner<BrowserType>, IBrow
                 { "chromiumSandbox", options.ChromiumSandbox },
                 { "slowMo", options.ChromiumSandbox },
                 { "timeout", options.Timeout },
-            }).ConfigureAwait(false)).Object;
+            }).ConfigureAwait(false);
         DidLaunchBrowser(browser);
         return browser;
     }
@@ -158,7 +151,7 @@ internal class BrowserType : ChannelOwnerBase, IChannelOwner<BrowserType>, IBrow
             channelArgs.Add("viewport", options.ViewportSize);
         }
 
-        var context = (await SendMessageToServerAsync<BrowserContextChannel>("launchPersistentContext", channelArgs).ConfigureAwait(false)).Object;
+        var context = await SendMessageToServerAsync<BrowserContext>("launchPersistentContext", channelArgs).ConfigureAwait(false);
 
         // TODO: unite with a single browser context options type which is derived from channels
         DidCreateContext(
@@ -188,7 +181,7 @@ internal class BrowserType : ChannelOwnerBase, IChannelOwner<BrowserType>, IBrow
             {
                 new KeyValuePair<string, string>("x-playwright-browser", Name),
             }.ToDictionary(pair => pair.Key, pair => pair.Value);
-        var localUtils = _channel.Connection.LocalUtils;
+        var localUtils = _connection.LocalUtils;
         var pipe = await localUtils.ConnectAsync(wsEndpoint: wsEndpoint, headers: headers, slowMo: options.SlowMo, timeout: options.Timeout, exposeNetwork: options.ExposeNetwork).ConfigureAwait(false);
 
         void ClosePipe()
@@ -196,7 +189,7 @@ internal class BrowserType : ChannelOwnerBase, IChannelOwner<BrowserType>, IBrow
             pipe.CloseAsync().IgnoreException();
         }
 #pragma warning disable CA2000 // Dispose objects before losing scope
-        var connection = new Connection(_channel.Connection.LocalUtils);
+        var connection = new Connection(_connection.LocalUtils);
 #pragma warning restore CA2000
         connection.MarkAsRemote();
         connection.Close += (_, _) => ClosePipe();
@@ -243,7 +236,7 @@ internal class BrowserType : ChannelOwnerBase, IChannelOwner<BrowserType>, IBrow
             catch (Exception ex)
             {
                 closeError = ex;
-                _channel.Connection.TraceMessage("pw:dotnet", $"Dispatching error: {ex.Message}\n{ex.StackTrace}");
+                _connection.TraceMessage("pw:dotnet", $"Dispatching error: {ex.Message}\n{ex.StackTrace}");
                 ClosePipe();
             }
         };
@@ -283,11 +276,11 @@ internal class BrowserType : ChannelOwnerBase, IChannelOwner<BrowserType>, IBrow
                 { "slowMo", options.SlowMo },
                 { "timeout", options.Timeout },
             }).ConfigureAwait(false);
-        Browser browser = result.GetProperty("browser").ToObject<Browser>(_channel.Connection.DefaultJsonSerializerOptions);
+        Browser browser = result.GetProperty("browser").ToObject<Browser>(_connection.DefaultJsonSerializerOptions);
         DidLaunchBrowser(browser);
         if (result.TryGetProperty("defaultContext", out JsonElement defaultContextValue))
         {
-            var defaultContext = defaultContextValue.ToObject<BrowserContext>(_channel.Connection.DefaultJsonSerializerOptions);
+            var defaultContext = defaultContextValue.ToObject<BrowserContext>(_connection.DefaultJsonSerializerOptions);
             DidCreateContext(defaultContext, new(), null);
         }
         return browser;

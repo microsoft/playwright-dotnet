@@ -38,7 +38,7 @@ using Microsoft.Playwright.Transport.Protocol;
 
 namespace Microsoft.Playwright.Core;
 
-internal class BrowserContext : ChannelOwnerBase, IChannelOwner<BrowserContext>, IBrowserContext
+internal class BrowserContext : ChannelOwnerBase, IBrowserContext
 {
     private readonly TaskCompletionSource<bool> _closeTcs = new();
     private readonly Dictionary<string, Delegate> _bindings = new();
@@ -55,11 +55,10 @@ internal class BrowserContext : ChannelOwnerBase, IChannelOwner<BrowserContext>,
 
     internal TimeoutSettings _timeoutSettings = new();
 
-    internal BrowserContext(IChannelOwner parent, string guid, BrowserContextInitializer initializer) : base(parent, guid)
+    internal BrowserContext(ChannelOwnerBase parent, string guid, BrowserContextInitializer initializer) : base(parent, guid)
     {
         _browser = parent as Browser;
         _browser?._contexts.Add(this);
-        Channel = new(guid, parent.Connection, this);
 
         _tracing = initializer.Tracing;
         _request = initializer.RequestContext;
@@ -128,15 +127,9 @@ internal class BrowserContext : ChannelOwnerBase, IChannelOwner<BrowserContext>,
         set => throw new NotSupportedException();
     }
 
-    ChannelBase IChannelOwner.Channel => Channel;
-
-    IChannel<BrowserContext> IChannelOwner<BrowserContext>.Channel => Channel;
-
     public IBrowser Browser => _browser;
 
     public IReadOnlyList<IPage> Pages => _pages;
-
-    internal BrowserContextChannel Channel { get; }
 
     internal Page OwnerPage { get; set; }
 
@@ -157,10 +150,10 @@ internal class BrowserContext : ChannelOwnerBase, IChannelOwner<BrowserContext>,
                 break;
             case "bindingCall":
                 Channel_BindingCall(
-                    serverParams?.GetProperty("binding").ToObject<BindingCallChannel>(_connection.DefaultJsonSerializerOptions).Object);
+                    serverParams?.GetProperty("binding").ToObject<BindingCall>(_connection.DefaultJsonSerializerOptions));
                 break;
             case "dialog":
-                OnDialog(serverParams?.GetProperty("dialog").ToObject<DialogChannel>(_connection.DefaultJsonSerializerOptions).Object);
+                OnDialog(serverParams?.GetProperty("dialog").ToObject<Dialog>(_connection.DefaultJsonSerializerOptions));
                 break;
             case "console":
                 var consoleMessage = new ConsoleMessage(serverParams?.ToObject<BrowserContextConsoleEvent>(_connection.DefaultJsonSerializerOptions));
@@ -171,19 +164,18 @@ internal class BrowserContext : ChannelOwnerBase, IChannelOwner<BrowserContext>,
                 }
                 break;
             case "route":
-                var route = serverParams?.GetProperty("route").ToObject<RouteChannel>(_connection.DefaultJsonSerializerOptions).Object;
+                var route = serverParams?.GetProperty("route").ToObject<Route>(_connection.DefaultJsonSerializerOptions);
                 Channel_Route(this, route);
                 break;
             case "page":
                 Channel_OnPage(
                     this,
-                    serverParams?.GetProperty("page").ToObject<PageChannel>(_connection.DefaultJsonSerializerOptions));
+                    serverParams?.GetProperty("page").ToObject<Page>(_connection.DefaultJsonSerializerOptions));
                 break;
             case "pageError":
                 {
                     var error = serverParams?.GetProperty("error").ToObject<SerializedError>(_connection.DefaultJsonSerializerOptions);
-                    var pageChannel = serverParams?.GetProperty("page").ToObject<PageChannel>(_connection.DefaultJsonSerializerOptions);
-                    var pageObject = pageChannel?.Object;
+                    var pageObject = serverParams?.GetProperty("page").ToObject<Page>(_connection.DefaultJsonSerializerOptions);
                     var parsedError = string.IsNullOrEmpty(error.Error.Stack) ? $"{error.Error.Name}: {error.Error.Message}" : error.Error.Stack;
                     WebError?.Invoke(this, new WebError(pageObject, parsedError));
                     pageObject?.FirePageError(parsedError);
@@ -191,7 +183,7 @@ internal class BrowserContext : ChannelOwnerBase, IChannelOwner<BrowserContext>,
                 }
             case "serviceWorker":
                 {
-                    var serviceWorker = serverParams?.GetProperty("worker").ToObject<WorkerChannel>(_connection.DefaultJsonSerializerOptions).Object;
+                    var serviceWorker = serverParams?.GetProperty("worker").ToObject<Worker>(_connection.DefaultJsonSerializerOptions);
                     ((Worker)serviceWorker).Context = this;
                     _serviceWorkers.Add(serviceWorker);
                     ServiceWorker?.Invoke(this, serviceWorker);
@@ -260,7 +252,7 @@ internal class BrowserContext : ChannelOwnerBase, IChannelOwner<BrowserContext>,
     }
 
     [MethodImpl(MethodImplOptions.NoInlining)]
-    public Task AddCookiesAsync(IEnumerable<Cookie> cookies) => SendMessageToServerAsync<PageChannel>(
+    public Task AddCookiesAsync(IEnumerable<Cookie> cookies) => SendMessageToServerAsync(
             "addCookies",
             new Dictionary<string, object>
             {
@@ -275,7 +267,7 @@ internal class BrowserContext : ChannelOwnerBase, IChannelOwner<BrowserContext>,
             script = ScriptsHelper.EvaluationScript(script, scriptPath);
         }
 
-        return SendMessageToServerAsync<PageChannel>(
+        return SendMessageToServerAsync(
             "addInitScript",
             new Dictionary<string, object>
             {
@@ -315,7 +307,7 @@ internal class BrowserContext : ChannelOwnerBase, IChannelOwner<BrowserContext>,
                 if (isCompressed && !needCompressed)
                 {
                     await artifact.SaveAsAsync(harRecorder.Value.Path + ".tmp").ConfigureAwait(false);
-                    await Channel.Connection.LocalUtils.HarUnzipAsync(harRecorder.Value.Path + ".tmp", harRecorder.Value.Path).ConfigureAwait(false);
+                    await _connection.LocalUtils.HarUnzipAsync(harRecorder.Value.Path + ".tmp", harRecorder.Value.Path).ConfigureAwait(false);
                 }
                 else
                 {
@@ -416,7 +408,7 @@ internal class BrowserContext : ChannelOwnerBase, IChannelOwner<BrowserContext>,
 
     [MethodImpl(MethodImplOptions.NoInlining)]
     public Task GrantPermissionsAsync(IEnumerable<string> permissions, BrowserContextGrantPermissionsOptions options = default)
-        => SendMessageToServerAsync<PageChannel>("grantPermissions", new Dictionary<string, object>
+        => SendMessageToServerAsync("grantPermissions", new Dictionary<string, object>
         {
             ["permissions"] = permissions?.ToArray(),
             ["origin"] = options?.Origin,
@@ -424,21 +416,21 @@ internal class BrowserContext : ChannelOwnerBase, IChannelOwner<BrowserContext>,
 
     [MethodImpl(MethodImplOptions.NoInlining)]
     public async Task<ICDPSession> NewCDPSessionAsync(IPage page)
-        => (await SendMessageToServerAsync<CDPChannel>(
+        => await SendMessageToServerAsync<CDPSession>(
         "newCDPSession",
         new Dictionary<string, object>
         {
             ["page"] = new { guid = (page as Page).Guid },
-        }).ConfigureAwait(false)).Object;
+        }).ConfigureAwait(false);
 
     [MethodImpl(MethodImplOptions.NoInlining)]
     public async Task<ICDPSession> NewCDPSessionAsync(IFrame frame)
-        => (await SendMessageToServerAsync<CDPChannel>(
+        => await SendMessageToServerAsync<CDPSession>(
         "newCDPSession",
         new Dictionary<string, object>
         {
             ["frame"] = new { guid = (frame as Frame).Guid },
-        }).ConfigureAwait(false)).Object;
+        }).ConfigureAwait(false);
 
     [MethodImpl(MethodImplOptions.NoInlining)]
     public async Task<IPage> NewPageAsync()
@@ -448,7 +440,7 @@ internal class BrowserContext : ChannelOwnerBase, IChannelOwner<BrowserContext>,
             throw new PlaywrightException("Please use Browser.NewContextAsync()");
         }
 
-        return (await SendMessageToServerAsync<PageChannel>("newPage").ConfigureAwait(false)).Object;
+        return await SendMessageToServerAsync<Page>("newPage").ConfigureAwait(false);
     }
 
     [MethodImpl(MethodImplOptions.NoInlining)]
@@ -485,7 +477,7 @@ internal class BrowserContext : ChannelOwnerBase, IChannelOwner<BrowserContext>,
             });
 
     [MethodImpl(MethodImplOptions.NoInlining)]
-    public Task SetGeolocationAsync(Geolocation geolocation) => SendMessageToServerAsync<PageChannel>(
+    public Task SetGeolocationAsync(Geolocation geolocation) => SendMessageToServerAsync(
             "setGeolocation",
             new Dictionary<string, object>
             {
@@ -493,7 +485,7 @@ internal class BrowserContext : ChannelOwnerBase, IChannelOwner<BrowserContext>,
             });
 
     [MethodImpl(MethodImplOptions.NoInlining)]
-    public Task SetOfflineAsync(bool offline) => SendMessageToServerAsync<PageChannel>(
+    public Task SetOfflineAsync(bool offline) => SendMessageToServerAsync(
             "setOffline",
             new Dictionary<string, object>
             {
@@ -596,7 +588,7 @@ internal class BrowserContext : ChannelOwnerBase, IChannelOwner<BrowserContext>,
     {
         _timeoutSettings.SetDefaultNavigationTimeout(timeout);
         WrapApiCallAsync(
-            () => SendMessageToServerAsync<PageChannel>(
+            () => SendMessageToServerAsync(
             "setDefaultNavigationTimeoutNoReply",
             new Dictionary<string, object>
             {
@@ -612,7 +604,7 @@ internal class BrowserContext : ChannelOwnerBase, IChannelOwner<BrowserContext>,
     {
         _timeoutSettings.SetDefaultTimeout(timeout);
         WrapApiCallAsync(
-            () => SendMessageToServerAsync<PageChannel>(
+            () => SendMessageToServerAsync(
             "setDefaultTimeoutNoReply",
             new Dictionary<string, object>
             {
@@ -726,9 +718,8 @@ internal class BrowserContext : ChannelOwnerBase, IChannelOwner<BrowserContext>,
         _closeTcs.TrySetResult(true);
     }
 
-    private void Channel_OnPage(object sender, PageChannel pageChannel)
+    private void Channel_OnPage(object sender, Page page)
     {
-        var page = pageChannel.Object;
         page.Context = this;
         _pages.Add(page);
         Page?.Invoke(this, page);
@@ -766,7 +757,7 @@ internal class BrowserContext : ChannelOwnerBase, IChannelOwner<BrowserContext>,
 
         _bindings.Add(name, callback);
 
-        return SendMessageToServerAsync<PageChannel>(
+        return SendMessageToServerAsync(
             "exposeBinding",
             new Dictionary<string, object>
             {
@@ -793,7 +784,7 @@ internal class BrowserContext : ChannelOwnerBase, IChannelOwner<BrowserContext>,
         var contentPolicy = RouteFromHarUpdateContentPolicyToHarContentPolicy(options?.UpdateContent);
         var harId = (await SendMessageToServerAsync("harStart", new Dictionary<string, object>
             {
-                { "page", page?.Channel },
+                { "page", page },
                 { "options", Core.Browser.PrepareHarOptions(contentPolicy ?? HarContentPolicy.Attach, options.UpdateMode ?? HarMode.Minimal, har, null, options.Url, options.UrlString, options.UrlRegex) },
             }).ConfigureAwait(false)).GetString("harId", false);
         _harRecorders.Add(harId, new() { Path = har, Content = contentPolicy ?? HarContentPolicy.Attach });
@@ -807,7 +798,7 @@ internal class BrowserContext : ChannelOwnerBase, IChannelOwner<BrowserContext>,
             await RecordIntoHarAsync(har, null, options).ConfigureAwait(false);
             return;
         }
-        var harRouter = await HarRouter.CreateAsync(Channel.Connection.LocalUtils, har, options?.NotFound ?? HarNotFound.Abort, new()
+        var harRouter = await HarRouter.CreateAsync(_connection.LocalUtils, har, options?.NotFound ?? HarNotFound.Abort, new()
         {
             Url = options?.Url,
             UrlRegex = options?.UrlRegex,

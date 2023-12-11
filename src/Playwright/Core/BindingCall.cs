@@ -29,29 +29,22 @@ using System.Reflection;
 using System.Threading.Tasks;
 using Microsoft.Playwright.Helpers;
 using Microsoft.Playwright.Transport;
-using Microsoft.Playwright.Transport.Channels;
 using Microsoft.Playwright.Transport.Protocol;
 
 namespace Microsoft.Playwright.Core;
 
-internal class BindingCall : ChannelOwnerBase, IChannelOwner<BindingCall>
+internal class BindingCall : ChannelOwnerBase
 {
     private static readonly Type VoidTaskResultType = Type.GetType("System.Threading.Tasks.VoidTaskResult");
 
-    private readonly BindingCallChannel _channel;
     private readonly BindingCallInitializer _initializer;
 
-    public BindingCall(IChannelOwner parent, string guid, BindingCallInitializer initializer) : base(parent, guid)
+    public BindingCall(ChannelOwnerBase parent, string guid, BindingCallInitializer initializer) : base(parent, guid)
     {
-        _channel = new(guid, parent.Connection, this);
         _initializer = initializer;
     }
 
     public string Name => _initializer.Name;
-
-    ChannelBase IChannelOwner.Channel => _channel;
-
-    IChannel<BindingCall> IChannelOwner<BindingCall>.Channel => _channel;
 
     internal async Task CallAsync(Delegate binding)
     {

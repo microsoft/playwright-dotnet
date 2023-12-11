@@ -26,13 +26,12 @@ using System;
 using System.Collections.Generic;
 using System.Text.Json;
 using System.Text.Json.Serialization;
-using Microsoft.Playwright.Transport.Channels;
 
 namespace Microsoft.Playwright.Transport.Converters;
 
 internal class ChannelOwnerListToGuidListConverter<T>
     : JsonConverter<IEnumerable<T>>
-    where T : class, IChannelOwner
+    where T : ChannelOwnerBase
 {
     private readonly Connection _connection;
 
@@ -55,7 +54,7 @@ internal class ChannelOwnerListToGuidListConverter<T>
         foreach (T item in value)
         {
             writer.WriteStartObject();
-            writer.WriteString("guid", item.Channel.Guid);
+            writer.WriteString("guid", item.Guid);
             writer.WriteEndObject();
         }
         writer.WriteEndArray();

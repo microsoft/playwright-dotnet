@@ -31,22 +31,20 @@ using System.Threading.Tasks;
 using System.Web;
 using Microsoft.Playwright.Helpers;
 using Microsoft.Playwright.Transport;
-using Microsoft.Playwright.Transport.Channels;
+
 using Microsoft.Playwright.Transport.Protocol;
 
 namespace Microsoft.Playwright.Core;
 
-internal class Request : ChannelOwnerBase, IChannelOwner<Request>, IRequest
+internal class Request : ChannelOwnerBase, IRequest
 {
-    private readonly RequestChannel _channel;
     internal readonly RequestInitializer _initializer;
     private readonly RawHeaders _provisionalHeaders;
     private readonly RouteFallbackOptions _fallbackOverrides = new();
     private Task<RawHeaders> _rawHeadersTask;
 
-    internal Request(IChannelOwner parent, string guid, RequestInitializer initializer) : base(parent, guid)
+    internal Request(ChannelOwnerBase parent, string guid, RequestInitializer initializer) : base(parent, guid)
     {
-        _channel = new(guid, parent.Connection, this);
         _initializer = initializer;
         RedirectedFrom = _initializer.RedirectedFrom;
         Timing = new();
@@ -59,10 +57,6 @@ internal class Request : ChannelOwnerBase, IChannelOwner<Request>, IRequest
         _provisionalHeaders = new RawHeaders(initializer.Headers.ConvertAll(x => new NameValue() { Name = x.Name, Value = x.Value }).ToList());
         _fallbackOverrides.PostData = initializer.PostData;
     }
-
-    ChannelBase IChannelOwner.Channel => _channel;
-
-    IChannel<Request> IChannelOwner<Request>.Channel => _channel;
 
     public string Failure { get; internal set; }
 
@@ -144,7 +138,7 @@ internal class Request : ChannelOwnerBase, IChannelOwner<Request>, IRequest
     internal BrowserContext _context => (BrowserContext)Frame.Page.Context;
 
     [MethodImpl(MethodImplOptions.NoInlining)]
-    public async Task<IResponse> ResponseAsync() => (await SendMessageToServerAsync<ResponseChannel>("response").ConfigureAwait(false))?.Object;
+    public async Task<IResponse> ResponseAsync() => await SendMessageToServerAsync<Response>("response").ConfigureAwait(false);
 
     [MethodImpl(MethodImplOptions.NoInlining)]
     public JsonElement? PostDataJSON()
@@ -180,12 +174,12 @@ internal class Request : ChannelOwnerBase, IChannelOwner<Request>, IRequest
     [MethodImpl(MethodImplOptions.NoInlining)]
     public async Task<RequestSizesResult> SizesAsync()
     {
-        if (await ResponseAsync().ConfigureAwait(false) is not IChannelOwner<Response> res)
+        if (await ResponseAsync().ConfigureAwait(false) is not Response res)
         {
             throw new PlaywrightException("Unable to fetch resources sizes.");
         }
 
-        return (await ((Response)res).SendMessageToServerAsync("sizes").ConfigureAwait(false))?.GetProperty("sizes").ToObject<RequestSizesResult>();
+        return (await res.SendMessageToServerAsync("sizes").ConfigureAwait(false))?.GetProperty("sizes").ToObject<RequestSizesResult>();
     }
 
     [MethodImpl(MethodImplOptions.NoInlining)]

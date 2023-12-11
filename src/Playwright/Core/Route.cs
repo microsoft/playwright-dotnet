@@ -32,7 +32,6 @@ using System.Text.Json;
 using System.Threading.Tasks;
 using Microsoft.Playwright.Helpers;
 using Microsoft.Playwright.Transport;
-using Microsoft.Playwright.Transport.Channels;
 using Microsoft.Playwright.Transport.Protocol;
 
 namespace Microsoft.Playwright.Core;
@@ -40,16 +39,14 @@ namespace Microsoft.Playwright.Core;
 /// <summary>
 /// <see cref="IRoute"/>.
 /// </summary>
-internal class Route : ChannelOwnerBase, IChannelOwner<Route>, IRoute
+internal class Route : ChannelOwnerBase, IRoute
 {
-    private readonly RouteChannel _channel;
     private readonly RouteInitializer _initializer;
     private readonly Request _request;
     private TaskCompletionSource<bool> _handlingTask;
 
-    internal Route(IChannelOwner parent, string guid, RouteInitializer initializer) : base(parent, guid)
+    internal Route(ChannelOwnerBase parent, string guid, RouteInitializer initializer) : base(parent, guid)
     {
-        _channel = new(guid, parent.Connection, this);
         _initializer = initializer;
         _request = initializer.Request;
     }
@@ -57,10 +54,6 @@ internal class Route : ChannelOwnerBase, IChannelOwner<Route>, IRoute
     public IRequest Request => _initializer.Request;
 
     internal BrowserContext _context { get; set; }
-
-    ChannelBase IChannelOwner.Channel => _channel;
-
-    IChannel<Route> IChannelOwner<Route>.Channel => _channel;
 
     [MethodImpl(MethodImplOptions.NoInlining)]
     public async Task FulfillAsync(RouteFulfillOptions options = default)
@@ -107,7 +100,7 @@ internal class Route : ChannelOwnerBase, IChannelOwner<Route>, IRoute
     internal async Task InnerContinueAsync(bool @internal = false)
     {
         var options = _request.FallbackOverridesForContinue();
-        await _channel.Connection.WrapApiCallAsync(
+        await _connection.WrapApiCallAsync(
             () => RaceWithTargetCloseAsync(
                 SendMessageToServerAsync(
             "continue",
@@ -167,7 +160,7 @@ internal class Route : ChannelOwnerBase, IChannelOwner<Route>, IRoute
             headers ??= response.Headers;
             if (body == null && path == null && response is APIResponse responseImpl)
             {
-                if (responseImpl._context._channel.Connection == this._channel.Connection)
+                if (responseImpl._context._connection == this._connection)
                 {
                     fetchResponseUid = responseImpl.FetchUid();
                 }
@@ -284,7 +277,7 @@ internal class Route : ChannelOwnerBase, IChannelOwner<Route>, IRoute
 
     [MethodImpl(MethodImplOptions.NoInlining)]
     public Task<IAPIResponse> FetchAsync(RouteFetchOptions options)
-        => _channel.Connection.WrapApiCallAsync(
+        => _connection.WrapApiCallAsync(
             () =>
             {
                 var apiRequest = (APIRequestContext)_context.APIRequest;

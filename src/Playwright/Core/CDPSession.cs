@@ -27,25 +27,18 @@ using System.Runtime.CompilerServices;
 using System.Text.Json;
 using System.Threading.Tasks;
 using Microsoft.Playwright.Transport;
-using Microsoft.Playwright.Transport.Channels;
 
 #nullable enable
 
 namespace Microsoft.Playwright.Core;
 
-internal class CDPSession : ChannelOwnerBase, ICDPSession, IChannelOwner<CDPSession>
+internal class CDPSession : ChannelOwnerBase, ICDPSession
 {
-    private readonly CDPChannel _channel;
     private readonly Dictionary<string, CDPSessionEvent> _cdpSessionEvents = new();
 
-    public CDPSession(IChannelOwner parent, string guid) : base(parent, guid)
+    public CDPSession(ChannelOwnerBase parent, string guid) : base(parent, guid)
     {
-        _channel = new(guid, parent.Connection, this);
     }
-
-    ChannelBase IChannelOwner.Channel => _channel;
-
-    IChannel<CDPSession> IChannelOwner<CDPSession>.Channel => _channel;
 
     internal override void OnMessage(string method, JsonElement? serverParams)
     {

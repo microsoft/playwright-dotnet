@@ -34,14 +34,12 @@ using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Microsoft.Playwright.Helpers;
 using Microsoft.Playwright.Transport;
-using Microsoft.Playwright.Transport.Channels;
 using Microsoft.Playwright.Transport.Protocol;
 
 namespace Microsoft.Playwright.Core;
 
-internal class Page : ChannelOwnerBase, IChannelOwner<Page>, IPage
+internal class Page : ChannelOwnerBase, IPage
 {
-    private readonly PageChannel _channel;
     private readonly List<Frame> _frames = new();
     private readonly IAccessibility _accessibility;
     private readonly IMouse _mouse;
@@ -55,12 +53,10 @@ internal class Page : ChannelOwnerBase, IChannelOwner<Page>, IPage
     private Video _video;
     private string _closeReason;
 
-    internal Page(IChannelOwner parent, string guid, PageInitializer initializer) : base(parent, guid)
+    internal Page(ChannelOwnerBase parent, string guid, PageInitializer initializer) : base(parent, guid)
     {
         Context = (BrowserContext)parent;
         _timeoutSettings = new(Context._timeoutSettings);
-
-        _channel = new(guid, parent.Connection, this);
 
         MainFrame = initializer.MainFrame;
         MainFrame.Page = this;
@@ -71,10 +67,10 @@ internal class Page : ChannelOwnerBase, IChannelOwner<Page>, IPage
         }
 
         IsClosed = initializer.IsClosed;
-        _accessibility = new Accessibility(_channel);
-        _keyboard = new Keyboard(_channel);
-        _touchscreen = new Touchscreen(_channel);
-        _mouse = new Mouse(_channel);
+        _accessibility = new Accessibility(this);
+        _keyboard = new Keyboard(this);
+        _touchscreen = new Touchscreen(this);
+        _mouse = new Mouse(this);
         APIRequest = Context._request;
 
         _initializer = initializer;
@@ -163,10 +159,6 @@ internal class Page : ChannelOwnerBase, IChannelOwner<Page>, IPage
 
     public event EventHandler<IDownload> Download;
 
-    ChannelBase IChannelOwner.Channel => _channel;
-
-    IChannel<Page> IChannelOwner<Page>.Channel => _channel;
-
     public bool IsClosed { get; private set; }
 
     IFrame IPage.MainFrame => MainFrame;
@@ -227,8 +219,6 @@ internal class Page : ChannelOwnerBase, IChannelOwner<Page>, IPage
 
     internal Page Opener => _initializer.Opener;
 
-    internal PageChannel Channel => _channel;
-
     internal TaskCompletionSource<bool> ClosedOrCrashedTcs { get; } = new();
 
     public IAPIRequestContext APIRequest { get; }
@@ -246,35 +236,35 @@ internal class Page : ChannelOwnerBase, IChannelOwner<Page>, IPage
             case "bindingCall":
                 Channel_BindingCall(
                     this,
-                    serverParams?.GetProperty("binding").ToObject<BindingCallChannel>(_connection.DefaultJsonSerializerOptions).Object);
+                    serverParams?.GetProperty("binding").ToObject<BindingCall>(_connection.DefaultJsonSerializerOptions));
                 break;
             case "route":
-                var route = serverParams?.GetProperty("route").ToObject<RouteChannel>(_connection.DefaultJsonSerializerOptions).Object;
+                var route = serverParams?.GetProperty("route").ToObject<Route>(_connection.DefaultJsonSerializerOptions);
                 Channel_Route(this, route);
                 break;
             case "popup":
-                Popup?.Invoke(this, serverParams?.GetProperty("page").ToObject<PageChannel>(_connection.DefaultJsonSerializerOptions).Object);
+                Popup?.Invoke(this, serverParams?.GetProperty("page").ToObject<Page>(_connection.DefaultJsonSerializerOptions));
                 break;
             case "fileChooser":
-                _fileChooserImpl?.Invoke(this, new FileChooser(this, serverParams.Value.GetProperty("element").ToObject<ElementHandleChannel>(_connection.DefaultJsonSerializerOptions).Object, serverParams.Value.GetProperty("isMultiple").ToObject<bool>(_connection.DefaultJsonSerializerOptions)));
+                _fileChooserImpl?.Invoke(this, new FileChooser(this, serverParams.Value.GetProperty("element").ToObject<ElementHandle>(_connection.DefaultJsonSerializerOptions), serverParams.Value.GetProperty("isMultiple").ToObject<bool>(_connection.DefaultJsonSerializerOptions)));
                 break;
             case "frameAttached":
-                Channel_FrameAttached(this, serverParams?.GetProperty("frame").ToObject<FrameChannel>(_connection.DefaultJsonSerializerOptions).Object);
+                Channel_FrameAttached(this, serverParams?.GetProperty("frame").ToObject<Frame>(_connection.DefaultJsonSerializerOptions));
                 break;
             case "frameDetached":
-                Channel_FrameDetached(this, serverParams?.GetProperty("frame").ToObject<FrameChannel>(_connection.DefaultJsonSerializerOptions).Object);
+                Channel_FrameDetached(this, serverParams?.GetProperty("frame").ToObject<Frame>(_connection.DefaultJsonSerializerOptions));
                 break;
             case "webSocket":
-                WebSocket?.Invoke(this, serverParams?.GetProperty("webSocket").ToObject<WebSocketChannel>(_connection.DefaultJsonSerializerOptions).Object);
+                WebSocket?.Invoke(this, serverParams?.GetProperty("webSocket").ToObject<WebSocket>(_connection.DefaultJsonSerializerOptions));
                 break;
             case "download":
-                Download?.Invoke(this, new Download(this, serverParams.Value.GetProperty("url").ToObject<string>(_connection.DefaultJsonSerializerOptions), serverParams.Value.GetProperty("suggestedFilename").ToObject<string>(_connection.DefaultJsonSerializerOptions), serverParams.Value.GetProperty("artifact").ToObject<ArtifactChannel>(_connection.DefaultJsonSerializerOptions).Object));
+                Download?.Invoke(this, new Download(this, serverParams.Value.GetProperty("url").ToObject<string>(_connection.DefaultJsonSerializerOptions), serverParams.Value.GetProperty("suggestedFilename").ToObject<string>(_connection.DefaultJsonSerializerOptions), serverParams.Value.GetProperty("artifact").ToObject<Artifact>(_connection.DefaultJsonSerializerOptions)));
                 break;
             case "video":
-                ForceVideo().ArtifactReady(serverParams?.GetProperty("artifact").ToObject<ArtifactChannel>(_connection.DefaultJsonSerializerOptions).Object);
+                ForceVideo().ArtifactReady(serverParams?.GetProperty("artifact").ToObject<Artifact>(_connection.DefaultJsonSerializerOptions));
                 break;
             case "worker":
-                var worker = serverParams?.GetProperty("worker").ToObject<WorkerChannel>(_connection.DefaultJsonSerializerOptions).Object;
+                var worker = serverParams?.GetProperty("worker").ToObject<Worker>(_connection.DefaultJsonSerializerOptions);
                 _workers.Add(worker);
                 worker.Page = this;
                 Worker?.Invoke(this, worker);
@@ -701,7 +691,7 @@ internal class Page : ChannelOwnerBase, IChannelOwner<Page>, IPage
             ["maskColor"] = options.MaskColor,
             ["mask"] = options.Mask?.Select(locator => new Dictionary<string, object>
             {
-                ["frame"] = ((Locator)locator)._frame._channel,
+                ["frame"] = ((Locator)locator)._frame,
                 ["selector"] = ((Locator)locator)._selector,
             }).ToArray(),
         }).ConfigureAwait(false))?.GetProperty("binary").GetBytesFromBase64();
@@ -795,27 +785,27 @@ internal class Page : ChannelOwnerBase, IChannelOwner<Page>, IPage
 
     [MethodImpl(MethodImplOptions.NoInlining)]
     public async Task<IResponse> GoBackAsync(PageGoBackOptions options = default)
-        => (await SendMessageToServerAsync<ResponseChannel>("goBack", new Dictionary<string, object>
+        => await SendMessageToServerAsync<Response>("goBack", new Dictionary<string, object>
         {
             ["timeout"] = options?.Timeout,
             ["waitUntil"] = options?.WaitUntil,
-        }).ConfigureAwait(false))?.Object;
+        }).ConfigureAwait(false);
 
     [MethodImpl(MethodImplOptions.NoInlining)]
     public async Task<IResponse> GoForwardAsync(PageGoForwardOptions options = default)
-        => (await SendMessageToServerAsync<ResponseChannel>("goForward", new Dictionary<string, object>
+        => await SendMessageToServerAsync<Response>("goForward", new Dictionary<string, object>
         {
             ["timeout"] = options?.Timeout,
             ["waitUntil"] = options?.WaitUntil,
-        }).ConfigureAwait(false))?.Object;
+        }).ConfigureAwait(false);
 
     [MethodImpl(MethodImplOptions.NoInlining)]
     public async Task<IResponse> ReloadAsync(PageReloadOptions options = default)
-        => (await SendMessageToServerAsync<ResponseChannel>("reload", new Dictionary<string, object>
+        => await SendMessageToServerAsync<Response>("reload", new Dictionary<string, object>
         {
             ["timeout"] = options?.Timeout,
             ["waitUntil"] = options?.WaitUntil,
-        }).ConfigureAwait(false))?.Object;
+        }).ConfigureAwait(false);
 
     [MethodImpl(MethodImplOptions.NoInlining)]
     public Task ExposeBindingAsync(string name, Action callback, PageExposeBindingOptions options = default)
@@ -916,7 +906,7 @@ internal class Page : ChannelOwnerBase, IChannelOwner<Page>, IPage
 
     [MethodImpl(MethodImplOptions.NoInlining)]
     public Task AddInitScriptAsync(string script, string scriptPath)
-        => SendMessageToServerAsync<PageChannel>(
+        => SendMessageToServerAsync(
             "addInitScript",
             new Dictionary<string, object>
             {
@@ -1343,7 +1333,7 @@ internal class Page : ChannelOwnerBase, IChannelOwner<Page>, IPage
 
         Bindings.Add(name, callback);
 
-        return SendMessageToServerAsync<PageChannel>(
+        return SendMessageToServerAsync(
             "exposeBinding",
             new Dictionary<string, object>
             {
@@ -1352,7 +1342,7 @@ internal class Page : ChannelOwnerBase, IChannelOwner<Page>, IPage
             });
     }
 
-    private Video ForceVideo() => _video ??= new(this, _channel.Connection);
+    private Video ForceVideo() => _video ??= new(this, _connection);
 
     private FrameSetInputFilesOptions Map(PageSetInputFilesOptions options)
     {
@@ -1383,7 +1373,7 @@ internal class Page : ChannelOwnerBase, IChannelOwner<Page>, IPage
             }).ConfigureAwait(false);
             return;
         }
-        var harRouter = await HarRouter.CreateAsync(Channel.Connection.LocalUtils, har, options?.NotFound ?? HarNotFound.Abort, new()
+        var harRouter = await HarRouter.CreateAsync(_connection.LocalUtils, har, options?.NotFound ?? HarNotFound.Abort, new()
         {
             UrlRegex = options?.UrlRegex,
             Url = options?.Url,

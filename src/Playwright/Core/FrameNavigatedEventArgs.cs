@@ -22,8 +22,6 @@
  * SOFTWARE.
  */
 
-using Microsoft.Playwright.Transport.Channels;
-
 namespace Microsoft.Playwright.Core;
 
 internal class FrameNavigatedEventArgs
@@ -39,5 +37,5 @@ internal class FrameNavigatedEventArgs
 
 internal class NavigateDocument
 {
-    public RequestChannel Request { get; set; }
+    public Request Request { get; set; }
 }

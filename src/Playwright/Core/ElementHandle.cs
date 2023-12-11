@@ -29,25 +29,17 @@ using System.Linq;
 using System.Text.Json;
 using System.Threading.Tasks;
 using Microsoft.Playwright.Helpers;
-using Microsoft.Playwright.Transport.Channels;
+using Microsoft.Playwright.Transport;
 using Microsoft.Playwright.Transport.Protocol;
 
 namespace Microsoft.Playwright.Core;
 
-internal class ElementHandle : JSHandle, IElementHandle, IChannelOwner<ElementHandle>
+internal class ElementHandle : JSHandle, IElementHandle
 {
-    private readonly ElementHandleChannel _channel;
 
-    internal ElementHandle(IChannelOwner parent, string guid, ElementHandleInitializer initializer) : base(parent, guid, initializer)
+    internal ElementHandle(ChannelOwnerBase parent, string guid, ElementHandleInitializer initializer) : base(parent, guid, initializer)
     {
-        _channel = new(guid, parent.Connection, this);
     }
-
-    ChannelBase IChannelOwner.Channel => _channel;
-
-    IChannel<ElementHandle> IChannelOwner<ElementHandle>.Channel => _channel;
-
-    internal IChannel<ElementHandle> ElementChannel => _channel;
 
     internal override void OnMessage(string method, JsonElement? serverParams)
     {
@@ -60,7 +52,7 @@ internal class ElementHandle : JSHandle, IElementHandle, IChannelOwner<ElementHa
     }
 
     public async Task<IElementHandle> WaitForSelectorAsync(string selector, ElementHandleWaitForSelectorOptions options = default)
-        => (await SendMessageToServerAsync<ElementHandleChannel>(
+        => await SendMessageToServerAsync<ElementHandle>(
             "waitForSelector",
             new Dictionary<string, object>
             {
@@ -68,7 +60,7 @@ internal class ElementHandle : JSHandle, IElementHandle, IChannelOwner<ElementHa
                 ["timeout"] = options?.Timeout,
                 ["state"] = options?.State,
                 ["strict"] = options?.Strict,
-            }).ConfigureAwait(false)).Object;
+            }).ConfigureAwait(false);
 
     public Task WaitForElementStateAsync(ElementState state, ElementHandleWaitForElementStateOptions options = default)
         => SendMessageToServerAsync("waitForElementState", new Dictionary<string, object>
@@ -119,7 +111,7 @@ internal class ElementHandle : JSHandle, IElementHandle, IChannelOwner<ElementHa
         {
             args["mask"] = options.Mask.Select(locator => new Dictionary<string, object>
             {
-                ["frame"] = ((Locator)locator)._frame._channel,
+                ["frame"] = ((Locator)locator)._frame,
                 ["selector"] = ((Locator)locator)._selector,
             }).ToArray();
         }
@@ -144,7 +136,7 @@ internal class ElementHandle : JSHandle, IElementHandle, IChannelOwner<ElementHa
             ["noWaitAfter"] = options?.NoWaitAfter,
         });
 
-    public async Task<IFrame> ContentFrameAsync() => (await SendMessageToServerAsync<FrameChannel>("contentFrame").ConfigureAwait(false))?.Object;
+    public async Task<IFrame> ContentFrameAsync() => await SendMessageToServerAsync<Frame>("contentFrame").ConfigureAwait(false);
 
     public Task HoverAsync(ElementHandleHoverOptions options = default)
         => SendMessageToServerAsync<JsonElement?>("hover", new Dictionary<string, object>
@@ -158,12 +150,12 @@ internal class ElementHandle : JSHandle, IElementHandle, IChannelOwner<ElementHa
         });
 
     public Task ScrollIntoViewIfNeededAsync(ElementHandleScrollIntoViewIfNeededOptions options = default)
-        => SendMessageToServerAsync<ElementHandleChannel>("scrollIntoViewIfNeeded", new Dictionary<string, object>
+        => SendMessageToServerAsync("scrollIntoViewIfNeeded", new Dictionary<string, object>
         {
             ["timeout"] = options?.Timeout,
         });
 
-    public async Task<IFrame> OwnerFrameAsync() => (await SendMessageToServerAsync<FrameChannel>("ownerFrame").ConfigureAwait(false)).Object;
+    public async Task<IFrame> OwnerFrameAsync() => await SendMessageToServerAsync<Frame>("ownerFrame").ConfigureAwait(false);
 
     public async Task<ElementHandleBoundingBoxResult> BoundingBoxAsync()
     {
@@ -240,20 +232,20 @@ internal class ElementHandle : JSHandle, IElementHandle, IChannelOwner<ElementHa
     }
 
     public async Task<IElementHandle> QuerySelectorAsync(string selector)
-        => (await SendMessageToServerAsync<ElementHandleChannel>(
+        => await SendMessageToServerAsync<ElementHandle>(
             "querySelector",
             new Dictionary<string, object>
             {
                 ["selector"] = selector,
-            }).ConfigureAwait(false))?.Object;
+            }).ConfigureAwait(false);
 
     public async Task<IReadOnlyList<IElementHandle>> QuerySelectorAllAsync(string selector)
-        => (await SendMessageToServerAsync<ChannelBase[]>(
+        => (await SendMessageToServerAsync<ElementHandle[]>(
             "querySelectorAll",
             new Dictionary<string, object>
             {
                 ["selector"] = selector,
-            }).ConfigureAwait(false)).Select(e => ((ElementHandleChannel)e).Object).ToList().AsReadOnly();
+            }).ConfigureAwait(false)).ToList().AsReadOnly();
 
     public async Task<JsonElement?> EvalOnSelectorAsync(string selector, string expression, object arg = null)
         => ScriptsHelper.ParseEvaluateResult<JsonElement?>(await SendMessageToServerAsync<JsonElement?>(
@@ -288,7 +280,7 @@ internal class ElementHandle : JSHandle, IElementHandle, IChannelOwner<ElementHa
     public Task FocusAsync() => SendMessageToServerAsync("focus");
 
     public Task DispatchEventAsync(string type, object eventInit = null)
-        => SendMessageToServerAsync<ElementHandleChannel>("dispatchEvent", new Dictionary<string, object>
+        => SendMessageToServerAsync("dispatchEvent", new Dictionary<string, object>
         {
             ["type"] = type,
             ["eventInit"] = ScriptsHelper.SerializedArgument(eventInit),
@@ -313,7 +305,7 @@ internal class ElementHandle : JSHandle, IElementHandle, IChannelOwner<ElementHa
     public async Task<string> TextContentAsync() => (await SendMessageToServerAsync("textContent").ConfigureAwait(false))?.GetProperty("value").ToString();
 
     public Task SelectTextAsync(ElementHandleSelectTextOptions options = default)
-        => SendMessageToServerAsync<ElementHandleChannel>("selectText", new Dictionary<string, object>
+        => SendMessageToServerAsync("selectText", new Dictionary<string, object>
         {
             ["force"] = options?.Force,
             ["timeout"] = options?.Timeout,
@@ -360,7 +352,7 @@ internal class ElementHandle : JSHandle, IElementHandle, IChannelOwner<ElementHa
     }
 
     public Task CheckAsync(ElementHandleCheckOptions options = default)
-        => SendMessageToServerAsync<ElementHandleChannel>("check", new Dictionary<string, object>
+        => SendMessageToServerAsync("check", new Dictionary<string, object>
         {
             ["force"] = options?.Force,
             ["position"] = options?.Position,
@@ -370,7 +362,7 @@ internal class ElementHandle : JSHandle, IElementHandle, IChannelOwner<ElementHa
         });
 
     public Task UncheckAsync(ElementHandleUncheckOptions options = default)
-        => SendMessageToServerAsync<ElementHandleChannel>("uncheck", new Dictionary<string, object>
+        => SendMessageToServerAsync("uncheck", new Dictionary<string, object>
         {
             ["force"] = options?.Force,
             ["position"] = options?.Position,
@@ -409,7 +401,7 @@ internal class ElementHandle : JSHandle, IElementHandle, IChannelOwner<ElementHa
             }).ConfigureAwait(false))?.GetProperty("value").GetString();
 
     public Task SetCheckedAsync(bool checkedState, ElementHandleSetCheckedOptions options = null)
-        => SendMessageToServerAsync<ElementHandleChannel>(checkedState ? "check" : "uncheck", new Dictionary<string, object>
+        => SendMessageToServerAsync(checkedState ? "check" : "uncheck", new Dictionary<string, object>
         {
             ["force"] = options?.Force,
             ["position"] = options?.Position,
