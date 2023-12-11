@@ -32,9 +32,9 @@ using Microsoft.Playwright.Transport;
 
 namespace Microsoft.Playwright.Core;
 
-internal class Stream : ChannelOwnerBase, IAsyncDisposable
+internal class Stream : ChannelOwner, IAsyncDisposable
 {
-    internal Stream(ChannelOwnerBase parent, string guid) : base(parent, guid)
+    internal Stream(ChannelOwner parent, string guid) : base(parent, guid)
     {
     }
 

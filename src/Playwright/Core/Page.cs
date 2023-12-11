@@ -38,13 +38,9 @@ using Microsoft.Playwright.Transport.Protocol;
 
 namespace Microsoft.Playwright.Core;
 
-internal class Page : ChannelOwnerBase, IPage
+internal class Page : ChannelOwner, IPage
 {
     private readonly List<Frame> _frames = new();
-    private readonly IAccessibility _accessibility;
-    private readonly IMouse _mouse;
-    private readonly IKeyboard _keyboard;
-    private readonly ITouchscreen _touchscreen;
     private readonly PageInitializer _initializer;
 
     internal readonly List<Worker> _workers = new();
@@ -53,7 +49,7 @@ internal class Page : ChannelOwnerBase, IPage
     private Video _video;
     private string _closeReason;
 
-    internal Page(ChannelOwnerBase parent, string guid, PageInitializer initializer) : base(parent, guid)
+    internal Page(ChannelOwner parent, string guid, PageInitializer initializer) : base(parent, guid)
     {
         Context = (BrowserContext)parent;
         _timeoutSettings = new(Context._timeoutSettings);
@@ -67,10 +63,10 @@ internal class Page : ChannelOwnerBase, IPage
         }
 
         IsClosed = initializer.IsClosed;
-        _accessibility = new Accessibility(this);
-        _keyboard = new Keyboard(this);
-        _touchscreen = new Touchscreen(this);
-        _mouse = new Mouse(this);
+        Accessibility = new Accessibility(this);
+        Keyboard = new Keyboard(this);
+        Touchscreen = new Touchscreen(this);
+        Mouse = new Mouse(this);
         APIRequest = Context._request;
 
         _initializer = initializer;
@@ -173,29 +169,21 @@ internal class Page : ChannelOwnerBase, IPage
 
     public IAccessibility Accessibility
     {
-        get => _accessibility;
-        set => throw new NotSupportedException();
+        get;
     }
 
     public IMouse Mouse
     {
-        get => _mouse;
-        set => throw new NotSupportedException();
+        get;
     }
 
     public string Url => MainFrame.Url;
 
     public IReadOnlyList<IFrame> Frames => _frames.ToList().AsReadOnly();
 
-    public IKeyboard Keyboard
-    {
-        get => _keyboard;
-    }
+    public IKeyboard Keyboard { get; }
 
-    public ITouchscreen Touchscreen
-    {
-        get => _touchscreen;
-    }
+    public ITouchscreen Touchscreen { get; }
 
     public IReadOnlyList<IWorker> Workers => _workers;
 

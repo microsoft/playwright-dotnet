@@ -40,12 +40,12 @@ using Microsoft.Playwright.Transport.Protocol;
 
 namespace Microsoft.Playwright.Core;
 
-internal class Frame : ChannelOwnerBase, IFrame
+internal class Frame : ChannelOwner, IFrame
 {
     private readonly List<WaitUntilState> _loadStates = new();
     internal readonly List<Frame> _childFrames = new();
 
-    internal Frame(ChannelOwnerBase parent, string guid, FrameInitializer initializer) : base(parent, guid)
+    internal Frame(ChannelOwner parent, string guid, FrameInitializer initializer) : base(parent, guid)
     {
         Url = initializer.Url;
         Name = initializer.Name;
@@ -1044,7 +1044,6 @@ internal class Frame : ChannelOwnerBase, IFrame
 
 internal class SelectOptionValueProtocol
 {
-
 #nullable enable
     [JsonPropertyName("value")]
     public string? Value { get; set; }
@@ -1068,4 +1067,20 @@ internal class SelectOptionValueProtocol
             Index = value.Index,
         };
     }
+}
+
+internal class FrameNavigatedEventArgs
+{
+    public string Name { get; set; }
+
+    public string Url { get; set; }
+
+    public string Error { get; set; }
+
+    internal NavigateDocument NewDocument { get; set; }
+}
+
+internal class NavigateDocument
+{
+    public Request Request { get; set; }
 }

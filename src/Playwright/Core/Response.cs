@@ -34,14 +34,14 @@ using Microsoft.Playwright.Transport.Protocol;
 
 namespace Microsoft.Playwright.Core;
 
-internal class Response : ChannelOwnerBase, IResponse
+internal class Response : ChannelOwner, IResponse
 {
     private readonly ResponseInitializer _initializer;
     private readonly TaskCompletionSource<string> _finishedTask;
     private readonly RawHeaders _headers;
     private Task<RawHeaders> _rawHeadersTask;
 
-    internal Response(ChannelOwnerBase parent, string guid, ResponseInitializer initializer) : base(parent, guid)
+    internal Response(ChannelOwner parent, string guid, ResponseInitializer initializer) : base(parent, guid)
     {
         _initializer = initializer;
         _initializer.Request.Timing = _initializer.Timing;

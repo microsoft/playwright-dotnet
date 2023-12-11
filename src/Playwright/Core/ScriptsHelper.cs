@@ -87,3 +87,8 @@ internal static class ScriptsHelper
         throw new ArgumentException("Either path or content property must be present");
     }
 }
+
+internal class EvaluateArgumentGuidElement
+{
+    public string Guid { get; set; }
+}

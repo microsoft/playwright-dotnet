@@ -26,9 +26,9 @@ using Microsoft.Playwright.Transport;
 
 namespace Microsoft.Playwright.Core;
 
-internal class SocksSupport : ChannelOwnerBase
+internal class SocksSupport : ChannelOwner
 {
-    internal SocksSupport(ChannelOwnerBase parent, string guid) : base(parent, guid)
+    internal SocksSupport(ChannelOwner parent, string guid) : base(parent, guid)
     {
     }
 }

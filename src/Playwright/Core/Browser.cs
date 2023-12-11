@@ -36,7 +36,7 @@ using Microsoft.Playwright.Transport.Protocol;
 
 namespace Microsoft.Playwright.Core;
 
-internal class Browser : ChannelOwnerBase, IBrowser
+internal class Browser : ChannelOwner, IBrowser
 {
     private readonly BrowserInitializer _initializer;
     private readonly TaskCompletionSource<bool> _closedTcs = new();
@@ -44,7 +44,7 @@ internal class Browser : ChannelOwnerBase, IBrowser
     internal BrowserType _browserType;
     internal string _closeReason;
 
-    internal Browser(ChannelOwnerBase parent, string guid, BrowserInitializer initializer) : base(parent, guid)
+    internal Browser(ChannelOwner parent, string guid, BrowserInitializer initializer) : base(parent, guid)
     {
         IsConnected = true;
         _initializer = initializer;

@@ -54,7 +54,7 @@ internal static class ChannelHelpers
     }
 
     internal static T? GetObject<T>(this JsonElement? element, string name, Connection connection)
-        where T : ChannelOwnerBase
+        where T : ChannelOwner
     {
         if (!element.HasValue)
         {
@@ -72,7 +72,7 @@ internal static class ChannelHelpers
     }
 
     internal static T GetObject<T>(this JsonElement element, string name, Connection connection)
-        where T : ChannelOwnerBase
+        where T : ChannelOwner
     {
         var result = GetObject<T>((JsonElement?)element, name, connection);
         if (result == null)

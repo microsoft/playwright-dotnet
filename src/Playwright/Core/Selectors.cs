@@ -29,9 +29,9 @@ using Microsoft.Playwright.Transport;
 
 namespace Microsoft.Playwright.Core;
 
-internal class Selectors : ChannelOwnerBase
+internal class Selectors : ChannelOwner
 {
-    internal Selectors(ChannelOwnerBase parent, string guid) : base(parent, guid)
+    internal Selectors(ChannelOwner parent, string guid) : base(parent, guid)
     {
     }
 }

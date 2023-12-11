@@ -34,11 +34,11 @@ using Microsoft.Playwright.Transport.Protocol;
 
 namespace Microsoft.Playwright.Core;
 
-internal class Worker : ChannelOwnerBase, IWorker
+internal class Worker : ChannelOwner, IWorker
 {
     private readonly WorkerInitializer _initializer;
 
-    public Worker(ChannelOwnerBase parent, string guid, WorkerInitializer initializer) : base(parent, guid)
+    public Worker(ChannelOwner parent, string guid, WorkerInitializer initializer) : base(parent, guid)
     {
         _initializer = initializer;
     }

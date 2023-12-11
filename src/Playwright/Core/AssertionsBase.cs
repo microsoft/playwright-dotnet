@@ -47,24 +47,24 @@ internal class AssertionsBase
         IsNot = isNot;
     }
 
-    protected bool IsNot { get; private set; }
+    protected bool IsNot { get; }
 
-    internal Locator ActualLocator { get; private set; }
+    protected Locator ActualLocator { get; }
 
-    internal async Task ExpectImplAsync(string expression, ExpectedTextValue textValue, object expected, string message, FrameExpectOptions options)
+    protected async Task ExpectImplAsync(string expression, ExpectedTextValue textValue, object expected, string message, FrameExpectOptions options)
     {
         await ExpectImplAsync(expression, new ExpectedTextValue[] { textValue }, expected, message, options).ConfigureAwait(false);
     }
 
-    internal async Task ExpectImplAsync(string expression, ExpectedTextValue[] expectedText, object expected, string message, FrameExpectOptions options)
+    protected async Task ExpectImplAsync(string expression, ExpectedTextValue[] expectedText, object expected, string message, FrameExpectOptions options)
     {
-        options = options ?? new();
+        options ??= new();
         options.ExpectedText = expectedText;
         options.IsNot = IsNot;
         await ExpectImplAsync(expression, options, expected, message).ConfigureAwait(false);
     }
 
-    internal async Task ExpectImplAsync(string expression, FrameExpectOptions expectOptions, object expected, string message)
+    protected async Task ExpectImplAsync(string expression, FrameExpectOptions expectOptions, object expected, string message)
     {
         if (expectOptions.Timeout == null)
         {
@@ -87,7 +87,7 @@ internal class AssertionsBase
         }
     }
 
-    internal ExpectedTextValue ExpectedRegex(Regex pattern, ExpectedTextValue options = null)
+    protected ExpectedTextValue ExpectedRegex(Regex pattern, ExpectedTextValue options = null)
     {
         if (pattern == null)
         {
@@ -100,7 +100,7 @@ internal class AssertionsBase
         return textValue;
     }
 
-    internal FrameExpectOptions ConvertToFrameExpectOptions(object source) => ClassUtils.Clone<FrameExpectOptions>(source);
+    protected FrameExpectOptions ConvertToFrameExpectOptions(object source) => ClassUtils.Clone<FrameExpectOptions>(source);
 
     private string FormatValue(object value)
     {
@@ -122,6 +122,6 @@ internal class AssertionsBase
         return value.ToString();
     }
 
-    internal static void SetDefaultTimeout(float timeout)
+    public static void SetDefaultTimeout(float timeout)
         => _defaultTimeout = timeout;
 }

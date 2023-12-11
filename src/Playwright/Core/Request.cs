@@ -36,14 +36,14 @@ using Microsoft.Playwright.Transport.Protocol;
 
 namespace Microsoft.Playwright.Core;
 
-internal class Request : ChannelOwnerBase, IRequest
+internal class Request : ChannelOwner, IRequest
 {
     internal readonly RequestInitializer _initializer;
     private readonly RawHeaders _provisionalHeaders;
     private readonly RouteFallbackOptions _fallbackOverrides = new();
     private Task<RawHeaders> _rawHeadersTask;
 
-    internal Request(ChannelOwnerBase parent, string guid, RequestInitializer initializer) : base(parent, guid)
+    internal Request(ChannelOwner parent, string guid, RequestInitializer initializer) : base(parent, guid)
     {
         _initializer = initializer;
         RedirectedFrom = _initializer.RedirectedFrom;
@@ -109,7 +109,6 @@ internal class Request : ChannelOwnerBase, IRequest
             return null;
         }
     }
-
 
     public byte[] PostDataBuffer
     {

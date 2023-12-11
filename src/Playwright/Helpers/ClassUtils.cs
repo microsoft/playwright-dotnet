@@ -22,6 +22,8 @@
  * SOFTWARE.
  */
 
+namespace Microsoft.Playwright.Helpers;
+
 internal static class ClassUtils
 {
     internal static T Clone<T>(object source)

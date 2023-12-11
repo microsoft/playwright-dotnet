@@ -172,7 +172,7 @@ internal static class EvaluateArgumentValueConverter
             return new { a, id };
         }
 
-        if (value is ChannelOwnerBase channelOwner)
+        if (value is ChannelOwner channelOwner)
         {
             handles.Add(new() { Guid = channelOwner.Guid });
             return new { h = handles.Count - 1 };
@@ -252,11 +252,8 @@ internal static class EvaluateArgumentValueConverter
 
             foreach (var kv in parsedExpando)
             {
-                var property = t.GetProperties().FirstOrDefault(prop => string.Equals(prop.Name, kv.Key, StringComparison.OrdinalIgnoreCase));
-                if (property != null)
-                {
-                    property.SetValue(objResult, ToExpectedType(kv.Value, property.PropertyType, visited));
-                }
+                var property = Array.Find(t.GetProperties(), prop => string.Equals(prop.Name, kv.Key, StringComparison.OrdinalIgnoreCase));
+                property?.SetValue(objResult, ToExpectedType(kv.Value, property.PropertyType, visited));
             }
 
             return objResult;
@@ -391,7 +388,7 @@ internal static class EvaluateArgumentValueConverter
 
         internal int LastId { get; set; }
 
-        private ObjectIDGenerator IDGenerator { get; set; }
+        private ObjectIDGenerator IDGenerator { get; }
 
         internal long Identity(object obj)
             => IDGenerator.GetId(obj, out _);

@@ -39,13 +39,13 @@ namespace Microsoft.Playwright.Core;
 /// <summary>
 /// <see cref="IRoute"/>.
 /// </summary>
-internal class Route : ChannelOwnerBase, IRoute
+internal class Route : ChannelOwner, IRoute
 {
     private readonly RouteInitializer _initializer;
     private readonly Request _request;
     private TaskCompletionSource<bool> _handlingTask;
 
-    internal Route(ChannelOwnerBase parent, string guid, RouteInitializer initializer) : base(parent, guid)
+    internal Route(ChannelOwner parent, string guid, RouteInitializer initializer) : base(parent, guid)
     {
         _initializer = initializer;
         _request = initializer.Request;

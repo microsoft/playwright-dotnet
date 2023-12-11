@@ -34,11 +34,11 @@ using Microsoft.Playwright.Transport.Protocol;
 
 namespace Microsoft.Playwright.Core;
 
-internal class BrowserType : ChannelOwnerBase, IBrowserType
+internal class BrowserType : ChannelOwner, IBrowserType
 {
     private readonly BrowserTypeInitializer _initializer;
 
-    internal BrowserType(ChannelOwnerBase parent, string guid, BrowserTypeInitializer initializer) : base(parent, guid)
+    internal BrowserType(ChannelOwner parent, string guid, BrowserTypeInitializer initializer) : base(parent, guid)
     {
         _initializer = initializer;
     }

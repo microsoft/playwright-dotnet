@@ -30,12 +30,12 @@ using Microsoft.Playwright.Transport.Protocol;
 
 namespace Microsoft.Playwright.Core;
 
-internal class WebSocket : ChannelOwnerBase, IWebSocket
+internal class WebSocket : ChannelOwner, IWebSocket
 {
     private const int OpcodeBase64 = 2;
     private readonly WebSocketInitializer _initializer;
 
-    internal WebSocket(ChannelOwnerBase parent, string guid, WebSocketInitializer initializer) : base(parent, guid)
+    internal WebSocket(ChannelOwner parent, string guid, WebSocketInitializer initializer) : base(parent, guid)
     {
         _initializer = initializer;
     }

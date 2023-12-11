@@ -36,8 +36,7 @@ namespace Microsoft.Playwright.Core;
 
 internal class ElementHandle : JSHandle, IElementHandle
 {
-
-    internal ElementHandle(ChannelOwnerBase parent, string guid, ElementHandleInitializer initializer) : base(parent, guid, initializer)
+    internal ElementHandle(ChannelOwner parent, string guid, ElementHandleInitializer initializer) : base(parent, guid, initializer)
     {
     }
 
