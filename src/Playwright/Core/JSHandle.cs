@@ -28,24 +28,16 @@ using System.Text.Json;
 using System.Threading.Tasks;
 using Microsoft.Playwright.Helpers;
 using Microsoft.Playwright.Transport;
-using Microsoft.Playwright.Transport.Channels;
 using Microsoft.Playwright.Transport.Protocol;
 
 namespace Microsoft.Playwright.Core;
 
-internal class JSHandle : ChannelOwnerBase, IChannelOwner<JSHandle>, IJSHandle
+internal class JSHandle : ChannelOwnerBase, IJSHandle
 {
-    private readonly JSHandleChannel _channel;
-
-    internal JSHandle(IChannelOwner parent, string guid, JSHandleInitializer initializer) : base(parent, guid)
+    internal JSHandle(ChannelOwnerBase parent, string guid, JSHandleInitializer initializer) : base(parent, guid)
     {
-        _channel = new(guid, parent.Connection, this);
         Preview = initializer.Preview;
     }
-
-    ChannelBase IChannelOwner.Channel => _channel;
-
-    IChannel<JSHandle> IChannelOwner<JSHandle>.Channel => _channel;
 
     internal string Preview { get; set; }
 
@@ -64,13 +56,13 @@ internal class JSHandle : ChannelOwnerBase, IChannelOwner<JSHandle>, IJSHandle
 
     [MethodImpl(MethodImplOptions.NoInlining)]
     public async Task<IJSHandle> EvaluateHandleAsync(string expression, object arg = null)
-        => (await SendMessageToServerAsync<JSHandleChannel>(
+        => await SendMessageToServerAsync<JSHandle>(
             "evaluateExpressionHandle",
             new Dictionary<string, object>
             {
                 ["expression"] = expression,
                 ["arg"] = ScriptsHelper.SerializedArgument(arg),
-            }).ConfigureAwait(false))?.Object;
+            }).ConfigureAwait(false);
 
     [MethodImpl(MethodImplOptions.NoInlining)]
     public async Task<T> EvaluateAsync<T>(string expression, object arg = null)
@@ -86,12 +78,12 @@ internal class JSHandle : ChannelOwnerBase, IChannelOwner<JSHandle>, IJSHandle
     public async Task<T> JsonValueAsync<T>() => ScriptsHelper.ParseEvaluateResult<T>(await SendMessageToServerAsync<JsonElement>("jsonValue").ConfigureAwait(false));
 
     [MethodImpl(MethodImplOptions.NoInlining)]
-    public async Task<IJSHandle> GetPropertyAsync(string propertyName) => (await SendMessageToServerAsync<JSHandleChannel>(
+    public async Task<IJSHandle> GetPropertyAsync(string propertyName) => await SendMessageToServerAsync<JSHandle>(
             "getProperty",
             new Dictionary<string, object>
             {
                 ["name"] = propertyName,
-            }).ConfigureAwait(false))?.Object;
+            }).ConfigureAwait(false);
 
     [MethodImpl(MethodImplOptions.NoInlining)]
     public async Task<Dictionary<string, IJSHandle>> GetPropertiesAsync()
@@ -102,7 +94,7 @@ internal class JSHandle : ChannelOwnerBase, IChannelOwner<JSHandle>, IJSHandle
 
         foreach (var kv in channelResult)
         {
-            result[kv.Name] = kv.Value.Object;
+            result[kv.Name] = kv.Value;
         }
 
         return result;
@@ -118,5 +110,5 @@ internal class JSElementProperty
 {
     public string Name { get; set; }
 
-    public JSHandleChannel Value { get; set; }
+    public JSHandle Value { get; set; }
 }

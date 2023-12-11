@@ -32,7 +32,6 @@ using System.Text.Json;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Microsoft.Playwright.Helpers;
-using Microsoft.Playwright.Transport.Channels;
 using Microsoft.Playwright.Transport.Protocol;
 
 namespace Microsoft.Playwright.Core;
@@ -393,14 +392,13 @@ internal class Locator : ILocator
 
         return this._frame.WrapApiCallAsync(async () =>
         {
-            var result = await _frame.SendMessageToServerAsync<ElementHandleChannel>("waitForSelector", new Dictionary<string, object>
+            var handle = await _frame.SendMessageToServerAsync<ElementHandle>("waitForSelector", new Dictionary<string, object>
             {
                 ["selector"] = this._selector,
                 ["state"] = WaitForSelectorState.Attached,
                 ["timeout"] = timeout,
                 ["strict"] = true,
             }).ConfigureAwait(false);
-            var handle = result?.Object;
             if (handle == null)
             {
                 throw new PlaywrightException($"Could not resolve {this._selector} to DOM Element");

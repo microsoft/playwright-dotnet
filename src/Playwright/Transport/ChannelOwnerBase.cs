@@ -29,23 +29,23 @@ using System.Runtime.CompilerServices;
 using System.Text.Json;
 using System.Threading.Tasks;
 using Microsoft.Playwright.Helpers;
-using Microsoft.Playwright.Transport.Channels;
 
 namespace Microsoft.Playwright.Transport;
 
-internal class ChannelOwnerBase : IChannelOwner
+internal class ChannelOwnerBase
 {
     internal readonly Connection _connection;
     private readonly ConcurrentDictionary<string, ChannelOwnerBase> _objects = new();
+
     internal bool _wasCollected;
 
-    internal ChannelOwnerBase(IChannelOwner parent, string guid) : this(parent, null, guid)
+    internal ChannelOwnerBase(ChannelOwnerBase parent, string guid) : this(parent, null, guid)
     {
     }
 
-    internal ChannelOwnerBase(IChannelOwner parent, Connection connection, string guid)
+    internal ChannelOwnerBase(ChannelOwnerBase parent, Connection connection, string guid)
     {
-        _connection = parent?.Connection ?? connection;
+        _connection = parent?._connection ?? connection;
 
         Guid = guid;
         Parent = parent;
@@ -57,18 +57,12 @@ internal class ChannelOwnerBase : IChannelOwner
         }
     }
 
-    /// <inheritdoc/>
-    Connection IChannelOwner.Connection => _connection;
+    internal ConcurrentDictionary<string, ChannelOwnerBase> Objects => _objects;
 
-    /// <inheritdoc/>
-    ChannelBase IChannelOwner.Channel => null;
-
-    /// <inheritdoc/>
-    ConcurrentDictionary<string, ChannelOwnerBase> IChannelOwner.Objects => _objects;
 
     internal string Guid { get; set; }
 
-    internal IChannelOwner Parent { get; set; }
+    internal ChannelOwnerBase Parent { get; set; }
 
     internal virtual void OnMessage(string method, JsonElement? serverParams)
     {

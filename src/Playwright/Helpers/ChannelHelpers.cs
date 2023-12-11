@@ -24,7 +24,6 @@
 using System;
 using System.Text.Json;
 using Microsoft.Playwright.Transport;
-using Microsoft.Playwright.Transport.Channels;
 
 #nullable enable
 #pragma warning disable IDE0018 // Inline variable declaration will cause issues due to Roslyn design: https://github.com/dotnet/roslyn/issues/54711
@@ -55,7 +54,7 @@ internal static class ChannelHelpers
     }
 
     internal static T? GetObject<T>(this JsonElement? element, string name, Connection connection)
-        where T : ChannelOwnerBase, IChannelOwner<T>
+        where T : ChannelOwnerBase
     {
         if (!element.HasValue)
         {
@@ -73,7 +72,7 @@ internal static class ChannelHelpers
     }
 
     internal static T GetObject<T>(this JsonElement element, string name, Connection connection)
-        where T : ChannelOwnerBase, IChannelOwner<T>
+        where T : ChannelOwnerBase
     {
         var result = GetObject<T>((JsonElement?)element, name, connection);
         if (result == null)

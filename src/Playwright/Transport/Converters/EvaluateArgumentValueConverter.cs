@@ -35,7 +35,6 @@ using System.Text.Json;
 using System.Text.RegularExpressions;
 using Microsoft.Playwright.Core;
 using Microsoft.Playwright.Helpers;
-using Microsoft.Playwright.Transport.Channels;
 
 namespace Microsoft.Playwright.Transport.Converters;
 
@@ -173,9 +172,9 @@ internal static class EvaluateArgumentValueConverter
             return new { a, id };
         }
 
-        if (value is IChannelOwner channelOwner)
+        if (value is ChannelOwnerBase channelOwner)
         {
-            handles.Add(new() { Guid = channelOwner.Channel.Guid });
+            handles.Add(new() { Guid = channelOwner.Guid });
             return new { h = handles.Count - 1 };
         }
 

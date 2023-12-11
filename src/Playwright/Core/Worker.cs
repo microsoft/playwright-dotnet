@@ -29,29 +29,23 @@ using System.Text.Json;
 using System.Threading.Tasks;
 using Microsoft.Playwright.Helpers;
 using Microsoft.Playwright.Transport;
-using Microsoft.Playwright.Transport.Channels;
+
 using Microsoft.Playwright.Transport.Protocol;
 
 namespace Microsoft.Playwright.Core;
 
-internal class Worker : ChannelOwnerBase, IChannelOwner<Worker>, IWorker
+internal class Worker : ChannelOwnerBase, IWorker
 {
-    private readonly WorkerChannel _channel;
     private readonly WorkerInitializer _initializer;
 
-    public Worker(IChannelOwner parent, string guid, WorkerInitializer initializer) : base(parent, guid)
+    public Worker(ChannelOwnerBase parent, string guid, WorkerInitializer initializer) : base(parent, guid)
     {
-        _channel = new(guid, parent.Connection, this);
         _initializer = initializer;
     }
 
     public event EventHandler<IWorker> Close;
 
     public string Url => _initializer.Url;
-
-    ChannelBase IChannelOwner.Channel => _channel;
-
-    IChannel<Worker> IChannelOwner<Worker>.Channel => _channel;
 
     internal Page Page { get; set; }
 

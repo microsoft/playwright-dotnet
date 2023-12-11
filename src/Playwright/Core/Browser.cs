@@ -32,12 +32,11 @@ using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Microsoft.Playwright.Helpers;
 using Microsoft.Playwright.Transport;
-using Microsoft.Playwright.Transport.Channels;
 using Microsoft.Playwright.Transport.Protocol;
 
 namespace Microsoft.Playwright.Core;
 
-internal class Browser : ChannelOwnerBase, IChannelOwner<Browser>, IBrowser
+internal class Browser : ChannelOwnerBase, IBrowser
 {
     private readonly BrowserInitializer _initializer;
     private readonly TaskCompletionSource<bool> _closedTcs = new();
@@ -45,18 +44,13 @@ internal class Browser : ChannelOwnerBase, IChannelOwner<Browser>, IBrowser
     internal BrowserType _browserType;
     internal string _closeReason;
 
-    internal Browser(IChannelOwner parent, string guid, BrowserInitializer initializer) : base(parent, guid)
+    internal Browser(ChannelOwnerBase parent, string guid, BrowserInitializer initializer) : base(parent, guid)
     {
-        Channel = new(guid, parent.Connection, this);
         IsConnected = true;
         _initializer = initializer;
     }
 
     public event EventHandler<IBrowser> Disconnected;
-
-    ChannelBase IChannelOwner.Channel => Channel;
-
-    IChannel<Browser> IChannelOwner<Browser>.Channel => Channel;
 
     public IReadOnlyList<IBrowserContext> Contexts => _contexts.ToArray();
 
@@ -65,8 +59,6 @@ internal class Browser : ChannelOwnerBase, IChannelOwner<Browser>, IBrowser
     internal bool ShouldCloseConnectionOnClose { get; set; }
 
     public string Version => _initializer.Version;
-
-    internal BrowserChannel Channel { get; }
 
     public IBrowserType BrowserType => _browserType;
 
@@ -88,11 +80,11 @@ internal class Browser : ChannelOwnerBase, IChannelOwner<Browser>, IBrowser
         {
             if (ShouldCloseConnectionOnClose)
             {
-                Channel.Connection.DoClose();
+                _connection.DoClose();
             }
             else
             {
-                await SendMessageToServerAsync<BrowserContextChannel>("close", new Dictionary<string, object>
+                await SendMessageToServerAsync("close", new Dictionary<string, object>
                 {
                     ["reason"] = options?.Reason,
                 }).ConfigureAwait(false);
@@ -175,7 +167,7 @@ internal class Browser : ChannelOwnerBase, IChannelOwner<Browser>, IBrowser
             args.Add("screen", options.ScreenSize);
         }
 
-        var context = (await SendMessageToServerAsync<BrowserContextChannel>("newContext", args).ConfigureAwait(false)).Object;
+        var context = await SendMessageToServerAsync<BrowserContext>("newContext", args).ConfigureAwait(false);
 
         _browserType.DidCreateContext(context, options, null);
         return context;
@@ -274,8 +266,8 @@ internal class Browser : ChannelOwnerBase, IChannelOwner<Browser>, IBrowser
 
     [MethodImpl(MethodImplOptions.NoInlining)]
     public async Task<ICDPSession> NewBrowserCDPSessionAsync()
-        => (await SendMessageToServerAsync<CDPChannel>(
-        "newBrowserCDPSession").ConfigureAwait(false)).Object;
+        => await SendMessageToServerAsync<CDPSession>(
+        "newBrowserCDPSession").ConfigureAwait(false);
 
     internal static Dictionary<string, object> PrepareHarOptions(
         HarContentPolicy? recordHarContent,

@@ -61,7 +61,6 @@ internal class Connection : IDisposable
             options.Converters.Add(new ChannelToGuidConverter(this));
             options.Converters.Add(new ChannelOwnerToGuidConverter<JSHandle>(this));
             options.Converters.Add(new ChannelOwnerToGuidConverter<ElementHandle>(this));
-            options.Converters.Add(new ChannelOwnerToGuidConverter<IChannelOwner>(this));
 
             // Workaround for https://github.com/dotnet/runtime/issues/46522
             options.Converters.Add(new ChannelOwnerListToGuidListConverter<WritableStream>(this));
@@ -216,7 +215,7 @@ internal class Connection : IDisposable
         {
             return default;
         }
-        else if (typeof(ChannelBase).IsAssignableFrom(typeof(T)) || typeof(ChannelBase[]).IsAssignableFrom(typeof(T)))
+        else if (typeof(ChannelOwnerBase).IsAssignableFrom(typeof(T)) || typeof(ChannelOwnerBase[]).IsAssignableFrom(typeof(T)))
         {
             var enumerate = result.Value.EnumerateObject();
 
@@ -230,7 +229,7 @@ internal class Connection : IDisposable
         }
     }
 
-    internal IChannelOwner GetObject(string guid)
+    internal ChannelOwnerBase GetObject(string guid)
     {
         Objects.TryGetValue(guid, out var result);
         return result;
@@ -320,9 +319,9 @@ internal class Connection : IDisposable
         }
     }
 
-    private IChannelOwner CreateRemoteObject(string parentGuid, ChannelOwnerType type, string guid, JsonElement? initializer)
+    private ChannelOwnerBase CreateRemoteObject(string parentGuid, ChannelOwnerType type, string guid, JsonElement? initializer)
     {
-        IChannelOwner result = null;
+        ChannelOwnerBase result = null;
         var parent = string.IsNullOrEmpty(parentGuid) ? _rootObject : Objects[parentGuid];
 
 #pragma warning disable CA2000 // Dispose objects before losing scope

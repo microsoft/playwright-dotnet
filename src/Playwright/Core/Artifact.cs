@@ -29,26 +29,16 @@ using System.Text.Json;
 using System.Threading.Tasks;
 using Microsoft.Playwright.Helpers;
 using Microsoft.Playwright.Transport;
-using Microsoft.Playwright.Transport.Channels;
 using Microsoft.Playwright.Transport.Protocol;
 
 namespace Microsoft.Playwright.Core;
 
-internal class Artifact : ChannelOwnerBase, IChannelOwner<Artifact>
+internal class Artifact : ChannelOwnerBase
 {
-    private readonly ArtifactChannel _channel;
-
-    internal Artifact(IChannelOwner parent, string guid, ArtifactInitializer initializer) : base(parent, guid)
+    internal Artifact(ChannelOwnerBase parent, string guid, ArtifactInitializer initializer) : base(parent, guid)
     {
-        _channel = new(guid, parent.Connection, this);
         AbsolutePath = initializer.AbsolutePath;
     }
-
-    Connection IChannelOwner.Connection => _connection;
-
-    ChannelBase IChannelOwner.Channel => _channel;
-
-    IChannel<Artifact> IChannelOwner<Artifact>.Channel => _channel;
 
     internal string AbsolutePath { get; }
 

@@ -26,20 +26,17 @@ using System;
 using System.Text.Json;
 using Microsoft.Playwright.Helpers;
 using Microsoft.Playwright.Transport;
-using Microsoft.Playwright.Transport.Channels;
 using Microsoft.Playwright.Transport.Protocol;
 
 namespace Microsoft.Playwright.Core;
 
-internal class WebSocket : ChannelOwnerBase, IChannelOwner<WebSocket>, IWebSocket
+internal class WebSocket : ChannelOwnerBase, IWebSocket
 {
     private const int OpcodeBase64 = 2;
-    private readonly WebSocketChannel _channel;
     private readonly WebSocketInitializer _initializer;
 
-    internal WebSocket(IChannelOwner parent, string guid, WebSocketInitializer initializer) : base(parent, guid)
+    internal WebSocket(ChannelOwnerBase parent, string guid, WebSocketInitializer initializer) : base(parent, guid)
     {
-        _channel = new(guid, parent.Connection, this);
         _initializer = initializer;
     }
 
@@ -50,10 +47,6 @@ internal class WebSocket : ChannelOwnerBase, IChannelOwner<WebSocket>, IWebSocke
     public event EventHandler<IWebSocketFrame> FrameReceived;
 
     public event EventHandler<string> SocketError;
-
-    ChannelBase IChannelOwner.Channel => _channel;
-
-    IChannel<WebSocket> IChannelOwner<WebSocket>.Channel => _channel;
 
     public string Url => _initializer.Url;
 

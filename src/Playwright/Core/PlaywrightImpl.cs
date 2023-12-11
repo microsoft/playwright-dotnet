@@ -26,25 +26,22 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using Microsoft.Playwright.Transport;
-using Microsoft.Playwright.Transport.Channels;
 using Microsoft.Playwright.Transport.Protocol;
 
 namespace Microsoft.Playwright.Core;
 
 [SuppressMessage("Microsoft.Design", "CA1724", Justification = "Playwright is the entrypoint for all languages.")]
-internal class PlaywrightImpl : ChannelOwnerBase, IPlaywright, IChannelOwner<PlaywrightImpl>
+internal class PlaywrightImpl : ChannelOwnerBase, IPlaywright
 {
     private readonly PlaywrightInitializer _initializer;
-    internal readonly PlaywrightChannel _channel;
     internal SelectorsAPI _selectors;
 
     private readonly Dictionary<string, BrowserNewContextOptions> _devices = new(StringComparer.InvariantCultureIgnoreCase);
 
-    internal PlaywrightImpl(IChannelOwner parent, string guid, PlaywrightInitializer initializer)
+    internal PlaywrightImpl(ChannelOwnerBase parent, string guid, PlaywrightInitializer initializer)
          : base(parent, guid)
     {
         _initializer = initializer;
-        _channel = new(guid, parent.Connection, this);
 
         _devices = _connection.LocalUtils?._devices ?? new();
 
@@ -60,12 +57,6 @@ internal class PlaywrightImpl : ChannelOwnerBase, IPlaywright, IChannelOwner<Pla
     }
 
     ~PlaywrightImpl() => Dispose(false);
-
-    Connection IChannelOwner.Connection => _connection;
-
-    ChannelBase IChannelOwner.Channel => _channel;
-
-    IChannel<PlaywrightImpl> IChannelOwner<PlaywrightImpl>.Channel => _channel;
 
     public IBrowserType Chromium { get => _initializer.Chromium; set => throw new NotSupportedException(); }
 

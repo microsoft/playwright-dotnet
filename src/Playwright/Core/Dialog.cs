@@ -26,19 +26,16 @@ using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using Microsoft.Playwright.Transport;
-using Microsoft.Playwright.Transport.Channels;
 using Microsoft.Playwright.Transport.Protocol;
 
 namespace Microsoft.Playwright.Core;
 
-internal class Dialog : ChannelOwnerBase, IChannelOwner<Dialog>, IDialog
+internal class Dialog : ChannelOwnerBase, IDialog
 {
-    private readonly DialogChannel _channel;
     private readonly DialogInitializer _initializer;
 
-    public Dialog(IChannelOwner parent, string guid, DialogInitializer initializer) : base(parent, guid)
+    public Dialog(ChannelOwnerBase parent, string guid, DialogInitializer initializer) : base(parent, guid)
     {
-        _channel = new(guid, parent.Connection, this);
         _initializer = initializer;
     }
 
@@ -52,12 +49,8 @@ internal class Dialog : ChannelOwnerBase, IChannelOwner<Dialog>, IDialog
     // Therefore, we must report the dialog without a page to be able to handle it.
     public IPage Page => _initializer.Page;
 
-    ChannelBase IChannelOwner.Channel => _channel;
-
-    IChannel<Dialog> IChannelOwner<Dialog>.Channel => _channel;
-
     [MethodImpl(MethodImplOptions.NoInlining)]
-    public Task AcceptAsync(string promptText) => SendMessageToServerAsync<PageChannel>(
+    public Task AcceptAsync(string promptText) => SendMessageToServerAsync(
             "accept",
             new Dictionary<string, object>
             {

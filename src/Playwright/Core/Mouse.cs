@@ -24,21 +24,20 @@
 
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using Microsoft.Playwright.Transport.Channels;
 
 namespace Microsoft.Playwright.Core;
 
 internal class Mouse : IMouse
 {
-    private readonly PageChannel _channel;
+    private readonly Page _page;
 
-    public Mouse(PageChannel channel)
+    public Mouse(Page page)
     {
-        _channel = channel;
+        _page = page;
     }
 
     public Task ClickAsync(float x, float y, MouseClickOptions options = default)
-        => _channel.Object.SendMessageToServerAsync(
+        => _page.SendMessageToServerAsync(
             "mouseClick",
             new Dictionary<string, object>
             {
@@ -50,7 +49,7 @@ internal class Mouse : IMouse
             });
 
     public Task DblClickAsync(float x, float y, MouseDblClickOptions options = default)
-        => _channel.Object.SendMessageToServerAsync(
+        => _page.SendMessageToServerAsync(
             "mouseClick",
             new Dictionary<string, object>
             {
@@ -62,7 +61,7 @@ internal class Mouse : IMouse
             });
 
     public Task DownAsync(MouseDownOptions options = default)
-        => _channel.Object.SendMessageToServerAsync(
+        => _page.SendMessageToServerAsync(
             "mouseDown",
             new Dictionary<string, object>
             {
@@ -71,7 +70,7 @@ internal class Mouse : IMouse
             });
 
     public Task MoveAsync(float x, float y, MouseMoveOptions options = default)
-        => _channel.Object.SendMessageToServerAsync(
+        => _page.SendMessageToServerAsync(
             "mouseMove",
             new Dictionary<string, object>
             {
@@ -81,7 +80,7 @@ internal class Mouse : IMouse
             });
 
     public Task UpAsync(MouseUpOptions options = default)
-      => _channel.Object.SendMessageToServerAsync(
+      => _page.SendMessageToServerAsync(
             "mouseUp",
             new Dictionary<string, object>
             {
@@ -90,7 +89,7 @@ internal class Mouse : IMouse
             });
 
     public Task WheelAsync(float deltaX, float deltaY)
-        => _channel.Object.SendMessageToServerAsync(
+        => _page.SendMessageToServerAsync(
             "mouseWheel",
             new Dictionary<string, object>
             {

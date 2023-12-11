@@ -31,27 +31,20 @@ using System.Text.Json;
 using System.Threading.Tasks;
 using Microsoft.Playwright.Helpers;
 using Microsoft.Playwright.Transport;
-using Microsoft.Playwright.Transport.Channels;
 using Microsoft.Playwright.Transport.Protocol;
 
 namespace Microsoft.Playwright.Core;
 
-internal class APIRequestContext : ChannelOwnerBase, IChannelOwner<APIRequestContext>, IAPIRequestContext
+internal class APIRequestContext : ChannelOwnerBase, IAPIRequestContext
 {
-    internal readonly APIRequestContextChannel _channel;
     internal readonly Tracing _tracing;
 
     internal APIRequest _request;
 
-    public APIRequestContext(IChannelOwner parent, string guid, APIRequestContextInitializer initializer) : base(parent, guid)
+    public APIRequestContext(ChannelOwnerBase parent, string guid, APIRequestContextInitializer initializer) : base(parent, guid)
     {
-        _channel = new(guid, parent.Connection, this);
         _tracing = initializer.Tracing;
     }
-
-    ChannelBase IChannelOwner.Channel => _channel;
-
-    IChannel<APIRequestContext> IChannelOwner<APIRequestContext>.Channel => _channel;
 
     [MethodImpl(MethodImplOptions.NoInlining)]
     public ValueTask DisposeAsync() => new(SendMessageToServerAsync("dispose"));

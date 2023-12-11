@@ -23,14 +23,13 @@
  */
 
 using Microsoft.Playwright.Transport;
-using Microsoft.Playwright.Transport.Channels;
 using Microsoft.Playwright.Transport.Protocol;
 
 namespace Microsoft.Playwright.Core;
 
 internal class AndroidDevice : ChannelOwnerBase
 {
-    internal AndroidDevice(IChannelOwner parent, string guid, BrowserInitializer initializer) : base(parent, guid)
+    internal AndroidDevice(ChannelOwnerBase parent, string guid, BrowserInitializer initializer) : base(parent, guid)
     {
     }
 }

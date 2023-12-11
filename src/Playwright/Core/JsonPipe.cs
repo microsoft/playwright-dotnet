@@ -29,29 +29,22 @@ using System.Text.Json;
 using System.Threading.Tasks;
 using Microsoft.Playwright.Helpers;
 using Microsoft.Playwright.Transport;
-using Microsoft.Playwright.Transport.Channels;
 using Microsoft.Playwright.Transport.Protocol;
 
 namespace Microsoft.Playwright.Core;
 
-internal class JsonPipe : ChannelOwnerBase, IChannelOwner<JsonPipe>
+internal class JsonPipe : ChannelOwnerBase
 {
-    private readonly JsonPipeChannel _channel;
     private readonly JsonPipeInitializer _initializer;
 
-    public JsonPipe(IChannelOwner parent, string guid, JsonPipeInitializer initializer) : base(parent, guid)
+    public JsonPipe(ChannelOwnerBase parent, string guid, JsonPipeInitializer initializer) : base(parent, guid)
     {
-        _channel = new(guid, parent.Connection, this);
         _initializer = initializer;
     }
 
     public event EventHandler<PlaywrightServerMessage> Message;
 
     public event EventHandler<SerializedError> Closed;
-
-    ChannelBase IChannelOwner.Channel => _channel;
-
-    IChannel<JsonPipe> IChannelOwner<JsonPipe>.Channel => _channel;
 
     internal override void OnMessage(string method, JsonElement? serverParams)
     {

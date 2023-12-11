@@ -45,7 +45,7 @@ internal static class SetInputFilesHelpers
                 Payloads = Array.Empty<InputFilesList>(),
             };
         }
-        if (context.Channel.Connection.IsRemote)
+        if (context._connection.IsRemote)
         {
             var streams = await files.SelectAsync(async f =>
             {
