@@ -492,8 +492,7 @@ internal class BrowserContext : ChannelOwnerBase, IChannelOwner<BrowserContext>,
         return _closeReason ?? _browser._closeReason;
     }
 
-    [MethodImpl(MethodImplOptions.NoInlining)]
-    public async Task<T> InnerWaitForEventAsync<T>(PlaywrightEvent<T> playwrightEvent, Func<Task> action = default, Func<T, bool> predicate = default, float? timeout = default)
+    internal async Task<T> InnerWaitForEventAsync<T>(PlaywrightEvent<T> playwrightEvent, Func<Task> action = default, Func<T, bool> predicate = default, float? timeout = default)
     {
         if (playwrightEvent == null)
         {

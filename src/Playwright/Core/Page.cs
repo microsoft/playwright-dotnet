@@ -472,8 +472,7 @@ internal class Page : ChannelOwnerBase, IChannelOwner<Page>, IPage
         return new TargetClosedException(_closeReason ?? Context._effectiveCloseReason());
     }
 
-    [MethodImpl(MethodImplOptions.NoInlining)]
-    public async Task<T> InnerWaitForEventAsync<T>(PlaywrightEvent<T> pageEvent, Func<Task> action = default, Func<T, bool> predicate = default, float? timeout = default)
+    internal async Task<T> InnerWaitForEventAsync<T>(PlaywrightEvent<T> pageEvent, Func<Task> action = default, Func<T, bool> predicate = default, float? timeout = default)
     {
         if (pageEvent == null)
         {
