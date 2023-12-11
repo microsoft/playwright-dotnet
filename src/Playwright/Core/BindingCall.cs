@@ -27,6 +27,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
+using Microsoft.Playwright.Helpers;
 using Microsoft.Playwright.Transport;
 using Microsoft.Playwright.Transport.Channels;
 using Microsoft.Playwright.Transport.Protocol;
@@ -96,15 +97,28 @@ internal class BindingCall : ChannelOwnerBase, IChannelOwner<BindingCall>
                 }
             }
 
-            await _channel.ResolveAsync(ScriptsHelper.SerializedArgument(result)).ConfigureAwait(false);
+            await SendMessageToServerAsync("resolve", new Dictionary<string, object>
+            {
+                ["result"] = ScriptsHelper.SerializedArgument(result),
+            }).ConfigureAwait(false);
         }
         catch (TargetInvocationException ex)
         {
-            await _channel.RejectAsync(ex.InnerException).ConfigureAwait(false);
+            await SendMessageToServerAsync(
+                "reject",
+                new Dictionary<string, object>
+                {
+                    ["error"] = ex.InnerException.ToObject(),
+                }).ConfigureAwait(false);
         }
         catch (Exception ex)
         {
-            await _channel.RejectAsync(ex).ConfigureAwait(false);
+            await SendMessageToServerAsync(
+                "reject",
+                new Dictionary<string, object>
+                {
+                    ["error"] = ex.ToObject(),
+                }).ConfigureAwait(false);
         }
     }
 }

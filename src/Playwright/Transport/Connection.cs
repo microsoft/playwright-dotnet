@@ -144,7 +144,7 @@ internal class Connection : IDisposable
         {
             throw _closedError;
         }
-        if (@object._wasCollected)
+        if (@object?._wasCollected == true)
         {
             throw new PlaywrightException("The object has been collected to prevent unbounded heap growth.");
         }
@@ -195,7 +195,7 @@ internal class Connection : IDisposable
             var message = new MessageRequest
             {
                 Id = id,
-                Guid = @object.Guid,
+                Guid = @object == null ? string.Empty : @object.Guid,
                 Method = method,
                 Params = sanitizedArgs,
                 Metadata = metadata,
@@ -238,9 +238,15 @@ internal class Connection : IDisposable
 
     internal void MarkAsRemote() => IsRemote = true;
 
-    internal Task<PlaywrightImpl> InitializePlaywrightAsync()
+    internal async Task<PlaywrightImpl> InitializePlaywrightAsync()
     {
-        return _rootObject.InitializeAsync();
+        var args = new Dictionary<string, object>
+        {
+            ["sdkLanguage"] = "csharp",
+        };
+
+        var jsonElement = await SendMessageToServerAsync(null, "initialize", args).ConfigureAwait(false);
+        return jsonElement.GetObject<PlaywrightImpl>("playwright", this);
     }
 
     internal void Dispatch(PlaywrightServerMessage message)

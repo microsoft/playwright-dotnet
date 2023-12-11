@@ -22,8 +22,6 @@
  * SOFTWARE.
  */
 
-using System.Collections.Generic;
-using System.Threading.Tasks;
 using Microsoft.Playwright.Core;
 
 namespace Microsoft.Playwright.Transport.Channels;
@@ -33,12 +31,4 @@ internal class JsonPipeChannel : Channel<JsonPipe>
     public JsonPipeChannel(string guid, Connection connection, JsonPipe owner) : base(guid, connection, owner)
     {
     }
-
-    internal Task SendAsync(object message) =>
-        Connection.SendMessageToServerAsync(Object, "send", new Dictionary<string, object>
-        {
-                { "message", message },
-        });
-
-    internal Task CloseAsync() => Connection.SendMessageToServerAsync(Object, "close");
 }

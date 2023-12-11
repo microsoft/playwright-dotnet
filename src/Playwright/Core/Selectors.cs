@@ -47,21 +47,21 @@ internal class Selectors : ChannelOwnerBase, IChannelOwner<Selectors>
 internal class SelectorsAPI : ISelectors
 {
     private readonly HashSet<Selectors> _channels = new();
-    private readonly List<SelectorsRegisterParams> _registrations = new();
+    private readonly List<Dictionary<string, object>> _registrations = new();
 
     public async Task RegisterAsync(string name, SelectorsRegisterOptions options = default)
     {
         options ??= new SelectorsRegisterOptions();
         var source = ScriptsHelper.EvaluationScript(options.Script, options.Path);
-        SelectorsRegisterParams @params = new()
+        var @params = new Dictionary<string, object>()
         {
-            Name = name,
-            Source = source,
-            ContentScript = options?.ContentScript,
+            ["name"] = name,
+            ["source"] = source,
+            ["contentScript"] = options.ContentScript,
         };
         foreach (var channel in _channels)
         {
-            await channel._channel.RegisterAsync(@params).ConfigureAwait(false);
+            await channel.SendMessageToServerAsync("register", @params).ConfigureAwait(false);
         }
         _registrations.Add(@params);
     }
@@ -71,7 +71,12 @@ internal class SelectorsAPI : ISelectors
         Locator.SetTestIdAttribute(attributeName);
         foreach (var channel in _channels)
         {
-            channel._channel.SetTestIdAttributeAsync(attributeName).IgnoreException();
+            channel.SendMessageToServerAsync(
+            "setTestIdAttributeName",
+            new Dictionary<string, object>
+            {
+                ["testIdAttributeName"] = attributeName,
+            }).IgnoreException();
         }
     }
 
@@ -81,8 +86,11 @@ internal class SelectorsAPI : ISelectors
         foreach (var @params in _registrations)
         {
             // This should not fail except for connection closure, but just in case we catch.
-            channel._channel.RegisterAsync(@params).IgnoreException();
-            channel._channel.SetTestIdAttributeAsync(Locator.TestIdAttributeName()).IgnoreException();
+            channel.SendMessageToServerAsync("register", @params).IgnoreException();
+            channel.SendMessageToServerAsync("setTestIdAttributeName", new Dictionary<string, object>
+            {
+                ["testIdAttributeName"] = Locator.TestIdAttributeName(),
+            }).IgnoreException();
         }
     }
 
@@ -90,4 +98,11 @@ internal class SelectorsAPI : ISelectors
     {
         _channels.Remove(channel);
     }
+}
+
+internal record SelectorsRegisterParams
+{
+    internal string Name;
+    internal string Source;
+    internal bool? ContentScript;
 }

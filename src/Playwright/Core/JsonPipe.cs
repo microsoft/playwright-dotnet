@@ -23,6 +23,7 @@
  */
 
 using System;
+using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 using System.Text.Json;
 using System.Threading.Tasks;
@@ -73,8 +74,11 @@ internal class JsonPipe : ChannelOwnerBase, IChannelOwner<JsonPipe>
     }
 
     [MethodImpl(MethodImplOptions.NoInlining)]
-    public Task CloseAsync() => _channel.CloseAsync();
+    public Task CloseAsync() => SendMessageToServerAsync("close");
 
     [MethodImpl(MethodImplOptions.NoInlining)]
-    public Task SendAsync(object message) => _channel.SendAsync(message);
+    public Task SendAsync(object message) => SendMessageToServerAsync("send", new Dictionary<string, object>
+        {
+                { "message", message },
+        });
 }

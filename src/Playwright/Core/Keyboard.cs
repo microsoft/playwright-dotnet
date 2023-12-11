@@ -22,6 +22,7 @@
  * SOFTWARE.
  */
 
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.Playwright.Transport.Channels;
 
@@ -36,15 +37,45 @@ internal class Keyboard : IKeyboard
         _channel = channel;
     }
 
-    public Task DownAsync(string key) => _channel.KeyboardDownAsync(key);
+    public Task DownAsync(string key)
+          => _channel.Object.SendMessageToServerAsync(
+            "keyboardDown",
+            new Dictionary<string, object>
+            {
+                ["key"] = key,
+            });
 
-    public Task UpAsync(string key) => _channel.KeyboardUpAsync(key);
+    public Task UpAsync(string key)
+            => _channel.Object.SendMessageToServerAsync(
+            "keyboardUp",
+            new Dictionary<string, object>
+            {
+                ["key"] = key,
+            });
 
     public Task PressAsync(string key, KeyboardPressOptions options = default)
-       => _channel.PressAsync(key, options?.Delay);
+       => _channel.Object.SendMessageToServerAsync(
+            "keyboardPress",
+            new Dictionary<string, object>
+            {
+                ["key"] = key,
+                ["delay"] = options?.Delay,
+            });
 
     public Task TypeAsync(string text, KeyboardTypeOptions options = default)
-       => _channel.TypeAsync(text, options?.Delay);
+        => _channel.Object.SendMessageToServerAsync(
+            "keyboardType",
+            new Dictionary<string, object>
+            {
+                ["text"] = text,
+                ["delay"] = options?.Delay,
+            });
 
-    public Task InsertTextAsync(string text) => _channel.InsertTextAsync(text);
+    public Task InsertTextAsync(string text)
+        => _channel.Object.SendMessageToServerAsync(
+            "keyboardInsertText",
+            new Dictionary<string, object>
+            {
+                ["text"] = text,
+            });
 }

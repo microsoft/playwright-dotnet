@@ -23,6 +23,7 @@
  */
 
 using System;
+using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 using System.Text.Json;
 using System.Threading.Tasks;
@@ -86,18 +87,24 @@ internal class Worker : ChannelOwnerBase, IChannelOwner<Worker>, IWorker
 
     [MethodImpl(MethodImplOptions.NoInlining)]
     public async Task<T> EvaluateAsync<T>(string expression, object arg = null)
-        => ScriptsHelper.ParseEvaluateResult<T>(await _channel.EvaluateExpressionAsync(
-            expression,
-            null,
-            ScriptsHelper.SerializedArgument(arg)).ConfigureAwait(false));
+        => ScriptsHelper.ParseEvaluateResult<T>((await SendMessageToServerAsync(
+                "evaluateExpression",
+                new Dictionary<string, object>
+                {
+                    ["expression"] = expression,
+                    ["arg"] = ScriptsHelper.SerializedArgument(arg),
+                }).ConfigureAwait(false)).Value.GetProperty("value"));
 
     [MethodImpl(MethodImplOptions.NoInlining)]
     public async Task<IJSHandle> EvaluateHandleAsync(string expression, object arg = null)
-        => await _channel.EvaluateExpressionHandleAsync(
-            expression,
-            null,
-            ScriptsHelper.SerializedArgument(arg))
-        .ConfigureAwait(false);
+        => (await SendMessageToServerAsync<JsonElement>(
+            "evaluateExpressionHandle",
+            new Dictionary<string, object>
+            {
+                ["expression"] = expression,
+                ["arg"] = ScriptsHelper.SerializedArgument(arg),
+            })
+            .ConfigureAwait(false)).GetObject<JSHandle>("handle", _connection);
 
     [MethodImpl(MethodImplOptions.NoInlining)]
     public async Task<IWorker> WaitForCloseAsync(Func<Task> action = default, float? timeout = default)

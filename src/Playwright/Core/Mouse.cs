@@ -22,6 +22,7 @@
  * SOFTWARE.
  */
 
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.Playwright.Transport.Channels;
 
@@ -37,20 +38,63 @@ internal class Mouse : IMouse
     }
 
     public Task ClickAsync(float x, float y, MouseClickOptions options = default)
-        => _channel.MouseClickAsync(x, y, delay: options?.Delay, button: options?.Button, clickCount: options?.ClickCount);
+        => _channel.Object.SendMessageToServerAsync(
+            "mouseClick",
+            new Dictionary<string, object>
+            {
+                ["x"] = x,
+                ["y"] = y,
+                ["delay"] = options?.Delay,
+                ["button"] = options?.Button,
+                ["clickCount"] = options?.ClickCount,
+            });
 
     public Task DblClickAsync(float x, float y, MouseDblClickOptions options = default)
-        => _channel.MouseClickAsync(x, y, delay: options?.Delay, button: options?.Button, 2);
+        => _channel.Object.SendMessageToServerAsync(
+            "mouseClick",
+            new Dictionary<string, object>
+            {
+                ["x"] = x,
+                ["y"] = y,
+                ["delay"] = options?.Delay,
+                ["button"] = options?.Button,
+                ["clickCount"] = 2,
+            });
 
     public Task DownAsync(MouseDownOptions options = default)
-        => _channel.MouseDownAsync(button: options?.Button, clickCount: options?.ClickCount);
+        => _channel.Object.SendMessageToServerAsync(
+            "mouseDown",
+            new Dictionary<string, object>
+            {
+                ["button"] = options?.Button,
+                ["clickCount"] = options?.ClickCount,
+            });
 
     public Task MoveAsync(float x, float y, MouseMoveOptions options = default)
-        => _channel.MouseMoveAsync(x, y, steps: options?.Steps);
+        => _channel.Object.SendMessageToServerAsync(
+            "mouseMove",
+            new Dictionary<string, object>
+            {
+                ["x"] = x,
+                ["y"] = y,
+                ["steps"] = options?.Steps,
+            });
 
     public Task UpAsync(MouseUpOptions options = default)
-        => _channel.MouseUpAsync(button: options?.Button, clickCount: options?.ClickCount);
+      => _channel.Object.SendMessageToServerAsync(
+            "mouseUp",
+            new Dictionary<string, object>
+            {
+                ["button"] = options?.Button,
+                ["clickCount"] = options?.ClickCount,
+            });
 
     public Task WheelAsync(float deltaX, float deltaY)
-        => _channel.MouseWheelAsync(deltaX, deltaY);
+        => _channel.Object.SendMessageToServerAsync(
+            "mouseWheel",
+            new Dictionary<string, object>
+            {
+                ["deltaX"] = deltaX,
+                ["deltaY"] = deltaY,
+            });
 }

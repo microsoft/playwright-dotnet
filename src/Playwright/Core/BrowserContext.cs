@@ -260,7 +260,12 @@ internal class BrowserContext : ChannelOwnerBase, IChannelOwner<BrowserContext>,
     }
 
     [MethodImpl(MethodImplOptions.NoInlining)]
-    public Task AddCookiesAsync(IEnumerable<Cookie> cookies) => Channel.AddCookiesAsync(cookies);
+    public Task AddCookiesAsync(IEnumerable<Cookie> cookies) => SendMessageToServerAsync<PageChannel>(
+            "addCookies",
+            new Dictionary<string, object>
+            {
+                ["cookies"] = cookies,
+            });
 
     [MethodImpl(MethodImplOptions.NoInlining)]
     public Task AddInitScriptAsync(string script = null, string scriptPath = null)
@@ -270,14 +275,19 @@ internal class BrowserContext : ChannelOwnerBase, IChannelOwner<BrowserContext>,
             script = ScriptsHelper.EvaluationScript(script, scriptPath);
         }
 
-        return Channel.AddInitScriptAsync(script);
+        return SendMessageToServerAsync<PageChannel>(
+            "addInitScript",
+            new Dictionary<string, object>
+            {
+                ["source"] = script,
+            });
     }
 
     [MethodImpl(MethodImplOptions.NoInlining)]
-    public Task ClearCookiesAsync() => Channel.ClearCookiesAsync();
+    public Task ClearCookiesAsync() => SendMessageToServerAsync("clearCookies");
 
     [MethodImpl(MethodImplOptions.NoInlining)]
-    public Task ClearPermissionsAsync() => Channel.ClearPermissionsAsync();
+    public Task ClearPermissionsAsync() => SendMessageToServerAsync("clearPermissions");
 
     [MethodImpl(MethodImplOptions.NoInlining)]
     public async Task CloseAsync(BrowserContextCloseOptions options = default)
@@ -293,7 +303,12 @@ internal class BrowserContext : ChannelOwnerBase, IChannelOwner<BrowserContext>,
         {
             foreach (var harRecorder in _harRecorders)
             {
-                Artifact artifact = await Channel.HarExportAsync(harRecorder.Key).ConfigureAwait(false);
+                Artifact artifact = (await SendMessageToServerAsync(
+        "harExport",
+        new Dictionary<string, object>
+        {
+            ["harId"] = harRecorder.Key,
+        }).ConfigureAwait(false)).GetObject<Artifact>("artifact", _connection);
                 // Server side will compress artifact if content is attach or if file is .zip.
                 var isCompressed = harRecorder.Value.Content == HarContentPolicy.Attach || harRecorder.Value.Path.EndsWith(".zip", StringComparison.Ordinal);
                 var needCompressed = harRecorder.Value.Path.EndsWith(".zip", StringComparison.Ordinal);
@@ -310,7 +325,10 @@ internal class BrowserContext : ChannelOwnerBase, IChannelOwner<BrowserContext>,
             }
         },
             true).ConfigureAwait(false);
-        await Channel.CloseAsync(options?.Reason).ConfigureAwait(false);
+        await SendMessageToServerAsync("close", new Dictionary<string, object>
+        {
+            ["reason"] = options?.Reason,
+        }).ConfigureAwait(false);
         await _closeTcs.Task.ConfigureAwait(false);
     }
 
@@ -325,7 +343,12 @@ internal class BrowserContext : ChannelOwnerBase, IChannelOwner<BrowserContext>,
     }
 
     [MethodImpl(MethodImplOptions.NoInlining)]
-    public Task<IReadOnlyList<BrowserContextCookiesResult>> CookiesAsync(IEnumerable<string> urls = null) => Channel.CookiesAsync(urls);
+    public async Task<IReadOnlyList<BrowserContextCookiesResult>> CookiesAsync(IEnumerable<string> urls = null) => (await SendMessageToServerAsync(
+            "cookies",
+            new Dictionary<string, object>
+            {
+                ["urls"] = urls?.ToArray() ?? Array.Empty<string>(),
+            }).ConfigureAwait(false))?.GetProperty("cookies").ToObject<IReadOnlyList<BrowserContextCookiesResult>>();
 
     [MethodImpl(MethodImplOptions.NoInlining)]
     public Task ExposeBindingAsync(string name, Action callback, BrowserContextExposeBindingOptions options = default)
@@ -393,15 +416,29 @@ internal class BrowserContext : ChannelOwnerBase, IChannelOwner<BrowserContext>,
 
     [MethodImpl(MethodImplOptions.NoInlining)]
     public Task GrantPermissionsAsync(IEnumerable<string> permissions, BrowserContextGrantPermissionsOptions options = default)
-        => Channel.GrantPermissionsAsync(permissions, options?.Origin);
+        => SendMessageToServerAsync<PageChannel>("grantPermissions", new Dictionary<string, object>
+        {
+            ["permissions"] = permissions?.ToArray(),
+            ["origin"] = options?.Origin,
+        });
 
     [MethodImpl(MethodImplOptions.NoInlining)]
     public async Task<ICDPSession> NewCDPSessionAsync(IPage page)
-        => (await Channel.NewCDPSessionAsync(page as Page).ConfigureAwait(false)).Object;
+        => (await SendMessageToServerAsync<CDPChannel>(
+        "newCDPSession",
+        new Dictionary<string, object>
+        {
+            ["page"] = new { guid = (page as Page).Guid },
+        }).ConfigureAwait(false)).Object;
 
     [MethodImpl(MethodImplOptions.NoInlining)]
     public async Task<ICDPSession> NewCDPSessionAsync(IFrame frame)
-        => (await Channel.NewCDPSessionAsync(frame as Frame).ConfigureAwait(false)).Object;
+        => (await SendMessageToServerAsync<CDPChannel>(
+        "newCDPSession",
+        new Dictionary<string, object>
+        {
+            ["frame"] = new { guid = (frame as Frame).Guid },
+        }).ConfigureAwait(false)).Object;
 
     [MethodImpl(MethodImplOptions.NoInlining)]
     public async Task<IPage> NewPageAsync()
@@ -411,7 +448,7 @@ internal class BrowserContext : ChannelOwnerBase, IChannelOwner<BrowserContext>,
             throw new PlaywrightException("Please use Browser.NewContextAsync()");
         }
 
-        return (await Channel.NewPageAsync().ConfigureAwait(false)).Object;
+        return (await SendMessageToServerAsync<PageChannel>("newPage").ConfigureAwait(false)).Object;
     }
 
     [MethodImpl(MethodImplOptions.NoInlining)]
@@ -440,19 +477,34 @@ internal class BrowserContext : ChannelOwnerBase, IChannelOwner<BrowserContext>,
 
     [MethodImpl(MethodImplOptions.NoInlining)]
     public Task SetExtraHTTPHeadersAsync(IEnumerable<KeyValuePair<string, string>> headers)
-        => Channel.SetExtraHTTPHeadersAsync(headers);
+        => SendMessageToServerAsync(
+            "setExtraHTTPHeaders",
+            new Dictionary<string, object>
+            {
+                ["headers"] = headers.Select(kv => new HeaderEntry { Name = kv.Key, Value = kv.Value }),
+            });
 
     [MethodImpl(MethodImplOptions.NoInlining)]
-    public Task SetGeolocationAsync(Geolocation geolocation) => Channel.SetGeolocationAsync(geolocation);
+    public Task SetGeolocationAsync(Geolocation geolocation) => SendMessageToServerAsync<PageChannel>(
+            "setGeolocation",
+            new Dictionary<string, object>
+            {
+                ["geolocation"] = geolocation,
+            });
 
     [MethodImpl(MethodImplOptions.NoInlining)]
-    public Task SetOfflineAsync(bool offline) => Channel.SetOfflineAsync(offline);
+    public Task SetOfflineAsync(bool offline) => SendMessageToServerAsync<PageChannel>(
+            "setOffline",
+            new Dictionary<string, object>
+            {
+                ["offline"] = offline,
+            });
 
     [MethodImpl(MethodImplOptions.NoInlining)]
     public async Task<string> StorageStateAsync(BrowserContextStorageStateOptions options = default)
     {
         string state = JsonSerializer.Serialize(
-            await Channel.GetStorageStateAsync().ConfigureAwait(false),
+            await SendMessageToServerAsync<StorageState>("storageState").ConfigureAwait(false),
             JsonExtensions.DefaultJsonSerializerOptions);
 
         if (!string.IsNullOrEmpty(options?.Path))
@@ -543,7 +595,14 @@ internal class BrowserContext : ChannelOwnerBase, IChannelOwner<BrowserContext>,
     internal void SetDefaultNavigationTimeoutImpl(float? timeout)
     {
         _timeoutSettings.SetDefaultNavigationTimeout(timeout);
-        WrapApiCallAsync(() => Channel.SetDefaultNavigationTimeoutNoReplyAsync(timeout), true).IgnoreException();
+        WrapApiCallAsync(
+            () => SendMessageToServerAsync<PageChannel>(
+            "setDefaultNavigationTimeoutNoReply",
+            new Dictionary<string, object>
+            {
+                ["timeout"] = timeout,
+            }),
+            true).IgnoreException();
     }
 
     [MethodImpl(MethodImplOptions.NoInlining)]
@@ -552,7 +611,14 @@ internal class BrowserContext : ChannelOwnerBase, IChannelOwner<BrowserContext>,
     internal void SetDefaultTimeoutImpl(float? timeout)
     {
         _timeoutSettings.SetDefaultTimeout(timeout);
-        WrapApiCallAsync(() => Channel.SetDefaultTimeoutNoReplyAsync(timeout), true).IgnoreException();
+        WrapApiCallAsync(
+            () => SendMessageToServerAsync<PageChannel>(
+            "setDefaultTimeoutNoReply",
+            new Dictionary<string, object>
+            {
+                ["timeout"] = timeout,
+            }),
+            true).IgnoreException();
     }
 
     internal async Task OnRouteAsync(Route route)
@@ -644,7 +710,9 @@ internal class BrowserContext : ChannelOwnerBase, IChannelOwner<BrowserContext>,
     private Task UpdateInterceptionAsync()
     {
         var patterns = RouteHandler.PrepareInterceptionPatterns(_routes);
-        return Channel.SetNetworkInterceptionPatternsAsync(patterns);
+        return SendMessageToServerAsync(
+            "setNetworkInterceptionPatterns",
+            patterns);
     }
 
     internal void OnClose()
@@ -698,7 +766,13 @@ internal class BrowserContext : ChannelOwnerBase, IChannelOwner<BrowserContext>,
 
         _bindings.Add(name, callback);
 
-        return Channel.ExposeBindingAsync(name, handle);
+        return SendMessageToServerAsync<PageChannel>(
+            "exposeBinding",
+            new Dictionary<string, object>
+            {
+                ["name"] = name,
+                ["needsHandle"] = handle,
+            });
     }
 
     private HarContentPolicy? RouteFromHarUpdateContentPolicyToHarContentPolicy(RouteFromHarUpdateContentPolicy? policy)
@@ -717,14 +791,11 @@ internal class BrowserContext : ChannelOwnerBase, IChannelOwner<BrowserContext>,
     internal async Task RecordIntoHarAsync(string har, Page page, BrowserContextRouteFromHAROptions options)
     {
         var contentPolicy = RouteFromHarUpdateContentPolicyToHarContentPolicy(options?.UpdateContent);
-        var harId = await Channel.HarStartAsync(
-            page,
-            har,
-            options?.Url,
-            options?.UrlString,
-            options?.UrlRegex,
-            contentPolicy,
-            options?.UpdateMode).ConfigureAwait(false);
+        var harId = (await SendMessageToServerAsync("harStart", new Dictionary<string, object>
+            {
+                { "page", page?.Channel },
+                { "options", Core.Browser.PrepareHarOptions(contentPolicy ?? HarContentPolicy.Attach, options.UpdateMode ?? HarMode.Minimal, har, null, options.Url, options.UrlString, options.UrlRegex) },
+            }).ConfigureAwait(false)).GetString("harId", false);
         _harRecorders.Add(harId, new() { Path = har, Content = contentPolicy ?? HarContentPolicy.Attach });
     }
 

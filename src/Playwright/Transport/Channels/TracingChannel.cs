@@ -22,12 +22,7 @@
  * SOFTWARE.
  */
 
-using System.Collections.Generic;
-using System.Text.Json;
-using System.Threading.Tasks;
 using Microsoft.Playwright.Core;
-using Microsoft.Playwright.Helpers;
-using Microsoft.Playwright.Transport.Protocol;
 
 namespace Microsoft.Playwright.Transport.Channels;
 
@@ -35,49 +30,5 @@ internal class TracingChannel : Channel<Tracing>
 {
     public TracingChannel(string guid, Connection connection, Tracing owner) : base(guid, connection, owner)
     {
-    }
-
-    internal Task TracingStartAsync(string name, string title, bool? screenshots, bool? snapshots, bool? sources)
-        => Connection.SendMessageToServerAsync(
-            Object,
-            "tracingStart",
-            new Dictionary<string, object>
-            {
-                ["name"] = name,
-                ["title"] = title,
-                ["screenshots"] = screenshots,
-                ["snapshots"] = snapshots,
-                ["sources"] = sources,
-            });
-
-    internal Task TracingStopAsync()
-        => Connection.SendMessageToServerAsync(
-            Object,
-            "tracingStop");
-
-    internal async Task<string> StartChunkAsync(string title = null, string name = null)
-        => (await Connection.SendMessageToServerAsync(Object, "tracingStartChunk", new Dictionary<string, object>
-        {
-            ["title"] = title,
-            ["name"] = name,
-        }).ConfigureAwait(false))?.GetProperty("traceName").ToString();
-
-    internal async Task<(Artifact Artifact, List<NameValue> Entries)> TracingStopChunkAsync(string mode)
-    {
-        var result = await Connection.SendMessageToServerAsync(Object, "tracingStopChunk", new Dictionary<string, object>
-        {
-            ["mode"] = mode,
-        }).ConfigureAwait(false);
-
-        var artifact = result.GetObject<Artifact>("artifact", Connection);
-        List<NameValue> entries = new();
-        if (result.Value.TryGetProperty("entries", out var entriesElement))
-        {
-            foreach (var current in entriesElement.EnumerateArray())
-            {
-                entries.Add(current.Deserialize<NameValue>());
-            }
-        }
-        return (artifact, entries);
     }
 }

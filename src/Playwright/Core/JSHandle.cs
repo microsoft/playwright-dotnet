@@ -26,6 +26,7 @@ using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 using System.Text.Json;
 using System.Threading.Tasks;
+using Microsoft.Playwright.Helpers;
 using Microsoft.Playwright.Transport;
 using Microsoft.Playwright.Transport.Channels;
 using Microsoft.Playwright.Transport.Protocol;
@@ -53,33 +54,51 @@ internal class JSHandle : ChannelOwnerBase, IChannelOwner<JSHandle>, IJSHandle
 
     [MethodImpl(MethodImplOptions.NoInlining)]
     public async Task<JsonElement?> EvaluateAsync(string expression, object arg = null)
-        => ScriptsHelper.ParseEvaluateResult<JsonElement?>(await _channel.EvaluateExpressionAsync(
-            script: expression,
-            arg: ScriptsHelper.SerializedArgument(arg)).ConfigureAwait(false));
+        => ScriptsHelper.ParseEvaluateResult<JsonElement?>(await SendMessageToServerAsync<JsonElement?>(
+            "evaluateExpression",
+            new Dictionary<string, object>
+            {
+                ["expression"] = expression,
+                ["arg"] = ScriptsHelper.SerializedArgument(arg),
+            }).ConfigureAwait(false));
 
     [MethodImpl(MethodImplOptions.NoInlining)]
     public async Task<IJSHandle> EvaluateHandleAsync(string expression, object arg = null)
-        => (await _channel.EvaluateExpressionHandleAsync(
-            script: expression,
-            arg: ScriptsHelper.SerializedArgument(arg)).ConfigureAwait(false))?.Object;
+        => (await SendMessageToServerAsync<JSHandleChannel>(
+            "evaluateExpressionHandle",
+            new Dictionary<string, object>
+            {
+                ["expression"] = expression,
+                ["arg"] = ScriptsHelper.SerializedArgument(arg),
+            }).ConfigureAwait(false))?.Object;
 
     [MethodImpl(MethodImplOptions.NoInlining)]
     public async Task<T> EvaluateAsync<T>(string expression, object arg = null)
-        => ScriptsHelper.ParseEvaluateResult<T>(await _channel.EvaluateExpressionAsync(
-            script: expression,
-            arg: ScriptsHelper.SerializedArgument(arg)).ConfigureAwait(false));
+        => ScriptsHelper.ParseEvaluateResult<T>(await SendMessageToServerAsync<JsonElement?>(
+            "evaluateExpression",
+            new Dictionary<string, object>
+            {
+                ["expression"] = expression,
+                ["arg"] = ScriptsHelper.SerializedArgument(arg),
+            }).ConfigureAwait(false));
 
     [MethodImpl(MethodImplOptions.NoInlining)]
-    public async Task<T> JsonValueAsync<T>() => ScriptsHelper.ParseEvaluateResult<T>(await _channel.JsonValueAsync().ConfigureAwait(false));
+    public async Task<T> JsonValueAsync<T>() => ScriptsHelper.ParseEvaluateResult<T>(await SendMessageToServerAsync<JsonElement>("jsonValue").ConfigureAwait(false));
 
     [MethodImpl(MethodImplOptions.NoInlining)]
-    public async Task<IJSHandle> GetPropertyAsync(string propertyName) => (await _channel.GetPropertyAsync(propertyName).ConfigureAwait(false))?.Object;
+    public async Task<IJSHandle> GetPropertyAsync(string propertyName) => (await SendMessageToServerAsync<JSHandleChannel>(
+            "getProperty",
+            new Dictionary<string, object>
+            {
+                ["name"] = propertyName,
+            }).ConfigureAwait(false))?.Object;
 
     [MethodImpl(MethodImplOptions.NoInlining)]
     public async Task<Dictionary<string, IJSHandle>> GetPropertiesAsync()
     {
         var result = new Dictionary<string, IJSHandle>();
-        var channelResult = await _channel.GetPropertiesAsync().ConfigureAwait(false);
+        var channelResult = (await SendMessageToServerAsync("getPropertyList").ConfigureAwait(false))?
+            .GetProperty("properties").ToObject<List<JSElementProperty>>(_connection.DefaultJsonSerializerOptions);
 
         foreach (var kv in channelResult)
         {
@@ -90,7 +109,14 @@ internal class JSHandle : ChannelOwnerBase, IChannelOwner<JSHandle>, IJSHandle
     }
 
     [MethodImpl(MethodImplOptions.NoInlining)]
-    public async ValueTask DisposeAsync() => await _channel.DisposeAsync().ConfigureAwait(false);
+    public async ValueTask DisposeAsync() => await SendMessageToServerAsync("dispose").ConfigureAwait(false);
 
     public override string ToString() => Preview;
+}
+
+internal class JSElementProperty
+{
+    public string Name { get; set; }
+
+    public JSHandleChannel Value { get; set; }
 }

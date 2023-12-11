@@ -51,7 +51,11 @@ internal static class SetInputFilesHelpers
             {
                 var lastModifiedMs = new DateTimeOffset(File.GetLastWriteTime(f)).ToUnixTimeMilliseconds();
 #pragma warning disable CA2007 // Upstream bug: https://github.com/dotnet/roslyn-analyzers/issues/5712
-                await using var stream = await context.Channel.CreateTempFileAsync(Path.GetFileName(f), lastModifiedMs).ConfigureAwait(false);
+                await using var stream = (await context.SendMessageToServerAsync("createTempFile", new Dictionary<string, object>
+            {
+                { "name", Path.GetFileName(f) },
+                { "lastModifiedMs", lastModifiedMs },
+            }).ConfigureAwait(false)).GetObject<WritableStream>("writableStream", context._connection);
 #pragma warning restore CA2007
                 using var fileStream = File.OpenRead(f);
                 await fileStream.CopyToAsync(stream.WritableStreamImpl).ConfigureAwait(false);

@@ -29,6 +29,7 @@ using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
 using System.Web;
+using Microsoft.Playwright.Helpers;
 using Microsoft.Playwright.Transport;
 using Microsoft.Playwright.Transport.Channels;
 using Microsoft.Playwright.Transport.Protocol;
@@ -143,7 +144,7 @@ internal class Request : ChannelOwnerBase, IChannelOwner<Request>, IRequest
     internal BrowserContext _context => (BrowserContext)Frame.Page.Context;
 
     [MethodImpl(MethodImplOptions.NoInlining)]
-    public async Task<IResponse> ResponseAsync() => (await _channel.GetResponseAsync().ConfigureAwait(false))?.Object;
+    public async Task<IResponse> ResponseAsync() => (await SendMessageToServerAsync<ResponseChannel>("response").ConfigureAwait(false))?.Object;
 
     [MethodImpl(MethodImplOptions.NoInlining)]
     public JsonElement? PostDataJSON()
@@ -184,7 +185,7 @@ internal class Request : ChannelOwnerBase, IChannelOwner<Request>, IRequest
             throw new PlaywrightException("Unable to fetch resources sizes.");
         }
 
-        return await ((ResponseChannel)res.Channel).SizesAsync().ConfigureAwait(false);
+        return (await ((Response)res).SendMessageToServerAsync("sizes").ConfigureAwait(false))?.GetProperty("sizes").ToObject<RequestSizesResult>();
     }
 
     [MethodImpl(MethodImplOptions.NoInlining)]
@@ -215,7 +216,8 @@ internal class Request : ChannelOwnerBase, IChannelOwner<Request>, IRequest
 
     private async Task<RawHeaders> GetRawHeadersTaskAsync()
     {
-        return new(await _channel.GetRawRequestHeadersAsync().ConfigureAwait(false));
+        var headerList = (await SendMessageToServerAsync("rawRequestHeaders").ConfigureAwait(false))?.GetProperty("headers").ToObject<List<NameValue>>();
+        return new(headerList);
     }
 
     internal void ApplyFallbackOverrides(RouteFallbackOptions overrides)

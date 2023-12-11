@@ -22,12 +22,7 @@
  * SOFTWARE.
  */
 
-using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
 using Microsoft.Playwright.Core;
-using Microsoft.Playwright.Helpers;
-using Microsoft.Playwright.Transport.Protocol;
 
 namespace Microsoft.Playwright.Transport.Channels;
 
@@ -35,98 +30,5 @@ internal class LocalUtilsChannel : Channel<LocalUtils>
 {
     public LocalUtilsChannel(string guid, Connection connection, LocalUtils owner) : base(guid, connection, owner)
     {
-    }
-
-    internal Task ZipAsync(string zipFile, List<NameValue> entries, string mode, string stacksId, bool includeSources) =>
-        Connection.SendMessageToServerAsync(Object, "zip", new Dictionary<string, object>
-        {
-                { "zipFile", zipFile },
-                { "entries", entries },
-                { "mode", mode },
-                { "stacksId", stacksId },
-                { "includeSources", includeSources },
-        });
-
-    internal async Task<(string HarId, string Error)> HarOpenAsync(string file)
-    {
-        var response = await Connection.SendMessageToServerAsync(Object, "harOpen", new Dictionary<string, object>
-            {
-                  { "file", file },
-            }).ConfigureAwait(false);
-        return (response.GetString("harId", true), response.GetString("error", true));
-    }
-
-    internal async Task<LocalUtilsHarLookupResult> HarLookupAsync(
-        string harId,
-        string url,
-        string method,
-        List<Header> headers,
-        byte[] postData,
-        bool isNavigationRequest)
-    {
-        var response = await Connection.SendMessageToServerAsync<LocalUtilsHarLookupResult>(Object, "harLookup", new Dictionary<string, object>
-            {
-                { "harId", harId },
-                { "url", url },
-                { "method", method },
-                { "headers", headers },
-                { "postData", postData != null ? Convert.ToBase64String(postData) : null },
-                { "isNavigationRequest", isNavigationRequest },
-            }).ConfigureAwait(false);
-        return response;
-    }
-
-    internal Task HarCloseAsync(string harId) =>
-        Connection.SendMessageToServerAsync(Object, "HarCloseAsync", new Dictionary<string, object>
-        {
-                  { "harId", harId },
-        });
-
-    internal Task HarUnzipAsync(string zipFile, string harFile) =>
-        Connection.SendMessageToServerAsync(Object, "harUnzip", new Dictionary<string, object>
-        {
-                  { "zipFile", zipFile },
-                  { "harFile", harFile },
-        });
-
-    internal async Task<JsonPipe> ConnectAsync(string wsEndpoint, IEnumerable<KeyValuePair<string, string>> headers, float? slowMo, float? timeout, string exposeNetwork)
-    {
-        var args = new Dictionary<string, object>
-            {
-                { "wsEndpoint", wsEndpoint },
-                { "headers", headers },
-                { "slowMo", slowMo },
-                { "timeout", timeout },
-                { "exposeNetwork", exposeNetwork },
-            };
-        return (await Connection.SendMessageToServerAsync(Object, "connect", args).ConfigureAwait(false)).Value.GetObject<JsonPipe>("pipe", Connection);
-    }
-
-    internal void AddStackToTracingNoReply(List<StackFrame> frames, int id)
-        => Connection.SendMessageToServerAsync(Object, "addStackToTracingNoReply", new Dictionary<string, object>
-        {
-            {
-                "callData", new ClientSideCallMetadata()
-                {
-                    Id = id,
-                    Stack = frames,
-                }
-            },
-        }).IgnoreException();
-
-    internal Task TraceDiscardedAsync(string stacksId)
-        => Connection.SendMessageToServerAsync(Object, "traceDiscarded", new Dictionary<string, object>
-        {
-            { "stacksId", stacksId },
-        });
-
-    internal async Task<string> TracingStartedAsync(string tracesDir, string traceName)
-    {
-        var response = await Connection.SendMessageToServerAsync(Object, "tracingStarted", new Dictionary<string, object>
-        {
-            { "tracesDir", tracesDir },
-            { "traceName", traceName },
-        }).ConfigureAwait(false);
-        return response.GetString("stacksId", true);
     }
 }

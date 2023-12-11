@@ -22,6 +22,7 @@
  * SOFTWARE.
  */
 
+using System.Collections.Generic;
 using System.Text.Json;
 using System.Threading.Tasks;
 using Microsoft.Playwright.Transport.Channels;
@@ -37,9 +38,17 @@ internal class Accessibility : IAccessibility
         _channel = channel;
     }
 
-    public Task<JsonElement?> SnapshotAsync(AccessibilitySnapshotOptions options = default)
+    public async Task<JsonElement?> SnapshotAsync(AccessibilitySnapshotOptions options = default)
     {
         options ??= new();
-        return _channel.AccessibilitySnapshotAsync(options.InterestingOnly, (options.Root as ElementHandle)?.ElementChannel);
+        if ((await _channel.Object.SendMessageToServerAsync("accessibilitySnapshot", new Dictionary<string, object>
+        {
+            ["interestingOnly"] = options?.InterestingOnly,
+            ["root"] = (options.Root as ElementHandle)?.ElementChannel,
+        }).ConfigureAwait(false)).Value.TryGetProperty("rootAXNode", out var jsonElement))
+        {
+            return jsonElement;
+        }
+        return null;
     }
 }

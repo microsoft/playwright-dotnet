@@ -77,7 +77,7 @@ internal class Route : ChannelOwnerBase, IChannelOwner<Route>, IRoute
             options.Path,
             options.Response).ConfigureAwait(false);
         normalized["requestUrl"] = _request._initializer.Url;
-        await RaceWithTargetCloseAsync(_channel.FulfillAsync(normalized)).ConfigureAwait(false);
+        await RaceWithTargetCloseAsync(SendMessageToServerAsync("fulfill", normalized)).ConfigureAwait(false);
         ReportHandled(true);
     }
 
@@ -85,7 +85,13 @@ internal class Route : ChannelOwnerBase, IChannelOwner<Route>, IRoute
     public async Task AbortAsync(string errorCode = RequestAbortErrorCode.Failed)
     {
         CheckNotHandled();
-        await RaceWithTargetCloseAsync(_channel.AbortAsync(_request._initializer.Url, errorCode)).ConfigureAwait(false);
+        await RaceWithTargetCloseAsync(SendMessageToServerAsync(
+            "abort",
+            new Dictionary<string, object>
+            {
+                ["requestUrl"] = _request._initializer.Url,
+                ["errorCode"] = string.IsNullOrEmpty(errorCode) ? RequestAbortErrorCode.Failed : errorCode,
+            })).ConfigureAwait(false);
         ReportHandled(true);
     }
 
@@ -102,7 +108,18 @@ internal class Route : ChannelOwnerBase, IChannelOwner<Route>, IRoute
     {
         var options = _request.FallbackOverridesForContinue();
         await _channel.Connection.WrapApiCallAsync(
-            () => RaceWithTargetCloseAsync(_channel.ContinueAsync(requestUrl: _request._initializer.Url, url: options.Url, method: options.Method, postData: options.PostData, headers: options.Headers, isFallback: @internal)),
+            () => RaceWithTargetCloseAsync(
+                SendMessageToServerAsync(
+            "continue",
+            new Dictionary<string, object>
+            {
+                ["requestUrl"] = _request._initializer.Url,
+                ["url"] = options.Url,
+                ["method"] = options.Method,
+                ["postData"] = options.PostData != null ? Convert.ToBase64String(options.PostData) : null,
+                ["headers"] = options.Headers?.Select(kv => new HeaderEntry { Name = kv.Key, Value = kv.Value }).ToArray(),
+                ["isFallback"] = @internal,
+            })),
             @internal).ConfigureAwait(false);
     }
 
@@ -235,7 +252,12 @@ internal class Route : ChannelOwnerBase, IChannelOwner<Route>, IRoute
     internal async Task RedirectNavigationRequestAsync(string url)
     {
         CheckNotHandled();
-        await RaceWithTargetCloseAsync(_channel.RedirectNavigationRequestAsync(url)).ConfigureAwait(false);
+        await RaceWithTargetCloseAsync(SendMessageToServerAsync(
+            "redirectNavigationRequest",
+            new Dictionary<string, object>
+            {
+                ["url"] = url,
+            })).ConfigureAwait(false);
         ReportHandled(true);
     }
 

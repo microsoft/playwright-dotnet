@@ -22,12 +22,7 @@
 * SOFTWARE.
 */
 
-using System;
-using System.Collections.Generic;
-using System.Text.Json;
-using System.Threading.Tasks;
 using Microsoft.Playwright.Core;
-using Microsoft.Playwright.Helpers;
 
 namespace Microsoft.Playwright.Transport.Channels;
 
@@ -36,22 +31,4 @@ internal class BindingCallChannel : Channel<BindingCall>
     public BindingCallChannel(string guid, Connection connection, BindingCall owner) : base(guid, connection, owner)
     {
     }
-
-    internal Task RejectAsync(Exception error)
-        => Connection.SendMessageToServerAsync<JsonElement>(
-            Object,
-            "reject",
-            new Dictionary<string, object>
-            {
-                ["error"] = error.ToObject(),
-            });
-
-    internal Task ResolveAsync(object result)
-        => Connection.SendMessageToServerAsync<JsonElement>(
-            Object,
-            "resolve",
-            new Dictionary<string, object>
-            {
-                ["result"] = result,
-            });
 }

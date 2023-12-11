@@ -27,6 +27,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text.Json;
 using System.Threading.Tasks;
+using Microsoft.Playwright.Helpers;
 
 namespace Microsoft.Playwright.Core;
 
@@ -61,12 +62,12 @@ internal class APIResponse : IAPIResponse
     {
         try
         {
-            var result = await _context._channel.FetchResponseBodyAsync(FetchUid()).ConfigureAwait(false);
-            if (result == null)
+            var response = await _context.SendMessageToServerAsync("fetchResponseBody", new Dictionary<string, object> { ["fetchUid"] = FetchUid() }).ConfigureAwait(false);
+            if (response?.TryGetProperty("binary", out var binary) == true)
             {
-                throw new PlaywrightException("Response has been disposed");
+                return Convert.FromBase64String(binary.ToString());
             }
-            return Convert.FromBase64String(result);
+            throw new PlaywrightException("Response has been disposed");
         }
         catch (Exception e) when (DriverMessages.IsTargetClosedError(e))
         {
@@ -86,9 +87,13 @@ internal class APIResponse : IAPIResponse
 
     internal string FetchUid() => _initializer.FetchUid;
 
-    internal Task<string[]> FetchLogAsync() => _context._channel.FetchResponseLogAsync(FetchUid());
+    internal async Task<string[]> FetchLogAsync()
+    {
+        var response = await _context.SendMessageToServerAsync("fetchLog", new Dictionary<string, object> { ["fetchUid"] = FetchUid() }).ConfigureAwait(false);
+        return response.Value.GetProperty("log").ToObject<string[]>();
+    }
 
-    public ValueTask DisposeAsync() => new(_context._channel.DisposeAPIResponseAsync(FetchUid()));
+    public ValueTask DisposeAsync() => new(_context.SendMessageToServerAsync("disposeAPIResponse", new Dictionary<string, object> { ["fetchUid"] = FetchUid() }));
 
     public override string ToString()
     {
