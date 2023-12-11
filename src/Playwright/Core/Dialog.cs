@@ -30,11 +30,11 @@ using Microsoft.Playwright.Transport.Protocol;
 
 namespace Microsoft.Playwright.Core;
 
-internal class Dialog : ChannelOwnerBase, IDialog
+internal class Dialog : ChannelOwner, IDialog
 {
     private readonly DialogInitializer _initializer;
 
-    public Dialog(ChannelOwnerBase parent, string guid, DialogInitializer initializer) : base(parent, guid)
+    public Dialog(ChannelOwner parent, string guid, DialogInitializer initializer) : base(parent, guid)
     {
         _initializer = initializer;
     }

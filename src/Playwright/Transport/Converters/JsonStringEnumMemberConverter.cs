@@ -79,7 +79,7 @@ internal class JsonStringEnumMemberConverter : JsonConverterFactory
     {
         if (value.HasValue)
         {
-            writer.WriteStringValue(EnumHelper.ToValueString(value.Value));
+            writer.WriteStringValue(value.Value.ToValueString());
         }
         else
         {

@@ -31,7 +31,7 @@ namespace Microsoft.Playwright.Transport.Converters;
 
 internal class ChannelOwnerListToGuidListConverter<T>
     : JsonConverter<IEnumerable<T>>
-    where T : ChannelOwnerBase
+    where T : ChannelOwner
 {
     private readonly Connection _connection;
 

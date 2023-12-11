@@ -31,11 +31,11 @@ using Microsoft.Playwright.Transport.Protocol;
 
 namespace Microsoft.Playwright.Core;
 
-internal class LocalUtils : ChannelOwnerBase
+internal class LocalUtils : ChannelOwner
 {
     internal readonly Dictionary<string, BrowserNewContextOptions> _devices = new();
 
-    public LocalUtils(ChannelOwnerBase parent, string guid, LocalUtilsInitializer initializer) : base(parent, guid)
+    public LocalUtils(ChannelOwner parent, string guid, LocalUtilsInitializer initializer) : base(parent, guid)
     {
         foreach (var entry in initializer.DeviceDescriptors)
         {

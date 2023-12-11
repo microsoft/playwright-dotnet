@@ -30,7 +30,7 @@ namespace Microsoft.Playwright.Transport.Converters;
 
 internal class ChannelOwnerToGuidConverter<T>
     : JsonConverter<T>
-    where T : ChannelOwnerBase
+    where T : ChannelOwner
 {
     private readonly Connection _connection;
 
@@ -40,7 +40,7 @@ internal class ChannelOwnerToGuidConverter<T>
     }
 
     public override bool CanConvert(Type type)
-        => (typeof(T) == typeof(ChannelOwnerBase) && typeof(T).IsAssignableFrom(type)) || type == typeof(T);
+        => (typeof(T) == typeof(ChannelOwner) && typeof(T).IsAssignableFrom(type)) || type == typeof(T);
 
     public override T Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
     {

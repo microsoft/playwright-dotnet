@@ -27,9 +27,9 @@ using Microsoft.Playwright.Transport.Protocol;
 
 namespace Microsoft.Playwright.Core;
 
-internal class AndroidDevice : ChannelOwnerBase
+internal class AndroidDevice : ChannelOwner
 {
-    internal AndroidDevice(ChannelOwnerBase parent, string guid, BrowserInitializer initializer) : base(parent, guid)
+    internal AndroidDevice(ChannelOwner parent, string guid, BrowserInitializer initializer) : base(parent, guid)
     {
     }
 }

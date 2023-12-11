@@ -75,11 +75,11 @@ internal class LocatorAssertions : AssertionsBase, ILocatorAssertions
     public Task ToBeInViewportAsync(LocatorAssertionsToBeInViewportOptions options = null)
     {
         var frameExpectOptions = ConvertToFrameExpectOptions(options);
-        if (options != null && options.Ratio != null)
+        if (options?.Ratio != null)
         {
             frameExpectOptions.ExpectedNumber = (float)options.Ratio;
         }
-        return ExpectTrueAsync("to.be.in.viewport", $"Locator expected to be in viewport", frameExpectOptions);
+        return ExpectTrueAsync("to.be.in.viewport", "Locator expected to be in viewport", frameExpectOptions);
     }
 
     public Task ToBeVisibleAsync(LocatorAssertionsToBeVisibleOptions options = null)

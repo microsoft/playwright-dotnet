@@ -371,10 +371,7 @@ internal class Locator : ILocator
             foreach (var sourceProperty in sourceType.GetProperties())
             {
                 var targetProperty = targetType.GetProperty(sourceProperty.Name);
-                if (targetProperty != null)
-                {
-                    targetProperty.SetValue(target, sourceProperty.GetValue(source));
-                }
+                targetProperty?.SetValue(target, sourceProperty.GetValue(source));
             }
         }
         var strictProperty = targetType.GetProperty("Strict");
@@ -564,7 +561,7 @@ internal class Locator : ILocator
         //   cssEscape(value).replace(/\\ /g, ' ')
         // However, our attribute selectors do not conform to CSS parsing spec,
         // so we escape them differently.
-        var exactFlag = (exact == true) ? string.Empty : "i";
+        var exactFlag = exact ? string.Empty : "i";
         return $"\"{value.Replace("\\", "\\\\").Replace("\"", "\\\"")}\"{exactFlag}";
     }
 

@@ -31,14 +31,14 @@ using Microsoft.Playwright.Transport.Protocol;
 namespace Microsoft.Playwright.Core;
 
 [SuppressMessage("Microsoft.Design", "CA1724", Justification = "Playwright is the entrypoint for all languages.")]
-internal class PlaywrightImpl : ChannelOwnerBase, IPlaywright
+internal class PlaywrightImpl : ChannelOwner, IPlaywright
 {
     private readonly PlaywrightInitializer _initializer;
     internal SelectorsAPI _selectors;
 
     private readonly Dictionary<string, BrowserNewContextOptions> _devices = new(StringComparer.InvariantCultureIgnoreCase);
 
-    internal PlaywrightImpl(ChannelOwnerBase parent, string guid, PlaywrightInitializer initializer)
+    internal PlaywrightImpl(ChannelOwner parent, string guid, PlaywrightInitializer initializer)
          : base(parent, guid)
     {
         _initializer = initializer;

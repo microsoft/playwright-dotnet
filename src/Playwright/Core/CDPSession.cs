@@ -32,11 +32,11 @@ using Microsoft.Playwright.Transport;
 
 namespace Microsoft.Playwright.Core;
 
-internal class CDPSession : ChannelOwnerBase, ICDPSession
+internal class CDPSession : ChannelOwner, ICDPSession
 {
     private readonly Dictionary<string, CDPSessionEvent> _cdpSessionEvents = new();
 
-    public CDPSession(ChannelOwnerBase parent, string guid) : base(parent, guid)
+    public CDPSession(ChannelOwner parent, string guid) : base(parent, guid)
     {
     }
 

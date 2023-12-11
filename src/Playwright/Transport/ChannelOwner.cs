@@ -32,18 +32,17 @@ using Microsoft.Playwright.Helpers;
 
 namespace Microsoft.Playwright.Transport;
 
-internal class ChannelOwnerBase
+internal class ChannelOwner
 {
     internal readonly Connection _connection;
-    private readonly ConcurrentDictionary<string, ChannelOwnerBase> _objects = new();
 
     internal bool _wasCollected;
 
-    internal ChannelOwnerBase(ChannelOwnerBase parent, string guid) : this(parent, null, guid)
+    internal ChannelOwner(ChannelOwner parent, string guid) : this(parent, null, guid)
     {
     }
 
-    internal ChannelOwnerBase(ChannelOwnerBase parent, Connection connection, string guid)
+    internal ChannelOwner(ChannelOwner parent, Connection connection, string guid)
     {
         _connection = parent?._connection ?? connection;
 
@@ -57,21 +56,20 @@ internal class ChannelOwnerBase
         }
     }
 
-    internal ConcurrentDictionary<string, ChannelOwnerBase> Objects => _objects;
-
+    internal ConcurrentDictionary<string, ChannelOwner> Objects { get; } = new();
 
     internal string Guid { get; set; }
 
-    internal ChannelOwnerBase Parent { get; set; }
+    internal ChannelOwner Parent { get; set; }
 
     internal virtual void OnMessage(string method, JsonElement? serverParams)
     {
     }
 
-    internal void Adopt(ChannelOwnerBase child)
+    internal void Adopt(ChannelOwner child)
     {
         child.Parent.Objects.TryRemove(child.Guid, out _);
-        _objects[child.Guid] = child;
+        Objects[child.Guid] = child;
         child.Parent = this;
     }
 
@@ -81,11 +79,11 @@ internal class ChannelOwnerBase
         _connection?.Objects.TryRemove(Guid, out var _);
         _wasCollected = reason == "gc";
 
-        foreach (var item in _objects.Values)
+        foreach (var item in Objects.Values)
         {
             item.DisposeOwner(reason);
         }
-        _objects.Clear();
+        Objects.Clear();
     }
 
     public Task<T> WrapApiCallAsync<T>(Func<Task<T>> action, bool isInternal = false) => _connection.WrapApiCallAsync(action, isInternal);

@@ -32,14 +32,14 @@ using Microsoft.Playwright.Transport.Protocol;
 
 namespace Microsoft.Playwright.Core;
 
-internal class JSHandle : ChannelOwnerBase, IJSHandle
+internal class JSHandle : ChannelOwner, IJSHandle
 {
-    internal JSHandle(ChannelOwnerBase parent, string guid, JSHandleInitializer initializer) : base(parent, guid)
+    internal JSHandle(ChannelOwner parent, string guid, JSHandleInitializer initializer) : base(parent, guid)
     {
         Preview = initializer.Preview;
     }
 
-    internal string Preview { get; set; }
+    protected string Preview { get; set; }
 
     [MethodImpl(MethodImplOptions.NoInlining)]
     public IElementHandle AsElement() => this as IElementHandle;

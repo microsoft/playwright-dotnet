@@ -35,13 +35,13 @@ using Microsoft.Playwright.Transport.Protocol;
 
 namespace Microsoft.Playwright.Core;
 
-internal class APIRequestContext : ChannelOwnerBase, IAPIRequestContext
+internal class APIRequestContext : ChannelOwner, IAPIRequestContext
 {
     internal readonly Tracing _tracing;
 
     internal APIRequest _request;
 
-    public APIRequestContext(ChannelOwnerBase parent, string guid, APIRequestContextInitializer initializer) : base(parent, guid)
+    public APIRequestContext(ChannelOwner parent, string guid, APIRequestContextInitializer initializer) : base(parent, guid)
     {
         _tracing = initializer.Tracing;
     }
@@ -160,7 +160,6 @@ internal class APIRequestContext : ChannelOwnerBase, IAPIRequestContext
             return false;
         }
     }
-
 
     [MethodImpl(MethodImplOptions.NoInlining)]
     public Task<IAPIResponse> DeleteAsync(string url, APIRequestContextOptions options = null) => FetchAsync(url, WithMethod(options, "DELETE"));

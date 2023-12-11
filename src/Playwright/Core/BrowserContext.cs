@@ -38,12 +38,12 @@ using Microsoft.Playwright.Transport.Protocol;
 
 namespace Microsoft.Playwright.Core;
 
-internal class BrowserContext : ChannelOwnerBase, IBrowserContext
+internal class BrowserContext : ChannelOwner, IBrowserContext
 {
     private readonly TaskCompletionSource<bool> _closeTcs = new();
     private readonly Dictionary<string, Delegate> _bindings = new();
     private readonly BrowserContextInitializer _initializer;
-    internal readonly Tracing _tracing;
+    private readonly Tracing _tracing;
     internal readonly IAPIRequestContext _request;
     private readonly IDictionary<string, HarRecorder> _harRecorders = new Dictionary<string, HarRecorder>();
     internal readonly List<IWorker> _serviceWorkers = new();
@@ -55,7 +55,7 @@ internal class BrowserContext : ChannelOwnerBase, IBrowserContext
 
     internal TimeoutSettings _timeoutSettings = new();
 
-    internal BrowserContext(ChannelOwnerBase parent, string guid, BrowserContextInitializer initializer) : base(parent, guid)
+    internal BrowserContext(ChannelOwner parent, string guid, BrowserContextInitializer initializer) : base(parent, guid)
     {
         _browser = parent as Browser;
         _browser?._contexts.Add(this);

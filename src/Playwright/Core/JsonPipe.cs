@@ -33,11 +33,11 @@ using Microsoft.Playwright.Transport.Protocol;
 
 namespace Microsoft.Playwright.Core;
 
-internal class JsonPipe : ChannelOwnerBase
+internal class JsonPipe : ChannelOwner
 {
     private readonly JsonPipeInitializer _initializer;
 
-    public JsonPipe(ChannelOwnerBase parent, string guid, JsonPipeInitializer initializer) : base(parent, guid)
+    public JsonPipe(ChannelOwner parent, string guid, JsonPipeInitializer initializer) : base(parent, guid)
     {
         _initializer = initializer;
     }

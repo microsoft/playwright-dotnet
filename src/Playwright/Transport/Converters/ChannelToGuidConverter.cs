@@ -28,7 +28,7 @@ using System.Text.Json.Serialization;
 
 namespace Microsoft.Playwright.Transport.Converters;
 
-internal class ChannelToGuidConverter : JsonConverter<ChannelOwnerBase>
+internal class ChannelToGuidConverter : JsonConverter<ChannelOwner>
 {
     private readonly Connection _connection;
 
@@ -37,16 +37,16 @@ internal class ChannelToGuidConverter : JsonConverter<ChannelOwnerBase>
         _connection = connection;
     }
 
-    public override bool CanConvert(Type type) => typeof(ChannelOwnerBase).IsAssignableFrom(type);
+    public override bool CanConvert(Type type) => typeof(ChannelOwner).IsAssignableFrom(type);
 
-    public override ChannelOwnerBase Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
+    public override ChannelOwner Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
     {
         using JsonDocument document = JsonDocument.ParseValue(ref reader);
         string guid = document.RootElement.GetProperty("guid").ToString();
         return _connection.GetObject(guid);
     }
 
-    public override void Write(Utf8JsonWriter writer, ChannelOwnerBase value, JsonSerializerOptions options)
+    public override void Write(Utf8JsonWriter writer, ChannelOwner value, JsonSerializerOptions options)
     {
         writer.WriteStartObject();
         writer.WriteString("guid", value.Guid);

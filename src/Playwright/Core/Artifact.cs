@@ -33,9 +33,9 @@ using Microsoft.Playwright.Transport.Protocol;
 
 namespace Microsoft.Playwright.Core;
 
-internal class Artifact : ChannelOwnerBase
+internal class Artifact : ChannelOwner
 {
-    internal Artifact(ChannelOwnerBase parent, string guid, ArtifactInitializer initializer) : base(parent, guid)
+    internal Artifact(ChannelOwner parent, string guid, ArtifactInitializer initializer) : base(parent, guid)
     {
         AbsolutePath = initializer.AbsolutePath;
     }

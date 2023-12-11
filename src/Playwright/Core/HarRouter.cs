@@ -29,7 +29,7 @@ using Microsoft.Playwright.Helpers;
 
 namespace Microsoft.Playwright.Core;
 
-internal class HarRouter
+internal sealed class HarRouter
 {
     private readonly LocalUtils _localUtils;
 

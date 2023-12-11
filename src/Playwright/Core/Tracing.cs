@@ -32,14 +32,14 @@ using Microsoft.Playwright.Transport.Protocol;
 
 namespace Microsoft.Playwright.Core;
 
-internal class Tracing : ChannelOwnerBase, ITracing
+internal class Tracing : ChannelOwner, ITracing
 {
     internal string _tracesDir;
     private bool _includeSources;
     private string _stacksId;
     private bool _isTracing;
 
-    public Tracing(ChannelOwnerBase parent, string guid) : base(parent, guid)
+    public Tracing(ChannelOwner parent, string guid) : base(parent, guid)
     {
     }
 

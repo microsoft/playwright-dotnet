@@ -33,13 +33,13 @@ using Microsoft.Playwright.Transport.Protocol;
 
 namespace Microsoft.Playwright.Core;
 
-internal class BindingCall : ChannelOwnerBase
+internal class BindingCall : ChannelOwner
 {
     private static readonly Type VoidTaskResultType = Type.GetType("System.Threading.Tasks.VoidTaskResult");
 
     private readonly BindingCallInitializer _initializer;
 
-    public BindingCall(ChannelOwnerBase parent, string guid, BindingCallInitializer initializer) : base(parent, guid)
+    public BindingCall(ChannelOwner parent, string guid, BindingCallInitializer initializer) : base(parent, guid)
     {
         _initializer = initializer;
     }

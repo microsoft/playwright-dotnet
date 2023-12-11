@@ -75,7 +75,7 @@ internal class Connection : IDisposable
 
     internal event EventHandler<Exception> Close;
 
-    public ConcurrentDictionary<string, ChannelOwnerBase> Objects { get; } = new();
+    public ConcurrentDictionary<string, ChannelOwner> Objects { get; } = new();
 
     internal AsyncLocal<List<ApiZone>> ApiZone { get; } = new();
 
@@ -121,20 +121,20 @@ internal class Connection : IDisposable
     }
 
     internal Task<JsonElement?> SendMessageToServerAsync(
-        ChannelOwnerBase @object,
+        ChannelOwner @object,
         string method,
         Dictionary<string, object> args = null,
         bool keepNulls = false)
         => SendMessageToServerAsync<JsonElement?>(@object, method, args, keepNulls);
 
     internal Task<T> SendMessageToServerAsync<T>(
-        ChannelOwnerBase @object,
+        ChannelOwner @object,
         string method,
         Dictionary<string, object> args = null,
         bool keepNulls = false) => WrapApiCallAsync(() => InnerSendMessageToServerAsync<T>(@object, method, args, keepNulls));
 
     private async Task<T> InnerSendMessageToServerAsync<T>(
-        ChannelOwnerBase @object,
+        ChannelOwner @object,
         string method,
         Dictionary<string, object> dictionary = null,
         bool keepNulls = false)
@@ -158,7 +158,7 @@ internal class Connection : IDisposable
         _callbacks.TryAdd(id, callback);
 
         var sanitizedArgs = new Dictionary<string, object>();
-        if (dictionary != null && dictionary.Keys.Any(f => f != null))
+        if (dictionary?.Keys.Any(f => f != null) == true)
         {
             sanitizedArgs = dictionary
                 .Where(f => f.Value != null)
@@ -215,7 +215,7 @@ internal class Connection : IDisposable
         {
             return default;
         }
-        else if (typeof(ChannelOwnerBase).IsAssignableFrom(typeof(T)) || typeof(ChannelOwnerBase[]).IsAssignableFrom(typeof(T)))
+        else if (typeof(ChannelOwner).IsAssignableFrom(typeof(T)) || typeof(ChannelOwner[]).IsAssignableFrom(typeof(T)))
         {
             var enumerate = result.Value.EnumerateObject();
 
@@ -229,7 +229,7 @@ internal class Connection : IDisposable
         }
     }
 
-    internal ChannelOwnerBase GetObject(string guid)
+    internal ChannelOwner GetObject(string guid)
     {
         Objects.TryGetValue(guid, out var result);
         return result;
@@ -301,7 +301,7 @@ internal class Connection : IDisposable
                 {
                     throw new PlaywrightException($"Unknown new child: '{childGuid}'");
                 }
-                @object.Adopt((ChannelOwnerBase)child);
+                @object.Adopt((ChannelOwner)child);
                 return;
             }
 
@@ -319,9 +319,9 @@ internal class Connection : IDisposable
         }
     }
 
-    private ChannelOwnerBase CreateRemoteObject(string parentGuid, ChannelOwnerType type, string guid, JsonElement? initializer)
+    private ChannelOwner CreateRemoteObject(string parentGuid, ChannelOwnerType type, string guid, JsonElement? initializer)
     {
-        ChannelOwnerBase result = null;
+        ChannelOwner result = null;
         var parent = string.IsNullOrEmpty(parentGuid) ? _rootObject : Objects[parentGuid];
 
 #pragma warning disable CA2000 // Dispose objects before losing scope
@@ -442,7 +442,6 @@ internal class Connection : IDisposable
         {
             return new TimeoutException(error.Message + messageSuffix);
         }
-
 
         if (error.Name == "TargetClosedError")
         {

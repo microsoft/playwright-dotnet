@@ -40,13 +40,13 @@ internal class Waiter : IDisposable
     private readonly CancellationTokenSource _onDisposeCts = new();
     private readonly CancellationTokenSource _manualCts = new();
     private readonly string _waitId = Guid.NewGuid().ToString();
-    private readonly ChannelOwnerBase _channelOwner;
+    private readonly ChannelOwner _channelOwner;
     private Exception _immediateError;
 
     private bool _disposed;
     private string _error;
 
-    internal Waiter(ChannelOwnerBase channelOwner, string @event)
+    internal Waiter(ChannelOwner channelOwner, string @event)
     {
         _channelOwner = channelOwner;
 
