@@ -1357,6 +1357,9 @@ internal class Page : ChannelOwner, IPage
                 Url = options?.Url,
                 UrlString = options?.UrlString,
                 UrlRegex = options?.UrlRegex,
+                Update = options.Update,
+                UpdateContent = options.UpdateContent,
+                UpdateMode = options.UpdateMode,
             }).ConfigureAwait(false);
             return;
         }
