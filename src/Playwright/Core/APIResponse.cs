@@ -29,6 +29,8 @@ using System.Text.Json;
 using System.Threading.Tasks;
 using Microsoft.Playwright.Helpers;
 
+#nullable enable
+
 namespace Microsoft.Playwright.Core;
 
 internal class APIResponse : IAPIResponse
@@ -77,7 +79,7 @@ internal class APIResponse : IAPIResponse
 
     public async Task<JsonElement?> JsonAsync() => JsonSerializer.Deserialize<JsonElement>(await BodyAsync().ConfigureAwait(false));
 
-    public async Task<T> JsonAsync<T>() => JsonSerializer.Deserialize<T>(await BodyAsync().ConfigureAwait(false));
+    public async Task<T?> JsonAsync<T>(JsonSerializerOptions? options) => JsonSerializer.Deserialize<T>(await BodyAsync().ConfigureAwait(false), options);
 
     public async Task<string> TextAsync()
     {
