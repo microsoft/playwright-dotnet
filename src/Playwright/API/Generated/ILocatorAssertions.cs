@@ -218,7 +218,8 @@ public partial interface ILocatorAssertions
     /// <summary>
     /// <para>
     /// Ensures the <see cref="ILocator"/> points to an element that contains the given
-    /// text. You can use regular expressions for the value as well.
+    /// text. All nested elements will be considered when computing the text content of
+    /// the element. You can use regular expressions for the value as well.
     /// </para>
     /// <para>**Details**</para>
     /// <para>
@@ -262,7 +263,8 @@ public partial interface ILocatorAssertions
     /// <summary>
     /// <para>
     /// Ensures the <see cref="ILocator"/> points to an element that contains the given
-    /// text. You can use regular expressions for the value as well.
+    /// text. All nested elements will be considered when computing the text content of
+    /// the element. You can use regular expressions for the value as well.
     /// </para>
     /// <para>**Details**</para>
     /// <para>
@@ -306,7 +308,8 @@ public partial interface ILocatorAssertions
     /// <summary>
     /// <para>
     /// Ensures the <see cref="ILocator"/> points to an element that contains the given
-    /// text. You can use regular expressions for the value as well.
+    /// text. All nested elements will be considered when computing the text content of
+    /// the element. You can use regular expressions for the value as well.
     /// </para>
     /// <para>**Details**</para>
     /// <para>
@@ -350,7 +353,8 @@ public partial interface ILocatorAssertions
     /// <summary>
     /// <para>
     /// Ensures the <see cref="ILocator"/> points to an element that contains the given
-    /// text. You can use regular expressions for the value as well.
+    /// text. All nested elements will be considered when computing the text content of
+    /// the element. You can use regular expressions for the value as well.
     /// </para>
     /// <para>**Details**</para>
     /// <para>
@@ -606,8 +610,9 @@ public partial interface ILocatorAssertions
 
     /// <summary>
     /// <para>
-    /// Ensures the <see cref="ILocator"/> points to an element with the given text. You
-    /// can use regular expressions for the value as well.
+    /// Ensures the <see cref="ILocator"/> points to an element with the given text. All
+    /// nested elements will be considered when computing the text content of the element.
+    /// You can use regular expressions for the value as well.
     /// </para>
     /// <para>**Details**</para>
     /// <para>
@@ -652,8 +657,9 @@ public partial interface ILocatorAssertions
 
     /// <summary>
     /// <para>
-    /// Ensures the <see cref="ILocator"/> points to an element with the given text. You
-    /// can use regular expressions for the value as well.
+    /// Ensures the <see cref="ILocator"/> points to an element with the given text. All
+    /// nested elements will be considered when computing the text content of the element.
+    /// You can use regular expressions for the value as well.
     /// </para>
     /// <para>**Details**</para>
     /// <para>
@@ -698,8 +704,9 @@ public partial interface ILocatorAssertions
 
     /// <summary>
     /// <para>
-    /// Ensures the <see cref="ILocator"/> points to an element with the given text. You
-    /// can use regular expressions for the value as well.
+    /// Ensures the <see cref="ILocator"/> points to an element with the given text. All
+    /// nested elements will be considered when computing the text content of the element.
+    /// You can use regular expressions for the value as well.
     /// </para>
     /// <para>**Details**</para>
     /// <para>
@@ -744,8 +751,9 @@ public partial interface ILocatorAssertions
 
     /// <summary>
     /// <para>
-    /// Ensures the <see cref="ILocator"/> points to an element with the given text. You
-    /// can use regular expressions for the value as well.
+    /// Ensures the <see cref="ILocator"/> points to an element with the given text. All
+    /// nested elements will be considered when computing the text content of the element.
+    /// You can use regular expressions for the value as well.
     /// </para>
     /// <para>**Details**</para>
     /// <para>

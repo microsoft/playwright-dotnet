@@ -110,6 +110,10 @@ public partial interface IElementHandle : IJSHandle
     Task<ElementHandleBoundingBoxResult?> BoundingBoxAsync();
 
     /// <summary>
+    /// <para>
+    /// Use locator-based <see cref="ILocator.CheckAsync"/> instead. Read more about <a
+    /// href="https://playwright.dev/dotnet/docs/locators">locators</a>.
+    /// </para>
     /// <para>This method checks the element by performing the following steps:</para>
     /// <list type="ordinal">
     /// <item><description>
@@ -142,6 +146,10 @@ public partial interface IElementHandle : IJSHandle
     Task CheckAsync(ElementHandleCheckOptions? options = default);
 
     /// <summary>
+    /// <para>
+    /// Use locator-based <see cref="ILocator.ClickAsync"/> instead. Read more about <a
+    /// href="https://playwright.dev/dotnet/docs/locators">locators</a>.
+    /// </para>
     /// <para>This method clicks the element by performing the following steps:</para>
     /// <list type="ordinal">
     /// <item><description>
@@ -180,6 +188,10 @@ public partial interface IElementHandle : IJSHandle
     Task<IFrame?> ContentFrameAsync();
 
     /// <summary>
+    /// <para>
+    /// Use locator-based <see cref="ILocator.DblClickAsync"/> instead. Read more about
+    /// <a href="https://playwright.dev/dotnet/docs/locators">locators</a>.
+    /// </para>
     /// <para>This method double clicks the element by performing the following steps:</para>
     /// <list type="ordinal">
     /// <item><description>
@@ -217,6 +229,10 @@ public partial interface IElementHandle : IJSHandle
     Task DblClickAsync(ElementHandleDblClickOptions? options = default);
 
     /// <summary>
+    /// <para>
+    /// Use locator-based <see cref="ILocator.DispatchEventAsync"/> instead. Read more about
+    /// <a href="https://playwright.dev/dotnet/docs/locators">locators</a>.
+    /// </para>
     /// <para>
     /// The snippet below dispatches the <c>click</c> event on the element. Regardless of
     /// the visibility state of the element, <c>click</c> is dispatched. This is equivalent
@@ -262,6 +278,11 @@ public partial interface IElementHandle : IJSHandle
     Task DispatchEventAsync(string type, object? eventInit = default);
 
     /// <summary>
+    /// <para>
+    /// This method does not wait for the element to pass actionability checks and therefore
+    /// can lead to the flaky tests. Use <see cref="ILocator.EvaluateAsync"/>, other <see
+    /// cref="ILocator"/> helper methods or web-first assertions instead.
+    /// </para>
     /// <para>Returns the return value of <paramref name="expression"/>.</para>
     /// <para>
     /// The method finds an element matching the specified selector in the <c>ElementHandle</c>s
@@ -288,6 +309,10 @@ public partial interface IElementHandle : IJSHandle
     Task<T> EvalOnSelectorAsync<T>(string selector, string expression, object? arg = default);
 
     /// <summary>
+    /// <para>
+    /// In most cases, <see cref="ILocator.EvaluateAllAsync"/>, other <see cref="ILocator"/>
+    /// helper methods and web-first assertions do a better job.
+    /// </para>
     /// <para>Returns the return value of <paramref name="expression"/>.</para>
     /// <para>
     /// The method finds all elements matching the specified selector in the <c>ElementHandle</c>'s
@@ -313,6 +338,7 @@ public partial interface IElementHandle : IJSHandle
     Task<T> EvalOnSelectorAllAsync<T>(string selector, string expression, object? arg = default);
 
     /// <summary>
+    /// <para>Use locator-based <see cref="ILocator.FillAsync"/> instead. Read more about <a href="https://playwright.dev/dotnet/docs/locators">locators</a>.</para>
     /// <para>
     /// This method waits for <a href="https://playwright.dev/dotnet/docs/actionability">actionability</a>
     /// checks, focuses the element, fills it and triggers an <c>input</c> event after filling.
@@ -335,17 +361,31 @@ public partial interface IElementHandle : IJSHandle
 
     /// <summary>
     /// <para>
+    /// Use locator-based <see cref="ILocator.FocusAsync"/> instead. Read more about <a
+    /// href="https://playwright.dev/dotnet/docs/locators">locators</a>.
+    /// </para>
+    /// <para>
     /// Calls <a href="https://developer.mozilla.org/en-US/docs/Web/API/HTMLElement/focus">focus</a>
     /// on the element.
     /// </para>
     /// </summary>
     Task FocusAsync();
 
-    /// <summary><para>Returns element attribute value.</para></summary>
+    /// <summary>
+    /// <para>
+    /// Use locator-based <see cref="ILocator.GetAttributeAsync"/> instead. Read more about
+    /// <a href="https://playwright.dev/dotnet/docs/locators">locators</a>.
+    /// </para>
+    /// <para>Returns element attribute value.</para>
+    /// </summary>
     /// <param name="name">Attribute name to get the value for.</param>
     Task<string?> GetAttributeAsync(string name);
 
     /// <summary>
+    /// <para>
+    /// Use locator-based <see cref="ILocator.HoverAsync"/> instead. Read more about <a
+    /// href="https://playwright.dev/dotnet/docs/locators">locators</a>.
+    /// </para>
     /// <para>This method hovers over the element by performing the following steps:</para>
     /// <list type="ordinal">
     /// <item><description>
@@ -375,13 +415,29 @@ public partial interface IElementHandle : IJSHandle
     /// <param name="options">Call options</param>
     Task HoverAsync(ElementHandleHoverOptions? options = default);
 
-    /// <summary><para>Returns the <c>element.innerHTML</c>.</para></summary>
+    /// <summary>
+    /// <para>
+    /// Use locator-based <see cref="ILocator.InnerHTMLAsync"/> instead. Read more about
+    /// <a href="https://playwright.dev/dotnet/docs/locators">locators</a>.
+    /// </para>
+    /// <para>Returns the <c>element.innerHTML</c>.</para>
+    /// </summary>
     Task<string> InnerHTMLAsync();
 
-    /// <summary><para>Returns the <c>element.innerText</c>.</para></summary>
+    /// <summary>
+    /// <para>
+    /// Use locator-based <see cref="ILocator.InnerTextAsync"/> instead. Read more about
+    /// <a href="https://playwright.dev/dotnet/docs/locators">locators</a>.
+    /// </para>
+    /// <para>Returns the <c>element.innerText</c>.</para>
+    /// </summary>
     Task<string> InnerTextAsync();
 
     /// <summary>
+    /// <para>
+    /// Use locator-based <see cref="ILocator.InputValueAsync"/> instead. Read more about
+    /// <a href="https://playwright.dev/dotnet/docs/locators">locators</a>.
+    /// </para>
     /// <para>
     /// Returns <c>input.value</c> for the selected <c>&lt;input&gt;</c> or <c>&lt;textarea&gt;</c>
     /// or <c>&lt;select&gt;</c> element.
@@ -397,31 +453,69 @@ public partial interface IElementHandle : IJSHandle
 
     /// <summary>
     /// <para>
+    /// Use locator-based <see cref="ILocator.IsCheckedAsync"/> instead. Read more about
+    /// <a href="https://playwright.dev/dotnet/docs/locators">locators</a>.
+    /// </para>
+    /// <para>
     /// Returns whether the element is checked. Throws if the element is not a checkbox
     /// or radio input.
     /// </para>
     /// </summary>
     Task<bool> IsCheckedAsync();
 
-    /// <summary><para>Returns whether the element is disabled, the opposite of <a href="https://playwright.dev/dotnet/docs/actionability#enabled">enabled</a>.</para></summary>
+    /// <summary>
+    /// <para>
+    /// Use locator-based <see cref="ILocator.IsDisabledAsync"/> instead. Read more about
+    /// <a href="https://playwright.dev/dotnet/docs/locators">locators</a>.
+    /// </para>
+    /// <para>Returns whether the element is disabled, the opposite of <a href="https://playwright.dev/dotnet/docs/actionability#enabled">enabled</a>.</para>
+    /// </summary>
     Task<bool> IsDisabledAsync();
 
-    /// <summary><para>Returns whether the element is <a href="https://playwright.dev/dotnet/docs/actionability#editable">editable</a>.</para></summary>
+    /// <summary>
+    /// <para>
+    /// Use locator-based <see cref="ILocator.IsEditableAsync"/> instead. Read more about
+    /// <a href="https://playwright.dev/dotnet/docs/locators">locators</a>.
+    /// </para>
+    /// <para>Returns whether the element is <a href="https://playwright.dev/dotnet/docs/actionability#editable">editable</a>.</para>
+    /// </summary>
     Task<bool> IsEditableAsync();
 
-    /// <summary><para>Returns whether the element is <a href="https://playwright.dev/dotnet/docs/actionability#enabled">enabled</a>.</para></summary>
+    /// <summary>
+    /// <para>
+    /// Use locator-based <see cref="ILocator.IsEnabledAsync"/> instead. Read more about
+    /// <a href="https://playwright.dev/dotnet/docs/locators">locators</a>.
+    /// </para>
+    /// <para>Returns whether the element is <a href="https://playwright.dev/dotnet/docs/actionability#enabled">enabled</a>.</para>
+    /// </summary>
     Task<bool> IsEnabledAsync();
 
-    /// <summary><para>Returns whether the element is hidden, the opposite of <a href="https://playwright.dev/dotnet/docs/actionability#visible">visible</a>.</para></summary>
+    /// <summary>
+    /// <para>
+    /// Use locator-based <see cref="ILocator.IsHiddenAsync"/> instead. Read more about
+    /// <a href="https://playwright.dev/dotnet/docs/locators">locators</a>.
+    /// </para>
+    /// <para>Returns whether the element is hidden, the opposite of <a href="https://playwright.dev/dotnet/docs/actionability#visible">visible</a>.</para>
+    /// </summary>
     Task<bool> IsHiddenAsync();
 
-    /// <summary><para>Returns whether the element is <a href="https://playwright.dev/dotnet/docs/actionability#visible">visible</a>.</para></summary>
+    /// <summary>
+    /// <para>
+    /// Use locator-based <see cref="ILocator.IsVisibleAsync"/> instead. Read more about
+    /// <a href="https://playwright.dev/dotnet/docs/locators">locators</a>.
+    /// </para>
+    /// <para>Returns whether the element is <a href="https://playwright.dev/dotnet/docs/actionability#visible">visible</a>.</para>
+    /// </summary>
     Task<bool> IsVisibleAsync();
 
     /// <summary><para>Returns the frame containing the given element.</para></summary>
     Task<IFrame?> OwnerFrameAsync();
 
     /// <summary>
+    /// <para>
+    /// Use locator-based <see cref="ILocator.PressAsync"/> instead. Read more about <a
+    /// href="https://playwright.dev/dotnet/docs/locators">locators</a>.
+    /// </para>
     /// <para>Focuses the element, and then uses <see cref="IKeyboard.DownAsync"/> and <see cref="IKeyboard.UpAsync"/>.</para>
     /// <para>
     /// <paramref name="key"/> can specify the intended <a href="https://developer.mozilla.org/en-US/docs/Web/API/KeyboardEvent/key">keyboardEvent.key</a>
@@ -462,6 +556,7 @@ public partial interface IElementHandle : IJSHandle
     Task PressAsync(string key, ElementHandlePressOptions? options = default);
 
     /// <summary>
+    /// <para>Use locator-based <see cref="IPage.Locator"/> instead. Read more about <a href="https://playwright.dev/dotnet/docs/locators">locators</a>.</para>
     /// <para>
     /// The method finds an element matching the specified selector in the <c>ElementHandle</c>'s
     /// subtree. If no elements match the selector, returns <c>null</c>.
@@ -471,6 +566,7 @@ public partial interface IElementHandle : IJSHandle
     Task<IElementHandle?> QuerySelectorAsync(string selector);
 
     /// <summary>
+    /// <para>Use locator-based <see cref="IPage.Locator"/> instead. Read more about <a href="https://playwright.dev/dotnet/docs/locators">locators</a>.</para>
     /// <para>
     /// The method finds all elements matching the specified selector in the <c>ElementHandle</c>s
     /// subtree. If no elements match the selector, returns empty array.
@@ -480,6 +576,10 @@ public partial interface IElementHandle : IJSHandle
     Task<IReadOnlyList<IElementHandle>> QuerySelectorAllAsync(string selector);
 
     /// <summary>
+    /// <para>
+    /// Use locator-based <see cref="ILocator.ScreenshotAsync"/> instead. Read more about
+    /// <a href="https://playwright.dev/dotnet/docs/locators">locators</a>.
+    /// </para>
     /// <para>
     /// This method captures a screenshot of the page, clipped to the size and position
     /// of this particular element. If the element is covered by other elements, it will
@@ -498,6 +598,10 @@ public partial interface IElementHandle : IJSHandle
 
     /// <summary>
     /// <para>
+    /// Use locator-based <see cref="ILocator.ScrollIntoViewIfNeededAsync"/> instead. Read
+    /// more about <a href="https://playwright.dev/dotnet/docs/locators">locators</a>.
+    /// </para>
+    /// <para>
     /// This method waits for <a href="https://playwright.dev/dotnet/docs/actionability">actionability</a>
     /// checks, then tries to scroll element into view, unless it is completely visible
     /// as defined by <a href="https://developer.mozilla.org/en-US/docs/Web/API/Intersection_Observer_API">IntersectionObserver</a>'s
@@ -512,6 +616,10 @@ public partial interface IElementHandle : IJSHandle
     Task ScrollIntoViewIfNeededAsync(ElementHandleScrollIntoViewIfNeededOptions? options = default);
 
     /// <summary>
+    /// <para>
+    /// Use locator-based <see cref="ILocator.SelectOptionAsync"/> instead. Read more about
+    /// <a href="https://playwright.dev/dotnet/docs/locators">locators</a>.
+    /// </para>
     /// <para>
     /// This method waits for <a href="https://playwright.dev/dotnet/docs/actionability">actionability</a>
     /// checks, waits until all specified options are present in the <c>&lt;select&gt;</c>
@@ -554,6 +662,10 @@ public partial interface IElementHandle : IJSHandle
 
     /// <summary>
     /// <para>
+    /// Use locator-based <see cref="ILocator.SelectOptionAsync"/> instead. Read more about
+    /// <a href="https://playwright.dev/dotnet/docs/locators">locators</a>.
+    /// </para>
+    /// <para>
     /// This method waits for <a href="https://playwright.dev/dotnet/docs/actionability">actionability</a>
     /// checks, waits until all specified options are present in the <c>&lt;select&gt;</c>
     /// element and selects these options.
@@ -594,6 +706,10 @@ public partial interface IElementHandle : IJSHandle
     Task<IReadOnlyList<string>> SelectOptionAsync(IElementHandle values, ElementHandleSelectOptionOptions? options = default);
 
     /// <summary>
+    /// <para>
+    /// Use locator-based <see cref="ILocator.SelectOptionAsync"/> instead. Read more about
+    /// <a href="https://playwright.dev/dotnet/docs/locators">locators</a>.
+    /// </para>
     /// <para>
     /// This method waits for <a href="https://playwright.dev/dotnet/docs/actionability">actionability</a>
     /// checks, waits until all specified options are present in the <c>&lt;select&gt;</c>
@@ -636,6 +752,10 @@ public partial interface IElementHandle : IJSHandle
 
     /// <summary>
     /// <para>
+    /// Use locator-based <see cref="ILocator.SelectOptionAsync"/> instead. Read more about
+    /// <a href="https://playwright.dev/dotnet/docs/locators">locators</a>.
+    /// </para>
+    /// <para>
     /// This method waits for <a href="https://playwright.dev/dotnet/docs/actionability">actionability</a>
     /// checks, waits until all specified options are present in the <c>&lt;select&gt;</c>
     /// element and selects these options.
@@ -676,6 +796,10 @@ public partial interface IElementHandle : IJSHandle
     Task<IReadOnlyList<string>> SelectOptionAsync(SelectOptionValue values, ElementHandleSelectOptionOptions? options = default);
 
     /// <summary>
+    /// <para>
+    /// Use locator-based <see cref="ILocator.SelectOptionAsync"/> instead. Read more about
+    /// <a href="https://playwright.dev/dotnet/docs/locators">locators</a>.
+    /// </para>
     /// <para>
     /// This method waits for <a href="https://playwright.dev/dotnet/docs/actionability">actionability</a>
     /// checks, waits until all specified options are present in the <c>&lt;select&gt;</c>
@@ -718,6 +842,10 @@ public partial interface IElementHandle : IJSHandle
 
     /// <summary>
     /// <para>
+    /// Use locator-based <see cref="ILocator.SelectOptionAsync"/> instead. Read more about
+    /// <a href="https://playwright.dev/dotnet/docs/locators">locators</a>.
+    /// </para>
+    /// <para>
     /// This method waits for <a href="https://playwright.dev/dotnet/docs/actionability">actionability</a>
     /// checks, waits until all specified options are present in the <c>&lt;select&gt;</c>
     /// element and selects these options.
@@ -759,6 +887,10 @@ public partial interface IElementHandle : IJSHandle
 
     /// <summary>
     /// <para>
+    /// Use locator-based <see cref="ILocator.SelectTextAsync"/> instead. Read more about
+    /// <a href="https://playwright.dev/dotnet/docs/locators">locators</a>.
+    /// </para>
+    /// <para>
     /// This method waits for <a href="https://playwright.dev/dotnet/docs/actionability">actionability</a>
     /// checks, then focuses the element and selects all its text content.
     /// </para>
@@ -772,6 +904,10 @@ public partial interface IElementHandle : IJSHandle
     Task SelectTextAsync(ElementHandleSelectTextOptions? options = default);
 
     /// <summary>
+    /// <para>
+    /// Use locator-based <see cref="ILocator.SetCheckedAsync"/> instead. Read more about
+    /// <a href="https://playwright.dev/dotnet/docs/locators">locators</a>.
+    /// </para>
     /// <para>This method checks or unchecks an element by performing the following steps:</para>
     /// <list type="ordinal">
     /// <item><description>Ensure that element is a checkbox or a radio input. If not, this method throws.</description></item>
@@ -801,6 +937,10 @@ public partial interface IElementHandle : IJSHandle
 
     /// <summary>
     /// <para>
+    /// Use locator-based <see cref="ILocator.SetInputFilesAsync"/> instead. Read more about
+    /// <a href="https://playwright.dev/dotnet/docs/locators">locators</a>.
+    /// </para>
+    /// <para>
     /// Sets the value of the file input to these file paths or files. If some of the <c>filePaths</c>
     /// are relative paths, then they are resolved relative to the current working directory.
     /// For empty array, clears the selected files.
@@ -818,6 +958,10 @@ public partial interface IElementHandle : IJSHandle
     Task SetInputFilesAsync(string files, ElementHandleSetInputFilesOptions? options = default);
 
     /// <summary>
+    /// <para>
+    /// Use locator-based <see cref="ILocator.SetInputFilesAsync"/> instead. Read more about
+    /// <a href="https://playwright.dev/dotnet/docs/locators">locators</a>.
+    /// </para>
     /// <para>
     /// Sets the value of the file input to these file paths or files. If some of the <c>filePaths</c>
     /// are relative paths, then they are resolved relative to the current working directory.
@@ -837,6 +981,10 @@ public partial interface IElementHandle : IJSHandle
 
     /// <summary>
     /// <para>
+    /// Use locator-based <see cref="ILocator.SetInputFilesAsync"/> instead. Read more about
+    /// <a href="https://playwright.dev/dotnet/docs/locators">locators</a>.
+    /// </para>
+    /// <para>
     /// Sets the value of the file input to these file paths or files. If some of the <c>filePaths</c>
     /// are relative paths, then they are resolved relative to the current working directory.
     /// For empty array, clears the selected files.
@@ -855,6 +1003,10 @@ public partial interface IElementHandle : IJSHandle
 
     /// <summary>
     /// <para>
+    /// Use locator-based <see cref="ILocator.SetInputFilesAsync"/> instead. Read more about
+    /// <a href="https://playwright.dev/dotnet/docs/locators">locators</a>.
+    /// </para>
+    /// <para>
     /// Sets the value of the file input to these file paths or files. If some of the <c>filePaths</c>
     /// are relative paths, then they are resolved relative to the current working directory.
     /// For empty array, clears the selected files.
@@ -872,6 +1024,7 @@ public partial interface IElementHandle : IJSHandle
     Task SetInputFilesAsync(IEnumerable<FilePayload> files, ElementHandleSetInputFilesOptions? options = default);
 
     /// <summary>
+    /// <para>Use locator-based <see cref="ILocator.TapAsync"/> instead. Read more about <a href="https://playwright.dev/dotnet/docs/locators">locators</a>.</para>
     /// <para>This method taps the element by performing the following steps:</para>
     /// <list type="ordinal">
     /// <item><description>
@@ -907,7 +1060,13 @@ public partial interface IElementHandle : IJSHandle
     /// <param name="options">Call options</param>
     Task TapAsync(ElementHandleTapOptions? options = default);
 
-    /// <summary><para>Returns the <c>node.textContent</c>.</para></summary>
+    /// <summary>
+    /// <para>
+    /// Use locator-based <see cref="ILocator.TextContentAsync"/> instead. Read more about
+    /// <a href="https://playwright.dev/dotnet/docs/locators">locators</a>.
+    /// </para>
+    /// <para>Returns the <c>node.textContent</c>.</para>
+    /// </summary>
     Task<string?> TextContentAsync();
 
     /// <summary>
@@ -929,6 +1088,10 @@ public partial interface IElementHandle : IJSHandle
     Task TypeAsync(string text, ElementHandleTypeOptions? options = default);
 
     /// <summary>
+    /// <para>
+    /// Use locator-based <see cref="ILocator.UncheckAsync"/> instead. Read more about <a
+    /// href="https://playwright.dev/dotnet/docs/locators">locators</a>.
+    /// </para>
     /// <para>This method checks the element by performing the following steps:</para>
     /// <list type="ordinal">
     /// <item><description>
@@ -996,6 +1159,10 @@ public partial interface IElementHandle : IJSHandle
     Task WaitForElementStateAsync(ElementState state, ElementHandleWaitForElementStateOptions? options = default);
 
     /// <summary>
+    /// <para>
+    /// Use web assertions that assert visibility or a locator-based <see cref="ILocator.WaitForAsync"/>
+    /// instead.
+    /// </para>
     /// <para>
     /// Returns element specified by selector when it satisfies <paramref name="state"/>
     /// option. Returns <c>null</c> if waiting for <c>hidden</c> or <c>detached</c>.

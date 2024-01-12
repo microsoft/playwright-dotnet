@@ -39,14 +39,15 @@ namespace Microsoft.Playwright;
 /// save it to a file.
 /// </para>
 /// <code>
-/// await using var browser = playwright.Chromium.LaunchAsync();<br/>
+/// using var playwright = await Playwright.CreateAsync();<br/>
+/// var browser = await playwright.Chromium.LaunchAsync();<br/>
 /// await using var context = await browser.NewContextAsync();<br/>
 /// await context.Tracing.StartAsync(new()<br/>
 /// {<br/>
 ///   Screenshots = true,<br/>
 ///   Snapshots = true<br/>
 /// });<br/>
-/// var page = context.NewPageAsync();<br/>
+/// var page = await context.NewPageAsync();<br/>
 /// await page.GotoAsync("https://playwright.dev");<br/>
 /// await context.Tracing.StopAsync(new()<br/>
 /// {<br/>
@@ -60,14 +61,15 @@ public partial interface ITracing
     /// <para>Start tracing.</para>
     /// <para>**Usage**</para>
     /// <code>
-    /// await using var browser = playwright.Chromium.LaunchAsync();<br/>
+    /// using var playwright = await Playwright.CreateAsync();<br/>
+    /// var browser = await playwright.Chromium.LaunchAsync();<br/>
     /// await using var context = await browser.NewContextAsync();<br/>
     /// await context.Tracing.StartAsync(new()<br/>
     /// {<br/>
     ///   Screenshots = true,<br/>
     ///   Snapshots = true<br/>
     /// });<br/>
-    /// var page = context.NewPageAsync();<br/>
+    /// var page = await context.NewPageAsync();<br/>
     /// await page.GotoAsync("https://playwright.dev");<br/>
     /// await context.Tracing.StopAsync(new()<br/>
     /// {<br/>
@@ -86,14 +88,15 @@ public partial interface ITracing
     /// </para>
     /// <para>**Usage**</para>
     /// <code>
-    /// await using var browser = playwright.Chromium.LaunchAsync();<br/>
+    /// using var playwright = await Playwright.CreateAsync();<br/>
+    /// var browser = await playwright.Chromium.LaunchAsync();<br/>
     /// await using var context = await browser.NewContextAsync();<br/>
     /// await context.Tracing.StartAsync(new()<br/>
     /// {<br/>
     ///   Screenshots = true,<br/>
     ///   Snapshots = true<br/>
     /// });<br/>
-    /// var page = context.NewPageAsync();<br/>
+    /// var page = await context.NewPageAsync();<br/>
     /// await page.GotoAsync("https://playwright.dev");<br/>
     /// <br/>
     /// await context.Tracing.StartChunkAsync();<br/>

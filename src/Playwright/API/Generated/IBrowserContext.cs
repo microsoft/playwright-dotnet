@@ -752,6 +752,15 @@ public partial interface IBrowserContext
 
     /// <summary>
     /// <para>
+    /// Removes all routes created with <see cref="IBrowserContext.RouteAsync"/> and <see
+    /// cref="IBrowserContext.RouteFromHARAsync"/>.
+    /// </para>
+    /// </summary>
+    /// <param name="options">Call options</param>
+    Task UnrouteAllAsync(BrowserContextUnrouteAllOptions? options = default);
+
+    /// <summary>
+    /// <para>
     /// Removes a route created with <see cref="IBrowserContext.RouteAsync"/>. When <paramref
     /// name="handler"/> is not specified, removes all routes for the <paramref name="url"/>.
     /// </para>

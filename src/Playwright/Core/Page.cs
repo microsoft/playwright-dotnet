@@ -48,6 +48,8 @@ internal class Page : ChannelOwner, IPage
     private List<RouteHandler> _routes = new();
     private Video _video;
     private string _closeReason;
+    internal bool _closeWasCalled = false;
+    private List<HarRouter> _harRouters = new();
 
     internal Page(ChannelOwner parent, string guid, PageInitializer initializer) : base(parent, guid)
     {
@@ -485,6 +487,7 @@ internal class Page : ChannelOwner, IPage
     public async Task CloseAsync(PageCloseOptions options = default)
     {
         _closeReason = options?.Reason;
+        _closeWasCalled = true;
         try
         {
             await SendMessageToServerAsync(
@@ -676,6 +679,7 @@ internal class Page : ChannelOwner, IPage
             ["scale"] = options.Scale,
             ["quality"] = options.Quality,
             ["maskColor"] = options.MaskColor,
+            ["style"] = options.Style,
             ["mask"] = options.Mask?.Select(locator => new Dictionary<string, object>
             {
                 ["frame"] = ((Locator)locator)._frame,
@@ -923,6 +927,13 @@ internal class Page : ChannelOwner, IPage
     [MethodImpl(MethodImplOptions.NoInlining)]
     public Task RouteAsync(Func<string, bool> url, Func<IRoute, Task> handler, PageRouteOptions options = null)
         => RouteAsync(null, url, handler, options);
+
+    [MethodImpl(MethodImplOptions.NoInlining)]
+    public async Task UnrouteAllAsync(PageUnrouteAllOptions options = default)
+    {
+        await UnrouteInternalAsync(_routes, new(), options?.Behavior).ConfigureAwait(false);
+        DisposeHarRouters();
+    }
 
     [MethodImpl(MethodImplOptions.NoInlining)]
     public Task UnrouteAsync(string urlString, Action<IRoute> handler)
@@ -1235,6 +1246,18 @@ internal class Page : ChannelOwner, IPage
         return UpdateInterceptionAsync();
     }
 
+    private async Task UnrouteInternalAsync(List<RouteHandler> removed, List<RouteHandler> remaining, UnrouteBehavior? behavior)
+    {
+        _routes = remaining;
+        await UpdateInterceptionAsync().ConfigureAwait(false);
+        if (behavior == null || behavior == UnrouteBehavior.Default)
+        {
+            return;
+        }
+        var tasks = removed.Select(routeHandler => routeHandler.StopAsync((UnrouteBehavior)behavior));
+        await Task.WhenAll(tasks).ConfigureAwait(false);
+    }
+
     private Task UpdateInterceptionAsync()
     {
         var patterns = RouteHandler.PrepareInterceptionPatterns(_routes);
@@ -1245,6 +1268,7 @@ internal class Page : ChannelOwner, IPage
     {
         IsClosed = true;
         Context?._pages.Remove(this);
+        DisposeHarRouters();
         Close?.Invoke(this, this);
     }
 
@@ -1269,9 +1293,18 @@ internal class Page : ChannelOwner, IPage
         var routeHandlers = _routes.ToArray();
         foreach (var routeHandler in routeHandlers)
         {
+            // If the page was closed we stall all requests right away.
+            if (_closeWasCalled || Context._closeWasCalled)
+            {
+                return;
+            }
             var matches = (routeHandler.Regex?.IsMatch(route.Request.Url) == true) ||
                 (routeHandler.Function?.Invoke(route.Request.Url) == true);
             if (!matches)
+            {
+                continue;
+            }
+            if (!_routes.Contains(routeHandler))
             {
                 continue;
             }
@@ -1369,7 +1402,17 @@ internal class Page : ChannelOwner, IPage
             Url = options?.Url,
             UrlString = options?.UrlString,
         }).ConfigureAwait(false);
+        _harRouters.Add(harRouter);
         await harRouter.AddPageRouteAsync(this).ConfigureAwait(false);
+    }
+
+    private void DisposeHarRouters()
+    {
+        foreach (var router in _harRouters)
+        {
+            router.Dispose();
+        }
+        _harRouters.Clear();
     }
 
     [MethodImpl(MethodImplOptions.NoInlining)]

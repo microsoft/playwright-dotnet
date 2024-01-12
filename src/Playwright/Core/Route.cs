@@ -42,8 +42,9 @@ namespace Microsoft.Playwright.Core;
 internal class Route : ChannelOwner, IRoute
 {
     private readonly RouteInitializer _initializer;
-    private readonly Request _request;
+    internal readonly Request _request;
     private TaskCompletionSource<bool> _handlingTask;
+    internal bool DidThrow;
 
     internal Route(ChannelOwner parent, string guid, RouteInitializer initializer) : base(parent, guid)
     {
@@ -77,15 +78,17 @@ internal class Route : ChannelOwner, IRoute
     [MethodImpl(MethodImplOptions.NoInlining)]
     public async Task AbortAsync(string errorCode = RequestAbortErrorCode.Failed)
     {
-        CheckNotHandled();
-        await RaceWithTargetCloseAsync(SendMessageToServerAsync(
-            "abort",
-            new Dictionary<string, object>
-            {
-                ["requestUrl"] = _request._initializer.Url,
-                ["errorCode"] = string.IsNullOrEmpty(errorCode) ? RequestAbortErrorCode.Failed : errorCode,
-            })).ConfigureAwait(false);
-        ReportHandled(true);
+
+        await HandleRouteAsync(async () =>
+        {
+            await RaceWithTargetCloseAsync(SendMessageToServerAsync(
+                "abort",
+                new Dictionary<string, object>
+                {
+                    ["requestUrl"] = _request._initializer.Url,
+                    ["errorCode"] = string.IsNullOrEmpty(errorCode) ? RequestAbortErrorCode.Failed : errorCode,
+                })).ConfigureAwait(false);
+        }).ConfigureAwait(false);
     }
 
     [MethodImpl(MethodImplOptions.NoInlining)]
@@ -114,6 +117,21 @@ internal class Route : ChannelOwner, IRoute
                 ["isFallback"] = @internal,
             })),
             @internal).ConfigureAwait(false);
+    }
+
+    private async Task HandleRouteAsync(Func<Task> callback)
+    {
+        CheckNotHandled();
+        try
+        {
+            await callback().ConfigureAwait(false);
+            ReportHandled(true);
+        }
+        catch (Exception)
+        {
+            DidThrow = true;
+            throw;
+        }
     }
 
     private async Task RaceWithTargetCloseAsync(Task task)

@@ -115,8 +115,6 @@ internal sealed class HarRouter
         {
             await context.RouteAsync("**/*", route => HandleAsync((Route)route)).ConfigureAwait(false);
         }
-
-        context.Close += (_, _) => Dispose();
     }
 
     internal async Task AddPageRouteAsync(Page page)
@@ -137,11 +135,9 @@ internal sealed class HarRouter
         {
             await page.RouteAsync("**/*", route => HandleAsync((Route)route)).ConfigureAwait(false);
         }
-
-        page.Close += (_, _) => Dispose();
     }
 
-    private void Dispose() => _localUtils.HarCloseAsync(_harId).IgnoreException();
+    internal void Dispose() => _localUtils.HarCloseAsync(_harId).IgnoreException();
 }
 
 internal class HarRouterOptions

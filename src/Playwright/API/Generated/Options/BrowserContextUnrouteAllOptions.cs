@@ -28,35 +28,39 @@ using System.Text.Json.Serialization;
 
 namespace Microsoft.Playwright;
 
-public class TracingStartChunkOptions
+public class BrowserContextUnrouteAllOptions
 {
-    public TracingStartChunkOptions() { }
+    public BrowserContextUnrouteAllOptions() { }
 
-    public TracingStartChunkOptions(TracingStartChunkOptions clone)
+    public BrowserContextUnrouteAllOptions(BrowserContextUnrouteAllOptions clone)
     {
         if (clone == null)
         {
             return;
         }
 
-        Name = clone.Name;
-        Title = clone.Title;
+        Behavior = clone.Behavior;
     }
 
     /// <summary>
     /// <para>
-    /// If specified, intermediate trace files are going to be saved into the files with
-    /// the given name prefix inside the <paramref name="tracesDir"/> folder specified in
-    /// <see cref="IBrowserType.LaunchAsync"/>. To specify the final trace zip file name,
-    /// you need to pass <c>path</c> option to <see cref="ITracing.StopChunkAsync"/> instead.
+    /// Specifies wether to wait for already running handlers and what to do if they throw
+    /// errors:
     /// </para>
+    /// <list type="bullet">
+    /// <item><description>
+    /// <c>'default'</c> - do not wait for current handler calls (if any) to finish, if
+    /// unrouted handler throws, it may result in unhandled error
+    /// </description></item>
+    /// <item><description><c>'wait'</c> - wait for current handler calls (if any) to finish</description></item>
+    /// <item><description>
+    /// <c>'ignoreErrors'</c> - do not wait for current handler calls (if any) to finish,
+    /// all errors thrown by the handlers after unrouting are silently caught
+    /// </description></item>
+    /// </list>
     /// </summary>
-    [JsonPropertyName("name")]
-    public string? Name { get; set; }
-
-    /// <summary><para>Trace name to be shown in the Trace Viewer.</para></summary>
-    [JsonPropertyName("title")]
-    public string? Title { get; set; }
+    [JsonPropertyName("behavior")]
+    public UnrouteBehavior? Behavior { get; set; }
 }
 
 #nullable disable

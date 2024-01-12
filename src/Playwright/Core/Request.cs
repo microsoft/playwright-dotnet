@@ -94,6 +94,14 @@ internal class Request : ChannelOwner, IRequest
         }
     }
 
+    internal Page SafePage
+    {
+        get
+        {
+            return (_initializer.Frame?.Page as Page) ?? null;
+        }
+    }
+
     public bool IsNavigationRequest => _initializer.IsNavigationRequest;
 
     public string Method => !string.IsNullOrEmpty(_fallbackOverrides.Method) ? _fallbackOverrides.Method : _initializer.Method;

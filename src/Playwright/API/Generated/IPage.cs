@@ -2538,6 +2538,10 @@ public partial interface IPage
     /// <param name="options">Call options</param>
     Task UncheckAsync(string selector, PageUncheckOptions? options = default);
 
+    /// <summary><para>Removes all routes created with <see cref="IPage.RouteAsync"/> and <see cref="IPage.RouteFromHARAsync"/>.</para></summary>
+    /// <param name="options">Call options</param>
+    Task UnrouteAllAsync(PageUnrouteAllOptions? options = default);
+
     /// <summary>
     /// <para>
     /// Removes a route created with <see cref="IPage.RouteAsync"/>. When <paramref name="handler"/>

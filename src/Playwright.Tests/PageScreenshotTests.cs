@@ -447,4 +447,32 @@ public class PageScreenshotTests : PageTestEx
         var exception = await PlaywrightAssert.ThrowsAsync<ArgumentException>(() => Page.ScreenshotAsync(new() { Path = "file.txt" }));
         StringAssert.Contains("path: unsupported mime type \"text/plain\"", exception.Message);
     }
+
+    [PlaywrightTest("page-screenshot.spec.ts", "should hide elements based on attr")]
+    public async Task ShouldHideElementsBasedOnAttr()
+    {
+        await Page.SetViewportSizeAsync(500, 500);
+        await Page.GotoAsync(Server.Prefix + "/grid.html");
+        await Page.Locator("div").Nth(5).EvaluateAsync("element => element.setAttribute('data-test-screenshot', 'hide')");
+        var screenshot = await Page.ScreenshotAsync(new() { Style = @"[data-test-screenshot=""hide""] {
+            visibility: hidden;
+        }" });
+        Assert.True(ScreenshotHelper.PixelMatch("hide-should-work.png", screenshot));
+        var visibility = await Page.Locator("div").Nth(5).EvaluateAsync<string>("element => element.style.visibility");
+        Assert.AreEqual("", visibility);
+    }
+
+    [PlaywrightTest("page-screenshot.spec.ts", "should remove elements based on attr")]
+    public async Task ShouldRemoveElementsBasedOnAttr()
+    {
+        await Page.SetViewportSizeAsync(500, 500);
+        await Page.GotoAsync(Server.Prefix + "/grid.html");
+        await Page.Locator("div").Nth(5).EvaluateAsync("element => element.setAttribute('data-test-screenshot', 'remove')");
+        var screenshot = await Page.ScreenshotAsync(new() { Style = @"[data-test-screenshot=""remove""] {
+            visibility: none;
+        }" });
+        Assert.True(ScreenshotHelper.PixelMatch("remove-should-work.png", screenshot));
+        var display = await Page.Locator("div").Nth(5).EvaluateAsync<string>("element => element.style.display");
+        Assert.AreEqual("", display);
+    }
 }

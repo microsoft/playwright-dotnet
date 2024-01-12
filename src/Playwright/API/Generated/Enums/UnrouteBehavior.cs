@@ -22,41 +22,20 @@
  * SOFTWARE.
  */
 
-using System.Text.Json.Serialization;
+using System.Runtime.Serialization;
 
 #nullable enable
 
 namespace Microsoft.Playwright;
 
-public class TracingStartChunkOptions
+public enum UnrouteBehavior
 {
-    public TracingStartChunkOptions() { }
-
-    public TracingStartChunkOptions(TracingStartChunkOptions clone)
-    {
-        if (clone == null)
-        {
-            return;
-        }
-
-        Name = clone.Name;
-        Title = clone.Title;
-    }
-
-    /// <summary>
-    /// <para>
-    /// If specified, intermediate trace files are going to be saved into the files with
-    /// the given name prefix inside the <paramref name="tracesDir"/> folder specified in
-    /// <see cref="IBrowserType.LaunchAsync"/>. To specify the final trace zip file name,
-    /// you need to pass <c>path</c> option to <see cref="ITracing.StopChunkAsync"/> instead.
-    /// </para>
-    /// </summary>
-    [JsonPropertyName("name")]
-    public string? Name { get; set; }
-
-    /// <summary><para>Trace name to be shown in the Trace Viewer.</para></summary>
-    [JsonPropertyName("title")]
-    public string? Title { get; set; }
+    [EnumMember(Value = "wait")]
+    Wait,
+    [EnumMember(Value = "ignoreErrors")]
+    IgnoreErrors,
+    [EnumMember(Value = "default")]
+    Default,
 }
 
 #nullable disable

@@ -52,9 +52,16 @@ public class FrameLocatorLocatorOptions
 
     /// <summary>
     /// <para>
-    /// Matches elements containing an element that matches an inner locator. Inner locator
-    /// is queried against the outer one. For example, <c>article</c> that has <c>text=Playwright</c>
+    /// Narrows down the results of the method to those which contain elements matching
+    /// this relative locator. For example, <c>article</c> that has <c>text=Playwright</c>
     /// matches <c>&lt;article&gt;&lt;div&gt;Playwright&lt;/div&gt;&lt;/article&gt;</c>.
+    /// </para>
+    /// <para>
+    /// Inner locator **must be relative** to the outer locator and is queried starting
+    /// with the outer locator match, not the document root. For example, you can find <c>content</c>
+    /// that has <c>div</c> in <c>&lt;article&gt;&lt;content&gt;&lt;div&gt;Playwright&lt;/div&gt;&lt;/content&gt;&lt;/article&gt;</c>.
+    /// However, looking for <c>content</c> that has <c>article div</c> will fail, because
+    /// the inner locator must be relative and should not use any elements outside the <c>content</c>.
     /// </para>
     /// <para>
     /// Note that outer and inner locators must belong to the same frame. Inner locator
