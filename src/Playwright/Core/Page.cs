@@ -1353,10 +1353,10 @@ internal class Page : ChannelOwner, IPage
         {
             await Context.RecordIntoHarAsync(har, this, new()
             {
-                NotFound = options?.NotFound,
-                Url = options?.Url,
-                UrlString = options?.UrlString,
-                UrlRegex = options?.UrlRegex,
+                NotFound = options.NotFound,
+                Url = options.Url,
+                UrlString = options.UrlString,
+                UrlRegex = options.UrlRegex,
                 Update = options.Update,
                 UpdateContent = options.UpdateContent,
                 UpdateMode = options.UpdateMode,
