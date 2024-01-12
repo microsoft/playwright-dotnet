@@ -2,7 +2,7 @@
 
 ## Pre-requisites
 
-* install .NET SDK 5 with installer: https://dotnet.microsoft.com/download/dotnet/5.0
+* install .NET SDK 8 with installer: https://dotnet.microsoft.com/download/dotnet/8.0
 * install necessary build tools:
   ```bash
   ./build.sh --init
