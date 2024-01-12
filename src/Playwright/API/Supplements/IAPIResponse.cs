@@ -23,11 +23,14 @@
  */
 
 using System;
+using System.Text.Json;
 using System.Threading.Tasks;
+
+#nullable enable
 
 namespace Microsoft.Playwright;
 
 public partial interface IAPIResponse : IAsyncDisposable
 {
-    Task<T> JsonAsync<T>();
+    Task<T?> JsonAsync<T>(JsonSerializerOptions? options = null);
 }

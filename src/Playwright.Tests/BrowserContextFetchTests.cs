@@ -772,6 +772,19 @@ public class BrowserContextFetchTests : PageTestEx
         public string Foo { get; set; }
     }
 
+    [PlaywrightTest("", "should parse response JSON while passing a type with serializer options")]
+    public async Task ShouldParseResponseJSONWhilePassingATypeWithSerializerOptions()
+    {
+        var response = await Context.APIRequest.GetAsync(Server.Prefix + "/simple.json");
+        var json = await response.JsonAsync<SimpleObject>(new() { PropertyNameCaseInsensitive = true });
+        Assert.AreEqual("bar", json.Foo);
+    }
+
+    record SimplerObject
+    {
+        public string Foo { get; set; }
+    }
+
     [PlaywrightTest("browsercontext-fetch.spec.ts", "should accept bool and numeric params")]
     public async Task ShouldAcceptBoolAndNumericParams()
     {
