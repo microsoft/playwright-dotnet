@@ -49,7 +49,7 @@ public class PageKeyboardTests : PageTestEx
                 window.keyPromise = new Promise(resolve => document.addEventListener('keydown', event => resolve(event.key)));
             }");
         await Page.Keyboard.PressAsync("Meta");
-        Assert.AreEqual(TestConstants.IsFirefox && !TestConstants.IsMacOSX ? "OS" : "Meta", await Page.EvaluateAsync<string>("keyPromise"));
+        Assert.AreEqual("Meta", await Page.EvaluateAsync<string>("keyPromise"));
     }
 
     [PlaywrightTest("page-keyboard.spec.ts", "should move with the arrow keys")]
@@ -466,29 +466,9 @@ public class PageKeyboardTests : PageTestEx
         string key = result.key;
         string code = result.code;
         bool metaKey = result.metaKey;
-
-        if (TestConstants.IsFirefox && !TestConstants.IsMacOSX)
-        {
-            Assert.AreEqual("OS", key);
-        }
-        else
-        {
-            Assert.AreEqual("Meta", key);
-        }
-
-        if (TestConstants.IsFirefox)
-        {
-            Assert.AreEqual("MetaLeft", code);
-        }
-
-        if (TestConstants.IsFirefox && !TestConstants.IsMacOSX)
-        {
-            Assert.False(metaKey);
-        }
-        else
-        {
-            Assert.True(metaKey);
-        }
+        Assert.AreEqual("Meta", key);
+        Assert.AreEqual("MetaLeft", code);
+        Assert.True(metaKey);
     }
 
     [PlaywrightTest("page-keyboard.spec.ts", "should work after a cross origin navigation")]
