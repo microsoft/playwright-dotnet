@@ -363,7 +363,7 @@ public class BrowserContextRouteTests : BrowserTestEx
         await using var context = await Browser.NewContextAsync();
         var page = await context.NewPageAsync();
         var intercepted = new List<string>();
-        Action<IRoute> handler = (route) =>
+        async Task handler(IRoute route)
         {
             intercepted.Add("first");
             route.ContinueAsync();
