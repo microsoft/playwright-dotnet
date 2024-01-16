@@ -144,7 +144,7 @@ public class UnrouteBehaviorTests : PageTestEx
         // The error in the unrouted handler should be silently caught and remaining handler called.
         Assert.False(secondHandlerCalled);
     }
-    
+
     [PlaywrightTest("context-unroute.spec.ts", "page.close should not wait for active route handlers on the owning context")]
     public async Task PageCloseShouldNotWaitForActiveRouteHandlersOnTheOwningContext()
     {
@@ -256,7 +256,7 @@ public class UnrouteBehaviorTests : PageTestEx
         await routePromise.Task;
 
         bool didUnroute = false;
-        var unroutePromise = Page.UnrouteAllAsync(new () { Behavior = UnrouteBehavior.Wait }).ContinueWith(_ => didUnroute = true);
+        var unroutePromise = Page.UnrouteAllAsync(new() { Behavior = UnrouteBehavior.Wait }).ContinueWith(_ => didUnroute = true);
         await Task.Delay(500);
         Assert.False(didUnroute);
 
@@ -292,7 +292,7 @@ public class UnrouteBehaviorTests : PageTestEx
         await routePromise.Task;
 
         bool didUnroute = false;
-        var unroutePromise = Page.UnrouteAllAsync(new () { Behavior = UnrouteBehavior.IgnoreErrors }).ContinueWith(_ => didUnroute = true);
+        var unroutePromise = Page.UnrouteAllAsync(new() { Behavior = UnrouteBehavior.IgnoreErrors }).ContinueWith(_ => didUnroute = true);
         await Task.Delay(500);
         await unroutePromise;
         Assert.True(didUnroute);
@@ -378,6 +378,6 @@ public class UnrouteBehaviorTests : PageTestEx
         Page.GotoAsync(Server.EmptyPage).IgnoreException();
         var route = await routePromise.Task;
         await Page.CloseAsync();
-        await route.FulfillAsync(new () { Status = (int)HttpStatusCode.OK });
+        await route.FulfillAsync(new() { Status = (int)HttpStatusCode.OK });
     }
 }
