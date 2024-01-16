@@ -49,7 +49,7 @@ internal class Page : ChannelOwner, IPage
     private Video _video;
     private string _closeReason;
     internal bool _closeWasCalled = false;
-    private List<HarRouter> _harRouters = new();
+    private readonly List<HarRouter> _harRouters = new();
 
     internal Page(ChannelOwner parent, string guid, PageInitializer initializer) : base(parent, guid)
     {
