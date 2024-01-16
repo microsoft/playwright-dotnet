@@ -33,7 +33,7 @@ public class UnrouteBehaviorTests : PageTestEx
     [PlaywrightTest("unroute-behavior.spec.ts", "context.unroute should not wait for pending handlers to complete")]
     public async Task ContextUnrouteShouldNotWaitForPendingHandlersToComplete()
     {
-        bool secondHandlerCalled = false;
+        var secondHandlerCalled = false;
         await Context.RouteAsync("**/*", async (route) =>
         {
             secondHandlerCalled = true;
