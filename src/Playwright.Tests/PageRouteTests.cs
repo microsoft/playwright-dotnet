@@ -771,7 +771,7 @@ public class PageRouteTests : PageTestEx
     public async Task ShouldWorkIfHandlerWithTimesParameterWasRemovedFromAnotherHandler()
     {
         var intercepted = new List<string>();
-        Action<IRoute> handler = (route) =>
+        async Task handler(IRoute route)
         {
             intercepted.Add("first");
             route.ContinueAsync();
