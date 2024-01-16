@@ -52,7 +52,7 @@ internal class BrowserContext : ChannelOwner, IBrowserContext
     private readonly Browser _browser;
     internal bool _closeWasCalled;
     private string _closeReason;
-    private List<HarRouter> _harRouters = new();
+    private readonly List<HarRouter> _harRouters = new();
 
     internal TimeoutSettings _timeoutSettings = new();
 
