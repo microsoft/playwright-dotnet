@@ -34,6 +34,19 @@ public partial interface IFormData
     /// Sets a field on the form. File values can be passed either as <c>Path</c> or as
     /// <c>FilePayload</c>.
     /// </para>
+    /// <code>
+    /// var multipart = Context.APIRequest.CreateFormData();<br/>
+    /// // Only name and value are set.<br/>
+    /// multipart.Set("firstName", "John");<br/>
+    /// // Name, value, filename and Content-Type are set.<br/>
+    /// multipart.Set("profilePicture", new FilePayload()<br/>
+    /// {<br/>
+    ///     Name = "john.jpg",<br/>
+    ///     MimeType = "image/jpeg",<br/>
+    ///     Buffer = File.ReadAllBytes("john.jpg")<br/>
+    /// });<br/>
+    /// await Page.APIRequest.PostAsync("https://localhost/submit", new() { Multipart = multipart });
+    /// </code>
     /// </summary>
     /// <param name="name">Field name.</param>
     /// <param name="value">Field value.</param>
@@ -44,6 +57,19 @@ public partial interface IFormData
     /// Sets a field on the form. File values can be passed either as <c>Path</c> or as
     /// <c>FilePayload</c>.
     /// </para>
+    /// <code>
+    /// var multipart = Context.APIRequest.CreateFormData();<br/>
+    /// // Only name and value are set.<br/>
+    /// multipart.Set("firstName", "John");<br/>
+    /// // Name, value, filename and Content-Type are set.<br/>
+    /// multipart.Set("profilePicture", new FilePayload()<br/>
+    /// {<br/>
+    ///     Name = "john.jpg",<br/>
+    ///     MimeType = "image/jpeg",<br/>
+    ///     Buffer = File.ReadAllBytes("john.jpg")<br/>
+    /// });<br/>
+    /// await Page.APIRequest.PostAsync("https://localhost/submit", new() { Multipart = multipart });
+    /// </code>
     /// </summary>
     /// <param name="name">Field name.</param>
     /// <param name="value">Field value.</param>
@@ -54,6 +80,19 @@ public partial interface IFormData
     /// Sets a field on the form. File values can be passed either as <c>Path</c> or as
     /// <c>FilePayload</c>.
     /// </para>
+    /// <code>
+    /// var multipart = Context.APIRequest.CreateFormData();<br/>
+    /// // Only name and value are set.<br/>
+    /// multipart.Set("firstName", "John");<br/>
+    /// // Name, value, filename and Content-Type are set.<br/>
+    /// multipart.Set("profilePicture", new FilePayload()<br/>
+    /// {<br/>
+    ///     Name = "john.jpg",<br/>
+    ///     MimeType = "image/jpeg",<br/>
+    ///     Buffer = File.ReadAllBytes("john.jpg")<br/>
+    /// });<br/>
+    /// await Page.APIRequest.PostAsync("https://localhost/submit", new() { Multipart = multipart });
+    /// </code>
     /// </summary>
     /// <param name="name">Field name.</param>
     /// <param name="value">Field value.</param>
@@ -64,6 +103,19 @@ public partial interface IFormData
     /// Sets a field on the form. File values can be passed either as <c>Path</c> or as
     /// <c>FilePayload</c>.
     /// </para>
+    /// <code>
+    /// var multipart = Context.APIRequest.CreateFormData();<br/>
+    /// // Only name and value are set.<br/>
+    /// multipart.Set("firstName", "John");<br/>
+    /// // Name, value, filename and Content-Type are set.<br/>
+    /// multipart.Set("profilePicture", new FilePayload()<br/>
+    /// {<br/>
+    ///     Name = "john.jpg",<br/>
+    ///     MimeType = "image/jpeg",<br/>
+    ///     Buffer = File.ReadAllBytes("john.jpg")<br/>
+    /// });<br/>
+    /// await Page.APIRequest.PostAsync("https://localhost/submit", new() { Multipart = multipart });
+    /// </code>
     /// </summary>
     /// <param name="name">Field name.</param>
     /// <param name="value">Field value.</param>

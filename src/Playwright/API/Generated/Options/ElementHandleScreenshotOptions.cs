@@ -48,6 +48,7 @@ public class ElementHandleScreenshotOptions
         Path = clone.Path;
         Quality = clone.Quality;
         Scale = clone.Scale;
+        Style = clone.Style;
         Timeout = clone.Timeout;
         Type = clone.Type;
     }
@@ -135,6 +136,17 @@ public class ElementHandleScreenshotOptions
     /// </summary>
     [JsonPropertyName("scale")]
     public ScreenshotScale? Scale { get; set; }
+
+    /// <summary>
+    /// <para>
+    /// Text of the stylesheet to apply while making the screenshot. This is where you can
+    /// hide dynamic elements, make elements invisible or change their properties to help
+    /// you creating repeatable screenshots. This stylesheet pierces the Shadow DOM and
+    /// applies to the inner frames.
+    /// </para>
+    /// </summary>
+    [JsonPropertyName("style")]
+    public string? Style { get; set; }
 
     /// <summary>
     /// <para>

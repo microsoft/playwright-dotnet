@@ -32,6 +32,10 @@ namespace Microsoft.Playwright.Core;
 
 internal class RouteHandler
 {
+    private HashSet<HandlerInvocation> _activeInvocations = new HashSet<HandlerInvocation>();
+
+    private bool _ignoreException;
+
     public Regex Regex { get; set; }
 
     public Func<string, bool> Function { get; set; }
@@ -79,6 +83,59 @@ internal class RouteHandler
 
     public async Task<bool> HandleAsync(Route route)
     {
+        var handlerInvocation = new HandlerInvocation
+        {
+            Complete = new TaskCompletionSource<bool>(),
+            Route = route,
+        };
+        _activeInvocations.Add(handlerInvocation);
+        try
+        {
+            return await HandleInternalAsync(route).ConfigureAwait(false);
+        }
+        catch (Exception)
+        {
+            // If the handler was stopped (without waiting for completion), we ignore all exceptions.
+            if (_ignoreException)
+            {
+                return false;
+            }
+            throw;
+        }
+        finally
+        {
+            handlerInvocation.Complete.SetResult(true);
+            _activeInvocations.Remove(handlerInvocation);
+        }
+    }
+
+    public async Task StopAsync(UnrouteBehavior behavior)
+    {
+        // When a handler is manually unrouted or its page/context is closed we either
+        // - wait for the current handler invocations to finish
+        // - or do not wait, if the user opted out of it, but swallow all exceptions
+        //   that happen after the unroute/close.
+        if (behavior == UnrouteBehavior.IgnoreErrors)
+        {
+            _ignoreException = true;
+        }
+        else
+        {
+            var tasks = new List<Task>();
+            foreach (var activation in _activeInvocations)
+            {
+                if (!activation.Route.DidThrow)
+                {
+                    tasks.Add(activation.Complete.Task);
+                }
+            }
+            await Task.WhenAll(tasks).ConfigureAwait(false);
+        }
+    }
+
+
+    private async Task<bool> HandleInternalAsync(Route route)
+    {
         ++HandledCount;
         var handledTask = route.StartHandlingAsync();
         var maybeTask = Handler.DynamicInvoke(new object[] { route });
@@ -92,5 +149,12 @@ internal class RouteHandler
     public bool WillExpire()
     {
         return HandledCount + 1 >= Times;
+    }
+
+    internal class HandlerInvocation
+    {
+        public TaskCompletionSource<bool> Complete { get; set; } = new TaskCompletionSource<bool>();
+
+        public Route Route { get; set; }
     }
 }

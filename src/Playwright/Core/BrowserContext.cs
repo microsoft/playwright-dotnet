@@ -50,7 +50,7 @@ internal class BrowserContext : ChannelOwner, IBrowserContext
     private List<RouteHandler> _routes = new();
     internal readonly List<Page> _pages = new();
     private readonly Browser _browser;
-    private bool _closeWasCalled;
+    private readonly List<HarRouter> _harRouters = new();
     private string _closeReason;
 
     internal TimeoutSettings _timeoutSettings = new();
@@ -136,6 +136,8 @@ internal class BrowserContext : ChannelOwner, IBrowserContext
     internal bool IsChromium => _initializer.IsChromium;
 
     internal BrowserNewContextOptions Options { get; set; }
+
+    internal bool CloseWasCalled { get; private set; }
 
     public IAPIRequestContext APIRequest => _request;
 
@@ -284,12 +286,12 @@ internal class BrowserContext : ChannelOwner, IBrowserContext
     [MethodImpl(MethodImplOptions.NoInlining)]
     public async Task CloseAsync(BrowserContextCloseOptions options = default)
     {
-        if (_closeWasCalled)
+        if (CloseWasCalled)
         {
             return;
         }
         _closeReason = options?.Reason;
-        _closeWasCalled = true;
+        CloseWasCalled = true;
         await WrapApiCallAsync(
             async () =>
         {
@@ -508,6 +510,13 @@ internal class BrowserContext : ChannelOwner, IBrowserContext
     }
 
     [MethodImpl(MethodImplOptions.NoInlining)]
+    public async Task UnrouteAllAsync(BrowserContextUnrouteAllOptions options = default)
+    {
+        await UnrouteInternalAsync(_routes, new(), options?.Behavior).ConfigureAwait(false);
+        DisposeHarRouters();
+    }
+
+    [MethodImpl(MethodImplOptions.NoInlining)]
     public Task UnrouteAsync(string urlString, Action<IRoute> handler = default)
         => UnrouteAsync(new Regex(CombineUrlWithBase(urlString).GlobToRegex()), null, handler);
 
@@ -615,12 +624,22 @@ internal class BrowserContext : ChannelOwner, IBrowserContext
     internal async Task OnRouteAsync(Route route)
     {
         route._context = this;
+        var page = route._request.SafePage;
         var routeHandlers = _routes.ToArray();
         foreach (var routeHandler in routeHandlers)
         {
+            // If the page or the context was closed we stall all requests right away.
+            if (page?.CloseWasCalled == true || CloseWasCalled)
+            {
+                return;
+            }
             var matches = routeHandler.Regex?.IsMatch(route.Request.Url) == true ||
                 routeHandler.Function?.Invoke(route.Request.Url) == true;
             if (!matches)
+            {
+                continue;
+            }
+            if (!_routes.Contains(routeHandler))
             {
                 continue;
             }
@@ -639,7 +658,15 @@ internal class BrowserContext : ChannelOwner, IBrowserContext
             }
         }
 
-        await route.InnerContinueAsync(true).ConfigureAwait(false);
+        try
+        {
+            await route.InnerContinueAsync(true).ConfigureAwait(false);
+        }
+        catch
+        {
+            // If the page is closed or UnrouteAll() was called without waiting and interception disabled,
+            // the method will throw an error - silence it.
+        }
     }
 
     internal bool UrlMatches(string url, string glob)
@@ -698,6 +725,18 @@ internal class BrowserContext : ChannelOwner, IBrowserContext
         return UpdateInterceptionAsync();
     }
 
+    private async Task UnrouteInternalAsync(List<RouteHandler> removed, List<RouteHandler> remaining, UnrouteBehavior? behavior)
+    {
+        _routes = remaining;
+        await UpdateInterceptionAsync().ConfigureAwait(false);
+        if (behavior == null || behavior == UnrouteBehavior.Default)
+        {
+            return;
+        }
+        var tasks = removed.Select(routeHandler => routeHandler.StopAsync((UnrouteBehavior)behavior));
+        await Task.WhenAll(tasks).ConfigureAwait(false);
+    }
+
     private Task UpdateInterceptionAsync()
     {
         var patterns = RouteHandler.PrepareInterceptionPatterns(_routes);
@@ -713,6 +752,7 @@ internal class BrowserContext : ChannelOwner, IBrowserContext
             ((Browser)Browser)._contexts.Remove(this);
         }
 
+        DisposeHarRouters();
         Close?.Invoke(this, this);
         _closeTcs.TrySetResult(true);
     }
@@ -803,7 +843,17 @@ internal class BrowserContext : ChannelOwner, IBrowserContext
             UrlRegex = options?.UrlRegex,
             UrlString = options?.UrlString,
         }).ConfigureAwait(false);
+        _harRouters.Add(harRouter);
         await harRouter.AddContextRouteAsync(this).ConfigureAwait(false);
+    }
+
+    private void DisposeHarRouters()
+    {
+        foreach (var router in _harRouters)
+        {
+            router.Dispose();
+        }
+        _harRouters.Clear();
     }
 }
 

@@ -766,4 +766,27 @@ public class PageRouteTests : PageTestEx
         await page.GotoAsync(Server.EmptyPage);
         Assert.AreEqual(new List<int>() { 3, 2, 1 }, interceped);
     }
+
+    [PlaywrightTest("page-route.spec.ts", "should work if handler with times parameter was removed from another handler")]
+    public async Task ShouldWorkIfHandlerWithTimesParameterWasRemovedFromAnotherHandler()
+    {
+        var intercepted = new List<string>();
+        async Task handler(IRoute route)
+        {
+            intercepted.Add("first");
+            route.ContinueAsync();
+        };
+        await Page.RouteAsync("**/*", handler, new() { Times = 1 });
+        await Page.RouteAsync("**/*", async (route) =>
+        {
+            intercepted.Add("second");
+            await Page.UnrouteAsync("**/*", handler);
+            await route.FallbackAsync();
+        });
+        await Page.GotoAsync(Server.EmptyPage);
+        Assert.AreEqual(new List<string>() { "second" }, intercepted);
+        intercepted.Clear();
+        await Page.GotoAsync(Server.EmptyPage);
+        Assert.AreEqual(new List<string>() { "second" }, intercepted);
+    }
 }

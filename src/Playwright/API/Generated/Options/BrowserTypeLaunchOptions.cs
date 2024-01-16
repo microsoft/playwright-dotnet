@@ -63,9 +63,10 @@ public class BrowserTypeLaunchOptions
     /// <summary>
     /// <para>
     /// Additional arguments to pass to the browser instance. The list of Chromium flags
-    /// can be found <a href="http://peter.sh/experiments/chromium-command-line-switches/">here</a>.
+    /// can be found <a href="https://peter.sh/experiments/chromium-command-line-switches/">here</a>.
     /// </para>
     /// </summary>
+    /// <remarks><para>Use custom browser args at your own risk, as some of them may break Playwright functionality.</para></remarks>
     [JsonPropertyName("args")]
     public IEnumerable<string>? Args { get; set; }
 

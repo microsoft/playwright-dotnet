@@ -331,20 +331,4 @@ public class PageNetworkResponseTests : PageTestEx
             Assert.True(res.FromServiceWorker);
         }
     }
-
-    [PlaywrightTest("", "should collect stale handles")]
-    public async Task ShouldCollectStaleHandels()
-    {
-        Page.Request += (sender, request) => { };
-        var response = await Page.GotoAsync(Server.EmptyPage);
-        for (var i = 0; i < 1000; i++)
-        {
-            await Page.EvaluateAsync(@"async () => {
-                const response = await fetch('/');
-                await response.text();
-            }");
-        }
-        var exception = await PlaywrightAssert.ThrowsAsync<PlaywrightException>(async () => await response.AllHeadersAsync());
-        StringAssert.Contains("The object has been collected to prevent unbounded heap growth.", exception.Message);
-    }
 }

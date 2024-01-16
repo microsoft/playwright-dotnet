@@ -356,4 +356,29 @@ public class BrowserContextRouteTests : BrowserTestEx
         await page.GotoAsync(Server.EmptyPage);
         Assert.AreEqual(new List<int>() { 3, 2, 1 }, interceped);
     }
+
+    [PlaywrightTest("browsercontext-route.spec.ts", "should work if handler with times parameter was removed from another handler")]
+    public async Task ShouldWorkIfHandlerWithTimesParameterWasRemovedFromAnotherHandler()
+    {
+        await using var context = await Browser.NewContextAsync();
+        var page = await context.NewPageAsync();
+        var intercepted = new List<string>();
+        async Task handler(IRoute route)
+        {
+            intercepted.Add("first");
+            route.ContinueAsync();
+        };
+        await context.RouteAsync("**/*", handler, new() { Times = 1 });
+        await context.RouteAsync("**/*", async (route) =>
+        {
+            intercepted.Add("second");
+            await context.UnrouteAsync("**/*", handler);
+            await route.FallbackAsync();
+        });
+        await page.GotoAsync(Server.EmptyPage);
+        Assert.AreEqual(new List<string>() { "second" }, intercepted);
+        intercepted.Clear();
+        await page.GotoAsync(Server.EmptyPage);
+        Assert.AreEqual(new List<string>() { "second" }, intercepted);
+    }
 }
