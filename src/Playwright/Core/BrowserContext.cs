@@ -50,9 +50,8 @@ internal class BrowserContext : ChannelOwner, IBrowserContext
     private List<RouteHandler> _routes = new();
     internal readonly List<Page> _pages = new();
     private readonly Browser _browser;
-    internal bool _closeWasCalled;
-    private string _closeReason;
     private readonly List<HarRouter> _harRouters = new();
+    private string _closeReason;
 
     internal TimeoutSettings _timeoutSettings = new();
 
@@ -137,6 +136,8 @@ internal class BrowserContext : ChannelOwner, IBrowserContext
     internal bool IsChromium => _initializer.IsChromium;
 
     internal BrowserNewContextOptions Options { get; set; }
+
+    internal bool CloseWasCalled { get; private set; }
 
     public IAPIRequestContext APIRequest => _request;
 
@@ -285,12 +286,12 @@ internal class BrowserContext : ChannelOwner, IBrowserContext
     [MethodImpl(MethodImplOptions.NoInlining)]
     public async Task CloseAsync(BrowserContextCloseOptions options = default)
     {
-        if (_closeWasCalled)
+        if (CloseWasCalled)
         {
             return;
         }
         _closeReason = options?.Reason;
-        _closeWasCalled = true;
+        CloseWasCalled = true;
         await WrapApiCallAsync(
             async () =>
         {
@@ -628,7 +629,7 @@ internal class BrowserContext : ChannelOwner, IBrowserContext
         foreach (var routeHandler in routeHandlers)
         {
             // If the page or the context was closed we stall all requests right away.
-            if (page?._closeWasCalled == true || _closeWasCalled)
+            if (page?.CloseWasCalled == true || CloseWasCalled)
             {
                 return;
             }

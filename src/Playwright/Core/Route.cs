@@ -42,7 +42,6 @@ namespace Microsoft.Playwright.Core;
 internal class Route : ChannelOwner, IRoute
 {
     private readonly RouteInitializer _initializer;
-    internal readonly Request _request;
     private TaskCompletionSource<bool> _handlingTask;
     internal bool DidThrow;
 
@@ -55,6 +54,8 @@ internal class Route : ChannelOwner, IRoute
     public IRequest Request => _initializer.Request;
 
     internal BrowserContext _context { get; set; }
+
+    internal Request _request { get; }
 
     [MethodImpl(MethodImplOptions.NoInlining)]
     public async Task FulfillAsync(RouteFulfillOptions options = default)

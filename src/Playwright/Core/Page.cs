@@ -45,11 +45,10 @@ internal class Page : ChannelOwner, IPage
 
     internal readonly List<Worker> _workers = new();
     internal readonly TimeoutSettings _timeoutSettings;
+    private readonly List<HarRouter> _harRouters = new();
     private List<RouteHandler> _routes = new();
     private Video _video;
     private string _closeReason;
-    internal bool _closeWasCalled = false;
-    private readonly List<HarRouter> _harRouters = new();
 
     internal Page(ChannelOwner parent, string guid, PageInitializer initializer) : base(parent, guid)
     {
@@ -158,6 +157,8 @@ internal class Page : ChannelOwner, IPage
     public event EventHandler<IDownload> Download;
 
     public bool IsClosed { get; private set; }
+
+    internal bool CloseWasCalled { get; private set; }
 
     IFrame IPage.MainFrame => MainFrame;
 
@@ -487,7 +488,7 @@ internal class Page : ChannelOwner, IPage
     public async Task CloseAsync(PageCloseOptions options = default)
     {
         _closeReason = options?.Reason;
-        _closeWasCalled = true;
+        CloseWasCalled = true;
         try
         {
             await SendMessageToServerAsync(
@@ -1294,7 +1295,7 @@ internal class Page : ChannelOwner, IPage
         foreach (var routeHandler in routeHandlers)
         {
             // If the page was closed we stall all requests right away.
-            if (_closeWasCalled || Context._closeWasCalled)
+            if (CloseWasCalled || Context.CloseWasCalled)
             {
                 return;
             }
