@@ -285,7 +285,17 @@ public class BrowserContextBasicTests : BrowserTestEx
     {
         await using var context = await Browser.NewContextAsync(new() { Offline = true });
         var page = await context.NewPageAsync();
-        await PlaywrightAssert.ThrowsAsync<PlaywrightException>(() => page.GotoAsync(Server.EmptyPage));
+        if (BrowserName == "firefox")
+        {
+            var frameNavigatedEvent = new TaskCompletionSource<bool>();
+            page.FrameNavigated += (_, _) => frameNavigatedEvent.TrySetResult(true);
+            await PlaywrightAssert.ThrowsAsync<PlaywrightException>(() => page.GotoAsync(Server.EmptyPage));
+            await frameNavigatedEvent.Task;
+        }
+        else
+        {
+            await PlaywrightAssert.ThrowsAsync<PlaywrightException>(() => page.GotoAsync(Server.EmptyPage));
+        }
         await context.SetOfflineAsync(false);
         var response = await page.GotoAsync(Server.EmptyPage);
         Assert.AreEqual((int)HttpStatusCode.OK, response.Status);
