@@ -73,7 +73,7 @@ internal class BrowserType : ChannelOwner, IBrowserType
                 { "tracesDir", options.TracesDir },
                 { "firefoxUserPrefs", options.FirefoxUserPrefs },
                 { "chromiumSandbox", options.ChromiumSandbox },
-                { "slowMo", options.ChromiumSandbox },
+                { "slowMo", options.SlowMo },
                 { "timeout", options.Timeout },
             }).ConfigureAwait(false);
         DidLaunchBrowser(browser);
