@@ -69,8 +69,8 @@ public partial interface ILocatorAssertions
 
     /// <summary>
     /// <para>
-    /// Ensures that <see cref="ILocator"/> points to an <a href="https://playwright.dev/dotnet/docs/actionability#attached">attached</a>
-    /// DOM node.
+    /// Ensures that <see cref="ILocator"/> points to an element that is <a href="https://developer.mozilla.org/en-US/docs/Web/API/Node/isConnected">connected</a>
+    /// to a Document or a ShadowRoot.
     /// </para>
     /// <para>**Usage**</para>
     /// <code>await Expect(Page.GetByText("Hidden text")).ToBeAttachedAsync();</code>
@@ -191,8 +191,7 @@ public partial interface ILocatorAssertions
 
     /// <summary>
     /// <para>
-    /// Ensures that <see cref="ILocator"/> points to an <a href="https://playwright.dev/dotnet/docs/actionability#attached">attached</a>
-    /// and <a href="https://playwright.dev/dotnet/docs/actionability#visible">visible</a>
+    /// Ensures that <see cref="ILocator"/> points to an attached and <a href="https://playwright.dev/dotnet/docs/actionability#visible">visible</a>
     /// DOM node.
     /// </para>
     /// <para>To check that at least one element from the list is visible, use <see cref="ILocator.First"/>.</para>

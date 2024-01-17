@@ -32,7 +32,7 @@ namespace Microsoft.Playwright.Core;
 
 internal class RouteHandler
 {
-    private HashSet<HandlerInvocation> _activeInvocations = new HashSet<HandlerInvocation>();
+    private readonly HashSet<HandlerInvocation> _activeInvocations = new HashSet<HandlerInvocation>();
 
     private bool _ignoreException;
 
