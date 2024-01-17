@@ -61,7 +61,7 @@ public class WorkerAwareTest
     [SetUp]
     public void WorkerSetup()
     {
-        if (!_allWorkers.TryPop(out _currentWorker))
+        if (!_allWorkers.TryPop(out _currentWorker!))
         {
             _currentWorker = new();
         }
