@@ -26,6 +26,7 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Globalization;
 using System.Linq;
 using System.Text.Encodings.Web;
 using System.Text.Json;
@@ -534,7 +535,7 @@ internal class Locator : ILocator
         }
         if (options.Level != null)
         {
-            props.Add(new List<string> { "level", options.Level.ToString() });
+            props.Add(new List<string> { "level", options.Level?.ToString(CultureInfo.InvariantCulture) });
         }
         if (options.Name != null)
         {

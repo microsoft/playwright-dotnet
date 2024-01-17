@@ -88,11 +88,11 @@ public class BrowserContextRouteTests : BrowserTestEx
             route.ContinueAsync();
         });
 
-        Action<IRoute> handler4 = (route) =>
+        void handler4(IRoute route)
         {
             intercepted.Add(4);
             route.ContinueAsync();
-        };
+        }
         await context.RouteAsync(new Regex("/empty.html"), handler4);
 
         await page.GotoAsync(Server.EmptyPage);
@@ -125,11 +125,11 @@ public class BrowserContextRouteTests : BrowserTestEx
             route.ContinueAsync();
         });
 
-        Action<IRoute> handler2 = (route) =>
+        void handler2(IRoute route)
         {
             intercepted.Add(2);
             route.ContinueAsync();
-        };
+        }
         await page.RouteAsync("/empty.html", handler2);
 
         await page.GotoAsync(Server.EmptyPage);
@@ -363,7 +363,7 @@ public class BrowserContextRouteTests : BrowserTestEx
         await using var context = await Browser.NewContextAsync();
         var page = await context.NewPageAsync();
         var intercepted = new List<string>();
-        async Task handler(IRoute route)
+        void handler(IRoute route)
         {
             intercepted.Add("first");
             route.ContinueAsync();
