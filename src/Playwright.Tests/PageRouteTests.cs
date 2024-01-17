@@ -81,11 +81,11 @@ public class PageRouteTests : PageTestEx
         });
 
 
-        Action<IRoute> handler4 = (route) =>
+        void handler4(IRoute route)
         {
             intercepted.Add(4);
             route.FallbackAsync();
-        };
+        }
 
         await Page.RouteAsync(new Regex("/empty.html"), handler4);
         await Page.GotoAsync(Server.EmptyPage);
@@ -771,7 +771,7 @@ public class PageRouteTests : PageTestEx
     public async Task ShouldWorkIfHandlerWithTimesParameterWasRemovedFromAnotherHandler()
     {
         var intercepted = new List<string>();
-        async Task handler(IRoute route)
+        void handler(IRoute route)
         {
             intercepted.Add("first");
             route.ContinueAsync();
