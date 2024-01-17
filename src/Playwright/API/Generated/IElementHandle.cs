@@ -1135,8 +1135,8 @@ public partial interface IElementHandle : IJSHandle
     /// <item><description><c>"visible"</c> Wait until the element is <a href="https://playwright.dev/dotnet/docs/actionability#visible">visible</a>.</description></item>
     /// <item><description>
     /// <c>"hidden"</c> Wait until the element is <a href="https://playwright.dev/dotnet/docs/actionability#visible">not
-    /// visible</a> or <a href="https://playwright.dev/dotnet/docs/actionability#attached">not
-    /// attached</a>. Note that waiting for hidden does not throw when the element detaches.
+    /// visible</a> or not attached. Note that waiting for hidden does not throw when the
+    /// element detaches.
     /// </description></item>
     /// <item><description>
     /// <c>"stable"</c> Wait until the element is both <a href="https://playwright.dev/dotnet/docs/actionability#visible">visible</a>
