@@ -58,10 +58,9 @@ internal class Connection : IDisposable
         JsonSerializerOptions NewJsonSerializerOptions(bool keepNulls)
         {
             var options = JsonExtensions.GetNewDefaultSerializerOptions(keepNulls);
-            options.Converters.Add(new ChannelToGuidConverter(this));
-            options.Converters.Add(new ChannelOwnerToGuidConverter<JSHandle>(this));
-            options.Converters.Add(new ChannelOwnerToGuidConverter<ElementHandle>(this));
 
+            // Workaround for https://github.com/dotnet/runtime/issues/46522
+            options.Converters.Add(new ChannelOwnerConverterFactory(this));
             // Workaround for https://github.com/dotnet/runtime/issues/46522
             options.Converters.Add(new ChannelOwnerListToGuidListConverter<WritableStream>(this));
             return options;
