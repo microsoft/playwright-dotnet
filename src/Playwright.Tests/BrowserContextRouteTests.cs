@@ -43,9 +43,7 @@ public class BrowserContextRouteTests : BrowserTestEx
             intercepted = true;
 
             StringAssert.Contains("empty.html", route.Request.Url);
-#pragma warning disable 0612
             Assert.False(string.IsNullOrEmpty(route.Request.Headers["user-agent"]));
-#pragma warning restore 0612
             Assert.AreEqual(HttpMethod.Get.Method, route.Request.Method);
             Assert.Null(route.Request.PostData);
             Assert.True(route.Request.IsNavigationRequest);

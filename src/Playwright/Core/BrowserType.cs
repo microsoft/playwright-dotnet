@@ -188,9 +188,7 @@ internal class BrowserType : ChannelOwner, IBrowserType
         {
             pipe.CloseAsync().IgnoreException();
         }
-#pragma warning disable CA2000 // Dispose objects before losing scope
         var connection = new Connection(_connection.LocalUtils);
-#pragma warning restore CA2000
         connection.MarkAsRemote();
         connection.Close += (_, _) => ClosePipe();
 

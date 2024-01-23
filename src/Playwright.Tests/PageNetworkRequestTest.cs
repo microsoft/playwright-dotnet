@@ -77,9 +77,7 @@ public class PageNetworkRequestTest : PageTestEx
             _ => "None"
         };
 
-#pragma warning disable 0612
         StringAssert.Contains(expected, response.Request.Headers["user-agent"]);
-#pragma warning restore 0612
     }
 
     [PlaywrightTest("page-network-request.spec.ts", "should return postData")]

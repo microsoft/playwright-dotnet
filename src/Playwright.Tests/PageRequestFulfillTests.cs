@@ -47,9 +47,7 @@ public class RequestFulfillTests : PageTestEx
         });
         var response = await Page.GotoAsync(Server.EmptyPage);
         Assert.AreEqual((int)HttpStatusCode.Created, response.Status);
-#pragma warning disable 0612
         Assert.AreEqual("bar", response.Headers["foo"]);
-#pragma warning restore 0612
         Assert.AreEqual("Yo, page!", await Page.EvaluateAsync<string>("() => document.body.textContent"));
     }
 
@@ -139,9 +137,7 @@ public class RequestFulfillTests : PageTestEx
 
         var response = await Page.GotoAsync(Server.EmptyPage);
         Assert.AreEqual((int)HttpStatusCode.OK, response.Status);
-#pragma warning disable 0612
         Assert.AreEqual("true", response.Headers["foo"]);
-#pragma warning restore 0612
         Assert.AreEqual("Yo, page!", await Page.EvaluateAsync<string>("() => document.body.textContent"));
     }
 
@@ -178,9 +174,7 @@ public class RequestFulfillTests : PageTestEx
         await Page.RouteAsync(Server.CrossProcessPrefix + "/something", (route) =>
         {
             playwrightRequest = route.Request;
-#pragma warning disable 0612
             route.ContinueAsync(new() { Headers = route.Request.Headers.ToDictionary(x => x.Key, x => x.Value) });
-#pragma warning restore 0612
         });
 
         string textAfterRoute = await Page.EvaluateAsync<string>(@"async url => {
@@ -217,9 +211,7 @@ public class RequestFulfillTests : PageTestEx
             }", Server.CrossProcessPrefix + "/something");
 
         Assert.AreEqual("done", text);
-#pragma warning disable 0612
         Assert.AreEqual(Server.Prefix, interceptedRequest.Headers["origin"]);
-#pragma warning restore 0612
     }
 
     [PlaywrightTest("page-request-fulfill.spec.ts", "should fulfill with global fetch result")]

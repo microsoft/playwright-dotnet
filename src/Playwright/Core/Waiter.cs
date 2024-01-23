@@ -150,9 +150,7 @@ internal class Waiter : IDisposable
             return;
         }
 
-#pragma warning disable CA2000 // Dispose objects before losing scope
         var cts = new CancellationTokenSource();
-#pragma warning restore CA2000 // Dispose objects before losing scope
         RejectOn(
             new TaskCompletionSource<bool>().Task.WithTimeout(timeout.Value, _ => new TimeoutException(message), cts.Token),
             () => cts.Cancel());

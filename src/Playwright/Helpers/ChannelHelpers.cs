@@ -26,7 +26,6 @@ using System.Text.Json;
 using Microsoft.Playwright.Transport;
 
 #nullable enable
-#pragma warning disable IDE0018 // Inline variable declaration will cause issues due to Roslyn design: https://github.com/dotnet/roslyn/issues/54711
 
 namespace Microsoft.Playwright.Helpers;
 
@@ -39,8 +38,7 @@ internal static class ChannelHelpers
             return null;
         }
 
-        System.Text.Json.JsonElement retElement;
-        if (element.Value.TryGetProperty(name, out retElement))
+        if (element.Value.TryGetProperty(name, out JsonElement retElement))
         {
             return retElement.ToString();
         }
@@ -61,8 +59,7 @@ internal static class ChannelHelpers
             return null;
         }
 
-        JsonElement retElement;
-        if (!element.Value.TryGetProperty(name, out retElement))
+        if (!element.Value.TryGetProperty(name, out JsonElement retElement))
         {
             return null;
         }
@@ -103,6 +100,3 @@ internal static class ChannelHelpers
         };
     }
 }
-
-#nullable disable
-#pragma warning restore IDE0018 // Inline variable declaration

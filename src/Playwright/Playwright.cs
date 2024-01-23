@@ -40,10 +40,8 @@ public static class Playwright
     /// <returns>A <see cref="Task"/> that completes when the playwright driver is ready to be used.</returns>
     public static async Task<IPlaywright> CreateAsync()
     {
-#pragma warning disable CA2000 // Dispose objects before losing scope
         var transport = new StdIOTransport();
         var connection = new Connection();
-#pragma warning restore CA2000
         transport.MessageReceived += (_, message) => connection.Dispatch(JsonSerializer.Deserialize<PlaywrightServerMessage>(message, JsonExtensions.DefaultJsonSerializerOptions));
         transport.LogReceived += (_, log) =>
         {

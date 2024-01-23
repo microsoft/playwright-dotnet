@@ -323,7 +323,6 @@ internal class Connection : IDisposable
         ChannelOwner result = null;
         var parent = string.IsNullOrEmpty(parentGuid) ? _rootObject : Objects[parentGuid];
 
-#pragma warning disable CA2000 // Dispose objects before losing scope
         switch (type)
         {
             case ChannelOwnerType.APIRequestContext:
@@ -412,7 +411,6 @@ internal class Connection : IDisposable
                 TraceMessage("pw:dotnet", "Missing type " + type);
                 break;
         }
-#pragma warning restore CA2000
         return result;
     }
 
