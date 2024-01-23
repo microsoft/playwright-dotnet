@@ -39,9 +39,7 @@ public class PageRouteTests : PageTestEx
         await Page.RouteAsync("**/empty.html", (route) =>
         {
             StringAssert.Contains("empty.html", route.Request.Url);
-#pragma warning disable 0612
             Assert.False(string.IsNullOrEmpty(route.Request.Headers["user-agent"]));
-#pragma warning restore 0612
             Assert.AreEqual(HttpMethod.Get.Method, route.Request.Method);
             Assert.Null(route.Request.PostData);
             Assert.True(route.Request.IsNavigationRequest);
@@ -147,9 +145,7 @@ public class PageRouteTests : PageTestEx
         Server.SetRedirect("/rrredirect", "/empty.html");
         await Page.RouteAsync("**/*", (route) =>
         {
-#pragma warning disable 0612
             var headers = new Dictionary<string, string>(route.Request.Headers.ToDictionary(x => x.Key, x => x.Value)) { ["foo"] = "bar" };
-#pragma warning restore 0612
             route.ContinueAsync(new() { Headers = headers });
         });
         await Page.GotoAsync(Server.Prefix + "/rrredirect");
@@ -160,9 +156,7 @@ public class PageRouteTests : PageTestEx
     {
         await Page.RouteAsync("**/*", (route) =>
         {
-#pragma warning disable 0612
             var headers = new Dictionary<string, string>(route.Request.Headers.ToDictionary(x => x.Key, x => x.Value)) { ["foo"] = "bar" };
-#pragma warning restore 0612
             headers.Remove("origin");
             route.ContinueAsync(new() { Headers = headers });
         });
@@ -186,9 +180,7 @@ public class PageRouteTests : PageTestEx
         });
         await Page.GotoAsync(Server.Prefix + "/one-style.html");
         StringAssert.Contains("/one-style.css", requests[1].Url);
-#pragma warning disable 0612
         StringAssert.Contains("/one-style.html", requests[1].Headers["referer"]);
-#pragma warning restore 0612
     }
 
     [PlaywrightTest("page-route.spec.ts", "should properly return navigation response when URL has cookies")]
@@ -221,9 +213,7 @@ public class PageRouteTests : PageTestEx
         });
         await Page.RouteAsync("**/*", (route) =>
         {
-#pragma warning disable 0612
             Assert.AreEqual("bar", route.Request.Headers["foo"]);
-#pragma warning restore 0612
             route.ContinueAsync();
         });
         var response = await Page.GotoAsync(Server.EmptyPage);
@@ -253,15 +243,11 @@ public class PageRouteTests : PageTestEx
         {
             if (TestConstants.IsChromium)
             {
-#pragma warning disable 0612
                 Assert.AreEqual(Server.EmptyPage + ", " + Server.EmptyPage, route.Request.Headers["referer"]);
-#pragma warning restore 0612
             }
             else
             {
-#pragma warning disable 0612
                 Assert.AreEqual(Server.EmptyPage, route.Request.Headers["referer"]);
-#pragma warning restore 0612
             }
             route.ContinueAsync();
         });
@@ -314,9 +300,7 @@ public class PageRouteTests : PageTestEx
     {
         await Page.SetExtraHTTPHeadersAsync(new Dictionary<string, string> { ["referer"] = "http://google.com/" });
         await Page.RouteAsync("**/*", (route) => route.ContinueAsync());
-#pragma warning disable 0612
         var requestTask = Server.WaitForRequest("/grid.html", request => request.Headers["referer"]);
-#pragma warning restore 0612
         await TaskUtils.WhenAll(
             requestTask,
             Page.GotoAsync(Server.Prefix + "/grid.html")
