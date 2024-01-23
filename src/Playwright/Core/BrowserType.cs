@@ -234,7 +234,6 @@ internal class BrowserType : ChannelOwner, IBrowserType
             catch (Exception ex)
             {
                 closeError = ex;
-                _connection.TraceMessage("pw:dotnet", $"Dispatching error: {ex.Message}\n{ex.StackTrace}");
                 ClosePipe();
             }
         };

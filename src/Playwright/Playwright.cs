@@ -42,7 +42,11 @@ public static class Playwright
     {
         var transport = new StdIOTransport();
         var connection = new Connection();
-        transport.MessageReceived += (_, message) => connection.Dispatch(JsonSerializer.Deserialize<PlaywrightServerMessage>(message, JsonExtensions.DefaultJsonSerializerOptions));
+        transport.MessageReceived += (_, message) =>
+        {
+            Connection.TraceMessage("pw:channel:recv", message);
+            connection.Dispatch(JsonSerializer.Deserialize<PlaywrightServerMessage>(message, JsonExtensions.DefaultJsonSerializerOptions));
+        };
         transport.LogReceived += (_, log) =>
         {
             // workaround for https://github.com/nunit/nunit/issues/4144
@@ -50,9 +54,13 @@ public static class Playwright
             writer.WriteLine(log);
         };
         transport.TransportClosed += (_, reason) => connection.DoClose(reason);
-        connection.OnMessage = (message, keepNulls) => transport.SendAsync(JsonSerializer.SerializeToUtf8Bytes(message, keepNulls ? connection.DefaultJsonSerializerOptionsKeepNulls : connection.DefaultJsonSerializerOptions));
+        connection.OnMessage = (message, keepNulls) =>
+        {
+            var rawMessage = JsonSerializer.SerializeToUtf8Bytes(message, keepNulls ? connection.DefaultJsonSerializerOptionsKeepNulls : connection.DefaultJsonSerializerOptions);
+            Connection.TraceMessage("pw:channel:send", rawMessage);
+            return transport.SendAsync(rawMessage);
+        };
         connection.Close += (_, reason) => transport.Close(reason);
-        var playwright = await connection.InitializePlaywrightAsync().ConfigureAwait(false);
-        return playwright;
+        return await connection.InitializePlaywrightAsync().ConfigureAwait(false);
     }
 }
