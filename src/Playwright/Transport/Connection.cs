@@ -30,6 +30,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Runtime.CompilerServices;
+using System.Text;
 using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
@@ -190,18 +191,16 @@ internal class Connection : IDisposable
 
         await _queue.EnqueueAsync(() =>
         {
-            var message = new MessageRequest
-            {
-                Id = id,
-                Guid = @object == null ? string.Empty : @object.Guid,
-                Method = method,
-                Params = sanitizedArgs,
-                Metadata = metadata,
-            };
-
-            TraceMessage("pw:channel:command", message);
-
-            return OnMessage(message, keepNulls);
+            return OnMessage(
+                new MessageRequest
+                {
+                    Id = id,
+                    Guid = @object == null ? string.Empty : @object.Guid,
+                    Method = method,
+                    Params = sanitizedArgs,
+                    Metadata = metadata,
+                },
+                keepNulls);
         }).ConfigureAwait(false);
 
         var result = await tcs.Task.ConfigureAwait(false);
@@ -255,8 +254,6 @@ internal class Connection : IDisposable
         }
         if (message.Id.HasValue)
         {
-            TraceMessage("pw:channel:response", message);
-
             _callbacks.TryRemove(message.Id.Value, out var callback);
             if (callback == null)
             {
@@ -274,8 +271,6 @@ internal class Connection : IDisposable
             }
             return;
         }
-
-        TraceMessage("pw:channel:event", message);
 
         try
         {
@@ -313,7 +308,6 @@ internal class Connection : IDisposable
         }
         catch (Exception ex)
         {
-            TraceMessage("pw:dotnet", $"Connection Close: {ex.Message}\n{ex.StackTrace}");
             DoClose(ex);
         }
     }
@@ -407,8 +401,12 @@ internal class Connection : IDisposable
             case ChannelOwnerType.Tracing:
                 result = new Tracing(parent, guid);
                 break;
+            case ChannelOwnerType.Electron:
+            case ChannelOwnerType.Android:
+                result = null;
+                break;
             default:
-                TraceMessage("pw:dotnet", "Missing type " + type);
+                Debug.Fail($"Missing Playwright type binding for '{type}'");
                 break;
         }
         return result;
@@ -459,28 +457,21 @@ internal class Connection : IDisposable
         Close.Invoke(this, new TargetClosedException("Connection disposed"));
     }
 
-    [Conditional("DEBUG")]
-    internal void TraceMessage(string logLevel, object message)
+    internal static void TraceMessage(string logLevel, byte[] rawMessage)
     {
         string actualLogLevel = Environment.GetEnvironmentVariable("DEBUG");
-        if (!string.IsNullOrEmpty(actualLogLevel))
+        if (string.IsNullOrEmpty(actualLogLevel))
         {
-            if (!actualLogLevel.Contains(logLevel))
-            {
-                return;
-            }
-            if (message is not string)
-            {
-                message = JsonSerializer.Serialize(message, DefaultJsonSerializerOptions);
-            }
-            if (((string)message).Contains("deviceDescriptors"))
-            {
-                return;
-            }
-            string line = $"{logLevel}: {message}";
-            Trace.WriteLine(line);
-            Console.Error.WriteLine(line);
+            return;
         }
+        if (!actualLogLevel.Contains(logLevel))
+        {
+            return;
+        }
+        var message = UTF8Encoding.UTF8.GetString(rawMessage);
+        string line = $"{logLevel}: {message}";
+        Trace.WriteLine(line);
+        Console.Error.WriteLine(line);
     }
 
     [MethodImpl(MethodImplOptions.NoInlining)]
