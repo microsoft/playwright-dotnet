@@ -18,7 +18,7 @@ jobs:
       with:
         dotnet-version: 8.0.x
     - name: Check formatting
-      run: dotnet format ./src/ --verify-no-changes -v:diag --verbosity diag
+      run: dotnet format ./src/ --verify-no-changes -v:diag
     - name: Download driver
       run: ./build.sh --download-driver
     - name: Build projects (runs .NET analyzers)
