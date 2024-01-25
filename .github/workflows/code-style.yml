@@ -16,7 +16,9 @@ jobs:
     - name: Setup .NET Core
       uses: actions/setup-dotnet@v3
       with:
-        dotnet-version: 8.0.x
+        dotnet-version: |
+          6.0.x
+          8.0.x
     - name: Check formatting
       run: dotnet format ./src/ --verify-no-changes -v:diag
     - name: Download driver
