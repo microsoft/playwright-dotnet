@@ -866,6 +866,7 @@ internal class Page : ChannelOwner, IPage
     [MethodImpl(MethodImplOptions.NoInlining)]
     public async Task<byte[]> PdfAsync(PagePdfOptions options = default)
     {
+        options ??= new();
         if (!Context.IsChromium)
         {
             throw new NotSupportedException("This browser doesn't support this action.");
