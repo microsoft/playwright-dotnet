@@ -356,7 +356,6 @@ src/Playwright/.drivers
 src/Playwright.Tests/Screenshots/**/test.png
 src/Playwright/Microsoft.Playwright.xml
 
-dotnet-format/
 testCert.cer
 
 coverage-report/

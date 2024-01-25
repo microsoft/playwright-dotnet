@@ -27,7 +27,7 @@ using Microsoft.Playwright.Helpers;
 
 namespace Microsoft.Playwright.Tests;
 
-public class GlobTests : PageTestEx
+public class InterceptionTests : PageTestEx
 {
     [PlaywrightTest("interception.spec.ts", "should work with glob")]
     public void ShouldWorkWithGlob()

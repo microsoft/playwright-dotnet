@@ -11,7 +11,6 @@ if [[ ($1 == '--help') || ($1 == '-h') ]]; then
   echo "  --init                - download .NET deps and download driver"
   echo "  --roll <version>      - roll the .NET language binding to a specific driver version"
   echo "  --download-driver     - download the driver"
-  echo "  --setup-dotnet-deps   - download and install the .NET tool deps"
   echo "  --update-assets       - sync the assets from 'playwright' to 'playwright-dotnet'"
   echo "  --help                - show this help"
   echo
@@ -29,12 +28,6 @@ if [[ -n "$PW_SRC_DIR" ]]; then
   upstream_repo_path="$PW_SRC_DIR"
 fi
 echo "Upstream repo path: ${upstream_repo_path}"
-
-function download_dotnet_tool_deps() {
-  echo "Downloading .NET tool dependencies"
-  dotnet tool install --global dotnet-format || true
-  echo "done"
-}
 
 function download_driver() {
   echo "downloading driver..."
@@ -76,7 +69,6 @@ function roll_driver() {
 
 CMD="$1"
 if [[ ("$CMD" == "--init") ]]; then
-  download_dotnet_tool_deps
   download_driver
 elif [[ ("$CMD" == "--roll") ]]; then
   roll_driver $2
@@ -84,8 +76,6 @@ elif [[ ("$CMD" == "--download-driver") ]]; then
   download_driver
 elif [[ ("$CMD" == "--update-assets") ]]; then
   update_assets
-elif [[ ("$CMD" == "--setup-dotnet-deps") ]]; then
-  download_dotnet_tool_deps
 else
   echo "ERROR: unknown command - $CMD"
   echo "Pass --help for supported commands"
