@@ -2,6 +2,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
     <PropertyGroup>
         <TargetFrameworks>net8.0</TargetFrameworks>
+        <LangVersion>12</LangVersion>
         <IsTestProject>true</IsTestProject>
         <ReleaseVersion>0.0.0</ReleaseVersion>
         <NoWarn>1701;1702</NoWarn>
