@@ -42,13 +42,13 @@ public class PlaywrightSettingsProvider : ISettingsProvider
             var browserFromEnv = Environment.GetEnvironmentVariable("BROWSER")?.ToLowerInvariant();
             if (!string.IsNullOrEmpty(browserFromEnv))
             {
-                ValidateBrowserName(browserFromEnv!, "'BROWSER' environment variable");
+                ValidateBrowserName(browserFromEnv!, "'BROWSER' environment variable", "\nTry to remove 'BROWSER' environment variable for using default browser");
                 return browserFromEnv!;
             }
             if (_settings != null && !string.IsNullOrEmpty(_settings.BrowserName))
             {
                 var browser = _settings.BrowserName!.ToLowerInvariant();
-                ValidateBrowserName(browser, "run settings");
+                ValidateBrowserName(browser, "run settings", string.Empty);
                 return browser;
             }
             return BrowserType.Chromium;
@@ -93,15 +93,15 @@ public class PlaywrightSettingsProvider : ISettingsProvider
         }
     }
 
-    private static void ValidateBrowserName(string browserName, string fromText)
+    private static void ValidateBrowserName(string browserName, string fromText, string suffix)
     {
         if (browserName != BrowserType.Chromium &&
             browserName != BrowserType.Firefox &&
             browserName != BrowserType.Webkit)
         {
             throw new ArgumentException($"Invalid browser name from {fromText}.\n" +
-                $"Supported browsers: '{BrowserType.Chromium}', '{BrowserType.Firefox}', '{BrowserType.Webkit}'\n" +
-                $"Actual browser: '{browserName}'");
+                $"Supported browsers: '{BrowserType.Chromium}', '{BrowserType.Firefox}', and '{BrowserType.Webkit}'\n" +
+                $"Actual browser: '{browserName}'{suffix}");
         }
     }
 
