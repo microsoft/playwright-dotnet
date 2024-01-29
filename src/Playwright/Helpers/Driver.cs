@@ -37,6 +37,7 @@ internal static class Driver
         ["PW_LANG_NAME"] = "csharp",
         ["PW_LANG_NAME_VERSION"] = $"{Environment.Version.Major}.{Environment.Version.Minor}",
         ["PW_CLI_DISPLAY_VERSION"] = typeof(Driver).Assembly.GetName().Version.ToString(3),
+        ["PW_DRIVER_FORCE_UNICODE_REPLACEMENT"] = "1",
     };
 
     internal static (string ExecutablePath, Func<string, string> GetArgs) GetExecutablePath()
