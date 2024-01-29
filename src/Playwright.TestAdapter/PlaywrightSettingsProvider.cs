@@ -42,13 +42,13 @@ public class PlaywrightSettingsProvider : ISettingsProvider
             var browserFromEnv = Environment.GetEnvironmentVariable("BROWSER")?.ToLowerInvariant();
             if (!string.IsNullOrEmpty(browserFromEnv))
             {
-                ValidateBrowserName(browserFromEnv!);
+                ValidateBrowserName(browserFromEnv!, "'BROWSER' environment variable");
                 return browserFromEnv!;
             }
             if (_settings != null && !string.IsNullOrEmpty(_settings.BrowserName))
             {
                 var browser = _settings.BrowserName!.ToLowerInvariant();
-                ValidateBrowserName(browser);
+                ValidateBrowserName(browser, "run settings");
                 return browser;
             }
             return BrowserType.Chromium;
@@ -93,13 +93,15 @@ public class PlaywrightSettingsProvider : ISettingsProvider
         }
     }
 
-    private static void ValidateBrowserName(string browserName)
+    private static void ValidateBrowserName(string browserName, string fromText)
     {
         if (browserName != BrowserType.Chromium &&
             browserName != BrowserType.Firefox &&
             browserName != BrowserType.Webkit)
         {
-            throw new ArgumentException($"Invalid browser name: {browserName}");
+            throw new ArgumentException($"Invalid browser name from {fromText}.\n" +
+                $"Supported browsers: '{BrowserType.Chromium}', '{BrowserType.Firefox}', '{BrowserType.Webkit}'\n" +
+                $"Actual browser: '{browserName}'");
         }
     }
 
