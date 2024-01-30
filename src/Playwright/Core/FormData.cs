@@ -28,7 +28,7 @@ using Microsoft.Playwright.Transport.Protocol;
 
 namespace Microsoft.Playwright.Core;
 
-public class FormData : IFormData
+internal class FormData : IFormData
 {
     public FormData()
     {
