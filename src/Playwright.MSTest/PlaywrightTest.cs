@@ -130,6 +130,8 @@ public class PlaywrightTest
 
     public TestContext TestContext { get; set; } = null!;
 
+    public void SetDefaultExpectTimeout(float timeout) => Assertions.SetDefaultExpectTimeout(timeout);
+
     public ILocatorAssertions Expect(ILocator locator) => Assertions.Expect(locator);
 
     public IPageAssertions Expect(IPage page) => Assertions.Expect(page);
