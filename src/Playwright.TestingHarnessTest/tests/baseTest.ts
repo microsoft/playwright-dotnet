@@ -69,13 +69,9 @@ export const test = base.extend<{
         console.log('=========================================');
         console.log(`Command: ${testResult.command}`);
         console.log(`Exit code: ${testResult.exitCode}`);
-        if (testResult.stdout) {
+        if (testResult.rawStdout) {
           console.log(`Stdout:`);
-          console.log(testResult.stdout);
-        }
-        if (testResult.stderr) {
-          console.log(`Stderr:`);
-          console.log(testResult.stderr);
+          console.log(testResult.rawStdout);
         }
         console.log('=========================================');
       }
