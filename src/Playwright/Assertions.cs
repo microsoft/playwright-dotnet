@@ -28,6 +28,15 @@ namespace Microsoft.Playwright;
 
 public static class Assertions
 {
+    /// <summary>
+    /// Sets the default timeout for all future <c>Expect</c> calls.
+    /// </summary>
+    /// <param name="timeout">The timeout in milliseconds.</param>
+    /// <remarks>
+    /// <para>
+    /// The default timeout is 5 seconds.
+    /// </para>
+    /// </remarks>
     public static void SetDefaultExpectTimeout(float timeout) => AssertionsBase.SetDefaultTimeout(timeout);
 
     public static ILocatorAssertions Expect(ILocator locator) => new LocatorAssertions(locator, false);
