@@ -47,6 +47,22 @@ public class LocatorAssertionsTests : PageTestEx
         StringAssert.Contains("LocatorAssertions.ToBeCheckedAsync with timeout 300ms", exception.Message);
     }
 
+    [PlaywrightTest("playwright-test/playwright.expect.spec.ts", "should be able to set default timeout")]
+    public async Task ShouldBeAbleToSetDefaultTimeout()
+    {
+        try
+        {
+            SetDefaultExpectTimeout(1111);
+            var exception = await PlaywrightAssert.ThrowsAsync<PlaywrightException>(() => Expect(Page.Locator("input")).Not.ToBeCheckedAsync());
+            StringAssert.Contains("Locator expected not to be checked", exception.Message);
+            StringAssert.Contains("LocatorAssertions.ToBeCheckedAsync with timeout 1111ms", exception.Message);
+        }
+        finally
+        {
+            SetDefaultExpectTimeout(5000);
+        }
+    }
+
     [PlaywrightTest("page/expect-boolean.spec.ts", "toBeAttached > default")]
     public async Task ToBeAttachedDefault()
     {
