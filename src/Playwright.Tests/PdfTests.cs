@@ -48,6 +48,15 @@ public class PdfTests : PageTestEx
         }
     }
 
+    [PlaywrightTest("pdf.spec.ts", "should be able to save file without passing options")]
+    [Skip(SkipAttribute.Targets.Firefox, SkipAttribute.Targets.Webkit)]
+    public async Task ShouldBeAbleToSaveFileWithoutPassingOptions()
+    {
+        await Page.GotoAsync(Server.EmptyPage);
+        var result = await Page.PdfAsync();
+        Assert.True(result.Length > 0);
+    }
+
     [PlaywrightTest("pdf.spec.ts", "should only have pdf in chromium")]
     [Skip(SkipAttribute.Targets.Chromium)]
     public Task ShouldOnlyHavePdfInChromium()
