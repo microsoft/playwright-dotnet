@@ -1,260 +1,247 @@
 trigger: none # We don't want CI builds, just a manual release process
-pool: $(PlaywrightPoolName)
 parameters:
-  - name: doRelease
-    displayName: Push the Playwright Release to NuGet.org
-    default: false
-    type: boolean
+- name: doRelease
+  displayName: Push the Playwright Release to NuGet.org
+  default: false
+  type: boolean
 
-  - name: doReleaseCLI
-    displayName: Push the CLI Release to NuGet.org
-    default: false
-    type: boolean
+- name: doReleaseCLI
+  displayName: Push the CLI Release to NuGet.org
+  default: false
+  type: boolean
 
-  - name: signType
-    displayName: Sign Type
-    default: 'test'
-    type: string
-    values:
-    - test
-    - real
+- name: signType
+  displayName: Sign Type
+  default: 'test'
+  type: string
+  values:
+  - test
+  - real
 
-stages:
-- stage: BuildPackageSign
-  displayName: Build, Package & Sign
-  jobs:
-  - job: BuildPackage
-    displayName: Build & Package
-    steps:
+variables:
+- name: BuildConfiguration
+  value: 'Release' 
 
-    - task: UseDotNet@2
-      displayName: 'Use .NET 8 SDK'
-      inputs:
-        packageType: sdk
-        version: 8.x
-
-    - task: MicroBuildSigningPlugin@3
-      inputs:
-        signType: '${{ parameters.signType }}'
-        feedSource: 'https://devdiv.pkgs.visualstudio.com/DefaultCollection/_packaging/MicroBuildToolset/nuget/v3/index.json'
-        
-      # We need to download the driver first, so we can build
-    - task: DotNetCoreCLI@2
-      displayName: Download the driver
-      inputs:
-        command: 'run'
-        arguments: '--project $(Build.SourcesDirectory)/src/tools/Playwright.Tooling/Playwright.Tooling.csproj -- download-drivers --basepath $(Build.SourcesDirectory)'
-
-    - task: DotNetCoreCLI@2
-      displayName: Build Playwright CLI
-      inputs:
-        command: 'build'
-        projects: '**/Playwright.CLI.csproj'
-        arguments: '-c $(BuildConfiguration)'
-
-    - task: DotNetCoreCLI@2
-      displayName: Pack Playwright CLI
-      inputs:
-        command: 'pack'
-        packagesToPack: '**/Playwright.CLI.csproj'
-        packDirectory: '$(Build.ArtifactStagingDirectory)/nuget'
-        versioningScheme: 'off'
-
-    - task: DotNetCoreCLI@2
-      displayName: Build Playwright
-      inputs:
-        command: 'build'
-        projects: '**/Playwright.csproj'
-        arguments: '-c $(BuildConfiguration)'
-
-    - task: DotNetCoreCLI@2
-      displayName: Pack Playwright NuGet
-      inputs:
-        command: 'pack'
-        packagesToPack: '**/Playwright.csproj'
-        packDirectory: '$(Build.ArtifactStagingDirectory)/nuget'
-        versioningScheme: 'off'
-
-    - task: DotNetCoreCLI@2
-      displayName: Build Playwright.NUnit
-      inputs:
-        command: 'build'
-        projects: '**/Playwright.NUnit.csproj'
-        arguments: '-c $(BuildConfiguration)'
-
-    - task: DotNetCoreCLI@2
-      displayName: Pack Playwright.NUnit NuGet
-      inputs:
-        command: 'pack'
-        packagesToPack: '**/Playwright.NUnit.csproj'
-        packDirectory: '$(Build.ArtifactStagingDirectory)/nuget'
-        versioningScheme: 'off'
-
-    - task: DotNetCoreCLI@2
-      displayName: Build Playwright.MSTest
-      inputs:
-        command: 'build'
-        projects: '**/Playwright.MSTest.csproj'
-        arguments: '-c $(BuildConfiguration)'
-
-    - task: DotNetCoreCLI@2
-      displayName: Pack Playwright.MSTest NuGet
-      inputs:
-        command: 'pack'
-        packagesToPack: '**/Playwright.MSTest.csproj'
-        packDirectory: '$(Build.ArtifactStagingDirectory)/nuget'
-        versioningScheme: 'off'
-
-    - task: DotNetCoreCLI@2
-      displayName: Build Playwright.TestAdapter
-      inputs:
-        command: 'build'
-        projects: '**/Playwright.TestAdapter.csproj'
-        arguments: '-c $(BuildConfiguration)'
-
-    - task: DotNetCoreCLI@2
-      displayName: Pack Playwright.TestAdapter NuGet
-      inputs:
-        command: 'pack'
-        packagesToPack: '**/Playwright.TestAdapter.csproj'
-        packDirectory: '$(Build.ArtifactStagingDirectory)/nuget'
-        versioningScheme: 'off'
-
-    - task: PublishBuildArtifacts@1
-      displayName: Copy NuGet Artifacts to Build Results
-      inputs:
-        PathtoPublish: '$(Build.ArtifactStagingDirectory)/nuget'
-        ArtifactName: 'drop'
-        publishLocation: 'Container'
-
-    - task: MicroBuildCleanup@1
-
-- stage: ReleasePlaywright
-  dependsOn: BuildPackageSign
-
-  jobs:
-  - job: ReleaseNuget
-    displayName: Publish on Nuget.org
-    condition: eq('${{parameters.doRelease}}', true)
-
-    steps:
-    - checkout: none
-    - task: DownloadBuildArtifacts@1
-      displayName: Download the NuGet Packages from Build System
-      inputs:
-        buildType: 'current'
-        downloadType: 'specific'
-        itemPattern: '**/Microsoft.Playwright.1.*'
-        downloadPath: '$(System.ArtifactsDirectory)'
-
-    - task: NuGetCommand@2
-      displayName: Push Playwright NuGet to NuGet.org
-      inputs:
-        command: 'push'
-        packagesToPush: '$(System.ArtifactsDirectory)/**/*.nupkg'
-        nuGetFeedType: 'external'
-        publishFeedCredentials: 'NuGet-Playwright'
-
-- stage: ReleasePlaywrightCLI
-  dependsOn: BuildPackageSign
-
-  jobs:
-  - job: ReleaseNugetCLI
-    displayName: Publish CLI on Nuget.org
-    condition: eq('${{parameters.doReleaseCLI}}', true)
-
-    steps:
-    - checkout: none
-    - task: DownloadBuildArtifacts@1
-      displayName: Download the NuGet Packages from Build System
-      inputs:
-        buildType: 'current'
-        downloadType: 'specific'
-        itemPattern: '**/*.CLI.*'
-        downloadPath: '$(System.ArtifactsDirectory)'
-
-    - task: NuGetCommand@2
-      displayName: Push CLI NuGet to Nuget.org
-      inputs:
-        command: 'push'
-        packagesToPush: '$(System.ArtifactsDirectory)/**/*.nupkg'
-        nuGetFeedType: 'external'
-        publishFeedCredentials: 'NuGet-Playwright'
-
-- stage: ReleasePlaywrightNUnit
-  dependsOn: BuildPackageSign
-
-  jobs:
-  - job: ReleaseNugetNUnit
-    displayName: Publish Playwright.NUnit on Nuget.org
-    condition: eq('${{parameters.doRelease}}', true)
-
-    steps:
-    - checkout: none
-    - task: DownloadBuildArtifacts@1
-      displayName: Download the NuGet Packages from Build System
-      inputs:
-        buildType: 'current'
-        downloadType: 'specific'
-        itemPattern: '**/*.NUnit.*'
-        downloadPath: '$(System.ArtifactsDirectory)'
-
-    - task: NuGetCommand@2
-      displayName: Push NUnit NuGet to Nuget.org
-      inputs:
-        command: 'push'
-        packagesToPush: '$(System.ArtifactsDirectory)/**/*.nupkg'
-        nuGetFeedType: 'external'
-        publishFeedCredentials: 'NuGet-Playwright'
-
-- stage: ReleasePlaywrightMSTest
-  dependsOn: BuildPackageSign
-
-  jobs:
-  - job: ReleaseNugetMSTest
-    displayName: Publish Playwright.MSTest on Nuget.org
-    condition: eq('${{parameters.doRelease}}', true)
-
-    steps:
-    - checkout: none
-    - task: DownloadBuildArtifacts@1
-      displayName: Download the NuGet Packages from Build System
-      inputs:
-        buildType: 'current'
-        downloadType: 'specific'
-        itemPattern: '**/*.MSTest.*'
-        downloadPath: '$(System.ArtifactsDirectory)'
-
-    - task: NuGetCommand@2
-      displayName: Push MSTest NuGet to Nuget.org
-      inputs:
-        command: 'push'
-        packagesToPush: '$(System.ArtifactsDirectory)/**/*.nupkg'
-        nuGetFeedType: 'external'
-        publishFeedCredentials: 'NuGet-Playwright'
-
-- stage: ReleasePlaywrightTestAdapter
-  dependsOn: BuildPackageSign
-
-  jobs:
-  - job: ReleaseNugetTestAdapter
-    displayName: Publish Playwright.TestAdapter on Nuget.org
-    condition: eq('${{parameters.doRelease}}', true)
-
-    steps:
-    - checkout: none
-    - task: DownloadBuildArtifacts@1
-      displayName: Download the NuGet Packages from Build System
-      inputs:
-        buildType: 'current'
-        downloadType: 'specific'
-        itemPattern: '**/*.TestAdapter.*'
-        downloadPath: '$(System.ArtifactsDirectory)'
-
-    - task: NuGetCommand@2
-      displayName: Push TestAdapter NuGet to Nuget.org
-      inputs:
-        command: 'push'
-        packagesToPush: '$(System.ArtifactsDirectory)/**/*.nupkg'
-        nuGetFeedType: 'external'
-        publishFeedCredentials: 'NuGet-Playwright'
+resources:
+  repositories:
+  - repository: 1esPipelines
+    type: git
+    name: 1ESPipelineTemplates/1ESPipelineTemplates
+    ref: refs/tags/release
+extends:
+  template: v1/1ES.Official.PipelineTemplate.yml@1esPipelines
+  parameters:
+    pool:
+      name: VSEngSS-MicroBuild2022-1ES
+      os: windows
+    sdl:
+      suppression:
+        suppressionFile: $(Build.SourcesDirectory)\.build\guardian\SDL\.gdnsuppress
+    stages:
+    - stage: BuildPackageSign
+      displayName: Build, Package & Sign
+      jobs:
+      - job: BuildPackage
+        displayName: Build & Package
+        steps:
+        - task: UseDotNet@2
+          displayName: 'Use .NET 8 SDK'
+          inputs:
+            packageType: sdk
+            version: 8.x
+        - task: MicroBuildSigningPlugin@3
+          inputs:
+            signType: '${{ parameters.signType }}'
+            feedSource: 'https://devdiv.pkgs.visualstudio.com/DefaultCollection/_packaging/MicroBuildToolset/nuget/v3/index.json'
+        # We need to download the driver first, so we can build
+        - task: DotNetCoreCLI@2
+          displayName: Download the driver
+          inputs:
+            command: 'run'
+            arguments: '--project $(Build.SourcesDirectory)/src/tools/Playwright.Tooling/Playwright.Tooling.csproj -- download-drivers --basepath $(Build.SourcesDirectory)'
+        - task: DotNetCoreCLI@2
+          displayName: Build Playwright CLI
+          inputs:
+            command: 'build'
+            projects: '**/Playwright.CLI.csproj'
+            arguments: '-c $(BuildConfiguration)'
+        - task: DotNetCoreCLI@2
+          displayName: Pack Playwright CLI
+          inputs:
+            command: 'pack'
+            packagesToPack: '**/Playwright.CLI.csproj'
+            packDirectory: '$(Build.ArtifactStagingDirectory)/nuget'
+            versioningScheme: 'off'
+        - task: DotNetCoreCLI@2
+          displayName: Build Playwright
+          inputs:
+            command: 'build'
+            projects: '**/Playwright.csproj'
+            arguments: '-c $(BuildConfiguration)'
+        - task: DotNetCoreCLI@2
+          displayName: Pack Playwright NuGet
+          inputs:
+            command: 'pack'
+            packagesToPack: '**/Playwright.csproj'
+            packDirectory: '$(Build.ArtifactStagingDirectory)/nuget'
+            versioningScheme: 'off'
+        - task: DotNetCoreCLI@2
+          displayName: Build Playwright.NUnit
+          inputs:
+            command: 'build'
+            projects: '**/Playwright.NUnit.csproj'
+            arguments: '-c $(BuildConfiguration)'
+        - task: DotNetCoreCLI@2
+          displayName: Pack Playwright.NUnit NuGet
+          inputs:
+            command: 'pack'
+            packagesToPack: '**/Playwright.NUnit.csproj'
+            packDirectory: '$(Build.ArtifactStagingDirectory)/nuget'
+            versioningScheme: 'off'
+        - task: DotNetCoreCLI@2
+          displayName: Build Playwright.MSTest
+          inputs:
+            command: 'build'
+            projects: '**/Playwright.MSTest.csproj'
+            arguments: '-c $(BuildConfiguration)'
+        - task: DotNetCoreCLI@2
+          displayName: Pack Playwright.MSTest NuGet
+          inputs:
+            command: 'pack'
+            packagesToPack: '**/Playwright.MSTest.csproj'
+            packDirectory: '$(Build.ArtifactStagingDirectory)/nuget'
+            versioningScheme: 'off'
+        - task: DotNetCoreCLI@2
+          displayName: Build Playwright.TestAdapter
+          inputs:
+            command: 'build'
+            projects: '**/Playwright.TestAdapter.csproj'
+            arguments: '-c $(BuildConfiguration)'
+        - task: DotNetCoreCLI@2
+          displayName: Pack Playwright.TestAdapter NuGet
+          inputs:
+            command: 'pack'
+            packagesToPack: '**/Playwright.TestAdapter.csproj'
+            packDirectory: '$(Build.ArtifactStagingDirectory)/nuget'
+            versioningScheme: 'off'
+        - task: 1ES.PublishBuildArtifacts@1
+          displayName: Copy NuGet Artifacts to Build Results
+          inputs:
+            PathtoPublish: '$(Build.ArtifactStagingDirectory)/nuget'
+            ArtifactName: 'drop'
+        - task: MicroBuildCleanup@1
+    - stage: ReleasePlaywright
+      dependsOn: BuildPackageSign
+      jobs:
+      - job: ReleaseNuget
+        displayName: Publish on Nuget.org
+        condition: eq('${{parameters.doRelease}}', true)
+        steps:
+        - checkout: none
+        - task: DownloadBuildArtifacts@1
+          displayName: Download the NuGet Packages from Build System
+          inputs:
+            buildType: 'current'
+            downloadType: 'specific'
+            itemPattern: '**/Microsoft.Playwright.1.*'
+            downloadPath: '$(System.ArtifactsDirectory)'
+        - task: 1ES.PublishNuget@1
+          displayName: Publish Nuget package
+          inputs:
+            useDotNetTask: false
+            packagesToPush: '$(System.ArtifactsDirectory)/**/*.nupkg'
+            packageParentPath: '$(Build.ArtifactStagingDirectory)'
+            nuGetFeedType: external
+            publishFeedCredentials: 'NuGet-Playwright'
+    - stage: ReleasePlaywrightCLI
+      dependsOn: BuildPackageSign
+      jobs:
+      - job: ReleaseNugetCLI
+        displayName: Publish CLI on Nuget.org
+        condition: eq('${{parameters.doReleaseCLI}}', true)
+        steps:
+        - checkout: none
+        - task: DownloadBuildArtifacts@1
+          displayName: Download the NuGet Packages from Build System
+          inputs:
+            buildType: 'current'
+            downloadType: 'specific'
+            itemPattern: '**/*.CLI.*'
+            downloadPath: '$(System.ArtifactsDirectory)'
+        - task: 1ES.PublishNuget@1
+          displayName: Publish Nuget package
+          inputs:
+            useDotNetTask: false
+            packagesToPush: '$(System.ArtifactsDirectory)/**/*.nupkg'
+            packageParentPath: '$(Build.ArtifactStagingDirectory)'
+            nuGetFeedType: external
+            publishFeedCredentials: 'NuGet-Playwright'
+    - stage: ReleasePlaywrightNUnit
+      dependsOn: BuildPackageSign
+      jobs:
+      - job: ReleaseNugetNUnit
+        displayName: Publish Playwright.NUnit on Nuget.org
+        condition: eq('${{parameters.doRelease}}', true)
+        steps:
+        - checkout: none
+        - task: DownloadBuildArtifacts@1
+          displayName: Download the NuGet Packages from Build System
+          inputs:
+            buildType: 'current'
+            downloadType: 'specific'
+            itemPattern: '**/*.NUnit.*'
+            downloadPath: '$(System.ArtifactsDirectory)'
+        - task: 1ES.PublishNuget@1
+          displayName: Publish Nuget package
+          inputs:
+            useDotNetTask: false
+            packagesToPush: '$(System.ArtifactsDirectory)/**/*.nupkg'
+            packageParentPath: '$(Build.ArtifactStagingDirectory)'
+            nuGetFeedType: external
+            publishFeedCredentials: 'NuGet-Playwright'
+    - stage: ReleasePlaywrightMSTest
+      dependsOn: BuildPackageSign
+      jobs:
+      - job: ReleaseNugetMSTest
+        displayName: Publish Playwright.MSTest on Nuget.org
+        condition: eq('${{parameters.doRelease}}', true)
+        steps:
+        - checkout: none
+        - task: DownloadBuildArtifacts@1
+          displayName: Download the NuGet Packages from Build System
+          inputs:
+            buildType: 'current'
+            downloadType: 'specific'
+            itemPattern: '**/*.MSTest.*'
+            downloadPath: '$(System.ArtifactsDirectory)'
+        - task: 1ES.PublishNuget@1
+          displayName: Publish Nuget package
+          inputs:
+            useDotNetTask: false
+            packagesToPush: '$(System.ArtifactsDirectory)/**/*.nupkg'
+            packageParentPath: '$(Build.ArtifactStagingDirectory)'
+            nuGetFeedType: external
+            publishFeedCredentials: 'NuGet-Playwright'
+    - stage: ReleasePlaywrightTestAdapter
+      dependsOn: BuildPackageSign
+      jobs:
+      - job: ReleaseNugetTestAdapter
+        displayName: Publish Playwright.TestAdapter on Nuget.org
+        condition: eq('${{parameters.doRelease}}', true)
+        steps:
+        - checkout: none
+        - task: DownloadBuildArtifacts@1
+          displayName: Download the NuGet Packages from Build System
+          inputs:
+            buildType: 'current'
+            downloadType: 'specific'
+            itemPattern: '**/*.TestAdapter.*'
+            downloadPath: '$(System.ArtifactsDirectory)'
+        - task: 1ES.PublishNuget@1
+          displayName: Publish Nuget package
+          inputs:
+            useDotNetTask: false
+            packagesToPush: '$(System.ArtifactsDirectory)/**/*.nupkg'
+            packageParentPath: '$(Build.ArtifactStagingDirectory)'
+            nuGetFeedType: external
+            publishFeedCredentials: 'NuGet-Playwright'
