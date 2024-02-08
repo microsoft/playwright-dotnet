@@ -1,0 +1,100 @@
+trigger: none # We don't want CI builds, just a manual release process
+parameters:
+- name: doRelease
+  displayName: Push the Playwright Release to NuGet.org
+  default: false
+  type: boolean
+
+- name: doReleaseCLI
+  displayName: Push the CLI Release to NuGet.org
+  default: false
+  type: boolean
+
+variables:
+- name: BuildConfiguration
+  value: 'Release' 
+- name: TeamName
+  value: Playwright 
+
+resources:
+  repositories:
+  - repository: 1esPipelines
+    type: git
+    name: 1ESPipelineTemplates/1ESPipelineTemplates
+    ref: refs/tags/release
+extends:
+  template: v1/1ES.Official.PipelineTemplate.yml@1esPipelines
+  parameters:
+    pool:
+      # https://aka.ms/MicroBuild
+      name: VSEngSS-MicroBuild2022-1ES
+      os: windows
+    sdl:
+      suppression:
+        suppressionFile: $(Build.SourcesDirectory)\.azure-pipelines\guardian\SDL\.gdnsuppress
+    stages:
+    - stage: BuildPackageSignPublish
+      displayName: Build, Package, Sign, Publish
+      jobs:
+      - job: Build
+        displayName: Build
+        steps:
+        - task: UseDotNet@2
+          displayName: 'Use .NET 8 SDK'
+          inputs:
+            packageType: sdk
+            version: 8.x
+        - task: MicroBuildSigningPlugin@3
+          inputs:
+            signType: real
+            feedSource: 'https://devdiv.pkgs.visualstudio.com/DefaultCollection/_packaging/MicroBuildToolset/nuget/v3/index.json'
+        # We need to download the driver first, so we can build
+        - task: DotNetCoreCLI@2
+          displayName: Download the driver
+          inputs:
+            command: 'run'
+            arguments: '--project $(Build.SourcesDirectory)/src/tools/Playwright.Tooling/Playwright.Tooling.csproj -- download-drivers --basepath $(Build.SourcesDirectory)'
+        - task: DotNetCoreCLI@2
+          displayName: Build Playwright NuGet Packages
+          inputs:
+            command: 'build'
+            projects: src
+            arguments: '-c $(BuildConfiguration)'
+        # This (dotnet pack) will internally sign it via the MicroBuildSigningPlugin
+        - task: DotNetCoreCLI@2
+          displayName: Pack Playwright NuGet Packages
+          inputs:
+            command: 'pack'
+            packagesToPack: |
+              src/Playwright.CLI/Playwright.CLI.csproj;
+              src/Playwright/Playwright.csproj;
+              src/Playwright.NUnit/Playwright.NUnit.csproj;
+              src/Playwright.MSTest/Playwright.MSTest.csproj;
+              src/Playwright.TestAdapter/Playwright.TestAdapter.csproj;
+            packDirectory: '$(Build.ArtifactStagingDirectory)/nuget'
+            versioningScheme: 'off'
+        - task: 1ES.PublishNuget@1
+          displayName: Publish Microsoft.Playwright{NUnit,MSTest,TestAdapter}
+          condition: eq('${{parameters.doRelease}}', true)
+          inputs:
+            useDotNetTask: false
+            # The reason for the 1.* after the package name is that we know the end of the package name in order to not
+            # match with e.g. Microsoft.Playwright.CLI when we only want to match Microsoft.Playwright.
+            packagesToPush: |
+              $(Build.ArtifactStagingDirectory)/nuget/Microsoft.Playwright.1.*.nupkg;
+              $(Build.ArtifactStagingDirectory)/nuget/Microsoft.Playwright.MSTest.1.*.nupkg;
+              $(Build.ArtifactStagingDirectory)/nuget/Microsoft.Playwright.NUnit.1.*.nupkg;
+              $(Build.ArtifactStagingDirectory)/nuget/Microsoft.Playwright.TestAdapter.1.*.nupkg;
+            packageParentPath: '$(Build.ArtifactStagingDirectory)'
+            nuGetFeedType: external
+            publishFeedCredentials: 'NuGet-Playwright'
+        - task: 1ES.PublishNuget@1
+          displayName: Publish Microsoft.Playwright.CLI
+          condition: eq('${{parameters.doReleaseCLI}}', true)
+          inputs:
+            useDotNetTask: false
+            packagesToPush: '$(Build.ArtifactStagingDirectory)/nuget/Microsoft.Playwright.CLI.1.*.nupkg'
+            packageParentPath: '$(Build.ArtifactStagingDirectory)'
+            nuGetFeedType: external
+            publishFeedCredentials: 'NuGet-Playwright'
+        - task: MicroBuildCleanup@1
