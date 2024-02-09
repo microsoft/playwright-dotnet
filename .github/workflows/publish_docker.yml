@@ -17,7 +17,7 @@ jobs:
     runs-on: ubuntu-22.04
     if: github.repository == 'microsoft/playwright-dotnet'
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
     - name: Setup .NET Core
       uses: actions/setup-dotnet@v3
       with:
