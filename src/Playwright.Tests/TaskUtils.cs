@@ -41,11 +41,11 @@ internal static class TaskUtils
         return (task1.Result, task2.Result);
     }
 
-    public static async Task<T> WhenAll<T>(Task<T> task1, Task task2)
+    public static async Task<(T1, object)> WhenAll<T1>(Task<T1> task1, Task task2)
     {
         await Task.WhenAll(task1, task2).ConfigureAwait(false);
 
-        return task1.Result;
+        return (task1.Result, null);
     }
 
     public static async Task<(T1, T2, T3)> WhenAll<T1, T2, T3>(Task<T1> task1, Task<T2> task2, Task<T3> task3)
@@ -69,7 +69,7 @@ internal static class TaskUtils
         return (task1.Result, task2.Result);
     }
 
-    public static async Task<bool> WithBooleanReturnType(this Task task)
+    public static async Task<bool> WithBooleanReturnTypeForTesting(this Task task)
     {
         await task.ConfigureAwait(false);
         return default;

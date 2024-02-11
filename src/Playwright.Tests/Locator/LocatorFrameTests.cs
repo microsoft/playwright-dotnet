@@ -213,9 +213,9 @@ public class LocatorFrameTests : PageTestEx
         // Click in iframe
         var button = Page.FrameLocator("iframe").Locator("button");
         var (_, text, _) = await TaskUtils.WhenAll(
-            button.ClickAsync().WithBooleanReturnType(),
+            button.ClickAsync().WithBooleanReturnTypeForTesting(),
             button.InnerTextAsync(),
-            Expect(button).ToHaveTextAsync("Hello iframe").WithBooleanReturnType()
+            Expect(button).ToHaveTextAsync("Hello iframe").WithBooleanReturnTypeForTesting()
         );
         Assert.AreEqual("Hello iframe", text);
     }

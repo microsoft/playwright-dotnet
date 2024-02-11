@@ -29,12 +29,10 @@ public class PageEventPopupTests : PageTestEx
     [PlaywrightTest("page-event-popup.spec.ts", "should work")]
     public async Task ShouldWork()
     {
-        var popupTask = Page.WaitForPopupAsync();
-        await TaskUtils.WhenAll(
-            popupTask,
+        var (popup, _) = await TaskUtils.WhenAll(
+            Page.WaitForPopupAsync(),
             Page.EvaluateAsync("() => window.open('about:blank')")
         );
-        var popup = popupTask.Result;
         Assert.False(await Page.EvaluateAsync<bool>("() => !!window.opener"));
         Assert.True(await popup.EvaluateAsync<bool>("() => !!window.opener"));
     }
@@ -43,12 +41,10 @@ public class PageEventPopupTests : PageTestEx
     public async Task ShouldWorkWithWindowFeatures()
     {
         await Page.GotoAsync(Server.EmptyPage);
-        var popupTask = Page.WaitForPopupAsync();
-        await TaskUtils.WhenAll(
-            popupTask,
-            Page.EvaluateAsync("() => window.open('about:blank', 'Title', 'toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=yes,resizable=yes,width=780,height=200,top=0,left=0')")
+        var (popup, _) = await TaskUtils.WhenAll(
+            Page.WaitForPopupAsync(),
+            Page.EvaluateAsync("() => window.open(window.location.href, 'Title', 'toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=yes,resizable=yes,width=780,height=200,top=0,left=0')")
         );
-        var popup = popupTask.Result;
         Assert.False(await Page.EvaluateAsync<bool>("() => !!window.opener"));
         Assert.True(await popup.EvaluateAsync<bool>("() => !!window.opener"));
     }
@@ -57,47 +53,57 @@ public class PageEventPopupTests : PageTestEx
     public async Task ShouldEmitForImmediatelyClosedPopups()
     {
         await Page.GotoAsync(Server.EmptyPage);
-        var popupTask = Page.WaitForPopupAsync();
-        await TaskUtils.WhenAll(
-            popupTask,
+        var (popup, _) = await TaskUtils.WhenAll(
+            Page.WaitForPopupAsync(),
             Page.EvaluateAsync<string>(@"() => {
-                    const win = window.open('about:blank');
-                    win.close();
-                }")
+                const win = window.open('about:blank');
+                win.close();
+            }")
         );
-        Assert.NotNull(popupTask.Result);
+        Assert.NotNull(popup);
     }
 
     [PlaywrightTest("page-event-popup.spec.ts", "should emit for immediately closed popups")]
     public async Task ShouldEmitForImmediatelyClosedPopupsWithLocation()
     {
         await Page.GotoAsync(Server.EmptyPage);
-        var popup = await Page.RunAndWaitForPopupAsync(async () =>
-        {
-            await Page.EvaluateAsync<string>(@"() => {
-                    const win = window.open(window.location.href);
-                    win.close();
-                }");
-        });
+        var (popup, _) = await TaskUtils.WhenAll(
+            Page.WaitForPopupAsync(),
+            Page.EvaluateAsync<string>(@"() => {
+                const win = window.open(window.location.href);
+                win.close();
+            }")
+        );
         Assert.NotNull(popup);
     }
 
     [PlaywrightTest("page-event-popup.spec.ts", "should be able to capture alert")]
-    public void ShouldBeAbleToCaptureAlert()
+    public async Task ShouldBeAbleToCaptureAlert()
     {
-        // Too fancy.
+        var evaluateTask = Page.EvaluateAsync<string>(@"() => {
+            const win = window.open('');
+            win.alert('hello');
+        }");
+        var dialogTask = new TaskCompletionSource<IDialog>();
+        Page.Context.Dialog += (_, dialog) => dialogTask.SetResult(dialog);
+        var (popup, dialog) = await TaskUtils.WhenAll(
+            Page.WaitForPopupAsync(),
+            dialogTask.Task
+        );
+        Assert.AreEqual("hello", dialog.Message);
+        Assert.AreEqual(popup, dialog.Page);
+        await dialog.DismissAsync();
+        await evaluateTask;
     }
 
     [PlaywrightTest("page-event-popup.spec.ts", "should work with empty url")]
     public async Task ShouldWorkWithEmptyUrl()
     {
         await Page.GotoAsync(Server.EmptyPage);
-        var popupTask = Page.WaitForPopupAsync();
-        await TaskUtils.WhenAll(
-            popupTask,
+        var (popup, _) = await TaskUtils.WhenAll(
+            Page.WaitForPopupAsync(),
             Page.EvaluateAsync("() => window.open('')")
         );
-        var popup = popupTask.Result;
         Assert.False(await Page.EvaluateAsync<bool>("() => !!window.opener"));
         Assert.True(await popup.EvaluateAsync<bool>("() => !!window.opener"));
     }
@@ -106,12 +112,11 @@ public class PageEventPopupTests : PageTestEx
     public async Task ShouldWorkWithNoopenerAndNoUrl()
     {
         await Page.GotoAsync(Server.EmptyPage);
-        var popupTask = Page.WaitForPopupAsync();
-        await TaskUtils.WhenAll(
-            popupTask,
+        var (popup, _) = await TaskUtils.WhenAll(
+            Page.WaitForPopupAsync(),
             Page.EvaluateAsync("() => window.open(undefined, null, 'noopener')")
         );
-        var popup = popupTask.Result;
+        // Chromium reports `about:blank#blocked` here.
         Assert.AreEqual("about:blank", popup.Url.Split('#')[0]);
         Assert.False(await Page.EvaluateAsync<bool>("() => !!window.opener"));
         Assert.False(await popup.EvaluateAsync<bool>("() => !!window.opener"));
@@ -121,12 +126,10 @@ public class PageEventPopupTests : PageTestEx
     public async Task ShouldWorkWithNoopenerAndAboutBlank()
     {
         await Page.GotoAsync(Server.EmptyPage);
-        var popupTask = Page.WaitForPopupAsync();
-        await TaskUtils.WhenAll(
-            popupTask,
+        var (popup, _) = await TaskUtils.WhenAll(
+            Page.WaitForPopupAsync(),
             Page.EvaluateAsync("() => window.open('about:blank', null, 'noopener')")
         );
-        var popup = popupTask.Result;
         Assert.False(await Page.EvaluateAsync<bool>("() => !!window.opener"));
         Assert.False(await popup.EvaluateAsync<bool>("() => !!window.opener"));
     }
@@ -135,101 +138,80 @@ public class PageEventPopupTests : PageTestEx
     public async Task ShouldWorkWithNoopenerAndUrl()
     {
         await Page.GotoAsync(Server.EmptyPage);
-        var popupTask = Page.WaitForPopupAsync();
-        await TaskUtils.WhenAll(
-            popupTask,
+        var (popup, _) = await TaskUtils.WhenAll(
+            Page.WaitForPopupAsync(),
             Page.EvaluateAsync("url => window.open(url, null, 'noopener')", Server.EmptyPage)
         );
-        var popup = popupTask.Result;
         Assert.False(await Page.EvaluateAsync<bool>("() => !!window.opener"));
         Assert.False(await popup.EvaluateAsync<bool>("() => !!window.opener"));
     }
 
     [PlaywrightTest("page-event-popup.spec.ts", "should work with clicking target=_blank")]
-    [Skip(SkipAttribute.Targets.Firefox)]
     public async Task ShouldWorkWithClickingTargetBlank()
     {
         await Page.GotoAsync(Server.EmptyPage);
         await Page.SetContentAsync("<a target=_blank rel=\"opener\" href=\"/one-style.html\">yo</a>");
-        var popupTask = Page.WaitForPopupAsync().ContinueWith(async task =>
-        {
-            var popup = task.Result;
-            await popup.WaitForLoadStateAsync();
-            return popup;
-        });
-        await TaskUtils.WhenAll(
-            popupTask,
+        var (popup, _) = await TaskUtils.WhenAll(
+            Page.WaitForPopupAsync(),
             Page.ClickAsync("a")
         );
 
-        var popup = await popupTask.Result;
         Assert.False(await Page.EvaluateAsync<bool>("() => !!window.opener"));
         Assert.True(await popup.EvaluateAsync<bool>("() => !!window.opener"));
         Assert.AreEqual(popup.MainFrame.Page, popup);
     }
 
     [PlaywrightTest("page-event-popup.spec.ts", "should work with fake-clicking target=_blank and rel=noopener")]
-    [Skip(SkipAttribute.Targets.Firefox)]
     public async Task ShouldWorkWithFakeClickingTargetBlankAndRelNoopener()
     {
         await Page.GotoAsync(Server.EmptyPage);
         await Page.SetContentAsync("<a target=_blank rel=noopener href=\"/one-style.html\">yo</a>");
-        var popupTask = Page.WaitForPopupAsync().ContinueWith(async task =>
-        {
-            var popup = task.Result;
-            await popup.WaitForLoadStateAsync();
-            return popup;
-        });
-        await TaskUtils.WhenAll(
-            popupTask,
+        var (popup, _) = await TaskUtils.WhenAll(
+            Page.WaitForPopupAsync(),
             Page.EvalOnSelectorAsync("a", "a => a.click()")
         );
-        var popup = await popupTask.Result;
         Assert.False(await Page.EvaluateAsync<bool>("() => !!window.opener"));
         Assert.False(await popup.EvaluateAsync<bool>("() => !!window.opener"));
     }
 
     [PlaywrightTest("page-event-popup.spec.ts", "should work with clicking target=_blank and rel=noopener")]
-    [Skip(SkipAttribute.Targets.Firefox)]
     public async Task ShouldWorkWithClickingTargetBlankAndRelNoopener()
     {
         await Page.GotoAsync(Server.EmptyPage);
         await Page.SetContentAsync("<a target=_blank rel=noopener href=\"/one-style.html\">yo</a>");
-        var popupTask = Page.WaitForPopupAsync().ContinueWith(async task =>
-        {
-            var popup = task.Result;
-            await popup.WaitForLoadStateAsync();
-            return popup;
-        });
-        await TaskUtils.WhenAll(
-            popupTask,
+        var (popup, _) = await TaskUtils.WhenAll(
+            Page.WaitForPopupAsync(),
             Page.ClickAsync("a")
         );
-        var popup = await popupTask.Result;
         Assert.False(await Page.EvaluateAsync<bool>("() => !!window.opener"));
         Assert.False(await popup.EvaluateAsync<bool>("() => !!window.opener"));
     }
 
     [PlaywrightTest("page-event-popup.spec.ts", "should not treat navigations as new popups")]
-    [Skip(SkipAttribute.Targets.Firefox)]
     public async Task ShouldNotTreatNavigationsAsNewPopups()
     {
         await Page.GotoAsync(Server.EmptyPage);
         await Page.SetContentAsync("<a target=_blank rel=noopener href=\"/one-style.html\">yo</a>");
-        var popupTask = Page.WaitForPopupAsync().ContinueWith(async task =>
-        {
-            var popup = task.Result;
-            await popup.WaitForLoadStateAsync();
-            return popup;
-        });
-        await TaskUtils.WhenAll(
-            popupTask,
+        var (popup, _) = await TaskUtils.WhenAll(
+            Page.WaitForPopupAsync(),
             Page.ClickAsync("a")
         );
-        var popup = await popupTask.Result;
         bool badSecondPopup = false;
         Page.Popup += (_, _) => badSecondPopup = true;
         await popup.GotoAsync(Server.CrossProcessPrefix + "/empty.html");
+        await Page.CloseAsync();
         Assert.False(badSecondPopup);
+    }
+
+    [PlaywrightTest("page-event-popup.spec.ts", "should report popup opened from iframes")]
+    public async Task ShouldReportPopupOpenedFromIframes()
+    {
+        await Page.GotoAsync(Server.Prefix + "/frames/two-frames.html");
+        var frame = Page.Frames.First(f => f.Name == "uno");
+        var popup = await TaskUtils.WhenAll(
+            Page.WaitForPopupAsync(),
+            frame.EvaluateAsync("() => window.open('')")
+        );
+        Assert.NotNull(popup);
     }
 }

@@ -107,7 +107,7 @@ public class PageSetInputFilesTests : PageTestEx
     public async Task ShouldWorkWhenFileInputIsAttachedToDOM()
     {
         await Page.SetContentAsync("<input type=file>");
-        var chooser = await TaskUtils.WhenAll(
+        var (chooser, _) = await TaskUtils.WhenAll(
             Page.WaitForFileChooserAsync(),
             Page.ClickAsync("input")
         );
@@ -286,7 +286,7 @@ public class PageSetInputFilesTests : PageTestEx
     public async Task ShouldNotAcceptMultipleFilesForSingleFileInput()
     {
         await Page.SetContentAsync("<input type=file>");
-        var fileChooser = await TaskUtils.WhenAll(
+        var (fileChooser, _) = await TaskUtils.WhenAll(
            Page.WaitForFileChooserAsync(),
            Page.ClickAsync("input")
         );
@@ -322,10 +322,9 @@ public class PageSetInputFilesTests : PageTestEx
     public async Task ShouldWorkForSingleFilePick()
     {
         await Page.SetContentAsync("<input type=file>");
-        var waitTask = Page.WaitForFileChooserAsync();
 
-        var fileChooser = await TaskUtils.WhenAll(
-           waitTask,
+        var (fileChooser, _) = await TaskUtils.WhenAll(
+           Page.WaitForFileChooserAsync(),
            Page.ClickAsync("input")
         );
         Assert.False(fileChooser.IsMultiple);
@@ -335,7 +334,7 @@ public class PageSetInputFilesTests : PageTestEx
     public async Task ShouldWorkForMultiple()
     {
         await Page.SetContentAsync("<input multiple type=file>");
-        var fileChooser = await TaskUtils.WhenAll(
+        var (fileChooser, _) = await TaskUtils.WhenAll(
            Page.WaitForFileChooserAsync(),
            Page.ClickAsync("input")
         );
@@ -346,7 +345,7 @@ public class PageSetInputFilesTests : PageTestEx
     public async Task ShouldWorkForWebkitdirectory()
     {
         await Page.SetContentAsync("<input multiple webkitdirectory type=file>");
-        var fileChooser = await TaskUtils.WhenAll(
+        var (fileChooser, _) = await TaskUtils.WhenAll(
            Page.WaitForFileChooserAsync(),
            Page.ClickAsync("input")
         );
@@ -379,7 +378,7 @@ public class PageSetInputFilesTests : PageTestEx
         Assert.AreEqual(await input.EvaluateAsync<string>("e => e.files[0].name"), "200MB");
         Assert.AreEqual(await events.EvaluateAsync<string[]>("e => e"), new[] { "input", "change" });
 
-        var (file0Name, file0Size) = await TaskUtils.WhenAll(
+        var ((file0Name, file0Size), _) = await TaskUtils.WhenAll(
            Server.WaitForRequest("/upload", request => (request.Form.Files[0].FileName, request.Form.Files[0].Length)),
            Page.ClickAsync("input[type=submit]")
         );
@@ -411,7 +410,7 @@ public class PageSetInputFilesTests : PageTestEx
             File.Copy(uploadFile, dstFile);
             uploadFiles.Add(dstFile);
         }
-        var fileChooser = await TaskUtils.WhenAll(
+        var (fileChooser, _) = await TaskUtils.WhenAll(
            Page.WaitForFileChooserAsync(),
            input.ClickAsync()
         );
