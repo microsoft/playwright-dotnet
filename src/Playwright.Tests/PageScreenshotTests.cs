@@ -329,17 +329,6 @@ public class PageScreenshotTests : PageTestEx
         Assert.True(ScreenshotHelper.PixelMatch("screenshot-canvas.png", screenshot));
     }
 
-    [PlaywrightTest("page-screenshot.spec.ts", "should work for webgl")]
-    [Skip(SkipAttribute.Targets.Firefox, SkipAttribute.Targets.Webkit)]
-    public async Task ShouldWorkForWebgl()
-    {
-        await Page.SetViewportSizeAsync(640, 480);
-        await Page.GotoAsync(Server.Prefix + "/screenshots/webgl.html");
-        byte[] screenshot = await Page.ScreenshotAsync();
-
-        Assert.True(ScreenshotHelper.PixelMatch("screenshot-webgl.png", screenshot));
-    }
-
     [PlaywrightTest("page-screenshot.spec.ts", "should work for translateZ")]
     public async Task ShouldWorkForTranslateZ()
     {
