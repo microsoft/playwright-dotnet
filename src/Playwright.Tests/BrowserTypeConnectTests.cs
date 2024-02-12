@@ -482,7 +482,7 @@ public class BrowserTypeConnectTests : PlaywrightTestEx
         Assert.AreEqual(await input.EvaluateAsync<string>("e => e.files[0].name"), "200MB");
         Assert.AreEqual(await events.EvaluateAsync<string[]>("e => e"), new[] { "input", "change" });
 
-        var (file0Name, file0Size) = await TaskUtils.WhenAll(
+        var ((file0Name, file0Size), _) = await TaskUtils.WhenAll(
            Server.WaitForRequest("/upload", request => (request.Form.Files[0].FileName, request.Form.Files[0].Length)),
            page.ClickAsync("input[type=submit]")
         );
