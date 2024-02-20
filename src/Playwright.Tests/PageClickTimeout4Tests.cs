@@ -40,6 +40,7 @@ public class PageClickTimeout4Tests : PageTestEx
 
         StringAssert.Contains("Timeout 3000ms exceeded", exception.Message);
         StringAssert.Contains("waiting for element to be visible, enabled and stable", exception.Message);
-        StringAssert.Contains("element is not stable - waiting", exception.Message);
+        StringAssert.Contains("element is not stable", exception.Message);
+        StringAssert.Contains("retrying click action", exception.Message);
     }
 }

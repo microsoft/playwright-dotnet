@@ -46,6 +46,7 @@ internal class Page : ChannelOwner, IPage
     internal readonly List<Worker> _workers = new();
     internal readonly TimeoutSettings _timeoutSettings;
     private readonly List<HarRouter> _harRouters = new();
+    private readonly Dictionary<int, Func<Task>> _locatorHandlers = new();
     private List<RouteHandler> _routes = new();
     private Video _video;
     private string _closeReason;
@@ -244,6 +245,9 @@ internal class Page : ChannelOwner, IPage
                 break;
             case "frameDetached":
                 Channel_FrameDetached(this, serverParams?.GetProperty("frame").ToObject<Frame>(_connection.DefaultJsonSerializerOptions));
+                break;
+            case "locatorHandlerTriggered":
+                _ = Channel_LocatorHandlerTriggeredAsync(serverParams.Value.GetProperty("uid").GetInt32());
                 break;
             case "webSocket":
                 WebSocket?.Invoke(this, serverParams?.GetProperty("webSocket").ToObject<WebSocket>(_connection.DefaultJsonSerializerOptions));
@@ -886,6 +890,8 @@ internal class Page : ChannelOwner, IPage
             ["width"] = options.Width,
             ["format"] = options.Format,
             ["height"] = options.Height,
+            ["outline"] = options.Outline,
+            ["tagged"] = options.Tagged,
         }).ConfigureAwait(false))?.GetProperty("pdf").GetBytesFromBase64();
 
         if (!string.IsNullOrEmpty(options?.Path))
@@ -903,7 +909,7 @@ internal class Page : ChannelOwner, IPage
             "addInitScript",
             new Dictionary<string, object>
             {
-                ["source"] = ScriptsHelper.EvaluationScript(script, scriptPath),
+                ["source"] = ScriptsHelper.EvaluationScript(script, scriptPath, true),
             });
 
     [MethodImpl(MethodImplOptions.NoInlining)]
@@ -1468,4 +1474,33 @@ internal class Page : ChannelOwner, IPage
     [MethodImpl(MethodImplOptions.NoInlining)]
     public ILocator GetByTitle(Regex text, PageGetByTitleOptions options = null)
         => MainFrame.GetByTitle(text, new() { Exact = options?.Exact });
+
+    public async Task AddLocatorHandlerAsync(ILocator locator, Func<Task> handler)
+    {
+        if ((locator as Locator)._frame != MainFrame)
+        {
+            throw new PlaywrightException("Locator must belong to the main frame of this page");
+        }
+        var response = await SendMessageToServerAsync("registerLocatorHandler", new Dictionary<string, object>
+        {
+            ["selector"] = (locator as Locator)._selector,
+        }).ConfigureAwait(false);
+
+        _locatorHandlers.Add(response.Value.GetProperty("uid").GetInt32(), handler);
+    }
+
+    private async Task Channel_LocatorHandlerTriggeredAsync(int uid)
+    {
+        try
+        {
+            await _locatorHandlers[uid]().ConfigureAwait(false);
+        }
+        finally
+        {
+            SendMessageToServerAsync("resolveLocatorHandlerNoReply", new Dictionary<string, object>
+            {
+                ["uid"] = uid,
+            }).IgnoreException();
+        }
+    }
 }

@@ -36,6 +36,7 @@ public class PageClickTimeout1Tests : PageTestEx
         var exception = await PlaywrightAssert.ThrowsAsync<TimeoutException>(() => clickTask);
 
         StringAssert.Contains("Timeout 3000ms exceeded", exception.Message);
-        StringAssert.Contains("element is not enabled - waiting", exception.Message);
+        StringAssert.Contains("element is not enabled", exception.Message);
+        StringAssert.Contains("retrying click action", exception.Message);
     }
 }

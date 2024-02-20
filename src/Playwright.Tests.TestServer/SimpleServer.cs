@@ -257,6 +257,12 @@ public class SimpleServer
 
     public void SetRoute(string path, Func<HttpContext, Task> handler) => _routes[path] = handler;
 
+    public void SetRoute(string path, Action<HttpContext> handler) => _routes[path] = (context) =>
+    {
+        handler(context);
+        return Task.CompletedTask;
+    };
+
     public void SendOnWebSocketConnection(string data) => _onWebSocketConnectionData = Encoding.UTF8.GetBytes(data);
 
     public void SetRedirect(string from, string to) => SetRoute(from, context =>

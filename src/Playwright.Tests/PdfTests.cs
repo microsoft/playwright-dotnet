@@ -61,4 +61,14 @@ public class PdfTests : PageTestEx
     [Skip(SkipAttribute.Targets.Chromium)]
     public Task ShouldOnlyHavePdfInChromium()
         => PlaywrightAssert.ThrowsAsync<NotSupportedException>(() => Page.PdfAsync());
+
+    [PlaywrightTest("pdf.spec.ts", "should be able to generate outline")]
+    [Skip(SkipAttribute.Targets.Firefox, SkipAttribute.Targets.Webkit)]
+    public async Task ShouldBeAbleToGenerateOutline()
+    {
+        await Page.GotoAsync(Server.Prefix + "/headings.html");
+        var outputFileNoOutline = await Page.PdfAsync();
+        var outputFileOutline = await Page.PdfAsync(new() { Tagged = true, Outline = true });
+        Assert.Greater(outputFileOutline.Length, outputFileNoOutline.Length);
+    }
 }

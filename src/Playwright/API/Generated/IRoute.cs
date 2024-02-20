@@ -76,11 +76,11 @@ public partial interface IRoute
     /// <para>Continues route's request with optional overrides.</para>
     /// <para>**Usage**</para>
     /// <code>
-    /// await page.RouteAsync("**/*", route =&gt;<br/>
+    /// await page.RouteAsync("**/*", async route =&gt;<br/>
     /// {<br/>
     ///     var headers = new Dictionary&lt;string, string&gt;(route.Request.Headers) { { "foo", "bar" } };<br/>
     ///     headers.Remove("origin");<br/>
-    ///     route.ContinueAsync(headers);<br/>
+    ///     await route.ContinueAsync(new() { Headers = headers });<br/>
     /// });
     /// </code>
     /// <para>**Details**</para>
@@ -151,11 +151,11 @@ public partial interface IRoute
     /// intermediate route handler can modify url, method, headers and postData of the request.
     /// </para>
     /// <code>
-    /// await page.RouteAsync("**/*", route =&gt;<br/>
+    /// await page.RouteAsync("**/*", async route =&gt;<br/>
     /// {<br/>
     ///     var headers = new Dictionary&lt;string, string&gt;(route.Request.Headers) { { "foo", "foo-value" } };<br/>
     ///     headers.Remove("bar");<br/>
-    ///     route.FallbackAsync(headers);<br/>
+    ///     await route.FallbackAsync(new() { Headers = headers });<br/>
     /// });
     /// </code>
     /// </summary>

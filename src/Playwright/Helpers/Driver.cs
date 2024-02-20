@@ -119,7 +119,7 @@ internal static class Driver
             throw new PlaywrightException("Unknown platform");
         }
 
-        var cliEntrypoint = Path.Combine(driversPath, ".playwright", "package", "lib", "cli", "cli.js");
+        var cliEntrypoint = Path.Combine(driversPath, ".playwright", "package", "cli.js");
         string getArgs(string args)
         {
             return !string.IsNullOrEmpty(args) ? $"\"{cliEntrypoint}\" {args}" : cliEntrypoint;

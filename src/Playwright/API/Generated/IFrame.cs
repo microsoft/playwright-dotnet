@@ -1078,9 +1078,9 @@ public partial interface IFrame
     /// <c>a</c> and <c>A</c> will generate different respective texts.
     /// </para>
     /// <para>
-    /// Shortcuts such as <c>key: "Control+o"</c> or <c>key: "Control+Shift+T"</c> are supported
-    /// as well. When specified with the modifier, modifier is pressed and being held while
-    /// the subsequent key is being pressed.
+    /// Shortcuts such as <c>key: "Control+o"</c>, <c>key: "Control++</c> or <c>key: "Control+Shift+T"</c>
+    /// are supported as well. When specified with the modifier, modifier is pressed and
+    /// being held while the subsequent key is being pressed.
     /// </para>
     /// </summary>
     /// <param name="selector">

@@ -36,7 +36,8 @@ public class PageClickTimeout2Tests : PageTestEx
 
         StringAssert.Contains("Timeout 5000ms exceeded", exception.Message);
         StringAssert.Contains("waiting for element to be visible, enabled and stable", exception.Message);
-        StringAssert.Contains("element is not visible - waiting", exception.Message);
+        StringAssert.Contains("element is not visible", exception.Message);
+        StringAssert.Contains("retrying click action", exception.Message);
     }
 
     [PlaywrightTest("page-click-timeout-2.spec.ts", "should timeout waiting for visibility:hidden to be gone")]
@@ -49,7 +50,8 @@ public class PageClickTimeout2Tests : PageTestEx
 
         StringAssert.Contains("Timeout 5000ms exceeded", exception.Message);
         StringAssert.Contains("waiting for element to be visible, enabled and stable", exception.Message);
-        StringAssert.Contains("element is not visible - waiting", exception.Message);
+        StringAssert.Contains("element is not visible", exception.Message);
+        StringAssert.Contains("retrying click action", exception.Message);
     }
 
 }

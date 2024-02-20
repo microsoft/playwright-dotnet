@@ -44,7 +44,7 @@ internal class SelectorsAPI : ISelectors
     public async Task RegisterAsync(string name, SelectorsRegisterOptions options = default)
     {
         options ??= new SelectorsRegisterOptions();
-        var source = ScriptsHelper.EvaluationScript(options.Script, options.Path);
+        var source = ScriptsHelper.EvaluationScript(options.Script, options.Path, false);
         var @params = new Dictionary<string, object>()
         {
             ["name"] = name,

@@ -143,4 +143,14 @@ public sealed class BrowserContextStorageStateTests : PageTestEx
                 return cookies.map(cookie => cookie.trim()).sort();
             }"));
     }
+
+    [PlaywrightTest("browsercontext-storage-state.spec.ts", "should serialize storageState with lone surrogates")]
+    public async Task ShouldSerializeStorageStateWithLoneSurrogates()
+    {
+        await Page.GotoAsync(Server.EmptyPage);
+        await Page.EvaluateAsync(@"chars => window.localStorage.setItem('foo', String.fromCharCode(55934))");
+        string storageState = await Context.StorageStateAsync();
+        // It should get replaced by the utf8 replacement char (U+FFFD)
+        StringAssert.Contains(@"""value"":""\uFFFD""", storageState);
+    }
 }

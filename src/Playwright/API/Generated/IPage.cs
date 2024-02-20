@@ -81,7 +81,7 @@ public partial interface IPage
     /// <summary>
     /// <para>
     /// Emitted when JavaScript within the page calls one of console API methods, e.g. <c>console.log</c>
-    /// or <c>console.dir</c>. Also emitted if the page throws an error or a warning.
+    /// or <c>console.dir</c>.
     /// </para>
     /// <para>
     /// The arguments passed into <c>console.log</c> are available on the <see cref="IConsoleMessage"/>
@@ -1637,9 +1637,9 @@ public partial interface IPage
     /// <c>a</c> and <c>A</c> will generate different respective texts.
     /// </para>
     /// <para>
-    /// Shortcuts such as <c>key: "Control+o"</c> or <c>key: "Control+Shift+T"</c> are supported
-    /// as well. When specified with the modifier, modifier is pressed and being held while
-    /// the subsequent key is being pressed.
+    /// Shortcuts such as <c>key: "Control+o"</c>, <c>key: "Control++</c> or <c>key: "Control+Shift+T"</c>
+    /// are supported as well. When specified with the modifier, modifier is pressed and
+    /// being held while the subsequent key is being pressed.
     /// </para>
     /// <para>**Usage**</para>
     /// <code>
@@ -1685,6 +1685,91 @@ public partial interface IPage
     /// </summary>
     /// <param name="selector">A selector to query for.</param>
     Task<IReadOnlyList<IElementHandle>> QuerySelectorAllAsync(string selector);
+
+    /// <summary>
+    /// <para>
+    /// Sometimes, the web page can show an overlay that obstructs elements behind it and
+    /// prevents certain actions, like click, from completing. When such an overlay is shown
+    /// predictably, we recommend dismissing it as a part of your test flow. However, sometimes
+    /// such an overlay may appear non-deterministically, for example certain cookies consent
+    /// dialogs behave this way. In this case, <see cref="IPage.AddLocatorHandlerAsync"/>
+    /// allows handling an overlay during an action that it would block.
+    /// </para>
+    /// <para>
+    /// This method registers a handler for an overlay that is executed once the locator
+    /// is visible on the page. The handler should get rid of the overlay so that actions
+    /// blocked by it can proceed. This is useful for nondeterministic interstitial pages
+    /// or dialogs, like a cookie consent dialog.
+    /// </para>
+    /// <para>
+    /// Note that execution time of the handler counts towards the timeout of the action/assertion
+    /// that executed the handler.
+    /// </para>
+    /// <para>
+    /// You can register multiple handlers. However, only a single handler will be running
+    /// at a time. Any actions inside a handler must not require another handler to run.
+    /// </para>
+    /// <para>**Usage**</para>
+    /// <para>An example that closes a cookie dialog when it appears:</para>
+    /// <code>
+    /// // Setup the handler.<br/>
+    /// await page.AddLocatorHandlerAsync(page.GetByRole(AriaRole.Button, new() { Name = "Accept all cookies" }), async () =&gt; {<br/>
+    ///   await page.GetByRole(AriaRole.Button, new() { Name = "Reject all cookies" }).ClickAsync();<br/>
+    /// });<br/>
+    /// <br/>
+    /// // Write the test as usual.<br/>
+    /// await page.GotoAsync("https://example.com");<br/>
+    /// await page.GetByRole("button", new() { Name = "Start here" }).ClickAsync();
+    /// </code>
+    /// <para>An example that skips the "Confirm your security details" page when it is shown:</para>
+    /// <code>
+    /// // Setup the handler.<br/>
+    /// await page.AddLocatorHandlerAsync(page.GetByText("Confirm your security details"), async () =&gt; {<br/>
+    ///   await page.GetByRole(AriaRole.Button, new() { Name = "Remind me later" }).ClickAsync();<br/>
+    /// });<br/>
+    /// <br/>
+    /// // Write the test as usual.<br/>
+    /// await page.GotoAsync("https://example.com");<br/>
+    /// await page.GetByRole("button", new() { Name = "Start here" }).ClickAsync();
+    /// </code>
+    /// <para>
+    /// An example with a custom callback on every actionability check. It uses a <c>&lt;body&gt;</c>
+    /// locator that is always visible, so the handler is called before every actionability
+    /// check:
+    /// </para>
+    /// <code>
+    /// // Setup the handler.<br/>
+    /// await page.AddLocatorHandlerAsync(page.Locator("body"), async () =&gt; {<br/>
+    ///   await page.EvaluateAsync("window.removeObstructionsForTestIfNeeded()");<br/>
+    /// });<br/>
+    /// <br/>
+    /// // Write the test as usual.<br/>
+    /// await page.GotoAsync("https://example.com");<br/>
+    /// await page.GetByRole("button", new() { Name = "Start here" }).ClickAsync();
+    /// </code>
+    /// </summary>
+    /// <remarks>
+    /// <para>
+    /// Running the interceptor will alter your page state mid-test. For example it will
+    /// change the currently focused element and move the mouse. Make sure that the actions
+    /// that run after the interceptor are self-contained and do not rely on the focus and
+    /// mouse state. <br /> <br /> For example, consider a test that calls <see cref="ILocator.FocusAsync"/>
+    /// followed by <see cref="IKeyboard.PressAsync"/>. If your handler clicks a button
+    /// between these two actions, the focused element most likely will be wrong, and key
+    /// press will happen on the unexpected element. Use <see cref="ILocator.PressAsync"/>
+    /// instead to avoid this problem. <br /> <br /> Another example is a series of mouse
+    /// actions, where <see cref="IMouse.MoveAsync"/> is followed by <see cref="IMouse.DownAsync"/>.
+    /// Again, when the handler runs between these two actions, the mouse position will
+    /// be wrong during the mouse down. Prefer methods like <see cref="ILocator.ClickAsync"/>
+    /// that are self-contained.
+    /// </para>
+    /// </remarks>
+    /// <param name="locator">Locator that triggers the handler.</param>
+    /// <param name="handler">
+    /// Function that should be run once <paramref name="locator"/> appears. This function
+    /// should get rid of the element that blocks actions like click.
+    /// </param>
+    Task AddLocatorHandlerAsync(ILocator locator, Func<Task> handler);
 
     /// <summary>
     /// <para>
