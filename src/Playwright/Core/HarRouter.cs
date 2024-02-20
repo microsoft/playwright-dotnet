@@ -75,6 +75,15 @@ internal sealed class HarRouter
         }
         if (response.Action == "fulfill")
         {
+            // If the response status is -1, the request was canceled or stalled, so we just stall it here.
+            // See https://github.com/microsoft/playwright/issues/29311.
+            // TODO: it'd be better to abort such requests, but then we likely need to respect the timing,
+            // because the request might have been stalled for a long time until the very end of the
+            // test when HAR was recorded but we'd abort it immediately.
+            if (response.Status == -1)
+            {
+                return;
+            }
             await route.FulfillAsync(new()
             {
                 Status = response.Status,

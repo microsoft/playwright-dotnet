@@ -67,7 +67,8 @@ test('should be able to forward DEBUG=pw:api env var', async ({ runTest }) => {
   expect(result.failed).toBe(0);
   expect(result.total).toBe(1);
   expect(result.stderr).toContain("pw:api")
-  expect(result.stderr).toContain("element is not enabled - waiting...")
+  expect(result.stderr).toContain("element is not enabled")
+  expect(result.stderr).toContain("retrying click action")
 });
 
 test('should be able to set the browser via the runsettings file', async ({ runTest }) => {

@@ -71,7 +71,7 @@ public partial interface IBrowserContext
     /// <summary>
     /// <para>
     /// Emitted when JavaScript within the page calls one of console API methods, e.g. <c>console.log</c>
-    /// or <c>console.dir</c>. Also emitted if the page throws an error or a warning.
+    /// or <c>console.dir</c>.
     /// </para>
     /// <para>
     /// The arguments passed into <c>console.log</c> and the page are available on the <see

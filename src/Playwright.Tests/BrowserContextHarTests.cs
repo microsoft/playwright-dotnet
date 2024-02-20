@@ -491,4 +491,43 @@ public class BrowserContextHarTests : ContextTestEx
         StringAssert.Contains("hello, world", await page2.ContentAsync());
         await Expect(page2.Locator("body")).ToHaveCSSAsync("background-color", "rgb(255, 192, 203)");
     }
+
+    [PlaywrightTest("browsercontext-har.spec.ts", "should ignore aborted requests")]
+    public async Task ShouldIgnoreAbortedRequests()
+    {
+        using var tmpDir = new TempDirectory();
+        var harPath = Path.Join(tmpDir.Path, "har.har");
+
+        Server.SetRoute("/x", context => context.Abort());
+
+        var context1 = await Browser.NewContextAsync();
+        await context1.RouteFromHARAsync(harPath, new() { Update = true });
+        var page1 = await context1.NewPageAsync();
+        await page1.GotoAsync(Server.EmptyPage);
+        var requestTask = Server.WaitForRequest("/x");
+        var evalTask = page1.EvaluateAsync<string>("(url) => fetch(url).catch(e => 'cancelled')", Server.Prefix + "/x");
+        await requestTask;
+        var req = await evalTask;
+        Assert.AreEqual(req, "cancelled");
+        await context1.CloseAsync();
+
+        Server.Reset();
+
+        Server.SetRoute("/x", async ctx =>
+        {
+            ctx.Response.Headers.ContentType = "text/plain";
+            await ctx.Response.Body.WriteAsync(UTF8Encoding.UTF8.GetBytes("test"));
+            await ctx.Response.CompleteAsync();
+        });
+
+        var context2 = await Browser.NewContextAsync();
+        await context2.RouteFromHARAsync(harPath);
+        var page2 = await context2.NewPageAsync();
+        await page2.GotoAsync(Server.EmptyPage);
+        evalTask = page2.EvaluateAsync<string>("(url) => fetch(url).catch(e => 'cancelled')", Server.Prefix + "/x");
+        var result = await Task.WhenAny(evalTask, Task.Delay(1000).ContinueWith(_ => "timeout"));
+        Assert.AreEqual(result.Result, "timeout");
+        await context2.CloseAsync();
+        await PlaywrightAssert.ThrowsAsync<PlaywrightException>(() => evalTask);
+    }
 }

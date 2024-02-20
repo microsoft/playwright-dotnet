@@ -476,8 +476,7 @@ internal class Frame : ChannelOwner, IFrame
         var content = options?.Content;
         if (!string.IsNullOrEmpty(options?.Path))
         {
-            content = File.ReadAllText(options.Path);
-            content += "//# sourceURL=" + options.Path.Replace("\n", string.Empty);
+            content = ScriptsHelper.AddSourceUrlToScript(File.ReadAllText(options.Path), options.Path);
         }
 
         return await SendMessageToServerAsync<ElementHandle>("addScriptTag", new Dictionary<string, object>

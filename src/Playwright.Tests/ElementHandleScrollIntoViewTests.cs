@@ -114,7 +114,8 @@ public class ElementHandleScrollIntoViewTests : PageTestEx
         await Page.SetContentAsync("<div style=\"display: none\">Hello</div>");
         var div = await Page.QuerySelectorAsync("div");
         var exception = await PlaywrightAssert.ThrowsAsync<TimeoutException>(() => div.ScrollIntoViewIfNeededAsync(new() { Timeout = 3000 }));
-        StringAssert.Contains("element is not displayed, retrying in 100ms", exception.Message);
+        StringAssert.Contains("element is not visible", exception.Message);
+        StringAssert.Contains("retrying scroll into view action", exception.Message);
     }
 
     private async Task TestWaitingAsync(IPage page, string after)

@@ -46,11 +46,13 @@ public class PagePdfOptions
         Height = clone.Height;
         Landscape = clone.Landscape;
         Margin = clone.Margin;
+        Outline = clone.Outline;
         PageRanges = clone.PageRanges;
         Path = clone.Path;
         PreferCSSPageSize = clone.PreferCSSPageSize;
         PrintBackground = clone.PrintBackground;
         Scale = clone.Scale;
+        Tagged = clone.Tagged;
         Width = clone.Width;
     }
 
@@ -104,6 +106,10 @@ public class PagePdfOptions
     [JsonPropertyName("margin")]
     public Margin? Margin { get; set; }
 
+    /// <summary><para>Whether or not to embed the document outline into the PDF. Defaults to <c>false</c>.</para></summary>
+    [JsonPropertyName("outline")]
+    public bool? Outline { get; set; }
+
     /// <summary>
     /// <para>
     /// Paper ranges to print, e.g., '1-5, 8, 11-13'. Defaults to the empty string, which
@@ -146,6 +152,10 @@ public class PagePdfOptions
     /// </summary>
     [JsonPropertyName("scale")]
     public float? Scale { get; set; }
+
+    /// <summary><para>Whether or not to generate tagged (accessible) PDF. Defaults to <c>false</c>.</para></summary>
+    [JsonPropertyName("tagged")]
+    public bool? Tagged { get; set; }
 
     /// <summary><para>Paper width, accepts values labeled with units.</para></summary>
     [JsonPropertyName("width")]

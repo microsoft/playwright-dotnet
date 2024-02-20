@@ -73,7 +73,7 @@ internal static class ScriptsHelper
         return new { value = EvaluateArgumentValueConverter.Serialize(arg, handles, new()), handles };
     }
 
-    internal static string EvaluationScript(string content, string path)
+    internal static string EvaluationScript(string content, string path, bool addSourceUrl)
     {
         if (!string.IsNullOrEmpty(content))
         {
@@ -81,10 +81,16 @@ internal static class ScriptsHelper
         }
         else if (!string.IsNullOrEmpty(path))
         {
-            return File.ReadAllText(path);
+            var source = File.ReadAllText(path);
+            return addSourceUrl ? AddSourceUrlToScript(source, path) : source;
         }
 
         throw new ArgumentException("Either path or content property must be present");
+    }
+
+    internal static string AddSourceUrlToScript(string source, string path)
+    {
+        return source + "\n//# sourceURL=" + path.Replace("\n", string.Empty);
     }
 }
 

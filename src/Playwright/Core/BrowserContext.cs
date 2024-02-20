@@ -266,7 +266,7 @@ internal class BrowserContext : ChannelOwner, IBrowserContext
     {
         if (string.IsNullOrEmpty(script))
         {
-            script = ScriptsHelper.EvaluationScript(script, scriptPath);
+            script = ScriptsHelper.EvaluationScript(script, scriptPath, true);
         }
 
         return SendMessageToServerAsync(
