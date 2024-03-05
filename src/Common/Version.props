@@ -2,7 +2,7 @@
   <PropertyGroup>
     <AssemblyVersion>1.42.0</AssemblyVersion>
     <PackageVersion>$(AssemblyVersion)-beta-2</PackageVersion>
-    <DriverVersion>1.42.0-alpha-2024-02-19</DriverVersion>
+    <DriverVersion>1.42.1</DriverVersion>
     <ReleaseVersion>$(AssemblyVersion)</ReleaseVersion>
     <FileVersion>$(AssemblyVersion)</FileVersion>
     <NoDefaultExcludes>true</NoDefaultExcludes>
