@@ -56,6 +56,7 @@ attach_eol_manifest() {
   local today=$(date -u +'%Y-%m-%d')
   install_oras_if_needed
   # oras is re-using Docker credentials, so we don't need to login.
+  # Following the advice in https://portal.microsofticm.com/imp/v3/incidents/incident/476783820/summary
   ./oras/oras attach --artifact-type application/vnd.microsoft.artifact.lifecycle --annotation "vnd.microsoft.artifact.lifecycle.end-of-life.date=$today" $image
 }
 
