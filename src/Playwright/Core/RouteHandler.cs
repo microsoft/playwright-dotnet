@@ -32,6 +32,7 @@ namespace Microsoft.Playwright.Core;
 
 internal class RouteHandler
 {
+    private readonly object _activeInvocationsLock = new object();
     private readonly HashSet<HandlerInvocation> _activeInvocations = new HashSet<HandlerInvocation>();
 
     private bool _ignoreException;
@@ -88,7 +89,10 @@ internal class RouteHandler
             Complete = new TaskCompletionSource<bool>(),
             Route = route,
         };
-        _activeInvocations.Add(handlerInvocation);
+        lock (_activeInvocationsLock)
+        {
+            _activeInvocations.Add(handlerInvocation);
+        }
         try
         {
             return await HandleInternalAsync(route).ConfigureAwait(false);
@@ -105,7 +109,10 @@ internal class RouteHandler
         finally
         {
             handlerInvocation.Complete.SetResult(true);
-            _activeInvocations.Remove(handlerInvocation);
+            lock (_activeInvocationsLock)
+            {
+                _activeInvocations.Remove(handlerInvocation);
+            }
         }
     }
 
@@ -122,11 +129,14 @@ internal class RouteHandler
         else
         {
             var tasks = new List<Task>();
-            foreach (var activation in _activeInvocations)
+            lock (_activeInvocationsLock)
             {
-                if (!activation.Route.DidThrow)
+                foreach (var activation in _activeInvocations)
                 {
-                    tasks.Add(activation.Complete.Task);
+                    if (!activation.Route.DidThrow)
+                    {
+                        tasks.Add(activation.Complete.Task);
+                    }
                 }
             }
             await Task.WhenAll(tasks).ConfigureAwait(false);
