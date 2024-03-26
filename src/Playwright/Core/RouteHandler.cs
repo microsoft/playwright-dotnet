@@ -23,6 +23,7 @@
  */
 
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
@@ -32,8 +33,7 @@ namespace Microsoft.Playwright.Core;
 
 internal class RouteHandler
 {
-    private readonly object _activeInvocationsLock = new object();
-    private readonly HashSet<HandlerInvocation> _activeInvocations = new HashSet<HandlerInvocation>();
+    private readonly IDictionary<HandlerInvocation, bool> _activeInvocations = new ConcurrentDictionary<HandlerInvocation, bool>();
 
     private bool _ignoreException;
 
@@ -89,10 +89,7 @@ internal class RouteHandler
             Complete = new TaskCompletionSource<bool>(),
             Route = route,
         };
-        lock (_activeInvocationsLock)
-        {
-            _activeInvocations.Add(handlerInvocation);
-        }
+        _activeInvocations[handlerInvocation] = false;
         try
         {
             return await HandleInternalAsync(route).ConfigureAwait(false);
@@ -109,10 +106,7 @@ internal class RouteHandler
         finally
         {
             handlerInvocation.Complete.SetResult(true);
-            lock (_activeInvocationsLock)
-            {
-                _activeInvocations.Remove(handlerInvocation);
-            }
+            _activeInvocations.Remove(handlerInvocation);
         }
     }
 
@@ -129,14 +123,11 @@ internal class RouteHandler
         else
         {
             var tasks = new List<Task>();
-            lock (_activeInvocationsLock)
+            foreach (var activation in _activeInvocations.Keys)
             {
-                foreach (var activation in _activeInvocations)
+                if (!activation.Route.DidThrow)
                 {
-                    if (!activation.Route.DidThrow)
-                    {
-                        tasks.Add(activation.Complete.Task);
-                    }
+                    tasks.Add(activation.Complete.Task);
                 }
             }
             await Task.WhenAll(tasks).ConfigureAwait(false);
