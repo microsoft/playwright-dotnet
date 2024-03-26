@@ -177,6 +177,44 @@ public class BrowserContextRouteTests : BrowserTestEx
         Assert.AreEqual("context", await response.TextAsync());
     }
 
+
+    [PlaywrightTest("browsercontext-route.spec.ts", "should not throw on concurrent requests")]
+    public async Task ShouldNotThrowOnConcurrentRequest()
+    {
+        await using var context = await Browser.NewContextAsync();
+
+        // provide an html page which performs a high load of requests
+        await context.RouteAsync("**/empty.html", async (route) =>
+        {
+            await route.FulfillAsync(new()
+            {
+                Status = (int)HttpStatusCode.OK,
+                Body = @"<script>document.addEventListener('DOMContentLoaded', async () => { while (true) { await fetch('test.json') }})</script>"
+            });
+        });
+
+        // provide a simple json to fulfill the requests
+        await context.RouteAsync("**/test.json", async (route) =>
+        {
+            await route.FulfillAsync(new()
+            {
+                Status = (int)HttpStatusCode.OK,
+                Body = @"[]"
+            });
+        });
+
+
+        // open 10 pages to generate load on the RouteHandler
+        foreach (int pageNr in Enumerable.Range(0, 10))
+            await (await context.NewPageAsync())
+                .GotoAsync(Server.EmptyPage);
+
+        // let the test run for 5 second
+        await Task.Delay(5000);
+
+        // unobserved task exceptions are automatically collected by the PlaywrightTest attribute
+    }
+
     [PlaywrightTest("browsercontext-route.spec.ts", "should support the times parameter with route matching")]
     public async Task ShouldSupportTheTimesParameterWithRouteMatching()
     {

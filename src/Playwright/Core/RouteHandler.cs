@@ -23,6 +23,7 @@
  */
 
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
@@ -32,7 +33,7 @@ namespace Microsoft.Playwright.Core;
 
 internal class RouteHandler
 {
-    private readonly HashSet<HandlerInvocation> _activeInvocations = new HashSet<HandlerInvocation>();
+    private readonly IDictionary<HandlerInvocation, bool> _activeInvocations = new ConcurrentDictionary<HandlerInvocation, bool>();
 
     private bool _ignoreException;
 
@@ -88,7 +89,7 @@ internal class RouteHandler
             Complete = new TaskCompletionSource<bool>(),
             Route = route,
         };
-        _activeInvocations.Add(handlerInvocation);
+        _activeInvocations[handlerInvocation] = false;
         try
         {
             return await HandleInternalAsync(route).ConfigureAwait(false);
@@ -122,7 +123,7 @@ internal class RouteHandler
         else
         {
             var tasks = new List<Task>();
-            foreach (var activation in _activeInvocations)
+            foreach (var activation in _activeInvocations.Keys)
             {
                 if (!activation.Route.DidThrow)
                 {
