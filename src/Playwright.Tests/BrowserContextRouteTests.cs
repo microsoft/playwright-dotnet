@@ -212,11 +212,6 @@ public class BrowserContextRouteTests : BrowserTestEx
         // let the test run for 5 second
         await Task.Delay(5000);
 
-        // trigger garbage collection which checks for unorbserved exceptions
-        // in collected tasks
-        GC.Collect();
-        GC.WaitForPendingFinalizers();
-
         // unobserved task exceptions are automatically collected by the PlaywrightTest attribute
     }
 
