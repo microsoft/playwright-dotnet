@@ -204,36 +204,20 @@ public class BrowserContextRouteTests : BrowserTestEx
         });
 
 
-        // subscribe for unobserved exceptions since we can not catch the exception
-        // in RouteHandler.cs directly
-        Exception? unobservedException = null;
-        void _handleUnobservedException(object sender, UnobservedTaskExceptionEventArgs args)
-            => unobservedException = args.Exception;
+        // open 10 pages to generate load on the RouteHandler
+        foreach (int pageNr in Enumerable.Range(0, 10))
+            await (await context.NewPageAsync())
+                .GotoAsync(Server.EmptyPage);
 
-        try
-        {
-            TaskScheduler.UnobservedTaskException += _handleUnobservedException;
+        // let the test run for 5 second
+        await Task.Delay(5000);
 
-            // open 10 pages to generate load on the RouteHandler
-            foreach (int pageNr in Enumerable.Range(0, 10))
-                await (await context.NewPageAsync())
-                    .GotoAsync(Server.EmptyPage);
+        // trigger garbage collection which checks for unorbserved exceptions
+        // in collected tasks
+        GC.Collect();
+        GC.WaitForPendingFinalizers();
 
-            // let the test run for 5 second
-            await Task.Delay(5000);
-
-            // trigger garbage collection which checks for unorbserved exceptions
-            // in collected tasks
-            GC.Collect();
-            GC.WaitForPendingFinalizers();
-
-            // check for exceptions
-            Assert.Null(unobservedException);
-        }
-        finally
-        {
-            TaskScheduler.UnobservedTaskException -= _handleUnobservedException;
-        }
+        // unobserved task exceptions are automatically collected by the PlaywrightTest attribute
     }
 
     [PlaywrightTest("browsercontext-route.spec.ts", "should support the times parameter with route matching")]
