@@ -178,7 +178,7 @@ internal class StdIOTransport : IDisposable
         }
     }
 
-    private static Task ScheduleTransportTaskAsync(Func<CancellationToken, Task> func, CancellationToken cancellationToken)
+    private static Task<Task> ScheduleTransportTaskAsync(Func<CancellationToken, Task> func, CancellationToken cancellationToken)
         => Task.Factory.StartNew(() => func(cancellationToken), cancellationToken, TaskCreationOptions.LongRunning, TaskScheduler.Current);
 
     private void Dispose(bool disposing)

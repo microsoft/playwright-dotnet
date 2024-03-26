@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <OutputType>Exe</OutputType>
@@ -9,6 +9,10 @@
     <NoWarn>CA2007</NoWarn>
     <ReleaseVersion>0.0.0</ReleaseVersion>
   </PropertyGroup>
+  <PropertyGroup>
+    <PublishAot>true</PublishAot>
+  </PropertyGroup>
+
 
   <!-- Required since we're not actually referencing Playwright -->
   <Import Project="../Playwright.Tests/build/Playwright.Tests.targets" />

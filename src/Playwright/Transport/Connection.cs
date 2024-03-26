@@ -32,6 +32,9 @@ using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text;
 using System.Text.Json;
+#if NET8_0_OR_GREATER
+using System.Text.Json.Serialization.Metadata;
+#endif
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Playwright.Core;
@@ -59,7 +62,10 @@ internal class Connection : IDisposable
         JsonSerializerOptions NewJsonSerializerOptions(bool keepNulls)
         {
             var options = JsonExtensions.GetNewDefaultSerializerOptions(keepNulls);
-
+#if NET8_0_OR_GREATER
+            Console.WriteLine("Using reflection: JsonSerializer.IsReflectionEnabledByDefault: " + JsonSerializer.IsReflectionEnabledByDefault);
+            options.TypeInfoResolver = new DefaultJsonTypeInfoResolver();
+#endif
             // Workaround for https://github.com/dotnet/runtime/issues/46522
             options.Converters.Add(new ChannelOwnerConverterFactory(this));
             // Workaround for https://github.com/dotnet/runtime/issues/46522
@@ -312,6 +318,7 @@ internal class Connection : IDisposable
         }
     }
 
+    [System.Diagnostics.CodeAnalysis.SuppressMessage("Reliability", "CA2000:Dispose objects before losing scope", Justification = "We dispose manually inside the protocol")]
     private ChannelOwner CreateRemoteObject(string parentGuid, ChannelOwnerType type, string guid, JsonElement? initializer)
     {
         ChannelOwner result = null;

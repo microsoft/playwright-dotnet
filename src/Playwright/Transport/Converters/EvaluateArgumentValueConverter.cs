@@ -376,6 +376,7 @@ internal static class EvaluateArgumentValueConverter
         return null;
     }
 
+#pragma warning disable SYSLIB0050 // Type or member is obsolete
     internal class VisitorInfo
     {
         internal VisitorInfo()
@@ -393,4 +394,5 @@ internal static class EvaluateArgumentValueConverter
         internal long Identity(object obj)
             => IDGenerator.GetId(obj, out _);
     }
+#pragma warning restore SYSLIB0050 // Type or member is obsolete
 }

@@ -26,6 +26,9 @@ using System;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using Microsoft.Playwright.Transport.Converters;
+#if NET8_0_OR_GREATER
+using System.Text.Json.Serialization.Metadata;
+#endif
 
 namespace Microsoft.Playwright.Helpers;
 
@@ -98,6 +101,9 @@ internal static class JsonExtensions
                     new JsonStringEnumMemberConverter(),
             },
         };
+#if NET8_0_OR_GREATER
+        options.TypeInfoResolver = new DefaultJsonTypeInfoResolver();
+#endif
         if (!keepNulls)
         {
             options.DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull;

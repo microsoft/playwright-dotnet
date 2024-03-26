@@ -7,7 +7,7 @@
     <Summary>The .NET port of Playwright, used to automate Chromium, Firefox and WebKit with a single API.</Summary>
     <Description>Playwright enables reliable end-to-end testing for modern web apps. It is built to enable cross-browser web automation that is ever-green, capable, reliable and fast. Learn more at https://playwright.dev/dotnet/.</Description>
     <PackageIcon>icon.png</PackageIcon>
-    <TargetFramework>netstandard2.0</TargetFramework>
+    <TargetFrameworks>netstandard2.0;net8.0</TargetFrameworks>
     <PublishRepositoryUrl>true</PublishRepositoryUrl>
     <DocumentationFile>Microsoft.Playwright.xml</DocumentationFile>
     <RunWithWarnings>true</RunWithWarnings>
@@ -17,7 +17,7 @@
     <ReleaseVersion>0.0.0</ReleaseVersion>
     <BuildFromSource>True</BuildFromSource>
     <AnalysisMode>AllEnabledByDefault</AnalysisMode>
-    <NoWarn>1701;1702;CS0067;1734;NU5110;NU5111</NoWarn>
+    <NoWarn>1701;1702;CS0067;1734;NU5110;NU5111;CA1849;CA1861;CA1867;VSTHRD103;CA1510;CA1851;CA1835;CA2000</NoWarn>
     <AssemblyName>Microsoft.Playwright</AssemblyName>
     <NoWin32Manifest>true</NoWin32Manifest>
   </PropertyGroup>
