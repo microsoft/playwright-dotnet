@@ -45,7 +45,7 @@ internal class BrowserContext : ChannelOwner, IBrowserContext
     private readonly BrowserContextInitializer _initializer;
     private readonly Tracing _tracing;
     internal readonly IAPIRequestContext _request;
-    private readonly IDictionary<string, HarRecorder> _harRecorders = new Dictionary<string, HarRecorder>();
+    private readonly Dictionary<string, HarRecorder> _harRecorders = new();
     internal readonly List<IWorker> _serviceWorkers = new();
     private List<RouteHandler> _routes = new();
     internal readonly List<Page> _pages = new();
@@ -737,12 +737,12 @@ internal class BrowserContext : ChannelOwner, IBrowserContext
         await Task.WhenAll(tasks).ConfigureAwait(false);
     }
 
-    private Task UpdateInterceptionAsync()
+    private async Task UpdateInterceptionAsync()
     {
         var patterns = RouteHandler.PrepareInterceptionPatterns(_routes);
-        return SendMessageToServerAsync(
+        await SendMessageToServerAsync(
             "setNetworkInterceptionPatterns",
-            patterns);
+            patterns).ConfigureAwait(false);
     }
 
     internal void OnClose()
@@ -779,7 +779,7 @@ internal class BrowserContext : ChannelOwner, IBrowserContext
 
     private void Channel_Route(object sender, Route route) => _ = OnRouteAsync(route).ConfigureAwait(false);
 
-    private Task ExposeBindingAsync(string name, Delegate callback, bool handle = false)
+    private async Task ExposeBindingAsync(string name, Delegate callback, bool handle = false)
     {
         foreach (var page in _pages)
         {
@@ -796,13 +796,13 @@ internal class BrowserContext : ChannelOwner, IBrowserContext
 
         _bindings.Add(name, callback);
 
-        return SendMessageToServerAsync(
+        await SendMessageToServerAsync(
             "exposeBinding",
             new Dictionary<string, object>
             {
                 ["name"] = name,
                 ["needsHandle"] = handle,
-            });
+            }).ConfigureAwait(false);
     }
 
     private HarContentPolicy? RouteFromHarUpdateContentPolicyToHarContentPolicy(RouteFromHarUpdateContentPolicy? policy)

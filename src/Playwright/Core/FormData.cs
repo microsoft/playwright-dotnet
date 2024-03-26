@@ -37,7 +37,7 @@ internal class FormData : IFormData
 
     internal Dictionary<string, object> Values { get; }
 
-    private IFormData SetImpl(string name, object value)
+    private FormData SetImpl(string name, object value)
     {
         Values.Add(name, value);
         return this;
