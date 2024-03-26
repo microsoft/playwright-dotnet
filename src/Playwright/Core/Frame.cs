@@ -528,9 +528,9 @@ internal class Frame : ChannelOwner, IFrame
         await _setInputFilesAsync(selector, converted, noWaitAfter: options?.NoWaitAfter, timeout: options?.Timeout, options?.Strict).ConfigureAwait(false);
     }
 
-    private Task _setInputFilesAsync(string selector, SetInputFilesFiles files, bool? noWaitAfter, float? timeout, bool? strict)
+    private async Task _setInputFilesAsync(string selector, SetInputFilesFiles files, bool? noWaitAfter, float? timeout, bool? strict)
     {
-        return SendMessageToServerAsync("setInputFiles", new Dictionary<string, object>
+        await SendMessageToServerAsync("setInputFiles", new Dictionary<string, object>
         {
             ["selector"] = selector,
             ["payloads"] = files.Payloads,
@@ -539,7 +539,7 @@ internal class Frame : ChannelOwner, IFrame
             ["noWaitAfter"] = noWaitAfter,
             ["timeout"] = timeout,
             ["strict"] = strict,
-        });
+        }).ConfigureAwait(false);
     }
 
     [MethodImpl(MethodImplOptions.NoInlining)]

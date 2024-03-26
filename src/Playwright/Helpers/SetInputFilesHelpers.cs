@@ -63,7 +63,7 @@ internal static class SetInputFilesHelpers
             }).ConfigureAwait(false);
             return new() { Streams = streams.ToArray() };
         }
-        return new() { LocalPaths = files.Select(f => Path.GetFullPath(f)).ToArray() };
+        return new() { LocalPaths = files.Select(Path.GetFullPath).ToArray() };
     }
 
     public static SetInputFilesFiles ConvertInputFiles(IEnumerable<FilePayload> files)

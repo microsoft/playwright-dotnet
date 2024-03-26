@@ -365,7 +365,7 @@ internal static class EvaluateArgumentValueConverter
 
         if (result.TryGetProperty("a", out var array))
         {
-            IList<object> list = new List<object>();
+            List<object> list = new List<object>();
             refs.Add(result.GetProperty("id").GetInt32(), list);
             foreach (var item in array.EnumerateArray())
             {

@@ -1266,10 +1266,10 @@ internal class Page : ChannelOwner, IPage
         await Task.WhenAll(tasks).ConfigureAwait(false);
     }
 
-    private Task UpdateInterceptionAsync()
+    private async Task UpdateInterceptionAsync()
     {
         var patterns = RouteHandler.PrepareInterceptionPatterns(_routes);
-        return SendMessageToServerAsync("setNetworkInterceptionPatterns", patterns);
+        await SendMessageToServerAsync("setNetworkInterceptionPatterns", patterns).ConfigureAwait(false);
     }
 
     internal void OnClose()
@@ -1352,7 +1352,7 @@ internal class Page : ChannelOwner, IPage
         FrameAttached?.Invoke(this, args);
     }
 
-    private Task InnerExposeBindingAsync(string name, Delegate callback, bool handle = false)
+    private async Task InnerExposeBindingAsync(string name, Delegate callback, bool handle = false)
     {
         if (Bindings.ContainsKey(name))
         {
@@ -1361,13 +1361,13 @@ internal class Page : ChannelOwner, IPage
 
         Bindings.Add(name, callback);
 
-        return SendMessageToServerAsync(
+        await SendMessageToServerAsync(
             "exposeBinding",
             new Dictionary<string, object>
             {
                 ["name"] = name,
                 ["needsHandle"] = handle,
-            });
+            }).ConfigureAwait(false);
     }
 
     private Video ForceVideo() => _video ??= new(this, _connection);
