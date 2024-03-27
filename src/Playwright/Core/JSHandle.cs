@@ -22,6 +22,7 @@
  * SOFTWARE.
  */
 
+using System;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 using System.Text.Json;
@@ -101,7 +102,17 @@ internal class JSHandle : ChannelOwner, IJSHandle
     }
 
     [MethodImpl(MethodImplOptions.NoInlining)]
-    public async ValueTask DisposeAsync() => await SendMessageToServerAsync("dispose").ConfigureAwait(false);
+    public async ValueTask DisposeAsync()
+    {
+        try
+        {
+            await SendMessageToServerAsync("dispose").ConfigureAwait(false);
+        }
+        catch (Exception e) when (DriverMessages.IsTargetClosedError(e))
+        {
+            // swallow exception
+        }
+    }
 
     public override string ToString() => Preview;
 }

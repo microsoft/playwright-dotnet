@@ -33,7 +33,7 @@ public class LocatorFrameTests : PageTestEx
         {
             await route.FulfillAsync(new()
             {
-                Body = "<iframe src=\"/iframe.html\"></iframe>",
+                Body = "<iframe src=\"/iframe.html\" name=\"frame1\"></iframe>",
                 ContentType = "text/html"
             });
         });
@@ -308,5 +308,29 @@ public class LocatorFrameTests : PageTestEx
         await Expect(button2).ToHaveTextAsync("Hello from iframe-2.html");
         var button3 = Page.Locator("body").FrameLocator("iframe").Last.Locator("button");
         await Expect(button3).ToHaveTextAsync("Hello from iframe-3.html");
+    }
+
+    [PlaywrightTest("locator-frame.spec.ts", "locator.contentFrame should work")]
+    public async Task LocatorContentFrameShouldWork()
+    {
+        await RouteIFrame(Page);
+        await Page.GotoAsync(Server.EmptyPage);
+        var locator = Page.Locator("iframe");
+        var frameLocator = locator.ContentFrame;
+        var button = frameLocator.Locator("button");
+        Assert.AreEqual(await button.InnerTextAsync(), "Hello iframe");
+        await Expect(button).ToHaveTextAsync("Hello iframe");
+        await button.ClickAsync();
+    }
+
+    [PlaywrightTest("locator-frame.spec.ts", "frameLocator.Owner should work")]
+    public async Task FrameLocatorOwnerShouldWork()
+    {
+        await RouteIFrame(Page);
+        await Page.GotoAsync(Server.EmptyPage);
+        var frameLocator = Page.FrameLocator("iframe");
+        var locator = frameLocator.Owner;
+        await Expect(locator).ToBeVisibleAsync();
+        Assert.AreEqual(await locator.GetAttributeAsync("name"), "frame1");
     }
 }

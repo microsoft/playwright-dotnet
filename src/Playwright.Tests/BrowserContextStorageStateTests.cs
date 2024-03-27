@@ -49,7 +49,7 @@ public sealed class BrowserContextStorageStateTests : PageTestEx
         string storage = await Context.StorageStateAsync();
 
         // TODO: think about IVT-in the StorageState and serializing
-        string expected = @"{""cookies"":[],""origins"":[{""origin"":""https://www.example.com"",""localStorage"":[{""name"":""name1"",""value"":""value1""}]},{""origin"":""https://www.domain.com"",""localStorage"":[{""name"":""name2"",""value"":""value2""}]}]}";
+        string expected = @"{""cookies"":[],""origins"":[{""origin"":""https://www.domain.com"",""localStorage"":[{""name"":""name2"",""value"":""value2""}]},{""origin"":""https://www.example.com"",""localStorage"":[{""name"":""name1"",""value"":""value1""}]}]}";
         Assert.AreEqual(expected, storage);
     }
 

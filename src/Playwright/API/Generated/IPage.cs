@@ -306,7 +306,7 @@ public partial interface IPage
     /// </para>
     /// <para>**Usage**</para>
     /// <para>An example of overriding <c>Math.random</c> before the page loads:</para>
-    /// <code>await page.AddInitScriptAsync(scriptPath: "./preload.js");</code>
+    /// <code>await Page.AddInitScriptAsync(scriptPath: "./preload.js");</code>
     /// </summary>
     /// <remarks>
     /// <para>
@@ -1688,10 +1688,10 @@ public partial interface IPage
 
     /// <summary>
     /// <para>
-    /// When testing a web page, sometimes unexpected overlays like a coookie consent dialog
-    /// appear and block actions you want to automate, e.g. clicking a button. These overlays
-    /// don't always show up in the same way or at the same time, making them tricky to
-    /// handle in automated tests.
+    /// When testing a web page, sometimes unexpected overlays like a "Sign up" dialog appear
+    /// and block actions you want to automate, e.g. clicking a button. These overlays don't
+    /// always show up in the same way or at the same time, making them tricky to handle
+    /// in automated tests.
     /// </para>
     /// <para>
     /// This method lets you set up a special function, called a handler, that activates
@@ -1710,6 +1710,9 @@ public partial interface IPage
     /// that requires an <a href="https://playwright.dev/dotnet/docs/actionability">actionability
     /// check</a>, or before performing an auto-waiting assertion check. When overlay is
     /// visible, Playwright calls the handler first, and then proceeds with the action/assertion.
+    /// Note that the handler is only called when you perform an action/assertion - if the
+    /// overlay becomes visible but you don't perform any actions, the handler will not
+    /// be triggered.
     /// </description></item>
     /// <item><description>
     /// The execution time of the handler counts towards the timeout of the action/assertion
@@ -1721,11 +1724,11 @@ public partial interface IPage
     /// </description></item>
     /// </list>
     /// <para>**Usage**</para>
-    /// <para>An example that closes a cookie consent dialog when it appears:</para>
+    /// <para>An example that closes a "Sign up to the newsletter" dialog when it appears:</para>
     /// <code>
     /// // Setup the handler.<br/>
-    /// await page.AddLocatorHandlerAsync(page.GetByRole(AriaRole.Button, new() { Name = "Accept all cookies" }), async () =&gt; {<br/>
-    ///   await page.GetByRole(AriaRole.Button, new() { Name = "Reject all cookies" }).ClickAsync();<br/>
+    /// await page.AddLocatorHandlerAsync(page.GetByText("Sign up to the newsletter"), async () =&gt; {<br/>
+    ///   await page.GetByRole(AriaRole.Button, new() { Name = "No thanks" }).ClickAsync();<br/>
     /// });<br/>
     /// <br/>
     /// // Write the test as usual.<br/>
@@ -1760,6 +1763,7 @@ public partial interface IPage
     /// </code>
     /// </summary>
     /// <remarks>
+    /// <para>This method is experimental and its behavior may change in the upcoming releases.</para>
     /// <para>
     /// Running the handler will alter your page state mid-test. For example it will change
     /// the currently focused element and move the mouse. Make sure that actions that run

@@ -54,10 +54,13 @@ namespace Microsoft.Playwright;
 /// <para>**Converting Locator to FrameLocator**</para>
 /// <para>
 /// If you have a <see cref="ILocator"/> object pointing to an <c>iframe</c> it can
-/// be converted to <see cref="IFrameLocator"/> using <a href="https://developer.mozilla.org/en-US/docs/Web/CSS/:scope"><c>:scope</c></a>
-/// CSS selector:
+/// be converted to <see cref="IFrameLocator"/> using <see cref="ILocator.ContentFrame"/>.
 /// </para>
-/// <code>var frameLocator = locator.FrameLocator(":scope");</code>
+/// <para>**Converting FrameLocator to Locator**</para>
+/// <para>
+/// If you have a <see cref="IFrameLocator"/> object it can be converted to <see cref="ILocator"/>
+/// pointing to the same <c>iframe</c> using <see cref="IFrameLocator.Owner"/>.
+/// </para>
 /// </summary>
 public partial interface IFrameLocator
 {
@@ -370,6 +373,26 @@ public partial interface IFrameLocator
     /// <param name="index">
     /// </param>
     IFrameLocator Nth(int index);
+
+    /// <summary>
+    /// <para>
+    /// Returns a <see cref="ILocator"/> object pointing to the same <c>iframe</c> as this
+    /// frame locator.
+    /// </para>
+    /// <para>
+    /// Useful when you have a <see cref="IFrameLocator"/> object obtained somewhere, and
+    /// later on would like to interact with the <c>iframe</c> element.
+    /// </para>
+    /// <para>For a reverse operation, use <see cref="ILocator.ContentFrame"/>.</para>
+    /// <para>**Usage**</para>
+    /// <code>
+    /// var frameLocator = Page.FrameLocator("iframe[name=\"embedded\"]");<br/>
+    /// // ...<br/>
+    /// var locator = frameLocator.Owner;<br/>
+    /// await Expect(locator).ToBeVisibleAsync();
+    /// </code>
+    /// </summary>
+    ILocator Owner { get; }
 }
 
 #nullable disable

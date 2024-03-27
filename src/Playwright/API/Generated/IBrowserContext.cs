@@ -98,7 +98,12 @@ public partial interface IBrowserContext
     /// waiting for the dialog, and actions like click will never finish.
     /// </para>
     /// <para>**Usage**</para>
-    /// <code>context.Dialog += (_, dialog) =&gt; dialog.AcceptAsync();</code>
+    /// <code>
+    /// Context.Dialog += async (_, dialog) =&gt;<br/>
+    /// {<br/>
+    ///     await dialog.AcceptAsync();<br/>
+    /// };
+    /// </code>
     /// </summary>
     /// <remarks>
     /// <para>
@@ -222,7 +227,7 @@ public partial interface IBrowserContext
     /// </para>
     /// <para>**Usage**</para>
     /// <para>An example of overriding <c>Math.random</c> before the page loads:</para>
-    /// <code>await context.AddInitScriptAsync(scriptPath: "preload.js");</code>
+    /// <code>await Context.AddInitScriptAsync(scriptPath: "preload.js");</code>
     /// </summary>
     /// <remarks>
     /// <para>
@@ -242,8 +247,19 @@ public partial interface IBrowserContext
     /// </summary>
     IBrowser? Browser { get; }
 
-    /// <summary><para>Clears context cookies.</para></summary>
-    Task ClearCookiesAsync();
+    /// <summary>
+    /// <para>Removes cookies from context. Accepts optional filter.</para>
+    /// <para>**Usage**</para>
+    /// <code>
+    /// await context.ClearCookiesAsync();<br/>
+    /// await context.ClearCookiesAsync(new() { Name = "session-id" });<br/>
+    /// await context.ClearCookiesAsync(new() { Domain = "my-origin.com" });<br/>
+    /// await context.ClearCookiesAsync(new() { Path = "/api/v1" });<br/>
+    /// await context.ClearCookiesAsync(new() { Name = "session-id", Domain = "my-origin.com" });
+    /// </code>
+    /// </summary>
+    /// <param name="options">Call options</param>
+    Task ClearCookiesAsync(BrowserContextClearCookiesOptions? options = default);
 
     /// <summary>
     /// <para>Clears all permission overrides for the browser context.</para>
@@ -479,7 +495,7 @@ public partial interface IBrowserContext
     /// await page.RouteAsync("/api/**", async r =&gt;<br/>
     /// {<br/>
     ///     if (r.Request.PostData.Contains("my-string"))<br/>
-    ///         await r.FulfillAsync(body: "mocked-data");<br/>
+    ///         await r.FulfillAsync(new() { Body = "mocked-data" });<br/>
     ///     else<br/>
     ///         await r.ContinueAsync();<br/>
     /// });
@@ -540,7 +556,7 @@ public partial interface IBrowserContext
     /// await page.RouteAsync("/api/**", async r =&gt;<br/>
     /// {<br/>
     ///     if (r.Request.PostData.Contains("my-string"))<br/>
-    ///         await r.FulfillAsync(body: "mocked-data");<br/>
+    ///         await r.FulfillAsync(new() { Body = "mocked-data" });<br/>
     ///     else<br/>
     ///         await r.ContinueAsync();<br/>
     /// });
@@ -601,7 +617,7 @@ public partial interface IBrowserContext
     /// await page.RouteAsync("/api/**", async r =&gt;<br/>
     /// {<br/>
     ///     if (r.Request.PostData.Contains("my-string"))<br/>
-    ///         await r.FulfillAsync(body: "mocked-data");<br/>
+    ///         await r.FulfillAsync(new() { Body = "mocked-data" });<br/>
     ///     else<br/>
     ///         await r.ContinueAsync();<br/>
     /// });

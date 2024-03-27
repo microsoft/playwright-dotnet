@@ -157,7 +157,7 @@ internal class Request : ChannelOwner, IRequest
 
         string content = PostData;
         Headers.TryGetValue("content-type", out string contentType);
-        if (contentType == "application/x-www-form-urlencoded")
+        if (contentType.Contains("application/x-www-form-urlencoded"))
         {
             var parsed = HttpUtility.ParseQueryString(PostData);
             var dictionary = new Dictionary<string, string>();

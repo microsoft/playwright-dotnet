@@ -278,7 +278,23 @@ internal class BrowserContext : ChannelOwner, IBrowserContext
     }
 
     [MethodImpl(MethodImplOptions.NoInlining)]
-    public Task ClearCookiesAsync() => SendMessageToServerAsync("clearCookies");
+    public async Task ClearCookiesAsync(BrowserContextClearCookiesOptions options = default)
+    {
+        var @params = new Dictionary<string, object>
+        {
+            ["name"] = options?.Name ?? options?.NameString,
+            ["nameRegexSource"] = options?.NameRegex?.ToString(),
+            ["nameRegexFlags"] = options?.NameRegex?.Options.GetInlineFlags(),
+            ["domain"] = options?.Domain ?? options?.DomainString,
+            ["domainRegexSource"] = options?.DomainRegex?.ToString(),
+            ["domainRegexFlags"] = options?.DomainRegex?.Options.GetInlineFlags(),
+            ["path"] = options?.Path ?? options?.PathString,
+            ["pathRegexSource"] = options?.PathRegex?.ToString(),
+            ["pathRegexFlags"] = options?.PathRegex?.Options.GetInlineFlags(),
+        };
+
+        await SendMessageToServerAsync("clearCookies", @params).ConfigureAwait(false);
+    }
 
     [MethodImpl(MethodImplOptions.NoInlining)]
     public Task ClearPermissionsAsync() => SendMessageToServerAsync("clearPermissions");

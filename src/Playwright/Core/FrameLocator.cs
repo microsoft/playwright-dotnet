@@ -39,9 +39,11 @@ internal class FrameLocator : IFrameLocator
         _frameSelector = selector;
     }
 
-    IFrameLocator IFrameLocator.First => new FrameLocator(_frame, $"{_frameSelector} >> nth=0");
+    public IFrameLocator First => new FrameLocator(_frame, $"{_frameSelector} >> nth=0");
 
-    IFrameLocator IFrameLocator.Last => new FrameLocator(_frame, $"{_frameSelector} >> nth=-1");
+    public IFrameLocator Last => new FrameLocator(_frame, $"{_frameSelector} >> nth=-1");
+
+    public ILocator Owner => new Locator(_frame, _frameSelector);
 
     ILocator IFrameLocator.GetByAltText(string text, FrameLocatorGetByAltTextOptions options)
         => Locator(Core.Locator.GetByAltTextSelector(text, options?.Exact));

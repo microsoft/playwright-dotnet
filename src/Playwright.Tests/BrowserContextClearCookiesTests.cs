@@ -23,6 +23,8 @@
  * SOFTWARE.
  */
 
+using System.Text.RegularExpressions;
+
 namespace Microsoft.Playwright.Tests;
 
 public class BrowserContextClearCookiesTests : PageTestEx
@@ -81,5 +83,152 @@ public class BrowserContextClearCookiesTests : PageTestEx
         await anotherContext.ClearCookiesAsync();
         Assert.IsEmpty(await Context.CookiesAsync());
         Assert.IsEmpty(await anotherContext.CookiesAsync());
+    }
+
+    [PlaywrightTest("browsercontext-clearcookies.spec.ts", "should remove cookies by name")]
+    public async Task ShouldRemoveCookiesByName()
+    {
+        await Context.AddCookiesAsync(
+        [
+            new Cookie
+            {
+                Name = "cookie1",
+                Value = "1",
+                Domain = new Uri(Server.Prefix).Host,
+                Path = "/"
+            },
+            new Cookie
+            {
+                Name = "cookie2",
+                Value = "2",
+                Domain = new Uri(Server.Prefix).Host,
+                Path = "/"
+            }
+        ]);
+        await Page.GotoAsync(Server.Prefix);
+        Assert.AreEqual("cookie1=1; cookie2=2", await Page.EvaluateAsync<string>("document.cookie"));
+        await Context.ClearCookiesAsync(new() { Name = "cookie1" });
+        Assert.AreEqual("cookie2=2", await Page.EvaluateAsync<string>("document.cookie"));
+    }
+
+    [PlaywrightTest("browsercontext-clearcookies.spec.ts", "should remove cookies by name regex")]
+    public async Task ShouldRemoveCookiesByNameRegex()
+    {
+        await Context.AddCookiesAsync(
+        [
+            new Cookie
+            {
+                Name = "cookie1",
+                Value = "1",
+                Domain = new Uri(Server.Prefix).Host,
+                Path = "/"
+            },
+            new Cookie
+            {
+                Name = "cookie2",
+                Value = "2",
+                Domain = new Uri(Server.Prefix).Host,
+                Path = "/"
+            }
+        ]);
+        await Page.GotoAsync(Server.Prefix);
+        Assert.AreEqual("cookie1=1; cookie2=2", await Page.EvaluateAsync<string>("document.cookie"));
+        await Context.ClearCookiesAsync(new() { NameRegex = new Regex("coo.*1") });
+        Assert.AreEqual("cookie2=2", await Page.EvaluateAsync<string>("document.cookie"));
+    }
+
+    [PlaywrightTest("browsercontext-clearcookies.spec.ts", "should remove cookies by domain")]
+    public async Task ShouldRemoveCookiesByDomain()
+    {
+        await Context.AddCookiesAsync(
+        [
+            new Cookie
+            {
+                Name = "cookie1",
+                Value = "1",
+                Domain = new Uri(Server.Prefix).Host,
+                Path = "/"
+            },
+            new Cookie
+            {
+                Name = "cookie2",
+                Value = "2",
+                Domain = new Uri(Server.CrossProcessPrefix).Host,
+                Path = "/"
+            }
+        ]);
+        await Page.GotoAsync(Server.Prefix);
+        Assert.AreEqual("cookie1=1", await Page.EvaluateAsync<string>("document.cookie"));
+        await Page.GotoAsync(Server.CrossProcessPrefix);
+        Assert.AreEqual("cookie2=2", await Page.EvaluateAsync<string>("document.cookie"));
+        await Context.ClearCookiesAsync(new() { Domain = new Uri(Server.CrossProcessPrefix).Host });
+        Assert.IsEmpty(await Page.EvaluateAsync<string>("document.cookie"));
+        await Page.GotoAsync(Server.Prefix);
+        Assert.AreEqual("cookie1=1", await Page.EvaluateAsync<string>("document.cookie"));
+    }
+
+    [PlaywrightTest("browsercontext-clearcookies.spec.ts", "should remove cookies by path")]
+    public async Task ShouldRemoveCookiesByPath()
+    {
+        await Context.AddCookiesAsync(
+        [
+        new Cookie
+        {
+            Name = "cookie1",
+            Value = "1",
+            Domain = new Uri(Server.Prefix).Host,
+            Path = "/api/v1"
+        },
+            new Cookie
+            {
+                Name = "cookie2",
+                Value = "2",
+                Domain = new Uri(Server.Prefix).Host,
+                Path = "/api/v2"
+            },
+            new Cookie
+            {
+                Name = "cookie3",
+                Value = "3",
+                Domain = new Uri(Server.Prefix).Host,
+                Path = "/"
+            }
+    ]);
+        await Page.GotoAsync(Server.Prefix + "/api/v1");
+        Assert.AreEqual("cookie1=1; cookie3=3", await Page.EvaluateAsync<string>("document.cookie"));
+        await Context.ClearCookiesAsync(new() { Path = "/api/v1" });
+        Assert.AreEqual("cookie3=3", await Page.EvaluateAsync<string>("document.cookie"));
+        await Page.GotoAsync(Server.Prefix + "/api/v2");
+        Assert.AreEqual("cookie2=2; cookie3=3", await Page.EvaluateAsync<string>("document.cookie"));
+        await Page.GotoAsync(Server.Prefix + "/");
+        Assert.AreEqual("cookie3=3", await Page.EvaluateAsync<string>("document.cookie"));
+    }
+
+    [PlaywrightTest("browsercontext-clearcookies.spec.ts", "should remove cookies by name and domain")]
+    public async Task ShouldRemoveCookiesByNameAndDomain()
+    {
+        await Context.AddCookiesAsync(
+        [
+            new Cookie
+            {
+                Name = "cookie1",
+                Value = "1",
+                Domain = new Uri(Server.Prefix).Host,
+                Path = "/"
+            },
+            new Cookie
+            {
+                Name = "cookie1",
+                Value = "1",
+                Domain = new Uri(Server.CrossProcessPrefix).Host,
+                Path = "/"
+            }
+        ]);
+        await Page.GotoAsync(Server.Prefix);
+        Assert.AreEqual("cookie1=1", await Page.EvaluateAsync<string>("document.cookie"));
+        await Context.ClearCookiesAsync(new() { Name = "cookie1", Domain = new Uri(Server.Prefix).Host });
+        Assert.IsEmpty(await Page.EvaluateAsync<string>("document.cookie"));
+        await Page.GotoAsync(Server.CrossProcessPrefix);
+        Assert.AreEqual("cookie1=1", await Page.EvaluateAsync<string>("document.cookie"));
     }
 }
