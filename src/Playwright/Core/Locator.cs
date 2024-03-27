@@ -105,7 +105,9 @@ internal class Locator : ILocator
 
     public ILocator Last => new Locator(_frame, $"{_selector} >> nth=-1");
 
-    IPage ILocator.Page => _frame.Page;
+    public IPage Page => _frame.Page;
+
+    public IFrameLocator ContentFrame => new FrameLocator(_frame, _selector);
 
     public Task<LocatorBoundingBoxResult> BoundingBoxAsync(LocatorBoundingBoxOptions options = null)
         => WithElementAsync(

@@ -389,6 +389,26 @@ public partial interface ILocator
     Task<IReadOnlyList<IElementHandle>> ElementHandlesAsync();
 
     /// <summary>
+    /// <para>
+    /// Returns a <see cref="IFrameLocator"/> object pointing to the same <c>iframe</c>
+    /// as this locator.
+    /// </para>
+    /// <para>
+    /// Useful when you have a <see cref="ILocator"/> object obtained somewhere, and later
+    /// on would like to interact with the content inside the frame.
+    /// </para>
+    /// <para>For a reverse operation, use <see cref="IFrameLocator.Owner"/>.</para>
+    /// <para>**Usage**</para>
+    /// <code>
+    /// var locator = Page.Locator("iframe[name=\"embedded\"]");<br/>
+    /// // ...<br/>
+    /// var frameLocator = locator.ContentFrame;<br/>
+    /// await frameLocator.GetByRole(AriaRole.Button).ClickAsync();
+    /// </code>
+    /// </summary>
+    IFrameLocator ContentFrame { get; }
+
+    /// <summary>
     /// <para>Execute JavaScript code in the page, taking the matching element as an argument.</para>
     /// <para>**Details**</para>
     /// <para>

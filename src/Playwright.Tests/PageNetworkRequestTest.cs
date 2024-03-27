@@ -165,6 +165,23 @@ public class PageNetworkRequestTest : PageTestEx
         Assert.AreEqual("123", element?.GetProperty("baz").ToString());
     }
 
+    [PlaywrightTest("page-network-request.spec.ts", "should parse the data if content-type is application/x-www-form-urlencoded; charset=UTF-8")]
+    public async Task ShouldParseTheDataIfContentTypeIsApplicationXWwwFormUrlencodedCharsetUTF8()
+    {
+        await Page.GotoAsync(Server.EmptyPage);
+        var requestPromise = Page.WaitForRequestAsync("**/post");
+        await Page.EvaluateAsync(@"() => fetch('./post', {
+        method: 'POST',
+        headers: {
+            'content-type': 'application/x-www-form-urlencoded; charset=UTF-8',
+        },
+        body: 'foo=bar&baz=123'
+    })");
+        var request = await requestPromise;
+        Assert.AreEqual("bar", request.PostDataJSON()?.GetProperty("foo").ToString());
+        Assert.AreEqual("123", request.PostDataJSON()?.GetProperty("baz").ToString());
+    }
+
     [PlaywrightTest("page-network-request.spec.ts", "should be |undefined| when there is no post data")]
     public async Task ShouldBeUndefinedWhenThereIsNoPostData2()
     {

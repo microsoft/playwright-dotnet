@@ -115,4 +115,13 @@ public class ElementHandleMiscTests : PageTestEx
         Assert.IsFalse(await Page.EvaluateAsync<bool>("checkbox.checked"));
     }
 
+    [PlaywrightTest("elementhandle-misc.spec.ts", "should allow disposing twice")]
+    public async Task ShouldAllowDisposingTwice()
+    {
+        await Page.SetContentAsync("<section>39</section>");
+        var element = await Page.QuerySelectorAsync("section");
+        Assert.NotNull(element);
+        await element.DisposeAsync();
+        await element.DisposeAsync();
+    }
 }

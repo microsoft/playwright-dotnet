@@ -179,11 +179,16 @@ public class BrowserTypeLaunchPersistentContextOptions
 
     /// <summary>
     /// <para>
+    /// **DEPRECATED** Use <a href="https://playwright.dev/dotnet/docs/debug">debugging
+    /// tools</a> instead.
+    /// </para>
+    /// <para>
     /// **Chromium-only** Whether to auto-open a Developer Tools panel for each tab. If
     /// this option is <c>true</c>, the <paramref name="headless"/> option will be set <c>false</c>.
     /// </para>
     /// </summary>
     [JsonPropertyName("devtools")]
+    [System.Obsolete]
     public bool? Devtools { get; set; }
 
     /// <summary>
