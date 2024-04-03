@@ -177,7 +177,7 @@ internal class StdIOTransport : IDisposable
                     Console.InputEncoding = originalInputEncoding;
                     Console.OutputEncoding = originalOutputEncoding;
                 }
-                catch (System.Exception)
+                catch (System.IO.IOException)
                 {
                     // It can fail under some conditions:
                     // https://github.com/microsoft/playwright-dotnet/issues/2888
