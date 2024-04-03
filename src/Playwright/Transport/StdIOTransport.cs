@@ -171,9 +171,17 @@ internal class StdIOTransport : IDisposable
         {
             if (hasConsole)
             {
-                // Restore the original encodings
-                Console.InputEncoding = originalInputEncoding;
-                Console.OutputEncoding = originalOutputEncoding;
+                try
+                {
+                    // Restore the original encodings
+                    Console.InputEncoding = originalInputEncoding;
+                    Console.OutputEncoding = originalOutputEncoding;
+                }
+                catch (System.IO.IOException)
+                {
+                    // It can fail under some conditions:
+                    // https://github.com/microsoft/playwright-dotnet/issues/2888
+                }
             }
         }
     }
