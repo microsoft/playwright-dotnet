@@ -57,11 +57,11 @@
       </Content>
     </ItemGroup>
   </Target>
-    <Target Name="PlaywrightChmodExecutables" AfterTargets="CopyFilesToOutputDirectory;CopyFilesToPublishDirectory" Condition="!$([MSBuild]::IsOSPlatform('Windows'))">
+  <Target Name="PlaywrightChmodExecutables" AfterTargets="CopyFilesToOutputDirectory;CopyFilesToPublishDirectory" Condition="!$([MSBuild]::IsOSPlatform('Windows'))">
     <ItemGroup>
       <_PlaywrightChmodItems Include="$([MSBuild]::EnsureTrailingSlash('$(OutputPath)')).playwright\node\*\node" />
       <_PlaywrightChmodItems Include="$([MSBuild]::EnsureTrailingSlash('$(PublishDir)')).playwright\node\*\node" />
     </ItemGroup>
-    <Exec Command="chmod +x &quot;%(_PlaywrightChmodItems.FullPath)&quot;" />
+    <Exec Command="chmod +x &quot;%(_PlaywrightChmodItems.FullPath)&quot;" Condition="'@(_PlaywrightChmodItems->Count())' != '0'" />
   </Target>
 </Project>
