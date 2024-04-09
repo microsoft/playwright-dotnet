@@ -56,6 +56,19 @@ namespace Microsoft.Playwright;
 public partial interface IBrowserContext
 {
     /// <summary>
+    /// <para>Emitted when new background page is created in the context.</para>
+    /// <code>
+    /// context.BackgroundPage += (_, backgroundPage) =&gt;<br/>
+    /// {<br/>
+    ///     Console.WriteLine(backgroundPage.Url);<br/>
+    /// };<br/>
+    ///
+    /// </code>
+    /// </summary>
+    /// <remarks><para>Only works with Chromium browser's persistent context.</para></remarks>
+    event EventHandler<IPage> BackgroundPage;
+
+    /// <summary>
     /// <para>
     /// Emitted when Browser context gets closed. This might happen because of one of the
     /// following:
@@ -238,6 +251,10 @@ public partial interface IBrowserContext
     /// <param name="script">Script to be evaluated in all pages in the browser context.</param>
     /// <param name="scriptPath">Instead of specifying <paramref name="script"/>, gives the file name to load from.</param>
     Task AddInitScriptAsync(string? script = default, string? scriptPath = default);
+
+    /// <summary><para>All existing background pages in the context.</para></summary>
+    /// <remarks><para>Background pages are only supported on Chromium-based browsers.</para></remarks>
+    IReadOnlyList<IPage> BackgroundPages { get; }
 
     /// <summary>
     /// <para>

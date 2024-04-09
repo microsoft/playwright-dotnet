@@ -44,6 +44,7 @@ internal class BrowserContext : ChannelOwner, IBrowserContext
     private readonly Dictionary<string, Delegate> _bindings = new();
     private readonly BrowserContextInitializer _initializer;
     private readonly Tracing _tracing;
+    internal readonly HashSet<IPage> _backgroundPages = new();
     internal readonly IAPIRequestContext _request;
     private readonly Dictionary<string, HarRecorder> _harRecorders = new();
     internal readonly List<IWorker> _serviceWorkers = new();
@@ -92,6 +93,8 @@ internal class BrowserContext : ChannelOwner, IBrowserContext
     }
 
     public event EventHandler<IPage> Page;
+
+    public event EventHandler<IPage> BackgroundPage;
 
     public event EventHandler<IWebError> WebError;
 
@@ -143,6 +146,8 @@ internal class BrowserContext : ChannelOwner, IBrowserContext
 
     public IReadOnlyList<IWorker> ServiceWorkers => _serviceWorkers;
 
+    public IReadOnlyList<IPage> BackgroundPages => _backgroundPages.ToList();
+
     internal override void OnMessage(string method, JsonElement? serverParams)
     {
         switch (method)
@@ -150,6 +155,13 @@ internal class BrowserContext : ChannelOwner, IBrowserContext
             case "close":
                 OnClose();
                 break;
+            case "backgroundPage":
+                {
+                    var page = serverParams?.GetProperty("page").ToObject<Page>(_connection.DefaultJsonSerializerOptions);
+                    _backgroundPages.Add(page);
+                    BackgroundPage?.Invoke(this, page);
+                    break;
+                }
             case "bindingCall":
                 Channel_BindingCall(
                     serverParams?.GetProperty("binding").ToObject<BindingCall>(_connection.DefaultJsonSerializerOptions));
