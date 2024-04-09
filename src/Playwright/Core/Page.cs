@@ -1275,7 +1275,8 @@ internal class Page : ChannelOwner, IPage
     internal void OnClose()
     {
         IsClosed = true;
-        Context?._pages.Remove(this);
+        Context._pages.Remove(this);
+        Context._backgroundPages.Remove(this);
         DisposeHarRouters();
         Close?.Invoke(this, this);
     }
