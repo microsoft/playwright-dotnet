@@ -27,7 +27,7 @@
         <PackageReference Include="NUnit" Version="3.14.0" />
         <PackageReference Include="NUnit3TestAdapter" Version="4.5.0" />
         <PackageReference Include="Mono.Posix.NETStandard" Version="1.0.0" />
-        <PackageReference Include="SixLabors.ImageSharp" Version="2.1.7" />
+        <PackageReference Include="SixLabors.ImageSharp" Version="2.1.8" />
         <PackageReference Include="NETStandard.Library" Version="2.0.3" />
         <PackageReference Include="System.CodeDom" Version="6.0.0" />
         <PackageReference Include="System.Net.Http" Version="4.3.4" />
