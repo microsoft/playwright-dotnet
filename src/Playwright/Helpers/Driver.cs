@@ -26,6 +26,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Reflection;
 using System.Runtime.InteropServices;
 
 namespace Microsoft.Playwright.Helpers;
@@ -48,19 +49,19 @@ internal static class Driver
         }
         if (assemblyDirectory?.Exists != true || !File.Exists(Path.Combine(assemblyDirectory.FullName, "Microsoft.Playwright.dll")))
         {
-            string assemblyLocation;
             var assembly = typeof(Playwright).Assembly;
-#pragma warning disable SYSLIB0012 // 'Assembly.CodeBase' is obsolete: 'Assembly.CodeBase and Assembly.EscapedCodeBase are only included for .NET Framework compatibility.
-            if (Uri.TryCreate(assembly.CodeBase, UriKind.Absolute, out var codeBase) && codeBase.IsFile)
-#pragma warning restore SYSLIB0012 // 'Assembly.CodeBase' is obsolete: 'Assembly.CodeBase and Assembly.EscapedCodeBase are only included for .NET Framework compatibility.
+            if (TryGetCodeBase(assembly, out var codeBase) && codeBase.IsFile)
             {
-                assemblyLocation = codeBase.LocalPath;
+                assemblyDirectory = new FileInfo(codeBase.LocalPath).Directory;
+            }
+            else if (!string.IsNullOrEmpty(assembly.Location))
+            {
+                assemblyDirectory = new FileInfo(assembly.Location).Directory;
             }
             else
             {
-                assemblyLocation = assembly.Location;
+                assemblyDirectory = new FileInfo(AppContext.BaseDirectory).Directory;
             }
-            assemblyDirectory = new FileInfo(assemblyLocation).Directory;
         }
 
         string executableFile;
@@ -93,6 +94,22 @@ internal static class Driver
         }
 
         throw new PlaywrightException($"Driver not found: {executableFile}");
+    }
+
+    private static bool TryGetCodeBase(Assembly assembly, out Uri codeBase)
+    {
+        try
+        {
+            // assembly.CodeBase might throw with:
+            // System.NotSupportedException: CodeBase is not supported on assemblies loaded from a single-file bundle.
+            Uri.TryCreate(assembly.CodeBase, UriKind.Absolute, out codeBase);
+            return true;
+        }
+        catch (NotSupportedException)
+        {
+            codeBase = null;
+            return false;
+        }
     }
 
     private static (string ExecutablePath, Func<string, string> GetArgs) GetPath(string driversPath)
