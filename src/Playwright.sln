@@ -1,4 +1,4 @@
-Microsoft Visual Studio Solution File, Format Version 12.00
+﻿Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.0.31516.353
 MinimumVisualStudioVersion = 10.0.40219.1
@@ -35,6 +35,18 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Playwright.TestAdapter", "Playwright.TestAdapter\Playwright.TestAdapter.csproj", "{61837C33-9182-4FBF-86F4-BDB757D1C023}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Playwright.Examples", "Playwright.Examples\Playwright.Examples.csproj", "{A7BFC553-1AFF-490B-86E2-09DBF24BDA69}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "runtimes", "runtimes", "{76B7A219-5307-4162-8C12-FAFABCD4F41E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Playwright.runtime.win-x64", "Playwright.runtime.win-x64\Playwright.runtime.win-x64.csproj", "{E03A4718-ABBB-41FD-8987-A0932D1A132F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Playwright.runtime.osx-x64", "Playwright.runtime.osx-x64\Playwright.runtime.osx-x64.csproj", "{3D4F5DC4-CC43-4508-9A91-19717DED25A4}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Playwright.runtime.linux-x64", "Playwright.runtime.linux-x64\Playwright.runtime.linux-x64.csproj", "{327D40DF-48AE-4216-AAE2-DB7B7A00A716}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Playwright.runtime.linux-arm", "Playwright.runtime.linux-arm64\Playwright.runtime.linux-arm64.csproj", "{D6BAEAFD-3408-4919-BAC4-945F9C14A96B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Playwright.runtime.osx-arm64", "Playwright.runtime.osx-arm64\Playwright.runtime.osx-arm64.csproj", "{8CB23361-CE40-4386-B2E4-4D09FF36D078}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -82,6 +94,26 @@ Global
 		{A7BFC553-1AFF-490B-86E2-09DBF24BDA69}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A7BFC553-1AFF-490B-86E2-09DBF24BDA69}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A7BFC553-1AFF-490B-86E2-09DBF24BDA69}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E03A4718-ABBB-41FD-8987-A0932D1A132F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E03A4718-ABBB-41FD-8987-A0932D1A132F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E03A4718-ABBB-41FD-8987-A0932D1A132F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E03A4718-ABBB-41FD-8987-A0932D1A132F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3D4F5DC4-CC43-4508-9A91-19717DED25A4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3D4F5DC4-CC43-4508-9A91-19717DED25A4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3D4F5DC4-CC43-4508-9A91-19717DED25A4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3D4F5DC4-CC43-4508-9A91-19717DED25A4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{327D40DF-48AE-4216-AAE2-DB7B7A00A716}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{327D40DF-48AE-4216-AAE2-DB7B7A00A716}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{327D40DF-48AE-4216-AAE2-DB7B7A00A716}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{327D40DF-48AE-4216-AAE2-DB7B7A00A716}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D6BAEAFD-3408-4919-BAC4-945F9C14A96B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D6BAEAFD-3408-4919-BAC4-945F9C14A96B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D6BAEAFD-3408-4919-BAC4-945F9C14A96B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D6BAEAFD-3408-4919-BAC4-945F9C14A96B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8CB23361-CE40-4386-B2E4-4D09FF36D078}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8CB23361-CE40-4386-B2E4-4D09FF36D078}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8CB23361-CE40-4386-B2E4-4D09FF36D078}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8CB23361-CE40-4386-B2E4-4D09FF36D078}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -90,8 +122,13 @@ Global
 		{61C89FA2-645D-4D0E-9A20-06ABE32054CF} = {5C6D57B1-C82A-48D6-9EBD-73B712CAE476}
 		{735E5F83-813C-4F5C-BB69-D3F87B15CF39} = {5C6D57B1-C82A-48D6-9EBD-73B712CAE476}
 		{55165383-EBE7-462B-B154-738818787740} = {D250D790-5A30-4C38-8F60-50FA96DB4E67}
-		{A7BFC553-1AFF-490B-86E2-09DBF24BDA69} = {5C6D57B1-C82A-48D6-9EBD-73B712CAE476}
 		{AE6072B5-4235-499F-8B0E-B8BCFC125CF5} = {D250D790-5A30-4C38-8F60-50FA96DB4E67}
+		{A7BFC553-1AFF-490B-86E2-09DBF24BDA69} = {5C6D57B1-C82A-48D6-9EBD-73B712CAE476}
+		{E03A4718-ABBB-41FD-8987-A0932D1A132F} = {76B7A219-5307-4162-8C12-FAFABCD4F41E}
+		{3D4F5DC4-CC43-4508-9A91-19717DED25A4} = {76B7A219-5307-4162-8C12-FAFABCD4F41E}
+		{327D40DF-48AE-4216-AAE2-DB7B7A00A716} = {76B7A219-5307-4162-8C12-FAFABCD4F41E}
+		{D6BAEAFD-3408-4919-BAC4-945F9C14A96B} = {76B7A219-5307-4162-8C12-FAFABCD4F41E}
+		{8CB23361-CE40-4386-B2E4-4D09FF36D078} = {76B7A219-5307-4162-8C12-FAFABCD4F41E}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {8D6EDE73-B005-4ABC-BCF8-BB3C154497EC}

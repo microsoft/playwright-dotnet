@@ -1,0 +1,16 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <PackageId>Microsoft.Playwright.runtime.win-64</PackageId>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <Description>Internal implementation package not meant for direct consumption. Please do not reference directly.</Description>
+  </PropertyGroup>
+
+  <Import Project="../Common/Version.props" />
+  <Import Project="../Common/SignAssembly.props" />
+  <Import Project="../Common/SignFiles.props" />
+
+  <ItemGroup>
+    <None Include="..\Playwright\.drivers\win32_x64\node.exe" Link=".playwright\node\win32_x64\node.exe" CopyToOutputDirectory="PreserveNewest" Pack="true" PackagePath=".playwright\node\win32_x64" />
+  </ItemGroup>
+</Project>
