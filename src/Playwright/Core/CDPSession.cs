@@ -45,7 +45,9 @@ internal class CDPSession : ChannelOwner, ICDPSession
         switch (method)
         {
             case "event":
-                OnCDPEvent(serverParams!.Value.GetProperty("method").ToString(), serverParams.Value.GetProperty("params"));
+                OnCDPEvent(
+                    serverParams!.Value.GetProperty("method").ToString(),
+                    serverParams!.Value.TryGetProperty("params", out var cdpParams) ? cdpParams : null);
                 break;
         }
     }
