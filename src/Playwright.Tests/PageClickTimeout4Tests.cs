@@ -35,6 +35,8 @@ public class PageClickTimeout4Tests : PageTestEx
                 button.style.marginLeft = '200px';
             }");
 
+        // rafraf for Firefox to kick in the animation.
+        await Page.EvaluateAsync("() => new Promise(f => requestAnimationFrame(() => requestAnimationFrame(f)))");
         var exception = await PlaywrightAssert.ThrowsAsync<TimeoutException>(()
             => Page.ClickAsync("button", new() { Timeout = 3000 }));
 

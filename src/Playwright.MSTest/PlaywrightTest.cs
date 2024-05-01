@@ -76,12 +76,6 @@ public class PlaywrightTest
         Playwright.Selectors.SetTestIdAttribute("data-testid");
     }
 
-    [ClassInitialize(InheritanceBehavior.BeforeEachDerivedClass)]
-    public static void ClassInitialize(TestContext context)
-    {
-        PlaywrightTestMethodAttribute.TestContext = context;
-    }
-
     [TestCleanup]
     public async Task Teardown()
     {

@@ -94,7 +94,7 @@ public class PlaywrightTestAttribute : TestAttribute, IWrapSetUpTearDown
     /// <summary>
     /// Helper to detect UnobservedTaskExceptions
     /// </summary>
-    private sealed class UnobservedTaskExceptionCommand : NUnit.PlaywrightTestAttribute.RetryTestCommand
+    private sealed class UnobservedTaskExceptionCommand : DelegatingTestCommand
     {
         public UnobservedTaskExceptionCommand(TestCommand innerCommand)
             : base(innerCommand)
@@ -109,7 +109,7 @@ public class PlaywrightTestAttribute : TestAttribute, IWrapSetUpTearDown
             TestResult result = null;
             try
             {
-                result = base.Execute(context);
+                result = innerCommand.Execute(context);
             }
             finally
             {
