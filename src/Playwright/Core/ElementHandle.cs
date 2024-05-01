@@ -105,6 +105,7 @@ internal class ElementHandle : JSHandle, IElementHandle
             ["scale"] = options.Scale,
             ["quality"] = options.Quality,
             ["maskColor"] = options.MaskColor,
+            ["style"] = options.Style,
         };
         if (options.Mask != null)
         {

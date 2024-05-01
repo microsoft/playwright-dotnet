@@ -401,4 +401,19 @@ public class ElementHandleScreenshotTests : PageTestEx
         await elementHandle.ScreenshotAsync(new() { Path = outputPath });
         PlaywrightAssert.ToMatchSnapshot("screenshot-element-bounding-box.png", outputPath);
     }
+
+    [PlaywrightTest("locator-screenshot.spec.ts", "should hide elements based on attr")]
+    public async Task ShouldHideElementsBasedOnAttr()
+    {
+        await Page.GotoAsync(Server.Prefix + "/grid.html");
+        var locator = Page.Locator("div").Nth(5);
+        await locator.EvaluateAsync("element => element.setAttribute('data-test-screenshot', 'red-background')");
+        var screenshot = await locator.ScreenshotAsync(new()
+        {
+            Style = @"[data-test-screenshot=""red-background""] {
+                background-color: red !important;
+            }",
+        });
+        PlaywrightAssert.ToMatchSnapshot("grid-cell-5-red.png", screenshot);
+    }
 }
