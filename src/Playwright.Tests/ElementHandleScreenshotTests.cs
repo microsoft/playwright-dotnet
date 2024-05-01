@@ -414,6 +414,6 @@ public class ElementHandleScreenshotTests : PageTestEx
                 background-color: red !important;
             }",
         });
-        Assert.True(ScreenshotHelper.PixelMatch("grid-cell-5-red.png", screenshot));
+        PlaywrightAssert.ToMatchSnapshot("grid-cell-5-red.png", screenshot);
     }
 }
