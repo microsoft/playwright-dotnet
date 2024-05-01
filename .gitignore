@@ -353,7 +353,6 @@ MigrationBackup/
 .idea
 src/Playwright.sln.DotSettings
 src/Playwright/.drivers
-src/Playwright.Tests/Screenshots/**/test.png
 src/Playwright/Microsoft.Playwright.xml
 
 testCert.cer

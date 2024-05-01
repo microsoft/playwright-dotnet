@@ -24,6 +24,8 @@
 
 using System.Text.Json;
 using NUnit.Framework.Constraints;
+using SixLabors.ImageSharp;
+using SixLabors.ImageSharp.PixelFormats;
 
 namespace Microsoft.Playwright.Tests;
 
@@ -49,5 +51,56 @@ internal static class PlaywrightAssert
     internal static void AreJsonEqual(object expected, object actual)
     {
         Assert.AreEqual(JsonSerializer.Serialize(expected), JsonSerializer.Serialize(actual));
+    }
+
+    internal static void ToMatchSnapshot(string expectedImageName, string actual)
+        => ToMatchSnapshot(expectedImageName, File.ReadAllBytes(actual));
+
+    internal static void ToMatchSnapshot(string expectedImageName, byte[] actual)
+    {
+        const int pixelThreshold = 10;
+        const decimal totalTolerance = 0.05m;
+
+        var goldenPathDir = Path.Combine(TestUtils.FindParentDirectory("Screenshots"), TestConstants.BrowserName);
+        var expectedImagePath = Path.Combine(goldenPathDir, expectedImageName);
+        if (Environment.GetEnvironmentVariable("UPDATE_SNAPSHOTS") == "1")
+        {
+            File.WriteAllBytes(expectedImagePath, actual);
+        }
+
+        var expectedImage = Image.Load<Rgb24>(expectedImagePath);
+        var actualImage = Image.Load<Rgb24>(actual);
+
+        if (expectedImage.Width != actualImage.Width || expectedImage.Height != actualImage.Height)
+        {
+            Assert.Fail("Expected image dimensions do not match actual image dimensions.\n" +
+                $"Expected: {expectedImage.Width}x{expectedImage.Height}\n" +
+                $"Actual: {actualImage.Width}x{actualImage.Height}");
+            return;
+        }
+
+        int invalidPixelsCount = 0;
+        for (int y = 0; y < expectedImage.Height; y++)
+        {
+            for (int x = 0; x < expectedImage.Width; x++)
+            {
+                var pixelA = expectedImage[x, y];
+                var pixelB = actualImage[x, y];
+
+
+                if (Math.Abs(pixelA.R - pixelB.R) > pixelThreshold ||
+                    Math.Abs(pixelA.G - pixelB.G) > pixelThreshold ||
+                    Math.Abs(pixelA.B - pixelB.B) > pixelThreshold)
+                {
+                    invalidPixelsCount++;
+                }
+            }
+        }
+        // cast invalidPixelsCount to decimal to avoid integer division
+        if (((decimal)invalidPixelsCount / (expectedImage.Height * expectedImage.Width)) > totalTolerance)
+        {
+            Assert.Fail($"Expected image to match snapshot but it did not. {invalidPixelsCount} pixels do not match.\n" +
+                $"Set the environment variable 'UPDATE_SNAPSHOTS' to '1' to update the snapshot.");
+        }
     }
 }

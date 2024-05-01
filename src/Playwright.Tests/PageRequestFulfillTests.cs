@@ -27,7 +27,7 @@ using Microsoft.AspNetCore.Http;
 
 namespace Microsoft.Playwright.Tests;
 
-public class RequestFulfillTests : PageTestEx
+public class PageRequestFulfillTests : PageTestEx
 {
     [PlaywrightTest("page-request-fulfill.spec.ts", "should work")]
     public async Task ShouldWork()
@@ -88,7 +88,7 @@ public class RequestFulfillTests : PageTestEx
                 return new Promise(fulfill => img.onload = fulfill);
             }", Server.Prefix);
         var img = await Page.QuerySelectorAsync("img");
-        Assert.True(ScreenshotHelper.PixelMatch("mock-binary-response.png", await img.ScreenshotAsync()));
+        PlaywrightAssert.ToMatchSnapshot("mock-binary-response.png", await img.ScreenshotAsync());
     }
 
     [PlaywrightTest("page-request-fulfill.spec.ts", "should allow mocking svg with charset")]
@@ -116,7 +116,7 @@ public class RequestFulfillTests : PageTestEx
                 return new Promise(fulfill => img.onload = fulfill);
             }", Server.Prefix);
         var img = await Page.QuerySelectorAsync("img");
-        Assert.True(ScreenshotHelper.PixelMatch("mock-binary-response.png", await img.ScreenshotAsync()));
+        PlaywrightAssert.ToMatchSnapshot("mock-binary-response.png", await img.ScreenshotAsync());
     }
 
     [PlaywrightTest("page-request-fulfill.spec.ts", "should stringify intercepted request response headers")]

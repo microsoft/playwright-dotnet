@@ -35,7 +35,7 @@ public class PageScreenshotTests : PageTestEx
         await Page.SetViewportSizeAsync(500, 500);
         await Page.GotoAsync(Server.Prefix + "/grid.html");
         byte[] screenshot = await Page.ScreenshotAsync();
-        Assert.True(ScreenshotHelper.PixelMatch("screenshot-sanity.png", screenshot));
+        PlaywrightAssert.ToMatchSnapshot("screenshot-sanity.png", screenshot);
     }
 
     [PlaywrightTest("page-screenshot.spec.ts", "should clip rect")]
@@ -54,7 +54,7 @@ public class PageScreenshotTests : PageTestEx
             }
         }
         );
-        Assert.True(ScreenshotHelper.PixelMatch("screenshot-clip-rect.png", screenshot));
+        PlaywrightAssert.ToMatchSnapshot("screenshot-clip-rect.png", screenshot);
     }
 
     [PlaywrightTest("page-screenshot.spec.ts", "should clip rect with fullPage")]
@@ -74,7 +74,7 @@ public class PageScreenshotTests : PageTestEx
                 Height = 100,
             }
         });
-        Assert.True(ScreenshotHelper.PixelMatch("screenshot-clip-rect.png", screenshot));
+        PlaywrightAssert.ToMatchSnapshot("screenshot-clip-rect.png", screenshot);
     }
 
     [PlaywrightTest("page-screenshot.spec.ts", "should clip elements to the viewport")]
@@ -92,7 +92,7 @@ public class PageScreenshotTests : PageTestEx
                 Height = 100,
             }
         });
-        Assert.True(ScreenshotHelper.PixelMatch("screenshot-offscreen-clip.png", screenshot));
+        PlaywrightAssert.ToMatchSnapshot("screenshot-offscreen-clip.png", screenshot);
     }
 
     [PlaywrightTest("page-screenshot.spec.ts", "should throw on clip outside the viewport")]
@@ -136,7 +136,7 @@ public class PageScreenshotTests : PageTestEx
         }
 
         await TaskUtils.WhenAll(tasks);
-        Assert.True(ScreenshotHelper.PixelMatch("grid-cell-1.png", tasks[0].Result));
+        PlaywrightAssert.ToMatchSnapshot("grid-cell-1.png", tasks[0].Result);
     }
 
     [PlaywrightTest("page-screenshot.spec.ts", "should take fullPage screenshots")]
@@ -145,7 +145,7 @@ public class PageScreenshotTests : PageTestEx
         await Page.SetViewportSizeAsync(500, 500);
         await Page.GotoAsync(Server.Prefix + "/grid.html");
         byte[] screenshot = await Page.ScreenshotAsync(new() { FullPage = true });
-        Assert.True(ScreenshotHelper.PixelMatch("screenshot-grid-fullpage.png", screenshot));
+        PlaywrightAssert.ToMatchSnapshot("screenshot-grid-fullpage.png", screenshot);
     }
 
     [PlaywrightTest("page-screenshot.spec.ts", "should restore viewport after fullPage screenshot")]
@@ -197,7 +197,7 @@ public class PageScreenshotTests : PageTestEx
 
         for (int i = 0; i < n; i++)
         {
-            Assert.True(ScreenshotHelper.PixelMatch($"grid-cell-{i % 2}.png", screenshotTasks[i].Result));
+            PlaywrightAssert.ToMatchSnapshot($"grid-cell-{i % 2}.png", screenshotTasks[i].Result);
         }
 
         var closeTasks = new List<Task>();
@@ -213,11 +213,19 @@ public class PageScreenshotTests : PageTestEx
     [Skip(SkipAttribute.Targets.Firefox)]
     public async Task ShouldAllowTransparency()
     {
-        await Page.SetViewportSizeAsync(50, 150);
-        await Page.GotoAsync(Server.EmptyPage);
+        await Page.SetViewportSizeAsync(300, 300);
+        await Page.SetContentAsync(@"
+            <style>
+                body { margin: 0 }
+                div { width: 300px; height: 100px; }
+            </style>
+            <div style=""background:black""></div>
+            <div style=""background:white""></div>
+            <div style=""background:transparent""></div>
+        ");
         byte[] screenshot = await Page.ScreenshotAsync(new() { OmitBackground = true });
 
-        Assert.True(ScreenshotHelper.PixelMatch("transparent.png", screenshot));
+        PlaywrightAssert.ToMatchSnapshot("transparent.png", screenshot);
     }
 
     [PlaywrightTest("page-screenshot.spec.ts", "should render white background on jpeg file")]
@@ -230,7 +238,7 @@ public class PageScreenshotTests : PageTestEx
             OmitBackground = true,
             Type = ScreenshotType.Jpeg,
         });
-        Assert.True(ScreenshotHelper.PixelMatch("white.jpg", screenshot));
+        PlaywrightAssert.ToMatchSnapshot("white.jpg", screenshot);
     }
 
     [PlaywrightTest("page-screenshot.spec.ts", "should work with odd clip size on Retina displays")]
@@ -247,7 +255,7 @@ public class PageScreenshotTests : PageTestEx
             }
         });
 
-        Assert.True(ScreenshotHelper.PixelMatch("screenshot-clip-odd-size.png", screenshot));
+        PlaywrightAssert.ToMatchSnapshot("screenshot-clip-odd-size.png", screenshot);
     }
 
     [PlaywrightTest("page-screenshot.spec.ts", "should work with a mobile viewport")]
@@ -267,7 +275,7 @@ public class PageScreenshotTests : PageTestEx
         await page.GotoAsync(Server.Prefix + "/overflow.html");
         byte[] screenshot = await page.ScreenshotAsync();
 
-        Assert.True(ScreenshotHelper.PixelMatch("screenshot-mobile.png", screenshot));
+        PlaywrightAssert.ToMatchSnapshot("screenshot-mobile.png", screenshot);
     }
 
     [PlaywrightTest("page-screenshot.spec.ts", "should work with a mobile viewport and clip")]
@@ -296,7 +304,7 @@ public class PageScreenshotTests : PageTestEx
             }
         });
 
-        Assert.True(ScreenshotHelper.PixelMatch("screenshot-mobile-clip.png", screenshot));
+        PlaywrightAssert.ToMatchSnapshot("screenshot-mobile-clip.png", screenshot);
     }
 
     [PlaywrightTest("page-screenshot.spec.ts", "should work with a mobile viewport and fullPage")]
@@ -316,7 +324,7 @@ public class PageScreenshotTests : PageTestEx
         await page.GotoAsync(Server.Prefix + "/overflow-large.html");
         byte[] screenshot = await page.ScreenshotAsync(new() { FullPage = true });
 
-        Assert.True(ScreenshotHelper.PixelMatch("screenshot-mobile-fullpage.png", screenshot));
+        PlaywrightAssert.ToMatchSnapshot("screenshot-mobile-fullpage.png", screenshot);
     }
 
     [PlaywrightTest("page-screenshot.spec.ts", "should work for canvas")]
@@ -326,7 +334,7 @@ public class PageScreenshotTests : PageTestEx
         await Page.GotoAsync(Server.Prefix + "/screenshots/canvas.html");
         byte[] screenshot = await Page.ScreenshotAsync();
 
-        Assert.True(ScreenshotHelper.PixelMatch("screenshot-canvas.png", screenshot));
+        PlaywrightAssert.ToMatchSnapshot("screenshot-canvas.png", screenshot);
     }
 
     [PlaywrightTest("page-screenshot.spec.ts", "should work for translateZ")]
@@ -336,7 +344,7 @@ public class PageScreenshotTests : PageTestEx
         await Page.GotoAsync(Server.Prefix + "/screenshots/translateZ.html");
         byte[] screenshot = await Page.ScreenshotAsync();
 
-        Assert.True(ScreenshotHelper.PixelMatch("screenshot-translateZ.png", screenshot));
+        PlaywrightAssert.ToMatchSnapshot("screenshot-translateZ.png", screenshot);
     }
 
     [PlaywrightTest("page-screenshot.spec.ts", "should work while navigating")]
@@ -373,7 +381,7 @@ public class PageScreenshotTests : PageTestEx
         await page.GotoAsync(Server.Prefix + "/grid.html");
         byte[] screenshot = await page.ScreenshotAsync();
 
-        Assert.True(ScreenshotHelper.PixelMatch("screenshot-device-scale-factor.png", screenshot));
+        PlaywrightAssert.ToMatchSnapshot("screenshot-device-scale-factor.png", screenshot);
     }
 
     [PlaywrightTest("page-screenshot.spec.ts", "should work with iframe in shadow")]
@@ -391,7 +399,7 @@ public class PageScreenshotTests : PageTestEx
         await page.GotoAsync(Server.Prefix + "/grid-iframe-in-shadow.html");
         byte[] screenshot = await page.ScreenshotAsync();
 
-        Assert.True(ScreenshotHelper.PixelMatch("screenshot-iframe.png", screenshot));
+        PlaywrightAssert.ToMatchSnapshot("screenshot-iframe.png", screenshot);
     }
 
     [PlaywrightTest("page-screenshot.spec.ts", "path option should work")]
@@ -403,7 +411,7 @@ public class PageScreenshotTests : PageTestEx
         string outputPath = Path.Combine(tmpDir.Path, "screenshot.png");
         await Page.ScreenshotAsync(new() { Path = outputPath });
 
-        Assert.True(ScreenshotHelper.PixelMatch("screenshot-sanity.png", outputPath));
+        PlaywrightAssert.ToMatchSnapshot("screenshot-sanity.png", outputPath);
     }
 
     [PlaywrightTest("page-screenshot.spec.ts", "path option should create subdirectories")]
@@ -415,7 +423,7 @@ public class PageScreenshotTests : PageTestEx
         string outputPath = Path.Combine(tmpDir.Path, "these", "are", "directories", "screenshot.png");
         await Page.ScreenshotAsync(new() { Path = outputPath });
 
-        Assert.True(ScreenshotHelper.PixelMatch("screenshot-sanity.png", outputPath));
+        PlaywrightAssert.ToMatchSnapshot("screenshot-sanity.png", outputPath);
     }
 
     [PlaywrightTest("page-screenshot.spec.ts", "path option should detect joeg")]
@@ -427,7 +435,7 @@ public class PageScreenshotTests : PageTestEx
         string outputPath = Path.Combine(tmpDir.Path, "screenshot.jpg");
         await Page.ScreenshotAsync(new() { Path = outputPath, OmitBackground = true });
 
-        Assert.True(ScreenshotHelper.PixelMatch("white.jpg", outputPath));
+        PlaywrightAssert.ToMatchSnapshot("white.jpg", outputPath);
     }
 
     [PlaywrightTest("page-screenshot.spec.ts", "path option should throw for unsupported mime type")]
@@ -446,7 +454,7 @@ public class PageScreenshotTests : PageTestEx
         var screenshot = await Page.ScreenshotAsync(new() { Style = @"[data-test-screenshot=""hide""] {
             visibility: hidden;
         }" });
-        Assert.True(ScreenshotHelper.PixelMatch("hide-should-work.png", screenshot));
+        PlaywrightAssert.ToMatchSnapshot("hide-should-work.png", screenshot);
         var visibility = await Page.Locator("div").Nth(5).EvaluateAsync<string>("element => element.style.visibility");
         Assert.AreEqual("", visibility);
     }
@@ -460,7 +468,7 @@ public class PageScreenshotTests : PageTestEx
         var screenshot = await Page.ScreenshotAsync(new() { Style = @"[data-test-screenshot=""remove""] {
             visibility: none;
         }" });
-        Assert.True(ScreenshotHelper.PixelMatch("remove-should-work.png", screenshot));
+        PlaywrightAssert.ToMatchSnapshot("remove-should-work.png", screenshot);
         var display = await Page.Locator("div").Nth(5).EvaluateAsync<string>("element => element.style.display");
         Assert.AreEqual("", display);
     }
