@@ -37,9 +37,9 @@ jobs:
         if: matrix.os != 'ubuntu-latest'
         env:
           BROWSER: ${{ matrix.browser }}
-        run: dotnet test ./src/Playwright.Tests/Playwright.Tests.csproj -c Debug -f net8.0 --logger:"console;verbosity=detailed" -- Playwright.Retries=1
+        run: dotnet test ./src/Playwright.Tests/Playwright.Tests.csproj -c Debug -f net8.0 --logger:"console;verbosity=detailed"
       - name: Running tests (Linux)
         if: matrix.os == 'ubuntu-latest'
         env:
           BROWSER: ${{ matrix.browser }}
-        run: xvfb-run dotnet test ./src/Playwright.Tests/Playwright.Tests.csproj -c Debug -f net8.0 --logger:"console;verbosity=detailed" -- Playwright.Retries=1
+        run: xvfb-run dotnet test ./src/Playwright.Tests/Playwright.Tests.csproj -c Debug -f net8.0 --logger:"console;verbosity=detailed"

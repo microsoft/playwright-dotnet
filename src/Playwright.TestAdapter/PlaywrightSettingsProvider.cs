@@ -71,11 +71,6 @@ public class PlaywrightSettingsProvider : ISettingsProvider
         }
     }
 
-    public static int Retries
-    {
-        get => _settings?.Retries ?? 0;
-    }
-
     public static BrowserTypeLaunchOptions LaunchOptions
     {
         get
