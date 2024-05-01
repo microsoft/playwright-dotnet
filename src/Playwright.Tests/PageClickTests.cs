@@ -528,7 +528,8 @@ public class PageClickTests : PageTestEx
                 button.style.display = 'block';
                 document.body.style.margin = '0';
             }");
-
+        // rafraf for Firefox to kick in the animation.
+        await Page.EvaluateAsync("() => new Promise(f => requestAnimationFrame(() => requestAnimationFrame(f)))");
         await Page.ClickAsync("button");
         Assert.AreEqual("Clicked", await Page.EvaluateAsync<string>("window.result"));
         Assert.AreEqual(300, await Page.EvaluateAsync<int>("pageX"));
