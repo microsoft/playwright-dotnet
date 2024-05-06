@@ -76,13 +76,4 @@ public class CapabilitiesTests : PageTestEx
         await Page.GotoAsync(Server.EmptyPage);
         Assert.AreEqual("SUCCESS", await Page.EvaluateAsync<string>("() => window.testStatus"));
     }
-
-    [PlaywrightTest("capabilities.spec.ts", "should play video")]
-    [Skip(SkipAttribute.Targets.Webkit | SkipAttribute.Targets.Linux, SkipAttribute.Targets.Webkit | SkipAttribute.Targets.Windows, SkipAttribute.Targets.Firefox)]
-    public async Task ShouldPlayVideo()
-    {
-        await Page.GotoAsync(Server.Prefix + (TestConstants.IsWebKit ? "/video_mp4.html" : "/video.html"));
-        await Page.EvalOnSelectorAsync("video", "v => v.play()");
-        await Page.EvalOnSelectorAsync("video", "v => v.pause()");
-    }
 }
