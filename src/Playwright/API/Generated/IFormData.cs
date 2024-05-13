@@ -175,7 +175,7 @@ public partial interface IFormData
     /// </summary>
     /// <param name="name">Field name.</param>
     /// <param name="value">Field value.</param>
-    IFormData Append(string name, AppendValue value);
+    IFormData Append(string name, FilePayload value);
 
     /// <summary>
     /// <para>
