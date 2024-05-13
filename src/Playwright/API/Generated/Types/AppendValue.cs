@@ -22,39 +22,29 @@
  * SOFTWARE.
  */
 
+using System.ComponentModel.DataAnnotations;
 using System.Text.Json.Serialization;
 
 #nullable enable
 
 namespace Microsoft.Playwright;
 
-public class PageAssertionsToHaveURLOptions
+public partial class AppendValue
 {
-    public PageAssertionsToHaveURLOptions() { }
+    /// <summary><para>File name</para></summary>
+    [Required]
+    [JsonPropertyName("name")]
+    public string Name { get; set; } = default!;
 
-    public PageAssertionsToHaveURLOptions(PageAssertionsToHaveURLOptions clone)
-    {
-        if (clone == null)
-        {
-            return;
-        }
+    /// <summary><para>File type</para></summary>
+    [Required]
+    [JsonPropertyName("mimeType")]
+    public string MimeType { get; set; } = default!;
 
-        IgnoreCase = clone.IgnoreCase;
-        Timeout = clone.Timeout;
-    }
-
-    /// <summary>
-    /// <para>
-    /// Whether to perform case-insensitive match. <paramref name="ignoreCase"/> option
-    /// takes precedence over the corresponding regular expression flag if specified.
-    /// </para>
-    /// </summary>
-    [JsonPropertyName("ignoreCase")]
-    public bool? IgnoreCase { get; set; }
-
-    /// <summary><para>Time to retry the assertion for in milliseconds. Defaults to <c>5000</c>.</para></summary>
-    [JsonPropertyName("timeout")]
-    public float? Timeout { get; set; }
+    /// <summary><para>File content</para></summary>
+    [Required]
+    [JsonPropertyName("buffer")]
+    public byte[] Buffer { get; set; } = default!;
 }
 
 #nullable disable

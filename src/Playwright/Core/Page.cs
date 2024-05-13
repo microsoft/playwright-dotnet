@@ -46,7 +46,8 @@ internal class Page : ChannelOwner, IPage
     internal readonly List<Worker> _workers = new();
     internal readonly TimeoutSettings _timeoutSettings;
     private readonly List<HarRouter> _harRouters = new();
-    private readonly Dictionary<int, Func<Task>> _locatorHandlers = new();
+    // Func<Locator, Task> Handler
+    private readonly Dictionary<int, LocatorHandler> _locatorHandlers = new();
     private List<RouteHandler> _routes = new();
     private Video _video;
     private string _closeReason;
@@ -1476,32 +1477,112 @@ internal class Page : ChannelOwner, IPage
     public ILocator GetByTitle(Regex text, PageGetByTitleOptions options = null)
         => MainFrame.GetByTitle(text, new() { Exact = options?.Exact });
 
-    public async Task AddLocatorHandlerAsync(ILocator locator, Func<Task> handler)
+    public Task AddLocatorHandlerAsync(ILocator locator, Func<Task> handler, PageAddLocatorHandlerOptions options = null)
+        => AddLocatorHandlerImplAsync(locator, handler, options);
+
+    public Task AddLocatorHandlerAsync(ILocator locator, Func<ILocator, Task> handler, PageAddLocatorHandlerOptions options = null)
+        => AddLocatorHandlerImplAsync(locator, handler, options);
+
+    private async Task AddLocatorHandlerImplAsync(ILocator locator, object handler, PageAddLocatorHandlerOptions options = null)
     {
         if ((locator as Locator)._frame != MainFrame)
         {
             throw new PlaywrightException("Locator must belong to the main frame of this page");
         }
+        if (options?.Times == 0)
+        {
+            return;
+        }
         var response = await SendMessageToServerAsync("registerLocatorHandler", new Dictionary<string, object>
         {
             ["selector"] = (locator as Locator)._selector,
+            ["noWaitAfter"] = options?.NoWaitAfter,
         }).ConfigureAwait(false);
 
-        _locatorHandlers.Add(response.Value.GetProperty("uid").GetInt32(), handler);
+        _locatorHandlers.Add(response.Value.GetProperty("uid").GetInt32(), new LocatorHandler((Locator)locator, handler, options?.Times));
     }
 
     private async Task Channel_LocatorHandlerTriggeredAsync(int uid)
     {
+        var remove = false;
         try
         {
-            await _locatorHandlers[uid]().ConfigureAwait(false);
+            if (_locatorHandlers.TryGetValue(uid, out var handler))
+            {
+                if (handler.Times != 0)
+                {
+                    if (handler.Times != null)
+                    {
+                        handler.Times--;
+                    }
+                    await handler.HandleAsync().ConfigureAwait(false);
+                }
+                remove = handler.Times == 0;
+            }
         }
         finally
         {
+            if (remove)
+            {
+                _locatorHandlers.Remove(uid);
+            }
             SendMessageToServerAsync("resolveLocatorHandlerNoReply", new Dictionary<string, object>
             {
                 ["uid"] = uid,
+                ["remove"] = remove,
             }).IgnoreException();
         }
+    }
+
+    public async Task RemoveLocatorHandlerAsync(ILocator locator)
+    {
+        foreach (KeyValuePair<int, LocatorHandler> entry in _locatorHandlers)
+        {
+            var (uid, data) = (entry.Key, entry.Value);
+            if (data.Locator.EqualLocator(locator as Locator))
+            {
+                _locatorHandlers.Remove(uid);
+                try
+                {
+                    await SendMessageToServerAsync("unregisterLocatorHandler", new Dictionary<string, object>
+                    {
+                        ["uid"] = uid,
+                    }).ConfigureAwait(false);
+                }
+                catch (System.Exception)
+                {
+                    // Ignore
+                }
+            }
+        }
+    }
+}
+
+internal class LocatorHandler
+{
+    internal LocatorHandler(Locator locator, object handler, int? times)
+    {
+        Locator = locator;
+        Handler = handler;
+        Times = times;
+    }
+
+    internal Locator Locator { get; }
+
+    private object Handler { get; }
+
+    internal int? Times { get; set; }
+
+    internal Task HandleAsync()
+    {
+        if (Handler is Func<Task> funcTask)
+        {
+            return funcTask();
+        }
+        if (Handler is Func<ILocator, Task> funcLocatorTask)
+        {
+            return funcLocatorTask(Locator);
+        }
+        throw new PlaywrightException("Locator handler must be a Func<Task> or Func<ILocator, Task>");
     }
 }

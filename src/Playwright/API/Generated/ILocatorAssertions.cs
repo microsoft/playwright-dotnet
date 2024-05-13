@@ -395,6 +395,66 @@ public partial interface ILocatorAssertions
     Task ToContainTextAsync(IEnumerable<Regex> expected, LocatorAssertionsToContainTextOptions? options = default);
 
     /// <summary>
+    /// <para>
+    /// Ensures the <see cref="ILocator"/> points to an element with a given <a href="https://w3c.github.io/accname/#dfn-accessible-description">accessible
+    /// description</a>.
+    /// </para>
+    /// <para>**Usage**</para>
+    /// <code>
+    /// var locator = Page.GetByTestId("save-button");<br/>
+    /// await Expect(locator).toHaveAccessibleDescriptionAsync("Save results to disk");
+    /// </code>
+    /// </summary>
+    /// <param name="description">Expected accessible description.</param>
+    /// <param name="options">Call options</param>
+    Task ToHaveAccessibleDescriptionAsync(string description, LocatorAssertionsToHaveAccessibleDescriptionOptions? options = default);
+
+    /// <summary>
+    /// <para>
+    /// Ensures the <see cref="ILocator"/> points to an element with a given <a href="https://w3c.github.io/accname/#dfn-accessible-description">accessible
+    /// description</a>.
+    /// </para>
+    /// <para>**Usage**</para>
+    /// <code>
+    /// var locator = Page.GetByTestId("save-button");<br/>
+    /// await Expect(locator).toHaveAccessibleDescriptionAsync("Save results to disk");
+    /// </code>
+    /// </summary>
+    /// <param name="description">Expected accessible description.</param>
+    /// <param name="options">Call options</param>
+    Task ToHaveAccessibleDescriptionAsync(Regex description, LocatorAssertionsToHaveAccessibleDescriptionOptions? options = default);
+
+    /// <summary>
+    /// <para>
+    /// Ensures the <see cref="ILocator"/> points to an element with a given <a href="https://w3c.github.io/accname/#dfn-accessible-name">accessible
+    /// name</a>.
+    /// </para>
+    /// <para>**Usage**</para>
+    /// <code>
+    /// var locator = Page.GetByTestId("save-button");<br/>
+    /// await Expect(locator).toHaveAccessibleNameAsync("Save to disk");
+    /// </code>
+    /// </summary>
+    /// <param name="name">Expected accessible name.</param>
+    /// <param name="options">Call options</param>
+    Task ToHaveAccessibleNameAsync(string name, LocatorAssertionsToHaveAccessibleNameOptions? options = default);
+
+    /// <summary>
+    /// <para>
+    /// Ensures the <see cref="ILocator"/> points to an element with a given <a href="https://w3c.github.io/accname/#dfn-accessible-name">accessible
+    /// name</a>.
+    /// </para>
+    /// <para>**Usage**</para>
+    /// <code>
+    /// var locator = Page.GetByTestId("save-button");<br/>
+    /// await Expect(locator).toHaveAccessibleNameAsync("Save to disk");
+    /// </code>
+    /// </summary>
+    /// <param name="name">Expected accessible name.</param>
+    /// <param name="options">Call options</param>
+    Task ToHaveAccessibleNameAsync(Regex name, LocatorAssertionsToHaveAccessibleNameOptions? options = default);
+
+    /// <summary>
     /// <para>Ensures the <see cref="ILocator"/> points to an element with given attribute.</para>
     /// <para>**Usage**</para>
     /// <code>
@@ -606,6 +666,26 @@ public partial interface ILocatorAssertions
     /// <param name="value">Property value.</param>
     /// <param name="options">Call options</param>
     Task ToHaveJSPropertyAsync(string name, object value, LocatorAssertionsToHaveJSPropertyOptions? options = default);
+
+    /// <summary>
+    /// <para>
+    /// Ensures the <see cref="ILocator"/> points to an element with a given <a href="https://www.w3.org/TR/wai-aria-1.2/#roles">ARIA
+    /// role</a>.
+    /// </para>
+    /// <para>
+    /// Note that role is matched as a string, disregarding the ARIA role hierarchy. For
+    /// example, asserting  a superclass role <c>"checkbox"</c> on an element with a subclass
+    /// role <c>"switch"</c> will fail.
+    /// </para>
+    /// <para>**Usage**</para>
+    /// <code>
+    /// var locator = Page.GetByTestId("save-button");<br/>
+    /// await Expect(locator).ToHaveRoleAsync(AriaRole.Button);
+    /// </code>
+    /// </summary>
+    /// <param name="role">Required aria role.</param>
+    /// <param name="options">Call options</param>
+    Task ToHaveRoleAsync(AriaRole role, LocatorAssertionsToHaveRoleOptions? options = default);
 
     /// <summary>
     /// <para>

@@ -79,7 +79,7 @@ public class BrowserTypeConnectTests : PlaywrightTestEx
                 ["hello-foo"] = "i-am-bar",
             }
         }).IgnoreException();
-        var request = await connectionRequest;
+        (_, var request) = await connectionRequest;
         StringAssert.Contains("Playwright", request.Headers["User-Agent"]);
         Assert.AreEqual(request.Headers["hello-foo"], "i-am-bar");
         Assert.AreEqual(request.Headers["x-playwright-browser"], BrowserType.Name);
@@ -509,6 +509,18 @@ public class BrowserTypeConnectTests : PlaywrightTestEx
         // rounds it to seconds in WebKit: 1696272058110 -> 1696272058000.
         for (var i = 0; i < timestamps.Length; i++)
             Assert.LessOrEqual(Math.Abs(timestamps[i] - expectedTimestamps[i]), 1000);
+    }
+
+    [PlaywrightTest("browsertype-connect.spec.ts", "should print custom ws close error")]
+    public async Task ShouldPrintCustomWsCloseError()
+    {
+        Server.OnceWebSocketConnection(async (webSocket, _) =>
+        {
+            await webSocket.ReceiveAsync(new byte[1], CancellationToken.None);
+            await webSocket.CloseAsync(System.Net.WebSockets.WebSocketCloseStatus.PolicyViolation, "Oh my!", CancellationToken.None);
+        });
+        var error = await PlaywrightAssert.ThrowsAsync<PlaywrightException>(() => BrowserType.ConnectAsync($"ws://localhost:{Server.Port}/ws"));
+        StringAssert.Contains("Oh my!", error.Message);
     }
 
     private class RemoteServer

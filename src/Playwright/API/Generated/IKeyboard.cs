@@ -86,7 +86,8 @@ public partial interface IKeyboard
     /// </para>
     /// <para>
     /// Following modification shortcuts are also supported: <c>Shift</c>, <c>Control</c>,
-    /// <c>Alt</c>, <c>Meta</c>, <c>ShiftLeft</c>.
+    /// <c>Alt</c>, <c>Meta</c>, <c>ShiftLeft</c>, <c>ControlOrMeta</c>. <c>ControlOrMeta</c>
+    /// resolves to <c>Control</c> on Windows and Linux and to <c>Meta</c> on macOS.
     /// </para>
     /// <para>
     /// Holding down <c>Shift</c> will type the text that corresponds to the <paramref name="key"/>
@@ -152,7 +153,8 @@ public partial interface IKeyboard
     /// </para>
     /// <para>
     /// Following modification shortcuts are also supported: <c>Shift</c>, <c>Control</c>,
-    /// <c>Alt</c>, <c>Meta</c>, <c>ShiftLeft</c>.
+    /// <c>Alt</c>, <c>Meta</c>, <c>ShiftLeft</c>, <c>ControlOrMeta</c>. <c>ControlOrMeta</c>
+    /// resolves to <c>Control</c> on Windows and Linux and to <c>Meta</c> on macOS.
     /// </para>
     /// <para>
     /// Holding down <c>Shift</c> will type the text that corresponds to the <paramref name="key"/>

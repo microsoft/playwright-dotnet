@@ -80,7 +80,7 @@ internal class Browser : ChannelOwner, IBrowser
         {
             if (ShouldCloseConnectionOnClose)
             {
-                _connection.DoClose();
+                _connection.DoClose(null as string);
             }
             else
             {

@@ -34,6 +34,8 @@ public enum KeyboardModifier
     Alt,
     [EnumMember(Value = "Control")]
     Control,
+    [EnumMember(Value = "ControlOrMeta")]
+    ControlOrMeta,
     [EnumMember(Value = "Meta")]
     Meta,
     [EnumMember(Value = "Shift")]

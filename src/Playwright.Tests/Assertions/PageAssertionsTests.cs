@@ -51,23 +51,28 @@ public class PageAssertionsTests : PageTestEx
     [PlaywrightTest("playwright-test/playwright.expect.misc.spec.ts", "should support toHaveURL")]
     public async Task ShouldSupportToHaveURLAsync()
     {
+        // Pass
         await Page.GotoAsync("data:text/html,<div>A</div>");
         await Expect(Page).ToHaveURLAsync("data:text/html,<div>A</div>");
 
+        // Fail
         await Page.GotoAsync("data:text/html,<div>B</div>");
         var exception = await PlaywrightAssert.ThrowsAsync<PlaywrightException>(() => Expect(Page).ToHaveURLAsync("wrong", new() { Timeout = 1000 }));
         StringAssert.Contains("Page URL expected to be 'wrong'", exception.Message);
         StringAssert.Contains("But was: 'data:text/html,<div>B</div>'", exception.Message);
         StringAssert.Contains("PageAssertions.ToHaveURLAsync with timeout 1000ms", exception.Message);
 
+        // Fail with Regex
         await Page.GotoAsync(Server.EmptyPage);
         await Expect(Page).ToHaveURLAsync(new Regex(".*empty.html"));
         await PlaywrightAssert.ThrowsAsync<PlaywrightException>(() => Expect(Page).ToHaveURLAsync(new Regex("nooo"), new() { Timeout = 1000 }));
 
+        // Pass with Regex
         await Page.GotoAsync(Server.EmptyPage);
         await Expect(Page).ToHaveURLAsync(Server.Prefix + "/empty.html");
         await Expect(Page).Not.ToHaveURLAsync(Server.Prefix + "/foobar.html");
 
+        // With BaseURL
         var page = await Browser.NewPageAsync(new() { BaseURL = Server.Prefix });
         try
         {
@@ -79,5 +84,10 @@ public class PageAssertionsTests : PageTestEx
         {
             await page.CloseAsync();
         }
+
+        // Support IgnoreCase
+        await Page.GotoAsync("data:text/html,<div>A</div>");
+        await Expect(Page).ToHaveURLAsync("DATA:teXT/HTml,<div>a</div>", new() { IgnoreCase = true });
+        await Expect(Page).ToHaveURLAsync(new Regex("DATA:teXT/HTml,<div>a</div>"), new() { IgnoreCase = true });
     }
 }

@@ -80,4 +80,12 @@ internal class FormData : IFormData
         }
         return output;
     }
+
+    public IFormData Append(string name, string value) => throw new NotImplementedException();
+
+    public IFormData Append(string name, bool value) => throw new NotImplementedException();
+
+    public IFormData Append(string name, int value) => throw new NotImplementedException();
+
+    public IFormData Append(string name, AppendValue value) => throw new NotImplementedException();
 }

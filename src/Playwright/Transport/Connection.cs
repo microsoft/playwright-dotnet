@@ -413,11 +413,17 @@ internal class Connection : IDisposable
     }
 
     internal void DoClose(Exception cause = null)
+        => DoCloseImpl(cause != null ? new TargetClosedException(cause.Message, cause) : new TargetClosedException());
+
+    internal void DoClose(string cause = null)
+        => DoCloseImpl(!string.IsNullOrEmpty(cause) ? new TargetClosedException(cause) : new TargetClosedException());
+
+    internal void DoCloseImpl(Exception closeError = null)
     {
-        _closedError = cause != null ? new TargetClosedException(cause.Message, cause) : new TargetClosedException();
+        this._closedError = closeError;
         foreach (var callback in _callbacks)
         {
-            callback.Value.TaskCompletionSource.TrySetException(_closedError);
+            callback.Value.TaskCompletionSource.TrySetException(closeError.InnerException ?? closeError);
             // We need to make sure that the task is handled otherwise it will be reported as unhandled on the caller side.
             // Its still possible to get the exception from the task.
             callback.Value.TaskCompletionSource.Task.IgnoreException();

@@ -226,7 +226,7 @@ public class BrowserContextPageEventTests : BrowserTestEx
         var popupEventTask = context.WaitForPageAsync();
         await TaskUtils.WhenAll(
           popupEventTask,
-          page.ClickAsync("a", new() { Modifiers = new[] { TestConstants.IsMacOSX ? KeyboardModifier.Meta : KeyboardModifier.Control } }));
+          page.ClickAsync("a", new() { Modifiers = new[] { KeyboardModifier.ControlOrMeta } }));
 
         Assert.Null(await popupEventTask.Result.OpenerAsync());
     }

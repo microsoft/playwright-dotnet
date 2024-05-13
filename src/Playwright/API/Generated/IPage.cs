@@ -212,7 +212,9 @@ public partial interface IPage
     /// The earliest moment that page is available is when it has navigated to the initial
     /// url. For example, when opening a popup with <c>window.open('http://example.com')</c>,
     /// this event will fire when the network request to "http://example.com" is done and
-    /// its response has started loading in the popup.
+    /// its response has started loading in the popup. If you would like to route/listen
+    /// to this network request, use <see cref="IBrowserContext.RouteAsync"/> and <see cref="IBrowserContext.Request"/>
+    /// respectively instead of similar methods on the <see cref="IPage"/>.
     /// </para>
     /// <code>
     /// var popup = await page.RunAndWaitForPopupAsync(async () =&gt;<br/>
@@ -1626,7 +1628,8 @@ public partial interface IPage
     /// </para>
     /// <para>
     /// Following modification shortcuts are also supported: <c>Shift</c>, <c>Control</c>,
-    /// <c>Alt</c>, <c>Meta</c>, <c>ShiftLeft</c>.
+    /// <c>Alt</c>, <c>Meta</c>, <c>ShiftLeft</c>, <c>ControlOrMeta</c>. <c>ControlOrMeta</c>
+    /// resolves to <c>Control</c> on Windows and Linux and to <c>Meta</c> on macOS.
     /// </para>
     /// <para>
     /// Holding down <c>Shift</c> will type the text that corresponds to the <paramref name="key"/>
@@ -1715,6 +1718,11 @@ public partial interface IPage
     /// be triggered.
     /// </description></item>
     /// <item><description>
+    /// After executing the handler, Playwright will ensure that overlay that triggered
+    /// the handler is not visible anymore. You can opt-out of this behavior with <paramref
+    /// name="noWaitAfter"/>.
+    /// </description></item>
+    /// <item><description>
     /// The execution time of the handler counts towards the timeout of the action/assertion
     /// that executed the handler. If your handler takes too long, it might cause timeouts.
     /// </description></item>
@@ -1749,21 +1757,30 @@ public partial interface IPage
     /// <para>
     /// An example with a custom callback on every actionability check. It uses a <c>&lt;body&gt;</c>
     /// locator that is always visible, so the handler is called before every actionability
-    /// check:
+    /// check. It is important to specify <paramref name="noWaitAfter"/>, because the handler
+    /// does not hide the <c>&lt;body&gt;</c> element.
     /// </para>
     /// <code>
     /// // Setup the handler.<br/>
     /// await page.AddLocatorHandlerAsync(page.Locator("body"), async () =&gt; {<br/>
     ///   await page.EvaluateAsync("window.removeObstructionsForTestIfNeeded()");<br/>
-    /// });<br/>
+    /// }, new() { NoWaitAfter = true });<br/>
     /// <br/>
     /// // Write the test as usual.<br/>
     /// await page.GotoAsync("https://example.com");<br/>
     /// await page.GetByRole("button", new() { Name = "Start here" }).ClickAsync();
     /// </code>
+    /// <para>
+    /// Handler takes the original locator as an argument. You can also automatically remove
+    /// the handler after a number of invocations by setting <paramref name="times"/>:
+    /// </para>
+    /// <code>
+    /// await page.AddLocatorHandlerAsync(page.GetByText("Sign up to the newsletter"), async locator =&gt; {<br/>
+    ///   await locator.ClickAsync();<br/>
+    /// }, new() { Times = 1 });
+    /// </code>
     /// </summary>
     /// <remarks>
-    /// <para>This method is experimental and its behavior may change in the upcoming releases.</para>
     /// <para>
     /// Running the handler will alter your page state mid-test. For example it will change
     /// the currently focused element and move the mouse. Make sure that actions that run
@@ -1784,7 +1801,17 @@ public partial interface IPage
     /// Function that should be run once <paramref name="locator"/> appears. This function
     /// should get rid of the element that blocks actions like click.
     /// </param>
-    Task AddLocatorHandlerAsync(ILocator locator, Func<Task> handler);
+    /// <param name="options">Call options</param>
+    Task AddLocatorHandlerAsync(ILocator locator, Func<ILocator, Task> handler, PageAddLocatorHandlerOptions? options = default);
+
+    /// <summary>
+    /// <para>
+    /// Removes all locator handlers added by <see cref="IPage.AddLocatorHandlerAsync"/>
+    /// for a specific locator.
+    /// </para>
+    /// </summary>
+    /// <param name="locator">Locator passed to <see cref="IPage.AddLocatorHandlerAsync"/>.</param>
+    Task RemoveLocatorHandlerAsync(ILocator locator);
 
     /// <summary>
     /// <para>
@@ -1851,6 +1878,10 @@ public partial interface IPage
     /// issue. We recommend disabling Service Workers when using request interception by
     /// setting <paramref name="Browser.newContext.serviceWorkers"/> to <c>'block'</c>.
     /// </para>
+    /// <para>
+    /// <see cref="IPage.RouteAsync"/> will not intercept the first request of a popup page.
+    /// Use <see cref="IBrowserContext.RouteAsync"/> instead.
+    /// </para>
     /// <para>Enabling routing disables http cache.</para>
     /// </remarks>
     /// <param name="url">
@@ -1909,6 +1940,10 @@ public partial interface IPage
     /// issue. We recommend disabling Service Workers when using request interception by
     /// setting <paramref name="Browser.newContext.serviceWorkers"/> to <c>'block'</c>.
     /// </para>
+    /// <para>
+    /// <see cref="IPage.RouteAsync"/> will not intercept the first request of a popup page.
+    /// Use <see cref="IBrowserContext.RouteAsync"/> instead.
+    /// </para>
     /// <para>Enabling routing disables http cache.</para>
     /// </remarks>
     /// <param name="url">
@@ -1966,6 +2001,10 @@ public partial interface IPage
     /// Worker. See <a href="https://github.com/microsoft/playwright/issues/1090">this</a>
     /// issue. We recommend disabling Service Workers when using request interception by
     /// setting <paramref name="Browser.newContext.serviceWorkers"/> to <c>'block'</c>.
+    /// </para>
+    /// <para>
+    /// <see cref="IPage.RouteAsync"/> will not intercept the first request of a popup page.
+    /// Use <see cref="IBrowserContext.RouteAsync"/> instead.
     /// </para>
     /// <para>Enabling routing disables http cache.</para>
     /// </remarks>
@@ -2824,6 +2863,12 @@ public partial interface IPage
     /// Console.WriteLine(await popup.TitleAsync()); // popup is ready to use.
     /// </code>
     /// </summary>
+    /// <remarks>
+    /// <para>
+    /// Most of the time, this method is not needed because Playwright <a href="https://playwright.dev/dotnet/docs/actionability">auto-waits
+    /// before every action</a>.
+    /// </para>
+    /// </remarks>
     /// <param name="state">
     /// Optional load state to wait for, defaults to <c>load</c>. If the state has been
     /// already reached while loading current document, the method resolves immediately.
