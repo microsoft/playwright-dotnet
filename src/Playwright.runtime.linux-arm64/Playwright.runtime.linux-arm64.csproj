@@ -1,0 +1,16 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <PackageId>Microsoft.Playwright.runtime.linux-arm64</PackageId>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <Description>Internal implementation package not meant for direct consumption. Please do not reference directly.</Description>
+  </PropertyGroup>
+
+  <Import Project="../Common/Version.props" />
+  <Import Project="../Common/SignAssembly.props" />
+  <Import Project="../Common/SignFiles.props" />
+
+  <ItemGroup>
+    <None Include="..\Playwright\.drivers\linux\node" Link=".playwright\node\linux-x64\node" CopyToOutputDirectory="PreserveNewest" Pack="true" PackagePath=".playwright\node\linux-x64" />
+  </ItemGroup>
+</Project>
