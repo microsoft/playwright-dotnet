@@ -49,7 +49,7 @@ public class SimpleServer
     const int MaxMessageSize = 256 * 1024;
 
     private readonly IDictionary<string, Action<HttpContext>> _requestWaits;
-    private readonly IList<Action<HttpContext>> _waitForWebSocketConnectionRequestsWaits;
+    private readonly IList<Func<WebSocket, HttpContext, Task>> _waitForWebSocketConnectionRequestsWaits;
     private readonly IDictionary<string, Func<HttpContext, Task>> _routes;
     private readonly IDictionary<string, (string username, string password)> _auths;
     private readonly IDictionary<string, string> _csp;
@@ -81,7 +81,7 @@ public class SimpleServer
         EmptyPage = $"{Prefix}/empty.html";
 
         _requestWaits = new ConcurrentDictionary<string, Action<HttpContext>>();
-        _waitForWebSocketConnectionRequestsWaits = new List<Action<HttpContext>>();
+        _waitForWebSocketConnectionRequestsWaits = [];
         _routes = new ConcurrentDictionary<string, Func<HttpContext, Task>>();
         _auths = new ConcurrentDictionary<string, (string username, string password)>();
         _csp = new ConcurrentDictionary<string, string>();
@@ -98,11 +98,12 @@ public class SimpleServer
                     {
                         if (context.WebSockets.IsWebSocketRequest)
                         {
+                            var webSocket = await context.WebSockets.AcceptWebSocketAsync().ConfigureAwait(false);
                             foreach (var wait in _waitForWebSocketConnectionRequestsWaits)
                             {
-                                wait(context);
+                                _waitForWebSocketConnectionRequestsWaits.Remove(wait);
+                                await wait(webSocket, context).ConfigureAwait(false);
                             }
-                            var webSocket = await context.WebSockets.AcceptWebSocketAsync().ConfigureAwait(false);
                             if (_onWebSocketConnectionData != null)
                             {
                                 await webSocket.SendAsync(_onWebSocketConnectionData, WebSocketMessageType.Text, true, CancellationToken.None).ConfigureAwait(false);
@@ -287,18 +288,20 @@ public class SimpleServer
 
     public Task WaitForRequest(string path) => WaitForRequest(path, _ => true);
 
-    public async Task<HttpRequest> WaitForWebSocketConnectionRequest()
+    public async Task<(WebSocket, HttpRequest)> WaitForWebSocketConnectionRequest()
     {
-        var taskCompletion = new TaskCompletionSource<HttpRequest>();
-        void entryCb(HttpContext context)
+        var taskCompletion = new TaskCompletionSource<(WebSocket, HttpRequest)>();
+        OnceWebSocketConnection((WebSocket ws, HttpContext context) =>
         {
-            taskCompletion.SetResult(context.Request);
-        };
-        _waitForWebSocketConnectionRequestsWaits.Add(entryCb);
+            taskCompletion.SetResult((ws, context.Request));
+            return Task.CompletedTask;
+        });
+        return await taskCompletion.Task.ConfigureAwait(false);
+    }
 
-        var request = await taskCompletion.Task.ConfigureAwait(false);
-        _waitForWebSocketConnectionRequestsWaits.Remove(entryCb);
-        return request;
+    public void OnceWebSocketConnection(Func<WebSocket, HttpContext, Task> handler)
+    {
+        _waitForWebSocketConnectionRequestsWaits.Add(handler);
     }
 
     private static bool Authenticate(string username, string password, HttpContext context)

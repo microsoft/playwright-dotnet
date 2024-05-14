@@ -35,8 +35,10 @@ public class PageAddLocatorHandlerTests : PageTestEx
 
         var beforeCount = 0;
         var afterCount = 0;
-        await Page.AddLocatorHandlerAsync(Page.GetByText("This interstitial covers the button"), async () =>
+        var originalLocator = Page.GetByText("This interstitial covers the button");
+        await Page.AddLocatorHandlerAsync(originalLocator, async (locator) =>
         {
+            Assert.AreEqual(originalLocator, locator);
             ++beforeCount;
             await Page.Locator("#close").ClickAsync();
             ++afterCount;
@@ -84,7 +86,7 @@ public class PageAddLocatorHandlerTests : PageTestEx
             {
                 await Page.Locator("#close").ClickAsync();
             }
-        });
+        }, new() { NoWaitAfter = true });
 
         foreach (var args in new[]
         {
@@ -216,5 +218,181 @@ public class PageAddLocatorHandlerTests : PageTestEx
         }");
         await Expect(Page.Locator("#target")).ToBeVisibleAsync();
         await Expect(Page.Locator("#interstitial")).Not.ToBeVisibleAsync();
+    }
+
+    [PlaywrightTest("page-add-locator-handler.spec.ts", "should work when owner frame detaches")]
+    public async Task ShouldWorkWhenOwnerFrameDetaches()
+    {
+        await Page.GotoAsync(Server.EmptyPage);
+
+        await Page.EvaluateAsync(@"() =>
+        {
+            const iframe = document.createElement('iframe');
+            iframe.src = 'data:text/html,<body>hello from iframe</body>';
+            document.body.append(iframe);
+
+            const target = document.createElement('button');
+            target.textContent = 'Click me';
+            target.id = 'target';
+            target.addEventListener('click', () => window._clicked = true);
+            document.body.appendChild(target);
+
+            const closeButton = document.createElement('button');
+            closeButton.textContent = 'close';
+            closeButton.id = 'close';
+            closeButton.addEventListener('click', () => iframe.remove());
+            document.body.appendChild(closeButton);
+        }");
+
+        await Page.AddLocatorHandlerAsync(Page.FrameLocator("iframe").Locator("body"), async () =>
+        {
+            await Page.Locator("#close").ClickAsync();
+        });
+
+        await Page.Locator("#target").ClickAsync();
+        Assert.Null(await Page.QuerySelectorAsync("iframe"));
+        Assert.True(await Page.EvaluateAsync<bool>("window._clicked"));
+    }
+
+    [PlaywrightTest("page-add-locator-handler.spec.ts", "should work with times: option")]
+    public async Task ShouldWorkWithTimesOption()
+    {
+        await Page.GotoAsync(Server.Prefix + "/input/handle-locator.html");
+
+        var called = 0;
+        await Page.AddLocatorHandlerAsync(Page.Locator("body"), () =>
+        {
+            ++called;
+            return Task.CompletedTask;
+        }, new() { NoWaitAfter = true, Times = 2 });
+
+        await Page.Locator("#aside").HoverAsync();
+        await Page.EvaluateAsync(@"() =>
+        {
+            window.clicked = 0;
+            window.setupAnnoyingInterstitial('mouseover', 4);
+        }");
+        var error = await PlaywrightAssert.ThrowsAsync<TimeoutException>(() => Page.Locator("#target").ClickAsync(new() { Timeout = 3000 }));
+        Assert.AreEqual(2, called);
+        Assert.AreEqual(0, await Page.EvaluateAsync<int>("window.clicked"));
+        await Expect(Page.Locator("#interstitial")).ToBeVisibleAsync();
+        StringAssert.Contains("Timeout 3000ms exceeded", error.Message);
+        StringAssert.Contains("<div>This interstitial covers the button</div> from <div class=\"visible\" id=\"interstitial\">…</div> subtree intercepts pointer events", error.Message);
+    }
+
+    [PlaywrightTest("page-add-locator-handler.spec.ts", "should wait for hidden by default")]
+    public async Task ShouldWaitForHiddenByDefault()
+    {
+        await Page.GotoAsync(Server.Prefix + "/input/handle-locator.html");
+
+        var called = 0;
+        await Page.AddLocatorHandlerAsync(Page.GetByRole(AriaRole.Button, new() { Name = "close" }), async button =>
+        {
+            called++;
+            await button.ClickAsync();
+        });
+
+        await Page.Locator("#aside").HoverAsync();
+        await Page.EvaluateAsync(@"() =>
+        {
+            window.clicked = 0;
+            window.setupAnnoyingInterstitial('timeout', 1);
+        }");
+        await Page.Locator("#target").ClickAsync();
+        Assert.AreEqual(1, await Page.EvaluateAsync<int>("window.clicked"));
+        await Expect(Page.Locator("#interstitial")).Not.ToBeVisibleAsync();
+        Assert.AreEqual(1, called);
+    }
+
+    [PlaywrightTest("page-add-locator-handler.spec.ts", "should wait for hidden by default 2")]
+    public async Task ShouldWaitForHiddenByDefault2()
+    {
+        await Page.GotoAsync(Server.Prefix + "/input/handle-locator.html");
+
+        var called = 0;
+        await Page.AddLocatorHandlerAsync(Page.GetByRole(AriaRole.Button, new() { Name = "close" }), button =>
+        {
+            called++;
+            return Task.CompletedTask;
+        });
+
+        await Page.Locator("#aside").HoverAsync();
+        await Page.EvaluateAsync(@"() =>
+        {
+            window.clicked = 0;
+            window.setupAnnoyingInterstitial('hide', 1);
+        }");
+        var error = await PlaywrightAssert.ThrowsAsync<TimeoutException>(() => Page.Locator("#target").ClickAsync(new() { Timeout = 3000 }));
+        Assert.AreEqual(0, await Page.EvaluateAsync<int>("window.clicked"));
+        await Expect(Page.Locator("#interstitial")).ToBeVisibleAsync();
+        Assert.AreEqual(1, called);
+        StringAssert.Contains("locator handler has finished, waiting for GetByRole(AriaRole.Button, new() { Name = \"close\" }) to be hidden", error.Message);
+    }
+
+    [PlaywrightTest("page-add-locator-handler.spec.ts", "should work with noWaitAfter")]
+    public async Task ShouldWorkWithNoWaitAfter()
+    {
+        await Page.GotoAsync(Server.Prefix + "/input/handle-locator.html");
+
+        var called = 0;
+        await Page.AddLocatorHandlerAsync(Page.GetByRole(AriaRole.Button, new() { Name = "close" }), async button =>
+        {
+            called++;
+            if (called == 1)
+            {
+                await button.ClickAsync();
+            }
+            else
+            {
+                await Page.Locator("#interstitial").WaitForAsync(new() { State = WaitForSelectorState.Hidden });
+            }
+        }, new() { NoWaitAfter = true });
+
+        await Page.Locator("#aside").HoverAsync();
+        await Page.EvaluateAsync(@"() =>
+        {
+            window.clicked = 0;
+            window.setupAnnoyingInterstitial('timeout', 1);
+        }");
+        await Page.Locator("#target").ClickAsync();
+        Assert.AreEqual(1, await Page.EvaluateAsync<int>("window.clicked"));
+        await Expect(Page.Locator("#interstitial")).Not.ToBeVisibleAsync();
+        Assert.AreEqual(2, called);
+    }
+
+    [PlaywrightTest("page-add-locator-handler.spec.ts", "should removeLocatorHandler")]
+    public async Task ShouldRemoveLocatorHandler()
+    {
+        await Page.GotoAsync(Server.Prefix + "/input/handle-locator.html");
+
+        var called = 0;
+        await Page.AddLocatorHandlerAsync(Page.GetByRole(AriaRole.Button, new() { Name = "close" }), async button =>
+        {
+            ++called;
+            await button.ClickAsync();
+        });
+
+        await Page.EvaluateAsync(@"() =>
+        {
+            window.clicked = 0;
+            window.setupAnnoyingInterstitial('hide', 1);
+        }");
+        await Page.Locator("#target").ClickAsync();
+        Assert.AreEqual(1, called);
+        Assert.AreEqual(1, await Page.EvaluateAsync<int>("window.clicked"));
+        await Expect(Page.Locator("#interstitial")).Not.ToBeVisibleAsync();
+
+        await Page.EvaluateAsync(@"() =>
+        {
+            window.clicked = 0;
+            window.setupAnnoyingInterstitial('hide', 1);
+        }");
+        await Page.RemoveLocatorHandlerAsync(Page.GetByRole(AriaRole.Button, new() { Name = "close" }));
+
+        var error = await PlaywrightAssert.ThrowsAsync<TimeoutException>(() => Page.Locator("#target").ClickAsync(new() { Timeout = 3000 }));
+        Assert.AreEqual(1, called);
+        Assert.AreEqual(0, await Page.EvaluateAsync<int>("window.clicked"));
+        await Expect(Page.Locator("#interstitial")).ToBeVisibleAsync();
+        StringAssert.Contains("Timeout 3000ms exceeded", error.Message);
     }
 }

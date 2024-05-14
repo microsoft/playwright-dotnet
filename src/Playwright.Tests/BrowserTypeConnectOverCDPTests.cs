@@ -47,7 +47,6 @@ public class BrowserTypeConnectOverCDPTests : PlaywrightTestEx
         }
         finally
         {
-
             await browserServer.CloseAsync();
         }
     }
@@ -63,7 +62,7 @@ public class BrowserTypeConnectOverCDPTests : PlaywrightTestEx
                     { "x-foo-bar", "fookek" }
                 },
         }).IgnoreException();
-        var req = await waitForRequest;
+        (_, var req) = await waitForRequest;
         Assert.AreEqual("fookek", req.Headers["x-foo-bar"]);
         StringAssert.Contains("Playwright", req.Headers["user-agent"]);
     }
@@ -95,5 +94,18 @@ public class BrowserTypeConnectOverCDPTests : PlaywrightTestEx
 
             await browserServer.CloseAsync();
         }
+    }
+
+    [PlaywrightTest("chromium/chromium.spec.ts", "should report all pages in an existing browser")]
+    [Skip(SkipAttribute.Targets.Firefox, SkipAttribute.Targets.Webkit)]
+    public async Task ShouldPrintCustomWsCloseError()
+    {
+        Server.OnceWebSocketConnection(async (ws, request) =>
+        {
+            await ws.ReceiveAsync(new byte[1024], CancellationToken.None);
+            await ws.CloseAsync(System.Net.WebSockets.WebSocketCloseStatus.NormalClosure, "Oh my!", CancellationToken.None);
+        });
+        var error = await PlaywrightAssert.ThrowsAsync<PlaywrightException>(() => BrowserType.ConnectOverCDPAsync($"ws://localhost:{Server.Port}/ws"));
+        StringAssert.Contains("Browser logs:\n\nOh my!\n", error.Message);
     }
 }

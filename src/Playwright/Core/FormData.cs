@@ -30,16 +30,12 @@ namespace Microsoft.Playwright.Core;
 
 internal class FormData : IFormData
 {
-    public FormData()
-    {
-        Values = new Dictionary<string, object>();
-    }
-
-    internal Dictionary<string, object> Values { get; }
+    internal List<(string Name, object Value)> Fields { get; } = new();
 
     private FormData SetImpl(string name, object value)
     {
-        Values.Add(name, value);
+        Fields.RemoveAll(f => f.Name == name);
+        Fields.Add((name, value));
         return this;
     }
 
@@ -54,7 +50,7 @@ internal class FormData : IFormData
     internal IList<object> ToProtocol(bool throwWhenSerializingFilePayloads = false)
     {
         var output = new List<object>();
-        foreach (var kvp in Values)
+        foreach (var kvp in Fields)
         {
             if (kvp.Value is FilePayload file)
             {
@@ -64,7 +60,7 @@ internal class FormData : IFormData
                 }
                 output.Add(new Dictionary<string, object>()
                 {
-                    ["name"] = kvp.Key,
+                    ["name"] = kvp.Name,
                     ["file"] = new Dictionary<string, string>()
                     {
                         ["name"] = file.Name,
@@ -75,9 +71,23 @@ internal class FormData : IFormData
             }
             else
             {
-                output.Add(new NameValue() { Name = kvp.Key, Value = kvp.Value.ToString() });
+                output.Add(new NameValue() { Name = kvp.Name, Value = kvp.Value.ToString() });
             }
         }
         return output;
+    }
+
+    public IFormData Append(string name, string value) => AppendImpl(name, value);
+
+    public IFormData Append(string name, bool value) => AppendImpl(name, value);
+
+    public IFormData Append(string name, int value) => AppendImpl(name, value);
+
+    public IFormData Append(string name, FilePayload value) => AppendImpl(name, value);
+
+    private FormData AppendImpl(string name, object value)
+    {
+        Fields.Add((name, value));
+        return this;
     }
 }

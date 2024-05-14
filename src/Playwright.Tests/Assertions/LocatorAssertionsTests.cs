@@ -695,4 +695,36 @@ public class LocatorAssertionsTests : PageTestEx
         await Expect(Page.Locator("div")).Not.ToBeInViewportAsync(new() { Ratio = 0.7f });
         await Expect(Page.Locator("div")).Not.ToBeInViewportAsync(new() { Ratio = 0.8f });
     }
+
+    [PlaywrightTest("page/expect-misc.spec.ts", "toHaveAccessibleName")]
+    public async Task ToHaveAccessibleName()
+    {
+        await Page.SetContentAsync(@"<div role=""button"" aria-label=""Hello""></div>");
+        await Expect(Page.Locator("div")).ToHaveAccessibleNameAsync("Hello");
+        await Expect(Page.Locator("div")).Not.ToHaveAccessibleNameAsync("hello");
+        await Expect(Page.Locator("div")).ToHaveAccessibleNameAsync("hello", new() { IgnoreCase = true });
+        await Expect(Page.Locator("div")).ToHaveAccessibleNameAsync(new Regex(@"ell\w"));
+        await Expect(Page.Locator("div")).Not.ToHaveAccessibleNameAsync(new Regex("hello"));
+        await Expect(Page.Locator("div")).ToHaveAccessibleNameAsync(new Regex("hello"), new() { IgnoreCase = true });
+    }
+
+    [PlaywrightTest("page/expect-misc.spec.ts", "toHaveAccessibleDescription")]
+    public async Task ToHaveAccessibleDescription()
+    {
+        await Page.SetContentAsync(@"<div role=""button"" aria-description=""Hello""></div>");
+        await Expect(Page.Locator("div")).ToHaveAccessibleDescriptionAsync("Hello");
+        await Expect(Page.Locator("div")).Not.ToHaveAccessibleDescriptionAsync("hello");
+        await Expect(Page.Locator("div")).ToHaveAccessibleDescriptionAsync("hello", new() { IgnoreCase = true });
+        await Expect(Page.Locator("div")).ToHaveAccessibleDescriptionAsync(new Regex(@"ell\w"));
+        await Expect(Page.Locator("div")).Not.ToHaveAccessibleDescriptionAsync(new Regex("hello"));
+        await Expect(Page.Locator("div")).ToHaveAccessibleDescriptionAsync(new Regex("hello"), new() { IgnoreCase = true });
+    }
+
+    [PlaywrightTest("page/expect-misc.spec.ts", "toHaveRole")]
+    public async Task ToHaveRole()
+    {
+        await Page.SetContentAsync(@"<div role=""button"">Button!</div>");
+        await Expect(Page.Locator("div")).ToHaveRoleAsync(AriaRole.Button);
+        await Expect(Page.Locator("div")).Not.ToHaveRoleAsync(AriaRole.Checkbox);
+    }
 }

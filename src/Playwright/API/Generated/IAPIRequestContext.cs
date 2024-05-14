@@ -82,10 +82,10 @@ public partial interface IAPIRequestContext
     /// <para>
     /// Sends HTTP(S) request and returns its response. The method will populate request
     /// cookies from the context and update context cookies from the response. The method
-    /// will automatically follow redirects. JSON objects can be passed directly to the
-    /// request.
+    /// will automatically follow redirects.
     /// </para>
     /// <para>**Usage**</para>
+    /// <para>JSON objects can be passed directly to the request:</para>
     /// <code>
     /// var data = new Dictionary&lt;string, object&gt;() {<br/>
     ///   { "title", "Book Title" },<br/>
@@ -94,9 +94,10 @@ public partial interface IAPIRequestContext
     /// await Request.FetchAsync("https://example.com/api/createBook", new() { Method = "post", DataObject = data });
     /// </code>
     /// <para>
-    /// The common way to send file(s) in the body of a request is to encode it as form
-    /// fields with <c>multipart/form-data</c> encoding. You can achieve that with Playwright
-    /// API like this:
+    /// The common way to send file(s) in the body of a request is to upload them as form
+    /// fields with <c>multipart/form-data</c> encoding. Use <see cref="IFormData"/> to
+    /// construct request body and pass it to the request as <paramref name="multipart"/>
+    /// parameter:
     /// </para>
     /// <code>
     /// var file = new FilePayload()<br/>
@@ -118,10 +119,10 @@ public partial interface IAPIRequestContext
     /// <para>
     /// Sends HTTP(S) request and returns its response. The method will populate request
     /// cookies from the context and update context cookies from the response. The method
-    /// will automatically follow redirects. JSON objects can be passed directly to the
-    /// request.
+    /// will automatically follow redirects.
     /// </para>
     /// <para>**Usage**</para>
+    /// <para>JSON objects can be passed directly to the request:</para>
     /// <code>
     /// var data = new Dictionary&lt;string, object&gt;() {<br/>
     ///   { "title", "Book Title" },<br/>
@@ -130,9 +131,10 @@ public partial interface IAPIRequestContext
     /// await Request.FetchAsync("https://example.com/api/createBook", new() { Method = "post", DataObject = data });
     /// </code>
     /// <para>
-    /// The common way to send file(s) in the body of a request is to encode it as form
-    /// fields with <c>multipart/form-data</c> encoding. You can achieve that with Playwright
-    /// API like this:
+    /// The common way to send file(s) in the body of a request is to upload them as form
+    /// fields with <c>multipart/form-data</c> encoding. Use <see cref="IFormData"/> to
+    /// construct request body and pass it to the request as <paramref name="multipart"/>
+    /// parameter:
     /// </para>
     /// <code>
     /// var file = new FilePayload()<br/>
@@ -210,7 +212,7 @@ public partial interface IAPIRequestContext
     /// <para>JSON objects can be passed directly to the request:</para>
     /// <code>
     /// var data = new Dictionary&lt;string, object&gt;() {<br/>
-    ///   { "firstNam", "John" },<br/>
+    ///   { "firstName", "John" },<br/>
     ///   { "lastName", "Doe" }<br/>
     /// };<br/>
     /// await request.PostAsync("https://example.com/api/createBook", new() { DataObject = data });
@@ -228,8 +230,8 @@ public partial interface IAPIRequestContext
     /// </code>
     /// <para>
     /// The common way to send file(s) in the body of a request is to upload them as form
-    /// fields with <c>multipart/form-data</c> encoding. You can achieve that with Playwright
-    /// API like this:
+    /// fields with <c>multipart/form-data</c> encoding. Use <see cref="IFormData"/> to
+    /// construct request body and pass it to the request as <c>multipart</c> parameter:
     /// </para>
     /// <code>
     /// var file = new FilePayload()<br/>

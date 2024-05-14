@@ -109,11 +109,7 @@ internal class Tracing : ChannelOwner, ITracing
 
     private async Task DoStopChunkAsync(string filePath)
     {
-        if (_isTracing)
-        {
-            _isTracing = false;
-            _connection.SetIsTracing(false);
-        }
+        ResetStackCounter();
 
         if (string.IsNullOrEmpty(filePath))
         {
@@ -171,5 +167,14 @@ internal class Tracing : ChannelOwner, ITracing
             }
         }
         return (artifact, entries);
+    }
+
+    internal void ResetStackCounter()
+    {
+        if (_isTracing)
+        {
+            _isTracing = false;
+            _connection.SetIsTracing(false);
+        }
     }
 }

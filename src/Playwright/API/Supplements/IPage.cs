@@ -84,4 +84,7 @@ public partial interface IPage
 
     /// <inheritdoc cref="UnrouteAsync(Func{string, bool}, Action{IRoute}?)"/>
     Task UnrouteAsync(Func<string, bool> url, Func<IRoute, Task> handler);
+
+    /// <inheritdoc cref="AddLocatorHandlerAsync(ILocator, Func{ILocator, Task}, PageAddLocatorHandlerOptions?)" />
+    Task AddLocatorHandlerAsync(ILocator locator, Func<Task> handler, PageAddLocatorHandlerOptions? options = default);
 }

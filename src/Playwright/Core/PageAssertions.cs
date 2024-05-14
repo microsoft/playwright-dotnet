@@ -57,8 +57,8 @@ internal class PageAssertions : AssertionsBase, IPageAssertions
         ExpectImplAsync("to.have.title", ExpectedRegex(titleOrRegExp, new() { NormalizeWhiteSpace = true }), titleOrRegExp, "Page title expected to be", ConvertToFrameExpectOptions(options));
 
     public Task ToHaveURLAsync(string urlOrRegExp, PageAssertionsToHaveURLOptions options = null) =>
-        ExpectImplAsync("to.have.url", new ExpectedTextValue() { String = _page.Context.CombineUrlWithBase(urlOrRegExp) }, urlOrRegExp, "Page URL expected to be", ConvertToFrameExpectOptions(options));
+        ExpectImplAsync("to.have.url", new ExpectedTextValue() { String = _page.Context.CombineUrlWithBase(urlOrRegExp), IgnoreCase = options?.IgnoreCase }, urlOrRegExp, "Page URL expected to be", ConvertToFrameExpectOptions(options));
 
     public Task ToHaveURLAsync(Regex urlOrRegExp, PageAssertionsToHaveURLOptions options = null) =>
-        ExpectImplAsync("to.have.url", ExpectedRegex(urlOrRegExp), urlOrRegExp, "Page URL expected to match regex", ConvertToFrameExpectOptions(options));
+        ExpectImplAsync("to.have.url", ExpectedRegex(urlOrRegExp, new() { IgnoreCase = options?.IgnoreCase }), urlOrRegExp, "Page URL expected to match regex", ConvertToFrameExpectOptions(options));
 }

@@ -28,29 +28,19 @@ using System.Text.Json.Serialization;
 
 namespace Microsoft.Playwright;
 
-public class PageAssertionsToHaveURLOptions
+public class LocatorAssertionsToHaveRoleOptions
 {
-    public PageAssertionsToHaveURLOptions() { }
+    public LocatorAssertionsToHaveRoleOptions() { }
 
-    public PageAssertionsToHaveURLOptions(PageAssertionsToHaveURLOptions clone)
+    public LocatorAssertionsToHaveRoleOptions(LocatorAssertionsToHaveRoleOptions clone)
     {
         if (clone == null)
         {
             return;
         }
 
-        IgnoreCase = clone.IgnoreCase;
         Timeout = clone.Timeout;
     }
-
-    /// <summary>
-    /// <para>
-    /// Whether to perform case-insensitive match. <paramref name="ignoreCase"/> option
-    /// takes precedence over the corresponding regular expression flag if specified.
-    /// </para>
-    /// </summary>
-    [JsonPropertyName("ignoreCase")]
-    public bool? IgnoreCase { get; set; }
 
     /// <summary><para>Time to retry the assertion for in milliseconds. Defaults to <c>5000</c>.</para></summary>
     [JsonPropertyName("timeout")]

@@ -28,11 +28,11 @@ using System.Text.Json.Serialization;
 
 namespace Microsoft.Playwright;
 
-public class PageAssertionsToHaveURLOptions
+public class LocatorAssertionsToHaveAccessibleNameOptions
 {
-    public PageAssertionsToHaveURLOptions() { }
+    public LocatorAssertionsToHaveAccessibleNameOptions() { }
 
-    public PageAssertionsToHaveURLOptions(PageAssertionsToHaveURLOptions clone)
+    public LocatorAssertionsToHaveAccessibleNameOptions(LocatorAssertionsToHaveAccessibleNameOptions clone)
     {
         if (clone == null)
         {

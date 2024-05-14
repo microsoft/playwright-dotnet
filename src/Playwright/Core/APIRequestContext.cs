@@ -47,7 +47,11 @@ internal class APIRequestContext : ChannelOwner, IAPIRequestContext
     }
 
     [MethodImpl(MethodImplOptions.NoInlining)]
-    public ValueTask DisposeAsync() => new(SendMessageToServerAsync("dispose"));
+    public async ValueTask DisposeAsync()
+    {
+        await SendMessageToServerAsync("dispose").ConfigureAwait(false);
+        _tracing.ResetStackCounter();
+    }
 
     [MethodImpl(MethodImplOptions.NoInlining)]
     public Task<IAPIResponse> FetchAsync(IRequest request, APIRequestContextOptions options = null)

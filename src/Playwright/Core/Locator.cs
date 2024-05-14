@@ -109,6 +109,8 @@ internal class Locator : ILocator
 
     public IFrameLocator ContentFrame => new FrameLocator(_frame, _selector);
 
+    internal bool EqualLocator(Locator locator) => _frame == locator._frame && _selector == locator._selector;
+
     public Task<LocatorBoundingBoxResult> BoundingBoxAsync(LocatorBoundingBoxOptions options = null)
         => WithElementAsync(
             async (h, _) =>

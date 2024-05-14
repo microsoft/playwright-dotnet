@@ -158,8 +158,8 @@ public class APIRequestContextOptions
     /// Provides an object that will be serialized as html form using <c>multipart/form-data</c>
     /// encoding and sent as this request body. If this parameter is specified <c>content-type</c>
     /// header will be set to <c>multipart/form-data</c> unless explicitly provided. File
-    /// values can be passed either as <a href="https://nodejs.org/api/fs.html#fs_class_fs_readstream"><c>fs.ReadStream</c></a>
-    /// or as file-like object containing file name, mime-type and its content.
+    /// values can be passed as file-like object containing file name, mime-type and its
+    /// content.
     /// </para>
     /// <para>An instance of <see cref="IFormData"/> can be created via <see cref="IAPIRequestContext.CreateFormData"/>.</para>
     /// </summary>

@@ -61,7 +61,8 @@ public class LocatorTapOptions
     /// <para>
     /// Modifier keys to press. Ensures that only these modifiers are pressed during the
     /// operation, and then restores current modifiers back. If not specified, currently
-    /// pressed modifiers are used.
+    /// pressed modifiers are used. "ControlOrMeta" resolves to "Control" on Windows and
+    /// Linux and to "Meta" on macOS.
     /// </para>
     /// </summary>
     [JsonPropertyName("modifiers")]

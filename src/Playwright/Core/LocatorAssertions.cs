@@ -201,4 +201,19 @@ internal class LocatorAssertions : AssertionsBase, ILocatorAssertions
 
     public Task ToHaveValuesAsync(IEnumerable<Regex> values, LocatorAssertionsToHaveValuesOptions options = null) =>
         ExpectImplAsync("to.have.values", values.Select(regex => ExpectedRegex(regex)).ToArray(), values, "Locator expected to have matching regex", ConvertToFrameExpectOptions(options));
+
+    public Task ToHaveAccessibleDescriptionAsync(string expected, LocatorAssertionsToHaveAccessibleDescriptionOptions options = null)
+        => ExpectImplAsync("to.have.accessible.description", new ExpectedTextValue() { String = expected, IgnoreCase = options?.IgnoreCase }, expected, "Locator expected to have accessible description", ConvertToFrameExpectOptions(options));
+
+    public Task ToHaveAccessibleDescriptionAsync(Regex expected, LocatorAssertionsToHaveAccessibleDescriptionOptions options = null)
+        => ExpectImplAsync("to.have.accessible.description", ExpectedRegex(expected, new() { IgnoreCase = options?.IgnoreCase }), expected, "Locator expected to have accessible description matching regex", ConvertToFrameExpectOptions(options));
+
+    public Task ToHaveAccessibleNameAsync(string expected, LocatorAssertionsToHaveAccessibleNameOptions options = null)
+        => ExpectImplAsync("to.have.accessible.name", new ExpectedTextValue() { String = expected, IgnoreCase = options?.IgnoreCase }, expected, "Locator expected to have accessible name", ConvertToFrameExpectOptions(options));
+
+    public Task ToHaveAccessibleNameAsync(Regex expected, LocatorAssertionsToHaveAccessibleNameOptions options = null)
+        => ExpectImplAsync("to.have.accessible.name", ExpectedRegex(expected, new() { IgnoreCase = options?.IgnoreCase }), expected, "Locator expected to have accessible name matching regex", ConvertToFrameExpectOptions(options));
+
+    public Task ToHaveRoleAsync(AriaRole role, LocatorAssertionsToHaveRoleOptions options = null)
+        => ExpectImplAsync("to.have.role", new ExpectedTextValue() { String = role.ToString().ToLowerInvariant() }, role, "Locator expected to have role", ConvertToFrameExpectOptions(options));
 }

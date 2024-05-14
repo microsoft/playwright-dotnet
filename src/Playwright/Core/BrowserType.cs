@@ -196,9 +196,9 @@ internal class BrowserType : ChannelOwner, IBrowserType
         connection.MarkAsRemote();
         connection.Close += (_, _) => ClosePipe();
 
-        Exception closeError = null;
+        string closeError = null;
         Browser browser = null;
-        void OnPipeClosed()
+        void OnPipeClosed(string reason = null)
         {
             // Emulate all pages, contexts and the browser closing upon disconnect.
             foreach (BrowserContext context in browser?._contexts.ToArray() ?? Array.Empty<BrowserContext>())
@@ -210,9 +210,9 @@ internal class BrowserType : ChannelOwner, IBrowserType
                 context.OnClose();
             }
             browser?.DidClose();
-            connection.DoClose(closeError);
+            connection.DoClose(reason ?? closeError);
         }
-        pipe.Closed += (_, _) => OnPipeClosed();
+        pipe.Closed += (_, reason) => OnPipeClosed(reason);
         connection.OnMessage = async (object message, bool _) =>
         {
             try
@@ -237,7 +237,7 @@ internal class BrowserType : ChannelOwner, IBrowserType
             }
             catch (Exception ex)
             {
-                closeError = ex;
+                closeError = ex.ToString();
                 ClosePipe();
             }
         };

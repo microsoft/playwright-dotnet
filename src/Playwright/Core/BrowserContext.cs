@@ -781,6 +781,7 @@ internal class BrowserContext : ChannelOwner, IBrowserContext
         }
 
         DisposeHarRouters();
+        _tracing.ResetStackCounter();
         Close?.Invoke(this, this);
         _closeTcs.TrySetResult(true);
     }

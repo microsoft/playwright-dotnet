@@ -28,33 +28,40 @@ using System.Text.Json.Serialization;
 
 namespace Microsoft.Playwright;
 
-public class PageAssertionsToHaveURLOptions
+public class PageAddLocatorHandlerOptions
 {
-    public PageAssertionsToHaveURLOptions() { }
+    public PageAddLocatorHandlerOptions() { }
 
-    public PageAssertionsToHaveURLOptions(PageAssertionsToHaveURLOptions clone)
+    public PageAddLocatorHandlerOptions(PageAddLocatorHandlerOptions clone)
     {
         if (clone == null)
         {
             return;
         }
 
-        IgnoreCase = clone.IgnoreCase;
-        Timeout = clone.Timeout;
+        NoWaitAfter = clone.NoWaitAfter;
+        Times = clone.Times;
     }
 
     /// <summary>
     /// <para>
-    /// Whether to perform case-insensitive match. <paramref name="ignoreCase"/> option
-    /// takes precedence over the corresponding regular expression flag if specified.
+    /// By default, after calling the handler Playwright will wait until the overlay becomes
+    /// hidden, and only then Playwright will continue with the action/assertion that triggered
+    /// the handler. This option allows to opt-out of this behavior, so that overlay can
+    /// stay visible after the handler has run.
     /// </para>
     /// </summary>
-    [JsonPropertyName("ignoreCase")]
-    public bool? IgnoreCase { get; set; }
+    [JsonPropertyName("noWaitAfter")]
+    public bool? NoWaitAfter { get; set; }
 
-    /// <summary><para>Time to retry the assertion for in milliseconds. Defaults to <c>5000</c>.</para></summary>
-    [JsonPropertyName("timeout")]
-    public float? Timeout { get; set; }
+    /// <summary>
+    /// <para>
+    /// Specifies the maximum number of times this handler should be called. Unlimited by
+    /// default.
+    /// </para>
+    /// </summary>
+    [JsonPropertyName("times")]
+    public int? Times { get; set; }
 }
 
 #nullable disable

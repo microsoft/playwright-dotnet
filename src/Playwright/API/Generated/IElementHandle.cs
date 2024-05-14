@@ -532,7 +532,7 @@ public partial interface IElementHandle : IJSHandle
     /// </para>
     /// <para>
     /// Following modification shortcuts are also supported: <c>Shift</c>, <c>Control</c>,
-    /// <c>Alt</c>, <c>Meta</c>, <c>ShiftLeft</c>.
+    /// <c>Alt</c>, <c>Meta</c>, <c>ShiftLeft</c>, <c>ControlOrMeta</c>.
     /// </para>
     /// <para>
     /// Holding down <c>Shift</c> will type the text that corresponds to the <paramref name="key"/>

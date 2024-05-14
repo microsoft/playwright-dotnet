@@ -809,6 +809,49 @@ public class BrowserContextFetchTests : PageTestEx
         Assert.AreEqual("False", receivedQueryParams["bool2"].First());
     }
 
+    [PlaywrightTest("browsercontext-fetch.spec.ts", "should support repeating names in multipart/form-data")]
+    public async Task ShouldSupportRepeatingNamesInMultipartFormData()
+    {
+        var postBodyPromise = new TaskCompletionSource<string>();
+        var formData = Context.APIRequest.CreateFormData();
+        formData.Set("name", "John");
+        formData.Append("name", "Doe");
+        formData.Append("file", new FilePayload()
+        {
+            Name = "f1.js",
+            MimeType = "text/javascript",
+            Buffer = System.Text.Encoding.UTF8.GetBytes("var x = 10;\r\n;console.log(x);")
+        });
+        formData.Append("file", new FilePayload()
+        {
+            Name = "f2.txt",
+            MimeType = "text/plain",
+            Buffer = System.Text.Encoding.UTF8.GetBytes("hello")
+        });
+        formData.Append("file", new FilePayload()
+        {
+            Name = "blob",
+            MimeType = "text/plain",
+            Buffer = System.Text.Encoding.UTF8.GetBytes("boo")
+        });
+
+        var (postBody, response) = await TaskUtils.WhenAll(
+        Server.WaitForRequest("/empty.html", request =>
+        {
+            using StreamReader reader = new(request.Body, System.Text.Encoding.UTF8);
+            return reader.ReadToEndAsync().GetAwaiter().GetResult();
+        }),
+            Context.APIRequest.PostAsync(Server.EmptyPage, new() { Multipart = formData })
+        );
+
+        StringAssert.Contains("content-disposition: form-data; name=\"name\"\r\n\r\nJohn", postBody);
+        StringAssert.Contains("content-disposition: form-data; name=\"name\"\r\n\r\nDoe", postBody);
+        StringAssert.Contains("content-disposition: form-data; name=\"file\"; filename=\"f1.js\"\r\ncontent-type: text/javascript\r\n\r\nvar x = 10;\r\n;console.log(x);", postBody);
+        StringAssert.Contains("content-disposition: form-data; name=\"file\"; filename=\"f2.txt\"\r\ncontent-type: text/plain\r\n\r\nhello", postBody);
+        StringAssert.Contains("content-disposition: form-data; name=\"file\"; filename=\"blob\"\r\ncontent-type: text/plain\r\n\r\nboo", postBody);
+        Assert.AreEqual(200, response.Status);
+    }
+
     private async Task ForAllMethods(IAPIRequestContext request, Func<Task<IAPIResponse>, Task> callback, string url, APIRequestContextOptions options = null)
     {
         var methodsToTest = new[] { "fetch", "delete", "get", "head", "patch", "post", "put" };

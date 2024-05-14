@@ -31,6 +31,154 @@ public partial interface IFormData
 {
     /// <summary>
     /// <para>
+    /// Appends a new value onto an existing key inside a FormData object, or adds the key
+    /// if it does not already exist. File values can be passed either as <c>Path</c> or
+    /// as <c>FilePayload</c>. Multiple fields with the same name can be added.
+    /// </para>
+    /// <para>
+    /// The difference between <see cref="IFormData.Set"/> and <see cref="IFormData.Append"/>
+    /// is that if the specified key already exists, <see cref="IFormData.Set"/> will overwrite
+    /// all existing values with the new one, whereas <see cref="IFormData.Append"/> will
+    /// append the new value onto the end of the existing set of values.
+    /// </para>
+    /// <code>
+    /// var multipart = Context.APIRequest.CreateFormData();<br/>
+    /// // Only name and value are set.<br/>
+    /// multipart.Append("firstName", "John");<br/>
+    /// // Name, value, filename and Content-Type are set.<br/>
+    /// multipart.Append("attachment", new FilePayload()<br/>
+    /// {<br/>
+    ///     Name = "pic.jpg",<br/>
+    ///     MimeType = "image/jpeg",<br/>
+    ///     Buffer = File.ReadAllBytes("john.jpg")<br/>
+    /// });<br/>
+    /// // Name, value, filename and Content-Type are set.<br/>
+    /// multipart.Append("attachment", new FilePayload()<br/>
+    /// {<br/>
+    ///     Name = "table.csv",<br/>
+    ///     MimeType = "text/csv",<br/>
+    ///     Buffer = File.ReadAllBytes("my-tble.csv")<br/>
+    /// });<br/>
+    /// await Page.APIRequest.PostAsync("https://localhost/submit", new() { Multipart = multipart });
+    /// </code>
+    /// </summary>
+    /// <param name="name">Field name.</param>
+    /// <param name="value">Field value.</param>
+    IFormData Append(string name, string value);
+
+    /// <summary>
+    /// <para>
+    /// Appends a new value onto an existing key inside a FormData object, or adds the key
+    /// if it does not already exist. File values can be passed either as <c>Path</c> or
+    /// as <c>FilePayload</c>. Multiple fields with the same name can be added.
+    /// </para>
+    /// <para>
+    /// The difference between <see cref="IFormData.Set"/> and <see cref="IFormData.Append"/>
+    /// is that if the specified key already exists, <see cref="IFormData.Set"/> will overwrite
+    /// all existing values with the new one, whereas <see cref="IFormData.Append"/> will
+    /// append the new value onto the end of the existing set of values.
+    /// </para>
+    /// <code>
+    /// var multipart = Context.APIRequest.CreateFormData();<br/>
+    /// // Only name and value are set.<br/>
+    /// multipart.Append("firstName", "John");<br/>
+    /// // Name, value, filename and Content-Type are set.<br/>
+    /// multipart.Append("attachment", new FilePayload()<br/>
+    /// {<br/>
+    ///     Name = "pic.jpg",<br/>
+    ///     MimeType = "image/jpeg",<br/>
+    ///     Buffer = File.ReadAllBytes("john.jpg")<br/>
+    /// });<br/>
+    /// // Name, value, filename and Content-Type are set.<br/>
+    /// multipart.Append("attachment", new FilePayload()<br/>
+    /// {<br/>
+    ///     Name = "table.csv",<br/>
+    ///     MimeType = "text/csv",<br/>
+    ///     Buffer = File.ReadAllBytes("my-tble.csv")<br/>
+    /// });<br/>
+    /// await Page.APIRequest.PostAsync("https://localhost/submit", new() { Multipart = multipart });
+    /// </code>
+    /// </summary>
+    /// <param name="name">Field name.</param>
+    /// <param name="value">Field value.</param>
+    IFormData Append(string name, bool value);
+
+    /// <summary>
+    /// <para>
+    /// Appends a new value onto an existing key inside a FormData object, or adds the key
+    /// if it does not already exist. File values can be passed either as <c>Path</c> or
+    /// as <c>FilePayload</c>. Multiple fields with the same name can be added.
+    /// </para>
+    /// <para>
+    /// The difference between <see cref="IFormData.Set"/> and <see cref="IFormData.Append"/>
+    /// is that if the specified key already exists, <see cref="IFormData.Set"/> will overwrite
+    /// all existing values with the new one, whereas <see cref="IFormData.Append"/> will
+    /// append the new value onto the end of the existing set of values.
+    /// </para>
+    /// <code>
+    /// var multipart = Context.APIRequest.CreateFormData();<br/>
+    /// // Only name and value are set.<br/>
+    /// multipart.Append("firstName", "John");<br/>
+    /// // Name, value, filename and Content-Type are set.<br/>
+    /// multipart.Append("attachment", new FilePayload()<br/>
+    /// {<br/>
+    ///     Name = "pic.jpg",<br/>
+    ///     MimeType = "image/jpeg",<br/>
+    ///     Buffer = File.ReadAllBytes("john.jpg")<br/>
+    /// });<br/>
+    /// // Name, value, filename and Content-Type are set.<br/>
+    /// multipart.Append("attachment", new FilePayload()<br/>
+    /// {<br/>
+    ///     Name = "table.csv",<br/>
+    ///     MimeType = "text/csv",<br/>
+    ///     Buffer = File.ReadAllBytes("my-tble.csv")<br/>
+    /// });<br/>
+    /// await Page.APIRequest.PostAsync("https://localhost/submit", new() { Multipart = multipart });
+    /// </code>
+    /// </summary>
+    /// <param name="name">Field name.</param>
+    /// <param name="value">Field value.</param>
+    IFormData Append(string name, int value);
+
+    /// <summary>
+    /// <para>
+    /// Appends a new value onto an existing key inside a FormData object, or adds the key
+    /// if it does not already exist. File values can be passed either as <c>Path</c> or
+    /// as <c>FilePayload</c>. Multiple fields with the same name can be added.
+    /// </para>
+    /// <para>
+    /// The difference between <see cref="IFormData.Set"/> and <see cref="IFormData.Append"/>
+    /// is that if the specified key already exists, <see cref="IFormData.Set"/> will overwrite
+    /// all existing values with the new one, whereas <see cref="IFormData.Append"/> will
+    /// append the new value onto the end of the existing set of values.
+    /// </para>
+    /// <code>
+    /// var multipart = Context.APIRequest.CreateFormData();<br/>
+    /// // Only name and value are set.<br/>
+    /// multipart.Append("firstName", "John");<br/>
+    /// // Name, value, filename and Content-Type are set.<br/>
+    /// multipart.Append("attachment", new FilePayload()<br/>
+    /// {<br/>
+    ///     Name = "pic.jpg",<br/>
+    ///     MimeType = "image/jpeg",<br/>
+    ///     Buffer = File.ReadAllBytes("john.jpg")<br/>
+    /// });<br/>
+    /// // Name, value, filename and Content-Type are set.<br/>
+    /// multipart.Append("attachment", new FilePayload()<br/>
+    /// {<br/>
+    ///     Name = "table.csv",<br/>
+    ///     MimeType = "text/csv",<br/>
+    ///     Buffer = File.ReadAllBytes("my-tble.csv")<br/>
+    /// });<br/>
+    /// await Page.APIRequest.PostAsync("https://localhost/submit", new() { Multipart = multipart });
+    /// </code>
+    /// </summary>
+    /// <param name="name">Field name.</param>
+    /// <param name="value">Field value.</param>
+    IFormData Append(string name, FilePayload value);
+
+    /// <summary>
+    /// <para>
     /// Sets a field on the form. File values can be passed either as <c>Path</c> or as
     /// <c>FilePayload</c>.
     /// </para>
@@ -45,6 +193,7 @@ public partial interface IFormData
     ///     MimeType = "image/jpeg",<br/>
     ///     Buffer = File.ReadAllBytes("john.jpg")<br/>
     /// });<br/>
+    /// multipart.Set("age", 30);<br/>
     /// await Page.APIRequest.PostAsync("https://localhost/submit", new() { Multipart = multipart });
     /// </code>
     /// </summary>
@@ -68,6 +217,7 @@ public partial interface IFormData
     ///     MimeType = "image/jpeg",<br/>
     ///     Buffer = File.ReadAllBytes("john.jpg")<br/>
     /// });<br/>
+    /// multipart.Set("age", 30);<br/>
     /// await Page.APIRequest.PostAsync("https://localhost/submit", new() { Multipart = multipart });
     /// </code>
     /// </summary>
@@ -91,6 +241,7 @@ public partial interface IFormData
     ///     MimeType = "image/jpeg",<br/>
     ///     Buffer = File.ReadAllBytes("john.jpg")<br/>
     /// });<br/>
+    /// multipart.Set("age", 30);<br/>
     /// await Page.APIRequest.PostAsync("https://localhost/submit", new() { Multipart = multipart });
     /// </code>
     /// </summary>
@@ -114,6 +265,7 @@ public partial interface IFormData
     ///     MimeType = "image/jpeg",<br/>
     ///     Buffer = File.ReadAllBytes("john.jpg")<br/>
     /// });<br/>
+    /// multipart.Set("age", 30);<br/>
     /// await Page.APIRequest.PostAsync("https://localhost/submit", new() { Multipart = multipart });
     /// </code>
     /// </summary>
