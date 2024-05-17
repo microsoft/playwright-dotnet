@@ -65,7 +65,12 @@ extends:
           displayName: Pack Playwright NuGet Packages
           inputs:
             command: 'pack'
-            packagesToPack: src/Playwright.CLI/Playwright.CLI.csproj src/Playwright/Playwright.csproj src/Playwright.NUnit/Playwright.NUnit.csproj src/Playwright.MSTest/Playwright.MSTest.csproj src/Playwright.TestAdapter/Playwright.TestAdapter.csproj
+            packagesToPack: |
+              src/Playwright.CLI/Playwright.CLI.csproj;
+              src/Playwright/Playwright.csproj;
+              src/Playwright.NUnit/Playwright.NUnit.csproj;
+              src/Playwright.MSTest/Playwright.MSTest.csproj;
+              src/Playwright.TestAdapter/Playwright.TestAdapter.csproj;
             packDirectory: '$(Build.ArtifactStagingDirectory)/nuget'
             versioningScheme: 'off'
         - task: 1ES.PublishNuget@1
@@ -75,7 +80,11 @@ extends:
             useDotNetTask: false
             # The reason for the 1.* after the package name is that we know the end of the package name in order to not
             # match with e.g. Microsoft.Playwright.CLI when we only want to match Microsoft.Playwright.
-            packagesToPush: $(Build.ArtifactStagingDirectory)/nuget/Microsoft.Playwright.1.*.nupkg $(Build.ArtifactStagingDirectory)/nuget/Microsoft.Playwright.MSTest.1.*.nupkg $(Build.ArtifactStagingDirectory)/nuget/Microsoft.Playwright.NUnit.1.*.nupkg $(Build.ArtifactStagingDirectory)/nuget/Microsoft.Playwright.TestAdapter.1.*.nupkg
+            packagesToPush: |
+              $(Build.ArtifactStagingDirectory)/nuget/Microsoft.Playwright.1.*.nupkg;
+              $(Build.ArtifactStagingDirectory)/nuget/Microsoft.Playwright.MSTest.1.*.nupkg;
+              $(Build.ArtifactStagingDirectory)/nuget/Microsoft.Playwright.NUnit.1.*.nupkg;
+              $(Build.ArtifactStagingDirectory)/nuget/Microsoft.Playwright.TestAdapter.1.*.nupkg;
             packageParentPath: '$(Build.ArtifactStagingDirectory)'
             nuGetFeedType: external
             publishFeedCredentials: 'NuGet-Playwright'
