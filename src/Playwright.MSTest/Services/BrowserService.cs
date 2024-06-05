@@ -50,8 +50,8 @@ internal class BrowserService : IWorkerService
         else
         {
             var exposeNetwork = Environment.GetEnvironmentVariable("PLAYWRIGHT_SERVICE_EXPOSE_NETWORK") ?? "<loopback>";
-            var os = Environment.GetEnvironmentVariable("PLAYWRIGHT_SERVICE_OS") ?? "linux";
-            var runId = Environment.GetEnvironmentVariable("PLAYWRIGHT_SERVICE_RUN_ID") ?? DateTime.Now.ToUniversalTime().ToString("yyyy-MM-ddTHH:mm:ss", CultureInfo.InvariantCulture);
+            var os = Uri.EscapeDataString(Environment.GetEnvironmentVariable("PLAYWRIGHT_SERVICE_OS") ?? "linux");
+            var runId = Uri.EscapeDataString(Environment.GetEnvironmentVariable("PLAYWRIGHT_SERVICE_RUN_ID") ?? DateTime.Now.ToUniversalTime().ToString("yyyy-MM-ddTHH:mm:ss", CultureInfo.InvariantCulture));
             var apiVersion = "2023-10-01-preview";
             var wsEndpoint = $"{serviceUrl}?os={os}&runId={runId}&api-version={apiVersion}";
             var connectOptions = new BrowserTypeConnectOptions
