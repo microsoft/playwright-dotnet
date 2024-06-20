@@ -45,7 +45,7 @@ internal class Clock(BrowserContext browserContext) : IClock
         }
         else if (timeDate != null)
         {
-            options["timeNumber"] = timeDate.Value.ToUniversalTime().Ticks;
+            options["timeNumber"] = ((DateTimeOffset)timeDate.Value).ToUnixTimeMilliseconds();
         }
         else if (timeInt64 != null)
         {
