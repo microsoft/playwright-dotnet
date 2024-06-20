@@ -32,27 +32,30 @@ internal class Clock(BrowserContext browserContext) : IClock
 {
     public async Task InstallAsync(ClockInstallOptions options = null)
     {
-        var timeIsGiven = options?.Time != null || options?.TimeInt64 != null || options?.TimeString != null || options?.TimeDate != null;
-        await browserContext.SendMessageToServerAsync("clockInstall", timeIsGiven ? ParseTime(options.Time ?? options.TimeString, options?.TimeDate, options?.TimeInt64) : null).ConfigureAwait(false);
+        Dictionary<string, object> args = null;
+        if ((options.Time ?? options.TimeString) != null)
+        {
+            args = ParseTime(options.Time ?? options.TimeString);
+        }
+        else if (options.TimeInt64 != null)
+        {
+            args = ParseTime(options.TimeInt64.Value);
+        }
+        else if (options.TimeDate != null)
+        {
+            args = ParseTime(options.TimeDate.Value);
+        }
+        await browserContext.SendMessageToServerAsync("clockInstall", args).ConfigureAwait(false);
     }
 
-    private Dictionary<string, object> ParseTime(string timeString, DateTime? timeDate, long? timeInt64)
-    {
-        var options = new Dictionary<string, object>();
-        if (!string.IsNullOrEmpty(timeString))
-        {
-            options["timeString"] = timeString;
-        }
-        else if (timeDate != null)
-        {
-            options["timeNumber"] = ((DateTimeOffset)timeDate.Value).ToUnixTimeMilliseconds();
-        }
-        else if (timeInt64 != null)
-        {
-            options["timeNumber"] = timeInt64.Value;
-        }
-        return options;
-    }
+    private static Dictionary<string, object> ParseTime(string timeString)
+        => new() { ["timeString"] = timeString };
+
+    private static Dictionary<string, object> ParseTime(DateTime? timeDate)
+        => new() { ["timeNumber"] = ((DateTimeOffset)timeDate.Value).ToUnixTimeMilliseconds() };
+
+    private static Dictionary<string, object> ParseTime(long timeInt64)
+        => new() { ["timeNumber"] = timeInt64 };
 
     private Dictionary<string, object> ParseTicks(long ticks)
         => new() { ["ticksNumber"] = ticks };
@@ -67,13 +70,13 @@ internal class Clock(BrowserContext browserContext) : IClock
         => browserContext.SendMessageToServerAsync("clockFastForward", ParseTicks(ticks));
 
     public Task PauseAtAsync(long time)
-        => browserContext.SendMessageToServerAsync("clockPauseAt", ParseTime(null, null, time));
+        => browserContext.SendMessageToServerAsync("clockPauseAt", ParseTime(time));
 
     public Task PauseAtAsync(string time)
-        => browserContext.SendMessageToServerAsync("clockPauseAt", ParseTime(time, null, null));
+        => browserContext.SendMessageToServerAsync("clockPauseAt", ParseTime(time));
 
     public Task PauseAtAsync(DateTime time)
-        => browserContext.SendMessageToServerAsync("clockPauseAt", ParseTime(null, time, null));
+        => browserContext.SendMessageToServerAsync("clockPauseAt", ParseTime(time));
 
     public Task ResumeAsync()
         => browserContext.SendMessageToServerAsync("clockResume");
@@ -85,20 +88,20 @@ internal class Clock(BrowserContext browserContext) : IClock
         => browserContext.SendMessageToServerAsync("clockRunFor", ParseTicks(ticks));
 
     public Task SetFixedTimeAsync(long time)
-        => browserContext.SendMessageToServerAsync("clockSetFixedTime", ParseTime(null, null, time));
+        => browserContext.SendMessageToServerAsync("clockSetFixedTime", ParseTime(time));
 
     public Task SetFixedTimeAsync(string time)
-        => browserContext.SendMessageToServerAsync("clockSetFixedTime", ParseTime(time, null, null));
+        => browserContext.SendMessageToServerAsync("clockSetFixedTime", ParseTime(time));
 
     public Task SetFixedTimeAsync(DateTime time)
-        => browserContext.SendMessageToServerAsync("clockSetFixedTime", ParseTime(null, time, null));
+        => browserContext.SendMessageToServerAsync("clockSetFixedTime", ParseTime(time));
 
     public Task SetSystemTimeAsync(long time)
-        => browserContext.SendMessageToServerAsync("clockSetSystemTime", ParseTime(null, null, time));
+        => browserContext.SendMessageToServerAsync("clockSetSystemTime", ParseTime(time));
 
     public Task SetSystemTimeAsync(string time)
-        => browserContext.SendMessageToServerAsync("clockSetSystemTime", ParseTime(time, null, null));
+        => browserContext.SendMessageToServerAsync("clockSetSystemTime", ParseTime(time));
 
     public Task SetSystemTimeAsync(DateTime time)
-        => browserContext.SendMessageToServerAsync("clockSetSystemTime", ParseTime(null, time, null));
+        => browserContext.SendMessageToServerAsync("clockSetSystemTime", ParseTime(time));
 }

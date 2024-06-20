@@ -58,11 +58,11 @@ internal class PlaywrightImpl : ChannelOwner, IPlaywright
 
     ~PlaywrightImpl() => Dispose(false);
 
-    public IBrowserType Chromium { get => _initializer.Chromium; set => throw new NotSupportedException(); }
+    public IBrowserType Chromium { get => _initializer.Chromium; }
 
-    public IBrowserType Firefox { get => _initializer.Firefox; set => throw new NotSupportedException(); }
+    public IBrowserType Firefox { get => _initializer.Firefox; }
 
-    public IBrowserType Webkit { get => _initializer.Webkit; set => throw new NotSupportedException(); }
+    public IBrowserType Webkit { get => _initializer.Webkit; }
 
     public ISelectors Selectors => _selectors;
 

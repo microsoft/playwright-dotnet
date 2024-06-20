@@ -126,17 +126,9 @@ internal class BrowserContext : ChannelOwner, IBrowserContext
 
     public event EventHandler<IWorker> ServiceWorker;
 
-    public ITracing Tracing
-    {
-        get => _tracing;
-        set => throw new NotSupportedException();
-    }
+    public ITracing Tracing { get => _tracing; }
 
-    public IClock Clock
-    {
-        get => _clock;
-        set => throw new NotSupportedException();
-    }
+    public IClock Clock { get => _clock; }
 
     public IBrowser Browser => _browser;
 
