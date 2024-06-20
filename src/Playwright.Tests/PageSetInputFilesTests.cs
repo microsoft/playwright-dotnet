@@ -424,7 +424,7 @@ public class PageSetInputFilesTests : PageTestEx
         }
     }
 
-    [PlaywrightTest("browsertype-connect.spec.ts", "should preserve lastModified timestamp")]
+    [PlaywrightTest("page-set-input-files.spec.ts", "should preserve lastModified timestamp")]
     public async Task ShouldPreserveLastModifiedTimestamp()
     {
         await Page.SetContentAsync("<input type=file multiple=true/>");
@@ -439,5 +439,81 @@ public class PageSetInputFilesTests : PageTestEx
         // rounds it to seconds in WebKit: 1696272058110 -> 1696272058000.
         for (var i = 0; i < timestamps.Length; i++)
             Assert.LessOrEqual(Math.Abs(timestamps[i] - expectedTimestamps[i]), 1000);
+    }
+
+    [PlaywrightTest("page-set-input-files.spec.ts", "should upload a folder")]
+    public async Task ShouldUploadAFolder()
+    {
+        await Page.GotoAsync(Server.Prefix + "/input/folderupload.html");
+        var input = await Page.QuerySelectorAsync("input");
+        using var tmpDir = new TempDirectory();
+        var dir = Path.Combine(tmpDir.Path, "file-upload-test");
+        {
+            Directory.CreateDirectory(dir);
+            File.WriteAllText(Path.Combine(dir, "file1.txt"), "file1 content");
+            File.WriteAllText(Path.Combine(dir, "file2"), "file2 content");
+            Directory.CreateDirectory(Path.Combine(dir, "sub-dir"));
+            File.WriteAllText(Path.Combine(dir, "sub-dir", "really.txt"), "sub-dir file content");
+        }
+        await input.SetInputFilesAsync(dir);
+        var webkitRelativePaths = await input.EvaluateAsync<string[]>("e => [...e.files].map(f => f.webkitRelativePath)");
+        Assert.True(new HashSet<string> { "file-upload-test/sub-dir/really.txt", "file-upload-test/file1.txt", "file-upload-test/file2" }.SetEquals(new HashSet<string>(webkitRelativePaths)));
+        for (var i = 0; i < webkitRelativePaths.Length; i++)
+        {
+            var content = await input.EvaluateAsync<string>(@"(e, i) => {
+                const reader = new FileReader();
+                const promise = new Promise(fulfill => reader.onload = fulfill);
+                reader.readAsText(e.files[i]);
+                return promise.then(() => reader.result);
+            }", i);
+            Assert.AreEqual(File.ReadAllText(Path.Combine(dir, "..", webkitRelativePaths[i])), content);
+        }
+    }
+
+    [PlaywrightTest("page-set-input-files.spec.ts", "should upload a folder and throw for multiple directories")]
+    public async Task ShouldUploadAFolderAndThrowForMultipleDirectories()
+    {
+        await Page.GotoAsync(Server.Prefix + "/input/folderupload.html");
+        var input = await Page.QuerySelectorAsync("input");
+        using var tmpDir = new TempDirectory();
+        var dir = Path.Combine(tmpDir.Path, "file-upload-test");
+        {
+            Directory.CreateDirectory(Path.Combine(dir, "folder1"));
+            File.WriteAllText(Path.Combine(dir, "folder1", "file1.txt"), "file1 content");
+            Directory.CreateDirectory(Path.Combine(dir, "folder2"));
+            File.WriteAllText(Path.Combine(dir, "folder2", "file2.txt"), "file2 content");
+        }
+        var ex = await PlaywrightAssert.ThrowsAsync<PlaywrightException>(() => input.SetInputFilesAsync(new string[] { Path.Combine(dir, "folder1"), Path.Combine(dir, "folder2") }));
+        Assert.AreEqual("Multiple directories are not supported", ex.Message);
+    }
+
+    [PlaywrightTest("page-set-input-files.spec.ts", "should throw if a directory and files are passed")]
+    public async Task ShouldThrowIfADirectoryAndFilesArePassed()
+    {
+        await Page.GotoAsync(Server.Prefix + "/input/folderupload.html");
+        var input = await Page.QuerySelectorAsync("input");
+        using var tmpDir = new TempDirectory();
+        var dir = Path.Combine(tmpDir.Path, "file-upload-test");
+        {
+            Directory.CreateDirectory(Path.Combine(dir, "folder1"));
+            File.WriteAllText(Path.Combine(dir, "folder1", "file1.txt"), "file1 content");
+        }
+        var ex = await PlaywrightAssert.ThrowsAsync<PlaywrightException>(() => input.SetInputFilesAsync(new string[] { Path.Combine(dir, "folder1"), Path.Combine(dir, "folder1", "file1.txt") }));
+        Assert.AreEqual("File paths must be all files or a single directory", ex.Message);
+    }
+
+    [PlaywrightTest("page-set-input-files.spec.ts", "should throw when uploading a folder in a normal file upload input")]
+    public async Task ShouldThrowWhenUploadingAFolderInANormalFileUploadInput()
+    {
+        await Page.GotoAsync(Server.Prefix + "/input/fileupload.html");
+        var input = await Page.QuerySelectorAsync("input");
+        using var tmpDir = new TempDirectory();
+        var dir = Path.Combine(tmpDir.Path, "file-upload-test");
+        {
+            Directory.CreateDirectory(dir);
+            File.WriteAllText(Path.Combine(dir, "file1.txt"), "file1 content");
+        }
+        var ex = await PlaywrightAssert.ThrowsAsync<PlaywrightException>(() => input.SetInputFilesAsync(dir));
+        Assert.AreEqual("Error: File input does not support directories, pass individual files instead", ex.Message);
     }
 }

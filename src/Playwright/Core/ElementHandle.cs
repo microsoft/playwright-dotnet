@@ -209,7 +209,9 @@ internal class ElementHandle : JSHandle, IElementHandle
         {
             ["payloads"] = converted.Payloads,
             ["localPaths"] = converted.LocalPaths,
+            ["localDirectory"] = converted.LocalDirectory,
             ["streams"] = converted.Streams,
+            ["directoryStream"] = converted.DirectoryStream,
             ["timeout"] = options?.Timeout,
             ["noWaitAfter"] = options?.NoWaitAfter,
         }).ConfigureAwait(false);

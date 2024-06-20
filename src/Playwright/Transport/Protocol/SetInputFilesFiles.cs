@@ -32,5 +32,9 @@ internal class SetInputFilesFiles
 
     public string[] LocalPaths { get; set; }
 
+    public string LocalDirectory { get; set; }
+
     public WritableStream[] Streams { get; set; }
+
+    public WritableStream DirectoryStream { get; set; }
 }

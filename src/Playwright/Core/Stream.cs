@@ -89,7 +89,10 @@ internal class StreamImpl : System.IO.Stream
         return result.Length;
     }
 
-    public override void Close() => _stream.CloseAsync().ConfigureAwait(false);
+    public override void Close()
+    {
+        _ = _stream.CloseAsync().ConfigureAwait(false);
+    }
 
     public override long Seek(long offset, SeekOrigin origin) => throw new NotImplementedException();
 
