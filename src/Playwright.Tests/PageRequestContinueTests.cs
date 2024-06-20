@@ -154,7 +154,8 @@ public class PageRequestContinueTests : PageTestEx
 
         async Task<string> SendFormData()
         {
-            var requestPostBody = Server.WaitForRequest("/upload", request => {
+            var requestPostBody = Server.WaitForRequest("/upload", request =>
+            {
                 using StreamReader reader = new(request.Body);
                 return reader.ReadToEndAsync().GetAwaiter().GetResult();
             });

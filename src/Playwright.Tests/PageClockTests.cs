@@ -23,7 +23,6 @@
  */
 
 using System.Text.Json;
-using System.Text.Json.Serialization;
 using Microsoft.AspNetCore.Http;
 
 namespace Microsoft.Playwright.Tests;
@@ -284,7 +283,7 @@ public class PageClockTests : PageTestEx
         }
     }
 
-    public class StubTimerTests: PageClockTests
+    public class StubTimerTests : PageClockTests
     {
         [PlaywrightTest("page-clock.spec.ts", "replaces global performance.timeOrigin")]
         public async Task ReplacesGlobalPerformanceTimeOrigin()
@@ -335,7 +334,8 @@ public class PageClockTests : PageTestEx
         [PlaywrightTest("page-clock.spec.ts", "should run time before popup")]
         public async Task ShouldRunTimeBeforePopup()
         {
-            Server.SetRoute("/popup.html", context => {
+            Server.SetRoute("/popup.html", context =>
+            {
                 context.Response.Headers["Content-Type"] = "text/html";
                 return context.Response.WriteAsync("<script>window.time = Date.now();</script>");
             });
@@ -352,7 +352,8 @@ public class PageClockTests : PageTestEx
         [PlaywrightTest("page-clock.spec.ts", "should not run time before popup on pause")]
         public async Task ShouldNotRunTimeBeforePopupOnPause()
         {
-            Server.SetRoute("/popup.html", context => {
+            Server.SetRoute("/popup.html", context =>
+            {
                 context.Response.Headers["Content-Type"] = "text/html";
                 return context.Response.WriteAsync("<script>window.time = Date.now();</script>");
             });
