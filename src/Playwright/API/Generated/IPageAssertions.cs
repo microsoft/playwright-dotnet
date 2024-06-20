@@ -36,21 +36,19 @@ namespace Microsoft.Playwright;
 /// </para>
 /// <code>
 /// using System.Text.RegularExpressions;<br/>
-/// using System.Threading.Tasks;<br/>
-/// using Microsoft.Playwright.NUnit;<br/>
-/// using NUnit.Framework;<br/>
+/// using Microsoft.Playwright;<br/>
+/// using Microsoft.Playwright.MSTest;<br/>
 /// <br/>
 /// namespace PlaywrightTests;<br/>
 /// <br/>
-/// [TestFixture]<br/>
+/// [TestClass]<br/>
 /// public class ExampleTests : PageTest<br/>
 /// {<br/>
-///     [Test]<br/>
+///     [TestMethod]<br/>
 ///     public async Task NavigatetoLoginPage()<br/>
 ///     {<br/>
-///         // ..<br/>
-///         await Page.GetByText("Sing in").ClickAsync();<br/>
-///         await Expect(Page.Locator("div#foobar")).ToHaveURL(new Regex(".*/login"));<br/>
+///         await Page.GetByRole(AriaRole.Button, new() { Name = "Sign In" }).ClickAsync();<br/>
+///         await Expect(Page).ToHaveURLAsync(new Regex(".*/login"));<br/>
 ///     }<br/>
 /// }
 /// </code>

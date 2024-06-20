@@ -44,7 +44,7 @@ public class BrowserContextUnrouteAllOptions
 
     /// <summary>
     /// <para>
-    /// Specifies wether to wait for already running handlers and what to do if they throw
+    /// Specifies whether to wait for already running handlers and what to do if they throw
     /// errors:
     /// </para>
     /// <list type="bullet">

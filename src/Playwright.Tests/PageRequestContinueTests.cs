@@ -141,4 +141,54 @@ public class PageRequestContinueTests : PageTestEx
         Assert.AreEqual("New URL must have same protocol as overridden URL", exception.Message);
         await PlaywrightAssert.ThrowsAsync<TimeoutException>(() => gotoTask);
     }
+
+    [PlaywrightTest("page-request-continue.spec.ts", "continue should not change multipart/form-data body")]
+    public async Task ContinueShouldNotChangeMultipartFormDataBody()
+    {
+        await Page.GotoAsync(Server.EmptyPage);
+        Server.SetRoute("/upload", context =>
+        {
+            context.Response.Headers["Content-Type"] = "text/plain";
+            return Task.CompletedTask;
+        });
+
+        async Task<string> SendFormData()
+        {
+            var requestPostBody = Server.WaitForRequest("/upload", request => {
+                using StreamReader reader = new(request.Body);
+                return reader.ReadToEndAsync().GetAwaiter().GetResult();
+            });
+            var status = await Page.EvaluateAsync<int>(@"async () => {
+                const newFile = new File(['file content'], 'file.txt');
+                const formData = new FormData();
+                formData.append('file', newFile);
+                const response = await fetch('/upload', {
+                    method: 'POST',
+                    credentials: 'include',
+                    body: formData,
+                });
+                return response.status;
+            }");
+            Assert.AreEqual(200, status);
+            return await requestPostBody;
+        }
+
+        var reqBefore = await SendFormData();
+        await Page.RouteAsync("**/*", async (route) =>
+        {
+            await route.ContinueAsync();
+        });
+        var reqAfter = await SendFormData();
+        var fileContent = string.Join("\r\n", new[]
+        {
+            "Content-Disposition: form-data; name=\"file\"; filename=\"file.txt\"",
+            "Content-Type: application/octet-stream",
+            "",
+            "file content",
+            "------"
+        });
+        StringAssert.Contains(fileContent, reqBefore);
+        StringAssert.Contains(fileContent, reqAfter);
+    }
 }
+

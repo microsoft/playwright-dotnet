@@ -88,7 +88,13 @@ public partial interface IMouse
     /// <param name="options">Call options</param>
     Task UpAsync(MouseUpOptions? options = default);
 
-    /// <summary><para>Dispatches a <c>wheel</c> event.</para></summary>
+    /// <summary>
+    /// <para>
+    /// Dispatches a <c>wheel</c> event. This method is usually used to manually scroll
+    /// the page. See <a href="https://playwright.dev/dotnet/docs/input#scrolling">scrolling</a>
+    /// for alternative ways to scroll.
+    /// </para>
+    /// </summary>
     /// <remarks>
     /// <para>
     /// Wheel events may cause scrolling if they are not handled, and this method does not

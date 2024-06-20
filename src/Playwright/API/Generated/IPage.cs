@@ -75,6 +75,9 @@ namespace Microsoft.Playwright;
 /// </summary>
 public partial interface IPage
 {
+    /// <summary><para>Playwright has ability to mock clock and passage of time.</para></summary>
+    public IClock Clock { get; }
+
     /// <summary><para>Emitted when the page closes.</para></summary>
     event EventHandler<IPage> Close;
 
@@ -2424,7 +2427,8 @@ public partial interface IPage
     /// <para>
     /// Sets the value of the file input to these file paths or files. If some of the <c>filePaths</c>
     /// are relative paths, then they are resolved relative to the current working directory.
-    /// For empty array, clears the selected files.
+    /// For empty array, clears the selected files. For inputs with a <c>[webkitdirectory]</c>
+    /// attribute, only a single directory path is supported.
     /// </para>
     /// <para>
     /// This method expects <paramref name="selector"/> to point to an <a href="https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input">input
@@ -2450,7 +2454,8 @@ public partial interface IPage
     /// <para>
     /// Sets the value of the file input to these file paths or files. If some of the <c>filePaths</c>
     /// are relative paths, then they are resolved relative to the current working directory.
-    /// For empty array, clears the selected files.
+    /// For empty array, clears the selected files. For inputs with a <c>[webkitdirectory]</c>
+    /// attribute, only a single directory path is supported.
     /// </para>
     /// <para>
     /// This method expects <paramref name="selector"/> to point to an <a href="https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input">input
@@ -2476,7 +2481,8 @@ public partial interface IPage
     /// <para>
     /// Sets the value of the file input to these file paths or files. If some of the <c>filePaths</c>
     /// are relative paths, then they are resolved relative to the current working directory.
-    /// For empty array, clears the selected files.
+    /// For empty array, clears the selected files. For inputs with a <c>[webkitdirectory]</c>
+    /// attribute, only a single directory path is supported.
     /// </para>
     /// <para>
     /// This method expects <paramref name="selector"/> to point to an <a href="https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input">input
@@ -2502,7 +2508,8 @@ public partial interface IPage
     /// <para>
     /// Sets the value of the file input to these file paths or files. If some of the <c>filePaths</c>
     /// are relative paths, then they are resolved relative to the current working directory.
-    /// For empty array, clears the selected files.
+    /// For empty array, clears the selected files. For inputs with a <c>[webkitdirectory]</c>
+    /// attribute, only a single directory path is supported.
     /// </para>
     /// <para>
     /// This method expects <paramref name="selector"/> to point to an <a href="https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input">input
@@ -3205,7 +3212,7 @@ public partial interface IPage
     /// await page.RunAndWaitForResponseAsync(async () =&gt;<br/>
     /// {<br/>
     ///     await page.GetByText("trigger response").ClickAsync();<br/>
-    /// }, response =&gt; response.Url == "https://example.com" &amp;&amp; response.Status == 200);
+    /// }, response =&gt; response.Url == "https://example.com" &amp;&amp; response.Status == 200 &amp;&amp; response.Request.Method == "GET");
     /// </code>
     /// </summary>
     /// <param name="urlOrPredicate">
@@ -3234,7 +3241,7 @@ public partial interface IPage
     /// await page.RunAndWaitForResponseAsync(async () =&gt;<br/>
     /// {<br/>
     ///     await page.GetByText("trigger response").ClickAsync();<br/>
-    /// }, response =&gt; response.Url == "https://example.com" &amp;&amp; response.Status == 200);
+    /// }, response =&gt; response.Url == "https://example.com" &amp;&amp; response.Status == 200 &amp;&amp; response.Request.Method == "GET");
     /// </code>
     /// </summary>
     /// <param name="urlOrPredicate">
@@ -3263,7 +3270,7 @@ public partial interface IPage
     /// await page.RunAndWaitForResponseAsync(async () =&gt;<br/>
     /// {<br/>
     ///     await page.GetByText("trigger response").ClickAsync();<br/>
-    /// }, response =&gt; response.Url == "https://example.com" &amp;&amp; response.Status == 200);
+    /// }, response =&gt; response.Url == "https://example.com" &amp;&amp; response.Status == 200 &amp;&amp; response.Request.Method == "GET");
     /// </code>
     /// </summary>
     /// <param name="urlOrPredicate">
@@ -3292,7 +3299,7 @@ public partial interface IPage
     /// await page.RunAndWaitForResponseAsync(async () =&gt;<br/>
     /// {<br/>
     ///     await page.GetByText("trigger response").ClickAsync();<br/>
-    /// }, response =&gt; response.Url == "https://example.com" &amp;&amp; response.Status == 200);
+    /// }, response =&gt; response.Url == "https://example.com" &amp;&amp; response.Status == 200 &amp;&amp; response.Request.Method == "GET");
     /// </code>
     /// </summary>
     /// <param name="action">Action that triggers the event.</param>
@@ -3322,7 +3329,7 @@ public partial interface IPage
     /// await page.RunAndWaitForResponseAsync(async () =&gt;<br/>
     /// {<br/>
     ///     await page.GetByText("trigger response").ClickAsync();<br/>
-    /// }, response =&gt; response.Url == "https://example.com" &amp;&amp; response.Status == 200);
+    /// }, response =&gt; response.Url == "https://example.com" &amp;&amp; response.Status == 200 &amp;&amp; response.Request.Method == "GET");
     /// </code>
     /// </summary>
     /// <param name="action">Action that triggers the event.</param>
@@ -3352,7 +3359,7 @@ public partial interface IPage
     /// await page.RunAndWaitForResponseAsync(async () =&gt;<br/>
     /// {<br/>
     ///     await page.GetByText("trigger response").ClickAsync();<br/>
-    /// }, response =&gt; response.Url == "https://example.com" &amp;&amp; response.Status == 200);
+    /// }, response =&gt; response.Url == "https://example.com" &amp;&amp; response.Status == 200 &amp;&amp; response.Request.Method == "GET");
     /// </code>
     /// </summary>
     /// <param name="action">Action that triggers the event.</param>

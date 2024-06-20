@@ -68,6 +68,9 @@ public partial interface IBrowserContext
     /// <remarks><para>Only works with Chromium browser's persistent context.</para></remarks>
     event EventHandler<IPage> BackgroundPage;
 
+    /// <summary><para>Playwright has ability to mock clock and passage of time.</para></summary>
+    public IClock Clock { get; }
+
     /// <summary>
     /// <para>
     /// Emitted when Browser context gets closed. This might happen because of one of the
@@ -433,21 +436,22 @@ public partial interface IBrowserContext
     /// A permission or an array of permissions to grant. Permissions can be one of the
     /// following values:
     /// <list type="bullet">
-    /// <item><description><c>'geolocation'</c></description></item>
-    /// <item><description><c>'midi'</c></description></item>
-    /// <item><description><c>'midi-sysex'</c> (system-exclusive midi)</description></item>
-    /// <item><description><c>'notifications'</c></description></item>
-    /// <item><description><c>'camera'</c></description></item>
-    /// <item><description><c>'microphone'</c></description></item>
-    /// <item><description><c>'background-sync'</c></description></item>
-    /// <item><description><c>'ambient-light-sensor'</c></description></item>
     /// <item><description><c>'accelerometer'</c></description></item>
-    /// <item><description><c>'gyroscope'</c></description></item>
-    /// <item><description><c>'magnetometer'</c></description></item>
     /// <item><description><c>'accessibility-events'</c></description></item>
+    /// <item><description><c>'ambient-light-sensor'</c></description></item>
+    /// <item><description><c>'background-sync'</c></description></item>
+    /// <item><description><c>'camera'</c></description></item>
     /// <item><description><c>'clipboard-read'</c></description></item>
     /// <item><description><c>'clipboard-write'</c></description></item>
+    /// <item><description><c>'geolocation'</c></description></item>
+    /// <item><description><c>'gyroscope'</c></description></item>
+    /// <item><description><c>'magnetometer'</c></description></item>
+    /// <item><description><c>'microphone'</c></description></item>
+    /// <item><description><c>'midi-sysex'</c> (system-exclusive midi)</description></item>
+    /// <item><description><c>'midi'</c></description></item>
+    /// <item><description><c>'notifications'</c></description></item>
     /// <item><description><c>'payment-handler'</c></description></item>
+    /// <item><description><c>'storage-access'</c></description></item>
     /// </list>
     /// </param>
     /// <param name="options">Call options</param>

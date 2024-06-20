@@ -44,6 +44,18 @@ public partial class HttpCredentials
     /// <summary><para>Restrain sending http credentials on specific origin (scheme://host:port).</para></summary>
     [JsonPropertyName("origin")]
     public string? Origin { get; set; }
+
+    /// <summary>
+    /// <para>
+    /// This option only applies to the requests sent from corresponding <see cref="IAPIRequestContext"/>
+    /// and does not affect requests sent from the browser. <c>'always'</c> - <c>Authorization</c>
+    /// header with basic authentication credentials will be sent with the each API request.
+    /// <c>'unauthorized</c> - the credentials are only sent when 401 (Unauthorized) response
+    /// with <c>WWW-Authenticate</c> header is received. Defaults to <c>'unauthorized'</c>.
+    /// </para>
+    /// </summary>
+    [JsonPropertyName("send")]
+    public HttpCredentialsSend? Send { get; set; }
 }
 
 #nullable disable

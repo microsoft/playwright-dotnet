@@ -36,21 +36,19 @@ namespace Microsoft.Playwright;
 /// used to make assertions about the <see cref="ILocator"/> state in the tests.
 /// </para>
 /// <code>
-/// using System.Text.RegularExpressions;<br/>
-/// using System.Threading.Tasks;<br/>
-/// using Microsoft.Playwright.NUnit;<br/>
-/// using NUnit.Framework;<br/>
+/// using Microsoft.Playwright;<br/>
+/// using Microsoft.Playwright.MSTest;<br/>
 /// <br/>
 /// namespace PlaywrightTests;<br/>
 /// <br/>
-/// [TestFixture]<br/>
+/// [TestClass]<br/>
 /// public class ExampleTests : PageTest<br/>
 /// {<br/>
-///     [Test]<br/>
+///     [TestMethod]<br/>
 ///     public async Task StatusBecomesSubmitted()<br/>
 ///     {<br/>
-///         // ..<br/>
-///         await Page.GetByRole(AriaRole.Button).ClickAsync();<br/>
+///         // ...<br/>
+///         await Page.GetByRole(AriaRole.Button, new() { Name = "Sign In" }).ClickAsync();<br/>
 ///         await Expect(Page.Locator(".status")).ToHaveTextAsync("Submitted");<br/>
 ///     }<br/>
 /// }

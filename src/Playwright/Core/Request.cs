@@ -55,7 +55,6 @@ internal class Request : ChannelOwner, IRequest
         }
 
         _provisionalHeaders = new RawHeaders(initializer.Headers.ConvertAll(x => new NameValue() { Name = x.Name, Value = x.Value }).ToList());
-        _fallbackOverrides.PostData = initializer.PostData;
     }
 
     public string Failure { get; internal set; }
@@ -114,6 +113,10 @@ internal class Request : ChannelOwner, IRequest
             {
                 return Encoding.UTF8.GetString(_fallbackOverrides.PostData);
             }
+            if (_initializer.PostData != null)
+            {
+                return Encoding.UTF8.GetString(_initializer.PostData);
+            }
             return null;
         }
     }
@@ -122,7 +125,7 @@ internal class Request : ChannelOwner, IRequest
     {
         get
         {
-            return _fallbackOverrides.PostData;
+            return _fallbackOverrides.PostData ?? _initializer.PostData;
         }
     }
 
