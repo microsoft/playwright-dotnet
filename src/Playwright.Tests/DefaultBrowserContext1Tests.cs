@@ -50,7 +50,7 @@ public class DefaultBrowserContext1Tests : PlaywrightTestEx
         Assert.AreEqual(-1, cookie.Expires);
         Assert.IsFalse(cookie.HttpOnly);
         Assert.IsFalse(cookie.Secure);
-        Assert.AreEqual(TestConstants.IsChromium ? SameSiteAttribute.Lax : SameSiteAttribute.None, cookie.SameSite);
+        Assert.AreEqual(DefaultSameSiteCookieValue, cookie.SameSite);
 
         await context.DisposeAsync();
         tmp.Dispose();
@@ -82,7 +82,7 @@ public class DefaultBrowserContext1Tests : PlaywrightTestEx
         Assert.AreEqual(-1, cookie.Expires);
         Assert.IsFalse(cookie.HttpOnly);
         Assert.IsFalse(cookie.Secure);
-        Assert.AreEqual(TestConstants.IsChromium ? SameSiteAttribute.Lax : SameSiteAttribute.None, cookie.SameSite);
+        Assert.AreEqual(DefaultSameSiteCookieValue, cookie.SameSite);
 
         await context.DisposeAsync();
         tmp.Dispose();

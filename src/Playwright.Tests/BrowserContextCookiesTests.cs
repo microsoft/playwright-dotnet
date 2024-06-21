@@ -48,7 +48,7 @@ public class BrowserContextCookiesTests : PageTestEx
         Assert.AreEqual(-1, cookie.Expires);
         Assert.IsFalse(cookie.HttpOnly);
         Assert.IsFalse(cookie.Secure);
-        Assert.AreEqual(TestConstants.IsChromium ? SameSiteAttribute.Lax : SameSiteAttribute.None, cookie.SameSite);
+        Assert.AreEqual(DefaultSameSiteCookieValue, cookie.SameSite);
     }
 
     [PlaywrightTest("browsercontext-cookies.spec.ts", "should get a non-session cookie")]
@@ -70,7 +70,7 @@ public class BrowserContextCookiesTests : PageTestEx
         Assert.NotNull(cookie.Expires);
         Assert.IsFalse(cookie.HttpOnly);
         Assert.IsFalse(cookie.Secure);
-        Assert.AreEqual(TestConstants.IsChromium ? SameSiteAttribute.Lax : SameSiteAttribute.None, cookie.SameSite);
+        Assert.AreEqual(DefaultSameSiteCookieValue, cookie.SameSite);
     }
 
     [PlaywrightTest("browsercontext-cookies.spec.ts", "should properly report httpOnly cookie")]
@@ -138,7 +138,7 @@ public class BrowserContextCookiesTests : PageTestEx
         Assert.AreEqual(cookie.Expires, -1);
         Assert.IsFalse(cookie.HttpOnly);
         Assert.IsFalse(cookie.Secure);
-        Assert.AreEqual(TestConstants.IsChromium ? SameSiteAttribute.Lax : SameSiteAttribute.None, cookie.SameSite);
+        Assert.AreEqual(DefaultSameSiteCookieValue, cookie.SameSite);
 
         cookie = cookies[1];
         Assert.AreEqual("username", cookie.Name);
@@ -148,7 +148,7 @@ public class BrowserContextCookiesTests : PageTestEx
         Assert.AreEqual(cookie.Expires, -1);
         Assert.IsFalse(cookie.HttpOnly);
         Assert.IsFalse(cookie.Secure);
-        Assert.AreEqual(TestConstants.IsChromium ? SameSiteAttribute.Lax : SameSiteAttribute.None, cookie.SameSite);
+        Assert.AreEqual(DefaultSameSiteCookieValue, cookie.SameSite);
     }
 
     [PlaywrightTest("browsercontext-cookies.spec.ts", "should get cookies from multiple urls")]
@@ -187,7 +187,7 @@ public class BrowserContextCookiesTests : PageTestEx
         Assert.AreEqual(cookie.Expires, -1);
         Assert.IsFalse(cookie.HttpOnly);
         Assert.IsTrue(cookie.Secure);
-        Assert.AreEqual(TestConstants.IsChromium ? SameSiteAttribute.Lax : SameSiteAttribute.None, cookie.SameSite);
+        Assert.AreEqual(DefaultSameSiteCookieValue, cookie.SameSite);
 
         cookie = cookies[1];
         Assert.AreEqual("doggo", cookie.Name);
@@ -197,6 +197,6 @@ public class BrowserContextCookiesTests : PageTestEx
         Assert.AreEqual(cookie.Expires, -1);
         Assert.IsFalse(cookie.HttpOnly);
         Assert.IsTrue(cookie.Secure);
-        Assert.AreEqual(TestConstants.IsChromium ? SameSiteAttribute.Lax : SameSiteAttribute.None, cookie.SameSite);
+        Assert.AreEqual(DefaultSameSiteCookieValue, cookie.SameSite);
     }
 }

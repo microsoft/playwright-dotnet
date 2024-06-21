@@ -145,7 +145,7 @@ public class PageWaitForSelector1Tests : PageTestEx
 
         StringAssert.Contains("Timeout 5000ms", exception.Message);
         StringAssert.Contains("waiting for Locator(\"div\") to be visible", exception.Message);
-        StringAssert.Contains("locator resolved to hidden <div id=\"mydiv\" class=\"foo bar\" foo=\"1234567890123456…>abcdefghijklmnopqrstuvwyxzabcdefghijklmnopqrstuvw…</div>", exception.Message);
+        StringAssert.Contains("locator resolved to hidden <div id=\"mydiv\" class=\"foo bar\" foo=\"123456789012345678901234567890123456789012345678901234567890\">abcdefghijklmnopqrstuvwyxzabcdefghijklmnopqrstuvw…</div>", exception.Message);
         StringAssert.Contains("locator resolved to hidden <div class=\"another\"></div>", exception.Message);
     }
 
