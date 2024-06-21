@@ -58,11 +58,11 @@ internal class PlaywrightImpl : ChannelOwner, IPlaywright
 
     ~PlaywrightImpl() => Dispose(false);
 
-    public IBrowserType Chromium { get => _initializer.Chromium; }
+    public IBrowserType Chromium => _initializer.Chromium;
 
-    public IBrowserType Firefox { get => _initializer.Firefox; }
+    public IBrowserType Firefox => _initializer.Firefox;
 
-    public IBrowserType Webkit { get => _initializer.Webkit; }
+    public IBrowserType Webkit => _initializer.Webkit;
 
     public ISelectors Selectors => _selectors;
 
