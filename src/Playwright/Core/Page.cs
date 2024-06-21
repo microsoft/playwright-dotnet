@@ -182,10 +182,7 @@ internal class Page : ChannelOwner, IPage
         get;
     }
 
-    public IClock Clock
-    {
-        get => Context.Clock;
-    }
+    public IClock Clock => Context.Clock;
 
     public string Url => MainFrame.Url;
 
