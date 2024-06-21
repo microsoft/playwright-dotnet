@@ -36,7 +36,15 @@ public class PageTestEx : PageTest
     {
         get
         {
-            return (TestConstants.IsChromium || TestConstants.IsWebKit) ? SameSiteAttribute.Lax : SameSiteAttribute.None;
+            if (TestConstants.IsChromium)
+            {
+                return SameSiteAttribute.Lax;
+            }
+            if (TestConstants.IsWebKit && TestConstants.IsLinux)
+            {
+                return SameSiteAttribute.Lax;
+            }
+            return SameSiteAttribute.None;
         }
     }
 

@@ -345,6 +345,7 @@ public class PageNetworkRequestTest : PageTestEx
                     return new Header { Name = e.Name, Value = values[0] };
                 }).ToList();
             }
+            expectedHeaders = expectedHeaders.Where(h => h.Name.ToLowerInvariant() != "priority").ToList();
 
             await ctx.Response.CompleteAsync();
         });
