@@ -31,8 +31,8 @@ namespace Microsoft.Playwright;
 /// <summary>
 /// <para>
 /// <see cref="IConsoleMessage"/> objects are dispatched by page via the <see cref="IPage.Console"/>
-/// event. For each console messages logged in the page there will be corresponding
-/// event in the Playwright context.
+/// event. For each console message logged in the page there will be corresponding event
+/// in the Playwright context.
 /// </para>
 /// <code>
 /// // Listen for all console messages and print them to the standard output.<br/>

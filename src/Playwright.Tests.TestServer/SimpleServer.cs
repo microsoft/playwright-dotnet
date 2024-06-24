@@ -117,6 +117,11 @@ public class SimpleServer
                         return;
                     }
 
+                    if (_requestWaits.TryGetValue(context.Request.Path, out var requestWait))
+                    {
+                        requestWait(context);
+                    }
+
                     if (_auths.TryGetValue(context.Request.Path, out var auth) && !Authenticate(auth.username, auth.password, context))
                     {
                         context.Response.Headers.Append("WWW-Authenticate", "Basic realm=\"Secure Area\"");
@@ -127,10 +132,6 @@ public class SimpleServer
                         }
                         await context.Response.WriteAsync("HTTP Error 401 Unauthorized: Access is denied").ConfigureAwait(false);
                         return;
-                    }
-                    if (_requestWaits.TryGetValue(context.Request.Path, out var requestWait))
-                    {
-                        requestWait(context);
                     }
                     if (_routes.TryGetValue(context.Request.Path + context.Request.QueryString, out var handler))
                     {

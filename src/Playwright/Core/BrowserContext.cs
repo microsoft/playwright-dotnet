@@ -44,6 +44,7 @@ internal class BrowserContext : ChannelOwner, IBrowserContext
     private readonly Dictionary<string, Delegate> _bindings = new();
     private readonly BrowserContextInitializer _initializer;
     private readonly Tracing _tracing;
+    private readonly Clock _clock;
     internal readonly HashSet<IPage> _backgroundPages = new();
     internal readonly IAPIRequestContext _request;
     private readonly Dictionary<string, HarRecorder> _harRecorders = new();
@@ -62,6 +63,7 @@ internal class BrowserContext : ChannelOwner, IBrowserContext
         _browser?._contexts.Add(this);
 
         _tracing = initializer.Tracing;
+        _clock = new Clock(this);
         _request = initializer.RequestContext;
         _initializer = initializer;
     }
@@ -124,11 +126,9 @@ internal class BrowserContext : ChannelOwner, IBrowserContext
 
     public event EventHandler<IWorker> ServiceWorker;
 
-    public ITracing Tracing
-    {
-        get => _tracing;
-        set => throw new NotSupportedException();
-    }
+    public ITracing Tracing => _tracing;
+
+    public IClock Clock => _clock;
 
     public IBrowser Browser => _browser;
 

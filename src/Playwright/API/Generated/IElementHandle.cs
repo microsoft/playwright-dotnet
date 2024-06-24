@@ -611,6 +611,10 @@ public partial interface IElementHandle : IJSHandle
     /// Throws when <c>elementHandle</c> does not point to an element <a href="https://developer.mozilla.org/en-US/docs/Web/API/Node/isConnected">connected</a>
     /// to a Document or a ShadowRoot.
     /// </para>
+    /// <para>
+    /// See <a href="https://playwright.dev/dotnet/docs/input#scrolling">scrolling</a> for
+    /// alternative ways to scroll.
+    /// </para>
     /// </summary>
     /// <param name="options">Call options</param>
     Task ScrollIntoViewIfNeededAsync(ElementHandleScrollIntoViewIfNeededOptions? options = default);
@@ -943,7 +947,8 @@ public partial interface IElementHandle : IJSHandle
     /// <para>
     /// Sets the value of the file input to these file paths or files. If some of the <c>filePaths</c>
     /// are relative paths, then they are resolved relative to the current working directory.
-    /// For empty array, clears the selected files.
+    /// For empty array, clears the selected files. For inputs with a <c>[webkitdirectory]</c>
+    /// attribute, only a single directory path is supported.
     /// </para>
     /// <para>
     /// This method expects <see cref="IElementHandle"/> to point to an <a href="https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input">input
@@ -965,7 +970,8 @@ public partial interface IElementHandle : IJSHandle
     /// <para>
     /// Sets the value of the file input to these file paths or files. If some of the <c>filePaths</c>
     /// are relative paths, then they are resolved relative to the current working directory.
-    /// For empty array, clears the selected files.
+    /// For empty array, clears the selected files. For inputs with a <c>[webkitdirectory]</c>
+    /// attribute, only a single directory path is supported.
     /// </para>
     /// <para>
     /// This method expects <see cref="IElementHandle"/> to point to an <a href="https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input">input
@@ -987,7 +993,8 @@ public partial interface IElementHandle : IJSHandle
     /// <para>
     /// Sets the value of the file input to these file paths or files. If some of the <c>filePaths</c>
     /// are relative paths, then they are resolved relative to the current working directory.
-    /// For empty array, clears the selected files.
+    /// For empty array, clears the selected files. For inputs with a <c>[webkitdirectory]</c>
+    /// attribute, only a single directory path is supported.
     /// </para>
     /// <para>
     /// This method expects <see cref="IElementHandle"/> to point to an <a href="https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input">input
@@ -1009,7 +1016,8 @@ public partial interface IElementHandle : IJSHandle
     /// <para>
     /// Sets the value of the file input to these file paths or files. If some of the <c>filePaths</c>
     /// are relative paths, then they are resolved relative to the current working directory.
-    /// For empty array, clears the selected files.
+    /// For empty array, clears the selected files. For inputs with a <c>[webkitdirectory]</c>
+    /// attribute, only a single directory path is supported.
     /// </para>
     /// <para>
     /// This method expects <see cref="IElementHandle"/> to point to an <a href="https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input">input

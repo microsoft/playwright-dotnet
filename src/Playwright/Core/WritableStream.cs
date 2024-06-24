@@ -25,6 +25,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Threading;
 using System.Threading.Tasks;
@@ -81,7 +82,10 @@ internal class WritableStreamImpl : System.IO.Stream
     public override Task<int> ReadAsync(byte[] buffer, int offset, int count, CancellationToken cancellationToken) =>
         throw new NotImplementedException();
 
-    public override void Close() => _stream.CloseAsync().ConfigureAwait(false);
+    public override void Close()
+    {
+        _ = _stream.CloseAsync().ConfigureAwait(false);
+    }
 
     public override long Seek(long offset, SeekOrigin origin) => throw new NotImplementedException();
 
@@ -91,6 +95,6 @@ internal class WritableStreamImpl : System.IO.Stream
 
     public override async Task WriteAsync(byte[] buffer, int offset, int count, CancellationToken cancellationToken)
     {
-        await this._stream.WriteAsync(Convert.ToBase64String(buffer)).ConfigureAwait(false);
+        await _stream.WriteAsync(Convert.ToBase64String(buffer.Skip(offset).Take(count).ToArray())).ConfigureAwait(false);
     }
 }

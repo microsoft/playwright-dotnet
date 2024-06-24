@@ -182,6 +182,8 @@ internal class Page : ChannelOwner, IPage
         get;
     }
 
+    public IClock Clock => Context.Clock;
+
     public string Url => MainFrame.Url;
 
     public IReadOnlyList<IFrame> Frames => _frames.ToList().AsReadOnly();

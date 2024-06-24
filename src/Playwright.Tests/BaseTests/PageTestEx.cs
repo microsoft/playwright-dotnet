@@ -32,6 +32,21 @@ public class PageTestEx : PageTest
     public SimpleServer Server { get; internal set; }
     public SimpleServer HttpsServer { get; internal set; }
     public int BrowserMajorVersion { get; internal set; }
+    public SameSiteAttribute DefaultSameSiteCookieValue
+    {
+        get
+        {
+            if (TestConstants.IsChromium)
+            {
+                return SameSiteAttribute.Lax;
+            }
+            if (TestConstants.IsWebKit && TestConstants.IsLinux)
+            {
+                return SameSiteAttribute.Lax;
+            }
+            return SameSiteAttribute.None;
+        }
+    }
 
     [SetUp]
     public async Task HttpSetup()

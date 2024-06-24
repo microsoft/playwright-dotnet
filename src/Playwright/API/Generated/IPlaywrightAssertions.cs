@@ -33,19 +33,18 @@ namespace Microsoft.Playwright;
 /// </para>
 /// <para>Consider the following example:</para>
 /// <code>
-/// using System.Threading.Tasks;<br/>
-/// using Microsoft.Playwright.NUnit;<br/>
-/// using NUnit.Framework;<br/>
+/// using Microsoft.Playwright;<br/>
+/// using Microsoft.Playwright.MSTest;<br/>
 /// <br/>
 /// namespace PlaywrightTests;<br/>
 /// <br/>
-/// [TestFixture]<br/>
+/// [TestClass]<br/>
 /// public class ExampleTests : PageTest<br/>
 /// {<br/>
-///     [Test]<br/>
+///     [TestMethod]<br/>
 ///     public async Task StatusBecomesSubmitted()<br/>
 ///     {<br/>
-///         await Page.Locator("#submit-button").ClickAsync();<br/>
+///         await Page.GetByRole(AriaRole.Button, new() { Name = "Submit" }).ClickAsync();<br/>
 ///         await Expect(Page.Locator(".status")).ToHaveTextAsync("Submitted");<br/>
 ///     }<br/>
 /// }

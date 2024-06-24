@@ -1183,6 +1183,10 @@ public partial interface ILocator
     /// as defined by <a href="https://developer.mozilla.org/en-US/docs/Web/API/Intersection_Observer_API">IntersectionObserver</a>'s
     /// <c>ratio</c>.
     /// </para>
+    /// <para>
+    /// See <a href="https://playwright.dev/dotnet/docs/input#scrolling">scrolling</a> for
+    /// alternative ways to scroll.
+    /// </para>
     /// </summary>
     /// <param name="options">Call options</param>
     Task ScrollIntoViewIfNeededAsync(LocatorScrollIntoViewIfNeededOptions? options = default);
@@ -1465,7 +1469,10 @@ public partial interface ILocator
     Task SetCheckedAsync(bool checkedState, LocatorSetCheckedOptions? options = default);
 
     /// <summary>
-    /// <para>Upload file or multiple files into <c>&lt;input type=file&gt;</c>.</para>
+    /// <para>
+    /// Upload file or multiple files into <c>&lt;input type=file&gt;</c>. For inputs with
+    /// a <c>[webkitdirectory]</c> attribute, only a single directory path is supported.
+    /// </para>
     /// <para>**Usage**</para>
     /// <code>
     /// // Select one file<br/>
@@ -1473,6 +1480,9 @@ public partial interface ILocator
     /// <br/>
     /// // Select multiple files<br/>
     /// await page.GetByLabel("Upload files").SetInputFilesAsync(new[] { "file1.txt", "file12.txt" });<br/>
+    /// <br/>
+    /// // Select a directory<br/>
+    /// await page.GetByLabel("Upload directory").SetInputFilesAsync("mydir");<br/>
     /// <br/>
     /// // Remove all the selected files<br/>
     /// await page.GetByLabel("Upload file").SetInputFilesAsync(new[] {});<br/>
@@ -1504,7 +1514,10 @@ public partial interface ILocator
     Task SetInputFilesAsync(string files, LocatorSetInputFilesOptions? options = default);
 
     /// <summary>
-    /// <para>Upload file or multiple files into <c>&lt;input type=file&gt;</c>.</para>
+    /// <para>
+    /// Upload file or multiple files into <c>&lt;input type=file&gt;</c>. For inputs with
+    /// a <c>[webkitdirectory]</c> attribute, only a single directory path is supported.
+    /// </para>
     /// <para>**Usage**</para>
     /// <code>
     /// // Select one file<br/>
@@ -1512,6 +1525,9 @@ public partial interface ILocator
     /// <br/>
     /// // Select multiple files<br/>
     /// await page.GetByLabel("Upload files").SetInputFilesAsync(new[] { "file1.txt", "file12.txt" });<br/>
+    /// <br/>
+    /// // Select a directory<br/>
+    /// await page.GetByLabel("Upload directory").SetInputFilesAsync("mydir");<br/>
     /// <br/>
     /// // Remove all the selected files<br/>
     /// await page.GetByLabel("Upload file").SetInputFilesAsync(new[] {});<br/>
@@ -1543,7 +1559,10 @@ public partial interface ILocator
     Task SetInputFilesAsync(IEnumerable<string> files, LocatorSetInputFilesOptions? options = default);
 
     /// <summary>
-    /// <para>Upload file or multiple files into <c>&lt;input type=file&gt;</c>.</para>
+    /// <para>
+    /// Upload file or multiple files into <c>&lt;input type=file&gt;</c>. For inputs with
+    /// a <c>[webkitdirectory]</c> attribute, only a single directory path is supported.
+    /// </para>
     /// <para>**Usage**</para>
     /// <code>
     /// // Select one file<br/>
@@ -1551,6 +1570,9 @@ public partial interface ILocator
     /// <br/>
     /// // Select multiple files<br/>
     /// await page.GetByLabel("Upload files").SetInputFilesAsync(new[] { "file1.txt", "file12.txt" });<br/>
+    /// <br/>
+    /// // Select a directory<br/>
+    /// await page.GetByLabel("Upload directory").SetInputFilesAsync("mydir");<br/>
     /// <br/>
     /// // Remove all the selected files<br/>
     /// await page.GetByLabel("Upload file").SetInputFilesAsync(new[] {});<br/>
@@ -1582,7 +1604,10 @@ public partial interface ILocator
     Task SetInputFilesAsync(FilePayload files, LocatorSetInputFilesOptions? options = default);
 
     /// <summary>
-    /// <para>Upload file or multiple files into <c>&lt;input type=file&gt;</c>.</para>
+    /// <para>
+    /// Upload file or multiple files into <c>&lt;input type=file&gt;</c>. For inputs with
+    /// a <c>[webkitdirectory]</c> attribute, only a single directory path is supported.
+    /// </para>
     /// <para>**Usage**</para>
     /// <code>
     /// // Select one file<br/>
@@ -1590,6 +1615,9 @@ public partial interface ILocator
     /// <br/>
     /// // Select multiple files<br/>
     /// await page.GetByLabel("Upload files").SetInputFilesAsync(new[] { "file1.txt", "file12.txt" });<br/>
+    /// <br/>
+    /// // Select a directory<br/>
+    /// await page.GetByLabel("Upload directory").SetInputFilesAsync("mydir");<br/>
     /// <br/>
     /// // Remove all the selected files<br/>
     /// await page.GetByLabel("Upload file").SetInputFilesAsync(new[] {});<br/>

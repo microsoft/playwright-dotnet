@@ -47,7 +47,7 @@ public class PlaywrightTest
 
     public IBrowserType BrowserType { get; private set; } = null!;
 
-    public int WorkerIndex { get => _currentWorker!.WorkerIndex; }
+    public int WorkerIndex => _currentWorker!.WorkerIndex;
 
     [TestInitialize]
     public async Task Setup()

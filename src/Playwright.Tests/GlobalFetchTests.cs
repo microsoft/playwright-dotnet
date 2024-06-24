@@ -181,7 +181,6 @@ public class GlobalFetchTests : PlaywrightTestEx
         await request.DisposeAsync();
     }
 
-
     [PlaywrightTest("global-fetch.spec.ts", "should use proxy")]
     [Ignore("Fetch API is using the CONNECT Http proxy server method all the time")]
     public async Task ShouldUseProxy()
@@ -192,6 +191,31 @@ public class GlobalFetchTests : PlaywrightTestEx
         StringAssert.Contains("Served by the proxy", await response.TextAsync());
         await request.DisposeAsync();
     }
+
+    [PlaywrightTest("global-fetch.spec.ts", "should support HTTPCredentials.send")]
+    public async Task ShouldSupportHTTPCredentialsSend()
+    {
+        var request = await Playwright.APIRequest.NewContextAsync(new() { HttpCredentials = new() { Username = "user", Password = "pass", Origin = Server.Prefix.ToUpperInvariant(), Send = HttpCredentialsSend.Always } });
+        {
+            var (requestHeaders, response) = await TaskUtils.WhenAll(
+                Server.WaitForRequest("/empty.html", request => request.Headers.ToDictionary(header => header.Key, header => header.Value)),
+                request.GetAsync(Server.EmptyPage)
+            );
+            Assert.AreEqual(requestHeaders["Authorization"], "Basic " + Convert.ToBase64String(System.Text.Encoding.UTF8.GetBytes("user:pass")));
+            Assert.AreEqual(200, response.Status);
+        }
+        {
+            var (requestHeaders, response) = await TaskUtils.WhenAll(
+                Server.WaitForRequest("/empty.html", request => request.Headers.ToDictionary(header => header.Key, header => header.Value)),
+                request.GetAsync(Server.CrossProcessPrefix + "/empty.html")
+            );
+            Assert.AreEqual(200, response.Status);
+            // Not sent to another origin.
+            Assert.AreEqual(false, requestHeaders.ContainsKey("Authorization"));
+        }
+        await request.DisposeAsync();
+    }
+
 
     [PlaywrightTest("global-fetch.spec.ts", "should support global ignoreHTTPSErrors option")]
     public async Task ShouldSupportGlobalIgnoreHTTPSErrorsOption()

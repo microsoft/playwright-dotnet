@@ -312,6 +312,38 @@ public class BrowserContextFetchTests : PageTestEx
         Assert.AreEqual("/empty.html", requestURL);
     }
 
+    [PlaywrightTest("browsercontext-fetch.spec.ts", "should support HTTPCredentials.send")]
+    public async Task ShouldSupportHttpCredentialsSend()
+    {
+        var context = await Browser.NewContextAsync(new()
+        {
+            HttpCredentials = new()
+            {
+                Username = "user",
+                Password = "pass",
+                Origin = Server.Prefix.ToUpperInvariant(),
+                Send = HttpCredentialsSend.Always
+            }
+        });
+        {
+            var (requestHeaders, response) = await TaskUtils.WhenAll(
+                Server.WaitForRequest("/empty.html", request => request.Headers.ToDictionary(header => header.Key, header => header.Value)),
+                context.APIRequest.GetAsync(Server.EmptyPage)
+            );
+            Assert.AreEqual(requestHeaders["Authorization"], "Basic " + Convert.ToBase64String(System.Text.Encoding.UTF8.GetBytes("user:pass")));
+            Assert.AreEqual(200, response.Status);
+        }
+        {
+            var (requestHeaders, response) = await TaskUtils.WhenAll(
+                Server.WaitForRequest("/empty.html", request => request.Headers.ToDictionary(header => header.Key, header => header.Value)),
+                context.APIRequest.GetAsync(Server.CrossProcessPrefix + "/empty.html")
+            );
+            Assert.AreEqual(200, response.Status);
+            // Not sent to another origin.
+            Assert.AreEqual(false, requestHeaders.ContainsKey("Authorization"));
+        }
+    }
+
     [PlaywrightTest("browsercontext-fetch.spec.ts", "delete should support post data")]
     public async Task DeleteShouldSupportPostData()
     {

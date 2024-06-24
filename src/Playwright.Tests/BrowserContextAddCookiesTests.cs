@@ -306,7 +306,7 @@ public class BrowserContextAddCookiesTests : PageTestEx
         Assert.AreEqual(-1, cookie.Expires);
         Assert.IsFalse(cookie.HttpOnly);
         Assert.IsFalse(cookie.Secure);
-        Assert.AreEqual(TestConstants.IsChromium ? SameSiteAttribute.Lax : SameSiteAttribute.None, cookie.SameSite);
+        Assert.AreEqual(DefaultSameSiteCookieValue, cookie.SameSite);
     }
 
     [PlaywrightTest("browsercontext-add-cookies.spec.ts", "should set a cookie with a path")]

@@ -36,34 +36,90 @@ internal static class SetInputFilesHelpers
 {
     private const int SizeLimitInBytes = 50 * 1024 * 1024;
 
+    private static (string[] LocalPaths, string LocalDirectory) ResolvePathsAndDirectoryForInputFiles(List<string> items)
+    {
+        List<string> localPaths = null;
+        string localDirectory = null;
+        foreach (var item in items)
+        {
+            if ((File.GetAttributes(item) & FileAttributes.Directory) == FileAttributes.Directory)
+            {
+                if (localDirectory != null)
+                {
+                    throw new PlaywrightException("Multiple directories are not supported");
+                }
+                localDirectory = Path.GetFullPath(item);
+            }
+            else
+            {
+                localPaths ??= [];
+                localPaths.Add(Path.GetFullPath(item));
+            }
+        }
+
+        if (localPaths?.Count > 0 && localDirectory != null)
+        {
+            throw new PlaywrightException("File paths must be all files or a single directory");
+        }
+
+        return (localPaths?.ToArray(), localDirectory);
+    }
+
+    private static IEnumerable<string> GetFilesRecursive(string directory)
+    {
+        var files = new List<string>();
+        files.AddRange(Directory.GetFiles(directory));
+        foreach (var subDirectory in Directory.GetDirectories(directory))
+        {
+            files.AddRange(GetFilesRecursive(subDirectory));
+        }
+        return files;
+    }
+
     public static async Task<SetInputFilesFiles> ConvertInputFilesAsync(IEnumerable<string> files, BrowserContext context)
     {
         if (!files.Any())
         {
-            return new()
-            {
-                Payloads = Array.Empty<InputFilesList>(),
-            };
+            return new() { Payloads = [] };
         }
+        var (localPaths, localDirectory) = ResolvePathsAndDirectoryForInputFiles(files.ToList());
         if (context._connection.IsRemote)
         {
-            var streams = await files.SelectAsync(async f =>
+            files = localDirectory != null ? GetFilesRecursive(localDirectory) : localPaths;
+            var result = await context.SendMessageToServerAsync("createTempFiles", new Dictionary<string, object>
             {
-                var lastModifiedMs = new DateTimeOffset(File.GetLastWriteTime(f)).ToUnixTimeMilliseconds();
-#pragma warning disable CA2007 // Upstream bug: https://github.com/dotnet/roslyn-analyzers/issues/5712
-                await using var stream = (await context.SendMessageToServerAsync("createTempFile", new Dictionary<string, object>
-            {
-                { "name", Path.GetFileName(f) },
-                { "lastModifiedMs", lastModifiedMs },
-            }).ConfigureAwait(false)).GetObject<WritableStream>("writableStream", context._connection);
-#pragma warning restore CA2007
-                using var fileStream = File.OpenRead(f);
-                await fileStream.CopyToAsync(stream.WritableStreamImpl).ConfigureAwait(false);
-                return stream;
+                ["rootDirName"] = localDirectory != null ? new DirectoryInfo(localDirectory).Name : null,
+                ["items"] = files.Select(file => new Dictionary<string, object>
+                {
+                    // TODO: best-effort relative path, switch to Path.GetRelativePath once have netstandard2.1
+                    ["name"] = localDirectory != null ? file.Substring(localDirectory.Length + 1) : Path.GetFileName(file),
+                    ["lastModifiedMs"] = new DateTimeOffset(File.GetLastWriteTime(file)).ToUnixTimeMilliseconds(),
+                }).ToArray(),
             }).ConfigureAwait(false);
-            return new() { Streams = streams.ToArray() };
+            var writableStreams = result.Value.GetProperty("writableStreams").EnumerateArray();
+            if (writableStreams.Count() != files.Count())
+            {
+                throw new Exception("Mismatch between the number of files and the number of writeable streams");
+            }
+            var streams = new List<WritableStream>();
+            for (var i = 0; i < files.Count(); i++)
+            {
+#pragma warning disable CA2007 // Consider calling ConfigureAwait on the awaited task
+                await using (var writeableStream = context._connection.GetObject(writableStreams.ElementAt(i).GetProperty("guid").ToString()) as WritableStream)
+                {
+                    streams.Add(writeableStream);
+                    using var fileStream = File.OpenRead(files.ElementAt(i));
+                    await fileStream.CopyToAsync(writeableStream.WritableStreamImpl).ConfigureAwait(false);
+                }
+#pragma warning restore CA2007 // Consider calling ConfigureAwait on the awaited task
+            }
+            return new()
+            {
+                DirectoryStream = result.Value.TryGetProperty("rootDir", out var rootDir) ? context._connection.GetObject(rootDir.GetProperty("guid").ToString()) as WritableStream : null,
+                Streams = localDirectory != null ? null : [.. streams],
+            };
         }
-        return new() { LocalPaths = files.Select(Path.GetFullPath).ToArray() };
+        return new() { LocalPaths = localPaths, LocalDirectory = localDirectory };
     }
 
     public static SetInputFilesFiles ConvertInputFiles(IEnumerable<FilePayload> files)

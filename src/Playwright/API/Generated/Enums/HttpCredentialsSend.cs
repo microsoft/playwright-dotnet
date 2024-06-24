@@ -22,45 +22,18 @@
  * SOFTWARE.
  */
 
-using System.Text.Json.Serialization;
+using System.Runtime.Serialization;
 
 #nullable enable
 
 namespace Microsoft.Playwright;
 
-public class PageUnrouteAllOptions
+public enum HttpCredentialsSend
 {
-    public PageUnrouteAllOptions() { }
-
-    public PageUnrouteAllOptions(PageUnrouteAllOptions clone)
-    {
-        if (clone == null)
-        {
-            return;
-        }
-
-        Behavior = clone.Behavior;
-    }
-
-    /// <summary>
-    /// <para>
-    /// Specifies whether to wait for already running handlers and what to do if they throw
-    /// errors:
-    /// </para>
-    /// <list type="bullet">
-    /// <item><description>
-    /// <c>'default'</c> - do not wait for current handler calls (if any) to finish, if
-    /// unrouted handler throws, it may result in unhandled error
-    /// </description></item>
-    /// <item><description><c>'wait'</c> - wait for current handler calls (if any) to finish</description></item>
-    /// <item><description>
-    /// <c>'ignoreErrors'</c> - do not wait for current handler calls (if any) to finish,
-    /// all errors thrown by the handlers after unrouting are silently caught
-    /// </description></item>
-    /// </list>
-    /// </summary>
-    [JsonPropertyName("behavior")]
-    public UnrouteBehavior? Behavior { get; set; }
+    [EnumMember(Value = "unauthorized")]
+    Unauthorized,
+    [EnumMember(Value = "always")]
+    Always,
 }
 
 #nullable disable
