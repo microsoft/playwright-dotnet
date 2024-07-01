@@ -794,23 +794,6 @@ public partial interface IPage
     ///     }<br/>
     /// }
     /// </code>
-    /// <para>An example of passing an element handle:</para>
-    /// <code>
-    /// var result = new TaskCompletionSource&lt;string&gt;();<br/>
-    /// await page.ExposeBindingAsync("clicked", async (BindingSource _, IJSHandle t) =&gt;<br/>
-    /// {<br/>
-    ///     return result.TrySetResult(await t.AsElement().TextContentAsync());<br/>
-    /// });<br/>
-    /// <br/>
-    /// await page.SetContentAsync("&lt;script&gt;\n" +<br/>
-    ///   "  document.addEventListener('click', event =&gt; window.clicked(event.target));\n" +<br/>
-    ///   "&lt;/script&gt;\n" +<br/>
-    ///   "&lt;div&gt;Click me&lt;/div&gt;\n" +<br/>
-    ///   "&lt;div&gt;Or click me&lt;/div&gt;\n");<br/>
-    /// <br/>
-    /// await page.ClickAsync("div");<br/>
-    /// Console.WriteLine(await result.Task);
-    /// </code>
     /// </summary>
     /// <remarks><para>Functions installed via <see cref="IPage.ExposeBindingAsync"/> survive navigations.</para></remarks>
     /// <param name="name">Name of the function on the window object.</param>

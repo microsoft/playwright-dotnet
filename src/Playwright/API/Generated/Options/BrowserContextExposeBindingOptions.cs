@@ -43,6 +43,7 @@ public class BrowserContextExposeBindingOptions
     }
 
     /// <summary>
+    /// <para>**DEPRECATED** This option will be removed in the future.</para>
     /// <para>
     /// Whether to pass the argument as a handle, instead of passing by value. When passing
     /// a handle, only one argument is supported. When passing by value, multiple arguments
@@ -50,6 +51,7 @@ public class BrowserContextExposeBindingOptions
     /// </para>
     /// </summary>
     [JsonPropertyName("handle")]
+    [System.Obsolete]
     public bool? Handle { get; set; }
 }
 

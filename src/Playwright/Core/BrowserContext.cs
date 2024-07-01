@@ -374,7 +374,9 @@ internal class BrowserContext : ChannelOwner, IBrowserContext
 
     [MethodImpl(MethodImplOptions.NoInlining)]
     public Task ExposeBindingAsync(string name, Action callback, BrowserContextExposeBindingOptions options = default)
+#pragma warning disable CS0612 // Type or member is obsolete
         => ExposeBindingAsync(name, callback, handle: options?.Handle ?? false);
+#pragma warning restore CS0612 // Type or member is obsolete
 
     [MethodImpl(MethodImplOptions.NoInlining)]
     public Task ExposeBindingAsync(string name, Action<BindingSource> callback)
