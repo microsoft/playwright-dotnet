@@ -808,7 +808,9 @@ internal class Page : ChannelOwner, IPage
 
     [MethodImpl(MethodImplOptions.NoInlining)]
     public Task ExposeBindingAsync(string name, Action callback, PageExposeBindingOptions options = default)
+#pragma warning disable CS0612 // Type or member is obsolete
         => InnerExposeBindingAsync(name, (Delegate)callback, options?.Handle ?? false);
+#pragma warning restore CS0612 // Type or member is obsolete
 
     [MethodImpl(MethodImplOptions.NoInlining)]
     public Task ExposeBindingAsync(string name, Action<BindingSource> callback)

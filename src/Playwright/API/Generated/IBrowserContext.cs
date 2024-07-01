@@ -350,26 +350,6 @@ public partial interface IBrowserContext
     /// "&lt;div&gt;&lt;/div&gt;");<br/>
     /// await page.GetByRole(AriaRole.Button).ClickAsync();
     /// </code>
-    /// <para>An example of passing an element handle:</para>
-    /// <code>
-    /// var result = new TaskCompletionSource&lt;string&gt;();<br/>
-    /// var page = await Context.NewPageAsync();<br/>
-    /// await Context.ExposeBindingAsync("clicked", async (BindingSource _, IJSHandle t) =&gt;<br/>
-    /// {<br/>
-    ///     return result.TrySetResult(await t.AsElement().TextContentAsync());<br/>
-    /// });<br/>
-    /// <br/>
-    /// await page.SetContentAsync("&lt;script&gt;\n" +<br/>
-    ///   "  document.addEventListener('click', event =&gt; window.clicked(event.target));\n" +<br/>
-    ///   "&lt;/script&gt;\n" +<br/>
-    ///   "&lt;div&gt;Click me&lt;/div&gt;\n" +<br/>
-    ///   "&lt;div&gt;Or click me&lt;/div&gt;\n");<br/>
-    /// <br/>
-    /// await page.ClickAsync("div");<br/>
-    /// // Note: it makes sense to await the result here, because otherwise, the context<br/>
-    /// //  gets closed and the binding function will throw an exception.<br/>
-    /// Assert.AreEqual("Click me", await result.Task);
-    /// </code>
     /// </summary>
     /// <param name="name">Name of the function on the window object.</param>
     /// <param name="callback">Callback function that will be called in the Playwright's context.</param>
