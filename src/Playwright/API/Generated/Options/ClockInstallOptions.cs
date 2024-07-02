@@ -42,7 +42,6 @@ public class ClockInstallOptions
 
         Time = clone.Time;
         TimeDate = clone.TimeDate;
-        TimeInt64 = clone.TimeInt64;
         TimeString = clone.TimeString;
     }
 
@@ -53,10 +52,6 @@ public class ClockInstallOptions
     /// <summary><para>Time to initialize with, current system time by default.</para></summary>
     [JsonPropertyName("timeDate")]
     public DateTime? TimeDate { get; set; }
-
-    /// <summary><para>Time to initialize with, current system time by default.</para></summary>
-    [JsonPropertyName("timeInt64")]
-    public long? TimeInt64 { get; set; }
 
     /// <summary><para>Time to initialize with, current system time by default.</para></summary>
     [JsonPropertyName("timeString")]

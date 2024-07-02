@@ -37,10 +37,6 @@ internal class Clock(BrowserContext browserContext) : IClock
         {
             args = ParseTime(options.Time ?? options.TimeString);
         }
-        else if (options.TimeInt64 != null)
-        {
-            args = ParseTime(options.TimeInt64.Value);
-        }
         else if (options.TimeDate != null)
         {
             args = ParseTime(options.TimeDate.Value);

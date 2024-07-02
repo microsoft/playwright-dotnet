@@ -150,49 +150,27 @@ public partial interface IClock
     /// await page.Clock.PauseAtAsync("2020-02-02");
     /// </code>
     /// </summary>
-    /// <param name="time">
-    /// </param>
-    Task PauseAtAsync(long time);
-
-    /// <summary>
-    /// <para>
-    /// Advance the clock by jumping forward in time and pause the time. Once this method
-    /// is called, no timers are fired unless <see cref="IClock.RunForAsync"/>, <see cref="IClock.FastForwardAsync"/>,
-    /// <see cref="IClock.PauseAtAsync"/> or <see cref="IClock.ResumeAsync"/> is called.
-    /// </para>
-    /// <para>
-    /// Only fires due timers at most once. This is equivalent to user closing the laptop
-    /// lid for a while and reopening it at the specified time and pausing.
-    /// </para>
-    /// <para>**Usage**</para>
-    /// <code>
-    /// await page.Clock.PauseAtAsync(DateTime.Parse("2020-02-02"));<br/>
-    /// await page.Clock.PauseAtAsync("2020-02-02");
-    /// </code>
-    /// </summary>
-    /// <param name="time">
-    /// </param>
-    Task PauseAtAsync(string time);
-
-    /// <summary>
-    /// <para>
-    /// Advance the clock by jumping forward in time and pause the time. Once this method
-    /// is called, no timers are fired unless <see cref="IClock.RunForAsync"/>, <see cref="IClock.FastForwardAsync"/>,
-    /// <see cref="IClock.PauseAtAsync"/> or <see cref="IClock.ResumeAsync"/> is called.
-    /// </para>
-    /// <para>
-    /// Only fires due timers at most once. This is equivalent to user closing the laptop
-    /// lid for a while and reopening it at the specified time and pausing.
-    /// </para>
-    /// <para>**Usage**</para>
-    /// <code>
-    /// await page.Clock.PauseAtAsync(DateTime.Parse("2020-02-02"));<br/>
-    /// await page.Clock.PauseAtAsync("2020-02-02");
-    /// </code>
-    /// </summary>
-    /// <param name="time">
-    /// </param>
+    /// <param name="time">Time to pause at.</param>
     Task PauseAtAsync(DateTime time);
+
+    /// <summary>
+    /// <para>
+    /// Advance the clock by jumping forward in time and pause the time. Once this method
+    /// is called, no timers are fired unless <see cref="IClock.RunForAsync"/>, <see cref="IClock.FastForwardAsync"/>,
+    /// <see cref="IClock.PauseAtAsync"/> or <see cref="IClock.ResumeAsync"/> is called.
+    /// </para>
+    /// <para>
+    /// Only fires due timers at most once. This is equivalent to user closing the laptop
+    /// lid for a while and reopening it at the specified time and pausing.
+    /// </para>
+    /// <para>**Usage**</para>
+    /// <code>
+    /// await page.Clock.PauseAtAsync(DateTime.Parse("2020-02-02"));<br/>
+    /// await page.Clock.PauseAtAsync("2020-02-02");
+    /// </code>
+    /// </summary>
+    /// <param name="time">Time to pause at.</param>
+    Task PauseAtAsync(string time);
 
     /// <summary>
     /// <para>
@@ -201,21 +179,6 @@ public partial interface IClock
     /// </para>
     /// </summary>
     Task ResumeAsync();
-
-    /// <summary>
-    /// <para>
-    /// Makes <c>Date.now</c> and <c>new Date()</c> return fixed fake time at all times,
-    /// keeps all the timers running.
-    /// </para>
-    /// <para>**Usage**</para>
-    /// <code>
-    /// await page.Clock.SetFixedTimeAsync(DateTime.Now);<br/>
-    /// await page.Clock.SetFixedTimeAsync(new DateTime(2020, 2, 2));<br/>
-    /// await page.Clock.SetFixedTimeAsync("2020-02-02");
-    /// </code>
-    /// </summary>
-    /// <param name="time">Time to be set.</param>
-    Task SetFixedTimeAsync(long time);
 
     /// <summary>
     /// <para>
@@ -256,21 +219,7 @@ public partial interface IClock
     /// await page.Clock.SetSystemTimeAsync("2020-02-02");
     /// </code>
     /// </summary>
-    /// <param name="time">
-    /// </param>
-    Task SetSystemTimeAsync(long time);
-
-    /// <summary>
-    /// <para>Sets current system time but does not trigger any timers.</para>
-    /// <para>**Usage**</para>
-    /// <code>
-    /// await page.Clock.SetSystemTimeAsync(DateTime.Now);<br/>
-    /// await page.Clock.SetSystemTimeAsync(new DateTime(2020, 2, 2));<br/>
-    /// await page.Clock.SetSystemTimeAsync("2020-02-02");
-    /// </code>
-    /// </summary>
-    /// <param name="time">
-    /// </param>
+    /// <param name="time">Time to be set.</param>
     Task SetSystemTimeAsync(string time);
 
     /// <summary>
@@ -282,8 +231,7 @@ public partial interface IClock
     /// await page.Clock.SetSystemTimeAsync("2020-02-02");
     /// </code>
     /// </summary>
-    /// <param name="time">
-    /// </param>
+    /// <param name="time">Time to be set.</param>
     Task SetSystemTimeAsync(DateTime time);
 }
 

@@ -54,8 +54,8 @@ public class PageClockTests : PageTestEx
         [SetUp]
         public async Task RunForSetUp()
         {
-            await Page.Clock.InstallAsync(new() { TimeInt64 = 0 });
-            await Page.Clock.PauseAtAsync(1000);
+            await Page.Clock.InstallAsync(new() { TimeDate = DateTimeOffset.FromUnixTimeMilliseconds(0).UtcDateTime });
+            await Page.Clock.PauseAtAsync(DateTimeOffset.FromUnixTimeMilliseconds(1000).UtcDateTime);
         }
 
         [PlaywrightTest("page-clock.spec.ts", "triggers immediately without specified delay")]
@@ -120,7 +120,7 @@ public class PageClockTests : PageTestEx
         [PlaywrightTest("page-clock.spec.ts", "creates updated Date while ticking")]
         public async Task CreatesUpdatedDateWhileTicking()
         {
-            await Page.Clock.SetSystemTimeAsync(0);
+            await Page.Clock.SetSystemTimeAsync(DateTimeOffset.FromUnixTimeMilliseconds(0).UtcDateTime);
             await Page.EvaluateAsync("() => { setInterval(() => { window.stubWithNumberValue(new Date().getTime()); }, 10); }");
             await Page.Clock.RunForAsync(100);
             Assert.AreEqual(new[] { 10, 20, 30, 40, 50, 60, 70, 80, 90, 100 }, _calls.Select(c => c[0]));
@@ -161,7 +161,7 @@ public class PageClockTests : PageTestEx
         [PlaywrightTest("page-clock.spec.ts", "returns the current now value")]
         public async Task ReturnsTheCurrentNowValue()
         {
-            await Page.Clock.SetSystemTimeAsync(0);
+            await Page.Clock.SetSystemTimeAsync(DateTimeOffset.FromUnixTimeMilliseconds(0).UtcDateTime);
             var value = 200;
             await Page.Clock.RunForAsync(value);
             Assert.AreEqual(value, await Page.EvaluateAsync<int>("Date.now()"));
@@ -173,8 +173,8 @@ public class PageClockTests : PageTestEx
         [SetUp]
         public async Task FastForwardSetUp()
         {
-            await Page.Clock.InstallAsync(new() { TimeInt64 = 0 });
-            await Page.Clock.PauseAtAsync(1000);
+            await Page.Clock.InstallAsync(new() { TimeDate = DateTimeOffset.FromUnixTimeMilliseconds(0).UtcDateTime });
+            await Page.Clock.PauseAtAsync(DateTimeOffset.FromUnixTimeMilliseconds(1000).UtcDateTime);
         }
 
         [PlaywrightTest("page-clock.spec.ts", "ignores timers which wouldn't be run")]
@@ -209,14 +209,14 @@ public class PageClockTests : PageTestEx
         [SetUp]
         public async Task StubTimersSetUp()
         {
-            await Page.Clock.InstallAsync(new() { TimeInt64 = 0 });
-            await Page.Clock.PauseAtAsync(1000);
+            await Page.Clock.InstallAsync(new() { TimeDate = DateTimeOffset.FromUnixTimeMilliseconds(0).UtcDateTime });
+            await Page.Clock.PauseAtAsync(DateTimeOffset.FromUnixTimeMilliseconds(1000).UtcDateTime);
         }
 
         [PlaywrightTest("page-clock.spec.ts", "sets initial timestamp")]
         public async Task SetsInitialTimestamp()
         {
-            await Page.Clock.SetSystemTimeAsync(1400);
+            await Page.Clock.SetSystemTimeAsync(DateTimeOffset.FromUnixTimeMilliseconds(1400).UtcDateTime);
             Assert.AreEqual(1400, await Page.EvaluateAsync<int>("Date.now()"));
         }
 
@@ -288,8 +288,8 @@ public class PageClockTests : PageTestEx
         [PlaywrightTest("page-clock.spec.ts", "replaces global performance.timeOrigin")]
         public async Task ReplacesGlobalPerformanceTimeOrigin()
         {
-            await Page.Clock.InstallAsync(new() { TimeInt64 = 1000 });
-            await Page.Clock.PauseAtAsync(2000);
+            await Page.Clock.InstallAsync(new() { TimeDate = DateTimeOffset.FromUnixTimeMilliseconds(1000).UtcDateTime });
+            await Page.Clock.PauseAtAsync(DateTimeOffset.FromUnixTimeMilliseconds(2000).UtcDateTime);
             var promise = Page.EvaluateAsync<JsonElement>("async () => { const prev = performance.now(); await new Promise(f => setTimeout(f, 1000)); const next = performance.now(); return { prev, next }; }");
             await Page.Clock.RunForAsync(1000);
             Assert.AreEqual(1000, await Page.EvaluateAsync<int>("performance.timeOrigin"));
@@ -304,7 +304,7 @@ public class PageClockTests : PageTestEx
         [PlaywrightTest("page-clock.spec.ts", "should tick after popup")]
         public async Task ShouldTickAfterPopup()
         {
-            await Page.Clock.InstallAsync(new() { TimeInt64 = 0 });
+            await Page.Clock.InstallAsync(new() { TimeDate = DateTimeOffset.FromUnixTimeMilliseconds(0).UtcDateTime });
             var now = new DateTime(2015, 9, 25);
             await Page.Clock.PauseAtAsync(now);
             var popupTask = Page.WaitForPopupAsync();
@@ -320,7 +320,7 @@ public class PageClockTests : PageTestEx
         [PlaywrightTest("page-clock.spec.ts", "should tick before popup")]
         public async Task ShouldTickBeforePopup()
         {
-            await Page.Clock.InstallAsync(new() { TimeInt64 = 0 });
+            await Page.Clock.InstallAsync(new() { TimeDate = DateTimeOffset.FromUnixTimeMilliseconds(0).UtcDateTime });
             var now = new DateTime(2015, 9, 25);
             await Page.Clock.PauseAtAsync(now);
             await Page.Clock.RunForAsync(1000);
@@ -357,8 +357,8 @@ public class PageClockTests : PageTestEx
                 context.Response.Headers["Content-Type"] = "text/html";
                 return context.Response.WriteAsync("<script>window.time = Date.now();</script>");
             });
-            await Page.Clock.InstallAsync(new() { TimeInt64 = 0 });
-            await Page.Clock.PauseAtAsync(1000);
+            await Page.Clock.InstallAsync(new() { TimeDate = DateTimeOffset.FromUnixTimeMilliseconds(0).UtcDateTime });
+            await Page.Clock.PauseAtAsync(DateTimeOffset.FromUnixTimeMilliseconds(1000).UtcDateTime);
             await Page.GotoAsync(Server.EmptyPage);
             // Wait for 2 seconds in real life to check that it is past in popup.
             await Page.WaitForTimeoutAsync(2000);
@@ -375,7 +375,7 @@ public class PageClockTests : PageTestEx
         [PlaywrightTest("page-clock.spec.ts", "does not fake methods")]
         public async Task DoesNotFakeMethods()
         {
-            await Page.Clock.SetFixedTimeAsync(0);
+            await Page.Clock.SetFixedTimeAsync(DateTimeOffset.FromUnixTimeMilliseconds(0).UtcDateTime);
             // Should not stall.
             await Page.EvaluateAsync("() => new Promise(f => setTimeout(f, 1))");
         }
@@ -383,16 +383,16 @@ public class PageClockTests : PageTestEx
         [PlaywrightTest("page-clock.spec.ts", "allows setting time multiple times")]
         public async Task AllowsSettingTimeMultipleTimes()
         {
-            await Page.Clock.SetFixedTimeAsync(100);
+            await Page.Clock.SetFixedTimeAsync(DateTimeOffset.FromUnixTimeMilliseconds(100).UtcDateTime);
             Assert.AreEqual(100, await Page.EvaluateAsync<long>("Date.now()"));
-            await Page.Clock.SetFixedTimeAsync(200);
+            await Page.Clock.SetFixedTimeAsync(DateTimeOffset.FromUnixTimeMilliseconds(200).UtcDateTime);
             Assert.AreEqual(200, await Page.EvaluateAsync<long>("Date.now()"));
         }
 
         [PlaywrightTest("page-clock.spec.ts", "fixed time is not affected by clock manipulation")]
         public async Task FixedTimeIsNotAffectedByClockManipulation()
         {
-            await Page.Clock.SetFixedTimeAsync(100);
+            await Page.Clock.SetFixedTimeAsync(DateTimeOffset.FromUnixTimeMilliseconds(100).UtcDateTime);
             Assert.AreEqual(100, await Page.EvaluateAsync<long>("Date.now()"));
             await Page.Clock.FastForwardAsync(20);
             Assert.AreEqual(100, await Page.EvaluateAsync<long>("Date.now()"));
@@ -401,9 +401,9 @@ public class PageClockTests : PageTestEx
         [PlaywrightTest("page-clock.spec.ts", "allows installing fake timers after setting time")]
         public async Task AllowsInstallingFakeTimersAfterSettingTime()
         {
-            await Page.Clock.SetFixedTimeAsync(100);
+            await Page.Clock.SetFixedTimeAsync(DateTimeOffset.FromUnixTimeMilliseconds(100).UtcDateTime);
             Assert.AreEqual(100, await Page.EvaluateAsync<long>("Date.now()"));
-            await Page.Clock.SetFixedTimeAsync(200);
+            await Page.Clock.SetFixedTimeAsync(DateTimeOffset.FromUnixTimeMilliseconds(200).UtcDateTime);
             await Page.EvaluateAsync("() => { setTimeout(() => window.stubWithNumberValue(Date.now()), 0); }");
             await Page.Clock.RunForAsync(0);
             Assert.AreEqual(1, _calls.Count);
@@ -416,7 +416,7 @@ public class PageClockTests : PageTestEx
         [PlaywrightTest("page-clock.spec.ts", "should progress time")]
         public async Task ShouldProgressTime()
         {
-            await Page.Clock.InstallAsync(new() { TimeInt64 = 0 });
+            await Page.Clock.InstallAsync(new() { TimeDate = DateTimeOffset.FromUnixTimeMilliseconds(0).UtcDateTime });
             await Page.GotoAsync("data:text/html,");
             await Page.WaitForTimeoutAsync(1000);
             var now = await Page.EvaluateAsync<long>("Date.now()");
@@ -427,7 +427,7 @@ public class PageClockTests : PageTestEx
         [PlaywrightTest("page-clock.spec.ts", "should runFor")]
         public async Task ShouldRunFor()
         {
-            await Page.Clock.InstallAsync(new() { TimeInt64 = 0 });
+            await Page.Clock.InstallAsync(new() { TimeDate = DateTimeOffset.FromUnixTimeMilliseconds(0).UtcDateTime });
             await Page.GotoAsync("data:text/html,");
             await Page.Clock.RunForAsync(10000);
             var now = await Page.EvaluateAsync<long>("Date.now()");
@@ -438,7 +438,7 @@ public class PageClockTests : PageTestEx
         [PlaywrightTest("page-clock.spec.ts", "should fastForward")]
         public async Task ShouldFastForward()
         {
-            await Page.Clock.InstallAsync(new() { TimeInt64 = 0 });
+            await Page.Clock.InstallAsync(new() { TimeDate = DateTimeOffset.FromUnixTimeMilliseconds(0).UtcDateTime });
             await Page.GotoAsync("data:text/html,");
             await Page.Clock.FastForwardAsync(10000);
             var now = await Page.EvaluateAsync<long>("Date.now()");
@@ -449,7 +449,7 @@ public class PageClockTests : PageTestEx
         [PlaywrightTest("page-clock.spec.ts", "should fastForwardTo")]
         public async Task ShouldFastForwardTo()
         {
-            await Page.Clock.InstallAsync(new() { TimeInt64 = 0 });
+            await Page.Clock.InstallAsync(new() { TimeDate = DateTimeOffset.FromUnixTimeMilliseconds(0).UtcDateTime });
             await Page.GotoAsync("data:text/html,");
             await Page.Clock.FastForwardAsync(10000);
             var now = await Page.EvaluateAsync<long>("Date.now()");
@@ -460,9 +460,9 @@ public class PageClockTests : PageTestEx
         [PlaywrightTest("page-clock.spec.ts", "should pause")]
         public async Task ShouldPause()
         {
-            await Page.Clock.InstallAsync(new() { TimeInt64 = 0 });
+            await Page.Clock.InstallAsync(new() { TimeDate = DateTimeOffset.FromUnixTimeMilliseconds(0).UtcDateTime });
             await Page.GotoAsync("data:text/html,");
-            await Page.Clock.PauseAtAsync(1000);
+            await Page.Clock.PauseAtAsync(DateTimeOffset.FromUnixTimeMilliseconds(1000).UtcDateTime);
             await Page.WaitForTimeoutAsync(1000);
             await Page.Clock.ResumeAsync();
             var now = await Page.EvaluateAsync<long>("Date.now()");
@@ -473,9 +473,9 @@ public class PageClockTests : PageTestEx
         [PlaywrightTest("page-clock.spec.ts", "should pause and fastForward")]
         public async Task ShouldPauseAndFastForward()
         {
-            await Page.Clock.InstallAsync(new() { TimeInt64 = 0 });
+            await Page.Clock.InstallAsync(new() { TimeDate = DateTimeOffset.FromUnixTimeMilliseconds(0).UtcDateTime });
             await Page.GotoAsync("data:text/html,");
-            await Page.Clock.PauseAtAsync(1000);
+            await Page.Clock.PauseAtAsync(DateTimeOffset.FromUnixTimeMilliseconds(1000).UtcDateTime);
             await Page.Clock.FastForwardAsync(1000);
             var now = await Page.EvaluateAsync<long>("Date.now()");
             Assert.AreEqual(2000, now);
@@ -484,9 +484,9 @@ public class PageClockTests : PageTestEx
         [PlaywrightTest("page-clock.spec.ts", "should set system time on pause")]
         public async Task ShouldSetSystemTimeOnPause()
         {
-            await Page.Clock.InstallAsync(new() { TimeInt64 = 0 });
+            await Page.Clock.InstallAsync(new() { TimeDate = DateTimeOffset.FromUnixTimeMilliseconds(0).UtcDateTime });
             await Page.GotoAsync("data:text/html,");
-            await Page.Clock.PauseAtAsync(1000);
+            await Page.Clock.PauseAtAsync(DateTimeOffset.FromUnixTimeMilliseconds(1000).UtcDateTime);
             var now = await Page.EvaluateAsync<long>("Date.now()");
             Assert.AreEqual(1000, now);
         }
@@ -497,9 +497,9 @@ public class PageClockTests : PageTestEx
         [PlaywrightTest("page-clock.spec.ts", "fastForward should not run nested immediate")]
         public async Task FastForwardShouldNotRunNestedImmediate()
         {
-            await Page.Clock.InstallAsync(new() { TimeInt64 = 0 });
+            await Page.Clock.InstallAsync(new() { TimeDate = DateTimeOffset.FromUnixTimeMilliseconds(0).UtcDateTime });
             await Page.GotoAsync("data:text/html,");
-            await Page.Clock.PauseAtAsync(1000);
+            await Page.Clock.PauseAtAsync(DateTimeOffset.FromUnixTimeMilliseconds(1000).UtcDateTime);
             await Page.EvaluateAsync("() => { setTimeout(() => { window.stubWithStringValue('outer'); setTimeout(() => window.stubWithStringValue('inner'), 0); }, 1000); }");
             await Page.Clock.FastForwardAsync(1000);
             Assert.AreEqual(1, _calls.Count);
@@ -512,9 +512,9 @@ public class PageClockTests : PageTestEx
         [PlaywrightTest("page-clock.spec.ts", "runFor should not run nested immediate")]
         public async Task RunForShouldNotRunNestedImmediate()
         {
-            await Page.Clock.InstallAsync(new() { TimeInt64 = 0 });
+            await Page.Clock.InstallAsync(new() { TimeDate = DateTimeOffset.FromUnixTimeMilliseconds(0).UtcDateTime });
             await Page.GotoAsync("data:text/html,");
-            await Page.Clock.PauseAtAsync(1000);
+            await Page.Clock.PauseAtAsync(DateTimeOffset.FromUnixTimeMilliseconds(1000).UtcDateTime);
             await Page.EvaluateAsync("() => { setTimeout(() => { window.stubWithStringValue('outer'); setTimeout(() => window.stubWithStringValue('inner'), 0); }, 1000); }");
             await Page.Clock.RunForAsync(1000);
             Assert.AreEqual(1, _calls.Count);
@@ -527,9 +527,9 @@ public class PageClockTests : PageTestEx
         [PlaywrightTest("page-clock.spec.ts", "runFor should not run nested immediate from microtask")]
         public async Task RunForShouldNotRunNestedImmediateFromMicrotask()
         {
-            await Page.Clock.InstallAsync(new() { TimeInt64 = 0 });
+            await Page.Clock.InstallAsync(new() { TimeDate = DateTimeOffset.FromUnixTimeMilliseconds(0).UtcDateTime });
             await Page.GotoAsync("data:text/html,");
-            await Page.Clock.PauseAtAsync(1000);
+            await Page.Clock.PauseAtAsync(DateTimeOffset.FromUnixTimeMilliseconds(1000).UtcDateTime);
             await Page.EvaluateAsync("() => { setTimeout(() => { window.stubWithStringValue('outer'); Promise.resolve().then(() => setTimeout(() => window.stubWithStringValue('inner'), 0)); }, 1000); }");
             await Page.Clock.RunForAsync(1000);
             Assert.AreEqual(1, _calls.Count);
