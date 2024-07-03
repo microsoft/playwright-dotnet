@@ -37,10 +37,6 @@ internal class Clock(BrowserContext browserContext) : IClock
         {
             args = ParseTime(options.Time ?? options.TimeString);
         }
-        else if (options.TimeInt64 != null)
-        {
-            args = ParseTime(options.TimeInt64.Value);
-        }
         else if (options.TimeDate != null)
         {
             args = ParseTime(options.TimeDate.Value);
@@ -54,9 +50,6 @@ internal class Clock(BrowserContext browserContext) : IClock
     private static Dictionary<string, object> ParseTime(DateTime? timeDate)
         => new() { ["timeNumber"] = ((DateTimeOffset)timeDate.Value).ToUnixTimeMilliseconds() };
 
-    private static Dictionary<string, object> ParseTime(long timeInt64)
-        => new() { ["timeNumber"] = timeInt64 };
-
     private Dictionary<string, object> ParseTicks(long ticks)
         => new() { ["ticksNumber"] = ticks };
 
@@ -68,9 +61,6 @@ internal class Clock(BrowserContext browserContext) : IClock
 
     public Task FastForwardAsync(string ticks)
         => browserContext.SendMessageToServerAsync("clockFastForward", ParseTicks(ticks));
-
-    public Task PauseAtAsync(long time)
-        => browserContext.SendMessageToServerAsync("clockPauseAt", ParseTime(time));
 
     public Task PauseAtAsync(string time)
         => browserContext.SendMessageToServerAsync("clockPauseAt", ParseTime(time));
@@ -87,17 +77,11 @@ internal class Clock(BrowserContext browserContext) : IClock
     public Task RunForAsync(string ticks)
         => browserContext.SendMessageToServerAsync("clockRunFor", ParseTicks(ticks));
 
-    public Task SetFixedTimeAsync(long time)
-        => browserContext.SendMessageToServerAsync("clockSetFixedTime", ParseTime(time));
-
     public Task SetFixedTimeAsync(string time)
         => browserContext.SendMessageToServerAsync("clockSetFixedTime", ParseTime(time));
 
     public Task SetFixedTimeAsync(DateTime time)
         => browserContext.SendMessageToServerAsync("clockSetFixedTime", ParseTime(time));
-
-    public Task SetSystemTimeAsync(long time)
-        => browserContext.SendMessageToServerAsync("clockSetSystemTime", ParseTime(time));
 
     public Task SetSystemTimeAsync(string time)
         => browserContext.SendMessageToServerAsync("clockSetSystemTime", ParseTime(time));
