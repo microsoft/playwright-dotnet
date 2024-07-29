@@ -884,6 +884,14 @@ public class BrowserContextFetchTests : PageTestEx
         Assert.AreEqual(200, response.Status);
     }
 
+    [PlaywrightTest("browsercontext-fetch.spec.ts", "should not work after context dispose")]
+    public async Task ShouldNotWorkAfterContextDispose()
+    {
+        await Context.CloseAsync(new() { Reason = "Test ended." });
+        var exception = await PlaywrightAssert.ThrowsAsync<PlaywrightException>(() => Context.APIRequest.GetAsync(Server.EmptyPage));
+        StringAssert.Contains("Test ended.", exception.Message);
+    }
+
     private async Task ForAllMethods(IAPIRequestContext request, Func<Task<IAPIResponse>, Task> callback, string url, APIRequestContextOptions options = null)
     {
         var methodsToTest = new[] { "fetch", "delete", "get", "head", "patch", "post", "put" };

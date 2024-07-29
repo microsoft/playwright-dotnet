@@ -38,6 +38,7 @@ namespace Microsoft.Playwright.Core;
 internal class APIRequestContext : ChannelOwner, IAPIRequestContext
 {
     internal readonly Tracing _tracing;
+    private string _closeReason;
 
     internal APIRequest _request;
 
@@ -49,7 +50,23 @@ internal class APIRequestContext : ChannelOwner, IAPIRequestContext
     [MethodImpl(MethodImplOptions.NoInlining)]
     public async ValueTask DisposeAsync()
     {
-        await SendMessageToServerAsync("dispose").ConfigureAwait(false);
+        await DisposeAsync(null).ConfigureAwait(false);
+    }
+
+    internal async ValueTask DisposeAsync(string reason)
+    {
+        _closeReason = reason;
+        try
+        {
+            await SendMessageToServerAsync("dispose", new Dictionary<string, object>
+            {
+                ["reason"] = reason,
+            }).ConfigureAwait(false);
+        }
+        catch (Exception e) when (DriverMessages.IsTargetClosedError(e))
+        {
+            // Swallow exception
+        }
         _tracing.ResetStackCounter();
     }
 
@@ -79,6 +96,10 @@ internal class APIRequestContext : ChannelOwner, IAPIRequestContext
     [MethodImpl(MethodImplOptions.NoInlining)]
     public async Task<IAPIResponse> FetchAsync(string url, APIRequestContextOptions options = null)
     {
+        if (!string.IsNullOrEmpty(_closeReason))
+        {
+            throw new PlaywrightException(_closeReason);
+        }
         options ??= new APIRequestContextOptions();
 
         if (options.MaxRedirects != null && options.MaxRedirects < 0)
