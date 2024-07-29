@@ -46,7 +46,7 @@ internal class BrowserContext : ChannelOwner, IBrowserContext
     private readonly Tracing _tracing;
     private readonly Clock _clock;
     internal readonly HashSet<IPage> _backgroundPages = new();
-    internal readonly IAPIRequestContext _request;
+    internal readonly APIRequestContext _request;
     private readonly Dictionary<string, HarRecorder> _harRecorders = new();
     internal readonly List<IWorker> _serviceWorkers = new();
     private List<RouteHandler> _routes = new();
@@ -320,6 +320,12 @@ internal class BrowserContext : ChannelOwner, IBrowserContext
         }
         _closeReason = options?.Reason;
         CloseWasCalled = true;
+        await WrapApiCallAsync(
+            async () =>
+        {
+            await _request.DisposeAsync(options?.Reason).ConfigureAwait(false);
+        },
+            true).ConfigureAwait(false);
         await WrapApiCallAsync(
             async () =>
         {
