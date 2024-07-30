@@ -224,9 +224,6 @@ public partial interface IBrowserContext
     /// <code>await context.AddCookiesAsync(new[] { cookie1, cookie2 });</code>
     /// </summary>
     /// <param name="cookies">
-    /// Adds cookies to the browser context.
-    /// For the cookie to apply to all subdomains as well, prefix domain with a dot, like
-    /// this: ".example.com".
     /// </param>
     Task AddCookiesAsync(IEnumerable<Cookie> cookies);
 

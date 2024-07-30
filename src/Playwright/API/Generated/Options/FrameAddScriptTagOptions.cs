@@ -60,7 +60,7 @@ public class FrameAddScriptTagOptions
 
     /// <summary>
     /// <para>
-    /// Script type. Use 'module' in order to load a Javascript ES6 module. See <a href="https://developer.mozilla.org/en-US/docs/Web/HTML/Element/script">script</a>
+    /// Script type. Use 'module' in order to load a JavaScript ES6 module. See <a href="https://developer.mozilla.org/en-US/docs/Web/HTML/Element/script">script</a>
     /// for more details.
     /// </para>
     /// </summary>

@@ -152,10 +152,6 @@ public partial interface ILocator
     /// </description></item>
     /// <item><description>Scroll the element into view if needed.</description></item>
     /// <item><description>Use <see cref="IPage.Mouse"/> to click in the center of the element.</description></item>
-    /// <item><description>
-    /// Wait for initiated navigations to either succeed or fail, unless <paramref name="noWaitAfter"/>
-    /// option is set.
-    /// </description></item>
     /// <item><description>Ensure that the element is now checked. If not, this method throws.</description></item>
     /// </list>
     /// <para>
@@ -263,11 +259,6 @@ public partial interface ILocator
     /// <item><description>
     /// Use <see cref="IPage.Mouse"/> to double click in the center of the element, or the
     /// specified <paramref name="position"/>.
-    /// </description></item>
-    /// <item><description>
-    /// Wait for initiated navigations to either succeed or fail, unless <paramref name="noWaitAfter"/>
-    /// option is set. Note that if the first click of the <c>dblclick()</c> triggers a
-    /// navigation event, this method will throw.
     /// </description></item>
     /// </list>
     /// <para>
@@ -860,10 +851,6 @@ public partial interface ILocator
     /// Use <see cref="IPage.Mouse"/> to hover over the center of the element, or the specified
     /// <paramref name="position"/>.
     /// </description></item>
-    /// <item><description>
-    /// Wait for initiated navigations to either succeed or fail, unless <c>noWaitAfter</c>
-    /// option is set.
-    /// </description></item>
     /// </list>
     /// <para>
     /// If the element is detached from the DOM at any moment during the action, this method
@@ -1452,10 +1439,6 @@ public partial interface ILocator
     /// </description></item>
     /// <item><description>Scroll the element into view if needed.</description></item>
     /// <item><description>Use <see cref="IPage.Mouse"/> to click in the center of the element.</description></item>
-    /// <item><description>
-    /// Wait for initiated navigations to either succeed or fail, unless <paramref name="noWaitAfter"/>
-    /// option is set.
-    /// </description></item>
     /// <item><description>Ensure that the element is now checked or unchecked. If not, this method throws.</description></item>
     /// </list>
     /// <para>
@@ -1662,10 +1645,6 @@ public partial interface ILocator
     /// Use <see cref="IPage.Touchscreen"/> to tap the center of the element, or the specified
     /// <paramref name="position"/>.
     /// </description></item>
-    /// <item><description>
-    /// Wait for initiated navigations to either succeed or fail, unless <paramref name="noWaitAfter"/>
-    /// option is set.
-    /// </description></item>
     /// </list>
     /// <para>
     /// If the element is detached from the DOM at any moment during the action, this method
@@ -1732,10 +1711,6 @@ public partial interface ILocator
     /// </description></item>
     /// <item><description>Scroll the element into view if needed.</description></item>
     /// <item><description>Use <see cref="IPage.Mouse"/> to click in the center of the element.</description></item>
-    /// <item><description>
-    /// Wait for initiated navigations to either succeed or fail, unless <paramref name="noWaitAfter"/>
-    /// option is set.
-    /// </description></item>
     /// <item><description>Ensure that the element is now unchecked. If not, this method throws.</description></item>
     /// </list>
     /// <para>

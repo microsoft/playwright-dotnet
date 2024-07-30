@@ -50,6 +50,7 @@ internal class APIRequest : IAPIRequest
             ["httpCredentials"] = options?.HttpCredentials,
             ["proxy"] = options?.Proxy,
             ["timeout"] = options?.Timeout,
+            ["clientCertificates"] = Browser.ToClientCertificatesProtocol(options.ClientCertificates),
         };
         string storageState = options?.StorageState;
         if (!string.IsNullOrEmpty(options?.StorageStatePath))

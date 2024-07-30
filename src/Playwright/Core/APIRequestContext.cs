@@ -104,7 +104,11 @@ internal class APIRequestContext : ChannelOwner, IAPIRequestContext
 
         if (options.MaxRedirects != null && options.MaxRedirects < 0)
         {
-            throw new PlaywrightException("'maxRedirects' should be greater than or equal to '0'");
+            throw new PlaywrightException("'maxRedirects' must be greater than or equal to '0'");
+        }
+        if (options.MaxRetries != null && options.MaxRetries < 0)
+        {
+            throw new PlaywrightException("'MaxRetries' must be greater than or equal to '0'");
         }
         if (new[] { options.Data, options.DataByte, options.DataObject, options.DataString, options.Form, options.Multipart }.Count(x => x != null) > 1)
         {
@@ -146,6 +150,7 @@ internal class APIRequestContext : ChannelOwner, IAPIRequestContext
             ["failOnStatusCode"] = options?.FailOnStatusCode,
             ["ignoreHTTPSErrors"] = options?.IgnoreHTTPSErrors,
             ["maxRedirects"] = options?.MaxRedirects,
+            ["maxRetries"] = options?.MaxRetries,
             ["timeout"] = options.Timeout,
             ["params"] = queryParams?.ToProtocol(),
             ["headers"] = options.Headers?.ToProtocol(),

@@ -41,6 +41,7 @@ public class APIRequestNewContextOptions
         }
 
         BaseURL = clone.BaseURL;
+        ClientCertificates = clone.ClientCertificates;
         ExtraHTTPHeaders = clone.ExtraHTTPHeaders;
         HttpCredentials = clone.HttpCredentials;
         IgnoreHTTPSErrors = clone.IgnoreHTTPSErrors;
@@ -74,6 +75,30 @@ public class APIRequestNewContextOptions
     /// </summary>
     [JsonPropertyName("baseURL")]
     public string? BaseURL { get; set; }
+
+    /// <summary>
+    /// <para>
+    /// TLS Client Authentication allows the server to request a client certificate and
+    /// verify it.
+    /// </para>
+    /// <para>**Details**</para>
+    /// <para>
+    /// An array of client certificates to be used. Each certificate object must have both
+    /// <c>certPath</c> and <c>keyPath</c> or a single <c>pfxPath</c> to load the client
+    /// certificate. Optionally, <c>passphrase</c> property should be provided if the certficiate
+    /// is encrypted. The <c>origin</c> property should be provided with an exact match
+    /// to the request origin that the certificate is valid for.
+    /// </para>
+    /// </summary>
+    /// <remarks>
+    /// <para>Using Client Certificates in combination with Proxy Servers is not supported.</para>
+    /// <para>
+    /// When using WebKit on macOS, accessing <c>localhost</c> will not pick up client certificates.
+    /// You can make it work by replacing <c>localhost</c> with <c>local.playwright</c>.
+    /// </para>
+    /// </remarks>
+    [JsonPropertyName("clientCertificates")]
+    public IEnumerable<ClientCertificate>? ClientCertificates { get; set; }
 
     /// <summary>
     /// <para>

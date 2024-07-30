@@ -465,4 +465,27 @@ public class GlobalFetchTests : PlaywrightTestEx
         Assert.AreEqual("{\"foo\":null}", await response.TextAsync());
         await request.DisposeAsync();
     }
+
+    [PlaywrightTest("global-fetch.spec.ts", "should retry ECONNRESET")]
+    public async Task ShouldRetryECONNRESET()
+    {
+        var request = await Playwright.APIRequest.NewContextAsync();
+        int requestCount = 0;
+        Server.SetRoute("/test", (context) =>
+        {
+            if (requestCount++ < 3)
+            {
+                context.Abort();
+                return Task.CompletedTask;
+            }
+            context.Response.Headers.ContentType = "text/plain";
+            context.Response.StatusCode = 200;
+            return context.Response.WriteAsync("Hello!");
+        });
+        var response = await request.GetAsync(Server.Prefix + "/test", new() { MaxRetries = 3 });
+        Assert.AreEqual(200, response.Status);
+        Assert.AreEqual("Hello!", await response.TextAsync());
+        Assert.AreEqual(4, requestCount);
+        await request.DisposeAsync();
+    }
 }

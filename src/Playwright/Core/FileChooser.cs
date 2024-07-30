@@ -74,7 +74,9 @@ internal class FileChooser : IFileChooser
 
         return new()
         {
+#pragma warning disable CS0612 // Type or member is obsolete
             NoWaitAfter = options?.NoWaitAfter,
+#pragma warning restore CS0612 // Type or member is obsolete
             Timeout = options?.Timeout,
         };
     }

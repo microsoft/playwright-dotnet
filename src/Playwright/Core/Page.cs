@@ -550,7 +550,9 @@ internal class Page : ChannelOwner, IPage
 
     [MethodImpl(MethodImplOptions.NoInlining)]
     public Task FillAsync(string selector, string value, PageFillOptions options = default)
+#pragma warning disable CS0612 // Type or member is obsolete
         => MainFrame.FillAsync(selector, value, new() { NoWaitAfter = options?.NoWaitAfter, Timeout = options?.Timeout, Force = options?.Force, Strict = options?.Strict });
+#pragma warning restore CS0612 // Type or member is obsolete
 
     [MethodImpl(MethodImplOptions.NoInlining)]
     public Task SetInputFilesAsync(string selector, string files, PageSetInputFilesOptions options = default)
@@ -573,7 +575,9 @@ internal class Page : ChannelOwner, IPage
         => MainFrame.TypeAsync(selector, text, new()
         {
             Delay = options?.Delay,
+#pragma warning disable CS0612 // Type or member is obsolete
             NoWaitAfter = options?.NoWaitAfter,
+#pragma warning restore CS0612 // Type or member is obsolete
             Timeout = options?.Timeout,
             Strict = options?.Strict,
         });
@@ -595,7 +599,9 @@ internal class Page : ChannelOwner, IPage
                 Position = options?.Position,
                 Modifiers = options?.Modifiers,
                 Force = options?.Force,
+#pragma warning disable CS0612 // Type or member is obsolete
                 NoWaitAfter = options?.NoWaitAfter,
+#pragma warning restore CS0612 // Type or member is obsolete
                 Timeout = options?.Timeout,
                 Trial = options?.Trial,
                 Strict = options?.Strict,
@@ -606,7 +612,9 @@ internal class Page : ChannelOwner, IPage
         => MainFrame.PressAsync(selector, key, new()
         {
             Delay = options?.Delay,
+#pragma warning disable CS0612 // Type or member is obsolete
             NoWaitAfter = options?.NoWaitAfter,
+#pragma warning restore CS0612 // Type or member is obsolete
             Timeout = options?.Timeout,
             Strict = options?.Strict,
         });
@@ -627,7 +635,9 @@ internal class Page : ChannelOwner, IPage
     public Task<IReadOnlyList<string>> SelectOptionAsync(string selector, IEnumerable<IElementHandle> values, PageSelectOptionOptions options = default)
         => MainFrame.SelectOptionAsync(selector, values, new()
         {
+#pragma warning disable CS0612 // Type or member is obsolete
             NoWaitAfter = options?.NoWaitAfter,
+#pragma warning restore CS0612 // Type or member is obsolete
             Timeout = options?.Timeout,
             Force = options?.Force,
             Strict = options?.Strict,
@@ -644,7 +654,9 @@ internal class Page : ChannelOwner, IPage
     internal Task<IReadOnlyList<string>> SelectOptionAsync(string selector, IEnumerable<SelectOptionValueProtocol> values, PageSelectOptionOptions options = default)
         => MainFrame.SelectOptionAsync(selector, values, new()
         {
+#pragma warning disable CS0612 // Type or member is obsolete
             NoWaitAfter = options?.NoWaitAfter,
+#pragma warning restore CS0612 // Type or member is obsolete
             Timeout = options?.Timeout,
             Force = options?.Force,
             Strict = options?.Strict,
@@ -761,7 +773,9 @@ internal class Page : ChannelOwner, IPage
                 Position = options?.Position,
                 Modifiers = options?.Modifiers,
                 Force = options?.Force,
+#pragma warning disable CS0612 // Type or member is obsolete
                 NoWaitAfter = options?.NoWaitAfter,
+#pragma warning restore CS0612 // Type or member is obsolete
                 Timeout = options?.Timeout,
                 Trial = options?.Trial,
                 Strict = options?.Strict,
@@ -777,7 +791,9 @@ internal class Page : ChannelOwner, IPage
             Modifiers = options?.Modifiers,
             Timeout = options?.Timeout,
             Force = options?.Force,
+#pragma warning disable CS0612 // Type or member is obsolete
             NoWaitAfter = options?.NoWaitAfter,
+#pragma warning restore CS0612 // Type or member is obsolete
             Trial = options?.Trial,
             Strict = options?.Strict,
         });
@@ -995,7 +1011,9 @@ internal class Page : ChannelOwner, IPage
         {
             Position = options?.Position,
             Force = options?.Force,
+#pragma warning disable CS0612 // Type or member is obsolete
             NoWaitAfter = options?.NoWaitAfter,
+#pragma warning restore CS0612 // Type or member is obsolete
             Strict = options?.Strict,
             Timeout = options?.Timeout,
             Trial = options?.Trial,
@@ -1004,7 +1022,9 @@ internal class Page : ChannelOwner, IPage
         {
             Position = options?.Position,
             Force = options?.Force,
+#pragma warning disable CS0612 // Type or member is obsolete
             NoWaitAfter = options?.NoWaitAfter,
+#pragma warning restore CS0612 // Type or member is obsolete
             Timeout = options?.Timeout,
             Trial = options?.Trial,
             Strict = options?.Strict,
@@ -1016,7 +1036,9 @@ internal class Page : ChannelOwner, IPage
         {
             Position = options?.Position,
             Force = options?.Force,
+#pragma warning disable CS0612 // Type or member is obsolete
             NoWaitAfter = options?.NoWaitAfter,
+#pragma warning restore CS0612 // Type or member is obsolete
             Strict = options?.Strict,
             Timeout = options?.Timeout,
             Trial = options?.Trial,
@@ -1028,7 +1050,9 @@ internal class Page : ChannelOwner, IPage
         {
             Position = options?.Position,
             Force = options?.Force,
+#pragma warning disable CS0612 // Type or member is obsolete
             NoWaitAfter = options?.NoWaitAfter,
+#pragma warning restore CS0612 // Type or member is obsolete
             Timeout = options?.Timeout,
             Trial = options?.Trial,
             Strict = options?.Strict,
@@ -1079,7 +1103,9 @@ internal class Page : ChannelOwner, IPage
                 Modifiers = options?.Modifiers,
                 Position = options?.Position,
                 Force = options?.Force,
+#pragma warning disable CS0612 // Type or member is obsolete
                 NoWaitAfter = options?.NoWaitAfter,
+#pragma warning restore CS0612 // Type or member is obsolete
                 Timeout = options?.Timeout,
                 Trial = options?.Trial,
                 Strict = options?.Strict,
@@ -1192,7 +1218,9 @@ internal class Page : ChannelOwner, IPage
         => MainFrame.DragAndDropAsync(source, target, new()
         {
             Force = options?.Force,
+#pragma warning disable CS0612 // Type or member is obsolete
             NoWaitAfter = options?.NoWaitAfter,
+#pragma warning restore CS0612 // Type or member is obsolete
             Timeout = options?.Timeout,
             Trial = options?.Trial,
             Strict = options?.Strict,
@@ -1387,7 +1415,9 @@ internal class Page : ChannelOwner, IPage
 
         return new()
         {
+#pragma warning disable CS0612 // Type or member is obsolete
             NoWaitAfter = options.NoWaitAfter,
+#pragma warning restore CS0612 // Type or member is obsolete
             Timeout = options.Timeout,
             Strict = options.Strict,
         };

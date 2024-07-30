@@ -892,6 +892,27 @@ public class BrowserContextFetchTests : PageTestEx
         StringAssert.Contains("Test ended.", exception.Message);
     }
 
+    [PlaywrightTest("browsercontext-fetch.spec.ts", "should retry ECONNRESET")]
+    public async Task ShouldRetryECONNRESET()
+    {
+        int requestCount = 0;
+        Server.SetRoute("/test", (context) =>
+        {
+            if (requestCount++ < 3)
+            {
+                context.Abort();
+                return Task.CompletedTask;
+            }
+            context.Response.Headers.ContentType = "text/plain";
+            context.Response.StatusCode = 200;
+            return context.Response.WriteAsync("Hello!");
+        });
+        var response = await Context.APIRequest.GetAsync(Server.Prefix + "/test", new() { MaxRetries = 3 });
+        Assert.AreEqual(200, response.Status);
+        Assert.AreEqual("Hello!", await response.TextAsync());
+        Assert.AreEqual(4, requestCount);
+    }
+
     private async Task ForAllMethods(IAPIRequestContext request, Func<Task<IAPIResponse>, Task> callback, string url, APIRequestContextOptions options = null)
     {
         var methodsToTest = new[] { "fetch", "delete", "get", "head", "patch", "post", "put" };

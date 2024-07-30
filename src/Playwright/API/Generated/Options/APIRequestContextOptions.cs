@@ -49,6 +49,7 @@ public class APIRequestContextOptions
         Headers = clone.Headers;
         IgnoreHTTPSErrors = clone.IgnoreHTTPSErrors;
         MaxRedirects = clone.MaxRedirects;
+        MaxRetries = clone.MaxRetries;
         Method = clone.Method;
         Multipart = clone.Multipart;
         Params = clone.Params;
@@ -142,6 +143,16 @@ public class APIRequestContextOptions
     /// </summary>
     [JsonPropertyName("maxRedirects")]
     public int? MaxRedirects { get; set; }
+
+    /// <summary>
+    /// <para>
+    /// Maximum number of times network errors should be retried. Currently only <c>ECONNRESET</c>
+    /// error is retried. Does not retry based on HTTP response codes. An error will be
+    /// thrown if the limit is exceeded. Defaults to <c>0</c> - no retries.
+    /// </para>
+    /// </summary>
+    [JsonPropertyName("maxRetries")]
+    public int? MaxRetries { get; set; }
 
     /// <summary>
     /// <para>

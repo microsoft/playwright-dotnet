@@ -52,10 +52,8 @@ public partial interface IMouse
     /// cref="IMouse.UpAsync"/>.
     /// </para>
     /// </summary>
-    /// <param name="x">
-    /// </param>
-    /// <param name="y">
-    /// </param>
+    /// <param name="x">X coordinate relative to the main frame's viewport in CSS pixels.</param>
+    /// <param name="y">Y coordinate relative to the main frame's viewport in CSS pixels.</param>
     /// <param name="options">Call options</param>
     Task ClickAsync(float x, float y, MouseClickOptions? options = default);
 
@@ -65,10 +63,8 @@ public partial interface IMouse
     /// cref="IMouse.UpAsync"/>, <see cref="IMouse.DownAsync"/> and <see cref="IMouse.UpAsync"/>.
     /// </para>
     /// </summary>
-    /// <param name="x">
-    /// </param>
-    /// <param name="y">
-    /// </param>
+    /// <param name="x">X coordinate relative to the main frame's viewport in CSS pixels.</param>
+    /// <param name="y">Y coordinate relative to the main frame's viewport in CSS pixels.</param>
     /// <param name="options">Call options</param>
     Task DblClickAsync(float x, float y, MouseDblClickOptions? options = default);
 
@@ -77,10 +73,8 @@ public partial interface IMouse
     Task DownAsync(MouseDownOptions? options = default);
 
     /// <summary><para>Dispatches a <c>mousemove</c> event.</para></summary>
-    /// <param name="x">
-    /// </param>
-    /// <param name="y">
-    /// </param>
+    /// <param name="x">X coordinate relative to the main frame's viewport in CSS pixels.</param>
+    /// <param name="y">Y coordinate relative to the main frame's viewport in CSS pixels.</param>
     /// <param name="options">Call options</param>
     Task MoveAsync(float x, float y, MouseMoveOptions? options = default);
 

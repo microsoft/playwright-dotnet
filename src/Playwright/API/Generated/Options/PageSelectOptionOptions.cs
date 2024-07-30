@@ -55,6 +55,7 @@ public class PageSelectOptionOptions
     public bool? Force { get; set; }
 
     /// <summary>
+    /// <para>**DEPRECATED** This option will default to <c>true</c> in the future.</para>
     /// <para>
     /// Actions that initiate navigations are waiting for these navigations to happen and
     /// for pages to start loading. You can opt out of waiting via setting this flag. You
@@ -63,6 +64,7 @@ public class PageSelectOptionOptions
     /// </para>
     /// </summary>
     [JsonPropertyName("noWaitAfter")]
+    [System.Obsolete]
     public bool? NoWaitAfter { get; set; }
 
     /// <summary>

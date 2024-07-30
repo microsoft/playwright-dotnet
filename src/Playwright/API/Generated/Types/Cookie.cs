@@ -41,15 +41,20 @@ public partial class Cookie
     [JsonPropertyName("value")]
     public string Value { get; set; } = default!;
 
-    /// <summary><para>either url or domain / path are required. Optional.</para></summary>
+    /// <summary><para>Either url or domain / path are required. Optional.</para></summary>
     [JsonPropertyName("url")]
     public string? Url { get; set; }
 
-    /// <summary><para>either url or domain / path are required Optional.</para></summary>
+    /// <summary>
+    /// <para>
+    /// For the cookie to apply to all subdomains as well, prefix domain with a dot, like
+    /// this: ".example.com". Either url or domain / path are required. Optional.
+    /// </para>
+    /// </summary>
     [JsonPropertyName("domain")]
     public string? Domain { get; set; }
 
-    /// <summary><para>either url or domain / path are required Optional.</para></summary>
+    /// <summary><para>Either url or domain / path are required Optional.</para></summary>
     [JsonPropertyName("path")]
     public string? Path { get; set; }
 
