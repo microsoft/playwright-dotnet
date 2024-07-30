@@ -575,9 +575,6 @@ internal class Page : ChannelOwner, IPage
         => MainFrame.TypeAsync(selector, text, new()
         {
             Delay = options?.Delay,
-#pragma warning disable CS0612 // Type or member is obsolete
-            NoWaitAfter = options?.NoWaitAfter,
-#pragma warning restore CS0612 // Type or member is obsolete
             Timeout = options?.Timeout,
             Strict = options?.Strict,
         });
@@ -599,9 +596,6 @@ internal class Page : ChannelOwner, IPage
                 Position = options?.Position,
                 Modifiers = options?.Modifiers,
                 Force = options?.Force,
-#pragma warning disable CS0612 // Type or member is obsolete
-                NoWaitAfter = options?.NoWaitAfter,
-#pragma warning restore CS0612 // Type or member is obsolete
                 Timeout = options?.Timeout,
                 Trial = options?.Trial,
                 Strict = options?.Strict,
@@ -825,40 +819,40 @@ internal class Page : ChannelOwner, IPage
     [MethodImpl(MethodImplOptions.NoInlining)]
     public Task ExposeBindingAsync(string name, Action callback, PageExposeBindingOptions options = default)
 #pragma warning disable CS0612 // Type or member is obsolete
-        => InnerExposeBindingAsync(name, (Delegate)callback, options?.Handle ?? false);
+        => InnerExposeBindingAsync(name, callback, options?.Handle ?? false);
 #pragma warning restore CS0612 // Type or member is obsolete
 
     [MethodImpl(MethodImplOptions.NoInlining)]
     public Task ExposeBindingAsync(string name, Action<BindingSource> callback)
-        => InnerExposeBindingAsync(name, (Delegate)callback);
+        => InnerExposeBindingAsync(name, callback);
 
     [MethodImpl(MethodImplOptions.NoInlining)]
     public Task ExposeBindingAsync<T>(string name, Action<BindingSource, T> callback)
-        => InnerExposeBindingAsync(name, (Delegate)callback);
+        => InnerExposeBindingAsync(name, callback);
 
     [MethodImpl(MethodImplOptions.NoInlining)]
     public Task ExposeBindingAsync<TResult>(string name, Func<BindingSource, TResult> callback)
-        => InnerExposeBindingAsync(name, (Delegate)callback);
+        => InnerExposeBindingAsync(name, callback);
 
     [MethodImpl(MethodImplOptions.NoInlining)]
     public Task ExposeBindingAsync<TResult>(string name, Func<BindingSource, IJSHandle, TResult> callback)
-        => InnerExposeBindingAsync(name, (Delegate)callback, true);
+        => InnerExposeBindingAsync(name, callback, true);
 
     [MethodImpl(MethodImplOptions.NoInlining)]
     public Task ExposeBindingAsync<T, TResult>(string name, Func<BindingSource, T, TResult> callback)
-        => InnerExposeBindingAsync(name, (Delegate)callback);
+        => InnerExposeBindingAsync(name, callback);
 
     [MethodImpl(MethodImplOptions.NoInlining)]
     public Task ExposeBindingAsync<T1, T2, TResult>(string name, Func<BindingSource, T1, T2, TResult> callback)
-        => InnerExposeBindingAsync(name, (Delegate)callback);
+        => InnerExposeBindingAsync(name, callback);
 
     [MethodImpl(MethodImplOptions.NoInlining)]
     public Task ExposeBindingAsync<T1, T2, T3, TResult>(string name, Func<BindingSource, T1, T2, T3, TResult> callback)
-        => InnerExposeBindingAsync(name, (Delegate)callback);
+        => InnerExposeBindingAsync(name, callback);
 
     [MethodImpl(MethodImplOptions.NoInlining)]
     public Task ExposeBindingAsync<T1, T2, T3, T4, TResult>(string name, Func<BindingSource, T1, T2, T3, T4, TResult> callback)
-        => InnerExposeBindingAsync(name, (Delegate)callback);
+        => InnerExposeBindingAsync(name, callback);
 
     [MethodImpl(MethodImplOptions.NoInlining)]
     public Task ExposeFunctionAsync(string name, Action callback)
@@ -1011,9 +1005,6 @@ internal class Page : ChannelOwner, IPage
         {
             Position = options?.Position,
             Force = options?.Force,
-#pragma warning disable CS0612 // Type or member is obsolete
-            NoWaitAfter = options?.NoWaitAfter,
-#pragma warning restore CS0612 // Type or member is obsolete
             Strict = options?.Strict,
             Timeout = options?.Timeout,
             Trial = options?.Trial,
@@ -1022,9 +1013,6 @@ internal class Page : ChannelOwner, IPage
         {
             Position = options?.Position,
             Force = options?.Force,
-#pragma warning disable CS0612 // Type or member is obsolete
-            NoWaitAfter = options?.NoWaitAfter,
-#pragma warning restore CS0612 // Type or member is obsolete
             Timeout = options?.Timeout,
             Trial = options?.Trial,
             Strict = options?.Strict,
@@ -1036,9 +1024,6 @@ internal class Page : ChannelOwner, IPage
         {
             Position = options?.Position,
             Force = options?.Force,
-#pragma warning disable CS0612 // Type or member is obsolete
-            NoWaitAfter = options?.NoWaitAfter,
-#pragma warning restore CS0612 // Type or member is obsolete
             Strict = options?.Strict,
             Timeout = options?.Timeout,
             Trial = options?.Trial,
@@ -1050,9 +1035,6 @@ internal class Page : ChannelOwner, IPage
         {
             Position = options?.Position,
             Force = options?.Force,
-#pragma warning disable CS0612 // Type or member is obsolete
-            NoWaitAfter = options?.NoWaitAfter,
-#pragma warning restore CS0612 // Type or member is obsolete
             Timeout = options?.Timeout,
             Trial = options?.Trial,
             Strict = options?.Strict,
@@ -1103,9 +1085,6 @@ internal class Page : ChannelOwner, IPage
                 Modifiers = options?.Modifiers,
                 Position = options?.Position,
                 Force = options?.Force,
-#pragma warning disable CS0612 // Type or member is obsolete
-                NoWaitAfter = options?.NoWaitAfter,
-#pragma warning restore CS0612 // Type or member is obsolete
                 Timeout = options?.Timeout,
                 Trial = options?.Trial,
                 Strict = options?.Strict,
@@ -1143,12 +1122,13 @@ internal class Page : ChannelOwner, IPage
             Strict = options?.Strict,
         });
 
-#pragma warning disable CS0612 // Type or member is obsolete
     [MethodImpl(MethodImplOptions.NoInlining)]
     public Task<bool> IsHiddenAsync(string selector, PageIsHiddenOptions options = default)
         => MainFrame.IsHiddenAsync(selector, new()
         {
+#pragma warning disable CS0612 // Type or member is obsolete
             Timeout = options?.Timeout,
+#pragma warning restore CS0612 // Type or member is obsolete
             Strict = options?.Strict,
         });
 
@@ -1156,10 +1136,11 @@ internal class Page : ChannelOwner, IPage
     public Task<bool> IsVisibleAsync(string selector, PageIsVisibleOptions options = default)
         => MainFrame.IsVisibleAsync(selector, new()
         {
+#pragma warning disable CS0612 // Type or member is obsolete
             Timeout = options?.Timeout,
+#pragma warning restore CS0612 // Type or member is obsolete
             Strict = options?.Strict,
         });
-#pragma warning restore CS0612 // Type or member is obsolete
 
     [MethodImpl(MethodImplOptions.NoInlining)]
     public async Task PauseAsync()
@@ -1218,9 +1199,6 @@ internal class Page : ChannelOwner, IPage
         => MainFrame.DragAndDropAsync(source, target, new()
         {
             Force = options?.Force,
-#pragma warning disable CS0612 // Type or member is obsolete
-            NoWaitAfter = options?.NoWaitAfter,
-#pragma warning restore CS0612 // Type or member is obsolete
             Timeout = options?.Timeout,
             Trial = options?.Trial,
             Strict = options?.Strict,
@@ -1415,9 +1393,6 @@ internal class Page : ChannelOwner, IPage
 
         return new()
         {
-#pragma warning disable CS0612 // Type or member is obsolete
-            NoWaitAfter = options.NoWaitAfter,
-#pragma warning restore CS0612 // Type or member is obsolete
             Timeout = options.Timeout,
             Strict = options.Strict,
         };

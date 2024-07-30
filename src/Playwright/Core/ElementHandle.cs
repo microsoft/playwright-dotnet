@@ -85,9 +85,6 @@ internal class ElementHandle : JSHandle, IElementHandle
             ["text"] = text,
             ["delay"] = options?.Delay,
             ["timeout"] = options?.Timeout,
-#pragma warning disable CS0612 // Type or member is obsolete
-            ["noWaitAfter"] = options?.NoWaitAfter,
-#pragma warning restore CS0612 // Type or member is obsolete
         });
 
     public async Task<byte[]> ScreenshotAsync(ElementHandleScreenshotOptions options = default)
@@ -137,9 +134,6 @@ internal class ElementHandle : JSHandle, IElementHandle
             ["value"] = value,
             ["timeout"] = options?.Timeout,
             ["force"] = options?.Force,
-#pragma warning disable CS0612 // Type or member is obsolete
-            ["noWaitAfter"] = options?.NoWaitAfter,
-#pragma warning restore CS0612 // Type or member is obsolete
         });
 
     public async Task<IFrame> ContentFrameAsync() => await SendMessageToServerAsync<Frame>("contentFrame").ConfigureAwait(false);
@@ -152,9 +146,6 @@ internal class ElementHandle : JSHandle, IElementHandle
             ["timeout"] = options?.Timeout,
             ["trial"] = options?.Trial,
             ["modifiers"] = options?.Modifiers?.Select(m => m.ToValueString()),
-#pragma warning disable CS0612 // Type or member is obsolete
-            ["noWaitAfter"] = options?.NoWaitAfter,
-#pragma warning restore CS0612 // Type or member is obsolete
         });
 
     public Task ScrollIntoViewIfNeededAsync(ElementHandleScrollIntoViewIfNeededOptions options = default)
@@ -225,9 +216,6 @@ internal class ElementHandle : JSHandle, IElementHandle
             ["streams"] = converted.Streams,
             ["directoryStream"] = converted.DirectoryStream,
             ["timeout"] = options?.Timeout,
-#pragma warning disable CS0612 // Type or member is obsolete
-            ["noWaitAfter"] = options?.NoWaitAfter,
-#pragma warning restore CS0612 // Type or member is obsolete
         }).ConfigureAwait(false);
     }
 
@@ -243,9 +231,6 @@ internal class ElementHandle : JSHandle, IElementHandle
             ["localPaths"] = converted.LocalPaths,
             ["streams"] = converted.Streams,
             ["timeout"] = options?.Timeout,
-#pragma warning disable CS0612 // Type or member is obsolete
-            ["noWaitAfter"] = options?.NoWaitAfter,
-#pragma warning restore CS0612 // Type or member is obsolete
         }).ConfigureAwait(false);
     }
 
@@ -388,9 +373,6 @@ internal class ElementHandle : JSHandle, IElementHandle
             ["position"] = options?.Position,
             ["trial"] = options?.Trial,
             ["timeout"] = options?.Timeout,
-#pragma warning disable CS0612 // Type or member is obsolete
-            ["noWaitAfter"] = options?.NoWaitAfter,
-#pragma warning restore CS0612 // Type or member is obsolete
         });
 
     public Task UncheckAsync(ElementHandleUncheckOptions options = default)
@@ -400,18 +382,12 @@ internal class ElementHandle : JSHandle, IElementHandle
             ["position"] = options?.Position,
             ["trial"] = options?.Trial,
             ["timeout"] = options?.Timeout,
-#pragma warning disable CS0612 // Type or member is obsolete
-            ["noWaitAfter"] = options?.NoWaitAfter,
-#pragma warning restore CS0612 // Type or member is obsolete
         });
 
     public Task TapAsync(ElementHandleTapOptions options = default)
         => SendMessageToServerAsync("tap", new Dictionary<string, object>
         {
             ["force"] = options?.Force,
-#pragma warning disable CS0612 // Type or member is obsolete
-            ["noWaitAfter"] = options?.NoWaitAfter,
-#pragma warning restore CS0612 // Type or member is obsolete
             ["position"] = options?.Position,
             ["modifiers"] = options?.Modifiers?.Select(m => m.ToValueString()),
             ["trial"] = options?.Trial,
@@ -443,9 +419,6 @@ internal class ElementHandle : JSHandle, IElementHandle
             ["position"] = options?.Position,
             ["trial"] = options?.Trial,
             ["timeout"] = options?.Timeout,
-#pragma warning disable CS0612 // Type or member is obsolete
-            ["noWaitAfter"] = options?.NoWaitAfter,
-#pragma warning restore CS0612 // Type or member is obsolete
         });
 
     internal static ScreenshotType DetermineScreenshotType(string path)
