@@ -104,7 +104,7 @@ internal class APIRequestContext : ChannelOwner, IAPIRequestContext
 
         if (options.MaxRedirects != null && options.MaxRedirects < 0)
         {
-            throw new PlaywrightException("'maxRedirects' must be greater than or equal to '0'");
+            throw new PlaywrightException("'MaxRedirects' must be greater than or equal to '0'");
         }
         if (options.MaxRetries != null && options.MaxRetries < 0)
         {
