@@ -103,6 +103,10 @@ public class ClientCertificatesTests : BrowserTestEx
         {
             Assert.Ignore("WebKit on macOS doesn't proxy localhost requests");
         }
+        if (TestConstants.IsChromium && TestConstants.IsWindows) {
+            // TODO: Remove after https://github.com/microsoft/playwright/issues/17252 is fixed.
+            Assert.Ignore("Chromium on Windows doesn't proxy localhost requests");
+        }
     }
 
     [PlaywrightTest("", "")]
