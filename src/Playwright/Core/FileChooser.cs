@@ -74,7 +74,6 @@ internal class FileChooser : IFileChooser
 
         return new()
         {
-            NoWaitAfter = options?.NoWaitAfter,
             Timeout = options?.Timeout,
         };
     }

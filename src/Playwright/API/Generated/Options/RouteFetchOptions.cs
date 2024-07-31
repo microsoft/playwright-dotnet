@@ -42,6 +42,7 @@ public class RouteFetchOptions
 
         Headers = clone.Headers;
         MaxRedirects = clone.MaxRedirects;
+        MaxRetries = clone.MaxRetries;
         Method = clone.Method;
         PostData = clone.PostData;
         Timeout = clone.Timeout;
@@ -61,6 +62,16 @@ public class RouteFetchOptions
     /// </summary>
     [JsonPropertyName("maxRedirects")]
     public int? MaxRedirects { get; set; }
+
+    /// <summary>
+    /// <para>
+    /// Maximum number of times network errors should be retried. Currently only <c>ECONNRESET</c>
+    /// error is retried. Does not retry based on HTTP response codes. An error will be
+    /// thrown if the limit is exceeded. Defaults to <c>0</c> - no retries.
+    /// </para>
+    /// </summary>
+    [JsonPropertyName("maxRetries")]
+    public int? MaxRetries { get; set; }
 
     /// <summary><para>If set changes the request method (e.g. GET or POST).</para></summary>
     [JsonPropertyName("method")]

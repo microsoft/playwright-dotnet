@@ -74,7 +74,9 @@ internal class ElementHandle : JSHandle, IElementHandle
             ["key"] = key,
             ["delay"] = options?.Delay,
             ["timeout"] = options?.Timeout,
+#pragma warning disable CS0612 // Type or member is obsolete
             ["noWaitAfter"] = options?.NoWaitAfter,
+#pragma warning restore CS0612 // Type or member is obsolete
         });
 
     public Task TypeAsync(string text, ElementHandleTypeOptions options = default)
@@ -83,7 +85,6 @@ internal class ElementHandle : JSHandle, IElementHandle
             ["text"] = text,
             ["delay"] = options?.Delay,
             ["timeout"] = options?.Timeout,
-            ["noWaitAfter"] = options?.NoWaitAfter,
         });
 
     public async Task<byte[]> ScreenshotAsync(ElementHandleScreenshotOptions options = default)
@@ -133,7 +134,6 @@ internal class ElementHandle : JSHandle, IElementHandle
             ["value"] = value,
             ["timeout"] = options?.Timeout,
             ["force"] = options?.Force,
-            ["noWaitAfter"] = options?.NoWaitAfter,
         });
 
     public async Task<IFrame> ContentFrameAsync() => await SendMessageToServerAsync<Frame>("contentFrame").ConfigureAwait(false);
@@ -146,7 +146,6 @@ internal class ElementHandle : JSHandle, IElementHandle
             ["timeout"] = options?.Timeout,
             ["trial"] = options?.Trial,
             ["modifiers"] = options?.Modifiers?.Select(m => m.ToValueString()),
-            ["noWaitAfter"] = options?.NoWaitAfter,
         });
 
     public Task ScrollIntoViewIfNeededAsync(ElementHandleScrollIntoViewIfNeededOptions options = default)
@@ -174,7 +173,9 @@ internal class ElementHandle : JSHandle, IElementHandle
             ["button"] = options?.Button,
             ["clickCount"] = options?.ClickCount,
             ["force"] = options?.Force,
+#pragma warning disable CS0612 // Type or member is obsolete
             ["noWaitAfter"] = options?.NoWaitAfter,
+#pragma warning restore CS0612 // Type or member is obsolete
             ["timeout"] = options?.Timeout,
             ["trial"] = options?.Trial,
             ["position"] = options?.Position,
@@ -187,7 +188,6 @@ internal class ElementHandle : JSHandle, IElementHandle
             ["delay"] = options?.Delay,
             ["button"] = options?.Button,
             ["force"] = options?.Force,
-            ["noWaitAfter"] = options?.NoWaitAfter,
             ["timeout"] = options?.Timeout,
             ["trial"] = options?.Trial,
             ["position"] = options?.Position,
@@ -213,7 +213,6 @@ internal class ElementHandle : JSHandle, IElementHandle
             ["streams"] = converted.Streams,
             ["directoryStream"] = converted.DirectoryStream,
             ["timeout"] = options?.Timeout,
-            ["noWaitAfter"] = options?.NoWaitAfter,
         }).ConfigureAwait(false);
     }
 
@@ -229,7 +228,6 @@ internal class ElementHandle : JSHandle, IElementHandle
             ["localPaths"] = converted.LocalPaths,
             ["streams"] = converted.Streams,
             ["timeout"] = options?.Timeout,
-            ["noWaitAfter"] = options?.NoWaitAfter,
         }).ConfigureAwait(false);
     }
 
@@ -314,22 +312,34 @@ internal class ElementHandle : JSHandle, IElementHandle
         });
 
     public Task<IReadOnlyList<string>> SelectOptionAsync(string value, ElementHandleSelectOptionOptions options = default)
+#pragma warning disable CS0612 // Type or member is obsolete
         => _selectOptionAsync(new[] { new SelectOptionValueProtocol() { ValueOrLabel = value } }, options?.NoWaitAfter, options?.Force, options?.Timeout);
+#pragma warning restore CS0612 // Type or member is obsolete
 
     public Task<IReadOnlyList<string>> SelectOptionAsync(IElementHandle values, ElementHandleSelectOptionOptions options = default)
+#pragma warning disable CS0612 // Type or member is obsolete
         => _selectOptionAsync(new[] { values }, options?.NoWaitAfter, options?.Force, options?.Timeout);
+#pragma warning restore CS0612 // Type or member is obsolete
 
     public Task<IReadOnlyList<string>> SelectOptionAsync(IEnumerable<string> values, ElementHandleSelectOptionOptions options = default)
+#pragma warning disable CS0612 // Type or member is obsolete
         => _selectOptionAsync(values.Select(x => new SelectOptionValueProtocol() { ValueOrLabel = x }), options?.NoWaitAfter, options?.Force, options?.Timeout);
+#pragma warning restore CS0612 // Type or member is obsolete
 
     public Task<IReadOnlyList<string>> SelectOptionAsync(SelectOptionValue values, ElementHandleSelectOptionOptions options = default)
+#pragma warning disable CS0612 // Type or member is obsolete
         => _selectOptionAsync(new[] { SelectOptionValueProtocol.From(values) }, options?.NoWaitAfter, options?.Force, options?.Timeout);
+#pragma warning restore CS0612 // Type or member is obsolete
 
     public Task<IReadOnlyList<string>> SelectOptionAsync(IEnumerable<IElementHandle> values, ElementHandleSelectOptionOptions options = default)
+#pragma warning disable CS0612 // Type or member is obsolete
         => _selectOptionAsync(values, options?.NoWaitAfter, options?.Force, options?.Timeout);
+#pragma warning restore CS0612 // Type or member is obsolete
 
     public Task<IReadOnlyList<string>> SelectOptionAsync(IEnumerable<SelectOptionValue> values, ElementHandleSelectOptionOptions options = default)
+#pragma warning disable CS0612 // Type or member is obsolete
         => _selectOptionAsync(values.Select(v => SelectOptionValueProtocol.From(v)), options?.NoWaitAfter, options?.Force, options?.Timeout);
+#pragma warning restore CS0612 // Type or member is obsolete
 
     private async Task<IReadOnlyList<string>> _selectOptionAsync(IEnumerable<SelectOptionValueProtocol> values, bool? noWaitAfter, bool? force, float? timeout)
     {
@@ -360,7 +370,6 @@ internal class ElementHandle : JSHandle, IElementHandle
             ["position"] = options?.Position,
             ["trial"] = options?.Trial,
             ["timeout"] = options?.Timeout,
-            ["noWaitAfter"] = options?.NoWaitAfter,
         });
 
     public Task UncheckAsync(ElementHandleUncheckOptions options = default)
@@ -370,14 +379,12 @@ internal class ElementHandle : JSHandle, IElementHandle
             ["position"] = options?.Position,
             ["trial"] = options?.Trial,
             ["timeout"] = options?.Timeout,
-            ["noWaitAfter"] = options?.NoWaitAfter,
         });
 
     public Task TapAsync(ElementHandleTapOptions options = default)
         => SendMessageToServerAsync("tap", new Dictionary<string, object>
         {
             ["force"] = options?.Force,
-            ["noWaitAfter"] = options?.NoWaitAfter,
             ["position"] = options?.Position,
             ["modifiers"] = options?.Modifiers?.Select(m => m.ToValueString()),
             ["trial"] = options?.Trial,
@@ -409,7 +416,6 @@ internal class ElementHandle : JSHandle, IElementHandle
             ["position"] = options?.Position,
             ["trial"] = options?.Trial,
             ["timeout"] = options?.Timeout,
-            ["noWaitAfter"] = options?.NoWaitAfter,
         });
 
     internal static ScreenshotType DetermineScreenshotType(string path)

@@ -139,6 +139,7 @@ internal class BrowserType : ChannelOwner, IBrowserType
                     recordHarUrlFilter: options.RecordHarUrlFilter,
                     recordHarUrlFilterString: options.RecordHarUrlFilterString,
                     recordHarUrlFilterRegex: options.RecordHarUrlFilterRegex),
+            ["clientCertificates"] = Browser.ToClientCertificatesProtocol(options.ClientCertificates),
         };
 
         if (options.AcceptDownloads.HasValue)

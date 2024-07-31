@@ -74,7 +74,7 @@ public partial interface IResponse
 
     /// <summary>
     /// <para>
-    /// Returns the value of the header matching the name. The name is case insensitive.
+    /// Returns the value of the header matching the name. The name is case-insensitive.
     /// If multiple headers have the same name (except <c>set-cookie</c>), they are returned
     /// as a list separated by <c>, </c>. For <c>set-cookie</c>, the <c>\n</c> separator
     /// is used. If no headers are found, <c>null</c> is returned.
@@ -86,7 +86,7 @@ public partial interface IResponse
     /// <summary>
     /// <para>
     /// Returns all values of the headers matching the name, for example <c>set-cookie</c>.
-    /// The name is case insensitive.
+    /// The name is case-insensitive.
     /// </para>
     /// </summary>
     /// <param name="name">Name of the header.</param>

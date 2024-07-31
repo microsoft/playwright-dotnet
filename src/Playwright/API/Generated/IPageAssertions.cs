@@ -45,7 +45,7 @@ namespace Microsoft.Playwright;
 /// public class ExampleTests : PageTest<br/>
 /// {<br/>
 ///     [TestMethod]<br/>
-///     public async Task NavigatetoLoginPage()<br/>
+///     public async Task NavigateToLoginPage()<br/>
 ///     {<br/>
 ///         await Page.GetByRole(AriaRole.Button, new() { Name = "Sign In" }).ClickAsync();<br/>
 ///         await Expect(Page).ToHaveURLAsync(new Regex(".*/login"));<br/>

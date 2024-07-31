@@ -306,6 +306,7 @@ internal class Route : ChannelOwner, IRoute
                     Method = options?.Method,
                     DataByte = options?.PostData,
                     MaxRedirects = options?.MaxRedirects,
+                    MaxRetries = options?.MaxRetries,
                     Timeout = options?.Timeout,
                 });
             });

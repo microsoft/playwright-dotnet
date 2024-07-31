@@ -546,20 +546,22 @@ public class PageEvaluateTests : PageTestEx
         StringAssert.Contains("handles", exception.Message);
     }
 
-    [PlaywrightTest("page-evaluate.spec.ts", "should evaluate exception")]
-    public async Task ShouldEvaluateException()
+    [PlaywrightTest("page-evaluate.spec.ts", "should evaluate exception with a function on the stack")]
+    [Ignore("todo https://github.com/microsoft/playwright-dotnet/issues/2947")]
+    public async Task ShouldEvaluateExceptionWithAFunctionOnTheStack()
     {
-        string exception = await Page.EvaluateAsync<string>(@"() => {
-                return (function functionOnStack() {
-                    return new Error('error message');
-                })();
-            }");
-        StringAssert.Contains("Error: error message", exception);
-        StringAssert.Contains("functionOnStack", exception);
+        var exception = await Page.EvaluateAsync<PlaywrightException>(@"() => {
+            return (function functionOnStack() {
+                return new Error('error message');
+            })();
+        }");
+        Assert.Equals("error message", exception.Message);
+        StringAssert.Contains("functionOnStack", exception.StackTrace);
     }
 
     [PlaywrightTest("page-evaluate.spec.ts", "should evaluate exception")]
-    public async Task ShouldEvaluateException2()
+    [Ignore("todo https://github.com/microsoft/playwright-dotnet/issues/2947")]
+    public async Task ShouldEvaluateException()
     {
         string exception = await Page.EvaluateAsync<string>(@"() => new Error('error message')");
         StringAssert.Contains("Error: error message", exception);

@@ -419,7 +419,7 @@ public class GlobalFetchTests : PlaywrightTestEx
         foreach (var method in new[] { "GET", "PUT", "POST", "OPTIONS", "HEAD", "PATCH" })
         {
             var exception = await PlaywrightAssert.ThrowsAsync<PlaywrightException>(() => request.FetchAsync($"{Server.Prefix}/a/redirect1", new() { Method = method, MaxRedirects = -1 }));
-            StringAssert.Contains("'maxRedirects' should be greater than or equal to '0'", exception.Message);
+            StringAssert.Contains("'MaxRedirects' must be greater than or equal to '0'", exception.Message);
         }
         await request.DisposeAsync();
     }
@@ -463,6 +463,29 @@ public class GlobalFetchTests : PlaywrightTestEx
         var response = await request.PostAsync(Server.Prefix + "/echo", new() { DataObject = new { foo = (object)null } });
         await Expect(response).ToBeOKAsync();
         Assert.AreEqual("{\"foo\":null}", await response.TextAsync());
+        await request.DisposeAsync();
+    }
+
+    [PlaywrightTest("global-fetch.spec.ts", "should retry ECONNRESET")]
+    public async Task ShouldRetryECONNRESET()
+    {
+        var request = await Playwright.APIRequest.NewContextAsync();
+        int requestCount = 0;
+        Server.SetRoute("/test", (context) =>
+        {
+            if (requestCount++ < 3)
+            {
+                context.Abort();
+                return Task.CompletedTask;
+            }
+            context.Response.Headers.ContentType = "text/plain";
+            context.Response.StatusCode = 200;
+            return context.Response.WriteAsync("Hello!");
+        });
+        var response = await request.GetAsync(Server.Prefix + "/test", new() { MaxRetries = 3 });
+        Assert.AreEqual(200, response.Status);
+        Assert.AreEqual("Hello!", await response.TextAsync());
+        Assert.AreEqual(4, requestCount);
         await request.DisposeAsync();
     }
 }

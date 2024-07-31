@@ -372,10 +372,6 @@ public partial interface IPage
     /// </description></item>
     /// <item><description>Scroll the element into view if needed.</description></item>
     /// <item><description>Use <see cref="IPage.Mouse"/> to click in the center of the element.</description></item>
-    /// <item><description>
-    /// Wait for initiated navigations to either succeed or fail, unless <paramref name="noWaitAfter"/>
-    /// option is set.
-    /// </description></item>
     /// <item><description>Ensure that the element is now checked. If not, this method throws.</description></item>
     /// </list>
     /// <para>
@@ -480,11 +476,6 @@ public partial interface IPage
     /// <item><description>
     /// Use <see cref="IPage.Mouse"/> to double click in the center of the element, or the
     /// specified <paramref name="position"/>.
-    /// </description></item>
-    /// <item><description>
-    /// Wait for initiated navigations to either succeed or fail, unless <paramref name="noWaitAfter"/>
-    /// option is set. Note that if the first click of the <c>dblclick()</c> triggers a
-    /// navigation event, this method will throw.
     /// </description></item>
     /// </list>
     /// <para>
@@ -1234,7 +1225,7 @@ public partial interface IPage
     /// <summary>
     /// <para>
     /// Returns the main resource response. In case of multiple redirects, the navigation
-    /// will resolve with the response of the last redirect. If can not go back, returns
+    /// will resolve with the response of the last redirect. If cannot go back, returns
     /// <c>null</c>.
     /// </para>
     /// <para>Navigate to the previous page in history.</para>
@@ -1245,7 +1236,7 @@ public partial interface IPage
     /// <summary>
     /// <para>
     /// Returns the main resource response. In case of multiple redirects, the navigation
-    /// will resolve with the response of the last redirect. If can not go forward, returns
+    /// will resolve with the response of the last redirect. If cannot go forward, returns
     /// <c>null</c>.
     /// </para>
     /// <para>Navigate to the next page in history.</para>
@@ -1315,10 +1306,6 @@ public partial interface IPage
     /// <item><description>
     /// Use <see cref="IPage.Mouse"/> to hover over the center of the element, or the specified
     /// <paramref name="position"/>.
-    /// </description></item>
-    /// <item><description>
-    /// Wait for initiated navigations to either succeed or fail, unless <c>noWaitAfter</c>
-    /// option is set.
     /// </description></item>
     /// </list>
     /// <para>
@@ -2325,10 +2312,6 @@ public partial interface IPage
     /// </description></item>
     /// <item><description>Scroll the element into view if needed.</description></item>
     /// <item><description>Use <see cref="IPage.Mouse"/> to click in the center of the element.</description></item>
-    /// <item><description>
-    /// Wait for initiated navigations to either succeed or fail, unless <paramref name="noWaitAfter"/>
-    /// option is set.
-    /// </description></item>
     /// <item><description>Ensure that the element is now checked or unchecked. If not, this method throws.</description></item>
     /// </list>
     /// <para>
@@ -2557,10 +2540,6 @@ public partial interface IPage
     /// Use <see cref="IPage.Touchscreen"/> to tap the center of the element, or the specified
     /// <paramref name="position"/>.
     /// </description></item>
-    /// <item><description>
-    /// Wait for initiated navigations to either succeed or fail, unless <paramref name="noWaitAfter"/>
-    /// option is set.
-    /// </description></item>
     /// </list>
     /// <para>
     /// When all steps combined have not finished during the specified <paramref name="timeout"/>,
@@ -2648,10 +2627,6 @@ public partial interface IPage
     /// </description></item>
     /// <item><description>Scroll the element into view if needed.</description></item>
     /// <item><description>Use <see cref="IPage.Mouse"/> to click in the center of the element.</description></item>
-    /// <item><description>
-    /// Wait for initiated navigations to either succeed or fail, unless <paramref name="noWaitAfter"/>
-    /// option is set.
-    /// </description></item>
     /// <item><description>Ensure that the element is now unchecked. If not, this method throws.</description></item>
     /// </list>
     /// <para>

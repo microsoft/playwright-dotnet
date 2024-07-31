@@ -127,7 +127,7 @@ public partial interface IRequest
     /// </summary>
     Task<IReadOnlyList<Header>> HeadersArrayAsync();
 
-    /// <summary><para>Returns the value of the header matching the name. The name is case insensitive.</para></summary>
+    /// <summary><para>Returns the value of the header matching the name. The name is case-insensitive.</para></summary>
     /// <param name="name">Name of the header.</param>
     Task<string?> HeaderValueAsync(string name);
 

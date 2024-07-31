@@ -118,33 +118,18 @@ public sealed class TapTests : PageTestEx
         });
     }
 
-    [PlaywrightTest("tap.spec.ts", "should wait for a navigation caused by a tap")]
-    public async Task ShouldWaitForANavigationCausedByATap()
+    [PlaywrightTest("tap.spec.ts", "should not wait for a navigation caused by a tap")]
+    public async Task ShouldNotWaitForANavigationCausedByATap()
     {
-        var requestResponse = new TaskCompletionSource<bool>();
-        string route = "/intercept-this.html";
         await Page.GotoAsync(Server.EmptyPage);
-        Server.SetRoute(route, _ =>
-        {
-            requestResponse.SetResult(true);
-            return requestResponse.Task;
-        });
-
-        await Page.SetContentAsync($@"<a href=""{route}"">link</a>");
-        bool loaded = false;
-        var awaitTask = Page.TapAsync("a").ContinueWith(_ =>
-        {
-            // this shouldn't happen before the request is called
-            Assert.True(requestResponse.Task.IsCompleted);
-
-            // and make sure this hasn't been set
-            Assert.False(loaded);
-            loaded = true;
-        });
-
-        await awaitTask;
-        await requestResponse.Task;
-        Assert.True(loaded);
+        await Page.SetContentAsync("<a href='/intercept-this.html'>link</a>;");
+        var tcs = new TaskCompletionSource<bool>();
+        Server.SetRoute("/intercept-this.html", (context) => tcs.SetResult(true));
+        await Task.WhenAll
+        (
+            tcs.Task,
+            Page.TapAsync("a")
+        );
     }
 
     [PlaywrightTest("tap.spec.ts", "should work with modifiers")]

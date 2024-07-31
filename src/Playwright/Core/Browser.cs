@@ -134,6 +134,7 @@ internal class Browser : ChannelOwner, IBrowser
             ["timezoneId"] = options.TimezoneId,
             ["userAgent"] = options.UserAgent,
             ["baseURL"] = options.BaseURL,
+            ["clientCertificates"] = ToClientCertificatesProtocol(options.ClientCertificates),
         };
 
         if (options.AcceptDownloads.HasValue)
@@ -215,6 +216,7 @@ internal class Browser : ChannelOwner, IBrowser
             ServiceWorkers = options.ServiceWorkers,
             BaseURL = options.BaseURL,
             StrictSelectors = options.StrictSelectors,
+            ClientCertificates = options.ClientCertificates,
         };
 
         var context = (BrowserContext)await NewContextAsync(contextOptions).ConfigureAwait(false);
@@ -315,5 +317,24 @@ internal class Browser : ChannelOwner, IBrowser
             return recordHarArgs;
         }
         return null;
+    }
+
+    internal static Dictionary<string, string>[] ToClientCertificatesProtocol(IEnumerable<ClientCertificate> clientCertificates)
+    {
+        if (clientCertificates == null)
+        {
+            return null;
+        }
+        return clientCertificates.Select(clientCertificate => new Dictionary<string, string>
+        {
+            ["origin"] = clientCertificate.Origin,
+            ["passphrase"] = clientCertificate.Passphrase,
+            ["cert"] = clientCertificate.CertPath != null ? Convert.ToBase64String(File.ReadAllBytes(clientCertificate.CertPath)) : null,
+            ["key"] = clientCertificate.KeyPath != null ? Convert.ToBase64String(File.ReadAllBytes(clientCertificate.KeyPath)) : null,
+            ["pfx"] = clientCertificate.PfxPath != null ? Convert.ToBase64String(File.ReadAllBytes(clientCertificate.PfxPath)) : null,
+        }
+                .Where(kv => kv.Value != null)
+                .ToDictionary(kv => kv.Key, kv => kv.Value))
+            .ToArray();
     }
 }

@@ -179,7 +179,9 @@ internal class Frame : ChannelOwner, IFrame
         {
             ["selector"] = selector,
             ["elements"] = values.Select(x => x as ElementHandle),
+#pragma warning disable CS0612 // Type or member is obsolete
             ["noWaitAfter"] = options?.NoWaitAfter,
+#pragma warning restore CS0612 // Type or member is obsolete
             ["strict"] = options?.Strict,
             ["force"] = options?.Force,
             ["timeout"] = options?.Timeout,
@@ -198,7 +200,9 @@ internal class Frame : ChannelOwner, IFrame
         {
             ["selector"] = selector,
             ["options"] = values,
+#pragma warning disable CS0612 // Type or member is obsolete
             ["noWaitAfter"] = options?.NoWaitAfter,
+#pragma warning restore CS0612 // Type or member is obsolete
             ["strict"] = options?.Strict,
             ["force"] = options?.Force,
             ["timeout"] = options?.Timeout,
@@ -337,7 +341,6 @@ internal class Frame : ChannelOwner, IFrame
             ["selector"] = selector,
             ["force"] = options?.Force,
             ["modifiers"] = options?.Modifiers?.Select(m => m.ToValueString()),
-            ["noWaitAfter"] = options?.NoWaitAfter,
             ["trial"] = options?.Trial,
             ["timeout"] = options?.Timeout,
             ["position"] = options?.Position,
@@ -373,7 +376,6 @@ internal class Frame : ChannelOwner, IFrame
             ["selector"] = selector,
             ["text"] = text,
             ["delay"] = options?.Delay,
-            ["noWaitAfter"] = options?.NoWaitAfter,
             ["timeout"] = options?.Timeout,
             ["strict"] = options?.Strict,
         });
@@ -432,7 +434,6 @@ internal class Frame : ChannelOwner, IFrame
             ["trial"] = options?.Trial,
             ["timeout"] = options?.Timeout,
             ["strict"] = options?.Strict,
-            ["noWaitAfter"] = options?.NoWaitAfter,
         });
 
     [MethodImpl(MethodImplOptions.NoInlining)]
@@ -443,7 +444,9 @@ internal class Frame : ChannelOwner, IFrame
             ["key"] = key,
             ["delay"] = options?.Delay,
             ["timeout"] = options?.Timeout,
+#pragma warning disable CS0612 // Type or member is obsolete
             ["noWaitAfter"] = options?.NoWaitAfter,
+#pragma warning restore CS0612 // Type or member is obsolete
             ["strict"] = options?.Strict,
         });
 
@@ -466,7 +469,6 @@ internal class Frame : ChannelOwner, IFrame
             ["value"] = value,
             ["force"] = options?.Force,
             ["timeout"] = options?.Timeout,
-            ["noWaitAfter"] = options?.NoWaitAfter,
             ["strict"] = options?.Strict,
         });
 
@@ -514,7 +516,9 @@ internal class Frame : ChannelOwner, IFrame
     public async Task SetInputFilesAsync(string selector, IEnumerable<string> files, FrameSetInputFilesOptions options = default)
     {
         var converted = await SetInputFilesHelpers.ConvertInputFilesAsync(files, (BrowserContext)Page.Context).ConfigureAwait(false);
+#pragma warning disable CS0612 // Type or member is obsolete
         await _setInputFilesAsync(selector, converted, options?.NoWaitAfter, options?.Timeout, options?.Strict).ConfigureAwait(false);
+#pragma warning restore CS0612 // Type or member is obsolete
     }
 
     [MethodImpl(MethodImplOptions.NoInlining)]
@@ -525,7 +529,9 @@ internal class Frame : ChannelOwner, IFrame
     public async Task SetInputFilesAsync(string selector, IEnumerable<FilePayload> files, FrameSetInputFilesOptions options = default)
     {
         var converted = SetInputFilesHelpers.ConvertInputFiles(files);
+#pragma warning disable CS0612 // Type or member is obsolete
         await _setInputFilesAsync(selector, converted, noWaitAfter: options?.NoWaitAfter, timeout: options?.Timeout, options?.Strict).ConfigureAwait(false);
+#pragma warning restore CS0612 // Type or member is obsolete
     }
 
     private async Task _setInputFilesAsync(string selector, SetInputFilesFiles files, bool? noWaitAfter, float? timeout, bool? strict)
@@ -538,7 +544,6 @@ internal class Frame : ChannelOwner, IFrame
             ["localDirectory"] = files.LocalDirectory,
             ["streams"] = files.Streams,
             ["directoryStream"] = files.DirectoryStream,
-            ["noWaitAfter"] = noWaitAfter,
             ["timeout"] = timeout,
             ["strict"] = strict,
         }).ConfigureAwait(false);
@@ -555,7 +560,9 @@ internal class Frame : ChannelOwner, IFrame
             ["clickCount"] = options?.ClickCount,
             ["modifiers"] = options?.Modifiers?.Select(m => m.ToValueString()),
             ["position"] = options?.Position,
+#pragma warning disable CS0612 // Type or member is obsolete
             ["noWaitAfter"] = options?.NoWaitAfter,
+#pragma warning restore CS0612 // Type or member is obsolete
             ["trial"] = options?.Trial,
             ["timeout"] = options?.Timeout,
             ["strict"] = options?.Strict,
@@ -573,7 +580,6 @@ internal class Frame : ChannelOwner, IFrame
             ["position"] = options?.Position,
             ["trial"] = options?.Trial,
             ["timeout"] = options?.Timeout,
-            ["noWaitAfter"] = options?.NoWaitAfter,
             ["strict"] = options?.Strict,
         });
 
@@ -584,7 +590,6 @@ internal class Frame : ChannelOwner, IFrame
             ["selector"] = selector,
             ["force"] = options?.Force,
             ["position"] = options?.Position,
-            ["noWaitAfter"] = options?.NoWaitAfter,
             ["trial"] = options?.Trial,
             ["timeout"] = options?.Timeout,
             ["strict"] = options?.Strict,
@@ -597,7 +602,6 @@ internal class Frame : ChannelOwner, IFrame
             ["selector"] = selector,
             ["force"] = options?.Force,
             ["position"] = options?.Position,
-            ["noWaitAfter"] = options?.NoWaitAfter,
             ["trial"] = options?.Trial,
             ["timeout"] = options?.Timeout,
             ["strict"] = options?.Strict,
@@ -610,7 +614,6 @@ internal class Frame : ChannelOwner, IFrame
             ["selector"] = selector,
             ["force"] = options?.Force,
             ["position"] = options?.Position,
-            ["noWaitAfter"] = options?.NoWaitAfter,
             ["trial"] = options?.Trial,
             ["timeout"] = options?.Timeout,
             ["strict"] = options?.Strict,
@@ -834,13 +837,14 @@ internal class Frame : ChannelOwner, IFrame
             ["strict"] = options?.Strict,
         }).ConfigureAwait(false))?.GetProperty("value").GetBoolean() ?? default;
 
-#pragma warning disable CS0612 // Type or member is obsolete
     [MethodImpl(MethodImplOptions.NoInlining)]
     public async Task<bool> IsHiddenAsync(string selector, FrameIsHiddenOptions options = default)
         => (await SendMessageToServerAsync("isHidden", new Dictionary<string, object>
         {
             ["selector"] = selector,
+#pragma warning disable CS0612 // Type or member is obsolete
             ["timeout"] = options?.Timeout,
+#pragma warning restore CS0612 // Type or member is obsolete
             ["strict"] = options?.Strict,
         }).ConfigureAwait(false))?.GetProperty("value").GetBoolean() ?? default;
 
@@ -849,10 +853,11 @@ internal class Frame : ChannelOwner, IFrame
         => (await SendMessageToServerAsync("isVisible", new Dictionary<string, object>
         {
             ["selector"] = selector,
+#pragma warning disable CS0612 // Type or member is obsolete
             ["timeout"] = options?.Timeout,
+#pragma warning restore CS0612 // Type or member is obsolete
             ["strict"] = options?.Strict,
         }).ConfigureAwait(false))?.GetProperty("value").GetBoolean() ?? default;
-#pragma warning restore CS0612 // Type or member is obsolete
 
     [MethodImpl(MethodImplOptions.NoInlining)]
     public Task WaitForURLAsync(string url, FrameWaitForURLOptions options = default)
@@ -873,7 +878,6 @@ internal class Frame : ChannelOwner, IFrame
             ["source"] = source,
             ["target"] = target,
             ["force"] = options?.Force,
-            ["noWaitAfter"] = options?.NoWaitAfter,
             ["timeout"] = options?.Timeout,
             ["trial"] = options?.Trial,
             ["strict"] = options?.Strict,

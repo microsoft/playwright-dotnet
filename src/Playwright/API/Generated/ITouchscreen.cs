@@ -49,10 +49,8 @@ public partial interface ITouchscreen
     /// option of the browser context is false.
     /// </para>
     /// </remarks>
-    /// <param name="x">
-    /// </param>
-    /// <param name="y">
-    /// </param>
+    /// <param name="x">X coordinate relative to the main frame's viewport in CSS pixels.</param>
+    /// <param name="y">Y coordinate relative to the main frame's viewport in CSS pixels.</param>
     Task TapAsync(float x, float y);
 }
 
