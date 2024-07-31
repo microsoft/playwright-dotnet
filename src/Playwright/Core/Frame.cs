@@ -580,9 +580,6 @@ internal class Frame : ChannelOwner, IFrame
             ["position"] = options?.Position,
             ["trial"] = options?.Trial,
             ["timeout"] = options?.Timeout,
-#pragma warning disable CS0612 // Type or member is obsolete
-            ["noWaitAfter"] = options?.NoWaitAfter,
-#pragma warning restore CS0612 // Type or member is obsolete
             ["strict"] = options?.Strict,
         });
 

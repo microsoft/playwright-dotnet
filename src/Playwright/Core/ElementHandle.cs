@@ -188,9 +188,6 @@ internal class ElementHandle : JSHandle, IElementHandle
             ["delay"] = options?.Delay,
             ["button"] = options?.Button,
             ["force"] = options?.Force,
-#pragma warning disable CS0612 // Type or member is obsolete
-            ["noWaitAfter"] = options?.NoWaitAfter,
-#pragma warning restore CS0612 // Type or member is obsolete
             ["timeout"] = options?.Timeout,
             ["trial"] = options?.Trial,
             ["position"] = options?.Position,

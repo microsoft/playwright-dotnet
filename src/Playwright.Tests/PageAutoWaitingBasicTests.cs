@@ -144,12 +144,12 @@ public class PageAutoWaitingBasicTests : PageTestEx
         Assert.AreEqual("route|navigated|click", string.Join("|", messages));
     }
 
-    [PlaywrightTest("page-autowaiting-basic.spec.ts", "should work with noWaitAfter: true")]
-    public async Task ShouldWorkWithNoWaitAfterTrue()
+    [PlaywrightTest("page-autowaiting-basic.spec.ts", "should work with dblclick without noWaitAfter when navigation is stalled")]
+    public async Task ShouldWorkWithDblClickWithoutNoWaitAfterWhenNavigaionIsStalled()
     {
-        Server.SetRoute("/empty.html", _ => Task.CompletedTask);
+        Server.SetRoute("/empty.html", _ => Task.Delay(10000));
         await Page.SetContentAsync($"<a id=anchor href='{Server.EmptyPage}'>empty.html</a>");
-        await Page.ClickAsync("a", new() { NoWaitAfter = true });
+        await Page.ClickAsync("a");
     }
 
     [PlaywrightTest("page-autowaiting-basic.spec.ts", "should work with waitForLoadState(load)")]

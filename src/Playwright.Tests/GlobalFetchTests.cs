@@ -419,7 +419,7 @@ public class GlobalFetchTests : PlaywrightTestEx
         foreach (var method in new[] { "GET", "PUT", "POST", "OPTIONS", "HEAD", "PATCH" })
         {
             var exception = await PlaywrightAssert.ThrowsAsync<PlaywrightException>(() => request.FetchAsync($"{Server.Prefix}/a/redirect1", new() { Method = method, MaxRedirects = -1 }));
-            StringAssert.Contains("'maxRedirects' should be greater than or equal to '0'", exception.Message);
+            StringAssert.Contains("'MaxRedirects' must be greater than or equal to '0'", exception.Message);
         }
         await request.DisposeAsync();
     }

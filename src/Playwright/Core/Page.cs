@@ -785,9 +785,6 @@ internal class Page : ChannelOwner, IPage
             Modifiers = options?.Modifiers,
             Timeout = options?.Timeout,
             Force = options?.Force,
-#pragma warning disable CS0612 // Type or member is obsolete
-            NoWaitAfter = options?.NoWaitAfter,
-#pragma warning restore CS0612 // Type or member is obsolete
             Trial = options?.Trial,
             Strict = options?.Strict,
         });
