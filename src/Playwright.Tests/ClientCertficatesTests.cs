@@ -39,6 +39,8 @@ public class ClientCertificatesTests : BrowserTestEx
     public async Task SetUp()
     {
         var serverCert = X509Certificate2.CreateFromPem(File.ReadAllText(TestUtils.GetAsset("client-certificates/server/server_cert.pem")), File.ReadAllText(TestUtils.GetAsset("client-certificates/server/server_key.pem")));
+        // Windows requires the private key in PFX format: https://stackoverflow.com/a/72101855/6512681
+        serverCert = new X509Certificate2(serverCert.Export(X509ContentType.Pfx));
         _webHost = new WebHostBuilder()
             .Configure((app) => app
                 .Use(middleware: async (HttpContext context, Func<Task> next) =>
