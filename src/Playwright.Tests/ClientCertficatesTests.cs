@@ -45,33 +45,36 @@ public class ClientCertificatesTests : BrowserTestEx
             .Configure((app) => app
                 .Use(middleware: async (HttpContext context, Func<Task> next) =>
                 {
+                    List<(string, string)> parts = [];
                     var clientCertificate = await context.Connection.GetClientCertificateAsync();
                     if (clientCertificate == null)
                     {
-                        context.Response.StatusCode = 403;
-                        await context.Response.WriteAsync("Forbidden: No client certificate provided");
-                        return;
+                        context.Response.StatusCode = 401;
+                        parts.Add(("message", "Sorry, but you need to provide a client certificate to continue."));
                     }
-
-                    // Create a chain for the client certificate
-                    using (var chain = new X509Chain())
+                    else
                     {
-                        chain.ChainPolicy.RevocationMode = X509RevocationMode.NoCheck;
-                        chain.ChainPolicy.VerificationFlags = X509VerificationFlags.AllowUnknownCertificateAuthority;
-                        chain.ChainPolicy.ExtraStore.Add(serverCert);
-
-                        bool isValid = chain.Build(clientCertificate);
-
-                        if (!isValid || chain.ChainElements.Count <= 1 || !chain.ChainElements[1].Certificate.Equals(serverCert))
+                        using (var chain = new X509Chain())
                         {
-                            context.Response.StatusCode = 403;
-                            await context.Response.WriteAsync("Forbidden: Invalid client certificate");
-                            return;
-                        }
+                            chain.ChainPolicy.RevocationMode = X509RevocationMode.NoCheck;
+                            chain.ChainPolicy.VerificationFlags = X509VerificationFlags.AllowUnknownCertificateAuthority;
+                            chain.ChainPolicy.ExtraStore.Add(serverCert);
 
-                        context.Response.StatusCode = 200;
-                        await context.Response.WriteAsync($"Hello {clientCertificate.Subject}");
+                            bool isValid = chain.Build(clientCertificate);
+
+                            if (!isValid || chain.ChainElements.Count <= 1 || !chain.ChainElements[1].Certificate.Equals(serverCert))
+                            {
+                                context.Response.StatusCode = 403;
+                                parts.Add(("message", $"Sorry {clientCertificate.Subject}, certificates from {clientCertificate.Issuer[0]} are not welcome here."));
+                            }
+                            else
+                            {
+                                context.Response.StatusCode = 200;
+                                parts.Add(("message", $"Hello {clientCertificate.Subject}"));
+                            }
+                        }
                     }
+                    await context.Response.WriteAsync(string.Join(string.Empty, parts.Select(p => $"<div data-testid='{p.Item1}'>{p.Item2}</div>")));
                 }))
             .UseKestrel(options =>
             {
@@ -130,17 +133,17 @@ public class ClientCertificatesTests : BrowserTestEx
         var page = await context.NewPageAsync();
         {
             await page.GotoAsync("https://127.0.0.1:10000");
-            await Expect(page.GetByText("Forbidden: No client certificate provided")).ToBeVisibleAsync();
+            await Expect(page.GetByTestId("message")).ToHaveTextAsync("Sorry, but you need to provide a client certificate to continue.");
 
             var response = await page.APIRequest.GetAsync("https://127.0.0.1:10000");
-            Assert.AreEqual("Forbidden: No client certificate provided", await response.TextAsync());
+            StringAssert.Contains("Sorry, but you need to provide a client certificate to continue", await response.TextAsync());
         }
         {
             await page.GotoAsync("https://localhost:10000");
             await Expect(page.GetByText("Hello CN=Alice")).ToBeVisibleAsync();
 
             var response = await page.APIRequest.GetAsync("https://localhost:10000");
-            Assert.AreEqual("Hello CN=Alice", await response.TextAsync());
+            StringAssert.Contains("Hello CN=Alice", await response.TextAsync());
         }
         await context.CloseAsync();
     }
@@ -164,7 +167,7 @@ public class ClientCertificatesTests : BrowserTestEx
         });
         {
             await page.GotoAsync("https://127.0.0.1:10000");
-            await Expect(page.GetByText("Forbidden: No client certificate provided")).ToBeVisibleAsync();
+            await Expect(page.GetByTestId("message")).ToHaveTextAsync("Sorry, but you need to provide a client certificate to continue.");
         }
         {
             await page.GotoAsync("https://localhost:10000");
@@ -193,7 +196,7 @@ public class ClientCertificatesTests : BrowserTestEx
         var page = context.Pages[0];
         {
             await page.GotoAsync("https://127.0.0.1:10000");
-            await Expect(page.GetByText("Forbidden: No client certificate provided")).ToBeVisibleAsync();
+            await Expect(page.GetByTestId("message")).ToHaveTextAsync("Sorry, but you need to provide a client certificate to continue.");
         }
         {
             await page.GotoAsync("https://localhost:10000");
@@ -221,11 +224,11 @@ public class ClientCertificatesTests : BrowserTestEx
         });
         {
             var response = await request.GetAsync("https://127.0.0.1:10000");
-            Assert.AreEqual("Forbidden: No client certificate provided", await response.TextAsync());
+            StringAssert.Contains("Sorry, but you need to provide a client certificate to continue", await response.TextAsync());
         }
         {
             var response = await request.GetAsync("https://localhost:10000");
-            Assert.AreEqual("Hello CN=Alice", await response.TextAsync());
+            StringAssert.Contains("Hello CN=Alice", await response.TextAsync());
         }
         await request.DisposeAsync();
     }
