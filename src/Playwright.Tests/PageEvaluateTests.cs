@@ -549,7 +549,7 @@ public class PageEvaluateTests : PageTestEx
     [PlaywrightTest("page-evaluate.spec.ts", "should evaluate exception with a function on the stack")]
     public async Task ShouldEvaluateExceptionWithAFunctionOnTheStack()
     {
-        var exception = await Page.EvaluateAsync<PlaywrightException>(@"() => {
+        var exception = await Page.EvaluateAsync<Exception>(@"() => {
             return (function functionOnStack() {
                 return new Error('error message');
             })();
@@ -569,23 +569,23 @@ public class PageEvaluateTests : PageTestEx
             }
             return innerFunction();
         }");
-        Assert.IsInstanceOf<PlaywrightException>(exception);
-        StringAssert.Contains("foobar: error message", (exception as PlaywrightException).Message);
-        StringAssert.Contains("innerFunction", (exception as PlaywrightException).Message);
+        Assert.IsInstanceOf<Exception>(exception);
+        StringAssert.Contains("foobar: error message", (exception as Exception).Message);
+        StringAssert.Contains("innerFunction", (exception as Exception).Message);
         StringAssert.Contains("foobar: error message", exception.ToString());
     }
 
     [PlaywrightTest("page-evaluate.spec.ts", "should pass exception argument")]
     public async Task ShouldPassExceptionArgument()
     {
-        PlaywrightException InnerFunction()
+        Exception InnerFunction()
         {
             try
             {
                 // We need to throw so a stack gets assigned
                 throw new PlaywrightException("error message");
             }
-            catch (PlaywrightException e)
+            catch (Exception e)
             {
                 return e;
             }

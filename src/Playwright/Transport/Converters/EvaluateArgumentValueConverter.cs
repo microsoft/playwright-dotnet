@@ -345,7 +345,7 @@ internal static class EvaluateArgumentValueConverter
 
         if (result.TryGetProperty("e", out var error))
         {
-            return new PlaywrightException(error.GetProperty("s").ToString());
+            return new Exception(error.GetProperty("s").ToString());
         }
 
         if (result.TryGetProperty("r", out var regex))
