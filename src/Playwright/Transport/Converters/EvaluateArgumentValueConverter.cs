@@ -123,6 +123,19 @@ internal static class EvaluateArgumentValueConverter
             return new { bi = bigInteger.ToString(CultureInfo.InvariantCulture) };
         }
 
+        if (value is Exception exception)
+        {
+            return new Dictionary<string, object>
+            {
+                ["e"] = new Dictionary<string, object>
+                {
+                    ["n"] = exception.GetType().Name,
+                    ["m"] = exception.Message,
+                    ["s"] = exception.StackTrace ?? string.Empty,
+                },
+            };
+        }
+
         if (value is Regex regex)
         {
             return new { r = new { p = regex.ToString(), f = regex.Options.GetInlineFlags() } };
@@ -328,6 +341,11 @@ internal static class EvaluateArgumentValueConverter
         if (result.TryGetProperty("bi", out var bigInt))
         {
             return BigInteger.Parse(bigInt.ToObject<string>(), CultureInfo.InvariantCulture);
+        }
+
+        if (result.TryGetProperty("e", out var error))
+        {
+            return new Exception(error.GetProperty("s").ToString());
         }
 
         if (result.TryGetProperty("r", out var regex))
