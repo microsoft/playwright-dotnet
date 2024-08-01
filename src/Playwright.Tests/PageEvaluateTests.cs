@@ -547,7 +547,6 @@ public class PageEvaluateTests : PageTestEx
     }
 
     [PlaywrightTest("page-evaluate.spec.ts", "should evaluate exception with a function on the stack")]
-    [Ignore("todo https://github.com/microsoft/playwright-dotnet/issues/2947")]
     public async Task ShouldEvaluateExceptionWithAFunctionOnTheStack()
     {
         var exception = await Page.EvaluateAsync<PlaywrightException>(@"() => {
@@ -555,16 +554,55 @@ public class PageEvaluateTests : PageTestEx
                 return new Error('error message');
             })();
         }");
-        Assert.Equals("error message", exception.Message);
-        StringAssert.Contains("functionOnStack", exception.StackTrace);
+        StringAssert.Contains("Error: error message", exception.Message);
+        StringAssert.Contains("functionOnStack", exception.Message);
     }
 
     [PlaywrightTest("page-evaluate.spec.ts", "should evaluate exception")]
-    [Ignore("todo https://github.com/microsoft/playwright-dotnet/issues/2947")]
     public async Task ShouldEvaluateException()
     {
-        string exception = await Page.EvaluateAsync<string>(@"() => new Error('error message')");
-        StringAssert.Contains("Error: error message", exception);
+        var exception = await Page.EvaluateAsync<object>(@"() => {
+            function innerFunction() {
+                const e = new Error('error message');
+                e.name = 'foobar';
+                return e;
+            }
+            return innerFunction();
+        }");
+        Assert.IsInstanceOf<PlaywrightException>(exception);
+        StringAssert.Contains("foobar: error message", (exception as PlaywrightException).Message);
+        StringAssert.Contains("innerFunction", (exception as PlaywrightException).Message);
+        StringAssert.Contains("foobar: error message", exception.ToString());
+    }
+
+    [PlaywrightTest("page-evaluate.spec.ts", "should pass exception argument")]
+    public async Task ShouldPassExceptionArgument()
+    {
+        PlaywrightException InnerFunction()
+        {
+            try
+            {
+                // We need to throw so a stack gets assigned
+                throw new PlaywrightException("error message");
+            }
+            catch (PlaywrightException e)
+            {
+                return e;
+            }
+        }
+        var exception = await Page.EvaluateAsync<ErrorStruct>(@"e => {
+            return { message: e.message, name: e.name, stack: e.stack };
+        }", InnerFunction());
+        StringAssert.Contains("error message", exception.Message);
+        StringAssert.Contains("PlaywrightException: error message", exception.Stack);
+        Assert.AreEqual("PlaywrightException", exception.Name);
+    }
+
+    public struct ErrorStruct
+    {
+        public string Message { get; set; }
+        public string Name { get; set; }
+        public string Stack { get; set; }
     }
 
     [PlaywrightTest("page-evaluate.spec.ts", "should evaluate date")]
