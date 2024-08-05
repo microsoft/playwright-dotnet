@@ -158,21 +158,9 @@ internal class BrowserType : ChannelOwner, IBrowserType
 
         var context = await SendMessageToServerAsync<BrowserContext>("launchPersistentContext", channelArgs).ConfigureAwait(false);
 
-        // TODO: unite with a single browser context options type which is derived from channels
         DidCreateContext(
             context,
-            new()
-            {
-                RecordVideoDir = options.RecordVideoDir,
-                RecordVideoSize = options.RecordVideoSize,
-                RecordHarContent = options.RecordHarContent,
-                RecordHarMode = options.RecordHarMode,
-                RecordHarOmitContent = options.RecordHarOmitContent,
-                RecordHarPath = options.RecordHarPath,
-                RecordHarUrlFilter = options.RecordHarUrlFilter,
-                RecordHarUrlFilterString = options.RecordHarUrlFilterString,
-                RecordHarUrlFilterRegex = options.RecordHarUrlFilterRegex,
-            },
+            ClassUtils.Clone<BrowserNewContextOptions>(options),
             options?.TracesDir);
 
         return context;

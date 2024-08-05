@@ -513,13 +513,9 @@ public class PageRouteTests : PageTestEx
             route.ContinueAsync();
             requests.Add(route.Request);
         });
-        var response = await Page.GotoAsync($"data:text/html,<link rel=\"stylesheet\" href=\"{Server.EmptyPage}/fonts?helvetica|arial\"/>");
+        var response = await Page.GotoAsync($"data:text/html,<meta charset=utf-8><link rel=\"stylesheet\" href=\"{Server.EmptyPage}/fonts?helvetica|arial\"/>");
         Assert.Null(response);
-        // TODO: https://github.com/microsoft/playwright/issues/12789
-        if (TestConstants.IsFirefox)
-            Assert.That(requests, Has.Count.EqualTo(2));
-        else
-            Assert.That(requests, Has.Count.EqualTo(1));
+        Assert.That(requests, Has.Count.EqualTo(1));
         Assert.AreEqual((int)HttpStatusCode.NotFound, (await requests[0].ResponseAsync()).Status);
     }
 
