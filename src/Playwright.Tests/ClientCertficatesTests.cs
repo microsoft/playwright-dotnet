@@ -118,7 +118,6 @@ public class ClientCertificatesTests : BrowserTestEx
     {
         var context = await Browser.NewContextAsync(new()
         {
-            // TODO: Remove this once we can pass a custom CA.
             IgnoreHTTPSErrors = true,
             ClientCertificates =
             [
@@ -153,7 +152,6 @@ public class ClientCertificatesTests : BrowserTestEx
     {
         var page = await Browser.NewPageAsync(new()
         {
-            // TODO: Remove this once we can pass a custom CA.
             IgnoreHTTPSErrors = true,
             ClientCertificates =
             [
@@ -181,7 +179,6 @@ public class ClientCertificatesTests : BrowserTestEx
     {
         var context = await BrowserType.LaunchPersistentContextAsync("", new()
         {
-            // TODO: Remove this once we can pass a custom CA.
             IgnoreHTTPSErrors = true,
             ClientCertificates =
             [
@@ -210,7 +207,6 @@ public class ClientCertificatesTests : BrowserTestEx
     {
         var request = await Playwright.APIRequest.NewContextAsync(new()
         {
-            // TODO: Remove this once we can pass a custom CA.
             IgnoreHTTPSErrors = true,
             ClientCertificates =
             [
