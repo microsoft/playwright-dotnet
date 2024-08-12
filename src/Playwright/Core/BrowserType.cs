@@ -200,6 +200,13 @@ internal class BrowserType : ChannelOwner, IBrowserType
             }
             browser?.DidClose();
             connection.DoClose(reason ?? closeError);
+            // TODO: Backport https://github.com/microsoft/playwright/commit/d8d5289e8692c9b1265d23ee66988d1ac5122f33
+            // Give a chance to any API call promises to reject upon page/context closure.
+            // This happens naturally when we receive page.onClose and browser.onClose from the server
+            // in separate tasks. However, upon pipe closure we used to dispatch them all synchronously
+            // here and promises did not have a chance to reject.
+            // The order of rejects vs closure is a part of the API contract and our test runner
+            // relies on it to attribute rejections to the right test.
         }
         pipe.Closed += (_, reason) => OnPipeClosed(reason);
         connection.OnMessage = async (object message, bool _) =>
