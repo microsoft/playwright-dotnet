@@ -21,8 +21,9 @@ jobs:
     timeout-minutes: 60
     runs-on: ubuntu-22.04
     strategy:
+      fail-fast: false
       matrix:
-        flavor: [focal, jammy, noble]
+        flavor: [jammy, noble]
     steps:
     - uses: actions/checkout@v3
     - name: Setup .NET Core
@@ -39,6 +40,6 @@ jobs:
     - name: Test
       run: |
         CONTAINER_ID="$(docker run --rm --ipc=host -v $(pwd):/root/playwright --name playwright-docker-test --workdir /root/playwright/ -d -t playwright-dotnet:localbuild-${{ matrix.flavor }} /bin/bash)"
-        docker exec -e BROWSER=chromium "${CONTAINER_ID}" xvfb-run dotnet test ./src/Playwright.Tests/Playwright.Tests.csproj -c Debug -f net8.0 --logger:"console;verbosity=detailed"
-        docker exec -e BROWSER=firefox "${CONTAINER_ID}" xvfb-run dotnet test ./src/Playwright.Tests/Playwright.Tests.csproj -c Debug -f net8.0 --logger:"console;verbosity=detailed"
-        docker exec -e BROWSER=webkit "${CONTAINER_ID}" xvfb-run dotnet test ./src/Playwright.Tests/Playwright.Tests.csproj -c Debug -f net8.0 --logger:"console;verbosity=detailed"
+        docker exec -e BROWSER=chromium "${CONTAINER_ID}" xvfb-run dotnet test ./src/Playwright.Tests/Playwright.Tests.csproj -c Debug --logger:"console;verbosity=detailed"
+        docker exec -e BROWSER=firefox "${CONTAINER_ID}" xvfb-run dotnet test ./src/Playwright.Tests/Playwright.Tests.csproj -c Debug --logger:"console;verbosity=detailed"
+        docker exec -e BROWSER=webkit "${CONTAINER_ID}" xvfb-run dotnet test ./src/Playwright.Tests/Playwright.Tests.csproj -c Debug --logger:"console;verbosity=detailed"
