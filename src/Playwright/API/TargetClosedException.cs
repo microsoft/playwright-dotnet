@@ -27,17 +27,17 @@ using Microsoft.Playwright.Core;
 
 namespace Microsoft.Playwright;
 
-internal class TargetClosedException : PlaywrightException
+public class TargetClosedException : PlaywrightException
 {
-    internal TargetClosedException() : base(DriverMessages.TargetClosedExceptionMessage)
+    public TargetClosedException() : base(DriverMessages.TargetClosedExceptionMessage)
     {
     }
 
-    internal TargetClosedException(string message) : base(message ?? DriverMessages.TargetClosedExceptionMessage)
+    public TargetClosedException(string message) : base(message ?? DriverMessages.TargetClosedExceptionMessage)
     {
     }
 
-    internal TargetClosedException(string message, Exception innerException) : base(message, innerException)
+    public TargetClosedException(string message, Exception innerException) : base(message, innerException)
     {
     }
 }
