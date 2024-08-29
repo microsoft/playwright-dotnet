@@ -71,7 +71,7 @@ internal class DriverDownloader
 
             var regex = new Regex("<!-- GEN:(.*?) -->(.*?)<!-- GEN:stop -->", RegexOptions.Compiled);
 
-            var basePlaywrightDir = Environment.GetEnvironmentVariable("PW_SRC_DIR") ?? Path.Combine(Environment.CurrentDirectory, "..", "playwright");
+            var basePlaywrightDir = Environment.GetEnvironmentVariable("PW_SRC_DIR") ?? Path.Combine(Environment.CurrentDirectory, "..", "playwright-dotnet");
             var readme = File.ReadAllText(Path.Combine(basePlaywrightDir, "README.md"));
             static string ReplaceBrowserVersion(string content, MatchCollection browserMatches)
             {
