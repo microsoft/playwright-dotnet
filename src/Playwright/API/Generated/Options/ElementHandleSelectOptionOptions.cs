@@ -54,13 +54,8 @@ public class ElementHandleSelectOptionOptions
     public bool? Force { get; set; }
 
     /// <summary>
-    /// <para>**DEPRECATED** This option will default to <c>true</c> in the future.</para>
-    /// <para>
-    /// Actions that initiate navigations are waiting for these navigations to happen and
-    /// for pages to start loading. You can opt out of waiting via setting this flag. You
-    /// would only need this option in the exceptional cases such as navigating to inaccessible
-    /// pages. Defaults to <c>false</c>.
-    /// </para>
+    /// <para>**DEPRECATED** This option has no effect.</para>
+    /// <para>This option has no effect.</para>
     /// </summary>
     [JsonPropertyName("noWaitAfter")]
     [System.Obsolete]

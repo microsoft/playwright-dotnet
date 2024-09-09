@@ -38,8 +38,8 @@ namespace Microsoft.Playwright;
 /// belong to the parent page's browser context.
 /// </para>
 /// <para>
-/// Playwright allows creating "incognito" browser contexts with <see cref="IBrowser.NewContextAsync"/>
-/// method. "Incognito" browser contexts don't write any browsing data to disk.
+/// Playwright allows creating isolated non-persistent browser contexts with <see cref="IBrowser.NewContextAsync"/>
+/// method. Non-persistent browser contexts don't write any browsing data to disk.
 /// </para>
 /// <code>
 /// using var playwright = await Playwright.CreateAsync();<br/>

@@ -346,7 +346,6 @@ internal class ElementHandle : JSHandle, IElementHandle
         return (await SendMessageToServerAsync("selectOption", new Dictionary<string, object>
         {
             ["options"] = values,
-            ["noWaitAfter"] = noWaitAfter,
             ["force"] = force,
             ["timeout"] = timeout,
         }).ConfigureAwait(false))?.GetProperty("values").ToObject<string[]>();
@@ -357,7 +356,6 @@ internal class ElementHandle : JSHandle, IElementHandle
         return (await SendMessageToServerAsync("selectOption", new Dictionary<string, object>
         {
             ["elements"] = values,
-            ["noWaitAfter"] = noWaitAfter,
             ["force"] = force,
             ["timeout"] = timeout,
         }).ConfigureAwait(false))?.GetProperty("values").ToObject<string[]>();

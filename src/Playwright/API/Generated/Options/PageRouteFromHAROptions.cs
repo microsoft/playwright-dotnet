@@ -83,7 +83,7 @@ public class PageRouteFromHAROptions
     /// <para>
     /// When set to <c>minimal</c>, only record information necessary for routing from HAR.
     /// This omits sizes, timing, page, cookies, security and other types of HAR information
-    /// that are not used when replaying from HAR. Defaults to <c>full</c>.
+    /// that are not used when replaying from HAR. Defaults to <c>minimal</c>.
     /// </para>
     /// </summary>
     [JsonPropertyName("updateMode")]

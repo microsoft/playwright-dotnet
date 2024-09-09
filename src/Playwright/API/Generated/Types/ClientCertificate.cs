@@ -45,13 +45,25 @@ public partial class ClientCertificate
     [JsonPropertyName("certPath")]
     public string? CertPath { get; set; }
 
+    /// <summary><para>Direct value of the certificate in PEM format.</para></summary>
+    [JsonPropertyName("cert")]
+    public byte[]? Cert { get; set; }
+
     /// <summary><para>Path to the file with the private key in PEM format.</para></summary>
     [JsonPropertyName("keyPath")]
     public string? KeyPath { get; set; }
 
+    /// <summary><para>Direct value of the private key in PEM format.</para></summary>
+    [JsonPropertyName("key")]
+    public byte[]? Key { get; set; }
+
     /// <summary><para>Path to the PFX or PKCS12 encoded private key and certificate chain.</para></summary>
     [JsonPropertyName("pfxPath")]
     public string? PfxPath { get; set; }
+
+    /// <summary><para>Direct value of the PFX or PKCS12 encoded private key and certificate chain.</para></summary>
+    [JsonPropertyName("pfx")]
+    public byte[]? Pfx { get; set; }
 
     /// <summary><para>Passphrase for the private key (PEM or PFX).</para></summary>
     [JsonPropertyName("passphrase")]

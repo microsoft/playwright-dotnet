@@ -37,6 +37,12 @@ internal class PlaywrightInitializer
     [JsonPropertyName("webkit")]
     public Core.BrowserType Webkit { get; set; }
 
+    [JsonPropertyName("bidiChromium")]
+    public Core.BrowserType BidiChromium { get; set; }
+
+    [JsonPropertyName("bidiFirefox")]
+    public Core.BrowserType BidiFirefox { get; set; }
+
     [JsonPropertyName("utils")]
     public Core.LocalUtils Utils { get; set; }
 

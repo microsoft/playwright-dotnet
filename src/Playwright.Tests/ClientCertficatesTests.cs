@@ -148,6 +148,40 @@ public class ClientCertificatesTests : BrowserTestEx
     }
 
     [PlaywrightTest("", "")]
+    public async Task ShouldWorkWithNewContextAndCertificateAsContent()
+    {
+        var context = await Browser.NewContextAsync(new()
+        {
+            IgnoreHTTPSErrors = true,
+            ClientCertificates =
+            [
+                new()
+                {
+                    Origin = "https://localhost:10000",
+                    Cert = File.ReadAllBytes(TestUtils.GetAsset("client-certificates/client/trusted/cert.pem")),
+                    Key = File.ReadAllBytes(TestUtils.GetAsset("client-certificates/client/trusted/key.pem")),
+                }
+            ]
+        });
+        var page = await context.NewPageAsync();
+        {
+            await page.GotoAsync("https://127.0.0.1:10000");
+            await Expect(page.GetByTestId("message")).ToHaveTextAsync("Sorry, but you need to provide a client certificate to continue.");
+
+            var response = await page.APIRequest.GetAsync("https://127.0.0.1:10000");
+            StringAssert.Contains("Sorry, but you need to provide a client certificate to continue", await response.TextAsync());
+        }
+        {
+            await page.GotoAsync("https://localhost:10000");
+            await Expect(page.GetByText("Hello CN=Alice")).ToBeVisibleAsync();
+
+            var response = await page.APIRequest.GetAsync("https://localhost:10000");
+            StringAssert.Contains("Hello CN=Alice", await response.TextAsync());
+        }
+        await context.CloseAsync();
+    }
+
+    [PlaywrightTest("", "")]
     public async Task ShouldWorkWithNewPage()
     {
         var page = await Browser.NewPageAsync(new()

@@ -46,7 +46,7 @@ public partial interface IAPIResponse
 
     /// <summary>
     /// <para>
-    /// An array with all the request HTTP headers associated with this response. Header
+    /// An array with all the response HTTP headers associated with this response. Header
     /// names are not lower-cased. Headers with multiple entries, such as <c>Set-Cookie</c>,
     /// appear in the array multiple times.
     /// </para>
