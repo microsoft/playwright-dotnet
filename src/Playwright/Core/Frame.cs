@@ -179,9 +179,6 @@ internal class Frame : ChannelOwner, IFrame
         {
             ["selector"] = selector,
             ["elements"] = values.Select(x => x as ElementHandle),
-#pragma warning disable CS0612 // Type or member is obsolete
-            ["noWaitAfter"] = options?.NoWaitAfter,
-#pragma warning restore CS0612 // Type or member is obsolete
             ["strict"] = options?.Strict,
             ["force"] = options?.Force,
             ["timeout"] = options?.Timeout,
