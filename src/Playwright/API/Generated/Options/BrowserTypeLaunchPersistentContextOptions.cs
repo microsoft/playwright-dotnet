@@ -164,11 +164,12 @@ public class BrowserTypeLaunchPersistentContextOptions
     /// </para>
     /// <para>**Details**</para>
     /// <para>
-    /// An array of client certificates to be used. Each certificate object must have both
-    /// <c>certPath</c> and <c>keyPath</c> or a single <c>pfxPath</c> to load the client
-    /// certificate. Optionally, <c>passphrase</c> property should be provided if the certficiate
-    /// is encrypted. The <c>origin</c> property should be provided with an exact match
-    /// to the request origin that the certificate is valid for.
+    /// An array of client certificates to be used. Each certificate object must have either
+    /// both <c>certPath</c> and <c>keyPath</c>, a single <c>pfxPath</c>, or their corresponding
+    /// direct value equivalents (<c>cert</c> and <c>key</c>, or <c>pfx</c>). Optionally,
+    /// <c>passphrase</c> property should be provided if the certificate is encrypted. The
+    /// <c>origin</c> property should be provided with an exact match to the request origin
+    /// that the certificate is valid for.
     /// </para>
     /// </summary>
     /// <remarks>

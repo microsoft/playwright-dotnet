@@ -73,7 +73,7 @@ public partial interface IRoute
     Task AbortAsync(string? errorCode = default);
 
     /// <summary>
-    /// <para>Continues route's request with optional overrides.</para>
+    /// <para>Sends route's request to the network with optional overrides.</para>
     /// <para>**Usage**</para>
     /// <code>
     /// await page.RouteAsync("**/*", async route =&gt;<br/>
@@ -91,11 +91,22 @@ public partial interface IRoute
     /// through redirects, use the combination of <see cref="IRoute.FetchAsync"/> and <see
     /// cref="IRoute.FulfillAsync"/> instead.
     /// </para>
+    /// <para>
+    /// <see cref="IRoute.ContinueAsync"/> will immediately send the request to the network,
+    /// other matching handlers won't be invoked. Use <see cref="IRoute.FallbackAsync"/>
+    /// If you want next matching handler in the chain to be invoked.
+    /// </para>
     /// </summary>
     /// <param name="options">Call options</param>
     Task ContinueAsync(RouteContinueOptions? options = default);
 
     /// <summary>
+    /// <para>
+    /// Continues route's request with optional overrides. The method is similar to <see
+    /// cref="IRoute.ContinueAsync"/> with the difference that other matching handlers will
+    /// be invoked before sending the request.
+    /// </para>
+    /// <para>**Usage**</para>
     /// <para>
     /// When several routes match the given pattern, they run in the order opposite to their
     /// registration. That way the last registered route can always override all the previous
@@ -103,7 +114,6 @@ public partial interface IRoute
     /// then it'll fall back to the previous one and in the end will be aborted by the first
     /// registered route.
     /// </para>
-    /// <para>**Usage**</para>
     /// <code>
     /// await page.RouteAsync("**/*", route =&gt; {<br/>
     ///     // Runs last.<br/>
@@ -158,6 +168,10 @@ public partial interface IRoute
     ///     await route.FallbackAsync(new() { Headers = headers });<br/>
     /// });
     /// </code>
+    /// <para>
+    /// Use <see cref="IRoute.ContinueAsync"/> to immediately send the request to the network,
+    /// other matching handlers won't be invoked in that case.
+    /// </para>
     /// </summary>
     /// <param name="options">Call options</param>
     Task FallbackAsync(RouteFallbackOptions? options = default);

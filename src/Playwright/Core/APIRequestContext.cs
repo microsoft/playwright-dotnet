@@ -29,6 +29,7 @@ using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text.Json;
 using System.Threading.Tasks;
+using System.Web;
 using Microsoft.Playwright.Helpers;
 using Microsoft.Playwright.Transport;
 using Microsoft.Playwright.Transport.Protocol;
@@ -114,12 +115,6 @@ internal class APIRequestContext : ChannelOwner, IAPIRequestContext
         {
             throw new PlaywrightException("Only one of 'data', 'form' or 'multipart' can be specified");
         }
-
-        var queryParams = new Dictionary<string, string>();
-        if (options.Params != null)
-        {
-            queryParams = options.Params.ToDictionary(x => x.Key, x => x.Value.ToString());
-        }
         byte[] postData = null;
         object jsonData = null;
         string dataString = !string.IsNullOrEmpty(options.Data) ? options.Data : options.DataString;
@@ -152,7 +147,7 @@ internal class APIRequestContext : ChannelOwner, IAPIRequestContext
             ["maxRedirects"] = options?.MaxRedirects,
             ["maxRetries"] = options?.MaxRetries,
             ["timeout"] = options.Timeout,
-            ["params"] = queryParams?.ToProtocol(),
+            ["params"] = QueryParamsToProtocol(options.Params, options.ParamsString),
             ["headers"] = options.Headers?.ToProtocol(),
             ["jsonData"] = jsonData,
             ["postData"] = postData != null ? Convert.ToBase64String(postData) : null,
@@ -162,6 +157,28 @@ internal class APIRequestContext : ChannelOwner, IAPIRequestContext
 
         var response = await SendMessageToServerAsync("fetch", message).ConfigureAwait(false);
         return new APIResponse(this, response?.GetProperty("response").ToObject<Transport.Protocol.APIResponse>());
+    }
+
+    private static IEnumerable<NameValue> QueryParamsToProtocol(IEnumerable<KeyValuePair<string, object>> @params, string paramsString)
+    {
+        if (@params != null)
+        {
+            return @params.ToDictionary(x => x.Key, x => x.Value.ToString()).ToProtocol();
+        }
+        if (string.IsNullOrEmpty(paramsString))
+        {
+            return null;
+        }
+        var result = new List<NameValue>();
+        var paramsCollection = HttpUtility.ParseQueryString(paramsString);
+        foreach (var key in paramsCollection.AllKeys)
+        {
+            foreach (var value in paramsCollection.GetValues(key))
+            {
+                result.Add(new NameValue { Name = key, Value = value });
+            }
+        }
+        return result;
     }
 
     private bool IsJsonContentType(IDictionary<string, string> headers)

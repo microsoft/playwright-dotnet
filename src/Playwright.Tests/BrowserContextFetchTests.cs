@@ -103,22 +103,35 @@ public class BrowserContextFetchTests : PageTestEx
         Assert.AreEqual("username=John Doe", cookieHeader);
     }
 
-    [PlaywrightTest("browsercontext-fetch.spec.ts", "should support queryParams")]
-    public async Task ShouldSupportQueryParams()
+    [PlaywrightTest("browsercontext-fetch.spec.ts", "should support paras passed as object")]
+    public async Task ShouldSupportParamsPassedAsObject()
     {
-        var queryString = new QueryString();
-        queryString.Add("p1", "v1");
-        queryString.Add("парам2", "знач2");
-        var requestOptions = new APIRequestContextOptions() { Params = new Dictionary<string, object>() { { "p1", "v1" }, { "парам2", "знач2" } } };
+        var requestOptions = new APIRequestContextOptions() { Params = new Dictionary<string, object>() { { "param1", "value1" }, { "парам2", "знач2" } } };
         await ForAllMethods(Context.APIRequest, async responseTask =>
         {
             var (receivedQueryString, _) = await TaskUtils.WhenAll(
                 Server.WaitForRequest("/empty.html", request => request.Query),
                 responseTask
             );
-            Assert.AreEqual("v1", receivedQueryString["p1"].First());
+            CollectionAssert.AreEquivalent(new[] { "value1", "value2" }, receivedQueryString["param1"]);
             Assert.AreEqual("знач2", receivedQueryString["парам2"].First());
-        }, Server.Prefix + "/empty.html?" + queryString.ToString(), requestOptions);
+        }, Server.Prefix + "/empty.html?param1=value2", requestOptions);
+    }
+
+    [PlaywrightTest("browsercontext-fetch.spec.ts", "should support params passed as string")]
+    public async Task ShouldSupportParamsPassedAsString()
+    {
+        var queryParams = "?param1=value1&param1=value2&парам2=знач2";
+        var requestOptions = new APIRequestContextOptions() { ParamsString = queryParams };
+        await ForAllMethods(Context.APIRequest, async responseTask =>
+        {
+            var (receivedQueryString, _) = await TaskUtils.WhenAll(
+                Server.WaitForRequest("/empty.html", request => request.Query),
+                responseTask
+            );
+            CollectionAssert.AreEquivalent(new[] { "value1", "value2" }, receivedQueryString["param1"]);
+            Assert.AreEqual("знач2", string.Join(",", receivedQueryString["парам2"]));
+        }, Server.Prefix + "/empty.html", requestOptions);
     }
 
     [PlaywrightTest("browsercontext-fetch.spec.ts", "should support failOnStatusCode")]

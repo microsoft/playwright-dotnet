@@ -329,12 +329,25 @@ internal class Browser : ChannelOwner, IBrowser
         {
             ["origin"] = clientCertificate.Origin,
             ["passphrase"] = clientCertificate.Passphrase,
-            ["cert"] = clientCertificate.CertPath != null ? Convert.ToBase64String(File.ReadAllBytes(clientCertificate.CertPath)) : null,
-            ["key"] = clientCertificate.KeyPath != null ? Convert.ToBase64String(File.ReadAllBytes(clientCertificate.KeyPath)) : null,
-            ["pfx"] = clientCertificate.PfxPath != null ? Convert.ToBase64String(File.ReadAllBytes(clientCertificate.PfxPath)) : null,
+            ["cert"] = ReadClientCertificateFile(clientCertificate.CertPath, clientCertificate.Cert),
+            ["key"] = ReadClientCertificateFile(clientCertificate.KeyPath, clientCertificate.Key),
+            ["pfx"] = ReadClientCertificateFile(clientCertificate.PfxPath, clientCertificate.Pfx),
         }
                 .Where(kv => kv.Value != null)
                 .ToDictionary(kv => kv.Key, kv => kv.Value))
             .ToArray();
+    }
+
+    private static string ReadClientCertificateFile(string path, byte[] value)
+    {
+        if (value != null)
+        {
+            return Convert.ToBase64String(value);
+        }
+        if (path != null)
+        {
+            return Convert.ToBase64String(File.ReadAllBytes(path));
+        }
+        return null;
     }
 }

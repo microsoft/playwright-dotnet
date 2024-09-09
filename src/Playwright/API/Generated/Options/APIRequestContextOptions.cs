@@ -53,6 +53,7 @@ public class APIRequestContextOptions
         Method = clone.Method;
         Multipart = clone.Multipart;
         Params = clone.Params;
+        ParamsString = clone.ParamsString;
         Timeout = clone.Timeout;
     }
 
@@ -180,6 +181,10 @@ public class APIRequestContextOptions
     /// <summary><para>Query parameters to be sent with the URL.</para></summary>
     [JsonPropertyName("params")]
     public IEnumerable<KeyValuePair<string, object>>? Params { get; set; }
+
+    /// <summary><para>Query parameters to be sent with the URL.</para></summary>
+    [JsonPropertyName("paramsString")]
+    public string? ParamsString { get; set; }
 
     /// <summary>
     /// <para>
