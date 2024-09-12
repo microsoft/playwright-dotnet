@@ -60,14 +60,14 @@ public partial interface IPageAssertions
     /// Makes the assertion check for the opposite condition. For example, this code tests
     /// that the page URL doesn't contain <c>"error"</c>:
     /// </para>
-    /// <code>await Expect(Page).Not.ToHaveURLAsync("error");</code>
+    /// <code>await Expect(Page).Not.ToHaveURL("error");</code>
     /// </summary>
     public IPageAssertions Not { get; }
 
     /// <summary>
     /// <para>Ensures the page has the given title.</para>
     /// <para>**Usage**</para>
-    /// <code>await Expect(Page).ToHaveTitleAsync("Playwright");</code>
+    /// <code>await Expect(Page).ToHaveTitle("Playwright");</code>
     /// </summary>
     /// <param name="titleOrRegExp">Expected title or RegExp.</param>
     /// <param name="options">Call options</param>
@@ -76,7 +76,7 @@ public partial interface IPageAssertions
     /// <summary>
     /// <para>Ensures the page has the given title.</para>
     /// <para>**Usage**</para>
-    /// <code>await Expect(Page).ToHaveTitleAsync("Playwright");</code>
+    /// <code>await Expect(Page).ToHaveTitle("Playwright");</code>
     /// </summary>
     /// <param name="titleOrRegExp">Expected title or RegExp.</param>
     /// <param name="options">Call options</param>
@@ -85,7 +85,7 @@ public partial interface IPageAssertions
     /// <summary>
     /// <para>Ensures the page is navigated to the given URL.</para>
     /// <para>**Usage**</para>
-    /// <code>await Expect(Page).ToHaveURLAsync(new Regex(".*checkout"));</code>
+    /// <code>await Expect(Page).ToHaveURL(new Regex(".*checkout"));</code>
     /// </summary>
     /// <param name="urlOrRegExp">Expected URL string or RegExp.</param>
     /// <param name="options">Call options</param>
@@ -94,7 +94,7 @@ public partial interface IPageAssertions
     /// <summary>
     /// <para>Ensures the page is navigated to the given URL.</para>
     /// <para>**Usage**</para>
-    /// <code>await Expect(Page).ToHaveURLAsync(new Regex(".*checkout"));</code>
+    /// <code>await Expect(Page).ToHaveURL(new Regex(".*checkout"));</code>
     /// </summary>
     /// <param name="urlOrRegExp">Expected URL string or RegExp.</param>
     /// <param name="options">Call options</param>
