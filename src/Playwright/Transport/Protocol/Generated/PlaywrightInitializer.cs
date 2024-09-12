@@ -31,17 +31,14 @@ internal class PlaywrightInitializer
     [JsonPropertyName("chromium")]
     public Core.BrowserType Chromium { get; set; }
 
+    [JsonPropertyName("bidi")]
+    public Core.BrowserType Bidi { get; set; }
+
     [JsonPropertyName("firefox")]
     public Core.BrowserType Firefox { get; set; }
 
     [JsonPropertyName("webkit")]
     public Core.BrowserType Webkit { get; set; }
-
-    [JsonPropertyName("bidiChromium")]
-    public Core.BrowserType BidiChromium { get; set; }
-
-    [JsonPropertyName("bidiFirefox")]
-    public Core.BrowserType BidiFirefox { get; set; }
 
     [JsonPropertyName("utils")]
     public Core.LocalUtils Utils { get; set; }
