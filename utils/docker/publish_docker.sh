@@ -102,7 +102,7 @@ publish_docker_manifest () {
   elif [[ "$FLAVOR" == "jammy" ]]; then
     TAGS=("${JAMMY_TAGS[@]}")
   elif [[ "$FLAVOR" == "noble" ]]; then
-    TAGS=("${NOBLE_TAGs[@]}")
+    TAGS=("${NOBLE_TAGS[@]}")
   else
     echo "ERROR: unknown flavor - $FLAVOR. Must be either 'focal', 'jammy' or 'noble'"
     exit 1
