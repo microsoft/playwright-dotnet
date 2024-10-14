@@ -131,12 +131,16 @@ public class BrowserNewContextOptions
     /// <c>origin</c> property should be provided with an exact match to the request origin
     /// that the certificate is valid for.
     /// </para>
-    /// </summary>
-    /// <remarks>
-    /// <para>Using Client Certificates in combination with Proxy Servers is not supported.</para>
     /// <para>
     /// When using WebKit on macOS, accessing <c>localhost</c> will not pick up client certificates.
     /// You can make it work by replacing <c>localhost</c> with <c>local.playwright</c>.
+    /// </para>
+    /// </summary>
+    /// <remarks>
+    /// <para>
+    /// When using WebKit on macOS, accessing <c>localhost</c> will not pick up client certificates.
+    /// You can make it work by replacing <c>localhost</c> with <c>local.playwright</c>.
+    ///
     /// </para>
     /// </remarks>
     [JsonPropertyName("clientCertificates")]
@@ -347,7 +351,7 @@ public class BrowserNewContextOptions
     /// <summary>
     /// <para>
     /// Emulates consistent window screen size available inside web page via <c>window.screen</c>.
-    /// Is only used when the <paramref name="viewport"/> is set.
+    /// Is only used when the <see cref="IBrowser.NewContextAsync"/> is set.
     /// </para>
     /// </summary>
     [JsonPropertyName("screen")]
@@ -416,6 +420,11 @@ public class BrowserNewContextOptions
     /// <c>ViewportSize.NoViewport</c> to disable the consistent viewport emulation. Learn
     /// more about <a href="https://playwright.dev/dotnet/docs/emulation#viewport">viewport
     /// emulation</a>.
+    /// </para>
+    /// <para>
+    /// The <c>ViewportSize.NoViewport</c> value opts out from the default presets, makes
+    /// viewport depend on the host window size defined by the operating system. It makes
+    /// the execution of the tests non-deterministic.
     /// </para>
     /// </summary>
     /// <remarks>

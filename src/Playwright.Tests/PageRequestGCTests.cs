@@ -6,7 +6,7 @@
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
- * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * to use, copy, modify, merge, publish, distribute, sublicense, and / or sell
  * copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions:
  *
@@ -22,36 +22,32 @@
  * SOFTWARE.
  */
 
-using System.Text.Json.Serialization;
+namespace Microsoft.Playwright.Tests;
 
-#nullable enable
-
-namespace Microsoft.Playwright;
-
-public class BrowserContextStorageStateOptions
+public class PageRequestGCTests : PageTestEx
 {
-    public BrowserContextStorageStateOptions() { }
-
-    public BrowserContextStorageStateOptions(BrowserContextStorageStateOptions clone)
+    [PlaywrightTest("page-gc.spec.ts", "should work")]
+    public async Task ShouldWork()
     {
-        if (clone == null)
+        await Page.EvaluateAsync(@"() => {
+            globalThis.objectToDestroy = { hello: 'world' };
+            globalThis.weakRef = new WeakRef(globalThis.objectToDestroy);
+        }");
+
+        await Page.RequestGCAsync();
+        Assert.AreEqual(new Dictionary<string, string>
         {
-            return;
-        }
+            ["hello"] = "world",
+        }, await Page.EvaluateAsync<object>("() => globalThis.weakRef.deref()"));
 
-        Path = clone.Path;
+        await Page.RequestGCAsync();
+        Assert.AreEqual(new Dictionary<string, string>
+        {
+            ["hello"] = "world",
+        }, await Page.EvaluateAsync<object>("() => globalThis.weakRef.deref()"));
+
+        await Page.EvaluateAsync("() => globalThis.objectToDestroy = null");
+        await Page.RequestGCAsync();
+        Assert.IsNull(await Page.EvaluateAsync<object>("() => globalThis.weakRef.deref()"));
     }
-
-    /// <summary>
-    /// <para>
-    /// The file path to save the storage state to. If <see cref="IBrowserContext.StorageStateAsync"/>
-    /// is a relative path, then it is resolved relative to current working directory. If
-    /// no path is provided, storage state is still returned, but won't be saved to the
-    /// disk.
-    /// </para>
-    /// </summary>
-    [JsonPropertyName("path")]
-    public string? Path { get; set; }
 }
-
-#nullable disable

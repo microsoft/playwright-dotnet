@@ -136,6 +136,10 @@ public partial interface IPage
     ///     Console.WriteLine(request.Url + " " + request.Failure);<br/>
     /// };
     /// </code>
+    /// <para>
+    /// When no <see cref="IPage.Dialog"/> or <see cref="IBrowserContext.Dialog"/> listeners
+    /// are present, all dialogs are automatically dismissed.
+    /// </para>
     /// </summary>
     /// <remarks>
     /// <para>
@@ -226,6 +230,10 @@ public partial interface IPage
     /// });<br/>
     /// Console.WriteLine(await popup.EvaluateAsync&lt;string&gt;("location.href"));
     /// </code>
+    /// <para>
+    /// Use <see cref="IPage.WaitForLoadStateAsync"/> to wait until the page gets to a particular
+    /// state (you should not need it in most cases).
+    /// </para>
     /// </summary>
     /// <remarks>
     /// <para>
@@ -244,7 +252,16 @@ public partial interface IPage
     /// </summary>
     event EventHandler<IRequest> Request;
 
-    /// <summary><para>Emitted when a request fails, for example by timing out.</para></summary>
+    /// <summary>
+    /// <para>Emitted when a request fails, for example by timing out.</para>
+    /// <para>
+    /// HTTP Error responses, such as 404 or 503, are still successful responses from HTTP
+    /// standpoint, so request will complete with <see cref="IPage.RequestFinished"/> event
+    /// and not with <see cref="IPage.RequestFailed"/>. A request will only be considered
+    /// failed when the client cannot get an HTTP response from the server, e.g. due to
+    /// network error net::ERR_FAILED.
+    /// </para>
+    /// </summary>
     /// <remarks>
     /// <para>
     /// HTTP Error responses, such as 404 or 503, are still successful responses from HTTP
@@ -312,6 +329,10 @@ public partial interface IPage
     /// <para>**Usage**</para>
     /// <para>An example of overriding <c>Math.random</c> before the page loads:</para>
     /// <code>await Page.AddInitScriptAsync(scriptPath: "./preload.js");</code>
+    /// <para>
+    /// The order of evaluation of multiple scripts installed via <see cref="IBrowserContext.AddInitScriptAsync"/>
+    /// and <see cref="IPage.AddInitScriptAsync"/> is not defined.
+    /// </para>
     /// </summary>
     /// <remarks>
     /// <para>
@@ -353,13 +374,13 @@ public partial interface IPage
     /// href="https://playwright.dev/dotnet/docs/locators">locators</a>.
     /// </para>
     /// <para>
-    /// This method checks an element matching <paramref name="selector"/> by performing
+    /// This method checks an element matching <see cref="IPage.CheckAsync"/> by performing
     /// the following steps:
     /// </para>
     /// <list type="ordinal">
     /// <item><description>
-    /// Find an element matching <paramref name="selector"/>. If there is none, wait until
-    /// a matching element is attached to the DOM.
+    /// Find an element matching <see cref="IPage.CheckAsync"/>. If there is none, wait
+    /// until a matching element is attached to the DOM.
     /// </description></item>
     /// <item><description>
     /// Ensure that matched element is a checkbox or a radio input. If not, this method
@@ -367,15 +388,15 @@ public partial interface IPage
     /// </description></item>
     /// <item><description>
     /// Wait for <a href="https://playwright.dev/dotnet/docs/actionability">actionability</a>
-    /// checks on the matched element, unless <paramref name="force"/> option is set. If
-    /// the element is detached during the checks, the whole action is retried.
+    /// checks on the matched element, unless <see cref="IPage.CheckAsync"/> option is set.
+    /// If the element is detached during the checks, the whole action is retried.
     /// </description></item>
     /// <item><description>Scroll the element into view if needed.</description></item>
     /// <item><description>Use <see cref="IPage.Mouse"/> to click in the center of the element.</description></item>
     /// <item><description>Ensure that the element is now checked. If not, this method throws.</description></item>
     /// </list>
     /// <para>
-    /// When all steps combined have not finished during the specified <paramref name="timeout"/>,
+    /// When all steps combined have not finished during the specified <see cref="IPage.CheckAsync"/>,
     /// this method throws a <see cref="TimeoutException"/>. Passing zero timeout disables
     /// this.
     /// </para>
@@ -393,31 +414,31 @@ public partial interface IPage
     /// href="https://playwright.dev/dotnet/docs/locators">locators</a>.
     /// </para>
     /// <para>
-    /// This method clicks an element matching <paramref name="selector"/> by performing
+    /// This method clicks an element matching <see cref="IPage.ClickAsync"/> by performing
     /// the following steps:
     /// </para>
     /// <list type="ordinal">
     /// <item><description>
-    /// Find an element matching <paramref name="selector"/>. If there is none, wait until
-    /// a matching element is attached to the DOM.
+    /// Find an element matching <see cref="IPage.ClickAsync"/>. If there is none, wait
+    /// until a matching element is attached to the DOM.
     /// </description></item>
     /// <item><description>
     /// Wait for <a href="https://playwright.dev/dotnet/docs/actionability">actionability</a>
-    /// checks on the matched element, unless <paramref name="force"/> option is set. If
-    /// the element is detached during the checks, the whole action is retried.
+    /// checks on the matched element, unless <see cref="IPage.ClickAsync"/> option is set.
+    /// If the element is detached during the checks, the whole action is retried.
     /// </description></item>
     /// <item><description>Scroll the element into view if needed.</description></item>
     /// <item><description>
     /// Use <see cref="IPage.Mouse"/> to click in the center of the element, or the specified
-    /// <paramref name="position"/>.
+    /// <see cref="IPage.ClickAsync"/>.
     /// </description></item>
     /// <item><description>
-    /// Wait for initiated navigations to either succeed or fail, unless <paramref name="noWaitAfter"/>
+    /// Wait for initiated navigations to either succeed or fail, unless <see cref="IPage.ClickAsync"/>
     /// option is set.
     /// </description></item>
     /// </list>
     /// <para>
-    /// When all steps combined have not finished during the specified <paramref name="timeout"/>,
+    /// When all steps combined have not finished during the specified <see cref="IPage.ClickAsync"/>,
     /// this method throws a <see cref="TimeoutException"/>. Passing zero timeout disables
     /// this.
     /// </para>
@@ -431,15 +452,20 @@ public partial interface IPage
 
     /// <summary>
     /// <para>
-    /// If <paramref name="runBeforeUnload"/> is <c>false</c>, does not run any unload handlers
-    /// and waits for the page to be closed. If <paramref name="runBeforeUnload"/> is <c>true</c>
+    /// If <see cref="IPage.CloseAsync"/> is <c>false</c>, does not run any unload handlers
+    /// and waits for the page to be closed. If <see cref="IPage.CloseAsync"/> is <c>true</c>
     /// the method will run unload handlers, but will **not** wait for the page to close.
     /// </para>
     /// <para>By default, <c>page.close()</c> **does not** run <c>beforeunload</c> handlers.</para>
+    /// <para>
+    /// if <see cref="IPage.CloseAsync"/> is passed as true, a <c>beforeunload</c> dialog
+    /// might be summoned and should be handled manually via <see cref="IPage.Dialog"/>
+    /// event.
+    /// </para>
     /// </summary>
     /// <remarks>
     /// <para>
-    /// if <paramref name="runBeforeUnload"/> is passed as true, a <c>beforeunload</c> dialog
+    /// if <see cref="IPage.CloseAsync"/> is passed as true, a <c>beforeunload</c> dialog
     /// might be summoned and should be handled manually via <see cref="IPage.Dialog"/>
     /// event.
     /// </para>
@@ -459,29 +485,33 @@ public partial interface IPage
     /// <a href="https://playwright.dev/dotnet/docs/locators">locators</a>.
     /// </para>
     /// <para>
-    /// This method double clicks an element matching <paramref name="selector"/> by performing
-    /// the following steps:
+    /// This method double clicks an element matching <see cref="IPage.DblClickAsync"/>
+    /// by performing the following steps:
     /// </para>
     /// <list type="ordinal">
     /// <item><description>
-    /// Find an element matching <paramref name="selector"/>. If there is none, wait until
-    /// a matching element is attached to the DOM.
+    /// Find an element matching <see cref="IPage.DblClickAsync"/>. If there is none, wait
+    /// until a matching element is attached to the DOM.
     /// </description></item>
     /// <item><description>
     /// Wait for <a href="https://playwright.dev/dotnet/docs/actionability">actionability</a>
-    /// checks on the matched element, unless <paramref name="force"/> option is set. If
-    /// the element is detached during the checks, the whole action is retried.
+    /// checks on the matched element, unless <see cref="IPage.DblClickAsync"/> option is
+    /// set. If the element is detached during the checks, the whole action is retried.
     /// </description></item>
     /// <item><description>Scroll the element into view if needed.</description></item>
     /// <item><description>
     /// Use <see cref="IPage.Mouse"/> to double click in the center of the element, or the
-    /// specified <paramref name="position"/>.
+    /// specified <see cref="IPage.DblClickAsync"/>.
     /// </description></item>
     /// </list>
     /// <para>
-    /// When all steps combined have not finished during the specified <paramref name="timeout"/>,
+    /// When all steps combined have not finished during the specified <see cref="IPage.DblClickAsync"/>,
     /// this method throws a <see cref="TimeoutException"/>. Passing zero timeout disables
     /// this.
+    /// </para>
+    /// <para>
+    /// <c>page.dblclick()</c> dispatches two <c>click</c> events and a single <c>dblclick</c>
+    /// event.
     /// </para>
     /// </summary>
     /// <remarks>
@@ -510,13 +540,13 @@ public partial interface IPage
     /// <para>**Usage**</para>
     /// <code>await page.DispatchEventAsync("button#submit", "click");</code>
     /// <para>
-    /// Under the hood, it creates an instance of an event based on the given <paramref
-    /// name="type"/>, initializes it with <paramref name="eventInit"/> properties and dispatches
+    /// Under the hood, it creates an instance of an event based on the given <see cref="IPage.DispatchEventAsync"/>,
+    /// initializes it with <see cref="IPage.DispatchEventAsync"/> properties and dispatches
     /// it on the element. Events are <c>composed</c>, <c>cancelable</c> and bubble by default.
     /// </para>
     /// <para>
-    /// Since <paramref name="eventInit"/> is event-specific, please refer to the events
-    /// documentation for the lists of initial properties:
+    /// Since <see cref="IPage.DispatchEventAsync"/> is event-specific, please refer to
+    /// the events documentation for the lists of initial properties:
     /// </para>
     /// <list type="bullet">
     /// <item><description><a href="https://developer.mozilla.org/en-US/docs/Web/API/DeviceMotionEvent/DeviceMotionEvent">DeviceMotionEvent</a></description></item>
@@ -622,12 +652,14 @@ public partial interface IPage
     /// </para>
     /// <para>
     /// The method finds an element matching the specified selector within the page and
-    /// passes it as a first argument to <paramref name="expression"/>. If no elements match
-    /// the selector, the method throws an error. Returns the value of <paramref name="expression"/>.
+    /// passes it as a first argument to <see cref="IPage.EvalOnSelectorAsync"/>. If no
+    /// elements match the selector, the method throws an error. Returns the value of <see
+    /// cref="IPage.EvalOnSelectorAsync"/>.
     /// </para>
     /// <para>
-    /// If <paramref name="expression"/> returns a <see cref="Task"/>, then <see cref="IPage.EvalOnSelectorAsync"/>
-    /// would wait for the promise to resolve and return its value.
+    /// If <see cref="IPage.EvalOnSelectorAsync"/> returns a <see cref="Task"/>, then <see
+    /// cref="IPage.EvalOnSelectorAsync"/> would wait for the promise to resolve and return
+    /// its value.
     /// </para>
     /// <para>**Usage**</para>
     /// <code>
@@ -641,7 +673,7 @@ public partial interface IPage
     /// JavaScript expression to be evaluated in the browser context. If the expression
     /// evaluates to a function, the function is automatically invoked.
     /// </param>
-    /// <param name="arg">Optional argument to pass to <paramref name="expression"/>.</param>
+    /// <param name="arg">Optional argument to pass to <see cref="IPage.EvalOnSelectorAsync"/>.</param>
     /// <param name="options">Call options</param>
     Task<T> EvalOnSelectorAsync<T>(string selector, string expression, object? arg = default, PageEvalOnSelectorOptions? options = default);
 
@@ -652,12 +684,13 @@ public partial interface IPage
     /// </para>
     /// <para>
     /// The method finds all elements matching the specified selector within the page and
-    /// passes an array of matched elements as a first argument to <paramref name="expression"/>.
-    /// Returns the result of <paramref name="expression"/> invocation.
+    /// passes an array of matched elements as a first argument to <see cref="IPage.EvalOnSelectorAllAsync"/>.
+    /// Returns the result of <see cref="IPage.EvalOnSelectorAllAsync"/> invocation.
     /// </para>
     /// <para>
-    /// If <paramref name="expression"/> returns a <see cref="Task"/>, then <see cref="IPage.EvalOnSelectorAllAsync"/>
-    /// would wait for the promise to resolve and return its value.
+    /// If <see cref="IPage.EvalOnSelectorAllAsync"/> returns a <see cref="Task"/>, then
+    /// <see cref="IPage.EvalOnSelectorAllAsync"/> would wait for the promise to resolve
+    /// and return its value.
     /// </para>
     /// <para>**Usage**</para>
     /// <code>var divsCount = await page.EvalOnSelectorAllAsync&lt;bool&gt;("div", "(divs, min) =&gt; divs.length &gt;= min", 10);</code>
@@ -667,11 +700,11 @@ public partial interface IPage
     /// JavaScript expression to be evaluated in the browser context. If the expression
     /// evaluates to a function, the function is automatically invoked.
     /// </param>
-    /// <param name="arg">Optional argument to pass to <paramref name="expression"/>.</param>
+    /// <param name="arg">Optional argument to pass to <see cref="IPage.EvalOnSelectorAllAsync"/>.</param>
     Task<T> EvalOnSelectorAllAsync<T>(string selector, string expression, object? arg = default);
 
     /// <summary>
-    /// <para>Returns the value of the <paramref name="expression"/> invocation.</para>
+    /// <para>Returns the value of the <see cref="IPage.EvaluateAsync"/> invocation.</para>
     /// <para>
     /// If the function passed to the <see cref="IPage.EvaluateAsync"/> returns a <see cref="Task"/>,
     /// then <see cref="IPage.EvaluateAsync"/> would wait for the promise to resolve and
@@ -684,7 +717,7 @@ public partial interface IPage
     /// are not serializable by <c>JSON</c>: <c>-0</c>, <c>NaN</c>, <c>Infinity</c>, <c>-Infinity</c>.
     /// </para>
     /// <para>**Usage**</para>
-    /// <para>Passing argument to <paramref name="expression"/>:</para>
+    /// <para>Passing argument to <see cref="IPage.EvaluateAsync"/>:</para>
     /// <code>
     /// var result = await page.EvaluateAsync&lt;int&gt;("([x, y]) =&gt; Promise.resolve(x * y)", new[] { 7, 8 });<br/>
     /// Console.WriteLine(result);
@@ -705,11 +738,14 @@ public partial interface IPage
     /// JavaScript expression to be evaluated in the browser context. If the expression
     /// evaluates to a function, the function is automatically invoked.
     /// </param>
-    /// <param name="arg">Optional argument to pass to <paramref name="expression"/>.</param>
+    /// <param name="arg">Optional argument to pass to <see cref="IPage.EvaluateAsync"/>.</param>
     Task<T> EvaluateAsync<T>(string expression, object? arg = default);
 
     /// <summary>
-    /// <para>Returns the value of the <paramref name="expression"/> invocation as a <see cref="IJSHandle"/>.</para>
+    /// <para>
+    /// Returns the value of the <see cref="IPage.EvaluateHandleAsync"/> invocation as a
+    /// <see cref="IJSHandle"/>.
+    /// </para>
     /// <para>
     /// The only difference between <see cref="IPage.EvaluateAsync"/> and <see cref="IPage.EvaluateHandleAsync"/>
     /// is that <see cref="IPage.EvaluateHandleAsync"/> returns <see cref="IJSHandle"/>.
@@ -738,23 +774,24 @@ public partial interface IPage
     /// JavaScript expression to be evaluated in the browser context. If the expression
     /// evaluates to a function, the function is automatically invoked.
     /// </param>
-    /// <param name="arg">Optional argument to pass to <paramref name="expression"/>.</param>
+    /// <param name="arg">Optional argument to pass to <see cref="IPage.EvaluateHandleAsync"/>.</param>
     Task<IJSHandle> EvaluateHandleAsync(string expression, object? arg = default);
 
     /// <summary>
     /// <para>
-    /// The method adds a function called <paramref name="name"/> on the <c>window</c> object
-    /// of every frame in this page. When called, the function executes <paramref name="callback"/>
-    /// and returns a <see cref="Task"/> which resolves to the return value of <paramref
-    /// name="callback"/>. If the <paramref name="callback"/> returns a <see cref="Promise"/>,
-    /// it will be awaited.
+    /// The method adds a function called <see cref="IPage.ExposeBindingAsync"/> on the
+    /// <c>window</c> object of every frame in this page. When called, the function executes
+    /// <see cref="IPage.ExposeBindingAsync"/> and returns a <see cref="Task"/> which resolves
+    /// to the return value of <see cref="IPage.ExposeBindingAsync"/>. If the <see cref="IPage.ExposeBindingAsync"/>
+    /// returns a <see cref="Promise"/>, it will be awaited.
     /// </para>
     /// <para>
-    /// The first argument of the <paramref name="callback"/> function contains information
-    /// about the caller: <c>{ browserContext: BrowserContext, page: Page, frame: Frame
-    /// }</c>.
+    /// The first argument of the <see cref="IPage.ExposeBindingAsync"/> function contains
+    /// information about the caller: <c>{ browserContext: BrowserContext, page: Page, frame:
+    /// Frame }</c>.
     /// </para>
     /// <para>See <see cref="IBrowserContext.ExposeBindingAsync"/> for the context-wide version.</para>
+    /// <para>Functions installed via <see cref="IPage.ExposeBindingAsync"/> survive navigations.</para>
     /// <para>**Usage**</para>
     /// <para>An example of exposing page URL to all frames in a page:</para>
     /// <code>
@@ -786,7 +823,12 @@ public partial interface IPage
     /// }
     /// </code>
     /// </summary>
-    /// <remarks><para>Functions installed via <see cref="IPage.ExposeBindingAsync"/> survive navigations.</para></remarks>
+    /// <remarks>
+    /// <para>
+    /// Functions installed via <see cref="IPage.ExposeBindingAsync"/> survive navigations.
+    ///
+    /// </para>
+    /// </remarks>
     /// <param name="name">Name of the function on the window object.</param>
     /// <param name="callback">Callback function that will be called in the Playwright's context.</param>
     /// <param name="options">Call options</param>
@@ -794,13 +836,17 @@ public partial interface IPage
 
     /// <summary>
     /// <para>
-    /// The method adds a function called <paramref name="name"/> on the <c>window</c> object
-    /// of every frame in the page. When called, the function executes <paramref name="callback"/>
-    /// and returns a <see cref="Task"/> which resolves to the return value of <paramref
-    /// name="callback"/>.
+    /// The method adds a function called <see cref="IPage.ExposeFunctionAsync"/> on the
+    /// <c>window</c> object of every frame in the page. When called, the function executes
+    /// <see cref="IPage.ExposeFunctionAsync"/> and returns a <see cref="Task"/> which resolves
+    /// to the return value of <see cref="IPage.ExposeFunctionAsync"/>.
     /// </para>
-    /// <para>If the <paramref name="callback"/> returns a <see cref="Task"/>, it will be awaited.</para>
+    /// <para>
+    /// If the <see cref="IPage.ExposeFunctionAsync"/> returns a <see cref="Task"/>, it
+    /// will be awaited.
+    /// </para>
     /// <para>See <see cref="IBrowserContext.ExposeFunctionAsync"/> for context-wide exposed function.</para>
+    /// <para>Functions installed via <see cref="IPage.ExposeFunctionAsync"/> survive navigations.</para>
     /// <para>**Usage**</para>
     /// <para>An example of adding a <c>sha256</c> function to the page:</para>
     /// <code>
@@ -840,7 +886,12 @@ public partial interface IPage
     /// }
     /// </code>
     /// </summary>
-    /// <remarks><para>Functions installed via <see cref="IPage.ExposeFunctionAsync"/> survive navigations.</para></remarks>
+    /// <remarks>
+    /// <para>
+    /// Functions installed via <see cref="IPage.ExposeFunctionAsync"/> survive navigations.
+    ///
+    /// </para>
+    /// </remarks>
     /// <param name="name">Name of the function on the window object</param>
     /// <param name="callback">Callback function which will be called in Playwright's context.</param>
     Task ExposeFunctionAsync(string name, Action callback);
@@ -848,7 +899,7 @@ public partial interface IPage
     /// <summary>
     /// <para>Use locator-based <see cref="ILocator.FillAsync"/> instead. Read more about <a href="https://playwright.dev/dotnet/docs/locators">locators</a>.</para>
     /// <para>
-    /// This method waits for an element matching <paramref name="selector"/>, waits for
+    /// This method waits for an element matching <see cref="IPage.FillAsync"/>, waits for
     /// <a href="https://playwright.dev/dotnet/docs/actionability">actionability</a> checks,
     /// focuses the element, fills it and triggers an <c>input</c> event after filling.
     /// Note that you can pass an empty string to clear the input field.
@@ -878,9 +929,9 @@ public partial interface IPage
     /// href="https://playwright.dev/dotnet/docs/locators">locators</a>.
     /// </para>
     /// <para>
-    /// This method fetches an element with <paramref name="selector"/> and focuses it.
-    /// If there's no element matching <paramref name="selector"/>, the method waits until
-    /// a matching element appears in the DOM.
+    /// This method fetches an element with <see cref="IPage.FocusAsync"/> and focuses it.
+    /// If there's no element matching <see cref="IPage.FocusAsync"/>, the method waits
+    /// until a matching element appears in the DOM.
     /// </para>
     /// </summary>
     /// <param name="selector">
@@ -1246,6 +1297,27 @@ public partial interface IPage
 
     /// <summary>
     /// <para>
+    /// Request the page to perform garbage collection. Note that there is no guarantee
+    /// that all unreachable objects will be collected.
+    /// </para>
+    /// <para>
+    /// This is useful to help detect memory leaks. For example, if your page has a large
+    /// object <c>'suspect'</c> that might be leaked, you can check that it does not leak
+    /// by using a <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/WeakRef"><c>WeakRef</c></a>.
+    /// </para>
+    /// <code>
+    /// // 1. In your page, save a WeakRef for the "suspect".<br/>
+    /// await Page.EvaluateAsync("globalThis.suspectWeakRef = new WeakRef(suspect)");<br/>
+    /// // 2. Request garbage collection.<br/>
+    /// await Page.RequestGCAsync();<br/>
+    /// // 3. Check that weak ref does not deref to the original object.<br/>
+    /// Assert.True(await Page.EvaluateAsync("!globalThis.suspectWeakRef.deref()"));
+    /// </code>
+    /// </summary>
+    Task RequestGCAsync();
+
+    /// <summary>
+    /// <para>
     /// Returns the main resource response. In case of multiple redirects, the navigation
     /// will resolve with the first non-redirect response.
     /// </para>
@@ -1253,7 +1325,7 @@ public partial interface IPage
     /// <list type="bullet">
     /// <item><description>there's an SSL error (e.g. in case of self-signed certificates).</description></item>
     /// <item><description>target URL is invalid.</description></item>
-    /// <item><description>the <paramref name="timeout"/> is exceeded during navigation.</description></item>
+    /// <item><description>the <see cref="IPage.GotoAsync"/> is exceeded during navigation.</description></item>
     /// <item><description>the remote server does not respond or is unreachable.</description></item>
     /// <item><description>the main resource failed to load.</description></item>
     /// </list>
@@ -1261,6 +1333,15 @@ public partial interface IPage
     /// The method will not throw an error when any valid HTTP status code is returned by
     /// the remote server, including 404 "Not Found" and 500 "Internal Server Error".  The
     /// status code for such responses can be retrieved by calling <see cref="IResponse.Status"/>.
+    /// </para>
+    /// <para>
+    /// The method either throws an error or returns a main resource response. The only
+    /// exceptions are navigation to <c>about:blank</c> or navigation to the same URL with
+    /// a different hash, which would succeed and return <c>null</c>.
+    /// </para>
+    /// <para>
+    /// Headless mode doesn't support navigation to a PDF document. See the <a href="https://bugs.chromium.org/p/chromium/issues/detail?id=761295">upstream
+    /// issue</a>.
     /// </para>
     /// </summary>
     /// <remarks>
@@ -1276,8 +1357,8 @@ public partial interface IPage
     /// </remarks>
     /// <param name="url">
     /// URL to navigate page to. The url should include scheme, e.g. <c>https://</c>. When
-    /// a <paramref name="baseURL"/> via the context options was provided and the passed
-    /// URL is a path, it gets merged via the <a href="https://developer.mozilla.org/en-US/docs/Web/API/URL/URL"><c>new
+    /// a <see cref="IBrowser.NewContextAsync"/> via the context options was provided and
+    /// the passed URL is a path, it gets merged via the <a href="https://developer.mozilla.org/en-US/docs/Web/API/URL/URL"><c>new
     /// URL()</c></a> constructor.
     /// </param>
     /// <param name="options">Call options</param>
@@ -1289,27 +1370,27 @@ public partial interface IPage
     /// href="https://playwright.dev/dotnet/docs/locators">locators</a>.
     /// </para>
     /// <para>
-    /// This method hovers over an element matching <paramref name="selector"/> by performing
+    /// This method hovers over an element matching <see cref="IPage.HoverAsync"/> by performing
     /// the following steps:
     /// </para>
     /// <list type="ordinal">
     /// <item><description>
-    /// Find an element matching <paramref name="selector"/>. If there is none, wait until
-    /// a matching element is attached to the DOM.
+    /// Find an element matching <see cref="IPage.HoverAsync"/>. If there is none, wait
+    /// until a matching element is attached to the DOM.
     /// </description></item>
     /// <item><description>
     /// Wait for <a href="https://playwright.dev/dotnet/docs/actionability">actionability</a>
-    /// checks on the matched element, unless <paramref name="force"/> option is set. If
-    /// the element is detached during the checks, the whole action is retried.
+    /// checks on the matched element, unless <see cref="IPage.HoverAsync"/> option is set.
+    /// If the element is detached during the checks, the whole action is retried.
     /// </description></item>
     /// <item><description>Scroll the element into view if needed.</description></item>
     /// <item><description>
     /// Use <see cref="IPage.Mouse"/> to hover over the center of the element, or the specified
-    /// <paramref name="position"/>.
+    /// <see cref="IPage.HoverAsync"/>.
     /// </description></item>
     /// </list>
     /// <para>
-    /// When all steps combined have not finished during the specified <paramref name="timeout"/>,
+    /// When all steps combined have not finished during the specified <see cref="IPage.HoverAsync"/>,
     /// this method throws a <see cref="TimeoutException"/>. Passing zero timeout disables
     /// this.
     /// </para>
@@ -1440,7 +1521,8 @@ public partial interface IPage
     /// </para>
     /// <para>
     /// Returns whether the element is hidden, the opposite of <a href="https://playwright.dev/dotnet/docs/actionability#visible">visible</a>.
-    /// <paramref name="selector"/> that does not match any elements is considered hidden.
+    /// <see cref="IPage.IsHiddenAsync"/> that does not match any elements is considered
+    /// hidden.
     /// </para>
     /// </summary>
     /// <param name="selector">
@@ -1457,7 +1539,8 @@ public partial interface IPage
     /// </para>
     /// <para>
     /// Returns whether the element is <a href="https://playwright.dev/dotnet/docs/actionability#visible">visible</a>.
-    /// <paramref name="selector"/> that does not match any elements is considered not visible.
+    /// <see cref="IPage.IsVisibleAsync"/> that does not match any elements is considered
+    /// not visible.
     /// </para>
     /// </summary>
     /// <param name="selector">
@@ -1510,21 +1593,31 @@ public partial interface IPage
     /// User can inspect selectors or perform manual steps while paused. Resume will continue
     /// running the original script from the place it was paused.
     /// </para>
+    /// <para>
+    /// This method requires Playwright to be started in a headed mode, with a falsy <see
+    /// cref="IBrowserType.LaunchAsync"/> option.
+    /// </para>
     /// </summary>
     /// <remarks>
     /// <para>
-    /// This method requires Playwright to be started in a headed mode, with a falsy <paramref
-    /// name="headless"/> value in the <see cref="IBrowserType.LaunchAsync"/>.
+    /// This method requires Playwright to be started in a headed mode, with a falsy <see
+    /// cref="IBrowserType.LaunchAsync"/> option.
     /// </para>
     /// </remarks>
     Task PauseAsync();
 
     /// <summary>
     /// <para>Returns the PDF buffer.</para>
+    /// <para>Generating a pdf is currently only supported in Chromium headless.</para>
     /// <para>
     /// <c>page.pdf()</c> generates a pdf of the page with <c>print</c> css media. To generate
     /// a pdf with <c>screen</c> media, call <see cref="IPage.EmulateMediaAsync"/> before
     /// calling <c>page.pdf()</c>:
+    /// </para>
+    /// <para>
+    /// By default, <c>page.pdf()</c> generates a pdf with modified colors for printing.
+    /// Use the <a href="https://developer.mozilla.org/en-US/docs/Web/CSS/-webkit-print-color-adjust"><c>-webkit-print-color-adjust</c></a>
+    /// property to force rendering of exact colors.
     /// </para>
     /// <para>**Usage**</para>
     /// <code>
@@ -1533,7 +1626,7 @@ public partial interface IPage
     /// await page.PdfAsync(new() { Path = "page.pdf" });
     /// </code>
     /// <para>
-    /// The <paramref name="width"/>, <paramref name="height"/>, and <paramref name="margin"/>
+    /// The <see cref="IPage.PdfAsync"/>, <see cref="IPage.PdfAsync"/>, and <see cref="IPage.PdfAsync"/>
     /// options accept values labeled with units. Unlabeled values are treated as pixels.
     /// </para>
     /// <para>A few examples:</para>
@@ -1549,7 +1642,7 @@ public partial interface IPage
     /// <item><description><c>cm</c> - centimeter</description></item>
     /// <item><description><c>mm</c> - millimeter</description></item>
     /// </list>
-    /// <para>The <paramref name="format"/> options are:</para>
+    /// <para>The <see cref="IPage.PdfAsync"/> options are:</para>
     /// <list type="bullet">
     /// <item><description><c>Letter</c>: 8.5in x 11in</description></item>
     /// <item><description><c>Legal</c>: 8.5in x 14in</description></item>
@@ -1563,6 +1656,11 @@ public partial interface IPage
     /// <item><description><c>A5</c>: 5.83in x 8.27in</description></item>
     /// <item><description><c>A6</c>: 4.13in x 5.83in</description></item>
     /// </list>
+    /// <para>
+    /// <see cref="IPage.PdfAsync"/> and <see cref="IPage.PdfAsync"/> markup have the following
+    /// limitations: > 1. Script tags inside templates are not evaluated. > 2. Page styles
+    /// are not visible inside templates.
+    /// </para>
     /// </summary>
     /// <remarks>
     /// <para>Generating a pdf is currently only supported in Chromium headless.</para>
@@ -1572,9 +1670,9 @@ public partial interface IPage
     /// property to force rendering of exact colors.
     /// </para>
     /// <para>
-    /// <paramref name="headerTemplate"/> and <paramref name="footerTemplate"/> markup have
-    /// the following limitations: > 1. Script tags inside templates are not evaluated.
-    /// > 2. Page styles are not visible inside templates.
+    /// <see cref="IPage.PdfAsync"/> and <see cref="IPage.PdfAsync"/> markup have the following
+    /// limitations: > 1. Script tags inside templates are not evaluated. > 2. Page styles
+    /// are not visible inside templates.
     /// </para>
     /// </remarks>
     /// <param name="options">Call options</param>
@@ -1587,9 +1685,9 @@ public partial interface IPage
     /// </para>
     /// <para>Focuses the element, and then uses <see cref="IKeyboard.DownAsync"/> and <see cref="IKeyboard.UpAsync"/>.</para>
     /// <para>
-    /// <paramref name="key"/> can specify the intended <a href="https://developer.mozilla.org/en-US/docs/Web/API/KeyboardEvent/key">keyboardEvent.key</a>
-    /// value or a single character to generate the text for. A superset of the <paramref
-    /// name="key"/> values can be found <a href="https://developer.mozilla.org/en-US/docs/Web/API/KeyboardEvent/key/Key_Values">here</a>.
+    /// <see cref="IPage.PressAsync"/> can specify the intended <a href="https://developer.mozilla.org/en-US/docs/Web/API/KeyboardEvent/key">keyboardEvent.key</a>
+    /// value or a single character to generate the text for. A superset of the <see cref="IPage.PressAsync"/>
+    /// values can be found <a href="https://developer.mozilla.org/en-US/docs/Web/API/KeyboardEvent/key/Key_Values">here</a>.
     /// Examples of the keys are:
     /// </para>
     /// <para>
@@ -1605,12 +1703,12 @@ public partial interface IPage
     /// resolves to <c>Control</c> on Windows and Linux and to <c>Meta</c> on macOS.
     /// </para>
     /// <para>
-    /// Holding down <c>Shift</c> will type the text that corresponds to the <paramref name="key"/>
+    /// Holding down <c>Shift</c> will type the text that corresponds to the <see cref="IPage.PressAsync"/>
     /// in the upper case.
     /// </para>
     /// <para>
-    /// If <paramref name="key"/> is a single character, it is case-sensitive, so the values
-    /// <c>a</c> and <c>A</c> will generate different respective texts.
+    /// If <see cref="IPage.PressAsync"/> is a single character, it is case-sensitive, so
+    /// the values <c>a</c> and <c>A</c> will generate different respective texts.
     /// </para>
     /// <para>
     /// Shortcuts such as <c>key: "Control+o"</c>, <c>key: "Control++</c> or <c>key: "Control+Shift+T"</c>
@@ -1692,8 +1790,7 @@ public partial interface IPage
     /// </description></item>
     /// <item><description>
     /// After executing the handler, Playwright will ensure that overlay that triggered
-    /// the handler is not visible anymore. You can opt-out of this behavior with <paramref
-    /// name="noWaitAfter"/>.
+    /// the handler is not visible anymore. You can opt-out of this behavior with <see cref="IPage.AddLocatorHandlerAsync"/>.
     /// </description></item>
     /// <item><description>
     /// The execution time of the handler counts towards the timeout of the action/assertion
@@ -1704,6 +1801,26 @@ public partial interface IPage
     /// at a time. Make sure the actions within a handler don't depend on another handler.
     /// </description></item>
     /// </list>
+    /// <para>
+    /// Running the handler will alter your page state mid-test. For example it will change
+    /// the currently focused element and move the mouse. Make sure that actions that run
+    /// after the handler are self-contained and do not rely on the focus and mouse state
+    /// being unchanged.
+    /// </para>
+    /// <para>
+    /// For example, consider a test that calls <see cref="ILocator.FocusAsync"/> followed
+    /// by <see cref="IKeyboard.PressAsync"/>. If your handler clicks a button between these
+    /// two actions, the focused element most likely will be wrong, and key press will happen
+    /// on the unexpected element. Use <see cref="ILocator.PressAsync"/> instead to avoid
+    /// this problem.
+    /// </para>
+    /// <para>
+    /// Another example is a series of mouse actions, where <see cref="IMouse.MoveAsync"/>
+    /// is followed by <see cref="IMouse.DownAsync"/>. Again, when the handler runs between
+    /// these two actions, the mouse position will be wrong during the mouse down. Prefer
+    /// self-contained actions like <see cref="ILocator.ClickAsync"/> that do not rely on
+    /// the state being unchanged by a handler.
+    /// </para>
     /// <para>**Usage**</para>
     /// <para>An example that closes a "Sign up to the newsletter" dialog when it appears:</para>
     /// <code>
@@ -1730,8 +1847,8 @@ public partial interface IPage
     /// <para>
     /// An example with a custom callback on every actionability check. It uses a <c>&lt;body&gt;</c>
     /// locator that is always visible, so the handler is called before every actionability
-    /// check. It is important to specify <paramref name="noWaitAfter"/>, because the handler
-    /// does not hide the <c>&lt;body&gt;</c> element.
+    /// check. It is important to specify <see cref="IPage.AddLocatorHandlerAsync"/>, because
+    /// the handler does not hide the <c>&lt;body&gt;</c> element.
     /// </para>
     /// <code>
     /// // Setup the handler.<br/>
@@ -1745,7 +1862,7 @@ public partial interface IPage
     /// </code>
     /// <para>
     /// Handler takes the original locator as an argument. You can also automatically remove
-    /// the handler after a number of invocations by setting <paramref name="times"/>:
+    /// the handler after a number of invocations by setting <see cref="IPage.AddLocatorHandlerAsync"/>:
     /// </para>
     /// <code>
     /// await page.AddLocatorHandlerAsync(page.GetByText("Sign up to the newsletter"), async locator =&gt; {<br/>
@@ -1758,21 +1875,21 @@ public partial interface IPage
     /// Running the handler will alter your page state mid-test. For example it will change
     /// the currently focused element and move the mouse. Make sure that actions that run
     /// after the handler are self-contained and do not rely on the focus and mouse state
-    /// being unchanged. <br /> <br /> For example, consider a test that calls <see cref="ILocator.FocusAsync"/>
+    /// being unchanged.  For example, consider a test that calls <see cref="ILocator.FocusAsync"/>
     /// followed by <see cref="IKeyboard.PressAsync"/>. If your handler clicks a button
     /// between these two actions, the focused element most likely will be wrong, and key
     /// press will happen on the unexpected element. Use <see cref="ILocator.PressAsync"/>
-    /// instead to avoid this problem. <br /> <br /> Another example is a series of mouse
-    /// actions, where <see cref="IMouse.MoveAsync"/> is followed by <see cref="IMouse.DownAsync"/>.
-    /// Again, when the handler runs between these two actions, the mouse position will
-    /// be wrong during the mouse down. Prefer self-contained actions like <see cref="ILocator.ClickAsync"/>
+    /// instead to avoid this problem.  Another example is a series of mouse actions, where
+    /// <see cref="IMouse.MoveAsync"/> is followed by <see cref="IMouse.DownAsync"/>. Again,
+    /// when the handler runs between these two actions, the mouse position will be wrong
+    /// during the mouse down. Prefer self-contained actions like <see cref="ILocator.ClickAsync"/>
     /// that do not rely on the state being unchanged by a handler.
     /// </para>
     /// </remarks>
     /// <param name="locator">Locator that triggers the handler.</param>
     /// <param name="handler">
-    /// Function that should be run once <paramref name="locator"/> appears. This function
-    /// should get rid of the element that blocks actions like click.
+    /// Function that should be run once <see cref="IPage.AddLocatorHandlerAsync"/> appears.
+    /// This function should get rid of the element that blocks actions like click.
     /// </param>
     /// <param name="options">Call options</param>
     Task AddLocatorHandlerAsync(ILocator locator, Func<ILocator, Task> handler, PageAddLocatorHandlerOptions? options = default);
@@ -1811,6 +1928,17 @@ public partial interface IPage
     /// Once routing is enabled, every request matching the url pattern will stall unless
     /// it's continued, fulfilled or aborted.
     /// </para>
+    /// <para>The handler will only be called for the first url if the response is a redirect.</para>
+    /// <para>
+    /// <see cref="IPage.RouteAsync"/> will not intercept requests intercepted by Service
+    /// Worker. See <a href="https://github.com/microsoft/playwright/issues/1090">this</a>
+    /// issue. We recommend disabling Service Workers when using request interception by
+    /// setting <see cref="IBrowser.NewContextAsync"/> to <c>'block'</c>.
+    /// </para>
+    /// <para>
+    /// <see cref="IPage.RouteAsync"/> will not intercept the first request of a popup page.
+    /// Use <see cref="IBrowserContext.RouteAsync"/> instead.
+    /// </para>
     /// <para>**Usage**</para>
     /// <para>An example of a naive handler that aborts all image requests:</para>
     /// <code>
@@ -1842,14 +1970,18 @@ public partial interface IPage
     /// when request matches both handlers.
     /// </para>
     /// <para>To remove a route with its handler you can use <see cref="IPage.UnrouteAsync"/>.</para>
+    /// <para>Enabling routing disables http cache.</para>
     /// </summary>
     /// <remarks>
-    /// <para>The handler will only be called for the first url if the response is a redirect.</para>
+    /// <para>
+    /// The handler will only be called for the first url if the response is a redirect.
+    ///
+    /// </para>
     /// <para>
     /// <see cref="IPage.RouteAsync"/> will not intercept requests intercepted by Service
     /// Worker. See <a href="https://github.com/microsoft/playwright/issues/1090">this</a>
     /// issue. We recommend disabling Service Workers when using request interception by
-    /// setting <paramref name="Browser.newContext.serviceWorkers"/> to <c>'block'</c>.
+    /// setting <see cref="IBrowser.NewContextAsync"/> to <c>'block'</c>.
     /// </para>
     /// <para>
     /// <see cref="IPage.RouteAsync"/> will not intercept the first request of a popup page.
@@ -1859,8 +1991,8 @@ public partial interface IPage
     /// </remarks>
     /// <param name="url">
     /// A glob pattern, regex pattern or predicate receiving <see cref="URL"/> to match
-    /// while routing. When a <paramref name="baseURL"/> via the context options was provided
-    /// and the passed URL is a path, it gets merged via the <a href="https://developer.mozilla.org/en-US/docs/Web/API/URL/URL"><c>new
+    /// while routing. When a <see cref="IBrowser.NewContextAsync"/> via the context options
+    /// was provided and the passed URL is a path, it gets merged via the <a href="https://developer.mozilla.org/en-US/docs/Web/API/URL/URL"><c>new
     /// URL()</c></a> constructor.
     /// </param>
     /// <param name="handler">handler function to route the request.</param>
@@ -1873,6 +2005,17 @@ public partial interface IPage
     /// Once routing is enabled, every request matching the url pattern will stall unless
     /// it's continued, fulfilled or aborted.
     /// </para>
+    /// <para>The handler will only be called for the first url if the response is a redirect.</para>
+    /// <para>
+    /// <see cref="IPage.RouteAsync"/> will not intercept requests intercepted by Service
+    /// Worker. See <a href="https://github.com/microsoft/playwright/issues/1090">this</a>
+    /// issue. We recommend disabling Service Workers when using request interception by
+    /// setting <see cref="IBrowser.NewContextAsync"/> to <c>'block'</c>.
+    /// </para>
+    /// <para>
+    /// <see cref="IPage.RouteAsync"/> will not intercept the first request of a popup page.
+    /// Use <see cref="IBrowserContext.RouteAsync"/> instead.
+    /// </para>
     /// <para>**Usage**</para>
     /// <para>An example of a naive handler that aborts all image requests:</para>
     /// <code>
@@ -1904,14 +2047,18 @@ public partial interface IPage
     /// when request matches both handlers.
     /// </para>
     /// <para>To remove a route with its handler you can use <see cref="IPage.UnrouteAsync"/>.</para>
+    /// <para>Enabling routing disables http cache.</para>
     /// </summary>
     /// <remarks>
-    /// <para>The handler will only be called for the first url if the response is a redirect.</para>
+    /// <para>
+    /// The handler will only be called for the first url if the response is a redirect.
+    ///
+    /// </para>
     /// <para>
     /// <see cref="IPage.RouteAsync"/> will not intercept requests intercepted by Service
     /// Worker. See <a href="https://github.com/microsoft/playwright/issues/1090">this</a>
     /// issue. We recommend disabling Service Workers when using request interception by
-    /// setting <paramref name="Browser.newContext.serviceWorkers"/> to <c>'block'</c>.
+    /// setting <see cref="IBrowser.NewContextAsync"/> to <c>'block'</c>.
     /// </para>
     /// <para>
     /// <see cref="IPage.RouteAsync"/> will not intercept the first request of a popup page.
@@ -1921,8 +2068,8 @@ public partial interface IPage
     /// </remarks>
     /// <param name="url">
     /// A glob pattern, regex pattern or predicate receiving <see cref="URL"/> to match
-    /// while routing. When a <paramref name="baseURL"/> via the context options was provided
-    /// and the passed URL is a path, it gets merged via the <a href="https://developer.mozilla.org/en-US/docs/Web/API/URL/URL"><c>new
+    /// while routing. When a <see cref="IBrowser.NewContextAsync"/> via the context options
+    /// was provided and the passed URL is a path, it gets merged via the <a href="https://developer.mozilla.org/en-US/docs/Web/API/URL/URL"><c>new
     /// URL()</c></a> constructor.
     /// </param>
     /// <param name="handler">handler function to route the request.</param>
@@ -1935,6 +2082,17 @@ public partial interface IPage
     /// Once routing is enabled, every request matching the url pattern will stall unless
     /// it's continued, fulfilled or aborted.
     /// </para>
+    /// <para>The handler will only be called for the first url if the response is a redirect.</para>
+    /// <para>
+    /// <see cref="IPage.RouteAsync"/> will not intercept requests intercepted by Service
+    /// Worker. See <a href="https://github.com/microsoft/playwright/issues/1090">this</a>
+    /// issue. We recommend disabling Service Workers when using request interception by
+    /// setting <see cref="IBrowser.NewContextAsync"/> to <c>'block'</c>.
+    /// </para>
+    /// <para>
+    /// <see cref="IPage.RouteAsync"/> will not intercept the first request of a popup page.
+    /// Use <see cref="IBrowserContext.RouteAsync"/> instead.
+    /// </para>
     /// <para>**Usage**</para>
     /// <para>An example of a naive handler that aborts all image requests:</para>
     /// <code>
@@ -1966,14 +2124,18 @@ public partial interface IPage
     /// when request matches both handlers.
     /// </para>
     /// <para>To remove a route with its handler you can use <see cref="IPage.UnrouteAsync"/>.</para>
+    /// <para>Enabling routing disables http cache.</para>
     /// </summary>
     /// <remarks>
-    /// <para>The handler will only be called for the first url if the response is a redirect.</para>
+    /// <para>
+    /// The handler will only be called for the first url if the response is a redirect.
+    ///
+    /// </para>
     /// <para>
     /// <see cref="IPage.RouteAsync"/> will not intercept requests intercepted by Service
     /// Worker. See <a href="https://github.com/microsoft/playwright/issues/1090">this</a>
     /// issue. We recommend disabling Service Workers when using request interception by
-    /// setting <paramref name="Browser.newContext.serviceWorkers"/> to <c>'block'</c>.
+    /// setting <see cref="IBrowser.NewContextAsync"/> to <c>'block'</c>.
     /// </para>
     /// <para>
     /// <see cref="IPage.RouteAsync"/> will not intercept the first request of a popup page.
@@ -1983,8 +2145,8 @@ public partial interface IPage
     /// </remarks>
     /// <param name="url">
     /// A glob pattern, regex pattern or predicate receiving <see cref="URL"/> to match
-    /// while routing. When a <paramref name="baseURL"/> via the context options was provided
-    /// and the passed URL is a path, it gets merged via the <a href="https://developer.mozilla.org/en-US/docs/Web/API/URL/URL"><c>new
+    /// while routing. When a <see cref="IBrowser.NewContextAsync"/> via the context options
+    /// was provided and the passed URL is a path, it gets merged via the <a href="https://developer.mozilla.org/en-US/docs/Web/API/URL/URL"><c>new
     /// URL()</c></a> constructor.
     /// </param>
     /// <param name="handler">handler function to route the request.</param>
@@ -2001,7 +2163,7 @@ public partial interface IPage
     /// Playwright will not serve requests intercepted by Service Worker from the HAR file.
     /// See <a href="https://github.com/microsoft/playwright/issues/1090">this</a> issue.
     /// We recommend disabling Service Workers when using request interception by setting
-    /// <paramref name="Browser.newContext.serviceWorkers"/> to <c>'block'</c>.
+    /// <see cref="IBrowser.NewContextAsync"/> to <c>'block'</c>.
     /// </para>
     /// </summary>
     /// <param name="har">
@@ -2011,6 +2173,87 @@ public partial interface IPage
     /// </param>
     /// <param name="options">Call options</param>
     Task RouteFromHARAsync(string har, PageRouteFromHAROptions? options = default);
+
+    /// <summary>
+    /// <para>This method allows to modify websocket connections that are made by the page.</para>
+    /// <para>
+    /// Note that only <c>WebSocket</c>s created after this method was called will be routed.
+    /// It is recommended to call this method before navigating the page.
+    /// </para>
+    /// <para>**Usage**</para>
+    /// <para>
+    /// Below is an example of a simple mock that responds to a single message. See <see
+    /// cref="IWebSocketRoute"/> for more details and examples.
+    /// </para>
+    /// <code>
+    /// await page.RouteWebSocketAsync("/ws", ws =&gt; {<br/>
+    ///   ws.OnMessage(message =&gt; {<br/>
+    ///     if (message == "request")<br/>
+    ///       ws.Send("response");<br/>
+    ///   });<br/>
+    /// });
+    /// </code>
+    /// </summary>
+    /// <param name="url">
+    /// Only WebSockets with the url matching this pattern will be routed. A string pattern
+    /// can be relative to the <see cref="IBrowser.NewContextAsync"/> context option.
+    /// </param>
+    /// <param name="handler">Handler function to route the WebSocket.</param>
+    Task RouteWebSocketAsync(string url, Action<IWebSocketRoute> handler);
+
+    /// <summary>
+    /// <para>This method allows to modify websocket connections that are made by the page.</para>
+    /// <para>
+    /// Note that only <c>WebSocket</c>s created after this method was called will be routed.
+    /// It is recommended to call this method before navigating the page.
+    /// </para>
+    /// <para>**Usage**</para>
+    /// <para>
+    /// Below is an example of a simple mock that responds to a single message. See <see
+    /// cref="IWebSocketRoute"/> for more details and examples.
+    /// </para>
+    /// <code>
+    /// await page.RouteWebSocketAsync("/ws", ws =&gt; {<br/>
+    ///   ws.OnMessage(message =&gt; {<br/>
+    ///     if (message == "request")<br/>
+    ///       ws.Send("response");<br/>
+    ///   });<br/>
+    /// });
+    /// </code>
+    /// </summary>
+    /// <param name="url">
+    /// Only WebSockets with the url matching this pattern will be routed. A string pattern
+    /// can be relative to the <see cref="IBrowser.NewContextAsync"/> context option.
+    /// </param>
+    /// <param name="handler">Handler function to route the WebSocket.</param>
+    Task RouteWebSocketAsync(Regex url, Action<IWebSocketRoute> handler);
+
+    /// <summary>
+    /// <para>This method allows to modify websocket connections that are made by the page.</para>
+    /// <para>
+    /// Note that only <c>WebSocket</c>s created after this method was called will be routed.
+    /// It is recommended to call this method before navigating the page.
+    /// </para>
+    /// <para>**Usage**</para>
+    /// <para>
+    /// Below is an example of a simple mock that responds to a single message. See <see
+    /// cref="IWebSocketRoute"/> for more details and examples.
+    /// </para>
+    /// <code>
+    /// await page.RouteWebSocketAsync("/ws", ws =&gt; {<br/>
+    ///   ws.OnMessage(message =&gt; {<br/>
+    ///     if (message == "request")<br/>
+    ///       ws.Send("response");<br/>
+    ///   });<br/>
+    /// });
+    /// </code>
+    /// </summary>
+    /// <param name="url">
+    /// Only WebSockets with the url matching this pattern will be routed. A string pattern
+    /// can be relative to the <see cref="IBrowser.NewContextAsync"/> context option.
+    /// </param>
+    /// <param name="handler">Handler function to route the WebSocket.</param>
+    Task RouteWebSocketAsync(Func<string, bool> url, Action<IWebSocketRoute> handler);
 
     /// <summary><para>Returns the buffer with the captured screenshot.</para></summary>
     /// <param name="options">Call options</param>
@@ -2022,10 +2265,10 @@ public partial interface IPage
     /// <a href="https://playwright.dev/dotnet/docs/locators">locators</a>.
     /// </para>
     /// <para>
-    /// This method waits for an element matching <paramref name="selector"/>, waits for
-    /// <a href="https://playwright.dev/dotnet/docs/actionability">actionability</a> checks,
-    /// waits until all specified options are present in the <c>&lt;select&gt;</c> element
-    /// and selects these options.
+    /// This method waits for an element matching <see cref="IPage.SelectOptionAsync"/>,
+    /// waits for <a href="https://playwright.dev/dotnet/docs/actionability">actionability</a>
+    /// checks, waits until all specified options are present in the <c>&lt;select&gt;</c>
+    /// element and selects these options.
     /// </para>
     /// <para>
     /// If the target element is not a <c>&lt;select&gt;</c> element, this method throws
@@ -2067,10 +2310,10 @@ public partial interface IPage
     /// <a href="https://playwright.dev/dotnet/docs/locators">locators</a>.
     /// </para>
     /// <para>
-    /// This method waits for an element matching <paramref name="selector"/>, waits for
-    /// <a href="https://playwright.dev/dotnet/docs/actionability">actionability</a> checks,
-    /// waits until all specified options are present in the <c>&lt;select&gt;</c> element
-    /// and selects these options.
+    /// This method waits for an element matching <see cref="IPage.SelectOptionAsync"/>,
+    /// waits for <a href="https://playwright.dev/dotnet/docs/actionability">actionability</a>
+    /// checks, waits until all specified options are present in the <c>&lt;select&gt;</c>
+    /// element and selects these options.
     /// </para>
     /// <para>
     /// If the target element is not a <c>&lt;select&gt;</c> element, this method throws
@@ -2112,10 +2355,10 @@ public partial interface IPage
     /// <a href="https://playwright.dev/dotnet/docs/locators">locators</a>.
     /// </para>
     /// <para>
-    /// This method waits for an element matching <paramref name="selector"/>, waits for
-    /// <a href="https://playwright.dev/dotnet/docs/actionability">actionability</a> checks,
-    /// waits until all specified options are present in the <c>&lt;select&gt;</c> element
-    /// and selects these options.
+    /// This method waits for an element matching <see cref="IPage.SelectOptionAsync"/>,
+    /// waits for <a href="https://playwright.dev/dotnet/docs/actionability">actionability</a>
+    /// checks, waits until all specified options are present in the <c>&lt;select&gt;</c>
+    /// element and selects these options.
     /// </para>
     /// <para>
     /// If the target element is not a <c>&lt;select&gt;</c> element, this method throws
@@ -2157,10 +2400,10 @@ public partial interface IPage
     /// <a href="https://playwright.dev/dotnet/docs/locators">locators</a>.
     /// </para>
     /// <para>
-    /// This method waits for an element matching <paramref name="selector"/>, waits for
-    /// <a href="https://playwright.dev/dotnet/docs/actionability">actionability</a> checks,
-    /// waits until all specified options are present in the <c>&lt;select&gt;</c> element
-    /// and selects these options.
+    /// This method waits for an element matching <see cref="IPage.SelectOptionAsync"/>,
+    /// waits for <a href="https://playwright.dev/dotnet/docs/actionability">actionability</a>
+    /// checks, waits until all specified options are present in the <c>&lt;select&gt;</c>
+    /// element and selects these options.
     /// </para>
     /// <para>
     /// If the target element is not a <c>&lt;select&gt;</c> element, this method throws
@@ -2202,10 +2445,10 @@ public partial interface IPage
     /// <a href="https://playwright.dev/dotnet/docs/locators">locators</a>.
     /// </para>
     /// <para>
-    /// This method waits for an element matching <paramref name="selector"/>, waits for
-    /// <a href="https://playwright.dev/dotnet/docs/actionability">actionability</a> checks,
-    /// waits until all specified options are present in the <c>&lt;select&gt;</c> element
-    /// and selects these options.
+    /// This method waits for an element matching <see cref="IPage.SelectOptionAsync"/>,
+    /// waits for <a href="https://playwright.dev/dotnet/docs/actionability">actionability</a>
+    /// checks, waits until all specified options are present in the <c>&lt;select&gt;</c>
+    /// element and selects these options.
     /// </para>
     /// <para>
     /// If the target element is not a <c>&lt;select&gt;</c> element, this method throws
@@ -2247,10 +2490,10 @@ public partial interface IPage
     /// <a href="https://playwright.dev/dotnet/docs/locators">locators</a>.
     /// </para>
     /// <para>
-    /// This method waits for an element matching <paramref name="selector"/>, waits for
-    /// <a href="https://playwright.dev/dotnet/docs/actionability">actionability</a> checks,
-    /// waits until all specified options are present in the <c>&lt;select&gt;</c> element
-    /// and selects these options.
+    /// This method waits for an element matching <see cref="IPage.SelectOptionAsync"/>,
+    /// waits for <a href="https://playwright.dev/dotnet/docs/actionability">actionability</a>
+    /// checks, waits until all specified options are present in the <c>&lt;select&gt;</c>
+    /// element and selects these options.
     /// </para>
     /// <para>
     /// If the target element is not a <c>&lt;select&gt;</c> element, this method throws
@@ -2292,13 +2535,13 @@ public partial interface IPage
     /// <a href="https://playwright.dev/dotnet/docs/locators">locators</a>.
     /// </para>
     /// <para>
-    /// This method checks or unchecks an element matching <paramref name="selector"/> by
-    /// performing the following steps:
+    /// This method checks or unchecks an element matching <see cref="IPage.SetCheckedAsync"/>
+    /// by performing the following steps:
     /// </para>
     /// <list type="ordinal">
     /// <item><description>
-    /// Find an element matching <paramref name="selector"/>. If there is none, wait until
-    /// a matching element is attached to the DOM.
+    /// Find an element matching <see cref="IPage.SetCheckedAsync"/>. If there is none,
+    /// wait until a matching element is attached to the DOM.
     /// </description></item>
     /// <item><description>
     /// Ensure that matched element is a checkbox or a radio input. If not, this method
@@ -2307,15 +2550,15 @@ public partial interface IPage
     /// <item><description>If the element already has the right checked state, this method returns immediately.</description></item>
     /// <item><description>
     /// Wait for <a href="https://playwright.dev/dotnet/docs/actionability">actionability</a>
-    /// checks on the matched element, unless <paramref name="force"/> option is set. If
-    /// the element is detached during the checks, the whole action is retried.
+    /// checks on the matched element, unless <see cref="IPage.SetCheckedAsync"/> option
+    /// is set. If the element is detached during the checks, the whole action is retried.
     /// </description></item>
     /// <item><description>Scroll the element into view if needed.</description></item>
     /// <item><description>Use <see cref="IPage.Mouse"/> to click in the center of the element.</description></item>
     /// <item><description>Ensure that the element is now checked or unchecked. If not, this method throws.</description></item>
     /// </list>
     /// <para>
-    /// When all steps combined have not finished during the specified <paramref name="timeout"/>,
+    /// When all steps combined have not finished during the specified <see cref="IPage.SetCheckedAsync"/>,
     /// this method throws a <see cref="TimeoutException"/>. Passing zero timeout disables
     /// this.
     /// </para>
@@ -2352,11 +2595,16 @@ public partial interface IPage
     /// <item><description><see cref="IPage.RunAndWaitForNavigationAsync"/></description></item>
     /// <item><description><see cref="IPage.WaitForURLAsync"/></description></item>
     /// </list>
+    /// <para>
+    /// <see cref="IPage.SetDefaultNavigationTimeout"/> takes priority over <see cref="IPage.SetDefaultTimeout"/>,
+    /// <see cref="IBrowserContext.SetDefaultTimeout"/> and <see cref="IBrowserContext.SetDefaultNavigationTimeout"/>.
+    /// </para>
     /// </summary>
     /// <remarks>
     /// <para>
     /// <see cref="IPage.SetDefaultNavigationTimeout"/> takes priority over <see cref="IPage.SetDefaultTimeout"/>,
     /// <see cref="IBrowserContext.SetDefaultTimeout"/> and <see cref="IBrowserContext.SetDefaultNavigationTimeout"/>.
+    ///
     /// </para>
     /// </remarks>
     /// <param name="timeout">Maximum navigation time in milliseconds</param>
@@ -2365,14 +2613,26 @@ public partial interface IPage
     /// <summary>
     /// <para>
     /// This setting will change the default maximum time for all the methods accepting
-    /// <paramref name="timeout"/> option.
+    /// <see cref="IPage.SetDefaultTimeout"/> option.
     /// </para>
+    /// <para><see cref="IPage.SetDefaultNavigationTimeout"/> takes priority over <see cref="IPage.SetDefaultTimeout"/>.</para>
     /// </summary>
-    /// <remarks><para><see cref="IPage.SetDefaultNavigationTimeout"/> takes priority over <see cref="IPage.SetDefaultTimeout"/>.</para></remarks>
+    /// <remarks>
+    /// <para>
+    /// <see cref="IPage.SetDefaultNavigationTimeout"/> takes priority over <see cref="IPage.SetDefaultTimeout"/>.
+    ///
+    /// </para>
+    /// </remarks>
     /// <param name="timeout">Maximum time in milliseconds</param>
     void SetDefaultTimeout(float timeout);
 
-    /// <summary><para>The extra HTTP headers will be sent with every request the page initiates.</para></summary>
+    /// <summary>
+    /// <para>The extra HTTP headers will be sent with every request the page initiates.</para>
+    /// <para>
+    /// <see cref="IPage.SetExtraHTTPHeadersAsync"/> does not guarantee the order of headers
+    /// in the outgoing requests.
+    /// </para>
+    /// </summary>
     /// <remarks>
     /// <para>
     /// <see cref="IPage.SetExtraHTTPHeadersAsync"/> does not guarantee the order of headers
@@ -2397,7 +2657,7 @@ public partial interface IPage
     /// attribute, only a single directory path is supported.
     /// </para>
     /// <para>
-    /// This method expects <paramref name="selector"/> to point to an <a href="https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input">input
+    /// This method expects <see cref="IPage.SetInputFilesAsync"/> to point to an <a href="https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input">input
     /// element</a>. However, if the element is inside the <c>&lt;label&gt;</c> element
     /// that has an associated <a href="https://developer.mozilla.org/en-US/docs/Web/API/HTMLLabelElement/control">control</a>,
     /// targets the control instead.
@@ -2424,7 +2684,7 @@ public partial interface IPage
     /// attribute, only a single directory path is supported.
     /// </para>
     /// <para>
-    /// This method expects <paramref name="selector"/> to point to an <a href="https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input">input
+    /// This method expects <see cref="IPage.SetInputFilesAsync"/> to point to an <a href="https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input">input
     /// element</a>. However, if the element is inside the <c>&lt;label&gt;</c> element
     /// that has an associated <a href="https://developer.mozilla.org/en-US/docs/Web/API/HTMLLabelElement/control">control</a>,
     /// targets the control instead.
@@ -2451,7 +2711,7 @@ public partial interface IPage
     /// attribute, only a single directory path is supported.
     /// </para>
     /// <para>
-    /// This method expects <paramref name="selector"/> to point to an <a href="https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input">input
+    /// This method expects <see cref="IPage.SetInputFilesAsync"/> to point to an <a href="https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input">input
     /// element</a>. However, if the element is inside the <c>&lt;label&gt;</c> element
     /// that has an associated <a href="https://developer.mozilla.org/en-US/docs/Web/API/HTMLLabelElement/control">control</a>,
     /// targets the control instead.
@@ -2478,7 +2738,7 @@ public partial interface IPage
     /// attribute, only a single directory path is supported.
     /// </para>
     /// <para>
-    /// This method expects <paramref name="selector"/> to point to an <a href="https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input">input
+    /// This method expects <see cref="IPage.SetInputFilesAsync"/> to point to an <a href="https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input">input
     /// element</a>. However, if the element is inside the <c>&lt;label&gt;</c> element
     /// that has an associated <a href="https://developer.mozilla.org/en-US/docs/Web/API/HTMLLabelElement/control">control</a>,
     /// targets the control instead.
@@ -2513,43 +2773,45 @@ public partial interface IPage
     /// await page.GotoAsync("https://www.microsoft.com");
     /// </code>
     /// </summary>
-    /// <param name="width">
-    /// </param>
-    /// <param name="height">
-    /// </param>
+    /// <param name="width">Page width in pixels.</param>
+    /// <param name="height">Page height in pixels.</param>
     Task SetViewportSizeAsync(int width, int height);
 
     /// <summary>
     /// <para>Use locator-based <see cref="ILocator.TapAsync"/> instead. Read more about <a href="https://playwright.dev/dotnet/docs/locators">locators</a>.</para>
     /// <para>
-    /// This method taps an element matching <paramref name="selector"/> by performing the
-    /// following steps:
+    /// This method taps an element matching <see cref="IPage.TapAsync"/> by performing
+    /// the following steps:
     /// </para>
     /// <list type="ordinal">
     /// <item><description>
-    /// Find an element matching <paramref name="selector"/>. If there is none, wait until
+    /// Find an element matching <see cref="IPage.TapAsync"/>. If there is none, wait until
     /// a matching element is attached to the DOM.
     /// </description></item>
     /// <item><description>
     /// Wait for <a href="https://playwright.dev/dotnet/docs/actionability">actionability</a>
-    /// checks on the matched element, unless <paramref name="force"/> option is set. If
-    /// the element is detached during the checks, the whole action is retried.
+    /// checks on the matched element, unless <see cref="IPage.TapAsync"/> option is set.
+    /// If the element is detached during the checks, the whole action is retried.
     /// </description></item>
     /// <item><description>Scroll the element into view if needed.</description></item>
     /// <item><description>
     /// Use <see cref="IPage.Touchscreen"/> to tap the center of the element, or the specified
-    /// <paramref name="position"/>.
+    /// <see cref="IPage.TapAsync"/>.
     /// </description></item>
     /// </list>
     /// <para>
-    /// When all steps combined have not finished during the specified <paramref name="timeout"/>,
+    /// When all steps combined have not finished during the specified <see cref="IPage.TapAsync"/>,
     /// this method throws a <see cref="TimeoutException"/>. Passing zero timeout disables
     /// this.
+    /// </para>
+    /// <para>
+    /// <see cref="IPage.TapAsync"/> the method will throw if <see cref="IBrowser.NewContextAsync"/>
+    /// option of the browser context is false.
     /// </para>
     /// </summary>
     /// <remarks>
     /// <para>
-    /// <see cref="IPage.TapAsync"/> the method will throw if <paramref name="hasTouch"/>
+    /// <see cref="IPage.TapAsync"/> the method will throw if <see cref="IBrowser.NewContextAsync"/>
     /// option of the browser context is false.
     /// </para>
     /// </remarks>
@@ -2608,13 +2870,13 @@ public partial interface IPage
     /// href="https://playwright.dev/dotnet/docs/locators">locators</a>.
     /// </para>
     /// <para>
-    /// This method unchecks an element matching <paramref name="selector"/> by performing
+    /// This method unchecks an element matching <see cref="IPage.UncheckAsync"/> by performing
     /// the following steps:
     /// </para>
     /// <list type="ordinal">
     /// <item><description>
-    /// Find an element matching <paramref name="selector"/>. If there is none, wait until
-    /// a matching element is attached to the DOM.
+    /// Find an element matching <see cref="IPage.UncheckAsync"/>. If there is none, wait
+    /// until a matching element is attached to the DOM.
     /// </description></item>
     /// <item><description>
     /// Ensure that matched element is a checkbox or a radio input. If not, this method
@@ -2622,15 +2884,15 @@ public partial interface IPage
     /// </description></item>
     /// <item><description>
     /// Wait for <a href="https://playwright.dev/dotnet/docs/actionability">actionability</a>
-    /// checks on the matched element, unless <paramref name="force"/> option is set. If
-    /// the element is detached during the checks, the whole action is retried.
+    /// checks on the matched element, unless <see cref="IPage.UncheckAsync"/> option is
+    /// set. If the element is detached during the checks, the whole action is retried.
     /// </description></item>
     /// <item><description>Scroll the element into view if needed.</description></item>
     /// <item><description>Use <see cref="IPage.Mouse"/> to click in the center of the element.</description></item>
     /// <item><description>Ensure that the element is now unchecked. If not, this method throws.</description></item>
     /// </list>
     /// <para>
-    /// When all steps combined have not finished during the specified <paramref name="timeout"/>,
+    /// When all steps combined have not finished during the specified <see cref="IPage.UncheckAsync"/>,
     /// this method throws a <see cref="TimeoutException"/>. Passing zero timeout disables
     /// this.
     /// </para>
@@ -2648,8 +2910,8 @@ public partial interface IPage
 
     /// <summary>
     /// <para>
-    /// Removes a route created with <see cref="IPage.RouteAsync"/>. When <paramref name="handler"/>
-    /// is not specified, removes all routes for the <paramref name="url"/>.
+    /// Removes a route created with <see cref="IPage.RouteAsync"/>. When <see cref="IPage.UnrouteAsync"/>
+    /// is not specified, removes all routes for the <see cref="IPage.UnrouteAsync"/>.
     /// </para>
     /// </summary>
     /// <param name="url">
@@ -2661,8 +2923,8 @@ public partial interface IPage
 
     /// <summary>
     /// <para>
-    /// Removes a route created with <see cref="IPage.RouteAsync"/>. When <paramref name="handler"/>
-    /// is not specified, removes all routes for the <paramref name="url"/>.
+    /// Removes a route created with <see cref="IPage.RouteAsync"/>. When <see cref="IPage.UnrouteAsync"/>
+    /// is not specified, removes all routes for the <see cref="IPage.UnrouteAsync"/>.
     /// </para>
     /// </summary>
     /// <param name="url">
@@ -2674,8 +2936,8 @@ public partial interface IPage
 
     /// <summary>
     /// <para>
-    /// Removes a route created with <see cref="IPage.RouteAsync"/>. When <paramref name="handler"/>
-    /// is not specified, removes all routes for the <paramref name="url"/>.
+    /// Removes a route created with <see cref="IPage.RouteAsync"/>. When <see cref="IPage.UnrouteAsync"/>
+    /// is not specified, removes all routes for the <see cref="IPage.UnrouteAsync"/>.
     /// </para>
     /// </summary>
     /// <param name="url">
@@ -2765,8 +3027,8 @@ public partial interface IPage
 
     /// <summary>
     /// <para>
-    /// Returns when the <paramref name="expression"/> returns a truthy value. It resolves
-    /// to a JSHandle of the truthy value.
+    /// Returns when the <see cref="IPage.WaitForFunctionAsync"/> returns a truthy value.
+    /// It resolves to a JSHandle of the truthy value.
     /// </para>
     /// <para>**Usage**</para>
     /// <para>
@@ -2802,7 +3064,7 @@ public partial interface IPage
     /// JavaScript expression to be evaluated in the browser context. If the expression
     /// evaluates to a function, the function is automatically invoked.
     /// </param>
-    /// <param name="arg">Optional argument to pass to <paramref name="expression"/>.</param>
+    /// <param name="arg">Optional argument to pass to <see cref="IPage.WaitForFunctionAsync"/>.</param>
     /// <param name="options">Call options</param>
     Task<IJSHandle> WaitForFunctionAsync(string expression, object? arg = default, PageWaitForFunctionOptions? options = default);
 
@@ -2812,6 +3074,10 @@ public partial interface IPage
     /// This resolves when the page reaches a required load state, <c>load</c> by default.
     /// The navigation must have been committed when this method is called. If current document
     /// has already reached the required state, resolves immediately.
+    /// </para>
+    /// <para>
+    /// Most of the time, this method is not needed because Playwright <a href="https://playwright.dev/dotnet/docs/actionability">auto-waits
+    /// before every action</a>.
     /// </para>
     /// <para>**Usage**</para>
     /// <code>
@@ -2878,6 +3144,10 @@ public partial interface IPage
     /// <br/>
     /// // The method continues after navigation has finished
     /// </code>
+    /// <para>
+    /// Usage of the <a href="https://developer.mozilla.org/en-US/docs/Web/API/History_API">History
+    /// API</a> to change the URL is considered a navigation.
+    /// </para>
     /// </summary>
     /// <remarks>
     /// <para>
@@ -2916,6 +3186,10 @@ public partial interface IPage
     /// <br/>
     /// // The method continues after navigation has finished
     /// </code>
+    /// <para>
+    /// Usage of the <a href="https://developer.mozilla.org/en-US/docs/Web/API/History_API">History
+    /// API</a> to change the URL is considered a navigation.
+    /// </para>
     /// </summary>
     /// <remarks>
     /// <para>
@@ -2973,8 +3247,8 @@ public partial interface IPage
     /// </summary>
     /// <param name="urlOrPredicate">
     /// Request URL string, regex or predicate receiving <see cref="IRequest"/> object.
-    /// When a <paramref name="baseURL"/> via the context options was provided and the passed
-    /// URL is a path, it gets merged via the <a href="https://developer.mozilla.org/en-US/docs/Web/API/URL/URL"><c>new
+    /// When a <see cref="IBrowser.NewContextAsync"/> via the context options was provided
+    /// and the passed URL is a path, it gets merged via the <a href="https://developer.mozilla.org/en-US/docs/Web/API/URL/URL"><c>new
     /// URL()</c></a> constructor.
     /// </param>
     /// <param name="options">Call options</param>
@@ -3002,8 +3276,8 @@ public partial interface IPage
     /// </summary>
     /// <param name="urlOrPredicate">
     /// Request URL string, regex or predicate receiving <see cref="IRequest"/> object.
-    /// When a <paramref name="baseURL"/> via the context options was provided and the passed
-    /// URL is a path, it gets merged via the <a href="https://developer.mozilla.org/en-US/docs/Web/API/URL/URL"><c>new
+    /// When a <see cref="IBrowser.NewContextAsync"/> via the context options was provided
+    /// and the passed URL is a path, it gets merged via the <a href="https://developer.mozilla.org/en-US/docs/Web/API/URL/URL"><c>new
     /// URL()</c></a> constructor.
     /// </param>
     /// <param name="options">Call options</param>
@@ -3031,8 +3305,8 @@ public partial interface IPage
     /// </summary>
     /// <param name="urlOrPredicate">
     /// Request URL string, regex or predicate receiving <see cref="IRequest"/> object.
-    /// When a <paramref name="baseURL"/> via the context options was provided and the passed
-    /// URL is a path, it gets merged via the <a href="https://developer.mozilla.org/en-US/docs/Web/API/URL/URL"><c>new
+    /// When a <see cref="IBrowser.NewContextAsync"/> via the context options was provided
+    /// and the passed URL is a path, it gets merged via the <a href="https://developer.mozilla.org/en-US/docs/Web/API/URL/URL"><c>new
     /// URL()</c></a> constructor.
     /// </param>
     /// <param name="options">Call options</param>
@@ -3061,8 +3335,8 @@ public partial interface IPage
     /// <param name="action">Action that triggers the event.</param>
     /// <param name="urlOrPredicate">
     /// Request URL string, regex or predicate receiving <see cref="IRequest"/> object.
-    /// When a <paramref name="baseURL"/> via the context options was provided and the passed
-    /// URL is a path, it gets merged via the <a href="https://developer.mozilla.org/en-US/docs/Web/API/URL/URL"><c>new
+    /// When a <see cref="IBrowser.NewContextAsync"/> via the context options was provided
+    /// and the passed URL is a path, it gets merged via the <a href="https://developer.mozilla.org/en-US/docs/Web/API/URL/URL"><c>new
     /// URL()</c></a> constructor.
     /// </param>
     /// <param name="options">Call options</param>
@@ -3091,8 +3365,8 @@ public partial interface IPage
     /// <param name="action">Action that triggers the event.</param>
     /// <param name="urlOrPredicate">
     /// Request URL string, regex or predicate receiving <see cref="IRequest"/> object.
-    /// When a <paramref name="baseURL"/> via the context options was provided and the passed
-    /// URL is a path, it gets merged via the <a href="https://developer.mozilla.org/en-US/docs/Web/API/URL/URL"><c>new
+    /// When a <see cref="IBrowser.NewContextAsync"/> via the context options was provided
+    /// and the passed URL is a path, it gets merged via the <a href="https://developer.mozilla.org/en-US/docs/Web/API/URL/URL"><c>new
     /// URL()</c></a> constructor.
     /// </param>
     /// <param name="options">Call options</param>
@@ -3121,8 +3395,8 @@ public partial interface IPage
     /// <param name="action">Action that triggers the event.</param>
     /// <param name="urlOrPredicate">
     /// Request URL string, regex or predicate receiving <see cref="IRequest"/> object.
-    /// When a <paramref name="baseURL"/> via the context options was provided and the passed
-    /// URL is a path, it gets merged via the <a href="https://developer.mozilla.org/en-US/docs/Web/API/URL/URL"><c>new
+    /// When a <see cref="IBrowser.NewContextAsync"/> via the context options was provided
+    /// and the passed URL is a path, it gets merged via the <a href="https://developer.mozilla.org/en-US/docs/Web/API/URL/URL"><c>new
     /// URL()</c></a> constructor.
     /// </param>
     /// <param name="options">Call options</param>
@@ -3175,8 +3449,8 @@ public partial interface IPage
     /// </summary>
     /// <param name="urlOrPredicate">
     /// Request URL string, regex or predicate receiving <see cref="IResponse"/> object.
-    /// When a <paramref name="baseURL"/> via the context options was provided and the passed
-    /// URL is a path, it gets merged via the <a href="https://developer.mozilla.org/en-US/docs/Web/API/URL/URL"><c>new
+    /// When a <see cref="IBrowser.NewContextAsync"/> via the context options was provided
+    /// and the passed URL is a path, it gets merged via the <a href="https://developer.mozilla.org/en-US/docs/Web/API/URL/URL"><c>new
     /// URL()</c></a> constructor.
     /// </param>
     /// <param name="options">Call options</param>
@@ -3204,8 +3478,8 @@ public partial interface IPage
     /// </summary>
     /// <param name="urlOrPredicate">
     /// Request URL string, regex or predicate receiving <see cref="IResponse"/> object.
-    /// When a <paramref name="baseURL"/> via the context options was provided and the passed
-    /// URL is a path, it gets merged via the <a href="https://developer.mozilla.org/en-US/docs/Web/API/URL/URL"><c>new
+    /// When a <see cref="IBrowser.NewContextAsync"/> via the context options was provided
+    /// and the passed URL is a path, it gets merged via the <a href="https://developer.mozilla.org/en-US/docs/Web/API/URL/URL"><c>new
     /// URL()</c></a> constructor.
     /// </param>
     /// <param name="options">Call options</param>
@@ -3233,8 +3507,8 @@ public partial interface IPage
     /// </summary>
     /// <param name="urlOrPredicate">
     /// Request URL string, regex or predicate receiving <see cref="IResponse"/> object.
-    /// When a <paramref name="baseURL"/> via the context options was provided and the passed
-    /// URL is a path, it gets merged via the <a href="https://developer.mozilla.org/en-US/docs/Web/API/URL/URL"><c>new
+    /// When a <see cref="IBrowser.NewContextAsync"/> via the context options was provided
+    /// and the passed URL is a path, it gets merged via the <a href="https://developer.mozilla.org/en-US/docs/Web/API/URL/URL"><c>new
     /// URL()</c></a> constructor.
     /// </param>
     /// <param name="options">Call options</param>
@@ -3263,8 +3537,8 @@ public partial interface IPage
     /// <param name="action">Action that triggers the event.</param>
     /// <param name="urlOrPredicate">
     /// Request URL string, regex or predicate receiving <see cref="IResponse"/> object.
-    /// When a <paramref name="baseURL"/> via the context options was provided and the passed
-    /// URL is a path, it gets merged via the <a href="https://developer.mozilla.org/en-US/docs/Web/API/URL/URL"><c>new
+    /// When a <see cref="IBrowser.NewContextAsync"/> via the context options was provided
+    /// and the passed URL is a path, it gets merged via the <a href="https://developer.mozilla.org/en-US/docs/Web/API/URL/URL"><c>new
     /// URL()</c></a> constructor.
     /// </param>
     /// <param name="options">Call options</param>
@@ -3293,8 +3567,8 @@ public partial interface IPage
     /// <param name="action">Action that triggers the event.</param>
     /// <param name="urlOrPredicate">
     /// Request URL string, regex or predicate receiving <see cref="IResponse"/> object.
-    /// When a <paramref name="baseURL"/> via the context options was provided and the passed
-    /// URL is a path, it gets merged via the <a href="https://developer.mozilla.org/en-US/docs/Web/API/URL/URL"><c>new
+    /// When a <see cref="IBrowser.NewContextAsync"/> via the context options was provided
+    /// and the passed URL is a path, it gets merged via the <a href="https://developer.mozilla.org/en-US/docs/Web/API/URL/URL"><c>new
     /// URL()</c></a> constructor.
     /// </param>
     /// <param name="options">Call options</param>
@@ -3323,8 +3597,8 @@ public partial interface IPage
     /// <param name="action">Action that triggers the event.</param>
     /// <param name="urlOrPredicate">
     /// Request URL string, regex or predicate receiving <see cref="IResponse"/> object.
-    /// When a <paramref name="baseURL"/> via the context options was provided and the passed
-    /// URL is a path, it gets merged via the <a href="https://developer.mozilla.org/en-US/docs/Web/API/URL/URL"><c>new
+    /// When a <see cref="IBrowser.NewContextAsync"/> via the context options was provided
+    /// and the passed URL is a path, it gets merged via the <a href="https://developer.mozilla.org/en-US/docs/Web/API/URL/URL"><c>new
     /// URL()</c></a> constructor.
     /// </param>
     /// <param name="options">Call options</param>
@@ -3336,15 +3610,20 @@ public partial interface IPage
     /// instead. Read more about <a href="https://playwright.dev/dotnet/docs/locators">locators</a>.
     /// </para>
     /// <para>
-    /// Returns when element specified by selector satisfies <paramref name="state"/> option.
-    /// Returns <c>null</c> if waiting for <c>hidden</c> or <c>detached</c>.
+    /// Returns when element specified by selector satisfies <see cref="IPage.WaitForSelectorAsync"/>
+    /// option. Returns <c>null</c> if waiting for <c>hidden</c> or <c>detached</c>.
     /// </para>
     /// <para>
-    /// Wait for the <paramref name="selector"/> to satisfy <paramref name="state"/> option
-    /// (either appear/disappear from dom, or become visible/hidden). If at the moment of
-    /// calling the method <paramref name="selector"/> already satisfies the condition,
-    /// the method will return immediately. If the selector doesn't satisfy the condition
-    /// for the <paramref name="timeout"/> milliseconds, the function will throw.
+    /// Playwright automatically waits for element to be ready before performing an action.
+    /// Using <see cref="ILocator"/> objects and web-first assertions makes the code wait-for-selector-free.
+    /// </para>
+    /// <para>
+    /// Wait for the <see cref="IPage.WaitForSelectorAsync"/> to satisfy <see cref="IPage.WaitForSelectorAsync"/>
+    /// option (either appear/disappear from dom, or become visible/hidden). If at the moment
+    /// of calling the method <see cref="IPage.WaitForSelectorAsync"/> already satisfies
+    /// the condition, the method will return immediately. If the selector doesn't satisfy
+    /// the condition for the <see cref="IPage.WaitForSelectorAsync"/> milliseconds, the
+    /// function will throw.
     /// </para>
     /// <para>**Usage**</para>
     /// <para>This method works across navigations:</para>
@@ -3377,6 +3656,7 @@ public partial interface IPage
     /// <para>
     /// Playwright automatically waits for element to be ready before performing an action.
     /// Using <see cref="ILocator"/> objects and web-first assertions makes the code wait-for-selector-free.
+    ///
     /// </para>
     /// </remarks>
     /// <param name="selector">A selector to query for.</param>
@@ -3388,7 +3668,7 @@ public partial interface IPage
     /// Never wait for timeout in production. Tests that wait for time are inherently flaky.
     /// Use <see cref="ILocator"/> actions and web assertions that wait automatically.
     /// </para>
-    /// <para>Waits for the given <paramref name="timeout"/> in milliseconds.</para>
+    /// <para>Waits for the given <see cref="IPage.WaitForTimeoutAsync"/> in milliseconds.</para>
     /// <para>
     /// Note that <c>page.waitForTimeout()</c> should only be used for debugging. Tests
     /// using the timer in production are going to be flaky. Use signals such as network
@@ -3505,6 +3785,7 @@ public partial interface IPage
     /// This method returns all of the dedicated <a href="https://developer.mozilla.org/en-US/docs/Web/API/Web_Workers_API">WebWorkers</a>
     /// associated with the page.
     /// </para>
+    /// <para>This does not contain ServiceWorkers</para>
     /// </summary>
     /// <remarks><para>This does not contain ServiceWorkers</para></remarks>
     IReadOnlyList<IWorker> Workers { get; }

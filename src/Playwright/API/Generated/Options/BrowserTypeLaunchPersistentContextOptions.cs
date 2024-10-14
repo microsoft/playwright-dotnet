@@ -104,12 +104,18 @@ public class BrowserTypeLaunchPersistentContextOptions
     public bool? AcceptDownloads { get; set; }
 
     /// <summary>
+    /// <para>Use custom browser args at your own risk, as some of them may break Playwright functionality.</para>
     /// <para>
     /// Additional arguments to pass to the browser instance. The list of Chromium flags
     /// can be found <a href="https://peter.sh/experiments/chromium-command-line-switches/">here</a>.
     /// </para>
     /// </summary>
-    /// <remarks><para>Use custom browser args at your own risk, as some of them may break Playwright functionality.</para></remarks>
+    /// <remarks>
+    /// <para>
+    /// Use custom browser args at your own risk, as some of them may break Playwright functionality.
+    ///
+    /// </para>
+    /// </remarks>
     [JsonPropertyName("args")]
     public IEnumerable<string>? Args { get; set; }
 
@@ -171,12 +177,16 @@ public class BrowserTypeLaunchPersistentContextOptions
     /// <c>origin</c> property should be provided with an exact match to the request origin
     /// that the certificate is valid for.
     /// </para>
-    /// </summary>
-    /// <remarks>
-    /// <para>Using Client Certificates in combination with Proxy Servers is not supported.</para>
     /// <para>
     /// When using WebKit on macOS, accessing <c>localhost</c> will not pick up client certificates.
     /// You can make it work by replacing <c>localhost</c> with <c>local.playwright</c>.
+    /// </para>
+    /// </summary>
+    /// <remarks>
+    /// <para>
+    /// When using WebKit on macOS, accessing <c>localhost</c> will not pick up client certificates.
+    /// You can make it work by replacing <c>localhost</c> with <c>local.playwright</c>.
+    ///
     /// </para>
     /// </remarks>
     [JsonPropertyName("clientCertificates")]
@@ -210,7 +220,8 @@ public class BrowserTypeLaunchPersistentContextOptions
     /// </para>
     /// <para>
     /// **Chromium-only** Whether to auto-open a Developer Tools panel for each tab. If
-    /// this option is <c>true</c>, the <paramref name="headless"/> option will be set <c>false</c>.
+    /// this option is <c>true</c>, the <see cref="IBrowserType.LaunchPersistentContextAsync"/>
+    /// option will be set <c>false</c>.
     /// </para>
     /// </summary>
     [JsonPropertyName("devtools")]
@@ -234,7 +245,7 @@ public class BrowserTypeLaunchPersistentContextOptions
 
     /// <summary>
     /// <para>
-    /// Path to a browser executable to run instead of the bundled one. If <paramref name="executablePath"/>
+    /// Path to a browser executable to run instead of the bundled one. If <see cref="IBrowserType.LaunchPersistentContextAsync"/>
     /// is a relative path, then it is resolved relative to the current working directory.
     /// Note that Playwright only works with the bundled Chromium, Firefox or WebKit, use
     /// at your own risk.
@@ -294,7 +305,8 @@ public class BrowserTypeLaunchPersistentContextOptions
     /// <para>
     /// Whether to run browser in headless mode. More details for <a href="https://developers.google.com/web/updates/2017/04/headless-chrome">Chromium</a>
     /// and <a href="https://developer.mozilla.org/en-US/docs/Mozilla/Firefox/Headless_mode">Firefox</a>.
-    /// Defaults to <c>true</c> unless the <paramref name="devtools"/> option is <c>true</c>.
+    /// Defaults to <c>true</c> unless the <see cref="IBrowserType.LaunchAsync"/> option
+    /// is <c>true</c>.
     /// </para>
     /// </summary>
     [JsonPropertyName("headless")]
@@ -313,8 +325,8 @@ public class BrowserTypeLaunchPersistentContextOptions
     /// <summary>
     /// <para>
     /// If <c>true</c>, Playwright does not pass its own configurations args and only uses
-    /// the ones from <paramref name="args"/>. Dangerous option; use with care. Defaults
-    /// to <c>false</c>.
+    /// the ones from <see cref="IBrowserType.LaunchPersistentContextAsync"/>. Dangerous
+    /// option; use with care. Defaults to <c>false</c>.
     /// </para>
     /// </summary>
     [JsonPropertyName("ignoreAllDefaultArgs")]
@@ -323,7 +335,8 @@ public class BrowserTypeLaunchPersistentContextOptions
     /// <summary>
     /// <para>
     /// If <c>true</c>, Playwright does not pass its own configurations args and only uses
-    /// the ones from <paramref name="args"/>. Dangerous option; use with care.
+    /// the ones from <see cref="IBrowserType.LaunchPersistentContextAsync"/>. Dangerous
+    /// option; use with care.
     /// </para>
     /// </summary>
     [JsonPropertyName("ignoreDefaultArgs")]
@@ -472,7 +485,8 @@ public class BrowserTypeLaunchPersistentContextOptions
     /// <summary>
     /// <para>
     /// Emulates consistent window screen size available inside web page via <c>window.screen</c>.
-    /// Is only used when the <paramref name="viewport"/> is set.
+    /// Is only used when the <see cref="IBrowserType.LaunchPersistentContextAsync"/> is
+    /// set.
     /// </para>
     /// </summary>
     [JsonPropertyName("screen")]
@@ -544,6 +558,11 @@ public class BrowserTypeLaunchPersistentContextOptions
     /// <c>ViewportSize.NoViewport</c> to disable the consistent viewport emulation. Learn
     /// more about <a href="https://playwright.dev/dotnet/docs/emulation#viewport">viewport
     /// emulation</a>.
+    /// </para>
+    /// <para>
+    /// The <c>ViewportSize.NoViewport</c> value opts out from the default presets, makes
+    /// viewport depend on the host window size defined by the operating system. It makes
+    /// the execution of the tests non-deterministic.
     /// </para>
     /// </summary>
     /// <remarks>

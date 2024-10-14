@@ -40,12 +40,16 @@ public partial interface ITouchscreen
     /// <summary>
     /// <para>
     /// Dispatches a <c>touchstart</c> and <c>touchend</c> event with a single touch at
-    /// the position (<paramref name="x"/>,<paramref name="y"/>).
+    /// the position (<see cref="ITouchscreen.TapAsync"/>,<see cref="ITouchscreen.TapAsync"/>).
+    /// </para>
+    /// <para>
+    /// <see cref="IPage.TapAsync"/> the method will throw if <see cref="IBrowser.NewContextAsync"/>
+    /// option of the browser context is false.
     /// </para>
     /// </summary>
     /// <remarks>
     /// <para>
-    /// <see cref="IPage.TapAsync"/> the method will throw if <paramref name="hasTouch"/>
+    /// <see cref="IPage.TapAsync"/> the method will throw if <see cref="IBrowser.NewContextAsync"/>
     /// option of the browser context is false.
     /// </para>
     /// </remarks>

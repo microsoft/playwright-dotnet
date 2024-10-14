@@ -6,7 +6,7 @@
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
- * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * to use, copy, modify, merge, publish, distribute, sublicense, and / or sell
  * copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions:
  *
@@ -24,34 +24,10 @@
 
 using System.Text.Json.Serialization;
 
-#nullable enable
+namespace Microsoft.Playwright.Transport.Protocol;
 
-namespace Microsoft.Playwright;
-
-public class BrowserContextStorageStateOptions
+internal class WebSocketRouteInitializer
 {
-    public BrowserContextStorageStateOptions() { }
-
-    public BrowserContextStorageStateOptions(BrowserContextStorageStateOptions clone)
-    {
-        if (clone == null)
-        {
-            return;
-        }
-
-        Path = clone.Path;
-    }
-
-    /// <summary>
-    /// <para>
-    /// The file path to save the storage state to. If <see cref="IBrowserContext.StorageStateAsync"/>
-    /// is a relative path, then it is resolved relative to current working directory. If
-    /// no path is provided, storage state is still returned, but won't be saved to the
-    /// disk.
-    /// </para>
-    /// </summary>
-    [JsonPropertyName("path")]
-    public string? Path { get; set; }
+    [JsonPropertyName("url")]
+    public string Url { get; set; }
 }
-
-#nullable disable

@@ -43,10 +43,11 @@ internal class Route : ChannelOwner, IRoute
 {
     private readonly RouteInitializer _initializer;
     private TaskCompletionSource<bool> _handlingTask;
-    internal bool DidThrow;
+    internal bool _didThrow;
 
     internal Route(ChannelOwner parent, string guid, RouteInitializer initializer) : base(parent, guid)
     {
+        MarkAsInternalType();
         _initializer = initializer;
         _request = initializer.Request;
     }
@@ -71,7 +72,6 @@ internal class Route : ChannelOwner, IRoute
             options.Json,
             options.Path,
             options.Response).ConfigureAwait(false);
-        normalized["requestUrl"] = _request._initializer.Url;
         await RaceWithTargetCloseAsync(SendMessageToServerAsync("fulfill", normalized)).ConfigureAwait(false);
         ReportHandled(true);
     }
@@ -86,7 +86,6 @@ internal class Route : ChannelOwner, IRoute
                 "abort",
                 new Dictionary<string, object>
                 {
-                    ["requestUrl"] = _request._initializer.Url,
                     ["errorCode"] = string.IsNullOrEmpty(errorCode) ? RequestAbortErrorCode.Failed : errorCode,
                 })).ConfigureAwait(false);
         }).ConfigureAwait(false);
@@ -97,27 +96,24 @@ internal class Route : ChannelOwner, IRoute
     {
         CheckNotHandled();
         _request.ApplyFallbackOverrides(new RouteFallbackOptions().FromRouteContinueOptions(options));
-        await InnerContinueAsync().ConfigureAwait(false);
+        await InnerContinueAsync(false /* isFallback */).ConfigureAwait(false);
         ReportHandled(true);
     }
 
-    internal async Task InnerContinueAsync(bool @internal = false)
+    internal async Task InnerContinueAsync(bool isFallback = false)
     {
         var options = _request.FallbackOverridesForContinue();
-        await _connection.WrapApiCallAsync(
-            () => RaceWithTargetCloseAsync(
-                SendMessageToServerAsync(
+        await RaceWithTargetCloseAsync(
+            SendMessageToServerAsync(
             "continue",
             new Dictionary<string, object>
             {
-                ["requestUrl"] = _request._initializer.Url,
                 ["url"] = options.Url,
                 ["method"] = options.Method,
                 ["postData"] = options.PostData != null ? Convert.ToBase64String(options.PostData) : null,
                 ["headers"] = options.Headers?.Select(kv => new HeaderEntry { Name = kv.Key, Value = kv.Value }).ToArray(),
-                ["isFallback"] = @internal,
-            })),
-            @internal).ConfigureAwait(false);
+                ["isFallback"] = isFallback,
+            })).ConfigureAwait(false);
     }
 
     private async Task HandleRouteAsync(Func<Task> callback)
@@ -130,7 +126,7 @@ internal class Route : ChannelOwner, IRoute
         }
         catch (Exception)
         {
-            DidThrow = true;
+            _didThrow = true;
             throw;
         }
     }

@@ -72,9 +72,9 @@ public partial interface IKeyboard
     /// <summary>
     /// <para>Dispatches a <c>keydown</c> event.</para>
     /// <para>
-    /// <paramref name="key"/> can specify the intended <a href="https://developer.mozilla.org/en-US/docs/Web/API/KeyboardEvent/key">keyboardEvent.key</a>
-    /// value or a single character to generate the text for. A superset of the <paramref
-    /// name="key"/> values can be found <a href="https://developer.mozilla.org/en-US/docs/Web/API/KeyboardEvent/key/Key_Values">here</a>.
+    /// <see cref="IKeyboard.DownAsync"/> can specify the intended <a href="https://developer.mozilla.org/en-US/docs/Web/API/KeyboardEvent/key">keyboardEvent.key</a>
+    /// value or a single character to generate the text for. A superset of the <see cref="IKeyboard.DownAsync"/>
+    /// values can be found <a href="https://developer.mozilla.org/en-US/docs/Web/API/KeyboardEvent/key/Key_Values">here</a>.
     /// Examples of the keys are:
     /// </para>
     /// <para>
@@ -90,22 +90,26 @@ public partial interface IKeyboard
     /// resolves to <c>Control</c> on Windows and Linux and to <c>Meta</c> on macOS.
     /// </para>
     /// <para>
-    /// Holding down <c>Shift</c> will type the text that corresponds to the <paramref name="key"/>
+    /// Holding down <c>Shift</c> will type the text that corresponds to the <see cref="IKeyboard.DownAsync"/>
     /// in the upper case.
     /// </para>
     /// <para>
-    /// If <paramref name="key"/> is a single character, it is case-sensitive, so the values
-    /// <c>a</c> and <c>A</c> will generate different respective texts.
+    /// If <see cref="IKeyboard.DownAsync"/> is a single character, it is case-sensitive,
+    /// so the values <c>a</c> and <c>A</c> will generate different respective texts.
     /// </para>
     /// <para>
-    /// If <paramref name="key"/> is a modifier key, <c>Shift</c>, <c>Meta</c>, <c>Control</c>,
-    /// or <c>Alt</c>, subsequent key presses will be sent with that modifier active. To
-    /// release the modifier key, use <see cref="IKeyboard.UpAsync"/>.
+    /// If <see cref="IKeyboard.DownAsync"/> is a modifier key, <c>Shift</c>, <c>Meta</c>,
+    /// <c>Control</c>, or <c>Alt</c>, subsequent key presses will be sent with that modifier
+    /// active. To release the modifier key, use <see cref="IKeyboard.UpAsync"/>.
     /// </para>
     /// <para>
     /// After the key is pressed once, subsequent calls to <see cref="IKeyboard.DownAsync"/>
     /// will have <a href="https://developer.mozilla.org/en-US/docs/Web/API/KeyboardEvent/repeat">repeat</a>
     /// set to true. To release the key, use <see cref="IKeyboard.UpAsync"/>.
+    /// </para>
+    /// <para>
+    /// Modifier keys DO influence <c>keyboard.down</c>. Holding down <c>Shift</c> will
+    /// type the text in upper case.
     /// </para>
     /// </summary>
     /// <remarks>
@@ -127,6 +131,10 @@ public partial interface IKeyboard
     /// </para>
     /// <para>**Usage**</para>
     /// <code>await page.Keyboard.PressAsync("嗨");</code>
+    /// <para>
+    /// Modifier keys DO NOT effect <c>keyboard.insertText</c>. Holding down <c>Shift</c>
+    /// will not type the text in upper case.
+    /// </para>
     /// </summary>
     /// <remarks>
     /// <para>
@@ -138,10 +146,11 @@ public partial interface IKeyboard
     Task InsertTextAsync(string text);
 
     /// <summary>
+    /// <para>In most cases, you should use <see cref="ILocator.PressAsync"/> instead.</para>
     /// <para>
-    /// <paramref name="key"/> can specify the intended <a href="https://developer.mozilla.org/en-US/docs/Web/API/KeyboardEvent/key">keyboardEvent.key</a>
-    /// value or a single character to generate the text for. A superset of the <paramref
-    /// name="key"/> values can be found <a href="https://developer.mozilla.org/en-US/docs/Web/API/KeyboardEvent/key/Key_Values">here</a>.
+    /// <see cref="IKeyboard.PressAsync"/> can specify the intended <a href="https://developer.mozilla.org/en-US/docs/Web/API/KeyboardEvent/key">keyboardEvent.key</a>
+    /// value or a single character to generate the text for. A superset of the <see cref="IKeyboard.PressAsync"/>
+    /// values can be found <a href="https://developer.mozilla.org/en-US/docs/Web/API/KeyboardEvent/key/Key_Values">here</a>.
     /// Examples of the keys are:
     /// </para>
     /// <para>
@@ -157,12 +166,12 @@ public partial interface IKeyboard
     /// resolves to <c>Control</c> on Windows and Linux and to <c>Meta</c> on macOS.
     /// </para>
     /// <para>
-    /// Holding down <c>Shift</c> will type the text that corresponds to the <paramref name="key"/>
+    /// Holding down <c>Shift</c> will type the text that corresponds to the <see cref="IKeyboard.PressAsync"/>
     /// in the upper case.
     /// </para>
     /// <para>
-    /// If <paramref name="key"/> is a single character, it is case-sensitive, so the values
-    /// <c>a</c> and <c>A</c> will generate different respective texts.
+    /// If <see cref="IKeyboard.PressAsync"/> is a single character, it is case-sensitive,
+    /// so the values <c>a</c> and <c>A</c> will generate different respective texts.
     /// </para>
     /// <para>
     /// Shortcuts such as <c>key: "Control+o"</c>, <c>key: "Control++</c> or <c>key: "Control+Shift+T"</c>
@@ -192,6 +201,11 @@ public partial interface IKeyboard
 
     /// <summary>
     /// <para>
+    /// In most cases, you should use <see cref="ILocator.FillAsync"/> instead. You only
+    /// need to press keys one by one if there is special keyboard handling on the page
+    /// - in this case use <see cref="ILocator.PressSequentiallyAsync"/>.
+    /// </para>
+    /// <para>
     /// Sends a <c>keydown</c>, <c>keypress</c>/<c>input</c>, and <c>keyup</c> event for
     /// each character in the text.
     /// </para>
@@ -201,6 +215,14 @@ public partial interface IKeyboard
     /// await page.Keyboard.TypeAsync("Hello"); // types instantly<br/>
     /// await page.Keyboard.TypeAsync("World", new() { Delay = 100 }); // types slower, like a user
     /// </code>
+    /// <para>
+    /// Modifier keys DO NOT effect <c>keyboard.type</c>. Holding down <c>Shift</c> will
+    /// not type the text in upper case.
+    /// </para>
+    /// <para>
+    /// For characters that are not on a US keyboard, only an <c>input</c> event will be
+    /// sent.
+    /// </para>
     /// </summary>
     /// <remarks>
     /// <para>

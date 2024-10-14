@@ -88,6 +88,10 @@ public partial interface IMouse
     /// the page. See <a href="https://playwright.dev/dotnet/docs/input#scrolling">scrolling</a>
     /// for alternative ways to scroll.
     /// </para>
+    /// <para>
+    /// Wheel events may cause scrolling if they are not handled, and this method does not
+    /// wait for the scrolling to finish before returning.
+    /// </para>
     /// </summary>
     /// <remarks>
     /// <para>

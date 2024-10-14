@@ -37,6 +37,7 @@ internal class ChannelOwner
     internal readonly Connection _connection;
 
     internal bool _wasCollected;
+    internal bool _isInternalType;
 
     internal ChannelOwner(ChannelOwner parent, string guid) : this(parent, null, guid)
     {
@@ -92,6 +93,8 @@ internal class ChannelOwner
 
     [MethodImpl(MethodImplOptions.NoInlining)]
     public Task WrapApiBoundaryAsync(Func<Task> action) => _connection.WrapApiBoundaryAsync(action);
+
+    internal void MarkAsInternalType() => _isInternalType = true;
 
     internal EventHandler<T> UpdateEventHandler<T>(string eventName, EventHandler<T> handlers, EventHandler<T> handler, bool add)
     {

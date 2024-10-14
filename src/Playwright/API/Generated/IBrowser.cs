@@ -73,6 +73,11 @@ public partial interface IBrowser
     /// browser and disconnects from the browser server.
     /// </para>
     /// <para>
+    /// This is similar to force quitting the browser. Therefore, you should call <see cref="IBrowserContext.CloseAsync"/>
+    /// on any <see cref="IBrowserContext"/>'s you explicitly created earlier with <see
+    /// cref="IBrowser.NewContextAsync"/> **before** calling <see cref="IBrowser.CloseAsync"/>.
+    /// </para>
+    /// <para>
     /// The <see cref="IBrowser"/> object itself is considered to be disposed and cannot
     /// be used anymore.
     /// </para>
@@ -82,6 +87,7 @@ public partial interface IBrowser
     /// This is similar to force quitting the browser. Therefore, you should call <see cref="IBrowserContext.CloseAsync"/>
     /// on any <see cref="IBrowserContext"/>'s you explicitly created earlier with <see
     /// cref="IBrowser.NewContextAsync"/> **before** calling <see cref="IBrowser.CloseAsync"/>.
+    ///
     /// </para>
     /// </remarks>
     /// <param name="options">Call options</param>
@@ -106,12 +112,22 @@ public partial interface IBrowser
     /// <summary><para>Indicates that the browser is connected.</para></summary>
     bool IsConnected { get; }
 
-    /// <summary><para>Returns the newly created browser session.</para></summary>
+    /// <summary>
+    /// <para>CDP Sessions are only supported on Chromium-based browsers.</para>
+    /// <para>Returns the newly created browser session.</para>
+    /// </summary>
     /// <remarks><para>CDP Sessions are only supported on Chromium-based browsers.</para></remarks>
     Task<ICDPSession> NewBrowserCDPSessionAsync();
 
     /// <summary>
     /// <para>Creates a new browser context. It won't share cookies/cache with other browser contexts.</para>
+    /// <para>
+    /// If directly using this method to create <see cref="IBrowserContext"/>s, it is best
+    /// practice to explicitly close the returned context via <see cref="IBrowserContext.CloseAsync"/>
+    /// when your code is done with the <see cref="IBrowserContext"/>, and before calling
+    /// <see cref="IBrowser.CloseAsync"/>. This will ensure the <c>context</c> is closed
+    /// gracefully and any artifacts—like HARs and videos—are fully flushed and saved.
+    /// </para>
     /// <para>**Usage**</para>
     /// <code>
     /// using var playwright = await Playwright.CreateAsync();<br/>

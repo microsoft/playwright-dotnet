@@ -49,9 +49,10 @@ public class TracingStartOptions
     /// <summary>
     /// <para>
     /// If specified, intermediate trace files are going to be saved into the files with
-    /// the given name prefix inside the <paramref name="tracesDir"/> folder specified in
-    /// <see cref="IBrowserType.LaunchAsync"/>. To specify the final trace zip file name,
-    /// you need to pass <c>path</c> option to <see cref="ITracing.StopAsync"/> instead.
+    /// the given name prefix inside the <see cref="IBrowserType.LaunchAsync"/> directory
+    /// specified in <see cref="IBrowserType.LaunchAsync"/>. To specify the final trace
+    /// zip file name, you need to pass <c>path</c> option to <see cref="ITracing.StopAsync"/>
+    /// instead.
     /// </para>
     /// </summary>
     [JsonPropertyName("name")]

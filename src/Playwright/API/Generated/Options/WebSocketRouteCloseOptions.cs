@@ -28,41 +28,38 @@ using System.Text.Json.Serialization;
 
 namespace Microsoft.Playwright;
 
-public class FrameWaitForFunctionOptions
+public class WebSocketRouteCloseOptions
 {
-    public FrameWaitForFunctionOptions() { }
+    public WebSocketRouteCloseOptions() { }
 
-    public FrameWaitForFunctionOptions(FrameWaitForFunctionOptions clone)
+    public WebSocketRouteCloseOptions(WebSocketRouteCloseOptions clone)
     {
         if (clone == null)
         {
             return;
         }
 
-        PollingInterval = clone.PollingInterval;
-        Timeout = clone.Timeout;
+        Code = clone.Code;
+        Reason = clone.Reason;
     }
 
     /// <summary>
     /// <para>
-    /// If specified, then it is treated as an interval in milliseconds at which the function
-    /// would be executed. By default if the option is not specified <see cref="IFrame.WaitForFunctionAsync"/>
-    /// is executed in <c>requestAnimationFrame</c> callback.
+    /// Optional <a href="https://developer.mozilla.org/en-US/docs/Web/API/WebSocket/close#code">close
+    /// code</a>.
     /// </para>
     /// </summary>
-    [JsonPropertyName("pollingInterval")]
-    public float? PollingInterval { get; set; }
+    [JsonPropertyName("code")]
+    public int? Code { get; set; }
 
     /// <summary>
     /// <para>
-    /// Maximum time to wait for in milliseconds. Defaults to <c>30000</c> (30 seconds).
-    /// Pass <c>0</c> to disable timeout. The default value can be changed by using the
-    /// <see cref="IBrowserContext.SetDefaultTimeout"/> or <see cref="IPage.SetDefaultTimeout"/>
-    /// methods.
+    /// Optional <a href="https://developer.mozilla.org/en-US/docs/Web/API/WebSocket/close#reason">close
+    /// reason</a>.
     /// </para>
     /// </summary>
-    [JsonPropertyName("timeout")]
-    public float? Timeout { get; set; }
+    [JsonPropertyName("reason")]
+    public string? Reason { get; set; }
 }
 
 #nullable disable

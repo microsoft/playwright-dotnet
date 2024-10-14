@@ -90,12 +90,16 @@ public class APIRequestNewContextOptions
     /// <c>origin</c> property should be provided with an exact match to the request origin
     /// that the certificate is valid for.
     /// </para>
-    /// </summary>
-    /// <remarks>
-    /// <para>Using Client Certificates in combination with Proxy Servers is not supported.</para>
     /// <para>
     /// When using WebKit on macOS, accessing <c>localhost</c> will not pick up client certificates.
     /// You can make it work by replacing <c>localhost</c> with <c>local.playwright</c>.
+    /// </para>
+    /// </summary>
+    /// <remarks>
+    /// <para>
+    /// When using WebKit on macOS, accessing <c>localhost</c> will not pick up client certificates.
+    /// You can make it work by replacing <c>localhost</c> with <c>local.playwright</c>.
+    ///
     /// </para>
     /// </remarks>
     [JsonPropertyName("clientCertificates")]

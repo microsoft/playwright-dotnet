@@ -56,10 +56,10 @@ public partial interface IJSHandle
     IElementHandle? AsElement();
 
     /// <summary>
-    /// <para>Returns the return value of <paramref name="expression"/>.</para>
-    /// <para>This method passes this handle as the first argument to <paramref name="expression"/>.</para>
+    /// <para>Returns the return value of <see cref="IJSHandle.EvaluateAsync"/>.</para>
+    /// <para>This method passes this handle as the first argument to <see cref="IJSHandle.EvaluateAsync"/>.</para>
     /// <para>
-    /// If <paramref name="expression"/> returns a <see cref="Task"/>, then <c>handle.evaluate</c>
+    /// If <see cref="IJSHandle.EvaluateAsync"/> returns a <see cref="Task"/>, then <c>handle.evaluate</c>
     /// would wait for the promise to resolve and return its value.
     /// </para>
     /// <para>**Usage**</para>
@@ -72,12 +72,15 @@ public partial interface IJSHandle
     /// JavaScript expression to be evaluated in the browser context. If the expression
     /// evaluates to a function, the function is automatically invoked.
     /// </param>
-    /// <param name="arg">Optional argument to pass to <paramref name="expression"/>.</param>
+    /// <param name="arg">Optional argument to pass to <see cref="IJSHandle.EvaluateAsync"/>.</param>
     Task<T> EvaluateAsync<T>(string expression, object? arg = default);
 
     /// <summary>
-    /// <para>Returns the return value of <paramref name="expression"/> as a <see cref="IJSHandle"/>.</para>
-    /// <para>This method passes this handle as the first argument to <paramref name="expression"/>.</para>
+    /// <para>
+    /// Returns the return value of <see cref="IJSHandle.EvaluateHandleAsync"/> as a <see
+    /// cref="IJSHandle"/>.
+    /// </para>
+    /// <para>This method passes this handle as the first argument to <see cref="IJSHandle.EvaluateHandleAsync"/>.</para>
     /// <para>
     /// The only difference between <c>jsHandle.evaluate</c> and <c>jsHandle.evaluateHandle</c>
     /// is that <c>jsHandle.evaluateHandle</c> returns <see cref="IJSHandle"/>.
@@ -93,7 +96,7 @@ public partial interface IJSHandle
     /// JavaScript expression to be evaluated in the browser context. If the expression
     /// evaluates to a function, the function is automatically invoked.
     /// </param>
-    /// <param name="arg">Optional argument to pass to <paramref name="expression"/>.</param>
+    /// <param name="arg">Optional argument to pass to <see cref="IJSHandle.EvaluateHandleAsync"/>.</param>
     Task<IJSHandle> EvaluateHandleAsync(string expression, object? arg = default);
 
     /// <summary>
@@ -120,6 +123,10 @@ public partial interface IJSHandle
     /// <para>
     /// Returns a JSON representation of the object. If the object has a <c>toJSON</c> function,
     /// it **will not be called**.
+    /// </para>
+    /// <para>
+    /// The method will return an empty JSON object if the referenced object is not stringifiable.
+    /// It will throw an error if the object has circular references.
     /// </para>
     /// </summary>
     /// <remarks>

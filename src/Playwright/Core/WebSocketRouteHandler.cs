@@ -23,7 +23,6 @@
  */
 
 using System;
-using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
@@ -31,23 +30,15 @@ using Microsoft.Playwright.Helpers;
 
 namespace Microsoft.Playwright.Core;
 
-internal class RouteHandler
+internal class WebSocketRouteHandler
 {
-    private readonly IDictionary<HandlerInvocation, bool> _activeInvocations = new ConcurrentDictionary<HandlerInvocation, bool>();
-
-    private bool _ignoreException;
-
     public Regex Regex { get; set; }
 
     public Func<string, bool> Function { get; set; }
 
     public Delegate Handler { get; set; }
 
-    public int? Times { get; internal set; }
-
-    public int HandledCount { get; set; }
-
-    public static Dictionary<string, object> PrepareInterceptionPatterns(List<RouteHandler> handlers)
+    public static Dictionary<string, object> PrepareInterceptionPatterns(List<WebSocketRouteHandler> handlers)
     {
         bool all = false;
         var patterns = new List<Dictionary<string, object>>();
@@ -85,80 +76,13 @@ internal class RouteHandler
         };
     }
 
-    public async Task<bool> HandleAsync(Route route)
+    public async Task HandleAsync(WebSocketRoute route)
     {
-        var handlerInvocation = new HandlerInvocation
-        {
-            Complete = new TaskCompletionSource<bool>(),
-            Route = route,
-        };
-        _activeInvocations[handlerInvocation] = false;
-        try
-        {
-            return await HandleInternalAsync(route).ConfigureAwait(false);
-        }
-        catch (Exception)
-        {
-            // If the handler was stopped (without waiting for completion), we ignore all exceptions.
-            if (_ignoreException)
-            {
-                return false;
-            }
-            throw;
-        }
-        finally
-        {
-            handlerInvocation.Complete.SetResult(true);
-            _activeInvocations.Remove(handlerInvocation);
-        }
-    }
-
-    public async Task StopAsync(UnrouteBehavior behavior)
-    {
-        // When a handler is manually unrouted or its page/context is closed we either
-        // - wait for the current handler invocations to finish
-        // - or do not wait, if the user opted out of it, but swallow all exceptions
-        //   that happen after the unroute/close.
-        if (behavior == UnrouteBehavior.IgnoreErrors)
-        {
-            _ignoreException = true;
-        }
-        else
-        {
-            var tasks = new List<Task>();
-            foreach (var activation in _activeInvocations.Keys)
-            {
-                if (!activation.Route._didThrow)
-                {
-                    tasks.Add(activation.Complete.Task);
-                }
-            }
-            await Task.WhenAll(tasks).ConfigureAwait(false);
-        }
-    }
-
-
-    private async Task<bool> HandleInternalAsync(Route route)
-    {
-        ++HandledCount;
-        var handledTask = route.StartHandlingAsync();
         var maybeTask = Handler.DynamicInvoke(new object[] { route });
         if (maybeTask is Task task)
         {
             await task.ConfigureAwait(false);
         }
-        return await handledTask.ConfigureAwait(false);
-    }
-
-    public bool WillExpire()
-    {
-        return HandledCount + 1 >= Times;
-    }
-
-    internal class HandlerInvocation
-    {
-        public TaskCompletionSource<bool> Complete { get; set; } = new TaskCompletionSource<bool>();
-
-        public Route Route { get; set; }
+        await route.AfterHandleAsync().ConfigureAwait(false);
     }
 }
