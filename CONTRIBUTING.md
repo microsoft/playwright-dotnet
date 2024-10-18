@@ -7,7 +7,7 @@ You can contribute to Playwright for .NET with issues and PRs.
 Contributions must meet a certain standard of coding. To ensure this, the Project Maintainers perform regular Code Reviews.
 Additionally, a suite of tests runs for each PR.
 
-## DOs and DONT'Ts
+## DOs and DON'Ts
 Please do:
 
 * **DO** follow our coding style (C# code-specific)
@@ -53,7 +53,7 @@ footer
 2. *namespace* is put in parenthesis after label and is optional. Must be lowercase.
 3. *title* is a brief summary of changes.
 4. *description* is **optional**, new-line separated from title and is in present tense.
-5. *footer* is **optional**, new-line separated from *description* and contains "fixes" / "references" attribution to github issues.
+5. *footer* is **optional**, new-line separated from *description* and contains "fixes" / "references" attribution to GitHub issues.
 
 Example:
 
@@ -100,7 +100,7 @@ The resulting code will follow our style guides. This is also enforced in our CI
 ## Writing Tests
 
 * Every feature should be accompanied by a test.
-* Every public api event/method should be accompanied by a test.
+* Every public API event/method should be accompanied by a test.
 
 ### Running Tests Locally
 
@@ -130,7 +130,7 @@ To generate the API, identify the upstream driver version from the GitHub Action
 ./build.sh --roll <driver-version>
 ```
 
-This will re-generate the neccessary files for the new driver version.
+This will re-generate the necessary files for the new driver version.
 
 ### Collecting coverage when running tests
 
