@@ -8,7 +8,6 @@
         <NoWarn>1701;1702</NoWarn>
         <AssemblyName>Microsoft.Playwright.Tests</AssemblyName>
         <RootNamespace>Microsoft.Playwright.Tests</RootNamespace>
-        <GenerateProgramFile>false</GenerateProgramFile>
         <ImplicitUsings>enable</ImplicitUsings>
     </PropertyGroup>
     <Import Project="../Common/SignAssembly.props" />
