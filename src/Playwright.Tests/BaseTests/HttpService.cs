@@ -42,7 +42,7 @@ public class HttpService : IWorkerService
                 Server = SimpleServer.Create(8907 + workerIndex * 2, assetDir),
                 HttpsServer = SimpleServer.CreateHttps(8907 + workerIndex * 2 + 1, assetDir)
             };
-            await Task.WhenAll(http.Server.StartAsync(), http.HttpsServer.StartAsync());
+            await Task.WhenAll(http.Server.StartAsync(TestContext.CurrentContext.CancellationToken), http.HttpsServer.StartAsync(TestContext.CurrentContext.CancellationToken));
             return http;
         });
     }

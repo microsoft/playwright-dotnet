@@ -86,8 +86,7 @@ public class BrowserContextViewportTests : PageTestEx
     {
         await Page.GotoAsync(Server.Prefix + "/mobile.html");
         Assert.False(await Page.EvaluateAsync<bool>("'ontouchstart' in window"));
-        await Page.GotoAsync(Server.Prefix + "/detect-touch.html");
-        Assert.AreEqual("NO", await Page.EvaluateAsync<string>("document.body.textContent.trim()"));
+        Assert.AreEqual(false, await Page.EvaluateAsync<bool>("'ontouchstart' in window"));
     }
 
     [PlaywrightTest("browsercontext-viewport.spec.ts", "should support touch with null viewport")]

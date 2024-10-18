@@ -23,7 +23,6 @@
  */
 
 using System.Text.Json;
-using NUnit.Framework.Constraints;
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.PixelFormats;
 

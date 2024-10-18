@@ -16,6 +16,9 @@
   <ItemGroup>
     <Folder Include="assets\" />
   </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="NUnit" Version="4.2.2" />
+  </ItemGroup>
   <Target Name="CheckAssetsFolderExists" BeforeTargets="Build">
     <Error Text="assets folder prerequisites are missing. Ensure you've ran `.\build.sh --init` from the root of the solution." Condition="!Exists('$(MSBuildProjectDirectory)\assets\empty.html')" />
   </Target>
