@@ -279,7 +279,7 @@ public class PageGotoTests : PageTestEx
         }
         else if (TestConstants.IsWebKit && TestConstants.IsWindows)
         {
-            StringAssert.Contains("Couldn't connect to server", exception.Message);
+            StringAssert.Contains("Could not connect to server", exception.Message);
         }
         else if (TestConstants.IsWebKit)
         {
