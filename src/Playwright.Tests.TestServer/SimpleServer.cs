@@ -41,6 +41,8 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.Features;
 using Microsoft.AspNetCore.StaticFiles;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Logging.Console;
 
 namespace Microsoft.Playwright.Tests.TestServer;
 
@@ -88,32 +90,39 @@ public class SimpleServer
         _gzipRoutes = new List<string>();
         _contentRoot = contentRoot;
 
+        var loggerFactory = LoggerFactory.Create(builder =>
+        {
+            builder
+                .AddConsole()
+                .SetMinimumLevel(LogLevel.Debug); // or LogLevel.Debug
+        });
+
         _webHost = new WebHostBuilder()
+         .ConfigureLogging(logging =>
+        {
+            logging.ClearProviders();
+            logging.AddConsole(); // Correct way to add console logging
+        })
             .Configure((app) => app
                 .UseWebSockets()
                 .UseDeveloperExceptionPage()
                 .Use(middleware: async (HttpContext context, Func<Task> next) =>
                 {
-                    if (context.Request.Path == "/ws")
+                    if (context.WebSockets.IsWebSocketRequest)
                     {
-                        if (context.WebSockets.IsWebSocketRequest)
+                        Console.WriteLine("WebSocket request received on the server side");
+                        var webSocket = await context.WebSockets.AcceptWebSocketAsync().ConfigureAwait(false);
+                        foreach (var wait in _waitForWebSocketConnectionRequestsWaits)
                         {
-                            var webSocket = await context.WebSockets.AcceptWebSocketAsync().ConfigureAwait(false);
-                            foreach (var wait in _waitForWebSocketConnectionRequestsWaits)
-                            {
-                                _waitForWebSocketConnectionRequestsWaits.Remove(wait);
-                                await wait(webSocket, context).ConfigureAwait(false);
-                            }
-                            if (_onWebSocketConnectionData != null)
-                            {
-                                await webSocket.SendAsync(_onWebSocketConnectionData, WebSocketMessageType.Text, true, CancellationToken.None).ConfigureAwait(false);
-                            }
-                            await ReceiveLoopAsync(webSocket, context.Request.Headers["User-Agent"].ToString().Contains("Firefox"), CancellationToken.None).ConfigureAwait(false);
+                            _waitForWebSocketConnectionRequestsWaits.Remove(wait);
+                            await wait(webSocket, context).ConfigureAwait(false);
+                            return;
                         }
-                        else if (!context.Response.HasStarted)
+                        if (_onWebSocketConnectionData != null)
                         {
-                            context.Response.StatusCode = 400;
+                            await webSocket.SendAsync(_onWebSocketConnectionData, WebSocketMessageType.Text, true, CancellationToken.None).ConfigureAwait(false);
                         }
+                        await ReceiveLoopAsync(webSocket, context.Request.Headers["User-Agent"].ToString().Contains("Firefox"), CancellationToken.None).ConfigureAwait(false);
                         return;
                     }
 
@@ -288,6 +297,19 @@ public class SimpleServer
     }
 
     public Task WaitForRequest(string path) => WaitForRequest(path, _ => true);
+
+    public Task<WebSocketWithEvents> WaitForWebSocketAsync()
+    {
+        var tcs = new TaskCompletionSource<WebSocketWithEvents>();
+        Console.WriteLine("test123");
+        OnceWebSocketConnection((ws, _) => {
+            Console.WriteLine("test123 inside the handler");
+            Console.Error.WriteLine("test123 inside the handler");
+            tcs.SetResult(new WebSocketWithEvents(ws));
+            return Task.CompletedTask;
+        });
+        return tcs.Task;
+    }
 
     public async Task<(WebSocket, HttpRequest)> WaitForWebSocketConnectionRequest()
     {
