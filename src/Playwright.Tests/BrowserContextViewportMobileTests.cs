@@ -70,8 +70,7 @@ public class BrowserContextViewportMobileTests : BrowserTestEx
     {
         await using var context = await Browser.NewContextAsync(Playwright.Devices["iPhone 6"]);
         var page = await context.NewPageAsync();
-        await page.GotoAsync(Server.Prefix + "/detect-touch.html");
-        Assert.AreEqual("YES", await page.EvaluateAsync<string>("document.body.textContent.trim()"));
+        Assert.AreEqual(true, await page.EvaluateAsync<bool>("'ontouchstart' in window || !!window.TouchEvent"));
     }
 
     [PlaywrightTest("browsercontext-viewport-mobile.spec.ts", "should detect touch when applying viewport with touches")]
