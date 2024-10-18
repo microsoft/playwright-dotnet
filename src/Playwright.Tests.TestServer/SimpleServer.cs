@@ -250,7 +250,7 @@ public class SimpleServer
 
     public void SetCSP(string path, string csp) => _csp.Add(path, csp);
 
-    public Task StartAsync() => _webHost.StartAsync();
+    public Task StartAsync(CancellationToken cancellationToken) => _webHost.StartAsync(cancellationToken);
 
     public Task StopAsync()
     {
