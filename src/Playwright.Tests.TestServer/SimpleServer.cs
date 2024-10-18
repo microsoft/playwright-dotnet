@@ -93,12 +93,12 @@ public class SimpleServer
         _contentRoot = contentRoot;
 
         _webHost = new WebHostBuilder()
-         .ConfigureLogging(logging =>
-        {
-            // Allow seeing exceptions in the console output.
-            logging.AddConsole();
-            logging.SetMinimumLevel(LogLevel.Error);
-        })
+            .ConfigureLogging(logging =>
+            {
+                // Allow seeing exceptions in the console output.
+                logging.AddConsole();
+                logging.SetMinimumLevel(LogLevel.Error);
+            })
             .Configure((app) => app
                 .UseWebSockets()
                 .Use(middleware: async (HttpContext context, Func<Task> next) =>
