@@ -20,4 +20,4 @@
 ./build.sh --roll <driver-version>
 ```
 
-This will complete the entire process (downnload and set the new driver, re-generate API and transport channels, update the README).
+This will complete the entire process (download and set the new driver, re-generate API and transport channels, update the README).
