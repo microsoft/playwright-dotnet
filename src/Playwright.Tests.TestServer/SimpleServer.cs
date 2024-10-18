@@ -30,6 +30,7 @@ using System.IO;
 using System.IO.Compression;
 using System.Net;
 using System.Net.WebSockets;
+using System.Reflection;
 using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -41,6 +42,8 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.Features;
 using Microsoft.AspNetCore.StaticFiles;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
+using NUnit.Framework.Internal;
 
 namespace Microsoft.Playwright.Tests.TestServer;
 
@@ -80,6 +83,7 @@ public class SimpleServer
 
         EmptyPage = $"{Prefix}/empty.html";
 
+        var currentExecutionContext = TestExecutionContext.CurrentContext;
         _requestWaits = new ConcurrentDictionary<string, Action<HttpContext>>();
         _waitForWebSocketConnectionRequestsWaits = [];
         _routes = new ConcurrentDictionary<string, Func<HttpContext, Task>>();
@@ -89,11 +93,21 @@ public class SimpleServer
         _contentRoot = contentRoot;
 
         _webHost = new WebHostBuilder()
+         .ConfigureLogging(logging =>
+        {
+            // Allow seeing exceptions in the console output.
+            logging.AddConsole();
+            logging.SetMinimumLevel(LogLevel.Error);
+        })
             .Configure((app) => app
                 .UseWebSockets()
-                .UseDeveloperExceptionPage()
                 .Use(middleware: async (HttpContext context, Func<Task> next) =>
                 {
+                    {
+                        // This hack allows us to have Console.WriteLine etc. appear in the test output.
+                        var currentContext = typeof(TestExecutionContext).GetField("AsyncLocalCurrentContext", BindingFlags.NonPublic | BindingFlags.Static).GetValue(null) as AsyncLocal<TestExecutionContext>;
+                        currentContext.Value = currentExecutionContext;
+                    }
                     if (context.Request.Path == "/ws")
                     {
                         if (context.WebSockets.IsWebSocketRequest)

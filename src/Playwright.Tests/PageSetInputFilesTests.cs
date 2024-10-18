@@ -353,7 +353,7 @@ public class PageSetInputFilesTests : PageTestEx
     }
 
     [PlaywrightTest("page-set-input-files.spec.ts", "should upload large file")]
-    [Timeout(TestConstants.SlowTestTimeout)]
+    [CancelAfter(TestConstants.SlowTestTimeout)]
     public async Task ShouldUploadLargeFile()
     {
         await Page.GotoAsync(Server.Prefix + "/input/fileupload.html");
