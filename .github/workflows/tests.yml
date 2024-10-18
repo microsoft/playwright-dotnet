@@ -32,7 +32,7 @@ jobs:
       - name: Building
         run: dotnet build ./src
       - name: Installing Browsers and dependencies
-        run: pwsh src/Playwright/bin/Debug/netstandard2.0/playwright.ps1 install --with-deps
+        run: pwsh src/Playwright/bin/Debug/netstandard2.0/playwright.ps1 install --with-deps ${{ matrix.browser }}
       - name: Running tests
         if: matrix.os != 'ubuntu-latest'
         env:
