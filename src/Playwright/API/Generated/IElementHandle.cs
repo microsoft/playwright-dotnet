@@ -35,6 +35,10 @@ namespace Microsoft.Playwright;
 /// ElementHandle represents an in-page DOM element. ElementHandles can be created with
 /// the <see cref="IPage.QuerySelectorAsync"/> method.
 /// </para>
+/// <para>
+/// The use of ElementHandle is discouraged, use <see cref="ILocator"/> objects and
+/// web-first assertions instead.
+/// </para>
 /// <code>
 /// var handle = await page.QuerySelectorAsync("a");<br/>
 /// await handle.ClickAsync();
@@ -122,7 +126,8 @@ public partial interface IElementHandle : IJSHandle
     /// </description></item>
     /// <item><description>
     /// Wait for <a href="https://playwright.dev/dotnet/docs/actionability">actionability</a>
-    /// checks on the element, unless <paramref name="force"/> option is set.
+    /// checks on the element, unless <see cref="IElementHandle.CheckAsync"/> option is
+    /// set.
     /// </description></item>
     /// <item><description>Scroll the element into view if needed.</description></item>
     /// <item><description>Use <see cref="IPage.Mouse"/> to click in the center of the element.</description></item>
@@ -133,7 +138,7 @@ public partial interface IElementHandle : IJSHandle
     /// throws.
     /// </para>
     /// <para>
-    /// When all steps combined have not finished during the specified <paramref name="timeout"/>,
+    /// When all steps combined have not finished during the specified <see cref="IElementHandle.CheckAsync"/>,
     /// this method throws a <see cref="TimeoutException"/>. Passing zero timeout disables
     /// this.
     /// </para>
@@ -150,15 +155,16 @@ public partial interface IElementHandle : IJSHandle
     /// <list type="ordinal">
     /// <item><description>
     /// Wait for <a href="https://playwright.dev/dotnet/docs/actionability">actionability</a>
-    /// checks on the element, unless <paramref name="force"/> option is set.
+    /// checks on the element, unless <see cref="IElementHandle.ClickAsync"/> option is
+    /// set.
     /// </description></item>
     /// <item><description>Scroll the element into view if needed.</description></item>
     /// <item><description>
     /// Use <see cref="IPage.Mouse"/> to click in the center of the element, or the specified
-    /// <paramref name="position"/>.
+    /// <see cref="IElementHandle.ClickAsync"/>.
     /// </description></item>
     /// <item><description>
-    /// Wait for initiated navigations to either succeed or fail, unless <paramref name="noWaitAfter"/>
+    /// Wait for initiated navigations to either succeed or fail, unless <see cref="IElementHandle.ClickAsync"/>
     /// option is set.
     /// </description></item>
     /// </list>
@@ -167,7 +173,7 @@ public partial interface IElementHandle : IJSHandle
     /// throws.
     /// </para>
     /// <para>
-    /// When all steps combined have not finished during the specified <paramref name="timeout"/>,
+    /// When all steps combined have not finished during the specified <see cref="IElementHandle.ClickAsync"/>,
     /// this method throws a <see cref="TimeoutException"/>. Passing zero timeout disables
     /// this.
     /// </para>
@@ -192,12 +198,13 @@ public partial interface IElementHandle : IJSHandle
     /// <list type="ordinal">
     /// <item><description>
     /// Wait for <a href="https://playwright.dev/dotnet/docs/actionability">actionability</a>
-    /// checks on the element, unless <paramref name="force"/> option is set.
+    /// checks on the element, unless <see cref="IElementHandle.DblClickAsync"/> option
+    /// is set.
     /// </description></item>
     /// <item><description>Scroll the element into view if needed.</description></item>
     /// <item><description>
     /// Use <see cref="IPage.Mouse"/> to double click in the center of the element, or the
-    /// specified <paramref name="position"/>.
+    /// specified <see cref="IElementHandle.DblClickAsync"/>.
     /// </description></item>
     /// </list>
     /// <para>
@@ -205,9 +212,13 @@ public partial interface IElementHandle : IJSHandle
     /// throws.
     /// </para>
     /// <para>
-    /// When all steps combined have not finished during the specified <paramref name="timeout"/>,
+    /// When all steps combined have not finished during the specified <see cref="IElementHandle.DblClickAsync"/>,
     /// this method throws a <see cref="TimeoutException"/>. Passing zero timeout disables
     /// this.
+    /// </para>
+    /// <para>
+    /// <c>elementHandle.dblclick()</c> dispatches two <c>click</c> events and a single
+    /// <c>dblclick</c> event.
     /// </para>
     /// </summary>
     /// <remarks>
@@ -232,13 +243,14 @@ public partial interface IElementHandle : IJSHandle
     /// <para>**Usage**</para>
     /// <code>await elementHandle.DispatchEventAsync("click");</code>
     /// <para>
-    /// Under the hood, it creates an instance of an event based on the given <paramref
-    /// name="type"/>, initializes it with <paramref name="eventInit"/> properties and dispatches
-    /// it on the element. Events are <c>composed</c>, <c>cancelable</c> and bubble by default.
+    /// Under the hood, it creates an instance of an event based on the given <see cref="IElementHandle.DispatchEventAsync"/>,
+    /// initializes it with <see cref="IElementHandle.DispatchEventAsync"/> properties and
+    /// dispatches it on the element. Events are <c>composed</c>, <c>cancelable</c> and
+    /// bubble by default.
     /// </para>
     /// <para>
-    /// Since <paramref name="eventInit"/> is event-specific, please refer to the events
-    /// documentation for the lists of initial properties:
+    /// Since <see cref="IElementHandle.DispatchEventAsync"/> is event-specific, please
+    /// refer to the events documentation for the lists of initial properties:
     /// </para>
     /// <list type="bullet">
     /// <item><description><a href="https://developer.mozilla.org/en-US/docs/Web/API/DeviceMotionEvent/DeviceMotionEvent">DeviceMotionEvent</a></description></item>
@@ -274,15 +286,16 @@ public partial interface IElementHandle : IJSHandle
     /// can lead to the flaky tests. Use <see cref="ILocator.EvaluateAsync"/>, other <see
     /// cref="ILocator"/> helper methods or web-first assertions instead.
     /// </para>
-    /// <para>Returns the return value of <paramref name="expression"/>.</para>
+    /// <para>Returns the return value of <see cref="IElementHandle.EvalOnSelectorAsync"/>.</para>
     /// <para>
     /// The method finds an element matching the specified selector in the <c>ElementHandle</c>s
-    /// subtree and passes it as a first argument to <paramref name="expression"/>. If no
-    /// elements match the selector, the method throws an error.
+    /// subtree and passes it as a first argument to <see cref="IElementHandle.EvalOnSelectorAsync"/>.
+    /// If no elements match the selector, the method throws an error.
     /// </para>
     /// <para>
-    /// If <paramref name="expression"/> returns a <see cref="Task"/>, then <see cref="IElementHandle.EvalOnSelectorAsync"/>
-    /// would wait for the promise to resolve and return its value.
+    /// If <see cref="IElementHandle.EvalOnSelectorAsync"/> returns a <see cref="Task"/>,
+    /// then <see cref="IElementHandle.EvalOnSelectorAsync"/> would wait for the promise
+    /// to resolve and return its value.
     /// </para>
     /// <para>**Usage**</para>
     /// <code>
@@ -296,7 +309,7 @@ public partial interface IElementHandle : IJSHandle
     /// JavaScript expression to be evaluated in the browser context. If the expression
     /// evaluates to a function, the function is automatically invoked.
     /// </param>
-    /// <param name="arg">Optional argument to pass to <paramref name="expression"/>.</param>
+    /// <param name="arg">Optional argument to pass to <see cref="IElementHandle.EvalOnSelectorAsync"/>.</param>
     Task<T> EvalOnSelectorAsync<T>(string selector, string expression, object? arg = default);
 
     /// <summary>
@@ -304,15 +317,15 @@ public partial interface IElementHandle : IJSHandle
     /// In most cases, <see cref="ILocator.EvaluateAllAsync"/>, other <see cref="ILocator"/>
     /// helper methods and web-first assertions do a better job.
     /// </para>
-    /// <para>Returns the return value of <paramref name="expression"/>.</para>
+    /// <para>Returns the return value of <see cref="IElementHandle.EvalOnSelectorAllAsync"/>.</para>
     /// <para>
     /// The method finds all elements matching the specified selector in the <c>ElementHandle</c>'s
-    /// subtree and passes an array of matched elements as a first argument to <paramref
-    /// name="expression"/>.
+    /// subtree and passes an array of matched elements as a first argument to <see cref="IElementHandle.EvalOnSelectorAllAsync"/>.
     /// </para>
     /// <para>
-    /// If <paramref name="expression"/> returns a <see cref="Task"/>, then <see cref="IElementHandle.EvalOnSelectorAllAsync"/>
-    /// would wait for the promise to resolve and return its value.
+    /// If <see cref="IElementHandle.EvalOnSelectorAllAsync"/> returns a <see cref="Task"/>,
+    /// then <see cref="IElementHandle.EvalOnSelectorAllAsync"/> would wait for the promise
+    /// to resolve and return its value.
     /// </para>
     /// <para>**Usage**</para>
     /// <code>
@@ -325,7 +338,7 @@ public partial interface IElementHandle : IJSHandle
     /// JavaScript expression to be evaluated in the browser context. If the expression
     /// evaluates to a function, the function is automatically invoked.
     /// </param>
-    /// <param name="arg">Optional argument to pass to <paramref name="expression"/>.</param>
+    /// <param name="arg">Optional argument to pass to <see cref="IElementHandle.EvalOnSelectorAllAsync"/>.</param>
     Task<T> EvalOnSelectorAllAsync<T>(string selector, string expression, object? arg = default);
 
     /// <summary>
@@ -381,12 +394,13 @@ public partial interface IElementHandle : IJSHandle
     /// <list type="ordinal">
     /// <item><description>
     /// Wait for <a href="https://playwright.dev/dotnet/docs/actionability">actionability</a>
-    /// checks on the element, unless <paramref name="force"/> option is set.
+    /// checks on the element, unless <see cref="IElementHandle.HoverAsync"/> option is
+    /// set.
     /// </description></item>
     /// <item><description>Scroll the element into view if needed.</description></item>
     /// <item><description>
     /// Use <see cref="IPage.Mouse"/> to hover over the center of the element, or the specified
-    /// <paramref name="position"/>.
+    /// <see cref="IElementHandle.HoverAsync"/>.
     /// </description></item>
     /// </list>
     /// <para>
@@ -394,7 +408,7 @@ public partial interface IElementHandle : IJSHandle
     /// throws.
     /// </para>
     /// <para>
-    /// When all steps combined have not finished during the specified <paramref name="timeout"/>,
+    /// When all steps combined have not finished during the specified <see cref="IElementHandle.HoverAsync"/>,
     /// this method throws a <see cref="TimeoutException"/>. Passing zero timeout disables
     /// this.
     /// </para>
@@ -505,9 +519,9 @@ public partial interface IElementHandle : IJSHandle
     /// </para>
     /// <para>Focuses the element, and then uses <see cref="IKeyboard.DownAsync"/> and <see cref="IKeyboard.UpAsync"/>.</para>
     /// <para>
-    /// <paramref name="key"/> can specify the intended <a href="https://developer.mozilla.org/en-US/docs/Web/API/KeyboardEvent/key">keyboardEvent.key</a>
-    /// value or a single character to generate the text for. A superset of the <paramref
-    /// name="key"/> values can be found <a href="https://developer.mozilla.org/en-US/docs/Web/API/KeyboardEvent/key/Key_Values">here</a>.
+    /// <see cref="IElementHandle.PressAsync"/> can specify the intended <a href="https://developer.mozilla.org/en-US/docs/Web/API/KeyboardEvent/key">keyboardEvent.key</a>
+    /// value or a single character to generate the text for. A superset of the <see cref="IElementHandle.PressAsync"/>
+    /// values can be found <a href="https://developer.mozilla.org/en-US/docs/Web/API/KeyboardEvent/key/Key_Values">here</a>.
     /// Examples of the keys are:
     /// </para>
     /// <para>
@@ -522,12 +536,12 @@ public partial interface IElementHandle : IJSHandle
     /// <c>Alt</c>, <c>Meta</c>, <c>ShiftLeft</c>, <c>ControlOrMeta</c>.
     /// </para>
     /// <para>
-    /// Holding down <c>Shift</c> will type the text that corresponds to the <paramref name="key"/>
+    /// Holding down <c>Shift</c> will type the text that corresponds to the <see cref="IElementHandle.PressAsync"/>
     /// in the upper case.
     /// </para>
     /// <para>
-    /// If <paramref name="key"/> is a single character, it is case-sensitive, so the values
-    /// <c>a</c> and <c>A</c> will generate different respective texts.
+    /// If <see cref="IElementHandle.PressAsync"/> is a single character, it is case-sensitive,
+    /// so the values <c>a</c> and <c>A</c> will generate different respective texts.
     /// </para>
     /// <para>
     /// Shortcuts such as <c>key: "Control+o"</c>, <c>key: "Control++</c> or <c>key: "Control+Shift+T"</c>
@@ -905,15 +919,16 @@ public partial interface IElementHandle : IJSHandle
     /// <item><description>If the element already has the right checked state, this method returns immediately.</description></item>
     /// <item><description>
     /// Wait for <a href="https://playwright.dev/dotnet/docs/actionability">actionability</a>
-    /// checks on the matched element, unless <paramref name="force"/> option is set. If
-    /// the element is detached during the checks, the whole action is retried.
+    /// checks on the matched element, unless <see cref="IElementHandle.SetCheckedAsync"/>
+    /// option is set. If the element is detached during the checks, the whole action is
+    /// retried.
     /// </description></item>
     /// <item><description>Scroll the element into view if needed.</description></item>
     /// <item><description>Use <see cref="IPage.Mouse"/> to click in the center of the element.</description></item>
     /// <item><description>Ensure that the element is now checked or unchecked. If not, this method throws.</description></item>
     /// </list>
     /// <para>
-    /// When all steps combined have not finished during the specified <paramref name="timeout"/>,
+    /// When all steps combined have not finished during the specified <see cref="IElementHandle.SetCheckedAsync"/>,
     /// this method throws a <see cref="TimeoutException"/>. Passing zero timeout disables
     /// this.
     /// </para>
@@ -1020,12 +1035,12 @@ public partial interface IElementHandle : IJSHandle
     /// <list type="ordinal">
     /// <item><description>
     /// Wait for <a href="https://playwright.dev/dotnet/docs/actionability">actionability</a>
-    /// checks on the element, unless <paramref name="force"/> option is set.
+    /// checks on the element, unless <see cref="IElementHandle.TapAsync"/> option is set.
     /// </description></item>
     /// <item><description>Scroll the element into view if needed.</description></item>
     /// <item><description>
     /// Use <see cref="IPage.Touchscreen"/> to tap the center of the element, or the specified
-    /// <paramref name="position"/>.
+    /// <see cref="IElementHandle.TapAsync"/>.
     /// </description></item>
     /// </list>
     /// <para>
@@ -1033,9 +1048,13 @@ public partial interface IElementHandle : IJSHandle
     /// throws.
     /// </para>
     /// <para>
-    /// When all steps combined have not finished during the specified <paramref name="timeout"/>,
+    /// When all steps combined have not finished during the specified <see cref="IElementHandle.TapAsync"/>,
     /// this method throws a <see cref="TimeoutException"/>. Passing zero timeout disables
     /// this.
+    /// </para>
+    /// <para>
+    /// <c>elementHandle.tap()</c> requires that the <c>hasTouch</c> option of the browser
+    /// context be set to true.
     /// </para>
     /// </summary>
     /// <remarks>
@@ -1087,7 +1106,8 @@ public partial interface IElementHandle : IJSHandle
     /// </description></item>
     /// <item><description>
     /// Wait for <a href="https://playwright.dev/dotnet/docs/actionability">actionability</a>
-    /// checks on the element, unless <paramref name="force"/> option is set.
+    /// checks on the element, unless <see cref="IElementHandle.UncheckAsync"/> option is
+    /// set.
     /// </description></item>
     /// <item><description>Scroll the element into view if needed.</description></item>
     /// <item><description>Use <see cref="IPage.Mouse"/> to click in the center of the element.</description></item>
@@ -1098,7 +1118,7 @@ public partial interface IElementHandle : IJSHandle
     /// throws.
     /// </para>
     /// <para>
-    /// When all steps combined have not finished during the specified <paramref name="timeout"/>,
+    /// When all steps combined have not finished during the specified <see cref="IElementHandle.UncheckAsync"/>,
     /// this method throws a <see cref="TimeoutException"/>. Passing zero timeout disables
     /// this.
     /// </para>
@@ -1107,10 +1127,10 @@ public partial interface IElementHandle : IJSHandle
     Task UncheckAsync(ElementHandleUncheckOptions? options = default);
 
     /// <summary>
-    /// <para>Returns when the element satisfies the <paramref name="state"/>.</para>
+    /// <para>Returns when the element satisfies the <see cref="IElementHandle.WaitForElementStateAsync"/>.</para>
     /// <para>
-    /// Depending on the <paramref name="state"/> parameter, this method waits for one of
-    /// the <a href="https://playwright.dev/dotnet/docs/actionability">actionability</a>
+    /// Depending on the <see cref="IElementHandle.WaitForElementStateAsync"/> parameter,
+    /// this method waits for one of the <a href="https://playwright.dev/dotnet/docs/actionability">actionability</a>
     /// checks to pass. This method throws when the element is detached while waiting, unless
     /// waiting for the <c>"hidden"</c> state.
     /// </para>
@@ -1133,7 +1153,7 @@ public partial interface IElementHandle : IJSHandle
     /// <item><description><c>"editable"</c> Wait until the element is <a href="https://playwright.dev/dotnet/docs/actionability#editable">editable</a>.</description></item>
     /// </list>
     /// <para>
-    /// If the element does not satisfy the condition for the <paramref name="timeout"/>
+    /// If the element does not satisfy the condition for the <see cref="IElementHandle.WaitForElementStateAsync"/>
     /// milliseconds, this method will throw.
     /// </para>
     /// </summary>
@@ -1147,16 +1167,17 @@ public partial interface IElementHandle : IJSHandle
     /// instead.
     /// </para>
     /// <para>
-    /// Returns element specified by selector when it satisfies <paramref name="state"/>
+    /// Returns element specified by selector when it satisfies <see cref="IElementHandle.WaitForSelectorAsync"/>
     /// option. Returns <c>null</c> if waiting for <c>hidden</c> or <c>detached</c>.
     /// </para>
     /// <para>
-    /// Wait for the <paramref name="selector"/> relative to the element handle to satisfy
-    /// <paramref name="state"/> option (either appear/disappear from dom, or become visible/hidden).
-    /// If at the moment of calling the method <paramref name="selector"/> already satisfies
-    /// the condition, the method will return immediately. If the selector doesn't satisfy
-    /// the condition for the <paramref name="timeout"/> milliseconds, the function will
-    /// throw.
+    /// Wait for the <see cref="IElementHandle.WaitForSelectorAsync"/> relative to the element
+    /// handle to satisfy <see cref="IElementHandle.WaitForSelectorAsync"/> option (either
+    /// appear/disappear from dom, or become visible/hidden). If at the moment of calling
+    /// the method <see cref="IElementHandle.WaitForSelectorAsync"/> already satisfies the
+    /// condition, the method will return immediately. If the selector doesn't satisfy the
+    /// condition for the <see cref="IElementHandle.WaitForSelectorAsync"/> milliseconds,
+    /// the function will throw.
     /// </para>
     /// <para>**Usage**</para>
     /// <code>
@@ -1165,6 +1186,10 @@ public partial interface IElementHandle : IJSHandle
     /// // Waiting for the "span" selector relative to the div.<br/>
     /// var span = await page.WaitForSelectorAsync("span", WaitForSelectorState.Attached);
     /// </code>
+    /// <para>
+    /// This method does not work across navigations, use <see cref="IPage.WaitForSelectorAsync"/>
+    /// instead.
+    /// </para>
     /// </summary>
     /// <remarks>
     /// <para>

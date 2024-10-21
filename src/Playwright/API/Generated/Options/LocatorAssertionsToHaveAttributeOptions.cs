@@ -45,8 +45,8 @@ public class LocatorAssertionsToHaveAttributeOptions
 
     /// <summary>
     /// <para>
-    /// Whether to perform case-insensitive match. <paramref name="ignoreCase"/> option
-    /// takes precedence over the corresponding regular expression flag if specified.
+    /// Whether to perform case-insensitive match. <see cref="ILocatorAssertions.ToHaveAttributeAsync"/>
+    /// option takes precedence over the corresponding regular expression flag if specified.
     /// </para>
     /// </summary>
     [JsonPropertyName("ignoreCase")]

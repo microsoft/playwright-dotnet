@@ -46,7 +46,7 @@ public class PageWaitForFunctionOptions
     /// <summary>
     /// <para>
     /// If specified, then it is treated as an interval in milliseconds at which the function
-    /// would be executed. By default if the option is not specified <paramref name="expression"/>
+    /// would be executed. By default if the option is not specified <see cref="IPage.WaitForFunctionAsync"/>
     /// is executed in <c>requestAnimationFrame</c> callback.
     /// </para>
     /// </summary>

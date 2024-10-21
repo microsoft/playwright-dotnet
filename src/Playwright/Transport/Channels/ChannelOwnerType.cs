@@ -116,4 +116,7 @@ internal enum ChannelOwnerType
 
     [EnumMember(Value = "APIRequestContext")]
     APIRequestContext,
+
+    [EnumMember(Value = "WebSocketroute")]
+    WebSocketRoute,
 }

@@ -41,6 +41,7 @@ internal class Tracing : ChannelOwner, ITracing
 
     public Tracing(ChannelOwner parent, string guid) : base(parent, guid)
     {
+        MarkAsInternalType();
     }
 
     [MethodImpl(MethodImplOptions.NoInlining)]
@@ -48,26 +49,21 @@ internal class Tracing : ChannelOwner, ITracing
         TracingStartOptions options = default)
     {
         _includeSources = options?.Sources == true;
-        var traceName = await _connection.WrapApiCallAsync(
-            async () =>
+        await SendMessageToServerAsync(
+        "tracingStart",
+        new Dictionary<string, object>
         {
-            await SendMessageToServerAsync(
-            "tracingStart",
-            new Dictionary<string, object>
-            {
-                ["name"] = options?.Name,
-                ["title"] = options?.Title,
-                ["screenshots"] = options?.Screenshots,
-                ["snapshots"] = options?.Snapshots,
-                ["sources"] = options?.Sources,
-            }).ConfigureAwait(false);
-            return (await SendMessageToServerAsync("tracingStartChunk", new Dictionary<string, object>
-            {
-                ["title"] = options?.Title,
-                ["name"] = options?.Name,
-            }).ConfigureAwait(false))?.GetProperty("traceName").ToString();
-        },
-            true).ConfigureAwait(false);
+            ["name"] = options?.Name,
+            ["title"] = options?.Title,
+            ["screenshots"] = options?.Screenshots,
+            ["snapshots"] = options?.Snapshots,
+            ["sources"] = options?.Sources,
+        }).ConfigureAwait(false);
+        var traceName = (await SendMessageToServerAsync("tracingStartChunk", new Dictionary<string, object>
+        {
+            ["title"] = options?.Title,
+            ["name"] = options?.Name,
+        }).ConfigureAwait(false))?.GetProperty("traceName").ToString();
         await StartCollectingStacksAsync(traceName).ConfigureAwait(false);
     }
 
@@ -93,18 +89,13 @@ internal class Tracing : ChannelOwner, ITracing
     }
 
     [MethodImpl(MethodImplOptions.NoInlining)]
-    public Task StopChunkAsync(TracingStopChunkOptions options = default) => _connection.WrapApiCallAsync(() => DoStopChunkAsync(filePath: options?.Path), true);
+    public Task StopChunkAsync(TracingStopChunkOptions options = default) => DoStopChunkAsync(filePath: options?.Path);
 
     [MethodImpl(MethodImplOptions.NoInlining)]
     public async Task StopAsync(TracingStopOptions options = default)
     {
-        await _connection.WrapApiCallAsync(
-            async () =>
-            {
-                await StopChunkAsync(new() { Path = options?.Path }).ConfigureAwait(false);
-                await SendMessageToServerAsync("tracingStop").ConfigureAwait(false);
-            },
-            true).ConfigureAwait(false);
+        await StopChunkAsync(new() { Path = options?.Path }).ConfigureAwait(false);
+        await SendMessageToServerAsync("tracingStop").ConfigureAwait(false);
     }
 
     private async Task DoStopChunkAsync(string filePath)

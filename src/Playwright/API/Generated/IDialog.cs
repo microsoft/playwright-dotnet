@@ -56,6 +56,12 @@ namespace Microsoft.Playwright;
 ///     }<br/>
 /// }
 /// </code>
+/// <para>
+/// Dialogs are dismissed automatically, unless there is a <see cref="IPage.Dialog"/>
+/// listener. When listener is present, it **must** either <see cref="IDialog.AcceptAsync"/>
+/// or <see cref="IDialog.DismissAsync"/> the dialog - otherwise the page will <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/EventLoop#never_blocking">freeze</a>
+/// waiting for the dialog, and actions like click will never finish.
+/// </para>
 /// </summary>
 /// <remarks>
 /// <para>

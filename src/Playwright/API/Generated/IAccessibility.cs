@@ -69,6 +69,11 @@ public partial interface IAccessibility
     /// Captures the current state of the accessibility tree. The returned object represents
     /// the root accessible node of the page.
     /// </para>
+    /// <para>
+    /// The Chromium accessibility tree contains nodes that go unused on most platforms
+    /// and by most screen readers. Playwright will discard them as well for an easier to
+    /// process tree, unless <see cref="IAccessibility.SnapshotAsync"/> is set to <c>false</c>.
+    /// </para>
     /// <para>**Usage**</para>
     /// <para>An example of dumping the entire accessibility tree:</para>
     /// <code>
@@ -85,7 +90,8 @@ public partial interface IAccessibility
     /// <para>
     /// The Chromium accessibility tree contains nodes that go unused on most platforms
     /// and by most screen readers. Playwright will discard them as well for an easier to
-    /// process tree, unless <paramref name="interestingOnly"/> is set to <c>false</c>.
+    /// process tree, unless <see cref="IAccessibility.SnapshotAsync"/> is set to <c>false</c>.
+    ///
     /// </para>
     /// </remarks>
     /// <param name="options">Call options</param>

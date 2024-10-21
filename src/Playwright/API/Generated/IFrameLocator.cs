@@ -32,11 +32,11 @@ namespace Microsoft.Playwright;
 /// <para>
 /// FrameLocator represents a view to the <c>iframe</c> on the page. It captures the
 /// logic sufficient to retrieve the <c>iframe</c> and locate elements in that iframe.
-/// FrameLocator can be created with either <see cref="IPage.FrameLocator"/> or <see
-/// cref="ILocator.FrameLocator"/> method.
+/// FrameLocator can be created with either <see cref="ILocator.ContentFrame"/>, <see
+/// cref="IPage.FrameLocator"/> or <see cref="ILocator.FrameLocator"/> method.
 /// </para>
 /// <code>
-/// var locator = page.FrameLocator("#my-frame").GetByText("Submit");<br/>
+/// var locator = page.Locator("#my-frame").ContentFrame.GetByText("Submit");<br/>
 /// await locator.ClickAsync();
 /// </code>
 /// <para>**Strictness**</para>
@@ -46,10 +46,10 @@ namespace Microsoft.Playwright;
 /// </para>
 /// <code>
 /// // Throws if there are several frames in DOM:<br/>
-/// await page.FrameLocator(".result-frame").GetByRole(AriaRole.Button).ClickAsync();<br/>
+/// await page.Locator(".result-frame").ContentFrame.GetByRole(AriaRole.Button).ClickAsync();<br/>
 /// <br/>
 /// // Works because we explicitly tell locator to pick the first frame:<br/>
-/// await page.FrameLocator(".result-frame").First.getByRole(AriaRole.Button).ClickAsync();
+/// await page.Locator(".result-frame").First.ContentFrame.getByRole(AriaRole.Button).ClickAsync();
 /// </code>
 /// <para>**Converting Locator to FrameLocator**</para>
 /// <para>
@@ -65,6 +65,7 @@ namespace Microsoft.Playwright;
 public partial interface IFrameLocator
 {
     /// <summary><para>Returns locator to the first matching frame.</para></summary>
+    [System.Obsolete]
     IFrameLocator First { get; }
 
     /// <summary>
@@ -340,6 +341,7 @@ public partial interface IFrameLocator
     ILocator GetByTitle(Regex text, FrameLocatorGetByTitleOptions? options = default);
 
     /// <summary><para>Returns locator to the last matching frame.</para></summary>
+    [System.Obsolete]
     IFrameLocator Last { get; }
 
     /// <summary>
@@ -366,12 +368,17 @@ public partial interface IFrameLocator
 
     /// <summary>
     /// <para>
+    /// **DEPRECATED** Use <see cref="ILocator.Nth"/> followed by <see cref="ILocator.ContentFrame"/>
+    /// instead.
+    /// </para>
+    /// <para>
     /// Returns locator to the n-th matching frame. It's zero based, <c>nth(0)</c> selects
     /// the first frame.
     /// </para>
     /// </summary>
     /// <param name="index">
     /// </param>
+    [System.Obsolete]
     IFrameLocator Nth(int index);
 
     /// <summary>
@@ -386,7 +393,7 @@ public partial interface IFrameLocator
     /// <para>For a reverse operation, use <see cref="ILocator.ContentFrame"/>.</para>
     /// <para>**Usage**</para>
     /// <code>
-    /// var frameLocator = Page.FrameLocator("iframe[name=\"embedded\"]");<br/>
+    /// var frameLocator = Page.Locator("iframe[name=\"embedded\"]").ContentFrame;<br/>
     /// // ...<br/>
     /// var locator = frameLocator.Owner;<br/>
     /// await Expect(locator).ToBeVisibleAsync();

@@ -71,7 +71,7 @@ public class BrowserTypeConnectTests : PlaywrightTestEx
     [PlaywrightTest("browsertype-connect.spec.ts", "should send default User-Agent and X-Playwright-Browser headers with connect request")]
     public async Task ShouldSendDefaultUserAgentAndPlaywrightBrowserHeadersWithConnectRequest()
     {
-        var connectionRequest = Server.WaitForWebSocketConnectionRequest();
+        var connectionRequestTask = Server.WaitForWebSocketAsync();
         BrowserType.ConnectAsync($"ws://localhost:{Server.Port}/ws", new()
         {
             Headers = new Dictionary<string, string>()
@@ -79,10 +79,10 @@ public class BrowserTypeConnectTests : PlaywrightTestEx
                 ["hello-foo"] = "i-am-bar",
             }
         }).IgnoreException();
-        (_, var request) = await connectionRequest;
-        StringAssert.Contains("Playwright", request.Headers["User-Agent"]);
-        Assert.AreEqual(request.Headers["hello-foo"], "i-am-bar");
-        Assert.AreEqual(request.Headers["x-playwright-browser"], BrowserType.Name);
+        var connectionRequest = await connectionRequestTask;
+        StringAssert.Contains("Playwright", connectionRequest.request.Headers["User-Agent"]);
+        Assert.AreEqual(connectionRequest.request.Headers["hello-foo"], "i-am-bar");
+        Assert.AreEqual(connectionRequest.request.Headers["x-playwright-browser"], BrowserType.Name);
     }
 
     [PlaywrightTest("browsertype-connect.spec.ts", "should be able to connect two browsers at the same time")]
@@ -608,8 +608,8 @@ public class BrowserTypeConnectTests : PlaywrightTestEx
     {
         Server.OnceWebSocketConnection(async (webSocket, _) =>
         {
-            await webSocket.ReceiveAsync(new byte[1], CancellationToken.None);
-            await webSocket.CloseAsync(System.Net.WebSockets.WebSocketCloseStatus.PolicyViolation, "Oh my!", CancellationToken.None);
+            await webSocket.ws.ReceiveAsync(new byte[1], CancellationToken.None);
+            await webSocket.ws.CloseAsync(System.Net.WebSockets.WebSocketCloseStatus.PolicyViolation, "Oh my!", CancellationToken.None);
         });
         var error = await PlaywrightAssert.ThrowsAsync<PlaywrightException>(() => BrowserType.ConnectAsync($"ws://localhost:{Server.Port}/ws"));
         StringAssert.Contains("Oh my!", error.Message);

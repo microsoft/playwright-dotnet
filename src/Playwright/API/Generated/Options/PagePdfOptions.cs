@@ -60,19 +60,14 @@ public class PagePdfOptions
     [JsonPropertyName("displayHeaderFooter")]
     public bool? DisplayHeaderFooter { get; set; }
 
-    /// <summary>
-    /// <para>
-    /// HTML template for the print footer. Should use the same format as the <paramref
-    /// name="headerTemplate"/>.
-    /// </para>
-    /// </summary>
+    /// <summary><para>HTML template for the print footer. Should use the same format as the <see cref="IPage.PdfAsync"/>.</para></summary>
     [JsonPropertyName("footerTemplate")]
     public string? FooterTemplate { get; set; }
 
     /// <summary>
     /// <para>
-    /// Paper format. If set, takes priority over <paramref name="width"/> or <paramref
-    /// name="height"/> options. Defaults to 'Letter'.
+    /// Paper format. If set, takes priority over <see cref="IPage.PdfAsync"/> or <see cref="IPage.PdfAsync"/>
+    /// options. Defaults to 'Letter'.
     /// </para>
     /// </summary>
     [JsonPropertyName("format")]
@@ -121,9 +116,9 @@ public class PagePdfOptions
 
     /// <summary>
     /// <para>
-    /// The file path to save the PDF to. If <paramref name="path"/> is a relative path,
-    /// then it is resolved relative to the current working directory. If no path is provided,
-    /// the PDF won't be saved to the disk.
+    /// The file path to save the PDF to. If <see cref="IPage.PdfAsync"/> is a relative
+    /// path, then it is resolved relative to the current working directory. If no path
+    /// is provided, the PDF won't be saved to the disk.
     /// </para>
     /// </summary>
     [JsonPropertyName("path")]
@@ -132,7 +127,7 @@ public class PagePdfOptions
     /// <summary>
     /// <para>
     /// Give any CSS <c>@page</c> size declared in the page priority over what is declared
-    /// in <paramref name="width"/> and <paramref name="height"/> or <paramref name="format"/>
+    /// in <see cref="IPage.PdfAsync"/> and <see cref="IPage.PdfAsync"/> or <see cref="IPage.PdfAsync"/>
     /// options. Defaults to <c>false</c>, which will scale the content to fit the paper
     /// size.
     /// </para>

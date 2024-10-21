@@ -60,7 +60,7 @@ public partial interface IWorker
     event EventHandler<IWorker> Close;
 
     /// <summary>
-    /// <para>Returns the return value of <paramref name="expression"/>.</para>
+    /// <para>Returns the return value of <see cref="IWorker.EvaluateAsync"/>.</para>
     /// <para>
     /// If the function passed to the <see cref="IWorker.EvaluateAsync"/> returns a <see
     /// cref="Task"/>, then <see cref="IWorker.EvaluateAsync"/> would wait for the promise
@@ -77,11 +77,14 @@ public partial interface IWorker
     /// JavaScript expression to be evaluated in the browser context. If the expression
     /// evaluates to a function, the function is automatically invoked.
     /// </param>
-    /// <param name="arg">Optional argument to pass to <paramref name="expression"/>.</param>
+    /// <param name="arg">Optional argument to pass to <see cref="IWorker.EvaluateAsync"/>.</param>
     Task<T> EvaluateAsync<T>(string expression, object? arg = default);
 
     /// <summary>
-    /// <para>Returns the return value of <paramref name="expression"/> as a <see cref="IJSHandle"/>.</para>
+    /// <para>
+    /// Returns the return value of <see cref="IWorker.EvaluateHandleAsync"/> as a <see
+    /// cref="IJSHandle"/>.
+    /// </para>
     /// <para>
     /// The only difference between <see cref="IWorker.EvaluateAsync"/> and <see cref="IWorker.EvaluateHandleAsync"/>
     /// is that <see cref="IWorker.EvaluateHandleAsync"/> returns <see cref="IJSHandle"/>.
@@ -96,7 +99,7 @@ public partial interface IWorker
     /// JavaScript expression to be evaluated in the browser context. If the expression
     /// evaluates to a function, the function is automatically invoked.
     /// </param>
-    /// <param name="arg">Optional argument to pass to <paramref name="expression"/>.</param>
+    /// <param name="arg">Optional argument to pass to <see cref="IWorker.EvaluateHandleAsync"/>.</param>
     Task<IJSHandle> EvaluateHandleAsync(string expression, object? arg = default);
 
     string Url { get; }

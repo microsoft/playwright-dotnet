@@ -46,8 +46,8 @@ internal class Page : ChannelOwner, IPage
     internal readonly List<Worker> _workers = new();
     internal readonly TimeoutSettings _timeoutSettings;
     private readonly List<HarRouter> _harRouters = new();
-    // Func<Locator, Task> Handler
     private readonly Dictionary<int, LocatorHandler> _locatorHandlers = new();
+    private readonly List<WebSocketRouteHandler> _webSocketRoutes = new();
     private List<RouteHandler> _routes = new();
     private Video _video;
     private string _closeReason;
@@ -237,6 +237,10 @@ internal class Page : ChannelOwner, IPage
                 var route = serverParams?.GetProperty("route").ToObject<Route>(_connection.DefaultJsonSerializerOptions);
                 Channel_Route(this, route);
                 break;
+            case "webSocketRoute":
+                var webSocketRoute = serverParams?.GetProperty("webSocketRoute").ToObject<WebSocketRoute>(_connection.DefaultJsonSerializerOptions);
+                _ = OnWebSocketRouteAsync(webSocketRoute).ConfigureAwait(false);
+                break;
             case "popup":
                 Popup?.Invoke(this, serverParams?.GetProperty("page").ToObject<Page>(_connection.DefaultJsonSerializerOptions));
                 break;
@@ -293,6 +297,9 @@ internal class Page : ChannelOwner, IPage
 
     [MethodImpl(MethodImplOptions.NoInlining)]
     public Task<IPage> OpenerAsync() => Task.FromResult<IPage>(Opener?.IsClosed == false ? Opener : null);
+
+    [MethodImpl(MethodImplOptions.NoInlining)]
+    public Task RequestGCAsync() => SendMessageToServerAsync("requestGC");
 
     [MethodImpl(MethodImplOptions.NoInlining)]
     public Task EmulateMediaAsync(PageEmulateMediaOptions options = default)
@@ -1343,6 +1350,19 @@ internal class Page : ChannelOwner, IPage
         await Context.OnRouteAsync(route).ConfigureAwait(false);
     }
 
+    private async Task OnWebSocketRouteAsync(WebSocketRoute webSocketRoute)
+    {
+        var routeHandler = _webSocketRoutes.Find(r => r.Regex?.IsMatch(webSocketRoute.Url) == true || r.Function?.Invoke(webSocketRoute.Url) == true);
+        if (routeHandler != null)
+        {
+            await routeHandler.HandleAsync(webSocketRoute).ConfigureAwait(false);
+        }
+        else
+        {
+            await Context.OnWebSocketRouteAsync(webSocketRoute).ConfigureAwait(false);
+        }
+    }
+
     private void Channel_FrameDetached(object sender, IFrame args)
     {
         var frame = (Frame)args;
@@ -1561,6 +1581,35 @@ internal class Page : ChannelOwner, IPage
                 }
             }
         }
+    }
+
+    [MethodImpl(MethodImplOptions.NoInlining)]
+    public Task RouteWebSocketAsync(string url, Action<IWebSocketRoute> handler)
+        => RouteWebSocketAsync(new Regex(Context.CombineUrlWithBase(url).GlobToRegex()), null, handler);
+
+    [MethodImpl(MethodImplOptions.NoInlining)]
+    public Task RouteWebSocketAsync(Regex url, Action<IWebSocketRoute> handler)
+        => RouteWebSocketAsync(url, null, handler);
+
+    [MethodImpl(MethodImplOptions.NoInlining)]
+    public Task RouteWebSocketAsync(Func<string, bool> url, Action<IWebSocketRoute> handler)
+        => RouteWebSocketAsync(null, url, handler);
+
+    private Task RouteWebSocketAsync(Regex urlRegex, Func<string, bool> urlFunc, Delegate handler)
+    {
+        _webSocketRoutes.Insert(0, new WebSocketRouteHandler()
+        {
+            Regex = urlRegex,
+            Function = urlFunc,
+            Handler = handler,
+        });
+        return UpdateWebSocketInterceptionAsync();
+    }
+
+    private async Task UpdateWebSocketInterceptionAsync()
+    {
+        var patterns = WebSocketRouteHandler.PrepareInterceptionPatterns(_webSocketRoutes);
+        await SendMessageToServerAsync("setWebSocketInterceptionPatterns", patterns).ConfigureAwait(false);
     }
 }
 
