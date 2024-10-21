@@ -44,9 +44,10 @@ public class APIRequestContextStorageStateOptions
 
     /// <summary>
     /// <para>
-    /// The file path to save the storage state to. If <paramref name="path"/> is a relative
-    /// path, then it is resolved relative to current working directory. If no path is provided,
-    /// storage state is still returned, but won't be saved to the disk.
+    /// The file path to save the storage state to. If <see cref="IAPIRequestContext.StorageStateAsync"/>
+    /// is a relative path, then it is resolved relative to current working directory. If
+    /// no path is provided, storage state is still returned, but won't be saved to the
+    /// disk.
     /// </para>
     /// </summary>
     [JsonPropertyName("path")]

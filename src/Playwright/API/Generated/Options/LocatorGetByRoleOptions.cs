@@ -63,11 +63,18 @@ public class LocatorGetByRoleOptions
     [JsonPropertyName("checked")]
     public bool? Checked { get; set; }
 
-    /// <summary><para>An attribute that is usually set by <c>aria-disabled</c> or <c>disabled</c>.</para></summary>
+    /// <summary>
+    /// <para>An attribute that is usually set by <c>aria-disabled</c> or <c>disabled</c>.</para>
+    /// <para>
+    /// Unlike most other attributes, <c>disabled</c> is inherited through the DOM hierarchy.
+    /// Learn more about <a href="https://www.w3.org/TR/wai-aria-1.2/#aria-disabled"><c>aria-disabled</c></a>.
+    /// </para>
+    /// </summary>
     /// <remarks>
     /// <para>
     /// Unlike most other attributes, <c>disabled</c> is inherited through the DOM hierarchy.
     /// Learn more about <a href="https://www.w3.org/TR/wai-aria-1.2/#aria-disabled"><c>aria-disabled</c></a>.
+    ///
     /// </para>
     /// </remarks>
     [JsonPropertyName("disabled")]
@@ -75,9 +82,9 @@ public class LocatorGetByRoleOptions
 
     /// <summary>
     /// <para>
-    /// Whether <paramref name="name"/> is matched exactly: case-sensitive and whole-string.
-    /// Defaults to false. Ignored when <paramref name="name"/> is a regular expression.
-    /// Note that exact match still trims whitespace.
+    /// Whether <see cref="ILocator.GetByRole"/> is matched exactly: case-sensitive and
+    /// whole-string. Defaults to false. Ignored when <see cref="ILocator.GetByRole"/> is
+    /// a regular expression. Note that exact match still trims whitespace.
     /// </para>
     /// </summary>
     [JsonPropertyName("exact")]
@@ -116,7 +123,7 @@ public class LocatorGetByRoleOptions
     /// <para>
     /// Option to match the <a href="https://w3c.github.io/accname/#dfn-accessible-name">accessible
     /// name</a>. By default, matching is case-insensitive and searches for a substring,
-    /// use <paramref name="exact"/> to control this behavior.
+    /// use <see cref="ILocator.GetByRole"/> to control this behavior.
     /// </para>
     /// <para>
     /// Learn more about <a href="https://w3c.github.io/accname/#dfn-accessible-name">accessible
@@ -130,7 +137,7 @@ public class LocatorGetByRoleOptions
     /// <para>
     /// Option to match the <a href="https://w3c.github.io/accname/#dfn-accessible-name">accessible
     /// name</a>. By default, matching is case-insensitive and searches for a substring,
-    /// use <paramref name="exact"/> to control this behavior.
+    /// use <see cref="ILocator.GetByRole"/> to control this behavior.
     /// </para>
     /// <para>
     /// Learn more about <a href="https://w3c.github.io/accname/#dfn-accessible-name">accessible
@@ -144,7 +151,7 @@ public class LocatorGetByRoleOptions
     /// <para>
     /// Option to match the <a href="https://w3c.github.io/accname/#dfn-accessible-name">accessible
     /// name</a>. By default, matching is case-insensitive and searches for a substring,
-    /// use <paramref name="exact"/> to control this behavior.
+    /// use <see cref="ILocator.GetByRole"/> to control this behavior.
     /// </para>
     /// <para>
     /// Learn more about <a href="https://w3c.github.io/accname/#dfn-accessible-name">accessible

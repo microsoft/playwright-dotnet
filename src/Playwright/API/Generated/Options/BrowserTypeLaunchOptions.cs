@@ -61,12 +61,18 @@ public class BrowserTypeLaunchOptions
     }
 
     /// <summary>
+    /// <para>Use custom browser args at your own risk, as some of them may break Playwright functionality.</para>
     /// <para>
     /// Additional arguments to pass to the browser instance. The list of Chromium flags
     /// can be found <a href="https://peter.sh/experiments/chromium-command-line-switches/">here</a>.
     /// </para>
     /// </summary>
-    /// <remarks><para>Use custom browser args at your own risk, as some of them may break Playwright functionality.</para></remarks>
+    /// <remarks>
+    /// <para>
+    /// Use custom browser args at your own risk, as some of them may break Playwright functionality.
+    ///
+    /// </para>
+    /// </remarks>
     [JsonPropertyName("args")]
     public IEnumerable<string>? Args { get; set; }
 
@@ -92,7 +98,8 @@ public class BrowserTypeLaunchOptions
     /// </para>
     /// <para>
     /// **Chromium-only** Whether to auto-open a Developer Tools panel for each tab. If
-    /// this option is <c>true</c>, the <paramref name="headless"/> option will be set <c>false</c>.
+    /// this option is <c>true</c>, the <see cref="IBrowserType.LaunchAsync"/> option will
+    /// be set <c>false</c>.
     /// </para>
     /// </summary>
     [JsonPropertyName("devtools")]
@@ -116,7 +123,7 @@ public class BrowserTypeLaunchOptions
 
     /// <summary>
     /// <para>
-    /// Path to a browser executable to run instead of the bundled one. If <paramref name="executablePath"/>
+    /// Path to a browser executable to run instead of the bundled one. If <see cref="IBrowserType.LaunchAsync"/>
     /// is a relative path, then it is resolved relative to the current working directory.
     /// Note that Playwright only works with the bundled Chromium, Firefox or WebKit, use
     /// at your own risk.
@@ -145,7 +152,8 @@ public class BrowserTypeLaunchOptions
     /// <para>
     /// Whether to run browser in headless mode. More details for <a href="https://developers.google.com/web/updates/2017/04/headless-chrome">Chromium</a>
     /// and <a href="https://developer.mozilla.org/en-US/docs/Mozilla/Firefox/Headless_mode">Firefox</a>.
-    /// Defaults to <c>true</c> unless the <paramref name="devtools"/> option is <c>true</c>.
+    /// Defaults to <c>true</c> unless the <see cref="IBrowserType.LaunchAsync"/> option
+    /// is <c>true</c>.
     /// </para>
     /// </summary>
     [JsonPropertyName("headless")]
@@ -154,8 +162,8 @@ public class BrowserTypeLaunchOptions
     /// <summary>
     /// <para>
     /// If <c>true</c>, Playwright does not pass its own configurations args and only uses
-    /// the ones from <paramref name="args"/>. Dangerous option; use with care. Defaults
-    /// to <c>false</c>.
+    /// the ones from <see cref="IBrowserType.LaunchAsync"/>. Dangerous option; use with
+    /// care. Defaults to <c>false</c>.
     /// </para>
     /// </summary>
     [JsonPropertyName("ignoreAllDefaultArgs")]
@@ -164,7 +172,8 @@ public class BrowserTypeLaunchOptions
     /// <summary>
     /// <para>
     /// If <c>true</c>, Playwright does not pass its own configurations args and only uses
-    /// the ones from <paramref name="args"/>. Dangerous option; use with care.
+    /// the ones from <see cref="IBrowserType.LaunchAsync"/>. Dangerous option; use with
+    /// care.
     /// </para>
     /// </summary>
     [JsonPropertyName("ignoreDefaultArgs")]

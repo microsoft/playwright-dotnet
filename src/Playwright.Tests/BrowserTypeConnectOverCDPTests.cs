@@ -55,16 +55,16 @@ public class BrowserTypeConnectOverCDPTests : PlaywrightTestEx
     [Skip(SkipAttribute.Targets.Firefox, SkipAttribute.Targets.Webkit)]
     public async Task ShouldSendExtraHeadersWithConnectRequest()
     {
-        var waitForRequest = Server.WaitForWebSocketConnectionRequest();
+        var webSocketTask = Server.WaitForWebSocketAsync();
         BrowserType.ConnectOverCDPAsync($"ws://127.0.0.1:{Server.Port}/ws", new()
         {
             Headers = new Dictionary<string, string> {
-                    { "x-foo-bar", "fookek" }
-                },
+                { "x-foo-bar", "fookek" }
+            },
         }).IgnoreException();
-        (_, var req) = await waitForRequest;
-        Assert.AreEqual("fookek", req.Headers["x-foo-bar"]);
-        StringAssert.Contains("Playwright", req.Headers["user-agent"]);
+        var webSocket = await webSocketTask;
+        Assert.AreEqual("fookek", webSocket.request.Headers["x-foo-bar"]);
+        StringAssert.Contains("Playwright", webSocket.request.Headers["user-agent"]);
     }
 
     [PlaywrightTest("chromium/chromium.spec.ts", "should report all pages in an existing browser")]
@@ -102,8 +102,8 @@ public class BrowserTypeConnectOverCDPTests : PlaywrightTestEx
     {
         Server.OnceWebSocketConnection(async (ws, request) =>
         {
-            await ws.ReceiveAsync(new byte[1024], CancellationToken.None);
-            await ws.CloseAsync(System.Net.WebSockets.WebSocketCloseStatus.NormalClosure, "Oh my!", CancellationToken.None);
+            await ws.ws.ReceiveAsync(new byte[1024], CancellationToken.None);
+            await ws.ws.CloseAsync(System.Net.WebSockets.WebSocketCloseStatus.NormalClosure, "Oh my!", CancellationToken.None);
         });
         var error = await PlaywrightAssert.ThrowsAsync<PlaywrightException>(() => BrowserType.ConnectOverCDPAsync($"ws://localhost:{Server.Port}/ws"));
         StringAssert.Contains("Browser logs:\n\nOh my!\n", error.Message);

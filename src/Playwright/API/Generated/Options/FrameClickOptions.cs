@@ -134,7 +134,9 @@ public class FrameClickOptions
     /// <para>
     /// When set, this method only performs the <a href="https://playwright.dev/dotnet/docs/actionability">actionability</a>
     /// checks and skips the action. Defaults to <c>false</c>. Useful to wait until the
-    /// element is ready for the action without performing it.
+    /// element is ready for the action without performing it. Note that keyboard <c>modifiers</c>
+    /// will be pressed regardless of <c>trial</c> to allow testing elements which are only
+    /// visible when those keys are pressed.
     /// </para>
     /// </summary>
     [JsonPropertyName("trial")]

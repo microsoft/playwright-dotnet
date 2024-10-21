@@ -49,6 +49,7 @@ internal class BrowserContext : ChannelOwner, IBrowserContext
     internal readonly APIRequestContext _request;
     private readonly Dictionary<string, HarRecorder> _harRecorders = new();
     internal readonly List<IWorker> _serviceWorkers = new();
+    private readonly List<WebSocketRouteHandler> _webSocketRoutes = new();
     private List<RouteHandler> _routes = new();
     internal readonly List<Page> _pages = new();
     private readonly Browser _browser;
@@ -180,6 +181,10 @@ internal class BrowserContext : ChannelOwner, IBrowserContext
             case "route":
                 var route = serverParams?.GetProperty("route").ToObject<Route>(_connection.DefaultJsonSerializerOptions);
                 Channel_Route(this, route);
+                break;
+            case "webSocketRoute":
+                var webSocketRoute = serverParams?.GetProperty("webSocketRoute").ToObject<WebSocketRoute>(_connection.DefaultJsonSerializerOptions);
+                _ = OnWebSocketRouteAsync(webSocketRoute).ConfigureAwait(false);
                 break;
             case "page":
                 Channel_OnPage(
@@ -696,12 +701,25 @@ internal class BrowserContext : ChannelOwner, IBrowserContext
 
         try
         {
-            await route.InnerContinueAsync(true).ConfigureAwait(false);
+            await route.InnerContinueAsync(true /* isFallback */).ConfigureAwait(false);
         }
         catch
         {
             // If the page is closed or UnrouteAll() was called without waiting and interception disabled,
             // the method will throw an error - silence it.
+        }
+    }
+
+    internal async Task OnWebSocketRouteAsync(WebSocketRoute webSocketRoute)
+    {
+        var routeHandler = _webSocketRoutes.Find(r => r.Regex?.IsMatch(webSocketRoute.Url) == true || r.Function?.Invoke(webSocketRoute.Url) == true);
+        if (routeHandler != null)
+        {
+            await routeHandler.HandleAsync(webSocketRoute).ConfigureAwait(false);
+        }
+        else
+        {
+            webSocketRoute.ConnectToServer();
         }
     }
 
@@ -891,6 +909,35 @@ internal class BrowserContext : ChannelOwner, IBrowserContext
             router.Dispose();
         }
         _harRouters.Clear();
+    }
+
+    [MethodImpl(MethodImplOptions.NoInlining)]
+    public Task RouteWebSocketAsync(string url, Action<IWebSocketRoute> handler)
+        => RouteWebSocketAsync(new Regex(CombineUrlWithBase(url).GlobToRegex()), null, handler);
+
+    [MethodImpl(MethodImplOptions.NoInlining)]
+    public Task RouteWebSocketAsync(Regex url, Action<IWebSocketRoute> handler)
+        => RouteWebSocketAsync(url, null, handler);
+
+    [MethodImpl(MethodImplOptions.NoInlining)]
+    public Task RouteWebSocketAsync(Func<string, bool> url, Action<IWebSocketRoute> handler)
+        => RouteWebSocketAsync(null, url, handler);
+
+    private Task RouteWebSocketAsync(Regex urlRegex, Func<string, bool> urlFunc, Delegate handler)
+    {
+        _webSocketRoutes.Insert(0, new WebSocketRouteHandler()
+        {
+            Regex = urlRegex,
+            Function = urlFunc,
+            Handler = handler,
+        });
+        return UpdateWebSocketInterceptionAsync();
+    }
+
+    private async Task UpdateWebSocketInterceptionAsync()
+    {
+        var patterns = WebSocketRouteHandler.PrepareInterceptionPatterns(_webSocketRoutes);
+        await SendMessageToServerAsync("setWebSocketInterceptionPatterns", patterns).ConfigureAwait(false);
     }
 }
 

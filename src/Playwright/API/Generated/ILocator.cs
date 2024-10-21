@@ -46,6 +46,18 @@ public partial interface ILocator
     /// When the locator points to a list of elements, this returns an array of locators,
     /// pointing to their respective elements.
     /// </para>
+    /// <para>
+    /// <see cref="ILocator.AllAsync"/> does not wait for elements to match the locator,
+    /// and instead immediately returns whatever is present in the page.
+    /// </para>
+    /// <para>
+    /// When the list of elements changes dynamically, <see cref="ILocator.AllAsync"/> will
+    /// produce unpredictable and flaky results.
+    /// </para>
+    /// <para>
+    /// When the list of elements is stable, but loaded dynamically, wait for the full list
+    /// to finish loading before calling <see cref="ILocator.AllAsync"/>.
+    /// </para>
     /// <para>**Usage**</para>
     /// <code>
     /// foreach (var li in await page.GetByRole("listitem").AllAsync())<br/>
@@ -59,26 +71,39 @@ public partial interface ILocator
     /// of elements changes dynamically, <see cref="ILocator.AllAsync"/> will produce unpredictable
     /// and flaky results.  When the list of elements is stable, but loaded dynamically,
     /// wait for the full list to finish loading before calling <see cref="ILocator.AllAsync"/>.
+    ///
     /// </para>
     /// </remarks>
     Task<IReadOnlyList<ILocator>> AllAsync();
 
     /// <summary>
     /// <para>Returns an array of <c>node.innerText</c> values for all matching nodes.</para>
+    /// <para>
+    /// If you need to assert text on the page, prefer <see cref="ILocatorAssertions.ToHaveTextAsync"/>
+    /// with <see cref="ILocatorAssertions.ToHaveTextAsync"/> option to avoid flakiness.
+    /// See <a href="https://playwright.dev/dotnet/docs/test-assertions">assertions guide</a>
+    /// for more details.
+    /// </para>
     /// <para>**Usage**</para>
     /// <code>var texts = await page.GetByRole(AriaRole.Link).AllInnerTextsAsync();</code>
     /// </summary>
     /// <remarks>
     /// <para>
     /// If you need to assert text on the page, prefer <see cref="ILocatorAssertions.ToHaveTextAsync"/>
-    /// with <paramref name="useInnerText"/> option to avoid flakiness. See <a href="https://playwright.dev/dotnet/docs/test-assertions">assertions
-    /// guide</a> for more details.
+    /// with <see cref="ILocatorAssertions.ToHaveTextAsync"/> option to avoid flakiness.
+    /// See <a href="https://playwright.dev/dotnet/docs/test-assertions">assertions guide</a>
+    /// for more details.
     /// </para>
     /// </remarks>
     Task<IReadOnlyList<string>> AllInnerTextsAsync();
 
     /// <summary>
     /// <para>Returns an array of <c>node.textContent</c> values for all matching nodes.</para>
+    /// <para>
+    /// If you need to assert text on the page, prefer <see cref="ILocatorAssertions.ToHaveTextAsync"/>
+    /// to avoid flakiness. See <a href="https://playwright.dev/dotnet/docs/test-assertions">assertions
+    /// guide</a> for more details.
+    /// </para>
     /// <para>**Usage**</para>
     /// <code>var texts = await page.GetByRole(AriaRole.Link).AllTextContentsAsync();</code>
     /// </summary>
@@ -148,7 +173,7 @@ public partial interface ILocator
     /// </description></item>
     /// <item><description>
     /// Wait for <a href="https://playwright.dev/dotnet/docs/actionability">actionability</a>
-    /// checks on the element, unless <paramref name="force"/> option is set.
+    /// checks on the element, unless <see cref="ILocator.CheckAsync"/> option is set.
     /// </description></item>
     /// <item><description>Scroll the element into view if needed.</description></item>
     /// <item><description>Use <see cref="IPage.Mouse"/> to click in the center of the element.</description></item>
@@ -159,7 +184,7 @@ public partial interface ILocator
     /// throws.
     /// </para>
     /// <para>
-    /// When all steps combined have not finished during the specified <paramref name="timeout"/>,
+    /// When all steps combined have not finished during the specified <see cref="ILocator.CheckAsync"/>,
     /// this method throws a <see cref="TimeoutException"/>. Passing zero timeout disables
     /// this.
     /// </para>
@@ -196,15 +221,15 @@ public partial interface ILocator
     /// <list type="ordinal">
     /// <item><description>
     /// Wait for <a href="https://playwright.dev/dotnet/docs/actionability">actionability</a>
-    /// checks on the element, unless <paramref name="force"/> option is set.
+    /// checks on the element, unless <see cref="ILocator.ClickAsync"/> option is set.
     /// </description></item>
     /// <item><description>Scroll the element into view if needed.</description></item>
     /// <item><description>
     /// Use <see cref="IPage.Mouse"/> to click in the center of the element, or the specified
-    /// <paramref name="position"/>.
+    /// <see cref="ILocator.ClickAsync"/>.
     /// </description></item>
     /// <item><description>
-    /// Wait for initiated navigations to either succeed or fail, unless <paramref name="noWaitAfter"/>
+    /// Wait for initiated navigations to either succeed or fail, unless <see cref="ILocator.ClickAsync"/>
     /// option is set.
     /// </description></item>
     /// </list>
@@ -213,7 +238,7 @@ public partial interface ILocator
     /// throws.
     /// </para>
     /// <para>
-    /// When all steps combined have not finished during the specified <paramref name="timeout"/>,
+    /// When all steps combined have not finished during the specified <see cref="ILocator.ClickAsync"/>,
     /// this method throws a <see cref="TimeoutException"/>. Passing zero timeout disables
     /// this.
     /// </para>
@@ -234,6 +259,11 @@ public partial interface ILocator
 
     /// <summary>
     /// <para>Returns the number of elements matching the locator.</para>
+    /// <para>
+    /// If you need to assert the number of elements on the page, prefer <see cref="ILocatorAssertions.ToHaveCountAsync"/>
+    /// to avoid flakiness. See <a href="https://playwright.dev/dotnet/docs/test-assertions">assertions
+    /// guide</a> for more details.
+    /// </para>
     /// <para>**Usage**</para>
     /// <code>int count = await page.GetByRole(AriaRole.Listitem).CountAsync();</code>
     /// </summary>
@@ -253,12 +283,12 @@ public partial interface ILocator
     /// <list type="ordinal">
     /// <item><description>
     /// Wait for <a href="https://playwright.dev/dotnet/docs/actionability">actionability</a>
-    /// checks on the element, unless <paramref name="force"/> option is set.
+    /// checks on the element, unless <see cref="ILocator.DblClickAsync"/> option is set.
     /// </description></item>
     /// <item><description>Scroll the element into view if needed.</description></item>
     /// <item><description>
     /// Use <see cref="IPage.Mouse"/> to double click in the center of the element, or the
-    /// specified <paramref name="position"/>.
+    /// specified <see cref="ILocator.DblClickAsync"/>.
     /// </description></item>
     /// </list>
     /// <para>
@@ -266,9 +296,13 @@ public partial interface ILocator
     /// throws.
     /// </para>
     /// <para>
-    /// When all steps combined have not finished during the specified <paramref name="timeout"/>,
+    /// When all steps combined have not finished during the specified <see cref="ILocator.DblClickAsync"/>,
     /// this method throws a <see cref="TimeoutException"/>. Passing zero timeout disables
     /// this.
+    /// </para>
+    /// <para>
+    /// <c>element.dblclick()</c> dispatches two <c>click</c> events and a single <c>dblclick</c>
+    /// event.
     /// </para>
     /// </summary>
     /// <remarks>
@@ -291,13 +325,13 @@ public partial interface ILocator
     /// to calling <a href="https://developer.mozilla.org/en-US/docs/Web/API/HTMLElement/click">element.click()</a>.
     /// </para>
     /// <para>
-    /// Under the hood, it creates an instance of an event based on the given <paramref
-    /// name="type"/>, initializes it with <paramref name="eventInit"/> properties and dispatches
+    /// Under the hood, it creates an instance of an event based on the given <see cref="ILocator.DispatchEventAsync"/>,
+    /// initializes it with <see cref="ILocator.DispatchEventAsync"/> properties and dispatches
     /// it on the element. Events are <c>composed</c>, <c>cancelable</c> and bubble by default.
     /// </para>
     /// <para>
-    /// Since <paramref name="eventInit"/> is event-specific, please refer to the events
-    /// documentation for the lists of initial properties:
+    /// Since <see cref="ILocator.DispatchEventAsync"/> is event-specific, please refer
+    /// to the events documentation for the lists of initial properties:
     /// </para>
     /// <list type="bullet">
     /// <item><description><a href="https://developer.mozilla.org/en-US/docs/Web/API/DeviceMotionEvent/DeviceMotionEvent">DeviceMotionEvent</a></description></item>
@@ -403,14 +437,15 @@ public partial interface ILocator
     /// <para>Execute JavaScript code in the page, taking the matching element as an argument.</para>
     /// <para>**Details**</para>
     /// <para>
-    /// Returns the return value of <paramref name="expression"/>, called with the matching
-    /// element as a first argument, and <paramref name="arg"/> as a second argument.
+    /// Returns the return value of <see cref="ILocator.EvaluateAsync"/>, called with the
+    /// matching element as a first argument, and <see cref="ILocator.EvaluateAsync"/> as
+    /// a second argument.
     /// </para>
     /// <para>
-    /// If <paramref name="expression"/> returns a <see cref="Task"/>, this method will
-    /// wait for the promise to resolve and return its value.
+    /// If <see cref="ILocator.EvaluateAsync"/> returns a <see cref="Task"/>, this method
+    /// will wait for the promise to resolve and return its value.
     /// </para>
-    /// <para>If <paramref name="expression"/> throws or rejects, this method throws.</para>
+    /// <para>If <see cref="ILocator.EvaluateAsync"/> throws or rejects, this method throws.</para>
     /// <para>**Usage**</para>
     /// <code>
     /// var tweets = page.Locator(".tweet .retweets");<br/>
@@ -421,7 +456,7 @@ public partial interface ILocator
     /// JavaScript expression to be evaluated in the browser context. If the expression
     /// evaluates to a function, the function is automatically invoked.
     /// </param>
-    /// <param name="arg">Optional argument to pass to <paramref name="expression"/>.</param>
+    /// <param name="arg">Optional argument to pass to <see cref="ILocator.EvaluateAsync"/>.</param>
     /// <param name="options">Call options</param>
     Task<T> EvaluateAsync<T>(string expression, object? arg = default, LocatorEvaluateOptions? options = default);
 
@@ -429,15 +464,15 @@ public partial interface ILocator
     /// <para>Execute JavaScript code in the page, taking all matching elements as an argument.</para>
     /// <para>**Details**</para>
     /// <para>
-    /// Returns the return value of <paramref name="expression"/>, called with an array
-    /// of all matching elements as a first argument, and <paramref name="arg"/> as a second
-    /// argument.
+    /// Returns the return value of <see cref="ILocator.EvaluateAllAsync"/>, called with
+    /// an array of all matching elements as a first argument, and <see cref="ILocator.EvaluateAllAsync"/>
+    /// as a second argument.
     /// </para>
     /// <para>
-    /// If <paramref name="expression"/> returns a <see cref="Task"/>, this method will
-    /// wait for the promise to resolve and return its value.
+    /// If <see cref="ILocator.EvaluateAllAsync"/> returns a <see cref="Task"/>, this method
+    /// will wait for the promise to resolve and return its value.
     /// </para>
-    /// <para>If <paramref name="expression"/> throws or rejects, this method throws.</para>
+    /// <para>If <see cref="ILocator.EvaluateAllAsync"/> throws or rejects, this method throws.</para>
     /// <para>**Usage**</para>
     /// <code>
     /// var locator = page.Locator("div");<br/>
@@ -448,7 +483,7 @@ public partial interface ILocator
     /// JavaScript expression to be evaluated in the browser context. If the expression
     /// evaluates to a function, the function is automatically invoked.
     /// </param>
-    /// <param name="arg">Optional argument to pass to <paramref name="expression"/>.</param>
+    /// <param name="arg">Optional argument to pass to <see cref="ILocator.EvaluateAllAsync"/>.</param>
     Task<T> EvaluateAllAsync<T>(string expression, object? arg = default);
 
     /// <summary>
@@ -458,26 +493,26 @@ public partial interface ILocator
     /// </para>
     /// <para>**Details**</para>
     /// <para>
-    /// Returns the return value of <paramref name="expression"/> as a<see cref="IJSHandle"/>,
-    /// called with the matching element as a first argument, and <paramref name="arg"/>
-    /// as a second argument.
+    /// Returns the return value of <see cref="ILocator.EvaluateHandleAsync"/> as a<see
+    /// cref="IJSHandle"/>, called with the matching element as a first argument, and <see
+    /// cref="ILocator.EvaluateHandleAsync"/> as a second argument.
     /// </para>
     /// <para>
     /// The only difference between <see cref="ILocator.EvaluateAsync"/> and <see cref="ILocator.EvaluateHandleAsync"/>
     /// is that <see cref="ILocator.EvaluateHandleAsync"/> returns <see cref="IJSHandle"/>.
     /// </para>
     /// <para>
-    /// If <paramref name="expression"/> returns a <see cref="Task"/>, this method will
-    /// wait for the promise to resolve and return its value.
+    /// If <see cref="ILocator.EvaluateHandleAsync"/> returns a <see cref="Task"/>, this
+    /// method will wait for the promise to resolve and return its value.
     /// </para>
-    /// <para>If <paramref name="expression"/> throws or rejects, this method throws.</para>
+    /// <para>If <see cref="ILocator.EvaluateHandleAsync"/> throws or rejects, this method throws.</para>
     /// <para>See <see cref="IPage.EvaluateHandleAsync"/> for more details.</para>
     /// </summary>
     /// <param name="expression">
     /// JavaScript expression to be evaluated in the browser context. If the expression
     /// evaluates to a function, the function is automatically invoked.
     /// </param>
-    /// <param name="arg">Optional argument to pass to <paramref name="expression"/>.</param>
+    /// <param name="arg">Optional argument to pass to <see cref="ILocator.EvaluateHandleAsync"/>.</param>
     /// <param name="options">Call options</param>
     Task<IJSHandle> EvaluateHandleAsync(string expression, object? arg = default, LocatorEvaluateHandleOptions? options = default);
 
@@ -552,7 +587,14 @@ public partial interface ILocator
     /// <param name="selector">A selector to use when resolving DOM element.</param>
     IFrameLocator FrameLocator(string selector);
 
-    /// <summary><para>Returns the matching element's attribute value.</para></summary>
+    /// <summary>
+    /// <para>Returns the matching element's attribute value.</para>
+    /// <para>
+    /// If you need to assert an element's attribute, prefer <see cref="ILocatorAssertions.ToHaveAttributeAsync"/>
+    /// to avoid flakiness. See <a href="https://playwright.dev/dotnet/docs/test-assertions">assertions
+    /// guide</a> for more details.
+    /// </para>
+    /// </summary>
     /// <remarks>
     /// <para>
     /// If you need to assert an element's attribute, prefer <see cref="ILocatorAssertions.ToHaveAttributeAsync"/>
@@ -844,12 +886,12 @@ public partial interface ILocator
     /// <list type="ordinal">
     /// <item><description>
     /// Wait for <a href="https://playwright.dev/dotnet/docs/actionability">actionability</a>
-    /// checks on the element, unless <paramref name="force"/> option is set.
+    /// checks on the element, unless <see cref="ILocator.HoverAsync"/> option is set.
     /// </description></item>
     /// <item><description>Scroll the element into view if needed.</description></item>
     /// <item><description>
     /// Use <see cref="IPage.Mouse"/> to hover over the center of the element, or the specified
-    /// <paramref name="position"/>.
+    /// <see cref="ILocator.HoverAsync"/>.
     /// </description></item>
     /// </list>
     /// <para>
@@ -857,7 +899,7 @@ public partial interface ILocator
     /// throws.
     /// </para>
     /// <para>
-    /// When all steps combined have not finished during the specified <paramref name="timeout"/>,
+    /// When all steps combined have not finished during the specified <see cref="ILocator.HoverAsync"/>,
     /// this method throws a <see cref="TimeoutException"/>. Passing zero timeout disables
     /// this.
     /// </para>
@@ -869,12 +911,21 @@ public partial interface ILocator
     /// <param name="options">Call options</param>
     Task<string> InnerHTMLAsync(LocatorInnerHTMLOptions? options = default);
 
-    /// <summary><para>Returns the <a href="https://developer.mozilla.org/en-US/docs/Web/API/HTMLElement/innerText"><c>element.innerText</c></a>.</para></summary>
+    /// <summary>
+    /// <para>Returns the <a href="https://developer.mozilla.org/en-US/docs/Web/API/HTMLElement/innerText"><c>element.innerText</c></a>.</para>
+    /// <para>
+    /// If you need to assert text on the page, prefer <see cref="ILocatorAssertions.ToHaveTextAsync"/>
+    /// with <see cref="ILocatorAssertions.ToHaveTextAsync"/> option to avoid flakiness.
+    /// See <a href="https://playwright.dev/dotnet/docs/test-assertions">assertions guide</a>
+    /// for more details.
+    /// </para>
+    /// </summary>
     /// <remarks>
     /// <para>
     /// If you need to assert text on the page, prefer <see cref="ILocatorAssertions.ToHaveTextAsync"/>
-    /// with <paramref name="useInnerText"/> option to avoid flakiness. See <a href="https://playwright.dev/dotnet/docs/test-assertions">assertions
-    /// guide</a> for more details.
+    /// with <see cref="ILocatorAssertions.ToHaveTextAsync"/> option to avoid flakiness.
+    /// See <a href="https://playwright.dev/dotnet/docs/test-assertions">assertions guide</a>
+    /// for more details.
     /// </para>
     /// </remarks>
     /// <param name="options">Call options</param>
@@ -884,6 +935,11 @@ public partial interface ILocator
     /// <para>
     /// Returns the value for the matching <c>&lt;input&gt;</c> or <c>&lt;textarea&gt;</c>
     /// or <c>&lt;select&gt;</c> element.
+    /// </para>
+    /// <para>
+    /// If you need to assert input value, prefer <see cref="ILocatorAssertions.ToHaveValueAsync"/>
+    /// to avoid flakiness. See <a href="https://playwright.dev/dotnet/docs/test-assertions">assertions
+    /// guide</a> for more details.
     /// </para>
     /// <para>**Usage**</para>
     /// <code>String value = await page.GetByRole(AriaRole.Textbox).InputValueAsync();</code>
@@ -909,6 +965,11 @@ public partial interface ILocator
     /// Returns whether the element is checked. Throws if the element is not a checkbox
     /// or radio input.
     /// </para>
+    /// <para>
+    /// If you need to assert that checkbox is checked, prefer <see cref="ILocatorAssertions.ToBeCheckedAsync"/>
+    /// to avoid flakiness. See <a href="https://playwright.dev/dotnet/docs/test-assertions">assertions
+    /// guide</a> for more details.
+    /// </para>
     /// <para>**Usage**</para>
     /// <code>var isChecked = await page.GetByRole(AriaRole.Checkbox).IsCheckedAsync();</code>
     /// </summary>
@@ -924,6 +985,11 @@ public partial interface ILocator
 
     /// <summary>
     /// <para>Returns whether the element is disabled, the opposite of <a href="https://playwright.dev/dotnet/docs/actionability#enabled">enabled</a>.</para>
+    /// <para>
+    /// If you need to assert that an element is disabled, prefer <see cref="ILocatorAssertions.ToBeDisabledAsync"/>
+    /// to avoid flakiness. See <a href="https://playwright.dev/dotnet/docs/test-assertions">assertions
+    /// guide</a> for more details.
+    /// </para>
     /// <para>**Usage**</para>
     /// <code>Boolean disabled = await page.GetByRole(AriaRole.Button).IsDisabledAsync();</code>
     /// </summary>
@@ -939,6 +1005,11 @@ public partial interface ILocator
 
     /// <summary>
     /// <para>Returns whether the element is <a href="https://playwright.dev/dotnet/docs/actionability#editable">editable</a>.</para>
+    /// <para>
+    /// If you need to assert that an element is editable, prefer <see cref="ILocatorAssertions.ToBeEditableAsync"/>
+    /// to avoid flakiness. See <a href="https://playwright.dev/dotnet/docs/test-assertions">assertions
+    /// guide</a> for more details.
+    /// </para>
     /// <para>**Usage**</para>
     /// <code>Boolean editable = await page.GetByRole(AriaRole.Textbox).IsEditableAsync();</code>
     /// </summary>
@@ -954,6 +1025,11 @@ public partial interface ILocator
 
     /// <summary>
     /// <para>Returns whether the element is <a href="https://playwright.dev/dotnet/docs/actionability#enabled">enabled</a>.</para>
+    /// <para>
+    /// If you need to assert that an element is enabled, prefer <see cref="ILocatorAssertions.ToBeEnabledAsync"/>
+    /// to avoid flakiness. See <a href="https://playwright.dev/dotnet/docs/test-assertions">assertions
+    /// guide</a> for more details.
+    /// </para>
     /// <para>**Usage**</para>
     /// <code>Boolean enabled = await page.GetByRole(AriaRole.Button).IsEnabledAsync();</code>
     /// </summary>
@@ -969,6 +1045,11 @@ public partial interface ILocator
 
     /// <summary>
     /// <para>Returns whether the element is hidden, the opposite of <a href="https://playwright.dev/dotnet/docs/actionability#visible">visible</a>.</para>
+    /// <para>
+    /// If you need to assert that element is hidden, prefer <see cref="ILocatorAssertions.ToBeHiddenAsync"/>
+    /// to avoid flakiness. See <a href="https://playwright.dev/dotnet/docs/test-assertions">assertions
+    /// guide</a> for more details.
+    /// </para>
     /// <para>**Usage**</para>
     /// <code>Boolean hidden = await page.GetByRole(AriaRole.Button).IsHiddenAsync();</code>
     /// </summary>
@@ -984,6 +1065,11 @@ public partial interface ILocator
 
     /// <summary>
     /// <para>Returns whether the element is <a href="https://playwright.dev/dotnet/docs/actionability#visible">visible</a>.</para>
+    /// <para>
+    /// If you need to assert that element is visible, prefer <see cref="ILocatorAssertions.ToBeVisibleAsync"/>
+    /// to avoid flakiness. See <a href="https://playwright.dev/dotnet/docs/test-assertions">assertions
+    /// guide</a> for more details.
+    /// </para>
     /// <para>**Usage**</para>
     /// <code>Boolean visible = await page.GetByRole(AriaRole.Button).IsVisibleAsync();</code>
     /// </summary>
@@ -1039,7 +1125,12 @@ public partial interface ILocator
     ILocator Nth(int index);
 
     /// <summary>
-    /// <para>Creates a locator that matches either of the two locators.</para>
+    /// <para>Creates a locator matching all elements that match one or both of the two locators.</para>
+    /// <para>
+    /// Note that when both locators match something, the resulting locator will have multiple
+    /// matches and violate <a href="https://playwright.dev/dotnet/docs/locators#strictness">locator
+    /// strictness</a> guidelines.
+    /// </para>
     /// <para>**Usage**</para>
     /// <para>
     /// Consider a scenario where you'd like to click on a "New email" button, but sometimes
@@ -1068,9 +1159,9 @@ public partial interface ILocator
     /// <para>**Details**</para>
     /// <para>Focuses the element, and then uses <see cref="IKeyboard.DownAsync"/> and <see cref="IKeyboard.UpAsync"/>.</para>
     /// <para>
-    /// <paramref name="key"/> can specify the intended <a href="https://developer.mozilla.org/en-US/docs/Web/API/KeyboardEvent/key">keyboardEvent.key</a>
-    /// value or a single character to generate the text for. A superset of the <paramref
-    /// name="key"/> values can be found <a href="https://developer.mozilla.org/en-US/docs/Web/API/KeyboardEvent/key/Key_Values">here</a>.
+    /// <see cref="ILocator.PressAsync"/> can specify the intended <a href="https://developer.mozilla.org/en-US/docs/Web/API/KeyboardEvent/key">keyboardEvent.key</a>
+    /// value or a single character to generate the text for. A superset of the <see cref="ILocator.PressAsync"/>
+    /// values can be found <a href="https://developer.mozilla.org/en-US/docs/Web/API/KeyboardEvent/key/Key_Values">here</a>.
     /// Examples of the keys are:
     /// </para>
     /// <para>
@@ -1086,12 +1177,12 @@ public partial interface ILocator
     /// resolves to <c>Control</c> on Windows and Linux and to <c>Meta</c> on macOS.
     /// </para>
     /// <para>
-    /// Holding down <c>Shift</c> will type the text that corresponds to the <paramref name="key"/>
+    /// Holding down <c>Shift</c> will type the text that corresponds to the <see cref="ILocator.PressAsync"/>
     /// in the upper case.
     /// </para>
     /// <para>
-    /// If <paramref name="key"/> is a single character, it is case-sensitive, so the values
-    /// <c>a</c> and <c>A</c> will generate different respective texts.
+    /// If <see cref="ILocator.PressAsync"/> is a single character, it is case-sensitive,
+    /// so the values <c>a</c> and <c>A</c> will generate different respective texts.
     /// </para>
     /// <para>
     /// Shortcuts such as <c>key: "Control+o"</c>, <c>key: "Control++</c> or <c>key: "Control+Shift+T"</c>
@@ -1107,6 +1198,10 @@ public partial interface ILocator
     Task PressAsync(string key, LocatorPressOptions? options = default);
 
     /// <summary>
+    /// <para>
+    /// In most cases, you should use <see cref="ILocator.FillAsync"/> instead. You only
+    /// need to press keys one by one if there is special keyboard handling on the page.
+    /// </para>
     /// <para>
     /// Focuses the element, and then sends a <c>keydown</c>, <c>keypress</c>/<c>input</c>,
     /// and <c>keyup</c> event for each character in the text.
@@ -1128,6 +1223,7 @@ public partial interface ILocator
     /// <para>
     /// In most cases, you should use <see cref="ILocator.FillAsync"/> instead. You only
     /// need to press keys one by one if there is special keyboard handling on the page.
+    ///
     /// </para>
     /// </remarks>
     /// <param name="text">String of characters to sequentially press into a focused element.</param>
@@ -1434,15 +1530,15 @@ public partial interface ILocator
     /// <item><description>If the element already has the right checked state, this method returns immediately.</description></item>
     /// <item><description>
     /// Wait for <a href="https://playwright.dev/dotnet/docs/actionability">actionability</a>
-    /// checks on the matched element, unless <paramref name="force"/> option is set. If
-    /// the element is detached during the checks, the whole action is retried.
+    /// checks on the matched element, unless <see cref="ILocator.SetCheckedAsync"/> option
+    /// is set. If the element is detached during the checks, the whole action is retried.
     /// </description></item>
     /// <item><description>Scroll the element into view if needed.</description></item>
     /// <item><description>Use <see cref="IPage.Mouse"/> to click in the center of the element.</description></item>
     /// <item><description>Ensure that the element is now checked or unchecked. If not, this method throws.</description></item>
     /// </list>
     /// <para>
-    /// When all steps combined have not finished during the specified <paramref name="timeout"/>,
+    /// When all steps combined have not finished during the specified <see cref="ILocator.SetCheckedAsync"/>,
     /// this method throws a <see cref="TimeoutException"/>. Passing zero timeout disables
     /// this.
     /// </para>
@@ -1638,12 +1734,12 @@ public partial interface ILocator
     /// <list type="ordinal">
     /// <item><description>
     /// Wait for <a href="https://playwright.dev/dotnet/docs/actionability">actionability</a>
-    /// checks on the element, unless <paramref name="force"/> option is set.
+    /// checks on the element, unless <see cref="ILocator.TapAsync"/> option is set.
     /// </description></item>
     /// <item><description>Scroll the element into view if needed.</description></item>
     /// <item><description>
     /// Use <see cref="IPage.Touchscreen"/> to tap the center of the element, or the specified
-    /// <paramref name="position"/>.
+    /// <see cref="ILocator.TapAsync"/>.
     /// </description></item>
     /// </list>
     /// <para>
@@ -1651,9 +1747,13 @@ public partial interface ILocator
     /// throws.
     /// </para>
     /// <para>
-    /// When all steps combined have not finished during the specified <paramref name="timeout"/>,
+    /// When all steps combined have not finished during the specified <see cref="ILocator.TapAsync"/>,
     /// this method throws a <see cref="TimeoutException"/>. Passing zero timeout disables
     /// this.
+    /// </para>
+    /// <para>
+    /// <c>element.tap()</c> requires that the <c>hasTouch</c> option of the browser context
+    /// be set to true.
     /// </para>
     /// </summary>
     /// <remarks>
@@ -1665,7 +1765,14 @@ public partial interface ILocator
     /// <param name="options">Call options</param>
     Task TapAsync(LocatorTapOptions? options = default);
 
-    /// <summary><para>Returns the <a href="https://developer.mozilla.org/en-US/docs/Web/API/Node/textContent"><c>node.textContent</c></a>.</para></summary>
+    /// <summary>
+    /// <para>Returns the <a href="https://developer.mozilla.org/en-US/docs/Web/API/Node/textContent"><c>node.textContent</c></a>.</para>
+    /// <para>
+    /// If you need to assert text on the page, prefer <see cref="ILocatorAssertions.ToHaveTextAsync"/>
+    /// to avoid flakiness. See <a href="https://playwright.dev/dotnet/docs/test-assertions">assertions
+    /// guide</a> for more details.
+    /// </para>
+    /// </summary>
     /// <remarks>
     /// <para>
     /// If you need to assert text on the page, prefer <see cref="ILocatorAssertions.ToHaveTextAsync"/>
@@ -1707,7 +1814,7 @@ public partial interface ILocator
     /// </description></item>
     /// <item><description>
     /// Wait for <a href="https://playwright.dev/dotnet/docs/actionability">actionability</a>
-    /// checks on the element, unless <paramref name="force"/> option is set.
+    /// checks on the element, unless <see cref="ILocator.UncheckAsync"/> option is set.
     /// </description></item>
     /// <item><description>Scroll the element into view if needed.</description></item>
     /// <item><description>Use <see cref="IPage.Mouse"/> to click in the center of the element.</description></item>
@@ -1718,7 +1825,7 @@ public partial interface ILocator
     /// throws.
     /// </para>
     /// <para>
-    /// When all steps combined have not finished during the specified <paramref name="timeout"/>,
+    /// When all steps combined have not finished during the specified <see cref="ILocator.UncheckAsync"/>,
     /// this method throws a <see cref="TimeoutException"/>. Passing zero timeout disables
     /// this.
     /// </para>
@@ -1728,13 +1835,13 @@ public partial interface ILocator
 
     /// <summary>
     /// <para>
-    /// Returns when element specified by locator satisfies the <paramref name="state"/>
+    /// Returns when element specified by locator satisfies the <see cref="ILocator.WaitForAsync"/>
     /// option.
     /// </para>
     /// <para>
     /// If target element already satisfies the condition, the method returns immediately.
-    /// Otherwise, waits for up to <paramref name="timeout"/> milliseconds until the condition
-    /// is met.
+    /// Otherwise, waits for up to <see cref="ILocator.WaitForAsync"/> milliseconds until
+    /// the condition is met.
     /// </para>
     /// <para>**Usage**</para>
     /// <code>

@@ -56,6 +56,7 @@ namespace Microsoft.Playwright;
 public partial interface IBrowserContext
 {
     /// <summary>
+    /// <para>Only works with Chromium browser's persistent context.</para>
     /// <para>Emitted when new background page is created in the context.</para>
     /// <code>
     /// context.BackgroundPage += (_, backgroundPage) =&gt;<br/>
@@ -120,6 +121,10 @@ public partial interface IBrowserContext
     ///     await dialog.AcceptAsync();<br/>
     /// };
     /// </code>
+    /// <para>
+    /// When no <see cref="IPage.Dialog"/> or <see cref="IBrowserContext.Dialog"/> listeners
+    /// are present, all dialogs are automatically dismissed.
+    /// </para>
     /// </summary>
     /// <remarks>
     /// <para>
@@ -150,6 +155,10 @@ public partial interface IBrowserContext
     /// });<br/>
     /// Console.WriteLine(await popup.EvaluateAsync&lt;string&gt;("location.href"));
     /// </code>
+    /// <para>
+    /// Use <see cref="IPage.WaitForLoadStateAsync"/> to wait until the page gets to a particular
+    /// state (you should not need it in most cases).
+    /// </para>
     /// </summary>
     /// <remarks>
     /// <para>
@@ -184,6 +193,11 @@ public partial interface IBrowserContext
     /// <para>
     /// Emitted when a request fails, for example by timing out. To only listen for failed
     /// requests from a particular page, use <see cref="IPage.RequestFailed"/>.
+    /// </para>
+    /// <para>
+    /// HTTP Error responses, such as 404 or 503, are still successful responses from HTTP
+    /// standpoint, so request will complete with <see cref="IBrowserContext.RequestFinished"/>
+    /// event and not with <see cref="IBrowserContext.RequestFailed"/>.
     /// </para>
     /// </summary>
     /// <remarks>
@@ -243,6 +257,10 @@ public partial interface IBrowserContext
     /// <para>**Usage**</para>
     /// <para>An example of overriding <c>Math.random</c> before the page loads:</para>
     /// <code>await Context.AddInitScriptAsync(scriptPath: "preload.js");</code>
+    /// <para>
+    /// The order of evaluation of multiple scripts installed via <see cref="IBrowserContext.AddInitScriptAsync"/>
+    /// and <see cref="IPage.AddInitScriptAsync"/> is not defined.
+    /// </para>
     /// </summary>
     /// <remarks>
     /// <para>
@@ -254,7 +272,10 @@ public partial interface IBrowserContext
     /// <param name="scriptPath">Instead of specifying <paramref name="script"/>, gives the file name to load from.</param>
     Task AddInitScriptAsync(string? script = default, string? scriptPath = default);
 
-    /// <summary><para>All existing background pages in the context.</para></summary>
+    /// <summary>
+    /// <para>Background pages are only supported on Chromium-based browsers.</para>
+    /// <para>All existing background pages in the context.</para>
+    /// </summary>
     /// <remarks><para>Background pages are only supported on Chromium-based browsers.</para></remarks>
     IReadOnlyList<IPage> BackgroundPages { get; }
 
@@ -299,6 +320,7 @@ public partial interface IBrowserContext
     /// Closes the browser context. All the pages that belong to the browser context will
     /// be closed.
     /// </para>
+    /// <para>The default browser context cannot be closed.</para>
     /// </summary>
     /// <remarks><para>The default browser context cannot be closed.</para></remarks>
     /// <param name="options">Call options</param>
@@ -315,16 +337,17 @@ public partial interface IBrowserContext
 
     /// <summary>
     /// <para>
-    /// The method adds a function called <paramref name="name"/> on the <c>window</c> object
-    /// of every frame in every page in the context. When called, the function executes
-    /// <paramref name="callback"/> and returns a <see cref="Task"/> which resolves to the
-    /// return value of <paramref name="callback"/>. If the <paramref name="callback"/>
-    /// returns a <see cref="Promise"/>, it will be awaited.
+    /// The method adds a function called <see cref="IBrowserContext.ExposeBindingAsync"/>
+    /// on the <c>window</c> object of every frame in every page in the context. When called,
+    /// the function executes <see cref="IBrowserContext.ExposeBindingAsync"/> and returns
+    /// a <see cref="Task"/> which resolves to the return value of <see cref="IBrowserContext.ExposeBindingAsync"/>.
+    /// If the <see cref="IBrowserContext.ExposeBindingAsync"/> returns a <see cref="Promise"/>,
+    /// it will be awaited.
     /// </para>
     /// <para>
-    /// The first argument of the <paramref name="callback"/> function contains information
-    /// about the caller: <c>{ browserContext: BrowserContext, page: Page, frame: Frame
-    /// }</c>.
+    /// The first argument of the <see cref="IBrowserContext.ExposeBindingAsync"/> function
+    /// contains information about the caller: <c>{ browserContext: BrowserContext, page:
+    /// Page, frame: Frame }</c>.
     /// </para>
     /// <para>See <see cref="IPage.ExposeBindingAsync"/> for page-only version.</para>
     /// <para>**Usage**</para>
@@ -355,12 +378,15 @@ public partial interface IBrowserContext
 
     /// <summary>
     /// <para>
-    /// The method adds a function called <paramref name="name"/> on the <c>window</c> object
-    /// of every frame in every page in the context. When called, the function executes
-    /// <paramref name="callback"/> and returns a <see cref="Task"/> which resolves to the
-    /// return value of <paramref name="callback"/>.
+    /// The method adds a function called <see cref="IBrowserContext.ExposeFunctionAsync"/>
+    /// on the <c>window</c> object of every frame in every page in the context. When called,
+    /// the function executes <see cref="IBrowserContext.ExposeFunctionAsync"/> and returns
+    /// a <see cref="Task"/> which resolves to the return value of <see cref="IBrowserContext.ExposeFunctionAsync"/>.
     /// </para>
-    /// <para>If the <paramref name="callback"/> returns a <see cref="Task"/>, it will be awaited.</para>
+    /// <para>
+    /// If the <see cref="IBrowserContext.ExposeFunctionAsync"/> returns a <see cref="Task"/>,
+    /// it will be awaited.
+    /// </para>
     /// <para>See <see cref="IPage.ExposeFunctionAsync"/> for page-only version.</para>
     /// <para>**Usage**</para>
     /// <para>An example of adding a <c>sha256</c> function to all pages in the context:</para>
@@ -434,7 +460,10 @@ public partial interface IBrowserContext
     /// <param name="options">Call options</param>
     Task GrantPermissionsAsync(IEnumerable<string> permissions, BrowserContextGrantPermissionsOptions? options = default);
 
-    /// <summary><para>Returns the newly created session.</para></summary>
+    /// <summary>
+    /// <para>CDP sessions are only supported on Chromium-based browsers.</para>
+    /// <para>Returns the newly created session.</para>
+    /// </summary>
     /// <remarks><para>CDP sessions are only supported on Chromium-based browsers.</para></remarks>
     /// <param name="page">
     /// Target to create new session for. For backwards-compatibility, this parameter is
@@ -442,7 +471,10 @@ public partial interface IBrowserContext
     /// </param>
     Task<ICDPSession> NewCDPSessionAsync(IPage page);
 
-    /// <summary><para>Returns the newly created session.</para></summary>
+    /// <summary>
+    /// <para>CDP sessions are only supported on Chromium-based browsers.</para>
+    /// <para>Returns the newly created session.</para>
+    /// </summary>
     /// <remarks><para>CDP sessions are only supported on Chromium-based browsers.</para></remarks>
     /// <param name="page">
     /// Target to create new session for. For backwards-compatibility, this parameter is
@@ -470,6 +502,12 @@ public partial interface IBrowserContext
     /// page in the browser context. Once route is enabled, every request matching the url
     /// pattern will stall unless it's continued, fulfilled or aborted.
     /// </para>
+    /// <para>
+    /// <see cref="IBrowserContext.RouteAsync"/> will not intercept requests intercepted
+    /// by Service Worker. See <a href="https://github.com/microsoft/playwright/issues/1090">this</a>
+    /// issue. We recommend disabling Service Workers when using request interception by
+    /// setting <see cref="IBrowser.NewContextAsync"/> to <c>'block'</c>.
+    /// </para>
     /// <para>**Usage**</para>
     /// <para>An example of a naive handler that aborts all image requests:</para>
     /// <code>
@@ -505,20 +543,21 @@ public partial interface IBrowserContext
     /// context routes when request matches both handlers.
     /// </para>
     /// <para>To remove a route with its handler you can use <see cref="IBrowserContext.UnrouteAsync"/>.</para>
+    /// <para>Enabling routing disables http cache.</para>
     /// </summary>
     /// <remarks>
     /// <para>
     /// <see cref="IBrowserContext.RouteAsync"/> will not intercept requests intercepted
     /// by Service Worker. See <a href="https://github.com/microsoft/playwright/issues/1090">this</a>
     /// issue. We recommend disabling Service Workers when using request interception by
-    /// setting <paramref name="Browser.newContext.serviceWorkers"/> to <c>'block'</c>.
+    /// setting <see cref="IBrowser.NewContextAsync"/> to <c>'block'</c>.
     /// </para>
     /// <para>Enabling routing disables http cache.</para>
     /// </remarks>
     /// <param name="url">
     /// A glob pattern, regex pattern or predicate receiving <see cref="URL"/> to match
-    /// while routing. When a <paramref name="baseURL"/> via the context options was provided
-    /// and the passed URL is a path, it gets merged via the <a href="https://developer.mozilla.org/en-US/docs/Web/API/URL/URL"><c>new
+    /// while routing. When a <see cref="IBrowser.NewContextAsync"/> via the context options
+    /// was provided and the passed URL is a path, it gets merged via the <a href="https://developer.mozilla.org/en-US/docs/Web/API/URL/URL"><c>new
     /// URL()</c></a> constructor.
     /// </param>
     /// <param name="handler">handler function to route the request.</param>
@@ -531,6 +570,12 @@ public partial interface IBrowserContext
     /// page in the browser context. Once route is enabled, every request matching the url
     /// pattern will stall unless it's continued, fulfilled or aborted.
     /// </para>
+    /// <para>
+    /// <see cref="IBrowserContext.RouteAsync"/> will not intercept requests intercepted
+    /// by Service Worker. See <a href="https://github.com/microsoft/playwright/issues/1090">this</a>
+    /// issue. We recommend disabling Service Workers when using request interception by
+    /// setting <see cref="IBrowser.NewContextAsync"/> to <c>'block'</c>.
+    /// </para>
     /// <para>**Usage**</para>
     /// <para>An example of a naive handler that aborts all image requests:</para>
     /// <code>
@@ -566,20 +611,21 @@ public partial interface IBrowserContext
     /// context routes when request matches both handlers.
     /// </para>
     /// <para>To remove a route with its handler you can use <see cref="IBrowserContext.UnrouteAsync"/>.</para>
+    /// <para>Enabling routing disables http cache.</para>
     /// </summary>
     /// <remarks>
     /// <para>
     /// <see cref="IBrowserContext.RouteAsync"/> will not intercept requests intercepted
     /// by Service Worker. See <a href="https://github.com/microsoft/playwright/issues/1090">this</a>
     /// issue. We recommend disabling Service Workers when using request interception by
-    /// setting <paramref name="Browser.newContext.serviceWorkers"/> to <c>'block'</c>.
+    /// setting <see cref="IBrowser.NewContextAsync"/> to <c>'block'</c>.
     /// </para>
     /// <para>Enabling routing disables http cache.</para>
     /// </remarks>
     /// <param name="url">
     /// A glob pattern, regex pattern or predicate receiving <see cref="URL"/> to match
-    /// while routing. When a <paramref name="baseURL"/> via the context options was provided
-    /// and the passed URL is a path, it gets merged via the <a href="https://developer.mozilla.org/en-US/docs/Web/API/URL/URL"><c>new
+    /// while routing. When a <see cref="IBrowser.NewContextAsync"/> via the context options
+    /// was provided and the passed URL is a path, it gets merged via the <a href="https://developer.mozilla.org/en-US/docs/Web/API/URL/URL"><c>new
     /// URL()</c></a> constructor.
     /// </param>
     /// <param name="handler">handler function to route the request.</param>
@@ -592,6 +638,12 @@ public partial interface IBrowserContext
     /// page in the browser context. Once route is enabled, every request matching the url
     /// pattern will stall unless it's continued, fulfilled or aborted.
     /// </para>
+    /// <para>
+    /// <see cref="IBrowserContext.RouteAsync"/> will not intercept requests intercepted
+    /// by Service Worker. See <a href="https://github.com/microsoft/playwright/issues/1090">this</a>
+    /// issue. We recommend disabling Service Workers when using request interception by
+    /// setting <see cref="IBrowser.NewContextAsync"/> to <c>'block'</c>.
+    /// </para>
     /// <para>**Usage**</para>
     /// <para>An example of a naive handler that aborts all image requests:</para>
     /// <code>
@@ -627,20 +679,21 @@ public partial interface IBrowserContext
     /// context routes when request matches both handlers.
     /// </para>
     /// <para>To remove a route with its handler you can use <see cref="IBrowserContext.UnrouteAsync"/>.</para>
+    /// <para>Enabling routing disables http cache.</para>
     /// </summary>
     /// <remarks>
     /// <para>
     /// <see cref="IBrowserContext.RouteAsync"/> will not intercept requests intercepted
     /// by Service Worker. See <a href="https://github.com/microsoft/playwright/issues/1090">this</a>
     /// issue. We recommend disabling Service Workers when using request interception by
-    /// setting <paramref name="Browser.newContext.serviceWorkers"/> to <c>'block'</c>.
+    /// setting <see cref="IBrowser.NewContextAsync"/> to <c>'block'</c>.
     /// </para>
     /// <para>Enabling routing disables http cache.</para>
     /// </remarks>
     /// <param name="url">
     /// A glob pattern, regex pattern or predicate receiving <see cref="URL"/> to match
-    /// while routing. When a <paramref name="baseURL"/> via the context options was provided
-    /// and the passed URL is a path, it gets merged via the <a href="https://developer.mozilla.org/en-US/docs/Web/API/URL/URL"><c>new
+    /// while routing. When a <see cref="IBrowser.NewContextAsync"/> via the context options
+    /// was provided and the passed URL is a path, it gets merged via the <a href="https://developer.mozilla.org/en-US/docs/Web/API/URL/URL"><c>new
     /// URL()</c></a> constructor.
     /// </param>
     /// <param name="handler">handler function to route the request.</param>
@@ -657,7 +710,7 @@ public partial interface IBrowserContext
     /// Playwright will not serve requests intercepted by Service Worker from the HAR file.
     /// See <a href="https://github.com/microsoft/playwright/issues/1090">this</a> issue.
     /// We recommend disabling Service Workers when using request interception by setting
-    /// <paramref name="Browser.newContext.serviceWorkers"/> to <c>'block'</c>.
+    /// <see cref="IBrowser.NewContextAsync"/> to <c>'block'</c>.
     /// </para>
     /// </summary>
     /// <param name="har">
@@ -667,6 +720,102 @@ public partial interface IBrowserContext
     /// </param>
     /// <param name="options">Call options</param>
     Task RouteFromHARAsync(string har, BrowserContextRouteFromHAROptions? options = default);
+
+    /// <summary>
+    /// <para>
+    /// This method allows to modify websocket connections that are made by any page in
+    /// the browser context.
+    /// </para>
+    /// <para>
+    /// Note that only <c>WebSocket</c>s created after this method was called will be routed.
+    /// It is recommended to call this method before creating any pages.
+    /// </para>
+    /// <para>**Usage**</para>
+    /// <para>
+    /// Below is an example of a simple handler that blocks some websocket messages. See
+    /// <see cref="IWebSocketRoute"/> for more details and examples.
+    /// </para>
+    /// <code>
+    /// await context.RouteWebSocketAsync("/ws", async ws =&gt; {<br/>
+    ///   ws.RouteSend(message =&gt; {<br/>
+    ///     if (message == "to-be-blocked")<br/>
+    ///       return;<br/>
+    ///     ws.Send(message);<br/>
+    ///   });<br/>
+    ///   await ws.ConnectAsync();<br/>
+    /// });
+    /// </code>
+    /// </summary>
+    /// <param name="url">
+    /// Only WebSockets with the url matching this pattern will be routed. A string pattern
+    /// can be relative to the <see cref="IBrowser.NewContextAsync"/> context option.
+    /// </param>
+    /// <param name="handler">Handler function to route the WebSocket.</param>
+    Task RouteWebSocketAsync(string url, Action<IWebSocketRoute> handler);
+
+    /// <summary>
+    /// <para>
+    /// This method allows to modify websocket connections that are made by any page in
+    /// the browser context.
+    /// </para>
+    /// <para>
+    /// Note that only <c>WebSocket</c>s created after this method was called will be routed.
+    /// It is recommended to call this method before creating any pages.
+    /// </para>
+    /// <para>**Usage**</para>
+    /// <para>
+    /// Below is an example of a simple handler that blocks some websocket messages. See
+    /// <see cref="IWebSocketRoute"/> for more details and examples.
+    /// </para>
+    /// <code>
+    /// await context.RouteWebSocketAsync("/ws", async ws =&gt; {<br/>
+    ///   ws.RouteSend(message =&gt; {<br/>
+    ///     if (message == "to-be-blocked")<br/>
+    ///       return;<br/>
+    ///     ws.Send(message);<br/>
+    ///   });<br/>
+    ///   await ws.ConnectAsync();<br/>
+    /// });
+    /// </code>
+    /// </summary>
+    /// <param name="url">
+    /// Only WebSockets with the url matching this pattern will be routed. A string pattern
+    /// can be relative to the <see cref="IBrowser.NewContextAsync"/> context option.
+    /// </param>
+    /// <param name="handler">Handler function to route the WebSocket.</param>
+    Task RouteWebSocketAsync(Regex url, Action<IWebSocketRoute> handler);
+
+    /// <summary>
+    /// <para>
+    /// This method allows to modify websocket connections that are made by any page in
+    /// the browser context.
+    /// </para>
+    /// <para>
+    /// Note that only <c>WebSocket</c>s created after this method was called will be routed.
+    /// It is recommended to call this method before creating any pages.
+    /// </para>
+    /// <para>**Usage**</para>
+    /// <para>
+    /// Below is an example of a simple handler that blocks some websocket messages. See
+    /// <see cref="IWebSocketRoute"/> for more details and examples.
+    /// </para>
+    /// <code>
+    /// await context.RouteWebSocketAsync("/ws", async ws =&gt; {<br/>
+    ///   ws.RouteSend(message =&gt; {<br/>
+    ///     if (message == "to-be-blocked")<br/>
+    ///       return;<br/>
+    ///     ws.Send(message);<br/>
+    ///   });<br/>
+    ///   await ws.ConnectAsync();<br/>
+    /// });
+    /// </code>
+    /// </summary>
+    /// <param name="url">
+    /// Only WebSockets with the url matching this pattern will be routed. A string pattern
+    /// can be relative to the <see cref="IBrowser.NewContextAsync"/> context option.
+    /// </param>
+    /// <param name="handler">Handler function to route the WebSocket.</param>
+    Task RouteWebSocketAsync(Func<string, bool> url, Action<IWebSocketRoute> handler);
 
     /// <summary>
     /// <para>
@@ -681,6 +830,10 @@ public partial interface IBrowserContext
     /// <item><description><see cref="IPage.SetContentAsync"/></description></item>
     /// <item><description><see cref="IPage.RunAndWaitForNavigationAsync"/></description></item>
     /// </list>
+    /// <para>
+    /// <see cref="IPage.SetDefaultNavigationTimeout"/> and <see cref="IPage.SetDefaultTimeout"/>
+    /// take priority over <see cref="IBrowserContext.SetDefaultNavigationTimeout"/>.
+    /// </para>
     /// </summary>
     /// <remarks>
     /// <para>
@@ -694,7 +847,12 @@ public partial interface IBrowserContext
     /// <summary>
     /// <para>
     /// This setting will change the default maximum time for all the methods accepting
-    /// <paramref name="timeout"/> option.
+    /// <see cref="IBrowserContext.SetDefaultTimeout"/> option.
+    /// </para>
+    /// <para>
+    /// <see cref="IPage.SetDefaultNavigationTimeout"/>, <see cref="IPage.SetDefaultTimeout"/>
+    /// and <see cref="IBrowserContext.SetDefaultNavigationTimeout"/> take priority over
+    /// <see cref="IBrowserContext.SetDefaultTimeout"/>.
     /// </para>
     /// </summary>
     /// <remarks>
@@ -714,6 +872,10 @@ public partial interface IBrowserContext
     /// with <see cref="IPage.SetExtraHTTPHeadersAsync"/>. If page overrides a particular
     /// header, page-specific header value will be used instead of the browser context header
     /// value.
+    /// </para>
+    /// <para>
+    /// <see cref="IBrowserContext.SetExtraHTTPHeadersAsync"/> does not guarantee the order
+    /// of headers in the outgoing requests.
     /// </para>
     /// </summary>
     /// <remarks>
@@ -741,6 +903,10 @@ public partial interface IBrowserContext
     ///     Longitude = 30.31667f<br/>
     /// });
     /// </code>
+    /// <para>
+    /// Consider using <see cref="IBrowserContext.GrantPermissionsAsync"/> to grant permissions
+    /// for the browser context pages to read its geolocation.
+    /// </para>
     /// </summary>
     /// <remarks>
     /// <para>
@@ -777,8 +943,9 @@ public partial interface IBrowserContext
 
     /// <summary>
     /// <para>
-    /// Removes a route created with <see cref="IBrowserContext.RouteAsync"/>. When <paramref
-    /// name="handler"/> is not specified, removes all routes for the <paramref name="url"/>.
+    /// Removes a route created with <see cref="IBrowserContext.RouteAsync"/>. When <see
+    /// cref="IBrowserContext.UnrouteAsync"/> is not specified, removes all routes for the
+    /// <see cref="IBrowserContext.UnrouteAsync"/>.
     /// </para>
     /// </summary>
     /// <param name="url">
@@ -790,8 +957,9 @@ public partial interface IBrowserContext
 
     /// <summary>
     /// <para>
-    /// Removes a route created with <see cref="IBrowserContext.RouteAsync"/>. When <paramref
-    /// name="handler"/> is not specified, removes all routes for the <paramref name="url"/>.
+    /// Removes a route created with <see cref="IBrowserContext.RouteAsync"/>. When <see
+    /// cref="IBrowserContext.UnrouteAsync"/> is not specified, removes all routes for the
+    /// <see cref="IBrowserContext.UnrouteAsync"/>.
     /// </para>
     /// </summary>
     /// <param name="url">
@@ -803,8 +971,9 @@ public partial interface IBrowserContext
 
     /// <summary>
     /// <para>
-    /// Removes a route created with <see cref="IBrowserContext.RouteAsync"/>. When <paramref
-    /// name="handler"/> is not specified, removes all routes for the <paramref name="url"/>.
+    /// Removes a route created with <see cref="IBrowserContext.RouteAsync"/>. When <see
+    /// cref="IBrowserContext.UnrouteAsync"/> is not specified, removes all routes for the
+    /// <see cref="IBrowserContext.UnrouteAsync"/>.
     /// </para>
     /// </summary>
     /// <param name="url">

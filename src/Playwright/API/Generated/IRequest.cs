@@ -52,6 +52,10 @@ namespace Microsoft.Playwright;
 /// is emitted.
 /// </para>
 /// <para>
+/// HTTP Error responses, such as 404 or 503, are still successful responses from HTTP
+/// standpoint, so request will complete with <c>'requestfinished'</c> event.
+/// </para>
+/// <para>
 /// If request gets a 'redirect' response, the request is successfully finished with
 /// the <c>requestfinished</c> event, and a new request is  issued to a redirected url.
 /// </para>

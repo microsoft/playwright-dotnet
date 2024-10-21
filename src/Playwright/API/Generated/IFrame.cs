@@ -112,13 +112,13 @@ public partial interface IFrame
     /// href="https://playwright.dev/dotnet/docs/locators">locators</a>.
     /// </para>
     /// <para>
-    /// This method checks an element matching <paramref name="selector"/> by performing
+    /// This method checks an element matching <see cref="IFrame.CheckAsync"/> by performing
     /// the following steps:
     /// </para>
     /// <list type="ordinal">
     /// <item><description>
-    /// Find an element matching <paramref name="selector"/>. If there is none, wait until
-    /// a matching element is attached to the DOM.
+    /// Find an element matching <see cref="IFrame.CheckAsync"/>. If there is none, wait
+    /// until a matching element is attached to the DOM.
     /// </description></item>
     /// <item><description>
     /// Ensure that matched element is a checkbox or a radio input. If not, this method
@@ -126,15 +126,15 @@ public partial interface IFrame
     /// </description></item>
     /// <item><description>
     /// Wait for <a href="https://playwright.dev/dotnet/docs/actionability">actionability</a>
-    /// checks on the matched element, unless <paramref name="force"/> option is set. If
-    /// the element is detached during the checks, the whole action is retried.
+    /// checks on the matched element, unless <see cref="IFrame.CheckAsync"/> option is
+    /// set. If the element is detached during the checks, the whole action is retried.
     /// </description></item>
     /// <item><description>Scroll the element into view if needed.</description></item>
     /// <item><description>Use <see cref="IPage.Mouse"/> to click in the center of the element.</description></item>
     /// <item><description>Ensure that the element is now checked. If not, this method throws.</description></item>
     /// </list>
     /// <para>
-    /// When all steps combined have not finished during the specified <paramref name="timeout"/>,
+    /// When all steps combined have not finished during the specified <see cref="IFrame.CheckAsync"/>,
     /// this method throws a <see cref="TimeoutException"/>. Passing zero timeout disables
     /// this.
     /// </para>
@@ -154,31 +154,31 @@ public partial interface IFrame
     /// href="https://playwright.dev/dotnet/docs/locators">locators</a>.
     /// </para>
     /// <para>
-    /// This method clicks an element matching <paramref name="selector"/> by performing
+    /// This method clicks an element matching <see cref="IFrame.ClickAsync"/> by performing
     /// the following steps:
     /// </para>
     /// <list type="ordinal">
     /// <item><description>
-    /// Find an element matching <paramref name="selector"/>. If there is none, wait until
-    /// a matching element is attached to the DOM.
+    /// Find an element matching <see cref="IFrame.ClickAsync"/>. If there is none, wait
+    /// until a matching element is attached to the DOM.
     /// </description></item>
     /// <item><description>
     /// Wait for <a href="https://playwright.dev/dotnet/docs/actionability">actionability</a>
-    /// checks on the matched element, unless <paramref name="force"/> option is set. If
-    /// the element is detached during the checks, the whole action is retried.
+    /// checks on the matched element, unless <see cref="IFrame.ClickAsync"/> option is
+    /// set. If the element is detached during the checks, the whole action is retried.
     /// </description></item>
     /// <item><description>Scroll the element into view if needed.</description></item>
     /// <item><description>
     /// Use <see cref="IPage.Mouse"/> to click in the center of the element, or the specified
-    /// <paramref name="position"/>.
+    /// <see cref="IFrame.ClickAsync"/>.
     /// </description></item>
     /// <item><description>
-    /// Wait for initiated navigations to either succeed or fail, unless <paramref name="noWaitAfter"/>
+    /// Wait for initiated navigations to either succeed or fail, unless <see cref="IFrame.ClickAsync"/>
     /// option is set.
     /// </description></item>
     /// </list>
     /// <para>
-    /// When all steps combined have not finished during the specified <paramref name="timeout"/>,
+    /// When all steps combined have not finished during the specified <see cref="IFrame.ClickAsync"/>,
     /// this method throws a <see cref="TimeoutException"/>. Passing zero timeout disables
     /// this.
     /// </para>
@@ -199,30 +199,34 @@ public partial interface IFrame
     /// <a href="https://playwright.dev/dotnet/docs/locators">locators</a>.
     /// </para>
     /// <para>
-    /// This method double clicks an element matching <paramref name="selector"/> by performing
-    /// the following steps:
+    /// This method double clicks an element matching <see cref="IFrame.DblClickAsync"/>
+    /// by performing the following steps:
     /// </para>
     /// <list type="ordinal">
     /// <item><description>
-    /// Find an element matching <paramref name="selector"/>. If there is none, wait until
-    /// a matching element is attached to the DOM.
+    /// Find an element matching <see cref="IFrame.DblClickAsync"/>. If there is none, wait
+    /// until a matching element is attached to the DOM.
     /// </description></item>
     /// <item><description>
     /// Wait for <a href="https://playwright.dev/dotnet/docs/actionability">actionability</a>
-    /// checks on the matched element, unless <paramref name="force"/> option is set. If
-    /// the element is detached during the checks, the whole action is retried.
+    /// checks on the matched element, unless <see cref="IFrame.DblClickAsync"/> option
+    /// is set. If the element is detached during the checks, the whole action is retried.
     /// </description></item>
     /// <item><description>Scroll the element into view if needed.</description></item>
     /// <item><description>
     /// Use <see cref="IPage.Mouse"/> to double click in the center of the element, or the
-    /// specified <paramref name="position"/>. if the first click of the <c>dblclick()</c>
+    /// specified <see cref="IFrame.DblClickAsync"/>. if the first click of the <c>dblclick()</c>
     /// triggers a navigation event, this method will throw.
     /// </description></item>
     /// </list>
     /// <para>
-    /// When all steps combined have not finished during the specified <paramref name="timeout"/>,
+    /// When all steps combined have not finished during the specified <see cref="IFrame.DblClickAsync"/>,
     /// this method throws a <see cref="TimeoutException"/>. Passing zero timeout disables
     /// this.
+    /// </para>
+    /// <para>
+    /// <c>frame.dblclick()</c> dispatches two <c>click</c> events and a single <c>dblclick</c>
+    /// event.
     /// </para>
     /// </summary>
     /// <remarks>
@@ -251,13 +255,13 @@ public partial interface IFrame
     /// <para>**Usage**</para>
     /// <code>await frame.DispatchEventAsync("button#submit", "click");</code>
     /// <para>
-    /// Under the hood, it creates an instance of an event based on the given <paramref
-    /// name="type"/>, initializes it with <paramref name="eventInit"/> properties and dispatches
+    /// Under the hood, it creates an instance of an event based on the given <see cref="IFrame.DispatchEventAsync"/>,
+    /// initializes it with <see cref="IFrame.DispatchEventAsync"/> properties and dispatches
     /// it on the element. Events are <c>composed</c>, <c>cancelable</c> and bubble by default.
     /// </para>
     /// <para>
-    /// Since <paramref name="eventInit"/> is event-specific, please refer to the events
-    /// documentation for the lists of initial properties:
+    /// Since <see cref="IFrame.DispatchEventAsync"/> is event-specific, please refer to
+    /// the events documentation for the lists of initial properties:
     /// </para>
     /// <list type="bullet">
     /// <item><description><a href="https://developer.mozilla.org/en-US/docs/Web/API/DeviceMotionEvent/DeviceMotionEvent">DeviceMotionEvent</a></description></item>
@@ -307,15 +311,16 @@ public partial interface IFrame
     /// can lead to the flaky tests. Use <see cref="ILocator.EvaluateAsync"/>, other <see
     /// cref="ILocator"/> helper methods or web-first assertions instead.
     /// </para>
-    /// <para>Returns the return value of <paramref name="expression"/>.</para>
+    /// <para>Returns the return value of <see cref="IFrame.EvalOnSelectorAsync"/>.</para>
     /// <para>
     /// The method finds an element matching the specified selector within the frame and
-    /// passes it as a first argument to <paramref name="expression"/>. If no elements match
-    /// the selector, the method throws an error.
+    /// passes it as a first argument to <see cref="IFrame.EvalOnSelectorAsync"/>. If no
+    /// elements match the selector, the method throws an error.
     /// </para>
     /// <para>
-    /// If <paramref name="expression"/> returns a <see cref="Task"/>, then <see cref="IFrame.EvalOnSelectorAsync"/>
-    /// would wait for the promise to resolve and return its value.
+    /// If <see cref="IFrame.EvalOnSelectorAsync"/> returns a <see cref="Task"/>, then <see
+    /// cref="IFrame.EvalOnSelectorAsync"/> would wait for the promise to resolve and return
+    /// its value.
     /// </para>
     /// <para>**Usage**</para>
     /// <code>
@@ -329,7 +334,7 @@ public partial interface IFrame
     /// JavaScript expression to be evaluated in the browser context. If the expression
     /// evaluates to a function, the function is automatically invoked.
     /// </param>
-    /// <param name="arg">Optional argument to pass to <paramref name="expression"/>.</param>
+    /// <param name="arg">Optional argument to pass to <see cref="IFrame.EvalOnSelectorAsync"/>.</param>
     /// <param name="options">Call options</param>
     Task<T> EvalOnSelectorAsync<T>(string selector, string expression, object? arg = default, FrameEvalOnSelectorOptions? options = default);
 
@@ -338,14 +343,15 @@ public partial interface IFrame
     /// In most cases, <see cref="ILocator.EvaluateAllAsync"/>, other <see cref="ILocator"/>
     /// helper methods and web-first assertions do a better job.
     /// </para>
-    /// <para>Returns the return value of <paramref name="expression"/>.</para>
+    /// <para>Returns the return value of <see cref="IFrame.EvalOnSelectorAllAsync"/>.</para>
     /// <para>
     /// The method finds all elements matching the specified selector within the frame and
-    /// passes an array of matched elements as a first argument to <paramref name="expression"/>.
+    /// passes an array of matched elements as a first argument to <see cref="IFrame.EvalOnSelectorAllAsync"/>.
     /// </para>
     /// <para>
-    /// If <paramref name="expression"/> returns a <see cref="Task"/>, then <see cref="IFrame.EvalOnSelectorAllAsync"/>
-    /// would wait for the promise to resolve and return its value.
+    /// If <see cref="IFrame.EvalOnSelectorAllAsync"/> returns a <see cref="Task"/>, then
+    /// <see cref="IFrame.EvalOnSelectorAllAsync"/> would wait for the promise to resolve
+    /// and return its value.
     /// </para>
     /// <para>**Usage**</para>
     /// <code>var divsCount = await frame.EvalOnSelectorAllAsync&lt;bool&gt;("div", "(divs, min) =&gt; divs.length &gt;= min", 10);</code>
@@ -355,11 +361,11 @@ public partial interface IFrame
     /// JavaScript expression to be evaluated in the browser context. If the expression
     /// evaluates to a function, the function is automatically invoked.
     /// </param>
-    /// <param name="arg">Optional argument to pass to <paramref name="expression"/>.</param>
+    /// <param name="arg">Optional argument to pass to <see cref="IFrame.EvalOnSelectorAllAsync"/>.</param>
     Task<T> EvalOnSelectorAllAsync<T>(string selector, string expression, object? arg = default);
 
     /// <summary>
-    /// <para>Returns the return value of <paramref name="expression"/>.</para>
+    /// <para>Returns the return value of <see cref="IFrame.EvaluateAsync"/>.</para>
     /// <para>
     /// If the function passed to the <see cref="IFrame.EvaluateAsync"/> returns a <see
     /// cref="Task"/>, then <see cref="IFrame.EvaluateAsync"/> would wait for the promise
@@ -392,11 +398,11 @@ public partial interface IFrame
     /// JavaScript expression to be evaluated in the browser context. If the expression
     /// evaluates to a function, the function is automatically invoked.
     /// </param>
-    /// <param name="arg">Optional argument to pass to <paramref name="expression"/>.</param>
+    /// <param name="arg">Optional argument to pass to <see cref="IFrame.EvaluateAsync"/>.</param>
     Task<T> EvaluateAsync<T>(string expression, object? arg = default);
 
     /// <summary>
-    /// <para>Returns the return value of <paramref name="expression"/> as a <see cref="IJSHandle"/>.</para>
+    /// <para>Returns the return value of <see cref="IFrame.EvaluateHandleAsync"/> as a <see cref="IJSHandle"/>.</para>
     /// <para>
     /// The only difference between <see cref="IFrame.EvaluateAsync"/> and <see cref="IFrame.EvaluateHandleAsync"/>
     /// is that <see cref="IFrame.EvaluateHandleAsync"/> returns <see cref="IJSHandle"/>.
@@ -425,15 +431,15 @@ public partial interface IFrame
     /// JavaScript expression to be evaluated in the browser context. If the expression
     /// evaluates to a function, the function is automatically invoked.
     /// </param>
-    /// <param name="arg">Optional argument to pass to <paramref name="expression"/>.</param>
+    /// <param name="arg">Optional argument to pass to <see cref="IFrame.EvaluateHandleAsync"/>.</param>
     Task<IJSHandle> EvaluateHandleAsync(string expression, object? arg = default);
 
     /// <summary>
     /// <para>Use locator-based <see cref="ILocator.FillAsync"/> instead. Read more about <a href="https://playwright.dev/dotnet/docs/locators">locators</a>.</para>
     /// <para>
-    /// This method waits for an element matching <paramref name="selector"/>, waits for
-    /// <a href="https://playwright.dev/dotnet/docs/actionability">actionability</a> checks,
-    /// focuses the element, fills it and triggers an <c>input</c> event after filling.
+    /// This method waits for an element matching <see cref="IFrame.FillAsync"/>, waits
+    /// for <a href="https://playwright.dev/dotnet/docs/actionability">actionability</a>
+    /// checks, focuses the element, fills it and triggers an <c>input</c> event after filling.
     /// Note that you can pass an empty string to clear the input field.
     /// </para>
     /// <para>
@@ -461,9 +467,9 @@ public partial interface IFrame
     /// href="https://playwright.dev/dotnet/docs/locators">locators</a>.
     /// </para>
     /// <para>
-    /// This method fetches an element with <paramref name="selector"/> and focuses it.
-    /// If there's no element matching <paramref name="selector"/>, the method waits until
-    /// a matching element appears in the DOM.
+    /// This method fetches an element with <see cref="IFrame.FocusAsync"/> and focuses
+    /// it. If there's no element matching <see cref="IFrame.FocusAsync"/>, the method waits
+    /// until a matching element appears in the DOM.
     /// </para>
     /// </summary>
     /// <param name="selector">
@@ -800,7 +806,7 @@ public partial interface IFrame
     /// <list type="bullet">
     /// <item><description>there's an SSL error (e.g. in case of self-signed certificates).</description></item>
     /// <item><description>target URL is invalid.</description></item>
-    /// <item><description>the <paramref name="timeout"/> is exceeded during navigation.</description></item>
+    /// <item><description>the <see cref="IFrame.GotoAsync"/> is exceeded during navigation.</description></item>
     /// <item><description>the remote server does not respond or is unreachable.</description></item>
     /// <item><description>the main resource failed to load.</description></item>
     /// </list>
@@ -808,6 +814,15 @@ public partial interface IFrame
     /// The method will not throw an error when any valid HTTP status code is returned by
     /// the remote server, including 404 "Not Found" and 500 "Internal Server Error".  The
     /// status code for such responses can be retrieved by calling <see cref="IResponse.Status"/>.
+    /// </para>
+    /// <para>
+    /// The method either throws an error or returns a main resource response. The only
+    /// exceptions are navigation to <c>about:blank</c> or navigation to the same URL with
+    /// a different hash, which would succeed and return <c>null</c>.
+    /// </para>
+    /// <para>
+    /// Headless mode doesn't support navigation to a PDF document. See the <a href="https://bugs.chromium.org/p/chromium/issues/detail?id=761295">upstream
+    /// issue</a>.
     /// </para>
     /// </summary>
     /// <remarks>
@@ -831,27 +846,27 @@ public partial interface IFrame
     /// href="https://playwright.dev/dotnet/docs/locators">locators</a>.
     /// </para>
     /// <para>
-    /// This method hovers over an element matching <paramref name="selector"/> by performing
+    /// This method hovers over an element matching <see cref="IFrame.HoverAsync"/> by performing
     /// the following steps:
     /// </para>
     /// <list type="ordinal">
     /// <item><description>
-    /// Find an element matching <paramref name="selector"/>. If there is none, wait until
-    /// a matching element is attached to the DOM.
+    /// Find an element matching <see cref="IFrame.HoverAsync"/>. If there is none, wait
+    /// until a matching element is attached to the DOM.
     /// </description></item>
     /// <item><description>
     /// Wait for <a href="https://playwright.dev/dotnet/docs/actionability">actionability</a>
-    /// checks on the matched element, unless <paramref name="force"/> option is set. If
-    /// the element is detached during the checks, the whole action is retried.
+    /// checks on the matched element, unless <see cref="IFrame.HoverAsync"/> option is
+    /// set. If the element is detached during the checks, the whole action is retried.
     /// </description></item>
     /// <item><description>Scroll the element into view if needed.</description></item>
     /// <item><description>
     /// Use <see cref="IPage.Mouse"/> to hover over the center of the element, or the specified
-    /// <paramref name="position"/>.
+    /// <see cref="IFrame.HoverAsync"/>.
     /// </description></item>
     /// </list>
     /// <para>
-    /// When all steps combined have not finished during the specified <paramref name="timeout"/>,
+    /// When all steps combined have not finished during the specified <see cref="IFrame.HoverAsync"/>,
     /// this method throws a <see cref="TimeoutException"/>. Passing zero timeout disables
     /// this.
     /// </para>
@@ -976,7 +991,8 @@ public partial interface IFrame
     /// </para>
     /// <para>
     /// Returns whether the element is hidden, the opposite of <a href="https://playwright.dev/dotnet/docs/actionability#visible">visible</a>.
-    /// <paramref name="selector"/> that does not match any elements is considered hidden.
+    /// <see cref="IFrame.IsHiddenAsync"/> that does not match any elements is considered
+    /// hidden.
     /// </para>
     /// </summary>
     /// <param name="selector">
@@ -993,7 +1009,8 @@ public partial interface IFrame
     /// </para>
     /// <para>
     /// Returns whether the element is <a href="https://playwright.dev/dotnet/docs/actionability#visible">visible</a>.
-    /// <paramref name="selector"/> that does not match any elements is considered not visible.
+    /// <see cref="IFrame.IsVisibleAsync"/> that does not match any elements is considered
+    /// not visible.
     /// </para>
     /// </summary>
     /// <param name="selector">
@@ -1020,6 +1037,10 @@ public partial interface IFrame
     /// <summary>
     /// <para>Returns frame's name attribute as specified in the tag.</para>
     /// <para>If the name is empty, returns the id attribute instead.</para>
+    /// <para>
+    /// This value is calculated once when the frame is created, and will not update if
+    /// the attribute is changed later.
+    /// </para>
     /// </summary>
     /// <remarks>
     /// <para>
@@ -1041,9 +1062,9 @@ public partial interface IFrame
     /// href="https://playwright.dev/dotnet/docs/locators">locators</a>.
     /// </para>
     /// <para>
-    /// <paramref name="key"/> can specify the intended <a href="https://developer.mozilla.org/en-US/docs/Web/API/KeyboardEvent/key">keyboardEvent.key</a>
-    /// value or a single character to generate the text for. A superset of the <paramref
-    /// name="key"/> values can be found <a href="https://developer.mozilla.org/en-US/docs/Web/API/KeyboardEvent/key/Key_Values">here</a>.
+    /// <see cref="IFrame.PressAsync"/> can specify the intended <a href="https://developer.mozilla.org/en-US/docs/Web/API/KeyboardEvent/key">keyboardEvent.key</a>
+    /// value or a single character to generate the text for. A superset of the <see cref="IFrame.PressAsync"/>
+    /// values can be found <a href="https://developer.mozilla.org/en-US/docs/Web/API/KeyboardEvent/key/Key_Values">here</a>.
     /// Examples of the keys are:
     /// </para>
     /// <para>
@@ -1059,12 +1080,12 @@ public partial interface IFrame
     /// resolves to <c>Control</c> on Windows and Linux and to <c>Meta</c> on macOS.
     /// </para>
     /// <para>
-    /// Holding down <c>Shift</c> will type the text that corresponds to the <paramref name="key"/>
+    /// Holding down <c>Shift</c> will type the text that corresponds to the <see cref="IFrame.PressAsync"/>
     /// in the upper case.
     /// </para>
     /// <para>
-    /// If <paramref name="key"/> is a single character, it is case-sensitive, so the values
-    /// <c>a</c> and <c>A</c> will generate different respective texts.
+    /// If <see cref="IFrame.PressAsync"/> is a single character, it is case-sensitive,
+    /// so the values <c>a</c> and <c>A</c> will generate different respective texts.
     /// </para>
     /// <para>
     /// Shortcuts such as <c>key: "Control+o"</c>, <c>key: "Control++</c> or <c>key: "Control+Shift+T"</c>
@@ -1087,6 +1108,10 @@ public partial interface IFrame
     /// <para>Use locator-based <see cref="IFrame.Locator"/> instead. Read more about <a href="https://playwright.dev/dotnet/docs/locators">locators</a>.</para>
     /// <para>Returns the ElementHandle pointing to the frame element.</para>
     /// <para>
+    /// The use of <see cref="IElementHandle"/> is discouraged, use <see cref="ILocator"/>
+    /// objects and web-first assertions instead.
+    /// </para>
+    /// <para>
     /// The method finds an element matching the specified selector within the frame. If
     /// no elements match the selector, returns <c>null</c>.
     /// </para>
@@ -1104,6 +1129,10 @@ public partial interface IFrame
     /// <summary>
     /// <para>Use locator-based <see cref="IFrame.Locator"/> instead. Read more about <a href="https://playwright.dev/dotnet/docs/locators">locators</a>.</para>
     /// <para>Returns the ElementHandles pointing to the frame elements.</para>
+    /// <para>
+    /// The use of <see cref="IElementHandle"/> is discouraged, use <see cref="ILocator"/>
+    /// objects instead.
+    /// </para>
     /// <para>
     /// The method finds all elements matching the specified selector within the frame.
     /// If no elements match the selector, returns empty array.
@@ -1124,10 +1153,10 @@ public partial interface IFrame
     /// <a href="https://playwright.dev/dotnet/docs/locators">locators</a>.
     /// </para>
     /// <para>
-    /// This method waits for an element matching <paramref name="selector"/>, waits for
-    /// <a href="https://playwright.dev/dotnet/docs/actionability">actionability</a> checks,
-    /// waits until all specified options are present in the <c>&lt;select&gt;</c> element
-    /// and selects these options.
+    /// This method waits for an element matching <see cref="IFrame.SelectOptionAsync"/>,
+    /// waits for <a href="https://playwright.dev/dotnet/docs/actionability">actionability</a>
+    /// checks, waits until all specified options are present in the <c>&lt;select&gt;</c>
+    /// element and selects these options.
     /// </para>
     /// <para>
     /// If the target element is not a <c>&lt;select&gt;</c> element, this method throws
@@ -1166,10 +1195,10 @@ public partial interface IFrame
     /// <a href="https://playwright.dev/dotnet/docs/locators">locators</a>.
     /// </para>
     /// <para>
-    /// This method waits for an element matching <paramref name="selector"/>, waits for
-    /// <a href="https://playwright.dev/dotnet/docs/actionability">actionability</a> checks,
-    /// waits until all specified options are present in the <c>&lt;select&gt;</c> element
-    /// and selects these options.
+    /// This method waits for an element matching <see cref="IFrame.SelectOptionAsync"/>,
+    /// waits for <a href="https://playwright.dev/dotnet/docs/actionability">actionability</a>
+    /// checks, waits until all specified options are present in the <c>&lt;select&gt;</c>
+    /// element and selects these options.
     /// </para>
     /// <para>
     /// If the target element is not a <c>&lt;select&gt;</c> element, this method throws
@@ -1208,10 +1237,10 @@ public partial interface IFrame
     /// <a href="https://playwright.dev/dotnet/docs/locators">locators</a>.
     /// </para>
     /// <para>
-    /// This method waits for an element matching <paramref name="selector"/>, waits for
-    /// <a href="https://playwright.dev/dotnet/docs/actionability">actionability</a> checks,
-    /// waits until all specified options are present in the <c>&lt;select&gt;</c> element
-    /// and selects these options.
+    /// This method waits for an element matching <see cref="IFrame.SelectOptionAsync"/>,
+    /// waits for <a href="https://playwright.dev/dotnet/docs/actionability">actionability</a>
+    /// checks, waits until all specified options are present in the <c>&lt;select&gt;</c>
+    /// element and selects these options.
     /// </para>
     /// <para>
     /// If the target element is not a <c>&lt;select&gt;</c> element, this method throws
@@ -1250,10 +1279,10 @@ public partial interface IFrame
     /// <a href="https://playwright.dev/dotnet/docs/locators">locators</a>.
     /// </para>
     /// <para>
-    /// This method waits for an element matching <paramref name="selector"/>, waits for
-    /// <a href="https://playwright.dev/dotnet/docs/actionability">actionability</a> checks,
-    /// waits until all specified options are present in the <c>&lt;select&gt;</c> element
-    /// and selects these options.
+    /// This method waits for an element matching <see cref="IFrame.SelectOptionAsync"/>,
+    /// waits for <a href="https://playwright.dev/dotnet/docs/actionability">actionability</a>
+    /// checks, waits until all specified options are present in the <c>&lt;select&gt;</c>
+    /// element and selects these options.
     /// </para>
     /// <para>
     /// If the target element is not a <c>&lt;select&gt;</c> element, this method throws
@@ -1292,10 +1321,10 @@ public partial interface IFrame
     /// <a href="https://playwright.dev/dotnet/docs/locators">locators</a>.
     /// </para>
     /// <para>
-    /// This method waits for an element matching <paramref name="selector"/>, waits for
-    /// <a href="https://playwright.dev/dotnet/docs/actionability">actionability</a> checks,
-    /// waits until all specified options are present in the <c>&lt;select&gt;</c> element
-    /// and selects these options.
+    /// This method waits for an element matching <see cref="IFrame.SelectOptionAsync"/>,
+    /// waits for <a href="https://playwright.dev/dotnet/docs/actionability">actionability</a>
+    /// checks, waits until all specified options are present in the <c>&lt;select&gt;</c>
+    /// element and selects these options.
     /// </para>
     /// <para>
     /// If the target element is not a <c>&lt;select&gt;</c> element, this method throws
@@ -1334,10 +1363,10 @@ public partial interface IFrame
     /// <a href="https://playwright.dev/dotnet/docs/locators">locators</a>.
     /// </para>
     /// <para>
-    /// This method waits for an element matching <paramref name="selector"/>, waits for
-    /// <a href="https://playwright.dev/dotnet/docs/actionability">actionability</a> checks,
-    /// waits until all specified options are present in the <c>&lt;select&gt;</c> element
-    /// and selects these options.
+    /// This method waits for an element matching <see cref="IFrame.SelectOptionAsync"/>,
+    /// waits for <a href="https://playwright.dev/dotnet/docs/actionability">actionability</a>
+    /// checks, waits until all specified options are present in the <c>&lt;select&gt;</c>
+    /// element and selects these options.
     /// </para>
     /// <para>
     /// If the target element is not a <c>&lt;select&gt;</c> element, this method throws
@@ -1376,13 +1405,13 @@ public partial interface IFrame
     /// <a href="https://playwright.dev/dotnet/docs/locators">locators</a>.
     /// </para>
     /// <para>
-    /// This method checks or unchecks an element matching <paramref name="selector"/> by
-    /// performing the following steps:
+    /// This method checks or unchecks an element matching <see cref="IFrame.SetCheckedAsync"/>
+    /// by performing the following steps:
     /// </para>
     /// <list type="ordinal">
     /// <item><description>
-    /// Find an element matching <paramref name="selector"/>. If there is none, wait until
-    /// a matching element is attached to the DOM.
+    /// Find an element matching <see cref="IFrame.SetCheckedAsync"/>. If there is none,
+    /// wait until a matching element is attached to the DOM.
     /// </description></item>
     /// <item><description>
     /// Ensure that matched element is a checkbox or a radio input. If not, this method
@@ -1391,15 +1420,15 @@ public partial interface IFrame
     /// <item><description>If the element already has the right checked state, this method returns immediately.</description></item>
     /// <item><description>
     /// Wait for <a href="https://playwright.dev/dotnet/docs/actionability">actionability</a>
-    /// checks on the matched element, unless <paramref name="force"/> option is set. If
-    /// the element is detached during the checks, the whole action is retried.
+    /// checks on the matched element, unless <see cref="IFrame.SetCheckedAsync"/> option
+    /// is set. If the element is detached during the checks, the whole action is retried.
     /// </description></item>
     /// <item><description>Scroll the element into view if needed.</description></item>
     /// <item><description>Use <see cref="IPage.Mouse"/> to click in the center of the element.</description></item>
     /// <item><description>Ensure that the element is now checked or unchecked. If not, this method throws.</description></item>
     /// </list>
     /// <para>
-    /// When all steps combined have not finished during the specified <paramref name="timeout"/>,
+    /// When all steps combined have not finished during the specified <see cref="IFrame.SetCheckedAsync"/>,
     /// this method throws a <see cref="TimeoutException"/>. Passing zero timeout disables
     /// this.
     /// </para>
@@ -1433,7 +1462,7 @@ public partial interface IFrame
     /// For empty array, clears the selected files.
     /// </para>
     /// <para>
-    /// This method expects <paramref name="selector"/> to point to an <a href="https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input">input
+    /// This method expects <see cref="IFrame.SetInputFilesAsync"/> to point to an <a href="https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input">input
     /// element</a>. However, if the element is inside the <c>&lt;label&gt;</c> element
     /// that has an associated <a href="https://developer.mozilla.org/en-US/docs/Web/API/HTMLLabelElement/control">control</a>,
     /// targets the control instead.
@@ -1459,7 +1488,7 @@ public partial interface IFrame
     /// For empty array, clears the selected files.
     /// </para>
     /// <para>
-    /// This method expects <paramref name="selector"/> to point to an <a href="https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input">input
+    /// This method expects <see cref="IFrame.SetInputFilesAsync"/> to point to an <a href="https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input">input
     /// element</a>. However, if the element is inside the <c>&lt;label&gt;</c> element
     /// that has an associated <a href="https://developer.mozilla.org/en-US/docs/Web/API/HTMLLabelElement/control">control</a>,
     /// targets the control instead.
@@ -1485,7 +1514,7 @@ public partial interface IFrame
     /// For empty array, clears the selected files.
     /// </para>
     /// <para>
-    /// This method expects <paramref name="selector"/> to point to an <a href="https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input">input
+    /// This method expects <see cref="IFrame.SetInputFilesAsync"/> to point to an <a href="https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input">input
     /// element</a>. However, if the element is inside the <c>&lt;label&gt;</c> element
     /// that has an associated <a href="https://developer.mozilla.org/en-US/docs/Web/API/HTMLLabelElement/control">control</a>,
     /// targets the control instead.
@@ -1511,7 +1540,7 @@ public partial interface IFrame
     /// For empty array, clears the selected files.
     /// </para>
     /// <para>
-    /// This method expects <paramref name="selector"/> to point to an <a href="https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input">input
+    /// This method expects <see cref="IFrame.SetInputFilesAsync"/> to point to an <a href="https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input">input
     /// element</a>. However, if the element is inside the <c>&lt;label&gt;</c> element
     /// that has an associated <a href="https://developer.mozilla.org/en-US/docs/Web/API/HTMLLabelElement/control">control</a>,
     /// targets the control instead.
@@ -1529,29 +1558,33 @@ public partial interface IFrame
     /// <summary>
     /// <para>Use locator-based <see cref="ILocator.TapAsync"/> instead. Read more about <a href="https://playwright.dev/dotnet/docs/locators">locators</a>.</para>
     /// <para>
-    /// This method taps an element matching <paramref name="selector"/> by performing the
-    /// following steps:
+    /// This method taps an element matching <see cref="IFrame.TapAsync"/> by performing
+    /// the following steps:
     /// </para>
     /// <list type="ordinal">
     /// <item><description>
-    /// Find an element matching <paramref name="selector"/>. If there is none, wait until
+    /// Find an element matching <see cref="IFrame.TapAsync"/>. If there is none, wait until
     /// a matching element is attached to the DOM.
     /// </description></item>
     /// <item><description>
     /// Wait for <a href="https://playwright.dev/dotnet/docs/actionability">actionability</a>
-    /// checks on the matched element, unless <paramref name="force"/> option is set. If
-    /// the element is detached during the checks, the whole action is retried.
+    /// checks on the matched element, unless <see cref="IFrame.TapAsync"/> option is set.
+    /// If the element is detached during the checks, the whole action is retried.
     /// </description></item>
     /// <item><description>Scroll the element into view if needed.</description></item>
     /// <item><description>
     /// Use <see cref="IPage.Touchscreen"/> to tap the center of the element, or the specified
-    /// <paramref name="position"/>.
+    /// <see cref="IFrame.TapAsync"/>.
     /// </description></item>
     /// </list>
     /// <para>
-    /// When all steps combined have not finished during the specified <paramref name="timeout"/>,
+    /// When all steps combined have not finished during the specified <see cref="IFrame.TapAsync"/>,
     /// this method throws a <see cref="TimeoutException"/>. Passing zero timeout disables
     /// this.
+    /// </para>
+    /// <para>
+    /// <c>frame.tap()</c> requires that the <c>hasTouch</c> option of the browser context
+    /// be set to true.
     /// </para>
     /// </summary>
     /// <remarks>
@@ -1613,13 +1646,13 @@ public partial interface IFrame
     /// href="https://playwright.dev/dotnet/docs/locators">locators</a>.
     /// </para>
     /// <para>
-    /// This method checks an element matching <paramref name="selector"/> by performing
+    /// This method checks an element matching <see cref="IFrame.UncheckAsync"/> by performing
     /// the following steps:
     /// </para>
     /// <list type="ordinal">
     /// <item><description>
-    /// Find an element matching <paramref name="selector"/>. If there is none, wait until
-    /// a matching element is attached to the DOM.
+    /// Find an element matching <see cref="IFrame.UncheckAsync"/>. If there is none, wait
+    /// until a matching element is attached to the DOM.
     /// </description></item>
     /// <item><description>
     /// Ensure that matched element is a checkbox or a radio input. If not, this method
@@ -1627,15 +1660,15 @@ public partial interface IFrame
     /// </description></item>
     /// <item><description>
     /// Wait for <a href="https://playwright.dev/dotnet/docs/actionability">actionability</a>
-    /// checks on the matched element, unless <paramref name="force"/> option is set. If
-    /// the element is detached during the checks, the whole action is retried.
+    /// checks on the matched element, unless <see cref="IFrame.UncheckAsync"/> option is
+    /// set. If the element is detached during the checks, the whole action is retried.
     /// </description></item>
     /// <item><description>Scroll the element into view if needed.</description></item>
     /// <item><description>Use <see cref="IPage.Mouse"/> to click in the center of the element.</description></item>
     /// <item><description>Ensure that the element is now unchecked. If not, this method throws.</description></item>
     /// </list>
     /// <para>
-    /// When all steps combined have not finished during the specified <paramref name="timeout"/>,
+    /// When all steps combined have not finished during the specified <see cref="IFrame.UncheckAsync"/>,
     /// this method throws a <see cref="TimeoutException"/>. Passing zero timeout disables
     /// this.
     /// </para>
@@ -1652,8 +1685,8 @@ public partial interface IFrame
 
     /// <summary>
     /// <para>
-    /// Returns when the <paramref name="expression"/> returns a truthy value, returns that
-    /// value.
+    /// Returns when the <see cref="IFrame.WaitForFunctionAsync"/> returns a truthy value,
+    /// returns that value.
     /// </para>
     /// <para>**Usage**</para>
     /// <para>
@@ -1686,7 +1719,7 @@ public partial interface IFrame
     /// JavaScript expression to be evaluated in the browser context. If the expression
     /// evaluates to a function, the function is automatically invoked.
     /// </param>
-    /// <param name="arg">Optional argument to pass to <paramref name="expression"/>.</param>
+    /// <param name="arg">Optional argument to pass to <see cref="IFrame.WaitForFunctionAsync"/>.</param>
     /// <param name="options">Call options</param>
     Task<IJSHandle> WaitForFunctionAsync(string expression, object? arg = default, FrameWaitForFunctionOptions? options = default);
 
@@ -1696,6 +1729,10 @@ public partial interface IFrame
     /// This returns when the frame reaches a required load state, <c>load</c> by default.
     /// The navigation must have been committed when this method is called. If current document
     /// has already reached the required state, resolves immediately.
+    /// </para>
+    /// <para>
+    /// Most of the time, this method is not needed because Playwright <a href="https://playwright.dev/dotnet/docs/actionability">auto-waits
+    /// before every action</a>.
     /// </para>
     /// <para>**Usage**</para>
     /// <code>
@@ -1751,6 +1788,10 @@ public partial interface IFrame
     /// <br/>
     /// // Resolves after navigation has finished
     /// </code>
+    /// <para>
+    /// Usage of the <a href="https://developer.mozilla.org/en-US/docs/Web/API/History_API">History
+    /// API</a> to change the URL is considered a navigation.
+    /// </para>
     /// </summary>
     /// <remarks>
     /// <para>
@@ -1787,6 +1828,10 @@ public partial interface IFrame
     /// <br/>
     /// // Resolves after navigation has finished
     /// </code>
+    /// <para>
+    /// Usage of the <a href="https://developer.mozilla.org/en-US/docs/Web/API/History_API">History
+    /// API</a> to change the URL is considered a navigation.
+    /// </para>
     /// </summary>
     /// <remarks>
     /// <para>
@@ -1805,15 +1850,20 @@ public partial interface IFrame
     /// instead. Read more about <a href="https://playwright.dev/dotnet/docs/locators">locators</a>.
     /// </para>
     /// <para>
-    /// Returns when element specified by selector satisfies <paramref name="state"/> option.
-    /// Returns <c>null</c> if waiting for <c>hidden</c> or <c>detached</c>.
+    /// Returns when element specified by selector satisfies <see cref="IFrame.WaitForSelectorAsync"/>
+    /// option. Returns <c>null</c> if waiting for <c>hidden</c> or <c>detached</c>.
     /// </para>
     /// <para>
-    /// Wait for the <paramref name="selector"/> to satisfy <paramref name="state"/> option
-    /// (either appear/disappear from dom, or become visible/hidden). If at the moment of
-    /// calling the method <paramref name="selector"/> already satisfies the condition,
-    /// the method will return immediately. If the selector doesn't satisfy the condition
-    /// for the <paramref name="timeout"/> milliseconds, the function will throw.
+    /// Playwright automatically waits for element to be ready before performing an action.
+    /// Using <see cref="ILocator"/> objects and web-first assertions make the code wait-for-selector-free.
+    /// </para>
+    /// <para>
+    /// Wait for the <see cref="IFrame.WaitForSelectorAsync"/> to satisfy <see cref="IFrame.WaitForSelectorAsync"/>
+    /// option (either appear/disappear from dom, or become visible/hidden). If at the moment
+    /// of calling the method <see cref="IFrame.WaitForSelectorAsync"/> already satisfies
+    /// the condition, the method will return immediately. If the selector doesn't satisfy
+    /// the condition for the <see cref="IFrame.WaitForSelectorAsync"/> milliseconds, the
+    /// function will throw.
     /// </para>
     /// <para>**Usage**</para>
     /// <para>This method works across navigations:</para>
@@ -1844,6 +1894,7 @@ public partial interface IFrame
     /// <para>
     /// Playwright automatically waits for element to be ready before performing an action.
     /// Using <see cref="ILocator"/> objects and web-first assertions make the code wait-for-selector-free.
+    ///
     /// </para>
     /// </remarks>
     /// <param name="selector">A selector to query for.</param>
@@ -1855,7 +1906,7 @@ public partial interface IFrame
     /// Never wait for timeout in production. Tests that wait for time are inherently flaky.
     /// Use <see cref="ILocator"/> actions and web assertions that wait automatically.
     /// </para>
-    /// <para>Waits for the given <paramref name="timeout"/> in milliseconds.</para>
+    /// <para>Waits for the given <see cref="IFrame.WaitForTimeoutAsync"/> in milliseconds.</para>
     /// <para>
     /// Note that <c>frame.waitForTimeout()</c> should only be used for debugging. Tests
     /// using the timer in production are going to be flaky. Use signals such as network

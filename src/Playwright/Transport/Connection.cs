@@ -184,7 +184,7 @@ internal class Connection : IDisposable
             };
         }
 
-        if (_tracingCount > 0 && frames.Count > 0 && @object.Guid != "localUtils")
+        if (_tracingCount > 0 && frames.Count > 0 && !@object._isInternalType)
         {
             LocalUtils.AddStackToTracingNoReply(frames, id);
         }
@@ -385,6 +385,9 @@ internal class Connection : IDisposable
                 break;
             case ChannelOwnerType.WebSocket:
                 result = new WebSocket(parent, guid, initializer?.ToObject<WebSocketInitializer>(DefaultJsonSerializerOptions));
+                break;
+            case ChannelOwnerType.WebSocketRoute:
+                result = new WebSocketRoute(parent, guid, initializer?.ToObject<WebSocketRouteInitializer>(DefaultJsonSerializerOptions));
                 break;
             case ChannelOwnerType.Selectors:
                 result = new Selectors(parent, guid);
