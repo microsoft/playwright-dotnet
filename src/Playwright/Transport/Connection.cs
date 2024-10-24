@@ -131,7 +131,7 @@ internal class Connection : IDisposable
         ChannelOwner @object,
         string method,
         Dictionary<string, object> args = null,
-        bool keepNulls = false) => WrapApiCallAsync(() => InnerSendMessageToServerAsync<T>(@object, method, args, keepNulls));
+        bool keepNulls = false) => WrapApiCallAsync(() => InnerSendMessageToServerAsync<T>(@object, method, args, keepNulls), @object?._isInternalType ?? false);
 
     private async Task<T> InnerSendMessageToServerAsync<T>(
         ChannelOwner @object,
@@ -184,7 +184,7 @@ internal class Connection : IDisposable
             };
         }
 
-        if (_tracingCount > 0 && frames.Count > 0 && !@object._isInternalType)
+        if (_tracingCount > 0 && frames.Count > 0 && @object.Guid != "localUtils")
         {
             LocalUtils.AddStackToTracingNoReply(frames, id);
         }
