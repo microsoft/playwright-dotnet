@@ -259,7 +259,6 @@ public class TracingTests : ContextTestEx
                 "Page.EvaluateAsync",
                 "Page.RouteAsync",
                 "Page.GotoAsync",
-                "Route.ContinueAsync",
                 "Page.GotoAsync"
             };
         Assert.AreEqual(expectedActionApiNames, actualActionApiNames);
