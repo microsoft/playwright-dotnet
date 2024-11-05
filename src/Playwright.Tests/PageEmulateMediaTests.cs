@@ -158,7 +158,6 @@ public class PageEmulateMediaTests : PageTestEx
     }
 
     [PlaywrightTest("page-emulate-media.spec.ts", "should emulate forcedColors")]
-    [Skip(SkipAttribute.Targets.Webkit)] // see: https://bugs.webkit.org/show_bug.cgi?id=225281
     public async Task ShouldEmulateForcedColors()
     {
         Assert.IsTrue(await Page.EvaluateAsync<bool>("() => matchMedia('(forced-colors: none)').matches"));

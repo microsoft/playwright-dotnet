@@ -315,7 +315,7 @@ public class DownloadTests : PageTestEx
     }
 
     [PlaywrightTest("download.spec.ts", "should report alt-click downloads")]
-    [Skip(SkipAttribute.Targets.Firefox, SkipAttribute.Targets.Webkit)]
+    [Skip(SkipAttribute.Targets.Firefox)]
     public async Task ShouldReportAltClickDownloads()
     {
         Server.SetRoute("/download", context =>

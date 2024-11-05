@@ -195,7 +195,6 @@ public class BrowserContextPageEventTests : BrowserTestEx
     }
 
     [PlaywrightTest("browsercontext-page-event.spec.ts", "should work with Shift-clicking")]
-    [Skip(SkipAttribute.Targets.Webkit)]
     public async Task ShouldWorkWithShiftClicking()
     {
         // WebKit: Shift+Click does not open a new window.
@@ -213,7 +212,6 @@ public class BrowserContextPageEventTests : BrowserTestEx
     }
 
     [PlaywrightTest("browsercontext-page-event.spec.ts", "should report when a new page is created and closed")]
-    [Skip(SkipAttribute.Targets.Webkit, SkipAttribute.Targets.Firefox)]
     public async Task ShouldWorkWithCtrlClicking()
     {
         // Firefox: reports an opener in this case.

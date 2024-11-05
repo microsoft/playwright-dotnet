@@ -30,7 +30,6 @@ namespace Microsoft.Playwright.Tests;
 public class CapabilitiesTests : PageTestEx
 {
     [PlaywrightTest("capabilities.spec.ts", "Web Assembly should work")]
-    [Skip(SkipAttribute.Targets.Webkit | SkipAttribute.Targets.Windows)]
     public async Task WebAssemblyShouldWork()
     {
         await Page.GotoAsync(Server.Prefix + "/wasm/table2.html");
@@ -38,7 +37,6 @@ public class CapabilitiesTests : PageTestEx
     }
 
     [PlaywrightTest("capabilities.spec.ts", "WebSocket should work")]
-    [Skip(SkipAttribute.Targets.Webkit | SkipAttribute.Targets.Windows)]
     public async Task WebSocketShouldWork()
     {
         Server.SendOnWebSocketConnection("incoming");

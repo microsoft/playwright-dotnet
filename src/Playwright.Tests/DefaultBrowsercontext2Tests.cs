@@ -43,7 +43,7 @@ public class DefaultBrowsercontext2Tests : PlaywrightTestEx
     }
 
     [PlaywrightTest("defaultbrowsercontext-2.spec.ts", "should work in persistent context")]
-    [Skip(SkipAttribute.Targets.Firefox)]
+    [Skip(SkipAttribute.Targets.Firefox)] // Firefox does not support mobile
     public async Task ShouldWorkInPersistentContext()
     {
         var (tmp, context, page) = await LaunchAsync(new()

@@ -301,7 +301,6 @@ public class BrowserContextBasicTests : BrowserTestEx
     }
 
     [PlaywrightTest("browsercontext-basic.spec.ts", "should emulate navigator.onLine")]
-    [Skip(SkipAttribute.Targets.Firefox)]
     public async Task ShouldEmulateNavigatorOnLine()
     {
         await using var context = await Browser.NewContextAsync();

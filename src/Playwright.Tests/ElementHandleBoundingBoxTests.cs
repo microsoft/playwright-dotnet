@@ -82,7 +82,7 @@ public class ElementHandleBoundingBoxTests : PageTestEx
         AssertEqual(webBoundingBox, pwBoundingBox);
     }
 
-    [PlaywrightTest("elementhandle-bounding-box.spec.ts", "should work with page scale")]
+    [PlaywrightTest("elementhandle-bounding-box.spec.ts", "should return bounding box with page scale")]
     [Skip(SkipAttribute.Targets.Firefox)]
     public async Task ShouldWorkWithPageScale()
     {

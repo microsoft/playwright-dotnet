@@ -154,7 +154,6 @@ public class LocatorMisc2Tests : PageTestEx
     }
 
     [PlaywrightTest("locator-misc-2.spec.ts", "should return bounding box")]
-    [Skip(SkipAttribute.Targets.Firefox)]
     public async Task ShouldReturnBoundingBox()
     {
         await Page.SetViewportSizeAsync(500, 500);
