@@ -23,10 +23,7 @@
  * SOFTWARE.
  */
 
-using System;
 using System.Collections.Concurrent;
-using System.Collections.Generic;
-using System.IO;
 using System.IO.Compression;
 using System.Net;
 using System.Net.WebSockets;
@@ -34,15 +31,8 @@ using System.Reflection;
 using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Text.RegularExpressions;
-using System.Threading;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.Features;
 using Microsoft.AspNetCore.StaticFiles;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
 using NUnit.Framework.Internal;
 
 namespace Microsoft.Playwright.Tests.TestServer;
@@ -155,7 +145,7 @@ public class SimpleServer
             {
                 if (isHttps)
                 {
-                    var cert = new X509Certificate2("key.pfx", "aaaa");
+                    var cert = new X509Certificate2("TestServer/key.pfx", "aaaa");
                     options.Listen(IPAddress.Loopback, port, listenOptions => listenOptions.UseHttps(cert));
                 }
                 else

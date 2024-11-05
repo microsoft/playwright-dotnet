@@ -25,7 +25,6 @@
 using System.Globalization;
 using System.Net;
 using System.Text.RegularExpressions;
-using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Primitives;
 
 namespace Microsoft.Playwright.Tests;

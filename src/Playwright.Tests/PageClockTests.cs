@@ -23,7 +23,6 @@
  */
 
 using System.Text.Json;
-using Microsoft.AspNetCore.Http;
 
 namespace Microsoft.Playwright.Tests;
 

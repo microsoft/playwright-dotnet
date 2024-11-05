@@ -22,8 +22,6 @@
  * SOFTWARE.
  */
 
-using Microsoft.AspNetCore.Http;
-
 namespace Microsoft.Playwright.Tests.Assertions;
 
 public class APIResponseAssertionsTests : PageTestEx
