@@ -8,9 +8,6 @@
   </PropertyGroup>
   <Import Project="../Common/SignAssembly.props" />
 
-  <!-- Required since we're not actually referencing Playwright -->
-  <Import Project="../Playwright.Tests/build/Playwright.Tests.targets" />
-
   <ItemGroup>
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.8.0" />
     <PackageReference Include="MSTest.TestAdapter" Version="2.2.10" />
@@ -19,6 +16,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Playwright\Playwright.csproj" />
     <ProjectReference Include="..\Playwright.MSTest\Playwright.MSTest.csproj" />
     <ProjectReference Include="..\Playwright.NUnit\Playwright.NUnit.csproj" />
   </ItemGroup>
