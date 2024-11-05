@@ -24,7 +24,6 @@
 
 using System.Threading.Tasks;
 using CommandLine;
-using Playwright.Tooling.Options;
 
 namespace Playwright.Tooling;
 

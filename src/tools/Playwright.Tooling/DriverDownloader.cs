@@ -30,7 +30,7 @@ using System.Net.Http;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Xml;
-using Playwright.Tooling.Options;
+using CommandLine;
 
 namespace Playwright.Tooling;
 
@@ -185,4 +185,11 @@ internal class DriverDownloader
 
         return true;
     }
+}
+
+[Verb("download-drivers")]
+internal class DownloadDriversOptions
+{
+    [Option(Required = true, HelpText = "Solution path.")]
+    public string BasePath { get; set; }
 }
