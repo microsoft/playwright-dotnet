@@ -36,7 +36,7 @@ public class HttpService : IWorkerService
         var workerIndex = test.WorkerIndex;
         return test.RegisterService("Http", async () =>
         {
-            var assetDir = Path.Combine(TestUtils.FindParentDirectory("Playwright.Tests.TestServer"), "assets");
+            var assetDir = Path.Combine(TestUtils.FindParentDirectory("Playwright.Tests"), "assets");
             var http = new HttpService
             {
                 Server = SimpleServer.Create(8907 + workerIndex * 2, assetDir),

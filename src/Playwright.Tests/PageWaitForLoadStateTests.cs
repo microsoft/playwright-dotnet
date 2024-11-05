@@ -23,8 +23,6 @@
  * SOFTWARE.
  */
 
-using Microsoft.AspNetCore.Http;
-
 namespace Microsoft.Playwright.Tests;
 
 ///<playwright-file>page-wait-for-load-state.ts</playwright-file>

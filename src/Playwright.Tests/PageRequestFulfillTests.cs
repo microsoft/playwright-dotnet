@@ -23,7 +23,6 @@
  */
 
 using System.Net;
-using Microsoft.AspNetCore.Http;
 
 namespace Microsoft.Playwright.Tests;
 

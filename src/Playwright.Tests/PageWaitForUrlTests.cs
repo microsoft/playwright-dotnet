@@ -23,7 +23,6 @@
  */
 
 using System.Text.RegularExpressions;
-using Microsoft.AspNetCore.Http;
 
 namespace Microsoft.Playwright.Tests;
 

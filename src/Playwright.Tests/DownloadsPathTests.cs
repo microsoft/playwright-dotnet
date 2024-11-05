@@ -22,8 +22,6 @@
  * SOFTWARE.
  */
 
-using Microsoft.AspNetCore.Http;
-
 namespace Microsoft.Playwright.Tests;
 
 public class DownloadsPathTests : PlaywrightTestEx

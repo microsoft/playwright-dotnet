@@ -25,7 +25,6 @@
 using System.Diagnostics;
 using System.IO.Compression;
 using System.Text;
-using Microsoft.AspNetCore.Http;
 using Microsoft.Playwright.Helpers;
 
 namespace Microsoft.Playwright.Tests;

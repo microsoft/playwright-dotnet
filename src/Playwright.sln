@@ -1,9 +1,7 @@
-Microsoft Visual Studio Solution File, Format Version 12.00
+﻿Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.0.31516.353
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "TestTools", "TestTools", "{D250D790-5A30-4C38-8F60-50FA96DB4E67}"
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{5F0EC30F-2600-4399-9925-A16B049B9311}"
 	ProjectSection(SolutionItems) = preProject
 		.editorconfig = .editorconfig
@@ -24,17 +22,15 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Playwright.Tooling", "tools
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Playwright.CLI", "Playwright.CLI\Playwright.CLI.csproj", "{735E5F83-813C-4F5C-BB69-D3F87B15CF39}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Playwright.Tests.TestServer", "Playwright.Tests.TestServer\Playwright.Tests.TestServer.csproj", "{55165383-EBE7-462B-B154-738818787740}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Playwright.NUnit", "Playwright.NUnit\Playwright.NUnit.csproj", "{3EC5B076-CEE4-41A4-AA8E-4FDFFD08D4E9}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Playwright.MSTest", "Playwright.MSTest\Playwright.MSTest.csproj", "{62443703-36D1-43C9-B245-9E494FC5E50D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Playwright.TestingHarnessTest", "Playwright.TestingHarnessTest\Playwright.TestingHarnessTest.csproj", "{AE6072B5-4235-499F-8B0E-B8BCFC125CF5}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Playwright.TestAdapter", "Playwright.TestAdapter\Playwright.TestAdapter.csproj", "{61837C33-9182-4FBF-86F4-BDB757D1C023}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Playwright.Examples", "Playwright.Examples\Playwright.Examples.csproj", "{A7BFC553-1AFF-490B-86E2-09DBF24BDA69}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Playwright.TestingHarnessTest", "Playwright.TestingHarnessTest\Playwright.TestingHarnessTest.csproj", "{27D8C307-0B8D-456D-A76F-86F410A3684A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -58,10 +54,6 @@ Global
 		{735E5F83-813C-4F5C-BB69-D3F87B15CF39}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{735E5F83-813C-4F5C-BB69-D3F87B15CF39}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{735E5F83-813C-4F5C-BB69-D3F87B15CF39}.Release|Any CPU.Build.0 = Release|Any CPU
-		{55165383-EBE7-462B-B154-738818787740}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{55165383-EBE7-462B-B154-738818787740}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{55165383-EBE7-462B-B154-738818787740}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{55165383-EBE7-462B-B154-738818787740}.Release|Any CPU.Build.0 = Release|Any CPU
 		{3EC5B076-CEE4-41A4-AA8E-4FDFFD08D4E9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{3EC5B076-CEE4-41A4-AA8E-4FDFFD08D4E9}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3EC5B076-CEE4-41A4-AA8E-4FDFFD08D4E9}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -70,10 +62,6 @@ Global
 		{62443703-36D1-43C9-B245-9E494FC5E50D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{62443703-36D1-43C9-B245-9E494FC5E50D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{62443703-36D1-43C9-B245-9E494FC5E50D}.Release|Any CPU.Build.0 = Release|Any CPU
-		{AE6072B5-4235-499F-8B0E-B8BCFC125CF5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{AE6072B5-4235-499F-8B0E-B8BCFC125CF5}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{AE6072B5-4235-499F-8B0E-B8BCFC125CF5}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{AE6072B5-4235-499F-8B0E-B8BCFC125CF5}.Release|Any CPU.Build.0 = Release|Any CPU
 		{61837C33-9182-4FBF-86F4-BDB757D1C023}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{61837C33-9182-4FBF-86F4-BDB757D1C023}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{61837C33-9182-4FBF-86F4-BDB757D1C023}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -82,6 +70,10 @@ Global
 		{A7BFC553-1AFF-490B-86E2-09DBF24BDA69}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A7BFC553-1AFF-490B-86E2-09DBF24BDA69}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A7BFC553-1AFF-490B-86E2-09DBF24BDA69}.Release|Any CPU.Build.0 = Release|Any CPU
+		{27D8C307-0B8D-456D-A76F-86F410A3684A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{27D8C307-0B8D-456D-A76F-86F410A3684A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{27D8C307-0B8D-456D-A76F-86F410A3684A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{27D8C307-0B8D-456D-A76F-86F410A3684A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -89,9 +81,8 @@ Global
 	GlobalSection(NestedProjects) = preSolution
 		{61C89FA2-645D-4D0E-9A20-06ABE32054CF} = {5C6D57B1-C82A-48D6-9EBD-73B712CAE476}
 		{735E5F83-813C-4F5C-BB69-D3F87B15CF39} = {5C6D57B1-C82A-48D6-9EBD-73B712CAE476}
-		{55165383-EBE7-462B-B154-738818787740} = {D250D790-5A30-4C38-8F60-50FA96DB4E67}
 		{A7BFC553-1AFF-490B-86E2-09DBF24BDA69} = {5C6D57B1-C82A-48D6-9EBD-73B712CAE476}
-		{AE6072B5-4235-499F-8B0E-B8BCFC125CF5} = {D250D790-5A30-4C38-8F60-50FA96DB4E67}
+		{27D8C307-0B8D-456D-A76F-86F410A3684A} = {5C6D57B1-C82A-48D6-9EBD-73B712CAE476}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {8D6EDE73-B005-4ABC-BCF8-BB3C154497EC}

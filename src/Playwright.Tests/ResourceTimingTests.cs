@@ -22,8 +22,6 @@
  * SOFTWARE.
  */
 
-using Microsoft.AspNetCore.Http;
-
 namespace Microsoft.Playwright.Tests;
 
 ///<playwright-file>resource-timing.spec.ts</playwright-file>
