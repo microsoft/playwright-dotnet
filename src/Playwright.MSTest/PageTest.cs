@@ -35,6 +35,6 @@ public class PageTest : ContextTest
     [TestInitialize]
     public async Task PageSetup()
     {
-        Page = await Context!.NewPageAsync().ConfigureAwait(false);
+        Page = await Context.NewPageAsync().ConfigureAwait(false);
     }
 }

@@ -31,6 +31,12 @@ public class ContextTest : BrowserTest
 {
     public IBrowserContext Context { get; private set; } = null!;
 
+    [SetUp]
+    public async Task ContextSetup()
+    {
+        Context = await NewContext(ContextOptions()).ConfigureAwait(false);
+    }
+
     public virtual BrowserNewContextOptions ContextOptions()
     {
         return new()
@@ -38,11 +44,5 @@ public class ContextTest : BrowserTest
             Locale = "en-US",
             ColorScheme = ColorScheme.Light,
         };
-    }
-
-    [SetUp]
-    public async Task ContextSetup()
-    {
-        Context = await NewContext(ContextOptions()).ConfigureAwait(false);
     }
 }
