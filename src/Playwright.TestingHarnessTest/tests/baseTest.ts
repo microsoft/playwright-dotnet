@@ -24,7 +24,7 @@ export const test = base.extend<{
       const testDir = testInfo.outputPath();
       const testClassName = testInfo.titlePath.join(' ').replace(/[^\w]/g, '');
       for (const [fileName, fileContent] of Object.entries(files)) {
-        await fs.promises.writeFile(path.join(testDir, fileName), unintentFile(fileContent).replace('<class-name>', testClassName));
+        await fs.promises.writeFile(path.join(testDir, fileName), unintentFile(fileContent).replaceAll('<class-name>', testClassName));
       }
       const trxFile = path.join(testDir, 'result.trx');
       command += ` --logger "trx;logfilename=${trxFile}" --logger "console;verbosity=detailed" --filter "${testClassName}" ${path.join('..', '..')}`;
