@@ -28,7 +28,7 @@ using System.Globalization;
 using System.Threading.Tasks;
 using Microsoft.Playwright.TestAdapter;
 
-namespace Microsoft.Playwright.MSTest.Services;
+namespace Microsoft.Playwright.MSTest;
 
 internal class BrowserService : IWorkerService
 {
@@ -38,14 +38,24 @@ internal class BrowserService : IWorkerService
 
     public Task DisposeAsync() => Browser?.CloseAsync() ?? Task.CompletedTask;
 
-    public async Task BuildAsync(PlaywrightTest parentTest)
+    private BrowserService(IBrowser browser)
+    {
+        Browser = browser;
+    }
+
+    public static Task<BrowserService> Register(WorkerAwareTest test, IBrowserType browserType)
+    {
+        return test.RegisterService("Browser", async () => new BrowserService(await CreateBrowser(browserType).ConfigureAwait(false)));
+    }
+
+    private static async Task<IBrowser> CreateBrowser(IBrowserType browserType)
     {
         var accessToken = Environment.GetEnvironmentVariable("PLAYWRIGHT_SERVICE_ACCESS_TOKEN");
         var serviceUrl = Environment.GetEnvironmentVariable("PLAYWRIGHT_SERVICE_URL");
 
         if (string.IsNullOrEmpty(accessToken) || string.IsNullOrEmpty(serviceUrl))
         {
-            Browser = await parentTest!.BrowserType!.LaunchAsync(PlaywrightSettingsProvider.LaunchOptions).ConfigureAwait(false);
+            return await browserType.LaunchAsync(PlaywrightSettingsProvider.LaunchOptions).ConfigureAwait(false);
         }
         else
         {
@@ -64,7 +74,7 @@ internal class BrowserService : IWorkerService
                 }
             };
 
-            Browser = await parentTest!.BrowserType!.ConnectAsync(wsEndpoint, connectOptions).ConfigureAwait(false);
+            return await browserType.ConnectAsync(wsEndpoint, connectOptions).ConfigureAwait(false);
         }
     }
 }

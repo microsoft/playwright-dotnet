@@ -36,15 +36,15 @@ namespace Microsoft.Playwright.NUnit;
 
 public class WorkerAwareTest
 {
+    private static readonly ConcurrentStack<Worker> _allWorkers = new();
+    private Worker? _currentWorker = null!;
+
     internal class Worker
     {
         private static int _lastWorkedIndex = 0;
         public int WorkerIndex = Interlocked.Increment(ref _lastWorkedIndex);
-        public Dictionary<string, IWorkerService> Services = new();
+        public Dictionary<string, IWorkerService> Services = [];
     }
-
-    private static readonly ConcurrentStack<Worker> _allWorkers = new();
-    private Worker _currentWorker = null!;
 
     public int WorkerIndex { get; internal set; }
 
@@ -93,10 +93,16 @@ public class WorkerAwareTest
         }
     }
 
-    public bool TestOk()
+    protected bool TestOk()
     {
         return
             TestContext.CurrentContext.Result.Outcome.Status == TestStatus.Passed ||
             TestContext.CurrentContext.Result.Outcome.Status == TestStatus.Skipped;
     }
+}
+
+public interface IWorkerService
+{
+    public Task ResetAsync();
+    public Task DisposeAsync();
 }
