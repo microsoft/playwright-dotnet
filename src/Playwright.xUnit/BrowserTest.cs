@@ -48,7 +48,7 @@ public class BrowserTest : PlaywrightTest
 
     public override async Task DisposeAsync()
     {
-        await base.InitializeAsync().ConfigureAwait(false);
+        await base.DisposeAsync().ConfigureAwait(false);
         if (TestOk)
         {
             foreach (var context in _contexts)
