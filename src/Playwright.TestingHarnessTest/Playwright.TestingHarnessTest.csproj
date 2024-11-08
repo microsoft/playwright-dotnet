@@ -18,10 +18,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Using Include="Xunit" />
-  </ItemGroup>
-
-  <ItemGroup>
     <ProjectReference Include="..\Playwright\Playwright.csproj" />
     <ProjectReference Include="..\Playwright.MSTest\Playwright.MSTest.csproj" />
     <ProjectReference Include="..\Playwright.NUnit\Playwright.NUnit.csproj" />
