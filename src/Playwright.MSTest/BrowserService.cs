@@ -25,6 +25,8 @@
 using System;
 using System.Collections.Generic;
 using System.Globalization;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 using Microsoft.Playwright.TestAdapter;
 
@@ -70,7 +72,8 @@ internal class BrowserService : IWorkerService
                 ExposeNetwork = exposeNetwork,
                 Headers = new Dictionary<string, string>
                 {
-                    ["Authorization"] = $"Bearer {accessToken}"
+                    ["Authorization"] = $"Bearer {accessToken}",
+                    ["x-playwright-launch-options"] = JsonSerializer.Serialize(PlaywrightSettingsProvider.LaunchOptions, new JsonSerializerOptions() { DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull })
                 }
             };
 
