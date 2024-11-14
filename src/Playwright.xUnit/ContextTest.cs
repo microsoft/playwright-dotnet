@@ -24,7 +24,7 @@
 
 using System.Threading.Tasks;
 
-namespace Microsoft.Playwright.xUnit;
+namespace Microsoft.Playwright.xunit;
 
 public class ContextTest : BrowserTest
 {

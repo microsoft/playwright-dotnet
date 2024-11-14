@@ -25,7 +25,7 @@
 using System.Threading.Tasks;
 using Microsoft.Playwright.TestAdapter;
 
-namespace Microsoft.Playwright.xUnit;
+namespace Microsoft.Playwright.xunit;
 
 public class PlaywrightTest : WorkerAwareTest
 {

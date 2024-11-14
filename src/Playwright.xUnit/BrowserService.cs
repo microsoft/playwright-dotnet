@@ -28,7 +28,7 @@ using System.Globalization;
 using System.Threading.Tasks;
 using Microsoft.Playwright.TestAdapter;
 
-namespace Microsoft.Playwright.xUnit;
+namespace Microsoft.Playwright.xunit;
 
 internal class BrowserService : IWorkerService
 {
@@ -66,6 +66,7 @@ internal class BrowserService : IWorkerService
             Headers = new Dictionary<string, string>
             {
                 ["Authorization"] = $"Bearer {accessToken}"
+                ["x-playwright-launch-options"] = JsonSerializer.Serialize(PlaywrightSettingsProvider.LaunchOptions, new JsonSerializerOptions() { DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull })
             }
         };
 

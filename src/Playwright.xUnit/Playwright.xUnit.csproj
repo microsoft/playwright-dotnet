@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <Title>Microsoft.Playwright.xUnit</Title>
-    <PackageId>Microsoft.Playwright.xUnit</PackageId>
+    <Title>Microsoft.Playwright.xunit</Title>
+    <PackageId>Microsoft.Playwright.xunit</PackageId>
     <Summary>A set of helpers and fixtures to enable using Playwright in xUnit tests.</Summary>
     <Description>
       Playwright enables reliable end-to-end testing for modern web apps. This package brings in additional helpers
@@ -12,10 +12,10 @@
     <TargetFramework>net8.0</TargetFramework>
     <PublishRepositoryUrl>true</PublishRepositoryUrl>
     <RunWithWarnings>true</RunWithWarnings>
-    <RootNamespace>Microsoft.Playwright.xUnit</RootNamespace>
+    <RootNamespace>Microsoft.Playwright.xunit</RootNamespace>
     <ReleaseVersion>0.0.0</ReleaseVersion>
     <BuildFromSource>True</BuildFromSource>
-    <AssemblyName>Microsoft.Playwright.xUnit</AssemblyName>
+    <AssemblyName>Microsoft.Playwright.xunit</AssemblyName>
     <PackageOutputPath>./nupkg</PackageOutputPath>
     <IsPackable>true</IsPackable>
     <Nullable>enable</Nullable>

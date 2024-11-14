@@ -31,10 +31,10 @@ test('should be able to forward DEBUG=pw:api env var', async ({ runTest }) => {
     'ExampleTests.cs': `
       using System;
       using System.Threading.Tasks;
-      using Microsoft.Playwright.xUnit;
+      using Microsoft.Playwright.xunit;
       using Xunit;
 
-      namespace Playwright.TestingHarnessTest.xUnit;
+      namespace Playwright.TestingHarnessTest.xunit;
 
       public class <class-name> : PageTest
       {
@@ -79,11 +79,11 @@ test('should be able to set the browser via the runsettings file', async ({ runT
     'ExampleTests.cs': `
       using System;
       using System.Threading.Tasks;
-      using Microsoft.Playwright.xUnit;
+      using Microsoft.Playwright.xunit;
       using Xunit;
       using Xunit.Abstractions;
 
-      namespace Playwright.TestingHarnessTest.xUnit;
+      namespace Playwright.TestingHarnessTest.xunit;
 
       public class <class-name> : PageTest
       {
@@ -125,11 +125,11 @@ test('should prioritize browser from env over the runsettings file', async ({ ru
     'ExampleTests.cs': `
       using System;
       using System.Threading.Tasks;
-      using Microsoft.Playwright.xUnit;
+      using Microsoft.Playwright.xunit;
       using Xunit;
       using Xunit.Abstractions;
 
-      namespace Playwright.TestingHarnessTest.xUnit;
+      namespace Playwright.TestingHarnessTest.xunit;
 
       public class <class-name> : PageTest
       {
@@ -173,11 +173,11 @@ test('should be able to make the browser headed via the env', async ({ runTest }
     'ExampleTests.cs': `
       using System;
       using System.Threading.Tasks;
-      using Microsoft.Playwright.xUnit;
+      using Microsoft.Playwright.xunit;
       using Xunit;
       using Xunit.Abstractions;
 
-      namespace Playwright.TestingHarnessTest.xUnit;
+      namespace Playwright.TestingHarnessTest.xunit;
 
       public class <class-name> : PageTest
       {
@@ -211,11 +211,11 @@ test('should be able to parse BrowserName and LaunchOptions.Headless from runset
     'ExampleTests.cs': `
       using System;
       using System.Threading.Tasks;
-      using Microsoft.Playwright.xUnit;
+      using Microsoft.Playwright.xunit;
       using Xunit;
       using Xunit.Abstractions;
 
-      namespace Playwright.TestingHarnessTest.xUnit;
+      namespace Playwright.TestingHarnessTest.xunit;
 
       public class <class-name> : PageTest
       {
@@ -275,11 +275,11 @@ test('should be able to parse LaunchOptions.Proxy from runsettings', async ({ ru
     'ExampleTests.cs': `
       using System;
       using System.Threading.Tasks;
-      using Microsoft.Playwright.xUnit;
+      using Microsoft.Playwright.xunit;
       using Xunit;
       using Xunit.Abstractions;
 
-      namespace Playwright.TestingHarnessTest.xUnit;
+      namespace Playwright.TestingHarnessTest.xunit;
 
       public class <class-name> : PageTest
       {
@@ -333,11 +333,11 @@ test('should be able to parse LaunchOptions.Args from runsettings', async ({ run
     'ExampleTests.cs': `
       using System;
       using System.Threading.Tasks;
-      using Microsoft.Playwright.xUnit;
+      using Microsoft.Playwright.xunit;
       using Xunit;
       using Xunit.Abstractions;
 
-      namespace Playwright.TestingHarnessTest.xUnit;
+      namespace Playwright.TestingHarnessTest.xunit;
 
       public class <class-name> : PageTest
       {
@@ -378,10 +378,10 @@ test('should be able to override context options', async ({ runTest }) => {
       using System.Collections.Generic;
       using System.Threading.Tasks;
       using Microsoft.Playwright;
-      using Microsoft.Playwright.xUnit;
+      using Microsoft.Playwright.xunit;
       using Xunit;
       
-      namespace Playwright.TestingHarnessTest.xUnit;
+      namespace Playwright.TestingHarnessTest.xunit;
 
       public class <class-name> : PageTest
       {
@@ -429,10 +429,10 @@ test('should be able to override launch options', async ({ runTest }) => {
     'ExampleTests.cs': `
       using System;
       using System.Threading.Tasks;
-      using Microsoft.Playwright.xUnit;
+      using Microsoft.Playwright.xunit;
       using Xunit;
 
-      namespace Playwright.TestingHarnessTest.xUnit;
+      namespace Playwright.TestingHarnessTest.xunit;
 
       public class <class-name> : PageTest
       {
@@ -468,10 +468,10 @@ test.describe('Expect() timeout', () => {
       using System.Collections.Generic;
       using System.Threading.Tasks;
       using Microsoft.Playwright;
-      using Microsoft.Playwright.xUnit;
+      using Microsoft.Playwright.xunit;
       using Xunit;
       
-      namespace Playwright.TestingHarnessTest.xUnit;
+      namespace Playwright.TestingHarnessTest.xunit;
 
       public class <class-name> : PageTest
       {
@@ -497,10 +497,10 @@ test.describe('Expect() timeout', () => {
         using System.Collections.Generic;
         using System.Threading.Tasks;
         using Microsoft.Playwright;
-        using Microsoft.Playwright.xUnit;
+        using Microsoft.Playwright.xunit;
         using Xunit;
         
-        namespace Playwright.TestingHarnessTest.xUnit;
+        namespace Playwright.TestingHarnessTest.xunit;
 
         public class <class-name> : PageTest
         {
@@ -526,10 +526,10 @@ test.describe('Expect() timeout', () => {
       using System.Collections.Generic;
       using System.Threading.Tasks;
       using Microsoft.Playwright;
-      using Microsoft.Playwright.xUnit;
+      using Microsoft.Playwright.xunit;
       using Xunit;
       
-      namespace Playwright.TestingHarnessTest.xUnit;
+      namespace Playwright.TestingHarnessTest.xunit;
 
       public class <class-name> : PageTest
       {

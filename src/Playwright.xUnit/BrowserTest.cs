@@ -25,7 +25,7 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace Microsoft.Playwright.xUnit;
+namespace Microsoft.Playwright.xunit;
 
 public class BrowserTest : PlaywrightTest
 {
