@@ -31,7 +31,7 @@ namespace Microsoft.Playwright.Core;
 
 internal class WebSocketRouteHandler
 {
-    public URLMatch URL { get; set; }
+    public URLMatch urlMatcher { get; set; }
 
     public Delegate Handler { get; set; }
 
@@ -44,14 +44,14 @@ internal class WebSocketRouteHandler
             var pattern = new Dictionary<string, object>();
             patterns.Add(pattern);
 
-            if (!string.IsNullOrEmpty(handler.URL.globMatch))
+            if (!string.IsNullOrEmpty(handler.urlMatcher.glob))
             {
-                pattern["glob"] = handler.URL.globMatch;
+                pattern["glob"] = handler.urlMatcher.glob;
             }
-            else if (handler.URL.reMatch != null)
+            else if (handler.urlMatcher.re != null)
             {
-                pattern["regexSource"] = handler.URL.reMatch.ToString();
-                pattern["regexFlags"] = handler.URL.reMatch.Options.GetInlineFlags();
+                pattern["regexSource"] = handler.urlMatcher.re.ToString();
+                pattern["regexFlags"] = handler.urlMatcher.re.Options.GetInlineFlags();
             }
             else
             {
@@ -82,5 +82,5 @@ internal class WebSocketRouteHandler
         await route.AfterHandleAsync().ConfigureAwait(false);
     }
 
-    internal bool Matches(string normalisedUrl) => URL.Match(normalisedUrl);
+    internal bool Matches(string normalisedUrl) => urlMatcher.Match(normalisedUrl);
 }
