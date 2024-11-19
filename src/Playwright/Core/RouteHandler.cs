@@ -47,7 +47,7 @@ internal class RouteHandler
 
     public int HandledCount { get; set; }
 
-    public static Dictionary<string, object> PrepareInterceptionPatterns(List<RouteHandler> handlers)
+    public static List<Dictionary<string, object>> PrepareInterceptionPatterns(List<RouteHandler> handlers)
     {
         bool all = false;
         var patterns = new List<Dictionary<string, object>>();
@@ -70,19 +70,15 @@ internal class RouteHandler
 
         if (all)
         {
-            var allPattern = new Dictionary<string, object>
-            {
-                ["glob"] = "**/*",
-            };
-
-            patterns.Clear();
-            patterns.Add(allPattern);
+            return [
+                new Dictionary<string, object>
+                {
+                    ["glob"] = "**/*",
+                }
+            ];
         }
 
-        return new Dictionary<string, object>
-        {
-            ["patterns"] = patterns,
-        };
+        return patterns;
     }
 
     public async Task<bool> HandleAsync(Route route)

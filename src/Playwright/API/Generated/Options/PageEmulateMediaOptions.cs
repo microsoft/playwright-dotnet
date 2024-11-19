@@ -47,9 +47,9 @@ public class PageEmulateMediaOptions
 
     /// <summary>
     /// <para>
-    /// Emulates <c>'prefers-colors-scheme'</c> media feature, supported values are <c>'light'</c>,
-    /// <c>'dark'</c>, <c>'no-preference'</c>. Passing <c>'Null'</c> disables color scheme
-    /// emulation.
+    /// Emulates <a href="https://developer.mozilla.org/en-US/docs/Web/CSS/@media/prefers-color-scheme">prefers-colors-scheme</a>
+    /// media feature, supported values are <c>'light'</c> and <c>'dark'</c>. Passing <c>'Null'</c>
+    /// disables color scheme emulation. <c>'no-preference'</c> is deprecated.
     /// </para>
     /// </summary>
     [JsonPropertyName("colorScheme")]

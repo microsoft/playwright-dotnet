@@ -936,6 +936,25 @@ public partial interface ILocatorAssertions
     /// <param name="values">Expected options currently selected.</param>
     /// <param name="options">Call options</param>
     Task ToHaveValuesAsync(IEnumerable<Regex> values, LocatorAssertionsToHaveValuesOptions? options = default);
+
+    /// <summary>
+    /// <para>
+    /// Asserts that the target element matches the given <a href="https://playwright.dev/dotnet/docs/aria-snapshots">accessibility
+    /// snapshot</a>.
+    /// </para>
+    /// <para>**Usage**</para>
+    /// <code>
+    /// await page.GotoAsync("https://demo.playwright.dev/todomvc/");<br/>
+    /// await Expect(page.Locator("body")).ToMatchAriaSnapshotAsync(@"<br/>
+    ///   - heading ""todos""<br/>
+    ///   - textbox ""What needs to be done?""<br/>
+    /// ");
+    /// </code>
+    /// </summary>
+    /// <param name="expected">
+    /// </param>
+    /// <param name="options">Call options</param>
+    Task ToMatchAriaSnapshotAsync(string expected, LocatorAssertionsToMatchAriaSnapshotOptions? options = default);
 }
 
 #nullable disable

@@ -636,8 +636,6 @@ public partial interface IPage
     /// await page.EvaluateAsync("matchMedia('(prefers-color-scheme: dark)').matches");<br/>
     /// // → true<br/>
     /// await page.EvaluateAsync("matchMedia('(prefers-color-scheme: light)').matches");<br/>
-    /// // → false<br/>
-    /// await page.EvaluateAsync("matchMedia('(prefers-color-scheme: no-preference)').matches");<br/>
     /// // → false
     /// </code>
     /// </summary>
@@ -2187,8 +2185,8 @@ public partial interface IPage
     /// </para>
     /// <code>
     /// await page.RouteWebSocketAsync("/ws", ws =&gt; {<br/>
-    ///   ws.OnMessage(message =&gt; {<br/>
-    ///     if (message == "request")<br/>
+    ///   ws.OnMessage(frame =&gt; {<br/>
+    ///     if (frame.Text == "request")<br/>
     ///       ws.Send("response");<br/>
     ///   });<br/>
     /// });
@@ -2214,8 +2212,8 @@ public partial interface IPage
     /// </para>
     /// <code>
     /// await page.RouteWebSocketAsync("/ws", ws =&gt; {<br/>
-    ///   ws.OnMessage(message =&gt; {<br/>
-    ///     if (message == "request")<br/>
+    ///   ws.OnMessage(frame =&gt; {<br/>
+    ///     if (frame.Text == "request")<br/>
     ///       ws.Send("response");<br/>
     ///   });<br/>
     /// });
@@ -2241,8 +2239,8 @@ public partial interface IPage
     /// </para>
     /// <code>
     /// await page.RouteWebSocketAsync("/ws", ws =&gt; {<br/>
-    ///   ws.OnMessage(message =&gt; {<br/>
-    ///     if (message == "request")<br/>
+    ///   ws.OnMessage(frame =&gt; {<br/>
+    ///     if (frame.Text == "request")<br/>
     ///       ws.Send("response");<br/>
     ///   });<br/>
     /// });

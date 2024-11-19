@@ -168,4 +168,14 @@ internal class Tracing : ChannelOwner, ITracing
             _connection.SetIsTracing(false);
         }
     }
+
+    public Task GroupAsync(string name, TracingGroupOptions options = null)
+        => SendMessageToServerAsync("tracingGroup", new Dictionary<string, object>
+        {
+            ["name"] = name,
+            ["location"] = options?.Location,
+        });
+
+    public Task GroupEndAsync()
+        => SendMessageToServerAsync("tracingGroupEnd");
 }

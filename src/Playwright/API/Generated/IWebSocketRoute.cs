@@ -43,9 +43,9 @@ namespace Microsoft.Playwright;
 /// a <c>"request"</c> with a <c>"response"</c>.
 /// </para>
 /// <code>
-/// await page.RouteWebSocketAsync("/ws", ws =&gt; {<br/>
-///   ws.OnMessage(message =&gt; {<br/>
-///     if (message == "request")<br/>
+/// await page.RouteWebSocketAsync("wss://example.com/ws", ws =&gt; {<br/>
+///   ws.OnMessage(frame =&gt; {<br/>
+///     if (frame.Text == "request")<br/>
 ///       ws.Send("response");<br/>
 ///   });<br/>
 /// });
@@ -55,6 +55,21 @@ namespace Microsoft.Playwright;
 /// route handler, Playwright assumes that WebSocket will be mocked, and opens the WebSocket
 /// inside the page automatically.
 /// </para>
+/// <para>Here is another example that handles JSON messages:</para>
+/// <code>
+/// await page.RouteWebSocketAsync("wss://example.com/ws", ws =&gt; {<br/>
+///   ws.OnMessage(frame =&gt; {<br/>
+///     using var jsonDoc = JsonDocument.Parse(frame.Text);<br/>
+///     JsonElement root = jsonDoc.RootElement;<br/>
+///     if (root.TryGetProperty("request", out JsonElement requestElement) &amp;&amp; requestElement.GetString() == "question")<br/>
+///     {<br/>
+///       var response = new Dictionary&lt;string, string&gt; { ["response"] = "answer" };<br/>
+///       string jsonResponse = JsonSerializer.Serialize(response);<br/>
+///       ws.Send(jsonResponse);<br/>
+///     }<br/>
+///   });<br/>
+/// });
+/// </code>
 /// <para>**Intercepting**</para>
 /// <para>
 /// Alternatively, you may want to connect to the actual server, but intercept messages
@@ -70,11 +85,11 @@ namespace Microsoft.Playwright;
 /// <code>
 /// await page.RouteWebSocketAsync("/ws", ws =&gt; {<br/>
 ///   var server = ws.ConnectToServer();<br/>
-///   ws.OnMessage(message =&gt; {<br/>
-///     if (message == "request")<br/>
+///   ws.OnMessage(frame =&gt; {<br/>
+///     if (frame.Text == "request")<br/>
 ///       server.Send("request2");<br/>
 ///     else<br/>
-///       server.Send(message);<br/>
+///       server.Send(frame.Text);<br/>
 ///   });<br/>
 /// });
 /// </code>
@@ -100,13 +115,13 @@ namespace Microsoft.Playwright;
 /// <code>
 /// await page.RouteWebSocketAsync("/ws", ws =&gt; {<br/>
 ///   var server = ws.ConnectToServer();<br/>
-///   ws.OnMessage(message =&gt; {<br/>
-///     if (message != "blocked-from-the-page")<br/>
-///       server.Send(message);<br/>
+///   ws.OnMessage(frame =&gt; {<br/>
+///     if (frame.Text != "blocked-from-the-page")<br/>
+///       server.Send(frame.Text);<br/>
 ///   });<br/>
-///   server.OnMessage(message =&gt; {<br/>
-///     if (message != "blocked-from-the-server")<br/>
-///       ws.Send(message);<br/>
+///   server.OnMessage(frame =&gt; {<br/>
+///     if (frame.Text != "blocked-from-the-server")<br/>
+///       ws.Send(frame.Text);<br/>
 ///   });<br/>
 /// });
 /// </code>

@@ -284,4 +284,31 @@ public class PageRouteWebSocketTests : PageTestEx
             "close code=3008 reason=oops wasClean=true",
         ]);
     }
+
+    [PlaywrightTest("page-route-web-socket.spec.ts", "should work with baseURL")]
+    public async Task ShouldWorkWithBaseURL()
+    {
+        var context = await Browser.NewContextAsync(new() { BaseURL = $"http://localhost:{Server.Port}" });
+        var page = await context.NewPageAsync();
+
+        await page.RouteWebSocketAsync("/ws", ws =>
+        {
+            ws.OnMessage(message =>
+            {
+                ws.Send(message.Text);
+            });
+        });
+
+        await SetupWS(page, Server.Port, "blob");
+
+        await page.EvaluateAsync(@"async () => {
+            await window.wsOpened;
+            window.ws.send('echo');
+        }");
+        await AssertAreEqualWithRetriesAsync(() => page.EvaluateAsync<string[]>("() => window.log"), new[]
+        {
+            "open",
+            $"message: data=echo origin=ws://localhost:{Server.Port} lastEventId=",
+        });
+    }
 }
