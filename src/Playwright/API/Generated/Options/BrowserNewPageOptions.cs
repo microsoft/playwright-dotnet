@@ -148,8 +148,8 @@ public class BrowserNewPageOptions
 
     /// <summary>
     /// <para>
-    /// Emulates <c>'prefers-colors-scheme'</c> media feature, supported values are <c>'light'</c>,
-    /// <c>'dark'</c>, <c>'no-preference'</c>. See <see cref="IPage.EmulateMediaAsync"/>
+    /// Emulates <a href="https://developer.mozilla.org/en-US/docs/Web/CSS/@media/prefers-color-scheme">prefers-colors-scheme</a>
+    /// media feature, supported values are <c>'light'</c> and <c>'dark'</c>. See <see cref="IPage.EmulateMediaAsync"/>
     /// for more details. Passing <c>'null'</c> resets emulation to system defaults. Defaults
     /// to <c>'light'</c>.
     /// </para>

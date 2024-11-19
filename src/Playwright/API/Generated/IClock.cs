@@ -185,6 +185,12 @@ public partial interface IClock
     /// Makes <c>Date.now</c> and <c>new Date()</c> return fixed fake time at all times,
     /// keeps all the timers running.
     /// </para>
+    /// <para>
+    /// Use this method for simple scenarios where you only need to test with a predefined
+    /// time. For more advanced scenarios, use <see cref="IClock.InstallAsync"/> instead.
+    /// Read docs on <a href="https://playwright.dev/dotnet/docs/clock">clock emulation</a>
+    /// to learn more.
+    /// </para>
     /// <para>**Usage**</para>
     /// <code>
     /// await page.Clock.SetFixedTimeAsync(DateTime.Now);<br/>
@@ -200,6 +206,12 @@ public partial interface IClock
     /// Makes <c>Date.now</c> and <c>new Date()</c> return fixed fake time at all times,
     /// keeps all the timers running.
     /// </para>
+    /// <para>
+    /// Use this method for simple scenarios where you only need to test with a predefined
+    /// time. For more advanced scenarios, use <see cref="IClock.InstallAsync"/> instead.
+    /// Read docs on <a href="https://playwright.dev/dotnet/docs/clock">clock emulation</a>
+    /// to learn more.
+    /// </para>
     /// <para>**Usage**</para>
     /// <code>
     /// await page.Clock.SetFixedTimeAsync(DateTime.Now);<br/>
@@ -211,7 +223,11 @@ public partial interface IClock
     Task SetFixedTimeAsync(DateTime time);
 
     /// <summary>
-    /// <para>Sets current system time but does not trigger any timers.</para>
+    /// <para>
+    /// Sets system time, but does not trigger any timers. Use this to test how the web
+    /// page reacts to a time shift, for example switching from summer to winter time, or
+    /// changing time zones.
+    /// </para>
     /// <para>**Usage**</para>
     /// <code>
     /// await page.Clock.SetSystemTimeAsync(DateTime.Now);<br/>
@@ -223,7 +239,11 @@ public partial interface IClock
     Task SetSystemTimeAsync(string time);
 
     /// <summary>
-    /// <para>Sets current system time but does not trigger any timers.</para>
+    /// <para>
+    /// Sets system time, but does not trigger any timers. Use this to test how the web
+    /// page reacts to a time shift, for example switching from summer to winter time, or
+    /// changing time zones.
+    /// </para>
     /// <para>**Usage**</para>
     /// <code>
     /// await page.Clock.SetSystemTimeAsync(DateTime.Now);<br/>

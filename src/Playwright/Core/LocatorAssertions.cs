@@ -91,8 +91,7 @@ internal class LocatorAssertions : AssertionsBase, ILocatorAssertions
 
     private Task ExpectTrueAsync(string expression, string message, FrameExpectOptions options)
     {
-        ExpectedTextValue[] expectedText = null;
-        return ExpectImplAsync(expression, expectedText, null, message, options);
+        return ExpectImplAsync(expression, null as ExpectedTextValue[], null, message, options);
     }
 
     public Task ToContainTextAsync(string expected, LocatorAssertionsToContainTextOptions options = null) =>
@@ -139,10 +138,9 @@ internal class LocatorAssertions : AssertionsBase, ILocatorAssertions
 
     public Task ToHaveCountAsync(int count, LocatorAssertionsToHaveCountOptions options = null)
     {
-        ExpectedTextValue[] expectedText = null;
         var commonOptions = ConvertToFrameExpectOptions(options);
         commonOptions.ExpectedNumber = count;
-        return ExpectImplAsync("to.have.count", expectedText, count, "Locator expected to have count", commonOptions);
+        return ExpectImplAsync("to.have.count", null as ExpectedTextValue[], count, "Locator expected to have count", commonOptions);
     }
 
     public Task ToHaveCSSAsync(string name, string value, LocatorAssertionsToHaveCSSOptions options = null) =>
@@ -174,8 +172,7 @@ internal class LocatorAssertions : AssertionsBase, ILocatorAssertions
         var commonOptions = ConvertToFrameExpectOptions(options);
         commonOptions.ExpressionArg = name;
         commonOptions.ExpectedValue = ScriptsHelper.SerializedArgument(value);
-        ExpectedTextValue[] expectedText = null;
-        return ExpectImplAsync("to.have.property", expectedText, value, $"Locator expected to have JavaScript property '{name}'", commonOptions);
+        return ExpectImplAsync("to.have.property", null as ExpectedTextValue[], value, $"Locator expected to have JavaScript property '{name}'", commonOptions);
     }
 
     public Task ToHaveTextAsync(string expected, LocatorAssertionsToHaveTextOptions options = null) =>
@@ -216,4 +213,11 @@ internal class LocatorAssertions : AssertionsBase, ILocatorAssertions
 
     public Task ToHaveRoleAsync(AriaRole role, LocatorAssertionsToHaveRoleOptions options = null)
         => ExpectImplAsync("to.have.role", new ExpectedTextValue() { String = role.ToString().ToLowerInvariant() }, role, "Locator expected to have role", ConvertToFrameExpectOptions(options));
+
+    public Task ToMatchAriaSnapshotAsync(string expected, LocatorAssertionsToMatchAriaSnapshotOptions options = null)
+    {
+        var commonOptions = ConvertToFrameExpectOptions(options);
+        commonOptions.ExpectedValue = ScriptsHelper.SerializedArgument(expected);
+        return ExpectImplAsync("to.match.aria", null as ExpectedTextValue[], expected, "Locator expected to match Aria snapshot", commonOptions);
+    }
 }

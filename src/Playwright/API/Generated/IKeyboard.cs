@@ -60,12 +60,7 @@ namespace Microsoft.Playwright;
 /// await page.Keyboard.PressAsync("Shift+A");
 /// </code>
 /// <para>An example to trigger select-all with the keyboard</para>
-/// <code>
-/// // on Windows and Linux<br/>
-/// await page.Keyboard.PressAsync("Control+A");<br/>
-/// // on macOS<br/>
-/// await page.Keyboard.PressAsync("Meta+A");
-/// </code>
+/// <code>await page.Keyboard.PressAsync("ControlOrMeta+A");</code>
 /// </summary>
 public partial interface IKeyboard
 {

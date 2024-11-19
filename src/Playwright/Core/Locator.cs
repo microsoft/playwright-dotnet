@@ -593,6 +593,16 @@ internal class Locator : ILocator
 
     async Task<IReadOnlyList<ILocator>> ILocator.AllAsync()
         => Enumerable.Range(0, await CountAsync().ConfigureAwait(false)).Select(Nth).ToArray();
+
+    public async Task<string> AriaSnapshotAsync(LocatorAriaSnapshotOptions options = null)
+    {
+        var result = await _frame.SendMessageToServerAsync("ariaSnapshot", new Dictionary<string, object>
+        {
+            ["selector"] = _selector,
+            ["timeout"] = options?.Timeout,
+        }).ConfigureAwait(false);
+        return result.Value.GetProperty("snapshot").GetString();
+    }
 }
 
 internal class ByRoleOptions

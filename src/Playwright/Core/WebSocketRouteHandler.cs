@@ -24,7 +24,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Microsoft.Playwright.Helpers;
 
@@ -32,13 +31,11 @@ namespace Microsoft.Playwright.Core;
 
 internal class WebSocketRouteHandler
 {
-    public Regex Regex { get; set; }
-
-    public Func<string, bool> Function { get; set; }
+    public URLMatch URL { get; set; }
 
     public Delegate Handler { get; set; }
 
-    public static Dictionary<string, object> PrepareInterceptionPatterns(List<WebSocketRouteHandler> handlers)
+    public static List<Dictionary<string, object>> PrepareInterceptionPatterns(List<WebSocketRouteHandler> handlers)
     {
         bool all = false;
         var patterns = new List<Dictionary<string, object>>();
@@ -47,13 +44,16 @@ internal class WebSocketRouteHandler
             var pattern = new Dictionary<string, object>();
             patterns.Add(pattern);
 
-            if (handler.Regex != null)
+            if (!string.IsNullOrEmpty(handler.URL.globMatch))
             {
-                pattern["regexSource"] = handler.Regex.ToString();
-                pattern["regexFlags"] = handler.Regex.Options.GetInlineFlags();
+                pattern["glob"] = handler.URL.globMatch;
             }
-
-            if (handler.Function != null)
+            else if (handler.URL.reMatch != null)
+            {
+                pattern["regexSource"] = handler.URL.reMatch.ToString();
+                pattern["regexFlags"] = handler.URL.reMatch.Options.GetInlineFlags();
+            }
+            else
             {
                 all = true;
             }
@@ -61,19 +61,15 @@ internal class WebSocketRouteHandler
 
         if (all)
         {
-            var allPattern = new Dictionary<string, object>
-            {
-                ["glob"] = "**/*",
-            };
-
-            patterns.Clear();
-            patterns.Add(allPattern);
+            return [
+            new Dictionary<string, object>
+                {
+                    ["glob"] = "**/*",
+                }
+            ];
         }
 
-        return new Dictionary<string, object>
-        {
-            ["patterns"] = patterns,
-        };
+        return patterns;
     }
 
     public async Task HandleAsync(WebSocketRoute route)
@@ -85,4 +81,6 @@ internal class WebSocketRouteHandler
         }
         await route.AfterHandleAsync().ConfigureAwait(false);
     }
+
+    internal bool Matches(string normalisedUrl) => URL.Match(normalisedUrl);
 }

@@ -712,7 +712,7 @@ internal class BrowserContext : ChannelOwner, IBrowserContext
 
     internal async Task OnWebSocketRouteAsync(WebSocketRoute webSocketRoute)
     {
-        var routeHandler = _webSocketRoutes.Find(r => r.Regex?.IsMatch(webSocketRoute.Url) == true || r.Function?.Invoke(webSocketRoute.Url) == true);
+        var routeHandler = _webSocketRoutes.Find(route => route.Matches(webSocketRoute.Url));
         if (routeHandler != null)
         {
             await routeHandler.HandleAsync(webSocketRoute).ConfigureAwait(false);
@@ -728,21 +728,7 @@ internal class BrowserContext : ChannelOwner, IBrowserContext
 
     internal string CombineUrlWithBase(string url)
     {
-        var baseUrl = Options?.BaseURL;
-        if (string.IsNullOrEmpty(baseUrl)
-            || (url?.StartsWith("*", StringComparison.InvariantCultureIgnoreCase) ?? false)
-            || !Uri.IsWellFormedUriString(url, UriKind.RelativeOrAbsolute))
-        {
-            return url;
-        }
-
-        var mUri = new Uri(url, UriKind.RelativeOrAbsolute);
-        if (!mUri.IsAbsoluteUri)
-        {
-            return new Uri(new Uri(baseUrl), mUri).ToString();
-        }
-
-        return url;
+        return URLMatch.JoinWithBaseURL(Options?.BaseURL, url);
     }
 
     private Task RouteAsync(Regex urlRegex, Func<string, bool> urlFunc, Delegate handler, BrowserContextRouteOptions options)
@@ -796,7 +782,10 @@ internal class BrowserContext : ChannelOwner, IBrowserContext
         var patterns = RouteHandler.PrepareInterceptionPatterns(_routes);
         await SendMessageToServerAsync(
             "setNetworkInterceptionPatterns",
-            patterns).ConfigureAwait(false);
+            new Dictionary<string, object>
+            {
+                ["patterns"] = patterns,
+            }).ConfigureAwait(false);
     }
 
     internal void OnClose()
@@ -913,22 +902,27 @@ internal class BrowserContext : ChannelOwner, IBrowserContext
 
     [MethodImpl(MethodImplOptions.NoInlining)]
     public Task RouteWebSocketAsync(string url, Action<IWebSocketRoute> handler)
-        => RouteWebSocketAsync(new Regex(CombineUrlWithBase(url).GlobToRegex()), null, handler);
+        => RouteWebSocketAsync(url, null, null, handler);
 
     [MethodImpl(MethodImplOptions.NoInlining)]
     public Task RouteWebSocketAsync(Regex url, Action<IWebSocketRoute> handler)
-        => RouteWebSocketAsync(url, null, handler);
+        => RouteWebSocketAsync(null, url, null, handler);
 
     [MethodImpl(MethodImplOptions.NoInlining)]
     public Task RouteWebSocketAsync(Func<string, bool> url, Action<IWebSocketRoute> handler)
-        => RouteWebSocketAsync(null, url, handler);
+        => RouteWebSocketAsync(null, null, url, handler);
 
-    private Task RouteWebSocketAsync(Regex urlRegex, Func<string, bool> urlFunc, Delegate handler)
+    private Task RouteWebSocketAsync(string globMatch, Regex reMatch, Func<string, bool> funcMatch, Delegate handler)
     {
         _webSocketRoutes.Insert(0, new WebSocketRouteHandler()
         {
-            Regex = urlRegex,
-            Function = urlFunc,
+            URL = new URLMatch()
+            {
+                BaseURL = Options.BaseURL,
+                globMatch = globMatch,
+                reMatch = reMatch,
+                funcMatch = funcMatch,
+            },
             Handler = handler,
         });
         return UpdateWebSocketInterceptionAsync();
@@ -937,7 +931,10 @@ internal class BrowserContext : ChannelOwner, IBrowserContext
     private async Task UpdateWebSocketInterceptionAsync()
     {
         var patterns = WebSocketRouteHandler.PrepareInterceptionPatterns(_webSocketRoutes);
-        await SendMessageToServerAsync("setWebSocketInterceptionPatterns", patterns).ConfigureAwait(false);
+        await SendMessageToServerAsync("setWebSocketInterceptionPatterns", new Dictionary<string, object>
+        {
+            ["patterns"] = patterns,
+        }).ConfigureAwait(false);
     }
 }
 

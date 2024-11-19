@@ -333,6 +333,40 @@ public class TracingTests : ContextTestEx
         }
     }
 
+    [PlaywrightTest("tracing.spec.ts", "should show tracing.group in the action list with location")]
+    public async Task ShouldShowTracingGroupInActionList()
+    {
+        using var tracesDir = new TempDirectory();
+        await Context.Tracing.StartAsync();
+        var page = await Context.NewPageAsync();
+
+        await Context.Tracing.GroupAsync("outer group");
+        await page.GotoAsync("data:text/html,<!DOCTYPE html><body><div>Hello world</div></body>");
+        await Context.Tracing.GroupAsync("inner group 1");
+        await page.Locator("body").ClickAsync();
+        await Context.Tracing.GroupEndAsync();
+        await Context.Tracing.GroupAsync("inner group 2");
+        await Expect(page.GetByText("Hello")).ToBeVisibleAsync();
+        await Context.Tracing.GroupEndAsync();
+        await Context.Tracing.GroupEndAsync();
+
+        var tracePath = Path.Combine(tracesDir.Path, "trace.zip");
+        await Context.Tracing.StopAsync(new() { Path = tracePath });
+
+        var (events, resources) = ParseTrace(tracePath);
+        var actions = GetActions(events);
+
+        Assert.AreEqual(new[] {
+            "BrowserContext.NewPageAsync",
+            "outer group",
+            "Page.GotoAsync",
+            "inner group 1",
+            "Locator.ClickAsync",
+            "inner group 2",
+            "LocatorAssertions.ToBeVisibleAsync"
+        }, actions);
+    }
+
     private static (IReadOnlyList<TraceEventEntry> Events, Dictionary<string, byte[]> Resources) ParseTrace(string path)
     {
         Dictionary<string, byte[]> resources = new();

@@ -127,6 +127,35 @@ public partial interface ILocator
 
     /// <summary>
     /// <para>
+    /// Captures the aria snapshot of the given element. Read more about <a href="https://playwright.dev/dotnet/docs/aria-snapshots">aria
+    /// snapshots</a> and <see cref="ILocatorAssertions.ToMatchAriaSnapshotAsync"/> for
+    /// the corresponding assertion.
+    /// </para>
+    /// <para>**Usage**</para>
+    /// <code>await page.GetByRole(AriaRole.Link).AriaSnapshotAsync();</code>
+    /// <para>**Details**</para>
+    /// <para>
+    /// This method captures the aria snapshot of the given element. The snapshot is a string
+    /// that represents the state of the element and its children. The snapshot can be used
+    /// to assert the state of the element in the test, or to compare it to state in the
+    /// future.
+    /// </para>
+    /// <para>
+    /// The ARIA snapshot is represented using <a href="https://yaml.org/spec/1.2.2/">YAML</a>
+    /// markup language:
+    /// </para>
+    /// <list type="bullet">
+    /// <item><description>The keys of the objects are the roles and optional accessible names of the elements.</description></item>
+    /// <item><description>The values are either text content or an array of child elements.</description></item>
+    /// <item><description>Generic static text can be represented with the <c>text</c> key.</description></item>
+    /// </list>
+    /// <para>Below is the HTML markup and the respective ARIA snapshot:</para>
+    /// </summary>
+    /// <param name="options">Call options</param>
+    Task<string> AriaSnapshotAsync(LocatorAriaSnapshotOptions? options = default);
+
+    /// <summary>
+    /// <para>
     /// Calls <a href="https://developer.mozilla.org/en-US/docs/Web/API/HTMLElement/blur">blur</a>
     /// on the element.
     /// </para>

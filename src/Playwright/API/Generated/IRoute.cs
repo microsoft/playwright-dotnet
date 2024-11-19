@@ -85,11 +85,10 @@ public partial interface IRoute
     /// </code>
     /// <para>**Details**</para>
     /// <para>
-    /// Note that any overrides such as <see cref="IRoute.ContinueAsync"/> or <see cref="IRoute.ContinueAsync"/>
-    /// only apply to the request being routed. If this request results in a redirect, overrides
-    /// will not be applied to the new redirected request. If you want to propagate a header
-    /// through redirects, use the combination of <see cref="IRoute.FetchAsync"/> and <see
-    /// cref="IRoute.FulfillAsync"/> instead.
+    /// The <see cref="IRoute.ContinueAsync"/> option applies to both the routed request
+    /// and any redirects it initiates. However, <see cref="IRoute.ContinueAsync"/>, <see
+    /// cref="IRoute.ContinueAsync"/>, and <see cref="IRoute.ContinueAsync"/> only apply
+    /// to the original request and are not carried over to redirected requests.
     /// </para>
     /// <para>
     /// <see cref="IRoute.ContinueAsync"/> will immediately send the request to the network,

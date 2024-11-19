@@ -119,6 +119,31 @@ public partial interface ITracing
     /// <param name="options">Call options</param>
     Task StartChunkAsync(TracingStartChunkOptions? options = default);
 
+    /// <summary>
+    /// <para>Use <c>test.step</c> instead when available.</para>
+    /// <para>
+    /// Creates a new group within the trace, assigning any subsequent API calls to this
+    /// group, until <see cref="ITracing.GroupEndAsync"/> is called. Groups can be nested
+    /// and will be visible in the trace viewer.
+    /// </para>
+    /// <para>**Usage**</para>
+    /// <code>
+    /// // All actions between GroupAsync and GroupEndAsync<br/>
+    /// // will be shown in the trace viewer as a group.<br/>
+    /// await Page.Context().Tracing.GroupAsync("Open Playwright.dev &gt; API");<br/>
+    /// await Page.GotoAsync("https://playwright.dev/");<br/>
+    /// await Page.GetByRole(AriaRole.Link, new() { Name = "API" }).ClickAsync();<br/>
+    /// await Page.Context().Tracing.GroupEndAsync();
+    /// </code>
+    /// </summary>
+    /// <remarks><para>Use <c>test.step</c> instead when available.</para></remarks>
+    /// <param name="name">Group name shown in the trace viewer.</param>
+    /// <param name="options">Call options</param>
+    Task GroupAsync(string name, TracingGroupOptions? options = default);
+
+    /// <summary><para>Closes the last group created by <see cref="ITracing.GroupAsync"/>.</para></summary>
+    Task GroupEndAsync();
+
     /// <summary><para>Stop tracing.</para></summary>
     /// <param name="options">Call options</param>
     Task StopAsync(TracingStopOptions? options = default);
