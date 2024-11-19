@@ -79,4 +79,12 @@ public class URLMatch
 
         return url;
     }
+
+    public bool Equals(string globMatch, Regex reMatch, Func<string, bool> funcMatch, string baseURL)
+    {
+        return this.reMatch?.ToString() == reMatch?.ToString() && this.reMatch?.Options == reMatch?.Options
+            && this.funcMatch == funcMatch
+            && this.globMatch == globMatch
+            && BaseURL == baseURL;
+    }
 }

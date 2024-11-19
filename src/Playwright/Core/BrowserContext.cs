@@ -487,28 +487,28 @@ internal class BrowserContext : ChannelOwner, IBrowserContext
     }
 
     [MethodImpl(MethodImplOptions.NoInlining)]
-    public Task RouteAsync(string url, Action<IRoute> handler, BrowserContextRouteOptions options = default)
-        => RouteAsync(new Regex(CombineUrlWithBase(url).GlobToRegex()), null, handler, options);
+    public Task RouteAsync(string globMatch, Func<IRoute, Task> handler, BrowserContextRouteOptions options = null)
+        => RouteAsync(globMatch, null, null, handler, options);
 
     [MethodImpl(MethodImplOptions.NoInlining)]
-    public Task RouteAsync(string url, Func<IRoute, Task> handler, BrowserContextRouteOptions options = null)
-        => RouteAsync(new Regex(CombineUrlWithBase(url).GlobToRegex()), null, handler, options);
+    public Task RouteAsync(string globMatch, Action<IRoute> handler, BrowserContextRouteOptions options = null)
+        => RouteAsync(globMatch, null, null, handler, options);
 
     [MethodImpl(MethodImplOptions.NoInlining)]
-    public Task RouteAsync(Regex url, Action<IRoute> handler, BrowserContextRouteOptions options = default)
-        => RouteAsync(url, null, handler, options);
+    public Task RouteAsync(Regex reMatch, Action<IRoute> handler, BrowserContextRouteOptions options = null)
+         => RouteAsync(null, reMatch, null, handler, options);
 
     [MethodImpl(MethodImplOptions.NoInlining)]
-    public Task RouteAsync(Regex url, Func<IRoute, Task> handler, BrowserContextRouteOptions options = default)
-        => RouteAsync(url, null, handler, options);
+    public Task RouteAsync(Regex reMatch, Func<IRoute, Task> handler, BrowserContextRouteOptions options = null)
+         => RouteAsync(null, reMatch, null, handler, options);
 
     [MethodImpl(MethodImplOptions.NoInlining)]
-    public Task RouteAsync(Func<string, bool> url, Action<IRoute> handler, BrowserContextRouteOptions options = default)
-        => RouteAsync(null, url, handler, options);
+    public Task RouteAsync(Func<string, bool> funcMatch, Action<IRoute> handler, BrowserContextRouteOptions options = null)
+        => RouteAsync(null, null, funcMatch, handler, options);
 
     [MethodImpl(MethodImplOptions.NoInlining)]
-    public Task RouteAsync(Func<string, bool> url, Func<IRoute, Task> handler, BrowserContextRouteOptions options = default)
-        => RouteAsync(null, url, handler, options);
+    public Task RouteAsync(Func<string, bool> funcMatch, Func<IRoute, Task> handler, BrowserContextRouteOptions options = null)
+        => RouteAsync(null, null, funcMatch, handler, options);
 
     [MethodImpl(MethodImplOptions.NoInlining)]
     public Task SetExtraHTTPHeadersAsync(IEnumerable<KeyValuePair<string, string>> headers)
@@ -558,28 +558,28 @@ internal class BrowserContext : ChannelOwner, IBrowserContext
     }
 
     [MethodImpl(MethodImplOptions.NoInlining)]
-    public Task UnrouteAsync(string urlString, Action<IRoute> handler = default)
-        => UnrouteAsync(new Regex(CombineUrlWithBase(urlString).GlobToRegex()), null, handler);
+    public Task UnrouteAsync(string globMatch, Action<IRoute> handler)
+        => UnrouteAsync(globMatch, null, null, handler);
 
     [MethodImpl(MethodImplOptions.NoInlining)]
-    public Task UnrouteAsync(string urlString, Func<IRoute, Task> handler = null)
-        => UnrouteAsync(new Regex(CombineUrlWithBase(urlString).GlobToRegex()), null, handler);
+    public Task UnrouteAsync(string globMatch, Func<IRoute, Task> handler)
+        => UnrouteAsync(globMatch, null, null, handler);
 
     [MethodImpl(MethodImplOptions.NoInlining)]
-    public Task UnrouteAsync(Regex urlRegex, Action<IRoute> handler = default)
-        => UnrouteAsync(urlRegex, null, handler);
+    public Task UnrouteAsync(Regex reMatch, Action<IRoute> handler)
+        => UnrouteAsync(null, reMatch, null, handler);
 
     [MethodImpl(MethodImplOptions.NoInlining)]
-    public Task UnrouteAsync(Regex urlRegex, Func<IRoute, Task> handler = default)
-        => UnrouteAsync(urlRegex, null, handler);
+    public Task UnrouteAsync(Regex reMatch, Func<IRoute, Task> handler)
+        => UnrouteAsync(null, reMatch, null, handler);
 
     [MethodImpl(MethodImplOptions.NoInlining)]
-    public Task UnrouteAsync(Func<string, bool> urlFunc, Action<IRoute> handler = default)
-        => UnrouteAsync(null, urlFunc, handler);
+    public Task UnrouteAsync(Func<string, bool> funcMatch, Action<IRoute> handler)
+        => UnrouteAsync(null, null, funcMatch, handler);
 
     [MethodImpl(MethodImplOptions.NoInlining)]
-    public Task UnrouteAsync(Func<string, bool> urlFunc, Func<IRoute, Task> handler = default)
-        => UnrouteAsync(null, urlFunc, handler);
+    public Task UnrouteAsync(Func<string, bool> funcMatch, Func<IRoute, Task> handler)
+        => UnrouteAsync(null, null, funcMatch, handler);
 
     internal string _effectiveCloseReason()
     {
@@ -674,9 +674,7 @@ internal class BrowserContext : ChannelOwner, IBrowserContext
             {
                 return;
             }
-            var matches = routeHandler.Regex?.IsMatch(route.Request.Url) == true ||
-                routeHandler.Function?.Invoke(route.Request.Url) == true;
-            if (!matches)
+            if (!routeHandler.Matches(route.Request.Url))
             {
                 continue;
             }
@@ -731,11 +729,16 @@ internal class BrowserContext : ChannelOwner, IBrowserContext
         return URLMatch.JoinWithBaseURL(Options?.BaseURL, url);
     }
 
-    private Task RouteAsync(Regex urlRegex, Func<string, bool> urlFunc, Delegate handler, BrowserContextRouteOptions options)
+    private Task RouteAsync(string globMatch, Regex reMatch, Func<string, bool> funcMatch, Delegate handler, BrowserContextRouteOptions options)
         => RouteAsync(new()
         {
-            Regex = urlRegex,
-            Function = urlFunc,
+            URL = new URLMatch()
+            {
+                globMatch = globMatch,
+                reMatch = reMatch,
+                funcMatch = funcMatch,
+                BaseURL = Options.BaseURL,
+            },
             Handler = handler,
             Times = options?.Times,
         });
@@ -746,23 +749,22 @@ internal class BrowserContext : ChannelOwner, IBrowserContext
         return UpdateInterceptionAsync();
     }
 
-    private Task UnrouteAsync(Regex urlRegex, Func<string, bool> urlFunc, Delegate handler = null)
-        => UnrouteAsync(new()
-        {
-            Function = urlFunc,
-            Regex = urlRegex,
-            Handler = handler,
-        });
-
-    private Task UnrouteAsync(RouteHandler setting)
+    private async Task UnrouteAsync(string globMatch, Regex reMatch, Func<string, bool> funcMatch, Delegate handler)
     {
-        var newRoutes = new List<RouteHandler>();
-        newRoutes.AddRange(_routes.Where(r =>
-            (setting.Regex != null && !(r.Regex == setting.Regex || (r.Regex.ToString() == setting.Regex.ToString() && r.Regex.Options == setting.Regex.Options))) ||
-            (setting.Function != null && r.Function != setting.Function) ||
-            (setting.Handler != null && r.Handler != setting.Handler)));
-        _routes = newRoutes;
-        return UpdateInterceptionAsync();
+        var removed = new List<RouteHandler>();
+        var remaining = new List<RouteHandler>();
+        foreach (var routeHandler in _routes)
+        {
+            if (routeHandler.URL.Equals(globMatch, reMatch, funcMatch, Options.BaseURL) && (handler == null || routeHandler.Handler == handler))
+            {
+                removed.Add(routeHandler);
+            }
+            else
+            {
+                remaining.Add(routeHandler);
+            }
+        }
+        await UnrouteInternalAsync(removed, remaining, UnrouteBehavior.Default).ConfigureAwait(false);
     }
 
     private async Task UnrouteInternalAsync(List<RouteHandler> removed, List<RouteHandler> remaining, UnrouteBehavior? behavior)
@@ -773,7 +775,7 @@ internal class BrowserContext : ChannelOwner, IBrowserContext
         {
             return;
         }
-        var tasks = removed.Select(routeHandler => routeHandler.StopAsync((UnrouteBehavior)behavior));
+        var tasks = removed.Select(routeHandler => routeHandler.StopAsync(behavior.Value));
         await Task.WhenAll(tasks).ConfigureAwait(false);
     }
 

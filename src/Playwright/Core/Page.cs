@@ -932,59 +932,59 @@ internal class Page : ChannelOwner, IPage
             });
 
     [MethodImpl(MethodImplOptions.NoInlining)]
-    public Task RouteAsync(string url, Func<IRoute, Task> handler, PageRouteOptions options = null)
-        => RouteAsync(new Regex(Context.CombineUrlWithBase(url).GlobToRegex()), null, handler, options);
+    public Task RouteAsync(string globMatch, Func<IRoute, Task> handler, PageRouteOptions options = null)
+        => RouteAsync(globMatch, null, null, handler, options);
 
     [MethodImpl(MethodImplOptions.NoInlining)]
-    public Task RouteAsync(string url, Action<IRoute> handler, PageRouteOptions options = null)
-        => RouteAsync(new Regex(Context.CombineUrlWithBase(url).GlobToRegex()), null, handler, options);
+    public Task RouteAsync(string globMatch, Action<IRoute> handler, PageRouteOptions options = null)
+        => RouteAsync(globMatch, null, null, handler, options);
 
     [MethodImpl(MethodImplOptions.NoInlining)]
-    public Task RouteAsync(Regex url, Action<IRoute> handler, PageRouteOptions options = null)
-         => RouteAsync(url, null, handler, options);
+    public Task RouteAsync(Regex reMatch, Action<IRoute> handler, PageRouteOptions options = null)
+         => RouteAsync(null, reMatch, null, handler, options);
 
     [MethodImpl(MethodImplOptions.NoInlining)]
-    public Task RouteAsync(Regex url, Func<IRoute, Task> handler, PageRouteOptions options = null)
-         => RouteAsync(url, null, handler, options);
+    public Task RouteAsync(Regex reMatch, Func<IRoute, Task> handler, PageRouteOptions options = null)
+         => RouteAsync(null, reMatch, null, handler, options);
 
     [MethodImpl(MethodImplOptions.NoInlining)]
-    public Task RouteAsync(Func<string, bool> url, Action<IRoute> handler, PageRouteOptions options = null)
-        => RouteAsync(null, url, handler, options);
+    public Task RouteAsync(Func<string, bool> funcMatch, Action<IRoute> handler, PageRouteOptions options = null)
+        => RouteAsync(null, null, funcMatch, handler, options);
 
     [MethodImpl(MethodImplOptions.NoInlining)]
-    public Task RouteAsync(Func<string, bool> url, Func<IRoute, Task> handler, PageRouteOptions options = null)
-        => RouteAsync(null, url, handler, options);
+    public Task RouteAsync(Func<string, bool> funcMatch, Func<IRoute, Task> handler, PageRouteOptions options = null)
+        => RouteAsync(null, null, funcMatch, handler, options);
 
     [MethodImpl(MethodImplOptions.NoInlining)]
     public async Task UnrouteAllAsync(PageUnrouteAllOptions options = default)
     {
-        await UnrouteInternalAsync(_routes, new(), options?.Behavior).ConfigureAwait(false);
+        await UnrouteInternalAsync(_routes, [], options?.Behavior).ConfigureAwait(false);
         DisposeHarRouters();
     }
 
     [MethodImpl(MethodImplOptions.NoInlining)]
-    public Task UnrouteAsync(string urlString, Action<IRoute> handler)
-        => UnrouteAsync(new Regex(Context.CombineUrlWithBase(urlString).GlobToRegex()), null, handler);
+    public Task UnrouteAsync(string globMatch, Action<IRoute> handler)
+        => UnrouteAsync(globMatch, null, null, handler);
 
     [MethodImpl(MethodImplOptions.NoInlining)]
-    public Task UnrouteAsync(string urlString, Func<IRoute, Task> handler)
-        => UnrouteAsync(new Regex(Context.CombineUrlWithBase(urlString).GlobToRegex()), null, handler);
+    public Task UnrouteAsync(string globMatch, Func<IRoute, Task> handler)
+        => UnrouteAsync(globMatch, null, null, handler);
 
     [MethodImpl(MethodImplOptions.NoInlining)]
-    public Task UnrouteAsync(Regex urlString, Action<IRoute> handler)
-        => UnrouteAsync(urlString, null, handler);
+    public Task UnrouteAsync(Regex reMatch, Action<IRoute> handler)
+        => UnrouteAsync(null, reMatch, null, handler);
 
     [MethodImpl(MethodImplOptions.NoInlining)]
-    public Task UnrouteAsync(Regex urlString, Func<IRoute, Task> handler)
-        => UnrouteAsync(urlString, null, handler);
+    public Task UnrouteAsync(Regex reMatch, Func<IRoute, Task> handler)
+        => UnrouteAsync(null, reMatch, null, handler);
 
     [MethodImpl(MethodImplOptions.NoInlining)]
-    public Task UnrouteAsync(Func<string, bool> urlFunc, Action<IRoute> handler)
-        => UnrouteAsync(null, urlFunc, handler);
+    public Task UnrouteAsync(Func<string, bool> funcMatch, Action<IRoute> handler)
+        => UnrouteAsync(null, null, funcMatch, handler);
 
     [MethodImpl(MethodImplOptions.NoInlining)]
-    public Task UnrouteAsync(Func<string, bool> urlFunc, Func<IRoute, Task> handler)
-        => UnrouteAsync(null, urlFunc, handler);
+    public Task UnrouteAsync(Func<string, bool> funcMatch, Func<IRoute, Task> handler)
+        => UnrouteAsync(null, null, funcMatch, handler);
 
     [MethodImpl(MethodImplOptions.NoInlining)]
     public Task WaitForLoadStateAsync(LoadState? state = default, PageWaitForLoadStateOptions options = default)
@@ -1235,11 +1235,16 @@ internal class Page : ChannelOwner, IPage
 
     internal void FirePageError(string error) => PageError?.Invoke(this, error);
 
-    private Task RouteAsync(Regex urlRegex, Func<string, bool> urlFunc, Delegate handler, PageRouteOptions options)
+    private Task RouteAsync(string globMatch, Regex reMatch, Func<string, bool> funcMatch, Delegate handler, PageRouteOptions options)
         => RouteAsync(new()
         {
-            Regex = urlRegex,
-            Function = urlFunc,
+            URL = new URLMatch()
+            {
+                globMatch = globMatch,
+                reMatch = reMatch,
+                funcMatch = funcMatch,
+                BaseURL = Context.Options.BaseURL,
+            },
             Handler = handler,
             Times = options?.Times,
         });
@@ -1250,23 +1255,22 @@ internal class Page : ChannelOwner, IPage
         return UpdateInterceptionAsync();
     }
 
-    private Task UnrouteAsync(Regex urlRegex, Func<string, bool> urlFunc, Delegate handler = null)
-        => UnrouteAsync(new()
-        {
-            Function = urlFunc,
-            Regex = urlRegex,
-            Handler = handler,
-        });
-
-    private Task UnrouteAsync(RouteHandler setting)
+    private async Task UnrouteAsync(string globMatch, Regex reMatch, Func<string, bool> funcMatch, Delegate handler)
     {
-        var newRoutes = new List<RouteHandler>();
-        newRoutes.AddRange(_routes.Where(r =>
-            (setting.Regex != null && !(r.Regex == setting.Regex || (r.Regex.ToString() == setting.Regex.ToString() && r.Regex.Options == setting.Regex.Options))) ||
-            (setting.Function != null && r.Function != setting.Function) ||
-            (setting.Handler != null && r.Handler != setting.Handler)));
-        _routes = newRoutes;
-        return UpdateInterceptionAsync();
+        var removed = new List<RouteHandler>();
+        var remaining = new List<RouteHandler>();
+        foreach (var routeHandler in _routes)
+        {
+            if (routeHandler.URL.Equals(globMatch, reMatch, funcMatch, Context.Options.BaseURL) && (handler == null || routeHandler.Handler == handler))
+            {
+                removed.Add(routeHandler);
+            }
+            else
+            {
+                remaining.Add(routeHandler);
+            }
+        }
+        await UnrouteInternalAsync(removed, remaining, UnrouteBehavior.Default).ConfigureAwait(false);
     }
 
     private async Task UnrouteInternalAsync(List<RouteHandler> removed, List<RouteHandler> remaining, UnrouteBehavior? behavior)
@@ -1277,7 +1281,7 @@ internal class Page : ChannelOwner, IPage
         {
             return;
         }
-        var tasks = removed.Select(routeHandler => routeHandler.StopAsync((UnrouteBehavior)behavior));
+        var tasks = removed.Select(routeHandler => routeHandler.StopAsync(behavior.Value));
         await Task.WhenAll(tasks).ConfigureAwait(false);
     }
 
@@ -1317,17 +1321,14 @@ internal class Page : ChannelOwner, IPage
     private async Task OnRouteAsync(Route route)
     {
         route._context = Context;
-        var routeHandlers = _routes.ToArray();
-        foreach (var routeHandler in routeHandlers)
+        foreach (var routeHandler in _routes.ToArray())
         {
             // If the page was closed we stall all requests right away.
             if (CloseWasCalled || Context.CloseWasCalled)
             {
                 return;
             }
-            var matches = (routeHandler.Regex?.IsMatch(route.Request.Url) == true) ||
-                (routeHandler.Function?.Invoke(route.Request.Url) == true);
-            if (!matches)
+            if (!routeHandler.Matches(route.Request.Url))
             {
                 continue;
             }
@@ -1578,7 +1579,7 @@ internal class Page : ChannelOwner, IPage
                         ["uid"] = uid,
                     }).ConfigureAwait(false);
                 }
-                catch (System.Exception)
+                catch (Exception)
                 {
                     // Ignore
                 }

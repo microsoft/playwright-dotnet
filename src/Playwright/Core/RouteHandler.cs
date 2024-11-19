@@ -25,7 +25,6 @@
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
-using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Microsoft.Playwright.Helpers;
 
@@ -37,9 +36,7 @@ internal class RouteHandler
 
     private bool _ignoreException;
 
-    public Regex Regex { get; set; }
-
-    public Func<string, bool> Function { get; set; }
+    public URLMatch URL { get; set; }
 
     public Delegate Handler { get; set; }
 
@@ -56,13 +53,17 @@ internal class RouteHandler
             var pattern = new Dictionary<string, object>();
             patterns.Add(pattern);
 
-            if (handler.Regex != null)
+            if (!string.IsNullOrEmpty(handler.URL.globMatch))
             {
-                pattern["regexSource"] = handler.Regex.ToString();
-                pattern["regexFlags"] = handler.Regex.Options.GetInlineFlags();
+                pattern["glob"] = handler.URL.globMatch;
+            }
+            else if (handler.URL.reMatch != null)
+            {
+                pattern["regexSource"] = handler.URL.reMatch.ToString();
+                pattern["regexFlags"] = handler.URL.reMatch.Options.GetInlineFlags();
             }
 
-            if (handler.Function != null)
+            if (handler.URL.funcMatch != null)
             {
                 all = true;
             }
@@ -145,6 +146,8 @@ internal class RouteHandler
         }
         return await handledTask.ConfigureAwait(false);
     }
+
+    internal bool Matches(string normalisedUrl) => URL.Match(normalisedUrl);
 
     public bool WillExpire()
     {
