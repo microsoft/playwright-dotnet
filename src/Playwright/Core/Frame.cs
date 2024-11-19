@@ -263,7 +263,7 @@ internal class Frame : ChannelOwner, IFrame
     public async Task<IResponse> RunAndWaitForNavigationAsync(Func<Task> action, FrameRunAndWaitForNavigationOptions options = default)
     {
         using var waiter = SetupNavigationWaiter("frame.WaitForNavigationAsync", options?.Timeout);
-        var result = WaitForNavigationInternalAsync(waiter, options?.Url, options?.UrlFunc, options?.UrlRegex, options?.UrlString, options?.WaitUntil);
+        var result = WaitForNavigationInternalAsync(waiter, options?.Url ?? options?.UrlString, options?.UrlFunc, options?.UrlRegex, options?.WaitUntil);
 
         if (action != null)
         {
@@ -276,17 +276,15 @@ internal class Frame : ChannelOwner, IFrame
 
     private async Task<IResponse> WaitForNavigationInternalAsync(
         Waiter waiter,
-        string url,
+        string urlString,
         Func<string, bool> urlFunc,
         Regex urlRegex,
-        string urlString,
         WaitUntilState? waitUntil)
     {
-        WaitUntilState waitUntilNormalized = waitUntil ?? WaitUntilState.Load;
-        string urlStringNormalized = !string.IsNullOrEmpty(url) ? url! : urlString!;
+        waitUntil ??= WaitUntilState.Load;
         string toUrl = !string.IsNullOrEmpty(urlString) ? $" to \"{urlString}\"" : string.Empty;
 
-        waiter.Log($"waiting for navigation{toUrl} until \"{waitUntilNormalized}\"");
+        waiter.Log($"waiting for navigation{toUrl} until \"{waitUntil}\"");
 
         var navigatedEventTask = waiter.WaitForEventAsync<FrameNavigatedEventArgs>(
             this,
@@ -300,7 +298,13 @@ internal class Frame : ChannelOwner, IFrame
                 }
 
                 waiter.Log($"  navigated to \"{e.Url}\"");
-                return UrlMatches(e.Url, urlStringNormalized, urlRegex, urlFunc);
+                return new URLMatch()
+                {
+                    glob = urlString,
+                    re = urlRegex,
+                    func = urlFunc,
+                    baseURL = (Page as Page).Context.Options.BaseURL,
+                }.Match(e.Url);
             });
 
         var navigatedEvent = await navigatedEventTask.ConfigureAwait(false);
@@ -311,7 +315,7 @@ internal class Frame : ChannelOwner, IFrame
             await waiter.WaitForPromiseAsync(Task.FromException<object>(ex)).ConfigureAwait(false);
         }
 
-        if (!_loadStates.Select(s => s.ToValueString()).Contains(waitUntilNormalized.ToValueString()))
+        if (!_loadStates.Select(s => s.ToValueString()).Contains(waitUntil.Value.ToValueString()))
         {
             await waiter.WaitForEventAsync<WaitUntilState>(
                 this,
@@ -319,16 +323,15 @@ internal class Frame : ChannelOwner, IFrame
                 e =>
                 {
                     waiter.Log($"  \"{e}\" event fired");
-                    return e.ToValueString() == waitUntilNormalized.ToValueString();
+                    return e.ToValueString() == waitUntil.Value.ToValueString();
                 }).ConfigureAwait(false);
         }
 
         var request = navigatedEvent.NewDocument?.Request;
-        var response = request != null
+
+        return request != null
             ? await waiter.WaitForPromiseAsync(request.FinalRequest.ResponseAsync()).ConfigureAwait(false)
             : null;
-
-        return response;
     }
 
     [MethodImpl(MethodImplOptions.NoInlining)]
@@ -906,7 +909,13 @@ internal class Frame : ChannelOwner, IFrame
 
     private Task WaitForURLAsync(string urlString, Regex urlRegex, Func<string, bool> urlFunc, FrameWaitForURLOptions options = default)
     {
-        if (UrlMatches(Url, urlString, urlRegex, urlFunc))
+        if (new URLMatch()
+        {
+            glob = urlString,
+            re = urlRegex,
+            func = urlFunc,
+            baseURL = (Page as Page).Context.Options.BaseURL,
+        }.Match(Url))
         {
             return WaitForLoadStateAsync(ToLoadState(options?.WaitUntil), new() { Timeout = options?.Timeout });
         }
@@ -956,33 +965,6 @@ internal class Frame : ChannelOwner, IFrame
         waiter.RejectOnTimeout(Convert.ToInt32(timeout, CultureInfo.InvariantCulture), $"Timeout {timeout}ms exceeded.");
 
         return waiter;
-    }
-
-    private bool UrlMatches(string url, string matchUrl, Regex regex, Func<string, bool> match)
-    {
-        matchUrl = (Page.Context as BrowserContext)?.CombineUrlWithBase(matchUrl);
-
-        if (matchUrl == null && regex == null && match == null)
-        {
-            return true;
-        }
-
-        if (!string.IsNullOrEmpty(matchUrl))
-        {
-            regex = new(matchUrl.GlobToRegex());
-        }
-
-        if (matchUrl != null && url == matchUrl)
-        {
-            return true;
-        }
-
-        if (regex != null)
-        {
-            return regex.IsMatch(url);
-        }
-
-        return match(url);
     }
 
     internal Task HighlightAsync(string selector)

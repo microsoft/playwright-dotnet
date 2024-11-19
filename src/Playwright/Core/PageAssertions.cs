@@ -25,6 +25,7 @@
 using System;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using Microsoft.Playwright.Helpers;
 using Microsoft.Playwright.Transport.Protocol;
 
 namespace Microsoft.Playwright.Core;
@@ -57,7 +58,7 @@ internal class PageAssertions : AssertionsBase, IPageAssertions
         ExpectImplAsync("to.have.title", ExpectedRegex(titleOrRegExp, new() { NormalizeWhiteSpace = true }), titleOrRegExp, "Page title expected to be", ConvertToFrameExpectOptions(options));
 
     public Task ToHaveURLAsync(string urlOrRegExp, PageAssertionsToHaveURLOptions options = null) =>
-        ExpectImplAsync("to.have.url", new ExpectedTextValue() { String = _page.Context.CombineUrlWithBase(urlOrRegExp), IgnoreCase = options?.IgnoreCase }, urlOrRegExp, "Page URL expected to be", ConvertToFrameExpectOptions(options));
+        ExpectImplAsync("to.have.url", new ExpectedTextValue() { String = URLMatch.JoinWithBaseURL(_page.Context.Options.BaseURL, urlOrRegExp), IgnoreCase = options?.IgnoreCase }, urlOrRegExp, "Page URL expected to be", ConvertToFrameExpectOptions(options));
 
     public Task ToHaveURLAsync(Regex urlOrRegExp, PageAssertionsToHaveURLOptions options = null) =>
         ExpectImplAsync("to.have.url", ExpectedRegex(urlOrRegExp, new() { IgnoreCase = options?.IgnoreCase }), urlOrRegExp, "Page URL expected to match regex", ConvertToFrameExpectOptions(options));

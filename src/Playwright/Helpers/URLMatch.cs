@@ -59,7 +59,7 @@ public class URLMatch
             }
             return new Regex(globWithBaseURL.GlobToRegex()).IsMatch(url);
         }
-        return false;
+        return true;
     }
 
     internal static string JoinWithBaseURL(string baseUrl, string url)
