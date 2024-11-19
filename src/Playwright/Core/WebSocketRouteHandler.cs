@@ -63,9 +63,9 @@ internal class WebSocketRouteHandler
         {
             return [
             new Dictionary<string, object>
-                {
-                    ["glob"] = "**/*",
-                }
+            {
+                ["glob"] = "**/*",
+            }
             ];
         }
 
