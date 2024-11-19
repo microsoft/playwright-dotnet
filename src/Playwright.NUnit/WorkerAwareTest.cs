@@ -37,7 +37,7 @@ namespace Microsoft.Playwright.NUnit;
 public class WorkerAwareTest
 {
     private static readonly ConcurrentStack<Worker> _allWorkers = new();
-    private Worker? _currentWorker = null!;
+    private Worker _currentWorker = null!;
 
     internal class Worker
     {
