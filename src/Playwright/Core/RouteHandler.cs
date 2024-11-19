@@ -36,7 +36,7 @@ internal class RouteHandler
 
     private bool _ignoreException;
 
-    public URLMatch URL { get; set; }
+    public URLMatch urlMatcher { get; set; }
 
     public Delegate Handler { get; set; }
 
@@ -53,17 +53,17 @@ internal class RouteHandler
             var pattern = new Dictionary<string, object>();
             patterns.Add(pattern);
 
-            if (!string.IsNullOrEmpty(handler.URL.globMatch))
+            if (!string.IsNullOrEmpty(handler.urlMatcher.glob))
             {
-                pattern["glob"] = handler.URL.globMatch;
+                pattern["glob"] = handler.urlMatcher.glob;
             }
-            else if (handler.URL.reMatch != null)
+            else if (handler.urlMatcher.re != null)
             {
-                pattern["regexSource"] = handler.URL.reMatch.ToString();
-                pattern["regexFlags"] = handler.URL.reMatch.Options.GetInlineFlags();
+                pattern["regexSource"] = handler.urlMatcher.re.ToString();
+                pattern["regexFlags"] = handler.urlMatcher.re.Options.GetInlineFlags();
             }
 
-            if (handler.URL.funcMatch != null)
+            if (handler.urlMatcher.func != null)
             {
                 all = true;
             }
@@ -147,7 +147,7 @@ internal class RouteHandler
         return await handledTask.ConfigureAwait(false);
     }
 
-    internal bool Matches(string normalisedUrl) => URL.Match(normalisedUrl);
+    internal bool Matches(string normalisedUrl) => urlMatcher.Match(normalisedUrl);
 
     public bool WillExpire()
     {

@@ -732,12 +732,12 @@ internal class BrowserContext : ChannelOwner, IBrowserContext
     private Task RouteAsync(string globMatch, Regex reMatch, Func<string, bool> funcMatch, Delegate handler, BrowserContextRouteOptions options)
         => RouteAsync(new()
         {
-            URL = new URLMatch()
+            urlMatcher = new URLMatch()
             {
-                globMatch = globMatch,
-                reMatch = reMatch,
-                funcMatch = funcMatch,
-                BaseURL = Options.BaseURL,
+                glob = globMatch,
+                re = reMatch,
+                func = funcMatch,
+                baseURL = Options.BaseURL,
             },
             Handler = handler,
             Times = options?.Times,
@@ -755,7 +755,7 @@ internal class BrowserContext : ChannelOwner, IBrowserContext
         var remaining = new List<RouteHandler>();
         foreach (var routeHandler in _routes)
         {
-            if (routeHandler.URL.Equals(globMatch, reMatch, funcMatch, Options.BaseURL) && (handler == null || routeHandler.Handler == handler))
+            if (routeHandler.urlMatcher.Equals(globMatch, reMatch, funcMatch, Options.BaseURL) && (handler == null || routeHandler.Handler == handler))
             {
                 removed.Add(routeHandler);
             }
@@ -918,12 +918,12 @@ internal class BrowserContext : ChannelOwner, IBrowserContext
     {
         _webSocketRoutes.Insert(0, new WebSocketRouteHandler()
         {
-            URL = new URLMatch()
+            urlMatcher = new URLMatch()
             {
-                BaseURL = Options.BaseURL,
-                globMatch = globMatch,
-                reMatch = reMatch,
-                funcMatch = funcMatch,
+                baseURL = Options.BaseURL,
+                glob = globMatch,
+                re = reMatch,
+                func = funcMatch,
             },
             Handler = handler,
         });

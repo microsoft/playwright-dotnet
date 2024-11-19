@@ -1238,12 +1238,12 @@ internal class Page : ChannelOwner, IPage
     private Task RouteAsync(string globMatch, Regex reMatch, Func<string, bool> funcMatch, Delegate handler, PageRouteOptions options)
         => RouteAsync(new()
         {
-            URL = new URLMatch()
+            urlMatcher = new URLMatch()
             {
-                globMatch = globMatch,
-                reMatch = reMatch,
-                funcMatch = funcMatch,
-                BaseURL = Context.Options.BaseURL,
+                glob = globMatch,
+                re = reMatch,
+                func = funcMatch,
+                baseURL = Context.Options.BaseURL,
             },
             Handler = handler,
             Times = options?.Times,
@@ -1261,7 +1261,7 @@ internal class Page : ChannelOwner, IPage
         var remaining = new List<RouteHandler>();
         foreach (var routeHandler in _routes)
         {
-            if (routeHandler.URL.Equals(globMatch, reMatch, funcMatch, Context.Options.BaseURL) && (handler == null || routeHandler.Handler == handler))
+            if (routeHandler.urlMatcher.Equals(globMatch, reMatch, funcMatch, Context.Options.BaseURL) && (handler == null || routeHandler.Handler == handler))
             {
                 removed.Add(routeHandler);
             }
@@ -1603,12 +1603,12 @@ internal class Page : ChannelOwner, IPage
     {
         _webSocketRoutes.Insert(0, new WebSocketRouteHandler()
         {
-            URL = new URLMatch()
+            urlMatcher = new URLMatch()
             {
-                BaseURL = Context.Options.BaseURL,
-                globMatch = globMatch,
-                reMatch = urlRegex,
-                funcMatch = urlFunc,
+                baseURL = Context.Options.BaseURL,
+                glob = globMatch,
+                re = urlRegex,
+                func = urlFunc,
             },
             Handler = handler,
         });

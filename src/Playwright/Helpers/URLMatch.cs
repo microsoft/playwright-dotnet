@@ -29,29 +29,29 @@ namespace Microsoft.Playwright.Helpers;
 
 public class URLMatch
 {
-    public Regex reMatch { get; set; }
+    public Regex re { get; set; }
 
-    public Func<string, bool> funcMatch { get; set; }
+    public Func<string, bool> func { get; set; }
 
-    public string globMatch { get; set; }
+    public string glob { get; set; }
 
-    public string BaseURL { get; set; }
+    public string baseURL { get; set; }
 
     public bool Match(string url)
     {
-        if (reMatch != null)
+        if (re != null)
         {
-            return reMatch.IsMatch(url);
+            return re.IsMatch(url);
         }
 
-        if (funcMatch != null)
+        if (func != null)
         {
-            return funcMatch(url);
+            return func(url);
         }
 
-        if (globMatch != null)
+        if (glob != null)
         {
-            var globWithBaseURL = JoinWithBaseURL(BaseURL, globMatch);
+            var globWithBaseURL = JoinWithBaseURL(baseURL, glob);
             // Allow http(s) baseURL to match ws(s) urls.
             if (new Regex("^https?://").IsMatch(globWithBaseURL) && new Regex("^wss?://").IsMatch(url))
             {
@@ -82,9 +82,9 @@ public class URLMatch
 
     public bool Equals(string globMatch, Regex reMatch, Func<string, bool> funcMatch, string baseURL)
     {
-        return this.reMatch?.ToString() == reMatch?.ToString() && this.reMatch?.Options == reMatch?.Options
-            && this.funcMatch == funcMatch
-            && this.globMatch == globMatch
-            && BaseURL == baseURL;
+        return this.re?.ToString() == reMatch?.ToString() && this.re?.Options == reMatch?.Options
+            && this.func == funcMatch
+            && this.glob == globMatch
+            && this.baseURL == baseURL;
     }
 }
