@@ -279,7 +279,7 @@ internal class Page : ChannelOwner, IPage
         => Frames.FirstOrDefault(f => f.Name == name);
 
     [MethodImpl(MethodImplOptions.NoInlining)]
-    public IFrame FrameByUrl(string urlString) => Frames.FirstOrDefault(f => Context.UrlMatches(urlString, f.Url));
+    public IFrame FrameByUrl(string urlString) => Frames.FirstOrDefault(f => Context.UrlMatches(f.Url, urlString));
 
     [MethodImpl(MethodImplOptions.NoInlining)]
     public IFrame FrameByUrl(Regex urlRegex) => Frames.FirstOrDefault(f => urlRegex.IsMatch(f.Url));

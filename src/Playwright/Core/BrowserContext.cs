@@ -721,13 +721,12 @@ internal class BrowserContext : ChannelOwner, IBrowserContext
         }
     }
 
-    internal bool UrlMatches(string url, string glob)
-        => new Regex(CombineUrlWithBase(glob).GlobToRegex()).Match(url).Success;
-
-    internal string CombineUrlWithBase(string url)
-    {
-        return URLMatch.JoinWithBaseURL(Options?.BaseURL, url);
-    }
+    internal bool UrlMatches(string url, string globMatch)
+        => new URLMatch()
+        {
+            glob = globMatch,
+            baseURL = Options.BaseURL,
+        }.Match(url);
 
     private Task RouteAsync(string globMatch, Regex reMatch, Func<string, bool> funcMatch, Delegate handler, BrowserContextRouteOptions options)
         => RouteAsync(new()
