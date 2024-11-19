@@ -2,12 +2,7 @@
 
 ## Pre-requisites
 
-* install .NET SDK 8 with installer: https://dotnet.microsoft.com/download/dotnet/8.0
-* install necessary build tools:
-  ```bash
-  ./build.sh --init
-  # restart terminal after that
-  ```
+Install .NET SDK 8 with installer: https://dotnet.microsoft.com/download/dotnet/8.0
 
 ## Rolling
 

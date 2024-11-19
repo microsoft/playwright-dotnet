@@ -8,10 +8,8 @@ cd "$(dirname "$0")"
 if [[ ($1 == '--help') || ($1 == '-h') ]]; then
   echo "usage: build.sh <command>"
   echo "commands:"
-  echo "  --init                - download .NET deps and download driver"
   echo "  --roll <version>      - roll the .NET language binding to a specific driver version"
   echo "  --download-driver     - download the driver"
-  echo "  --update-assets       - sync the assets from 'playwright' to 'playwright-dotnet'"
   echo "  --help                - show this help"
   echo
   exit 0
@@ -32,14 +30,6 @@ echo "Upstream repo path: ${upstream_repo_path}"
 function download_driver() {
   echo "downloading driver..."
   dotnet run --project ./src/tools/Playwright.Tooling/Playwright.Tooling.csproj -- download-drivers --basepath .
-  echo "done"
-}
-
-function update_assets() {
-  echo "updating assets..."
-  dotnet_assets_path="./src/Playwright.Tests.TestServer/assets"
-  rm -rf "$dotnet_assets_path"
-  cp -r "${upstream_repo_path}/tests/assets" "${dotnet_assets_path}"
   echo "done"
 }
 
@@ -68,14 +58,10 @@ function roll_driver() {
 }
 
 CMD="$1"
-if [[ ("$CMD" == "--init") ]]; then
-  download_driver
-elif [[ ("$CMD" == "--roll") ]]; then
+if [[ ("$CMD" == "--roll") ]]; then
   roll_driver $2
 elif [[ ("$CMD" == "--download-driver") ]]; then
   download_driver
-elif [[ ("$CMD" == "--update-assets") ]]; then
-  update_assets
 else
   echo "ERROR: unknown command - $CMD"
   echo "Pass --help for supported commands"
