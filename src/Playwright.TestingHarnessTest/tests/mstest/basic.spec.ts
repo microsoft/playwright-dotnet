@@ -182,7 +182,7 @@ test('should be able to make the browser headed via the env', async ({ runTest }
   expect(result.stdout).not.toContain("Headless")
 });
 
-test('should be able to to parse BrowserName and LaunchOptions.Headless from runsettings', async ({ runTest }) => {
+test('should be able to parse BrowserName and LaunchOptions.Headless from runsettings', async ({ runTest }) => {
   const result = await runTest({
     'ExampleTests.cs': `
       using System;
@@ -445,6 +445,7 @@ test.describe('Expect() timeout', () => {
     expect(result.total).toBe(1);
     expect(result.rawStdout).toContain("LocatorAssertions.ToHaveTextAsync with timeout 5000ms")
   });
+
   test('should be able to override it via each Expect() call', async ({ runTest }) => {
     const result = await runTest({
       'ExampleTests.cs': `

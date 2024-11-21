@@ -6,7 +6,7 @@
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
- * to use, copy, modify, merge, publish, distribute, sublicense, and / or sell
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
  * copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions:
  *
@@ -22,10 +22,17 @@
  * SOFTWARE.
  */
 
-using Microsoft.Playwright;
+using System.Threading.Tasks;
 
-using var playwright = await Playwright.CreateAsync();
-await using var browser = await playwright.Chromium.LaunchAsync();
-var page = await browser.NewPageAsync();
-await page.GotoAsync("https://playwright.dev/dotnet");
-await page.ScreenshotAsync(new PageScreenshotOptions { Path = "screenshot.png" });
+namespace Microsoft.Playwright.Xunit;
+
+public class PageTest : ContextTest
+{
+    public IPage Page { get; private set; } = null!;
+
+    public override async Task InitializeAsync()
+    {
+        await base.InitializeAsync().ConfigureAwait(false);
+        Page = await Context.NewPageAsync().ConfigureAwait(false);
+    }
+}
