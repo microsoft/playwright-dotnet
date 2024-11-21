@@ -30,7 +30,7 @@ using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 using Microsoft.Playwright.TestAdapter;
 
-namespace Microsoft.Playwright.xunit;
+namespace Microsoft.Playwright.Xunit;
 
 internal class BrowserService : IWorkerService
 {

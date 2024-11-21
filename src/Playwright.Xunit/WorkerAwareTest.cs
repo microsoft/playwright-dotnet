@@ -32,7 +32,7 @@ using Microsoft.Playwright.Core;
 using Microsoft.Playwright.TestAdapter;
 using Xunit;
 
-namespace Microsoft.Playwright.xunit;
+namespace Microsoft.Playwright.Xunit;
 
 public class WorkerAwareTest : ExceptionCapturer, IAsyncLifetime
 {

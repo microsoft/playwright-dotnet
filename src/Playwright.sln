@@ -32,7 +32,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Playwright.Examples", "Play
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Playwright.TestingHarnessTest", "Playwright.TestingHarnessTest\Playwright.TestingHarnessTest.csproj", "{27D8C307-0B8D-456D-A76F-86F410A3684A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Playwright.xunit", "Playwright.xunit\Playwright.xunit.csproj", "{7E427229-793C-44E5-B90E-FB8E322066FA}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Playwright.Xunit", "Playwright.Xunit\Playwright.Xunit.csproj", "{7E427229-793C-44E5-B90E-FB8E322066FA}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

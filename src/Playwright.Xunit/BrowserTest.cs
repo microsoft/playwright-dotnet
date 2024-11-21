@@ -22,26 +22,41 @@
  * SOFTWARE.
  */
 
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace Microsoft.Playwright.xunit;
+namespace Microsoft.Playwright.Xunit;
 
-public class ContextTest : BrowserTest
+public class BrowserTest : PlaywrightTest
 {
-    public IBrowserContext Context { get; private set; } = null!;
+    public IBrowser Browser { get; internal set; } = null!;
+    private readonly List<IBrowserContext> _contexts = new();
+
+    public async Task<IBrowserContext> NewContext(BrowserNewContextOptions? options = null)
+    {
+        var context = await Browser.NewContextAsync(options).ConfigureAwait(false);
+        _contexts.Add(context);
+        return context;
+    }
 
     public override async Task InitializeAsync()
     {
         await base.InitializeAsync().ConfigureAwait(false);
-        Context = await NewContext(ContextOptions()).ConfigureAwait(false);
+        var service = await BrowserService.Register(this, BrowserType).ConfigureAwait(false);
+        Browser = service.Browser;
     }
 
-    public virtual BrowserNewContextOptions ContextOptions()
+    public override async Task DisposeAsync()
     {
-        return new()
+        await base.DisposeAsync().ConfigureAwait(false);
+        if (TestOk)
         {
-            Locale = "en-US",
-            ColorScheme = ColorScheme.Light,
-        };
+            foreach (var context in _contexts)
+            {
+                await context.CloseAsync().ConfigureAwait(false);
+            }
+        }
+        _contexts.Clear();
+        Browser = null!;
     }
 }

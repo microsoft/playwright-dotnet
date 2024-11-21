@@ -24,15 +24,24 @@
 
 using System.Threading.Tasks;
 
-namespace Microsoft.Playwright.xunit;
+namespace Microsoft.Playwright.Xunit;
 
-public class PageTest : ContextTest
+public class ContextTest : BrowserTest
 {
-    public IPage Page { get; private set; } = null!;
+    public IBrowserContext Context { get; private set; } = null!;
 
     public override async Task InitializeAsync()
     {
         await base.InitializeAsync().ConfigureAwait(false);
-        Page = await Context.NewPageAsync().ConfigureAwait(false);
+        Context = await NewContext(ContextOptions()).ConfigureAwait(false);
+    }
+
+    public virtual BrowserNewContextOptions ContextOptions()
+    {
+        return new()
+        {
+            Locale = "en-US",
+            ColorScheme = ColorScheme.Light,
+        };
     }
 }

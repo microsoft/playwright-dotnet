@@ -21,6 +21,6 @@
     <ProjectReference Include="..\Playwright\Playwright.csproj" />
     <ProjectReference Include="..\Playwright.MSTest\Playwright.MSTest.csproj" />
     <ProjectReference Include="..\Playwright.NUnit\Playwright.NUnit.csproj" />
-    <ProjectReference Include="..\Playwright.xunit\Playwright.xunit.csproj" />
+    <ProjectReference Include="..\Playwright.Xunit\Playwright.Xunit.csproj" />
   </ItemGroup>
 </Project>
