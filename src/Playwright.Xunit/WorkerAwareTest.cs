@@ -73,7 +73,6 @@ public class WorkerAwareTest : ExceptionCapturer
 
     public async override Task DisposeAsync()
     {
-        await base.DisposeAsync().ConfigureAwait(false);
         if (TestOk)
         {
             foreach (var kv in _currentWorker.Services)
@@ -90,6 +89,7 @@ public class WorkerAwareTest : ExceptionCapturer
             }
             _currentWorker.Services.Clear();
         }
+        await base.DisposeAsync().ConfigureAwait(false);
     }
 }
 
