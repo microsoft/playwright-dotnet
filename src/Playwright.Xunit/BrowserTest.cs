@@ -48,7 +48,6 @@ public class BrowserTest : PlaywrightTest
 
     public override async Task DisposeAsync()
     {
-        await base.DisposeAsync().ConfigureAwait(false);
         if (TestOk)
         {
             foreach (var context in _contexts)
@@ -58,5 +57,6 @@ public class BrowserTest : PlaywrightTest
         }
         _contexts.Clear();
         Browser = null!;
+        await base.DisposeAsync().ConfigureAwait(false);
     }
 }
