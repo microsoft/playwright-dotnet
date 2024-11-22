@@ -25,7 +25,6 @@
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
-using System.Runtime.CompilerServices;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Playwright.Core;
@@ -34,10 +33,10 @@ using Xunit;
 
 namespace Microsoft.Playwright.Xunit;
 
-public class WorkerAwareTest : ExceptionCapturer, IAsyncLifetime
+public class WorkerAwareTest : ExceptionCapturer
 {
     private static readonly ConcurrentStack<Worker> _allWorkers = new();
-    private Worker? _currentWorker = null!;
+    private Worker _currentWorker = null!;
 
     internal class Worker
     {
@@ -58,8 +57,9 @@ public class WorkerAwareTest : ExceptionCapturer, IAsyncLifetime
         return (_currentWorker.Services[name] as T)!;
     }
 
-    public virtual Task InitializeAsync()
+    async public override Task InitializeAsync()
     {
+        await base.InitializeAsync().ConfigureAwait(false);
         if (!_allWorkers.TryPop(out _currentWorker!))
         {
             _currentWorker = new();
@@ -69,11 +69,11 @@ public class WorkerAwareTest : ExceptionCapturer, IAsyncLifetime
         {
             AssertionsBase.SetDefaultTimeout(PlaywrightSettingsProvider.ExpectTimeout.Value);
         }
-        return Task.CompletedTask;
     }
 
-    public virtual async Task DisposeAsync()
+    public async override Task DisposeAsync()
     {
+        await base.DisposeAsync().ConfigureAwait(false);
         if (TestOk)
         {
             foreach (var kv in _currentWorker.Services)
@@ -107,16 +107,26 @@ public interface IWorkerService
 /// Note: There is no way of getting the test status in xUnit in the dispose method.
 /// For more information, see: https://stackoverflow.com/questions/28895448/current-test-status-in-xunit-net
 /// </summary>
-public class ExceptionCapturer
+public class ExceptionCapturer : IAsyncLifetime
 {
-    protected static bool TestOk { get; private set; } = true;
+    protected bool TestOk { get; private set; } = true;
 
-    [ModuleInitializer]
-    public static void Setup()
+    public ExceptionCapturer()
     {
         AppDomain.CurrentDomain.FirstChanceException += (_, e) =>
         {
             TestOk = false;
         };
+    }
+
+    public virtual Task InitializeAsync()
+    {
+        TestOk = true;
+        return Task.CompletedTask;
+    }
+
+    public virtual Task DisposeAsync()
+    {
+        return Task.CompletedTask;
     }
 }
