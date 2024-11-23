@@ -18,12 +18,13 @@ variables:
 
 resources:
   repositories:
-  - repository: 1esPipelines
+  - repository: MicroBuildTemplate
     type: git
-    name: 1ESPipelineTemplates/1ESPipelineTemplates
+    name: 1ESPipelineTemplates/MicroBuildTemplate
     ref: refs/tags/release
+
 extends:
-  template: v1/1ES.Official.PipelineTemplate.yml@1esPipelines
+  template: azure-pipelines/MicroBuild.1ES.Official.yml@MicroBuildTemplate
   parameters:
     pool:
       # https://aka.ms/MicroBuild
@@ -38,16 +39,22 @@ extends:
       jobs:
       - job: Build
         displayName: Build
+        templateContext:
+          mb:
+            signing:
+              enabled: true
+              signType: real
+              templateContext:
+          outputs:
+          - output: pipelineArtifact
+            displayName: 'Publish Artifact'
+            targetPath: '$(Build.ArtifactStagingDirectory)'
         steps:
         - task: UseDotNet@2
           displayName: 'Use .NET 8 SDK'
           inputs:
             packageType: sdk
             version: 8.x
-        - task: MicroBuildSigningPlugin@4
-          inputs:
-            signType: real
-            feedSource: 'https://devdiv.pkgs.visualstudio.com/DefaultCollection/_packaging/MicroBuildToolset/nuget/v3/index.json'
         # We need to download the driver first, so we can build
         - task: DotNetCoreCLI@2
           displayName: Download the driver
@@ -94,4 +101,3 @@ extends:
             packageParentPath: '$(Build.ArtifactStagingDirectory)'
             nuGetFeedType: external
             publishFeedCredentials: 'NuGet-Playwright'
-        - task: MicroBuildCleanup@1
