@@ -40,7 +40,8 @@ public class PlaywrightSettingsProvider : ISettingsProvider
         get
         {
             var browserFromEnv = Environment.GetEnvironmentVariable("BROWSER")?.ToLowerInvariant();
-            if (!string.IsNullOrEmpty(browserFromEnv))
+            // GitHub Codespaces sets the BROWSER environment variable, ignore it if its bogus.
+            if (!string.IsNullOrEmpty(browserFromEnv) && !browserFromEnv!.StartsWith("/vscode/"))
             {
                 ValidateBrowserName(browserFromEnv!, "'BROWSER' environment variable", "\nTry to remove 'BROWSER' environment variable for using default browser");
                 return browserFromEnv!;
