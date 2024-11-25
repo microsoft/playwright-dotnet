@@ -77,12 +77,12 @@ extends:
               src/Playwright/Playwright.csproj;
               src/Playwright.NUnit/Playwright.NUnit.csproj;
               src/Playwright.MSTest/Playwright.MSTest.csproj;
-              src/Playwright.MSTest/Playwright.Xunit.csproj;
+              src/Playwright.Xunit/Playwright.Xunit.csproj;
               src/Playwright.TestAdapter/Playwright.TestAdapter.csproj;
             packDirectory: '$(Build.ArtifactStagingDirectory)/nuget'
             versioningScheme: 'off'
         - task: 1ES.PublishNuget@1
-          displayName: Publish Microsoft.Playwright{NUnit,MSTest,TestAdapter}
+          displayName: Publish Microsoft.Playwright{NUnit,MSTest,Xunit,TestAdapter}
           condition: eq('${{parameters.doRelease}}', true)
           inputs:
             useDotNetTask: false
