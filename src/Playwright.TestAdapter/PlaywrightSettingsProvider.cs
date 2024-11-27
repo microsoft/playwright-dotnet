@@ -41,7 +41,8 @@ public class PlaywrightSettingsProvider : ISettingsProvider
         {
             var browserFromEnv = Environment.GetEnvironmentVariable("BROWSER")?.ToLowerInvariant();
             // GitHub Codespaces sets the BROWSER environment variable, ignore it if its bogus.
-            if (!string.IsNullOrEmpty(browserFromEnv) && !browserFromEnv!.StartsWith("/vscode/"))
+            var ignoreValueFromEnv = Environment.GetEnvironmentVariable("CODESPACES") == "true" && browserFromEnv!.StartsWith("/vscode/");
+            if (!string.IsNullOrEmpty(browserFromEnv) && !ignoreValueFromEnv)
             {
                 ValidateBrowserName(browserFromEnv!, "'BROWSER' environment variable", "\nTry to remove 'BROWSER' environment variable for using default browser");
                 return browserFromEnv!;
