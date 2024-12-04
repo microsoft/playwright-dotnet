@@ -8,6 +8,7 @@ cd "$(dirname "$0")"
 
 MCR_IMAGE_NAME="playwright/dotnet"
 PW_VERSION=$(node -e "console.log(/\<AssemblyVersion\>(.*?)<\/AssemblyVersion\>/.exec(fs.readFileSync('../../src/Common/Version.props').toString())[1])")
+DOTNET_VERSION="$2"
 
 RELEASE_CHANNEL="$1"
 if [[ "${RELEASE_CHANNEL}" == "stable" ]]; then
@@ -23,13 +24,13 @@ fi
 
 # Ubuntu 22.04
 JAMMY_TAGS=(
-  "v${PW_VERSION}-jammy"
+  "v${PW_VERSION}-jammy-net${DOTNET_VERSION}"
 )
 
 # Ubuntu 24.04
 NOBLE_TAGS=(
-  "v${PW_VERSION}"
-  "v${PW_VERSION}-noble"
+  "v${PW_VERSION}-net${DOTNET_VERSION}"
+  "v${PW_VERSION}-noble-net${DOTNET_VERSION}"
 )
 
 tag_and_push() {
@@ -79,7 +80,7 @@ publish_docker_images_with_arch_suffix() {
   fi
   # Prune docker images to avoid platform conflicts
   docker system prune -fa
-  ./build.sh "--${ARCH}" "${FLAVOR}" "${MCR_IMAGE_NAME}:localbuild"
+  ./build.sh "--${ARCH}" "${FLAVOR}" "${MCR_IMAGE_NAME}:localbuild" "${DOTNET_VERSION}"
 
   for ((i = 0; i < ${#TAGS[@]}; i++)) do
     local TAG="${TAGS[$i]}"

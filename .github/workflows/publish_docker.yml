@@ -14,6 +14,10 @@ jobs:
       id-token: write   # This is required for OIDC login (azure/login) to succeed
       contents: read    # This is required for actions/checkout to succeed
     environment: Docker
+    strategy:
+      fail-fast: false
+      matrix:
+        dotnet-version: ["8.0", "9.0"]
     steps:
     - uses: actions/checkout@v4
     - name: Azure login
@@ -27,7 +31,7 @@ jobs:
     - name: Setup .NET Core
       uses: actions/setup-dotnet@v4
       with:
-        dotnet-version: 8.0.x
+        dotnet-version: ${{ matrix.dotnet-version }}.x
     - name: Install prerequisites and download drivers
       shell: bash
       run: ./build.sh --download-driver
@@ -35,4 +39,4 @@ jobs:
       uses: docker/setup-qemu-action@v3
       with:
         platforms: arm64
-    - run: ./utils/docker/publish_docker.sh stable
+    - run: ./utils/docker/publish_docker.sh stable ${{ matrix.dotnet-version }}

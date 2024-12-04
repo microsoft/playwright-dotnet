@@ -1,4 +1,5 @@
-FROM mcr.microsoft.com/dotnet/sdk:8.0-jammy
+ARG DOTNET_VERSION
+FROM mcr.microsoft.com/dotnet/sdk:${DOTNET_VERSION}-jammy
 
 ARG DEBIAN_FRONTEND=noninteractive
 ARG TZ=America/Los_Angeles
