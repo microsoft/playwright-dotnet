@@ -18,23 +18,24 @@ on:
       - release-*
 jobs:
   build:
-    timeout-minutes: 60
+    timeout-minutes: 90
     runs-on: ubuntu-22.04
     strategy:
       fail-fast: false
       matrix:
         flavor: [jammy, noble]
+        dotnet-version: ["8.0", "9.0"]
     steps:
     - uses: actions/checkout@v4
     - name: Setup .NET Core
       uses: actions/setup-dotnet@v4
       with:
-        dotnet-version: 8.0.x
+        dotnet-version: ${{ matrix.dotnet-version }}.x
     - name: Install prerequisites and download drivers
       shell: bash
       run: ./build.sh --download-driver
     - name: Build Docker image
-      run: bash utils/docker/build.sh --amd64 ${{ matrix.flavor }} playwright-dotnet:localbuild-${{ matrix.flavor }}
+      run: bash utils/docker/build.sh --amd64 ${{ matrix.flavor }} playwright-dotnet:localbuild-${{ matrix.flavor }} ${{ matrix.dotnet-version }}
     - name: Cleanup
       run: dotnet clean src/ || true
     - name: Test
