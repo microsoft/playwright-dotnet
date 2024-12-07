@@ -57,6 +57,20 @@ public class WorkerAwareTest : ExceptionCapturer
         return (_currentWorker.Services[name] as T)!;
     }
 
+    protected virtual PlaywrightSettings? PlaywrightSettings()
+    {
+        return null;
+    }
+
+    private void LoadPlaywrightSettings()
+    {
+        var settings = PlaywrightSettings();
+        if (settings != null)
+        {
+            PlaywrightSettingsProvider.Load(settings);
+        }
+    }
+
     async public override Task InitializeAsync()
     {
         await base.InitializeAsync().ConfigureAwait(false);
@@ -65,6 +79,10 @@ public class WorkerAwareTest : ExceptionCapturer
             _currentWorker = new();
         }
         WorkerIndex = _currentWorker.WorkerIndex;
+
+        // Must be run before accessing any static PlaywrightSettingsProvider.* properties
+        LoadPlaywrightSettings();
+
         if (PlaywrightSettingsProvider.ExpectTimeout.HasValue)
         {
             AssertionsBase.SetDefaultTimeout(PlaywrightSettingsProvider.ExpectTimeout.Value);
