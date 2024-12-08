@@ -100,8 +100,13 @@ internal class StdIOTransport : IDisposable
                 ll[2] = (byte)((len >> 16) & 0xFF);
                 ll[3] = (byte)((len >> 24) & 0xFF);
 
+#if NET
+                await _process.StandardInput.BaseStream.WriteAsync(ll.AsMemory(0, 4), _readerCancellationSource.Token).ConfigureAwait(false);
+                await _process.StandardInput.BaseStream.WriteAsync(message.AsMemory(0, len), _readerCancellationSource.Token).ConfigureAwait(false);
+#else
                 await _process.StandardInput.BaseStream.WriteAsync(ll, 0, 4, _readerCancellationSource.Token).ConfigureAwait(false);
                 await _process.StandardInput.BaseStream.WriteAsync(message, 0, len, _readerCancellationSource.Token).ConfigureAwait(false);
+#endif
                 await _process.StandardInput.BaseStream.FlushAsync(_readerCancellationSource.Token).ConfigureAwait(false);
             }
         }
@@ -186,7 +191,7 @@ internal class StdIOTransport : IDisposable
         }
     }
 
-    private static Task ScheduleTransportTaskAsync(Func<CancellationToken, Task> func, CancellationToken cancellationToken)
+    private static Task<Task> ScheduleTransportTaskAsync(Func<CancellationToken, Task> func, CancellationToken cancellationToken)
         => Task.Factory.StartNew(() => func(cancellationToken), cancellationToken, TaskCreationOptions.LongRunning, TaskScheduler.Current);
 
     private void Dispose(bool disposing)
@@ -210,7 +215,11 @@ internal class StdIOTransport : IDisposable
 
             while (!token.IsCancellationRequested && !_process.HasExited)
             {
+#if NET
+                int read = await stream.BaseStream.ReadAsync(buffer.AsMemory(0, DefaultBufferSize), token).ConfigureAwait(false);
+#else
                 int read = await stream.BaseStream.ReadAsync(buffer, 0, DefaultBufferSize, token).ConfigureAwait(false);
+#endif
                 if (!token.IsCancellationRequested)
                 {
                     _data.AddRange(new ArraySegment<byte>(buffer, 0, read));

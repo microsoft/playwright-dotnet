@@ -9,7 +9,7 @@
       and fixtures to enable using it within NUnit.
     </Description>
     <PackageIcon>icon.png</PackageIcon>
-    <TargetFrameworks>netcoreapp3.1;net462</TargetFrameworks>
+    <TargetFrameworks>net8.0;net462</TargetFrameworks>
     <PublishRepositoryUrl>true</PublishRepositoryUrl>
     <RunWithWarnings>true</RunWithWarnings>
     <RootNamespace>Microsoft.Playwright.NUnit</RootNamespace>

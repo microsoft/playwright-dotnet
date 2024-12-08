@@ -150,10 +150,16 @@ internal class Waiter : IDisposable
             return;
         }
 
+#pragma warning disable CA2000 // Dispose objects before losing scope
         var cts = new CancellationTokenSource();
+#pragma warning restore CA2000 // Dispose objects before losing scope
         RejectOn(
             new TaskCompletionSource<bool>().Task.WithTimeout(timeout.Value, _ => new TimeoutException(message), cts.Token),
-            () => cts.Cancel());
+            () =>
+            {
+                cts.Cancel();
+                cts.Dispose();
+            });
     }
 
     internal Task<T> WaitForEventAsync<T>(object eventSource, string e, Func<T, bool> predicate)
@@ -250,7 +256,11 @@ internal class Waiter : IDisposable
         }
         catch
         {
+#if NET
+            await cts.CancelAsync().ConfigureAwait(false);
+#else
             cts.Cancel();
+#endif
             throw;
         }
     }

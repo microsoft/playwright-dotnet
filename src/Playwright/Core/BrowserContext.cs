@@ -544,7 +544,11 @@ internal class BrowserContext : ChannelOwner, IBrowserContext
 
         if (!string.IsNullOrEmpty(options?.Path))
         {
+#if NET
+            await File.WriteAllTextAsync(options?.Path, state).ConfigureAwait(false);
+#else
             File.WriteAllText(options?.Path, state);
+#endif
         }
 
         return state;

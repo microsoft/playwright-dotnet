@@ -192,7 +192,11 @@ internal class Route : ChannelOwner, IRoute
 
         if (!string.IsNullOrEmpty(path))
         {
+#if NET
+            byte[] content = await File.ReadAllBytesAsync(path).ConfigureAwait(false);
+#else
             byte[] content = File.ReadAllBytes(path);
+#endif
             resultBody = Convert.ToBase64String(content);
             isBase64 = true;
             length = resultBody.Length;

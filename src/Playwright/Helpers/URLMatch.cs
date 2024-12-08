@@ -65,7 +65,11 @@ public class URLMatch
     internal static string JoinWithBaseURL(string baseUrl, string url)
     {
         if (string.IsNullOrEmpty(baseUrl)
+#if NET
+            || (url?.StartsWith('*') ?? false)
+#else
             || (url?.StartsWith("*", StringComparison.InvariantCultureIgnoreCase) ?? false)
+#endif
             || !Uri.IsWellFormedUriString(url, UriKind.RelativeOrAbsolute))
         {
             return url;

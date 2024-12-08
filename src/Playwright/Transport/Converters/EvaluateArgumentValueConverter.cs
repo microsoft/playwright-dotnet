@@ -30,7 +30,6 @@ using System.Dynamic;
 using System.Globalization;
 using System.Linq;
 using System.Numerics;
-using System.Runtime.Serialization;
 using System.Text.Json;
 using System.Text.RegularExpressions;
 using Microsoft.Playwright.Core;
@@ -345,7 +344,7 @@ internal static class EvaluateArgumentValueConverter
 
         if (result.TryGetProperty("e", out var error))
         {
-            return new Exception(error.GetProperty("s").ToString());
+            return new PlaywrightException(error.GetProperty("s").ToString());
         }
 
         if (result.TryGetProperty("r", out var regex))
@@ -399,16 +398,25 @@ internal static class EvaluateArgumentValueConverter
         internal VisitorInfo()
         {
             Visited = new Dictionary<long, int>();
-            IDGenerator = new ObjectIDGenerator();
+            ObjectToId = new Dictionary<object, long>();
         }
 
         internal Dictionary<long, int> Visited { get; set; }
 
         internal int LastId { get; set; }
 
-        private ObjectIDGenerator IDGenerator { get; }
+        private Dictionary<object, long> ObjectToId { get; }
 
         internal long Identity(object obj)
-            => IDGenerator.GetId(obj, out _);
+        {
+            if (ObjectToId.TryGetValue(obj, out long id))
+            {
+                return id;
+            }
+
+            id = ObjectToId.Count + 1;
+            ObjectToId.Add(obj, id);
+            return id;
+        }
     }
 }

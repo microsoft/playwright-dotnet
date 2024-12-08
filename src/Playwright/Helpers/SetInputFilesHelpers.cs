@@ -65,7 +65,7 @@ internal static class SetInputFilesHelpers
         return (localPaths?.ToArray(), localDirectory);
     }
 
-    private static IEnumerable<string> GetFilesRecursive(string directory)
+    private static List<string> GetFilesRecursive(string directory)
     {
         var files = new List<string>();
         files.AddRange(Directory.GetFiles(directory));
@@ -76,16 +76,16 @@ internal static class SetInputFilesHelpers
         return files;
     }
 
-    public static async Task<SetInputFilesFiles> ConvertInputFilesAsync(IEnumerable<string> files, BrowserContext context)
+    public static async Task<SetInputFilesFiles> ConvertInputFilesAsync(List<string> files, BrowserContext context)
     {
-        if (!files.Any())
+        if (files.Count == 0)
         {
             return new() { Payloads = [] };
         }
-        var (localPaths, localDirectory) = ResolvePathsAndDirectoryForInputFiles(files.ToList());
+        var (localPaths, localDirectory) = ResolvePathsAndDirectoryForInputFiles(files);
         if (context._connection.IsRemote)
         {
-            files = localDirectory != null ? GetFilesRecursive(localDirectory) : localPaths;
+            files = localDirectory != null ? GetFilesRecursive(localDirectory) : localPaths.ToList();
             var result = await context.SendMessageToServerAsync("createTempFiles", new Dictionary<string, object>
             {
                 ["rootDirName"] = localDirectory != null ? new DirectoryInfo(localDirectory).Name : null,
@@ -97,12 +97,12 @@ internal static class SetInputFilesHelpers
                 }).ToArray(),
             }).ConfigureAwait(false);
             var writableStreams = result.Value.GetProperty("writableStreams").EnumerateArray();
-            if (writableStreams.Count() != files.Count())
+            if (writableStreams.Count() != files.Count)
             {
-                throw new Exception("Mismatch between the number of files and the number of writeable streams");
+                throw new PlaywrightException("Mismatch between the number of files and the number of writeable streams");
             }
             var streams = new List<WritableStream>();
-            for (var i = 0; i < files.Count(); i++)
+            for (var i = 0; i < files.Count; i++)
             {
 #pragma warning disable CA2007 // Consider calling ConfigureAwait on the awaited task
                 await using (var writeableStream = context._connection.GetObject(writableStreams.ElementAt(i).GetProperty("guid").ToString()) as WritableStream)
@@ -122,7 +122,7 @@ internal static class SetInputFilesHelpers
         return new() { LocalPaths = localPaths, LocalDirectory = localDirectory };
     }
 
-    public static SetInputFilesFiles ConvertInputFiles(IEnumerable<FilePayload> files)
+    public static SetInputFilesFiles ConvertInputFiles(List<FilePayload> files)
     {
         var filePayloadExceedsSizeLimit = files.Sum(f => f.Buffer.Length) > SizeLimitInBytes;
         if (filePayloadExceedsSizeLimit)

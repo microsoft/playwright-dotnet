@@ -549,7 +549,7 @@ public class PageEvaluateTests : PageTestEx
     [PlaywrightTest("page-evaluate.spec.ts", "should evaluate exception with a function on the stack")]
     public async Task ShouldEvaluateExceptionWithAFunctionOnTheStack()
     {
-        var exception = await Page.EvaluateAsync<Exception>(@"() => {
+        var exception = await Page.EvaluateAsync<PlaywrightException>(@"() => {
             return (function functionOnStack() {
                 return new Error('error message');
             })();
