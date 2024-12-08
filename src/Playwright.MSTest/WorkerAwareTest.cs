@@ -46,6 +46,8 @@ public class WorkerAwareTest
         {
             _currentWorker = new();
         }
+
+        new Program().Run(["install", "--with-deps", PlaywrightSettingsProvider.BrowserName], throwOnError: true);
     }
 
     [TestCleanup]
