@@ -100,9 +100,14 @@ internal static class Driver
     {
         try
         {
-            // assembly.CodeBase might throw with:
-            // System.NotSupportedException: CodeBase is not supported on assemblies loaded from a single-file bundle.
+            // assembly.Location/CodeBase might throw with:
+            // System.NotSupportedException: Location/CodeBase is not supported on assemblies loaded from a single-file bundle.
+            // Still using CodeBase for legacy .NET because of behaviour difference with shadow-copy (see https://learn.microsoft.com/en-us/dotnet/api/system.reflection.assembly.location?view=net-8.0#remarks)
+#if NET
+            Uri.TryCreate(assembly.Location, UriKind.Absolute, out codeBase);
+#else
             Uri.TryCreate(assembly.CodeBase, UriKind.Absolute, out codeBase);
+#endif
             return true;
         }
         catch (NotSupportedException)

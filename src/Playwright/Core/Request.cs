@@ -70,12 +70,11 @@ internal class Request : ChannelOwner, IRequest
             var frame = _initializer.Frame;
             if (frame.Page == null)
             {
-                throw new PlaywrightException(string.Join("\n", new string[]
-                {
-                    "Frame for this navigation request is not available, because the request",
-                    "was issued before the frame is created. You can check whether the request",
-                    "is a navigation request by calling isNavigationRequest() method.",
-                }));
+                throw new PlaywrightException("""
+                    Frame for this navigation request is not available, because the request
+                    was issued before the frame is created. You can check whether the request
+                    is a navigation request by calling isNavigationRequest() method.
+                    """);
             }
             return frame;
         }

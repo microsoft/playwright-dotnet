@@ -122,7 +122,11 @@ internal class ElementHandle : JSHandle, IElementHandle
         if (!string.IsNullOrEmpty(options.Path))
         {
             Directory.CreateDirectory(new FileInfo(options.Path).Directory.FullName);
+#if NET
+            await File.WriteAllBytesAsync(options.Path, result).ConfigureAwait(false);
+#else
             File.WriteAllBytes(options.Path, result);
+#endif
         }
 
         return result;
@@ -204,7 +208,7 @@ internal class ElementHandle : JSHandle, IElementHandle
         {
             throw new PlaywrightException("Cannot set input files to detached element.");
         }
-        var converted = await SetInputFilesHelpers.ConvertInputFilesAsync(files, (BrowserContext)frame.Page.Context).ConfigureAwait(false);
+        var converted = await SetInputFilesHelpers.ConvertInputFilesAsync(files.ToList(), (BrowserContext)frame.Page.Context).ConfigureAwait(false);
         await SendMessageToServerAsync("setInputFiles", new Dictionary<string, object>
         {
             ["payloads"] = converted.Payloads,
@@ -221,7 +225,7 @@ internal class ElementHandle : JSHandle, IElementHandle
 
     public async Task SetInputFilesAsync(IEnumerable<FilePayload> files, ElementHandleSetInputFilesOptions options = default)
     {
-        var converted = SetInputFilesHelpers.ConvertInputFiles(files);
+        var converted = SetInputFilesHelpers.ConvertInputFiles(files.ToList());
         await SendMessageToServerAsync("setInputFiles", new Dictionary<string, object>
         {
             ["payloads"] = converted.Payloads,

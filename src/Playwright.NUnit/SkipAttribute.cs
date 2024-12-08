@@ -63,7 +63,7 @@ public class SkipAttribute : NUnitAttribute, IApplyToTest
     {
         if (_combinations.Any(combination =>
         {
-            var requirements = (Enum.GetValues(typeof(Targets)) as Targets[]).Where(x => combination.HasFlag(x));
+            var requirements = ((Targets[])Enum.GetValues(typeof(Targets))).Where(x => combination.HasFlag(x));
             return requirements.All(flag =>
                 flag switch
                 {

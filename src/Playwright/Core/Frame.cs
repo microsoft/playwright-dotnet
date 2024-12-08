@@ -478,7 +478,12 @@ internal class Frame : ChannelOwner, IFrame
         var content = options?.Content;
         if (!string.IsNullOrEmpty(options?.Path))
         {
-            content = ScriptsHelper.AddSourceUrlToScript(File.ReadAllText(options.Path), options.Path);
+#if NET
+            string source = await File.ReadAllTextAsync(options.Path).ConfigureAwait(false);
+#else
+            string source = File.ReadAllText(options.Path);
+#endif
+            content = ScriptsHelper.AddSourceUrlToScript(source, options.Path);
         }
 
         return await SendMessageToServerAsync<ElementHandle>("addScriptTag", new Dictionary<string, object>
@@ -496,7 +501,11 @@ internal class Frame : ChannelOwner, IFrame
         var content = options?.Content;
         if (!string.IsNullOrEmpty(options?.Path))
         {
+#if NET
+            content = await File.ReadAllTextAsync(options.Path).ConfigureAwait(false);
+#else
             content = File.ReadAllText(options.Path);
+#endif
             content += "//# sourceURL=" + options.Path.Replace("\n", string.Empty);
         }
 
@@ -515,7 +524,7 @@ internal class Frame : ChannelOwner, IFrame
     [MethodImpl(MethodImplOptions.NoInlining)]
     public async Task SetInputFilesAsync(string selector, IEnumerable<string> files, FrameSetInputFilesOptions options = default)
     {
-        var converted = await SetInputFilesHelpers.ConvertInputFilesAsync(files, (BrowserContext)Page.Context).ConfigureAwait(false);
+        var converted = await SetInputFilesHelpers.ConvertInputFilesAsync(files.ToList(), (BrowserContext)Page.Context).ConfigureAwait(false);
 #pragma warning disable CS0612 // Type or member is obsolete
         await _setInputFilesAsync(selector, converted, options?.NoWaitAfter, options?.Timeout, options?.Strict).ConfigureAwait(false);
 #pragma warning restore CS0612 // Type or member is obsolete
@@ -528,7 +537,7 @@ internal class Frame : ChannelOwner, IFrame
     [MethodImpl(MethodImplOptions.NoInlining)]
     public async Task SetInputFilesAsync(string selector, IEnumerable<FilePayload> files, FrameSetInputFilesOptions options = default)
     {
-        var converted = SetInputFilesHelpers.ConvertInputFiles(files);
+        var converted = SetInputFilesHelpers.ConvertInputFiles(files.ToList());
 #pragma warning disable CS0612 // Type or member is obsolete
         await _setInputFilesAsync(selector, converted, noWaitAfter: options?.NoWaitAfter, timeout: options?.Timeout, options?.Strict).ConfigureAwait(false);
 #pragma warning restore CS0612 // Type or member is obsolete

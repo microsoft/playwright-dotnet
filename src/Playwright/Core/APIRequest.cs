@@ -60,7 +60,11 @@ internal class APIRequest : IAPIRequest
                 throw new PlaywrightException($"The specified storage state file does not exist: {options?.StorageStatePath}");
             }
 
+#if NET
+            storageState = await File.ReadAllTextAsync(options?.StorageStatePath).ConfigureAwait(false);
+#else
             storageState = File.ReadAllText(options?.StorageStatePath);
+#endif
         }
         if (!string.IsNullOrEmpty(storageState))
         {
