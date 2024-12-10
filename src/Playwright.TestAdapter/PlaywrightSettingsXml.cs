@@ -58,10 +58,6 @@ public class PlaywrightSettingsXml
                     reader.Read();
                     ExpectTimeout = float.Parse(reader.Value, CultureInfo.InvariantCulture);
                     break;
-                case "Retries":
-                    reader.Read();
-                    Retries = int.Parse(reader.Value, CultureInfo.InvariantCulture);
-                    break;
                 default:
                     Console.WriteLine($"Playwright RunSettings Parsing Error: Playwright>{reader.Name} is not implemented");
                     break;
