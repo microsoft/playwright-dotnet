@@ -615,7 +615,11 @@ internal static class StringExtensions
 
         var result = new Dictionary<string, string>();
 
+#if NET
+        if (query.StartsWith('?'))
+#else
         if (query.StartsWith("?", StringComparison.InvariantCultureIgnoreCase))
+#endif
         {
             query = query.Substring(1, query.Length - 1);
         }

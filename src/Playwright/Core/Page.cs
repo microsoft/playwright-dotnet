@@ -711,7 +711,11 @@ internal class Page : ChannelOwner, IPage
         if (!string.IsNullOrEmpty(options.Path))
         {
             Directory.CreateDirectory(new FileInfo(options.Path).Directory.FullName);
+#if NET
+            await File.WriteAllBytesAsync(options.Path, result).ConfigureAwait(false);
+#else
             File.WriteAllBytes(options.Path, result);
+#endif
         }
 
         return result;
@@ -916,7 +920,11 @@ internal class Page : ChannelOwner, IPage
         if (!string.IsNullOrEmpty(options?.Path))
         {
             Directory.CreateDirectory(new FileInfo(options.Path).Directory.FullName);
+#if NET
+            await File.WriteAllBytesAsync(options.Path, result).ConfigureAwait(false);
+#else
             File.WriteAllBytes(options.Path, result);
+#endif
         }
 
         return result;

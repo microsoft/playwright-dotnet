@@ -314,105 +314,78 @@ internal class Connection : IDisposable
 
     private ChannelOwner CreateRemoteObject(string parentGuid, ChannelOwnerType type, string guid, JsonElement? initializer)
     {
-        ChannelOwner result = null;
         var parent = string.IsNullOrEmpty(parentGuid) ? _rootObject : Objects[parentGuid];
 
         switch (type)
         {
             case ChannelOwnerType.APIRequestContext:
-                result = new APIRequestContext(parent, guid, initializer?.ToObject<APIRequestContextInitializer>(DefaultJsonSerializerOptions));
-                break;
+                return new APIRequestContext(parent, guid, initializer?.ToObject<APIRequestContextInitializer>(DefaultJsonSerializerOptions));
             case ChannelOwnerType.Artifact:
-                result = new Artifact(parent, guid, initializer?.ToObject<ArtifactInitializer>(DefaultJsonSerializerOptions));
-                break;
+                return new Artifact(parent, guid, initializer?.ToObject<ArtifactInitializer>(DefaultJsonSerializerOptions));
             case ChannelOwnerType.BindingCall:
-                result = new BindingCall(parent, guid, initializer?.ToObject<BindingCallInitializer>(DefaultJsonSerializerOptions));
-                break;
+                return new BindingCall(parent, guid, initializer?.ToObject<BindingCallInitializer>(DefaultJsonSerializerOptions));
             case ChannelOwnerType.Playwright:
-                result = new PlaywrightImpl(parent, guid, initializer?.ToObject<PlaywrightInitializer>(DefaultJsonSerializerOptions));
-                break;
+                return new PlaywrightImpl(parent, guid, initializer?.ToObject<PlaywrightInitializer>(DefaultJsonSerializerOptions));
             case ChannelOwnerType.Browser:
                 var browserInitializer = initializer?.ToObject<BrowserInitializer>(DefaultJsonSerializerOptions);
-                result = new Browser(parent, guid, browserInitializer);
-                break;
+                return new Browser(parent, guid, browserInitializer);
             case ChannelOwnerType.BrowserType:
                 var browserTypeInitializer = initializer?.ToObject<BrowserTypeInitializer>(DefaultJsonSerializerOptions);
-                result = new Core.BrowserType(parent, guid, browserTypeInitializer);
-                break;
+                return new Core.BrowserType(parent, guid, browserTypeInitializer);
             case ChannelOwnerType.BrowserContext:
                 var browserContextInitializer = initializer?.ToObject<BrowserContextInitializer>(DefaultJsonSerializerOptions);
-                result = new BrowserContext(parent, guid, browserContextInitializer);
-                break;
+                return new BrowserContext(parent, guid, browserContextInitializer);
             case ChannelOwnerType.CDPSession:
-                result = new CDPSession(parent, guid);
-                break;
+                return new CDPSession(parent, guid);
             case ChannelOwnerType.Dialog:
-                result = new Dialog(parent, guid, initializer?.ToObject<DialogInitializer>(DefaultJsonSerializerOptions));
-                break;
+                return new Dialog(parent, guid, initializer?.ToObject<DialogInitializer>(DefaultJsonSerializerOptions));
             case ChannelOwnerType.ElementHandle:
-                result = new ElementHandle(parent, guid, initializer?.ToObject<ElementHandleInitializer>(DefaultJsonSerializerOptions));
-                break;
+                return new ElementHandle(parent, guid, initializer?.ToObject<ElementHandleInitializer>(DefaultJsonSerializerOptions));
             case ChannelOwnerType.Frame:
-                result = new Frame(parent, guid, initializer?.ToObject<FrameInitializer>(DefaultJsonSerializerOptions));
-                break;
+                return new Frame(parent, guid, initializer?.ToObject<FrameInitializer>(DefaultJsonSerializerOptions));
             case ChannelOwnerType.JSHandle:
-                result = new JSHandle(parent, guid, initializer?.ToObject<JSHandleInitializer>(DefaultJsonSerializerOptions));
-                break;
+                return new JSHandle(parent, guid, initializer?.ToObject<JSHandleInitializer>(DefaultJsonSerializerOptions));
             case ChannelOwnerType.JsonPipe:
-                result = new JsonPipe(parent, guid, initializer?.ToObject<JsonPipeInitializer>(DefaultJsonSerializerOptions));
-                break;
+                return new JsonPipe(parent, guid, initializer?.ToObject<JsonPipeInitializer>(DefaultJsonSerializerOptions));
             case ChannelOwnerType.LocalUtils:
-                result = new LocalUtils(parent, guid, initializer?.ToObject<LocalUtilsInitializer>(DefaultJsonSerializerOptions));
+                var localUtils = new LocalUtils(parent, guid, initializer?.ToObject<LocalUtilsInitializer>(DefaultJsonSerializerOptions));
                 if (LocalUtils == null)
                 {
-                    LocalUtils = result as LocalUtils;
+                    LocalUtils = localUtils;
                 }
-                break;
+                return localUtils;
             case ChannelOwnerType.Page:
-                result = new Page(parent, guid, initializer?.ToObject<PageInitializer>(DefaultJsonSerializerOptions));
-                break;
+                return new Page(parent, guid, initializer?.ToObject<PageInitializer>(DefaultJsonSerializerOptions));
             case ChannelOwnerType.Request:
-                result = new Request(parent, guid, initializer?.ToObject<RequestInitializer>(DefaultJsonSerializerOptions));
-                break;
+                return new Request(parent, guid, initializer?.ToObject<RequestInitializer>(DefaultJsonSerializerOptions));
             case ChannelOwnerType.Response:
-                result = new Response(parent, guid, initializer?.ToObject<ResponseInitializer>(DefaultJsonSerializerOptions));
-                break;
+                return new Response(parent, guid, initializer?.ToObject<ResponseInitializer>(DefaultJsonSerializerOptions));
             case ChannelOwnerType.Route:
-                result = new Route(parent, guid, initializer?.ToObject<RouteInitializer>(DefaultJsonSerializerOptions));
-                break;
+                return new Route(parent, guid, initializer?.ToObject<RouteInitializer>(DefaultJsonSerializerOptions));
             case ChannelOwnerType.Worker:
-                result = new Worker(parent, guid, initializer?.ToObject<WorkerInitializer>(DefaultJsonSerializerOptions));
-                break;
+                return new Worker(parent, guid, initializer?.ToObject<WorkerInitializer>(DefaultJsonSerializerOptions));
             case ChannelOwnerType.WebSocket:
-                result = new WebSocket(parent, guid, initializer?.ToObject<WebSocketInitializer>(DefaultJsonSerializerOptions));
-                break;
+                return new WebSocket(parent, guid, initializer?.ToObject<WebSocketInitializer>(DefaultJsonSerializerOptions));
             case ChannelOwnerType.WebSocketRoute:
-                result = new WebSocketRoute(parent, guid, initializer?.ToObject<WebSocketRouteInitializer>(DefaultJsonSerializerOptions));
-                break;
+                return new WebSocketRoute(parent, guid, initializer?.ToObject<WebSocketRouteInitializer>(DefaultJsonSerializerOptions));
             case ChannelOwnerType.Selectors:
-                result = new Selectors(parent, guid);
-                break;
+                return new Selectors(parent, guid);
             case ChannelOwnerType.SocksSupport:
-                result = new SocksSupport(parent, guid);
-                break;
+                return new SocksSupport(parent, guid);
             case ChannelOwnerType.Stream:
-                result = new Stream(parent, guid);
-                break;
+                return new Stream(parent, guid);
             case ChannelOwnerType.WritableStream:
-                result = new WritableStream(parent, guid);
-                break;
+                return new WritableStream(parent, guid);
             case ChannelOwnerType.Tracing:
-                result = new Tracing(parent, guid);
-                break;
+                return new Tracing(parent, guid);
             case ChannelOwnerType.Electron:
             case ChannelOwnerType.Android:
-                result = null;
                 break;
             default:
                 Debug.Fail($"Missing Playwright type binding for '{type}'");
                 break;
         }
-        return result;
+        return null;
     }
 
     internal void DoClose(Exception cause = null)
@@ -507,7 +480,11 @@ internal class Connection : IDisposable
                 {
                     apiBoundaryReached = true;
                 }
+#if NET
+                var hasCleanMethodName = !methodName.StartsWith('<');
+#else
                 var hasCleanMethodName = !methodName.StartsWith("<", StringComparison.InvariantCultureIgnoreCase);
+#endif
                 if (hasCleanMethodName)
                 {
                     lastInternalApiName = methodName;
