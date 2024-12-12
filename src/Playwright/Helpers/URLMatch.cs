@@ -39,6 +39,11 @@ public class URLMatch
 
     public bool Match(string url)
     {
+        return MatchImpl(url, re, func, glob, baseURL);
+    }
+
+    private static bool MatchImpl(string url, Regex re, Func<string, bool> func, string glob, string baseURL)
+    {
         if (re != null)
         {
             return re.IsMatch(url);
@@ -51,33 +56,38 @@ public class URLMatch
 
         if (glob != null)
         {
-            var globWithBaseURL = JoinWithBaseURL(baseURL, glob);
-            // Allow http(s) baseURL to match ws(s) urls.
-            if (new Regex("^https?://").IsMatch(globWithBaseURL) && new Regex("^wss?://").IsMatch(url))
+            if (string.IsNullOrEmpty(glob))
             {
-                globWithBaseURL = new Regex("^http").Replace(globWithBaseURL, "ws");
+                return true;
             }
-            return new Regex(globWithBaseURL.GlobToRegex()).IsMatch(url);
+            if (!glob.StartsWith("*", StringComparison.InvariantCultureIgnoreCase))
+            {
+                // Allow http(s) baseURL to match ws(s) urls.
+                if (!string.IsNullOrEmpty(baseURL) && new Regex("^https?://").IsMatch(baseURL) && new Regex("^wss?://").IsMatch(url))
+                {
+                    baseURL = new Regex("^http").Replace(baseURL, "ws");
+                }
+                glob = ConstructURLBasedOnBaseURL(baseURL, glob);
+            }
+            return new Regex(glob.GlobToRegex()).IsMatch(url);
         }
         return true;
     }
 
-    internal static string JoinWithBaseURL(string baseUrl, string url)
+    internal static string ConstructURLBasedOnBaseURL(string baseUrl, string url)
     {
-        if (string.IsNullOrEmpty(baseUrl)
-            || (url?.StartsWith("*", StringComparison.InvariantCultureIgnoreCase) ?? false)
-            || !Uri.IsWellFormedUriString(url, UriKind.RelativeOrAbsolute))
+        try
+        {
+            if (string.IsNullOrEmpty(baseUrl))
+            {
+                return new Uri(url, UriKind.Absolute).ToString();
+            }
+            return new Uri(new Uri(baseUrl), new Uri(url, UriKind.RelativeOrAbsolute)).ToString();
+        }
+        catch
         {
             return url;
         }
-
-        var mUri = new Uri(url, UriKind.RelativeOrAbsolute);
-        if (!mUri.IsAbsoluteUri)
-        {
-            return new Uri(new Uri(baseUrl), mUri).ToString();
-        }
-
-        return url;
     }
 
     public bool Equals(string globMatch, Regex reMatch, Func<string, bool> funcMatch, string baseURL)

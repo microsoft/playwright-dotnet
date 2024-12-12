@@ -311,4 +311,39 @@ public class PageRouteWebSocketTests : PageTestEx
             $"message: data=echo origin=ws://localhost:{Server.Port} lastEventId=",
         });
     }
+
+    [PlaywrightTest("page-route-web-socket.spec.ts", "should work with no trailing slash")]
+    public async Task ShouldWorkWithNoTrailingSlash()
+    {
+        var log = new List<string>();
+        // No trailing slash!
+        await Page.RouteWebSocketAsync($"ws://localhost:{Server.Port}", ws =>
+        {
+            ws.OnMessage(message =>
+            {
+                log.Add(message.Text);
+                ws.Send("response");
+            });
+        });
+
+        await Page.GotoAsync("about:blank");
+        await Page.EvaluateAsync(@"({ port }) => {
+            window.log = [];
+            // No trailing slash in WebSocket URL
+            window.ws = new WebSocket('ws://localhost:' + port);
+            window.ws.addEventListener('message', event => window.log.push(event.data));
+        }", new Dictionary<string, object>
+        {
+            ["port"] = Server.Port
+        });
+
+        await Page.WaitForFunctionAsync("() => window.ws.readyState === 1");
+        await Page.EvaluateAsync("() => window.ws.send('query')");
+        await AssertAreEqualWithRetriesAsync(
+            () => Task.FromResult(log.ToArray()),
+            ["query"]);
+        await AssertAreEqualWithRetriesAsync(
+            () => Page.EvaluateAsync<string[]>("() => window.log"),
+            ["response"]);
+    }
 }
