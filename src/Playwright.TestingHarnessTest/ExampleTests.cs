@@ -22,8 +22,7 @@ public class xunitv3basicspectsshouldbeabletosetthebrowserviatherunsettingsfile 
     public async Task Test()
     {
         await Page.GotoAsync("about:blank");
-        output.WriteLine("BrowserName: " + BrowserName);
-        output.WriteLine("BrowserType: " + BrowserType.Name);
-        output.WriteLine("User-Agent: " + await Page.EvaluateAsync<string>("() => navigator.userAgent"));
+        if (BrowserName != "webkit")
+            throw new XunitException("Expected webkit but got: " + BrowserName);
     }
 }
