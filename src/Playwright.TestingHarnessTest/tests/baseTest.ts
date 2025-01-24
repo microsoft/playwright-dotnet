@@ -1,7 +1,7 @@
 import fs from 'fs';
 import path from 'path';
 import childProcess from 'child_process';
-import { test as base } from '@playwright/test';
+import { test as base, BrowserServer } from '@playwright/test';
 import { XMLParser } from 'fast-xml-parser';
 
 type RunResult = {
@@ -17,7 +17,16 @@ type RunResult = {
 
 export const test = base.extend<{
   runTest: (files: Record<string, string>, command: string, env?: NodeJS.ProcessEnv) => Promise<RunResult>;
+  launchServer: ({ port: number }) => Promise<void>;
 }>({
+  launchServer: async ({ playwright }, use) => {
+    const servers: BrowserServer[] = [];
+    await use(async ({port}: {port: number}) => {
+      servers.push(await playwright.chromium.launchServer({ port }));
+    });
+    for (const server of servers)
+      await server.close();
+  },
   runTest: async ({ }, use, testInfo) => {
     const testResults: RunResult[] = [];
     await use(async (files, command, env) => {

@@ -22,47 +22,9 @@
  * SOFTWARE.
  */
 
-using System.Collections.Generic;
-using System.Threading.Tasks;
-using NUnit.Framework;
+using Microsoft.Playwright;
 
-namespace Microsoft.Playwright.NUnit;
-
-public class BrowserTest : PlaywrightTest
+public class PlaywrightConnectOptions : BrowserTypeConnectOptions
 {
-    public IBrowser Browser { get; internal set; } = null!;
-    private readonly List<IBrowserContext> _contexts = new();
-
-    public async Task<IBrowserContext> NewContext(BrowserNewContextOptions? options = null)
-    {
-        var context = await Browser.NewContextAsync(options).ConfigureAwait(false);
-        _contexts.Add(context);
-        return context;
-    }
-
-    [SetUp]
-    public async Task BrowserSetup()
-    {
-        var service = await BrowserService.Register(this, BrowserType, ConnectOptions()).ConfigureAwait(false);
-        Browser = service.Browser;
-    }
-
-    [TearDown]
-    public async Task BrowserTearDown()
-    {
-        if (TestOk())
-        {
-            foreach (var context in _contexts)
-            {
-                await context.CloseAsync().ConfigureAwait(false);
-            }
-        }
-        _contexts.Clear();
-        Browser = null!;
-    }
-
-    public virtual PlaywrightConnectOptions? ConnectOptions()
-    {
-        return null;
-    }
+    public string WSEndpoint = string.Empty;
 }

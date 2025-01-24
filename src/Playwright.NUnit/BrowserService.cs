@@ -41,19 +41,35 @@ internal class BrowserService : IWorkerService
         Browser = browser;
     }
 
-    public static Task<BrowserService> Register(WorkerAwareTest test, IBrowserType browserType)
+    public static Task<BrowserService> Register(WorkerAwareTest test, IBrowserType browserType, PlaywrightConnectOptions? connectOptions)
     {
-        return test.RegisterService("Browser", async () => new BrowserService(await CreateBrowser(browserType).ConfigureAwait(false)));
+        return test.RegisterService("Browser", async () => new BrowserService(await CreateBrowser(browserType, connectOptions).ConfigureAwait(false)));
     }
 
-    private static async Task<IBrowser> CreateBrowser(IBrowserType browserType)
+    private static async Task<IBrowser> CreateBrowser(IBrowserType browserType, PlaywrightConnectOptions? connectOptions)
+    {
+        if (connectOptions != null)
+        {
+            return await browserType.ConnectAsync(connectOptions.WSEndpoint, connectOptions).ConfigureAwait(false);
+        }
+
+        var legacyBrowser = await ConnectToLegacyService(browserType);
+        if (legacyBrowser != null)
+        {
+            return legacyBrowser;
+        }
+        return await browserType.LaunchAsync(PlaywrightSettingsProvider.LaunchOptions).ConfigureAwait(false);
+    }
+
+    // TODO: Remove after Q3 2025
+    private static async Task<IBrowser?> ConnectToLegacyService(IBrowserType browserType)
     {
         var accessToken = Environment.GetEnvironmentVariable("PLAYWRIGHT_SERVICE_ACCESS_TOKEN");
         var serviceUrl = Environment.GetEnvironmentVariable("PLAYWRIGHT_SERVICE_URL");
 
         if (string.IsNullOrEmpty(accessToken) || string.IsNullOrEmpty(serviceUrl))
         {
-            return await browserType.LaunchAsync(PlaywrightSettingsProvider.LaunchOptions).ConfigureAwait(false);
+            return null;
         }
 
         var exposeNetwork = Environment.GetEnvironmentVariable("PLAYWRIGHT_SERVICE_EXPOSE_NETWORK") ?? "<loopback>";
@@ -61,7 +77,8 @@ internal class BrowserService : IWorkerService
         var runId = Uri.EscapeDataString(Environment.GetEnvironmentVariable("PLAYWRIGHT_SERVICE_RUN_ID") ?? DateTime.Now.ToUniversalTime().ToString("yyyy-MM-ddTHH:mm:ss", CultureInfo.InvariantCulture));
         var apiVersion = "2023-10-01-preview";
         var wsEndpoint = $"{serviceUrl}?os={os}&runId={runId}&api-version={apiVersion}";
-        var connectOptions = new BrowserTypeConnectOptions
+
+        return await browserType.ConnectAsync(wsEndpoint, new BrowserTypeConnectOptions
         {
             Timeout = 3 * 60 * 1000,
             ExposeNetwork = exposeNetwork,
@@ -70,9 +87,7 @@ internal class BrowserService : IWorkerService
                 ["Authorization"] = $"Bearer {accessToken}",
                 ["x-playwright-launch-options"] = JsonSerializer.Serialize(PlaywrightSettingsProvider.LaunchOptions, new JsonSerializerOptions() { DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull })
             }
-        };
-
-        return await browserType.ConnectAsync(wsEndpoint, connectOptions).ConfigureAwait(false);
+        }).ConfigureAwait(false);
     }
 
     public Task ResetAsync() => Task.CompletedTask;
