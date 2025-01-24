@@ -6,21 +6,33 @@
     <ReleaseVersion>0.0.0</ReleaseVersion>
     <LangVersion>12</LangVersion>
   </PropertyGroup>
+
   <Import Project="../Common/SignAssembly.props" />
 
   <ItemGroup>
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.8.0" />
-    <PackageReference Include="MSTest.TestAdapter" Version="2.2.10" />
-    <PackageReference Include="MSTest.TestFramework" Version="2.2.10" />
-    <PackageReference Include="NUnit3TestAdapter" Version="4.5.0" />
-    <PackageReference Include="xunit" Version="2.9.2" />
-    <PackageReference Include="xunit.runner.visualstudio" Version="2.8.2" />
+    
+    <!-- MSTest -->
+    <PackageReference Include="MSTest.TestAdapter" Version="2.2.10" Condition="'$(TEST_MODE)' == 'mstest'" />
+    <PackageReference Include="MSTest.TestFramework" Version="2.2.10" Condition="'$(TEST_MODE)' == 'mstest'" />
+    
+    <!-- NUnit -->
+    <PackageReference Include="NUnit3TestAdapter" Version="4.5.0" Condition="'$(TEST_MODE)' == 'nunit'" />
+    
+    <!-- xUnit -->
+    <PackageReference Include="xunit" Version="2.9.2" Condition="'$(TEST_MODE)' == 'xunit'" />
+    <PackageReference Include="xunit.runner.visualstudio" Version="2.8.2" Condition="'$(TEST_MODE)' == 'xunit'" />
+
+    <!-- xUnit.v3 -->
+    <PackageReference Include="xunit.v3" Version="1.0.1" Condition="'$(TEST_MODE)' == 'xunit.v3'" />
+    <PackageReference Include="xunit.runner.visualstudio" Version="3.0.1" Condition="'$(TEST_MODE)' == 'xunit.v3'" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\Playwright\Playwright.csproj" />
-    <ProjectReference Include="..\Playwright.MSTest\Playwright.MSTest.csproj" />
-    <ProjectReference Include="..\Playwright.NUnit\Playwright.NUnit.csproj" />
-    <ProjectReference Include="..\Playwright.Xunit\Playwright.Xunit.csproj" />
+    <ProjectReference Include="..\Playwright.MSTest\Playwright.MSTest.csproj" Condition="'$(TEST_MODE)' == 'mstest'" />
+    <ProjectReference Include="..\Playwright.NUnit\Playwright.NUnit.csproj" Condition="'$(TEST_MODE)' == 'nunit'" />
+    <ProjectReference Include="..\Playwright.Xunit\Playwright.Xunit.csproj" Condition="'$(TEST_MODE)' == 'xunit'" />
+    <ProjectReference Include="..\Playwright.Xunit.v3\Playwright.Xunit.v3.csproj" Condition="'$(TEST_MODE)' == 'xunit.v3'" />
   </ItemGroup>
 </Project>
