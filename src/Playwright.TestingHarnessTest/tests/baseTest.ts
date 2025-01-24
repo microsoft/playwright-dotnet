@@ -2,7 +2,7 @@ import fs from 'fs';
 import http from 'http';
 import path from 'path';
 import childProcess from 'child_process';
-import { test as base } from '@playwright/test';
+import { test as base, BrowserServer } from '@playwright/test';
 import { XMLParser } from 'fast-xml-parser';
 import { AddressInfo } from 'net';
 
@@ -21,6 +21,7 @@ export const test = base.extend<{
   proxyServer: ProxyServer;
   testMode: 'nunit' | 'mstest' | 'xunit';
   runTest: (files: Record<string, string>, command: string, env?: NodeJS.ProcessEnv) => Promise<RunResult>;
+  launchServer: ({ port: number }) => Promise<void>;
 }>({
   proxyServer: async ({}, use) => {
     const proxyServer = new ProxyServer();
@@ -29,7 +30,15 @@ export const test = base.extend<{
     await proxyServer.stop();
   },
   testMode: null,
-  runTest: async ({ testMode }, use, testInfo) => {
+  launchServer: async ({ playwright }, use) => {
+    const servers: BrowserServer[] = [];
+    await use(async ({port}: {port: number}) => {
+      servers.push(await playwright.chromium.launchServer({ port }));
+    });
+    for (const server of servers)
+      await server.close();
+  },
+  runTest: async ({ }, use, testInfo) => {
     const testResults: RunResult[] = [];
     await use(async (files, command, env) => {
       const testDir = testInfo.outputPath();

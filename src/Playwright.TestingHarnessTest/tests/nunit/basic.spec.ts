@@ -487,3 +487,49 @@ test.describe('Expect() timeout', () => {
     expect(result.rawStdout).toContain("LocatorAssertions.ToHaveTextAsync with timeout 123ms")
   });
 });
+
+test.describe('ConnectOptions', () => {
+  const ExampleTestWithConnectOptions = `
+    using System;
+    using System.Threading.Tasks;
+    using Microsoft.Playwright.NUnit;
+    using NUnit.Framework;
+
+    namespace Playwright.TestingHarnessTest.NUnit;
+
+    public class <class-name> : PageTest
+    {
+        [Test]
+        public async Task Test()
+        {
+            await Page.GotoAsync("about:blank");
+        }
+
+        public override PlaywrightConnectOptions ConnectOptions()
+        {
+            return new() {
+                WSEndpoint = "http://127.0.0.1:1234",
+            };
+        }
+  }`;
+
+  test('should fail when the server is not reachable', async ({ runTest }) => {
+    const result = await runTest({
+      'ExampleTests.cs': ExampleTestWithConnectOptions,
+    }, 'dotnet test');
+    expect(result.passed).toBe(0);
+    expect(result.failed).toBe(1);
+    expect(result.total).toBe(1);
+    expect(result.rawStdout).toContain('connect ECONNREFUSED 127.0.0.1:1234')
+  });
+
+  test('should pass when the server is reachable', async ({ runTest, launchServer }) => {
+    await launchServer({ port: 1234 });
+    const result = await runTest({
+      'ExampleTests.cs': ExampleTestWithConnectOptions,
+    }, 'dotnet test');
+    expect(result.passed).toBe(1);
+    expect(result.failed).toBe(0);
+    expect(result.total).toBe(1);
+  });
+});
