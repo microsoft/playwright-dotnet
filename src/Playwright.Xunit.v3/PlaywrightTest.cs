@@ -40,7 +40,7 @@ public class PlaywrightTest : WorkerAwareTest
     {
         await base.InitializeAsync().ConfigureAwait(false);
         Playwright = await _playwrightTask.ConfigureAwait(false);
-        System.Console.Error.WriteLine("Reading browser name from playwrightTest: " + PlaywrightSettingsProvider.BrowserName + " with pid " + System.Diagnostics.Process.GetCurrentProcess().Id);
+        System.Console.Error.WriteLine("Reading browser name from PlaywrightTest::InitializeAsync " + PlaywrightSettingsProvider.BrowserName + " with pid " + System.Diagnostics.Process.GetCurrentProcess().Id);
         BrowserName = PlaywrightSettingsProvider.BrowserName;
         BrowserType = Playwright[BrowserName];
         Playwright.Selectors.SetTestIdAttribute("data-testid");

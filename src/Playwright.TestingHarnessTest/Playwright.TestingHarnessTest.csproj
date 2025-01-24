@@ -6,11 +6,14 @@
     <ReleaseVersion>0.0.0</ReleaseVersion>
     <LangVersion>12</LangVersion>
   </PropertyGroup>
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+  </PropertyGroup>
 
   <Import Project="../Common/SignAssembly.props" />
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.8.0" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.12.0" />
     
     <!-- MSTest -->
     <PackageReference Include="MSTest.TestAdapter" Version="2.2.10" Condition="'$(TEST_MODE)' == 'mstest'" />
