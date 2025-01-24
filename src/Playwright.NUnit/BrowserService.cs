@@ -25,6 +25,7 @@
 using System;
 using System.Collections.Generic;
 using System.Globalization;
+using System.Linq;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
@@ -50,10 +51,14 @@ internal class BrowserService : IWorkerService
     {
         if (connectOptions != null)
         {
-            return await browserType.ConnectAsync(connectOptions.WSEndpoint, connectOptions).ConfigureAwait(false);
+            var options = new BrowserTypeConnectOptions(connectOptions);
+            var headers = options.Headers?.ToDictionary(kvp => kvp.Key, kvp => kvp.Value) ?? [];
+            headers.Add("x-playwright-launch-options", JsonSerializer.Serialize(PlaywrightSettingsProvider.LaunchOptions, new JsonSerializerOptions() { DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull }));
+            options.Headers = headers;
+            return await browserType.ConnectAsync(connectOptions.WSEndpoint, options).ConfigureAwait(false);
         }
 
-        var legacyBrowser = await ConnectToLegacyService(browserType);
+        var legacyBrowser = await ConnectBasedOnEnv(browserType);
         if (legacyBrowser != null)
         {
             return legacyBrowser;
@@ -61,8 +66,8 @@ internal class BrowserService : IWorkerService
         return await browserType.LaunchAsync(PlaywrightSettingsProvider.LaunchOptions).ConfigureAwait(false);
     }
 
-    // TODO: Remove after Q3 2025
-    private static async Task<IBrowser?> ConnectToLegacyService(IBrowserType browserType)
+    // TODO: Remove at some point
+    private static async Task<IBrowser?> ConnectBasedOnEnv(IBrowserType browserType)
     {
         var accessToken = Environment.GetEnvironmentVariable("PLAYWRIGHT_SERVICE_ACCESS_TOKEN");
         var serviceUrl = Environment.GetEnvironmentVariable("PLAYWRIGHT_SERVICE_URL");
