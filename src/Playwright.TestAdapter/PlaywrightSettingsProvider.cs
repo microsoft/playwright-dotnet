@@ -103,5 +103,8 @@ public class PlaywrightSettingsProvider : ISettingsProvider
     }
 
     public void Load(XmlReader reader)
-        => _settings = new PlaywrightSettingsXml(reader);
+    {
+        _settings = new PlaywrightSettingsXml(reader);
+        Console.Error.WriteLine("Loading settings with pid: " + System.Diagnostics.Process.GetCurrentProcess().Id + " and browser name " + BrowserName);
+    }
 }
