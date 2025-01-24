@@ -45,12 +45,6 @@ public class WorkerAwareTest: IAsyncLifetime
         public Dictionary<string, IWorkerService> Services = [];
     }
     
-    [Class]
-    public WorkerAwareTest()
-    {
-        Console.WriteLine("WorkerAwareTest::WorkerAwareTest: " + PlaywrightSettingsProvider.BrowserName);
-    }
-
     public int WorkerIndex { get; internal set; }
 
     public async Task<T> RegisterService<T>(string name, Func<Task<T>> factory) where T : class, IWorkerService
