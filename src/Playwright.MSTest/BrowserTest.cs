@@ -24,6 +24,7 @@
 
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Microsoft.Playwright.TestAdapter;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Microsoft.Playwright.MSTest;
@@ -44,7 +45,7 @@ public class BrowserTest : PlaywrightTest
     [TestInitialize]
     public async Task BrowserSetup()
     {
-        var service = await BrowserService.Register(this, BrowserType).ConfigureAwait(false);
+        var service = await BrowserService.Register(this, BrowserType, ConnectOptions()).ConfigureAwait(false);
         Browser = service.Browser;
     }
 
@@ -60,5 +61,10 @@ public class BrowserTest : PlaywrightTest
         }
         _contexts.Clear();
         Browser = null!;
+    }
+
+    public virtual PlaywrightConnectOptions? ConnectOptions()
+    {
+        return null;
     }
 }

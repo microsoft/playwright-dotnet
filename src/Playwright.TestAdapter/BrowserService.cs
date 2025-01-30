@@ -31,9 +31,9 @@ using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 using Microsoft.Playwright.TestAdapter;
 
-namespace Microsoft.Playwright.NUnit;
+namespace Microsoft.Playwright.TestAdapter;
 
-internal class BrowserService : IWorkerService
+public class BrowserService : IWorkerService
 {
     public IBrowser Browser { get; private set; }
 
@@ -42,7 +42,7 @@ internal class BrowserService : IWorkerService
         Browser = browser;
     }
 
-    public static Task<BrowserService> Register(WorkerAwareTest test, IBrowserType browserType, PlaywrightConnectOptions? connectOptions)
+    public static Task<BrowserService> Register(IWorkerAwareTest test, IBrowserType browserType, PlaywrightConnectOptions? connectOptions)
     {
         return test.RegisterService("Browser", async () => new BrowserService(await CreateBrowser(browserType, connectOptions).ConfigureAwait(false)));
     }

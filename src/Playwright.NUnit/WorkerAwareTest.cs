@@ -34,7 +34,7 @@ using NUnit.Framework.Interfaces;
 
 namespace Microsoft.Playwright.NUnit;
 
-public class WorkerAwareTest
+public class WorkerAwareTest : IWorkerAwareTest
 {
     private static readonly ConcurrentStack<Worker> _allWorkers = new();
     private Worker _currentWorker = null!;
@@ -99,10 +99,4 @@ public class WorkerAwareTest
             TestContext.CurrentContext.Result.Outcome.Status == TestStatus.Passed ||
             TestContext.CurrentContext.Result.Outcome.Status == TestStatus.Skipped;
     }
-}
-
-public interface IWorkerService
-{
-    public Task ResetAsync();
-    public Task DisposeAsync();
 }

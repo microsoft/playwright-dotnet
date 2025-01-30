@@ -24,6 +24,7 @@
 
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Microsoft.Playwright.TestAdapter;
 
 namespace Microsoft.Playwright.Xunit;
 
@@ -42,7 +43,8 @@ public class BrowserTest : PlaywrightTest
     public override async Task InitializeAsync()
     {
         await base.InitializeAsync().ConfigureAwait(false);
-        var service = await BrowserService.Register(this, BrowserType).ConfigureAwait(false);
+        var service = await BrowserService.Register(this, BrowserType, ConnectOptions()).ConfigureAwait(false);
+
         Browser = service.Browser;
     }
 
@@ -58,5 +60,10 @@ public class BrowserTest : PlaywrightTest
         _contexts.Clear();
         Browser = null!;
         await base.DisposeAsync().ConfigureAwait(false);
+    }
+
+    public virtual PlaywrightConnectOptions? ConnectOptions()
+    {
+        return null;
     }
 }

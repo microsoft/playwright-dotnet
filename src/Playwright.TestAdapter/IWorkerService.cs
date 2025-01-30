@@ -22,48 +22,18 @@
  * SOFTWARE.
  */
 
-using System.Collections.Generic;
+using System;
 using System.Threading.Tasks;
-using Microsoft.Playwright.TestAdapter;
-using NUnit.Framework;
 
-namespace Microsoft.Playwright.NUnit;
+namespace Microsoft.Playwright.TestAdapter;
 
-public class BrowserTest : PlaywrightTest
+public interface IWorkerService
 {
-    public IBrowser Browser { get; internal set; } = null!;
-    private readonly List<IBrowserContext> _contexts = new();
+    public Task ResetAsync();
+    public Task DisposeAsync();
+}
 
-    public async Task<IBrowserContext> NewContext(BrowserNewContextOptions? options = null)
-    {
-        var context = await Browser.NewContextAsync(options).ConfigureAwait(false);
-        _contexts.Add(context);
-        return context;
-    }
-
-    [SetUp]
-    public async Task BrowserSetup()
-    {
-        var service = await BrowserService.Register(this, BrowserType, ConnectOptions()).ConfigureAwait(false);
-        Browser = service.Browser;
-    }
-
-    [TearDown]
-    public async Task BrowserTearDown()
-    {
-        if (TestOk())
-        {
-            foreach (var context in _contexts)
-            {
-                await context.CloseAsync().ConfigureAwait(false);
-            }
-        }
-        _contexts.Clear();
-        Browser = null!;
-    }
-
-    public virtual PlaywrightConnectOptions? ConnectOptions()
-    {
-        return null;
-    }
+public interface IWorkerAwareTest
+{
+    Task<T> RegisterService<T>(string name, Func<Task<T>> factory) where T : class, IWorkerService;
 }

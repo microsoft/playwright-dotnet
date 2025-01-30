@@ -8,7 +8,7 @@ using Microsoft.Playwright.TestAdapter;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 namespace Microsoft.Playwright.MSTest;
 
-public class WorkerAwareTest
+public class WorkerAwareTest: IWorkerAwareTest
 {
     public TestContext TestContext { get; set; } = null!;
 
@@ -74,10 +74,4 @@ public class WorkerAwareTest
         return TestContext!.CurrentTestOutcome == UnitTestOutcome.Passed
             || TestContext!.CurrentTestOutcome == UnitTestOutcome.NotRunnable;
     }
-}
-
-public interface IWorkerService
-{
-    public Task ResetAsync();
-    public Task DisposeAsync();
 }

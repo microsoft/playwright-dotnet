@@ -33,7 +33,7 @@ using Xunit;
 
 namespace Microsoft.Playwright.Xunit;
 
-public class WorkerAwareTest : ExceptionCapturer
+public class WorkerAwareTest : ExceptionCapturer, IWorkerAwareTest
 {
     private static readonly ConcurrentStack<Worker> _allWorkers = new();
     private Worker _currentWorker = null!;
@@ -91,12 +91,6 @@ public class WorkerAwareTest : ExceptionCapturer
         }
         await base.DisposeAsync().ConfigureAwait(false);
     }
-}
-
-public interface IWorkerService
-{
-    public Task ResetAsync();
-    public Task DisposeAsync();
 }
 
 /// <summary>
