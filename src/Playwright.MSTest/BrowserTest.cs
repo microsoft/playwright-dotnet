@@ -44,7 +44,7 @@ public class BrowserTest : PlaywrightTest
     [TestInitialize]
     public async Task BrowserSetup()
     {
-        var service = await BrowserService.Register(this, BrowserType).ConfigureAwait(false);
+        var service = await BrowserService.Register(this, BrowserType, ConnectOptions()).ConfigureAwait(false);
         Browser = service.Browser;
     }
 
@@ -60,5 +60,10 @@ public class BrowserTest : PlaywrightTest
         }
         _contexts.Clear();
         Browser = null!;
+    }
+
+    public virtual PlaywrightConnectOptions? ConnectOptions()
+    {
+        return null;
     }
 }
