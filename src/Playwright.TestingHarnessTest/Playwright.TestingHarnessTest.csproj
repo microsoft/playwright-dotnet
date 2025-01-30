@@ -27,4 +27,9 @@
     <PackageReference Include="xunit" Version="2.9.2" Condition="'$(TEST_MODE)' == 'xunit'" />
     <PackageReference Include="xunit.runner.visualstudio" Version="2.8.2" Condition="'$(TEST_MODE)' == 'xunit'" />
   </ItemGroup>
+
+  <ItemGroup>
+    <Compile Remove="**/*.cs" />
+    <Compile Include="$(PWTEST_TEST_DIR)/*.cs" />
+  </ItemGroup>
 </Project>

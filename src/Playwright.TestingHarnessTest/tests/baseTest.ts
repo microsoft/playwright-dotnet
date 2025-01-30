@@ -38,6 +38,7 @@ export const test = base.extend<{
           ...env,
           NODE_OPTIONS: undefined,
           TEST_MODE: testMode,
+          PWTEST_TEST_DIR: testDir,
         },
         stdio: 'pipe',
       });
