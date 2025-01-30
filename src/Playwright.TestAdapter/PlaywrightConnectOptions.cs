@@ -22,7 +22,7 @@
  * SOFTWARE.
  */
 
-using Microsoft.Playwright;
+namespace Microsoft.Playwright.TestAdapter;
 
 public class PlaywrightConnectOptions : BrowserTypeConnectOptions
 {
