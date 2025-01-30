@@ -1606,7 +1606,6 @@ public partial interface IPage
 
     /// <summary>
     /// <para>Returns the PDF buffer.</para>
-    /// <para>Generating a pdf is currently only supported in Chromium headless.</para>
     /// <para>
     /// <c>page.pdf()</c> generates a pdf of the page with <c>print</c> css media. To generate
     /// a pdf with <c>screen</c> media, call <see cref="IPage.EmulateMediaAsync"/> before
@@ -1661,7 +1660,6 @@ public partial interface IPage
     /// </para>
     /// </summary>
     /// <remarks>
-    /// <para>Generating a pdf is currently only supported in Chromium headless.</para>
     /// <para>
     /// By default, <c>page.pdf()</c> generates a pdf with modified colors for printing.
     /// Use the <a href="https://developer.mozilla.org/en-US/docs/Web/CSS/-webkit-print-color-adjust"><c>-webkit-print-color-adjust</c></a>
@@ -2621,7 +2619,7 @@ public partial interface IPage
     ///
     /// </para>
     /// </remarks>
-    /// <param name="timeout">Maximum time in milliseconds</param>
+    /// <param name="timeout">Maximum time in milliseconds. Pass <c>0</c> to disable timeout.</param>
     void SetDefaultTimeout(float timeout);
 
     /// <summary>

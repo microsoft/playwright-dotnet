@@ -149,6 +149,12 @@ public partial interface IClock
     /// await page.Clock.PauseAtAsync(DateTime.Parse("2020-02-02"));<br/>
     /// await page.Clock.PauseAtAsync("2020-02-02");
     /// </code>
+    /// <para>
+    /// For best results, install the clock before navigating the page and set it to a time
+    /// slightly before the intended test time. This ensures that all timers run normally
+    /// during page loading, preventing the page from getting stuck. Once the page has fully
+    /// loaded, you can safely use <see cref="IClock.PauseAtAsync"/> to pause the clock.
+    /// </para>
     /// </summary>
     /// <param name="time">Time to pause at.</param>
     Task PauseAtAsync(DateTime time);
@@ -168,6 +174,12 @@ public partial interface IClock
     /// await page.Clock.PauseAtAsync(DateTime.Parse("2020-02-02"));<br/>
     /// await page.Clock.PauseAtAsync("2020-02-02");
     /// </code>
+    /// <para>
+    /// For best results, install the clock before navigating the page and set it to a time
+    /// slightly before the intended test time. This ensures that all timers run normally
+    /// during page loading, preventing the page from getting stuck. Once the page has fully
+    /// loaded, you can safely use <see cref="IClock.PauseAtAsync"/> to pause the clock.
+    /// </para>
     /// </summary>
     /// <param name="time">Time to pause at.</param>
     Task PauseAtAsync(string time);

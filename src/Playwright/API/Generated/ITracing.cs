@@ -130,10 +130,10 @@ public partial interface ITracing
     /// <code>
     /// // All actions between GroupAsync and GroupEndAsync<br/>
     /// // will be shown in the trace viewer as a group.<br/>
-    /// await Page.Context().Tracing.GroupAsync("Open Playwright.dev &gt; API");<br/>
+    /// await Page.Context.Tracing.GroupAsync("Open Playwright.dev &gt; API");<br/>
     /// await Page.GotoAsync("https://playwright.dev/");<br/>
     /// await Page.GetByRole(AriaRole.Link, new() { Name = "API" }).ClickAsync();<br/>
-    /// await Page.Context().Tracing.GroupEndAsync();
+    /// await Page.Context.Tracing.GroupEndAsync();
     /// </code>
     /// </summary>
     /// <remarks><para>Use <c>test.step</c> instead when available.</para></remarks>

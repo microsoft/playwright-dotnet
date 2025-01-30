@@ -436,11 +436,12 @@ public partial interface IBrowserContext
     /// </para>
     /// </summary>
     /// <param name="permissions">
-    /// A permission or an array of permissions to grant. Permissions can be one of the
-    /// following values:
+    /// A list of permissions to grant.
+    /// Supported permissions differ between browsers, and even between different versions
+    /// of the same browser. Any permission may stop working after an update.
+    /// Here are some permissions that may be supported by some browsers:
     /// <list type="bullet">
     /// <item><description><c>'accelerometer'</c></description></item>
-    /// <item><description><c>'accessibility-events'</c></description></item>
     /// <item><description><c>'ambient-light-sensor'</c></description></item>
     /// <item><description><c>'background-sync'</c></description></item>
     /// <item><description><c>'camera'</c></description></item>
@@ -862,7 +863,7 @@ public partial interface IBrowserContext
     /// <see cref="IBrowserContext.SetDefaultTimeout"/>.
     /// </para>
     /// </remarks>
-    /// <param name="timeout">Maximum time in milliseconds</param>
+    /// <param name="timeout">Maximum time in milliseconds. Pass <c>0</c> to disable timeout.</param>
     void SetDefaultTimeout(float timeout);
 
     /// <summary>

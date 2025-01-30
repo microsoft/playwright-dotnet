@@ -28,40 +28,29 @@ using System.Text.Json.Serialization;
 
 namespace Microsoft.Playwright;
 
-public class LocatorAssertionsToBeCheckedOptions
+public class LocatorAssertionsToHaveAccessibleErrorMessageOptions
 {
-    public LocatorAssertionsToBeCheckedOptions() { }
+    public LocatorAssertionsToHaveAccessibleErrorMessageOptions() { }
 
-    public LocatorAssertionsToBeCheckedOptions(LocatorAssertionsToBeCheckedOptions clone)
+    public LocatorAssertionsToHaveAccessibleErrorMessageOptions(LocatorAssertionsToHaveAccessibleErrorMessageOptions clone)
     {
         if (clone == null)
         {
             return;
         }
 
-        Checked = clone.Checked;
-        Indeterminate = clone.Indeterminate;
+        IgnoreCase = clone.IgnoreCase;
         Timeout = clone.Timeout;
     }
 
     /// <summary>
     /// <para>
-    /// Provides state to assert for. Asserts for input to be checked by default. This option
-    /// can't be used when <see cref="ILocatorAssertions.ToBeCheckedAsync"/> is set to true.
+    /// Whether to perform case-insensitive match. <see cref="ILocatorAssertions.ToHaveAccessibleErrorMessageAsync"/>
+    /// option takes precedence over the corresponding regular expression flag if specified.
     /// </para>
     /// </summary>
-    [JsonPropertyName("checked")]
-    public bool? Checked { get; set; }
-
-    /// <summary>
-    /// <para>
-    /// Asserts that the element is in the indeterminate (mixed) state. Only supported for
-    /// checkboxes and radio buttons. This option can't be true when <see cref="ILocatorAssertions.ToBeCheckedAsync"/>
-    /// is provided.
-    /// </para>
-    /// </summary>
-    [JsonPropertyName("indeterminate")]
-    public bool? Indeterminate { get; set; }
+    [JsonPropertyName("ignoreCase")]
+    public bool? IgnoreCase { get; set; }
 
     /// <summary><para>Time to retry the assertion for in milliseconds. Defaults to <c>5000</c>.</para></summary>
     [JsonPropertyName("timeout")]

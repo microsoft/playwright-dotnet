@@ -135,7 +135,7 @@ public partial interface ILocatorAssertions
     /// <para>**Usage**</para>
     /// <code>
     /// var locator = Page.Locator("button.submit");<br/>
-    /// await Expect(locator).toBeEnabledAsync();
+    /// await Expect(locator).ToBeEnabledAsync();
     /// </code>
     /// </summary>
     /// <param name="options">Call options</param>
@@ -400,7 +400,7 @@ public partial interface ILocatorAssertions
     /// <para>**Usage**</para>
     /// <code>
     /// var locator = Page.GetByTestId("save-button");<br/>
-    /// await Expect(locator).toHaveAccessibleDescriptionAsync("Save results to disk");
+    /// await Expect(locator).ToHaveAccessibleDescriptionAsync("Save results to disk");
     /// </code>
     /// </summary>
     /// <param name="description">Expected accessible description.</param>
@@ -415,12 +415,42 @@ public partial interface ILocatorAssertions
     /// <para>**Usage**</para>
     /// <code>
     /// var locator = Page.GetByTestId("save-button");<br/>
-    /// await Expect(locator).toHaveAccessibleDescriptionAsync("Save results to disk");
+    /// await Expect(locator).ToHaveAccessibleDescriptionAsync("Save results to disk");
     /// </code>
     /// </summary>
     /// <param name="description">Expected accessible description.</param>
     /// <param name="options">Call options</param>
     Task ToHaveAccessibleDescriptionAsync(Regex description, LocatorAssertionsToHaveAccessibleDescriptionOptions? options = default);
+
+    /// <summary>
+    /// <para>
+    /// Ensures the <see cref="ILocator"/> points to an element with a given <a href="https://w3c.github.io/aria/#aria-errormessage">aria
+    /// errormessage</a>.
+    /// </para>
+    /// <para>**Usage**</para>
+    /// <code>
+    /// var locator = Page.GetByTestId("username-input");<br/>
+    /// await Expect(locator).ToHaveAccessibleErrorMessageAsync("Username is required.");
+    /// </code>
+    /// </summary>
+    /// <param name="errorMessage">Expected accessible error message.</param>
+    /// <param name="options">Call options</param>
+    Task ToHaveAccessibleErrorMessageAsync(string errorMessage, LocatorAssertionsToHaveAccessibleErrorMessageOptions? options = default);
+
+    /// <summary>
+    /// <para>
+    /// Ensures the <see cref="ILocator"/> points to an element with a given <a href="https://w3c.github.io/aria/#aria-errormessage">aria
+    /// errormessage</a>.
+    /// </para>
+    /// <para>**Usage**</para>
+    /// <code>
+    /// var locator = Page.GetByTestId("username-input");<br/>
+    /// await Expect(locator).ToHaveAccessibleErrorMessageAsync("Username is required.");
+    /// </code>
+    /// </summary>
+    /// <param name="errorMessage">Expected accessible error message.</param>
+    /// <param name="options">Call options</param>
+    Task ToHaveAccessibleErrorMessageAsync(Regex errorMessage, LocatorAssertionsToHaveAccessibleErrorMessageOptions? options = default);
 
     /// <summary>
     /// <para>
@@ -430,7 +460,7 @@ public partial interface ILocatorAssertions
     /// <para>**Usage**</para>
     /// <code>
     /// var locator = Page.GetByTestId("save-button");<br/>
-    /// await Expect(locator).toHaveAccessibleNameAsync("Save to disk");
+    /// await Expect(locator).ToHaveAccessibleNameAsync("Save to disk");
     /// </code>
     /// </summary>
     /// <param name="name">Expected accessible name.</param>
@@ -445,7 +475,7 @@ public partial interface ILocatorAssertions
     /// <para>**Usage**</para>
     /// <code>
     /// var locator = Page.GetByTestId("save-button");<br/>
-    /// await Expect(locator).toHaveAccessibleNameAsync("Save to disk");
+    /// await Expect(locator).ToHaveAccessibleNameAsync("Save to disk");
     /// </code>
     /// </summary>
     /// <param name="name">Expected accessible name.</param>
@@ -481,17 +511,19 @@ public partial interface ILocatorAssertions
     /// <summary>
     /// <para>
     /// Ensures the <see cref="ILocator"/> points to an element with given CSS classes.
-    /// This needs to be a full match or using a relaxed regular expression.
+    /// When a string is provided, it must fully match the element's <c>class</c> attribute.
+    /// To match individual classes or perform partial matches, use a regular expression:
     /// </para>
     /// <para>**Usage**</para>
     /// <code>
     /// var locator = Page.Locator("#component");<br/>
-    /// await Expect(locator).ToHaveClassAsync(new Regex("selected"));<br/>
-    /// await Expect(locator).ToHaveClassAsync("selected row");
+    /// await Expect(locator).ToHaveClassAsync(new Regex("(^|\\s)selected(\\s|$)"));<br/>
+    /// await Expect(locator).ToHaveClassAsync("middle selected row");
     /// </code>
     /// <para>
-    /// Note that if array is passed as an expected value, entire lists of elements can
-    /// be asserted:
+    /// When an array is passed, the method asserts that the list of elements located matches
+    /// the corresponding list of expected class values. Each element's class attribute
+    /// is matched against the corresponding string or regular expression in the array:
     /// </para>
     /// <code>
     /// var locator = Page.Locator("list &gt; .component");<br/>
@@ -505,17 +537,19 @@ public partial interface ILocatorAssertions
     /// <summary>
     /// <para>
     /// Ensures the <see cref="ILocator"/> points to an element with given CSS classes.
-    /// This needs to be a full match or using a relaxed regular expression.
+    /// When a string is provided, it must fully match the element's <c>class</c> attribute.
+    /// To match individual classes or perform partial matches, use a regular expression:
     /// </para>
     /// <para>**Usage**</para>
     /// <code>
     /// var locator = Page.Locator("#component");<br/>
-    /// await Expect(locator).ToHaveClassAsync(new Regex("selected"));<br/>
-    /// await Expect(locator).ToHaveClassAsync("selected row");
+    /// await Expect(locator).ToHaveClassAsync(new Regex("(^|\\s)selected(\\s|$)"));<br/>
+    /// await Expect(locator).ToHaveClassAsync("middle selected row");
     /// </code>
     /// <para>
-    /// Note that if array is passed as an expected value, entire lists of elements can
-    /// be asserted:
+    /// When an array is passed, the method asserts that the list of elements located matches
+    /// the corresponding list of expected class values. Each element's class attribute
+    /// is matched against the corresponding string or regular expression in the array:
     /// </para>
     /// <code>
     /// var locator = Page.Locator("list &gt; .component");<br/>
@@ -529,17 +563,19 @@ public partial interface ILocatorAssertions
     /// <summary>
     /// <para>
     /// Ensures the <see cref="ILocator"/> points to an element with given CSS classes.
-    /// This needs to be a full match or using a relaxed regular expression.
+    /// When a string is provided, it must fully match the element's <c>class</c> attribute.
+    /// To match individual classes or perform partial matches, use a regular expression:
     /// </para>
     /// <para>**Usage**</para>
     /// <code>
     /// var locator = Page.Locator("#component");<br/>
-    /// await Expect(locator).ToHaveClassAsync(new Regex("selected"));<br/>
-    /// await Expect(locator).ToHaveClassAsync("selected row");
+    /// await Expect(locator).ToHaveClassAsync(new Regex("(^|\\s)selected(\\s|$)"));<br/>
+    /// await Expect(locator).ToHaveClassAsync("middle selected row");
     /// </code>
     /// <para>
-    /// Note that if array is passed as an expected value, entire lists of elements can
-    /// be asserted:
+    /// When an array is passed, the method asserts that the list of elements located matches
+    /// the corresponding list of expected class values. Each element's class attribute
+    /// is matched against the corresponding string or regular expression in the array:
     /// </para>
     /// <code>
     /// var locator = Page.Locator("list &gt; .component");<br/>
@@ -553,17 +589,19 @@ public partial interface ILocatorAssertions
     /// <summary>
     /// <para>
     /// Ensures the <see cref="ILocator"/> points to an element with given CSS classes.
-    /// This needs to be a full match or using a relaxed regular expression.
+    /// When a string is provided, it must fully match the element's <c>class</c> attribute.
+    /// To match individual classes or perform partial matches, use a regular expression:
     /// </para>
     /// <para>**Usage**</para>
     /// <code>
     /// var locator = Page.Locator("#component");<br/>
-    /// await Expect(locator).ToHaveClassAsync(new Regex("selected"));<br/>
-    /// await Expect(locator).ToHaveClassAsync("selected row");
+    /// await Expect(locator).ToHaveClassAsync(new Regex("(^|\\s)selected(\\s|$)"));<br/>
+    /// await Expect(locator).ToHaveClassAsync("middle selected row");
     /// </code>
     /// <para>
-    /// Note that if array is passed as an expected value, entire lists of elements can
-    /// be asserted:
+    /// When an array is passed, the method asserts that the list of elements located matches
+    /// the corresponding list of expected class values. Each element's class attribute
+    /// is matched against the corresponding string or regular expression in the array:
     /// </para>
     /// <code>
     /// var locator = Page.Locator("list &gt; .component");<br/>
