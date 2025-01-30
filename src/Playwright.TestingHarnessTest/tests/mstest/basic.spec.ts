@@ -26,6 +26,8 @@ import http from 'http';
 import { test, expect } from '../baseTest';
 import httpProxy from 'http-proxy';
 
+test.use({ testMode: 'mstest' });
+
 test('should be able to forward DEBUG=pw:api env var', async ({ runTest }) => {
   const result = await runTest({
     'ExampleTests.cs': `
