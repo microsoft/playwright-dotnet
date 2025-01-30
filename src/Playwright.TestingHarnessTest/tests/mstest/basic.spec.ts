@@ -24,7 +24,6 @@
 
 import http from 'http';
 import { test, expect } from '../baseTest';
-import httpProxy from 'http-proxy';
 
 test.use({ testMode: 'mstest' });
 
@@ -225,27 +224,7 @@ test('should be able to parse BrowserName and LaunchOptions.Headless from runset
   expect(result.stdout).not.toContain("Headless")
 });
 
-test('should be able to parse LaunchOptions.Proxy from runsettings', async ({ runTest }) => {
-  const httpServer = http.createServer((req, res) => {
-    res.end('hello world!')
-  }).listen(3129);
-  const proxyServer = httpProxy.createProxyServer({
-    auth: 'user:pwd',
-    target: 'http://localhost:3129',
-  }).listen(3128);
-
-  const waitForProxyRequest = new Promise<[string, string]>((resolve) => {
-    proxyServer.on('proxyReq', (proxyReq, req, res, options) => {
-      if (req.url.includes('google.com')) // Telemetry requests.
-      {
-        return;
-      }
-      const authHeader = proxyReq.getHeader('authorization') as string;
-      const auth = Buffer.from(authHeader.split(' ')[1], 'base64').toString();
-      resolve([req.url, auth]);
-    });
-  })
-
+test('should be able to parse LaunchOptions.Proxy from runsettings', async ({ runTest, proxyServer }) => {
   const result = await runTest({
     'ExampleTests.cs': `
       using System;
@@ -273,7 +252,7 @@ test('should be able to parse LaunchOptions.Proxy from runsettings', async ({ ru
                 <LaunchOptions>
                     <Headless>false</Headless>
                     <Proxy>
-                        <Server>http://127.0.0.1:3128</Server>
+                        <Server>${proxyServer.listenAddr()}</Server>
                         <Username>user</Username>
                         <Password>pwd</Password>
                     </Proxy>
@@ -288,12 +267,9 @@ test('should be able to parse LaunchOptions.Proxy from runsettings', async ({ ru
 
   expect(result.stdout).not.toContain("Headless");
 
-  const [url, auth] = await waitForProxyRequest;
+  const { url, auth } = proxyServer.requests.find(r => r.url === 'http://example.com/')!;;
   expect(url).toBe('http://example.com/');
   expect(auth).toBe('user:pwd');
-
-  proxyServer.close();
-  httpServer.close();
 });
 
 test('should be able to parse LaunchOptions.Args from runsettings', async ({ runTest }) => {
