@@ -46,13 +46,14 @@ internal class LocatorAssertions : AssertionsBase, ILocatorAssertions
 
     public Task ToBeCheckedAsync(LocatorAssertionsToBeCheckedOptions options = null)
     {
-        var expectedValue = new Dictionary<string, object>
-        {
-            ["indeterminate"] = options?.Indeterminate,
-        };
+        var expectedValue = new Dictionary<string, object>();
         if (options?.Checked != null)
         {
             expectedValue["checked"] = options.Checked;
+        }
+        if (options?.Indeterminate != null)
+        {
+            expectedValue["indeterminate"] = options.Indeterminate;
         }
         var frameExpectedOptions = ConvertToFrameExpectOptions(options) ?? new();
         frameExpectedOptions.ExpectedValue = ScriptsHelper.SerializedArgument(expectedValue);
