@@ -42,20 +42,20 @@ internal class BrowserService : IWorkerService
         Browser = browser;
     }
 
-    public static Task<BrowserService> Register(WorkerAwareTest test, IBrowserType browserType, PlaywrightConnectOptions? connectOptions)
+    public static Task<BrowserService> Register(WorkerAwareTest test, IBrowserType browserType, (string, BrowserTypeConnectOptions?)? connectOptions)
     {
         return test.RegisterService("Browser", async () => new BrowserService(await CreateBrowser(browserType, connectOptions).ConfigureAwait(false)));
     }
 
-    private static async Task<IBrowser> CreateBrowser(IBrowserType browserType, PlaywrightConnectOptions? connectOptions)
+    private static async Task<IBrowser> CreateBrowser(IBrowserType browserType, (string WSEndpoint, BrowserTypeConnectOptions? Options)? connectOptions)
     {
-        if (connectOptions != null)
+        if (connectOptions.HasValue && connectOptions.Value.WSEndpoint != null)
         {
-            var options = new BrowserTypeConnectOptions(connectOptions);
+            var options = new BrowserTypeConnectOptions(connectOptions?.Options ?? new());
             var headers = options.Headers?.ToDictionary(kvp => kvp.Key, kvp => kvp.Value) ?? [];
             headers.Add("x-playwright-launch-options", JsonSerializer.Serialize(PlaywrightSettingsProvider.LaunchOptions, new JsonSerializerOptions() { DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull }));
             options.Headers = headers;
-            return await browserType.ConnectAsync(connectOptions.WSEndpoint, options).ConfigureAwait(false);
+            return await browserType.ConnectAsync(connectOptions!.Value.WSEndpoint, options).ConfigureAwait(false);
         }
 
         var legacyBrowser = await ConnectBasedOnEnv(browserType);

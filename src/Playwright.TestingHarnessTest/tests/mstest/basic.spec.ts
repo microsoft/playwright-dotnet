@@ -496,6 +496,7 @@ test.describe('ConnectOptions', () => {
   const ExampleTestWithConnectOptions = `
     using System;
     using System.Threading.Tasks;
+    using Microsoft.Playwright;
     using Microsoft.Playwright.MSTest;
     using Microsoft.VisualStudio.TestTools.UnitTesting;
 
@@ -509,11 +510,9 @@ test.describe('ConnectOptions', () => {
         {
             await Page.GotoAsync("about:blank");
         }
-        public override PlaywrightConnectOptions ConnectOptions()
+        public override async Task<(string, BrowserTypeConnectOptions)?> ConnectOptionsAsync()
         {
-            return new() {
-                WSEndpoint = "http://127.0.0.1:1234",
-            };
+            return ("http://127.0.0.1:1234", null);
         }
   }`;
 

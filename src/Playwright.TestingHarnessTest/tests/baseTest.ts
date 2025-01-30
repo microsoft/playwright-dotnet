@@ -38,7 +38,7 @@ export const test = base.extend<{
     for (const server of servers)
       await server.close();
   },
-  runTest: async ({ }, use, testInfo) => {
+  runTest: async ({ testMode }, use, testInfo) => {
     const testResults: RunResult[] = [];
     await use(async (files, command, env) => {
       const testDir = testInfo.outputPath();
