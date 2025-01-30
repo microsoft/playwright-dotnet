@@ -73,9 +73,10 @@ public partial interface IBrowser
     /// browser and disconnects from the browser server.
     /// </para>
     /// <para>
-    /// This is similar to force quitting the browser. Therefore, you should call <see cref="IBrowserContext.CloseAsync"/>
-    /// on any <see cref="IBrowserContext"/>'s you explicitly created earlier with <see
-    /// cref="IBrowser.NewContextAsync"/> **before** calling <see cref="IBrowser.CloseAsync"/>.
+    /// This is similar to force-quitting the browser. To close pages gracefully and ensure
+    /// you receive page close events, call <see cref="IBrowserContext.CloseAsync"/> on
+    /// any <see cref="IBrowserContext"/> instances you explicitly created earlier using
+    /// <see cref="IBrowser.NewContextAsync"/> **before** calling <see cref="IBrowser.CloseAsync"/>.
     /// </para>
     /// <para>
     /// The <see cref="IBrowser"/> object itself is considered to be disposed and cannot
@@ -84,9 +85,10 @@ public partial interface IBrowser
     /// </summary>
     /// <remarks>
     /// <para>
-    /// This is similar to force quitting the browser. Therefore, you should call <see cref="IBrowserContext.CloseAsync"/>
-    /// on any <see cref="IBrowserContext"/>'s you explicitly created earlier with <see
-    /// cref="IBrowser.NewContextAsync"/> **before** calling <see cref="IBrowser.CloseAsync"/>.
+    /// This is similar to force-quitting the browser. To close pages gracefully and ensure
+    /// you receive page close events, call <see cref="IBrowserContext.CloseAsync"/> on
+    /// any <see cref="IBrowserContext"/> instances you explicitly created earlier using
+    /// <see cref="IBrowser.NewContextAsync"/> **before** calling <see cref="IBrowser.CloseAsync"/>.
     ///
     /// </para>
     /// </remarks>

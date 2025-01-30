@@ -43,6 +43,7 @@ internal class Response : ChannelOwner, IResponse
 
     internal Response(ChannelOwner parent, string guid, ResponseInitializer initializer) : base(parent, guid)
     {
+        MarkAsInternalType();
         _initializer = initializer;
         _initializer.Request.Timing = _initializer.Timing;
         _finishedTask = new();

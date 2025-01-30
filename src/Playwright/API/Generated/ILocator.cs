@@ -1033,7 +1033,12 @@ public partial interface ILocator
     Task<bool> IsDisabledAsync(LocatorIsDisabledOptions? options = default);
 
     /// <summary>
-    /// <para>Returns whether the element is <a href="https://playwright.dev/dotnet/docs/actionability#editable">editable</a>.</para>
+    /// <para>
+    /// Returns whether the element is <a href="https://playwright.dev/dotnet/docs/actionability#editable">editable</a>.
+    /// If the target element is not an <c>&lt;input&gt;</c>, <c>&lt;textarea&gt;</c>, <c>&lt;select&gt;</c>,
+    /// <c>[contenteditable]</c> and does not have a role allowing <c>[aria-readonly]</c>,
+    /// this method throws an error.
+    /// </para>
     /// <para>
     /// If you need to assert that an element is editable, prefer <see cref="ILocatorAssertions.ToBeEditableAsync"/>
     /// to avoid flakiness. See <a href="https://playwright.dev/dotnet/docs/test-assertions">assertions
@@ -1157,8 +1162,8 @@ public partial interface ILocator
     /// <para>Creates a locator matching all elements that match one or both of the two locators.</para>
     /// <para>
     /// Note that when both locators match something, the resulting locator will have multiple
-    /// matches and violate <a href="https://playwright.dev/dotnet/docs/locators#strictness">locator
-    /// strictness</a> guidelines.
+    /// matches, potentially causing a <a href="https://playwright.dev/dotnet/docs/locators#strictness">locator
+    /// strictness</a> violation.
     /// </para>
     /// <para>**Usage**</para>
     /// <para>
@@ -1166,15 +1171,29 @@ public partial interface ILocator
     /// a security settings dialog shows up instead. In this case, you can wait for either
     /// a "New email" button, or a dialog and act accordingly.
     /// </para>
+    /// <para>
+    /// If both "New email" button and security dialog appear on screen, the "or" locator
+    /// will match both of them, possibly throwing the <a href="https://playwright.dev/dotnet/docs/locators#strictness">"strict
+    /// mode violation" error</a>. In this case, you can use <see cref="ILocator.First"/>
+    /// to only match one of them.
+    /// </para>
     /// <code>
     /// var newEmail = page.GetByRole(AriaRole.Button, new() { Name = "New" });<br/>
     /// var dialog = page.GetByText("Confirm security settings");<br/>
-    /// await Expect(newEmail.Or(dialog)).ToBeVisibleAsync();<br/>
+    /// await Expect(newEmail.Or(dialog).First).ToBeVisibleAsync();<br/>
     /// if (await dialog.IsVisibleAsync())<br/>
     ///   await page.GetByRole(AriaRole.Button, new() { Name = "Dismiss" }).ClickAsync();<br/>
     /// await newEmail.ClickAsync();
     /// </code>
     /// </summary>
+    /// <remarks>
+    /// <para>
+    /// If both "New email" button and security dialog appear on screen, the "or" locator
+    /// will match both of them, possibly throwing the <a href="https://playwright.dev/dotnet/docs/locators#strictness">"strict
+    /// mode violation" error</a>. In this case, you can use <see cref="ILocator.First"/>
+    /// to only match one of them.
+    /// </para>
+    /// </remarks>
     /// <param name="locator">Alternative locator to match.</param>
     ILocator Or(ILocator locator);
 

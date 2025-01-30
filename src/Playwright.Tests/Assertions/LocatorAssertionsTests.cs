@@ -47,6 +47,32 @@ public class LocatorAssertionsTests : PageTestEx
         StringAssert.Contains("LocatorAssertions.ToBeCheckedAsync with timeout 300ms", exception.Message);
     }
 
+    [PlaywrightTest("tests/page/expect-boolean.spec.ts", "with indeterminate:true")]
+    public async Task WithIndeterminateTrue()
+    {
+        await Page.SetContentAsync("<input type=checkbox></input>");
+        await Page.Locator("input").EvaluateAsync("e => e.indeterminate = true");
+        await Expect(Page.Locator("input")).ToBeCheckedAsync(new() { Indeterminate = true });
+    }
+
+    [PlaywrightTest("tests/page/expect-boolean.spec.ts", "with indeterminate:true and checked")]
+    public async Task WithIndeterminateTrueAndChecked()
+    {
+        await Page.SetContentAsync("<input type=checkbox></input>");
+        await Page.Locator("input").EvaluateAsync("e => e.indeterminate = true");
+        var exception = await PlaywrightAssert.ThrowsAsync<PlaywrightException>(() => Expect(Page.Locator("input")).ToBeCheckedAsync(new() { Indeterminate = true, Checked = false }));
+        StringAssert.Contains("Can't assert indeterminate and checked at the same time", exception.Message);
+    }
+
+    [PlaywrightTest("tests/page/expect-boolean.spec.ts", "fail with indeterminate: true")]
+    public async Task FailWithIndeterminateTrue()
+    {
+        await Page.SetContentAsync("<input type=checkbox></input>");
+        var locator = Page.Locator("input");
+        var exception = await PlaywrightAssert.ThrowsAsync<PlaywrightException>(() => Expect(locator).ToBeCheckedAsync(new() { Indeterminate = true, Timeout = 1000 }));
+        StringAssert.Contains("LocatorAssertions.ToBeCheckedAsync with timeout 1000ms", exception.Message);
+    }
+
     [PlaywrightTest("playwright-test/playwright.expect.spec.ts", "should be able to set default timeout")]
     public async Task ShouldBeAbleToSetDefaultTimeout()
     {
@@ -718,6 +744,43 @@ public class LocatorAssertionsTests : PageTestEx
         await Expect(Page.Locator("div")).ToHaveAccessibleDescriptionAsync(new Regex(@"ell\w"));
         await Expect(Page.Locator("div")).Not.ToHaveAccessibleDescriptionAsync(new Regex("hello"));
         await Expect(Page.Locator("div")).ToHaveAccessibleDescriptionAsync(new Regex("hello"), new() { IgnoreCase = true });
+    }
+
+    [PlaywrightTest("page/expect-misc.spec.ts", "toHaveAccessibleErrorMessage")]
+    public async Task ToHaveAccessibleErrorMessage()
+    {
+        await Page.SetContentAsync(@"
+            <form>
+                <input role=""textbox"" aria-invalid=""true"" aria-errormessage=""error-message"" />
+                <div id=""error-message"">Hello</div>
+                <div id=""irrelevant-error"">This should not be considered.</div>
+            </form>");
+        var locator = Page.Locator("input[role=\"textbox\"]");
+        await Expect(locator).ToHaveAccessibleErrorMessageAsync("Hello");
+        await Expect(locator).Not.ToHaveAccessibleErrorMessageAsync("hello");
+        await Expect(locator).ToHaveAccessibleErrorMessageAsync("hello", new() { IgnoreCase = true });
+        await Expect(locator).ToHaveAccessibleErrorMessageAsync(new Regex(@"ell\w"));
+        await Expect(locator).Not.ToHaveAccessibleErrorMessageAsync(new Regex("hello"));
+        await Expect(locator).ToHaveAccessibleErrorMessageAsync(new Regex("hello"), new() { IgnoreCase = true });
+        await Expect(locator).Not.ToHaveAccessibleErrorMessageAsync("This should not be considered.");
+    }
+
+
+    [PlaywrightTest("page/expect-misc.spec.ts", "toHaveAccessibleErrorMessage should handle multiple aria-errormessage reference")]
+    public async Task ToHaveAccessibleErrorMessageShouldHandleMultipleAriaErrormessageReference()
+    {
+        await Page.SetContentAsync(@"
+        <form>
+            <input role=""textbox"" aria-invalid=""true"" aria-errormessage=""error1 error2"" />
+            <div id=""error1"">First error message.</div>
+            <div id=""error2"">Second error message.</div>
+            <div id=""irrelevant-error"">This should not be considered.</div>
+        </form>");
+        var locator = Page.Locator("input[role=\"textbox\"]");
+        await Expect(locator).ToHaveAccessibleErrorMessageAsync("First error message. Second error message.");
+        await Expect(locator).ToHaveAccessibleErrorMessageAsync(new Regex("first error message.", RegexOptions.IgnoreCase));
+        await Expect(locator).ToHaveAccessibleErrorMessageAsync(new Regex("second error message.", RegexOptions.IgnoreCase));
+        await Expect(locator).Not.ToHaveAccessibleErrorMessageAsync(new Regex("This should not be considered.", RegexOptions.IgnoreCase));
     }
 
     [PlaywrightTest("page/expect-misc.spec.ts", "toHaveRole")]

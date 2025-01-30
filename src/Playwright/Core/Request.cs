@@ -45,6 +45,7 @@ internal class Request : ChannelOwner, IRequest
 
     internal Request(ChannelOwner parent, string guid, RequestInitializer initializer) : base(parent, guid)
     {
+        MarkAsInternalType();
         _initializer = initializer;
         RedirectedFrom = _initializer.RedirectedFrom;
         Timing = new();

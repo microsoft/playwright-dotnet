@@ -77,10 +77,14 @@ public class BrowserTypeLaunchOptions
     public IEnumerable<string>? Args { get; set; }
 
     /// <summary>
+    /// <para>Browser distribution channel.</para>
     /// <para>
-    /// Browser distribution channel.  Supported values are "chrome", "chrome-beta", "chrome-dev",
-    /// "chrome-canary", "msedge", "msedge-beta", "msedge-dev", "msedge-canary". Read more
-    /// about using <a href="https://playwright.dev/dotnet/docs/browsers#google-chrome--microsoft-edge">Google
+    /// Use "chromium" to <a href="https://playwright.dev/dotnet/docs/browsers#chromium-new-headless-mode">opt
+    /// in to new headless mode</a>.
+    /// </para>
+    /// <para>
+    /// Use "chrome", "chrome-beta", "chrome-dev", "chrome-canary", "msedge", "msedge-beta",
+    /// "msedge-dev", or "msedge-canary" to use branded <a href="https://playwright.dev/dotnet/docs/browsers#google-chrome--microsoft-edge">Google
     /// Chrome and Microsoft Edge</a>.
     /// </para>
     /// </summary>

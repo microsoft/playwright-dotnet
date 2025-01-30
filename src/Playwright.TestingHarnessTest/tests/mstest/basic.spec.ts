@@ -235,7 +235,11 @@ test('should be able to parse LaunchOptions.Proxy from runsettings', async ({ ru
   }).listen(3128);
 
   const waitForProxyRequest = new Promise<[string, string]>((resolve) => {
-    proxyServer.once('proxyReq', (proxyReq, req, res, options) => {
+    proxyServer.on('proxyReq', (proxyReq, req, res, options) => {
+      if (req.url.includes('google.com')) // Telemetry requests.
+      {
+        return;
+      }
       const authHeader = proxyReq.getHeader('authorization') as string;
       const auth = Buffer.from(authHeader.split(' ')[1], 'base64').toString();
       resolve([req.url, auth]);
