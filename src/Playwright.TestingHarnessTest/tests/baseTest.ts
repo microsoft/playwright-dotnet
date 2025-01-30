@@ -16,9 +16,11 @@ type RunResult = {
 }
 
 export const test = base.extend<{
+  testMode: 'nunit' | 'mstest' | 'xunit';
   runTest: (files: Record<string, string>, command: string, env?: NodeJS.ProcessEnv) => Promise<RunResult>;
 }>({
-  runTest: async ({ }, use, testInfo) => {
+  testMode: null,
+  runTest: async ({ testMode }, use, testInfo) => {
     const testResults: RunResult[] = [];
     await use(async (files, command, env) => {
       const testDir = testInfo.outputPath();
@@ -34,7 +36,9 @@ export const test = base.extend<{
         env: {
           ...process.env,
           ...env,
-          NODE_OPTIONS: undefined
+          NODE_OPTIONS: undefined,
+          TEST_MODE: testMode,
+          PWTEST_TEST_DIR: testDir,
         },
         stdio: 'pipe',
       });
