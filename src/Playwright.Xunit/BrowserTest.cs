@@ -42,7 +42,7 @@ public class BrowserTest : PlaywrightTest
     public override async Task InitializeAsync()
     {
         await base.InitializeAsync().ConfigureAwait(false);
-        var service = await BrowserService.Register(this, BrowserType).ConfigureAwait(false);
+        var service = await BrowserService.Register(this, BrowserType, await ConnectOptionsAsync()).ConfigureAwait(false);
         Browser = service.Browser;
     }
 
@@ -59,4 +59,6 @@ public class BrowserTest : PlaywrightTest
         Browser = null!;
         await base.DisposeAsync().ConfigureAwait(false);
     }
+
+    public virtual Task<(string, BrowserTypeConnectOptions?)?> ConnectOptionsAsync() => Task.FromResult<(string, BrowserTypeConnectOptions?)?>(null);
 }
