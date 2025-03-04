@@ -40,6 +40,7 @@ public class PageEmulateMediaOptions
         }
 
         ColorScheme = clone.ColorScheme;
+        Contrast = clone.Contrast;
         ForcedColors = clone.ForcedColors;
         Media = clone.Media;
         ReducedMotion = clone.ReducedMotion;
@@ -54,6 +55,9 @@ public class PageEmulateMediaOptions
     /// </summary>
     [JsonPropertyName("colorScheme")]
     public ColorScheme? ColorScheme { get; set; }
+
+    [JsonPropertyName("contrast")]
+    public Contrast? Contrast { get; set; }
 
     [JsonPropertyName("forcedColors")]
     public ForcedColors? ForcedColors { get; set; }

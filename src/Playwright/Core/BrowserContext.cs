@@ -539,7 +539,12 @@ internal class BrowserContext : ChannelOwner, IBrowserContext
     public async Task<string> StorageStateAsync(BrowserContextStorageStateOptions options = default)
     {
         string state = JsonSerializer.Serialize(
-            await SendMessageToServerAsync<object>("storageState").ConfigureAwait(false),
+            await SendMessageToServerAsync<object>(
+                "storageState",
+                new Dictionary<string, object>
+                {
+                    ["indexedDB"] = options?.IndexedDB,
+                }).ConfigureAwait(false),
             JsonExtensions.DefaultJsonSerializerOptions);
 
         if (!string.IsNullOrEmpty(options?.Path))

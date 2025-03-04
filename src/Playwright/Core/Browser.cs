@@ -121,6 +121,7 @@ internal class Browser : ChannelOwner, IBrowser
             ["colorScheme"] = options.ColorScheme == ColorScheme.Null ? "no-override" : options.ColorScheme,
             ["reducedMotion"] = options.ReducedMotion == ReducedMotion.Null ? "no-override" : options.ReducedMotion,
             ["forcedColors"] = options.ForcedColors == ForcedColors.Null ? "no-override" : options.ForcedColors,
+            ["contrast"] = options.Contrast == Contrast.Null ? "no-override" : options.Contrast,
             ["extraHTTPHeaders"] = options.ExtraHTTPHeaders?.Select(kv => new HeaderEntry { Name = kv.Key, Value = kv.Value }).ToArray(),
             ["recordHar"] = PrepareHarOptions(
                     recordHarContent: options.RecordHarContent,
@@ -201,6 +202,7 @@ internal class Browser : ChannelOwner, IBrowser
             ColorScheme = options.ColorScheme,
             ReducedMotion = options.ReducedMotion,
             ForcedColors = options.ForcedColors,
+            Contrast = options.Contrast,
             RecordHarPath = options.RecordHarPath,
             RecordHarContent = options.RecordHarContent,
             RecordHarMode = options.RecordHarMode,

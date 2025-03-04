@@ -48,6 +48,7 @@ public class LocatorFilterOptions
         HasText = clone.HasText;
         HasTextRegex = clone.HasTextRegex;
         HasTextString = clone.HasTextString;
+        Visible = clone.Visible;
     }
 
     /// <summary>
@@ -144,6 +145,10 @@ public class LocatorFilterOptions
     /// </summary>
     [JsonPropertyName("hasTextString")]
     public string? HasTextString { get; set; }
+
+    /// <summary><para>Only matches visible or invisible elements.</para></summary>
+    [JsonPropertyName("visible")]
+    public bool? Visible { get; set; }
 }
 
 #nullable disable

@@ -39,8 +39,13 @@ public class APIRequestContextStorageStateOptions
             return;
         }
 
+        IndexedDB = clone.IndexedDB;
         Path = clone.Path;
     }
+
+    /// <summary><para>Set to <c>true</c> to include IndexedDB in the storage state snapshot.</para></summary>
+    [JsonPropertyName("indexedDB")]
+    public bool? IndexedDB { get; set; }
 
     /// <summary>
     /// <para>

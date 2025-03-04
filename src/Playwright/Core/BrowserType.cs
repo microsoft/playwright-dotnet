@@ -88,7 +88,7 @@ internal class BrowserType : ChannelOwner, IBrowserType
         options ??= new BrowserTypeLaunchPersistentContextOptions();
         var channelArgs = new Dictionary<string, object>
         {
-            ["userDataDir"] = userDataDir,
+            ["userDataDir"] = !string.IsNullOrEmpty(userDataDir) ? System.IO.Path.Combine(Environment.CurrentDirectory, userDataDir) : userDataDir,
             ["headless"] = options.Headless,
             ["channel"] = options.Channel,
             ["executablePath"] = options.ExecutablePath,
@@ -127,6 +127,7 @@ internal class BrowserType : ChannelOwner, IBrowserType
             ["colorScheme"] = options.ColorScheme == ColorScheme.Null ? "no-override" : options.ColorScheme,
             ["reducedMotion"] = options.ReducedMotion == ReducedMotion.Null ? "no-override" : options.ReducedMotion,
             ["forcedColors"] = options.ForcedColors == ForcedColors.Null ? "no-override" : options.ForcedColors,
+            ["contrast"] = options.Contrast == Contrast.Null ? "no-override" : options.Contrast,
             ["recordVideo"] = Browser.GetVideoArgs(options.RecordVideoDir, options.RecordVideoSize),
             ["ignoreDefaultArgs"] = options.IgnoreDefaultArgs,
             ["ignoreAllDefaultArgs"] = options.IgnoreAllDefaultArgs,

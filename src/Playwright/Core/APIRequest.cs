@@ -51,6 +51,7 @@ internal class APIRequest : IAPIRequest
             ["proxy"] = options?.Proxy,
             ["timeout"] = options?.Timeout,
             ["clientCertificates"] = Browser.ToClientCertificatesProtocol(options?.ClientCertificates),
+            ["failOnStatusCode"] = options?.FailOnStatusCode,
         };
         string storageState = options?.StorageState;
         if (!string.IsNullOrEmpty(options?.StorageStatePath))

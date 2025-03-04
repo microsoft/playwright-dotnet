@@ -34,6 +34,11 @@ namespace Microsoft.Playwright;
 /// corner of the viewport. Methods on the touchscreen can only be used in browser contexts
 /// that have been initialized with <c>hasTouch</c> set to true.
 /// </para>
+/// <para>
+/// This class is limited to emulating tap gestures. For examples of other gestures
+/// simulated by manually dispatching touch events, see the <a href="https://playwright.dev/dotnet/docs/touch-events">emulating
+/// legacy touch events</a> page.
+/// </para>
 /// </summary>
 public partial interface ITouchscreen
 {

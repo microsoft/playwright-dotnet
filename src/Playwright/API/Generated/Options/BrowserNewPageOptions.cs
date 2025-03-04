@@ -46,6 +46,7 @@ public class BrowserNewPageOptions
         BypassCSP = clone.BypassCSP;
         ClientCertificates = clone.ClientCertificates;
         ColorScheme = clone.ColorScheme;
+        Contrast = clone.Contrast;
         DeviceScaleFactor = clone.DeviceScaleFactor;
         ExtraHTTPHeaders = clone.ExtraHTTPHeaders;
         ForcedColors = clone.ForcedColors;
@@ -156,6 +157,16 @@ public class BrowserNewPageOptions
     /// </summary>
     [JsonPropertyName("colorScheme")]
     public ColorScheme? ColorScheme { get; set; }
+
+    /// <summary>
+    /// <para>
+    /// Emulates <c>'prefers-contrast'</c> media feature, supported values are <c>'no-preference'</c>,
+    /// <c>'more'</c>. See <see cref="IPage.EmulateMediaAsync"/> for more details. Passing
+    /// <c>'null'</c> resets emulation to system defaults. Defaults to <c>'no-preference'</c>.
+    /// </para>
+    /// </summary>
+    [JsonPropertyName("contrast")]
+    public Contrast? Contrast { get; set; }
 
     /// <summary>
     /// <para>

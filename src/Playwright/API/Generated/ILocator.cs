@@ -476,10 +476,6 @@ public partial interface ILocator
     /// </para>
     /// <para>If <see cref="ILocator.EvaluateAsync"/> throws or rejects, this method throws.</para>
     /// <para>**Usage**</para>
-    /// <code>
-    /// var tweets = page.Locator(".tweet .retweets");<br/>
-    /// Assert.AreEqual("10 retweets", await tweets.EvaluateAsync("node =&gt; node.innerText"));
-    /// </code>
     /// </summary>
     /// <param name="expression">
     /// JavaScript expression to be evaluated in the browser context. If the expression
@@ -1776,7 +1772,11 @@ public partial interface ILocator
     Task SetInputFilesAsync(IEnumerable<FilePayload> files, LocatorSetInputFilesOptions? options = default);
 
     /// <summary>
-    /// <para>Perform a tap gesture on the element matching the locator.</para>
+    /// <para>
+    /// Perform a tap gesture on the element matching the locator. For examples of emulating
+    /// other gestures by manually dispatching touch events, see the <a href="https://playwright.dev/dotnet/docs/touch-events">emulating
+    /// legacy touch events</a> page.
+    /// </para>
     /// <para>**Details**</para>
     /// <para>This method taps the element by performing the following steps:</para>
     /// <list type="ordinal">

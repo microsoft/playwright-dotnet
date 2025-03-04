@@ -49,7 +49,7 @@ public sealed class BrowserContextStorageStateTests : PageTestEx
         string storage = await Context.StorageStateAsync();
 
         // TODO: think about IVT-in the StorageState and serializing
-        string expected = @"{""cookies"":[],""origins"":[{""origin"":""https://www.domain.com"",""localStorage"":[{""name"":""name2"",""value"":""value2""}]},{""origin"":""https://www.example.com"",""localStorage"":[{""name"":""name1"",""value"":""value1""}]}]}";
+        string expected = @"{""cookies"":[],""origins"":[{""origin"":""https://www.domain.com"",""localStorage"":[{""name"":""name2"",""value"":""value2""}],""indexedDB"":[]},{""origin"":""https://www.example.com"",""localStorage"":[{""name"":""name1"",""value"":""value1""}],""indexedDB"":[]}]}";
         Assert.AreEqual(expected, storage);
     }
 
@@ -82,14 +82,30 @@ public sealed class BrowserContextStorageStateTests : PageTestEx
         });
 
         await page1.GotoAsync("https://www.example.com");
-        await page1.EvaluateAsync(@"() =>
+        await page1.EvaluateAsync(@"async () =>
             {
                 localStorage['name1'] = 'value1';
                 document.cookie = 'username=John Doe';
+
+                await new Promise((resolve, reject) => {
+                  const openRequest = indexedDB.open('db', 42);
+                  openRequest.onupgradeneeded = () => {
+                    openRequest.result.createObjectStore('store');
+                  };
+                  openRequest.onsuccess = () => {
+                    const request = openRequest.result.transaction('store', 'readwrite')
+                        .objectStore('store')
+                        .put('foo', 'bar');
+                    request.addEventListener('success', resolve);
+                    request.addEventListener('error', reject);
+                  };
+                });
+
+                return document.cookie;
             }");
         using var tempDir = new TempDirectory();
         string path = Path.Combine(tempDir.Path, "storage-state.json");
-        string storage = await Context.StorageStateAsync(new() { Path = path });
+        string storage = await Context.StorageStateAsync(new() { IndexedDB = true, Path = path });
         Assert.AreEqual(storage, File.ReadAllText(path));
 
         await using var context = await Browser.NewContextAsync(new() { StorageStatePath = path });
@@ -102,6 +118,22 @@ public sealed class BrowserContextStorageStateTests : PageTestEx
         await page2.GotoAsync("https://www.example.com");
         Assert.AreEqual("value1", await page2.EvaluateAsync<string>("localStorage['name1']"));
         Assert.AreEqual("username=John Doe", await page2.EvaluateAsync<string>("document.cookie"));
+
+        var idbValue = await page2.EvaluateAsync<string>(@"
+            () => {
+              return new Promise((resolve, reject) => {
+                const openRequest = indexedDB.open('db', 42);
+                openRequest.addEventListener('success', () => {
+                  const db = openRequest.result;
+                  const transaction = db.transaction('store', 'readonly');
+                  const getRequest = transaction.objectStore('store').get('bar');
+                  getRequest.addEventListener('success', () => resolve(getRequest.result));
+                  getRequest.addEventListener('error', () => reject(getRequest.error));
+                });
+                openRequest.addEventListener('error', () => reject(openRequest.error));
+              });
+            }");
+        Assert.AreEqual("foo", idbValue);
     }
 
     [PlaywrightTest("browsercontext-storage-state.spec.ts", "should capture cookies")]

@@ -924,8 +924,8 @@ public partial interface IBrowserContext
 
     /// <summary>
     /// <para>
-    /// Returns storage state for this browser context, contains current cookies and local
-    /// storage snapshot.
+    /// Returns storage state for this browser context, contains current cookies, local
+    /// storage snapshot and IndexedDB snapshot.
     /// </para>
     /// </summary>
     /// <param name="options">Call options</param>

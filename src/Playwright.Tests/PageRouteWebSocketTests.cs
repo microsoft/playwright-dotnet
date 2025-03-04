@@ -69,8 +69,10 @@ public class PageRouteWebSocketTests : PageTestEx
             {
                 return;
             }
-            Console.WriteLine($"Actual  : {string.Join(", ", result)}");
-            Console.WriteLine($"Expected: {string.Join(", ", expected)}");
+            // uncomment next lines to debug test failures
+            //
+            // Console.WriteLine($"Actual  : {string.Join(", ", result)}");
+            // Console.WriteLine($"Expected: {string.Join(", ", expected)}");
             if (DateTime.Now - start > TimeSpan.FromMilliseconds(maxTimeout))
             {
                 Assert.AreEqual(expected, result);

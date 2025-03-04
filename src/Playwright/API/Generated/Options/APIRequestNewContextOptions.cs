@@ -43,6 +43,7 @@ public class APIRequestNewContextOptions
         BaseURL = clone.BaseURL;
         ClientCertificates = clone.ClientCertificates;
         ExtraHTTPHeaders = clone.ExtraHTTPHeaders;
+        FailOnStatusCode = clone.FailOnStatusCode;
         HttpCredentials = clone.HttpCredentials;
         IgnoreHTTPSErrors = clone.IgnoreHTTPSErrors;
         Proxy = clone.Proxy;
@@ -113,6 +114,15 @@ public class APIRequestNewContextOptions
     /// </summary>
     [JsonPropertyName("extraHTTPHeaders")]
     public IEnumerable<KeyValuePair<string, string>>? ExtraHTTPHeaders { get; set; }
+
+    /// <summary>
+    /// <para>
+    /// Whether to throw on response codes other than 2xx and 3xx. By default response object
+    /// is returned for all status codes.
+    /// </para>
+    /// </summary>
+    [JsonPropertyName("failOnStatusCode")]
+    public bool? FailOnStatusCode { get; set; }
 
     /// <summary>
     /// <para>
