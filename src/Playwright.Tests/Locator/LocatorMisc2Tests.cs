@@ -199,6 +199,15 @@ public class LocatorMisc2Tests : PageTestEx
         await Expect(Page.Locator(".item >> visible=true >> text=data3")).ToHaveTextAsync("visible data3");
     }
 
+    [PlaywrightTest("locator-misc-2.spec.ts", "should support filter(visible)")]
+    public async Task LocatorShouldSupportFilterVisible()
+    {
+        await Page.SetContentAsync("<div><div class='item' style='display: none'>Hidden data0</div><div class='item'>visible data1</div><div class='item' style='display: none'>Hidden data1</div><div class='item'>visible data2</div><div class='item' style='display: none'>Hidden data2</div><div class='item'>visible data3</div></div>");
+        await Expect(Page.Locator(".item").Filter(new() { Visible = true }).Nth(1)).ToHaveTextAsync("visible data2");
+        await Expect(Page.Locator(".item").Filter(new() { Visible = true }).GetByText("data3")).ToHaveTextAsync("visible data3");
+        await Expect(Page.Locator(".item").Filter(new() { Visible = false }).GetByText("data1")).ToHaveTextAsync("Hidden data1");
+    }
+
     [PlaywrightTest("locator-misc-2.spec.ts", "locator.count should work with deleted Map in main world")]
     public async Task LocatorCountShouldWorkWithDeletedMapInMainWorld()
     {

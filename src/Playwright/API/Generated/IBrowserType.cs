@@ -57,13 +57,26 @@ public partial interface IBrowserType
 {
     /// <summary>
     /// <para>
-    /// This method attaches Playwright to an existing browser instance. When connecting
-    /// to another browser launched via <c>BrowserType.launchServer</c> in Node.js, the
-    /// major and minor version needs to match the client version (1.2.3 → is compatible
-    /// with 1.2.x).
+    /// This method attaches Playwright to an existing browser instance created via <c>BrowserType.launchServer</c>
+    /// in Node.js.
+    /// </para>
+    /// <para>
+    /// The major and minor version of the Playwright instance that connects needs to match
+    /// the version of Playwright that launches the browser (1.2.3 → is compatible with
+    /// 1.2.x).
     /// </para>
     /// </summary>
-    /// <param name="wsEndpoint">A browser websocket endpoint to connect to.</param>
+    /// <remarks>
+    /// <para>
+    /// The major and minor version of the Playwright instance that connects needs to match
+    /// the version of Playwright that launches the browser (1.2.3 → is compatible with
+    /// 1.2.x).
+    /// </para>
+    /// </remarks>
+    /// <param name="wsEndpoint">
+    /// A Playwright browser websocket endpoint to connect to. You obtain this endpoint
+    /// via <c>BrowserServer.wsEndpoint</c>.
+    /// </param>
     /// <param name="options">Call options</param>
     Task<IBrowser> ConnectAsync(string wsEndpoint, BrowserTypeConnectOptions? options = default);
 
@@ -77,6 +90,11 @@ public partial interface IBrowserType
     /// Connecting over the Chrome DevTools Protocol is only supported for Chromium-based
     /// browsers.
     /// </para>
+    /// <para>
+    /// This connection is significantly lower fidelity than the Playwright protocol connection
+    /// via <see cref="IBrowserType.ConnectAsync"/>. If you are experiencing issues or attempting
+    /// to use advanced functionality, you probably want to use <see cref="IBrowserType.ConnectAsync"/>.
+    /// </para>
     /// <para>**Usage**</para>
     /// <code>
     /// var browser = await playwright.Chromium.ConnectOverCDPAsync("http://localhost:9222");<br/>
@@ -88,6 +106,12 @@ public partial interface IBrowserType
     /// <para>
     /// Connecting over the Chrome DevTools Protocol is only supported for Chromium-based
     /// browsers.
+    /// </para>
+    /// <para>
+    /// This connection is significantly lower fidelity than the Playwright protocol connection
+    /// via <see cref="IBrowserType.ConnectAsync"/>. If you are experiencing issues or attempting
+    /// to use advanced functionality, you probably want to use <see cref="IBrowserType.ConnectAsync"/>.
+    ///
     /// </para>
     /// </remarks>
     /// <param name="endpointURL">

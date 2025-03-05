@@ -28,7 +28,14 @@ using System;
 
 namespace Microsoft.Playwright;
 
-/// <summary><para>The <see cref="IWebSocket"/> class represents websocket connections in the page.</para></summary>
+/// <summary>
+/// <para>
+/// The <see cref="IWebSocket"/> class represents WebSocket connections within a page.
+/// It provides the ability to inspect and manipulate the data being transmitted and
+/// received.
+/// </para>
+/// <para>If you want to intercept or modify WebSocket frames, consider using <see cref="IWebSocketRoute"/>.</para>
+/// </summary>
 public partial interface IWebSocket
 {
     /// <summary><para>Fired when the websocket closes.</para></summary>

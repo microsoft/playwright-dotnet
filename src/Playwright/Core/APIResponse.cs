@@ -64,12 +64,17 @@ internal class APIResponse : IAPIResponse
     {
         try
         {
-            var response = await _context.SendMessageToServerAsync("fetchResponseBody", new Dictionary<string, object> { ["fetchUid"] = FetchUid() }).ConfigureAwait(false);
-            if (response?.TryGetProperty("binary", out var binary) == true)
-            {
-                return Convert.FromBase64String(binary.ToString());
-            }
-            throw new PlaywrightException("Response has been disposed");
+            return await _context.WrapApiCallAsync(
+                async () =>
+                {
+                    var response = await _context.SendMessageToServerAsync("fetchResponseBody", new Dictionary<string, object> { ["fetchUid"] = FetchUid() }).ConfigureAwait(false);
+                    if (response?.TryGetProperty("binary", out var binary) == true)
+                    {
+                        return Convert.FromBase64String(binary.ToString());
+                    }
+                    throw new PlaywrightException("Response has been disposed");
+                },
+                true).ConfigureAwait(false);
         }
         catch (Exception e) when (DriverMessages.IsTargetClosedError(e))
         {

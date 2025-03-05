@@ -465,6 +465,22 @@ public class GlobalFetchTests : PlaywrightTestEx
         await request.DisposeAsync();
     }
 
+    [PlaywrightTest("global-fetch.spec.ts", "should throw when failOnStatusCode is set to true inside APIRequest context options")]
+    public async Task ShouldThrowWhenFailOnStatusCodeIsSet()
+    {
+        var request = await Playwright.APIRequest.NewContextAsync(new() { FailOnStatusCode = true });
+        Server.SetRoute("/empty.html", async (ctx) =>
+        {
+            ctx.Response.StatusCode = 404;
+            ctx.Response.Headers.Append("Content-Length", "10");
+            ctx.Response.Headers.Append("Content-Type", "text/plain");
+            await ctx.Response.WriteAsync("Not found.");
+        });
+        var exception = await PlaywrightAssert.ThrowsAsync<PlaywrightException>(async () => await request.PostAsync(Server.Prefix + "/empty.html"));
+        StringAssert.Contains("404 Not Found", exception.Message);
+        await request.DisposeAsync();
+    }
+
     [PlaywrightTest("global-fetch.spec.ts", "should retry ECONNRESET")]
     public async Task ShouldRetryECONNRESET()
     {

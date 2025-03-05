@@ -93,6 +93,22 @@ public class DefaultBrowsercontext2Tests : PlaywrightTestEx
         tmp.Dispose();
     }
 
+    [PlaywrightTest("defaultbrowsercontext-2.spec.ts", "should support contrast option")]
+    public async Task ShouldSupportContrastOption()
+    {
+        var (tmp, context, page) = await LaunchAsync(new()
+        {
+            Contrast = Contrast.More
+        });
+
+
+        Assert.IsTrue(await page.EvaluateAsync<bool>("() => matchMedia('(prefers-contrast: more)').matches"));
+        Assert.IsFalse(await page.EvaluateAsync<bool>("() => matchMedia('(prefers-contrast: no-preference)').matches"));
+
+        await context.DisposeAsync();
+        tmp.Dispose();
+    }
+
     [PlaywrightTest("defaultbrowsercontext-2.spec.ts", "should support timezoneId option")]
     public async Task ShouldSupportTimezoneIdOption()
     {
@@ -192,6 +208,18 @@ public class DefaultBrowsercontext2Tests : PlaywrightTestEx
         await context.CloseAsync();
         Assert.IsNotEmpty(new DirectoryInfo(tmp.Path).GetDirectories());
 
+        tmp.Dispose();
+    }
+
+    [PlaywrightTest("defaultbrowsercontext-2.spec.ts", "should accept relative userDataDir")]
+    public async Task ShouldAcceptRelativeUserDataDir()
+    {
+        var tmp = new TempDirectory();
+        var foobar = System.IO.Path.Combine(tmp.Path, "foobar");
+        var userDataDir = System.IO.Path.GetRelativePath(Environment.CurrentDirectory, foobar);
+        var context = await BrowserType.LaunchPersistentContextAsync(userDataDir);
+        Assert.IsNotEmpty(new DirectoryInfo(foobar).GetDirectories());
+        await context.CloseAsync();
         tmp.Dispose();
     }
 

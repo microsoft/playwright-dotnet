@@ -171,4 +171,18 @@ public class PageEmulateMediaTests : PageTestEx
         await Page.EmulateMediaAsync(new() { ForcedColors = ForcedColors.Null });
         Assert.IsTrue(await Page.EvaluateAsync<bool>("() => matchMedia('(forced-colors: none)').matches"));
     }
+
+    [PlaywrightTest("page-emulate-media.spec.ts", "should emulate contrast")]
+    public async Task ShouldEmulateContrast()
+    {
+        Assert.IsTrue(await Page.EvaluateAsync<bool>("() => matchMedia('(prefers-contrast: no-preference)').matches"));
+        await Page.EmulateMediaAsync(new() { Contrast = Contrast.NoPreference });
+        Assert.IsTrue(await Page.EvaluateAsync<bool>("() => matchMedia('(prefers-contrast: no-preference)').matches"));
+        Assert.IsFalse(await Page.EvaluateAsync<bool>("() => matchMedia('(prefers-contrast: more)').matches"));
+        await Page.EmulateMediaAsync(new() { Contrast = Contrast.More });
+        Assert.IsFalse(await Page.EvaluateAsync<bool>("() => matchMedia('(prefers-contrast: no-preference)').matches"));
+        Assert.IsTrue(await Page.EvaluateAsync<bool>("() => matchMedia('(prefers-contrast: more)').matches"));
+        await Page.EmulateMediaAsync(new() { Contrast = Contrast.Null });
+        Assert.IsTrue(await Page.EvaluateAsync<bool>("() => matchMedia('(prefers-contrast: no-preference)').matches"));
+    }
 }

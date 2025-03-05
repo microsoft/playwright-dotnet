@@ -452,6 +452,10 @@ public class LocatorAssertionsTests : PageTestEx
             await Expect(locator).ToHaveTextAsync(new Regex("Text\\s+content"));
             // Should respect ignoreCase.
             await Expect(Page.Locator("#node")).ToHaveTextAsync(new Regex("Text\\s+cONtent"), new() { IgnoreCase = true });
+            // Should support falsy ignoreCase.
+            await Expect(Page.Locator("#node")).Not.ToHaveTextAsync("TEXT CONTENT", new() { IgnoreCase = false });
+            // Should normalize soft hyphens.
+            await Expect(Page.Locator("#node")).ToHaveTextAsync("T\u00ade\u00adxt content");
         }
         {
             await Page.SetContentAsync("<div id=node>Text content</div>");

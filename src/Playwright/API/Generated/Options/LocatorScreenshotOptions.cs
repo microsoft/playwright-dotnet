@@ -86,7 +86,9 @@ public class LocatorScreenshotOptions
     /// <para>
     /// Specify locators that should be masked when the screenshot is taken. Masked elements
     /// will be overlaid with a pink box <c>#FF00FF</c> (customized by <see cref="ILocator.ScreenshotAsync"/>)
-    /// that completely covers its bounding box.
+    /// that completely covers its bounding box. The mask is also applied to invisible elements,
+    /// see <a href="https://playwright.dev/dotnet/docs/locators#matching-only-visible-elements">Matching
+    /// only visible elements</a> to disable that.
     /// </para>
     /// </summary>
     [JsonPropertyName("mask")]

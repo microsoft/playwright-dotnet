@@ -310,6 +310,7 @@ internal class Page : ChannelOwner, IPage
             ["colorScheme"] = options?.ColorScheme == ColorScheme.Null ? "no-override" : options?.ColorScheme,
             ["reducedMotion"] = options?.ReducedMotion == ReducedMotion.Null ? "no-override" : options?.ReducedMotion,
             ["forcedColors"] = options?.ForcedColors == ForcedColors.Null ? "no-override" : options?.ForcedColors,
+            ["contrast"] = options?.Contrast == Contrast.Null ? "no-override" : options?.Contrast,
         };
         return SendMessageToServerAsync("emulateMedia", args);
     }

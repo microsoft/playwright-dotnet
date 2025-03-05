@@ -48,7 +48,7 @@ internal class Locator : ILocator
 
     private static string _testIdAttributeName = "data-testid";
 
-    public Locator(Frame parent, string selector, LocatorLocatorOptions options = null)
+    public Locator(Frame parent, string selector, LocatorLocatorOptions options = null, bool? visible = null)
     {
         _frame = parent;
         _selector = selector;
@@ -98,6 +98,11 @@ internal class Locator : ILocator
             }
 
             _selector += $" >> internal:has-not={JsonSerializer.Serialize(locator._selector, _locatorSerializerOptions)}";
+        }
+
+        if (visible != null)
+        {
+            _selector += " >> visible=" + (visible == true ? "true" : "false");
         }
     }
 
@@ -189,17 +194,21 @@ internal class Locator : ILocator
         new FrameLocator(_frame, $"{_selector} >> {selector}");
 
     public ILocator Filter(LocatorFilterOptions options = null) =>
-        new Locator(_frame, _selector, new()
-        {
-            Has = options?.Has,
-            HasNot = options?.HasNot,
-            HasText = options?.HasText,
-            HasTextString = options?.HasTextString,
-            HasTextRegex = options?.HasTextRegex,
-            HasNotText = options?.HasNotText,
-            HasNotTextString = options?.HasNotTextString,
-            HasNotTextRegex = options?.HasNotTextRegex,
-        });
+        new Locator(
+            _frame,
+            _selector,
+            new()
+            {
+                Has = options?.Has,
+                HasNot = options?.HasNot,
+                HasText = options?.HasText,
+                HasTextString = options?.HasTextString,
+                HasTextRegex = options?.HasTextRegex,
+                HasNotText = options?.HasNotText,
+                HasNotTextString = options?.HasNotTextString,
+                HasNotTextRegex = options?.HasNotTextRegex,
+            },
+            options?.Visible);
 
     public Task<IElementHandle> ElementHandleAsync(LocatorElementHandleOptions options = null)
         => _frame.WaitForSelectorAsync(

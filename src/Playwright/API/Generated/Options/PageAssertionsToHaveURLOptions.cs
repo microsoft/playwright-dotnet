@@ -46,7 +46,8 @@ public class PageAssertionsToHaveURLOptions
     /// <summary>
     /// <para>
     /// Whether to perform case-insensitive match. <see cref="IPageAssertions.ToHaveURLAsync"/>
-    /// option takes precedence over the corresponding regular expression flag if specified.
+    /// option takes precedence over the corresponding regular expression parameter if specified.
+    /// A provided predicate ignores this flag.
     /// </para>
     /// </summary>
     [JsonPropertyName("ignoreCase")]

@@ -49,6 +49,7 @@ public class BrowserTypeLaunchPersistentContextOptions
         ChromiumSandbox = clone.ChromiumSandbox;
         ClientCertificates = clone.ClientCertificates;
         ColorScheme = clone.ColorScheme;
+        Contrast = clone.Contrast;
         DeviceScaleFactor = clone.DeviceScaleFactor;
         Devtools = clone.Devtools;
         DownloadsPath = clone.DownloadsPath;
@@ -206,6 +207,16 @@ public class BrowserTypeLaunchPersistentContextOptions
     /// </summary>
     [JsonPropertyName("colorScheme")]
     public ColorScheme? ColorScheme { get; set; }
+
+    /// <summary>
+    /// <para>
+    /// Emulates <c>'prefers-contrast'</c> media feature, supported values are <c>'no-preference'</c>,
+    /// <c>'more'</c>. See <see cref="IPage.EmulateMediaAsync"/> for more details. Passing
+    /// <c>'null'</c> resets emulation to system defaults. Defaults to <c>'no-preference'</c>.
+    /// </para>
+    /// </summary>
+    [JsonPropertyName("contrast")]
+    public Contrast? Contrast { get; set; }
 
     /// <summary>
     /// <para>

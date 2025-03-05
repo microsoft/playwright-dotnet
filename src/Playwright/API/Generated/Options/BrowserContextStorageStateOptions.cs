@@ -39,8 +39,21 @@ public class BrowserContextStorageStateOptions
             return;
         }
 
+        IndexedDB = clone.IndexedDB;
         Path = clone.Path;
     }
+
+    /// <summary>
+    /// <para>
+    /// Set to <c>true</c> to include <a href="https://developer.mozilla.org/en-US/docs/Web/API/IndexedDB_API">IndexedDB</a>
+    /// in the storage state snapshot. If your application uses IndexedDB to store authentication
+    /// tokens, like Firebase Authentication, enable this.
+    /// </para>
+    /// <para>IndexedDBs with typed arrays are currently not supported.</para>
+    /// </summary>
+    /// <remarks><para>IndexedDBs with typed arrays are currently not supported.</para></remarks>
+    [JsonPropertyName("indexedDB")]
+    public bool? IndexedDB { get; set; }
 
     /// <summary>
     /// <para>
