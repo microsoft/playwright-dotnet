@@ -232,7 +232,7 @@ public class PageNetworkRequestTest : PageTestEx
         Assert.False(requests["style.css"].IsNavigationRequest);
     }
 
-    [PlaywrightTest("page-network-request.spec.ts", "Request.isNavigationRequest", "should return navigation bit when navigating to image")]
+    [PlaywrightTest("page-network-request.spec.ts", "should return navigation bit when navigating to image")]
     public async Task ShouldReturnNavigationBitWhenNavigatingToImage()
     {
         var requests = new List<IRequest>();

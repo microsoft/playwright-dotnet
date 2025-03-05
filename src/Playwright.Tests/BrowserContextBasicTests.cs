@@ -235,7 +235,7 @@ public class BrowserContextBasicTests : BrowserTestEx
         CollectionAssert.Contains(context.Pages, second);
     }
 
-    [PlaywrightTest("browsercontext-basic.spec.ts", "BrowserContext.pages()", "should close all belonging pages once closing context")]
+    [PlaywrightTest("browsercontext-basic.spec.ts", "should close all belonging pages once closing context")]
     public async Task ShouldCloseAllBelongingPagesOnceClosingContext()
     {
         await using var context = await Browser.NewContextAsync();

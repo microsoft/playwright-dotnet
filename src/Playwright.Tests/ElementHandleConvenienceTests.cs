@@ -94,7 +94,7 @@ public class ElementHandleConvenienceTests : PageTestEx
         Assert.AreEqual("Text,\nmore text", await Page.TextContentAsync("#outer"));
     }
 
-    [PlaywrightTest("elementhandle-convenience.spec.ts", "Page.dispatchEvent(click)", "innerText should be atomic")]
+    [PlaywrightTest("elementhandle-convenience.spec.ts", "innerText should be atomic")]
     public async Task InnerTextShouldBeAtomic()
     {
         const string createDummySelector = @"({
@@ -120,7 +120,7 @@ public class ElementHandleConvenienceTests : PageTestEx
         Assert.AreEqual("modified", await Page.EvaluateAsync<string>("() => document.querySelector('div').textContent"));
     }
 
-    [PlaywrightTest("elementhandle-convenience.spec.ts", "Page.dispatchEvent(click)", "innerHTML should be atomic")]
+    [PlaywrightTest("elementhandle-convenience.spec.ts", "innerHTML should be atomic")]
     public async Task InnerHtmlShouldBeAtomic()
     {
         const string createDummySelector = @"({
@@ -146,7 +146,7 @@ public class ElementHandleConvenienceTests : PageTestEx
         Assert.AreEqual("modified", await Page.EvaluateAsync<string>("() => document.querySelector('div').textContent"));
     }
 
-    [PlaywrightTest("elementhandle-convenience.spec.ts", "Page.dispatchEvent(click)", "getAttribute should be atomic")]
+    [PlaywrightTest("elementhandle-convenience.spec.ts", "getAttribute should be atomic")]
     public async Task GetAttributeShouldBeAtomic()
     {
         const string createDummySelector = @"({

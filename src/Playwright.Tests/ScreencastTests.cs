@@ -191,7 +191,6 @@ public class ScreencastTests : BrowserTestEx
 
 
     [PlaywrightTest("screencast.spec.ts", "video.path()/saveAs() does not hang immediately after launchPersistentContext and context.close()")]
-    [CancelAfter(30_000)]
     public async Task VideoPathSaveAsDoesNotHangImmediatelyAfterLaunchPersistentContextAndContextClose()
     {
         using var userDirectory = new TempDirectory();

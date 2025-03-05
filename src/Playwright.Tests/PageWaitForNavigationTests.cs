@@ -307,7 +307,7 @@ public class PageWaitForNavigationTests : PageTestEx
     }
 
     [PlaywrightTest]
-    [CancelAfter(45_000)]
+    [CancelAfter(TestConstants.SlowTestTimeout)]
     public async Task ShouldHaveADefaultTimeout()
     {
         await Page.GotoAsync(Server.Prefix + "/frames/one-frame.html");
@@ -315,7 +315,6 @@ public class PageWaitForNavigationTests : PageTestEx
     }
 
     [PlaywrightTest]
-    [CancelAfter(5_000)]
     public async Task ShouldTakeTimeoutIntoAccount()
     {
         await Page.GotoAsync(Server.Prefix + "/frames/one-frame.html");
