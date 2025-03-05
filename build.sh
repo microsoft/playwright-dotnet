@@ -54,6 +54,11 @@ function roll_driver() {
 
   download_driver
 
+  pushd src/Playwright.TestingHarnessTest/
+  echo "Updating driver version in tests..."
+  npm install --save-exact "@playwright/test@${new_driver_version}"
+  popd
+
   echo "done"
 }
 
