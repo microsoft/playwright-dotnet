@@ -127,7 +127,10 @@ public class PlaywrightTestAttribute : TestAttribute, IApplyToContext, IApplyToT
                         break;
                     }
                 }
-                catch (Exception) {}
+                catch (Exception)
+                {
+                    // Ignore the exception
+                }
 
                 tryCount++;
                 if (tryCount < _retryCount)
