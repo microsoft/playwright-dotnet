@@ -28,6 +28,7 @@ using NUnit.Framework.Internal.Commands;
 
 // Run all tests in sequence
 [assembly: LevelOfParallelism(1)]
+[assembly: Parallelizable(ParallelScope.Fixtures)]
 
 namespace Microsoft.Playwright.Tests;
 
@@ -35,8 +36,10 @@ namespace Microsoft.Playwright.Tests;
 /// Enables decorating test facts with information about the corresponding test in the upstream repository.
 /// </summary>
 [AttributeUsage(AttributeTargets.Method, AllowMultiple = true)]
-public class PlaywrightTestAttribute : TestAttribute, IWrapSetUpTearDown
+public class PlaywrightTestAttribute : TestAttribute, IApplyToContext, IApplyToTest, IWrapSetUpTearDown
 {
+    private readonly CancelAfterAttribute _cancelAfterAttribute = new(TestConstants.DefaultTestTimeout);
+
     public PlaywrightTestAttribute()
     {
     }
@@ -50,17 +53,6 @@ public class PlaywrightTestAttribute : TestAttribute, IWrapSetUpTearDown
     {
         FileName = fileName;
         TestName = nameOfTest;
-    }
-
-    /// <summary>
-    /// Creates a new instance of the attribute.
-    /// </summary>
-    /// <param name="fileName"><see cref="FileName"/></param>
-    /// <param name="describe"><see cref="Describe"/></param>
-    /// <param name="nameOfTest"><see cref="TestName"/></param>
-    public PlaywrightTestAttribute(string fileName, string describe, string nameOfTest) : this(fileName, nameOfTest)
-    {
-        Describe = describe;
     }
 
     /// <summary>
@@ -83,6 +75,22 @@ public class PlaywrightTestAttribute : TestAttribute, IWrapSetUpTearDown
     /// </summary>
     public string Describe { get; }
 
+    public void ApplyToContext(TestExecutionContext context)
+    {
+        if (context.TestCaseTimeout == 0)
+        {
+            (_cancelAfterAttribute as IApplyToContext).ApplyToContext(context);
+        }
+    }
+
+    public new void ApplyToTest(Test test)
+    {
+        base.ApplyToTest(test);
+        if (TestExecutionContext.CurrentContext.TestCaseTimeout == 0)
+        {
+            _cancelAfterAttribute.ApplyToTest(test);
+        }
+    }
     /// <summary>
     /// Wraps the current test command in a <see cref="UnobservedTaskExceptionCommand"/>.
     /// </summary>

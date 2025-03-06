@@ -25,9 +25,6 @@
 
 using System.Runtime.InteropServices;
 
-[assembly: NUnit.Framework.Timeout(Microsoft.Playwright.Tests.TestConstants.DefaultTestTimeout)]
-[assembly: NUnit.Framework.Parallelizable(NUnit.Framework.ParallelScope.Fixtures)]
-
 namespace Microsoft.Playwright.Tests;
 
 internal static class TestConstants

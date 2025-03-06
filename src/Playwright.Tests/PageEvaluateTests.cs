@@ -709,7 +709,8 @@ public class PageEvaluateTests : PageTestEx
         Test = 1
     }
 
-    [PlaywrightTest(Description = "https://github.com/microsoft/playwright-dotnet/issues/1706")]
+    // See https://github.com/microsoft/playwright-dotnet/issues/1706
+    [PlaywrightTest]
     public async Task ShouldNotReturnDisposedJsonElement()
     {
         var result = await Page.EvaluateAsync<JsonElement?>("()=> [{a:1,b:2},{a:1,b:2}]");

@@ -160,7 +160,7 @@ public class PageDispatchEventTests : PageTestEx
         Assert.True(await Page.EvaluateAsync<bool>("() => window['_clicked']"));
     }
 
-    [PlaywrightTest("page-dispatchevent.spec.ts", "Page.dispatchEvent(drag)", "should dispatch drag drop events")]
+    [PlaywrightTest("page-dispatchevent.spec.ts", "should dispatch drag drop events")]
     [Skip(SkipAttribute.Targets.Webkit)]
     public async Task ShouldDispatchDragDropEvents()
     {
@@ -176,7 +176,7 @@ public class PageDispatchEventTests : PageTestEx
             }", new { source, target }));
     }
 
-    [PlaywrightTest("page-dispatchevent.spec.ts", "Page.dispatchEvent(drag)", "should dispatch drag drop events")]
+    [PlaywrightTest("page-dispatchevent.spec.ts", "should dispatch drag drop events")]
     [Skip(SkipAttribute.Targets.Webkit)]
     public async Task ElementHandleShouldDispatchDragDropEvents()
     {
