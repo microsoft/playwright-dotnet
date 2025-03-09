@@ -136,6 +136,7 @@ internal class DriverDownloader
 
             Console.WriteLine($"Running the patch for driver {platform}");
             await PatchFilesAsync(directory.FullName).ConfigureAwait(false);
+            await PatchFrameJsAsync(directory.FullName).ConfigureAwait(false);
 
             Console.WriteLine($"Driver for {platform} downloaded");
         }
@@ -152,8 +153,8 @@ internal class DriverDownloader
         var chromium_path = Path.Combine(server_path, "chromium");
 
         var cr_devtools_path = Path.Combine(chromium_path, "crDevTools.js");
-
-        await ReplaceInFileAsync(cr_devtools_path, "session.send('Runtime.enable'), ", "/*session.send('Runtime.enable'), */").ConfigureAwait(false);
+        await ReplaceInFileAsync(cr_devtools_path, "session.send('Runtime.enable'),", "/*session.send('Runtime.enable'), */").ConfigureAwait(false);
+        await ReplaceInFileAsync(cr_devtools_path, "session.send('Runtime.enable')", "/*session.send('Runtime.enable'), */").ConfigureAwait(false);
 
         var cr_page_path = Path.Combine(chromium_path, "crPage.js");
         await ReplaceInFileAsync(cr_page_path, "this._client.send('Runtime.enable', {}),", "/*this._client.send('Runtime.enable', {}),*/").ConfigureAwait(false);
@@ -166,19 +167,59 @@ internal class DriverDownloader
         await PatchFrameJsAsync(frames_path).ConfigureAwait(false);
     }
 
-    private async Task PatchFrameJsAsync(string frameJsPath)
+    private async Task PatchFrameJsAsync(string filePath)
     {
-        var content = await File.ReadAllTextAsync(frameJsPath).ConfigureAwait(false);
+        var content = await File.ReadAllTextAsync(filePath).ConfigureAwait(false);
 
-        content = "// undetected-undetected_playwright-patch - custom imports\r\nvar _crExecutionContext = require('./chromium/crExecutionContext')\r\nvar _dom =  require('./dom')\r\n" + content;
-        var contextReplacement = " async _context(world) {\r\n\r\n        // atm ignores world_name\r\n        if (this._isolatedContext == undefined) {\r\n          var worldName = \"utility\"\r\n          var result = await this._page._delegate._mainFrameSession._client.send('Page.createIsolatedWorld', {\r\n            frameId: this._id,\r\n            grantUniveralAccess: true,\r\n            worldName: worldName\r\n          });\r\n          var crContext = new _crExecutionContext.CRExecutionContext(this._page._delegate._mainFrameSession._client, {id:result.executionContextId})\r\n          this._isolatedContext = new _dom.FrameExecutionContext(crContext, this, worldName)\r\n        }\r\n        return this._isolatedContext\r\n\r\n}\r\n";
-        content = Regex.Replace(content, ".*\\s_context?\\s*\\(world\\)\\s*\\{(?:[^}{]+|\\{(?:[^}{]+|\\{[^}{]*\\})*\\})*\\}", contextReplacement);
+        // Add custom imports
+        var customImports = "// undetected-undetected_playwright-patch - custom imports\n" +
+                            "var _crExecutionContext = require('./chromium/crExecutionContext')\n" +
+                            "var _dom = require('./dom')\n\n";
+        content = customImports + content;
 
-        var clearReplacement = " _onClearLifecycle() {\r\n\r\n        this._isolatedContext = undefined;\r\n";
-        content = Regex.Replace(content, ".\\s_onClearLifecycle?\\s*\\(\\)\\s*\\{", clearReplacement);
+        // Patch _context function
+        var contextRegex = new Regex(@".*\s_context?\s*\(world\)\s*\{(?:[^}{]+|\{(?:[^}{]+|\{[^}{]*\})*\})*\}");
+        var contextReplacement = @"
+        async _context(world) {
+            // atm ignores world_name
+            if (this._isolatedContext == undefined) {
+                var worldName = 'utility';
+                var result = await this._page._delegate._mainFrameSession._client.send('Page.createIsolatedWorld', {
+                    frameId: this._id,
+                    grantUniveralAccess: true,
+                    worldName: worldName
+                });
+                var crContext = new _crExecutionContext.CRExecutionContext(this._page._delegate._mainFrameSession._client, {id:result.executionContextId});
+                this._isolatedContext = new _dom.FrameExecutionContext(crContext, this, worldName);
+            }
+            return this._isolatedContext;
+        }";
+        content = contextRegex.Replace(content, contextReplacement, 1);
 
-        await File.WriteAllTextAsync(frameJsPath, content).ConfigureAwait(false);
+        // Patch _onClearLifecycle function
+        var clearLifecycleRegex = new Regex(@".\s_onClearLifecycle?\s*\(\)\s*\{");
+        var clearLifecycleReplacement = @"
+        _onClearLifecycle() {
+            this._isolatedContext = undefined;";
+        content = clearLifecycleRegex.Replace(content, clearLifecycleReplacement, 1);
+
+        // Write the updated content back to the file
+        await File.WriteAllTextAsync(filePath, content).ConfigureAwait(false);
     }
+
+    // private async Task PatchFrameJsAsync(string frameJsPath)
+    // {
+    //     var content = await File.ReadAllTextAsync(frameJsPath).ConfigureAwait(false);
+    //
+    //     content = "// undetected-undetected_playwright-patch - custom imports\r\nvar _crExecutionContext = require('./chromium/crExecutionContext')\r\nvar _dom =  require('./dom')\r\n" + content;
+    //     var contextReplacement = " async _context(world) {\r\n\r\n        // atm ignores world_name\r\n        if (this._isolatedContext == undefined) {\r\n          var worldName = \"utility\"\r\n          var result = await this._page._delegate._mainFrameSession._client.send('Page.createIsolatedWorld', {\r\n            frameId: this._id,\r\n            grantUniveralAccess: true,\r\n            worldName: worldName\r\n          });\r\n          var crContext = new _crExecutionContext.CRExecutionContext(this._page._delegate._mainFrameSession._client, {id:result.executionContextId})\r\n          this._isolatedContext = new _dom.FrameExecutionContext(crContext, this, worldName)\r\n        }\r\n        return this._isolatedContext\r\n\r\n}\r\n";
+    //     content = Regex.Replace(content, ".*\\s_context?\\s*\\(world\\)\\s*\\{(?:[^}{]+|\\{(?:[^}{]+|\\{[^}{]*\\})*\\})*\\}", contextReplacement);
+    //
+    //     var clearReplacement = " _onClearLifecycle() {\r\n\r\n        this._isolatedContext = undefined;\r\n";
+    //     content = Regex.Replace(content, ".\\s_onClearLifecycle?\\s*\\(\\)\\s*\\{", clearReplacement);
+    //
+    //     await File.WriteAllTextAsync(frameJsPath, content).ConfigureAwait(false);
+    // }
 
     private async Task ReplaceInFileAsync(string path, string oldValue, string newValue)
     {
