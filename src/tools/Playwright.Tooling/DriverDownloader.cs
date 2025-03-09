@@ -152,7 +152,10 @@ internal class DriverDownloader
         var chromium_path = Path.Combine(server_path, "chromium");
 
         var cr_devtools_path = Path.Combine(chromium_path, "crDevTools.js");
-        await ReplaceInFileAsync(cr_devtools_path, "session.send('Runtime.enable'),", "/*session.send('Runtime.enable'), */").ConfigureAwait(false);
+        await ReplaceInFileAsync(cr_devtools_path, "session.send('Runtime.enable'),", "/*session.send('Runtime.enable'),*/").ConfigureAwait(false);
+
+        var wk_page_path = Path.Combine(chromium_path, "wkPage.js");
+        await ReplaceInFileAsync(wk_page_path, "session.send('Runtime.enable'),", "/*session.send('Runtime.enable'),*/").ConfigureAwait(false);
 
         var cr_page_path = Path.Combine(chromium_path, "crPage.js");
         await ReplaceInFileAsync(cr_page_path, "this._client.send('Runtime.enable', {}),", "/*this._client.send('Runtime.enable', {}),*/").ConfigureAwait(false);
