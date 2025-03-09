@@ -148,25 +148,32 @@ internal class DriverDownloader
 
      private async Task PatchFilesAsync(string path)
     {
-        var server_path = Path.Combine(path, "package", "lib", "server");
-        var chromium_path = Path.Combine(server_path, "chromium");
+        var serverPath = Path.Combine(path, "package", "lib", "server");
+        var chromiumPath = Path.Combine(serverPath, "chromium");
 
-        var cr_devtools_path = Path.Combine(chromium_path, "crDevTools.js");
-        await ReplaceInFileAsync(cr_devtools_path, "session.send('Runtime.enable'),", "/*session.send('Runtime.enable'),*/").ConfigureAwait(false);
+        var crDevtoolsPath = Path.Combine(chromiumPath, "crDevTools.js");
+        await ReplaceInFileAsync(crDevtoolsPath, "session.send('Runtime.enable'),", "/*session.send('Runtime.enable'),*/").ConfigureAwait(false);
 
-        var server_wk_path = Path.Combine(path, "package", "lib", "server", "webkit");
-        var wk_page_path = Path.Combine(server_wk_path, "wkPage.js");
-        await ReplaceInFileAsync(wk_page_path, "session.send('Runtime.enable'),", "/*session.send('Runtime.enable'),*/").ConfigureAwait(false);
+        var serverWkPath = Path.Combine(path, "package", "lib", "server", "webkit");
+        var wkPagePath = Path.Combine(serverWkPath, "wkPage.js");
+        await ReplaceInFileAsync(wkPagePath, "session.send('Runtime.enable'),", "/*session.send('Runtime.enable'),*/").ConfigureAwait(false);
 
-        var cr_page_path = Path.Combine(chromium_path, "crPage.js");
-        await ReplaceInFileAsync(cr_page_path, "this._client.send('Runtime.enable', {}),", "/*this._client.send('Runtime.enable', {}),*/").ConfigureAwait(false);
-        await ReplaceInFileAsync(cr_page_path, "session._sendMayFail('Runtime.enable');", "/*session._sendMayFail('Runtime.enable');*/").ConfigureAwait(false);
+        var wkWorkersPath = Path.Combine(serverWkPath, "wkWorkers.js");
+        await ReplaceInFileAsync(wkPagePath, "workerSession.send('Runtime.enable'),", "/*workerSession.send('Runtime.enable'),*/").ConfigureAwait(false);
 
-        var cr_sv_worker_path = Path.Combine(chromium_path, "crServiceWorker.js");
-        await ReplaceInFileAsync(cr_sv_worker_path, "session.send('Runtime.enable', {}).catch(e => {});", "/*session.send('Runtime.enable', {}).catch(e => {});*/").ConfigureAwait(false);
+        var serverElectronPath = Path.Combine(path, "package", "lib", "server", "electron");
+        var electronPath = Path.Combine(serverElectronPath, "electron.js");
+        await ReplaceInFileAsync(electronPath, "await this._nodeSession.send('Runtime.enable', {});", "/*await this._nodeSession.send('Runtime.enable', {});*/").ConfigureAwait(false);
 
-        var frames_path = Path.Combine(server_path, "frames.js");
-        await PatchFrameJsAsync(frames_path).ConfigureAwait(false);
+        var crPagePath = Path.Combine(chromiumPath, "crPage.js");
+        await ReplaceInFileAsync(crPagePath, "this._client.send('Runtime.enable', {}),", "/*this._client.send('Runtime.enable', {}),*/").ConfigureAwait(false);
+        await ReplaceInFileAsync(crPagePath, "session._sendMayFail('Runtime.enable');", "/*session._sendMayFail('Runtime.enable');*/").ConfigureAwait(false);
+
+        var crSvWorkerPath = Path.Combine(chromiumPath, "crServiceWorker.js");
+        await ReplaceInFileAsync(crSvWorkerPath, "session.send('Runtime.enable', {}).catch(e => {});", "/*session.send('Runtime.enable', {}).catch(e => {});*/").ConfigureAwait(false);
+
+        var framesPath = Path.Combine(serverPath, "frames.js");
+        await PatchFrameJsAsync(framesPath).ConfigureAwait(false);
     }
 
     private async Task PatchFrameJsAsync(string filePath)
