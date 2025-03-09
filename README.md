@@ -16,6 +16,25 @@ Playwright for .NET is the official language port of [Playwright](https://playwr
 ## API Reference
 [https://playwright.dev/dotnet/docs/api/class-playwright](https://playwright.dev/dotnet/docs/api/class-playwright)
 
+## Build and Publish
+```bash
+# 1. Update the version from `/playwright-dotnet/src/Common/Version.props` file
+# 2. Delete the .drivers folder from `/playwright-dotnet/src/Playwright/.drivers`
+# 3. Go to the root folder of the repo. And run the dotnet command to download the drivers again.
+cd playwright-dotnet
+dotnet run --project ./src/tools/Playwright.Tooling/Playwright.Tooling.csproj -- download-drivers --basepath .
+
+# 4. Go to src and run build
+cd src
+dotnet build
+
+# 5. Now publish a release for nuget.
+dotnet pack -c Release
+
+# 6. Push to Nuget registry
+dotnet nuget push ./Playwright/bin/Release/WitcherPro.Playwright.nupkg -k <api-key-here> -s https://api.nuget.org/v3/index.json 
+```
+
 
 ```cs
 using System.Threading.Tasks;
