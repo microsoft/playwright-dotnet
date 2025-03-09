@@ -86,7 +86,7 @@ static class Program
     {
         foreach (var dir in root.EnumerateDirectories())
         {
-            var candidate = Path.Combine(dir.ToString(), "Microsoft.Playwright.dll");
+            var candidate = Path.Combine(dir.ToString(), "WitcherPro.Playwright.dll");
             if (File.Exists(candidate))
             {
                 return candidate;

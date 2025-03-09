@@ -2,8 +2,8 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <OutputType>Exe</OutputType>
-    <Title>Microsoft.Playwright</Title>
-    <PackageId>Microsoft.Playwright</PackageId>
+    <Title>WitcherPro.Playwright</Title>
+    <PackageId>WitcherPro.Playwright</PackageId>
     <Summary>The .NET port of Playwright, used to automate Chromium, Firefox and WebKit with a single API.</Summary>
     <Description>Playwright enables reliable end-to-end testing for modern web apps. It is built to enable cross-browser web automation that is ever-green, capable, reliable and fast. Learn more at https://playwright.dev/dotnet/.</Description>
     <PackageIcon>icon.png</PackageIcon>
@@ -18,8 +18,11 @@
     <BuildFromSource>True</BuildFromSource>
     <AnalysisMode>AllEnabledByDefault</AnalysisMode>
     <NoWarn>1701;1702;CS0067;1734;NU5110;NU5111</NoWarn>
-    <AssemblyName>Microsoft.Playwright</AssemblyName>
+    <AssemblyName>WitcherPro.Playwright</AssemblyName>
     <NoWin32Manifest>true</NoWin32Manifest>
+    <Authors>WitcherPro</Authors>
+    <RepositoryUrl>https://github.com/witcher-pro/playwright-dotnet.git</RepositoryUrl>
+    <PackageProjectUrl>https://github.com/witcher-pro/playwright-dotnet</PackageProjectUrl>
   </PropertyGroup>
   <Import Project="../Common/Version.props" />
   <Import Project="../Common/Dependencies.props" />

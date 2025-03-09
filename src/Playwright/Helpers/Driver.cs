@@ -47,7 +47,7 @@ internal static class Driver
         {
             assemblyDirectory = new(AppContext.BaseDirectory);
         }
-        if (assemblyDirectory?.Exists != true || !File.Exists(Path.Combine(assemblyDirectory.FullName, "Microsoft.Playwright.dll")))
+        if (assemblyDirectory?.Exists != true || !File.Exists(Path.Combine(assemblyDirectory.FullName, "WitcherPro.Playwright.dll")))
         {
             var assembly = typeof(Playwright).Assembly;
             if (TryGetCodeBase(assembly, out var codeBase) && codeBase.IsFile)

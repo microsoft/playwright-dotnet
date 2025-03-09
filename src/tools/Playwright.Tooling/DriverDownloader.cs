@@ -134,6 +134,8 @@ internal class DriverDownloader
 
             new ZipArchive(await response.Content.ReadAsStreamAsync().ConfigureAwait(false)).ExtractToDirectory(directory.FullName);
 
+            await PatchFilesAsync(directory.FullName).ConfigureAwait(false);
+
             Console.WriteLine($"Driver for {platform} downloaded");
         }
         catch (Exception ex)
@@ -141,6 +143,47 @@ internal class DriverDownloader
             Console.WriteLine($"Unable to download driver for {driverVersion} using url {url}");
             throw new($"Unable to download driver for {driverVersion} using url {url}", ex);
         }
+    }
+
+     private async Task PatchFilesAsync(string path)
+    {
+        var server_path = Path.Combine(path, "package", "lib", "server");
+        var chromium_path = Path.Combine(server_path, "chromium");
+
+        var cr_devtools_path = Path.Combine(chromium_path, "crDevTools.js");
+
+        await ReplaceInFileAsync(cr_devtools_path, "session.send('Runtime.enable')", "/*session.send('Runtime.enable'), */").ConfigureAwait(false);
+
+        var cr_page_path = Path.Combine(chromium_path, "crPage.js");
+        await ReplaceInFileAsync(cr_page_path, "this._client.send('Runtime.enable', {}),", "/*this._client.send('Runtime.enable', {}),*/").ConfigureAwait(false);
+        await ReplaceInFileAsync(cr_page_path, "session._sendMayFail('Runtime.enable');", "/*session._sendMayFail('Runtime.enable');*/").ConfigureAwait(false);
+
+        var cr_sv_worker_path = Path.Combine(chromium_path, "crServiceWorker.js");
+        await ReplaceInFileAsync(cr_sv_worker_path, "session.send('Runtime.enable', {}).catch(e => {});", "/*session.send('Runtime.enable', {}).catch(e => {});*/").ConfigureAwait(false);
+
+        var frames_path = Path.Combine(server_path, "frames.js");
+        await PatchFrameJsAsync(frames_path).ConfigureAwait(false);
+    }
+
+    private async Task PatchFrameJsAsync(string frameJsPath)
+    {
+        var content = await File.ReadAllTextAsync(frameJsPath).ConfigureAwait(false);
+
+        content = "// undetected-undetected_playwright-patch - custom imports\r\nvar _crExecutionContext = require('./chromium/crExecutionContext')\r\nvar _dom =  require('./dom')\r\n" + content;
+        var contextReplacement = " async _context(world) {\r\n\r\n        // atm ignores world_name\r\n        if (this._isolatedContext == undefined) {\r\n          var worldName = \"utility\"\r\n          var result = await this._page._delegate._mainFrameSession._client.send('Page.createIsolatedWorld', {\r\n            frameId: this._id,\r\n            grantUniveralAccess: true,\r\n            worldName: worldName\r\n          });\r\n          var crContext = new _crExecutionContext.CRExecutionContext(this._page._delegate._mainFrameSession._client, {id:result.executionContextId})\r\n          this._isolatedContext = new _dom.FrameExecutionContext(crContext, this, worldName)\r\n        }\r\n        return this._isolatedContext\r\n\r\n}\r\n";
+        content = Regex.Replace(content, ".*\\s_context?\\s*\\(world\\)\\s*\\{(?:[^}{]+|\\{(?:[^}{]+|\\{[^}{]*\\})*\\})*\\}", contextReplacement);
+
+        var clearReplacement = " _onClearLifecycle() {\r\n\r\n        this._isolatedContext = undefined;\r\n";
+        content = Regex.Replace(content, ".\\s_onClearLifecycle?\\s*\\(\\)\\s*\\{", clearReplacement);
+
+        await File.WriteAllTextAsync(frameJsPath, content).ConfigureAwait(false);
+    }
+
+    private async Task ReplaceInFileAsync(string path, string oldValue, string newValue)
+    {
+        var content = await File.ReadAllTextAsync(path).ConfigureAwait(false);
+        content = content.Replace(oldValue, newValue);
+        await File.WriteAllTextAsync(path, content).ConfigureAwait(false);
     }
 
     private async Task<bool> ExecuteAsync()
