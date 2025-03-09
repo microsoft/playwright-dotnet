@@ -32,7 +32,7 @@ dotnet build
 dotnet pack -c Release
 
 # 6. Push to Nuget registry
-dotnet nuget push ./Playwright/bin/Release/WitcherPro.Playwright.nupkg -k <api-key-here> -s https://api.nuget.org/v3/index.json 
+dotnet nuget push .\Playwright\bin\Release\WitcherPro.Playwright.<version>.nupkg -k <api-key-here> -s https://api.nuget.org/v3/index.json
 ```
 
 
