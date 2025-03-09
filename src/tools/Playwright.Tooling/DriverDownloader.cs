@@ -136,7 +136,6 @@ internal class DriverDownloader
 
             Console.WriteLine($"Running the patch for driver {platform}");
             await PatchFilesAsync(directory.FullName).ConfigureAwait(false);
-            await PatchFrameJsAsync(directory.FullName).ConfigureAwait(false);
 
             Console.WriteLine($"Driver for {platform} downloaded");
         }
