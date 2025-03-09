@@ -134,6 +134,7 @@ internal class DriverDownloader
 
             new ZipArchive(await response.Content.ReadAsStreamAsync().ConfigureAwait(false)).ExtractToDirectory(directory.FullName);
 
+            Console.WriteLine($"Running the patch for driver {platform}");
             await PatchFilesAsync(directory.FullName).ConfigureAwait(false);
 
             Console.WriteLine($"Driver for {platform} downloaded");
