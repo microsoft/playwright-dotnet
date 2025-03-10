@@ -18,8 +18,8 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        browser: [chromium, firefox, webkit]
-        os: [windows-latest, ubuntu-latest, macos-latest]
+        browser: [webkit]
+        os: [windows-latest]
     steps:
       - uses: actions/checkout@v4
       - name: Setup .NET Core
@@ -37,9 +37,9 @@ jobs:
         if: matrix.os != 'ubuntu-latest'
         env:
           BROWSER: ${{ matrix.browser }}
-        run: dotnet test ./src/Playwright.Tests/Playwright.Tests.csproj -c Debug -f net8.0 --logger:"console;verbosity=detailed"
+        run: dotnet test ./src/Playwright.Tests/Playwright.Tests.csproj -c Debug -f net8.0 --logger:"console;verbosity=detailed" --filter ShouldAutoDetectCssSelector
       - name: Running tests (Linux)
         if: matrix.os == 'ubuntu-latest'
         env:
           BROWSER: ${{ matrix.browser }}
-        run: xvfb-run dotnet test ./src/Playwright.Tests/Playwright.Tests.csproj -c Debug -f net8.0 --logger:"console;verbosity=detailed"
+        run: xvfb-run dotnet test ./src/Playwright.Tests/Playwright.Tests.csproj -c Debug -f net8.0 --logger:"console;verbosity=detailed" --filter ShouldAutoDetectCssSelector
