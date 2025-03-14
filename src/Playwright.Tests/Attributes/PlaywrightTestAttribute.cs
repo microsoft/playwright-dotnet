@@ -22,6 +22,7 @@
  * SOFTWARE.
  */
 
+using System.Reflection;
 using NUnit.Framework.Interfaces;
 using NUnit.Framework.Internal;
 using NUnit.Framework.Internal.Commands;
@@ -235,22 +236,22 @@ public class PlaywrightTestAttribute : TestAttribute, IWrapSetUpTearDown
                         context.CurrentResult.SetResult(
                             ResultState.Failure,
                             $"Test exceeded Timeout value of {_timeout}ms");
-                        // // When the timeout is reached the TearDown methods are not called. This is a best-effort
-                        // // attempt to call them and close the browser / http server.
-                        // foreach (var method in new string[] { "WorkerTeardown", "BrowserTearDown" })
-                        // {
-                        //     var methodFun = context.CurrentTest.Method.MethodInfo.DeclaringType
-                        //         .GetMethod(method, BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
-                        //     if (methodFun != null)
-                        //     {
-                        //         var res = methodFun.Invoke(context.TestObject, null);
-                        //         if (res is Task task)
-                        //         {
-                        //             Console.WriteLine($"Waiting for {method} task to complete");
-                        //             task.GetAwaiter().GetResult();
-                        //         }
-                        //     }
-                        // }
+                        // When the timeout is reached the TearDown methods are not called. This is a best-effort
+                        // attempt to call them and close the browser / http server.
+                        foreach (var method in new string[] { "WorkerTeardown", "BrowserTearDown" })
+                        {
+                            var methodFun = context.CurrentTest.Method.MethodInfo.DeclaringType
+                                .GetMethod(method, BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
+                            if (methodFun != null)
+                            {
+                                var res = methodFun.Invoke(context.TestObject, null);
+                                if (res is Task task)
+                                {
+                                    Console.WriteLine($"Waiting for {method} task to complete");
+                                    task.GetAwaiter().GetResult();
+                                }
+                            }
+                        }
                     }
                     else
                     {
