@@ -97,7 +97,63 @@ public class PlaywrightTestAttribute : TestAttribute, IApplyToContext, IApplyToT
     /// <param name="command">the test command</param>
     /// <returns>the wrapped test command</returns>
     public TestCommand Wrap(TestCommand command)
-        => new UnobservedTaskExceptionCommand(command);
+    {
+        if (Environment.GetEnvironmentVariable("CI") != null)
+        {
+            command = new RetryCommand(command, 3);
+        }
+        return new UnobservedTaskExceptionCommand(command);
+    }
+
+    // RetryAttribute.RetryCommand only retries AssertionException but we want to retry all exceptions. See
+    // https://github.com/nunit/nunit/issues/1388#issuecomment-2574970271
+    internal class RetryCommand(TestCommand innerCommand, int retryCount) : DelegatingTestCommand(innerCommand)
+    {
+        private readonly int _retryCount = retryCount;
+
+        public override TestResult Execute(TestExecutionContext context)
+        {
+            int tryCount = 0;
+            bool isPassed = false;
+
+            while (tryCount < _retryCount)
+            {
+                try
+                {
+                    innerCommand.Execute(context);
+                    if (context.CurrentResult.ResultState == ResultState.Success)
+                    {
+                        isPassed = true;
+                        break;
+                    }
+                }
+                catch (Exception)
+                {
+                    // Ignore the exception
+                }
+
+                tryCount++;
+                if (tryCount < _retryCount)
+                {
+                    // Reset only if there will be another retry
+                    context.CurrentResult = context.CurrentTest.MakeTestResult();
+                }
+
+            }
+
+            LogFinalOutcome(context.CurrentResult, tryCount == 0, isPassed);
+
+            return context.CurrentResult;
+        }
+
+        private void LogFinalOutcome(TestResult result, bool firstAttempt, bool isPassed)
+        {
+            if (!firstAttempt)
+            {
+                Console.Error.WriteLine($"WARNING: Test {result.FullName} needed {_retryCount} retries and {(isPassed ? "passed" : "failed")}");
+            }
+        }
+    }
 
     /// <summary>
     /// Helper to detect UnobservedTaskExceptions
