@@ -306,8 +306,7 @@ public class PageWaitForNavigationTests : PageTestEx
         StringAssert.Contains("/frames/one-frame.html", Page.Url);
     }
 
-    [PlaywrightTest]
-    [CancelAfter(TestConstants.SlowTestTimeout)]
+    [PlaywrightTest(TestConstants.SlowTestTimeout)]
     public async Task ShouldHaveADefaultTimeout()
     {
         await Page.GotoAsync(Server.Prefix + "/frames/one-frame.html");

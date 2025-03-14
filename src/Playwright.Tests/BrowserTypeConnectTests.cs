@@ -451,8 +451,7 @@ public class BrowserTypeConnectTests : PlaywrightTestEx
         }
     }
 
-    [PlaywrightTest("browsertype-connect.spec.ts", "should upload large file")]
-    [CancelAfter(TestConstants.SlowTestTimeout)]
+    [PlaywrightTest("browsertype-connect.spec.ts", "should upload large file", TestConstants.SlowTestTimeout)]
     public async Task ShouldUploadLargeFile()
     {
         var browser = await BrowserType.ConnectAsync(_remoteServer.WSEndpoint);

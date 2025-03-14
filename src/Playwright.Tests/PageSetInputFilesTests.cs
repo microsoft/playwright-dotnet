@@ -352,8 +352,7 @@ public class PageSetInputFilesTests : PageTestEx
         Assert.True(fileChooser.IsMultiple);
     }
 
-    [PlaywrightTest("page-set-input-files.spec.ts", "should upload large file")]
-    [CancelAfter(TestConstants.SlowTestTimeout)]
+    [PlaywrightTest("page-set-input-files.spec.ts", "should upload large file", TestConstants.SlowTestTimeout)]
     public async Task ShouldUploadLargeFile()
     {
         await Page.GotoAsync(Server.Prefix + "/input/fileupload.html");
