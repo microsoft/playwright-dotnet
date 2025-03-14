@@ -197,31 +197,15 @@ public class PlaywrightTestAttribute : TestAttribute, IWrapSetUpTearDown
         }
     }
 
-    /// <summary>
-    /// <see cref="TimeoutCommand"/> creates a timer in order to cancel
-    /// a test if it exceeds a specified time and adjusts
-    /// the test result if it did time out.
-    /// </summary>
     public class TimeoutCommand : BeforeAndAfterTestCommand
     {
         private readonly int _timeout;
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref="TimeoutCommand"/> class.
-        /// </summary>
-        /// <param name="innerCommand">The inner command</param>
-        /// <param name="timeout">Timeout value</param>
-        /// <param name="debugger">An <see cref="IDebugger" /> instance</param>
         internal TimeoutCommand(TestCommand innerCommand, int timeout) : base(innerCommand)
         {
             _timeout = timeout;
         }
 
-        /// <summary>
-        /// Runs the test, saving a TestResult in the supplied TestExecutionContext.
-        /// </summary>
-        /// <param name="context">The context in which the test should run.</param>
-        /// <returns>A TestResult</returns>
         public override TestResult Execute(TestExecutionContext context)
         {
             try
@@ -238,19 +222,9 @@ public class PlaywrightTestAttribute : TestAttribute, IWrapSetUpTearDown
                             $"Test exceeded Timeout value of {_timeout}ms");
                         // When the timeout is reached the TearDown methods are not called. This is a best-effort
                         // attempt to call them and close the browser / http server.
-                        foreach (var method in new string[] { "WorkerTeardown", "BrowserTearDown" })
+                        foreach (var tearDown in GetHackyTearDownMethods(context))
                         {
-                            var methodFun = context.CurrentTest.Method.MethodInfo.DeclaringType
-                                .GetMethod(method, BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
-                            if (methodFun != null)
-                            {
-                                var res = methodFun.Invoke(context.TestObject, null);
-                                if (res is Task task)
-                                {
-                                    Console.WriteLine($"Waiting for {method} task to complete");
-                                    task.GetAwaiter().GetResult();
-                                }
-                            }
+                            tearDown();
                         }
                     }
                     else
@@ -265,6 +239,28 @@ public class PlaywrightTestAttribute : TestAttribute, IWrapSetUpTearDown
             }
 
             return context.CurrentResult;
+        }
+
+        private Action[] GetHackyTearDownMethods(TestExecutionContext context)
+        {
+            var methods = new List<Action>();
+            foreach (var method in new string[] { "WorkerTeardown", "BrowserTearDown" })
+            {
+                var methodFun = context.CurrentTest.Method.MethodInfo.DeclaringType
+                    .GetMethod(method, BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
+                if (methodFun != null)
+                {
+                    methods.Add(() =>
+                    {
+                        var maybeTask = methodFun.Invoke(context.TestObject, null);
+                        if (maybeTask is Task task)
+                        {
+                            task.GetAwaiter().GetResult();
+                        }
+                    });
+                }
+            }
+            return methods.ToArray();
         }
     }
 }
