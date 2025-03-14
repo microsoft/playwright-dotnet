@@ -111,7 +111,7 @@ public class PlaywrightTestAttribute : TestAttribute, IWrapSetUpTearDown
                 try
                 {
                     innerCommand.Execute(context);
-                    if (context.CurrentResult.ResultState == ResultState.Success)
+                    if (context.CurrentResult.ResultState == ResultState.Success || context.CurrentResult.ResultState == ResultState.Skipped || context.CurrentResult.ResultState == ResultState.Ignored)
                     {
                         isPassed = true;
                         break;
