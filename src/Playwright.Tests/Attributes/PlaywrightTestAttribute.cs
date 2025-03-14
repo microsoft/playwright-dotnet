@@ -36,12 +36,22 @@ namespace Microsoft.Playwright.Tests;
 /// Enables decorating test facts with information about the corresponding test in the upstream repository.
 /// </summary>
 [AttributeUsage(AttributeTargets.Method, AllowMultiple = true)]
-public class PlaywrightTestAttribute : TestAttribute, IApplyToContext, IApplyToTest, IWrapSetUpTearDown
+public class PlaywrightTestAttribute : TestAttribute, IWrapSetUpTearDown
 {
-    private readonly CancelAfterAttribute _cancelAfterAttribute = new(TestConstants.DefaultTestTimeout);
+    private readonly int? _timeout;
 
     public PlaywrightTestAttribute()
     {
+    }
+
+    public PlaywrightTestAttribute(int timeout) : this()
+    {
+        _timeout = timeout;
+    }
+
+    public PlaywrightTestAttribute(string fileName, string nameOfTest, int timeout) : this(fileName, nameOfTest)
+    {
+        _timeout = timeout;
     }
 
     /// <summary>
@@ -61,11 +71,6 @@ public class PlaywrightTestAttribute : TestAttribute, IApplyToContext, IApplyToT
     public string FileName { get; }
 
     /// <summary>
-    /// Returns the trimmed file name.
-    /// </summary>
-    public string TrimmedName => FileName.Substring(0, FileName.IndexOf('.'));
-
-    /// <summary>
     /// The name of the test, the decorated code is based on.
     /// </summary>
     public string TestName { get; }
@@ -75,22 +80,6 @@ public class PlaywrightTestAttribute : TestAttribute, IApplyToContext, IApplyToT
     /// </summary>
     public string Describe { get; }
 
-    public void ApplyToContext(TestExecutionContext context)
-    {
-        if (context.TestCaseTimeout == 0)
-        {
-            (_cancelAfterAttribute as IApplyToContext).ApplyToContext(context);
-        }
-    }
-
-    public new void ApplyToTest(Test test)
-    {
-        base.ApplyToTest(test);
-        if (TestExecutionContext.CurrentContext.TestCaseTimeout == 0)
-        {
-            _cancelAfterAttribute.ApplyToTest(test);
-        }
-    }
     /// <summary>
     /// Wraps the current test command in a <see cref="UnobservedTaskExceptionCommand"/>.
     /// </summary>
@@ -98,6 +87,7 @@ public class PlaywrightTestAttribute : TestAttribute, IApplyToContext, IApplyToT
     /// <returns>the wrapped test command</returns>
     public TestCommand Wrap(TestCommand command)
     {
+        command = new TimeoutCommand(command, _timeout ?? TestConstants.DefaultTestTimeout);
         if (Environment.GetEnvironmentVariable("CI") != null)
         {
             command = new RetryCommand(command, 3);
@@ -203,6 +193,77 @@ public class PlaywrightTestAttribute : TestAttribute, IApplyToContext, IApplyToT
         private void UnobservedTaskException(object sender, UnobservedTaskExceptionEventArgs e)
         {
             _unobservedTaskExceptions.Add(e.Exception);
+        }
+    }
+
+    /// <summary>
+    /// <see cref="TimeoutCommand"/> creates a timer in order to cancel
+    /// a test if it exceeds a specified time and adjusts
+    /// the test result if it did time out.
+    /// </summary>
+    public class TimeoutCommand : BeforeAndAfterTestCommand
+    {
+        private readonly int _timeout;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="TimeoutCommand"/> class.
+        /// </summary>
+        /// <param name="innerCommand">The inner command</param>
+        /// <param name="timeout">Timeout value</param>
+        /// <param name="debugger">An <see cref="IDebugger" /> instance</param>
+        internal TimeoutCommand(TestCommand innerCommand, int timeout) : base(innerCommand)
+        {
+            _timeout = timeout;
+        }
+
+        /// <summary>
+        /// Runs the test, saving a TestResult in the supplied TestExecutionContext.
+        /// </summary>
+        /// <param name="context">The context in which the test should run.</param>
+        /// <returns>A TestResult</returns>
+        public override TestResult Execute(TestExecutionContext context)
+        {
+            try
+            {
+                using (new TestExecutionContext.IsolatedContext())
+                {
+                    var testExecution = Task.Run(() => innerCommand.Execute(TestExecutionContext.CurrentContext));
+                    var timedOut = Task.WaitAny([testExecution], _timeout) == -1;
+
+                    if (timedOut)
+                    {
+                        context.CurrentResult.SetResult(
+                            ResultState.Failure,
+                            $"Test exceeded Timeout value of {_timeout}ms");
+                        // // When the timeout is reached the TearDown methods are not called. This is a best-effort
+                        // // attempt to call them and close the browser / http server.
+                        // foreach (var method in new string[] { "WorkerTeardown", "BrowserTearDown" })
+                        // {
+                        //     var methodFun = context.CurrentTest.Method.MethodInfo.DeclaringType
+                        //         .GetMethod(method, BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
+                        //     if (methodFun != null)
+                        //     {
+                        //         var res = methodFun.Invoke(context.TestObject, null);
+                        //         if (res is Task task)
+                        //         {
+                        //             Console.WriteLine($"Waiting for {method} task to complete");
+                        //             task.GetAwaiter().GetResult();
+                        //         }
+                        //     }
+                        // }
+                    }
+                    else
+                    {
+                        context.CurrentResult = testExecution.GetAwaiter().GetResult();
+                    }
+                }
+            }
+            catch (Exception exception)
+            {
+                context.CurrentResult.RecordException(exception, FailureSite.Test);
+            }
+
+            return context.CurrentResult;
         }
     }
 }
