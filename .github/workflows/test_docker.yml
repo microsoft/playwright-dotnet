@@ -39,7 +39,7 @@ jobs:
       run: dotnet clean src/ || true
     - name: Test
       run: |
-        CONTAINER_ID="$(docker run --rm --ipc=host -v $(pwd):/root/playwright --name playwright-docker-test --workdir /root/playwright/ -d -t playwright-dotnet:localbuild-${{ matrix.flavor }} /bin/bash)"
+        CONTAINER_ID="$(docker run --rm --ipc=host -v $(pwd):/root/playwright --name playwright-docker-test --workdir /root/playwright/ -e CI -d -t playwright-dotnet:localbuild-${{ matrix.flavor }} /bin/bash)"
         docker exec -e BROWSER=chromium "${CONTAINER_ID}" xvfb-run dotnet test ./src/Playwright.Tests/Playwright.Tests.csproj -c Debug --logger:"console;verbosity=detailed"
         docker exec -e BROWSER=firefox "${CONTAINER_ID}" xvfb-run dotnet test ./src/Playwright.Tests/Playwright.Tests.csproj -c Debug --logger:"console;verbosity=detailed"
         docker exec -e BROWSER=webkit "${CONTAINER_ID}" xvfb-run dotnet test ./src/Playwright.Tests/Playwright.Tests.csproj -c Debug --logger:"console;verbosity=detailed"
