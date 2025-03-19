@@ -61,10 +61,7 @@ test('should be able to forward DEBUG=pw:api env var', async ({ runTest }) => {
           </EnvironmentVariables>
         </RunConfiguration>
       </RunSettings>`,
-    }, 'dotnet test --settings=.runsettings', {
-      // Workaround until we can enable https://github.com/xunit/xunit/issues/1730#issuecomment-2330825763 assembly wide.
-      PWAPI_TO_STDOUT: '1',
-    });
+    }, 'dotnet test --settings=.runsettings');
   expect(result.passed).toBe(1);
   expect(result.failed).toBe(0);
   expect(result.total).toBe(1);

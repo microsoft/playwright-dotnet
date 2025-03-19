@@ -63,7 +63,7 @@ export const test = base.extend<{
       if (process.env.PWTEST_DEBUG) {
         cp.stdout.pipe(process.stdout);
         cp.stderr.pipe(process.stderr);
-        console.log(`Running: ${command}`);
+        console.log(`Running: TEST_MODE=${testMode} PWTEST_TEST_DIR=${testDir} ${command}`);
       }
       let [rawStdout, rawStderr] = ['', ''];
       cp.stdout.on('data', (data: Buffer) => rawStdout += data.toString());
