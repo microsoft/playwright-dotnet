@@ -22,7 +22,6 @@
  * SOFTWARE.
  */
 
-import http from 'http';
 import { test, expect } from '../baseTest';
 
 test.use({ testMode: 'mstest' });
