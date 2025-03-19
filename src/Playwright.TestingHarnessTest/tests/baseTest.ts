@@ -19,7 +19,7 @@ type RunResult = {
 
 export const test = base.extend<{
   proxyServer: ProxyServer;
-  testMode: 'nunit' | 'mstest' | 'xunit';
+  testMode: 'nunit' | 'mstest' | 'xunit' | 'xunit.v3';
   runTest: (files: Record<string, string>, command: string, env?: NodeJS.ProcessEnv) => Promise<RunResult>;
   launchServer: (options: { port: number }) => Promise<void>;
   server: SimpleServer;
