@@ -9,6 +9,9 @@
         <AssemblyName>Microsoft.Playwright.Tests</AssemblyName>
         <RootNamespace>Microsoft.Playwright.Tests</RootNamespace>
         <ImplicitUsings>enable</ImplicitUsings>
+        <OutputType>Exe</OutputType>
+        <EnableNUnitRunner>true</EnableNUnitRunner>
+        <TestingPlatformDotnetTestSupport>true</TestingPlatformDotnetTestSupport>
     </PropertyGroup>
     <Import Project="../Common/SignAssembly.props" />
     <ItemGroup>
