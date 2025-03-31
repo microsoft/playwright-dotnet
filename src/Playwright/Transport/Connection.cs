@@ -99,7 +99,7 @@ internal class Connection : IDisposable
         {
             return string.Empty;
         }
-        return "\nCall log:\n  - " + string.Join("\n  - ", log);
+        return "\nCall log:\n" + string.Join("\n", log);
     }
 
     public void Dispose()
