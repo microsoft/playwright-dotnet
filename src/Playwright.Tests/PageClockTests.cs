@@ -537,5 +537,15 @@ public class PageClockTests : PageTestEx
             Assert.AreEqual(2, _calls.Count);
             Assert.AreEqual("inner", _calls[1][0]);
         }
+
+        [PlaywrightTest("page-clock.spec.ts", "")]
+        public async Task ShouldHavePausedClockAfterInstall()
+        {
+            await Page.Clock.InstallAsync();
+            await Page.GotoAsync("data:text/html,");
+            var currentTime = await Page.EvaluateAsync<long>("Date.now()");
+            await Page.WaitForTimeoutAsync(100);
+            var newTime = await Page.EvaluateAsync<long>("Date.now()");
+        }
     }
 }
