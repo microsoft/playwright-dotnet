@@ -32,6 +32,7 @@ internal class Clock(BrowserContext browserContext) : IClock
 {
     public async Task InstallAsync(ClockInstallOptions options = null)
     {
+        options ??= new();
         Dictionary<string, object> args = null;
         if ((options.Time ?? options.TimeString) != null)
         {
