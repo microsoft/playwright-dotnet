@@ -24,6 +24,7 @@
 
 using System;
 using System.Diagnostics;
+using System.IO;
 using Microsoft.Playwright.Helpers;
 
 namespace Microsoft.Playwright;
@@ -38,13 +39,18 @@ public class Program
 
     public int Run(string[] args)
     {
+        return Run(args, throwOnError: false);
+    }
+
+    public int Run(string[] args, bool throwOnError)
+    {
         Func<string?, string> getArgs;
         string executablePath;
         try
         {
             (executablePath, getArgs) = Driver.GetExecutablePath();
         }
-        catch
+        catch when (!throwOnError)
         {
             return PrintError("Microsoft.Playwright assembly was found, but is missing required assets. Please ensure to build your project before running Playwright tool.");
         }
@@ -55,6 +61,8 @@ public class Program
             // This works after net8.0-preview-4
             // https://github.com/dotnet/runtime/pull/82662
             WindowStyle = ProcessWindowStyle.Hidden,
+            RedirectStandardOutput = throwOnError,
+            RedirectStandardError = throwOnError,
         };
         foreach (var pair in Driver.EnvironmentVariables)
         {
@@ -66,9 +74,26 @@ public class Program
             StartInfo = playwrightStartInfo,
         };
 
+        using var pwOutput = new StringWriter();
+        if (throwOnError)
+        {
+            pwProcess.OutputDataReceived += (_, eventArgs) => pwOutput.WriteLine(eventArgs.Data);
+            pwProcess.ErrorDataReceived += (_, eventArgs) => pwOutput.WriteLine(eventArgs.Data);
+        }
         pwProcess.Start();
+        if (throwOnError)
+        {
+            pwProcess.BeginOutputReadLine();
+            pwProcess.BeginErrorReadLine();
+        }
 
         pwProcess.WaitForExit();
+
+        if (pwProcess.ExitCode != 0 && throwOnError)
+        {
+            throw new PlaywrightException($"Failed to run {playwrightStartInfo.FileName} {playwrightStartInfo.Arguments}{Environment.NewLine}{pwOutput.ToString().Trim()}");
+        }
+
         return pwProcess.ExitCode;
     }
 
