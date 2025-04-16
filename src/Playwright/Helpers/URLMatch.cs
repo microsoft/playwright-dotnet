@@ -33,16 +33,12 @@ public class URLMatch
 
     public Func<string, bool> func { get; set; }
 
-    public string glob { get; set; }
-
-    public string baseURL { get; set; }
-
     public bool Match(string url)
     {
-        return MatchImpl(url, re, func, glob, baseURL);
+        return MatchImpl(url, re, func);
     }
 
-    private static bool MatchImpl(string url, Regex re, Func<string, bool> func, string glob, string baseURL)
+    private static bool MatchImpl(string url, Regex re, Func<string, bool> func)
     {
         if (re != null)
         {
@@ -54,23 +50,6 @@ public class URLMatch
             return func(url);
         }
 
-        if (glob != null)
-        {
-            if (string.IsNullOrEmpty(glob))
-            {
-                return true;
-            }
-            if (!glob.StartsWith("*", StringComparison.InvariantCultureIgnoreCase))
-            {
-                // Allow http(s) baseURL to match ws(s) urls.
-                if (!string.IsNullOrEmpty(baseURL) && new Regex("^https?://").IsMatch(baseURL) && new Regex("^wss?://").IsMatch(url))
-                {
-                    baseURL = new Regex("^http").Replace(baseURL, "ws");
-                }
-                glob = ConstructURLBasedOnBaseURL(baseURL, glob);
-            }
-            return new Regex(glob.GlobToRegex()).IsMatch(url);
-        }
         return true;
     }
 
@@ -90,11 +69,9 @@ public class URLMatch
         }
     }
 
-    public bool Equals(string globMatch, Regex reMatch, Func<string, bool> funcMatch, string baseURL)
+    public bool Equals(URLMatch matcher)
     {
-        return this.re?.ToString() == reMatch?.ToString() && this.re?.Options == reMatch?.Options
-            && this.func == funcMatch
-            && this.glob == globMatch
-            && this.baseURL == baseURL;
+        return this.re?.ToString() == matcher.re?.ToString() && this.re?.Options == matcher.re?.Options
+            && this.func == matcher.func;
     }
 }

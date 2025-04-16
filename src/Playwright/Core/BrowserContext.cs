@@ -732,23 +732,28 @@ internal class BrowserContext : ChannelOwner, IBrowserContext
         }
     }
 
-    internal bool UrlMatches(string url, string globMatch)
+    internal CreateURLMatcherAsync(string globMatch, Regex reMatch, Func<string, bool> funcMatch, bool webSocketUrl = false)
+    {
+        if (reMatch == null && !string.IsNullOrEmpty(globMatch))
+          reMatch = await _connection.LocalUtils.GlobToRegexAsync(globMatch, Options.BaseURL, webSocketUrl).ConfigureAwait(false);
+        return new URLMatch()
+        {
+            re = reMatch,
+            func = funcMatch,
+        };
+    }
+
+    internal bool UrlMatches(string url, string relativeOrAbsoluteURL)
         => new URLMatch()
         {
-            glob = globMatch,
+            relativeOrAbsoluteURL = relativeOrAbsoluteURL,
             baseURL = Options.BaseURL,
         }.Match(url);
 
     private Task RouteAsync(string globMatch, Regex reMatch, Func<string, bool> funcMatch, Delegate handler, BrowserContextRouteOptions options)
         => RouteAsync(new()
         {
-            urlMatcher = new URLMatch()
-            {
-                glob = globMatch,
-                re = reMatch,
-                func = funcMatch,
-                baseURL = Options.BaseURL,
-            },
+            urlMatcher = await CreateURLMatcherAsync(globMatch, reMatch, funcMatch).ConfigureAwait(false),
             Handler = handler,
             Times = options?.Times,
         });
@@ -761,11 +766,12 @@ internal class BrowserContext : ChannelOwner, IBrowserContext
 
     private async Task UnrouteAsync(string globMatch, Regex reMatch, Func<string, bool> funcMatch, Delegate handler)
     {
+        var urlMatcher = await CreateURLMatcherAsync(globMatch, reMatch, funcMatch).ConfigureAwait(false);
         var removed = new List<RouteHandler>();
         var remaining = new List<RouteHandler>();
         foreach (var routeHandler in _routes)
         {
-            if (routeHandler.urlMatcher.Equals(globMatch, reMatch, funcMatch, Options.BaseURL) && (handler == null || routeHandler.Handler == handler))
+            if (routeHandler.urlMatcher.Equals(urlMatcher) && (handler == null || routeHandler.Handler == handler))
             {
                 removed.Add(routeHandler);
             }
@@ -926,15 +932,10 @@ internal class BrowserContext : ChannelOwner, IBrowserContext
 
     private Task RouteWebSocketAsync(string globMatch, Regex reMatch, Func<string, bool> funcMatch, Delegate handler)
     {
+        var urlMatcher = await CreateURLMatcherAsync(globMatch, reMatch, funcMatch, true).ConfigureAwait(false);
         _webSocketRoutes.Insert(0, new WebSocketRouteHandler()
         {
-            urlMatcher = new URLMatch()
-            {
-                baseURL = Options.BaseURL,
-                glob = globMatch,
-                re = reMatch,
-                func = funcMatch,
-            },
+            urlMatcher = urlMatcher,
             Handler = handler,
         });
         return UpdateWebSocketInterceptionAsync();

@@ -279,7 +279,7 @@ internal class Page : ChannelOwner, IPage
         => Frames.FirstOrDefault(f => f.Name == name);
 
     [MethodImpl(MethodImplOptions.NoInlining)]
-    public IFrame FrameByUrl(string urlString) => Frames.FirstOrDefault(f => Context.UrlMatches(f.Url, urlString));
+    public IFrame FrameByUrl(string urlString) => Frames.FirstOrDefault(f => URLMatch.ConstructURLBasedOnBaseURL(Context.Options.BaseURL, urlString) == f.Url);
 
     [MethodImpl(MethodImplOptions.NoInlining)]
     public IFrame FrameByUrl(Regex urlRegex) => Frames.FirstOrDefault(f => urlRegex.IsMatch(f.Url));
@@ -1239,13 +1239,7 @@ internal class Page : ChannelOwner, IPage
     private Task RouteAsync(string globMatch, Regex reMatch, Func<string, bool> funcMatch, Delegate handler, PageRouteOptions options)
         => RouteAsync(new()
         {
-            urlMatcher = new URLMatch()
-            {
-                glob = globMatch,
-                re = reMatch,
-                func = funcMatch,
-                baseURL = Context.Options.BaseURL,
-            },
+            urlMatcher = await Context.CreateURLMatcherAsync(globMatch, reMatch, funcMatch).ConfigureAwait(false),
             Handler = handler,
             Times = options?.Times,
         });
@@ -1602,15 +1596,10 @@ internal class Page : ChannelOwner, IPage
 
     private Task RouteWebSocketAsync(string globMatch, Regex urlRegex, Func<string, bool> urlFunc, Delegate handler)
     {
+        var urlMatcher = await Context.CreateURLMatcherAsync(globMatch, reMatch, funcMatch, true).ConfigureAwait(false);
         _webSocketRoutes.Insert(0, new WebSocketRouteHandler()
         {
-            urlMatcher = new URLMatch()
-            {
-                baseURL = Context.Options.BaseURL,
-                glob = globMatch,
-                re = urlRegex,
-                func = urlFunc,
-            },
+            urlMatcher = urlMatcher,
             Handler = handler,
         });
         return UpdateWebSocketInterceptionAsync();

@@ -29,37 +29,6 @@ namespace Microsoft.Playwright.Tests;
 
 public class InterceptionTests : PageTestEx
 {
-    [PlaywrightTest("interception.spec.ts", "should work with glob")]
-    public void ShouldWorkWithGlob()
-    {
-        Assert.That("https://localhost:8080/foo.js", Does.Match(StringExtensions.GlobToRegex("**/*.js")));
-        Assert.That("https://localhost:8080/foo.js", Does.Not.Match(StringExtensions.GlobToRegex("**/*.css")));
-        Assert.That("https://localhost:8080/foo.js", Does.Not.Match(StringExtensions.GlobToRegex("*.js")));
-        Assert.That("https://localhost:8080/foo.js", Does.Match(StringExtensions.GlobToRegex("https://**/*.js")));
-        Assert.That("http://localhost:8080/simple/path.js", Does.Match(StringExtensions.GlobToRegex("http://localhost:8080/simple/path.js")));
-        Assert.That("http://localhost:8080/Simple/path.js", Does.Match(StringExtensions.GlobToRegex("http://localhost:8080/?imple/path.js")));
-        Assert.That("https://localhost:8080/a.js", Does.Match(StringExtensions.GlobToRegex("**/{a,b}.js")));
-        Assert.That("https://localhost:8080/b.js", Does.Match(StringExtensions.GlobToRegex("**/{a,b}.js")));
-        Assert.That("https://localhost:8080/c.js", Does.Not.Match(StringExtensions.GlobToRegex("**/{a,b}.js")));
-        Assert.That("https://localhost:8080/c.jpg", Does.Match(StringExtensions.GlobToRegex("**/*.{png,jpg,jpeg}")));
-        Assert.That("https://localhost:8080/c.jpeg", Does.Match(StringExtensions.GlobToRegex("**/*.{png,jpg,jpeg}")));
-        Assert.That("https://localhost:8080/c.png", Does.Match(StringExtensions.GlobToRegex("**/*.{png,jpg,jpeg}")));
-        Assert.That("https://localhost:8080/c.css", Does.Not.Match(StringExtensions.GlobToRegex("**/*.{png,jpg,jpeg}")));
-        Assert.That("foo.js", Does.Match(StringExtensions.GlobToRegex("foo*")));
-        Assert.That("foo/bar.js", Does.Not.Match(StringExtensions.GlobToRegex("foo*")));
-        Assert.That("http://localhost:3000/signin-oidc/foo", Does.Not.Match(StringExtensions.GlobToRegex("http://localhost:3000/signin-oidc*")));
-        Assert.That("http://localhost:3000/signin-oidcnice", Does.Match(StringExtensions.GlobToRegex("http://localhost:3000/signin-oidc*")));
-
-        Assert.That("http://mydomain:8080/blah/blah/three-columns/settings.html?id=settings-e3c58efe-02e9-44b0-97ac-dd138100cf7c&blah", Does.Match(StringExtensions.GlobToRegex("**/three-columns/settings.html?**id=[a-z]**")));
-
-        Assert.AreEqual("^\\?$", StringExtensions.GlobToRegex("\\?"));
-        Assert.AreEqual("^\\\\$", StringExtensions.GlobToRegex("\\"));
-        Assert.AreEqual("^\\\\$", StringExtensions.GlobToRegex("\\\\"));
-        Assert.AreEqual("^\\[$", StringExtensions.GlobToRegex("\\["));
-        Assert.AreEqual("^[a-z]$", StringExtensions.GlobToRegex("[a-z]"));
-        Assert.AreEqual(@"^\$\^\+\.\*\(\)\|\?\{\}\[\]$", StringExtensions.GlobToRegex("$^+.\\*()|\\?\\{\\}\\[\\]"));
-    }
-
     [PlaywrightTest("interception.spec.ts", "should work with ignoreHTTPSErrors")]
     public async Task ShouldWorkWithIgnoreHTTPSErrors()
     {

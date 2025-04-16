@@ -80,6 +80,17 @@ internal class LocalUtils : ChannelOwner
                 { "isNavigationRequest", isNavigationRequest },
             });
 
+    internal Task<Regex> GlobToRegexAsync(string glob, string baseURL, bool webSocketUrl = false)
+    {
+        var response = await SendMessageToServerAsync("globToRegex", new Dictionary<string, object>
+            {
+                { "glob", glob },
+                { "baseURL", baseURL },
+                { "webSocketUrl", webSocketUrl },
+            }).ConfigureAwait(false);
+        return new Regex(response.GetString("regex", true));
+    }
+
     internal Task HarCloseAsync(string harId)
          => SendMessageToServerAsync("HarCloseAsync", new Dictionary<string, object>
         {
