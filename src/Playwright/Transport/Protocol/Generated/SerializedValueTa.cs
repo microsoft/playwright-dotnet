@@ -22,55 +22,15 @@
  * SOFTWARE.
  */
 
-using System.Collections.Generic;
 using System.Text.Json.Serialization;
 
 namespace Microsoft.Playwright.Transport.Protocol;
 
-internal class SerializedValue
+internal class SerializedValueTa
 {
-    [JsonPropertyName("n")]
-    public int? N { get; set; }
-
     [JsonPropertyName("b")]
-    public bool? B { get; set; }
+    public byte[] B { get; set; }
 
-    [JsonPropertyName("s")]
-    public string S { get; set; }
-
-    [JsonPropertyName("v")]
-    public string V { get; set; }
-
-    [JsonPropertyName("d")]
-    public string D { get; set; }
-
-    [JsonPropertyName("u")]
-    public string U { get; set; }
-
-    [JsonPropertyName("bi")]
-    public string Bi { get; set; }
-
-    [JsonPropertyName("ta")]
-    public SerializedValueTa Ta { get; set; }
-
-    [JsonPropertyName("e")]
-    public SerializedValueE E { get; set; }
-
-    [JsonPropertyName("r")]
-    public SerializedValueR R { get; set; }
-
-    [JsonPropertyName("a")]
-    public List<System.Text.Json.JsonElement> A { get; set; }
-
-    [JsonPropertyName("o")]
-    public List<SerializedValueO> O { get; set; }
-
-    [JsonPropertyName("h")]
-    public int? H { get; set; }
-
-    [JsonPropertyName("id")]
-    public int? Id { get; set; }
-
-    [JsonPropertyName("ref")]
-    public int? Ref { get; set; }
+    [JsonPropertyName("k")]
+    public string K { get; set; }
 }

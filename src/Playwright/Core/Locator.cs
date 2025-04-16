@@ -609,6 +609,7 @@ internal class Locator : ILocator
         {
             ["selector"] = _selector,
             ["timeout"] = options?.Timeout,
+            ["ref"] = options?.Ref,
         }).ConfigureAwait(false);
         return result.Value.GetProperty("snapshot").GetString();
     }

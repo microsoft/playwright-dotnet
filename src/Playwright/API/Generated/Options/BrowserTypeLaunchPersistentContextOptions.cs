@@ -319,7 +319,7 @@ public class BrowserTypeLaunchPersistentContextOptions
     /// <summary>
     /// <para>
     /// Whether to run browser in headless mode. More details for <a href="https://developers.google.com/web/updates/2017/04/headless-chrome">Chromium</a>
-    /// and <a href="https://developer.mozilla.org/en-US/docs/Mozilla/Firefox/Headless_mode">Firefox</a>.
+    /// and <a href="https://hacks.mozilla.org/2017/12/using-headless-mode-in-firefox/">Firefox</a>.
     /// Defaults to <c>true</c> unless the <see cref="IBrowserType.LaunchAsync"/> option
     /// is <c>true</c>.
     /// </para>

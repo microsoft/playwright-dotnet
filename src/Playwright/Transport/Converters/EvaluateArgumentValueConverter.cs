@@ -353,6 +353,26 @@ internal static class EvaluateArgumentValueConverter
             return new Regex(regex.GetProperty("p").ToString(), RegexOptionsExtensions.FromInlineFlags(regex.GetProperty("f").ToString()));
         }
 
+        if (result.TryGetProperty("ta", out var ta))
+        {
+            byte[] bytes = Convert.FromBase64String(ta.GetProperty("b").ToString());
+            return ta.GetProperty("k").ToString() switch
+            {
+                "i8" => bytes.Select(b => unchecked((sbyte)b)).ToArray(),
+                "ui8" => bytes,
+                "ui8c" => bytes,
+                "i16" => Enumerable.Range(0, bytes.Length / 2).Select(i => BitConverter.ToInt16(bytes, i * 2)).ToArray(),
+                "ui16" => Enumerable.Range(0, bytes.Length / 2).Select(i => BitConverter.ToUInt16(bytes, i * 2)).ToArray(),
+                "i32" => Enumerable.Range(0, bytes.Length / 4).Select(i => BitConverter.ToInt32(bytes, i * 4)).ToArray(),
+                "ui32" => Enumerable.Range(0, bytes.Length / 4).Select(i => BitConverter.ToUInt32(bytes, i * 4)).ToArray(),
+                "f32" => Enumerable.Range(0, bytes.Length / 4).Select(i => BitConverter.ToSingle(bytes, i * 4)).ToArray(),
+                "f64" => Enumerable.Range(0, bytes.Length / 8).Select(i => BitConverter.ToDouble(bytes, i * 8)).ToArray(),
+                "bi64" => Enumerable.Range(0, bytes.Length / 8).Select(i => BitConverter.ToInt64(bytes, i * 8)).ToArray(),
+                "bui64" => Enumerable.Range(0, bytes.Length / 8).Select(i => BitConverter.ToUInt64(bytes, i * 8)).ToArray(),
+                _ => null,
+            };
+        }
+
         if (result.TryGetProperty("b", out var boolean))
         {
             return boolean.ToObject<bool>();

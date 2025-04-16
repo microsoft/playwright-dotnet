@@ -147,6 +147,12 @@ internal class LocatorAssertions : AssertionsBase, ILocatorAssertions
     public Task ToHaveClassAsync(IEnumerable<Regex> expected, LocatorAssertionsToHaveClassOptions options = null) =>
         ExpectImplAsync("to.have.class.array", expected.Select(regex => ExpectedRegex(regex)).ToArray(), expected, "Locator expected to have class matching regex", ConvertToFrameExpectOptions(options));
 
+    public Task ToContainClassAsync(string expected, LocatorAssertionsToContainClassOptions options = null) =>
+        ExpectImplAsync("to.contain.class", new ExpectedTextValue() { String = expected }, expected, "Locator expected to contain class names", ConvertToFrameExpectOptions(options));
+
+    public Task ToContainClassAsync(IEnumerable<string> expected, LocatorAssertionsToContainClassOptions options = null) =>
+        ExpectImplAsync("to.contain.class.array", expected.Select(text => new ExpectedTextValue() { String = text }).ToArray(), expected, "Locator expected to contain class names", ConvertToFrameExpectOptions(options));
+
     public Task ToHaveCountAsync(int count, LocatorAssertionsToHaveCountOptions options = null)
     {
         var commonOptions = ConvertToFrameExpectOptions(options);

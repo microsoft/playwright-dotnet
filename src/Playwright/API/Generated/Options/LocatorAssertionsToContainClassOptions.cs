@@ -28,41 +28,23 @@ using System.Text.Json.Serialization;
 
 namespace Microsoft.Playwright;
 
-public class BrowserContextStorageStateOptions
+public class LocatorAssertionsToContainClassOptions
 {
-    public BrowserContextStorageStateOptions() { }
+    public LocatorAssertionsToContainClassOptions() { }
 
-    public BrowserContextStorageStateOptions(BrowserContextStorageStateOptions clone)
+    public LocatorAssertionsToContainClassOptions(LocatorAssertionsToContainClassOptions clone)
     {
         if (clone == null)
         {
             return;
         }
 
-        IndexedDB = clone.IndexedDB;
-        Path = clone.Path;
+        Timeout = clone.Timeout;
     }
 
-    /// <summary>
-    /// <para>
-    /// Set to <c>true</c> to include <a href="https://developer.mozilla.org/en-US/docs/Web/API/IndexedDB_API">IndexedDB</a>
-    /// in the storage state snapshot. If your application uses IndexedDB to store authentication
-    /// tokens, like Firebase Authentication, enable this.
-    /// </para>
-    /// </summary>
-    [JsonPropertyName("indexedDB")]
-    public bool? IndexedDB { get; set; }
-
-    /// <summary>
-    /// <para>
-    /// The file path to save the storage state to. If <see cref="IBrowserContext.StorageStateAsync"/>
-    /// is a relative path, then it is resolved relative to current working directory. If
-    /// no path is provided, storage state is still returned, but won't be saved to the
-    /// disk.
-    /// </para>
-    /// </summary>
-    [JsonPropertyName("path")]
-    public string? Path { get; set; }
+    /// <summary><para>Time to retry the assertion for in milliseconds. Defaults to <c>5000</c>.</para></summary>
+    [JsonPropertyName("timeout")]
+    public float? Timeout { get; set; }
 }
 
 #nullable disable

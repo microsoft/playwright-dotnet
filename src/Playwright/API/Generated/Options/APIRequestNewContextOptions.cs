@@ -46,6 +46,7 @@ public class APIRequestNewContextOptions
         FailOnStatusCode = clone.FailOnStatusCode;
         HttpCredentials = clone.HttpCredentials;
         IgnoreHTTPSErrors = clone.IgnoreHTTPSErrors;
+        MaxRedirects = clone.MaxRedirects;
         Proxy = clone.Proxy;
         StorageState = clone.StorageState;
         StorageStatePath = clone.StorageStatePath;
@@ -137,6 +138,16 @@ public class APIRequestNewContextOptions
     /// <summary><para>Whether to ignore HTTPS errors when sending network requests. Defaults to <c>false</c>.</para></summary>
     [JsonPropertyName("ignoreHTTPSErrors")]
     public bool? IgnoreHTTPSErrors { get; set; }
+
+    /// <summary>
+    /// <para>
+    /// Maximum number of request redirects that will be followed automatically. An error
+    /// will be thrown if the number is exceeded. Defaults to <c>20</c>. Pass <c>0</c> to
+    /// not follow redirects. This can be overwritten for each request individually.
+    /// </para>
+    /// </summary>
+    [JsonPropertyName("maxRedirects")]
+    public int? MaxRedirects { get; set; }
 
     /// <summary><para>Network proxy settings.</para></summary>
     [JsonPropertyName("proxy")]
