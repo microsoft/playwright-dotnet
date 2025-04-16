@@ -169,11 +169,13 @@ public partial interface IBrowserType
     /// </summary>
     /// <param name="userDataDir">
     /// Path to a User Data Directory, which stores browser session data like cookies and
-    /// local storage. More details for <a href="https://chromium.googlesource.com/chromium/src/+/master/docs/user_data_dir.md#introduction">Chromium</a>
-    /// and <a href="https://developer.mozilla.org/en-US/docs/Mozilla/Command_Line_Options#User_Profile">Firefox</a>.
-    /// Note that Chromium's user data directory is the **parent** directory of the "Profile
-    /// Path" seen at <c>chrome://version</c>. Pass an empty string to use a temporary directory
-    /// instead.
+    /// local storage. Pass an empty string to create a temporary directory.
+    /// More details for <a href="https://chromium.googlesource.com/chromium/src/+/master/docs/user_data_dir.md#introduction">Chromium</a>
+    /// and <a href="https://wiki.mozilla.org/Firefox/CommandLineOptions#User_profile">Firefox</a>.
+    /// Chromium's user data directory is the **parent** directory of the "Profile Path"
+    /// seen at <c>chrome://version</c>.
+    /// Note that browsers do not allow launching multiple instances with the same User
+    /// Data Directory.
     /// </param>
     /// <param name="options">Call options</param>
     Task<IBrowserContext> LaunchPersistentContextAsync(string userDataDir, BrowserTypeLaunchPersistentContextOptions? options = default);

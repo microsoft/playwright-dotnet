@@ -44,9 +44,9 @@ public class LocatorEvaluateHandleOptions
 
     /// <summary>
     /// <para>
-    /// Maximum time in milliseconds. Defaults to <c>30000</c> (30 seconds). Pass <c>0</c>
-    /// to disable timeout. The default value can be changed by using the <see cref="IBrowserContext.SetDefaultTimeout"/>
-    /// or <see cref="IPage.SetDefaultTimeout"/> methods.
+    /// Maximum time in milliseconds to wait for the locator before evaluating. Note that
+    /// after locator is resolved, evaluation itself is not limited by the timeout. Defaults
+    /// to <c>30000</c> (30 seconds). Pass <c>0</c> to disable timeout.
     /// </para>
     /// </summary>
     [JsonPropertyName("timeout")]

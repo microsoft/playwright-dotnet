@@ -1986,9 +1986,10 @@ public partial interface IPage
     /// <para>Enabling routing disables http cache.</para>
     /// </remarks>
     /// <param name="url">
-    /// A glob pattern, regex pattern or predicate receiving <see cref="URL"/> to match
-    /// while routing. When a <see cref="IBrowser.NewContextAsync"/> via the context options
-    /// was provided and the passed URL is a path, it gets merged via the <a href="https://developer.mozilla.org/en-US/docs/Web/API/URL/URL"><c>new
+    /// A glob pattern, regex pattern, or predicate that receives a <see cref="URL"/> to
+    /// match during routing. If <see cref="IBrowser.NewContextAsync"/> is set in the context
+    /// options and the provided URL is a string that does not start with <c>*</c>, it is
+    /// resolved using the <a href="https://developer.mozilla.org/en-US/docs/Web/API/URL/URL"><c>new
     /// URL()</c></a> constructor.
     /// </param>
     /// <param name="handler">handler function to route the request.</param>
@@ -2063,9 +2064,10 @@ public partial interface IPage
     /// <para>Enabling routing disables http cache.</para>
     /// </remarks>
     /// <param name="url">
-    /// A glob pattern, regex pattern or predicate receiving <see cref="URL"/> to match
-    /// while routing. When a <see cref="IBrowser.NewContextAsync"/> via the context options
-    /// was provided and the passed URL is a path, it gets merged via the <a href="https://developer.mozilla.org/en-US/docs/Web/API/URL/URL"><c>new
+    /// A glob pattern, regex pattern, or predicate that receives a <see cref="URL"/> to
+    /// match during routing. If <see cref="IBrowser.NewContextAsync"/> is set in the context
+    /// options and the provided URL is a string that does not start with <c>*</c>, it is
+    /// resolved using the <a href="https://developer.mozilla.org/en-US/docs/Web/API/URL/URL"><c>new
     /// URL()</c></a> constructor.
     /// </param>
     /// <param name="handler">handler function to route the request.</param>
@@ -2140,9 +2142,10 @@ public partial interface IPage
     /// <para>Enabling routing disables http cache.</para>
     /// </remarks>
     /// <param name="url">
-    /// A glob pattern, regex pattern or predicate receiving <see cref="URL"/> to match
-    /// while routing. When a <see cref="IBrowser.NewContextAsync"/> via the context options
-    /// was provided and the passed URL is a path, it gets merged via the <a href="https://developer.mozilla.org/en-US/docs/Web/API/URL/URL"><c>new
+    /// A glob pattern, regex pattern, or predicate that receives a <see cref="URL"/> to
+    /// match during routing. If <see cref="IBrowser.NewContextAsync"/> is set in the context
+    /// options and the provided URL is a string that does not start with <c>*</c>, it is
+    /// resolved using the <a href="https://developer.mozilla.org/en-US/docs/Web/API/URL/URL"><c>new
     /// URL()</c></a> constructor.
     /// </param>
     /// <param name="handler">handler function to route the request.</param>

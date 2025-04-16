@@ -408,6 +408,22 @@ public class GlobalFetchTests : PlaywrightTestEx
         await request.DisposeAsync();
     }
 
+    [PlaywrightTest("global-fetch.spec.ts", "should not follow redirects when maxRedirects is set to 0 in newContext")]
+    public async Task ShouldNotFollowRedirectsWhenMaxRedirectsIsSetTo0InNewContext()
+    {
+        Server.SetRedirect("/a/redirect1", "/b/c/redirect2");
+        Server.SetRedirect("/b/c/redirect2", "/simple.json");
+
+        var request = await Playwright.APIRequest.NewContextAsync(new() { MaxRedirects = 0 });
+        foreach (var method in new[] { "GET", "PUT", "POST", "OPTIONS", "HEAD", "PATCH" })
+        {
+            var response = await request.FetchAsync($"{Server.Prefix}/a/redirect1", new() { Method = method });
+            Assert.AreEqual("/b/c/redirect2", response.Headers["location"]);
+            Assert.AreEqual(302, response.Status);
+        }
+        await request.DisposeAsync();
+    }
+
     [PlaywrightTest("global-fetch.spec.ts", "should throw an error when maxRedirects is less than 0")]
     public async Task ShouldThrowAnErrorWhenMaxRedirectsIsLessThan0()
     {

@@ -99,7 +99,64 @@ public class PageAriaSnapshotTests : PageTestEx
         await CheckAndMatchSnapshot(Page.Locator("body"), @"
             - list:
               - listitem:
-                - link ""link""
+                - link ""link"":
+                  - /url: about:blank
+        ");
+    }
+
+    [PlaywrightTest("to-match-aria-snapshot.spec.ts", "should detect unexpected children: equal")]
+    public async Task ShouldDetectUnexpectedChildrenEqual()
+    {
+        await Page.SetContentAsync(@"
+            <ul>
+                <li>One</li>
+                <li>Two</li>
+                <li>Three</li>
+            </ul>
+        ");
+        await Expect(Page.Locator("body")).ToMatchAriaSnapshotAsync(@"
+            - list:
+                - listitem: ""One""
+                - listitem: ""Three""
+        ");
+        var exception = await PlaywrightAssert.ThrowsAsync<PlaywrightException>(() =>
+        {
+            return Expect(Page.Locator("body")).ToMatchAriaSnapshotAsync(@"
+                - list:
+                    - /children: equal
+                    - listitem: ""One""
+                    - listitem: ""Three""
+            ", new() { Timeout = 300 });
+        });
+        StringAssert.Contains("LocatorAssertions.ToMatchAriaSnapshotAsync with timeout 300ms", exception.Message);
+        StringAssert.Contains("- unexpected value", exception.Message);
+    }
+
+    [PlaywrightTest("page-aria-snapshot.spec.ts", "should generate refs")]
+    public async Task ShouldGenerateRefs()
+    {
+        await Page.SetContentAsync(@"
+            <button>One</button>
+            <button>Two</button>
+            <button>Three</button>
+        ");
+        var snapshot = await Page.Locator("body").AriaSnapshotAsync(new() { Ref = true });
+        Assert.AreEqual(_unshift(@"
+            - button ""One"" [ref=s1e3]
+            - button ""Two"" [ref=s1e4]
+            - button ""Three"" [ref=s1e5]
+        "), snapshot);
+    }
+
+    [PlaywrightTest("to-match-aria-snapshot.spec.ts", "should match url")]
+    public async Task ShouldMatchUrl()
+    {
+        await Page.SetContentAsync(@"
+            <a href='https://example.com'>Link</a>
+        ");
+        await Expect(Page.Locator("body")).ToMatchAriaSnapshotAsync(@"
+            - link:
+                - /url: /.*example.com/
         ");
     }
 }

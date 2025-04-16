@@ -376,11 +376,17 @@ internal class BrowserContext : ChannelOwner, IBrowserContext
     }
 
     [MethodImpl(MethodImplOptions.NoInlining)]
-    public async Task<IReadOnlyList<BrowserContextCookiesResult>> CookiesAsync(IEnumerable<string> urls = null) => (await SendMessageToServerAsync(
+    public Task<IReadOnlyList<BrowserContextCookiesResult>> CookiesAsync() => CookiesAsync(Array.Empty<string>());
+
+    [MethodImpl(MethodImplOptions.NoInlining)]
+    public Task<IReadOnlyList<BrowserContextCookiesResult>> CookiesAsync(string url) => CookiesAsync(new string[] { url });
+
+    [MethodImpl(MethodImplOptions.NoInlining)]
+    public async Task<IReadOnlyList<BrowserContextCookiesResult>> CookiesAsync(IEnumerable<string> urls) => (await SendMessageToServerAsync(
             "cookies",
             new Dictionary<string, object>
             {
-                ["urls"] = urls?.ToArray() ?? Array.Empty<string>(),
+                ["urls"] = urls.ToArray(),
             }).ConfigureAwait(false))?.GetProperty("cookies").ToObject<IReadOnlyList<BrowserContextCookiesResult>>();
 
     [MethodImpl(MethodImplOptions.NoInlining)]

@@ -553,6 +553,31 @@ public class LocatorAssertionsTests : PageTestEx
         }
     }
 
+    [PlaywrightTest("playwright-test/playwright.expect.spec.ts", "should support toContainClass")]
+    public async Task ShouldSupportToContainClass()
+    {
+        {
+            await Page.SetContentAsync("<div class=\"foo bar baz\"></div>");
+            var locator = Page.Locator("div");
+            await Expect(locator).ToContainClassAsync("");
+            await Expect(locator).ToContainClassAsync("bar");
+            await Expect(locator).ToContainClassAsync("baz bar");
+            await Expect(locator).ToContainClassAsync("   bar   foo ");
+            await Expect(locator).Not.ToContainClassAsync("baz not-matching");
+            var exception = await PlaywrightAssert.ThrowsAsync<PlaywrightException>(() => Expect(locator).ToContainClassAsync("does-not-exist", new() { Timeout = 300 }));
+            StringAssert.Contains("Locator expected to contain class names 'does-not-exist'", exception.Message);
+            StringAssert.Contains("But was: 'foo bar baz'", exception.Message);
+            StringAssert.Contains("LocatorAssertions.ToContainClassAsync with timeout 300ms", exception.Message);
+        }
+        {
+            await Page.SetContentAsync("<div class=\"foo\"></div><div class=\"hello bar\"></div><div class=\"baz\"></div>");
+            var locator = Page.Locator("div");
+            await Expect(locator).ToContainClassAsync(new string[] { "foo", "hello", "baz" });
+            await Expect(locator).Not.ToContainClassAsync(new string[] { "not-there", "hello", "baz" });
+            await Expect(locator).Not.ToContainClassAsync(new string[] { "foo", "hello" });
+        }
+    }
+
     [PlaywrightTest("playwright-test/playwright.expect.spec.ts", "should support toHaveCount")]
     public async Task ShouldSupportToHaveCount()
     {

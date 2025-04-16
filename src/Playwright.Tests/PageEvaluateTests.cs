@@ -74,6 +74,22 @@ public class PageEvaluateTests : PageTestEx
         Assert.AreEqual(double.NegativeInfinity, result);
     }
 
+    [PlaywrightTest("page-evaluate.spec.ts", "should transfer typed arrays")]
+    public async Task ShouldTransferTypedArrays()
+    {
+        Assert.AreEqual(new sbyte[] { 1, 2, 3 }, await Page.EvaluateAsync<sbyte[]>("() => new Int8Array([1, 2, 3])"));
+        Assert.AreEqual(new byte[] { 1, 2, 3 }, await Page.EvaluateAsync<byte[]>("() => new Uint8Array([1, 2, 3])"));
+        Assert.AreEqual(new byte[] { 1, 2, 3 }, await Page.EvaluateAsync<byte[]>("() => new Uint8ClampedArray([1, 2, 3])"));
+        Assert.AreEqual(new short[] { 1, 2, 3 }, await Page.EvaluateAsync<short[]>("() => new Int16Array([1, 2, 3])"));
+        Assert.AreEqual(new ushort[] { 1, 2, 3 }, await Page.EvaluateAsync<ushort[]>("() => new Uint16Array([1, 2, 3])"));
+        Assert.AreEqual(new int[] { 1, 2, 3 }, await Page.EvaluateAsync<int[]>("() => new Int32Array([1, 2, 3])"));
+        Assert.AreEqual(new uint[] { 1, 2, 3 }, await Page.EvaluateAsync<uint[]>("() => new Uint32Array([1, 2, 3])"));
+        Assert.AreEqual(new float[] { 1.5F, 2.5F, 3.5F }, await Page.EvaluateAsync<float[]>("() => new Float32Array([1.5, 2.5, 3.5])"));
+        Assert.AreEqual(new double[] { 1.5, 2.5, 3.5 }, await Page.EvaluateAsync<double[]>("() => new Float64Array([1.5, 2.5, 3.5])"));
+        Assert.AreEqual(new long[] { 1, 2, 3 }, await Page.EvaluateAsync<long[]>("() => new BigInt64Array([1n, 2n, 3n])"));
+        Assert.AreEqual(new ulong[] { 1, 2, 3 }, await Page.EvaluateAsync<ulong[]>("() => new BigUint64Array([1n, 2n, 3n])"));
+    }
+
     [PlaywrightTest("page-evaluate.spec.ts", "should transfer bigint")]
     public async Task ShouldTransferBigInt()
     {
