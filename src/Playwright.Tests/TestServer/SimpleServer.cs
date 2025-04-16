@@ -179,6 +179,8 @@ public class SimpleServer
         if (!File.Exists(filePath))
         {
             context.Response.StatusCode = StatusCodes.Status404NotFound;
+            context.Response.ContentType = "text/plain";
+            await context.Response.WriteAsync($"File not found: {filePath}").ConfigureAwait(false);
             return;
         }
         context.Response.StatusCode = StatusCodes.Status200OK;
