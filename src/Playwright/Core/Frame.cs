@@ -209,6 +209,21 @@ internal class Frame : ChannelOwner, IFrame
     public async Task WaitForLoadStateAsync(LoadState? state = default, FrameWaitForLoadStateOptions options = default)
     {
         Waiter waiter = null;
+        try
+        {
+            var (task, w) = WaitForLoadStateInternal(state, options);
+            waiter = w;
+            await task.ConfigureAwait(false);
+        }
+        finally
+        {
+            waiter?.Dispose();
+        }
+    }
+
+    private (Task Task, Waiter Waiter) WaitForLoadStateInternal(LoadState? state = default, FrameWaitForLoadStateOptions options = default)
+    {
+        Waiter waiter = null;
         WaitUntilState loadState = Microsoft.Playwright.WaitUntilState.Load;
         switch (state)
         {
@@ -222,27 +237,20 @@ internal class Frame : ChannelOwner, IFrame
                 loadState = Microsoft.Playwright.WaitUntilState.NetworkIdle;
                 break;
         }
-        try
-        {
-            waiter = SetupNavigationWaiter("frame.WaitForLoadStateAsync", options?.Timeout);
+        waiter = SetupNavigationWaiter("frame.WaitForLoadStateAsync", options?.Timeout);
 
-            if (_loadStates.Contains(loadState))
-            {
-                waiter.Log($"  not waiting, \"{state}\" event already fired");
-            }
-            else
-            {
-                await waiter.WaitForEventAsync<WaitUntilState>(this, "LoadState", s =>
-                {
-                    waiter.Log($"  \"{s}\" event fired");
-                    return s == loadState;
-                }).ConfigureAwait(false);
-            }
-        }
-        finally
+        if (_loadStates.Contains(loadState))
         {
-            waiter?.Dispose();
+            waiter.Log($"  not waiting, \"{state}\" event already fired");
+            return (Task.CompletedTask, waiter);
         }
+
+        var task = waiter.WaitForEventAsync<WaitUntilState>(this, "LoadState", s =>
+        {
+            waiter.Log($"  \"{s}\" event fired");
+            return s == loadState;
+        });
+        return (task, waiter);
     }
 
     [MethodImpl(MethodImplOptions.NoInlining)]
@@ -263,7 +271,9 @@ internal class Frame : ChannelOwner, IFrame
     public async Task<IResponse> RunAndWaitForNavigationAsync(Func<Task> action, FrameRunAndWaitForNavigationOptions options = default)
     {
         using var waiter = SetupNavigationWaiter("frame.WaitForNavigationAsync", options?.Timeout);
-        var result = WaitForNavigationInternalAsync(waiter, options?.Url ?? options?.UrlString, options?.UrlFunc, options?.UrlRegex, options?.WaitUntil);
+        var urlString = options?.Url ?? options?.UrlString;
+        var urlMatcherTask = (Page as Page).Context.CreateURLMatcherAsync(urlString, options?.UrlRegex, options?.UrlFunc);
+        var result = WaitForNavigationInternalAsync(waiter, urlMatcherTask, urlString, options?.WaitUntil);
 
         if (action != null)
         {
@@ -276,9 +286,8 @@ internal class Frame : ChannelOwner, IFrame
 
     private async Task<IResponse> WaitForNavigationInternalAsync(
         Waiter waiter,
+        Task<URLMatch> urlMatcherTask,
         string urlString,
-        Func<string, bool> urlFunc,
-        Regex urlRegex,
         WaitUntilState? waitUntil)
     {
         waitUntil ??= WaitUntilState.Load;
@@ -286,10 +295,10 @@ internal class Frame : ChannelOwner, IFrame
 
         waiter.Log($"waiting for navigation{toUrl} until \"{waitUntil}\"");
 
-        var navigatedEventTask = waiter.WaitForEventAsync<FrameNavigatedEventArgs>(
+        var navigatedEventTask = waiter.WaitForAsyncEventAsync<FrameNavigatedEventArgs>(
             this,
             "Navigated",
-            e =>
+            async e =>
             {
                 // Any failed navigation results in a rejection.
                 if (e.Error != null)
@@ -298,16 +307,16 @@ internal class Frame : ChannelOwner, IFrame
                 }
 
                 waiter.Log($"  navigated to \"{e.Url}\"");
-                return new URLMatch()
-                {
-                    glob = urlString,
-                    re = urlRegex,
-                    func = urlFunc,
-                    baseURL = (Page as Page).Context.Options.BaseURL,
-                }.Match(e.Url);
+                var urlMatcher = await urlMatcherTask.ConfigureAwait(false);
+                return urlMatcher.Match(e.Url);
             });
 
         var navigatedEvent = await navigatedEventTask.ConfigureAwait(false);
+        if (navigatedEvent == null)
+        {
+            // This happens when the waiting task was cancelled.
+            return null;
+        }
 
         if (navigatedEvent.Error != null)
         {
@@ -907,28 +916,37 @@ internal class Frame : ChannelOwner, IFrame
         return parsed;
     }
 
-    private Task WaitForURLAsync(string urlString, Regex urlRegex, Func<string, bool> urlFunc, FrameWaitForURLOptions options = default)
+    private async Task WaitForURLAsync(string urlString, Regex urlRegex, Func<string, bool> urlFunc, FrameWaitForURLOptions options = default)
     {
-        if (new URLMatch()
+        Waiter loadStateWaiter = null;
+        Waiter navigationWaiter = null;
+        try
         {
-            glob = urlString,
-            re = urlRegex,
-            func = urlFunc,
-            baseURL = (Page as Page).Context.Options.BaseURL,
-        }.Match(Url))
-        {
-            return WaitForLoadStateAsync(ToLoadState(options?.WaitUntil), new() { Timeout = options?.Timeout });
-        }
+            var urlMatcherTask = (Page as Page).Context.CreateURLMatcherAsync(urlString, urlRegex, urlFunc);
 
-        return WaitForNavigationAsync(
-            new()
+            var (waitForLoadStateTask, waiter) = WaitForLoadStateInternal(ToLoadState(options?.WaitUntil), new() { Timeout = options?.Timeout });
+            loadStateWaiter = waiter;
+
+            navigationWaiter = SetupNavigationWaiter("frame.WaitForURLAsync", options?.Timeout);
+            var waitForNavigationTask = WaitForNavigationInternalAsync(navigationWaiter, urlMatcherTask, urlString, options?.WaitUntil);
+
+            var urlMatcher = await urlMatcherTask.ConfigureAwait(false);
+            if (urlMatcher.Match(Url))
             {
-                UrlString = urlString,
-                UrlRegex = urlRegex,
-                UrlFunc = urlFunc,
-                Timeout = options?.Timeout,
-                WaitUntil = options?.WaitUntil,
-            });
+                navigationWaiter.Dispose();
+            }
+            else
+            {
+                loadStateWaiter.Dispose();
+            }
+            await waitForNavigationTask.ConfigureAwait(false);
+            await waitForLoadStateTask.ConfigureAwait(false);
+        }
+        finally
+        {
+            loadStateWaiter?.Dispose();
+            navigationWaiter?.Dispose();
+        }
     }
 
     private LoadState? ToLoadState(WaitUntilState? waitUntilState)

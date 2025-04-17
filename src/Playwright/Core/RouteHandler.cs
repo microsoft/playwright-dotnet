@@ -53,11 +53,7 @@ internal class RouteHandler
             var pattern = new Dictionary<string, object>();
             patterns.Add(pattern);
 
-            if (!string.IsNullOrEmpty(handler.urlMatcher.glob))
-            {
-                pattern["glob"] = handler.urlMatcher.glob;
-            }
-            else if (handler.urlMatcher.re != null)
+            if (handler.urlMatcher.re != null)
             {
                 pattern["regexSource"] = handler.urlMatcher.re.ToString();
                 pattern["regexFlags"] = handler.urlMatcher.re.Options.GetInlineFlags();

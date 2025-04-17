@@ -24,6 +24,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Microsoft.Playwright.Helpers;
 using Microsoft.Playwright.Transport;
@@ -79,6 +80,17 @@ internal class LocalUtils : ChannelOwner
                 { "postData", postData != null ? Convert.ToBase64String(postData) : null },
                 { "isNavigationRequest", isNavigationRequest },
             });
+
+    internal async Task<Regex> GlobToRegexAsync(string glob, string baseURL, bool webSocketUrl = false)
+    {
+        var response = await SendMessageToServerAsync("globToRegex", new Dictionary<string, object>
+            {
+                { "glob", glob },
+                { "baseURL", baseURL },
+                { "webSocketUrl", webSocketUrl },
+            }).ConfigureAwait(false);
+        return new Regex(response.GetString("regex", true));
+    }
 
     internal Task HarCloseAsync(string harId)
          => SendMessageToServerAsync("HarCloseAsync", new Dictionary<string, object>
