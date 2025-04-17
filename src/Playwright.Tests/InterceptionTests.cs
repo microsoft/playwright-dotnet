@@ -23,7 +23,6 @@
  */
 
 using System.Net;
-using Microsoft.Playwright.Helpers;
 
 namespace Microsoft.Playwright.Tests;
 

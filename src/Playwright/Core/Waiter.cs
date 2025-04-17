@@ -156,6 +156,12 @@ internal class Waiter : IDisposable
             () => cts.Cancel());
     }
 
+    internal Task<T> WaitForAsyncEventAsync<T>(object eventSource, string e, Func<T, Task<bool>> predicate)
+    {
+        var (task, dispose) = GetWaitForAsyncEventTask(eventSource, e, predicate);
+        return WaitForPromiseAsync(task, dispose);
+    }
+
     internal Task<T> WaitForEventAsync<T>(object eventSource, string e, Func<T, bool> predicate)
     {
         var (task, dispose) = GetWaitForEventTask(eventSource, e, predicate);
@@ -170,14 +176,21 @@ internal class Waiter : IDisposable
 
     internal (Task<T> Task, Action Dispose) GetWaitForEventTask<T>(object eventSource, string e, Func<T, bool> predicate)
     {
+        var asyncPredicate = predicate != null ? new Func<T, Task<bool>>(x => Task.FromResult(predicate(x))) : null;
+        return GetWaitForAsyncEventTask(eventSource, e, asyncPredicate);
+    }
+
+    internal (Task<T> Task, Action Dispose) GetWaitForAsyncEventTask<T>(object eventSource, string e, Func<T, Task<bool>> predicate)
+    {
         var info = eventSource.GetType().GetEvent(e) ?? eventSource.GetType().BaseType.GetEvent(e);
 
         var eventTsc = new TaskCompletionSource<T>();
-        void EventHandler(object sender, T e)
+        var removed = false;
+        async Task EventHandlerAsync(object sender, T e)
         {
             try
             {
-                if (predicate == null || predicate(e))
+                if (predicate == null || await predicate(e).ConfigureAwait(false))
                 {
                     eventTsc.TrySetResult(e);
                 }
@@ -191,11 +204,26 @@ internal class Waiter : IDisposable
                 eventTsc.TrySetException(ex);
             }
 
+            RemoveEventHandler();
+        }
+
+        void EventHandler(object sender, T e)
+        {
+            _ = EventHandlerAsync(sender, e);
+        }
+
+        void RemoveEventHandler()
+        {
+            if (removed)
+            {
+                return;
+            }
+            removed = true;
             info.RemoveEventHandler(eventSource, (EventHandler<T>)EventHandler);
         }
 
         info.AddEventHandler(eventSource, (EventHandler<T>)EventHandler);
-        return (eventTsc.Task, () => info.RemoveEventHandler(eventSource, (EventHandler<T>)EventHandler));
+        return (eventTsc.Task, RemoveEventHandler);
     }
 
     internal async Task<T> WaitForPromiseAsync<T>(Task<T> task, Action dispose = null)

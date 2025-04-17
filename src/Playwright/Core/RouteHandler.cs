@@ -59,7 +59,7 @@ internal class RouteHandler
                 pattern["regexFlags"] = handler.urlMatcher.re.Options.GetInlineFlags();
             }
 
-            if (handler.urlMatcher.func != null || handler.urlMatcher.relativeOrAbsoluteURL != null)
+            if (handler.urlMatcher.func != null)
             {
                 all = true;
             }

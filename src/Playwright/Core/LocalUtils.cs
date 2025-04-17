@@ -24,6 +24,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Microsoft.Playwright.Helpers;
 using Microsoft.Playwright.Transport;
@@ -80,7 +81,7 @@ internal class LocalUtils : ChannelOwner
                 { "isNavigationRequest", isNavigationRequest },
             });
 
-    internal Task<Regex> GlobToRegexAsync(string glob, string baseURL, bool webSocketUrl = false)
+    internal async Task<Regex> GlobToRegexAsync(string glob, string baseURL, bool webSocketUrl = false)
     {
         var response = await SendMessageToServerAsync("globToRegex", new Dictionary<string, object>
             {

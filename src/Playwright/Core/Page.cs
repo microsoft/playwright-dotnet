@@ -377,7 +377,7 @@ internal class Page : ChannelOwner, IPage
 
     [MethodImpl(MethodImplOptions.NoInlining)]
     public Task<IRequest> WaitForRequestAsync(string urlOrPredicate, PageWaitForRequestOptions options = default)
-        => InnerWaitForEventAsync(PageEvent.Request, null, e => Context.UrlMatches(e.Url, urlOrPredicate), options?.Timeout);
+        => RunAndWaitForRequestAsync(null, urlOrPredicate, new() { Timeout = options?.Timeout });
 
     [MethodImpl(MethodImplOptions.NoInlining)]
     public Task<IRequest> WaitForRequestAsync(Regex urlOrPredicate, PageWaitForRequestOptions options = default)
@@ -393,7 +393,7 @@ internal class Page : ChannelOwner, IPage
 
     [MethodImpl(MethodImplOptions.NoInlining)]
     public Task<IResponse> WaitForResponseAsync(string urlOrPredicate, PageWaitForResponseOptions options = default)
-        => InnerWaitForEventAsync(PageEvent.Response, null, e => Context.UrlMatches(e.Url, urlOrPredicate), options?.Timeout);
+        => RunAndWaitForResponseAsync(null, urlOrPredicate, new() { Timeout = options?.Timeout });
 
     [MethodImpl(MethodImplOptions.NoInlining)]
     public Task<IResponse> WaitForResponseAsync(Regex urlOrPredicate, PageWaitForResponseOptions options = default)
@@ -437,7 +437,18 @@ internal class Page : ChannelOwner, IPage
 
     [MethodImpl(MethodImplOptions.NoInlining)]
     public Task<IRequest> RunAndWaitForRequestAsync(Func<Task> action, string urlOrPredicate, PageRunAndWaitForRequestOptions options = default)
-        => InnerWaitForEventAsync(PageEvent.Request, action, e => Context.UrlMatches(e.Url, urlOrPredicate), options?.Timeout);
+    {
+        var urlMatcherTask = Context.CreateURLMatcherAsync(urlOrPredicate, null, null);
+        return InnerWaitForEventAsync(
+            PageEvent.Request,
+            action,
+            async e =>
+            {
+                var urlMatcher = await urlMatcherTask.ConfigureAwait(false);
+                return urlMatcher.Match(e.Url);
+            },
+            options?.Timeout);
+    }
 
     [MethodImpl(MethodImplOptions.NoInlining)]
     public Task<IRequest> RunAndWaitForRequestAsync(Func<Task> action, Regex urlOrPredicate, PageRunAndWaitForRequestOptions options = default)
@@ -449,7 +460,18 @@ internal class Page : ChannelOwner, IPage
 
     [MethodImpl(MethodImplOptions.NoInlining)]
     public Task<IResponse> RunAndWaitForResponseAsync(Func<Task> action, string urlOrPredicate, PageRunAndWaitForResponseOptions options = default)
-        => InnerWaitForEventAsync(PageEvent.Response, action, e => Context.UrlMatches(e.Url, urlOrPredicate), options?.Timeout);
+    {
+        var urlMatcherTask = Context.CreateURLMatcherAsync(urlOrPredicate, null, null);
+        return InnerWaitForEventAsync(
+            PageEvent.Response,
+            action,
+            async e =>
+            {
+                var urlMatcher = await urlMatcherTask.ConfigureAwait(false);
+                return urlMatcher.Match(e.Url);
+            },
+            options?.Timeout);
+    }
 
     [MethodImpl(MethodImplOptions.NoInlining)]
     public Task<IResponse> RunAndWaitForResponseAsync(Func<Task> action, Regex urlOrPredicate, PageRunAndWaitForResponseOptions options = default)
@@ -470,6 +492,12 @@ internal class Page : ChannelOwner, IPage
 
     internal async Task<T> InnerWaitForEventAsync<T>(PlaywrightEvent<T> pageEvent, Func<Task> action = default, Func<T, bool> predicate = default, float? timeout = default)
     {
+        var asyncPredicate = predicate != null ? new Func<T, Task<bool>>(x => Task.FromResult(predicate(x))) : null;
+        return await InnerWaitForEventAsync(pageEvent, action, asyncPredicate, timeout).ConfigureAwait(false);
+    }
+
+    internal async Task<T> InnerWaitForEventAsync<T>(PlaywrightEvent<T> pageEvent, Func<Task> action = default, Func<T, Task<bool>> predicate = default, float? timeout = default)
+    {
         if (pageEvent == null)
         {
             throw new ArgumentException("Page event is required", nameof(pageEvent));
@@ -489,7 +517,7 @@ internal class Page : ChannelOwner, IPage
             waiter.RejectOnEvent<IPage>(this, PageEvent.Close.Name, () => _closeErrorWithReason());
         }
 
-        var waitForEventTask = waiter.WaitForEventAsync(this, pageEvent.Name, predicate);
+        var waitForEventTask = waiter.WaitForAsyncEventAsync(this, pageEvent.Name, predicate);
         if (action != null)
         {
             await WrapApiBoundaryAsync(() => waiter.CancelWaitOnExceptionAsync(waitForEventTask, action))
@@ -1236,13 +1264,13 @@ internal class Page : ChannelOwner, IPage
 
     internal void FirePageError(string error) => PageError?.Invoke(this, error);
 
-    private Task RouteAsync(string globMatch, Regex reMatch, Func<string, bool> funcMatch, Delegate handler, PageRouteOptions options)
-        => RouteAsync(new()
+    private async Task RouteAsync(string globMatch, Regex reMatch, Func<string, bool> funcMatch, Delegate handler, PageRouteOptions options)
+        => await RouteAsync(new()
         {
             urlMatcher = await Context.CreateURLMatcherAsync(globMatch, reMatch, funcMatch).ConfigureAwait(false),
             Handler = handler,
             Times = options?.Times,
-        });
+        }).ConfigureAwait(false);
 
     private Task RouteAsync(RouteHandler setting)
     {
@@ -1252,11 +1280,12 @@ internal class Page : ChannelOwner, IPage
 
     private async Task UnrouteAsync(string globMatch, Regex reMatch, Func<string, bool> funcMatch, Delegate handler)
     {
+        var urlMatcher = await Context.CreateURLMatcherAsync(globMatch, reMatch, funcMatch).ConfigureAwait(false);
         var removed = new List<RouteHandler>();
         var remaining = new List<RouteHandler>();
         foreach (var routeHandler in _routes)
         {
-            if (routeHandler.urlMatcher.Equals(globMatch, reMatch, funcMatch, Context.Options.BaseURL) && (handler == null || routeHandler.Handler == handler))
+            if (routeHandler.urlMatcher.Equals(urlMatcher) && (handler == null || routeHandler.Handler == handler))
             {
                 removed.Add(routeHandler);
             }
@@ -1594,15 +1623,15 @@ internal class Page : ChannelOwner, IPage
     public Task RouteWebSocketAsync(Func<string, bool> url, Action<IWebSocketRoute> handler)
         => RouteWebSocketAsync(null, null, url, handler);
 
-    private Task RouteWebSocketAsync(string globMatch, Regex urlRegex, Func<string, bool> urlFunc, Delegate handler)
+    private async Task RouteWebSocketAsync(string globMatch, Regex urlRegex, Func<string, bool> urlFunc, Delegate handler)
     {
-        var urlMatcher = await Context.CreateURLMatcherAsync(globMatch, reMatch, funcMatch, true).ConfigureAwait(false);
+        var urlMatcher = await Context.CreateURLMatcherAsync(globMatch, urlRegex, urlFunc, true).ConfigureAwait(false);
         _webSocketRoutes.Insert(0, new WebSocketRouteHandler()
         {
             urlMatcher = urlMatcher,
             Handler = handler,
         });
-        return UpdateWebSocketInterceptionAsync();
+        await UpdateWebSocketInterceptionAsync().ConfigureAwait(false);
     }
 
     private async Task UpdateWebSocketInterceptionAsync()

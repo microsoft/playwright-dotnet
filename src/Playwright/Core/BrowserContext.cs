@@ -599,6 +599,12 @@ internal class BrowserContext : ChannelOwner, IBrowserContext
 
     internal async Task<T> InnerWaitForEventAsync<T>(PlaywrightEvent<T> playwrightEvent, Func<Task> action = default, Func<T, bool> predicate = default, float? timeout = default)
     {
+        var asyncPredicate = predicate != null ? new Func<T, Task<bool>>(x => Task.FromResult(predicate(x))) : null;
+        return await InnerWaitForEventAsync(playwrightEvent, action, asyncPredicate, timeout).ConfigureAwait(false);
+    }
+
+    internal async Task<T> InnerWaitForEventAsync<T>(PlaywrightEvent<T> playwrightEvent, Func<Task> action = default, Func<T, Task<bool>> predicate = default, float? timeout = default)
+    {
         if (playwrightEvent == null)
         {
             throw new ArgumentException("Page event is required", nameof(playwrightEvent));
@@ -613,7 +619,7 @@ internal class BrowserContext : ChannelOwner, IBrowserContext
             waiter.RejectOnEvent<IBrowserContext>(this, BrowserContextEvent.Close.Name, () => new TargetClosedException(_effectiveCloseReason()));
         }
 
-        var result = waiter.WaitForEventAsync(this, playwrightEvent.Name, predicate);
+        var result = waiter.WaitForAsyncEventAsync(this, playwrightEvent.Name, predicate);
         if (action != null)
         {
             await WrapApiBoundaryAsync(() => waiter.CancelWaitOnExceptionAsync(result, action)).ConfigureAwait(false);
@@ -732,10 +738,12 @@ internal class BrowserContext : ChannelOwner, IBrowserContext
         }
     }
 
-    internal CreateURLMatcherAsync(string globMatch, Regex reMatch, Func<string, bool> funcMatch, bool webSocketUrl = false)
+    internal async Task<URLMatch> CreateURLMatcherAsync(string globMatch, Regex reMatch, Func<string, bool> funcMatch, bool webSocketUrl = false)
     {
         if (reMatch == null && !string.IsNullOrEmpty(globMatch))
-          reMatch = await _connection.LocalUtils.GlobToRegexAsync(globMatch, Options.BaseURL, webSocketUrl).ConfigureAwait(false);
+        {
+            reMatch = await _connection.LocalUtils.GlobToRegexAsync(globMatch, Options.BaseURL, webSocketUrl).ConfigureAwait(false);
+        }
         return new URLMatch()
         {
             re = reMatch,
@@ -743,20 +751,13 @@ internal class BrowserContext : ChannelOwner, IBrowserContext
         };
     }
 
-    internal bool UrlMatches(string url, string relativeOrAbsoluteURL)
-        => new URLMatch()
-        {
-            relativeOrAbsoluteURL = relativeOrAbsoluteURL,
-            baseURL = Options.BaseURL,
-        }.Match(url);
-
-    private Task RouteAsync(string globMatch, Regex reMatch, Func<string, bool> funcMatch, Delegate handler, BrowserContextRouteOptions options)
-        => RouteAsync(new()
+    private async Task RouteAsync(string globMatch, Regex reMatch, Func<string, bool> funcMatch, Delegate handler, BrowserContextRouteOptions options)
+        => await RouteAsync(new()
         {
             urlMatcher = await CreateURLMatcherAsync(globMatch, reMatch, funcMatch).ConfigureAwait(false),
             Handler = handler,
             Times = options?.Times,
-        });
+        }).ConfigureAwait(false);
 
     private Task RouteAsync(RouteHandler setting)
     {
@@ -930,7 +931,7 @@ internal class BrowserContext : ChannelOwner, IBrowserContext
     public Task RouteWebSocketAsync(Func<string, bool> url, Action<IWebSocketRoute> handler)
         => RouteWebSocketAsync(null, null, url, handler);
 
-    private Task RouteWebSocketAsync(string globMatch, Regex reMatch, Func<string, bool> funcMatch, Delegate handler)
+    private async Task RouteWebSocketAsync(string globMatch, Regex reMatch, Func<string, bool> funcMatch, Delegate handler)
     {
         var urlMatcher = await CreateURLMatcherAsync(globMatch, reMatch, funcMatch, true).ConfigureAwait(false);
         _webSocketRoutes.Insert(0, new WebSocketRouteHandler()
@@ -938,7 +939,7 @@ internal class BrowserContext : ChannelOwner, IBrowserContext
             urlMatcher = urlMatcher,
             Handler = handler,
         });
-        return UpdateWebSocketInterceptionAsync();
+        await UpdateWebSocketInterceptionAsync().ConfigureAwait(false);
     }
 
     private async Task UpdateWebSocketInterceptionAsync()
