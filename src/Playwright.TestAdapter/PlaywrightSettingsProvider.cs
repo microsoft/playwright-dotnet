@@ -34,11 +34,18 @@ namespace Microsoft.Playwright.TestAdapter;
 public class PlaywrightSettingsProvider : ISettingsProvider
 {
     private static PlaywrightSettingsXml? _settings = null!;
+    private static PlaywrightSettings? _playwrightSettings;
 
     public static string BrowserName
     {
         get
         {
+            if (_playwrightSettings != null)
+            {
+                var browser = _playwrightSettings.Browser.ToString().ToLowerInvariant();
+                ValidateBrowserName(browser, "PlaywrightSettings.Browser property", string.Empty);
+                return browser;
+            }
             var browserFromEnv = Environment.GetEnvironmentVariable("BROWSER")?.ToLowerInvariant();
             // GitHub Codespaces sets the BROWSER environment variable, ignore it if its bogus.
             var ignoreValueFromEnv = Environment.GetEnvironmentVariable("CODESPACES") == "true" && browserFromEnv!.StartsWith("/vscode/");
@@ -61,15 +68,8 @@ public class PlaywrightSettingsProvider : ISettingsProvider
     {
         get
         {
-            if (_settings == null)
-            {
-                return null;
-            }
-            if (_settings.ExpectTimeout.HasValue)
-            {
-                return _settings.ExpectTimeout.Value;
-            }
-            return null;
+            var expectTimeout = _playwrightSettings?.ExpectTimeout?.TotalMilliseconds;
+            return expectTimeout.HasValue ? Convert.ToSingle(expectTimeout.Value) : _settings?.ExpectTimeout;
         }
     }
 
@@ -77,7 +77,7 @@ public class PlaywrightSettingsProvider : ISettingsProvider
     {
         get
         {
-            var launchOptions = _settings?.LaunchOptions ?? new BrowserTypeLaunchOptions();
+            var launchOptions = _playwrightSettings?.LaunchOptions ?? _settings?.LaunchOptions ?? new BrowserTypeLaunchOptions();
             if (Environment.GetEnvironmentVariable("HEADED") == "1")
             {
                 launchOptions.Headless = false;
@@ -104,4 +104,7 @@ public class PlaywrightSettingsProvider : ISettingsProvider
 
     public void Load(XmlReader reader)
         => _settings = new PlaywrightSettingsXml(reader);
+
+    public static void Load(PlaywrightSettings settings)
+        => _playwrightSettings = settings;
 }
