@@ -23,6 +23,7 @@
  */
 
 using System.Net;
+using System.Text.RegularExpressions;
 using Microsoft.Playwright.Helpers;
 
 namespace Microsoft.Playwright.Tests;
@@ -32,32 +33,85 @@ public class InterceptionTests : PageTestEx
     [PlaywrightTest("interception.spec.ts", "should work with glob")]
     public void ShouldWorkWithGlob()
     {
-        Assert.That("https://localhost:8080/foo.js", Does.Match(StringExtensions.GlobToRegex("**/*.js")));
-        Assert.That("https://localhost:8080/foo.js", Does.Not.Match(StringExtensions.GlobToRegex("**/*.css")));
-        Assert.That("https://localhost:8080/foo.js", Does.Not.Match(StringExtensions.GlobToRegex("*.js")));
-        Assert.That("https://localhost:8080/foo.js", Does.Match(StringExtensions.GlobToRegex("https://**/*.js")));
-        Assert.That("http://localhost:8080/simple/path.js", Does.Match(StringExtensions.GlobToRegex("http://localhost:8080/simple/path.js")));
-        Assert.That("http://localhost:8080/Simple/path.js", Does.Match(StringExtensions.GlobToRegex("http://localhost:8080/?imple/path.js")));
-        Assert.That("https://localhost:8080/a.js", Does.Match(StringExtensions.GlobToRegex("**/{a,b}.js")));
-        Assert.That("https://localhost:8080/b.js", Does.Match(StringExtensions.GlobToRegex("**/{a,b}.js")));
-        Assert.That("https://localhost:8080/c.js", Does.Not.Match(StringExtensions.GlobToRegex("**/{a,b}.js")));
-        Assert.That("https://localhost:8080/c.jpg", Does.Match(StringExtensions.GlobToRegex("**/*.{png,jpg,jpeg}")));
-        Assert.That("https://localhost:8080/c.jpeg", Does.Match(StringExtensions.GlobToRegex("**/*.{png,jpg,jpeg}")));
-        Assert.That("https://localhost:8080/c.png", Does.Match(StringExtensions.GlobToRegex("**/*.{png,jpg,jpeg}")));
-        Assert.That("https://localhost:8080/c.css", Does.Not.Match(StringExtensions.GlobToRegex("**/*.{png,jpg,jpeg}")));
-        Assert.That("foo.js", Does.Match(StringExtensions.GlobToRegex("foo*")));
-        Assert.That("foo/bar.js", Does.Not.Match(StringExtensions.GlobToRegex("foo*")));
-        Assert.That("http://localhost:3000/signin-oidc/foo", Does.Not.Match(StringExtensions.GlobToRegex("http://localhost:3000/signin-oidc*")));
-        Assert.That("http://localhost:3000/signin-oidcnice", Does.Match(StringExtensions.GlobToRegex("http://localhost:3000/signin-oidc*")));
+        Regex GlobToRegex(string glob)
+        {
+            return new Regex(URLMatch.GlobToRegexPattern(glob));
+        }
 
-        Assert.That("http://mydomain:8080/blah/blah/three-columns/settings.html?id=settings-e3c58efe-02e9-44b0-97ac-dd138100cf7c&blah", Does.Match(StringExtensions.GlobToRegex("**/three-columns/settings.html?**id=[a-z]**")));
+        bool URLMatches(string baseURL, string url, string glob)
+        {
+            return new URLMatch()
+            {
+                baseURL = baseURL,
+                glob = glob,
+            }.Match(url);
+        }
 
-        Assert.AreEqual("^\\?$", StringExtensions.GlobToRegex("\\?"));
-        Assert.AreEqual("^\\\\$", StringExtensions.GlobToRegex("\\"));
-        Assert.AreEqual("^\\\\$", StringExtensions.GlobToRegex("\\\\"));
-        Assert.AreEqual("^\\[$", StringExtensions.GlobToRegex("\\["));
-        Assert.AreEqual("^[a-z]$", StringExtensions.GlobToRegex("[a-z]"));
-        Assert.AreEqual(@"^\$\^\+\.\*\(\)\|\?\{\}\[\]$", StringExtensions.GlobToRegex("$^+.\\*()|\\?\\{\\}\\[\\]"));
+        Assert.That("https://localhost:8080/foo.js", Does.Match(GlobToRegex("**/*.js")));
+        Assert.That("https://localhost:8080/foo.js", Does.Not.Match(GlobToRegex("**/*.css")));
+        Assert.That("https://localhost:8080/foo.js", Does.Not.Match(GlobToRegex("*.js")));
+        Assert.That("https://localhost:8080/foo.js", Does.Match(GlobToRegex("https://**/*.js")));
+        Assert.That("http://localhost:8080/simple/path.js", Does.Match(GlobToRegex("http://localhost:8080/simple/path.js")));
+        Assert.That("https://localhost:8080/a.js", Does.Match(GlobToRegex("**/{a,b}.js")));
+        Assert.That("https://localhost:8080/b.js", Does.Match(GlobToRegex("**/{a,b}.js")));
+        Assert.That("https://localhost:8080/c.js", Does.Not.Match(GlobToRegex("**/{a,b}.js")));
+        Assert.That("https://localhost:8080/c.jpg", Does.Match(GlobToRegex("**/*.{png,jpg,jpeg}")));
+        Assert.That("https://localhost:8080/c.jpeg", Does.Match(GlobToRegex("**/*.{png,jpg,jpeg}")));
+        Assert.That("https://localhost:8080/c.png", Does.Match(GlobToRegex("**/*.{png,jpg,jpeg}")));
+        Assert.That("https://localhost:8080/c.css", Does.Not.Match(GlobToRegex("**/*.{png,jpg,jpeg}")));
+        Assert.That("foo.js", Does.Match(GlobToRegex("foo*")));
+        Assert.That("foo/bar.js", Does.Not.Match(GlobToRegex("foo*")));
+        Assert.That("http://localhost:3000/signin-oidc/foo", Does.Not.Match(GlobToRegex("http://localhost:3000/signin-oidc*")));
+        Assert.That("http://localhost:3000/signin-oidcnice", Does.Match(GlobToRegex("http://localhost:3000/signin-oidc*")));
+
+        // range [] is NOT supported
+        Assert.That("http://example.com/api/v[0-9]", Does.Match(GlobToRegex("**/api/v[0-9]")));
+        Assert.That("http://example.com/api/version", Does.Not.Match(GlobToRegex("**/api/v[0-9]")));
+
+        // query params
+        Assert.That("http://example.com/api?param", Does.Match(GlobToRegex("**/api\\?param")));
+        Assert.That("http://example.com/api-param", Does.Not.Match(GlobToRegex("**/api\\?param")));
+        Assert.That("http://mydomain:8080/blah/blah/three-columns/settings.html?id=settings-e3c58efe-02e9-44b0-97ac-dd138100cf7c&blah", Does.Match(GlobToRegex("**/three-columns/settings.html\\?**id=settings-**")));
+
+        Assert.AreEqual("^\\?$", URLMatch.GlobToRegexPattern("\\?"));
+        Assert.AreEqual("^\\\\$", URLMatch.GlobToRegexPattern("\\"));
+        Assert.AreEqual("^\\\\$", URLMatch.GlobToRegexPattern("\\\\"));
+        Assert.AreEqual("^\\[$", URLMatch.GlobToRegexPattern("\\["));
+        Assert.AreEqual("^\\[a-z\\]$", URLMatch.GlobToRegexPattern("[a-z]"));
+        Assert.AreEqual(@"^\$\^\+\.\*\(\)\|\?\{\}\[\]$", URLMatch.GlobToRegexPattern("$^+.\\*()|\\?\\{\\}\\[\\]"));
+
+        Assert.True(URLMatches(null, "http://playwright.dev/", "http://playwright.dev"));
+        Assert.True(URLMatches(null, "http://playwright.dev/?a=b", "http://playwright.dev?a=b"));
+        Assert.True(URLMatches(null, "http://playwright.dev/", "h*://playwright.dev"));
+        Assert.True(URLMatches(null, "http://api.playwright.dev/?x=y", "http://*.playwright.dev?x=y"));
+        Assert.True(URLMatches(null, "http://playwright.dev/foo/bar", "**/foo/**"));
+        Assert.True(URLMatches("http://playwright.dev", "http://playwright.dev/?x=y", "?x=y"));
+        Assert.True(URLMatches("http://playwright.dev/foo/", "http://playwright.dev/foo/bar?x=y", "./bar?x=y"));
+
+        // This is not supported, we treat ? as a query separator.
+        Assert.That("http://localhost:8080/Simple/path.js", Does.Not.Match(GlobToRegex("http://localhost:8080/?imple/path.js")));
+        Assert.False(URLMatches(null, "http://playwright.dev/", "http://playwright.?ev"));
+        Assert.True(URLMatches(null, "http://playwright./?ev", "http://playwright.?ev"));
+        Assert.False(URLMatches(null, "http://playwright.dev/foo", "http://playwright.dev/f??"));
+        Assert.True(URLMatches(null, "http://playwright.dev/f??", "http://playwright.dev/f??"));
+        Assert.True(URLMatches(null, "http://playwright.dev/?x=y", "http://playwright.dev\\?x=y"));
+        Assert.True(URLMatches(null, "http://playwright.dev/?x=y", "http://playwright.dev/\\?x=y"));
+        Assert.True(URLMatches("http://playwright.dev/foo", "http://playwright.dev/foo?bar", "?bar"));
+        Assert.True(URLMatches("http://playwright.dev/foo", "http://playwright.dev/foo?bar", "\\\\?bar"));
+        Assert.True(URLMatches("http://first.host/", "http://second.host/foo", "**/foo"));
+        Assert.True(URLMatches("http://playwright.dev/", "http://localhost/", "*//localhost/"));
+    }
+
+    [PlaywrightTest("interception.spec.ts", "should intercept by glob")]
+    public async Task ShouldInterceptByGlob()
+    {
+        await Page.GotoAsync(Server.EmptyPage);
+        await Page.RouteAsync("http://localhos**?*oo", (route) =>
+        {
+            return route.FulfillAsync(new() { Status = (int)HttpStatusCode.OK, Body = "intercepted" });
+        });
+        var result = await Page.EvaluateAsync<string>("url => fetch(url).then(r => r.text())", Server.Prefix + "/?foo");
+        Assert.AreEqual("intercepted", result);
     }
 
     [PlaywrightTest("interception.spec.ts", "should work with ignoreHTTPSErrors")]

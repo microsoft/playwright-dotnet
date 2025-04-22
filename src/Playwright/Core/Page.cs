@@ -1262,7 +1262,7 @@ internal class Page : ChannelOwner, IPage
         var remaining = new List<RouteHandler>();
         foreach (var routeHandler in _routes)
         {
-            if (routeHandler.urlMatcher.Equals(globMatch, reMatch, funcMatch, Context.Options.BaseURL) && (handler == null || routeHandler.Handler == handler))
+            if (routeHandler.urlMatcher.Equals(globMatch, reMatch, funcMatch, Context.Options.BaseURL, false) && (handler == null || routeHandler.Handler == handler))
             {
                 removed.Add(routeHandler);
             }
@@ -1610,6 +1610,7 @@ internal class Page : ChannelOwner, IPage
                 glob = globMatch,
                 re = urlRegex,
                 func = urlFunc,
+                isWebSocketUrl = true,
             },
             Handler = handler,
         });

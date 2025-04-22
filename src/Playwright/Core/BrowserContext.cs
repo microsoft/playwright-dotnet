@@ -765,7 +765,7 @@ internal class BrowserContext : ChannelOwner, IBrowserContext
         var remaining = new List<RouteHandler>();
         foreach (var routeHandler in _routes)
         {
-            if (routeHandler.urlMatcher.Equals(globMatch, reMatch, funcMatch, Options.BaseURL) && (handler == null || routeHandler.Handler == handler))
+            if (routeHandler.urlMatcher.Equals(globMatch, reMatch, funcMatch, Options.BaseURL, false) && (handler == null || routeHandler.Handler == handler))
             {
                 removed.Add(routeHandler);
             }
@@ -934,6 +934,7 @@ internal class BrowserContext : ChannelOwner, IBrowserContext
                 glob = globMatch,
                 re = reMatch,
                 func = funcMatch,
+                isWebSocketUrl = true,
             },
             Handler = handler,
         });
