@@ -379,14 +379,14 @@ internal class BrowserContext : ChannelOwner, IBrowserContext
     public Task<IReadOnlyList<BrowserContextCookiesResult>> CookiesAsync() => CookiesAsync(Array.Empty<string>());
 
     [MethodImpl(MethodImplOptions.NoInlining)]
-    public Task<IReadOnlyList<BrowserContextCookiesResult>> CookiesAsync(string url) => CookiesAsync(new string[] { url });
+    public Task<IReadOnlyList<BrowserContextCookiesResult>> CookiesAsync(string url) => CookiesAsync(string.IsNullOrEmpty(url) ? null : [url]);
 
     [MethodImpl(MethodImplOptions.NoInlining)]
     public async Task<IReadOnlyList<BrowserContextCookiesResult>> CookiesAsync(IEnumerable<string> urls) => (await SendMessageToServerAsync(
             "cookies",
             new Dictionary<string, object>
             {
-                ["urls"] = urls.ToArray(),
+                ["urls"] = urls ?? [],
             }).ConfigureAwait(false))?.GetProperty("cookies").ToObject<IReadOnlyList<BrowserContextCookiesResult>>();
 
     [MethodImpl(MethodImplOptions.NoInlining)]
