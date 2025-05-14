@@ -199,4 +199,37 @@ public class BrowserContextCookiesTests : PageTestEx
         Assert.IsTrue(cookie.Secure);
         Assert.AreEqual(DefaultSameSiteCookieValue, cookie.SameSite);
     }
+
+    [PlaywrightTest("browsercontext-cookies.spec.ts", "should get cookies from single urls")]
+    public async Task ShouldGetCookiesFromSingleUrl()
+    {
+        await Context.AddCookiesAsync(
+        [
+                new Cookie
+                {
+                    Url = "https://foo.com",
+                    Name = "doggo",
+                    Value = "woofs"
+                },
+            ]);
+
+        void ValidateCookies(IReadOnlyList<BrowserContextCookiesResult> cookies)
+        {
+            Assert.AreEqual(1, cookies.Count);
+            var cookie = cookies[0];
+            Assert.AreEqual("doggo", cookie.Name);
+            Assert.AreEqual("woofs", cookie.Value);
+            Assert.AreEqual("foo.com", cookie.Domain);
+            Assert.AreEqual("/", cookie.Path);
+            Assert.AreEqual(cookie.Expires, -1);
+            Assert.IsFalse(cookie.HttpOnly);
+            Assert.IsTrue(cookie.Secure);
+            Assert.AreEqual(DefaultSameSiteCookieValue, cookie.SameSite);
+        }
+
+        ValidateCookies(await Context.CookiesAsync("https://foo.com"));
+        ValidateCookies(await Context.CookiesAsync(null as string));
+        ValidateCookies(await Context.CookiesAsync(null as string[]));
+        ValidateCookies(await Context.CookiesAsync([]));
+    }
 }
