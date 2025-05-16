@@ -40,13 +40,13 @@ internal class WebSocket : ChannelOwner, IWebSocket
         _initializer = initializer;
     }
 
-    public event EventHandler<IWebSocket> Close;
+    public event EventHandler<IWebSocket>? Close;
 
-    public event EventHandler<IWebSocketFrame> FrameSent;
+    public event EventHandler<IWebSocketFrame>? FrameSent;
 
-    public event EventHandler<IWebSocketFrame> FrameReceived;
+    public event EventHandler<IWebSocketFrame>? FrameReceived;
 
-    public event EventHandler<string> SocketError;
+    public event EventHandler<string>? SocketError;
 
     public string Url => _initializer.Url;
 

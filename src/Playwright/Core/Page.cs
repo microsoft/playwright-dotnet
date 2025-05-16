@@ -78,85 +78,85 @@ internal class Page : ChannelOwner, IPage
         Crash += (_, _) => ClosedOrCrashedTcs.TrySetResult(true);
     }
 
-    private event EventHandler<IRequest> _requestImpl;
+    private event EventHandler<IRequest>? _requestImpl;
 
-    private event EventHandler<IResponse> _responseImpl;
+    private event EventHandler<IResponse>? _responseImpl;
 
-    private event EventHandler<IRequest> _requestFinishedImpl;
+    private event EventHandler<IRequest>? _requestFinishedImpl;
 
-    private event EventHandler<IRequest> _requestFailedImpl;
+    private event EventHandler<IRequest>? _requestFailedImpl;
 
-    private event EventHandler<IFileChooser> _fileChooserImpl;
+    private event EventHandler<IFileChooser>? _fileChooserImpl;
 
-    private event EventHandler<IConsoleMessage> _consoleImpl;
+    private event EventHandler<IConsoleMessage>? _consoleImpl;
 
-    private event EventHandler<IDialog> _dialogImpl;
+    private event EventHandler<IDialog>? _dialogImpl;
 
-    public event EventHandler<IConsoleMessage> Console
+    public event EventHandler<IConsoleMessage>? Console
     {
         add => this._consoleImpl = UpdateEventHandler("console", this._consoleImpl, value, true);
         remove => this._consoleImpl = UpdateEventHandler("console", this._consoleImpl, value, false);
     }
 
-    public event EventHandler<IPage> Popup;
+    public event EventHandler<IPage>? Popup;
 
-    public event EventHandler<IRequest> Request
+    public event EventHandler<IRequest>? Request
     {
         add => this._requestImpl = UpdateEventHandler("request", this._requestImpl, value, true);
         remove => this._requestImpl = UpdateEventHandler("request", this._requestImpl, value, false);
     }
 
-    public event EventHandler<IWebSocket> WebSocket;
+    public event EventHandler<IWebSocket>? WebSocket;
 
-    public event EventHandler<IResponse> Response
+    public event EventHandler<IResponse>? Response
     {
         add => this._responseImpl = UpdateEventHandler("response", this._responseImpl, value, true);
         remove => this._responseImpl = UpdateEventHandler("response", this._responseImpl, value, false);
     }
 
-    public event EventHandler<IRequest> RequestFinished
+    public event EventHandler<IRequest>? RequestFinished
     {
         add => this._requestFinishedImpl = UpdateEventHandler("requestFinished", this._requestFinishedImpl, value, true);
         remove => this._requestFinishedImpl = UpdateEventHandler("requestFinished", this._requestFinishedImpl, value, false);
     }
 
-    public event EventHandler<IRequest> RequestFailed
+    public event EventHandler<IRequest>? RequestFailed
     {
         add => this._requestFailedImpl = UpdateEventHandler("requestFailed", this._requestFailedImpl, value, true);
         remove => this._requestFailedImpl = UpdateEventHandler("requestFailed", this._requestFailedImpl, value, false);
     }
 
-    public event EventHandler<IDialog> Dialog
+    public event EventHandler<IDialog>? Dialog
     {
         add => this._dialogImpl = UpdateEventHandler("dialog", this._dialogImpl, value, true);
         remove => this._dialogImpl = UpdateEventHandler("dialog", this._dialogImpl, value, false);
     }
 
-    public event EventHandler<IFrame> FrameAttached;
+    public event EventHandler<IFrame>? FrameAttached;
 
-    public event EventHandler<IFrame> FrameDetached;
+    public event EventHandler<IFrame>? FrameDetached;
 
-    public event EventHandler<IFrame> FrameNavigated;
+    public event EventHandler<IFrame>? FrameNavigated;
 
-    public event EventHandler<IFileChooser> FileChooser
+    public event EventHandler<IFileChooser>? FileChooser
     {
         add => this._fileChooserImpl = UpdateEventHandler("fileChooser", this._fileChooserImpl, value, true);
         remove => this._fileChooserImpl = UpdateEventHandler("fileChooser", this._fileChooserImpl, value, false);
     }
 
-    public event EventHandler<IPage> Load;
+    public event EventHandler<IPage>? Load;
 
-    public event EventHandler<IPage> DOMContentLoaded;
+    public event EventHandler<IPage>? DOMContentLoaded;
 
-    public event EventHandler<IPage> Close;
+    public event EventHandler<IPage>? Close;
 
-    public event EventHandler<IPage> Crash;
+    public event EventHandler<IPage>? Crash;
 
-    public event EventHandler<string> PageError;
+    public event EventHandler<string>? PageError;
 
-    public event EventHandler<IWorker> Worker;
+    public event EventHandler<IWorker>? Worker;
 
-    public event EventHandler<IDownload> Download;
+    public event EventHandler<IDownload>? Download;
 
     public bool IsClosed { get; private set; }
 

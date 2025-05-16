@@ -67,7 +67,7 @@ internal static class ScriptsHelper
         return (T)parsed;
     }
 
-    internal static object SerializedArgument(object arg)
+    internal static object SerializedArgument(object? arg = null)
     {
         var handles = new List<EvaluateArgumentGuidElement>();
         return new { value = EvaluateArgumentValueConverter.Serialize(arg, handles, new()), handles };

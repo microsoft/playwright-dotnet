@@ -96,7 +96,7 @@ internal class ChannelOwner
 
     internal void MarkAsInternalType() => _isInternalType = true;
 
-    internal EventHandler<T> UpdateEventHandler<T>(string eventName, EventHandler<T> handlers, EventHandler<T> handler, bool add)
+    internal EventHandler<T>? UpdateEventHandler<T>(string eventName, EventHandler<T>? handlers, EventHandler<T>? handler, bool add)
     {
         if (add)
         {
@@ -134,12 +134,12 @@ internal class ChannelOwner
 
     internal Task<JsonElement?> SendMessageToServerAsync(
         string method,
-        Dictionary<string, object> args = null,
+        Dictionary<string, object?>? args = null,
         bool keepNulls = false)
         => SendMessageToServerAsync<JsonElement?>(method, args, keepNulls);
 
     internal Task<T> SendMessageToServerAsync<T>(
         string method,
-        Dictionary<string, object> args = null,
+        Dictionary<string, object?>? args = null,
         bool keepNulls = false) => _connection.SendMessageToServerAsync<T>(this, method, args, keepNulls);
 }

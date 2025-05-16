@@ -39,7 +39,7 @@ public class WebSocketWithEvents : IDisposable
         this.request = request;
     }
 
-    public event EventHandler<string> MessageReceived;
+    public event EventHandler<string>? MessageReceived;
     public event EventHandler<(WebSocketCloseStatus? Code, string Reason)> Closed;
 
     internal async Task RunReceiveLoop()

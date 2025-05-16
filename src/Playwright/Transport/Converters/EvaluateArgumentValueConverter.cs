@@ -45,7 +45,7 @@ internal static class EvaluateArgumentValueConverter
         ReferenceHandler = System.Text.Json.Serialization.ReferenceHandler.Preserve,
     };
 
-    internal static object Serialize(object value, List<EvaluateArgumentGuidElement> handles, VisitorInfo visitorInfo)
+    internal static object Serialize(object? value, List<EvaluateArgumentGuidElement> handles, VisitorInfo visitorInfo)
     {
         int id;
         if (value == null)

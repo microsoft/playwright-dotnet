@@ -37,13 +37,13 @@ internal class Accessibility : IAccessibility
         _page = page;
     }
 
-    public async Task<JsonElement?> SnapshotAsync(AccessibilitySnapshotOptions options = default)
+    public async Task<JsonElement?> SnapshotAsync(AccessibilitySnapshotOptions? options = default)
     {
         options ??= new();
-        if ((await _page.SendMessageToServerAsync("accessibilitySnapshot", new Dictionary<string, object>
+        if ((await _page.SendMessageToServerAsync("accessibilitySnapshot", new Dictionary<string, object?>
         {
             ["interestingOnly"] = options?.InterestingOnly,
-            ["root"] = options.Root,
+            ["root"] = options?.Root,
         }).ConfigureAwait(false)).Value.TryGetProperty("rootAXNode", out var jsonElement))
         {
             return jsonElement;

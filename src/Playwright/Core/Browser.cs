@@ -50,7 +50,7 @@ internal class Browser : ChannelOwner, IBrowser
         _initializer = initializer;
     }
 
-    public event EventHandler<IBrowser> Disconnected;
+    public event EventHandler<IBrowser>? Disconnected;
 
     public IReadOnlyList<IBrowserContext> Contexts => _contexts.ToArray();
 

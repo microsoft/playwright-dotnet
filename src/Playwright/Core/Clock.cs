@@ -30,13 +30,14 @@ namespace Microsoft.Playwright.Core;
 
 internal class Clock(BrowserContext browserContext) : IClock
 {
-    public async Task InstallAsync(ClockInstallOptions options = null)
+    public async Task InstallAsync(ClockInstallOptions? options = null)
     {
         options ??= new();
-        Dictionary<string, object> args = null;
-        if ((options.Time ?? options.TimeString) != null)
+        Dictionary<string, object>? args = null;
+        var timeString = options.Time ?? options.TimeString;
+        if (timeString != null)
         {
-            args = ParseTime(options.Time ?? options.TimeString);
+            args = ParseTime(timeString);
         }
         else if (options.TimeDate != null)
         {
@@ -49,7 +50,13 @@ internal class Clock(BrowserContext browserContext) : IClock
         => new() { ["timeString"] = timeString };
 
     private static Dictionary<string, object> ParseTime(DateTime? timeDate)
-        => new() { ["timeNumber"] = ((DateTimeOffset)timeDate.Value).ToUnixTimeMilliseconds() };
+    {
+        if (!timeDate.HasValue)
+        {
+            throw new ArgumentNullException(nameof(timeDate), "DateTime value cannot be null");
+        }
+        return new() { ["timeNumber"] = ((DateTimeOffset)timeDate.Value).ToUnixTimeMilliseconds() };
+    }
 
     private Dictionary<string, object> ParseTicks(long ticks)
         => new() { ["ticksNumber"] = ticks };

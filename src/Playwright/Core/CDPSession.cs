@@ -58,7 +58,7 @@ internal class CDPSession : ChannelOwner, ICDPSession
     [MethodImpl(MethodImplOptions.NoInlining)]
     public async Task<JsonElement?> SendAsync(string method, Dictionary<string, object>? args = null)
     {
-        var newArgs = new Dictionary<string, object>() { { "method", method } };
+        var newArgs = new Dictionary<string, object?>() { { "method", method } };
         if (args != null)
         {
             newArgs["params"] = args;

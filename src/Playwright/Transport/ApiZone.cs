@@ -31,7 +31,7 @@ namespace Microsoft.Playwright.Transport;
 internal class ApiZone
 {
     [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
-    public string ApiName { get; set; }
+    public string? ApiName { get; set; }
 
-    public List<StackFrame> Frames { get; set; }
+    public List<StackFrame> Frames { get; set; } = [];
 }

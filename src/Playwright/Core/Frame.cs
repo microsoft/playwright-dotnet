@@ -56,12 +56,12 @@ internal class Frame : ChannelOwner, IFrame
     /// <summary>
     /// Raised when a navigation is received.
     /// </summary>
-    public event EventHandler<FrameNavigatedEventArgs> Navigated;
+    public event EventHandler<FrameNavigatedEventArgs>? Navigated;
 
     /// <summary>
     /// Raised when a new LoadState was added.
     /// </summary>
-    public event EventHandler<WaitUntilState> LoadState;
+    public event EventHandler<WaitUntilState>? LoadState;
 
     public IReadOnlyList<IFrame> ChildFrames => _childFrames;
 

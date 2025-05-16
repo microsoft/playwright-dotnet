@@ -42,9 +42,9 @@ internal class JsonPipe : ChannelOwner
         _initializer = initializer;
     }
 
-    public event EventHandler<PlaywrightServerMessage> Message;
+    public event EventHandler<PlaywrightServerMessage>? Message;
 
-    public event EventHandler<string> Closed;
+    public event EventHandler<string>? Closed;
 
     internal override void OnMessage(string method, JsonElement? serverParams)
     {

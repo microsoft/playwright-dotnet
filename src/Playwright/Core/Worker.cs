@@ -43,7 +43,7 @@ internal class Worker : ChannelOwner, IWorker
         _initializer = initializer;
     }
 
-    public event EventHandler<IWorker> Close;
+    public event EventHandler<IWorker>? Close;
 
     public string Url => _initializer.Url;
 

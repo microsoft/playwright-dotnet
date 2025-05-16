@@ -29,7 +29,7 @@ namespace Microsoft.Playwright.Core;
 
 internal class Video : IVideo
 {
-    private readonly TaskCompletionSource<Artifact> _artifactTcs = new();
+    private readonly TaskCompletionSource<Artifact?> _artifactTcs = new();
     private readonly bool _isRemote;
 
     public Video(Page page, Connection connection)

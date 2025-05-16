@@ -73,7 +73,7 @@ internal class Connection : IDisposable
     /// <inheritdoc cref="IDisposable.Dispose"/>
     ~Connection() => Dispose(false);
 
-    internal event EventHandler<Exception> Close;
+    internal event EventHandler<Exception>? Close;
 
     public ConcurrentDictionary<string, ChannelOwner> Objects { get; } = new();
 
@@ -123,20 +123,20 @@ internal class Connection : IDisposable
     internal Task<JsonElement?> SendMessageToServerAsync(
         ChannelOwner @object,
         string method,
-        Dictionary<string, object> args = null,
+        Dictionary<string, object?>? args = null,
         bool keepNulls = false)
         => SendMessageToServerAsync<JsonElement?>(@object, method, args, keepNulls);
 
     internal Task<T> SendMessageToServerAsync<T>(
         ChannelOwner @object,
         string method,
-        Dictionary<string, object> args = null,
+        Dictionary<string, object?>? args = null,
         bool keepNulls = false) => WrapApiCallAsync(() => InnerSendMessageToServerAsync<T>(@object, method, args, keepNulls), @object?._isInternalType ?? false);
 
     private async Task<T> InnerSendMessageToServerAsync<T>(
         ChannelOwner @object,
         string method,
-        Dictionary<string, object> dictionary = null,
+        Dictionary<string, object>? dictionary = null,
         bool keepNulls = false)
     {
         if (_closedError != null)
