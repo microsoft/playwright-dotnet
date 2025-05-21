@@ -22,6 +22,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
+#nullable enable
 
 using System;
 using System.Collections.Generic;
@@ -42,7 +43,7 @@ internal static class Driver
 
     internal static (string ExecutablePath, Func<string, string> GetArgs) GetExecutablePath()
     {
-        DirectoryInfo assemblyDirectory = null;
+        DirectoryInfo? assemblyDirectory = null;
         if (!string.IsNullOrEmpty(AppContext.BaseDirectory))
         {
             assemblyDirectory = new(AppContext.BaseDirectory);
@@ -50,7 +51,7 @@ internal static class Driver
         if (assemblyDirectory?.Exists != true || !File.Exists(Path.Combine(assemblyDirectory.FullName, "Microsoft.Playwright.dll")))
         {
             var assembly = typeof(Playwright).Assembly;
-            if (TryGetCodeBase(assembly, out var codeBase) && codeBase.IsFile)
+            if (TryGetCodeBase(assembly, out var codeBase) && codeBase?.IsFile == true)
             {
                 assemblyDirectory = new FileInfo(codeBase.LocalPath).Directory;
             }
@@ -96,7 +97,7 @@ internal static class Driver
         throw new PlaywrightException($"Driver not found: {executableFile}");
     }
 
-    private static bool TryGetCodeBase(Assembly assembly, out Uri codeBase)
+    private static bool TryGetCodeBase(Assembly assembly, out Uri? codeBase)
     {
         try
         {
