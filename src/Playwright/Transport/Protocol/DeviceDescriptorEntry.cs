@@ -21,12 +21,12 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-
+#nullable enable
 namespace Microsoft.Playwright.Transport.Protocol;
 
 internal class DeviceDescriptorEntry
 {
-    public string Name { get; set; }
+    public string Name { get; set; } = null!;
 
-    public BrowserNewContextOptions Descriptor { get; set; }
+    public BrowserNewContextOptions Descriptor { get; set; } = null!;
 }

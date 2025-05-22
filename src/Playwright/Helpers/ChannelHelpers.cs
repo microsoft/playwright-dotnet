@@ -26,8 +26,6 @@ using System;
 using System.Text.Json;
 using Microsoft.Playwright.Transport;
 
-#nullable enable
-
 namespace Microsoft.Playwright.Helpers;
 
 internal static class ChannelHelpers

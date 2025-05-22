@@ -176,8 +176,7 @@ internal class BrowserType : ChannelOwner, IBrowserType
             {
                 new KeyValuePair<string, string>("x-playwright-browser", Name),
             }.ToDictionary(pair => pair.Key, pair => pair.Value);
-        var localUtils = _connection.LocalUtils;
-        var pipe = await localUtils.ConnectAsync(wsEndpoint: wsEndpoint, headers: headers, slowMo: options.SlowMo, timeout: options.Timeout, exposeNetwork: options.ExposeNetwork).ConfigureAwait(false);
+        var pipe = await _connection.LocalUtils!.ConnectAsync(wsEndpoint: wsEndpoint, headers: headers, slowMo: options.SlowMo, timeout: options.Timeout, exposeNetwork: options.ExposeNetwork).ConfigureAwait(false);
 
         void ClosePipe()
         {

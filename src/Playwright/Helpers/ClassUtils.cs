@@ -22,6 +22,7 @@
  * SOFTWARE.
  */
 
+#nullable enable
 namespace Microsoft.Playwright.Helpers;
 
 internal static class ClassUtils

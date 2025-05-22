@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-
+#nullable enable
 using System.Text.Json;
 
 namespace Microsoft.Playwright.Transport;
@@ -30,15 +30,20 @@ internal class PlaywrightServerMessage
 {
     public int? Id { get; set; }
 
-    public string Guid { get; set; }
+    public string Guid { get; set; } = null!;
 
-    public string Method { get; set; }
+    public string Method { get; set; } = null!;
 
     public JsonElement? Params { get; set; }
 
     public JsonElement? Result { get; set; }
 
-    public ErrorEntry Error { get; set; }
+    public ErrorEntry? Error { get; set; }
 
-    public string[] Log { get; set; }
+    public string[]? Log { get; set; }
+}
+
+internal class ErrorEntry
+{
+    public PlaywrightServerError? Error { get; set; }
 }

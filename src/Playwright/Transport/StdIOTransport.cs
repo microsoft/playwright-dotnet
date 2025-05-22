@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-
+#nullable enable
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -60,11 +60,11 @@ internal class StdIOTransport : IDisposable
 
     ~StdIOTransport() => Dispose(false);
 
-    public event EventHandler<byte[]> MessageReceived;
+    public event EventHandler<byte[]>? MessageReceived;
 
-    public event EventHandler<Exception> TransportClosed;
+    public event EventHandler<Exception>? TransportClosed;
 
-    public event EventHandler<string> LogReceived;
+    public event EventHandler<string>? LogReceived;
 
     public bool IsClosed { get; private set; }
 
