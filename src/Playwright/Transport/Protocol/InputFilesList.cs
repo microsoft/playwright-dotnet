@@ -21,14 +21,14 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-
+#nullable enable
 namespace Microsoft.Playwright.Transport.Protocol;
 
 public class InputFilesList
 {
-    public string Name { get; set; }
+    public string Name { get; set; } = null!;
 
-    public string MimeType { get; set; }
+    public string MimeType { get; set; } = null!;
 
-    public string Buffer { get; set; }
+    public string Buffer { get; set; } = null!;
 }

@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-
+#nullable enable
 using System;
 using System.Text.Json;
 using System.Text.Json.Serialization;
@@ -57,7 +57,7 @@ internal class ChannelOwnerToGuidConverter<T> : JsonConverter<T>
         _connection = connection;
     }
 
-    public override T Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
+    public override T? Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
     {
         using JsonDocument document = JsonDocument.ParseValue(ref reader);
         string guid = document.RootElement.GetProperty("guid").ToString();

@@ -150,10 +150,7 @@ internal class Connection : IDisposable
 
         int id = Interlocked.Increment(ref _lastId);
         var tcs = new TaskCompletionSource<JsonElement?>(TaskCreationOptions.RunContinuationsAsynchronously);
-        var callback = new ConnectionCallback
-        {
-            TaskCompletionSource = tcs,
-        };
+        var callback = new ConnectionCallback(tcs);
 
         _callbacks.TryAdd(id, callback);
 
@@ -186,21 +183,20 @@ internal class Connection : IDisposable
 
         if (_tracingCount > 0 && frames.Count > 0 && @object.Guid != "localUtils")
         {
-            LocalUtils.AddStackToTracingNoReply(frames, id);
+            LocalUtils?.AddStackToTracingNoReply(frames, id);
         }
 
         await _queue.EnqueueAsync(() =>
         {
-            return OnMessage(
-                new MessageRequest
-                {
-                    Id = id,
-                    Guid = @object == null ? string.Empty : @object.Guid,
-                    Method = method,
-                    Params = sanitizedArgs,
-                    Metadata = metadata,
-                },
-                keepNulls);
+            var message = new Dictionary<string, object>
+            {
+                ["id"] = id,
+                ["guid"] = @object?.Guid ?? string.Empty,
+                ["method"] = method,
+                ["params"] = sanitizedArgs,
+                ["metadata"] = metadata,
+            };
+            return OnMessage(message, keepNulls);
         }).ConfigureAwait(false);
 
         var result = await tcs.Task.ConfigureAwait(false);
@@ -276,8 +272,7 @@ internal class Connection : IDisposable
         {
             if (message.Method == "__create__")
             {
-                var createObjectInfo = message.Params.Value.ToObject<CreateObjectInfo>(DefaultJsonSerializerOptions);
-                CreateRemoteObject(message.Guid, createObjectInfo.Type, createObjectInfo.Guid, createObjectInfo.Initializer);
+                CreateRemoteObject(message.Guid, message.Params.Value.GetProperty("type").ToObject<ChannelOwnerType>(), message.Params.GetString("guid", false)!, message.Params?.GetProperty("initializer"));
                 return;
             }
 
@@ -584,5 +579,10 @@ internal class Connection : IDisposable
 
 internal class ConnectionCallback
 {
-    public TaskCompletionSource<JsonElement?> TaskCompletionSource { get; set; }
+    public ConnectionCallback(TaskCompletionSource<JsonElement?> taskCompletionSource)
+    {
+        TaskCompletionSource = taskCompletionSource;
+    }
+
+    internal TaskCompletionSource<JsonElement?> TaskCompletionSource { get; }
 }

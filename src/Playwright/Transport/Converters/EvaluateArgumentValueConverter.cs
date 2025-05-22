@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-
+#nullable enable
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -203,7 +203,7 @@ internal static class EvaluateArgumentValueConverter
         return new { o = entries, id };
     }
 
-    internal static object Deserialize(JsonElement result, Type t)
+    internal static object? Deserialize(JsonElement result, Type t)
     {
         var parsed = ParseEvaluateResultToExpando(result, new Dictionary<int, object>());
 
@@ -227,7 +227,7 @@ internal static class EvaluateArgumentValueConverter
         return ToExpectedType(parsed, t, new Dictionary<object, object>());
     }
 
-    private static object ToExpectedType(object parsed, Type t, IDictionary<object, object> visited)
+    private static object? ToExpectedType(object? parsed, Type t, IDictionary<object, object> visited)
     {
         if (parsed == null)
         {
@@ -275,7 +275,7 @@ internal static class EvaluateArgumentValueConverter
         return ChangeType(parsed, t);
     }
 
-    private static object ChangeType(object value, Type conversion)
+    private static object? ChangeType(object value, Type conversion)
     {
         var t = conversion;
 
@@ -301,7 +301,7 @@ internal static class EvaluateArgumentValueConverter
         return Convert.ChangeType(value, t, CultureInfo.InvariantCulture);
     }
 
-    private static object ParseEvaluateResultToExpando(JsonElement result, IDictionary<int, object> refs)
+    private static object? ParseEvaluateResultToExpando(JsonElement result, IDictionary<int, object> refs)
     {
         // Parse JSON into a structure where objects/arrays are represented with expando/arrays.
         if (result.TryGetProperty("v", out var value))
@@ -392,7 +392,7 @@ internal static class EvaluateArgumentValueConverter
         {
             var expando = new ExpandoObject();
             refs.Add(result.GetProperty("id").GetInt32(), expando);
-            IDictionary<string, object> dict = expando;
+            IDictionary<string, object?> dict = expando;
             foreach (var kv in obj.ToObject<KeyJsonElementValueObject[]>())
             {
                 dict[kv.K] = ParseEvaluateResultToExpando(kv.V, refs);
@@ -403,7 +403,7 @@ internal static class EvaluateArgumentValueConverter
 
         if (result.TryGetProperty("a", out var array))
         {
-            List<object> list = new List<object>();
+            List<object?> list = [];
             refs.Add(result.GetProperty("id").GetInt32(), list);
             foreach (var item in array.EnumerateArray())
             {
