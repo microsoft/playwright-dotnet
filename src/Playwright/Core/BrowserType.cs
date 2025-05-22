@@ -257,7 +257,7 @@ internal class BrowserType : ChannelOwner, IBrowserType
         }
         var task = CreateBrowserAsync();
         var timeout = options?.Timeout != null ? (int)options.Timeout : 30_000;
-        return await task.WithTimeout(timeout, _ => throw new TimeoutException($"BrowserType.ConnectAsync: Timeout {options!.Timeout}ms exceeded")).ConfigureAwait(false);
+        return await task.WithTimeout(timeout, _ => throw new TimeoutException($"BrowserType.ConnectAsync: Timeout {timeout}ms exceeded")).ConfigureAwait(false);
     }
 
     [MethodImpl(MethodImplOptions.NoInlining)]
