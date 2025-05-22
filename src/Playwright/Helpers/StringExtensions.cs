@@ -21,6 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
+#nullable enable
 
 using System;
 using System.Collections.Generic;
@@ -629,7 +630,7 @@ internal static class StringExtensions
     internal static string GetContentType(this string path)
     {
         const string defaultContentType = "application/octet-stream";
-        string extension = GetExtension(path);
+        var extension = GetExtension(path);
         if (extension == null)
         {
             return defaultContentType;
@@ -641,7 +642,7 @@ internal static class StringExtensions
     internal static string MimeType(this string file)
         => _mappings.TryGetValue(new FileInfo(file).Extension, out string mime) ? mime : "application/octet-stream";
 
-    private static string GetExtension(string path)
+    private static string? GetExtension(string path)
     {
         if (string.IsNullOrWhiteSpace(path))
         {

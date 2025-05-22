@@ -21,6 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
+#nullable enable
 
 using System;
 using System.Collections.Generic;
@@ -36,10 +37,10 @@ internal static class SetInputFilesHelpers
 {
     private const int SizeLimitInBytes = 50 * 1024 * 1024;
 
-    private static (string[] LocalPaths, string LocalDirectory) ResolvePathsAndDirectoryForInputFiles(List<string> items)
+    private static (string[]? LocalPaths, string? LocalDirectory) ResolvePathsAndDirectoryForInputFiles(List<string> items)
     {
-        List<string> localPaths = null;
-        string localDirectory = null;
+        List<string>? localPaths = null;
+        string? localDirectory = null;
         foreach (var item in items)
         {
             if ((File.GetAttributes(item) & FileAttributes.Directory) == FileAttributes.Directory)
@@ -85,8 +86,8 @@ internal static class SetInputFilesHelpers
         var (localPaths, localDirectory) = ResolvePathsAndDirectoryForInputFiles(files.ToList());
         if (context._connection.IsRemote)
         {
-            files = localDirectory != null ? GetFilesRecursive(localDirectory) : localPaths;
-            var result = await context.SendMessageToServerAsync("createTempFiles", new Dictionary<string, object>
+            files = localDirectory != null ? GetFilesRecursive(localDirectory) : (localPaths ?? []);
+            var result = await context.SendMessageToServerAsync("createTempFiles", new Dictionary<string, object?>
             {
                 ["rootDirName"] = localDirectory != null ? new DirectoryInfo(localDirectory).Name : null,
                 ["items"] = files.Select(file => new Dictionary<string, object>
@@ -105,17 +106,20 @@ internal static class SetInputFilesHelpers
             for (var i = 0; i < files.Count(); i++)
             {
 #pragma warning disable CA2007 // Consider calling ConfigureAwait on the awaited task
-                await using (var writeableStream = context._connection.GetObject(writableStreams.ElementAt(i).GetProperty("guid").ToString()) as WritableStream)
-                {
-                    streams.Add(writeableStream);
-                    using var fileStream = File.OpenRead(files.ElementAt(i));
-                    await fileStream.CopyToAsync(writeableStream.WritableStreamImpl).ConfigureAwait(false);
-                }
+                await using (var writeableStream = writableStreams.ElementAt(i).ToObject<WritableStream>(context._connection.DefaultJsonSerializerOptions))
 #pragma warning restore CA2007 // Consider calling ConfigureAwait on the awaited task
+                {
+                    if (writeableStream != null)
+                    {
+                        streams.Add(writeableStream);
+                        using var fileStream = File.OpenRead(files.ElementAt(i));
+                        await fileStream.CopyToAsync(writeableStream.WritableStreamImpl).ConfigureAwait(false);
+                    }
+                }
             }
             return new()
             {
-                DirectoryStream = result.Value.TryGetProperty("rootDir", out var rootDir) ? context._connection.GetObject(rootDir.GetProperty("guid").ToString()) as WritableStream : null,
+                DirectoryStream = result.Value.TryGetProperty("rootDir", out var rootDir) ? rootDir.ToObject<WritableStream>(context._connection.DefaultJsonSerializerOptions) : null,
                 Streams = localDirectory != null ? null : [.. streams],
             };
         }

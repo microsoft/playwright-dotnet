@@ -22,6 +22,7 @@
  * SOFTWARE.
  */
 
+#nullable enable
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -43,19 +44,19 @@ internal class BrowserType : ChannelOwner, IBrowserType
         _initializer = initializer;
     }
 
-    internal PlaywrightImpl Playwright { get; set; }
+    internal PlaywrightImpl Playwright { get; set; } = null!;
 
     public string ExecutablePath => _initializer.ExecutablePath;
 
     public string Name => _initializer.Name;
 
     [MethodImpl(MethodImplOptions.NoInlining)]
-    public async Task<IBrowser> LaunchAsync(BrowserTypeLaunchOptions options = default)
+    public async Task<IBrowser> LaunchAsync(BrowserTypeLaunchOptions? options = default)
     {
         options ??= new BrowserTypeLaunchOptions();
         Browser browser = await SendMessageToServerAsync<Browser>(
             "launch",
-            new Dictionary<string, object>
+            new Dictionary<string, object?>
             {
                 { "channel", options.Channel },
                 { "executablePath", options.ExecutablePath },
@@ -69,7 +70,7 @@ internal class BrowserType : ChannelOwner, IBrowserType
 #pragma warning disable CS0612 // Type or member is obsolete
                 { "devtools", options.Devtools },
 #pragma warning restore CS0612 // Type or member is obsolete
-                { "env", options.Env.ToProtocol() },
+                { "env", options.Env?.ToProtocol() },
                 { "proxy", options.Proxy },
                 { "downloadsPath", options.DownloadsPath },
                 { "tracesDir", options.TracesDir },
@@ -83,10 +84,10 @@ internal class BrowserType : ChannelOwner, IBrowserType
     }
 
     [MethodImpl(MethodImplOptions.NoInlining)]
-    public async Task<IBrowserContext> LaunchPersistentContextAsync(string userDataDir, BrowserTypeLaunchPersistentContextOptions options = default)
+    public async Task<IBrowserContext> LaunchPersistentContextAsync(string userDataDir, BrowserTypeLaunchPersistentContextOptions? options = default)
     {
         options ??= new BrowserTypeLaunchPersistentContextOptions();
-        var channelArgs = new Dictionary<string, object>
+        var channelArgs = new Dictionary<string, object?>
         {
             ["userDataDir"] = !string.IsNullOrEmpty(userDataDir) ? System.IO.Path.Combine(Environment.CurrentDirectory, userDataDir) : userDataDir,
             ["headless"] = options.Headless,
@@ -102,7 +103,7 @@ internal class BrowserType : ChannelOwner, IBrowserType
             ["handleSIGTERM"] = options.HandleSIGTERM,
             ["handleSIGHUP"] = options.HandleSIGHUP,
             ["timeout"] = options.Timeout,
-            ["env"] = options.Env.ToProtocol(),
+            ["env"] = options.Env?.ToProtocol(),
 #pragma warning disable CS0612 // Type or member is obsolete
             ["devtools"] = options.Devtools,
 #pragma warning restore CS0612 // Type or member is obsolete
@@ -121,7 +122,7 @@ internal class BrowserType : ChannelOwner, IBrowserType
             ["geolocation"] = options.Geolocation,
             ["locale"] = options.Locale,
             ["permissions"] = options.Permissions,
-            ["extraHTTPHeaders"] = options.ExtraHTTPHeaders.ToProtocol(),
+            ["extraHTTPHeaders"] = options.ExtraHTTPHeaders?.ToProtocol(),
             ["offline"] = options.Offline,
             ["httpCredentials"] = options.HttpCredentials,
             ["colorScheme"] = options.ColorScheme == ColorScheme.Null ? "no-override" : options.ColorScheme,
@@ -168,7 +169,7 @@ internal class BrowserType : ChannelOwner, IBrowserType
     }
 
     [MethodImpl(MethodImplOptions.NoInlining)]
-    public async Task<IBrowser> ConnectAsync(string wsEndpoint, BrowserTypeConnectOptions options = null)
+    public async Task<IBrowser> ConnectAsync(string wsEndpoint, BrowserTypeConnectOptions? options = null)
     {
         options ??= new BrowserTypeConnectOptions();
         var headers = new List<KeyValuePair<string, string>>(options.Headers ?? new Dictionary<string, string>())
@@ -186,9 +187,9 @@ internal class BrowserType : ChannelOwner, IBrowserType
         connection.MarkAsRemote();
         connection.Close += (_, _) => ClosePipe();
 
-        string closeError = null;
-        Browser browser = null;
-        void OnPipeClosed(string reason = null)
+        string? closeError = null;
+        Browser? browser = null;
+        void OnPipeClosed(string? reason = null)
         {
             // Emulate all pages, contexts and the browser closing upon disconnect.
             foreach (BrowserContext context in browser?._contexts.ToArray() ?? Array.Empty<BrowserContext>())
@@ -256,21 +257,21 @@ internal class BrowserType : ChannelOwner, IBrowserType
         }
         var task = CreateBrowserAsync();
         var timeout = options?.Timeout != null ? (int)options.Timeout : 30_000;
-        return await task.WithTimeout(timeout, _ => throw new TimeoutException($"BrowserType.ConnectAsync: Timeout {options.Timeout}ms exceeded")).ConfigureAwait(false);
+        return await task.WithTimeout(timeout, _ => throw new TimeoutException($"BrowserType.ConnectAsync: Timeout {timeout}ms exceeded")).ConfigureAwait(false);
     }
 
     [MethodImpl(MethodImplOptions.NoInlining)]
-    public async Task<IBrowser> ConnectOverCDPAsync(string endpointURL, BrowserTypeConnectOverCDPOptions options = null)
+    public async Task<IBrowser> ConnectOverCDPAsync(string endpointURL, BrowserTypeConnectOverCDPOptions? options = null)
     {
         if (Name != "chromium")
         {
             throw new ArgumentException("Connecting over CDP is only supported in Chromium.");
         }
         options ??= new BrowserTypeConnectOverCDPOptions();
-        JsonElement result = await SendMessageToServerAsync<JsonElement>("connectOverCDP", new Dictionary<string, object>
+        JsonElement result = await SendMessageToServerAsync<JsonElement>("connectOverCDP", new Dictionary<string, object?>
             {
                 { "endpointURL", endpointURL },
-                { "headers", options.Headers.ToProtocol() },
+                { "headers", options.Headers?.ToProtocol() },
                 { "slowMo", options.SlowMo },
                 { "timeout", options.Timeout },
             }).ConfigureAwait(false);
@@ -289,7 +290,7 @@ internal class BrowserType : ChannelOwner, IBrowserType
         browser._browserType = this;
     }
 
-    internal void DidCreateContext(BrowserContext context, BrowserNewContextOptions contextOptions, string tracesDir)
+    internal void DidCreateContext(BrowserContext context, BrowserNewContextOptions contextOptions, string? tracesDir)
     {
         context.SetOptions(contextOptions, tracesDir);
     }
