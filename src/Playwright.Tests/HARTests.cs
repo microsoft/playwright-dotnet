@@ -76,7 +76,7 @@ public class HARTests : BrowserTestEx
             var content = await File.ReadAllTextAsync(harPath);
             tmp.Dispose();
             return JsonSerializer.Deserialize<dynamic>(content);
-        };
+        }
 
         return (page, context, getContent);
     }

@@ -93,7 +93,7 @@ public class FrameGoToTests : PageTestEx
             {
                 await context.Response.WriteAsync(await matchingData[index].ServerResponseTcs.Task);
             }
-        };
+        }
 
         Server.SetRoute("/one-style.html?index=0", requestHandler);
         Server.SetRoute("/one-style.html?index=1", requestHandler);
