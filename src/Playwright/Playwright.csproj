@@ -20,6 +20,8 @@
     <NoWarn>1701;1702;CS0067;1734;NU5110;NU5111</NoWarn>
     <AssemblyName>Microsoft.Playwright</AssemblyName>
     <NoWin32Manifest>true</NoWin32Manifest>
+    <EnablePackageValidation>true</EnablePackageValidation>
+    <PackageValidationBaselineVersion>1.12.0</PackageValidationBaselineVersion>
   </PropertyGroup>
   <Import Project="../Common/Version.props" />
   <Import Project="../Common/Dependencies.props" />

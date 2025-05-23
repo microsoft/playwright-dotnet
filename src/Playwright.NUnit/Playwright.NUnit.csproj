@@ -19,6 +19,8 @@
     <PackageOutputPath>./nupkg</PackageOutputPath>
     <IsPackable>true</IsPackable>
     <Nullable>enable</Nullable>
+    <EnablePackageValidation>true</EnablePackageValidation>
+    <PackageValidationBaselineVersion>1.12.0</PackageValidationBaselineVersion>
   </PropertyGroup>
 
   <Import Project="../Common/Version.props" />
