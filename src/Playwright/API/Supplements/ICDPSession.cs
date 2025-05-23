@@ -24,9 +24,13 @@
 
 using System;
 
+#nullable enable
+
 namespace Microsoft.Playwright
 {
     public partial interface ICDPSession : IAsyncDisposable
     {
     }
 }
+
+#nullable disable
