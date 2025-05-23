@@ -32,5 +32,3 @@ namespace Microsoft.Playwright
     {
     }
 }
-
-#nullable disable

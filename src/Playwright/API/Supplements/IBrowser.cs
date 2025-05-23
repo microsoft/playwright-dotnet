@@ -31,5 +31,3 @@ namespace Microsoft.Playwright;
 public partial interface IBrowser : IAsyncDisposable
 {
 }
-
-#nullable disable

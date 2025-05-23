@@ -35,5 +35,3 @@ public partial interface IJSHandle : IAsyncDisposable
     /// <inheritdoc cref="EvaluateAsync{T}(string, object)" />
     Task<JsonElement?> EvaluateAsync(string expression, object? arg = null);
 }
-
-#nullable disable
