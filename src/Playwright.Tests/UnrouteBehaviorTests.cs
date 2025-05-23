@@ -201,7 +201,7 @@ public class UnrouteBehaviorTests : PageTestEx
             routePromise.SetResult(true);
             await routeBarrier.Task;
             await route.FallbackAsync();
-        };
+        }
 
         await Page.RouteAsync(new Regex(".*"), handler);
         var navigationPromise = Page.GotoAsync(Server.EmptyPage);
@@ -249,7 +249,7 @@ public class UnrouteBehaviorTests : PageTestEx
             routePromise.SetResult(true);
             await routeBarrier.Task;
             await route.FallbackAsync().ConfigureAwait(false);
-        };
+        }
 
         await Page.RouteAsync(new Regex(".*"), handler);
         var navigationPromise = Page.GotoAsync(Server.EmptyPage);
@@ -285,7 +285,7 @@ public class UnrouteBehaviorTests : PageTestEx
             routePromise.SetResult(true);
             await routeBarrier.Task;
             throw new Exception("Handler error");
-        };
+        }
 
         await Page.RouteAsync(new Regex(".*"), handler);
         var navigationPromise = Page.GotoAsync(Server.EmptyPage);

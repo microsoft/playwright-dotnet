@@ -755,7 +755,7 @@ public class PageRouteTests : PageTestEx
         {
             intercepted.Add("first");
             route.ContinueAsync();
-        };
+        }
         await Page.RouteAsync("**/*", handler, new() { Times = 1 });
         await Page.RouteAsync("**/*", async (route) =>
         {
