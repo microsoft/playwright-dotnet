@@ -52,11 +52,11 @@ internal class WebSocket : ChannelOwner, IWebSocket
 
     public bool IsClosed { get; internal set; }
 
-    internal override void OnMessage(string method, JsonElement? serverParams)
+    internal override void OnMessage(string method, JsonElement serverParams)
     {
         bool IsTextOrBinaryFrame(out int opcode)
         {
-            opcode = serverParams?.GetProperty("opcode").ToObject<int>() ?? 0;
+            opcode = serverParams.GetProperty("opcode").ToObject<int>();
             return opcode != 1 && opcode != 2;
         }
 
@@ -76,7 +76,7 @@ internal class WebSocket : ChannelOwner, IWebSocket
                 FrameSent?.Invoke(
                     this,
                     new WebSocketFrame(
-                        serverParams?.GetProperty("data").ToObject<string>(),
+                        serverParams.GetProperty("data").ToObject<string>(),
                         opcode == OpcodeBase64));
                 break;
             case "frameReceived":
@@ -87,11 +87,11 @@ internal class WebSocket : ChannelOwner, IWebSocket
                 FrameReceived?.Invoke(
                     this,
                     new WebSocketFrame(
-                        serverParams?.GetProperty("data").ToObject<string>(),
+                        serverParams.GetProperty("data").ToObject<string>(),
                         opcode == OpcodeBase64));
                 break;
             case "socketError":
-                SocketError?.Invoke(this, serverParams?.GetProperty("error").ToObject<string>());
+                SocketError?.Invoke(this, serverParams.GetProperty("error").ToObject<string>());
                 break;
         }
     }

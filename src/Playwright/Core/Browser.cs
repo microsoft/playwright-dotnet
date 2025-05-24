@@ -63,7 +63,7 @@ internal class Browser : ChannelOwner, IBrowser
 
     public IBrowserType BrowserType => _browserType;
 
-    internal override void OnMessage(string method, JsonElement? serverParams)
+    internal override void OnMessage(string method, JsonElement serverParams)
     {
         switch (method)
         {

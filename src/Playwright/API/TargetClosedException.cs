@@ -33,7 +33,7 @@ internal class TargetClosedException : PlaywrightException
     {
     }
 
-    internal TargetClosedException(string message) : base(message ?? DriverMessages.TargetClosedExceptionMessage)
+    internal TargetClosedException(string? message) : base(message ?? DriverMessages.TargetClosedExceptionMessage)
     {
     }
 

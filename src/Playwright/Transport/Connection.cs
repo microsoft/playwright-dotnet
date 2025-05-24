@@ -207,7 +207,6 @@ internal class Connection : IDisposable
         }
         else if (result == null)
         {
-            Console.WriteLine($"Warning: {method} returned null");
             return default!;
         }
         else if (typeof(ChannelOwner).IsAssignableFrom(typeof(T)) || typeof(ChannelOwner[]).IsAssignableFrom(typeof(T)))
@@ -273,7 +272,7 @@ internal class Connection : IDisposable
         {
             if (message.Method == "__create__")
             {
-                CreateRemoteObject(message.Guid, message.Params?.GetProperty("type").ToObject<ChannelOwnerType>(), message.Params.GetString("guid", false)!, message.Params?.GetProperty("initializer"));
+                CreateRemoteObject(message.Guid, message.Params.GetProperty("type").ToObject<ChannelOwnerType>(), message.Params.GetProperty("guid").ToString(), message.Params.GetProperty("initializer"));
                 return;
             }
 
@@ -285,7 +284,7 @@ internal class Connection : IDisposable
 
             if (message.Method == "__adopt__")
             {
-                var childGuid = message.Params?.GetProperty("guid").GetString()!;
+                var childGuid = message.Params.GetProperty("guid").GetString()!;
                 Objects.TryGetValue(childGuid, out var child);
                 if (child == null)
                 {
@@ -297,7 +296,7 @@ internal class Connection : IDisposable
 
             if (message.Method == "__dispose__")
             {
-                @object.DisposeOwner(message.Params?.TryGetProperty("reason", out var reason) == true ? reason.GetString() : null);
+                @object.DisposeOwner(message.Params.TryGetProperty("reason", out var reason) == true ? reason.GetString() : null);
                 return;
             }
             @object.OnMessage(message.Method, message.Params);
@@ -319,16 +318,16 @@ internal class Connection : IDisposable
                 result = new APIRequestContext(parent, guid, initializer?.ToObject<APIRequestContextInitializer>(DefaultJsonSerializerOptions)!);
                 break;
             case ChannelOwnerType.Artifact:
-                result = new Artifact(parent, guid, initializer?.ToObject<ArtifactInitializer>(DefaultJsonSerializerOptions));
+                result = new Artifact(parent, guid, initializer?.ToObject<ArtifactInitializer>(DefaultJsonSerializerOptions)!);
                 break;
             case ChannelOwnerType.BindingCall:
-                result = new BindingCall(parent, guid, initializer?.ToObject<BindingCallInitializer>(DefaultJsonSerializerOptions));
+                result = new BindingCall(parent, guid, initializer?.ToObject<BindingCallInitializer>(DefaultJsonSerializerOptions)!);
                 break;
             case ChannelOwnerType.Playwright:
                 result = new PlaywrightImpl(parent, guid, initializer?.ToObject<PlaywrightInitializer>(DefaultJsonSerializerOptions));
                 break;
             case ChannelOwnerType.Browser:
-                var browserInitializer = initializer?.ToObject<BrowserInitializer>(DefaultJsonSerializerOptions);
+                var browserInitializer = initializer?.ToObject<BrowserInitializer>(DefaultJsonSerializerOptions)!;
                 result = new Browser(parent, guid, browserInitializer);
                 break;
             case ChannelOwnerType.BrowserType:
@@ -336,14 +335,14 @@ internal class Connection : IDisposable
                 result = new Core.BrowserType(parent, guid, browserTypeInitializer);
                 break;
             case ChannelOwnerType.BrowserContext:
-                var browserContextInitializer = initializer?.ToObject<BrowserContextInitializer>(DefaultJsonSerializerOptions);
+                var browserContextInitializer = initializer?.ToObject<BrowserContextInitializer>(DefaultJsonSerializerOptions)!;
                 result = new BrowserContext(parent, guid, browserContextInitializer);
                 break;
             case ChannelOwnerType.CDPSession:
                 result = new CDPSession(parent, guid);
                 break;
             case ChannelOwnerType.Dialog:
-                result = new Dialog(parent, guid, initializer?.ToObject<DialogInitializer>(DefaultJsonSerializerOptions));
+                result = new Dialog(parent, guid, initializer?.ToObject<DialogInitializer>(DefaultJsonSerializerOptions)!);
                 break;
             case ChannelOwnerType.ElementHandle:
                 result = new ElementHandle(parent, guid, initializer?.ToObject<ElementHandleInitializer>(DefaultJsonSerializerOptions));

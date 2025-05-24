@@ -63,7 +63,7 @@ internal class ChannelOwner
 
     internal ChannelOwner? Parent { get; set; }
 
-    internal virtual void OnMessage(string method, JsonElement? serverParams)
+    internal virtual void OnMessage(string method, JsonElement serverParams)
     {
     }
 

@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-
+#nullable enable
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
@@ -50,9 +50,9 @@ internal class Dialog : ChannelOwner, IDialog
     public IPage Page => _initializer.Page;
 
     [MethodImpl(MethodImplOptions.NoInlining)]
-    public Task AcceptAsync(string promptText) => SendMessageToServerAsync(
+    public Task AcceptAsync(string? promptText = null) => SendMessageToServerAsync(
             "accept",
-            new Dictionary<string, object>
+            new Dictionary<string, object?>
             {
                 ["promptText"] = promptText ?? string.Empty,
             });

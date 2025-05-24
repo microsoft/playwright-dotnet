@@ -40,12 +40,12 @@ internal class ElementHandle : JSHandle, IElementHandle
     {
     }
 
-    internal override void OnMessage(string method, JsonElement? serverParams)
+    internal override void OnMessage(string method, JsonElement serverParams)
     {
         switch (method)
         {
             case "previewUpdated":
-                Preview = serverParams.Value.GetProperty("preview").ToString();
+                Preview = serverParams.GetProperty("preview").ToString();
                 break;
         }
     }
