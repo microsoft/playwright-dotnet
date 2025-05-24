@@ -53,7 +53,7 @@ internal class Worker : ChannelOwner, IWorker
 
     internal TaskCompletionSource<bool> ClosedTcs { get; } = new();
 
-    internal override void OnMessage(string method, JsonElement? serverParams)
+    internal override void OnMessage(string method, JsonElement serverParams)
     {
         switch (method)
         {

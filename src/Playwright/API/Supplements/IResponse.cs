@@ -22,6 +22,7 @@
  * SOFTWARE.
  */
 
+#nullable enable
 using System.Threading.Tasks;
 
 namespace Microsoft.Playwright;

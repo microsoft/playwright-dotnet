@@ -27,7 +27,7 @@ namespace Microsoft.Playwright.Helpers;
 
 internal static class ClassUtils
 {
-    internal static T Clone<T>(object source)
+    internal static T Clone<T>(object? source)
         where T : new()
     {
         T target = new();

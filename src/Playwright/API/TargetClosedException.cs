@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-
+#nullable enable
 using System;
 using Microsoft.Playwright.Core;
 
@@ -33,7 +33,7 @@ internal class TargetClosedException : PlaywrightException
     {
     }
 
-    internal TargetClosedException(string message) : base(message ?? DriverMessages.TargetClosedExceptionMessage)
+    internal TargetClosedException(string? message) : base(message ?? DriverMessages.TargetClosedExceptionMessage)
     {
     }
 

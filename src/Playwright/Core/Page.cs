@@ -218,7 +218,7 @@ internal class Page : ChannelOwner, IPage
 
     public IAPIRequestContext APIRequest { get; }
 
-    internal override void OnMessage(string method, JsonElement? serverParams)
+    internal override void OnMessage(string method, JsonElement serverParams)
     {
         switch (method)
         {
@@ -231,42 +231,42 @@ internal class Page : ChannelOwner, IPage
             case "bindingCall":
                 Channel_BindingCall(
                     this,
-                    serverParams?.GetProperty("binding").ToObject<BindingCall>(_connection.DefaultJsonSerializerOptions));
+                    serverParams.GetProperty("binding").ToObject<BindingCall>(_connection.DefaultJsonSerializerOptions));
                 break;
             case "route":
-                var route = serverParams?.GetProperty("route").ToObject<Route>(_connection.DefaultJsonSerializerOptions);
+                var route = serverParams.GetProperty("route").ToObject<Route>(_connection.DefaultJsonSerializerOptions);
                 Channel_Route(this, route);
                 break;
             case "webSocketRoute":
-                var webSocketRoute = serverParams?.GetProperty("webSocketRoute").ToObject<WebSocketRoute>(_connection.DefaultJsonSerializerOptions);
+                var webSocketRoute = serverParams.GetProperty("webSocketRoute").ToObject<WebSocketRoute>(_connection.DefaultJsonSerializerOptions);
                 _ = OnWebSocketRouteAsync(webSocketRoute).ConfigureAwait(false);
                 break;
             case "popup":
-                Popup?.Invoke(this, serverParams?.GetProperty("page").ToObject<Page>(_connection.DefaultJsonSerializerOptions));
+                Popup?.Invoke(this, serverParams.GetProperty("page").ToObject<Page>(_connection.DefaultJsonSerializerOptions));
                 break;
             case "fileChooser":
-                _fileChooserImpl?.Invoke(this, new FileChooser(this, serverParams.Value.GetProperty("element").ToObject<ElementHandle>(_connection.DefaultJsonSerializerOptions), serverParams.Value.GetProperty("isMultiple").ToObject<bool>(_connection.DefaultJsonSerializerOptions)));
+                _fileChooserImpl?.Invoke(this, new FileChooser(this, serverParams.GetProperty("element").ToObject<ElementHandle>(_connection.DefaultJsonSerializerOptions), serverParams.GetProperty("isMultiple").ToObject<bool>(_connection.DefaultJsonSerializerOptions)));
                 break;
             case "frameAttached":
-                Channel_FrameAttached(this, serverParams?.GetProperty("frame").ToObject<Frame>(_connection.DefaultJsonSerializerOptions));
+                Channel_FrameAttached(this, serverParams.GetProperty("frame").ToObject<Frame>(_connection.DefaultJsonSerializerOptions));
                 break;
             case "frameDetached":
-                Channel_FrameDetached(this, serverParams?.GetProperty("frame").ToObject<Frame>(_connection.DefaultJsonSerializerOptions));
+                Channel_FrameDetached(this, serverParams.GetProperty("frame").ToObject<Frame>(_connection.DefaultJsonSerializerOptions));
                 break;
             case "locatorHandlerTriggered":
-                _ = Channel_LocatorHandlerTriggeredAsync(serverParams.Value.GetProperty("uid").GetInt32());
+                _ = Channel_LocatorHandlerTriggeredAsync(serverParams.GetProperty("uid").GetInt32());
                 break;
             case "webSocket":
-                WebSocket?.Invoke(this, serverParams?.GetProperty("webSocket").ToObject<WebSocket>(_connection.DefaultJsonSerializerOptions));
+                WebSocket?.Invoke(this, serverParams.GetProperty("webSocket").ToObject<WebSocket>(_connection.DefaultJsonSerializerOptions));
                 break;
             case "download":
-                Download?.Invoke(this, new Download(this, serverParams.Value.GetProperty("url").ToObject<string>(_connection.DefaultJsonSerializerOptions), serverParams.Value.GetProperty("suggestedFilename").ToObject<string>(_connection.DefaultJsonSerializerOptions), serverParams.Value.GetProperty("artifact").ToObject<Artifact>(_connection.DefaultJsonSerializerOptions)));
+                Download?.Invoke(this, new Download(this, serverParams.GetProperty("url").ToObject<string>(_connection.DefaultJsonSerializerOptions), serverParams.GetProperty("suggestedFilename").ToObject<string>(_connection.DefaultJsonSerializerOptions), serverParams.GetProperty("artifact").ToObject<Artifact>(_connection.DefaultJsonSerializerOptions)));
                 break;
             case "video":
-                ForceVideo().ArtifactReady(serverParams?.GetProperty("artifact").ToObject<Artifact>(_connection.DefaultJsonSerializerOptions));
+                ForceVideo().ArtifactReady(serverParams.GetProperty("artifact").ToObject<Artifact>(_connection.DefaultJsonSerializerOptions));
                 break;
             case "worker":
-                var worker = serverParams?.GetProperty("worker").ToObject<Worker>(_connection.DefaultJsonSerializerOptions);
+                var worker = serverParams.GetProperty("worker").ToObject<Worker>(_connection.DefaultJsonSerializerOptions);
                 _workers.Add(worker);
                 worker.Page = this;
                 Worker?.Invoke(this, worker);

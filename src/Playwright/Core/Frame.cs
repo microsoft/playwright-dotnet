@@ -77,14 +77,14 @@ internal class Frame : ChannelOwner, IFrame
 
     public bool IsDetached { get; internal set; }
 
-    internal override void OnMessage(string method, JsonElement? serverParams)
+    internal override void OnMessage(string method, JsonElement serverParams)
     {
         switch (method)
         {
             case "navigated":
-                var e = serverParams?.ToObject<FrameNavigatedEventArgs>(_connection.DefaultJsonSerializerOptions);
+                var e = serverParams.ToObject<FrameNavigatedEventArgs>(_connection.DefaultJsonSerializerOptions);
 
-                if (serverParams.Value.TryGetProperty("newDocument", out var documentElement))
+                if (serverParams.TryGetProperty("newDocument", out var documentElement))
                 {
                     e.NewDocument = documentElement.ToObject<NavigateDocument>(_connection.DefaultJsonSerializerOptions);
                 }
@@ -94,11 +94,11 @@ internal class Frame : ChannelOwner, IFrame
             case "loadstate":
                 WaitUntilState? add = null;
                 WaitUntilState? remove = null;
-                if (serverParams.Value.TryGetProperty("add", out var addElement))
+                if (serverParams.TryGetProperty("add", out var addElement))
                 {
                     add = addElement.ToObject<WaitUntilState>(_connection.DefaultJsonSerializerOptions);
                 }
-                if (serverParams.Value.TryGetProperty("remove", out var removeElement))
+                if (serverParams.TryGetProperty("remove", out var removeElement))
                 {
                     remove = removeElement.ToObject<WaitUntilState>(_connection.DefaultJsonSerializerOptions);
                 }

@@ -22,13 +22,14 @@
  * SOFTWARE.
  */
 
+#nullable enable
 using Microsoft.Playwright.Core;
 
 namespace Microsoft.Playwright.Transport.Channels;
 
 internal class BrowserContextChannelResponseEventArgs
 {
-    public Page Page { get; set; }
+    public Page? Page { get; set; }
 
-    public Response Response { get; set; }
+    public Response Response { get; set; } = null!;
 }

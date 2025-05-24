@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-
+#nullable enable
 using System.Collections.Generic;
 using System.IO;
 using System.Text.Json;
@@ -39,9 +39,9 @@ internal class APIRequest : IAPIRequest
         _playwright = playwright;
     }
 
-    async Task<IAPIRequestContext> IAPIRequest.NewContextAsync(APIRequestNewContextOptions options)
+    async Task<IAPIRequestContext> IAPIRequest.NewContextAsync(APIRequestNewContextOptions? options)
     {
-        var args = new Dictionary<string, object>()
+        var args = new Dictionary<string, object?>()
         {
             ["baseURL"] = options?.BaseURL,
             ["userAgent"] = options?.UserAgent,
@@ -54,7 +54,7 @@ internal class APIRequest : IAPIRequest
             ["clientCertificates"] = Browser.ToClientCertificatesProtocol(options?.ClientCertificates),
             ["failOnStatusCode"] = options?.FailOnStatusCode,
         };
-        string storageState = options?.StorageState;
+        var storageState = options?.StorageState;
         if (!string.IsNullOrEmpty(options?.StorageStatePath))
         {
             if (!File.Exists(options?.StorageStatePath))
@@ -64,7 +64,7 @@ internal class APIRequest : IAPIRequest
 
             storageState = File.ReadAllText(options?.StorageStatePath);
         }
-        if (!string.IsNullOrEmpty(storageState))
+        if (!string.IsNullOrEmpty(storageState) && storageState != null)
         {
             args.Add("storageState", JsonSerializer.Deserialize<object>(storageState, Helpers.JsonExtensions.DefaultJsonSerializerOptions));
         }

@@ -40,14 +40,14 @@ internal class CDPSession : ChannelOwner, ICDPSession
     {
     }
 
-    internal override void OnMessage(string method, JsonElement? serverParams)
+    internal override void OnMessage(string method, JsonElement serverParams)
     {
         switch (method)
         {
             case "event":
                 OnCDPEvent(
-                    serverParams!.Value.GetProperty("method").ToString(),
-                    serverParams!.Value.TryGetProperty("params", out var cdpParams) ? cdpParams : null);
+                    serverParams.GetProperty("method").ToString(),
+                    serverParams.TryGetProperty("params", out var cdpParams) ? cdpParams : null);
                 break;
         }
     }

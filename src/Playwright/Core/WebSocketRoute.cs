@@ -54,67 +54,67 @@ internal class WebSocketRoute : ChannelOwner, IWebSocketRoute
 
     public string Url => _initializer.Url;
 
-    internal override void OnMessage(string method, JsonElement? serverParams)
+    internal override void OnMessage(string method, JsonElement serverParams)
     {
         switch (method)
         {
             case "messageFromPage":
                 if (_onPageMessage != null)
                 {
-                    var frame = new WebSocketFrame(serverParams.Value.GetProperty("message").GetString(), serverParams.Value.GetProperty("isBase64").GetBoolean());
+                    var frame = new WebSocketFrame(serverParams.GetProperty("message").GetString(), serverParams.GetProperty("isBase64").GetBoolean());
                     _onPageMessage(frame);
                 }
                 else if (_connected)
                 {
                     SendMessageToServerAsync("sendToServer", new Dictionary<string, object>
                     {
-                        ["message"] = serverParams?.GetProperty("message").GetString(),
-                        ["isBase64"] = serverParams?.GetProperty("isBase64").GetBoolean(),
+                        ["message"] = serverParams.GetProperty("message").GetString(),
+                        ["isBase64"] = serverParams.GetProperty("isBase64").GetBoolean(),
                     }).IgnoreException();
                 }
                 break;
             case "messageFromServer":
                 if (_onServerMessage != null)
                 {
-                    var frame = new WebSocketFrame(serverParams.Value.GetProperty("message").GetString(), serverParams.Value.GetProperty("isBase64").GetBoolean());
+                    var frame = new WebSocketFrame(serverParams.GetProperty("message").GetString(), serverParams.GetProperty("isBase64").GetBoolean());
                     _onServerMessage(frame);
                 }
                 else
                 {
                     SendMessageToServerAsync("sendToPage", new Dictionary<string, object>
                     {
-                        ["message"] = serverParams?.GetProperty("message").GetString(),
-                        ["isBase64"] = serverParams?.GetProperty("isBase64").GetBoolean(),
+                        ["message"] = serverParams.GetProperty("message").GetString(),
+                        ["isBase64"] = serverParams.GetProperty("isBase64").GetBoolean(),
                     }).IgnoreException();
                 }
                 break;
             case "closePage":
                 if (_onPageClose != null)
                 {
-                    _onPageClose(serverParams?.GetProperty("code").GetInt32(), serverParams?.GetProperty("reason").GetString());
+                    _onPageClose(serverParams.GetProperty("code").GetInt32(), serverParams.GetProperty("reason").GetString());
                 }
                 else
                 {
                     SendMessageToServerAsync("closeServer", new Dictionary<string, object>
                     {
-                        ["code"] = serverParams?.GetProperty("code").GetInt32(),
-                        ["reason"] = serverParams?.GetProperty("reason").GetString(),
-                        ["wasClean"] = serverParams?.GetProperty("wasClean").GetBoolean(),
+                        ["code"] = serverParams.GetProperty("code").GetInt32(),
+                        ["reason"] = serverParams.GetProperty("reason").GetString(),
+                        ["wasClean"] = serverParams.GetProperty("wasClean").GetBoolean(),
                     }).IgnoreException();
                 }
                 break;
             case "closeServer":
                 if (_onServerClose != null)
                 {
-                    _onServerClose(serverParams?.GetProperty("code").GetInt32(), serverParams?.GetProperty("reason").GetString());
+                    _onServerClose(serverParams.GetProperty("code").GetInt32(), serverParams.GetProperty("reason").GetString());
                 }
                 else
                 {
                     SendMessageToServerAsync("closePage", new Dictionary<string, object>
                     {
-                        ["code"] = serverParams?.GetProperty("code").GetInt32(),
-                        ["reason"] = serverParams?.GetProperty("reason").GetString(),
-                        ["wasClean"] = serverParams?.GetProperty("wasClean").GetBoolean(),
+                        ["code"] = serverParams.GetProperty("code").GetInt32(),
+                        ["reason"] = serverParams.GetProperty("reason").GetString(),
+                        ["wasClean"] = serverParams.GetProperty("wasClean").GetBoolean(),
                     }).IgnoreException();
                 }
                 break;

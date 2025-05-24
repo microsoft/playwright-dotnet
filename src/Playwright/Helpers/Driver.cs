@@ -41,7 +41,7 @@ internal static class Driver
         ["PW_CLI_DISPLAY_VERSION"] = typeof(Driver).Assembly.GetName().Version.ToString(3),
     };
 
-    internal static (string ExecutablePath, Func<string, string> GetArgs) GetExecutablePath()
+    internal static (string ExecutablePath, Func<string?, string> GetArgs) GetExecutablePath()
     {
         DirectoryInfo? assemblyDirectory = null;
         if (!string.IsNullOrEmpty(AppContext.BaseDirectory))
@@ -66,7 +66,7 @@ internal static class Driver
         }
 
         string executableFile;
-        Func<string, string> getArgs;
+        Func<string?, string> getArgs;
 
         // When loading the Assembly via the memory we don't have any references where the driver might be located.
         // To workaround this we pass this env from the .ps1 wrapper over to the Assembly.
@@ -113,7 +113,7 @@ internal static class Driver
         }
     }
 
-    private static (string ExecutablePath, Func<string, string> GetArgs) GetPath(string driversPath)
+    private static (string ExecutablePath, Func<string?, string> GetArgs) GetPath(string driversPath)
     {
         string platformId;
         string nodeExecutable;
@@ -138,7 +138,7 @@ internal static class Driver
         }
 
         var cliEntrypoint = Path.Combine(driversPath, ".playwright", "package", "cli.js");
-        string getArgs(string args)
+        string getArgs(string? args)
         {
             return !string.IsNullOrEmpty(args) ? $"\"{cliEntrypoint}\" {args}" : cliEntrypoint;
         }

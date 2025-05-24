@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-
+#nullable enable
 using System;
 using System.Diagnostics.CodeAnalysis;
 using System.Text.Json;
@@ -45,7 +45,7 @@ public static class Playwright
         transport.MessageReceived += (_, message) =>
         {
             Connection.TraceMessage("pw:channel:recv", message);
-            connection.Dispatch(JsonSerializer.Deserialize<PlaywrightServerMessage>(message, JsonExtensions.DefaultJsonSerializerOptions));
+            connection.Dispatch(JsonSerializer.Deserialize<PlaywrightServerMessage>(message, JsonExtensions.DefaultJsonSerializerOptions)!);
         };
         transport.LogReceived += (_, log) =>
         {

@@ -46,16 +46,16 @@ internal class JsonPipe : ChannelOwner
 
     public event EventHandler<string> Closed;
 
-    internal override void OnMessage(string method, JsonElement? serverParams)
+    internal override void OnMessage(string method, JsonElement serverParams)
     {
         switch (method)
         {
             case "closed":
-                var reason = serverParams?.TryGetProperty("reason", out var r) == true ? r.GetString() : null;
+                var reason = serverParams.TryGetProperty("reason", out var r) == true ? r.GetString() : null;
                 Closed?.Invoke(this, reason);
                 break;
             case "message":
-                Message?.Invoke(this, serverParams?.GetProperty("message").ToObject<PlaywrightServerMessage>(_connection.DefaultJsonSerializerOptions));
+                Message?.Invoke(this, serverParams.GetProperty("message").ToObject<PlaywrightServerMessage>(_connection.DefaultJsonSerializerOptions));
                 break;
         }
     }
