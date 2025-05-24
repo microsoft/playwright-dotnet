@@ -22,6 +22,7 @@
  * SOFTWARE.
  */
 
+#nullable enable
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -88,7 +89,7 @@ internal class AssertionsBase
         }
     }
 
-    protected ExpectedTextValue ExpectedRegex(Regex pattern, ExpectedTextValue options = null)
+    protected ExpectedTextValue ExpectedRegex(Regex pattern, ExpectedTextValue? options = null)
     {
         if (pattern == null)
         {

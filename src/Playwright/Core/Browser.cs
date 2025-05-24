@@ -22,6 +22,7 @@
  * SOFTWARE.
  */
 
+#nullable enable
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -41,8 +42,8 @@ internal class Browser : ChannelOwner, IBrowser
     private readonly BrowserInitializer _initializer;
     private readonly TaskCompletionSource<bool> _closedTcs = new();
     internal readonly List<BrowserContext> _contexts = new();
-    internal BrowserType _browserType;
-    internal string _closeReason;
+    internal BrowserType _browserType = null!;
+    internal string? _closeReason;
 
     internal Browser(ChannelOwner parent, string guid, BrowserInitializer initializer) : base(parent, guid)
     {
@@ -50,7 +51,7 @@ internal class Browser : ChannelOwner, IBrowser
         _initializer = initializer;
     }
 
-    public event EventHandler<IBrowser> Disconnected;
+    public event EventHandler<IBrowser>? Disconnected;
 
     public IReadOnlyList<IBrowserContext> Contexts => _contexts.ToArray();
 
@@ -73,7 +74,7 @@ internal class Browser : ChannelOwner, IBrowser
     }
 
     [MethodImpl(MethodImplOptions.NoInlining)]
-    public async Task CloseAsync(BrowserCloseOptions options = default)
+    public async Task CloseAsync(BrowserCloseOptions? options = default)
     {
         _closeReason = options?.Reason;
         try
@@ -84,7 +85,7 @@ internal class Browser : ChannelOwner, IBrowser
             }
             else
             {
-                await SendMessageToServerAsync("close", new Dictionary<string, object>
+                await SendMessageToServerAsync("close", new Dictionary<string, object?>
                 {
                     ["reason"] = options?.Reason,
                 }).ConfigureAwait(false);
@@ -98,11 +99,11 @@ internal class Browser : ChannelOwner, IBrowser
     }
 
     [MethodImpl(MethodImplOptions.NoInlining)]
-    public async Task<IBrowserContext> NewContextAsync(BrowserNewContextOptions options = default)
+    public async Task<IBrowserContext> NewContextAsync(BrowserNewContextOptions? options = default)
     {
         options ??= new();
 
-        var args = new Dictionary<string, object>
+        var args = new Dictionary<string, object?>
         {
             ["bypassCSP"] = options.BypassCSP,
             ["deviceScaleFactor"] = options.DeviceScaleFactor,
@@ -154,7 +155,7 @@ internal class Browser : ChannelOwner, IBrowser
             storageState = File.ReadAllText(options.StorageStatePath);
         }
 
-        if (!string.IsNullOrEmpty(storageState))
+        if (!string.IsNullOrEmpty(storageState) && storageState != null)
         {
             args.Add("storageState", JsonSerializer.Deserialize<object>(storageState, Helpers.JsonExtensions.DefaultJsonSerializerOptions));
         }
@@ -176,7 +177,7 @@ internal class Browser : ChannelOwner, IBrowser
     }
 
     [MethodImpl(MethodImplOptions.NoInlining)]
-    public async Task<IPage> NewPageAsync(BrowserNewPageOptions options = default)
+    public async Task<IPage> NewPageAsync(BrowserNewPageOptions? options = default)
     {
         options ??= new();
 
@@ -236,9 +237,9 @@ internal class Browser : ChannelOwner, IBrowser
     [MethodImpl(MethodImplOptions.NoInlining)]
     public ValueTask DisposeAsync() => new ValueTask(CloseAsync());
 
-    internal static Dictionary<string, object> GetVideoArgs(string recordVideoDir, RecordVideoSize recordVideoSize)
+    internal static Dictionary<string, object>? GetVideoArgs(string? recordVideoDir, RecordVideoSize? recordVideoSize)
     {
-        Dictionary<string, object> recordVideoArgs = null;
+        Dictionary<string, object>? recordVideoArgs = null;
 
         if (recordVideoSize != null && string.IsNullOrEmpty(recordVideoDir))
         {
@@ -273,20 +274,20 @@ internal class Browser : ChannelOwner, IBrowser
         => await SendMessageToServerAsync<CDPSession>(
         "newBrowserCDPSession").ConfigureAwait(false);
 
-    internal static Dictionary<string, object> PrepareHarOptions(
+    internal static Dictionary<string, object?>? PrepareHarOptions(
         HarContentPolicy? recordHarContent,
         HarMode? recordHarMode,
-        string recordHarPath,
+        string? recordHarPath,
         bool? recordHarOmitContent,
-        string recordHarUrlFilter,
-        string recordHarUrlFilterString,
-        Regex recordHarUrlFilterRegex)
+        string? recordHarUrlFilter,
+        string? recordHarUrlFilterString,
+        Regex? recordHarUrlFilterRegex)
     {
         if (string.IsNullOrEmpty(recordHarPath))
         {
             return null;
         }
-        var recordHarArgs = new Dictionary<string, object>();
+        var recordHarArgs = new Dictionary<string, object?>();
         recordHarArgs["path"] = recordHarPath;
         if (recordHarContent.HasValue)
         {
@@ -321,13 +322,13 @@ internal class Browser : ChannelOwner, IBrowser
         return null;
     }
 
-    internal static Dictionary<string, string>[] ToClientCertificatesProtocol(IEnumerable<ClientCertificate> clientCertificates)
+    internal static Dictionary<string, string?>[]? ToClientCertificatesProtocol(IEnumerable<ClientCertificate>? clientCertificates)
     {
         if (clientCertificates == null)
         {
             return null;
         }
-        return clientCertificates.Select(clientCertificate => new Dictionary<string, string>
+        return clientCertificates.Select(clientCertificate => new Dictionary<string, string?>
         {
             ["origin"] = clientCertificate.Origin,
             ["passphrase"] = clientCertificate.Passphrase,
@@ -340,7 +341,7 @@ internal class Browser : ChannelOwner, IBrowser
             .ToArray();
     }
 
-    private static string ReadClientCertificateFile(string path, byte[] value)
+    private static string? ReadClientCertificateFile(string? path, byte[]? value)
     {
         if (value != null)
         {

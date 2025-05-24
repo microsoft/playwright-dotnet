@@ -34,7 +34,7 @@ internal class PlaywrightServerMessage
 
     public string Method { get; set; } = null!;
 
-    public JsonElement? Params { get; set; }
+    public JsonElement Params { get; set; }
 
     public JsonElement? Result { get; set; }
 

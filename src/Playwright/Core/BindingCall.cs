@@ -22,6 +22,7 @@
  * SOFTWARE.
  */
 
+#nullable enable
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -69,7 +70,7 @@ internal class BindingCall : ChannelOwner
                 }
             }
 
-            object result = binding.DynamicInvoke(args.ToArray());
+            object? result = binding.DynamicInvoke(args.ToArray());
 
             if (result is Task taskResult)
             {
@@ -85,7 +86,7 @@ internal class BindingCall : ChannelOwner
                 }
             }
 
-            await SendMessageToServerAsync("resolve", new Dictionary<string, object>
+            await SendMessageToServerAsync("resolve", new Dictionary<string, object?>
             {
                 ["result"] = ScriptsHelper.SerializedArgument(result),
             }).ConfigureAwait(false);
@@ -94,7 +95,7 @@ internal class BindingCall : ChannelOwner
         {
             await SendMessageToServerAsync(
                 "reject",
-                new Dictionary<string, object>
+                new Dictionary<string, object?>
                 {
                     ["error"] = ex.InnerException.ToObject(),
                 }).ConfigureAwait(false);
@@ -103,7 +104,7 @@ internal class BindingCall : ChannelOwner
         {
             await SendMessageToServerAsync(
                 "reject",
-                new Dictionary<string, object>
+                new Dictionary<string, object?>
                 {
                     ["error"] = ex.ToObject(),
                 }).ConfigureAwait(false);

@@ -96,7 +96,7 @@ internal class ChannelOwner
 
     internal void MarkAsInternalType() => _isInternalType = true;
 
-    internal EventHandler<T>? UpdateEventHandler<T>(string eventName, EventHandler<T>? handlers, EventHandler<T> handler, bool add)
+    internal EventHandler<T>? UpdateEventHandler<T>(string eventName, EventHandler<T>? handlers, EventHandler<T>? handler, bool add)
     {
         if (add)
         {
