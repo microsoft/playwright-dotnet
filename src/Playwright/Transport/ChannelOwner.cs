@@ -43,7 +43,7 @@ internal class ChannelOwner
     {
     }
 
-    internal ChannelOwner(ChannelOwner parent, Connection connection, string guid)
+    internal ChannelOwner(ChannelOwner? parent, Connection connection, string guid)
     {
         _connection = connection;
 

@@ -22,11 +22,12 @@
  * SOFTWARE.
  */
 
+#nullable enable
 namespace Microsoft.Playwright.Transport.Channels;
 
 internal class Root : ChannelOwner
 {
-    internal Root(ChannelOwner parent, Connection connection, string guid) : base(parent, connection, guid)
+    internal Root(ChannelOwner? parent, Connection connection, string guid) : base(parent, connection, guid)
     {
     }
 }

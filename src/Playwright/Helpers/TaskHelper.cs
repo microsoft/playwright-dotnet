@@ -22,7 +22,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-
+#nullable enable
 using System;
 using System.Diagnostics.CodeAnalysis;
 using System.Threading;
@@ -52,7 +52,7 @@ internal static class TaskHelper
     public static Task WithTimeout(
         this Task task,
         int milliseconds,
-        Func<TimeSpan, Exception> exceptionFactory = null,
+        Func<TimeSpan, Exception>? exceptionFactory = null,
         CancellationToken cancellationToken = default)
         => WithTimeout(task, TimeSpan.FromMilliseconds(milliseconds), exceptionFactory, cancellationToken);
 
@@ -67,7 +67,7 @@ internal static class TaskHelper
     public static Task WithTimeout(
         this Task task,
         TimeSpan timeout,
-        Func<TimeSpan, Exception> exceptionFactory = null,
+        Func<TimeSpan, Exception>? exceptionFactory = null,
         CancellationToken cancellationToken = default)
         => task.WithTimeout(
             () => throw (exceptionFactory ?? _defaultExceptionFactory)(timeout),
@@ -133,15 +133,10 @@ internal static class TaskHelper
     /// <typeparam name="T">Return type.</typeparam>
     public static async Task<T> WithTimeout<T>(this Task<T> task, Action timeoutAction, TimeSpan timeout)
     {
-        if (task == null)
-        {
-            return default;
-        }
-
         if (await TimeoutTask(task, timeout).ConfigureAwait(false) && timeoutAction != null)
         {
             timeoutAction();
-            return default;
+            return default!;
         }
 
         return await task.ConfigureAwait(false);
@@ -155,7 +150,7 @@ internal static class TaskHelper
     /// <param name="milliseconds">Milliseconds timeout.</param>
     /// <param name="exceptionFactory">Optional timeout exception factory.</param>
     /// <typeparam name="T">Task return type.</typeparam>
-    public static Task<T> WithTimeout<T>(this Task<T> task, int milliseconds = 1_000, Func<TimeSpan, Exception> exceptionFactory = null)
+    public static Task<T> WithTimeout<T>(this Task<T> task, int milliseconds = 1_000, Func<TimeSpan, Exception>? exceptionFactory = null)
         => WithTimeout(task, TimeSpan.FromMilliseconds(milliseconds), exceptionFactory);
 
     /// <summary>
@@ -166,13 +161,8 @@ internal static class TaskHelper
     /// <param name="timeout">The timeout period.</param>
     /// <param name="exceptionFactory">Optional timeout exception factory.</param>
     /// <typeparam name="T">Task return type.</typeparam>
-    public static async Task<T> WithTimeout<T>(this Task<T> task, TimeSpan timeout, Func<TimeSpan, Exception> exceptionFactory = null)
+    public static async Task<T> WithTimeout<T>(this Task<T> task, TimeSpan timeout, Func<TimeSpan, Exception>? exceptionFactory = null)
     {
-        if (task == null)
-        {
-            return default;
-        }
-
         if (await TimeoutTask(task, timeout).ConfigureAwait(false))
         {
             throw (exceptionFactory ?? _defaultExceptionFactory)(timeout);

@@ -54,12 +54,7 @@ internal class BindingCall : ChannelOwner
             var methodParams = binding.Method.GetParameters().Select(parameter => parameter.ParameterType).Skip(1).ToArray();
             var args = new List<object>
             {
-                new BindingSource
-                {
-                    Context = _initializer?.Frame?.Page?.Context,
-                    Page = _initializer?.Frame?.Page,
-                    Frame = _initializer?.Frame,
-                },
+                new BindingSource(_initializer.Frame.Page.Context, _initializer.Frame.Page, _initializer.Frame),
             };
 
             if (methodParams.Length == 1 && methodParams[0] == typeof(IJSHandle))

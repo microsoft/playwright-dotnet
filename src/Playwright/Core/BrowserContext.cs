@@ -219,7 +219,6 @@ internal class BrowserContext : ChannelOwner, IBrowserContext
                 {
                     var e = serverParams?.ToObject<BrowserContextChannelRequestEventArgs>(_connection.DefaultJsonSerializerOptions);
                     e.Request.SetResponseEndTiming(e.ResponseEndTiming);
-                    e.Request.Sizes = e.RequestSizes;
                     _requestFinishedImpl?.Invoke(this, e.Request);
                     e.Page?.FireRequestFinished(e.Request);
                     e.Response?.ReportFinished();

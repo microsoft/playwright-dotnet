@@ -23,7 +23,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-
+#nullable enable
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
@@ -49,9 +49,9 @@ internal class Connection : IDisposable
     private readonly TaskQueue _queue = new();
     private int _tracingCount;
     private int _lastId;
-    private Exception _closedError;
+    private Exception? _closedError;
 
-    public Connection(LocalUtils localUtils = null)
+    public Connection(LocalUtils? localUtils = null)
     {
         _rootObject = new(null, this, string.Empty);
         LocalUtils = localUtils;
@@ -73,23 +73,23 @@ internal class Connection : IDisposable
     /// <inheritdoc cref="IDisposable.Dispose"/>
     ~Connection() => Dispose(false);
 
-    internal event EventHandler<Exception> Close;
+    internal event EventHandler<Exception>? Close;
 
     public ConcurrentDictionary<string, ChannelOwner> Objects { get; } = new();
 
-    internal AsyncLocal<List<ApiZone>> ApiZone { get; } = new();
+    internal AsyncLocal<List<ApiZone?>> ApiZone { get; } = new();
 
     internal bool IsRemote { get; set; }
 
-    internal LocalUtils LocalUtils { get; private set; }
+    internal LocalUtils? LocalUtils { get; private set; }
 
-    internal Func<object, bool, Task> OnMessage { get; set; }
+    internal Func<object, bool, Task> OnMessage { get; set; } = null!;
 
     internal JsonSerializerOptions DefaultJsonSerializerOptions { get; }
 
     internal JsonSerializerOptions DefaultJsonSerializerOptionsKeepNulls { get; }
 
-    internal static string FormatCallLog(string[] log)
+    internal static string FormatCallLog(string[]? log)
     {
         if (log == null)
         {
@@ -121,22 +121,22 @@ internal class Connection : IDisposable
     }
 
     internal Task<JsonElement?> SendMessageToServerAsync(
-        ChannelOwner @object,
+        ChannelOwner? @object,
         string method,
-        Dictionary<string, object> args = null,
+        Dictionary<string, object?>? args = null,
         bool keepNulls = false)
         => SendMessageToServerAsync<JsonElement?>(@object, method, args, keepNulls);
 
     internal Task<T> SendMessageToServerAsync<T>(
-        ChannelOwner @object,
+        ChannelOwner? @object,
         string method,
-        Dictionary<string, object> args = null,
+        Dictionary<string, object?>? args = null,
         bool keepNulls = false) => WrapApiCallAsync(() => InnerSendMessageToServerAsync<T>(@object, method, args, keepNulls), @object?._isInternalType ?? false);
 
     private async Task<T> InnerSendMessageToServerAsync<T>(
-        ChannelOwner @object,
+        ChannelOwner? @object,
         string method,
-        Dictionary<string, object> dictionary = null,
+        Dictionary<string, object?>? dictionary = null,
         bool keepNulls = false)
     {
         if (_closedError != null)
@@ -159,10 +159,10 @@ internal class Connection : IDisposable
         {
             sanitizedArgs = dictionary
                 .Where(f => f.Value != null)
-                .ToDictionary(f => f.Key, f => f.Value);
+                .ToDictionary(f => f.Key, f => f.Value) as Dictionary<string, object>;
         }
-        var (apiName, frames) = (ApiZone.Value[0].ApiName, ApiZone.Value[0].Frames);
-        var metadata = new Dictionary<string, object>
+        var (apiName, frames) = (ApiZone.Value[0]!.ApiName, ApiZone.Value[0]!.Frames);
+        var metadata = new Dictionary<string, object?>
         {
             ["internal"] = string.IsNullOrEmpty(apiName),
             ["wallTime"] = DateTimeOffset.Now.ToUnixTimeMilliseconds(),
@@ -181,14 +181,14 @@ internal class Connection : IDisposable
             };
         }
 
-        if (_tracingCount > 0 && frames.Count > 0 && @object.Guid != "localUtils")
+        if (_tracingCount > 0 && frames.Count > 0 && @object?.Guid != "localUtils")
         {
             LocalUtils?.AddStackToTracingNoReply(frames, id);
         }
 
         await _queue.EnqueueAsync(() =>
         {
-            var message = new Dictionary<string, object>
+            var message = new Dictionary<string, object?>
             {
                 ["id"] = id,
                 ["guid"] = @object?.Guid ?? string.Empty,
@@ -207,7 +207,8 @@ internal class Connection : IDisposable
         }
         else if (result == null)
         {
-            return default;
+            Console.WriteLine($"Warning: {method} returned null");
+            return default!;
         }
         else if (typeof(ChannelOwner).IsAssignableFrom(typeof(T)) || typeof(ChannelOwner[]).IsAssignableFrom(typeof(T)))
         {
@@ -215,7 +216,7 @@ internal class Connection : IDisposable
 
             return enumerate.Any()
                 ? enumerate.FirstOrDefault().Value.ToObject<T>(DefaultJsonSerializerOptions)
-                : default;
+                : default!;
         }
         else
         {
@@ -233,13 +234,13 @@ internal class Connection : IDisposable
 
     internal async Task<PlaywrightImpl> InitializePlaywrightAsync()
     {
-        var args = new Dictionary<string, object>
+        var args = new Dictionary<string, object?>
         {
             ["sdkLanguage"] = "csharp",
         };
 
         var jsonElement = await SendMessageToServerAsync(null, "initialize", args).ConfigureAwait(false);
-        return jsonElement.GetObject<PlaywrightImpl>("playwright", this);
+        return jsonElement.GetObject<PlaywrightImpl>("playwright", this)!;
     }
 
     internal void Dispatch(PlaywrightServerMessage message)
@@ -272,7 +273,7 @@ internal class Connection : IDisposable
         {
             if (message.Method == "__create__")
             {
-                CreateRemoteObject(message.Guid, message.Params.Value.GetProperty("type").ToObject<ChannelOwnerType>(), message.Params.GetString("guid", false)!, message.Params?.GetProperty("initializer"));
+                CreateRemoteObject(message.Guid, message.Params?.GetProperty("type").ToObject<ChannelOwnerType>(), message.Params.GetString("guid", false)!, message.Params?.GetProperty("initializer"));
                 return;
             }
 
@@ -284,7 +285,7 @@ internal class Connection : IDisposable
 
             if (message.Method == "__adopt__")
             {
-                var childGuid = message.Params.Value.GetProperty("guid").GetString();
+                var childGuid = message.Params?.GetProperty("guid").GetString()!;
                 Objects.TryGetValue(childGuid, out var child);
                 if (child == null)
                 {
@@ -296,7 +297,7 @@ internal class Connection : IDisposable
 
             if (message.Method == "__dispose__")
             {
-                @object.DisposeOwner(message.Params.Value.TryGetProperty("reason", out var reason) ? reason.GetString() : null);
+                @object.DisposeOwner(message.Params?.TryGetProperty("reason", out var reason) == true ? reason.GetString() : null);
                 return;
             }
             @object.OnMessage(message.Method, message.Params);
@@ -307,15 +308,15 @@ internal class Connection : IDisposable
         }
     }
 
-    private ChannelOwner CreateRemoteObject(string parentGuid, ChannelOwnerType type, string guid, JsonElement? initializer)
+    private ChannelOwner? CreateRemoteObject(string parentGuid, ChannelOwnerType? type, string guid, JsonElement? initializer)
     {
-        ChannelOwner result = null;
+        ChannelOwner? result = null;
         var parent = string.IsNullOrEmpty(parentGuid) ? _rootObject : Objects[parentGuid];
 
         switch (type)
         {
             case ChannelOwnerType.APIRequestContext:
-                result = new APIRequestContext(parent, guid, initializer?.ToObject<APIRequestContextInitializer>(DefaultJsonSerializerOptions));
+                result = new APIRequestContext(parent, guid, initializer?.ToObject<APIRequestContextInitializer>(DefaultJsonSerializerOptions)!);
                 break;
             case ChannelOwnerType.Artifact:
                 result = new Artifact(parent, guid, initializer?.ToObject<ArtifactInitializer>(DefaultJsonSerializerOptions));
@@ -331,7 +332,7 @@ internal class Connection : IDisposable
                 result = new Browser(parent, guid, browserInitializer);
                 break;
             case ChannelOwnerType.BrowserType:
-                var browserTypeInitializer = initializer?.ToObject<BrowserTypeInitializer>(DefaultJsonSerializerOptions);
+                var browserTypeInitializer = initializer?.ToObject<BrowserTypeInitializer>(DefaultJsonSerializerOptions)!;
                 result = new Core.BrowserType(parent, guid, browserTypeInitializer);
                 break;
             case ChannelOwnerType.BrowserContext:
@@ -410,15 +411,15 @@ internal class Connection : IDisposable
         return result;
     }
 
-    internal void DoClose(Exception cause = null)
+    internal void DoClose(Exception? cause = null)
         => DoCloseImpl(cause != null ? new TargetClosedException(cause.Message, cause) : new TargetClosedException());
 
-    internal void DoClose(string cause = null)
-        => DoCloseImpl(!string.IsNullOrEmpty(cause) ? new TargetClosedException(cause) : new TargetClosedException());
+    internal void DoClose(string? cause = null)
+        => DoCloseImpl(!string.IsNullOrEmpty(cause) && cause != null ? new TargetClosedException(cause) : new TargetClosedException());
 
-    internal void DoCloseImpl(Exception closeError = null)
+    internal void DoCloseImpl(Exception closeError)
     {
-        this._closedError = closeError;
+        _closedError = closeError;
         foreach (var callback in _callbacks)
         {
             callback.Value.TaskCompletionSource.TrySetException(closeError.InnerException ?? closeError);
@@ -458,7 +459,7 @@ internal class Connection : IDisposable
         }
 
         _queue.Dispose();
-        Close.Invoke(this, new TargetClosedException("Connection disposed"));
+        Close?.Invoke(this, new TargetClosedException("Connection disposed"));
     }
 
     internal static void TraceMessage(string logLevel, byte[] rawMessage)
@@ -544,7 +545,7 @@ internal class Connection : IDisposable
             },
             isInternal);
 
-    private static bool IsPlaywrightInternalNamespace(string namespaceName)
+    private static bool IsPlaywrightInternalNamespace(string? namespaceName)
     {
         return namespaceName != null &&
             (namespaceName == "Microsoft.Playwright" ||

@@ -45,5 +45,5 @@ internal class PlaywrightServerMessage
 
 internal class ErrorEntry
 {
-    public PlaywrightServerError? Error { get; set; }
+    public PlaywrightServerError Error { get; set; } = null!;
 }

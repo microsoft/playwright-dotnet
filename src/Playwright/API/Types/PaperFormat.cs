@@ -22,6 +22,7 @@
  * SOFTWARE.
  */
 
+#nullable enable
 namespace Microsoft.Playwright;
 
 public static class PaperFormat

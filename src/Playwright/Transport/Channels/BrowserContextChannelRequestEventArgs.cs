@@ -21,6 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
+#nullable enable
 
 using Microsoft.Playwright.Core;
 
@@ -28,15 +29,13 @@ namespace Microsoft.Playwright.Transport.Channels;
 
 internal class BrowserContextChannelRequestEventArgs
 {
-    public Page Page { get; set; }
+    public Page? Page { get; set; }
 
-    public Request Request { get; set; }
+    public Request Request { get; set; } = null!;
 
-    public Response Response { get; set; }
+    public Response? Response { get; set; }
 
-    public RequestSizesResult RequestSizes { get; set; }
-
-    public string FailureText { get; set; }
+    public string? FailureText { get; set; }
 
     public float ResponseEndTiming { get; set; }
 }
