@@ -21,6 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
+#nullable enable
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -38,7 +39,7 @@ internal class Touchscreen : ITouchscreen
     public Task TapAsync(float x, float y)
            => _page.SendMessageToServerAsync(
             "touchscreenTap",
-            new Dictionary<string, object>
+            new Dictionary<string, object?>
             {
                 ["x"] = x,
                 ["y"] = y,

@@ -21,6 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
+#nullable enable
 
 using System;
 using System.Collections.Generic;
@@ -45,7 +46,7 @@ internal class Stream : ChannelOwner, IAsyncDisposable
     {
         var response = await SendMessageToServerAsync(
             "read",
-            new Dictionary<string, object>
+            new Dictionary<string, object?>
             {
                 ["size"] = size,
             }).ConfigureAwait(false);

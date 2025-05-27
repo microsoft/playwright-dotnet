@@ -21,6 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
+#nullable enable
 
 using System.Threading.Tasks;
 
@@ -51,7 +52,7 @@ internal class Download : IDownload
 
     public Task<string> PathAsync() => _artifact.PathAfterFinishedAsync();
 
-    public Task<string> FailureAsync() => _artifact.FailureAsync();
+    public Task<string?> FailureAsync() => _artifact.FailureAsync();
 
     public Task DeleteAsync() => _artifact.DeleteAsync();
 

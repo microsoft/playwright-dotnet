@@ -324,7 +324,7 @@ internal class Connection : IDisposable
                 result = new BindingCall(parent, guid, initializer?.ToObject<BindingCallInitializer>(DefaultJsonSerializerOptions)!);
                 break;
             case ChannelOwnerType.Playwright:
-                result = new PlaywrightImpl(parent, guid, initializer?.ToObject<PlaywrightInitializer>(DefaultJsonSerializerOptions));
+                result = new PlaywrightImpl(parent, guid, initializer?.ToObject<PlaywrightInitializer>(DefaultJsonSerializerOptions)!);
                 break;
             case ChannelOwnerType.Browser:
                 var browserInitializer = initializer?.ToObject<BrowserInitializer>(DefaultJsonSerializerOptions)!;
@@ -351,13 +351,13 @@ internal class Connection : IDisposable
                 result = new Frame(parent, guid, initializer?.ToObject<FrameInitializer>(DefaultJsonSerializerOptions));
                 break;
             case ChannelOwnerType.JSHandle:
-                result = new JSHandle(parent, guid, initializer?.ToObject<JSHandleInitializer>(DefaultJsonSerializerOptions));
+                result = new JSHandle(parent, guid, initializer?.ToObject<JSHandleInitializer>(DefaultJsonSerializerOptions)!);
                 break;
             case ChannelOwnerType.JsonPipe:
-                result = new JsonPipe(parent, guid, initializer?.ToObject<JsonPipeInitializer>(DefaultJsonSerializerOptions));
+                result = new JsonPipe(parent, guid, initializer?.ToObject<JsonPipeInitializer>(DefaultJsonSerializerOptions)!);
                 break;
             case ChannelOwnerType.LocalUtils:
-                result = new LocalUtils(parent, guid, initializer?.ToObject<LocalUtilsInitializer>(DefaultJsonSerializerOptions));
+                result = new LocalUtils(parent, guid, initializer?.ToObject<LocalUtilsInitializer>(DefaultJsonSerializerOptions)!);
                 if (LocalUtils == null)
                 {
                     LocalUtils = result as LocalUtils;
@@ -367,7 +367,7 @@ internal class Connection : IDisposable
                 result = new Page(parent, guid, initializer?.ToObject<PageInitializer>(DefaultJsonSerializerOptions));
                 break;
             case ChannelOwnerType.Request:
-                result = new Request(parent, guid, initializer?.ToObject<RequestInitializer>(DefaultJsonSerializerOptions));
+                result = new Request(parent, guid, initializer?.ToObject<RequestInitializer>(DefaultJsonSerializerOptions)!);
                 break;
             case ChannelOwnerType.Response:
                 result = new Response(parent, guid, initializer?.ToObject<ResponseInitializer>(DefaultJsonSerializerOptions));
@@ -376,13 +376,13 @@ internal class Connection : IDisposable
                 result = new Route(parent, guid, initializer?.ToObject<RouteInitializer>(DefaultJsonSerializerOptions));
                 break;
             case ChannelOwnerType.Worker:
-                result = new Worker(parent, guid, initializer?.ToObject<WorkerInitializer>(DefaultJsonSerializerOptions));
+                result = new Worker(parent, guid, initializer?.ToObject<WorkerInitializer>(DefaultJsonSerializerOptions)!);
                 break;
             case ChannelOwnerType.WebSocket:
                 result = new WebSocket(parent, guid, initializer?.ToObject<WebSocketInitializer>(DefaultJsonSerializerOptions));
                 break;
             case ChannelOwnerType.WebSocketRoute:
-                result = new WebSocketRoute(parent, guid, initializer?.ToObject<WebSocketRouteInitializer>(DefaultJsonSerializerOptions));
+                result = new WebSocketRoute(parent, guid, initializer?.ToObject<WebSocketRouteInitializer>(DefaultJsonSerializerOptions)!);
                 break;
             case ChannelOwnerType.Selectors:
                 result = new Selectors(parent, guid);

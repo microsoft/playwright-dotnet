@@ -21,6 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
+#nullable enable
 
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -36,10 +37,10 @@ internal class Mouse : IMouse
         _page = page;
     }
 
-    public Task ClickAsync(float x, float y, MouseClickOptions options = default)
+    public Task ClickAsync(float x, float y, MouseClickOptions? options = default)
         => _page.SendMessageToServerAsync(
             "mouseClick",
-            new Dictionary<string, object>
+            new Dictionary<string, object?>
             {
                 ["x"] = x,
                 ["y"] = y,
@@ -48,10 +49,10 @@ internal class Mouse : IMouse
                 ["clickCount"] = options?.ClickCount,
             });
 
-    public Task DblClickAsync(float x, float y, MouseDblClickOptions options = default)
+    public Task DblClickAsync(float x, float y, MouseDblClickOptions? options = default)
         => _page.SendMessageToServerAsync(
             "mouseClick",
-            new Dictionary<string, object>
+            new Dictionary<string, object?>
             {
                 ["x"] = x,
                 ["y"] = y,
@@ -60,29 +61,29 @@ internal class Mouse : IMouse
                 ["clickCount"] = 2,
             });
 
-    public Task DownAsync(MouseDownOptions options = default)
+    public Task DownAsync(MouseDownOptions? options = default)
         => _page.SendMessageToServerAsync(
             "mouseDown",
-            new Dictionary<string, object>
+            new Dictionary<string, object?>
             {
                 ["button"] = options?.Button,
                 ["clickCount"] = options?.ClickCount,
             });
 
-    public Task MoveAsync(float x, float y, MouseMoveOptions options = default)
+    public Task MoveAsync(float x, float y, MouseMoveOptions? options = default)
         => _page.SendMessageToServerAsync(
             "mouseMove",
-            new Dictionary<string, object>
+            new Dictionary<string, object?>
             {
                 ["x"] = x,
                 ["y"] = y,
                 ["steps"] = options?.Steps,
             });
 
-    public Task UpAsync(MouseUpOptions options = default)
+    public Task UpAsync(MouseUpOptions? options = default)
       => _page.SendMessageToServerAsync(
             "mouseUp",
-            new Dictionary<string, object>
+            new Dictionary<string, object?>
             {
                 ["button"] = options?.Button,
                 ["clickCount"] = options?.ClickCount,
@@ -91,7 +92,7 @@ internal class Mouse : IMouse
     public Task WheelAsync(float deltaX, float deltaY)
         => _page.SendMessageToServerAsync(
             "mouseWheel",
-            new Dictionary<string, object>
+            new Dictionary<string, object?>
             {
                 ["deltaX"] = deltaX,
                 ["deltaY"] = deltaY,

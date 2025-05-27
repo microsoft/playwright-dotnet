@@ -22,6 +22,7 @@
  * SOFTWARE.
  */
 
+#nullable enable
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -51,9 +52,9 @@ internal class RawHeaders
 
     public List<Header> HeadersArray { get; }
 
-    public Dictionary<string, string> Headers => _headersMap.Keys.ToDictionary(x => x, y => Get(y));
+    public Dictionary<string, string> Headers => _headersMap.Keys.ToDictionary(x => x, y => Get(y)!);
 
-    public string Get(string name)
+    public string? Get(string name)
     {
         var values = GetAll(name);
         if (values == null)
@@ -64,7 +65,7 @@ internal class RawHeaders
         return string.Join("set-cookie".Equals(name, StringComparison.OrdinalIgnoreCase) ? "\n" : ", ", values);
     }
 
-    public string[] GetAll(string name)
+    public string[]? GetAll(string name)
     {
         if (_headersMap.TryGetValue(name.ToLowerInvariant(), out List<string> values))
         {
