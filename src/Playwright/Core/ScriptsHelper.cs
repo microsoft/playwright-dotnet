@@ -21,6 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
+#nullable enable
 
 using System;
 using System.Collections.Generic;
@@ -41,14 +42,14 @@ internal static class ScriptsHelper
     internal static object ParseEvaluateResult(JsonElement? element, Type t)
     {
         var genericMethod = _parseEvaluateResult.MakeGenericMethod(t);
-        return genericMethod.Invoke(null, new object[] { element });
+        return genericMethod.Invoke(null, new object?[] { element });
     }
 
     internal static T ParseEvaluateResult<T>(JsonElement? resultOrNull)
     {
         if (resultOrNull == null)
         {
-            return default;
+            return default!;
         }
 
         var result = (JsonElement)resultOrNull;
@@ -61,25 +62,25 @@ internal static class ScriptsHelper
         var parsed = EvaluateArgumentValueConverter.Deserialize(result, typeof(T));
         if (parsed == null)
         {
-            return default;
+            return default!;
         }
 
         return (T)parsed;
     }
 
-    internal static object SerializedArgument(object arg)
+    internal static object SerializedArgument(object? arg)
     {
         var handles = new List<EvaluateArgumentGuidElement>();
         return new { value = EvaluateArgumentValueConverter.Serialize(arg, handles, new()), handles };
     }
 
-    internal static string EvaluationScript(string content, string path, bool addSourceUrl)
+    internal static string EvaluationScript(string? content, string? path, bool addSourceUrl)
     {
-        if (!string.IsNullOrEmpty(content))
+        if (!string.IsNullOrEmpty(content) && content != null)
         {
             return content;
         }
-        else if (!string.IsNullOrEmpty(path))
+        else if (!string.IsNullOrEmpty(path) && path != null)
         {
             var source = File.ReadAllText(path);
             return addSourceUrl ? AddSourceUrlToScript(source, path) : source;
@@ -96,5 +97,5 @@ internal static class ScriptsHelper
 
 internal class EvaluateArgumentGuidElement
 {
-    public string Guid { get; set; }
+    public string Guid { get; set; } = null!;
 }

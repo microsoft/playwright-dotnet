@@ -890,7 +890,7 @@ internal class BrowserContext : ChannelOwner, IBrowserContext
             await RecordIntoHarAsync(har, null, options).ConfigureAwait(false);
             return;
         }
-        var harRouter = await HarRouter.CreateAsync(_connection.LocalUtils, har, options?.NotFound ?? HarNotFound.Abort, new()
+        var harRouter = await HarRouter.CreateAsync(_connection.LocalUtils!, har, options?.NotFound ?? HarNotFound.Abort, new()
         {
             Url = options?.Url,
             UrlRegex = options?.UrlRegex,

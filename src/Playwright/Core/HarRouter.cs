@@ -21,6 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
+#nullable enable
 
 using System.Linq;
 using System.Text.RegularExpressions;
@@ -50,11 +51,11 @@ internal sealed class HarRouter
     internal static async Task<HarRouter> CreateAsync(LocalUtils localUtils, string file, HarNotFound notFoundAction, HarRouterOptions options)
     {
         var (harId, error) = await localUtils.HarOpenAsync(file).ConfigureAwait(false);
-        if (!string.IsNullOrEmpty(error))
+        if (!string.IsNullOrEmpty(error) && error != null)
         {
             throw new PlaywrightException(error);
         }
-        return new HarRouter(localUtils, harId, notFoundAction, options);
+        return new HarRouter(localUtils, harId!, notFoundAction, options);
     }
 
     private async Task HandleAsync(Route route)
@@ -70,7 +71,7 @@ internal sealed class HarRouter
 
         if (response.Action == "redirect")
         {
-            await route.RedirectNavigationRequestAsync(response.RedirectURL).ConfigureAwait(false);
+            await route.RedirectNavigationRequestAsync(response.RedirectURL!).ConfigureAwait(false);
             return;
         }
         if (response.Action == "fulfill")
@@ -87,7 +88,7 @@ internal sealed class HarRouter
             await route.FulfillAsync(new()
             {
                 Status = response.Status,
-                Headers = new RawHeaders(response.Headers).Headers,
+                Headers = new RawHeaders(response.Headers!).Headers,
                 BodyBytes = response.Body,
             }).ConfigureAwait(false);
             return;
@@ -108,11 +109,11 @@ internal sealed class HarRouter
 
     internal async Task AddContextRouteAsync(BrowserContext context)
     {
-        if (!string.IsNullOrEmpty(_options.Url))
+        if (!string.IsNullOrEmpty(_options.Url) && _options.Url != null)
         {
             await context.RouteAsync(_options.Url, route => HandleAsync((Route)route)).ConfigureAwait(false);
         }
-        else if (!string.IsNullOrEmpty(_options.UrlString))
+        else if (!string.IsNullOrEmpty(_options.UrlString) && _options.UrlString != null)
         {
             await context.RouteAsync(_options.UrlString, route => HandleAsync((Route)route)).ConfigureAwait(false);
         }
@@ -128,11 +129,11 @@ internal sealed class HarRouter
 
     internal async Task AddPageRouteAsync(Page page)
     {
-        if (!string.IsNullOrEmpty(_options.Url))
+        if (!string.IsNullOrEmpty(_options.Url) && _options.Url != null)
         {
             await page.RouteAsync(_options.Url, route => HandleAsync((Route)route)).ConfigureAwait(false);
         }
-        else if (!string.IsNullOrEmpty(_options.UrlString))
+        else if (!string.IsNullOrEmpty(_options.UrlString) && _options.UrlString != null)
         {
             await page.RouteAsync(_options.UrlString, route => HandleAsync((Route)route)).ConfigureAwait(false);
         }
@@ -151,9 +152,9 @@ internal sealed class HarRouter
 
 internal class HarRouterOptions
 {
-    internal string Url { get; set; }
+    internal string? Url { get; set; }
 
-    internal string UrlString { get; set; }
+    internal string? UrlString { get; set; }
 
-    internal Regex UrlRegex { get; set; }
+    internal Regex? UrlRegex { get; set; }
 }

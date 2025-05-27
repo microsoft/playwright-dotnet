@@ -57,7 +57,7 @@ internal class RawHeaders
     public string? Get(string name)
     {
         var values = GetAll(name);
-        if (values == null)
+        if (values == null || values.Length == 0)
         {
             return null;
         }
@@ -65,14 +65,13 @@ internal class RawHeaders
         return string.Join("set-cookie".Equals(name, StringComparison.OrdinalIgnoreCase) ? "\n" : ", ", values);
     }
 
-    public string[]? GetAll(string name)
+    public string[] GetAll(string name)
     {
         if (_headersMap.TryGetValue(name.ToLowerInvariant(), out List<string> values))
         {
             return values.ToArray();
         }
-
-        return null;
+        return [];
     }
 
     internal static RawHeaders FromHeadersObjectLossy(IEnumerable<KeyValuePair<string, string>> headers)
