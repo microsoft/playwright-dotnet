@@ -22,10 +22,18 @@
  * SOFTWARE.
  */
 
+#nullable enable
 namespace Microsoft.Playwright;
 
 public class BindingSource
 {
+    internal BindingSource(IBrowserContext context, IPage page, IFrame frame)
+    {
+        Context = context;
+        Page = page;
+        Frame = frame;
+    }
+
     public IBrowserContext Context { get; set; }
 
     public IPage Page { get; set; }

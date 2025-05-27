@@ -259,7 +259,7 @@ public class URLMatch
         return match;
     }
 
-    public bool Equals(string globMatch, Regex reMatch, Func<string, bool> funcMatch, string baseURL, bool isWebSocketUrl)
+    public bool Equals(string? globMatch, Regex? reMatch, Func<string, bool>? funcMatch, string? baseURL, bool isWebSocketUrl)
     {
         return this.re?.ToString() == reMatch?.ToString() && this.re?.Options == reMatch?.Options
             && this.func == funcMatch
