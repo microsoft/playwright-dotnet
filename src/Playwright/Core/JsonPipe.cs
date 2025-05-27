@@ -22,6 +22,7 @@
  * SOFTWARE.
  */
 
+#nullable enable
 using System;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
@@ -42,9 +43,9 @@ internal class JsonPipe : ChannelOwner
         _initializer = initializer;
     }
 
-    public event EventHandler<PlaywrightServerMessage> Message;
+    public event EventHandler<PlaywrightServerMessage>? Message;
 
-    public event EventHandler<string> Closed;
+    public event EventHandler<string?>? Closed;
 
     internal override void OnMessage(string method, JsonElement serverParams)
     {
@@ -64,7 +65,7 @@ internal class JsonPipe : ChannelOwner
     public Task CloseAsync() => SendMessageToServerAsync("close");
 
     [MethodImpl(MethodImplOptions.NoInlining)]
-    public Task SendAsync(object message) => SendMessageToServerAsync("send", new Dictionary<string, object>
+    public Task SendAsync(object message) => SendMessageToServerAsync("send", new Dictionary<string, object?>
         {
                 { "message", message },
         });

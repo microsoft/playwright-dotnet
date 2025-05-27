@@ -21,6 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
+#nullable enable
 
 using System.Collections.Generic;
 using System.Linq;
@@ -41,7 +42,7 @@ internal class Request : ChannelOwner, IRequest
     internal readonly RequestInitializer _initializer;
     private readonly RawHeaders _provisionalHeaders;
     private readonly RouteFallbackOptions _fallbackOverrides = new();
-    private Task<RawHeaders> _rawHeadersTask;
+    private Task<RawHeaders>? _rawHeadersTask;
 
     internal Request(ChannelOwner parent, string guid, RequestInitializer initializer) : base(parent, guid)
     {
@@ -58,7 +59,7 @@ internal class Request : ChannelOwner, IRequest
         _provisionalHeaders = new RawHeaders(initializer.Headers.ConvertAll(x => new NameValue() { Name = x.Name, Value = x.Value }).ToList());
     }
 
-    public string Failure { get; internal set; }
+    public string? Failure { get; internal set; }
 
     public IFrame Frame
     {
@@ -68,7 +69,7 @@ internal class Request : ChannelOwner, IRequest
             {
                 throw new PlaywrightException("Service Worker requests do not have an associated frame.");
             }
-            var frame = _initializer.Frame;
+            var frame = _initializer.Frame!;
             if (frame.Page == null)
             {
                 throw new PlaywrightException(string.Join("\n", new string[]
@@ -94,7 +95,7 @@ internal class Request : ChannelOwner, IRequest
         }
     }
 
-    internal Page SafePage
+    internal Page? SafePage
     {
         get
         {
@@ -104,9 +105,9 @@ internal class Request : ChannelOwner, IRequest
 
     public bool IsNavigationRequest => _initializer.IsNavigationRequest;
 
-    public string Method => !string.IsNullOrEmpty(_fallbackOverrides.Method) ? _fallbackOverrides.Method : _initializer.Method;
+    public string Method => (!string.IsNullOrEmpty(_fallbackOverrides.Method) && _fallbackOverrides?.Method != null) ? _fallbackOverrides.Method : _initializer.Method;
 
-    public string PostData
+    public string? PostData
     {
         get
         {
@@ -130,26 +131,24 @@ internal class Request : ChannelOwner, IRequest
         }
     }
 
-    public IRequest RedirectedFrom { get; }
+    public IRequest? RedirectedFrom { get; }
 
-    public IRequest RedirectedTo { get; internal set; }
+    public IRequest? RedirectedTo { get; internal set; }
 
     public string ResourceType => _initializer.ResourceType;
 
     public RequestTimingResult Timing { get; internal set; }
 
-    public string Url => !string.IsNullOrEmpty(_fallbackOverrides.Url) ? _fallbackOverrides.Url : _initializer.Url;
+    public string Url => (!string.IsNullOrEmpty(_fallbackOverrides.Url) && _fallbackOverrides.Url != null) ? _fallbackOverrides.Url : _initializer.Url;
 
     internal Request FinalRequest => RedirectedTo != null ? ((Request)RedirectedTo).FinalRequest : this;
-
-    public RequestSizesResult Sizes { get; internal set; }
 
     public IWorker ServiceWorker => _initializer.ServiceWorker;
 
     internal BrowserContext _context => (BrowserContext)Frame.Page.Context;
 
     [MethodImpl(MethodImplOptions.NoInlining)]
-    public async Task<IResponse> ResponseAsync() => await SendMessageToServerAsync<Response>("response").ConfigureAwait(false);
+    public async Task<IResponse?> ResponseAsync() => await SendMessageToServerAsync<Response>("response").ConfigureAwait(false);
 
     [MethodImpl(MethodImplOptions.NoInlining)]
     public JsonElement? PostDataJSON()
@@ -190,7 +189,7 @@ internal class Request : ChannelOwner, IRequest
             throw new PlaywrightException("Unable to fetch resources sizes.");
         }
 
-        return (await res.SendMessageToServerAsync("sizes").ConfigureAwait(false))?.GetProperty("sizes").ToObject<RequestSizesResult>();
+        return (await res.SendMessageToServerAsync("sizes").ConfigureAwait(false)).Value.GetProperty("sizes").ToObject<RequestSizesResult>();
     }
 
     [MethodImpl(MethodImplOptions.NoInlining)]
@@ -202,7 +201,7 @@ internal class Request : ChannelOwner, IRequest
         => (await ActualHeadersAsync().ConfigureAwait(false)).HeadersArray;
 
     [MethodImpl(MethodImplOptions.NoInlining)]
-    public async Task<string> HeaderValueAsync(string name)
+    public async Task<string?> HeaderValueAsync(string name)
         => (await ActualHeadersAsync().ConfigureAwait(false)).Get(name);
 
     private Task<RawHeaders> ActualHeadersAsync()
@@ -221,7 +220,7 @@ internal class Request : ChannelOwner, IRequest
 
     private async Task<RawHeaders> GetRawHeadersTaskAsync()
     {
-        var headerList = (await SendMessageToServerAsync("rawRequestHeaders").ConfigureAwait(false))?.GetProperty("headers").ToObject<List<NameValue>>();
+        var headerList = (await SendMessageToServerAsync("rawRequestHeaders").ConfigureAwait(false)).Value.GetProperty("headers").ToObject<List<NameValue>>();
         return new(headerList);
     }
 

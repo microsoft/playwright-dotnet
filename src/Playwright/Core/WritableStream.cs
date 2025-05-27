@@ -21,6 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
+#nullable enable
 
 using System;
 using System.Collections.Generic;
@@ -44,7 +45,7 @@ internal class WritableStream : ChannelOwner, IAsyncDisposable
     [MethodImpl(MethodImplOptions.NoInlining)]
     public Task WriteAsync(string binary) => SendMessageToServerAsync(
             "write",
-            new Dictionary<string, object>
+            new Dictionary<string, object?>
             {
                 ["binary"] = binary,
             });

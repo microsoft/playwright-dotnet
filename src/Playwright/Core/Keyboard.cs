@@ -21,6 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
+#nullable enable
 
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -39,7 +40,7 @@ internal class Keyboard : IKeyboard
     public Task DownAsync(string key)
           => _page.SendMessageToServerAsync(
             "keyboardDown",
-            new Dictionary<string, object>
+            new Dictionary<string, object?>
             {
                 ["key"] = key,
             });
@@ -47,24 +48,24 @@ internal class Keyboard : IKeyboard
     public Task UpAsync(string key)
             => _page.SendMessageToServerAsync(
             "keyboardUp",
-            new Dictionary<string, object>
+            new Dictionary<string, object?>
             {
                 ["key"] = key,
             });
 
-    public Task PressAsync(string key, KeyboardPressOptions options = default)
+    public Task PressAsync(string key, KeyboardPressOptions? options = default)
        => _page.SendMessageToServerAsync(
             "keyboardPress",
-            new Dictionary<string, object>
+            new Dictionary<string, object?>
             {
                 ["key"] = key,
                 ["delay"] = options?.Delay,
             });
 
-    public Task TypeAsync(string text, KeyboardTypeOptions options = default)
+    public Task TypeAsync(string text, KeyboardTypeOptions? options = default)
         => _page.SendMessageToServerAsync(
             "keyboardType",
-            new Dictionary<string, object>
+            new Dictionary<string, object?>
             {
                 ["text"] = text,
                 ["delay"] = options?.Delay,
@@ -73,7 +74,7 @@ internal class Keyboard : IKeyboard
     public Task InsertTextAsync(string text)
         => _page.SendMessageToServerAsync(
             "keyboardInsertText",
-            new Dictionary<string, object>
+            new Dictionary<string, object?>
             {
                 ["text"] = text,
             });

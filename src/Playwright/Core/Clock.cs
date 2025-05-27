@@ -21,6 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
+#nullable enable
 
 using System;
 using System.Collections.Generic;
@@ -30,13 +31,13 @@ namespace Microsoft.Playwright.Core;
 
 internal class Clock(BrowserContext browserContext) : IClock
 {
-    public async Task InstallAsync(ClockInstallOptions options = null)
+    public async Task InstallAsync(ClockInstallOptions? options = null)
     {
         options ??= new();
-        Dictionary<string, object> args = null;
-        if ((options.Time ?? options.TimeString) != null)
+        Dictionary<string, object?> args = null!;
+        if ((options.TimeString ?? options.Time) != null)
         {
-            args = ParseTime(options.Time ?? options.TimeString);
+            args = ParseTime(options.TimeString ?? options.Time);
         }
         else if (options.TimeDate != null)
         {
@@ -45,16 +46,16 @@ internal class Clock(BrowserContext browserContext) : IClock
         await browserContext.SendMessageToServerAsync("clockInstall", args).ConfigureAwait(false);
     }
 
-    private static Dictionary<string, object> ParseTime(string timeString)
+    private static Dictionary<string, object?> ParseTime(string? timeString)
         => new() { ["timeString"] = timeString };
 
-    private static Dictionary<string, object> ParseTime(DateTime? timeDate)
-        => new() { ["timeNumber"] = ((DateTimeOffset)timeDate.Value).ToUnixTimeMilliseconds() };
+    private static Dictionary<string, object?> ParseTime(DateTime? timeDate)
+        => new() { ["timeNumber"] = ((DateTimeOffset?)timeDate)?.ToUnixTimeMilliseconds() };
 
-    private Dictionary<string, object> ParseTicks(long ticks)
+    private Dictionary<string, object?> ParseTicks(long ticks)
         => new() { ["ticksNumber"] = ticks };
 
-    private Dictionary<string, object> ParseTicks(string ticks)
+    private Dictionary<string, object?> ParseTicks(string ticks)
         => new() { ["ticksString"] = ticks };
 
     public Task FastForwardAsync(long ticks)

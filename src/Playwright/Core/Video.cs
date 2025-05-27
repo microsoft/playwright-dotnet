@@ -21,6 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
+#nullable enable
 
 using System.Threading.Tasks;
 using Microsoft.Playwright.Transport;
@@ -29,7 +30,7 @@ namespace Microsoft.Playwright.Core;
 
 internal class Video : IVideo
 {
-    private readonly TaskCompletionSource<Artifact> _artifactTcs = new();
+    private readonly TaskCompletionSource<Artifact?> _artifactTcs = new();
     private readonly bool _isRemote;
 
     public Video(Page page, Connection connection)

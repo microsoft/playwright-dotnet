@@ -21,6 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
+#nullable enable
 
 using System;
 using System.Collections.Generic;
@@ -43,33 +44,33 @@ internal class JSHandle : ChannelOwner, IJSHandle
     protected string Preview { get; set; }
 
     [MethodImpl(MethodImplOptions.NoInlining)]
-    public IElementHandle AsElement() => this as IElementHandle;
+    public IElementHandle AsElement() => (IElementHandle)this;
 
     [MethodImpl(MethodImplOptions.NoInlining)]
-    public async Task<JsonElement?> EvaluateAsync(string expression, object arg = null)
+    public async Task<JsonElement?> EvaluateAsync(string expression, object? arg = null)
         => ScriptsHelper.ParseEvaluateResult<JsonElement?>(await SendMessageToServerAsync<JsonElement?>(
             "evaluateExpression",
-            new Dictionary<string, object>
+            new Dictionary<string, object?>
             {
                 ["expression"] = expression,
                 ["arg"] = ScriptsHelper.SerializedArgument(arg),
             }).ConfigureAwait(false));
 
     [MethodImpl(MethodImplOptions.NoInlining)]
-    public async Task<IJSHandle> EvaluateHandleAsync(string expression, object arg = null)
+    public async Task<IJSHandle> EvaluateHandleAsync(string expression, object? arg = null)
         => await SendMessageToServerAsync<JSHandle>(
             "evaluateExpressionHandle",
-            new Dictionary<string, object>
+            new Dictionary<string, object?>
             {
                 ["expression"] = expression,
                 ["arg"] = ScriptsHelper.SerializedArgument(arg),
             }).ConfigureAwait(false);
 
     [MethodImpl(MethodImplOptions.NoInlining)]
-    public async Task<T> EvaluateAsync<T>(string expression, object arg = null)
+    public async Task<T> EvaluateAsync<T>(string expression, object? arg = null)
         => ScriptsHelper.ParseEvaluateResult<T>(await SendMessageToServerAsync<JsonElement?>(
             "evaluateExpression",
-            new Dictionary<string, object>
+            new Dictionary<string, object?>
             {
                 ["expression"] = expression,
                 ["arg"] = ScriptsHelper.SerializedArgument(arg),
@@ -81,7 +82,7 @@ internal class JSHandle : ChannelOwner, IJSHandle
     [MethodImpl(MethodImplOptions.NoInlining)]
     public async Task<IJSHandle> GetPropertyAsync(string propertyName) => await SendMessageToServerAsync<JSHandle>(
             "getProperty",
-            new Dictionary<string, object>
+            new Dictionary<string, object?>
             {
                 ["name"] = propertyName,
             }).ConfigureAwait(false);
@@ -90,7 +91,7 @@ internal class JSHandle : ChannelOwner, IJSHandle
     public async Task<Dictionary<string, IJSHandle>> GetPropertiesAsync()
     {
         var result = new Dictionary<string, IJSHandle>();
-        var channelResult = (await SendMessageToServerAsync("getPropertyList").ConfigureAwait(false))?
+        var channelResult = (await SendMessageToServerAsync("getPropertyList").ConfigureAwait(false)).Value
             .GetProperty("properties").ToObject<List<JSElementProperty>>(_connection.DefaultJsonSerializerOptions);
 
         foreach (var kv in channelResult)
@@ -119,7 +120,7 @@ internal class JSHandle : ChannelOwner, IJSHandle
 
 internal class JSElementProperty
 {
-    public string Name { get; set; }
+    public string Name { get; set; } = null!;
 
-    public JSHandle Value { get; set; }
+    public JSHandle Value { get; set; } = null!;
 }
