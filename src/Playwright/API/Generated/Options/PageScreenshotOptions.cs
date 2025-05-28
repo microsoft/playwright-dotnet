@@ -25,8 +25,6 @@
 using System.Collections.Generic;
 using System.Text.Json.Serialization;
 
-#nullable enable
-
 namespace Microsoft.Playwright;
 
 public class PageScreenshotOptions
@@ -179,5 +177,3 @@ public class PageScreenshotOptions
     [JsonPropertyName("type")]
     public ScreenshotType? Type { get; set; }
 }
-
-#nullable disable

@@ -25,8 +25,6 @@
 using System.ComponentModel.DataAnnotations;
 using System.Text.Json.Serialization;
 
-#nullable enable
-
 namespace Microsoft.Playwright;
 
 public partial class ScreenSize
@@ -41,5 +39,3 @@ public partial class ScreenSize
     [JsonPropertyName("height")]
     public int Height { get; set; } = default!;
 }
-
-#nullable disable

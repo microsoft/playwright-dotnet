@@ -24,8 +24,6 @@
 
 using System.Text.Json.Serialization;
 
-#nullable enable
-
 namespace Microsoft.Playwright;
 
 public class PageAddScriptTagOptions
@@ -71,5 +69,3 @@ public class PageAddScriptTagOptions
     [JsonPropertyName("url")]
     public string? Url { get; set; }
 }
-
-#nullable disable

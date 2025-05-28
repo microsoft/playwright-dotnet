@@ -25,8 +25,6 @@
 using System.Collections.Generic;
 using System.Text.Json.Serialization;
 
-#nullable enable
-
 namespace Microsoft.Playwright;
 
 public class RouteFulfillOptions
@@ -98,5 +96,3 @@ public class RouteFulfillOptions
     [JsonPropertyName("status")]
     public int? Status { get; set; }
 }
-
-#nullable disable

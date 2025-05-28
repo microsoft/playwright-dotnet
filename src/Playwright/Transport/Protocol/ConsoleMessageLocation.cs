@@ -23,7 +23,6 @@
  * SOFTWARE.
  */
 
-#nullable enable
 namespace Microsoft.Playwright.Transport.Protocol;
 
 internal class ConsoleMessageLocation

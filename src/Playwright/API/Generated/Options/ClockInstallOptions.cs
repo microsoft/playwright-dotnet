@@ -25,8 +25,6 @@
 using System;
 using System.Text.Json.Serialization;
 
-#nullable enable
-
 namespace Microsoft.Playwright;
 
 public class ClockInstallOptions
@@ -57,5 +55,3 @@ public class ClockInstallOptions
     [JsonPropertyName("timeString")]
     public string? TimeString { get; set; }
 }
-
-#nullable disable

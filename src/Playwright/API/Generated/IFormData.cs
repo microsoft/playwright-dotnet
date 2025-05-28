@@ -22,8 +22,6 @@
  * SOFTWARE.
  */
 
-#nullable enable
-
 namespace Microsoft.Playwright;
 
 /// <summary><para>The <see cref="IFormData"/> is used create form data that is sent via <see cref="IAPIRequestContext"/>.</para></summary>
@@ -273,5 +271,3 @@ public partial interface IFormData
     /// <param name="value">Field value.</param>
     IFormData Set(string name, FilePayload value);
 }
-
-#nullable disable

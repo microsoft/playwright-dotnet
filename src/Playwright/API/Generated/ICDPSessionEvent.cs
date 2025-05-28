@@ -25,8 +25,6 @@
 using System;
 using System.Text.Json;
 
-#nullable enable
-
 namespace Microsoft.Playwright;
 
 /// <summary>
@@ -45,5 +43,3 @@ public partial interface ICDPSessionEvent
 
     public string EventName { get; }
 }
-
-#nullable disable

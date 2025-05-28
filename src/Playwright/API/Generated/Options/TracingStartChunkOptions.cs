@@ -24,8 +24,6 @@
 
 using System.Text.Json.Serialization;
 
-#nullable enable
-
 namespace Microsoft.Playwright;
 
 public class TracingStartChunkOptions
@@ -59,5 +57,3 @@ public class TracingStartChunkOptions
     [JsonPropertyName("title")]
     public string? Title { get; set; }
 }
-
-#nullable disable

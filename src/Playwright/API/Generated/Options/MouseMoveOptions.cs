@@ -24,8 +24,6 @@
 
 using System.Text.Json.Serialization;
 
-#nullable enable
-
 namespace Microsoft.Playwright;
 
 public class MouseMoveOptions
@@ -46,5 +44,3 @@ public class MouseMoveOptions
     [JsonPropertyName("steps")]
     public int? Steps { get; set; }
 }
-
-#nullable disable

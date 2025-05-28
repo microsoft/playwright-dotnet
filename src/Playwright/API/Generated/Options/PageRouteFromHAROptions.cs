@@ -25,8 +25,6 @@
 using System.Text.Json.Serialization;
 using System.Text.RegularExpressions;
 
-#nullable enable
-
 namespace Microsoft.Playwright;
 
 public class PageRouteFromHAROptions
@@ -119,5 +117,3 @@ public class PageRouteFromHAROptions
     [JsonPropertyName("urlString")]
     public string? UrlString { get; set; }
 }
-
-#nullable disable

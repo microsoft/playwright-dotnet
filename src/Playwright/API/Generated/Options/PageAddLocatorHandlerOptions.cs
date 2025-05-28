@@ -24,8 +24,6 @@
 
 using System.Text.Json.Serialization;
 
-#nullable enable
-
 namespace Microsoft.Playwright;
 
 public class PageAddLocatorHandlerOptions
@@ -63,5 +61,3 @@ public class PageAddLocatorHandlerOptions
     [JsonPropertyName("times")]
     public int? Times { get; set; }
 }
-
-#nullable disable

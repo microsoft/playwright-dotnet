@@ -25,8 +25,6 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-#nullable enable
-
 namespace Microsoft.Playwright;
 
 /// <summary>
@@ -137,5 +135,3 @@ public partial interface IJSHandle
     /// </remarks>
     Task<T> JsonValueAsync<T>();
 }
-
-#nullable disable

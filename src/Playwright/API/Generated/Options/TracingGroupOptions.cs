@@ -24,8 +24,6 @@
 
 using System.Text.Json.Serialization;
 
-#nullable enable
-
 namespace Microsoft.Playwright;
 
 public class TracingGroupOptions
@@ -51,5 +49,3 @@ public class TracingGroupOptions
     [JsonPropertyName("location")]
     public Location? Location { get; set; }
 }
-
-#nullable disable

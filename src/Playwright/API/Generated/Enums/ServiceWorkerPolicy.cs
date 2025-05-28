@@ -24,8 +24,6 @@
 
 using System.Runtime.Serialization;
 
-#nullable enable
-
 namespace Microsoft.Playwright;
 
 public enum ServiceWorkerPolicy
@@ -35,5 +33,3 @@ public enum ServiceWorkerPolicy
     [EnumMember(Value = "block")]
     Block,
 }
-
-#nullable disable

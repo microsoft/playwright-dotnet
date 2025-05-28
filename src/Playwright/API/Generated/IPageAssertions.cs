@@ -25,8 +25,6 @@
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
-#nullable enable
-
 namespace Microsoft.Playwright;
 
 /// <summary>
@@ -100,5 +98,3 @@ public partial interface IPageAssertions
     /// <param name="options">Call options</param>
     Task ToHaveURLAsync(Regex urlOrRegExp, PageAssertionsToHaveURLOptions? options = default);
 }
-
-#nullable disable

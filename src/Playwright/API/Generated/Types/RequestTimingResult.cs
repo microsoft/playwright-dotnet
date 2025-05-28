@@ -25,8 +25,6 @@
 using System.ComponentModel.DataAnnotations;
 using System.Text.Json.Serialization;
 
-#nullable enable
-
 namespace Microsoft.Playwright;
 
 public partial class RequestTimingResult
@@ -122,5 +120,3 @@ public partial class RequestTimingResult
     [JsonPropertyName("responseEnd")]
     public float ResponseEnd { get; set; } = default!;
 }
-
-#nullable disable

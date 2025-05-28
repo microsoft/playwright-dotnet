@@ -24,8 +24,6 @@
 
 using System.Runtime.Serialization;
 
-#nullable enable
-
 namespace Microsoft.Playwright;
 
 public enum ScreenshotScale
@@ -35,5 +33,3 @@ public enum ScreenshotScale
     [EnumMember(Value = "device")]
     Device,
 }
-
-#nullable disable

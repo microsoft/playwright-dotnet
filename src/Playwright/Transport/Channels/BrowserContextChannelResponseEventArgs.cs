@@ -22,7 +22,6 @@
  * SOFTWARE.
  */
 
-#nullable enable
 using Microsoft.Playwright.Core;
 
 namespace Microsoft.Playwright.Transport.Channels;

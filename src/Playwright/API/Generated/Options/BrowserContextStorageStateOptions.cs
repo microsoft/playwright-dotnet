@@ -24,8 +24,6 @@
 
 using System.Text.Json.Serialization;
 
-#nullable enable
-
 namespace Microsoft.Playwright;
 
 public class BrowserContextStorageStateOptions
@@ -64,5 +62,3 @@ public class BrowserContextStorageStateOptions
     [JsonPropertyName("path")]
     public string? Path { get; set; }
 }
-
-#nullable disable

@@ -24,8 +24,6 @@
 
 using System.Runtime.Serialization;
 
-#nullable enable
-
 namespace Microsoft.Playwright;
 
 public enum MouseButton
@@ -37,5 +35,3 @@ public enum MouseButton
     [EnumMember(Value = "middle")]
     Middle,
 }
-
-#nullable disable

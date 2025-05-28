@@ -22,8 +22,6 @@
  * SOFTWARE.
  */
 
-#nullable enable
-
 namespace Microsoft.Playwright;
 
 /// <summary>
@@ -82,5 +80,3 @@ public partial interface IPlaywrightAssertions
     /// <param name="page"><see cref="IPage"/> object to use for assertions.</param>
     IPageAssertions Expect(IPage page);
 }
-
-#nullable disable

@@ -24,8 +24,6 @@
 
 using System.Runtime.Serialization;
 
-#nullable enable
-
 namespace Microsoft.Playwright;
 
 public enum ElementState
@@ -43,5 +41,3 @@ public enum ElementState
     [EnumMember(Value = "editable")]
     Editable,
 }
-
-#nullable disable

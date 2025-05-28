@@ -26,8 +26,6 @@ using System;
 using System.Text.Json;
 using System.Threading.Tasks;
 
-#nullable enable
-
 namespace Microsoft.Playwright;
 
 public partial interface IAPIResponse : IAsyncDisposable

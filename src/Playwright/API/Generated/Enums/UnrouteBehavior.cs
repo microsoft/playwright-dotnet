@@ -24,8 +24,6 @@
 
 using System.Runtime.Serialization;
 
-#nullable enable
-
 namespace Microsoft.Playwright;
 
 public enum UnrouteBehavior
@@ -37,5 +35,3 @@ public enum UnrouteBehavior
     [EnumMember(Value = "default")]
     Default,
 }
-
-#nullable disable

@@ -24,8 +24,6 @@
 
 using System.Text.Json.Serialization;
 
-#nullable enable
-
 namespace Microsoft.Playwright;
 
 public class AccessibilitySnapshotOptions
@@ -51,5 +49,3 @@ public class AccessibilitySnapshotOptions
     [JsonPropertyName("root")]
     public IElementHandle? Root { get; set; }
 }
-
-#nullable disable

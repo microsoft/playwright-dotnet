@@ -25,8 +25,6 @@
 using System.ComponentModel.DataAnnotations;
 using System.Text.Json.Serialization;
 
-#nullable enable
-
 namespace Microsoft.Playwright;
 
 public partial class HttpCredentials
@@ -57,5 +55,3 @@ public partial class HttpCredentials
     [JsonPropertyName("send")]
     public HttpCredentialsSend? Send { get; set; }
 }
-
-#nullable disable

@@ -25,8 +25,6 @@
 using System.Collections.Generic;
 using System.Text.Json.Serialization;
 
-#nullable enable
-
 namespace Microsoft.Playwright;
 
 public class BrowserTypeLaunchOptions
@@ -209,5 +207,3 @@ public class BrowserTypeLaunchOptions
     [JsonPropertyName("tracesDir")]
     public string? TracesDir { get; set; }
 }
-
-#nullable disable

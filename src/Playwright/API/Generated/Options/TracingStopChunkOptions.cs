@@ -24,8 +24,6 @@
 
 using System.Text.Json.Serialization;
 
-#nullable enable
-
 namespace Microsoft.Playwright;
 
 public class TracingStopChunkOptions
@@ -51,5 +49,3 @@ public class TracingStopChunkOptions
     [JsonPropertyName("path")]
     public string? Path { get; set; }
 }
-
-#nullable disable

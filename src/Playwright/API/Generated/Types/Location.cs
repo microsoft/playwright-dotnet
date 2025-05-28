@@ -25,8 +25,6 @@
 using System.ComponentModel.DataAnnotations;
 using System.Text.Json.Serialization;
 
-#nullable enable
-
 namespace Microsoft.Playwright;
 
 public partial class Location
@@ -44,5 +42,3 @@ public partial class Location
     [JsonPropertyName("column")]
     public int? Column { get; set; }
 }
-
-#nullable disable

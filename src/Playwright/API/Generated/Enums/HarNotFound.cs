@@ -24,8 +24,6 @@
 
 using System.Runtime.Serialization;
 
-#nullable enable
-
 namespace Microsoft.Playwright;
 
 public enum HarNotFound
@@ -35,5 +33,3 @@ public enum HarNotFound
     [EnumMember(Value = "fallback")]
     Fallback,
 }
-
-#nullable disable

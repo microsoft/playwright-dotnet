@@ -25,8 +25,6 @@
 using System.ComponentModel.DataAnnotations;
 using System.Text.Json.Serialization;
 
-#nullable enable
-
 namespace Microsoft.Playwright;
 
 public partial class Header
@@ -41,5 +39,3 @@ public partial class Header
     [JsonPropertyName("value")]
     public string Value { get; set; } = default!;
 }
-
-#nullable disable

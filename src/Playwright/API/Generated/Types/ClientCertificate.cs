@@ -25,8 +25,6 @@
 using System.ComponentModel.DataAnnotations;
 using System.Text.Json.Serialization;
 
-#nullable enable
-
 namespace Microsoft.Playwright;
 
 public partial class ClientCertificate
@@ -69,5 +67,3 @@ public partial class ClientCertificate
     [JsonPropertyName("passphrase")]
     public string? Passphrase { get; set; }
 }
-
-#nullable disable

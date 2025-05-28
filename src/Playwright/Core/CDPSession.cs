@@ -28,8 +28,6 @@ using System.Text.Json;
 using System.Threading.Tasks;
 using Microsoft.Playwright.Transport;
 
-#nullable enable
-
 namespace Microsoft.Playwright.Core;
 
 internal class CDPSession : ChannelOwner, ICDPSession

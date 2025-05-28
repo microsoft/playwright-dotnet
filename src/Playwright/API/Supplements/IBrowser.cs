@@ -22,7 +22,6 @@
  * SOFTWARE.
  */
 
-#nullable enable
 using System;
 
 namespace Microsoft.Playwright;

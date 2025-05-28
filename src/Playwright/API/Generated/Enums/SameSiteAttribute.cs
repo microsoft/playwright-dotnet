@@ -24,8 +24,6 @@
 
 using System.Runtime.Serialization;
 
-#nullable enable
-
 namespace Microsoft.Playwright;
 
 public enum SameSiteAttribute
@@ -37,5 +35,3 @@ public enum SameSiteAttribute
     [EnumMember(Value = "None")]
     None,
 }
-
-#nullable disable

@@ -24,8 +24,6 @@
 
 using System.Runtime.Serialization;
 
-#nullable enable
-
 namespace Microsoft.Playwright;
 
 public enum ScreenshotType
@@ -35,5 +33,3 @@ public enum ScreenshotType
     [EnumMember(Value = "jpeg")]
     Jpeg,
 }
-
-#nullable disable

@@ -24,8 +24,6 @@
 
 using System.Text.Json.Serialization;
 
-#nullable enable
-
 namespace Microsoft.Playwright;
 
 public class MouseDownOptions
@@ -51,5 +49,3 @@ public class MouseDownOptions
     [JsonPropertyName("clickCount")]
     public int? ClickCount { get; set; }
 }
-
-#nullable disable

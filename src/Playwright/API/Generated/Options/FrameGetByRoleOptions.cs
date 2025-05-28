@@ -25,8 +25,6 @@
 using System.Text.Json.Serialization;
 using System.Text.RegularExpressions;
 
-#nullable enable
-
 namespace Microsoft.Playwright;
 
 public class FrameGetByRoleOptions
@@ -175,5 +173,3 @@ public class FrameGetByRoleOptions
     [JsonPropertyName("selected")]
     public bool? Selected { get; set; }
 }
-
-#nullable disable

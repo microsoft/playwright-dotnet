@@ -25,8 +25,6 @@
 using System;
 using System.Threading.Tasks;
 
-#nullable enable
-
 namespace Microsoft.Playwright;
 
 /// <summary>
@@ -206,5 +204,3 @@ public partial interface IWebSocketRoute
     /// <summary><para>URL of the WebSocket created in the page.</para></summary>
     string Url { get; }
 }
-
-#nullable disable

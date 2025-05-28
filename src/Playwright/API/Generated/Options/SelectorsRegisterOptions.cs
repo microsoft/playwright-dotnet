@@ -24,8 +24,6 @@
 
 using System.Text.Json.Serialization;
 
-#nullable enable
-
 namespace Microsoft.Playwright;
 
 public class SelectorsRegisterOptions
@@ -73,5 +71,3 @@ public class SelectorsRegisterOptions
     [JsonPropertyName("script")]
     public string? Script { get; set; }
 }
-
-#nullable disable

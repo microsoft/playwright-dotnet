@@ -24,8 +24,6 @@
 
 using System.Text.Json.Serialization;
 
-#nullable enable
-
 namespace Microsoft.Playwright;
 
 public class LocatorAssertionsToContainTextOptions
@@ -66,5 +64,3 @@ public class LocatorAssertionsToContainTextOptions
     [JsonPropertyName("useInnerText")]
     public bool? UseInnerText { get; set; }
 }
-
-#nullable disable

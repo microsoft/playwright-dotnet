@@ -25,8 +25,6 @@
 using System.ComponentModel.DataAnnotations;
 using System.Text.Json.Serialization;
 
-#nullable enable
-
 namespace Microsoft.Playwright;
 
 public partial class FilePayload
@@ -46,5 +44,3 @@ public partial class FilePayload
     [JsonPropertyName("buffer")]
     public byte[] Buffer { get; set; } = default!;
 }
-
-#nullable disable

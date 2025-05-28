@@ -25,8 +25,6 @@
 using System.ComponentModel.DataAnnotations;
 using System.Text.Json.Serialization;
 
-#nullable enable
-
 namespace Microsoft.Playwright;
 
 public partial class Cookie
@@ -74,5 +72,3 @@ public partial class Cookie
     [JsonPropertyName("sameSite")]
     public SameSiteAttribute? SameSite { get; set; }
 }
-
-#nullable disable

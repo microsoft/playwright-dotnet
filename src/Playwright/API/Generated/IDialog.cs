@@ -24,8 +24,6 @@
 
 using System.Threading.Tasks;
 
-#nullable enable
-
 namespace Microsoft.Playwright;
 
 /// <summary>
@@ -100,5 +98,3 @@ public partial interface IDialog
     /// </summary>
     string Type { get; }
 }
-
-#nullable disable
