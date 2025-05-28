@@ -1039,7 +1039,6 @@ internal class SelectOptionValueProtocol
 
     [JsonPropertyName("index")]
     public int? Index { get; set; }
-#nullable disable
 
     internal static SelectOptionValueProtocol From(SelectOptionValue value)
     {
@@ -1054,16 +1053,16 @@ internal class SelectOptionValueProtocol
 
 internal class FrameNavigatedEventArgs
 {
-    public string Name { get; set; }
+    public string Name { get; set; } = null!;
 
-    public string Url { get; set; }
+    public string Url { get; set; } = null!;
 
-    public string Error { get; set; }
+    public string? Error { get; set; }
 
-    internal NavigateDocument NewDocument { get; set; }
+    internal NavigateDocument? NewDocument { get; set; }
 }
 
 internal class NavigateDocument
 {
-    public Request Request { get; set; }
+    public Request? Request { get; set; }
 }
