@@ -214,7 +214,7 @@ internal class Locator : ILocator
     public Task<IElementHandle> ElementHandleAsync(LocatorElementHandleOptions? options = null)
         => _frame.WaitForSelectorAsync(
             _selector,
-            ConvertOptions<FrameWaitForSelectorOptions>(options, new() { Strict = true, State = WaitForSelectorState.Attached }));
+            ConvertOptions<FrameWaitForSelectorOptions>(options, new() { Strict = true, State = WaitForSelectorState.Attached }))!;
 
     public Task<IReadOnlyList<IElementHandle>> ElementHandlesAsync()
         => _frame.QuerySelectorAllAsync(_selector);
@@ -618,7 +618,7 @@ internal class Locator : ILocator
 
 internal class ByRoleOptions
 {
-    public ByRoleOptions(FrameGetByRoleOptions clone)
+    public ByRoleOptions(FrameGetByRoleOptions? clone)
     {
         if (clone == null)
         {

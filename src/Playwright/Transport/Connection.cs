@@ -348,7 +348,7 @@ internal class Connection : IDisposable
                 result = new ElementHandle(parent, guid, initializer?.ToObject<ElementHandleInitializer>(DefaultJsonSerializerOptions)!);
                 break;
             case ChannelOwnerType.Frame:
-                result = new Frame(parent, guid, initializer?.ToObject<FrameInitializer>(DefaultJsonSerializerOptions));
+                result = new Frame(parent, guid, initializer?.ToObject<FrameInitializer>(DefaultJsonSerializerOptions)!);
                 break;
             case ChannelOwnerType.JSHandle:
                 result = new JSHandle(parent, guid, initializer?.ToObject<JSHandleInitializer>(DefaultJsonSerializerOptions)!);
