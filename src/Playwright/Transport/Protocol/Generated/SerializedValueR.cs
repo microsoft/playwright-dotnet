@@ -29,8 +29,8 @@ namespace Microsoft.Playwright.Transport.Protocol;
 internal class SerializedValueR
 {
     [JsonPropertyName("p")]
-    public string P { get; set; }
+    public string P { get; set; } = null!;
 
     [JsonPropertyName("f")]
-    public string F { get; set; }
+    public string F { get; set; } = null!;
 }

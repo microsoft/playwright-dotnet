@@ -30,17 +30,17 @@ namespace Microsoft.Playwright.Transport.Protocol;
 internal class APIResponse
 {
     [JsonPropertyName("fetchUid")]
-    public string FetchUid { get; set; }
+    public string FetchUid { get; set; } = null!;
 
     [JsonPropertyName("url")]
-    public string Url { get; set; }
+    public string Url { get; set; } = null!;
 
     [JsonPropertyName("status")]
     public int Status { get; set; }
 
     [JsonPropertyName("statusText")]
-    public string StatusText { get; set; }
+    public string StatusText { get; set; } = null!;
 
     [JsonPropertyName("headers")]
-    public List<NameValue> Headers { get; set; }
+    public List<NameValue> Headers { get; set; } = null!;
 }

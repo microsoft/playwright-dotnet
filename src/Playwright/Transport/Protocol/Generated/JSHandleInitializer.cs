@@ -29,5 +29,5 @@ namespace Microsoft.Playwright.Transport.Protocol;
 internal class JSHandleInitializer
 {
     [JsonPropertyName("preview")]
-    public string Preview { get; set; }
+    public string Preview { get; set; } = null!;
 }

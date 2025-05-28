@@ -30,14 +30,14 @@ namespace Microsoft.Playwright.Transport.Protocol;
 internal class BindingCallInitializer
 {
     [JsonPropertyName("frame")]
-    public Core.Frame Frame { get; set; }
+    public Core.Frame Frame { get; set; } = null!;
 
     [JsonPropertyName("name")]
-    public string Name { get; set; }
+    public string Name { get; set; } = null!;
 
     [JsonPropertyName("args")]
-    public List<System.Text.Json.JsonElement> Args { get; set; }
+    public List<System.Text.Json.JsonElement> Args { get; set; } = null!;
 
     [JsonPropertyName("handle")]
-    public Core.JSHandle Handle { get; set; }
+    public Core.JSHandle Handle { get; set; } = null!;
 }

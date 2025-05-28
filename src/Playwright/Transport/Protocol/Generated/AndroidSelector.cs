@@ -35,7 +35,7 @@ internal class AndroidSelector
     public bool? Checked { get; set; }
 
     [JsonPropertyName("clazz")]
-    public string Clazz { get; set; }
+    public string Clazz { get; set; } = null!;
 
     [JsonPropertyName("clickable")]
     public bool? Clickable { get; set; }
@@ -44,7 +44,7 @@ internal class AndroidSelector
     public int? Depth { get; set; }
 
     [JsonPropertyName("desc")]
-    public string Desc { get; set; }
+    public string Desc { get; set; } = null!;
 
     [JsonPropertyName("enabled")]
     public bool? Enabled { get; set; }
@@ -56,19 +56,19 @@ internal class AndroidSelector
     public bool? Focused { get; set; }
 
     [JsonPropertyName("hasChild")]
-    public AndroidSelectorHasChild HasChild { get; set; }
+    public AndroidSelectorHasChild HasChild { get; set; } = null!;
 
     [JsonPropertyName("hasDescendant")]
-    public AndroidSelectorHasDescendant HasDescendant { get; set; }
+    public AndroidSelectorHasDescendant HasDescendant { get; set; } = null!;
 
     [JsonPropertyName("longClickable")]
     public bool? LongClickable { get; set; }
 
     [JsonPropertyName("pkg")]
-    public string Pkg { get; set; }
+    public string Pkg { get; set; } = null!;
 
     [JsonPropertyName("res")]
-    public string Res { get; set; }
+    public string Res { get; set; } = null!;
 
     [JsonPropertyName("scrollable")]
     public bool? Scrollable { get; set; }
@@ -77,5 +77,5 @@ internal class AndroidSelector
     public bool? Selected { get; set; }
 
     [JsonPropertyName("text")]
-    public string Text { get; set; }
+    public string Text { get; set; } = null!;
 }

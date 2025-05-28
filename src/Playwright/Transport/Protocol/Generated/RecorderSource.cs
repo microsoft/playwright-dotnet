@@ -33,23 +33,23 @@ internal class RecorderSource
     public bool IsRecorded { get; set; }
 
     [JsonPropertyName("id")]
-    public string Id { get; set; }
+    public string Id { get; set; } = null!;
 
     [JsonPropertyName("label")]
-    public string Label { get; set; }
+    public string Label { get; set; } = null!;
 
     [JsonPropertyName("text")]
-    public string Text { get; set; }
+    public string Text { get; set; } = null!;
 
     [JsonPropertyName("language")]
-    public string Language { get; set; }
+    public string Language { get; set; } = null!;
 
     [JsonPropertyName("highlight")]
-    public List<RecorderSourceHighlight> Highlight { get; set; }
+    public List<RecorderSourceHighlight> Highlight { get; set; } = null!;
 
     [JsonPropertyName("revealLine")]
     public int? RevealLine { get; set; }
 
     [JsonPropertyName("group")]
-    public string Group { get; set; }
+    public string Group { get; set; } = null!;
 }

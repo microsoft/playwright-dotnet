@@ -29,7 +29,7 @@ namespace Microsoft.Playwright.Transport.Protocol;
 internal class SerializedValueO
 {
     [JsonPropertyName("k")]
-    public string K { get; set; }
+    public string K { get; set; } = null!;
 
     [JsonPropertyName("v")]
     public System.Text.Json.JsonElement V { get; set; }

@@ -29,7 +29,7 @@ namespace Microsoft.Playwright.Transport.Protocol;
 internal class StackFrame
 {
     [JsonPropertyName("file")]
-    public string File { get; set; }
+    public string File { get; set; } = null!;
 
     [JsonPropertyName("line")]
     public int Line { get; set; }
@@ -38,5 +38,5 @@ internal class StackFrame
     public int Column { get; set; }
 
     [JsonPropertyName("function")]
-    public string Function { get; set; }
+    public string Function { get; set; } = null!;
 }

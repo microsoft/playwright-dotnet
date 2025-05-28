@@ -30,14 +30,14 @@ namespace Microsoft.Playwright.Transport.Protocol;
 internal class FrameInitializer
 {
     [JsonPropertyName("url")]
-    public string Url { get; set; }
+    public string Url { get; set; } = null!;
 
     [JsonPropertyName("name")]
-    public string Name { get; set; }
+    public string Name { get; set; } = null!;
 
     [JsonPropertyName("parentFrame")]
-    public Core.Frame ParentFrame { get; set; }
+    public Core.Frame ParentFrame { get; set; } = null!;
 
     [JsonPropertyName("loadStates")]
-    public List<WaitUntilState> LoadStates { get; set; }
+    public List<WaitUntilState> LoadStates { get; set; } = null!;
 }

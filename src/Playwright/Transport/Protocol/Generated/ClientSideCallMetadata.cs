@@ -33,5 +33,5 @@ internal class ClientSideCallMetadata
     public int Id { get; set; }
 
     [JsonPropertyName("stack")]
-    public List<StackFrame> Stack { get; set; }
+    public List<StackFrame> Stack { get; set; } = null!;
 }

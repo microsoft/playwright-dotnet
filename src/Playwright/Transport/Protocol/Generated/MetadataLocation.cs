@@ -29,7 +29,7 @@ namespace Microsoft.Playwright.Transport.Protocol;
 internal class MetadataLocation
 {
     [JsonPropertyName("file")]
-    public string File { get; set; }
+    public string File { get; set; } = null!;
 
     [JsonPropertyName("line")]
     public int? Line { get; set; }
