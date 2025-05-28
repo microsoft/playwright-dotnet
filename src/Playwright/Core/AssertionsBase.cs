@@ -58,7 +58,7 @@ internal class AssertionsBase
         await ExpectImplAsync(expression, new ExpectedTextValue[] { textValue }, expected, message, options).ConfigureAwait(false);
     }
 
-    protected async Task ExpectImplAsync(string expression, ExpectedTextValue[] expectedText, object expected, string message, FrameExpectOptions options)
+    protected async Task ExpectImplAsync(string expression, ExpectedTextValue[]? expectedText, object? expected, string message, FrameExpectOptions options)
     {
         options ??= new();
         options.ExpectedText = expectedText;
@@ -66,7 +66,7 @@ internal class AssertionsBase
         await ExpectImplAsync(expression, options, expected, message).ConfigureAwait(false);
     }
 
-    protected async Task ExpectImplAsync(string expression, FrameExpectOptions expectOptions, object expected, string message)
+    protected async Task ExpectImplAsync(string expression, FrameExpectOptions expectOptions, object? expected, string message)
     {
         if (expectOptions.Timeout == null)
         {
@@ -102,7 +102,7 @@ internal class AssertionsBase
         return textValue;
     }
 
-    protected FrameExpectOptions ConvertToFrameExpectOptions(object source) => ClassUtils.Clone<FrameExpectOptions>(source);
+    protected FrameExpectOptions ConvertToFrameExpectOptions(object? source) => ClassUtils.Clone<FrameExpectOptions>(source);
 
     private string FormatValue(object value)
     {

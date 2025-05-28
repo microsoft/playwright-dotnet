@@ -68,7 +68,7 @@ internal class LocalUtils : ChannelOwner
         string url,
         string method,
         List<Header> headers,
-        byte[] postData,
+        byte[]? postData,
         bool isNavigationRequest)
         => SendMessageToServerAsync<LocalUtilsHarLookupResult>("harLookup", new Dictionary<string, object?>
             {

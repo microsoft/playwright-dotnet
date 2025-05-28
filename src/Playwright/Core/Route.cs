@@ -21,6 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
+#nullable enable
 
 using System;
 using System.Collections.Generic;
@@ -42,7 +43,7 @@ namespace Microsoft.Playwright.Core;
 internal class Route : ChannelOwner, IRoute
 {
     private readonly RouteInitializer _initializer;
-    private TaskCompletionSource<bool> _handlingTask;
+    private TaskCompletionSource<bool>? _handlingTask;
     internal bool _didThrow;
 
     internal Route(ChannelOwner parent, string guid, RouteInitializer initializer) : base(parent, guid)
@@ -54,12 +55,12 @@ internal class Route : ChannelOwner, IRoute
 
     public IRequest Request => _initializer.Request;
 
-    internal BrowserContext _context { get; set; }
+    internal BrowserContext _context { get; set; } = null!;
 
     internal Request _request { get; }
 
     [MethodImpl(MethodImplOptions.NoInlining)]
-    public async Task FulfillAsync(RouteFulfillOptions options = default)
+    public async Task FulfillAsync(RouteFulfillOptions? options = default)
     {
         CheckNotHandled();
         options ??= new RouteFulfillOptions();
@@ -77,14 +78,13 @@ internal class Route : ChannelOwner, IRoute
     }
 
     [MethodImpl(MethodImplOptions.NoInlining)]
-    public async Task AbortAsync(string errorCode = RequestAbortErrorCode.Failed)
+    public async Task AbortAsync(string? errorCode = null)
     {
-
         await HandleRouteAsync(async () =>
         {
             await RaceWithTargetCloseAsync(SendMessageToServerAsync(
                 "abort",
-                new Dictionary<string, object>
+                new Dictionary<string, object?>
                 {
                     ["errorCode"] = string.IsNullOrEmpty(errorCode) ? RequestAbortErrorCode.Failed : errorCode,
                 })).ConfigureAwait(false);
@@ -92,7 +92,7 @@ internal class Route : ChannelOwner, IRoute
     }
 
     [MethodImpl(MethodImplOptions.NoInlining)]
-    public async Task ContinueAsync(RouteContinueOptions options = default)
+    public async Task ContinueAsync(RouteContinueOptions? options = default)
     {
         CheckNotHandled();
         _request.ApplyFallbackOverrides(new RouteFallbackOptions().FromRouteContinueOptions(options));
@@ -106,7 +106,7 @@ internal class Route : ChannelOwner, IRoute
         await RaceWithTargetCloseAsync(
             SendMessageToServerAsync(
             "continue",
-            new Dictionary<string, object>
+            new Dictionary<string, object?>
             {
                 ["url"] = options.Url,
                 ["method"] = options.Method,
@@ -148,17 +148,17 @@ internal class Route : ChannelOwner, IRoute
         }
     }
 
-    private async Task<Dictionary<string, object>> NormalizeFulfillParametersAsync(
+    private async Task<Dictionary<string, object?>> NormalizeFulfillParametersAsync(
         int? status,
-        IEnumerable<KeyValuePair<string, string>> headers,
-        string contentType,
-        string body,
-        byte[] bodyContent,
-        object json,
-        string path,
-        IAPIResponse response)
+        IEnumerable<KeyValuePair<string, string>>? headers,
+        string? contentType,
+        string? body,
+        byte[]? bodyContent,
+        object? json,
+        string? path,
+        IAPIResponse? response)
     {
-        string fetchResponseUid = null;
+        string? fetchResponseUid = null;
 
         if (json != null)
         {
@@ -186,7 +186,7 @@ internal class Route : ChannelOwner, IRoute
             }
         }
 
-        string resultBody = null;
+        string? resultBody = null;
         bool isBase64 = false;
         int length = 0;
 
@@ -197,7 +197,7 @@ internal class Route : ChannelOwner, IRoute
             isBase64 = true;
             length = resultBody.Length;
         }
-        else if (!string.IsNullOrEmpty(body))
+        else if (!string.IsNullOrEmpty(body) && body != null)
         {
             resultBody = body;
             isBase64 = false;
@@ -220,7 +220,7 @@ internal class Route : ChannelOwner, IRoute
             }
         }
 
-        if (!string.IsNullOrEmpty(contentType))
+        if (!string.IsNullOrEmpty(contentType) && contentType != null)
         {
             resultHeaders["content-type"] = contentType;
         }
@@ -228,7 +228,7 @@ internal class Route : ChannelOwner, IRoute
         {
             resultHeaders["content-type"] = "application/json";
         }
-        else if (!string.IsNullOrEmpty(path))
+        else if (!string.IsNullOrEmpty(path) && path != null)
         {
             resultHeaders["content-type"] = path.GetContentType();
         }
@@ -238,7 +238,7 @@ internal class Route : ChannelOwner, IRoute
             resultHeaders["content-length"] = length.ToString(CultureInfo.InvariantCulture);
         }
 
-        return new Dictionary<string, object>()
+        return new Dictionary<string, object?>()
         {
             ["status"] = status ?? 200,
             ["headers"] = resultHeaders.Select(kv => new HeaderEntry { Name = kv.Key, Value = kv.Value }).ToArray(),
@@ -249,7 +249,7 @@ internal class Route : ChannelOwner, IRoute
     }
 
     [MethodImpl(MethodImplOptions.NoInlining)]
-    public Task FallbackAsync(RouteFallbackOptions options = null)
+    public Task FallbackAsync(RouteFallbackOptions? options = null)
     {
         CheckNotHandled();
         _request.ApplyFallbackOverrides(options);
@@ -262,7 +262,7 @@ internal class Route : ChannelOwner, IRoute
         CheckNotHandled();
         await RaceWithTargetCloseAsync(SendMessageToServerAsync(
             "redirectNavigationRequest",
-            new Dictionary<string, object>
+            new Dictionary<string, object?>
             {
                 ["url"] = url,
             })).ConfigureAwait(false);
@@ -285,13 +285,13 @@ internal class Route : ChannelOwner, IRoute
 
     private void ReportHandled(bool handled)
     {
-        var chain = _handlingTask;
+        var chain = _handlingTask!;
         _handlingTask = null;
         chain.SetResult(handled);
     }
 
     [MethodImpl(MethodImplOptions.NoInlining)]
-    public Task<IAPIResponse> FetchAsync(RouteFetchOptions options)
+    public Task<IAPIResponse> FetchAsync(RouteFetchOptions? options = null)
         => _connection.WrapApiCallAsync(
             () =>
             {

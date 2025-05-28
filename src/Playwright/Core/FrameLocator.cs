@@ -49,7 +49,7 @@ internal class FrameLocator : IFrameLocator
     ILocator IFrameLocator.GetByAltText(string text, FrameLocatorGetByAltTextOptions? options)
         => Locator(Core.Locator.GetByAltTextSelector(text, options?.Exact));
 
-    public ILocator GetByAltText(Regex? text, FrameLocatorGetByAltTextOptions? options = null)
+    public ILocator GetByAltText(Regex text, FrameLocatorGetByAltTextOptions? options = null)
         => Locator(Core.Locator.GetByAltTextSelector(text, options?.Exact));
 
     public ILocator GetByLabel(string text, FrameLocatorGetByLabelOptions? options = null)

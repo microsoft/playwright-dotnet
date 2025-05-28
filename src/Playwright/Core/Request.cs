@@ -224,7 +224,7 @@ internal class Request : ChannelOwner, IRequest
         return new(headerList);
     }
 
-    internal void ApplyFallbackOverrides(RouteFallbackOptions overrides)
+    internal void ApplyFallbackOverrides(RouteFallbackOptions? overrides)
     {
         _fallbackOverrides.Url = overrides?.Url ?? _fallbackOverrides.Url;
         _fallbackOverrides.Method = overrides?.Method ?? _fallbackOverrides.Method;

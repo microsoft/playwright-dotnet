@@ -28,7 +28,7 @@ internal class FrameExpectOptions
 {
     public object? ExpressionArg { get; set; }
 
-    public ExpectedTextValue[] ExpectedText { get; set; } = null!;
+    public ExpectedTextValue[]? ExpectedText { get; set; }
 
     public float ExpectedNumber { get; set; }
 
