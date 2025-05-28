@@ -96,7 +96,7 @@ internal class APIRequestContext : ChannelOwner, IAPIRequestContext
     [MethodImpl(MethodImplOptions.NoInlining)]
     public async Task<IAPIResponse> FetchAsync(string url, APIRequestContextOptions? options = null)
     {
-        if (!string.IsNullOrEmpty(_closeReason) && _closeReason != null)
+        if (!_closeReason.IsNullOrEmpty())
         {
             throw new PlaywrightException(_closeReason);
         }
