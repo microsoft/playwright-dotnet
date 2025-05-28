@@ -24,6 +24,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Linq;
 
@@ -603,7 +604,7 @@ internal static class StringExtensions
     /// </summary>
     /// <param name="query">Query string.</param>
     /// <returns>A <see cref="Dictionary{TKey, TValue}"/> containing the parsed QueryString.</returns>
-    public static Dictionary<string, string> ParseQueryString(this string query)
+    internal static Dictionary<string, string> ParseQueryString(this string query)
     {
         if (query is null)
         {
@@ -655,5 +656,15 @@ internal static class StringExtensions
         }
 
         return path.Substring(index);
+    }
+
+    /// <summary>
+    /// Checks if the string is null or empty. This should be used instead of string.IsNullOrEmpty to avoid nullability warnings.
+    /// If we drop netstandard2.0 support, we can migrate to string.IsNullOrEmpty().
+    /// Relates https://stackoverflow.com/a/64066801.
+    /// </summary>
+    internal static bool IsNullOrEmpty([NotNullWhen(false)] this string? data)
+    {
+        return string.IsNullOrEmpty(data);
     }
 }

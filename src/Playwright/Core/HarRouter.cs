@@ -50,7 +50,7 @@ internal sealed class HarRouter
     internal static async Task<HarRouter> CreateAsync(LocalUtils localUtils, string file, HarNotFound notFoundAction, HarRouterOptions options)
     {
         var (harId, error) = await localUtils.HarOpenAsync(file).ConfigureAwait(false);
-        if (!string.IsNullOrEmpty(error) && error != null)
+        if (!error.IsNullOrEmpty())
         {
             throw new PlaywrightException(error);
         }

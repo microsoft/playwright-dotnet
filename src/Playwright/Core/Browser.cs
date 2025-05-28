@@ -154,7 +154,7 @@ internal class Browser : ChannelOwner, IBrowser
             storageState = File.ReadAllText(options.StorageStatePath);
         }
 
-        if (!string.IsNullOrEmpty(storageState) && storageState != null)
+        if (!storageState.IsNullOrEmpty())
         {
             args.Add("storageState", JsonSerializer.Deserialize<object>(storageState, Helpers.JsonExtensions.DefaultJsonSerializerOptions));
         }

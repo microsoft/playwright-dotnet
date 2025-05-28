@@ -108,7 +108,7 @@ internal class Tracing : ChannelOwner, ITracing
         {
             // Not interested in artifacts.
             await _TracingStopChunkAsync("discard").ConfigureAwait(false);
-            if (!string.IsNullOrEmpty(_stacksId) && _stacksId != null)
+            if (!_stacksId.IsNullOrEmpty())
             {
                 if (_connection.LocalUtils != null)
                 {
@@ -135,7 +135,7 @@ internal class Tracing : ChannelOwner, ITracing
         // The artifact may be missing if the browser closed while stopping tracing.
         if (artifact == null)
         {
-            if (!string.IsNullOrEmpty(_stacksId) && _stacksId != null)
+            if (!_stacksId.IsNullOrEmpty())
             {
                 if (_connection.LocalUtils != null)
                 {

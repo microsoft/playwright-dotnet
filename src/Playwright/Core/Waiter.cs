@@ -78,7 +78,7 @@ internal class Waiter : IDisposable
                 ["waitId"] = _waitId,
                 ["phase"] = "after",
             };
-            if (!string.IsNullOrEmpty(_error) && _error != null)
+            if (!_error.IsNullOrEmpty())
             {
                 info["error"] = _error;
             }

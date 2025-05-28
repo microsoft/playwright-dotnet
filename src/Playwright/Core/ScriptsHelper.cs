@@ -28,6 +28,7 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Text.Json;
+using Microsoft.Playwright.Helpers;
 using Microsoft.Playwright.Transport.Converters;
 
 namespace Microsoft.Playwright.Core;
@@ -75,11 +76,11 @@ internal static class ScriptsHelper
 
     internal static string EvaluationScript(string? content, string? path, bool addSourceUrl)
     {
-        if (!string.IsNullOrEmpty(content) && content != null)
+        if (!content.IsNullOrEmpty())
         {
             return content;
         }
-        else if (!string.IsNullOrEmpty(path) && path != null)
+        else if (!path.IsNullOrEmpty())
         {
             var source = File.ReadAllText(path);
             return addSourceUrl ? AddSourceUrlToScript(source, path) : source;

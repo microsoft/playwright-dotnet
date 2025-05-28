@@ -196,7 +196,7 @@ internal class Route : ChannelOwner, IRoute
             isBase64 = true;
             length = resultBody.Length;
         }
-        else if (!string.IsNullOrEmpty(body) && body != null)
+        else if (!body.IsNullOrEmpty())
         {
             resultBody = body;
             isBase64 = false;
@@ -219,7 +219,7 @@ internal class Route : ChannelOwner, IRoute
             }
         }
 
-        if (!string.IsNullOrEmpty(contentType) && contentType != null)
+        if (!contentType.IsNullOrEmpty())
         {
             resultHeaders["content-type"] = contentType;
         }
@@ -227,7 +227,7 @@ internal class Route : ChannelOwner, IRoute
         {
             resultHeaders["content-type"] = "application/json";
         }
-        else if (!string.IsNullOrEmpty(path) && path != null)
+        else if (!path.IsNullOrEmpty())
         {
             resultHeaders["content-type"] = path.GetContentType();
         }
