@@ -25,8 +25,6 @@
 using System.ComponentModel.DataAnnotations;
 using System.Text.Json.Serialization;
 
-#nullable enable
-
 namespace Microsoft.Playwright;
 
 public partial class BrowserContextCookiesResult
@@ -71,5 +69,3 @@ public partial class BrowserContextCookiesResult
     [JsonPropertyName("sameSite")]
     public SameSiteAttribute SameSite { get; set; } = default!;
 }
-
-#nullable disable

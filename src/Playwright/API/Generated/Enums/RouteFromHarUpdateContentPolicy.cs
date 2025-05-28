@@ -24,8 +24,6 @@
 
 using System.Runtime.Serialization;
 
-#nullable enable
-
 namespace Microsoft.Playwright;
 
 public enum RouteFromHarUpdateContentPolicy
@@ -35,5 +33,3 @@ public enum RouteFromHarUpdateContentPolicy
     [EnumMember(Value = "attach")]
     Attach,
 }
-
-#nullable disable

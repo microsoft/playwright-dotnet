@@ -25,8 +25,6 @@
 using System.ComponentModel.DataAnnotations;
 using System.Text.Json.Serialization;
 
-#nullable enable
-
 namespace Microsoft.Playwright;
 
 public partial class Clip
@@ -51,5 +49,3 @@ public partial class Clip
     [JsonPropertyName("height")]
     public float Height { get; set; } = default!;
 }
-
-#nullable disable

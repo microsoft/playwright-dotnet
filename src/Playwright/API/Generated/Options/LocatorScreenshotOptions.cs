@@ -25,8 +25,6 @@
 using System.Collections.Generic;
 using System.Text.Json.Serialization;
 
-#nullable enable
-
 namespace Microsoft.Playwright;
 
 public class LocatorScreenshotOptions
@@ -164,5 +162,3 @@ public class LocatorScreenshotOptions
     [JsonPropertyName("type")]
     public ScreenshotType? Type { get; set; }
 }
-
-#nullable disable

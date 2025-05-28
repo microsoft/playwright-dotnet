@@ -24,8 +24,6 @@
 
 using System.Runtime.Serialization;
 
-#nullable enable
-
 namespace Microsoft.Playwright;
 
 public enum HarContentPolicy
@@ -37,5 +35,3 @@ public enum HarContentPolicy
     [EnumMember(Value = "attach")]
     Attach,
 }
-
-#nullable disable

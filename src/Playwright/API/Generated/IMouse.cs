@@ -24,8 +24,6 @@
 
 using System.Threading.Tasks;
 
-#nullable enable
-
 namespace Microsoft.Playwright;
 
 /// <summary>
@@ -103,5 +101,3 @@ public partial interface IMouse
     /// <param name="deltaY">Pixels to scroll vertically.</param>
     Task WheelAsync(float deltaX, float deltaY);
 }
-
-#nullable disable

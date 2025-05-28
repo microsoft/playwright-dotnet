@@ -25,8 +25,6 @@
 using System;
 using System.Text.Json.Serialization;
 
-#nullable enable
-
 namespace Microsoft.Playwright;
 
 public class PageWaitForRequestFinishedOptions
@@ -63,5 +61,3 @@ public class PageWaitForRequestFinishedOptions
     [JsonPropertyName("timeout")]
     public float? Timeout { get; set; }
 }
-
-#nullable disable

@@ -25,8 +25,6 @@
 using System.ComponentModel.DataAnnotations;
 using System.Text.Json.Serialization;
 
-#nullable enable
-
 namespace Microsoft.Playwright;
 
 public partial class Proxy
@@ -59,5 +57,3 @@ public partial class Proxy
     [JsonPropertyName("password")]
     public string? Password { get; set; }
 }
-
-#nullable disable

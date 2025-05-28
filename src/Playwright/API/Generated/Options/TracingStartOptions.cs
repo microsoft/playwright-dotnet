@@ -24,8 +24,6 @@
 
 using System.Text.Json.Serialization;
 
-#nullable enable
-
 namespace Microsoft.Playwright;
 
 public class TracingStartOptions
@@ -85,5 +83,3 @@ public class TracingStartOptions
     [JsonPropertyName("title")]
     public string? Title { get; set; }
 }
-
-#nullable disable

@@ -25,8 +25,6 @@
 using System.Text.Json;
 using System.Threading.Tasks;
 
-#nullable enable
-
 namespace Microsoft.Playwright;
 
 /// <summary>
@@ -98,5 +96,3 @@ public partial interface IAccessibility
     [System.Obsolete]
     Task<JsonElement?> SnapshotAsync(AccessibilitySnapshotOptions? options = default);
 }
-
-#nullable disable

@@ -24,8 +24,6 @@
 
 using System.Text.Json.Serialization;
 
-#nullable enable
-
 namespace Microsoft.Playwright;
 
 public partial class SelectOptionValue
@@ -42,5 +40,3 @@ public partial class SelectOptionValue
     [JsonPropertyName("index")]
     public int? Index { get; set; }
 }
-
-#nullable disable

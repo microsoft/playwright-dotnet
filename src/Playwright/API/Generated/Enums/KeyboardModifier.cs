@@ -24,8 +24,6 @@
 
 using System.Runtime.Serialization;
 
-#nullable enable
-
 namespace Microsoft.Playwright;
 
 public enum KeyboardModifier
@@ -41,5 +39,3 @@ public enum KeyboardModifier
     [EnumMember(Value = "Shift")]
     Shift,
 }
-
-#nullable disable

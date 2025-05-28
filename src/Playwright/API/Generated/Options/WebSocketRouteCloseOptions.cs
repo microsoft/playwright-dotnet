@@ -24,8 +24,6 @@
 
 using System.Text.Json.Serialization;
 
-#nullable enable
-
 namespace Microsoft.Playwright;
 
 public class WebSocketRouteCloseOptions
@@ -61,5 +59,3 @@ public class WebSocketRouteCloseOptions
     [JsonPropertyName("reason")]
     public string? Reason { get; set; }
 }
-
-#nullable disable

@@ -24,8 +24,6 @@
 
 using System.Text.Json.Serialization;
 
-#nullable enable
-
 namespace Microsoft.Playwright;
 
 public class FrameGotoOptions
@@ -89,5 +87,3 @@ public class FrameGotoOptions
     [JsonPropertyName("waitUntil")]
     public WaitUntilState? WaitUntil { get; set; }
 }
-
-#nullable disable

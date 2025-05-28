@@ -25,8 +25,6 @@
 using System;
 using System.Threading.Tasks;
 
-#nullable enable
-
 namespace Microsoft.Playwright;
 
 /// <summary>
@@ -104,5 +102,3 @@ public partial interface IWorker
 
     string Url { get; }
 }
-
-#nullable disable

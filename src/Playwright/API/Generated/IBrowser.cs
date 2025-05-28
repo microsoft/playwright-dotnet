@@ -26,8 +26,6 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-#nullable enable
-
 namespace Microsoft.Playwright;
 
 /// <summary>
@@ -175,5 +173,3 @@ public partial interface IBrowser
     /// <summary><para>Returns the browser version.</para></summary>
     string Version { get; }
 }
-
-#nullable disable

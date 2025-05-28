@@ -25,8 +25,6 @@
 using System.ComponentModel.DataAnnotations;
 using System.Text.Json.Serialization;
 
-#nullable enable
-
 namespace Microsoft.Playwright;
 
 public partial class Geolocation
@@ -45,5 +43,3 @@ public partial class Geolocation
     [JsonPropertyName("accuracy")]
     public float? Accuracy { get; set; }
 }
-
-#nullable disable

@@ -24,8 +24,6 @@
 
 using System.Text.Json.Serialization;
 
-#nullable enable
-
 namespace Microsoft.Playwright;
 
 public class PageEmulateMediaOptions
@@ -80,5 +78,3 @@ public class PageEmulateMediaOptions
     [JsonPropertyName("reducedMotion")]
     public ReducedMotion? ReducedMotion { get; set; }
 }
-
-#nullable disable

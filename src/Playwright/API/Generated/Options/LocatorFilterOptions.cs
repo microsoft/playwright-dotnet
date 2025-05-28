@@ -25,8 +25,6 @@
 using System.Text.Json.Serialization;
 using System.Text.RegularExpressions;
 
-#nullable enable
-
 namespace Microsoft.Playwright;
 
 public class LocatorFilterOptions
@@ -150,5 +148,3 @@ public class LocatorFilterOptions
     [JsonPropertyName("visible")]
     public bool? Visible { get; set; }
 }
-
-#nullable disable

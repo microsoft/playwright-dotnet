@@ -25,8 +25,6 @@
 using System.ComponentModel.DataAnnotations;
 using System.Text.Json.Serialization;
 
-#nullable enable
-
 namespace Microsoft.Playwright;
 
 public partial class ResponseServerAddrResult
@@ -41,5 +39,3 @@ public partial class ResponseServerAddrResult
     [JsonPropertyName("port")]
     public int Port { get; set; } = default!;
 }
-
-#nullable disable

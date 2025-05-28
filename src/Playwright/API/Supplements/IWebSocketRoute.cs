@@ -22,8 +22,6 @@
  * SOFTWARE.
  */
 
-#nullable enable
-
 namespace Microsoft.Playwright;
 
 public partial interface IWebSocketRoute

@@ -24,8 +24,6 @@
 
 using System.Threading.Tasks;
 
-#nullable enable
-
 namespace Microsoft.Playwright;
 
 /// <summary>
@@ -59,5 +57,3 @@ public partial interface IVideo
     /// <param name="path">Path where the video should be saved.</param>
     Task SaveAsAsync(string path);
 }
-
-#nullable disable

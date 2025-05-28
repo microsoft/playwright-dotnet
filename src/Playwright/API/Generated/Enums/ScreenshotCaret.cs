@@ -24,8 +24,6 @@
 
 using System.Runtime.Serialization;
 
-#nullable enable
-
 namespace Microsoft.Playwright;
 
 public enum ScreenshotCaret
@@ -35,5 +33,3 @@ public enum ScreenshotCaret
     [EnumMember(Value = "initial")]
     Initial,
 }
-
-#nullable disable

@@ -22,8 +22,6 @@
  * SOFTWARE.
  */
 
-#nullable enable
-
 namespace Microsoft.Playwright;
 
 /// <summary>
@@ -47,5 +45,3 @@ public partial interface IWebError
     /// <summary><para>Unhandled error that was thrown.</para></summary>
     string Error { get; }
 }
-
-#nullable disable

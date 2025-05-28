@@ -24,8 +24,6 @@
 
 using System.Text.Json.Serialization;
 
-#nullable enable
-
 namespace Microsoft.Playwright;
 
 public class KeyboardPressOptions
@@ -51,5 +49,3 @@ public class KeyboardPressOptions
     [JsonPropertyName("delay")]
     public float? Delay { get; set; }
 }
-
-#nullable disable

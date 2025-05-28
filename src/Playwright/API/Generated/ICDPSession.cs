@@ -26,8 +26,6 @@ using System.Collections.Generic;
 using System.Text.Json;
 using System.Threading.Tasks;
 
-#nullable enable
-
 namespace Microsoft.Playwright;
 
 /// <summary>
@@ -72,5 +70,3 @@ public partial interface ICDPSession
     /// <param name="eventName">CDP event name.</param>
     ICDPSessionEvent Event(string eventName);
 }
-
-#nullable disable

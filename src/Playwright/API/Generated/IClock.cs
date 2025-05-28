@@ -25,8 +25,6 @@
 using System;
 using System.Threading.Tasks;
 
-#nullable enable
-
 namespace Microsoft.Playwright;
 
 /// <summary>
@@ -266,5 +264,3 @@ public partial interface IClock
     /// <param name="time">Time to be set.</param>
     Task SetSystemTimeAsync(DateTime time);
 }
-
-#nullable disable

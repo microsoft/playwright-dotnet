@@ -26,8 +26,6 @@ using System.Collections.Generic;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
-#nullable enable
-
 namespace Microsoft.Playwright;
 
 /// <summary>
@@ -1056,5 +1054,3 @@ public partial interface ILocatorAssertions
     /// <param name="options">Call options</param>
     Task ToMatchAriaSnapshotAsync(string expected, LocatorAssertionsToMatchAriaSnapshotOptions? options = default);
 }
-
-#nullable disable

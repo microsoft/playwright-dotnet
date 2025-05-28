@@ -24,8 +24,6 @@
 
 using System.Threading.Tasks;
 
-#nullable enable
-
 namespace Microsoft.Playwright;
 
 /// <summary>
@@ -50,5 +48,3 @@ public partial interface IAPIResponseAssertions
     /// </summary>
     Task ToBeOKAsync();
 }
-
-#nullable disable

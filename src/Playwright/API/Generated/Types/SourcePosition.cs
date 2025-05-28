@@ -25,8 +25,6 @@
 using System.ComponentModel.DataAnnotations;
 using System.Text.Json.Serialization;
 
-#nullable enable
-
 namespace Microsoft.Playwright;
 
 public partial class SourcePosition
@@ -41,5 +39,3 @@ public partial class SourcePosition
     [JsonPropertyName("y")]
     public float Y { get; set; } = default!;
 }
-
-#nullable disable

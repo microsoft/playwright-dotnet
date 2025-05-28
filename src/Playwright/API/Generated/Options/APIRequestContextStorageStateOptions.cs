@@ -24,8 +24,6 @@
 
 using System.Text.Json.Serialization;
 
-#nullable enable
-
 namespace Microsoft.Playwright;
 
 public class APIRequestContextStorageStateOptions
@@ -58,5 +56,3 @@ public class APIRequestContextStorageStateOptions
     [JsonPropertyName("path")]
     public string? Path { get; set; }
 }
-
-#nullable disable

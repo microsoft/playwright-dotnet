@@ -22,8 +22,6 @@
  * SOFTWARE.
  */
 
-#nullable enable
-
 namespace Microsoft.Playwright;
 
 /// <summary>
@@ -41,5 +39,3 @@ public partial interface IWebSocketFrame
     /// <summary><para>Returns text payload.</para></summary>
     string? Text { get; }
 }
-
-#nullable disable

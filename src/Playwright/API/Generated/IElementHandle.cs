@@ -26,8 +26,6 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-#nullable enable
-
 namespace Microsoft.Playwright;
 
 /// <summary>
@@ -1201,5 +1199,3 @@ public partial interface IElementHandle : IJSHandle
     /// <param name="options">Call options</param>
     Task<IElementHandle?> WaitForSelectorAsync(string selector, ElementHandleWaitForSelectorOptions? options = default);
 }
-
-#nullable disable

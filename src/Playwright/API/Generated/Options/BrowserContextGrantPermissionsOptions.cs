@@ -24,8 +24,6 @@
 
 using System.Text.Json.Serialization;
 
-#nullable enable
-
 namespace Microsoft.Playwright;
 
 public class BrowserContextGrantPermissionsOptions
@@ -46,5 +44,3 @@ public class BrowserContextGrantPermissionsOptions
     [JsonPropertyName("origin")]
     public string? Origin { get; set; }
 }
-
-#nullable disable

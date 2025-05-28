@@ -24,8 +24,6 @@
 
 using System.Runtime.Serialization;
 
-#nullable enable
-
 namespace Microsoft.Playwright;
 
 public enum AriaRole
@@ -195,5 +193,3 @@ public enum AriaRole
     [EnumMember(Value = "treeitem")]
     Treeitem,
 }
-
-#nullable disable

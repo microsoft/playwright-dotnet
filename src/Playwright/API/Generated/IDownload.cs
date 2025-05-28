@@ -25,8 +25,6 @@
 using System.IO;
 using System.Threading.Tasks;
 
-#nullable enable
-
 namespace Microsoft.Playwright;
 
 /// <summary>
@@ -116,5 +114,3 @@ public partial interface IDownload
     /// <summary><para>Returns downloaded url.</para></summary>
     string Url { get; }
 }
-
-#nullable disable

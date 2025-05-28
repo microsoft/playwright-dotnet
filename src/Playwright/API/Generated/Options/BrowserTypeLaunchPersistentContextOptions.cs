@@ -26,8 +26,6 @@ using System.Collections.Generic;
 using System.Text.Json.Serialization;
 using System.Text.RegularExpressions;
 
-#nullable enable
-
 namespace Microsoft.Playwright;
 
 public class BrowserTypeLaunchPersistentContextOptions
@@ -590,5 +588,3 @@ public class BrowserTypeLaunchPersistentContextOptions
     [JsonPropertyName("viewport")]
     public ViewportSize? ViewportSize { get; set; }
 }
-
-#nullable disable

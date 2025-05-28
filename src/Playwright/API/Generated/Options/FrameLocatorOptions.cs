@@ -25,8 +25,6 @@
 using System.Text.Json.Serialization;
 using System.Text.RegularExpressions;
 
-#nullable enable
-
 namespace Microsoft.Playwright;
 
 public class FrameLocatorOptions
@@ -145,5 +143,3 @@ public class FrameLocatorOptions
     [JsonPropertyName("hasTextString")]
     public string? HasTextString { get; set; }
 }
-
-#nullable disable

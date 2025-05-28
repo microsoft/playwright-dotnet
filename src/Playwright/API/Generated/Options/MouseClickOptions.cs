@@ -24,8 +24,6 @@
 
 using System.Text.Json.Serialization;
 
-#nullable enable
-
 namespace Microsoft.Playwright;
 
 public class MouseClickOptions
@@ -61,5 +59,3 @@ public class MouseClickOptions
     [JsonPropertyName("delay")]
     public float? Delay { get; set; }
 }
-
-#nullable disable

@@ -22,7 +22,6 @@
  * SOFTWARE.
  */
 
-#nullable enable
 using System.Runtime.Serialization;
 
 namespace Microsoft.Playwright.Transport.Channels;

@@ -26,8 +26,6 @@ using System.Collections.Generic;
 using System.Text.Json;
 using System.Threading.Tasks;
 
-#nullable enable
-
 namespace Microsoft.Playwright;
 
 /// <summary>
@@ -79,5 +77,3 @@ public partial interface IAPIResponse
     /// <summary><para>Contains the URL of the response.</para></summary>
     string Url { get; }
 }
-
-#nullable disable

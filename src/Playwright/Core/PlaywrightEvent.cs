@@ -22,7 +22,6 @@
  * SOFTWARE.
  */
 
-#nullable enable
 namespace Microsoft.Playwright;
 
 internal class PlaywrightEvent<T>(string name)

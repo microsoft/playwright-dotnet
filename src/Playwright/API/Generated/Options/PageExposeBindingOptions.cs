@@ -24,8 +24,6 @@
 
 using System.Text.Json.Serialization;
 
-#nullable enable
-
 namespace Microsoft.Playwright;
 
 public class PageExposeBindingOptions
@@ -54,5 +52,3 @@ public class PageExposeBindingOptions
     [System.Obsolete]
     public bool? Handle { get; set; }
 }
-
-#nullable disable
