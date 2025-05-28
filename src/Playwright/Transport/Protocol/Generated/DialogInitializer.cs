@@ -29,14 +29,14 @@ namespace Microsoft.Playwright.Transport.Protocol;
 internal class DialogInitializer
 {
     [JsonPropertyName("page")]
-    public Core.Page Page { get; set; }
+    public Core.Page Page { get; set; } = null!;
 
     [JsonPropertyName("type")]
-    public string Type { get; set; }
+    public string Type { get; set; } = null!;
 
     [JsonPropertyName("message")]
-    public string Message { get; set; }
+    public string Message { get; set; } = null!;
 
     [JsonPropertyName("defaultValue")]
-    public string DefaultValue { get; set; }
+    public string DefaultValue { get; set; } = null!;
 }

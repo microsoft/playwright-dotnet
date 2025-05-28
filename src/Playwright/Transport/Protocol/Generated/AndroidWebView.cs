@@ -32,8 +32,8 @@ internal class AndroidWebView
     public int Pid { get; set; }
 
     [JsonPropertyName("pkg")]
-    public string Pkg { get; set; }
+    public string Pkg { get; set; } = null!;
 
     [JsonPropertyName("socketName")]
-    public string SocketName { get; set; }
+    public string SocketName { get; set; } = null!;
 }

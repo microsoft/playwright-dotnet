@@ -29,5 +29,5 @@ namespace Microsoft.Playwright.Transport.Protocol;
 internal class ArtifactInitializer
 {
     [JsonPropertyName("absolutePath")]
-    public string AbsolutePath { get; set; }
+    public string AbsolutePath { get; set; } = null!;
 }

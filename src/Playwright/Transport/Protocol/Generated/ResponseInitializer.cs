@@ -30,22 +30,22 @@ namespace Microsoft.Playwright.Transport.Protocol;
 internal class ResponseInitializer
 {
     [JsonPropertyName("request")]
-    public Core.Request Request { get; set; }
+    public Core.Request Request { get; set; } = null!;
 
     [JsonPropertyName("url")]
-    public string Url { get; set; }
+    public string Url { get; set; } = null!;
 
     [JsonPropertyName("status")]
     public int Status { get; set; }
 
     [JsonPropertyName("statusText")]
-    public string StatusText { get; set; }
+    public string StatusText { get; set; } = null!;
 
     [JsonPropertyName("headers")]
-    public List<NameValue> Headers { get; set; }
+    public List<NameValue> Headers { get; set; } = null!;
 
     [JsonPropertyName("timing")]
-    public RequestTimingResult Timing { get; set; }
+    public RequestTimingResult Timing { get; set; } = null!;
 
     [JsonPropertyName("fromServiceWorker")]
     public bool FromServiceWorker { get; set; }

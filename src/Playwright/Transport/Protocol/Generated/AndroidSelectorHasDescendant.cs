@@ -29,7 +29,7 @@ namespace Microsoft.Playwright.Transport.Protocol;
 internal class AndroidSelectorHasDescendant
 {
     [JsonPropertyName("selector")]
-    public AndroidSelector Selector { get; set; }
+    public AndroidSelector Selector { get; set; } = null!;
 
     [JsonPropertyName("maxDepth")]
     public int? MaxDepth { get; set; }

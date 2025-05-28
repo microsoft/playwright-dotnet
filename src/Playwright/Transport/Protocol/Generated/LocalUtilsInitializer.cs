@@ -30,5 +30,5 @@ namespace Microsoft.Playwright.Transport.Protocol;
 internal class LocalUtilsInitializer
 {
     [JsonPropertyName("deviceDescriptors")]
-    public List<DeviceDescriptorEntry> DeviceDescriptors { get; set; }
+    public List<DeviceDescriptorEntry> DeviceDescriptors { get; set; } = null!;
 }

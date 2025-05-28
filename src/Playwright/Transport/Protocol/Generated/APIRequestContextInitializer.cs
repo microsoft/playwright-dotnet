@@ -29,5 +29,5 @@ namespace Microsoft.Playwright.Transport.Protocol;
 internal class APIRequestContextInitializer
 {
     [JsonPropertyName("tracing")]
-    public Core.Tracing Tracing { get; set; }
+    public Core.Tracing Tracing { get; set; } = null!;
 }

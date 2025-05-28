@@ -29,14 +29,14 @@ namespace Microsoft.Playwright.Transport.Protocol;
 internal class PageInitializer : EventTargetInitializer
 {
     [JsonPropertyName("mainFrame")]
-    public Core.Frame MainFrame { get; set; }
+    public Core.Frame MainFrame { get; set; } = null!;
 
     [JsonPropertyName("viewportSize")]
-    public ViewportSize ViewportSize { get; set; }
+    public ViewportSize ViewportSize { get; set; } = null!;
 
     [JsonPropertyName("isClosed")]
     public bool IsClosed { get; set; }
 
     [JsonPropertyName("opener")]
-    public Core.Page Opener { get; set; }
+    public Core.Page Opener { get; set; } = null!;
 }

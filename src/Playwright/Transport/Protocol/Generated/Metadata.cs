@@ -29,14 +29,14 @@ namespace Microsoft.Playwright.Transport.Protocol;
 internal class Metadata
 {
     [JsonPropertyName("location")]
-    public MetadataLocation Location { get; set; }
+    public MetadataLocation Location { get; set; } = null!;
 
     [JsonPropertyName("apiName")]
-    public string ApiName { get; set; }
+    public string ApiName { get; set; } = null!;
 
     [JsonPropertyName("internal")]
     public bool? Internal { get; set; }
 
     [JsonPropertyName("stepId")]
-    public string StepId { get; set; }
+    public string StepId { get; set; } = null!;
 }

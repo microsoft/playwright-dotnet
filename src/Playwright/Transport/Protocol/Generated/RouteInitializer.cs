@@ -29,5 +29,5 @@ namespace Microsoft.Playwright.Transport.Protocol;
 internal class RouteInitializer
 {
     [JsonPropertyName("request")]
-    public Core.Request Request { get; set; }
+    public Core.Request Request { get; set; } = null!;
 }

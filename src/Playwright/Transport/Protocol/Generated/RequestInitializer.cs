@@ -30,29 +30,29 @@ namespace Microsoft.Playwright.Transport.Protocol;
 internal class RequestInitializer
 {
     [JsonPropertyName("frame")]
-    public Core.Frame Frame { get; set; }
+    public Core.Frame Frame { get; set; } = null!;
 
     [JsonPropertyName("serviceWorker")]
-    public Core.Worker ServiceWorker { get; set; }
+    public Core.Worker ServiceWorker { get; set; } = null!;
 
     [JsonPropertyName("url")]
-    public string Url { get; set; }
+    public string Url { get; set; } = null!;
 
     [JsonPropertyName("resourceType")]
-    public string ResourceType { get; set; }
+    public string ResourceType { get; set; } = null!;
 
     [JsonPropertyName("method")]
-    public string Method { get; set; }
+    public string Method { get; set; } = null!;
 
     [JsonPropertyName("postData")]
-    public byte[] PostData { get; set; }
+    public byte[] PostData { get; set; } = null!;
 
     [JsonPropertyName("headers")]
-    public List<NameValue> Headers { get; set; }
+    public List<NameValue> Headers { get; set; } = null!;
 
     [JsonPropertyName("isNavigationRequest")]
     public bool IsNavigationRequest { get; set; }
 
     [JsonPropertyName("redirectedFrom")]
-    public Core.Request RedirectedFrom { get; set; }
+    public Core.Request RedirectedFrom { get; set; } = null!;
 }

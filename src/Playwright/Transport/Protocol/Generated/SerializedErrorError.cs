@@ -29,11 +29,11 @@ namespace Microsoft.Playwright.Transport.Protocol;
 internal class SerializedErrorError
 {
     [JsonPropertyName("message")]
-    public string Message { get; set; }
+    public string Message { get; set; } = null!;
 
     [JsonPropertyName("name")]
-    public string Name { get; set; }
+    public string Name { get; set; } = null!;
 
     [JsonPropertyName("stack")]
-    public string Stack { get; set; }
+    public string Stack { get; set; } = null!;
 }

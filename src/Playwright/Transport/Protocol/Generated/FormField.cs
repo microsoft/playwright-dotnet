@@ -29,11 +29,11 @@ namespace Microsoft.Playwright.Transport.Protocol;
 internal class FormField
 {
     [JsonPropertyName("name")]
-    public string Name { get; set; }
+    public string Name { get; set; } = null!;
 
     [JsonPropertyName("value")]
-    public string Value { get; set; }
+    public string Value { get; set; } = null!;
 
     [JsonPropertyName("file")]
-    public FormFieldFile File { get; set; }
+    public FormFieldFile File { get; set; } = null!;
 }

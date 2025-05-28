@@ -29,11 +29,11 @@ namespace Microsoft.Playwright.Transport.Protocol;
 internal class SerializedValueE
 {
     [JsonPropertyName("m")]
-    public string M { get; set; }
+    public string M { get; set; } = null!;
 
     [JsonPropertyName("n")]
-    public string N { get; set; }
+    public string N { get; set; } = null!;
 
     [JsonPropertyName("s")]
-    public string S { get; set; }
+    public string S { get; set; } = null!;
 }

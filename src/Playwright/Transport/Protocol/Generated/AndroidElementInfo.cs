@@ -30,25 +30,25 @@ namespace Microsoft.Playwright.Transport.Protocol;
 internal class AndroidElementInfo
 {
     [JsonPropertyName("children")]
-    public List<AndroidElementInfo> Children { get; set; }
+    public List<AndroidElementInfo> Children { get; set; } = null!;
 
     [JsonPropertyName("clazz")]
-    public string Clazz { get; set; }
+    public string Clazz { get; set; } = null!;
 
     [JsonPropertyName("desc")]
-    public string Desc { get; set; }
+    public string Desc { get; set; } = null!;
 
     [JsonPropertyName("res")]
-    public string Res { get; set; }
+    public string Res { get; set; } = null!;
 
     [JsonPropertyName("pkg")]
-    public string Pkg { get; set; }
+    public string Pkg { get; set; } = null!;
 
     [JsonPropertyName("text")]
-    public string Text { get; set; }
+    public string Text { get; set; } = null!;
 
     [JsonPropertyName("bounds")]
-    public Rect Bounds { get; set; }
+    public Rect Bounds { get; set; } = null!;
 
     [JsonPropertyName("checkable")]
     public bool Checkable { get; set; }

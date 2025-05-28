@@ -29,5 +29,5 @@ namespace Microsoft.Playwright.Transport.Protocol;
 internal class ElectronApplicationInitializer : EventTargetInitializer
 {
     [JsonPropertyName("context")]
-    public Core.BrowserContext Context { get; set; }
+    public Core.BrowserContext Context { get; set; } = null!;
 }

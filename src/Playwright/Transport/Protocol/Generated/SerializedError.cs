@@ -29,7 +29,7 @@ namespace Microsoft.Playwright.Transport.Protocol;
 internal class SerializedError
 {
     [JsonPropertyName("error")]
-    public SerializedErrorError Error { get; set; }
+    public SerializedErrorError Error { get; set; } = null!;
 
     [JsonPropertyName("value")]
     public System.Text.Json.JsonElement Value { get; set; }
