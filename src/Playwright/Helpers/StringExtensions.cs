@@ -605,7 +605,7 @@ internal static class StringExtensions
     /// </summary>
     /// <param name="query">Query string.</param>
     /// <returns>A <see cref="Dictionary{TKey, TValue}"/> containing the parsed QueryString.</returns>
-    public static Dictionary<string, string> ParseQueryString(this string query)
+    internal static Dictionary<string, string> ParseQueryString(this string query)
     {
         if (query is null)
         {
@@ -664,7 +664,7 @@ internal static class StringExtensions
     /// If we drop netstandard2.0 support, we can migrate to string.IsNullOrEmpty().
     /// Relates https://stackoverflow.com/a/64066801.
     /// </summary>
-    public static bool IsNullOrEmpty([NotNullWhen(false)] this string? data)
+    internal static bool IsNullOrEmpty([NotNullWhen(false)] this string? data)
     {
         return string.IsNullOrEmpty(data);
     }
