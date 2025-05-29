@@ -24,8 +24,6 @@
 
 using System.Text.Json.Serialization;
 
-#nullable enable
-
 namespace Microsoft.Playwright;
 
 public partial class Margin
@@ -46,5 +44,3 @@ public partial class Margin
     [JsonPropertyName("left")]
     public string? Left { get; set; }
 }
-
-#nullable disable

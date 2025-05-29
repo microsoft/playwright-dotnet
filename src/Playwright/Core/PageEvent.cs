@@ -26,37 +26,37 @@ namespace Microsoft.Playwright.Core;
 
 internal static class PageEvent
 {
-    public static PlaywrightEvent<IRequest> Request { get; } = new() { Name = "Request" };
+    public static PlaywrightEvent<IRequest> Request { get; } = new("Request");
 
-    public static PlaywrightEvent<IRequest> RequestFinished { get; } = new() { Name = "RequestFinished" };
+    public static PlaywrightEvent<IRequest> RequestFinished { get; } = new("RequestFinished");
 
-    public static PlaywrightEvent<IPage> Crash { get; } = new() { Name = "Crash" };
+    public static PlaywrightEvent<IPage> Crash { get; } = new("Crash");
 
-    public static PlaywrightEvent<IPage> Close { get; } = new() { Name = "Close" };
+    public static PlaywrightEvent<IPage> Close { get; } = new("Close");
 
-    public static PlaywrightEvent<IResponse> Response { get; } = new() { Name = "Response" };
+    public static PlaywrightEvent<IResponse> Response { get; } = new("Response");
 
-    public static PlaywrightEvent<IDownload> Download { get; } = new() { Name = "Download" };
+    public static PlaywrightEvent<IDownload> Download { get; } = new("Download");
 
-    public static PlaywrightEvent<IConsoleMessage> Console { get; } = new() { Name = "Console" };
+    public static PlaywrightEvent<IConsoleMessage> Console { get; } = new("Console");
 
-    public static PlaywrightEvent<IPage> Popup { get; } = new() { Name = "Popup" };
+    public static PlaywrightEvent<IPage> Popup { get; } = new("Popup");
 
-    public static PlaywrightEvent<IFrame> FrameNavigated { get; } = new() { Name = "FrameNavigated" };
+    public static PlaywrightEvent<IFrame> FrameNavigated { get; } = new("FrameNavigated");
 
-    public static PlaywrightEvent<IFrame> FrameDetached { get; } = new() { Name = "FrameDetached" };
+    public static PlaywrightEvent<IFrame> FrameDetached { get; } = new("FrameDetached");
 
-    public static PlaywrightEvent<IWorker> Worker { get; } = new() { Name = "Worker" };
+    public static PlaywrightEvent<IWorker> Worker { get; } = new("Worker");
 
-    public static PlaywrightEvent<IDialog> Dialog { get; } = new() { Name = "Dialog" };
+    public static PlaywrightEvent<IDialog> Dialog { get; } = new("Dialog");
 
-    public static PlaywrightEvent<IFileChooser> FileChooser { get; } = new() { Name = "FileChooser" };
+    public static PlaywrightEvent<IFileChooser> FileChooser { get; } = new("FileChooser");
 
-    public static PlaywrightEvent<string> PageError { get; } = new() { Name = "PageError" };
+    public static PlaywrightEvent<string> PageError { get; } = new("PageError");
 
-    public static PlaywrightEvent<IPage> Load { get; } = new() { Name = "Load" };
+    public static PlaywrightEvent<IPage> Load { get; } = new("Load");
 
-    public static PlaywrightEvent<IPage> DOMContentLoaded { get; } = new() { Name = "DOMContentLoaded" };
+    public static PlaywrightEvent<IPage> DOMContentLoaded { get; } = new("DOMContentLoaded");
 
-    public static PlaywrightEvent<IWebSocket> WebSocket { get; } = new() { Name = "WebSocket" };
+    public static PlaywrightEvent<IWebSocket> WebSocket { get; } = new("WebSocket");
 }

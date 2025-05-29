@@ -29,7 +29,7 @@ namespace Microsoft.Playwright.Transport.Protocol;
 internal class RemoteAddr
 {
     [JsonPropertyName("ipAddress")]
-    public string IpAddress { get; set; }
+    public string IpAddress { get; set; } = null!;
 
     [JsonPropertyName("port")]
     public int Port { get; set; }

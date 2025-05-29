@@ -51,12 +51,12 @@ internal class RawHeaders
 
     public List<Header> HeadersArray { get; }
 
-    public Dictionary<string, string> Headers => _headersMap.Keys.ToDictionary(x => x, y => Get(y));
+    public Dictionary<string, string> Headers => _headersMap.Keys.ToDictionary(x => x, y => Get(y)!);
 
-    public string Get(string name)
+    public string? Get(string name)
     {
         var values = GetAll(name);
-        if (values == null)
+        if (values == null || values.Length == 0)
         {
             return null;
         }
@@ -70,8 +70,7 @@ internal class RawHeaders
         {
             return values.ToArray();
         }
-
-        return null;
+        return [];
     }
 
     internal static RawHeaders FromHeadersObjectLossy(IEnumerable<KeyValuePair<string, string>> headers)

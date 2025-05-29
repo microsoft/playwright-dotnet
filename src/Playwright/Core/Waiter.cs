@@ -41,16 +41,16 @@ internal class Waiter : IDisposable
     private readonly CancellationTokenSource _manualCts = new();
     private readonly string _waitId = Guid.NewGuid().ToString();
     private readonly ChannelOwner _channelOwner;
-    private Exception _immediateError;
+    private Exception? _immediateError;
 
     private bool _disposed;
-    private string _error;
+    private string? _error;
 
     internal Waiter(ChannelOwner channelOwner, string @event)
     {
         _channelOwner = channelOwner;
 
-        var beforeArgs = new Dictionary<string, object>
+        var beforeArgs = new Dictionary<string, object?>
         {
             ["info"] = new Dictionary<string, object>
             {
@@ -78,11 +78,11 @@ internal class Waiter : IDisposable
                 ["waitId"] = _waitId,
                 ["phase"] = "after",
             };
-            if (!string.IsNullOrEmpty(_error))
+            if (!_error.IsNullOrEmpty())
             {
                 info["error"] = _error;
             }
-            var afterArgs = new Dictionary<string, object>
+            var afterArgs = new Dictionary<string, object?>
             {
                 ["info"] = info,
             };
@@ -100,7 +100,7 @@ internal class Waiter : IDisposable
     {
         _logs.Add(log);
 
-        var logArgs = new Dictionary<string, object>
+        var logArgs = new Dictionary<string, object?>
         {
             ["info"] = new Dictionary<string, object>
             {
@@ -121,7 +121,7 @@ internal class Waiter : IDisposable
         object eventSource,
         string e,
         PlaywrightException navigationException,
-        Func<T, bool> predicate = null)
+        Func<T, bool>? predicate = null)
     {
         RejectOnEvent(eventSource, e, () => navigationException, predicate);
     }
@@ -130,7 +130,7 @@ internal class Waiter : IDisposable
         object eventSource,
         string e,
         Func<PlaywrightException> navigationException,
-        Func<T, bool> predicate = null)
+        Func<T, bool>? predicate = null)
     {
         if (eventSource == null)
         {
@@ -156,7 +156,7 @@ internal class Waiter : IDisposable
             () => cts.Cancel());
     }
 
-    internal Task<T> WaitForEventAsync<T>(object eventSource, string e, Func<T, bool> predicate)
+    internal Task<T> WaitForEventAsync<T>(object eventSource, string e, Func<T, bool>? predicate)
     {
         var (task, dispose) = GetWaitForEventTask(eventSource, e, predicate);
         return WaitForPromiseAsync(task, dispose);
@@ -168,7 +168,7 @@ internal class Waiter : IDisposable
         return WaitForPromiseAsync(task, dispose);
     }
 
-    internal (Task<T> Task, Action Dispose) GetWaitForEventTask<T>(object eventSource, string e, Func<T, bool> predicate)
+    internal (Task<T> Task, Action Dispose) GetWaitForEventTask<T>(object eventSource, string e, Func<T, bool>? predicate)
     {
         var info = eventSource.GetType().GetEvent(e) ?? eventSource.GetType().BaseType.GetEvent(e);
 
@@ -198,7 +198,7 @@ internal class Waiter : IDisposable
         return (eventTsc.Task, () => info.RemoveEventHandler(eventSource, (EventHandler<T>)EventHandler));
     }
 
-    internal async Task<T> WaitForPromiseAsync<T>(Task<T> task, Action dispose = null)
+    internal async Task<T> WaitForPromiseAsync<T>(Task<T> task, Action? dispose = null)
     {
         try
         {
@@ -212,7 +212,7 @@ internal class Waiter : IDisposable
 
             if (_manualCts.IsCancellationRequested)
             {
-                return default;
+                return default!;
             }
 
             await firstTask.ConfigureAwait(false);

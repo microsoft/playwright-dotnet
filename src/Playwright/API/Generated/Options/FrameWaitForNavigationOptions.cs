@@ -26,8 +26,6 @@ using System;
 using System.Text.Json.Serialization;
 using System.Text.RegularExpressions;
 
-#nullable enable
-
 namespace Microsoft.Playwright;
 
 public class FrameWaitForNavigationOptions
@@ -129,5 +127,3 @@ public class FrameWaitForNavigationOptions
     [JsonPropertyName("waitUntil")]
     public WaitUntilState? WaitUntil { get; set; }
 }
-
-#nullable disable

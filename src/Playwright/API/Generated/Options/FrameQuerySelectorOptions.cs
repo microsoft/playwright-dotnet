@@ -24,8 +24,6 @@
 
 using System.Text.Json.Serialization;
 
-#nullable enable
-
 namespace Microsoft.Playwright;
 
 public class FrameQuerySelectorOptions
@@ -51,5 +49,3 @@ public class FrameQuerySelectorOptions
     [JsonPropertyName("strict")]
     public bool? Strict { get; set; }
 }
-
-#nullable disable

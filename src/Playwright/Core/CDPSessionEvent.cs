@@ -25,8 +25,6 @@
 using System;
 using System.Text.Json;
 
-#nullable enable
-
 namespace Microsoft.Playwright.Core;
 
 internal class CDPSessionEvent : ICDPSessionEvent

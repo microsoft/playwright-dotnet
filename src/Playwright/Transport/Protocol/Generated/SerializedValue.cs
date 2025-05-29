@@ -36,34 +36,34 @@ internal class SerializedValue
     public bool? B { get; set; }
 
     [JsonPropertyName("s")]
-    public string S { get; set; }
+    public string S { get; set; } = null!;
 
     [JsonPropertyName("v")]
-    public string V { get; set; }
+    public string V { get; set; } = null!;
 
     [JsonPropertyName("d")]
-    public string D { get; set; }
+    public string D { get; set; } = null!;
 
     [JsonPropertyName("u")]
-    public string U { get; set; }
+    public string U { get; set; } = null!;
 
     [JsonPropertyName("bi")]
-    public string Bi { get; set; }
+    public string Bi { get; set; } = null!;
 
     [JsonPropertyName("ta")]
-    public SerializedValueTa Ta { get; set; }
+    public SerializedValueTa Ta { get; set; } = null!;
 
     [JsonPropertyName("e")]
-    public SerializedValueE E { get; set; }
+    public SerializedValueE E { get; set; } = null!;
 
     [JsonPropertyName("r")]
-    public SerializedValueR R { get; set; }
+    public SerializedValueR R { get; set; } = null!;
 
     [JsonPropertyName("a")]
-    public List<System.Text.Json.JsonElement> A { get; set; }
+    public List<System.Text.Json.JsonElement> A { get; set; } = null!;
 
     [JsonPropertyName("o")]
-    public List<SerializedValueO> O { get; set; }
+    public List<SerializedValueO> O { get; set; } = null!;
 
     [JsonPropertyName("h")]
     public int? H { get; set; }

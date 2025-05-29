@@ -26,8 +26,6 @@ using System;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
-#nullable enable
-
 namespace Microsoft.Playwright;
 
 /// <summary>

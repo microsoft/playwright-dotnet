@@ -24,8 +24,6 @@
 
 using System.Text.Json.Serialization;
 
-#nullable enable
-
 namespace Microsoft.Playwright;
 
 public class ElementHandleCheckOptions
@@ -92,5 +90,3 @@ public class ElementHandleCheckOptions
     [JsonPropertyName("trial")]
     public bool? Trial { get; set; }
 }
-
-#nullable disable

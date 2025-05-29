@@ -27,8 +27,6 @@ using System.Collections.Generic;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
-#nullable enable
-
 namespace Microsoft.Playwright;
 
 /// <summary>
@@ -1967,5 +1965,3 @@ public partial interface IFrame
     /// <param name="options">Call options</param>
     Task WaitForURLAsync(Func<string, bool> url, FrameWaitForURLOptions? options = default);
 }
-
-#nullable disable

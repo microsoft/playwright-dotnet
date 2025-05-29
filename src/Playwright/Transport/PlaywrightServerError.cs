@@ -21,14 +21,13 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-
 namespace Microsoft.Playwright.Transport;
 
 internal class PlaywrightServerError
 {
-    public string Message { get; set; }
+    public string? Message { get; set; }
 
-    public string Value { get; set; }
+    public string Value { get; set; } = null!;
 
-    public string Name { get; set; }
+    public string Name { get; set; } = null!;
 }

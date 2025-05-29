@@ -25,8 +25,6 @@
 using System.Text.Json.Serialization;
 using System.Text.RegularExpressions;
 
-#nullable enable
-
 namespace Microsoft.Playwright;
 
 public class BrowserContextClearCookiesOptions
@@ -87,5 +85,3 @@ public class BrowserContextClearCookiesOptions
     [JsonPropertyName("pathString")]
     public string? PathString { get; set; }
 }
-
-#nullable disable

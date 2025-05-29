@@ -21,7 +21,6 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-
 using System;
 using System.Text.Json;
 using System.Text.Json.Serialization;
@@ -48,8 +47,8 @@ internal static class JsonExtensions
     /// <param name="element">Element to convert.</param>
     /// <param name="options">Serialization options.</param>
     /// <returns>Converted value.</returns>
-    public static T ToObject<T>(this JsonElement element, JsonSerializerOptions options = null)
-        => element.Deserialize<T>(options ?? DefaultJsonSerializerOptions);
+    public static T ToObject<T>(this JsonElement element, JsonSerializerOptions? options = null)
+        => element.Deserialize<T>(options ?? DefaultJsonSerializerOptions)!;
 
     /// <summary>
     /// Convert a <see cref="JsonElement"/> to an object.
@@ -58,8 +57,8 @@ internal static class JsonExtensions
     /// <param name="type">Type to convert the <see cref="JsonElement"/> to.</param>
     /// <param name="options">Serialization options.</param>
     /// <returns>Converted value.</returns>
-    public static object ToObject(this JsonElement element, Type type, JsonSerializerOptions options = null)
-        => element.Deserialize(type, options ?? DefaultJsonSerializerOptions);
+    public static object ToObject(this JsonElement element, Type type, JsonSerializerOptions? options = null)
+        => element.Deserialize(type, options ?? DefaultJsonSerializerOptions)!;
 
     /// <summary>
     /// Serialize an object.
@@ -68,7 +67,7 @@ internal static class JsonExtensions
     /// <param name="value">Object to serialize.</param>
     /// <param name="options">Serialization options.</param>
     /// <returns>Serialized object.</returns>
-    public static string ToJson<T>(this T value, JsonSerializerOptions options = null)
+    public static string ToJson<T>(this T value, JsonSerializerOptions? options = null)
         => JsonSerializer.Serialize(value, options ?? DefaultJsonSerializerOptions);
 
     /// <summary>
@@ -78,7 +77,7 @@ internal static class JsonExtensions
     /// <param name="document">Document to convert.</param>
     /// <param name="options">Serialization options.</param>
     /// <returns>Converted value.</returns>
-    public static T ToObject<T>(this JsonDocument document, JsonSerializerOptions options = null)
+    public static T ToObject<T>(this JsonDocument document, JsonSerializerOptions? options = null)
     {
         if (document == null)
         {

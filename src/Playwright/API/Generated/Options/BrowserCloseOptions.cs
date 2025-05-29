@@ -24,8 +24,6 @@
 
 using System.Text.Json.Serialization;
 
-#nullable enable
-
 namespace Microsoft.Playwright;
 
 public class BrowserCloseOptions
@@ -46,5 +44,3 @@ public class BrowserCloseOptions
     [JsonPropertyName("reason")]
     public string? Reason { get; set; }
 }
-
-#nullable disable

@@ -25,8 +25,6 @@
 using System.Collections.Generic;
 using System.Text.Json.Serialization;
 
-#nullable enable
-
 namespace Microsoft.Playwright;
 
 public class PageClickOptions
@@ -142,5 +140,3 @@ public class PageClickOptions
     [JsonPropertyName("trial")]
     public bool? Trial { get; set; }
 }
-
-#nullable disable

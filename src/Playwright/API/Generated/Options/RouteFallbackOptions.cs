@@ -25,8 +25,6 @@
 using System.Collections.Generic;
 using System.Text.Json.Serialization;
 
-#nullable enable
-
 namespace Microsoft.Playwright;
 
 public class RouteFallbackOptions
@@ -68,5 +66,3 @@ public class RouteFallbackOptions
     [JsonPropertyName("url")]
     public string? Url { get; set; }
 }
-
-#nullable disable

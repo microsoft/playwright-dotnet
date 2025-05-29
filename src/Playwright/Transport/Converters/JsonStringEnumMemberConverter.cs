@@ -21,7 +21,6 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-
 using System;
 using System.Text.Json;
 using System.Text.Json.Serialization;
@@ -53,7 +52,7 @@ internal class JsonStringEnumMemberConverter : JsonConverterFactory
         }
         else if (reader.TokenType == JsonTokenType.String)
         {
-            return EnumHelper.FromValueString<TEnum>(reader.GetString());
+            return EnumHelper.FromValueString<TEnum>(reader.GetString()!);
         }
         else if (reader.TokenType == JsonTokenType.Number)
         {

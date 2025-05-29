@@ -24,8 +24,6 @@
 
 using System.Text.Json.Serialization;
 
-#nullable enable
-
 namespace Microsoft.Playwright;
 
 public class PageEvalOnSelectorOptions
@@ -51,5 +49,3 @@ public class PageEvalOnSelectorOptions
     [JsonPropertyName("strict")]
     public bool? Strict { get; set; }
 }
-
-#nullable disable

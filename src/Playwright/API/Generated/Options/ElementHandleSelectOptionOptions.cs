@@ -24,8 +24,6 @@
 
 using System.Text.Json.Serialization;
 
-#nullable enable
-
 namespace Microsoft.Playwright;
 
 public class ElementHandleSelectOptionOptions
@@ -71,5 +69,3 @@ public class ElementHandleSelectOptionOptions
     [JsonPropertyName("timeout")]
     public float? Timeout { get; set; }
 }
-
-#nullable disable

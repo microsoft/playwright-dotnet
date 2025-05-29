@@ -28,8 +28,6 @@ using System.Text.Json;
 using System.Threading.Tasks;
 using Microsoft.Playwright.Transport;
 
-#nullable enable
-
 namespace Microsoft.Playwright.Core;
 
 internal class CDPSession : ChannelOwner, ICDPSession
@@ -40,14 +38,14 @@ internal class CDPSession : ChannelOwner, ICDPSession
     {
     }
 
-    internal override void OnMessage(string method, JsonElement? serverParams)
+    internal override void OnMessage(string method, JsonElement serverParams)
     {
         switch (method)
         {
             case "event":
                 OnCDPEvent(
-                    serverParams!.Value.GetProperty("method").ToString(),
-                    serverParams!.Value.TryGetProperty("params", out var cdpParams) ? cdpParams : null);
+                    serverParams.GetProperty("method").ToString(),
+                    serverParams.TryGetProperty("params", out var cdpParams) ? cdpParams : null);
                 break;
         }
     }
@@ -58,7 +56,7 @@ internal class CDPSession : ChannelOwner, ICDPSession
     [MethodImpl(MethodImplOptions.NoInlining)]
     public async Task<JsonElement?> SendAsync(string method, Dictionary<string, object>? args = null)
     {
-        var newArgs = new Dictionary<string, object>() { { "method", method } };
+        var newArgs = new Dictionary<string, object?>() { { "method", method } };
         if (args != null)
         {
             newArgs["params"] = args;

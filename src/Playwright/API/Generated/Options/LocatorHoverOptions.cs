@@ -25,8 +25,6 @@
 using System.Collections.Generic;
 using System.Text.Json.Serialization;
 
-#nullable enable
-
 namespace Microsoft.Playwright;
 
 public class LocatorHoverOptions
@@ -107,5 +105,3 @@ public class LocatorHoverOptions
     [JsonPropertyName("trial")]
     public bool? Trial { get; set; }
 }
-
-#nullable disable

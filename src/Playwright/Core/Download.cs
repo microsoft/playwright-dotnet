@@ -51,7 +51,7 @@ internal class Download : IDownload
 
     public Task<string> PathAsync() => _artifact.PathAfterFinishedAsync();
 
-    public Task<string> FailureAsync() => _artifact.FailureAsync();
+    public Task<string?> FailureAsync() => _artifact.FailureAsync();
 
     public Task DeleteAsync() => _artifact.DeleteAsync();
 

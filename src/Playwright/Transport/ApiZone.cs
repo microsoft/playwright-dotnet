@@ -21,7 +21,6 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-
 using System.Collections.Generic;
 using System.Text.Json.Serialization;
 using Microsoft.Playwright.Transport.Protocol;
@@ -31,7 +30,7 @@ namespace Microsoft.Playwright.Transport;
 internal class ApiZone
 {
     [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
-    public string ApiName { get; set; }
+    public string? ApiName { get; set; }
 
-    public List<StackFrame> Frames { get; set; }
+    public List<StackFrame> Frames { get; set; } = null!;
 }

@@ -24,8 +24,6 @@
 
 using System.Text.Json.Serialization;
 
-#nullable enable
-
 namespace Microsoft.Playwright;
 
 public class PageAddStyleTagOptions
@@ -61,5 +59,3 @@ public class PageAddStyleTagOptions
     [JsonPropertyName("url")]
     public string? Url { get; set; }
 }
-
-#nullable disable

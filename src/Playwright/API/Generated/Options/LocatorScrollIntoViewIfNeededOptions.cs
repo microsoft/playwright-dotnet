@@ -24,8 +24,6 @@
 
 using System.Text.Json.Serialization;
 
-#nullable enable
-
 namespace Microsoft.Playwright;
 
 public class LocatorScrollIntoViewIfNeededOptions
@@ -52,5 +50,3 @@ public class LocatorScrollIntoViewIfNeededOptions
     [JsonPropertyName("timeout")]
     public float? Timeout { get; set; }
 }
-
-#nullable disable

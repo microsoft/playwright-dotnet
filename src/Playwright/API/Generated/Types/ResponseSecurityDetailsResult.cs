@@ -24,8 +24,6 @@
 
 using System.Text.Json.Serialization;
 
-#nullable enable
-
 namespace Microsoft.Playwright;
 
 public partial class ResponseSecurityDetailsResult
@@ -60,5 +58,3 @@ public partial class ResponseSecurityDetailsResult
     [JsonPropertyName("validTo")]
     public float? ValidTo { get; set; }
 }
-
-#nullable disable

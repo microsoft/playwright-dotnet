@@ -24,8 +24,6 @@
 
 using System.Threading.Tasks;
 
-#nullable enable
-
 namespace Microsoft.Playwright;
 
 /// <summary>
@@ -62,5 +60,3 @@ public partial interface ITouchscreen
     /// <param name="y">Y coordinate relative to the main frame's viewport in CSS pixels.</param>
     Task TapAsync(float x, float y);
 }
-
-#nullable disable

@@ -24,8 +24,6 @@
 
 using System.Text.Json.Serialization;
 
-#nullable enable
-
 namespace Microsoft.Playwright;
 
 public class LocatorAssertionsToHaveAccessibleDescriptionOptions
@@ -56,5 +54,3 @@ public class LocatorAssertionsToHaveAccessibleDescriptionOptions
     [JsonPropertyName("timeout")]
     public float? Timeout { get; set; }
 }
-
-#nullable disable

@@ -49,8 +49,8 @@ internal class Artifact : ChannelOwner
         {
             throw new PlaywrightException("Path is not available when connecting remotely. Use SaveAsAsync() to save a local copy.");
         }
-        return (await SendMessageToServerAsync<JsonElement?>("pathAfterFinished")
-            .ConfigureAwait(false)).GetString("value", true);
+        return (await SendMessageToServerAsync<JsonElement>("pathAfterFinished")
+            .ConfigureAwait(false)).GetProperty("value").ToString();
     }
 
     [MethodImpl(MethodImplOptions.NoInlining)]
@@ -60,7 +60,7 @@ internal class Artifact : ChannelOwner
         {
             await SendMessageToServerAsync(
             "saveAs",
-            new Dictionary<string, object>
+            new Dictionary<string, object?>
             {
                 ["path"] = path,
             }).ConfigureAwait(false);
@@ -68,7 +68,7 @@ internal class Artifact : ChannelOwner
         }
         Directory.CreateDirectory(Path.GetDirectoryName(Path.GetFullPath(path)));
         var stream = (await SendMessageToServerAsync("saveAsStream")
-            .ConfigureAwait(false)).GetObject<Stream>("stream", _connection);
+            .ConfigureAwait(false)).GetObject<Stream>("stream", _connection)!;
         await using (stream.ConfigureAwait(false))
         {
             using (var fileStream = new FileStream(path, FileMode.Create, FileAccess.Write))
@@ -81,14 +81,14 @@ internal class Artifact : ChannelOwner
     [MethodImpl(MethodImplOptions.NoInlining)]
     public async Task<System.IO.Stream> CreateReadStreamAsync()
     {
-        var stream = (await SendMessageToServerAsync<JsonElement?>("stream")
-            .ConfigureAwait(false))?.GetObject<Stream>("stream", _connection);
+        var stream = (await SendMessageToServerAsync<JsonElement>("stream")
+            .ConfigureAwait(false)).GetObject<Stream>("stream", _connection);
         return stream.StreamImpl;
     }
 
     internal Task CancelAsync() => SendMessageToServerAsync("cancel");
 
-    internal async Task<string> FailureAsync() => (await SendMessageToServerAsync<JsonElement?>("failure")
+    internal async Task<string?> FailureAsync() => (await SendMessageToServerAsync<JsonElement?>("failure")
             .ConfigureAwait(false)).GetString("error", true);
 
     internal Task DeleteAsync() => SendMessageToServerAsync("delete");

@@ -24,8 +24,6 @@
 
 using System.Text.Json.Serialization;
 
-#nullable enable
-
 namespace Microsoft.Playwright;
 
 public class FrameTextContentOptions
@@ -62,5 +60,3 @@ public class FrameTextContentOptions
     [JsonPropertyName("timeout")]
     public float? Timeout { get; set; }
 }
-
-#nullable disable

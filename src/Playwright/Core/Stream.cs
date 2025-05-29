@@ -45,7 +45,7 @@ internal class Stream : ChannelOwner, IAsyncDisposable
     {
         var response = await SendMessageToServerAsync(
             "read",
-            new Dictionary<string, object>
+            new Dictionary<string, object?>
             {
                 ["size"] = size,
             }).ConfigureAwait(false);

@@ -24,7 +24,7 @@
 
 namespace Microsoft.Playwright;
 
-internal class PlaywrightEvent<T>
+internal class PlaywrightEvent<T>(string name)
 {
-    public string Name { get; set; }
+    public string Name { get; set; } = name;
 }

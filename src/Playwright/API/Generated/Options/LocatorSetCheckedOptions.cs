@@ -24,8 +24,6 @@
 
 using System.Text.Json.Serialization;
 
-#nullable enable
-
 namespace Microsoft.Playwright;
 
 public class LocatorSetCheckedOptions
@@ -92,5 +90,3 @@ public class LocatorSetCheckedOptions
     [JsonPropertyName("trial")]
     public bool? Trial { get; set; }
 }
-
-#nullable disable

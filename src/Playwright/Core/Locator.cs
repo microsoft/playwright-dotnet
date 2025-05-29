@@ -48,7 +48,7 @@ internal class Locator : ILocator
 
     private static string _testIdAttributeName = "data-testid";
 
-    public Locator(Frame parent, string selector, LocatorLocatorOptions options = null, bool? visible = null)
+    public Locator(Frame parent, string selector, LocatorLocatorOptions? options = null, bool? visible = null)
     {
         _frame = parent;
         _selector = selector;
@@ -116,7 +116,7 @@ internal class Locator : ILocator
 
     internal bool EqualLocator(Locator locator) => _frame == locator._frame && _selector == locator._selector;
 
-    public Task<LocatorBoundingBoxResult> BoundingBoxAsync(LocatorBoundingBoxOptions options = null)
+    public Task<LocatorBoundingBoxResult?> BoundingBoxAsync(LocatorBoundingBoxOptions? options = null)
         => WithElementAsync(
             async (h, _) =>
             {
@@ -136,51 +136,51 @@ internal class Locator : ILocator
             },
             options?.Timeout);
 
-    public Task CheckAsync(LocatorCheckOptions options = null)
+    public Task CheckAsync(LocatorCheckOptions? options = null)
         => _frame.CheckAsync(
             _selector,
             ConvertOptions<FrameCheckOptions>(options));
 
-    public Task ClickAsync(LocatorClickOptions options = null)
+    public Task ClickAsync(LocatorClickOptions? options = null)
         => _frame.ClickAsync(
             _selector,
             ConvertOptions<FrameClickOptions>(options));
 
-    public Task DblClickAsync(LocatorDblClickOptions options = null)
+    public Task DblClickAsync(LocatorDblClickOptions? options = null)
         => _frame.DblClickAsync(_selector, ConvertOptions<FrameDblClickOptions>(options));
 
-    public Task DispatchEventAsync(string type, object eventInit = null, LocatorDispatchEventOptions options = null)
+    public Task DispatchEventAsync(string type, object? eventInit = null, LocatorDispatchEventOptions? options = null)
         => _frame.DispatchEventAsync(_selector, type, eventInit, ConvertOptions<FrameDispatchEventOptions>(options));
 
-    public Task DragToAsync(ILocator target, LocatorDragToOptions options = null)
+    public Task DragToAsync(ILocator target, LocatorDragToOptions? options = null)
         => _frame.DragAndDropAsync(_selector, ((Locator)target)._selector, ConvertOptions<FrameDragAndDropOptions>(options));
 
-    public Task<JsonElement?> EvaluateAsync(string expression, object arg = null, LocatorEvaluateOptions options = null)
+    public Task<JsonElement?> EvaluateAsync(string expression, object? arg = null, LocatorEvaluateOptions? options = null)
         => EvaluateAsync<JsonElement?>(expression, arg, options);
 
-    public Task<T> EvaluateAsync<T>(string expression, object arg = null, LocatorEvaluateOptions options = null)
+    public Task<T> EvaluateAsync<T>(string expression, object? arg = null, LocatorEvaluateOptions? options = null)
         => WithElementAsync(
             (h, _) => h.EvaluateAsync<T>(expression, arg),
             options?.Timeout);
 
-    public Task<T> EvaluateAllAsync<T>(string expression, object arg = null)
+    public Task<T> EvaluateAllAsync<T>(string expression, object? arg = null)
         => _frame.EvalOnSelectorAllAsync<T>(_selector, expression, arg);
 
-    public Task<IJSHandle> EvaluateHandleAsync(string expression, object arg = null, LocatorEvaluateHandleOptions options = null)
+    public Task<IJSHandle> EvaluateHandleAsync(string expression, object? arg = null, LocatorEvaluateHandleOptions? options = null)
         => WithElementAsync((e, _) => e.EvaluateHandleAsync(expression, arg), options?.Timeout);
 
-    public Task FillAsync(string value, LocatorFillOptions options = null)
+    public Task FillAsync(string value, LocatorFillOptions? options = null)
         => _frame.FillAsync(_selector, value, ConvertOptions<FrameFillOptions>(options));
 
-    public Task ClearAsync(LocatorClearOptions options = null)
+    public Task ClearAsync(LocatorClearOptions? options = null)
         => _frame.FillAsync(_selector, string.Empty, ConvertOptions<FrameFillOptions>(options));
 
     public Task HighlightAsync() => _frame.HighlightAsync(_selector);
 
-    ILocator ILocator.Locator(string selector, LocatorLocatorOptions options)
+    ILocator ILocator.Locator(string selector, LocatorLocatorOptions? options)
         => new Locator(_frame, $"{_selector} >> {selector}", options);
 
-    ILocator ILocator.Locator(ILocator locator, LocatorLocatorOptions options)
+    ILocator ILocator.Locator(ILocator locator, LocatorLocatorOptions? options)
     {
         var locatorImpl = (Locator)locator;
         if (locatorImpl._frame != _frame)
@@ -193,7 +193,7 @@ internal class Locator : ILocator
     IFrameLocator ILocator.FrameLocator(string selector) =>
         new FrameLocator(_frame, $"{_selector} >> {selector}");
 
-    public ILocator Filter(LocatorFilterOptions options = null) =>
+    public ILocator Filter(LocatorFilterOptions? options = null) =>
         new Locator(
             _frame,
             _selector,
@@ -210,10 +210,10 @@ internal class Locator : ILocator
             },
             options?.Visible);
 
-    public Task<IElementHandle> ElementHandleAsync(LocatorElementHandleOptions options = null)
+    public Task<IElementHandle> ElementHandleAsync(LocatorElementHandleOptions? options = null)
         => _frame.WaitForSelectorAsync(
             _selector,
-            ConvertOptions<FrameWaitForSelectorOptions>(options, new() { Strict = true, State = WaitForSelectorState.Attached }));
+            ConvertOptions<FrameWaitForSelectorOptions>(options, new() { Strict = true, State = WaitForSelectorState.Attached }))!;
 
     public Task<IReadOnlyList<IElementHandle>> ElementHandlesAsync()
         => _frame.QuerySelectorAllAsync(_selector);
@@ -222,29 +222,29 @@ internal class Locator : ILocator
 
     public ILocator Or(ILocator locator)
     {
-        if ((locator as Locator)._frame != this._frame)
+        if (((Locator)locator)._frame != this._frame)
         {
             throw new ArgumentException("Locators must belong to the same frame.");
         }
-        return new Locator(this._frame, this._selector + $" >> internal:or={JsonSerializer.Serialize((locator as Locator)._selector, _locatorSerializerOptions)}");
+        return new Locator(this._frame, this._selector + $" >> internal:or={JsonSerializer.Serialize(((Locator)locator)._selector, _locatorSerializerOptions)}");
     }
 
     public ILocator And(ILocator locator)
     {
-        if ((locator as Locator)._frame != this._frame)
+        if (((Locator)locator)._frame != this._frame)
         {
             throw new ArgumentException("Locators must belong to the same frame.");
         }
-        return new Locator(this._frame, this._selector + $" >> internal:and={JsonSerializer.Serialize((locator as Locator)._selector, _locatorSerializerOptions)}");
+        return new Locator(this._frame, this._selector + $" >> internal:and={JsonSerializer.Serialize(((Locator)locator)._selector, _locatorSerializerOptions)}");
     }
 
-    public Task FocusAsync(LocatorFocusOptions options = null)
+    public Task FocusAsync(LocatorFocusOptions? options = null)
         => _frame.FocusAsync(_selector, ConvertOptions<FrameFocusOptions>(options));
 
-    public Task BlurAsync(LocatorBlurOptions options = null)
+    public Task BlurAsync(LocatorBlurOptions? options = null)
         => _frame.SendMessageToServerAsync(
             "blur",
-            new Dictionary<string, object>
+            new Dictionary<string, object?>
             {
                 ["selector"] = _selector,
                 ["options"] = options,
@@ -253,99 +253,99 @@ internal class Locator : ILocator
     public Task<int> CountAsync()
         => _frame.QueryCountAsync(_selector);
 
-    public Task<string> GetAttributeAsync(string name, LocatorGetAttributeOptions options = null)
+    public Task<string?> GetAttributeAsync(string name, LocatorGetAttributeOptions? options = null)
         => _frame.GetAttributeAsync(_selector, name, ConvertOptions<FrameGetAttributeOptions>(options));
 
-    public Task HoverAsync(LocatorHoverOptions options = null)
+    public Task HoverAsync(LocatorHoverOptions? options = null)
         => _frame.HoverAsync(_selector, ConvertOptions<FrameHoverOptions>(options));
 
-    public Task<string> InnerHTMLAsync(LocatorInnerHTMLOptions options = null)
+    public Task<string> InnerHTMLAsync(LocatorInnerHTMLOptions? options = null)
         => _frame.InnerHTMLAsync(_selector, ConvertOptions<FrameInnerHTMLOptions>(options));
 
-    public Task<string> InnerTextAsync(LocatorInnerTextOptions options = null)
+    public Task<string> InnerTextAsync(LocatorInnerTextOptions? options = null)
         => _frame.InnerTextAsync(_selector, ConvertOptions<FrameInnerTextOptions>(options));
 
-    public Task<string> InputValueAsync(LocatorInputValueOptions options = null)
+    public Task<string> InputValueAsync(LocatorInputValueOptions? options = null)
         => _frame.InputValueAsync(_selector, ConvertOptions<FrameInputValueOptions>(options));
 
-    public Task<bool> IsCheckedAsync(LocatorIsCheckedOptions options = null)
+    public Task<bool> IsCheckedAsync(LocatorIsCheckedOptions? options = null)
         => _frame.IsCheckedAsync(_selector, ConvertOptions<FrameIsCheckedOptions>(options));
 
-    public Task<bool> IsDisabledAsync(LocatorIsDisabledOptions options = null)
+    public Task<bool> IsDisabledAsync(LocatorIsDisabledOptions? options = null)
         => _frame.IsDisabledAsync(_selector, ConvertOptions<FrameIsDisabledOptions>(options));
 
-    public Task<bool> IsEditableAsync(LocatorIsEditableOptions options = null)
+    public Task<bool> IsEditableAsync(LocatorIsEditableOptions? options = null)
         => _frame.IsEditableAsync(_selector, ConvertOptions<FrameIsEditableOptions>(options));
 
-    public Task<bool> IsEnabledAsync(LocatorIsEnabledOptions options = null)
+    public Task<bool> IsEnabledAsync(LocatorIsEnabledOptions? options = null)
         => _frame.IsEnabledAsync(_selector, ConvertOptions<FrameIsEnabledOptions>(options));
 
-    public Task<bool> IsHiddenAsync(LocatorIsHiddenOptions options = null)
+    public Task<bool> IsHiddenAsync(LocatorIsHiddenOptions? options = null)
         => _frame.IsHiddenAsync(_selector, ConvertOptions<FrameIsHiddenOptions>(options));
 
-    public Task<bool> IsVisibleAsync(LocatorIsVisibleOptions options = null)
+    public Task<bool> IsVisibleAsync(LocatorIsVisibleOptions? options = null)
         => _frame.IsVisibleAsync(_selector, ConvertOptions<FrameIsVisibleOptions>(options));
 
-    public Task PressAsync(string key, LocatorPressOptions options = null)
+    public Task PressAsync(string key, LocatorPressOptions? options = null)
         => _frame.PressAsync(_selector, key, ConvertOptions<FramePressOptions>(options));
 
-    public Task<byte[]> ScreenshotAsync(LocatorScreenshotOptions options = null)
+    public Task<byte[]> ScreenshotAsync(LocatorScreenshotOptions? options = null)
         => WithElementAsync((h, timeout) => h.ScreenshotAsync(ConvertOptions<ElementHandleScreenshotOptions>(options, new() { Timeout = timeout })), options?.Timeout);
 
-    public Task ScrollIntoViewIfNeededAsync(LocatorScrollIntoViewIfNeededOptions options = null)
+    public Task ScrollIntoViewIfNeededAsync(LocatorScrollIntoViewIfNeededOptions? options = null)
         => WithElementAsync((h, timeout) => h.ScrollIntoViewIfNeededAsync(ConvertOptions<ElementHandleScrollIntoViewIfNeededOptions>(options, new() { Timeout = timeout })), options?.Timeout);
 
-    public Task<IReadOnlyList<string>> SelectOptionAsync(string values, LocatorSelectOptionOptions options = null)
+    public Task<IReadOnlyList<string>> SelectOptionAsync(string values, LocatorSelectOptionOptions? options = null)
         => _frame.SelectOptionAsync(_selector, values, ConvertOptions<FrameSelectOptionOptions>(options));
 
-    public Task<IReadOnlyList<string>> SelectOptionAsync(IElementHandle values, LocatorSelectOptionOptions options = null)
+    public Task<IReadOnlyList<string>> SelectOptionAsync(IElementHandle values, LocatorSelectOptionOptions? options = null)
         => _frame.SelectOptionAsync(_selector, values, ConvertOptions<FrameSelectOptionOptions>(options));
 
-    public Task<IReadOnlyList<string>> SelectOptionAsync(IEnumerable<string> values, LocatorSelectOptionOptions options = null)
+    public Task<IReadOnlyList<string>> SelectOptionAsync(IEnumerable<string> values, LocatorSelectOptionOptions? options = null)
         => _frame.SelectOptionAsync(_selector, values, ConvertOptions<FrameSelectOptionOptions>(options));
 
-    public Task<IReadOnlyList<string>> SelectOptionAsync(SelectOptionValue values, LocatorSelectOptionOptions options = null)
+    public Task<IReadOnlyList<string>> SelectOptionAsync(SelectOptionValue values, LocatorSelectOptionOptions? options = null)
         => _frame.SelectOptionAsync(_selector, values, ConvertOptions<FrameSelectOptionOptions>(options));
 
-    public Task<IReadOnlyList<string>> SelectOptionAsync(IEnumerable<IElementHandle> values, LocatorSelectOptionOptions options = null)
+    public Task<IReadOnlyList<string>> SelectOptionAsync(IEnumerable<IElementHandle> values, LocatorSelectOptionOptions? options = null)
         => _frame.SelectOptionAsync(_selector, values, ConvertOptions<FrameSelectOptionOptions>(options));
 
-    public Task<IReadOnlyList<string>> SelectOptionAsync(IEnumerable<SelectOptionValue> values, LocatorSelectOptionOptions options = null)
+    public Task<IReadOnlyList<string>> SelectOptionAsync(IEnumerable<SelectOptionValue> values, LocatorSelectOptionOptions? options = null)
         => _frame.SelectOptionAsync(_selector, values, ConvertOptions<FrameSelectOptionOptions>(options));
 
-    public Task SelectTextAsync(LocatorSelectTextOptions options = null)
+    public Task SelectTextAsync(LocatorSelectTextOptions? options = null)
         => WithElementAsync((h, timeout) => h.SelectTextAsync(ConvertOptions<ElementHandleSelectTextOptions>(options, new() { Timeout = timeout })), options?.Timeout);
 
-    public Task SetCheckedAsync(bool @checked, LocatorSetCheckedOptions options = null)
+    public Task SetCheckedAsync(bool @checked, LocatorSetCheckedOptions? options = null)
         => @checked ?
             CheckAsync(ConvertOptions<LocatorCheckOptions>(options))
             : UncheckAsync(ConvertOptions<LocatorUncheckOptions>(options));
 
-    public Task SetInputFilesAsync(string files, LocatorSetInputFilesOptions options = null)
+    public Task SetInputFilesAsync(string files, LocatorSetInputFilesOptions? options = null)
         => _frame.SetInputFilesAsync(_selector, files, ConvertOptions<FrameSetInputFilesOptions>(options));
 
-    public Task SetInputFilesAsync(IEnumerable<string> files, LocatorSetInputFilesOptions options = null)
+    public Task SetInputFilesAsync(IEnumerable<string> files, LocatorSetInputFilesOptions? options = null)
         => _frame.SetInputFilesAsync(_selector, files, ConvertOptions<FrameSetInputFilesOptions>(options));
 
-    public Task SetInputFilesAsync(FilePayload files, LocatorSetInputFilesOptions options = null)
+    public Task SetInputFilesAsync(FilePayload files, LocatorSetInputFilesOptions? options = null)
         => _frame.SetInputFilesAsync(_selector, files, ConvertOptions<FrameSetInputFilesOptions>(options));
 
-    public Task SetInputFilesAsync(IEnumerable<FilePayload> files, LocatorSetInputFilesOptions options = null)
+    public Task SetInputFilesAsync(IEnumerable<FilePayload> files, LocatorSetInputFilesOptions? options = null)
         => _frame.SetInputFilesAsync(_selector, files, ConvertOptions<FrameSetInputFilesOptions>(options));
 
-    public Task TapAsync(LocatorTapOptions options = null)
+    public Task TapAsync(LocatorTapOptions? options = null)
         => _frame.TapAsync(_selector, ConvertOptions<FrameTapOptions>(options));
 
-    public Task<string> TextContentAsync(LocatorTextContentOptions options = null)
+    public Task<string?> TextContentAsync(LocatorTextContentOptions? options = null)
         => _frame.TextContentAsync(_selector, ConvertOptions<FrameTextContentOptions>(options));
 
-    public Task TypeAsync(string text, LocatorTypeOptions options = null)
+    public Task TypeAsync(string text, LocatorTypeOptions? options = null)
         => _frame.TypeAsync(_selector, text, ConvertOptions<FrameTypeOptions>(options));
 
-    public Task PressSequentiallyAsync(string text, LocatorPressSequentiallyOptions options = null)
+    public Task PressSequentiallyAsync(string text, LocatorPressSequentiallyOptions? options = null)
         => TypeAsync(text, ConvertOptions<LocatorTypeOptions>(options));
 
-    public Task UncheckAsync(LocatorUncheckOptions options = null)
+    public Task UncheckAsync(LocatorUncheckOptions? options = null)
         => _frame.UncheckAsync(_selector, ConvertOptions<FrameUncheckOptions>(options));
 
     public async Task<IReadOnlyList<string>> AllInnerTextsAsync()
@@ -354,9 +354,9 @@ internal class Locator : ILocator
     public async Task<IReadOnlyList<string>> AllTextContentsAsync()
         => await _frame.EvalOnSelectorAllAsync<string[]>(_selector, "ee => ee.map(e => e.textContent || '')").ConfigureAwait(false);
 
-    public Task WaitForAsync(LocatorWaitForOptions options = null)
+    public Task WaitForAsync(LocatorWaitForOptions? options = null)
     {
-        return _frame.SendMessageToServerAsync("waitForSelector", new Dictionary<string, object>
+        return _frame.SendMessageToServerAsync("waitForSelector", new Dictionary<string, object?>
         {
             ["selector"] = _selector,
             ["timeout"] = options?.Timeout,
@@ -366,7 +366,7 @@ internal class Locator : ILocator
         });
     }
 
-    internal Task<FrameExpectResult> ExpectAsync(string expression, FrameExpectOptions options = null)
+    internal Task<FrameExpectResult> ExpectAsync(string expression, FrameExpectOptions? options = null)
         => _frame.ExpectAsync(
             _selector,
             expression,
@@ -374,7 +374,7 @@ internal class Locator : ILocator
 
     public override string ToString() => "Locator@" + _selector;
 
-    private T ConvertOptions<T>(object source, T inheritFrom = default)
+    private T ConvertOptions<T>(object? source, T? inheritFrom = default)
         where T : class, new()
     {
         T target = inheritFrom ?? new();
@@ -403,7 +403,7 @@ internal class Locator : ILocator
 
         return this._frame.WrapApiCallAsync(async () =>
         {
-            var handle = await _frame.SendMessageToServerAsync<ElementHandle>("waitForSelector", new Dictionary<string, object>
+            var handle = await _frame.SendMessageToServerAsync<ElementHandle>("waitForSelector", new Dictionary<string, object?>
             {
                 ["selector"] = this._selector,
                 ["state"] = WaitForSelectorState.Attached,
@@ -437,25 +437,25 @@ internal class Locator : ILocator
             timeout).ConfigureAwait(false);
     }
 
-    public ILocator GetByAltText(string text, LocatorGetByAltTextOptions options = null)
+    public ILocator GetByAltText(string text, LocatorGetByAltTextOptions? options = null)
         => ((ILocator)this).Locator(GetByAltTextSelector(text, options?.Exact));
 
-    public ILocator GetByAltText(Regex text, LocatorGetByAltTextOptions options = null)
+    public ILocator GetByAltText(Regex text, LocatorGetByAltTextOptions? options = null)
         => ((ILocator)this).Locator(GetByAltTextSelector(text, options?.Exact));
 
-    public ILocator GetByLabel(string text, LocatorGetByLabelOptions options = null)
+    public ILocator GetByLabel(string text, LocatorGetByLabelOptions? options = null)
         => ((ILocator)this).Locator(GetByLabelSelector(text, options?.Exact));
 
-    public ILocator GetByLabel(Regex text, LocatorGetByLabelOptions options = null)
+    public ILocator GetByLabel(Regex text, LocatorGetByLabelOptions? options = null)
         => ((ILocator)this).Locator(GetByLabelSelector(text, options?.Exact));
 
-    public ILocator GetByPlaceholder(string text, LocatorGetByPlaceholderOptions options = null)
+    public ILocator GetByPlaceholder(string text, LocatorGetByPlaceholderOptions? options = null)
         => ((ILocator)this).Locator(GetByPlaceholderSelector(text, options?.Exact));
 
-    public ILocator GetByPlaceholder(Regex text, LocatorGetByPlaceholderOptions options = null)
+    public ILocator GetByPlaceholder(Regex text, LocatorGetByPlaceholderOptions? options = null)
         => ((ILocator)this).Locator(GetByPlaceholderSelector(text, options?.Exact));
 
-    public ILocator GetByRole(AriaRole role, LocatorGetByRoleOptions options = null)
+    public ILocator GetByRole(AriaRole role, LocatorGetByRoleOptions? options = null)
         => ((ILocator)this).Locator(GetByRoleSelector(role, new(options)));
 
     public ILocator GetByTestId(string testId)
@@ -464,16 +464,16 @@ internal class Locator : ILocator
     public ILocator GetByTestId(Regex testId)
         => ((ILocator)this).Locator(GetByTestIdSelector(TestIdAttributeName(), testId));
 
-    public ILocator GetByText(string text, LocatorGetByTextOptions options = null)
+    public ILocator GetByText(string text, LocatorGetByTextOptions? options = null)
         => ((ILocator)this).Locator(GetByTextSelector(text, options?.Exact));
 
-    public ILocator GetByText(Regex text, LocatorGetByTextOptions options = null)
+    public ILocator GetByText(Regex text, LocatorGetByTextOptions? options = null)
         => ((ILocator)this).Locator(GetByTextSelector(text, options?.Exact));
 
-    public ILocator GetByTitle(string text, LocatorGetByTitleOptions options = null)
+    public ILocator GetByTitle(string text, LocatorGetByTitleOptions? options = null)
         => ((ILocator)this).Locator(GetByTitleSelector(text, options?.Exact));
 
-    public ILocator GetByTitle(Regex text, LocatorGetByTitleOptions options = null)
+    public ILocator GetByTitle(Regex text, LocatorGetByTitleOptions? options = null)
         => ((ILocator)this).Locator(GetByTitleSelector(text, options?.Exact));
 
     internal static string TestIdAttributeName() => _testIdAttributeName;
@@ -548,7 +548,7 @@ internal class Locator : ILocator
         }
         if (options.Level != null)
         {
-            props.Add(new List<string> { "level", options.Level?.ToString(CultureInfo.InvariantCulture) });
+            props.Add(new List<string> { "level", options.Level.Value.ToString(CultureInfo.InvariantCulture) });
         }
         if (options.Name != null)
         {
@@ -562,7 +562,7 @@ internal class Locator : ILocator
         {
             props.Add(new List<string> { "name", EscapeForAttributeSelector(options.NameRegex, options?.Exact ?? false) });
         }
-        if (options.Pressed != null)
+        if (options?.Pressed != null)
         {
             props.Add(new List<string> { "pressed", options.Pressed.ToJson() });
         }
@@ -603,21 +603,21 @@ internal class Locator : ILocator
     async Task<IReadOnlyList<ILocator>> ILocator.AllAsync()
         => Enumerable.Range(0, await CountAsync().ConfigureAwait(false)).Select(Nth).ToArray();
 
-    public async Task<string> AriaSnapshotAsync(LocatorAriaSnapshotOptions options = null)
+    public async Task<string> AriaSnapshotAsync(LocatorAriaSnapshotOptions? options = null)
     {
-        var result = await _frame.SendMessageToServerAsync("ariaSnapshot", new Dictionary<string, object>
+        var result = await _frame.SendMessageToServerAsync("ariaSnapshot", new Dictionary<string, object?>
         {
             ["selector"] = _selector,
             ["timeout"] = options?.Timeout,
             ["ref"] = options?.Ref,
         }).ConfigureAwait(false);
-        return result.Value.GetProperty("snapshot").GetString();
+        return result.Value.GetProperty("snapshot").ToString();
     }
 }
 
 internal class ByRoleOptions
 {
-    public ByRoleOptions(FrameGetByRoleOptions clone)
+    public ByRoleOptions(FrameGetByRoleOptions? clone)
     {
         if (clone == null)
         {
@@ -636,7 +636,7 @@ internal class ByRoleOptions
         Exact = clone.Exact;
     }
 
-    public ByRoleOptions(FrameLocatorGetByRoleOptions clone)
+    public ByRoleOptions(FrameLocatorGetByRoleOptions? clone)
     {
         if (clone == null)
         {
@@ -655,7 +655,7 @@ internal class ByRoleOptions
         Exact = clone.Exact;
     }
 
-    public ByRoleOptions(PageGetByRoleOptions clone)
+    public ByRoleOptions(PageGetByRoleOptions? clone)
     {
         if (clone == null)
         {
@@ -674,7 +674,7 @@ internal class ByRoleOptions
         Exact = clone.Exact;
     }
 
-    public ByRoleOptions(LocatorGetByRoleOptions clone)
+    public ByRoleOptions(LocatorGetByRoleOptions? clone)
     {
         if (clone == null)
         {
@@ -703,11 +703,11 @@ internal class ByRoleOptions
 
     public int? Level { get; set; }
 
-    public string Name { get; set; }
+    public string? Name { get; set; }
 
-    public string NameString { get; set; }
+    public string? NameString { get; set; }
 
-    public Regex NameRegex { get; set; }
+    public Regex? NameRegex { get; set; }
 
     public bool? Pressed { get; set; }
 

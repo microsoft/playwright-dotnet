@@ -29,13 +29,13 @@ namespace Microsoft.Playwright.Transport.Protocol;
 internal class SecurityDetails
 {
     [JsonPropertyName("issuer")]
-    public string Issuer { get; set; }
+    public string Issuer { get; set; } = null!;
 
     [JsonPropertyName("protocol")]
-    public string Protocol { get; set; }
+    public string Protocol { get; set; } = null!;
 
     [JsonPropertyName("subjectName")]
-    public string SubjectName { get; set; }
+    public string SubjectName { get; set; } = null!;
 
     [JsonPropertyName("validFrom")]
     public int? ValidFrom { get; set; }

@@ -21,7 +21,6 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -31,9 +30,9 @@ namespace Microsoft.Playwright.Core;
 
 internal class WebSocketRouteHandler
 {
-    public URLMatch urlMatcher { get; set; }
+    public URLMatch urlMatcher { get; set; } = null!;
 
-    public Delegate Handler { get; set; }
+    public Delegate Handler { get; set; } = null!;
 
     public static List<Dictionary<string, object>> PrepareInterceptionPatterns(List<WebSocketRouteHandler> handlers)
     {
@@ -44,7 +43,7 @@ internal class WebSocketRouteHandler
             var pattern = new Dictionary<string, object>();
             patterns.Add(pattern);
 
-            if (!string.IsNullOrEmpty(handler.urlMatcher.glob))
+            if (!string.IsNullOrEmpty(handler.urlMatcher.glob) && handler.urlMatcher.glob != null)
             {
                 pattern["glob"] = handler.urlMatcher.glob;
             }

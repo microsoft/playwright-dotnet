@@ -85,7 +85,7 @@ internal class PlaywrightImpl : ChannelOwner, IPlaywright
             global::Microsoft.Playwright.BrowserType.Chromium => Chromium,
             global::Microsoft.Playwright.BrowserType.Firefox => Firefox,
             global::Microsoft.Playwright.BrowserType.Webkit => Webkit,
-            _ => null,
+            _ => throw new ArgumentException($"Unknown browser type: {browserType}"),
         };
 
     internal void SetSelectors(SelectorsAPI selectors)

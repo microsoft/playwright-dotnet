@@ -45,25 +45,25 @@ internal class FrameLocator : IFrameLocator
 
     public ILocator Owner => new Locator(_frame, _frameSelector);
 
-    ILocator IFrameLocator.GetByAltText(string text, FrameLocatorGetByAltTextOptions options)
+    ILocator IFrameLocator.GetByAltText(string text, FrameLocatorGetByAltTextOptions? options)
         => Locator(Core.Locator.GetByAltTextSelector(text, options?.Exact));
 
-    public ILocator GetByAltText(Regex text, FrameLocatorGetByAltTextOptions options = null)
+    public ILocator GetByAltText(Regex text, FrameLocatorGetByAltTextOptions? options = null)
         => Locator(Core.Locator.GetByAltTextSelector(text, options?.Exact));
 
-    public ILocator GetByLabel(string text, FrameLocatorGetByLabelOptions options = null)
+    public ILocator GetByLabel(string text, FrameLocatorGetByLabelOptions? options = null)
         => Locator(Core.Locator.GetByLabelSelector(text, options?.Exact));
 
-    public ILocator GetByLabel(Regex text, FrameLocatorGetByLabelOptions options = null)
+    public ILocator GetByLabel(Regex text, FrameLocatorGetByLabelOptions? options = null)
         => Locator(Core.Locator.GetByLabelSelector(text, options?.Exact));
 
-    public ILocator GetByPlaceholder(string text, FrameLocatorGetByPlaceholderOptions options = null)
+    public ILocator GetByPlaceholder(string text, FrameLocatorGetByPlaceholderOptions? options = null)
         => Locator(Core.Locator.GetByPlaceholderSelector(text, options?.Exact));
 
-    public ILocator GetByPlaceholder(Regex text, FrameLocatorGetByPlaceholderOptions options = null)
+    public ILocator GetByPlaceholder(Regex text, FrameLocatorGetByPlaceholderOptions? options = null)
         => Locator(Core.Locator.GetByPlaceholderSelector(text, options?.Exact));
 
-    public ILocator GetByRole(AriaRole role, FrameLocatorGetByRoleOptions options = null)
+    public ILocator GetByRole(AriaRole role, FrameLocatorGetByRoleOptions? options = null)
         => Locator(Core.Locator.GetByRoleSelector(role, new(options)));
 
     public ILocator GetByTestId(string testId)
@@ -72,21 +72,21 @@ internal class FrameLocator : IFrameLocator
     public ILocator GetByTestId(Regex testId)
         => Locator(Core.Locator.GetByTestIdSelector(Core.Locator.TestIdAttributeName(), testId));
 
-    public ILocator GetByText(string text, FrameLocatorGetByTextOptions options = null)
+    public ILocator GetByText(string text, FrameLocatorGetByTextOptions? options = null)
         => Locator(Core.Locator.GetByTextSelector(text, options?.Exact));
 
-    public ILocator GetByText(Regex text, FrameLocatorGetByTextOptions options = null)
+    public ILocator GetByText(Regex text, FrameLocatorGetByTextOptions? options = null)
         => Locator(Core.Locator.GetByTextSelector(text, options?.Exact));
 
-    public ILocator GetByTitle(string text, FrameLocatorGetByTitleOptions options = null)
+    public ILocator GetByTitle(string text, FrameLocatorGetByTitleOptions? options = null)
         => Locator(Core.Locator.GetByTitleSelector(text, options?.Exact));
 
-    public ILocator GetByTitle(Regex text, FrameLocatorGetByTitleOptions options = null)
+    public ILocator GetByTitle(Regex text, FrameLocatorGetByTitleOptions? options = null)
         => Locator(Core.Locator.GetByTitleSelector(text, options?.Exact));
 
     IFrameLocator IFrameLocator.FrameLocator(string selector) => new FrameLocator(_frame, $"{_frameSelector} >> internal:control=enter-frame  >> {selector}");
 
-    public ILocator Locator(string selector, FrameLocatorLocatorOptions options = null)
+    public ILocator Locator(string selector, FrameLocatorLocatorOptions? options = null)
         => new Locator(_frame, $"{_frameSelector} >> internal:control=enter-frame  >> {selector}", new()
         {
             Has = options?.Has,
@@ -99,7 +99,7 @@ internal class FrameLocator : IFrameLocator
             HasNotTextString = options?.HasNotTextString,
         });
 
-    public ILocator Locator(ILocator locator, FrameLocatorLocatorOptions options = null)
+    public ILocator Locator(ILocator locator, FrameLocatorLocatorOptions? options = null)
     {
         var locatorImpl = (Locator)locator;
         if (locatorImpl._frame != _frame)

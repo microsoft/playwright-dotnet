@@ -24,8 +24,6 @@
 
 using System.Runtime.Serialization;
 
-#nullable enable
-
 namespace Microsoft.Playwright;
 
 public enum ScreenshotAnimations
@@ -35,5 +33,3 @@ public enum ScreenshotAnimations
     [EnumMember(Value = "allow")]
     Allow,
 }
-
-#nullable disable

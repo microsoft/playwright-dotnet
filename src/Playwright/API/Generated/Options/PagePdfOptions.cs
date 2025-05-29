@@ -24,8 +24,6 @@
 
 using System.Text.Json.Serialization;
 
-#nullable enable
-
 namespace Microsoft.Playwright;
 
 public class PagePdfOptions
@@ -156,5 +154,3 @@ public class PagePdfOptions
     [JsonPropertyName("width")]
     public string? Width { get; set; }
 }
-
-#nullable disable

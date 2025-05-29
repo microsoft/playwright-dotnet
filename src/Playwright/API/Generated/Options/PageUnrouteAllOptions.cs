@@ -24,8 +24,6 @@
 
 using System.Text.Json.Serialization;
 
-#nullable enable
-
 namespace Microsoft.Playwright;
 
 public class PageUnrouteAllOptions
@@ -62,5 +60,3 @@ public class PageUnrouteAllOptions
     [JsonPropertyName("behavior")]
     public UnrouteBehavior? Behavior { get; set; }
 }
-
-#nullable disable

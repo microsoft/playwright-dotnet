@@ -29,8 +29,8 @@ namespace Microsoft.Playwright.Transport.Protocol;
 internal class AndroidDeviceInitializer : EventTargetInitializer
 {
     [JsonPropertyName("model")]
-    public string Model { get; set; }
+    public string Model { get; set; } = null!;
 
     [JsonPropertyName("serial")]
-    public string Serial { get; set; }
+    public string Serial { get; set; } = null!;
 }

@@ -25,8 +25,6 @@
 using System.Collections.Generic;
 using System.Text.Json.Serialization;
 
-#nullable enable
-
 namespace Microsoft.Playwright;
 
 public class APIRequestNewContextOptions
@@ -188,5 +186,3 @@ public class APIRequestNewContextOptions
     [JsonPropertyName("userAgent")]
     public string? UserAgent { get; set; }
 }
-
-#nullable disable

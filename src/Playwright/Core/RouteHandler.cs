@@ -36,9 +36,9 @@ internal class RouteHandler
 
     private bool _ignoreException;
 
-    public URLMatch urlMatcher { get; set; }
+    public URLMatch urlMatcher { get; set; } = null!;
 
-    public Delegate Handler { get; set; }
+    public Delegate Handler { get; set; } = null!;
 
     public int? Times { get; internal set; }
 
@@ -53,7 +53,7 @@ internal class RouteHandler
             var pattern = new Dictionary<string, object>();
             patterns.Add(pattern);
 
-            if (!string.IsNullOrEmpty(handler.urlMatcher.glob))
+            if (!string.IsNullOrEmpty(handler.urlMatcher.glob) && handler.urlMatcher.glob != null)
             {
                 pattern["glob"] = handler.urlMatcher.glob;
             }
@@ -158,6 +158,6 @@ internal class RouteHandler
     {
         public TaskCompletionSource<bool> Complete { get; set; } = new TaskCompletionSource<bool>();
 
-        public Route Route { get; set; }
+        public Route Route { get; set; } = null!;
     }
 }

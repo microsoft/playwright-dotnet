@@ -21,15 +21,12 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.Json;
 using System.Threading.Tasks;
 using Microsoft.Playwright.Helpers;
-
-#nullable enable
 
 namespace Microsoft.Playwright.Core;
 
@@ -67,7 +64,7 @@ internal class APIResponse : IAPIResponse
             return await _context.WrapApiCallAsync(
                 async () =>
                 {
-                    var response = await _context.SendMessageToServerAsync("fetchResponseBody", new Dictionary<string, object> { ["fetchUid"] = FetchUid() }).ConfigureAwait(false);
+                    var response = await _context.SendMessageToServerAsync("fetchResponseBody", new Dictionary<string, object?> { ["fetchUid"] = FetchUid() }).ConfigureAwait(false);
                     if (response?.TryGetProperty("binary", out var binary) == true)
                     {
                         return Convert.FromBase64String(binary.ToString());
@@ -96,11 +93,11 @@ internal class APIResponse : IAPIResponse
 
     internal async Task<string[]> FetchLogAsync()
     {
-        var response = await _context.SendMessageToServerAsync("fetchLog", new Dictionary<string, object> { ["fetchUid"] = FetchUid() }).ConfigureAwait(false);
+        var response = await _context.SendMessageToServerAsync("fetchLog", new Dictionary<string, object?> { ["fetchUid"] = FetchUid() }).ConfigureAwait(false);
         return response.Value.GetProperty("log").ToObject<string[]>();
     }
 
-    public ValueTask DisposeAsync() => new(_context.SendMessageToServerAsync("disposeAPIResponse", new Dictionary<string, object> { ["fetchUid"] = FetchUid() }));
+    public ValueTask DisposeAsync() => new(_context.SendMessageToServerAsync("disposeAPIResponse", new Dictionary<string, object?> { ["fetchUid"] = FetchUid() }));
 
     public override string ToString()
     {

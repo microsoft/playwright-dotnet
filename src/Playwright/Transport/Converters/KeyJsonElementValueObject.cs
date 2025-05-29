@@ -28,7 +28,7 @@ namespace Microsoft.Playwright.Transport.Converters;
 
 internal class KeyJsonElementValueObject
 {
-    public string K { get; set; }
+    public string K { get; set; } = null!;
 
     public JsonElement V { get; set; }
 }

@@ -24,8 +24,6 @@
 
 using System.Threading.Tasks;
 
-#nullable enable
-
 namespace Microsoft.Playwright;
 
 /// <summary>
@@ -245,5 +243,3 @@ public partial interface IKeyboard
     /// </param>
     Task UpAsync(string key);
 }
-
-#nullable disable

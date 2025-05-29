@@ -25,8 +25,6 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-#nullable enable
-
 namespace Microsoft.Playwright;
 
 /// <summary>
@@ -101,5 +99,3 @@ public partial interface IFileChooser
     /// <param name="options">Call options</param>
     Task SetFilesAsync(IEnumerable<FilePayload> files, FileChooserSetFilesOptions? options = default);
 }
-
-#nullable disable

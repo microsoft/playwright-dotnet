@@ -403,7 +403,7 @@ public class BrowserContextRouteTests : BrowserTestEx
         {
             intercepted.Add("first");
             route.ContinueAsync();
-        };
+        }
         await context.RouteAsync("**/*", handler, new() { Times = 1 });
         await context.RouteAsync("**/*", async (route) =>
         {

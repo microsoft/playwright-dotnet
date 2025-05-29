@@ -21,20 +21,19 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-
 using Microsoft.Playwright.Core;
 
 namespace Microsoft.Playwright.Transport.Protocol;
 
 internal class SetInputFilesFiles
 {
-    public InputFilesList[] Payloads { get; set; }
+    public InputFilesList[]? Payloads { get; set; }
 
-    public string[] LocalPaths { get; set; }
+    public string[]? LocalPaths { get; set; }
 
-    public string LocalDirectory { get; set; }
+    public string? LocalDirectory { get; set; }
 
-    public WritableStream[] Streams { get; set; }
+    public WritableStream[]? Streams { get; set; }
 
-    public WritableStream DirectoryStream { get; set; }
+    public WritableStream? DirectoryStream { get; set; }
 }

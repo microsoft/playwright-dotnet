@@ -49,8 +49,8 @@ internal class Page : ChannelOwner, IPage
     private readonly Dictionary<int, LocatorHandler> _locatorHandlers = new();
     private readonly List<WebSocketRouteHandler> _webSocketRoutes = new();
     private List<RouteHandler> _routes = new();
-    private Video _video;
-    private string _closeReason;
+    private Video? _video;
+    private string? _closeReason;
 
     internal Page(ChannelOwner parent, string guid, PageInitializer initializer) : base(parent, guid)
     {
@@ -78,85 +78,85 @@ internal class Page : ChannelOwner, IPage
         Crash += (_, _) => ClosedOrCrashedTcs.TrySetResult(true);
     }
 
-    private event EventHandler<IRequest> _requestImpl;
+    private event EventHandler<IRequest>? _requestImpl;
 
-    private event EventHandler<IResponse> _responseImpl;
+    private event EventHandler<IResponse>? _responseImpl;
 
-    private event EventHandler<IRequest> _requestFinishedImpl;
+    private event EventHandler<IRequest>? _requestFinishedImpl;
 
-    private event EventHandler<IRequest> _requestFailedImpl;
+    private event EventHandler<IRequest>? _requestFailedImpl;
 
-    private event EventHandler<IFileChooser> _fileChooserImpl;
+    private event EventHandler<IFileChooser>? _fileChooserImpl;
 
-    private event EventHandler<IConsoleMessage> _consoleImpl;
+    private event EventHandler<IConsoleMessage>? _consoleImpl;
 
-    private event EventHandler<IDialog> _dialogImpl;
+    private event EventHandler<IDialog>? _dialogImpl;
 
-    public event EventHandler<IConsoleMessage> Console
+    public event EventHandler<IConsoleMessage>? Console
     {
         add => this._consoleImpl = UpdateEventHandler("console", this._consoleImpl, value, true);
         remove => this._consoleImpl = UpdateEventHandler("console", this._consoleImpl, value, false);
     }
 
-    public event EventHandler<IPage> Popup;
+    public event EventHandler<IPage>? Popup;
 
-    public event EventHandler<IRequest> Request
+    public event EventHandler<IRequest>? Request
     {
         add => this._requestImpl = UpdateEventHandler("request", this._requestImpl, value, true);
         remove => this._requestImpl = UpdateEventHandler("request", this._requestImpl, value, false);
     }
 
-    public event EventHandler<IWebSocket> WebSocket;
+    public event EventHandler<IWebSocket>? WebSocket;
 
-    public event EventHandler<IResponse> Response
+    public event EventHandler<IResponse>? Response
     {
         add => this._responseImpl = UpdateEventHandler("response", this._responseImpl, value, true);
         remove => this._responseImpl = UpdateEventHandler("response", this._responseImpl, value, false);
     }
 
-    public event EventHandler<IRequest> RequestFinished
+    public event EventHandler<IRequest>? RequestFinished
     {
         add => this._requestFinishedImpl = UpdateEventHandler("requestFinished", this._requestFinishedImpl, value, true);
         remove => this._requestFinishedImpl = UpdateEventHandler("requestFinished", this._requestFinishedImpl, value, false);
     }
 
-    public event EventHandler<IRequest> RequestFailed
+    public event EventHandler<IRequest>? RequestFailed
     {
         add => this._requestFailedImpl = UpdateEventHandler("requestFailed", this._requestFailedImpl, value, true);
         remove => this._requestFailedImpl = UpdateEventHandler("requestFailed", this._requestFailedImpl, value, false);
     }
 
-    public event EventHandler<IDialog> Dialog
+    public event EventHandler<IDialog>? Dialog
     {
         add => this._dialogImpl = UpdateEventHandler("dialog", this._dialogImpl, value, true);
         remove => this._dialogImpl = UpdateEventHandler("dialog", this._dialogImpl, value, false);
     }
 
-    public event EventHandler<IFrame> FrameAttached;
+    public event EventHandler<IFrame>? FrameAttached;
 
-    public event EventHandler<IFrame> FrameDetached;
+    public event EventHandler<IFrame>? FrameDetached;
 
-    public event EventHandler<IFrame> FrameNavigated;
+    public event EventHandler<IFrame>? FrameNavigated;
 
-    public event EventHandler<IFileChooser> FileChooser
+    public event EventHandler<IFileChooser>? FileChooser
     {
         add => this._fileChooserImpl = UpdateEventHandler("fileChooser", this._fileChooserImpl, value, true);
         remove => this._fileChooserImpl = UpdateEventHandler("fileChooser", this._fileChooserImpl, value, false);
     }
 
-    public event EventHandler<IPage> Load;
+    public event EventHandler<IPage>? Load;
 
-    public event EventHandler<IPage> DOMContentLoaded;
+    public event EventHandler<IPage>? DOMContentLoaded;
 
-    public event EventHandler<IPage> Close;
+    public event EventHandler<IPage>? Close;
 
-    public event EventHandler<IPage> Crash;
+    public event EventHandler<IPage>? Crash;
 
-    public event EventHandler<string> PageError;
+    public event EventHandler<string>? PageError;
 
-    public event EventHandler<IWorker> Worker;
+    public event EventHandler<IWorker>? Worker;
 
-    public event EventHandler<IDownload> Download;
+    public event EventHandler<IDownload>? Download;
 
     public bool IsClosed { get; private set; }
 
@@ -170,7 +170,7 @@ internal class Page : ChannelOwner, IPage
 
     public BrowserContext Context { get; set; }
 
-    public PageViewportSizeResult ViewportSize { get; private set; }
+    public PageViewportSizeResult? ViewportSize { get; private set; }
 
     public IAccessibility Accessibility
     {
@@ -194,7 +194,7 @@ internal class Page : ChannelOwner, IPage
 
     public IReadOnlyList<IWorker> Workers => _workers;
 
-    public IVideo Video
+    public IVideo? Video
     {
         get
         {
@@ -208,7 +208,7 @@ internal class Page : ChannelOwner, IPage
         set => _video = value as Video;
     }
 
-    internal BrowserContext OwnedContext { get; set; }
+    internal BrowserContext? OwnedContext { get; set; }
 
     internal Dictionary<string, Delegate> Bindings { get; } = new();
 
@@ -218,7 +218,7 @@ internal class Page : ChannelOwner, IPage
 
     public IAPIRequestContext APIRequest { get; }
 
-    internal override void OnMessage(string method, JsonElement? serverParams)
+    internal override void OnMessage(string method, JsonElement serverParams)
     {
         switch (method)
         {
@@ -231,42 +231,42 @@ internal class Page : ChannelOwner, IPage
             case "bindingCall":
                 Channel_BindingCall(
                     this,
-                    serverParams?.GetProperty("binding").ToObject<BindingCall>(_connection.DefaultJsonSerializerOptions));
+                    serverParams.GetProperty("binding").ToObject<BindingCall>(_connection.DefaultJsonSerializerOptions));
                 break;
             case "route":
-                var route = serverParams?.GetProperty("route").ToObject<Route>(_connection.DefaultJsonSerializerOptions);
+                var route = serverParams.GetProperty("route").ToObject<Route>(_connection.DefaultJsonSerializerOptions);
                 Channel_Route(this, route);
                 break;
             case "webSocketRoute":
-                var webSocketRoute = serverParams?.GetProperty("webSocketRoute").ToObject<WebSocketRoute>(_connection.DefaultJsonSerializerOptions);
+                var webSocketRoute = serverParams.GetProperty("webSocketRoute").ToObject<WebSocketRoute>(_connection.DefaultJsonSerializerOptions);
                 _ = OnWebSocketRouteAsync(webSocketRoute).ConfigureAwait(false);
                 break;
             case "popup":
-                Popup?.Invoke(this, serverParams?.GetProperty("page").ToObject<Page>(_connection.DefaultJsonSerializerOptions));
+                Popup?.Invoke(this, serverParams.GetProperty("page").ToObject<Page>(_connection.DefaultJsonSerializerOptions));
                 break;
             case "fileChooser":
-                _fileChooserImpl?.Invoke(this, new FileChooser(this, serverParams.Value.GetProperty("element").ToObject<ElementHandle>(_connection.DefaultJsonSerializerOptions), serverParams.Value.GetProperty("isMultiple").ToObject<bool>(_connection.DefaultJsonSerializerOptions)));
+                _fileChooserImpl?.Invoke(this, new FileChooser(this, serverParams.GetProperty("element").ToObject<ElementHandle>(_connection.DefaultJsonSerializerOptions), serverParams.GetProperty("isMultiple").ToObject<bool>(_connection.DefaultJsonSerializerOptions)));
                 break;
             case "frameAttached":
-                Channel_FrameAttached(this, serverParams?.GetProperty("frame").ToObject<Frame>(_connection.DefaultJsonSerializerOptions));
+                Channel_FrameAttached(this, serverParams.GetProperty("frame").ToObject<Frame>(_connection.DefaultJsonSerializerOptions));
                 break;
             case "frameDetached":
-                Channel_FrameDetached(this, serverParams?.GetProperty("frame").ToObject<Frame>(_connection.DefaultJsonSerializerOptions));
+                Channel_FrameDetached(this, serverParams.GetProperty("frame").ToObject<Frame>(_connection.DefaultJsonSerializerOptions));
                 break;
             case "locatorHandlerTriggered":
-                _ = Channel_LocatorHandlerTriggeredAsync(serverParams.Value.GetProperty("uid").GetInt32());
+                _ = Channel_LocatorHandlerTriggeredAsync(serverParams.GetProperty("uid").GetInt32());
                 break;
             case "webSocket":
-                WebSocket?.Invoke(this, serverParams?.GetProperty("webSocket").ToObject<WebSocket>(_connection.DefaultJsonSerializerOptions));
+                WebSocket?.Invoke(this, serverParams.GetProperty("webSocket").ToObject<WebSocket>(_connection.DefaultJsonSerializerOptions));
                 break;
             case "download":
-                Download?.Invoke(this, new Download(this, serverParams.Value.GetProperty("url").ToObject<string>(_connection.DefaultJsonSerializerOptions), serverParams.Value.GetProperty("suggestedFilename").ToObject<string>(_connection.DefaultJsonSerializerOptions), serverParams.Value.GetProperty("artifact").ToObject<Artifact>(_connection.DefaultJsonSerializerOptions)));
+                Download?.Invoke(this, new Download(this, serverParams.GetProperty("url").ToObject<string>(_connection.DefaultJsonSerializerOptions), serverParams.GetProperty("suggestedFilename").ToObject<string>(_connection.DefaultJsonSerializerOptions), serverParams.GetProperty("artifact").ToObject<Artifact>(_connection.DefaultJsonSerializerOptions)));
                 break;
             case "video":
-                ForceVideo().ArtifactReady(serverParams?.GetProperty("artifact").ToObject<Artifact>(_connection.DefaultJsonSerializerOptions));
+                ForceVideo().ArtifactReady(serverParams.GetProperty("artifact").ToObject<Artifact>(_connection.DefaultJsonSerializerOptions));
                 break;
             case "worker":
-                var worker = serverParams?.GetProperty("worker").ToObject<Worker>(_connection.DefaultJsonSerializerOptions);
+                var worker = serverParams.GetProperty("worker").ToObject<Worker>(_connection.DefaultJsonSerializerOptions);
                 _workers.Add(worker);
                 worker.Page = this;
                 Worker?.Invoke(this, worker);
@@ -296,15 +296,15 @@ internal class Page : ChannelOwner, IPage
     public Task BringToFrontAsync() => SendMessageToServerAsync("bringToFront");
 
     [MethodImpl(MethodImplOptions.NoInlining)]
-    public Task<IPage> OpenerAsync() => Task.FromResult<IPage>(Opener?.IsClosed == false ? Opener : null);
+    public Task<IPage?> OpenerAsync() => Task.FromResult<IPage?>(Opener?.IsClosed == false ? Opener : null);
 
     [MethodImpl(MethodImplOptions.NoInlining)]
     public Task RequestGCAsync() => SendMessageToServerAsync("requestGC");
 
     [MethodImpl(MethodImplOptions.NoInlining)]
-    public Task EmulateMediaAsync(PageEmulateMediaOptions options = default)
+    public Task EmulateMediaAsync(PageEmulateMediaOptions? options = default)
     {
-        var args = new Dictionary<string, object>
+        var args = new Dictionary<string, object?>
         {
             ["media"] = options?.Media == Media.Null ? "no-override" : options?.Media,
             ["colorScheme"] = options?.ColorScheme == ColorScheme.Null ? "no-override" : options?.ColorScheme,
@@ -316,43 +316,43 @@ internal class Page : ChannelOwner, IPage
     }
 
     [MethodImpl(MethodImplOptions.NoInlining)]
-    public Task<IResponse> GotoAsync(string url, PageGotoOptions options = default)
+    public Task<IResponse?> GotoAsync(string url, PageGotoOptions? options = default)
         => MainFrame.GotoAsync(url, new() { WaitUntil = options?.WaitUntil, Timeout = options?.Timeout, Referer = options?.Referer });
 
     [MethodImpl(MethodImplOptions.NoInlining)]
-    public Task WaitForURLAsync(string url, PageWaitForURLOptions options = default)
+    public Task WaitForURLAsync(string url, PageWaitForURLOptions? options = default)
         => MainFrame.WaitForURLAsync(url, new() { WaitUntil = options?.WaitUntil, Timeout = options?.Timeout });
 
     [MethodImpl(MethodImplOptions.NoInlining)]
-    public Task WaitForURLAsync(Regex url, PageWaitForURLOptions options = default)
+    public Task WaitForURLAsync(Regex url, PageWaitForURLOptions? options = default)
         => MainFrame.WaitForURLAsync(url, new() { WaitUntil = options?.WaitUntil, Timeout = options?.Timeout });
 
     [MethodImpl(MethodImplOptions.NoInlining)]
-    public Task WaitForURLAsync(Func<string, bool> url, PageWaitForURLOptions options = default)
+    public Task WaitForURLAsync(Func<string, bool> url, PageWaitForURLOptions? options = default)
         => MainFrame.WaitForURLAsync(url, new() { WaitUntil = options?.WaitUntil, Timeout = options?.Timeout });
 
     [MethodImpl(MethodImplOptions.NoInlining)]
-    public Task<IConsoleMessage> WaitForConsoleMessageAsync(PageWaitForConsoleMessageOptions options = default)
+    public Task<IConsoleMessage> WaitForConsoleMessageAsync(PageWaitForConsoleMessageOptions? options = default)
         => InnerWaitForEventAsync(PageEvent.Console, null, options?.Predicate, options?.Timeout);
 
     [MethodImpl(MethodImplOptions.NoInlining)]
-    public Task<IFileChooser> WaitForFileChooserAsync(PageWaitForFileChooserOptions options = default)
+    public Task<IFileChooser> WaitForFileChooserAsync(PageWaitForFileChooserOptions? options = default)
         => InnerWaitForEventAsync(PageEvent.FileChooser, null, options?.Predicate, options?.Timeout);
 
     [MethodImpl(MethodImplOptions.NoInlining)]
-    public Task<IPage> WaitForPopupAsync(PageWaitForPopupOptions options = default)
+    public Task<IPage> WaitForPopupAsync(PageWaitForPopupOptions? options = default)
         => InnerWaitForEventAsync(PageEvent.Popup, null, options?.Predicate, options?.Timeout);
 
     [MethodImpl(MethodImplOptions.NoInlining)]
-    public Task<IWebSocket> WaitForWebSocketAsync(PageWaitForWebSocketOptions options = default)
+    public Task<IWebSocket> WaitForWebSocketAsync(PageWaitForWebSocketOptions? options = default)
         => InnerWaitForEventAsync(PageEvent.WebSocket, null, options?.Predicate, options?.Timeout);
 
     [MethodImpl(MethodImplOptions.NoInlining)]
-    public Task<IWorker> WaitForWorkerAsync(PageWaitForWorkerOptions options = default)
+    public Task<IWorker> WaitForWorkerAsync(PageWaitForWorkerOptions? options = default)
         => InnerWaitForEventAsync(PageEvent.Worker, null, options?.Predicate, options?.Timeout);
 
     [MethodImpl(MethodImplOptions.NoInlining)]
-    public Task<IResponse> WaitForNavigationAsync(PageWaitForNavigationOptions options = default)
+    public Task<IResponse?> WaitForNavigationAsync(PageWaitForNavigationOptions? options = default)
         => MainFrame.WaitForNavigationAsync(new()
         {
             Url = options?.Url,
@@ -364,7 +364,7 @@ internal class Page : ChannelOwner, IPage
         });
 
     [MethodImpl(MethodImplOptions.NoInlining)]
-    public Task<IResponse> RunAndWaitForNavigationAsync(Func<Task> action, PageRunAndWaitForNavigationOptions options = default)
+    public Task<IResponse?> RunAndWaitForNavigationAsync(Func<Task> action, PageRunAndWaitForNavigationOptions? options = default)
         => MainFrame.RunAndWaitForNavigationAsync(action, new()
         {
             Url = options?.Url,
@@ -376,91 +376,91 @@ internal class Page : ChannelOwner, IPage
         });
 
     [MethodImpl(MethodImplOptions.NoInlining)]
-    public Task<IRequest> WaitForRequestAsync(string urlOrPredicate, PageWaitForRequestOptions options = default)
+    public Task<IRequest> WaitForRequestAsync(string urlOrPredicate, PageWaitForRequestOptions? options = default)
         => InnerWaitForEventAsync(PageEvent.Request, null, e => Context.UrlMatches(e.Url, urlOrPredicate), options?.Timeout);
 
     [MethodImpl(MethodImplOptions.NoInlining)]
-    public Task<IRequest> WaitForRequestAsync(Regex urlOrPredicate, PageWaitForRequestOptions options = default)
+    public Task<IRequest> WaitForRequestAsync(Regex urlOrPredicate, PageWaitForRequestOptions? options = default)
         => InnerWaitForEventAsync(PageEvent.Request, null, e => urlOrPredicate.IsMatch(e.Url), options?.Timeout);
 
     [MethodImpl(MethodImplOptions.NoInlining)]
-    public Task<IRequest> WaitForRequestAsync(Func<IRequest, bool> urlOrPredicate, PageWaitForRequestOptions options = default)
+    public Task<IRequest> WaitForRequestAsync(Func<IRequest, bool> urlOrPredicate, PageWaitForRequestOptions? options = default)
         => InnerWaitForEventAsync(PageEvent.Request, null, e => urlOrPredicate(e), options?.Timeout);
 
     [MethodImpl(MethodImplOptions.NoInlining)]
-    public Task<IRequest> WaitForRequestFinishedAsync(PageWaitForRequestFinishedOptions options = default)
+    public Task<IRequest> WaitForRequestFinishedAsync(PageWaitForRequestFinishedOptions? options = default)
         => InnerWaitForEventAsync(PageEvent.RequestFinished, null, options?.Predicate, options?.Timeout);
 
     [MethodImpl(MethodImplOptions.NoInlining)]
-    public Task<IResponse> WaitForResponseAsync(string urlOrPredicate, PageWaitForResponseOptions options = default)
+    public Task<IResponse> WaitForResponseAsync(string urlOrPredicate, PageWaitForResponseOptions? options = default)
         => InnerWaitForEventAsync(PageEvent.Response, null, e => Context.UrlMatches(e.Url, urlOrPredicate), options?.Timeout);
 
     [MethodImpl(MethodImplOptions.NoInlining)]
-    public Task<IResponse> WaitForResponseAsync(Regex urlOrPredicate, PageWaitForResponseOptions options = default)
+    public Task<IResponse> WaitForResponseAsync(Regex urlOrPredicate, PageWaitForResponseOptions? options = default)
         => InnerWaitForEventAsync(PageEvent.Response, null, e => urlOrPredicate.IsMatch(e.Url), options?.Timeout);
 
     [MethodImpl(MethodImplOptions.NoInlining)]
-    public Task<IResponse> WaitForResponseAsync(Func<IResponse, bool> urlOrPredicate, PageWaitForResponseOptions options = default)
+    public Task<IResponse> WaitForResponseAsync(Func<IResponse, bool> urlOrPredicate, PageWaitForResponseOptions? options = default)
         => InnerWaitForEventAsync(PageEvent.Response, null, e => urlOrPredicate(e), options?.Timeout);
 
     [MethodImpl(MethodImplOptions.NoInlining)]
-    public Task<IConsoleMessage> RunAndWaitForConsoleMessageAsync(Func<Task> action, PageRunAndWaitForConsoleMessageOptions options = default)
+    public Task<IConsoleMessage> RunAndWaitForConsoleMessageAsync(Func<Task> action, PageRunAndWaitForConsoleMessageOptions? options = default)
         => InnerWaitForEventAsync(PageEvent.Console, action, options?.Predicate, options?.Timeout);
 
     [MethodImpl(MethodImplOptions.NoInlining)]
-    public Task<IDownload> WaitForDownloadAsync(PageWaitForDownloadOptions options = default)
+    public Task<IDownload> WaitForDownloadAsync(PageWaitForDownloadOptions? options = default)
         => InnerWaitForEventAsync(PageEvent.Download, null, options?.Predicate, options?.Timeout);
 
     [MethodImpl(MethodImplOptions.NoInlining)]
-    public Task<IDownload> RunAndWaitForDownloadAsync(Func<Task> action, PageRunAndWaitForDownloadOptions options = default)
+    public Task<IDownload> RunAndWaitForDownloadAsync(Func<Task> action, PageRunAndWaitForDownloadOptions? options = default)
         => InnerWaitForEventAsync(PageEvent.Download, action, options?.Predicate, options?.Timeout);
 
     [MethodImpl(MethodImplOptions.NoInlining)]
-    public Task<IFileChooser> RunAndWaitForFileChooserAsync(Func<Task> action, PageRunAndWaitForFileChooserOptions options = default)
+    public Task<IFileChooser> RunAndWaitForFileChooserAsync(Func<Task> action, PageRunAndWaitForFileChooserOptions? options = default)
         => InnerWaitForEventAsync(PageEvent.FileChooser, action, options?.Predicate, options?.Timeout);
 
     [MethodImpl(MethodImplOptions.NoInlining)]
-    public Task<IPage> RunAndWaitForPopupAsync(Func<Task> action, PageRunAndWaitForPopupOptions options = default)
+    public Task<IPage> RunAndWaitForPopupAsync(Func<Task> action, PageRunAndWaitForPopupOptions? options = default)
         => InnerWaitForEventAsync(PageEvent.Popup, action, options?.Predicate, options?.Timeout);
 
     [MethodImpl(MethodImplOptions.NoInlining)]
-    public Task<IRequest> RunAndWaitForRequestFinishedAsync(Func<Task> action, PageRunAndWaitForRequestFinishedOptions options = default)
+    public Task<IRequest> RunAndWaitForRequestFinishedAsync(Func<Task> action, PageRunAndWaitForRequestFinishedOptions? options = default)
         => InnerWaitForEventAsync(PageEvent.RequestFinished, action, options?.Predicate, options?.Timeout);
 
     [MethodImpl(MethodImplOptions.NoInlining)]
-    public Task<IWebSocket> RunAndWaitForWebSocketAsync(Func<Task> action, PageRunAndWaitForWebSocketOptions options = default)
+    public Task<IWebSocket> RunAndWaitForWebSocketAsync(Func<Task> action, PageRunAndWaitForWebSocketOptions? options = default)
         => InnerWaitForEventAsync(PageEvent.WebSocket, action, options?.Predicate, options?.Timeout);
 
     [MethodImpl(MethodImplOptions.NoInlining)]
-    public Task<IWorker> RunAndWaitForWorkerAsync(Func<Task> action, PageRunAndWaitForWorkerOptions options = default)
+    public Task<IWorker> RunAndWaitForWorkerAsync(Func<Task> action, PageRunAndWaitForWorkerOptions? options = default)
         => InnerWaitForEventAsync(PageEvent.Worker, action, options?.Predicate, options?.Timeout);
 
     [MethodImpl(MethodImplOptions.NoInlining)]
-    public Task<IRequest> RunAndWaitForRequestAsync(Func<Task> action, string urlOrPredicate, PageRunAndWaitForRequestOptions options = default)
+    public Task<IRequest> RunAndWaitForRequestAsync(Func<Task> action, string urlOrPredicate, PageRunAndWaitForRequestOptions? options = default)
         => InnerWaitForEventAsync(PageEvent.Request, action, e => Context.UrlMatches(e.Url, urlOrPredicate), options?.Timeout);
 
     [MethodImpl(MethodImplOptions.NoInlining)]
-    public Task<IRequest> RunAndWaitForRequestAsync(Func<Task> action, Regex urlOrPredicate, PageRunAndWaitForRequestOptions options = default)
+    public Task<IRequest> RunAndWaitForRequestAsync(Func<Task> action, Regex urlOrPredicate, PageRunAndWaitForRequestOptions? options = default)
         => InnerWaitForEventAsync(PageEvent.Request, action, e => urlOrPredicate.IsMatch(e.Url), options?.Timeout);
 
     [MethodImpl(MethodImplOptions.NoInlining)]
-    public Task<IRequest> RunAndWaitForRequestAsync(Func<Task> action, Func<IRequest, bool> urlOrPredicate, PageRunAndWaitForRequestOptions options = default)
+    public Task<IRequest> RunAndWaitForRequestAsync(Func<Task> action, Func<IRequest, bool> urlOrPredicate, PageRunAndWaitForRequestOptions? options = default)
         => InnerWaitForEventAsync(PageEvent.Request, action, e => urlOrPredicate(e), options?.Timeout);
 
     [MethodImpl(MethodImplOptions.NoInlining)]
-    public Task<IResponse> RunAndWaitForResponseAsync(Func<Task> action, string urlOrPredicate, PageRunAndWaitForResponseOptions options = default)
+    public Task<IResponse> RunAndWaitForResponseAsync(Func<Task> action, string urlOrPredicate, PageRunAndWaitForResponseOptions? options = default)
         => InnerWaitForEventAsync(PageEvent.Response, action, e => Context.UrlMatches(e.Url, urlOrPredicate), options?.Timeout);
 
     [MethodImpl(MethodImplOptions.NoInlining)]
-    public Task<IResponse> RunAndWaitForResponseAsync(Func<Task> action, Regex urlOrPredicate, PageRunAndWaitForResponseOptions options = default)
+    public Task<IResponse> RunAndWaitForResponseAsync(Func<Task> action, Regex urlOrPredicate, PageRunAndWaitForResponseOptions? options = default)
         => InnerWaitForEventAsync(PageEvent.Response, action, e => urlOrPredicate.IsMatch(e.Url), options?.Timeout);
 
     [MethodImpl(MethodImplOptions.NoInlining)]
-    public Task<IResponse> RunAndWaitForResponseAsync(Func<Task> action, Func<IResponse, bool> urlOrPredicate, PageRunAndWaitForResponseOptions options = default)
+    public Task<IResponse> RunAndWaitForResponseAsync(Func<Task> action, Func<IResponse, bool> urlOrPredicate, PageRunAndWaitForResponseOptions? options = default)
         => InnerWaitForEventAsync(PageEvent.Response, action, e => urlOrPredicate(e), options?.Timeout);
 
     [MethodImpl(MethodImplOptions.NoInlining)]
-    public Task<IJSHandle> WaitForFunctionAsync(string expression, object arg = default, PageWaitForFunctionOptions options = default)
+    public Task<IJSHandle> WaitForFunctionAsync(string expression, object? arg = default, PageWaitForFunctionOptions? options = default)
         => MainFrame.WaitForFunctionAsync(expression, arg, new() { PollingInterval = options?.PollingInterval, Timeout = options?.Timeout });
 
     internal TargetClosedException _closeErrorWithReason()
@@ -468,7 +468,7 @@ internal class Page : ChannelOwner, IPage
         return new TargetClosedException(_closeReason ?? Context._effectiveCloseReason());
     }
 
-    internal async Task<T> InnerWaitForEventAsync<T>(PlaywrightEvent<T> pageEvent, Func<Task> action = default, Func<T, bool> predicate = default, float? timeout = default)
+    internal async Task<T> InnerWaitForEventAsync<T>(PlaywrightEvent<T> pageEvent, Func<Task>? action = default, Func<T, bool>? predicate = default, float? timeout = default)
     {
         if (pageEvent == null)
         {
@@ -500,7 +500,7 @@ internal class Page : ChannelOwner, IPage
     }
 
     [MethodImpl(MethodImplOptions.NoInlining)]
-    public async Task CloseAsync(PageCloseOptions options = default)
+    public async Task CloseAsync(PageCloseOptions? options = default)
     {
         _closeReason = options?.Reason;
         CloseWasCalled = true;
@@ -508,7 +508,7 @@ internal class Page : ChannelOwner, IPage
         {
             await SendMessageToServerAsync(
             "close",
-            new Dictionary<string, object>
+            new Dictionary<string, object?>
             {
                 ["runBeforeUnload"] = options?.RunBeforeUnload ?? false,
             }).ConfigureAwait(false);
@@ -524,17 +524,17 @@ internal class Page : ChannelOwner, IPage
     }
 
     [MethodImpl(MethodImplOptions.NoInlining)]
-    public Task<T> EvaluateAsync<T>(string expression, object arg) => MainFrame.EvaluateAsync<T>(expression, arg);
+    public Task<T> EvaluateAsync<T>(string expression, object? arg) => MainFrame.EvaluateAsync<T>(expression, arg);
 
     [MethodImpl(MethodImplOptions.NoInlining)]
-    public Task<JsonElement?> EvalOnSelectorAsync(string selector, string expression, object arg) => MainFrame.EvalOnSelectorAsync(selector, expression, arg);
+    public Task<JsonElement?> EvalOnSelectorAsync(string selector, string expression, object? arg) => MainFrame.EvalOnSelectorAsync(selector, expression, arg);
 
     [MethodImpl(MethodImplOptions.NoInlining)]
-    public Task<T> EvalOnSelectorAsync<T>(string selector, string expression, object arg = null, PageEvalOnSelectorOptions options = null)
+    public Task<T> EvalOnSelectorAsync<T>(string selector, string expression, object? arg = null, PageEvalOnSelectorOptions? options = null)
         => MainFrame.EvalOnSelectorAsync<T>(selector, expression, arg, new() { Strict = options?.Strict });
 
     [MethodImpl(MethodImplOptions.NoInlining)]
-    public ILocator Locator(string selector, PageLocatorOptions options = default)
+    public ILocator Locator(string selector, PageLocatorOptions? options = default)
         => MainFrame.Locator(selector, new()
         {
             Has = options?.Has,
@@ -544,42 +544,42 @@ internal class Page : ChannelOwner, IPage
         });
 
     [MethodImpl(MethodImplOptions.NoInlining)]
-    public Task<IElementHandle> QuerySelectorAsync(string selector, PageQuerySelectorOptions options = null)
+    public Task<IElementHandle?> QuerySelectorAsync(string selector, PageQuerySelectorOptions? options = null)
         => MainFrame.QuerySelectorAsync(selector, new() { Strict = options?.Strict });
 
     [MethodImpl(MethodImplOptions.NoInlining)]
-    public Task<T> EvalOnSelectorAsync<T>(string selector, string expression, object arg) => MainFrame.EvalOnSelectorAsync<T>(selector, expression, arg);
+    public Task<T> EvalOnSelectorAsync<T>(string selector, string expression, object? arg) => MainFrame.EvalOnSelectorAsync<T>(selector, expression, arg);
 
     [MethodImpl(MethodImplOptions.NoInlining)]
-    public Task<JsonElement?> EvalOnSelectorAllAsync(string selector, string expression, object arg) => MainFrame.EvalOnSelectorAllAsync(selector, expression, arg);
+    public Task<JsonElement?> EvalOnSelectorAllAsync(string selector, string expression, object? arg) => MainFrame.EvalOnSelectorAllAsync(selector, expression, arg);
 
     [MethodImpl(MethodImplOptions.NoInlining)]
-    public Task<T> EvalOnSelectorAllAsync<T>(string selector, string expression, object arg) => MainFrame.EvalOnSelectorAllAsync<T>(selector, expression, arg);
+    public Task<T> EvalOnSelectorAllAsync<T>(string selector, string expression, object? arg) => MainFrame.EvalOnSelectorAllAsync<T>(selector, expression, arg);
 
     [MethodImpl(MethodImplOptions.NoInlining)]
-    public Task FillAsync(string selector, string value, PageFillOptions options = default)
+    public Task FillAsync(string selector, string value, PageFillOptions? options = default)
 #pragma warning disable CS0612 // Type or member is obsolete
         => MainFrame.FillAsync(selector, value, new() { NoWaitAfter = options?.NoWaitAfter, Timeout = options?.Timeout, Force = options?.Force, Strict = options?.Strict });
 #pragma warning restore CS0612 // Type or member is obsolete
 
     [MethodImpl(MethodImplOptions.NoInlining)]
-    public Task SetInputFilesAsync(string selector, string files, PageSetInputFilesOptions options = default)
+    public Task SetInputFilesAsync(string selector, string files, PageSetInputFilesOptions? options = default)
         => MainFrame.SetInputFilesAsync(selector, files, Map(options));
 
     [MethodImpl(MethodImplOptions.NoInlining)]
-    public Task SetInputFilesAsync(string selector, IEnumerable<string> files, PageSetInputFilesOptions options = default)
+    public Task SetInputFilesAsync(string selector, IEnumerable<string> files, PageSetInputFilesOptions? options = default)
         => MainFrame.SetInputFilesAsync(selector, files, Map(options));
 
     [MethodImpl(MethodImplOptions.NoInlining)]
-    public Task SetInputFilesAsync(string selector, FilePayload files, PageSetInputFilesOptions options = default)
+    public Task SetInputFilesAsync(string selector, FilePayload files, PageSetInputFilesOptions? options = default)
         => MainFrame.SetInputFilesAsync(selector, files, Map(options));
 
     [MethodImpl(MethodImplOptions.NoInlining)]
-    public Task SetInputFilesAsync(string selector, IEnumerable<FilePayload> files, PageSetInputFilesOptions options = default)
+    public Task SetInputFilesAsync(string selector, IEnumerable<FilePayload> files, PageSetInputFilesOptions? options = default)
         => MainFrame.SetInputFilesAsync(selector, files, Map(options));
 
     [MethodImpl(MethodImplOptions.NoInlining)]
-    public Task TypeAsync(string selector, string text, PageTypeOptions options = default)
+    public Task TypeAsync(string selector, string text, PageTypeOptions? options = default)
         => MainFrame.TypeAsync(selector, text, new()
         {
             Delay = options?.Delay,
@@ -588,7 +588,7 @@ internal class Page : ChannelOwner, IPage
         });
 
     [MethodImpl(MethodImplOptions.NoInlining)]
-    public Task FocusAsync(string selector, PageFocusOptions options = default)
+    public Task FocusAsync(string selector, PageFocusOptions? options = default)
         => MainFrame.FocusAsync(selector, new()
         {
             Timeout = options?.Timeout,
@@ -596,7 +596,7 @@ internal class Page : ChannelOwner, IPage
         });
 
     [MethodImpl(MethodImplOptions.NoInlining)]
-    public Task HoverAsync(string selector, PageHoverOptions options = default)
+    public Task HoverAsync(string selector, PageHoverOptions? options = default)
         => MainFrame.HoverAsync(
             selector,
             new()
@@ -610,7 +610,7 @@ internal class Page : ChannelOwner, IPage
             });
 
     [MethodImpl(MethodImplOptions.NoInlining)]
-    public Task PressAsync(string selector, string key, PagePressOptions options = default)
+    public Task PressAsync(string selector, string key, PagePressOptions? options = default)
         => MainFrame.PressAsync(selector, key, new()
         {
             Delay = options?.Delay,
@@ -622,19 +622,19 @@ internal class Page : ChannelOwner, IPage
         });
 
     [MethodImpl(MethodImplOptions.NoInlining)]
-    public Task<IReadOnlyList<string>> SelectOptionAsync(string selector, string values, PageSelectOptionOptions options = default)
+    public Task<IReadOnlyList<string>> SelectOptionAsync(string selector, string values, PageSelectOptionOptions? options = default)
         => SelectOptionAsync(selector, new[] { values }, options);
 
     [MethodImpl(MethodImplOptions.NoInlining)]
-    public Task<IReadOnlyList<string>> SelectOptionAsync(string selector, IEnumerable<string> values, PageSelectOptionOptions options = default)
+    public Task<IReadOnlyList<string>> SelectOptionAsync(string selector, IEnumerable<string> values, PageSelectOptionOptions? options = default)
         => SelectOptionAsync(selector, values.Select(x => new SelectOptionValueProtocol() { ValueOrLabel = x }), options);
 
     [MethodImpl(MethodImplOptions.NoInlining)]
-    public Task<IReadOnlyList<string>> SelectOptionAsync(string selector, IElementHandle values, PageSelectOptionOptions options = default)
+    public Task<IReadOnlyList<string>> SelectOptionAsync(string selector, IElementHandle values, PageSelectOptionOptions? options = default)
         => SelectOptionAsync(selector, new[] { values }, options);
 
     [MethodImpl(MethodImplOptions.NoInlining)]
-    public Task<IReadOnlyList<string>> SelectOptionAsync(string selector, IEnumerable<IElementHandle> values, PageSelectOptionOptions options = default)
+    public Task<IReadOnlyList<string>> SelectOptionAsync(string selector, IEnumerable<IElementHandle> values, PageSelectOptionOptions? options = default)
         => MainFrame.SelectOptionAsync(selector, values, new()
         {
 #pragma warning disable CS0612 // Type or member is obsolete
@@ -646,14 +646,14 @@ internal class Page : ChannelOwner, IPage
         });
 
     [MethodImpl(MethodImplOptions.NoInlining)]
-    public Task<IReadOnlyList<string>> SelectOptionAsync(string selector, SelectOptionValue values, PageSelectOptionOptions options = default)
+    public Task<IReadOnlyList<string>> SelectOptionAsync(string selector, SelectOptionValue values, PageSelectOptionOptions? options = default)
         => SelectOptionAsync(selector, new[] { values }, options);
 
     [MethodImpl(MethodImplOptions.NoInlining)]
-    public Task<IReadOnlyList<string>> SelectOptionAsync(string selector, IEnumerable<SelectOptionValue> values, PageSelectOptionOptions options = default)
+    public Task<IReadOnlyList<string>> SelectOptionAsync(string selector, IEnumerable<SelectOptionValue> values, PageSelectOptionOptions? options = default)
         => SelectOptionAsync(selector, values.Select(x => SelectOptionValueProtocol.From(x)), options);
 
-    internal Task<IReadOnlyList<string>> SelectOptionAsync(string selector, IEnumerable<SelectOptionValueProtocol> values, PageSelectOptionOptions options = default)
+    internal Task<IReadOnlyList<string>> SelectOptionAsync(string selector, IEnumerable<SelectOptionValueProtocol> values, PageSelectOptionOptions? options = default)
         => MainFrame.SelectOptionAsync(selector, values, new()
         {
 #pragma warning disable CS0612 // Type or member is obsolete
@@ -668,7 +668,7 @@ internal class Page : ChannelOwner, IPage
     public Task WaitForTimeoutAsync(float timeout) => MainFrame.WaitForTimeoutAsync(timeout);
 
     [MethodImpl(MethodImplOptions.NoInlining)]
-    public Task<IElementHandle> WaitForSelectorAsync(string selector, PageWaitForSelectorOptions options = default)
+    public Task<IElementHandle?> WaitForSelectorAsync(string selector, PageWaitForSelectorOptions? options = default)
         => MainFrame.WaitForSelectorAsync(selector, new()
         {
             State = options?.State,
@@ -677,18 +677,18 @@ internal class Page : ChannelOwner, IPage
         });
 
     [MethodImpl(MethodImplOptions.NoInlining)]
-    public Task<JsonElement?> EvaluateAsync(string expression, object arg) => MainFrame.EvaluateAsync(expression, arg);
+    public Task<JsonElement?> EvaluateAsync(string expression, object? arg) => MainFrame.EvaluateAsync(expression, arg);
 
     [MethodImpl(MethodImplOptions.NoInlining)]
-    public async Task<byte[]> ScreenshotAsync(PageScreenshotOptions options = default)
+    public async Task<byte[]> ScreenshotAsync(PageScreenshotOptions? options = default)
     {
         options ??= new PageScreenshotOptions();
-        if (options.Type == null && !string.IsNullOrEmpty(options.Path))
+        if (options.Type == null && !string.IsNullOrEmpty(options.Path) && options.Path != null)
         {
             options.Type = ElementHandle.DetermineScreenshotType(options.Path);
         }
 
-        var result = (await SendMessageToServerAsync("screenshot", new Dictionary<string, object>
+        var result = (await SendMessageToServerAsync("screenshot", new Dictionary<string, object?>
         {
             ["fullPage"] = options.FullPage,
             ["omitBackground"] = options.OmitBackground,
@@ -707,7 +707,7 @@ internal class Page : ChannelOwner, IPage
                 ["frame"] = ((Locator)locator)._frame,
                 ["selector"] = ((Locator)locator)._selector,
             }).ToArray(),
-        }).ConfigureAwait(false))?.GetProperty("binary").GetBytesFromBase64();
+        }).ConfigureAwait(false)).Value.GetProperty("binary").GetBytesFromBase64();
 
         if (!string.IsNullOrEmpty(options.Path))
         {
@@ -719,7 +719,7 @@ internal class Page : ChannelOwner, IPage
     }
 
     [MethodImpl(MethodImplOptions.NoInlining)]
-    public Task SetContentAsync(string html, PageSetContentOptions options = default)
+    public Task SetContentAsync(string html, PageSetContentOptions? options = default)
         => MainFrame.SetContentAsync(html, new() { WaitUntil = options?.WaitUntil, Timeout = options?.Timeout });
 
     [MethodImpl(MethodImplOptions.NoInlining)]
@@ -729,7 +729,7 @@ internal class Page : ChannelOwner, IPage
     public Task SetExtraHTTPHeadersAsync(IEnumerable<KeyValuePair<string, string>> headers)
         => SendMessageToServerAsync(
             "setExtraHTTPHeaders",
-            new Dictionary<string, object>
+            new Dictionary<string, object?>
             {
                 ["headers"] = headers.Select(kv => new HeaderEntry { Name = kv.Key, Value = kv.Value }),
             });
@@ -742,10 +742,10 @@ internal class Page : ChannelOwner, IPage
         => MainFrame.QuerySelectorAllAsync(selector);
 
     [MethodImpl(MethodImplOptions.NoInlining)]
-    public Task<IJSHandle> EvaluateHandleAsync(string expression, object arg) => MainFrame.EvaluateHandleAsync(expression, arg);
+    public Task<IJSHandle> EvaluateHandleAsync(string expression, object? arg) => MainFrame.EvaluateHandleAsync(expression, arg);
 
     [MethodImpl(MethodImplOptions.NoInlining)]
-    public Task<IElementHandle> AddScriptTagAsync(PageAddScriptTagOptions options = default)
+    public Task<IElementHandle> AddScriptTagAsync(PageAddScriptTagOptions? options = default)
         => MainFrame.AddScriptTagAsync(new()
         {
             Url = options?.Url,
@@ -755,7 +755,7 @@ internal class Page : ChannelOwner, IPage
         });
 
     [MethodImpl(MethodImplOptions.NoInlining)]
-    public Task<IElementHandle> AddStyleTagAsync(PageAddStyleTagOptions options = default)
+    public Task<IElementHandle> AddStyleTagAsync(PageAddStyleTagOptions? options = default)
         => MainFrame.AddStyleTagAsync(new()
         {
             Url = options?.Url,
@@ -764,7 +764,7 @@ internal class Page : ChannelOwner, IPage
         });
 
     [MethodImpl(MethodImplOptions.NoInlining)]
-    public Task ClickAsync(string selector, PageClickOptions options = default)
+    public Task ClickAsync(string selector, PageClickOptions? options = default)
         => MainFrame.ClickAsync(
             selector,
             new()
@@ -784,7 +784,7 @@ internal class Page : ChannelOwner, IPage
             });
 
     [MethodImpl(MethodImplOptions.NoInlining)]
-    public Task DblClickAsync(string selector, PageDblClickOptions options = default)
+    public Task DblClickAsync(string selector, PageDblClickOptions? options = default)
         => MainFrame.DblClickAsync(selector, new()
         {
             Delay = options?.Delay,
@@ -798,31 +798,31 @@ internal class Page : ChannelOwner, IPage
         });
 
     [MethodImpl(MethodImplOptions.NoInlining)]
-    public async Task<IResponse> GoBackAsync(PageGoBackOptions options = default)
-        => await SendMessageToServerAsync<Response>("goBack", new Dictionary<string, object>
+    public async Task<IResponse?> GoBackAsync(PageGoBackOptions? options = default)
+        => await SendMessageToServerAsync<Response>("goBack", new Dictionary<string, object?>
         {
             ["timeout"] = options?.Timeout,
             ["waitUntil"] = options?.WaitUntil,
         }).ConfigureAwait(false);
 
     [MethodImpl(MethodImplOptions.NoInlining)]
-    public async Task<IResponse> GoForwardAsync(PageGoForwardOptions options = default)
-        => await SendMessageToServerAsync<Response>("goForward", new Dictionary<string, object>
+    public async Task<IResponse?> GoForwardAsync(PageGoForwardOptions? options = default)
+        => await SendMessageToServerAsync<Response>("goForward", new Dictionary<string, object?>
         {
             ["timeout"] = options?.Timeout,
             ["waitUntil"] = options?.WaitUntil,
         }).ConfigureAwait(false);
 
     [MethodImpl(MethodImplOptions.NoInlining)]
-    public async Task<IResponse> ReloadAsync(PageReloadOptions options = default)
-        => await SendMessageToServerAsync<Response>("reload", new Dictionary<string, object>
+    public async Task<IResponse?> ReloadAsync(PageReloadOptions? options = default)
+        => await SendMessageToServerAsync<Response>("reload", new Dictionary<string, object?>
         {
             ["timeout"] = options?.Timeout,
             ["waitUntil"] = options?.WaitUntil,
         }).ConfigureAwait(false);
 
     [MethodImpl(MethodImplOptions.NoInlining)]
-    public Task ExposeBindingAsync(string name, Action callback, PageExposeBindingOptions options = default)
+    public Task ExposeBindingAsync(string name, Action callback, PageExposeBindingOptions? options = default)
 #pragma warning disable CS0612 // Type or member is obsolete
         => InnerExposeBindingAsync(name, callback, options?.Handle ?? false);
 #pragma warning restore CS0612 // Type or member is obsolete
@@ -888,7 +888,7 @@ internal class Page : ChannelOwner, IPage
         => ExposeBindingAsync(name, (BindingSource _, T1 t1, T2 t2, T3 t3, T4 t4) => callback(t1, t2, t3, t4));
 
     [MethodImpl(MethodImplOptions.NoInlining)]
-    public async Task<byte[]> PdfAsync(PagePdfOptions options = default)
+    public async Task<byte[]> PdfAsync(PagePdfOptions? options = default)
     {
         options ??= new();
         if (!Context.IsChromium)
@@ -896,75 +896,75 @@ internal class Page : ChannelOwner, IPage
             throw new NotSupportedException("This browser doesn't support this action.");
         }
 
-        byte[] result = (await SendMessageToServerAsync("pdf", new Dictionary<string, object>
+        byte[] result = (await SendMessageToServerAsync("pdf", new Dictionary<string, object?>
         {
-            ["scale"] = options.Scale,
-            ["displayHeaderFooter"] = options.DisplayHeaderFooter,
-            ["printBackground"] = options.PrintBackground,
-            ["landscape"] = options.Landscape,
-            ["preferCSSPageSize"] = options.PreferCSSPageSize,
-            ["pageRanges"] = options.PageRanges,
-            ["headerTemplate"] = options.HeaderTemplate,
-            ["footerTemplate"] = options.FooterTemplate,
-            ["margin"] = options.Margin,
-            ["width"] = options.Width,
-            ["format"] = options.Format,
-            ["height"] = options.Height,
-            ["outline"] = options.Outline,
-            ["tagged"] = options.Tagged,
-        }).ConfigureAwait(false))?.GetProperty("pdf").GetBytesFromBase64();
+            ["scale"] = options?.Scale,
+            ["displayHeaderFooter"] = options?.DisplayHeaderFooter,
+            ["printBackground"] = options?.PrintBackground,
+            ["landscape"] = options?.Landscape,
+            ["preferCSSPageSize"] = options?.PreferCSSPageSize,
+            ["pageRanges"] = options?.PageRanges,
+            ["headerTemplate"] = options?.HeaderTemplate,
+            ["footerTemplate"] = options?.FooterTemplate,
+            ["margin"] = options?.Margin,
+            ["width"] = options?.Width,
+            ["format"] = options?.Format,
+            ["height"] = options?.Height,
+            ["outline"] = options?.Outline,
+            ["tagged"] = options?.Tagged,
+        }).ConfigureAwait(false)).Value.GetProperty("pdf").GetBytesFromBase64();
 
         if (!string.IsNullOrEmpty(options?.Path))
         {
-            Directory.CreateDirectory(new FileInfo(options.Path).Directory.FullName);
-            File.WriteAllBytes(options.Path, result);
+            Directory.CreateDirectory(new FileInfo(options?.Path).Directory.FullName);
+            File.WriteAllBytes(options?.Path, result);
         }
 
         return result;
     }
 
     [MethodImpl(MethodImplOptions.NoInlining)]
-    public Task AddInitScriptAsync(string script, string scriptPath)
+    public Task AddInitScriptAsync(string? script, string? scriptPath)
         => SendMessageToServerAsync(
             "addInitScript",
-            new Dictionary<string, object>
+            new Dictionary<string, object?>
             {
                 ["source"] = ScriptsHelper.EvaluationScript(script, scriptPath, true),
             });
 
     [MethodImpl(MethodImplOptions.NoInlining)]
-    public Task RouteAsync(string globMatch, Func<IRoute, Task> handler, PageRouteOptions options = null)
+    public Task RouteAsync(string globMatch, Func<IRoute, Task> handler, PageRouteOptions? options = null)
         => RouteAsync(globMatch, null, null, handler, options);
 
     [MethodImpl(MethodImplOptions.NoInlining)]
-    public Task RouteAsync(string globMatch, Action<IRoute> handler, PageRouteOptions options = null)
+    public Task RouteAsync(string globMatch, Action<IRoute> handler, PageRouteOptions? options = null)
         => RouteAsync(globMatch, null, null, handler, options);
 
     [MethodImpl(MethodImplOptions.NoInlining)]
-    public Task RouteAsync(Regex reMatch, Action<IRoute> handler, PageRouteOptions options = null)
+    public Task RouteAsync(Regex reMatch, Action<IRoute> handler, PageRouteOptions? options = null)
          => RouteAsync(null, reMatch, null, handler, options);
 
     [MethodImpl(MethodImplOptions.NoInlining)]
-    public Task RouteAsync(Regex reMatch, Func<IRoute, Task> handler, PageRouteOptions options = null)
+    public Task RouteAsync(Regex reMatch, Func<IRoute, Task> handler, PageRouteOptions? options = null)
          => RouteAsync(null, reMatch, null, handler, options);
 
     [MethodImpl(MethodImplOptions.NoInlining)]
-    public Task RouteAsync(Func<string, bool> funcMatch, Action<IRoute> handler, PageRouteOptions options = null)
+    public Task RouteAsync(Func<string, bool> funcMatch, Action<IRoute> handler, PageRouteOptions? options = null)
         => RouteAsync(null, null, funcMatch, handler, options);
 
     [MethodImpl(MethodImplOptions.NoInlining)]
-    public Task RouteAsync(Func<string, bool> funcMatch, Func<IRoute, Task> handler, PageRouteOptions options = null)
+    public Task RouteAsync(Func<string, bool> funcMatch, Func<IRoute, Task> handler, PageRouteOptions? options = null)
         => RouteAsync(null, null, funcMatch, handler, options);
 
     [MethodImpl(MethodImplOptions.NoInlining)]
-    public async Task UnrouteAllAsync(PageUnrouteAllOptions options = default)
+    public async Task UnrouteAllAsync(PageUnrouteAllOptions? options = default)
     {
         await UnrouteInternalAsync(_routes, [], options?.Behavior).ConfigureAwait(false);
         DisposeHarRouters();
     }
 
     [MethodImpl(MethodImplOptions.NoInlining)]
-    public Task UnrouteAsync(string globMatch, Action<IRoute> handler)
+    public Task UnrouteAsync(string globMatch, Action<IRoute>? handler)
         => UnrouteAsync(globMatch, null, null, handler);
 
     [MethodImpl(MethodImplOptions.NoInlining)]
@@ -972,7 +972,7 @@ internal class Page : ChannelOwner, IPage
         => UnrouteAsync(globMatch, null, null, handler);
 
     [MethodImpl(MethodImplOptions.NoInlining)]
-    public Task UnrouteAsync(Regex reMatch, Action<IRoute> handler)
+    public Task UnrouteAsync(Regex reMatch, Action<IRoute>? handler)
         => UnrouteAsync(null, reMatch, null, handler);
 
     [MethodImpl(MethodImplOptions.NoInlining)]
@@ -980,7 +980,7 @@ internal class Page : ChannelOwner, IPage
         => UnrouteAsync(null, reMatch, null, handler);
 
     [MethodImpl(MethodImplOptions.NoInlining)]
-    public Task UnrouteAsync(Func<string, bool> funcMatch, Action<IRoute> handler)
+    public Task UnrouteAsync(Func<string, bool> funcMatch, Action<IRoute>? handler)
         => UnrouteAsync(null, null, funcMatch, handler);
 
     [MethodImpl(MethodImplOptions.NoInlining)]
@@ -988,7 +988,7 @@ internal class Page : ChannelOwner, IPage
         => UnrouteAsync(null, null, funcMatch, handler);
 
     [MethodImpl(MethodImplOptions.NoInlining)]
-    public Task WaitForLoadStateAsync(LoadState? state = default, PageWaitForLoadStateOptions options = default)
+    public Task WaitForLoadStateAsync(LoadState? state = default, PageWaitForLoadStateOptions? options = default)
         => MainFrame.WaitForLoadStateAsync(state, new() { Timeout = options?.Timeout });
 
     [MethodImpl(MethodImplOptions.NoInlining)]
@@ -997,14 +997,14 @@ internal class Page : ChannelOwner, IPage
         ViewportSize = new() { Width = width, Height = height };
         return SendMessageToServerAsync(
             "setViewportSize",
-            new Dictionary<string, object>
+            new Dictionary<string, object?>
             {
                 ["viewportSize"] = ViewportSize,
             });
     }
 
     [MethodImpl(MethodImplOptions.NoInlining)]
-    public Task SetCheckedAsync(string selector, bool checkedState, PageSetCheckedOptions options = null)
+    public Task SetCheckedAsync(string selector, bool checkedState, PageSetCheckedOptions? options = null)
         => checkedState ?
         MainFrame.CheckAsync(selector, new()
         {
@@ -1024,7 +1024,7 @@ internal class Page : ChannelOwner, IPage
         });
 
     [MethodImpl(MethodImplOptions.NoInlining)]
-    public Task CheckAsync(string selector, PageCheckOptions options = default)
+    public Task CheckAsync(string selector, PageCheckOptions? options = default)
         => MainFrame.CheckAsync(selector, new()
         {
             Position = options?.Position,
@@ -1035,7 +1035,7 @@ internal class Page : ChannelOwner, IPage
         });
 
     [MethodImpl(MethodImplOptions.NoInlining)]
-    public Task UncheckAsync(string selector, PageUncheckOptions options = default)
+    public Task UncheckAsync(string selector, PageUncheckOptions? options = default)
         => MainFrame.UncheckAsync(selector, new()
         {
             Position = options?.Position,
@@ -1046,11 +1046,11 @@ internal class Page : ChannelOwner, IPage
         });
 
     [MethodImpl(MethodImplOptions.NoInlining)]
-    public Task DispatchEventAsync(string selector, string type, object eventInit = default, PageDispatchEventOptions options = default)
+    public Task DispatchEventAsync(string selector, string type, object? eventInit = default, PageDispatchEventOptions? options = default)
          => MainFrame.DispatchEventAsync(selector, type, eventInit, new() { Timeout = options?.Timeout, Strict = options?.Strict });
 
     [MethodImpl(MethodImplOptions.NoInlining)]
-    public Task<string> GetAttributeAsync(string selector, string name, PageGetAttributeOptions options = default)
+    public Task<string?> GetAttributeAsync(string selector, string name, PageGetAttributeOptions? options = default)
          => MainFrame.GetAttributeAsync(selector, name, new()
          {
              Timeout = options?.Timeout,
@@ -1058,7 +1058,7 @@ internal class Page : ChannelOwner, IPage
          });
 
     [MethodImpl(MethodImplOptions.NoInlining)]
-    public Task<string> InnerHTMLAsync(string selector, PageInnerHTMLOptions options = default)
+    public Task<string> InnerHTMLAsync(string selector, PageInnerHTMLOptions? options = default)
          => MainFrame.InnerHTMLAsync(selector, new()
          {
              Timeout = options?.Timeout,
@@ -1066,7 +1066,7 @@ internal class Page : ChannelOwner, IPage
          });
 
     [MethodImpl(MethodImplOptions.NoInlining)]
-    public Task<string> InnerTextAsync(string selector, PageInnerTextOptions options = default)
+    public Task<string> InnerTextAsync(string selector, PageInnerTextOptions? options = default)
          => MainFrame.InnerTextAsync(selector, new()
          {
              Timeout = options?.Timeout,
@@ -1074,7 +1074,7 @@ internal class Page : ChannelOwner, IPage
          });
 
     [MethodImpl(MethodImplOptions.NoInlining)]
-    public Task<string> TextContentAsync(string selector, PageTextContentOptions options = default)
+    public Task<string?> TextContentAsync(string selector, PageTextContentOptions? options = default)
          => MainFrame.TextContentAsync(selector, new()
          {
              Timeout = options?.Timeout,
@@ -1082,7 +1082,7 @@ internal class Page : ChannelOwner, IPage
          });
 
     [MethodImpl(MethodImplOptions.NoInlining)]
-    public Task TapAsync(string selector, PageTapOptions options = default)
+    public Task TapAsync(string selector, PageTapOptions? options = default)
         => MainFrame.TapAsync(
             selector,
             new()
@@ -1096,7 +1096,7 @@ internal class Page : ChannelOwner, IPage
             });
 
     [MethodImpl(MethodImplOptions.NoInlining)]
-    public Task<bool> IsCheckedAsync(string selector, PageIsCheckedOptions options = default)
+    public Task<bool> IsCheckedAsync(string selector, PageIsCheckedOptions? options = default)
         => MainFrame.IsCheckedAsync(selector, new()
         {
             Timeout = options?.Timeout,
@@ -1104,7 +1104,7 @@ internal class Page : ChannelOwner, IPage
         });
 
     [MethodImpl(MethodImplOptions.NoInlining)]
-    public Task<bool> IsDisabledAsync(string selector, PageIsDisabledOptions options = default)
+    public Task<bool> IsDisabledAsync(string selector, PageIsDisabledOptions? options = default)
         => MainFrame.IsDisabledAsync(selector, new()
         {
             Timeout = options?.Timeout,
@@ -1112,7 +1112,7 @@ internal class Page : ChannelOwner, IPage
         });
 
     [MethodImpl(MethodImplOptions.NoInlining)]
-    public Task<bool> IsEditableAsync(string selector, PageIsEditableOptions options = default)
+    public Task<bool> IsEditableAsync(string selector, PageIsEditableOptions? options = default)
         => MainFrame.IsEditableAsync(selector, new()
         {
             Timeout = options?.Timeout,
@@ -1120,7 +1120,7 @@ internal class Page : ChannelOwner, IPage
         });
 
     [MethodImpl(MethodImplOptions.NoInlining)]
-    public Task<bool> IsEnabledAsync(string selector, PageIsEnabledOptions options = default)
+    public Task<bool> IsEnabledAsync(string selector, PageIsEnabledOptions? options = default)
         => MainFrame.IsEnabledAsync(selector, new()
         {
             Timeout = options?.Timeout,
@@ -1128,7 +1128,7 @@ internal class Page : ChannelOwner, IPage
         });
 
     [MethodImpl(MethodImplOptions.NoInlining)]
-    public Task<bool> IsHiddenAsync(string selector, PageIsHiddenOptions options = default)
+    public Task<bool> IsHiddenAsync(string selector, PageIsHiddenOptions? options = default)
         => MainFrame.IsHiddenAsync(selector, new()
         {
 #pragma warning disable CS0612 // Type or member is obsolete
@@ -1138,7 +1138,7 @@ internal class Page : ChannelOwner, IPage
         });
 
     [MethodImpl(MethodImplOptions.NoInlining)]
-    public Task<bool> IsVisibleAsync(string selector, PageIsVisibleOptions options = default)
+    public Task<bool> IsVisibleAsync(string selector, PageIsVisibleOptions? options = default)
         => MainFrame.IsVisibleAsync(selector, new()
         {
 #pragma warning disable CS0612 // Type or member is obsolete
@@ -1172,7 +1172,7 @@ internal class Page : ChannelOwner, IPage
         WrapApiCallAsync(
             () => SendMessageToServerAsync(
             "setDefaultNavigationTimeoutNoReply",
-            new Dictionary<string, object>
+            new Dictionary<string, object?>
             {
                 ["timeout"] = timeout,
             }),
@@ -1184,7 +1184,7 @@ internal class Page : ChannelOwner, IPage
     {
         _timeoutSettings.SetDefaultTimeout(timeout);
         WrapApiCallAsync(
-            () => SendMessageToServerAsync("setDefaultTimeoutNoReply", new Dictionary<string, object>
+            () => SendMessageToServerAsync("setDefaultTimeoutNoReply", new Dictionary<string, object?>
             {
                 ["timeout"] = timeout,
             }),
@@ -1192,7 +1192,7 @@ internal class Page : ChannelOwner, IPage
     }
 
     [MethodImpl(MethodImplOptions.NoInlining)]
-    public Task<string> InputValueAsync(string selector, PageInputValueOptions options = null)
+    public Task<string> InputValueAsync(string selector, PageInputValueOptions? options = null)
         => MainFrame.InputValueAsync(selector, new()
         {
             Timeout = options?.Timeout,
@@ -1200,7 +1200,7 @@ internal class Page : ChannelOwner, IPage
         });
 
     [MethodImpl(MethodImplOptions.NoInlining)]
-    public Task DragAndDropAsync(string source, string target, PageDragAndDropOptions options = null)
+    public Task DragAndDropAsync(string source, string target, PageDragAndDropOptions? options = null)
         => MainFrame.DragAndDropAsync(source, target, new()
         {
             Force = options?.Force,
@@ -1236,7 +1236,7 @@ internal class Page : ChannelOwner, IPage
 
     internal void FirePageError(string error) => PageError?.Invoke(this, error);
 
-    private Task RouteAsync(string globMatch, Regex reMatch, Func<string, bool> funcMatch, Delegate handler, PageRouteOptions options)
+    private Task RouteAsync(string? globMatch, Regex? reMatch, Func<string, bool>? funcMatch, Delegate handler, PageRouteOptions? options)
         => RouteAsync(new()
         {
             urlMatcher = new URLMatch()
@@ -1256,7 +1256,7 @@ internal class Page : ChannelOwner, IPage
         return UpdateInterceptionAsync();
     }
 
-    private async Task UnrouteAsync(string globMatch, Regex reMatch, Func<string, bool> funcMatch, Delegate handler)
+    private async Task UnrouteAsync(string? globMatch, Regex? reMatch, Func<string, bool>? funcMatch, Delegate? handler)
     {
         var removed = new List<RouteHandler>();
         var remaining = new List<RouteHandler>();
@@ -1289,7 +1289,7 @@ internal class Page : ChannelOwner, IPage
     private async Task UpdateInterceptionAsync()
     {
         var patterns = RouteHandler.PrepareInterceptionPatterns(_routes);
-        await SendMessageToServerAsync("setNetworkInterceptionPatterns", new Dictionary<string, object>
+        await SendMessageToServerAsync("setNetworkInterceptionPatterns", new Dictionary<string, object?>
         {
             ["patterns"] = patterns,
         }).ConfigureAwait(false);
@@ -1397,7 +1397,7 @@ internal class Page : ChannelOwner, IPage
 
         await SendMessageToServerAsync(
             "exposeBinding",
-            new Dictionary<string, object>
+            new Dictionary<string, object?>
             {
                 ["name"] = name,
                 ["needsHandle"] = handle,
@@ -1406,7 +1406,7 @@ internal class Page : ChannelOwner, IPage
 
     private Video ForceVideo() => _video ??= new(this, _connection);
 
-    private FrameSetInputFilesOptions Map(PageSetInputFilesOptions options)
+    private FrameSetInputFilesOptions? Map(PageSetInputFilesOptions? options)
     {
         if (options == null)
         {
@@ -1421,7 +1421,7 @@ internal class Page : ChannelOwner, IPage
     }
 
     [MethodImpl(MethodImplOptions.NoInlining)]
-    public async Task RouteFromHARAsync(string har, PageRouteFromHAROptions options = null)
+    public async Task RouteFromHARAsync(string har, PageRouteFromHAROptions? options = null)
     {
         if (options?.Update == true)
         {
@@ -1437,7 +1437,7 @@ internal class Page : ChannelOwner, IPage
             }).ConfigureAwait(false);
             return;
         }
-        var harRouter = await HarRouter.CreateAsync(_connection.LocalUtils, har, options?.NotFound ?? HarNotFound.Abort, new()
+        var harRouter = await HarRouter.CreateAsync(_connection.LocalUtils!, har, options?.NotFound ?? HarNotFound.Abort, new()
         {
             UrlRegex = options?.UrlRegex,
             Url = options?.Url,
@@ -1457,31 +1457,31 @@ internal class Page : ChannelOwner, IPage
     }
 
     [MethodImpl(MethodImplOptions.NoInlining)]
-    public ILocator GetByAltText(string text, PageGetByAltTextOptions options = null)
+    public ILocator GetByAltText(string text, PageGetByAltTextOptions? options = null)
         => MainFrame.GetByAltText(text, new() { Exact = options?.Exact });
 
     [MethodImpl(MethodImplOptions.NoInlining)]
-    public ILocator GetByAltText(Regex text, PageGetByAltTextOptions options = null)
+    public ILocator GetByAltText(Regex text, PageGetByAltTextOptions? options = null)
         => MainFrame.GetByAltText(text, new() { Exact = options?.Exact });
 
     [MethodImpl(MethodImplOptions.NoInlining)]
-    public ILocator GetByLabel(string text, PageGetByLabelOptions options = null)
+    public ILocator GetByLabel(string text, PageGetByLabelOptions? options = null)
         => MainFrame.GetByLabel(text, new() { Exact = options?.Exact });
 
     [MethodImpl(MethodImplOptions.NoInlining)]
-    public ILocator GetByLabel(Regex text, PageGetByLabelOptions options = null)
+    public ILocator GetByLabel(Regex text, PageGetByLabelOptions? options = null)
         => MainFrame.GetByLabel(text, new() { Exact = options?.Exact });
 
     [MethodImpl(MethodImplOptions.NoInlining)]
-    public ILocator GetByPlaceholder(string text, PageGetByPlaceholderOptions options = null)
+    public ILocator GetByPlaceholder(string text, PageGetByPlaceholderOptions? options = null)
         => MainFrame.GetByPlaceholder(text, new() { Exact = options?.Exact });
 
     [MethodImpl(MethodImplOptions.NoInlining)]
-    public ILocator GetByPlaceholder(Regex text, PageGetByPlaceholderOptions options = null)
+    public ILocator GetByPlaceholder(Regex text, PageGetByPlaceholderOptions? options = null)
         => MainFrame.GetByPlaceholder(text, new() { Exact = options?.Exact });
 
     [MethodImpl(MethodImplOptions.NoInlining)]
-    public ILocator GetByRole(AriaRole role, PageGetByRoleOptions options = null)
+    public ILocator GetByRole(AriaRole role, PageGetByRoleOptions? options = null)
         => Locator(Core.Locator.GetByRoleSelector(role, new(options)));
 
     [MethodImpl(MethodImplOptions.NoInlining)]
@@ -1493,30 +1493,30 @@ internal class Page : ChannelOwner, IPage
         => MainFrame.GetByTestId(testId);
 
     [MethodImpl(MethodImplOptions.NoInlining)]
-    public ILocator GetByText(string text, PageGetByTextOptions options = null)
+    public ILocator GetByText(string text, PageGetByTextOptions? options = null)
         => MainFrame.GetByText(text, new() { Exact = options?.Exact });
 
     [MethodImpl(MethodImplOptions.NoInlining)]
-    public ILocator GetByText(Regex text, PageGetByTextOptions options = null)
+    public ILocator GetByText(Regex text, PageGetByTextOptions? options = null)
         => MainFrame.GetByText(text, new() { Exact = options?.Exact });
 
     [MethodImpl(MethodImplOptions.NoInlining)]
-    public ILocator GetByTitle(string text, PageGetByTitleOptions options = null)
+    public ILocator GetByTitle(string text, PageGetByTitleOptions? options = null)
         => MainFrame.GetByTitle(text, new() { Exact = options?.Exact });
 
     [MethodImpl(MethodImplOptions.NoInlining)]
-    public ILocator GetByTitle(Regex text, PageGetByTitleOptions options = null)
+    public ILocator GetByTitle(Regex text, PageGetByTitleOptions? options = null)
         => MainFrame.GetByTitle(text, new() { Exact = options?.Exact });
 
-    public Task AddLocatorHandlerAsync(ILocator locator, Func<Task> handler, PageAddLocatorHandlerOptions options = null)
+    public Task AddLocatorHandlerAsync(ILocator locator, Func<Task> handler, PageAddLocatorHandlerOptions? options = null)
         => AddLocatorHandlerImplAsync(locator, handler, options);
 
-    public Task AddLocatorHandlerAsync(ILocator locator, Func<ILocator, Task> handler, PageAddLocatorHandlerOptions options = null)
+    public Task AddLocatorHandlerAsync(ILocator locator, Func<ILocator, Task> handler, PageAddLocatorHandlerOptions? options = null)
         => AddLocatorHandlerImplAsync(locator, handler, options);
 
-    private async Task AddLocatorHandlerImplAsync(ILocator locator, object handler, PageAddLocatorHandlerOptions options = null)
+    private async Task AddLocatorHandlerImplAsync(ILocator locator, object handler, PageAddLocatorHandlerOptions? options = null)
     {
-        if ((locator as Locator)._frame != MainFrame)
+        if (((Locator)locator)._frame != MainFrame)
         {
             throw new PlaywrightException("Locator must belong to the main frame of this page");
         }
@@ -1524,9 +1524,9 @@ internal class Page : ChannelOwner, IPage
         {
             return;
         }
-        var response = await SendMessageToServerAsync("registerLocatorHandler", new Dictionary<string, object>
+        var response = await SendMessageToServerAsync("registerLocatorHandler", new Dictionary<string, object?>
         {
-            ["selector"] = (locator as Locator)._selector,
+            ["selector"] = ((Locator)locator)._selector,
             ["noWaitAfter"] = options?.NoWaitAfter,
         }).ConfigureAwait(false);
 
@@ -1557,7 +1557,7 @@ internal class Page : ChannelOwner, IPage
             {
                 _locatorHandlers.Remove(uid);
             }
-            SendMessageToServerAsync("resolveLocatorHandlerNoReply", new Dictionary<string, object>
+            SendMessageToServerAsync("resolveLocatorHandlerNoReply", new Dictionary<string, object?>
             {
                 ["uid"] = uid,
                 ["remove"] = remove,
@@ -1570,12 +1570,12 @@ internal class Page : ChannelOwner, IPage
         foreach (KeyValuePair<int, LocatorHandler> entry in _locatorHandlers)
         {
             var (uid, data) = (entry.Key, entry.Value);
-            if (data.Locator.EqualLocator(locator as Locator))
+            if (data.Locator.EqualLocator((Locator)locator))
             {
                 _locatorHandlers.Remove(uid);
                 try
                 {
-                    await SendMessageToServerAsync("unregisterLocatorHandler", new Dictionary<string, object>
+                    await SendMessageToServerAsync("unregisterLocatorHandler", new Dictionary<string, object?>
                     {
                         ["uid"] = uid,
                     }).ConfigureAwait(false);
@@ -1600,7 +1600,7 @@ internal class Page : ChannelOwner, IPage
     public Task RouteWebSocketAsync(Func<string, bool> url, Action<IWebSocketRoute> handler)
         => RouteWebSocketAsync(null, null, url, handler);
 
-    private Task RouteWebSocketAsync(string globMatch, Regex urlRegex, Func<string, bool> urlFunc, Delegate handler)
+    private Task RouteWebSocketAsync(string? globMatch, Regex? urlRegex, Func<string, bool>? urlFunc, Delegate handler)
     {
         _webSocketRoutes.Insert(0, new WebSocketRouteHandler()
         {
@@ -1620,7 +1620,7 @@ internal class Page : ChannelOwner, IPage
     private async Task UpdateWebSocketInterceptionAsync()
     {
         var patterns = WebSocketRouteHandler.PrepareInterceptionPatterns(_webSocketRoutes);
-        await SendMessageToServerAsync("setWebSocketInterceptionPatterns", new Dictionary<string, object>
+        await SendMessageToServerAsync("setWebSocketInterceptionPatterns", new Dictionary<string, object?>
         {
             ["patterns"] = patterns,
         }).ConfigureAwait(false);

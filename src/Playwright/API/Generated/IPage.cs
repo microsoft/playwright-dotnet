@@ -27,8 +27,6 @@ using System.Collections.Generic;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
-#nullable enable
-
 namespace Microsoft.Playwright;
 
 /// <summary>
@@ -3789,5 +3787,3 @@ public partial interface IPage
     /// <remarks><para>This does not contain ServiceWorkers</para></remarks>
     IReadOnlyList<IWorker> Workers { get; }
 }
-
-#nullable disable

@@ -24,8 +24,6 @@
 
 using System.Runtime.Serialization;
 
-#nullable enable
-
 namespace Microsoft.Playwright;
 
 public enum Media
@@ -37,5 +35,3 @@ public enum Media
     [EnumMember(Value = "null")]
     Null,
 }
-
-#nullable disable

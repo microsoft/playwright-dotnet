@@ -21,18 +21,17 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-
 namespace Microsoft.Playwright.Transport.Protocol;
 
 internal class FrameExpectOptions
 {
-    public object ExpressionArg { get; set; }
+    public object? ExpressionArg { get; set; }
 
-    public ExpectedTextValue[] ExpectedText { get; set; }
+    public ExpectedTextValue[]? ExpectedText { get; set; }
 
     public float ExpectedNumber { get; set; }
 
-    public object ExpectedValue { get; set; }
+    public object? ExpectedValue { get; set; }
 
     public bool UseInnerText { get; set; }
 

@@ -21,14 +21,13 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-
 namespace Microsoft.Playwright.Transport.Protocol;
 
 internal class FrameExpectResult
 {
     public bool Matches { get; set; }
 
-    public object Received { get; set; }
+    public object Received { get; set; } = null!;
 
-    public string[] Log { get; set; }
+    public string[] Log { get; set; } = null!;
 }

@@ -28,11 +28,11 @@ internal class TimeoutSettings
 {
     private const int DefaultTimeoutInMilliseconds = 30_000;
 
-    private readonly TimeoutSettings _parent;
+    private readonly TimeoutSettings? _parent;
     private float? _defaultTimeout;
     private float? _defaultNavigationTimeout;
 
-    public TimeoutSettings(TimeoutSettings parent = null)
+    public TimeoutSettings(TimeoutSettings? parent = null)
     {
         _parent = parent;
     }

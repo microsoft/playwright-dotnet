@@ -24,8 +24,6 @@
 
 using System.Threading.Tasks;
 
-#nullable enable
-
 namespace Microsoft.Playwright;
 
 /// <summary>
@@ -234,5 +232,3 @@ public partial interface IRoute
     /// <summary><para>A request to be routed.</para></summary>
     IRequest Request { get; }
 }
-
-#nullable disable

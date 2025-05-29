@@ -53,19 +53,19 @@ internal class FileChooser : IFileChooser
 
     public bool IsMultiple { get; set; }
 
-    public Task SetFilesAsync(string files, FileChooserSetFilesOptions options = default)
+    public Task SetFilesAsync(string files, FileChooserSetFilesOptions? options = default)
         => ElementImpl.SetInputFilesAsync(files, Map(options));
 
-    public Task SetFilesAsync(IEnumerable<string> files, FileChooserSetFilesOptions options = default)
+    public Task SetFilesAsync(IEnumerable<string> files, FileChooserSetFilesOptions? options = default)
         => ElementImpl.SetInputFilesAsync(files, Map(options));
 
-    public Task SetFilesAsync(FilePayload files, FileChooserSetFilesOptions options = default)
+    public Task SetFilesAsync(FilePayload files, FileChooserSetFilesOptions? options = default)
         => ElementImpl.SetInputFilesAsync(files, Map(options));
 
-    public Task SetFilesAsync(IEnumerable<FilePayload> files, FileChooserSetFilesOptions options = default)
+    public Task SetFilesAsync(IEnumerable<FilePayload> files, FileChooserSetFilesOptions? options = default)
         => ElementImpl.SetInputFilesAsync(files, Map(options));
 
-    private ElementHandleSetInputFilesOptions Map(FileChooserSetFilesOptions options)
+    private ElementHandleSetInputFilesOptions? Map(FileChooserSetFilesOptions? options)
     {
         if (options == null)
         {

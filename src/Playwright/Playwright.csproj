@@ -22,6 +22,7 @@
     <NoWin32Manifest>true</NoWin32Manifest>
     <EnablePackageValidation>true</EnablePackageValidation>
     <PackageValidationBaselineVersion>1.12.0</PackageValidationBaselineVersion>
+    <Nullable>enable</Nullable>
   </PropertyGroup>
   <Import Project="../Common/Version.props" />
   <Import Project="../Common/Dependencies.props" />

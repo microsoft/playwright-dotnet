@@ -21,7 +21,6 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -38,9 +37,9 @@ namespace Microsoft.Playwright.Core;
 internal class APIRequestContext : ChannelOwner, IAPIRequestContext
 {
     internal readonly Tracing _tracing;
-    private string _closeReason;
+    private string? _closeReason;
 
-    internal APIRequest _request;
+    internal APIRequest? _request;
 
     public APIRequestContext(ChannelOwner parent, string guid, APIRequestContextInitializer initializer) : base(parent, guid)
     {
@@ -53,12 +52,12 @@ internal class APIRequestContext : ChannelOwner, IAPIRequestContext
         await DisposeAsync(null).ConfigureAwait(false);
     }
 
-    internal async ValueTask DisposeAsync(string reason)
+    internal async ValueTask DisposeAsync(string? reason)
     {
         _closeReason = reason;
         try
         {
-            await SendMessageToServerAsync("dispose", new Dictionary<string, object>
+            await SendMessageToServerAsync("dispose", new Dictionary<string, object?>
             {
                 ["reason"] = reason,
             }).ConfigureAwait(false);
@@ -71,10 +70,10 @@ internal class APIRequestContext : ChannelOwner, IAPIRequestContext
     }
 
     [MethodImpl(MethodImplOptions.NoInlining)]
-    public Task<IAPIResponse> FetchAsync(IRequest request, APIRequestContextOptions options = null)
+    public Task<IAPIResponse> FetchAsync(IRequest request, APIRequestContextOptions? options = null)
         => InnerFetchAsync(request, null, options);
 
-    internal async Task<IAPIResponse> InnerFetchAsync(IRequest request, string urlOverride, APIRequestContextOptions options = null)
+    internal async Task<IAPIResponse> InnerFetchAsync(IRequest request, string? urlOverride, APIRequestContextOptions? options = null)
     {
         options ??= new APIRequestContextOptions();
         if (string.IsNullOrEmpty(options.Method))
@@ -94,9 +93,9 @@ internal class APIRequestContext : ChannelOwner, IAPIRequestContext
     }
 
     [MethodImpl(MethodImplOptions.NoInlining)]
-    public async Task<IAPIResponse> FetchAsync(string url, APIRequestContextOptions options = null)
+    public async Task<IAPIResponse> FetchAsync(string url, APIRequestContextOptions? options = null)
     {
-        if (!string.IsNullOrEmpty(_closeReason))
+        if (!_closeReason.IsNullOrEmpty())
         {
             throw new PlaywrightException(_closeReason);
         }
@@ -114,9 +113,9 @@ internal class APIRequestContext : ChannelOwner, IAPIRequestContext
         {
             throw new PlaywrightException("Only one of 'data', 'form' or 'multipart' can be specified");
         }
-        byte[] postData = null;
-        object jsonData = null;
-        string dataString = !string.IsNullOrEmpty(options.Data) ? options.Data : options.DataString;
+        byte[]? postData = null;
+        object? jsonData = null;
+        string dataString = (!string.IsNullOrEmpty(options.Data) && options.Data != null) ? options.Data : options.DataString!;
         if (!string.IsNullOrEmpty(dataString))
         {
             if (IsJsonContentType(options.Headers?.ToDictionary(x => x.Key, x => x.Value)))
@@ -137,7 +136,7 @@ internal class APIRequestContext : ChannelOwner, IAPIRequestContext
             jsonData = JsonSerializer.Serialize(options.DataObject, _connection.DefaultJsonSerializerOptionsKeepNulls);
         }
 
-        var message = new Dictionary<string, object>
+        var message = new Dictionary<string, object?>
         {
             ["url"] = url,
             ["method"] = options?.Method,
@@ -145,21 +144,21 @@ internal class APIRequestContext : ChannelOwner, IAPIRequestContext
             ["ignoreHTTPSErrors"] = options?.IgnoreHTTPSErrors,
             ["maxRedirects"] = options?.MaxRedirects,
             ["maxRetries"] = options?.MaxRetries,
-            ["timeout"] = options.Timeout,
-            ["params"] = options.Params?.ToDictionary(x => x.Key, x => x.Value.ToString()).ToProtocol(),
-            ["encodedParams"] = options.ParamsString,
-            ["headers"] = options.Headers?.ToProtocol(),
+            ["timeout"] = options?.Timeout,
+            ["params"] = options?.Params?.ToDictionary(x => x.Key, x => x.Value.ToString()).ToProtocol(),
+            ["encodedParams"] = options?.ParamsString,
+            ["headers"] = options?.Headers?.ToProtocol(),
             ["jsonData"] = jsonData,
             ["postData"] = postData != null ? Convert.ToBase64String(postData) : null,
-            ["formData"] = ((FormData)options.Form)?.ToProtocol(throwWhenSerializingFilePayloads: true),
-            ["multipartData"] = ((FormData)options.Multipart)?.ToProtocol(),
+            ["formData"] = (options?.Form as FormData)?.ToProtocol(throwWhenSerializingFilePayloads: true),
+            ["multipartData"] = (options?.Multipart as FormData)?.ToProtocol(),
         };
 
         var response = await SendMessageToServerAsync("fetch", message).ConfigureAwait(false);
-        return new APIResponse(this, response?.GetProperty("response").ToObject<Transport.Protocol.APIResponse>());
+        return new APIResponse(this, response?.GetProperty("response").ToObject<Transport.Protocol.APIResponse>()!);
     }
 
-    private bool IsJsonContentType(IDictionary<string, string> headers)
+    private bool IsJsonContentType(IDictionary<string, string>? headers)
     {
         if (headers == null)
         {
@@ -187,24 +186,24 @@ internal class APIRequestContext : ChannelOwner, IAPIRequestContext
     }
 
     [MethodImpl(MethodImplOptions.NoInlining)]
-    public Task<IAPIResponse> DeleteAsync(string url, APIRequestContextOptions options = null) => FetchAsync(url, WithMethod(options, "DELETE"));
+    public Task<IAPIResponse> DeleteAsync(string url, APIRequestContextOptions? options = null) => FetchAsync(url, WithMethod(options, "DELETE"));
 
     [MethodImpl(MethodImplOptions.NoInlining)]
-    public Task<IAPIResponse> GetAsync(string url, APIRequestContextOptions options = null) => FetchAsync(url, WithMethod(options, "GET"));
+    public Task<IAPIResponse> GetAsync(string url, APIRequestContextOptions? options = null) => FetchAsync(url, WithMethod(options, "GET"));
 
     [MethodImpl(MethodImplOptions.NoInlining)]
-    public Task<IAPIResponse> HeadAsync(string url, APIRequestContextOptions options = null) => FetchAsync(url, WithMethod(options, "HEAD"));
+    public Task<IAPIResponse> HeadAsync(string url, APIRequestContextOptions? options = null) => FetchAsync(url, WithMethod(options, "HEAD"));
 
     [MethodImpl(MethodImplOptions.NoInlining)]
-    public Task<IAPIResponse> PatchAsync(string url, APIRequestContextOptions options = null) => FetchAsync(url, WithMethod(options, "PATCH"));
+    public Task<IAPIResponse> PatchAsync(string url, APIRequestContextOptions? options = null) => FetchAsync(url, WithMethod(options, "PATCH"));
 
     [MethodImpl(MethodImplOptions.NoInlining)]
-    public Task<IAPIResponse> PostAsync(string url, APIRequestContextOptions options = null) => FetchAsync(url, WithMethod(options, "POST"));
+    public Task<IAPIResponse> PostAsync(string url, APIRequestContextOptions? options = null) => FetchAsync(url, WithMethod(options, "POST"));
 
     [MethodImpl(MethodImplOptions.NoInlining)]
-    public Task<IAPIResponse> PutAsync(string url, APIRequestContextOptions options = null) => FetchAsync(url, WithMethod(options, "PUT"));
+    public Task<IAPIResponse> PutAsync(string url, APIRequestContextOptions? options = null) => FetchAsync(url, WithMethod(options, "PUT"));
 
-    private APIRequestContextOptions WithMethod(APIRequestContextOptions options, string method)
+    private APIRequestContextOptions WithMethod(APIRequestContextOptions? options, string method)
     {
         options = ClassUtils.Clone<APIRequestContextOptions>(options);
         options.Method = method;
@@ -212,7 +211,7 @@ internal class APIRequestContext : ChannelOwner, IAPIRequestContext
     }
 
     [MethodImpl(MethodImplOptions.NoInlining)]
-    public async Task<string> StorageStateAsync(APIRequestContextStorageStateOptions options = null)
+    public async Task<string> StorageStateAsync(APIRequestContextStorageStateOptions? options = null)
     {
         string state = JsonSerializer.Serialize(
             await SendMessageToServerAsync<object>("storageState").ConfigureAwait(false),

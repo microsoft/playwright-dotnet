@@ -24,8 +24,6 @@
 
 using System.Text.Json.Serialization;
 
-#nullable enable
-
 namespace Microsoft.Playwright;
 
 public class PageGetByLabelOptions
@@ -52,5 +50,3 @@ public class PageGetByLabelOptions
     [JsonPropertyName("exact")]
     public bool? Exact { get; set; }
 }
-
-#nullable disable

@@ -24,8 +24,6 @@
 
 using System.Text.Json.Serialization;
 
-#nullable enable
-
 namespace Microsoft.Playwright;
 
 public class LocatorAssertionsToBeVisibleOptions
@@ -50,5 +48,3 @@ public class LocatorAssertionsToBeVisibleOptions
     [JsonPropertyName("visible")]
     public bool? Visible { get; set; }
 }
-
-#nullable disable

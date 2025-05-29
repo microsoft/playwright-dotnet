@@ -25,8 +25,6 @@
 using System.ComponentModel.DataAnnotations;
 using System.Text.Json.Serialization;
 
-#nullable enable
-
 namespace Microsoft.Playwright;
 
 public partial class RequestSizesResult
@@ -66,5 +64,3 @@ public partial class RequestSizesResult
     [JsonPropertyName("responseHeadersSize")]
     public int ResponseHeadersSize { get; set; } = default!;
 }
-
-#nullable disable

@@ -37,9 +37,9 @@ namespace Microsoft.Playwright.Core;
 internal class Response : ChannelOwner, IResponse
 {
     private readonly ResponseInitializer _initializer;
-    private readonly TaskCompletionSource<string> _finishedTask;
+    private readonly TaskCompletionSource<string?> _finishedTask;
     private readonly RawHeaders _headers;
-    private Task<RawHeaders> _rawHeadersTask;
+    private Task<RawHeaders>? _rawHeadersTask;
 
     internal Response(ChannelOwner parent, string guid, ResponseInitializer initializer) : base(parent, guid)
     {
@@ -72,10 +72,10 @@ internal class Response : ChannelOwner, IResponse
         => (await GetRawHeadersAsync().ConfigureAwait(false)).Headers;
 
     [MethodImpl(MethodImplOptions.NoInlining)]
-    public async Task<byte[]> BodyAsync() => (await SendMessageToServerAsync("body").ConfigureAwait(false))?.GetProperty("binary").GetBytesFromBase64();
+    public async Task<byte[]> BodyAsync() => (await SendMessageToServerAsync("body").ConfigureAwait(false)).Value.GetProperty("binary").GetBytesFromBase64();
 
     [MethodImpl(MethodImplOptions.NoInlining)]
-    public async Task<string> FinishedAsync()
+    public async Task<string?> FinishedAsync()
     {
         var targetClosedTask = _initializer.Request.TargetClosedAsync();
         if (targetClosedTask == await Task.WhenAny(_finishedTask.Task, targetClosedTask).ConfigureAwait(false))
@@ -90,7 +90,7 @@ internal class Response : ChannelOwner, IResponse
         => (await GetRawHeadersAsync().ConfigureAwait(false)).HeadersArray;
 
     [MethodImpl(MethodImplOptions.NoInlining)]
-    public async Task<string> HeaderValueAsync(string name)
+    public async Task<string?> HeaderValueAsync(string name)
         => (await GetRawHeadersAsync().ConfigureAwait(false)).Get(name);
 
     [MethodImpl(MethodImplOptions.NoInlining)]
@@ -106,14 +106,14 @@ internal class Response : ChannelOwner, IResponse
 
     [MethodImpl(MethodImplOptions.NoInlining)]
     public async Task<T> JsonAsync<T>()
-        => JsonSerializer.Deserialize<T>(await BodyAsync().ConfigureAwait(false));
+        => JsonSerializer.Deserialize<T>(await BodyAsync().ConfigureAwait(false))!;
 
     [MethodImpl(MethodImplOptions.NoInlining)]
-    public async Task<ResponseSecurityDetailsResult> SecurityDetailsAsync() => (await SendMessageToServerAsync("securityDetails").ConfigureAwait(false))
+    public async Task<ResponseSecurityDetailsResult?> SecurityDetailsAsync() => (await SendMessageToServerAsync("securityDetails").ConfigureAwait(false))
             ?.GetProperty("value").ToObject<ResponseSecurityDetailsResult>(_connection.DefaultJsonSerializerOptions);
 
     [MethodImpl(MethodImplOptions.NoInlining)]
-    public async Task<ResponseServerAddrResult> ServerAddrAsync() => (await SendMessageToServerAsync("serverAddr").ConfigureAwait(false))
+    public async Task<ResponseServerAddrResult?> ServerAddrAsync() => (await SendMessageToServerAsync("serverAddr").ConfigureAwait(false))
             ?.GetProperty("value").ToObject<ResponseServerAddrResult>(_connection.DefaultJsonSerializerOptions);
 
     [MethodImpl(MethodImplOptions.NoInlining)]
@@ -123,9 +123,9 @@ internal class Response : ChannelOwner, IResponse
         return Encoding.UTF8.GetString(content);
     }
 
-    internal void ReportFinished(string erroMessage = null)
+    internal void ReportFinished(string? errorMessage = null)
     {
-        _finishedTask.SetResult(erroMessage);
+        _finishedTask.SetResult(errorMessage);
     }
 
     private Task<RawHeaders> GetRawHeadersAsync()
@@ -140,6 +140,6 @@ internal class Response : ChannelOwner, IResponse
 
     private async Task<RawHeaders> GetRawHeadersTaskAsync()
     {
-        return new((await SendMessageToServerAsync("rawResponseHeaders").ConfigureAwait(false))?.GetProperty("headers").ToObject<List<NameValue>>());
+        return new((await SendMessageToServerAsync("rawResponseHeaders").ConfigureAwait(false)).Value.GetProperty("headers").ToObject<List<NameValue>>());
     }
 }

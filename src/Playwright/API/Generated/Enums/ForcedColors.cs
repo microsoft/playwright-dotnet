@@ -24,8 +24,6 @@
 
 using System.Runtime.Serialization;
 
-#nullable enable
-
 namespace Microsoft.Playwright;
 
 public enum ForcedColors
@@ -37,5 +35,3 @@ public enum ForcedColors
     [EnumMember(Value = "null")]
     Null,
 }
-
-#nullable disable

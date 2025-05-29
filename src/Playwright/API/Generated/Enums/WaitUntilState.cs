@@ -24,8 +24,6 @@
 
 using System.Runtime.Serialization;
 
-#nullable enable
-
 namespace Microsoft.Playwright;
 
 public enum WaitUntilState
@@ -39,5 +37,3 @@ public enum WaitUntilState
     [EnumMember(Value = "commit")]
     Commit,
 }
-
-#nullable disable

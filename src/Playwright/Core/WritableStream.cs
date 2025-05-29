@@ -44,7 +44,7 @@ internal class WritableStream : ChannelOwner, IAsyncDisposable
     [MethodImpl(MethodImplOptions.NoInlining)]
     public Task WriteAsync(string binary) => SendMessageToServerAsync(
             "write",
-            new Dictionary<string, object>
+            new Dictionary<string, object?>
             {
                 ["binary"] = binary,
             });

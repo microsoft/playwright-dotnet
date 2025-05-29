@@ -24,8 +24,6 @@
 
 using System;
 
-#nullable enable
-
 namespace Microsoft.Playwright;
 
 /// <summary>
@@ -56,5 +54,3 @@ public partial interface IWebSocket
     /// <summary><para>Contains the URL of the WebSocket.</para></summary>
     string Url { get; }
 }
-
-#nullable disable

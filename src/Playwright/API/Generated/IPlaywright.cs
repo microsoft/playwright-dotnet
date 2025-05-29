@@ -24,8 +24,6 @@
 
 using System.Collections.Generic;
 
-#nullable enable
-
 namespace Microsoft.Playwright;
 
 /// <summary>
@@ -114,5 +112,3 @@ public partial interface IPlaywright
     /// </summary>
     public IBrowserType Webkit { get; }
 }
-
-#nullable disable

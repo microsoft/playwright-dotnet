@@ -24,8 +24,6 @@
 
 using System.Threading.Tasks;
 
-#nullable enable
-
 namespace Microsoft.Playwright;
 
 /// <summary>
@@ -86,5 +84,3 @@ public partial interface ISelectors
     /// <param name="attributeName">Test id attribute name.</param>
     void SetTestIdAttribute(string attributeName);
 }
-
-#nullable disable

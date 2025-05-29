@@ -24,8 +24,6 @@
 
 using System.Text.Json.Serialization;
 
-#nullable enable
-
 namespace Microsoft.Playwright;
 
 public class PageCloseOptions
@@ -56,5 +54,3 @@ public class PageCloseOptions
     [JsonPropertyName("runBeforeUnload")]
     public bool? RunBeforeUnload { get; set; }
 }
-
-#nullable disable

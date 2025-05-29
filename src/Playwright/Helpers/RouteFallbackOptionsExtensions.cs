@@ -21,12 +21,11 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-
 namespace Microsoft.Playwright.Helpers;
 
 internal static class RouteFallbackOptionsExtensions
 {
-    public static RouteFallbackOptions FromRouteContinueOptions(this RouteFallbackOptions options, RouteContinueOptions overrides)
+    public static RouteFallbackOptions FromRouteContinueOptions(this RouteFallbackOptions options, RouteContinueOptions? overrides)
     {
         if (overrides == null)
         {

@@ -24,8 +24,6 @@
 
 using System.Text.Json.Serialization;
 
-#nullable enable
-
 namespace Microsoft.Playwright;
 
 public class PageGoForwardOptions
@@ -79,5 +77,3 @@ public class PageGoForwardOptions
     [JsonPropertyName("waitUntil")]
     public WaitUntilState? WaitUntil { get; set; }
 }
-
-#nullable disable

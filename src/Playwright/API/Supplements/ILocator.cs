@@ -29,5 +29,5 @@ namespace Microsoft.Playwright;
 
 public partial interface ILocator
 {
-    Task<JsonElement?> EvaluateAsync(string expression, object arg = null, LocatorEvaluateOptions options = null);
+    Task<JsonElement?> EvaluateAsync(string expression, object? arg = null, LocatorEvaluateOptions? options = null);
 }

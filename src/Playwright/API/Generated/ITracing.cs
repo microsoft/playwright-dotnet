@@ -24,8 +24,6 @@
 
 using System.Threading.Tasks;
 
-#nullable enable
-
 namespace Microsoft.Playwright;
 
 /// <summary>
@@ -157,5 +155,3 @@ public partial interface ITracing
     /// <param name="options">Call options</param>
     Task StopChunkAsync(TracingStopChunkOptions? options = default);
 }
-
-#nullable disable

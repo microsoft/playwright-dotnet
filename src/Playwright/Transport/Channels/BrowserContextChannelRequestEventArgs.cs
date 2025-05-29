@@ -28,15 +28,13 @@ namespace Microsoft.Playwright.Transport.Channels;
 
 internal class BrowserContextChannelRequestEventArgs
 {
-    public Page Page { get; set; }
+    public Page? Page { get; set; }
 
-    public Request Request { get; set; }
+    public Request Request { get; set; } = null!;
 
-    public Response Response { get; set; }
+    public Response? Response { get; set; }
 
-    public RequestSizesResult RequestSizes { get; set; }
-
-    public string FailureText { get; set; }
+    public string? FailureText { get; set; }
 
     public float ResponseEndTiming { get; set; }
 }

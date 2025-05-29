@@ -39,13 +39,13 @@ internal class Selectors : ChannelOwner
 internal class SelectorsAPI : ISelectors
 {
     private readonly HashSet<Selectors> _channels = new();
-    private readonly List<Dictionary<string, object>> _registrations = new();
+    private readonly List<Dictionary<string, object?>> _registrations = new();
 
-    public async Task RegisterAsync(string name, SelectorsRegisterOptions options = default)
+    public async Task RegisterAsync(string name, SelectorsRegisterOptions? options = default)
     {
         options ??= new SelectorsRegisterOptions();
         var source = ScriptsHelper.EvaluationScript(options.Script, options.Path, false);
-        var @params = new Dictionary<string, object>()
+        var @params = new Dictionary<string, object?>()
         {
             ["name"] = name,
             ["source"] = source,
@@ -65,7 +65,7 @@ internal class SelectorsAPI : ISelectors
         {
             channel.SendMessageToServerAsync(
             "setTestIdAttributeName",
-            new Dictionary<string, object>
+            new Dictionary<string, object?>
             {
                 ["testIdAttributeName"] = attributeName,
             }).IgnoreException();
@@ -79,7 +79,7 @@ internal class SelectorsAPI : ISelectors
         {
             // This should not fail except for connection closure, but just in case we catch.
             channel.SendMessageToServerAsync("register", @params).IgnoreException();
-            channel.SendMessageToServerAsync("setTestIdAttributeName", new Dictionary<string, object>
+            channel.SendMessageToServerAsync("setTestIdAttributeName", new Dictionary<string, object?>
             {
                 ["testIdAttributeName"] = Locator.TestIdAttributeName(),
             }).IgnoreException();
@@ -90,11 +90,4 @@ internal class SelectorsAPI : ISelectors
     {
         _channels.Remove(channel);
     }
-}
-
-internal record SelectorsRegisterParams
-{
-    internal string Name;
-    internal string Source;
-    internal bool? ContentScript;
 }

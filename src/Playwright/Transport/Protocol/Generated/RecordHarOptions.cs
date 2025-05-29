@@ -29,20 +29,20 @@ namespace Microsoft.Playwright.Transport.Protocol;
 internal class RecordHarOptions
 {
     [JsonPropertyName("path")]
-    public string Path { get; set; }
+    public string Path { get; set; } = null!;
 
     [JsonPropertyName("content")]
-    public string Content { get; set; }
+    public string Content { get; set; } = null!;
 
     [JsonPropertyName("mode")]
-    public string Mode { get; set; }
+    public string Mode { get; set; } = null!;
 
     [JsonPropertyName("urlGlob")]
-    public string UrlGlob { get; set; }
+    public string UrlGlob { get; set; } = null!;
 
     [JsonPropertyName("urlRegexSource")]
-    public string UrlRegexSource { get; set; }
+    public string UrlRegexSource { get; set; } = null!;
 
     [JsonPropertyName("urlRegexFlags")]
-    public string UrlRegexFlags { get; set; }
+    public string UrlRegexFlags { get; set; } = null!;
 }

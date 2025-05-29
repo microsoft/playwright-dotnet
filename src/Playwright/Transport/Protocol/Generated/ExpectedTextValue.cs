@@ -29,13 +29,13 @@ namespace Microsoft.Playwright.Transport.Protocol;
 internal class ExpectedTextValue
 {
     [JsonPropertyName("string")]
-    public string String { get; set; }
+    public string String { get; set; } = null!;
 
     [JsonPropertyName("regexSource")]
-    public string RegexSource { get; set; }
+    public string RegexSource { get; set; } = null!;
 
     [JsonPropertyName("regexFlags")]
-    public string RegexFlags { get; set; }
+    public string RegexFlags { get; set; } = null!;
 
     [JsonPropertyName("matchSubstring")]
     public bool? MatchSubstring { get; set; }

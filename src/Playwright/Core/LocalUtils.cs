@@ -21,7 +21,6 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -44,8 +43,8 @@ internal class LocalUtils : ChannelOwner
         }
     }
 
-    internal Task ZipAsync(string zipFile, List<NameValue> entries, string mode, string stacksId, bool includeSources)
-        => SendMessageToServerAsync("zip", new Dictionary<string, object>
+    internal Task ZipAsync(string zipFile, List<NameValue> entries, string mode, string? stacksId, bool includeSources)
+        => SendMessageToServerAsync("zip", new Dictionary<string, object?>
         {
                 { "zipFile", zipFile },
                 { "entries", entries },
@@ -54,9 +53,9 @@ internal class LocalUtils : ChannelOwner
                 { "includeSources", includeSources },
         });
 
-    internal async Task<(string HarId, string Error)> HarOpenAsync(string file)
+    internal async Task<(string? HarId, string? Error)> HarOpenAsync(string file)
     {
-        var response = await SendMessageToServerAsync("harOpen", new Dictionary<string, object>
+        var response = await SendMessageToServerAsync("harOpen", new Dictionary<string, object?>
             {
                   { "file", file },
             }).ConfigureAwait(false);
@@ -68,9 +67,9 @@ internal class LocalUtils : ChannelOwner
         string url,
         string method,
         List<Header> headers,
-        byte[] postData,
+        byte[]? postData,
         bool isNavigationRequest)
-        => SendMessageToServerAsync<LocalUtilsHarLookupResult>("harLookup", new Dictionary<string, object>
+        => SendMessageToServerAsync<LocalUtilsHarLookupResult>("harLookup", new Dictionary<string, object?>
             {
                 { "harId", harId },
                 { "url", url },
@@ -81,20 +80,20 @@ internal class LocalUtils : ChannelOwner
             });
 
     internal Task HarCloseAsync(string harId)
-         => SendMessageToServerAsync("HarCloseAsync", new Dictionary<string, object>
+         => SendMessageToServerAsync("HarCloseAsync", new Dictionary<string, object?>
         {
                   { "harId", harId },
         });
 
     internal Task HarUnzipAsync(string zipFile, string harFile)
-         => SendMessageToServerAsync("harUnzip", new Dictionary<string, object>
+         => SendMessageToServerAsync("harUnzip", new Dictionary<string, object?>
         {
                   { "zipFile", zipFile },
                   { "harFile", harFile },
         });
 
-    internal async Task<JsonPipe> ConnectAsync(string wsEndpoint = default, IEnumerable<KeyValuePair<string, string>> headers = default, float? slowMo = default, float? timeout = default, string exposeNetwork = default)
-         => (await SendMessageToServerAsync("connect", new Dictionary<string, object>
+    internal async Task<JsonPipe> ConnectAsync(string wsEndpoint, IEnumerable<KeyValuePair<string, string>>? headers = default, float? slowMo = default, float? timeout = default, string? exposeNetwork = default)
+         => (await SendMessageToServerAsync("connect", new Dictionary<string, object?>
             {
                 { "wsEndpoint", wsEndpoint },
                 { "headers", headers },
@@ -104,7 +103,7 @@ internal class LocalUtils : ChannelOwner
             }).ConfigureAwait(false)).Value.GetObject<JsonPipe>("pipe", _connection);
 
     internal void AddStackToTracingNoReply(List<StackFrame> stack, int id)
-         => SendMessageToServerAsync("addStackToTracingNoReply", new Dictionary<string, object>
+         => SendMessageToServerAsync("addStackToTracingNoReply", new Dictionary<string, object?>
         {
             {
                 "callData", new ClientSideCallMetadata()
@@ -116,33 +115,33 @@ internal class LocalUtils : ChannelOwner
         }).IgnoreException();
 
     internal Task TraceDiscardedAsync(string stacksId)
-        => SendMessageToServerAsync("traceDiscarded", new Dictionary<string, object>
+        => SendMessageToServerAsync("traceDiscarded", new Dictionary<string, object?>
         {
             { "stacksId", stacksId },
         });
 
-    internal async Task<string> TracingStartedAsync(string tracesDir, string traceName)
+    internal async Task<string> TracingStartedAsync(string? tracesDir, string traceName)
     {
-        var response = await SendMessageToServerAsync("tracingStarted", new Dictionary<string, object>
+        var response = await SendMessageToServerAsync("tracingStarted", new Dictionary<string, object?>
         {
             { "tracesDir", tracesDir },
             { "traceName", traceName },
         }).ConfigureAwait(false);
-        return response.GetString("stacksId", true);
+        return response.Value.GetProperty("stacksId").ToString();
     }
 }
 
 internal class LocalUtilsHarLookupResult
 {
-    public string Action { get; set; }
+    public string Action { get; set; } = null!;
 
-    public string Message { get; set; }
+    public string? Message { get; set; }
 
-    public string RedirectURL { get; set; }
+    public string? RedirectURL { get; set; }
 
-    public int Status { get; set; }
+    public int? Status { get; set; }
 
-    public List<NameValue> Headers { get; set; }
+    public List<NameValue>? Headers { get; set; }
 
-    public byte[] Body { get; set; }
+    public byte[]? Body { get; set; }
 }

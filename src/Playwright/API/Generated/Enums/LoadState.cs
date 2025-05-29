@@ -24,8 +24,6 @@
 
 using System.Runtime.Serialization;
 
-#nullable enable
-
 namespace Microsoft.Playwright;
 
 public enum LoadState
@@ -37,5 +35,3 @@ public enum LoadState
     [EnumMember(Value = "networkidle")]
     NetworkIdle,
 }
-
-#nullable disable

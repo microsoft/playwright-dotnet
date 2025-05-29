@@ -24,8 +24,6 @@
 
 using System.Threading.Tasks;
 
-#nullable enable
-
 namespace Microsoft.Playwright;
 
 /// <summary>
@@ -42,5 +40,3 @@ public partial interface IAPIRequest
     /// <param name="options">Call options</param>
     Task<IAPIRequestContext> NewContextAsync(APIRequestNewContextOptions? options = default);
 }
-
-#nullable disable

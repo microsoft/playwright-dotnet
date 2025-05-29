@@ -24,8 +24,6 @@
 
 using System.Runtime.Serialization;
 
-#nullable enable
-
 namespace Microsoft.Playwright;
 
 public enum HarMode
@@ -35,5 +33,3 @@ public enum HarMode
     [EnumMember(Value = "minimal")]
     Minimal,
 }
-
-#nullable disable

@@ -24,8 +24,6 @@
 
 using System.Runtime.Serialization;
 
-#nullable enable
-
 namespace Microsoft.Playwright;
 
 public enum Contrast
@@ -37,5 +35,3 @@ public enum Contrast
     [EnumMember(Value = "null")]
     Null,
 }
-
-#nullable disable

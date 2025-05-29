@@ -24,8 +24,6 @@
 
 using System.Text.Json.Serialization;
 
-#nullable enable
-
 namespace Microsoft.Playwright;
 
 public class LocatorGetByPlaceholderOptions
@@ -52,5 +50,3 @@ public class LocatorGetByPlaceholderOptions
     [JsonPropertyName("exact")]
     public bool? Exact { get; set; }
 }
-
-#nullable disable

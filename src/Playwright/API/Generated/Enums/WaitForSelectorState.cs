@@ -24,8 +24,6 @@
 
 using System.Runtime.Serialization;
 
-#nullable enable
-
 namespace Microsoft.Playwright;
 
 public enum WaitForSelectorState
@@ -39,5 +37,3 @@ public enum WaitForSelectorState
     [EnumMember(Value = "hidden")]
     Hidden,
 }
-
-#nullable disable

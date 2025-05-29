@@ -29,8 +29,8 @@ namespace Microsoft.Playwright.Transport.Protocol;
 internal class SerializedValueTa
 {
     [JsonPropertyName("b")]
-    public byte[] B { get; set; }
+    public byte[] B { get; set; } = null!;
 
     [JsonPropertyName("k")]
-    public string K { get; set; }
+    public string K { get; set; } = null!;
 }

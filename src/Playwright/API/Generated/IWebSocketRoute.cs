@@ -25,8 +25,6 @@
 using System;
 using System.Threading.Tasks;
 
-#nullable enable
-
 namespace Microsoft.Playwright;
 
 /// <summary>
@@ -170,7 +168,7 @@ public partial interface IWebSocketRoute
     /// code</a> and an optional <a href="https://developer.mozilla.org/en-US/docs/Web/API/WebSocket/close#reason">close
     /// reason</a>.
     /// </param>
-    void OnClose(Action<int?, string> handler);
+    void OnClose(Action<int?, string?> handler);
 
     /// <summary>
     /// <para>
@@ -206,5 +204,3 @@ public partial interface IWebSocketRoute
     /// <summary><para>URL of the WebSocket created in the page.</para></summary>
     string Url { get; }
 }
-
-#nullable disable

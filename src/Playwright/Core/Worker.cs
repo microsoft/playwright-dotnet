@@ -43,17 +43,17 @@ internal class Worker : ChannelOwner, IWorker
         _initializer = initializer;
     }
 
-    public event EventHandler<IWorker> Close;
+    public event EventHandler<IWorker>? Close;
 
     public string Url => _initializer.Url;
 
-    internal Page Page { get; set; }
+    internal Page? Page { get; set; }
 
-    internal BrowserContext Context { get; set; }
+    internal BrowserContext? Context { get; set; }
 
     internal TaskCompletionSource<bool> ClosedTcs { get; } = new();
 
-    internal override void OnMessage(string method, JsonElement? serverParams)
+    internal override void OnMessage(string method, JsonElement serverParams)
     {
         switch (method)
         {
@@ -80,20 +80,20 @@ internal class Worker : ChannelOwner, IWorker
     }
 
     [MethodImpl(MethodImplOptions.NoInlining)]
-    public async Task<T> EvaluateAsync<T>(string expression, object arg = null)
+    public async Task<T> EvaluateAsync<T>(string expression, object? arg = null)
         => ScriptsHelper.ParseEvaluateResult<T>((await SendMessageToServerAsync(
                 "evaluateExpression",
-                new Dictionary<string, object>
+                new Dictionary<string, object?>
                 {
                     ["expression"] = expression,
                     ["arg"] = ScriptsHelper.SerializedArgument(arg),
                 }).ConfigureAwait(false)).Value.GetProperty("value"));
 
     [MethodImpl(MethodImplOptions.NoInlining)]
-    public async Task<IJSHandle> EvaluateHandleAsync(string expression, object arg = null)
+    public async Task<IJSHandle> EvaluateHandleAsync(string expression, object? arg = null)
         => (await SendMessageToServerAsync<JsonElement>(
             "evaluateExpressionHandle",
-            new Dictionary<string, object>
+            new Dictionary<string, object?>
             {
                 ["expression"] = expression,
                 ["arg"] = ScriptsHelper.SerializedArgument(arg),
@@ -101,7 +101,7 @@ internal class Worker : ChannelOwner, IWorker
             .ConfigureAwait(false)).GetObject<JSHandle>("handle", _connection);
 
     [MethodImpl(MethodImplOptions.NoInlining)]
-    public async Task<IWorker> WaitForCloseAsync(Func<Task> action = default, float? timeout = default)
+    public async Task<IWorker> WaitForCloseAsync(Func<Task>? action = default, float? timeout = default)
     {
         using var waiter = new Waiter(this, "worker.WaitForCloseAsync");
         var waiterResult = waiter.GetWaitForEventTask<IWorker>(this, nameof(Close), null);

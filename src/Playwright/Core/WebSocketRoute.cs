@@ -40,10 +40,10 @@ internal class WebSocketRoute : ChannelOwner, IWebSocketRoute
     private readonly IWebSocketRoute _server;
     internal readonly WebSocketRouteInitializer _initializer;
     private bool _connected;
-    private Action<int?, string> _onPageClose;
-    private Action<IWebSocketFrame> _onPageMessage;
-    internal Action<int?, string> _onServerClose;
-    internal Action<IWebSocketFrame> _onServerMessage;
+    private Action<int?, string?>? _onPageClose;
+    private Action<IWebSocketFrame>? _onPageMessage;
+    internal Action<int?, string?>? _onServerClose;
+    internal Action<IWebSocketFrame>? _onServerMessage;
 
     internal WebSocketRoute(ChannelOwner parent, string guid, WebSocketRouteInitializer initializer) : base(parent, guid)
     {
@@ -54,78 +54,78 @@ internal class WebSocketRoute : ChannelOwner, IWebSocketRoute
 
     public string Url => _initializer.Url;
 
-    internal override void OnMessage(string method, JsonElement? serverParams)
+    internal override void OnMessage(string method, JsonElement serverParams)
     {
         switch (method)
         {
             case "messageFromPage":
                 if (_onPageMessage != null)
                 {
-                    var frame = new WebSocketFrame(serverParams.Value.GetProperty("message").GetString(), serverParams.Value.GetProperty("isBase64").GetBoolean());
+                    var frame = new WebSocketFrame(serverParams.GetProperty("message").GetString()!, serverParams.GetProperty("isBase64").GetBoolean());
                     _onPageMessage(frame);
                 }
                 else if (_connected)
                 {
-                    SendMessageToServerAsync("sendToServer", new Dictionary<string, object>
+                    SendMessageToServerAsync("sendToServer", new Dictionary<string, object?>
                     {
-                        ["message"] = serverParams?.GetProperty("message").GetString(),
-                        ["isBase64"] = serverParams?.GetProperty("isBase64").GetBoolean(),
+                        ["message"] = serverParams.GetProperty("message").GetString(),
+                        ["isBase64"] = serverParams.GetProperty("isBase64").GetBoolean(),
                     }).IgnoreException();
                 }
                 break;
             case "messageFromServer":
                 if (_onServerMessage != null)
                 {
-                    var frame = new WebSocketFrame(serverParams.Value.GetProperty("message").GetString(), serverParams.Value.GetProperty("isBase64").GetBoolean());
+                    var frame = new WebSocketFrame(serverParams.GetProperty("message").GetString()!, serverParams.GetProperty("isBase64").GetBoolean());
                     _onServerMessage(frame);
                 }
                 else
                 {
-                    SendMessageToServerAsync("sendToPage", new Dictionary<string, object>
+                    SendMessageToServerAsync("sendToPage", new Dictionary<string, object?>
                     {
-                        ["message"] = serverParams?.GetProperty("message").GetString(),
-                        ["isBase64"] = serverParams?.GetProperty("isBase64").GetBoolean(),
+                        ["message"] = serverParams.GetProperty("message").GetString(),
+                        ["isBase64"] = serverParams.GetProperty("isBase64").GetBoolean(),
                     }).IgnoreException();
                 }
                 break;
             case "closePage":
                 if (_onPageClose != null)
                 {
-                    _onPageClose(serverParams?.GetProperty("code").GetInt32(), serverParams?.GetProperty("reason").GetString());
+                    _onPageClose(serverParams.GetProperty("code").GetInt32(), serverParams.GetProperty("reason").GetString());
                 }
                 else
                 {
-                    SendMessageToServerAsync("closeServer", new Dictionary<string, object>
+                    SendMessageToServerAsync("closeServer", new Dictionary<string, object?>
                     {
-                        ["code"] = serverParams?.GetProperty("code").GetInt32(),
-                        ["reason"] = serverParams?.GetProperty("reason").GetString(),
-                        ["wasClean"] = serverParams?.GetProperty("wasClean").GetBoolean(),
+                        ["code"] = serverParams.GetProperty("code").GetInt32(),
+                        ["reason"] = serverParams.GetProperty("reason").GetString(),
+                        ["wasClean"] = serverParams.GetProperty("wasClean").GetBoolean(),
                     }).IgnoreException();
                 }
                 break;
             case "closeServer":
                 if (_onServerClose != null)
                 {
-                    _onServerClose(serverParams?.GetProperty("code").GetInt32(), serverParams?.GetProperty("reason").GetString());
+                    _onServerClose(serverParams.GetProperty("code").GetInt32(), serverParams.GetProperty("reason").GetString());
                 }
                 else
                 {
-                    SendMessageToServerAsync("closePage", new Dictionary<string, object>
+                    SendMessageToServerAsync("closePage", new Dictionary<string, object?>
                     {
-                        ["code"] = serverParams?.GetProperty("code").GetInt32(),
-                        ["reason"] = serverParams?.GetProperty("reason").GetString(),
-                        ["wasClean"] = serverParams?.GetProperty("wasClean").GetBoolean(),
+                        ["code"] = serverParams.GetProperty("code").GetInt32(),
+                        ["reason"] = serverParams.GetProperty("reason").GetString(),
+                        ["wasClean"] = serverParams.GetProperty("wasClean").GetBoolean(),
                     }).IgnoreException();
                 }
                 break;
         }
     }
 
-    public async Task CloseAsync(WebSocketRouteCloseOptions options = null)
+    public async Task CloseAsync(WebSocketRouteCloseOptions? options = null)
     {
         try
         {
-            await SendMessageToServerAsync("closePage", new Dictionary<string, object>
+            await SendMessageToServerAsync("closePage", new Dictionary<string, object?>
             {
                 ["code"] = options?.Code,
                 ["reason"] = options?.Reason,
@@ -140,7 +140,7 @@ internal class WebSocketRoute : ChannelOwner, IWebSocketRoute
 
     public void Send(byte[] message)
     {
-        SendMessageToServerAsync("sendToPage", new Dictionary<string, object>
+        SendMessageToServerAsync("sendToPage", new Dictionary<string, object?>
         {
             ["message"] = Convert.ToBase64String(message),
             ["isBase64"] = true,
@@ -149,7 +149,7 @@ internal class WebSocketRoute : ChannelOwner, IWebSocketRoute
 
     public void Send(string message)
     {
-        SendMessageToServerAsync("sendToPage", new Dictionary<string, object>
+        SendMessageToServerAsync("sendToPage", new Dictionary<string, object?>
         {
             ["message"] = message,
             ["isBase64"] = false,
@@ -169,7 +169,7 @@ internal class WebSocketRoute : ChannelOwner, IWebSocketRoute
 
     public void OnMessage(Action<IWebSocketFrame> handler) => _onPageMessage = handler;
 
-    public void OnClose(Action<int?, string> handler) => _onPageClose = handler;
+    public void OnClose(Action<int?, string?> handler) => _onPageClose = handler;
 
     internal async Task AfterHandleAsync()
     {
@@ -193,11 +193,11 @@ internal class ServerWebSocketRoute : IWebSocketRoute
 
     public string Url => _webSocketRoute._initializer.Url;
 
-    public async Task CloseAsync(WebSocketRouteCloseOptions options = null)
+    public async Task CloseAsync(WebSocketRouteCloseOptions? options = null)
     {
         try
         {
-            await _webSocketRoute.SendMessageToServerAsync("closeServer", new Dictionary<string, object>
+            await _webSocketRoute.SendMessageToServerAsync("closeServer", new Dictionary<string, object?>
             {
                 ["code"] = options?.Code,
                 ["reason"] = options?.Reason,
@@ -212,13 +212,13 @@ internal class ServerWebSocketRoute : IWebSocketRoute
 
     public IWebSocketRoute ConnectToServer() => throw new PlaywrightException("ConnectToServer() must be called on the page-side WebSocketRoute");
 
-    public void OnClose(Action<int?, string> handler) => _webSocketRoute._onServerClose = handler;
+    public void OnClose(Action<int?, string?> handler) => _webSocketRoute._onServerClose = handler;
 
     public void OnMessage(Action<IWebSocketFrame> handler) => _webSocketRoute._onServerMessage = handler;
 
     public void Send(byte[] message)
     {
-        _webSocketRoute.SendMessageToServerAsync("sendToServer", new Dictionary<string, object>
+        _webSocketRoute.SendMessageToServerAsync("sendToServer", new Dictionary<string, object?>
         {
             ["message"] = Convert.ToBase64String(message),
             ["isBase64"] = true,
@@ -227,7 +227,7 @@ internal class ServerWebSocketRoute : IWebSocketRoute
 
     public void Send(string message)
     {
-        _webSocketRoute.SendMessageToServerAsync("sendToServer", new Dictionary<string, object>
+        _webSocketRoute.SendMessageToServerAsync("sendToServer", new Dictionary<string, object?>
         {
             ["message"] = message,
             ["isBase64"] = false,

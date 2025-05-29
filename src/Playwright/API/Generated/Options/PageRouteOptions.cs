@@ -24,8 +24,6 @@
 
 using System.Text.Json.Serialization;
 
-#nullable enable
-
 namespace Microsoft.Playwright;
 
 public class PageRouteOptions
@@ -46,5 +44,3 @@ public class PageRouteOptions
     [JsonPropertyName("times")]
     public int? Times { get; set; }
 }
-
-#nullable disable

@@ -29,8 +29,8 @@ namespace Microsoft.Playwright.Transport.Protocol;
 internal class BrowserTypeInitializer
 {
     [JsonPropertyName("executablePath")]
-    public string ExecutablePath { get; set; }
+    public string ExecutablePath { get; set; } = null!;
 
     [JsonPropertyName("name")]
-    public string Name { get; set; }
+    public string Name { get; set; } = null!;
 }

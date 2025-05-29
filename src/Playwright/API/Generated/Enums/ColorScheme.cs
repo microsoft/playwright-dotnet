@@ -24,8 +24,6 @@
 
 using System.Runtime.Serialization;
 
-#nullable enable
-
 namespace Microsoft.Playwright;
 
 public enum ColorScheme
@@ -39,5 +37,3 @@ public enum ColorScheme
     [EnumMember(Value = "null")]
     Null,
 }
-
-#nullable disable

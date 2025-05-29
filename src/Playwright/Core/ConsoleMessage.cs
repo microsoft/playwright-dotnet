@@ -55,17 +55,17 @@ internal class ConsoleMessage : IConsoleMessage
 internal class BrowserContextConsoleEvent
 {
     [JsonPropertyName("page")]
-    public Page Page { get; set; }
+    public Page Page { get; set; } = null!;
 
     [JsonPropertyName("type")]
-    public string Type { get; set; }
+    public string Type { get; set; } = null!;
 
     [JsonPropertyName("text")]
-    public string Text { get; set; }
+    public string Text { get; set; } = null!;
 
     [JsonPropertyName("args")]
-    public List<JSHandle> Args { get; set; }
+    public List<JSHandle> Args { get; set; } = null!;
 
     [JsonPropertyName("location")]
-    public ConsoleMessageLocation Location { get; set; }
+    public ConsoleMessageLocation Location { get; set; } = null!;
 }

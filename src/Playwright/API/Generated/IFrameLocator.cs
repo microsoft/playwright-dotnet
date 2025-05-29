@@ -24,8 +24,6 @@
 
 using System.Text.RegularExpressions;
 
-#nullable enable
-
 namespace Microsoft.Playwright;
 
 /// <summary>
@@ -401,5 +399,3 @@ public partial interface IFrameLocator
     /// </summary>
     ILocator Owner { get; }
 }
-
-#nullable disable

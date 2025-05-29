@@ -34,13 +34,13 @@ public class URLMatch
     // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Regular_expressions#escaping
     private static readonly char[] _escapeGlobChars = new[] { '$', '^', '+', '.', '*', '(', ')', '|', '\\', '?', '{', '}', '[', ']' };
 
-    public Regex re { get; set; }
+    public Regex? re { get; set; }
 
-    public Func<string, bool> func { get; set; }
+    public Func<string, bool>? func { get; set; }
 
-    public string glob { get; set; }
+    public string? glob { get; set; }
 
-    public string baseURL { get; set; }
+    public string? baseURL { get; set; }
 
     public bool isWebSocketUrl { get; set; }
 
@@ -49,7 +49,7 @@ public class URLMatch
         return MatchImpl(url, re, func, glob, baseURL, isWebSocketUrl);
     }
 
-    private static bool MatchImpl(string url, Regex re, Func<string, bool> func, string glob, string baseURL, bool isWebSocketUrl)
+    private static bool MatchImpl(string url, Regex? re, Func<string, bool>? func, string? glob, string? baseURL, bool isWebSocketUrl)
     {
         if (re != null)
         {
@@ -67,7 +67,7 @@ public class URLMatch
             {
                 return true;
             }
-            string match = ResolveGlobToRegexPattern(baseURL, glob, isWebSocketUrl);
+            var match = ResolveGlobToRegexPattern(baseURL, glob, isWebSocketUrl);
             return new Regex(match).IsMatch(url);
         }
 
@@ -86,7 +86,7 @@ public class URLMatch
         return builder.Uri;
     }
 
-    internal static string ConstructURLBasedOnBaseURL(string baseUrl, string url)
+    internal static string ConstructURLBasedOnBaseURL(string? baseUrl, string url)
     {
         try
         {
@@ -102,7 +102,7 @@ public class URLMatch
         }
     }
 
-    public static string GlobToRegexPattern(string glob)
+    public static string? GlobToRegexPattern(string glob)
     {
         if (string.IsNullOrEmpty(glob))
         {
@@ -176,9 +176,9 @@ public class URLMatch
         return string.Concat(tokens.ToArray());
     }
 
-    internal static string ToWebSocketBaseURL(string baseURL)
+    internal static string? ToWebSocketBaseURL(string? baseURL)
     {
-        if (string.IsNullOrEmpty(baseURL))
+        if (string.IsNullOrEmpty(baseURL) || baseURL == null)
         {
             return baseURL;
         }
@@ -194,7 +194,7 @@ public class URLMatch
         return baseURL;
     }
 
-    internal static string ResolveGlobToRegexPattern(string baseURL, string glob, bool isWebSocketUrl)
+    internal static string? ResolveGlobToRegexPattern(string? baseURL, string glob, bool isWebSocketUrl)
     {
         if (isWebSocketUrl)
         {
@@ -204,7 +204,7 @@ public class URLMatch
         return GlobToRegexPattern(glob);
     }
 
-    internal static string ResolveGlobBase(string baseURL, string match)
+    internal static string ResolveGlobBase(string? baseURL, string match)
     {
         // NOTE: Node.js version uses "$" in mapped tokens, but C# cannot swallow that.
         // So we use "playwright-pw-" instead. It is also important that this string is lowercase.
@@ -248,7 +248,7 @@ public class URLMatch
                 return newPrefix + newSuffix;
             }));
 
-            string resolved = ConstructURLBasedOnBaseURL(baseURL, relativePath);
+            var resolved = ConstructURLBasedOnBaseURL(baseURL, relativePath);
             foreach (var kvp in tokenMap)
             {
                 resolved = resolved.Replace(kvp.Key, kvp.Value);
@@ -258,7 +258,7 @@ public class URLMatch
         return match;
     }
 
-    public bool Equals(string globMatch, Regex reMatch, Func<string, bool> funcMatch, string baseURL, bool isWebSocketUrl)
+    public bool Equals(string? globMatch, Regex? reMatch, Func<string, bool>? funcMatch, string? baseURL, bool isWebSocketUrl)
     {
         return this.re?.ToString() == reMatch?.ToString() && this.re?.Options == reMatch?.Options
             && this.func == funcMatch

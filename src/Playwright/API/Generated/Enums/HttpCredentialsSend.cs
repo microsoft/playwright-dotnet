@@ -24,8 +24,6 @@
 
 using System.Runtime.Serialization;
 
-#nullable enable
-
 namespace Microsoft.Playwright;
 
 public enum HttpCredentialsSend
@@ -35,5 +33,3 @@ public enum HttpCredentialsSend
     [EnumMember(Value = "always")]
     Always,
 }
-
-#nullable disable

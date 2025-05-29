@@ -24,6 +24,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Linq;
 
@@ -603,7 +604,7 @@ internal static class StringExtensions
     /// </summary>
     /// <param name="query">Query string.</param>
     /// <returns>A <see cref="Dictionary{TKey, TValue}"/> containing the parsed QueryString.</returns>
-    public static Dictionary<string, string> ParseQueryString(this string query)
+    internal static Dictionary<string, string> ParseQueryString(this string query)
     {
         if (query is null)
         {
@@ -629,7 +630,7 @@ internal static class StringExtensions
     internal static string GetContentType(this string path)
     {
         const string defaultContentType = "application/octet-stream";
-        string extension = GetExtension(path);
+        var extension = GetExtension(path);
         if (extension == null)
         {
             return defaultContentType;
@@ -641,7 +642,7 @@ internal static class StringExtensions
     internal static string MimeType(this string file)
         => _mappings.TryGetValue(new FileInfo(file).Extension, out string mime) ? mime : "application/octet-stream";
 
-    private static string GetExtension(string path)
+    private static string? GetExtension(string path)
     {
         if (string.IsNullOrWhiteSpace(path))
         {
@@ -655,5 +656,15 @@ internal static class StringExtensions
         }
 
         return path.Substring(index);
+    }
+
+    /// <summary>
+    /// Checks if the string is null or empty. This should be used instead of string.IsNullOrEmpty to avoid nullability warnings.
+    /// If we drop netstandard2.0 support, we can migrate to string.IsNullOrEmpty().
+    /// Relates https://stackoverflow.com/a/64066801.
+    /// </summary>
+    internal static bool IsNullOrEmpty([NotNullWhen(false)] this string? data)
+    {
+        return string.IsNullOrEmpty(data);
     }
 }
