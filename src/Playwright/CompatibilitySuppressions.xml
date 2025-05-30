@@ -332,6 +332,13 @@
   </Suppression>
   <Suppression>
     <DiagnosticId>CP0002</DiagnosticId>
+    <Target>M:Microsoft.Playwright.BindingSource.#ctor</Target>
+    <Left>lib/net5.0/Microsoft.Playwright.dll</Left>
+    <Right>lib/netstandard2.0/Microsoft.Playwright.dll</Right>
+    <IsBaselineSuppression>true</IsBaselineSuppression>
+  </Suppression>
+  <Suppression>
+    <DiagnosticId>CP0002</DiagnosticId>
     <Target>M:Microsoft.Playwright.BrowserContextExposeBindingOptions.get_Handle</Target>
     <Left>lib/net5.0/Microsoft.Playwright.dll</Left>
     <Right>lib/netstandard2.0/Microsoft.Playwright.dll</Right>
@@ -2621,6 +2628,13 @@
   </Suppression>
   <Suppression>
     <DiagnosticId>CP0002</DiagnosticId>
+    <Target>M:Microsoft.Playwright.BindingSource.#ctor</Target>
+    <Left>lib/netstandard2.0/Microsoft.Playwright.dll</Left>
+    <Right>lib/netstandard2.0/Microsoft.Playwright.dll</Right>
+    <IsBaselineSuppression>true</IsBaselineSuppression>
+  </Suppression>
+  <Suppression>
+    <DiagnosticId>CP0002</DiagnosticId>
     <Target>M:Microsoft.Playwright.IBrowser.CloseAsync</Target>
     <Left>lib/netstandard2.0/Microsoft.Playwright.dll</Left>
     <Right>lib/netstandard2.0/Microsoft.Playwright.dll</Right>
@@ -2713,6 +2727,20 @@
   <Suppression>
     <DiagnosticId>CP0002</DiagnosticId>
     <Target>M:Microsoft.Playwright.IPage.RouteAsync(System.Text.RegularExpressions.Regex,System.Action{Microsoft.Playwright.IRoute})</Target>
+    <Left>lib/netstandard2.0/Microsoft.Playwright.dll</Left>
+    <Right>lib/netstandard2.0/Microsoft.Playwright.dll</Right>
+    <IsBaselineSuppression>true</IsBaselineSuppression>
+  </Suppression>
+  <Suppression>
+    <DiagnosticId>CP0009</DiagnosticId>
+    <Target>T:Microsoft.Playwright.BindingSource</Target>
+    <Left>lib/net5.0/Microsoft.Playwright.dll</Left>
+    <Right>lib/netstandard2.0/Microsoft.Playwright.dll</Right>
+    <IsBaselineSuppression>true</IsBaselineSuppression>
+  </Suppression>
+  <Suppression>
+    <DiagnosticId>CP0009</DiagnosticId>
+    <Target>T:Microsoft.Playwright.BindingSource</Target>
     <Left>lib/netstandard2.0/Microsoft.Playwright.dll</Left>
     <Right>lib/netstandard2.0/Microsoft.Playwright.dll</Right>
     <IsBaselineSuppression>true</IsBaselineSuppression>
