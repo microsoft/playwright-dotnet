@@ -141,6 +141,18 @@ internal class Frame : ChannelOwner, IFrame
         }
     }
 
+    internal float Timeout(float? timeout)
+    {
+        var timeoutSettings = (this.Page as Page)?._timeoutSettings ?? new();
+        return timeoutSettings.Timeout(timeout);
+    }
+
+    internal float NavigationTimeout(float? timeout)
+    {
+        var timeoutSettings = (this.Page as Page)?._timeoutSettings ?? new();
+        return timeoutSettings.NavigationTimeout(timeout);
+    }
+
     [MethodImpl(MethodImplOptions.NoInlining)]
     public async Task<IElementHandle> FrameElementAsync()
         => await SendMessageToServerAsync<ElementHandle>("frameElement").ConfigureAwait(false);
@@ -181,7 +193,7 @@ internal class Frame : ChannelOwner, IFrame
             ["elements"] = values.Select(x => x as ElementHandle),
             ["strict"] = options?.Strict,
             ["force"] = options?.Force,
-            ["timeout"] = options?.Timeout,
+            ["timeout"] = Timeout(options?.Timeout),
         }).ConfigureAwait(false)).Value.GetProperty("values").ToObject<string[]>().ToList().AsReadOnly();
 
     [MethodImpl(MethodImplOptions.NoInlining)]
@@ -202,7 +214,7 @@ internal class Frame : ChannelOwner, IFrame
 #pragma warning restore CS0612 // Type or member is obsolete
             ["strict"] = options?.Strict,
             ["force"] = options?.Force,
-            ["timeout"] = options?.Timeout,
+            ["timeout"] = Timeout(options?.Timeout),
         }).ConfigureAwait(false)).Value.GetProperty("values").ToObject<string[]>().ToList().AsReadOnly();
 
     [MethodImpl(MethodImplOptions.NoInlining)]
@@ -342,7 +354,7 @@ internal class Frame : ChannelOwner, IFrame
             ["force"] = options?.Force,
             ["modifiers"] = options?.Modifiers?.Select(m => m.ToValueString()),
             ["trial"] = options?.Trial,
-            ["timeout"] = options?.Timeout,
+            ["timeout"] = Timeout(options?.Timeout),
             ["position"] = options?.Position,
             ["strict"] = options?.Strict,
         });
@@ -365,7 +377,7 @@ internal class Frame : ChannelOwner, IFrame
         => SendMessageToServerAsync("focus", new Dictionary<string, object?>
         {
             ["selector"] = selector,
-            ["timeout"] = options?.Timeout,
+            ["timeout"] = Timeout(options?.Timeout),
             ["strict"] = options?.Strict,
         });
 
@@ -376,7 +388,7 @@ internal class Frame : ChannelOwner, IFrame
             ["selector"] = selector,
             ["text"] = text,
             ["delay"] = options?.Delay,
-            ["timeout"] = options?.Timeout,
+            ["timeout"] = Timeout(options?.Timeout),
             ["strict"] = options?.Strict,
         });
 
@@ -387,7 +399,7 @@ internal class Frame : ChannelOwner, IFrame
         {
             ["selector"] = selector,
             ["name"] = name,
-            ["timeout"] = options?.Timeout,
+            ["timeout"] = Timeout(options?.Timeout),
             ["strict"] = options?.Strict,
         }).ConfigureAwait(false))?.TryGetProperty("value", out JsonElement retValue) ?? false)
         {
@@ -401,7 +413,7 @@ internal class Frame : ChannelOwner, IFrame
         => (await SendMessageToServerAsync("innerHTML", new Dictionary<string, object?>
         {
             ["selector"] = selector,
-            ["timeout"] = options?.Timeout,
+            ["timeout"] = Timeout(options?.Timeout),
             ["strict"] = options?.Strict,
         }).ConfigureAwait(false)).Value.GetProperty("value").ToString();
 
@@ -410,7 +422,7 @@ internal class Frame : ChannelOwner, IFrame
         => (await SendMessageToServerAsync("innerText", new Dictionary<string, object?>
         {
             ["selector"] = selector,
-            ["timeout"] = options?.Timeout,
+            ["timeout"] = Timeout(options?.Timeout),
             ["strict"] = options?.Strict,
         }).ConfigureAwait(false)).Value.GetProperty("value").ToString();
 
@@ -419,7 +431,7 @@ internal class Frame : ChannelOwner, IFrame
         => (await SendMessageToServerAsync("textContent", new Dictionary<string, object?>
         {
             ["selector"] = selector,
-            ["timeout"] = options?.Timeout,
+            ["timeout"] = Timeout(options?.Timeout),
             ["strict"] = options?.Strict,
         }).ConfigureAwait(false))?.GetProperty("value").ToString();
 
@@ -432,7 +444,7 @@ internal class Frame : ChannelOwner, IFrame
             ["modifiers"] = options?.Modifiers?.Select(m => m.ToValueString()),
             ["position"] = options?.Position,
             ["trial"] = options?.Trial,
-            ["timeout"] = options?.Timeout,
+            ["timeout"] = Timeout(options?.Timeout),
             ["strict"] = options?.Strict,
         });
 
@@ -443,7 +455,7 @@ internal class Frame : ChannelOwner, IFrame
             ["selector"] = selector,
             ["key"] = key,
             ["delay"] = options?.Delay,
-            ["timeout"] = options?.Timeout,
+            ["timeout"] = Timeout(options?.Timeout),
 #pragma warning disable CS0612 // Type or member is obsolete
             ["noWaitAfter"] = options?.NoWaitAfter,
 #pragma warning restore CS0612 // Type or member is obsolete
@@ -457,7 +469,7 @@ internal class Frame : ChannelOwner, IFrame
             ["selector"] = selector,
             ["type"] = type,
             ["eventInit"] = ScriptsHelper.SerializedArgument(eventInit),
-            ["timeout"] = options?.Timeout,
+            ["timeout"] = Timeout(options?.Timeout),
             ["strict"] = options?.Strict,
         });
 
@@ -468,7 +480,7 @@ internal class Frame : ChannelOwner, IFrame
             ["selector"] = selector,
             ["value"] = value,
             ["force"] = options?.Force,
-            ["timeout"] = options?.Timeout,
+            ["timeout"] = Timeout(options?.Timeout),
             ["strict"] = options?.Strict,
         });
 
@@ -544,7 +556,7 @@ internal class Frame : ChannelOwner, IFrame
             ["localDirectory"] = files.LocalDirectory,
             ["streams"] = files.Streams,
             ["directoryStream"] = files.DirectoryStream,
-            ["timeout"] = timeout,
+            ["timeout"] = Timeout(timeout),
             ["strict"] = strict,
         }).ConfigureAwait(false);
     }
@@ -564,7 +576,7 @@ internal class Frame : ChannelOwner, IFrame
             ["noWaitAfter"] = options?.NoWaitAfter,
 #pragma warning restore CS0612 // Type or member is obsolete
             ["trial"] = options?.Trial,
-            ["timeout"] = options?.Timeout,
+            ["timeout"] = Timeout(options?.Timeout),
             ["strict"] = options?.Strict,
         });
 
@@ -579,7 +591,7 @@ internal class Frame : ChannelOwner, IFrame
             ["modifiers"] = options?.Modifiers?.Select(m => m.ToValueString()),
             ["position"] = options?.Position,
             ["trial"] = options?.Trial,
-            ["timeout"] = options?.Timeout,
+            ["timeout"] = Timeout(options?.Timeout),
             ["strict"] = options?.Strict,
         });
 
@@ -591,7 +603,7 @@ internal class Frame : ChannelOwner, IFrame
             ["force"] = options?.Force,
             ["position"] = options?.Position,
             ["trial"] = options?.Trial,
-            ["timeout"] = options?.Timeout,
+            ["timeout"] = Timeout(options?.Timeout),
             ["strict"] = options?.Strict,
         });
 
@@ -603,7 +615,7 @@ internal class Frame : ChannelOwner, IFrame
             ["force"] = options?.Force,
             ["position"] = options?.Position,
             ["trial"] = options?.Trial,
-            ["timeout"] = options?.Timeout,
+            ["timeout"] = Timeout(options?.Timeout),
             ["strict"] = options?.Strict,
         });
 
@@ -615,7 +627,7 @@ internal class Frame : ChannelOwner, IFrame
             ["force"] = options?.Force,
             ["position"] = options?.Position,
             ["trial"] = options?.Trial,
-            ["timeout"] = options?.Timeout,
+            ["timeout"] = Timeout(options?.Timeout),
             ["strict"] = options?.Strict,
         });
 
@@ -625,7 +637,7 @@ internal class Frame : ChannelOwner, IFrame
         {
             ["html"] = html,
             ["waitUntil"] = options?.WaitUntil,
-            ["timeout"] = options?.Timeout,
+            ["timeout"] = Timeout(options?.Timeout),
         });
 
     [MethodImpl(MethodImplOptions.NoInlining)]
@@ -633,7 +645,7 @@ internal class Frame : ChannelOwner, IFrame
         => (await SendMessageToServerAsync("inputValue", new Dictionary<string, object?>
         {
             ["selector"] = selector,
-            ["timeout"] = options?.Timeout,
+            ["timeout"] = Timeout(options?.Timeout),
             ["strict"] = options?.Strict,
         }).ConfigureAwait(false)).Value.GetProperty("value").ToString();
 
@@ -661,7 +673,7 @@ internal class Frame : ChannelOwner, IFrame
             {
                 ["expression"] = expression,
                 ["arg"] = ScriptsHelper.SerializedArgument(arg),
-                ["timeout"] = options?.Timeout,
+                ["timeout"] = Timeout(options?.Timeout),
                 ["pollingInterval"] = options?.PollingInterval,
             }).ConfigureAwait(false);
 
@@ -672,7 +684,7 @@ internal class Frame : ChannelOwner, IFrame
             new Dictionary<string, object?>
             {
                 ["selector"] = selector,
-                ["timeout"] = options?.Timeout,
+                ["timeout"] = Timeout(options?.Timeout),
                 ["state"] = options?.State,
                 ["strict"] = options?.Strict,
                 ["omitReturnValue"] = false,
@@ -796,7 +808,7 @@ internal class Frame : ChannelOwner, IFrame
         => await SendMessageToServerAsync<Response>("goto", new Dictionary<string, object?>
         {
             ["url"] = url,
-            ["timeout"] = options?.Timeout,
+            ["timeout"] = NavigationTimeout(options?.Timeout),
             ["waitUntil"] = options?.WaitUntil,
             ["referer"] = options?.Referer,
         }).ConfigureAwait(false);
@@ -806,7 +818,7 @@ internal class Frame : ChannelOwner, IFrame
         => (await SendMessageToServerAsync("isChecked", new Dictionary<string, object?>
         {
             ["selector"] = selector,
-            ["timeout"] = options?.Timeout,
+            ["timeout"] = Timeout(options?.Timeout),
             ["strict"] = options?.Strict,
         }).ConfigureAwait(false))?.GetProperty("value").GetBoolean() ?? default;
 
@@ -815,7 +827,7 @@ internal class Frame : ChannelOwner, IFrame
         => (await SendMessageToServerAsync("isDisabled", new Dictionary<string, object?>
         {
             ["selector"] = selector,
-            ["timeout"] = options?.Timeout,
+            ["timeout"] = Timeout(options?.Timeout),
             ["strict"] = options?.Strict,
         }).ConfigureAwait(false))?.GetProperty("value").GetBoolean() ?? default;
 
@@ -824,7 +836,7 @@ internal class Frame : ChannelOwner, IFrame
         => (await SendMessageToServerAsync("isEditable", new Dictionary<string, object?>
         {
             ["selector"] = selector,
-            ["timeout"] = options?.Timeout,
+            ["timeout"] = Timeout(options?.Timeout),
             ["strict"] = options?.Strict,
         }).ConfigureAwait(false))?.GetProperty("value").GetBoolean() ?? default;
 
@@ -833,7 +845,7 @@ internal class Frame : ChannelOwner, IFrame
         => (await SendMessageToServerAsync("isEnabled", new Dictionary<string, object?>
         {
             ["selector"] = selector,
-            ["timeout"] = options?.Timeout,
+            ["timeout"] = Timeout(options?.Timeout),
             ["strict"] = options?.Strict,
         }).ConfigureAwait(false))?.GetProperty("value").GetBoolean() ?? default;
 
@@ -842,9 +854,6 @@ internal class Frame : ChannelOwner, IFrame
         => (await SendMessageToServerAsync("isHidden", new Dictionary<string, object?>
         {
             ["selector"] = selector,
-#pragma warning disable CS0612 // Type or member is obsolete
-            ["timeout"] = options?.Timeout,
-#pragma warning restore CS0612 // Type or member is obsolete
             ["strict"] = options?.Strict,
         }).ConfigureAwait(false))?.GetProperty("value").GetBoolean() ?? default;
 
@@ -853,9 +862,6 @@ internal class Frame : ChannelOwner, IFrame
         => (await SendMessageToServerAsync("isVisible", new Dictionary<string, object?>
         {
             ["selector"] = selector,
-#pragma warning disable CS0612 // Type or member is obsolete
-            ["timeout"] = options?.Timeout,
-#pragma warning restore CS0612 // Type or member is obsolete
             ["strict"] = options?.Strict,
         }).ConfigureAwait(false))?.GetProperty("value").GetBoolean() ?? default;
 
@@ -878,26 +884,26 @@ internal class Frame : ChannelOwner, IFrame
             ["source"] = source,
             ["target"] = target,
             ["force"] = options?.Force,
-            ["timeout"] = options?.Timeout,
+            ["timeout"] = Timeout(options?.Timeout),
             ["trial"] = options?.Trial,
             ["strict"] = options?.Strict,
             ["sourcePosition"] = options?.SourcePosition,
             ["targetPosition"] = options?.TargetPosition,
         });
 
-    internal async Task<FrameExpectResult> ExpectAsync(string selector, string expression, FrameExpectOptions? options = null)
+    internal async Task<FrameExpectResult> ExpectAsync(string selector, string expression, FrameExpectOptions options)
     {
         var result = await SendMessageToServerAsync("expect", new Dictionary<string, object?>
         {
             ["selector"] = selector,
             ["expression"] = expression,
-            ["expressionArg"] = options?.ExpressionArg,
-            ["expectedText"] = options?.ExpectedText,
-            ["expectedNumber"] = options?.ExpectedNumber,
-            ["expectedValue"] = options?.ExpectedValue,
-            ["useInnerText"] = options?.UseInnerText,
-            ["isNot"] = options?.IsNot,
-            ["timeout"] = options?.Timeout,
+            ["expressionArg"] = options.ExpressionArg,
+            ["expectedText"] = options.ExpectedText,
+            ["expectedNumber"] = options.ExpectedNumber,
+            ["expectedValue"] = options.ExpectedValue,
+            ["useInnerText"] = options.UseInnerText,
+            ["isNot"] = options.IsNot,
+            ["timeout"] = options.Timeout,
         }).ConfigureAwait(false);
         var parsed = result.Value.ToObject<FrameExpectResult>();
         if (result.Value.TryGetProperty("received", out var received))

@@ -695,7 +695,7 @@ internal class Page : ChannelOwner, IPage
             ["clip"] = options.Clip,
             ["path"] = options.Path,
             ["type"] = options.Type,
-            ["timeout"] = options.Timeout,
+            ["timeout"] = _timeoutSettings.Timeout(options.Timeout),
             ["animations"] = options.Animations,
             ["caret"] = options.Caret,
             ["scale"] = options.Scale,
@@ -801,7 +801,7 @@ internal class Page : ChannelOwner, IPage
     public async Task<IResponse?> GoBackAsync(PageGoBackOptions? options = default)
         => await SendMessageToServerAsync<Response>("goBack", new Dictionary<string, object?>
         {
-            ["timeout"] = options?.Timeout,
+            ["timeout"] = _timeoutSettings.NavigationTimeout(options?.Timeout),
             ["waitUntil"] = options?.WaitUntil,
         }).ConfigureAwait(false);
 
@@ -809,7 +809,7 @@ internal class Page : ChannelOwner, IPage
     public async Task<IResponse?> GoForwardAsync(PageGoForwardOptions? options = default)
         => await SendMessageToServerAsync<Response>("goForward", new Dictionary<string, object?>
         {
-            ["timeout"] = options?.Timeout,
+            ["timeout"] = _timeoutSettings.NavigationTimeout(options?.Timeout),
             ["waitUntil"] = options?.WaitUntil,
         }).ConfigureAwait(false);
 
@@ -817,7 +817,7 @@ internal class Page : ChannelOwner, IPage
     public async Task<IResponse?> ReloadAsync(PageReloadOptions? options = default)
         => await SendMessageToServerAsync<Response>("reload", new Dictionary<string, object?>
         {
-            ["timeout"] = options?.Timeout,
+            ["timeout"] = _timeoutSettings.NavigationTimeout(options?.Timeout),
             ["waitUntil"] = options?.WaitUntil,
         }).ConfigureAwait(false);
 
@@ -1169,26 +1169,12 @@ internal class Page : ChannelOwner, IPage
     public void SetDefaultNavigationTimeout(float timeout)
     {
         _timeoutSettings.SetDefaultNavigationTimeout(timeout);
-        WrapApiCallAsync(
-            () => SendMessageToServerAsync(
-            "setDefaultNavigationTimeoutNoReply",
-            new Dictionary<string, object?>
-            {
-                ["timeout"] = timeout,
-            }),
-            true).IgnoreException();
     }
 
     [MethodImpl(MethodImplOptions.NoInlining)]
     public void SetDefaultTimeout(float timeout)
     {
         _timeoutSettings.SetDefaultTimeout(timeout);
-        WrapApiCallAsync(
-            () => SendMessageToServerAsync("setDefaultTimeoutNoReply", new Dictionary<string, object?>
-            {
-                ["timeout"] = timeout,
-            }),
-            true).IgnoreException();
     }
 
     [MethodImpl(MethodImplOptions.NoInlining)]

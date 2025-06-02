@@ -36,8 +36,11 @@ namespace Microsoft.Playwright.Core;
 
 internal class ElementHandle : JSHandle, IElementHandle
 {
+    private readonly Frame _frame;
+
     internal ElementHandle(ChannelOwner parent, string guid, ElementHandleInitializer initializer) : base(parent, guid, initializer)
     {
+        _frame = (Frame)parent;
     }
 
     internal override void OnMessage(string method, JsonElement serverParams)
@@ -56,7 +59,7 @@ internal class ElementHandle : JSHandle, IElementHandle
             new Dictionary<string, object?>
             {
                 ["selector"] = selector,
-                ["timeout"] = options?.Timeout,
+                ["timeout"] = _frame.Timeout(options?.Timeout),
                 ["state"] = options?.State,
                 ["strict"] = options?.Strict,
             }).ConfigureAwait(false);
@@ -65,7 +68,7 @@ internal class ElementHandle : JSHandle, IElementHandle
         => SendMessageToServerAsync("waitForElementState", new Dictionary<string, object?>
         {
             ["state"] = state,
-            ["timeout"] = options?.Timeout,
+            ["timeout"] = _frame.Timeout(options?.Timeout),
         });
 
     public Task PressAsync(string key, ElementHandlePressOptions? options = default)
@@ -73,7 +76,7 @@ internal class ElementHandle : JSHandle, IElementHandle
         {
             ["key"] = key,
             ["delay"] = options?.Delay,
-            ["timeout"] = options?.Timeout,
+            ["timeout"] = _frame.Timeout(options?.Timeout),
 #pragma warning disable CS0612 // Type or member is obsolete
             ["noWaitAfter"] = options?.NoWaitAfter,
 #pragma warning restore CS0612 // Type or member is obsolete
@@ -84,7 +87,7 @@ internal class ElementHandle : JSHandle, IElementHandle
         {
             ["text"] = text,
             ["delay"] = options?.Delay,
-            ["timeout"] = options?.Timeout,
+            ["timeout"] = _frame.Timeout(options?.Timeout),
         });
 
     public async Task<byte[]> ScreenshotAsync(ElementHandleScreenshotOptions? options = default)
@@ -100,7 +103,7 @@ internal class ElementHandle : JSHandle, IElementHandle
             ["type"] = options.Type,
             ["omitBackground"] = options.OmitBackground,
             ["path"] = options.Path,
-            ["timeout"] = options.Timeout,
+            ["timeout"] = _frame.Timeout(options.Timeout),
             ["animations"] = options.Animations,
             ["caret"] = options.Caret,
             ["scale"] = options.Scale,
@@ -132,7 +135,7 @@ internal class ElementHandle : JSHandle, IElementHandle
         => SendMessageToServerAsync("fill", new Dictionary<string, object?>
         {
             ["value"] = value,
-            ["timeout"] = options?.Timeout,
+            ["timeout"] = _frame.Timeout(options?.Timeout),
             ["force"] = options?.Force,
         });
 
@@ -143,7 +146,7 @@ internal class ElementHandle : JSHandle, IElementHandle
         {
             ["force"] = options?.Force,
             ["position"] = options?.Position,
-            ["timeout"] = options?.Timeout,
+            ["timeout"] = _frame.Timeout(options?.Timeout),
             ["trial"] = options?.Trial,
             ["modifiers"] = options?.Modifiers?.Select(m => m.ToValueString()),
         });
@@ -151,7 +154,7 @@ internal class ElementHandle : JSHandle, IElementHandle
     public Task ScrollIntoViewIfNeededAsync(ElementHandleScrollIntoViewIfNeededOptions? options = default)
         => SendMessageToServerAsync("scrollIntoViewIfNeeded", new Dictionary<string, object?>
         {
-            ["timeout"] = options?.Timeout,
+            ["timeout"] = _frame.Timeout(options?.Timeout),
         });
 
     public async Task<IFrame?> OwnerFrameAsync() => await SendMessageToServerAsync<Frame>("ownerFrame").ConfigureAwait(false);
@@ -176,7 +179,7 @@ internal class ElementHandle : JSHandle, IElementHandle
 #pragma warning disable CS0612 // Type or member is obsolete
             ["noWaitAfter"] = options?.NoWaitAfter,
 #pragma warning restore CS0612 // Type or member is obsolete
-            ["timeout"] = options?.Timeout,
+            ["timeout"] = _frame.Timeout(options?.Timeout),
             ["trial"] = options?.Trial,
             ["position"] = options?.Position,
             ["modifiers"] = options?.Modifiers?.Select(m => m.ToValueString()),
@@ -188,7 +191,7 @@ internal class ElementHandle : JSHandle, IElementHandle
             ["delay"] = options?.Delay,
             ["button"] = options?.Button,
             ["force"] = options?.Force,
-            ["timeout"] = options?.Timeout,
+            ["timeout"] = _frame.Timeout(options?.Timeout),
             ["trial"] = options?.Trial,
             ["position"] = options?.Position,
             ["modifiers"] = options?.Modifiers?.Select(m => m.ToValueString()),
@@ -212,7 +215,7 @@ internal class ElementHandle : JSHandle, IElementHandle
             ["localDirectory"] = converted.LocalDirectory,
             ["streams"] = converted.Streams,
             ["directoryStream"] = converted.DirectoryStream,
-            ["timeout"] = options?.Timeout,
+            ["timeout"] = _frame.Timeout(options?.Timeout),
         }).ConfigureAwait(false);
     }
 
@@ -227,7 +230,7 @@ internal class ElementHandle : JSHandle, IElementHandle
             ["payloads"] = converted.Payloads,
             ["localPaths"] = converted.LocalPaths,
             ["streams"] = converted.Streams,
-            ["timeout"] = options?.Timeout,
+            ["timeout"] = _frame.Timeout(options?.Timeout),
         }).ConfigureAwait(false);
     }
 
@@ -308,7 +311,7 @@ internal class ElementHandle : JSHandle, IElementHandle
         => SendMessageToServerAsync("selectText", new Dictionary<string, object?>
         {
             ["force"] = options?.Force,
-            ["timeout"] = options?.Timeout,
+            ["timeout"] = _frame.Timeout(options?.Timeout),
         });
 
     public Task<IReadOnlyList<string>> SelectOptionAsync(string value, ElementHandleSelectOptionOptions? options = default)
@@ -347,7 +350,7 @@ internal class ElementHandle : JSHandle, IElementHandle
         {
             ["options"] = values,
             ["force"] = force,
-            ["timeout"] = timeout,
+            ["timeout"] = _frame.Timeout(timeout),
         }).ConfigureAwait(false)).Value.GetProperty("values").ToObject<string[]>();
     }
 
@@ -357,7 +360,7 @@ internal class ElementHandle : JSHandle, IElementHandle
         {
             ["elements"] = values,
             ["force"] = force,
-            ["timeout"] = timeout,
+            ["timeout"] = _frame.Timeout(timeout),
         }).ConfigureAwait(false)).Value.GetProperty("values").ToObject<string[]>();
     }
 
@@ -367,7 +370,7 @@ internal class ElementHandle : JSHandle, IElementHandle
             ["force"] = options?.Force,
             ["position"] = options?.Position,
             ["trial"] = options?.Trial,
-            ["timeout"] = options?.Timeout,
+            ["timeout"] = _frame.Timeout(options?.Timeout),
         });
 
     public Task UncheckAsync(ElementHandleUncheckOptions? options = default)
@@ -376,7 +379,7 @@ internal class ElementHandle : JSHandle, IElementHandle
             ["force"] = options?.Force,
             ["position"] = options?.Position,
             ["trial"] = options?.Trial,
-            ["timeout"] = options?.Timeout,
+            ["timeout"] = _frame.Timeout(options?.Timeout),
         });
 
     public Task TapAsync(ElementHandleTapOptions? options = default)
@@ -386,7 +389,7 @@ internal class ElementHandle : JSHandle, IElementHandle
             ["position"] = options?.Position,
             ["modifiers"] = options?.Modifiers?.Select(m => m.ToValueString()),
             ["trial"] = options?.Trial,
-            ["timeout"] = options?.Timeout,
+            ["timeout"] = _frame.Timeout(options?.Timeout),
         });
 
     public async Task<bool> IsCheckedAsync() => (await SendMessageToServerAsync("isChecked").ConfigureAwait(false))?.GetProperty("value").GetBoolean() ?? default;
@@ -402,10 +405,7 @@ internal class ElementHandle : JSHandle, IElementHandle
     public async Task<bool> IsVisibleAsync() => (await SendMessageToServerAsync("isVisible").ConfigureAwait(false))?.GetProperty("value").GetBoolean() ?? default;
 
     public async Task<string> InputValueAsync(ElementHandleInputValueOptions? options = null)
-        => (await SendMessageToServerAsync("inputValue", new Dictionary<string, object?>()
-            {
-                { "timeout", options?.Timeout },
-            }).ConfigureAwait(false)).Value.GetProperty("value").ToString();
+        => (await SendMessageToServerAsync("inputValue").ConfigureAwait(false)).Value.GetProperty("value").ToString();
 
     public Task SetCheckedAsync(bool checkedState, ElementHandleSetCheckedOptions? options = null)
         => SendMessageToServerAsync(checkedState ? "check" : "uncheck", new Dictionary<string, object?>
@@ -413,7 +413,7 @@ internal class ElementHandle : JSHandle, IElementHandle
             ["force"] = options?.Force,
             ["position"] = options?.Position,
             ["trial"] = options?.Trial,
-            ["timeout"] = options?.Timeout,
+            ["timeout"] = _frame.Timeout(options?.Timeout),
         });
 
     internal static ScreenshotType DetermineScreenshotType(string path)
