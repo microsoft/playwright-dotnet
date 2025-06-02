@@ -76,7 +76,7 @@ internal class BrowserType : ChannelOwner, IBrowserType
                 { "firefoxUserPrefs", options.FirefoxUserPrefs },
                 { "chromiumSandbox", options.ChromiumSandbox },
                 { "slowMo", options.SlowMo },
-                { "timeout", options.Timeout },
+                { "timeout", TimeoutSettings.LaunchTimeout(options.Timeout) },
             }).ConfigureAwait(false);
         DidLaunchBrowser(browser);
         return browser;
@@ -101,7 +101,7 @@ internal class BrowserType : ChannelOwner, IBrowserType
             ["handleSIGINT"] = options.HandleSIGINT,
             ["handleSIGTERM"] = options.HandleSIGTERM,
             ["handleSIGHUP"] = options.HandleSIGHUP,
-            ["timeout"] = options.Timeout,
+            ["timeout"] = TimeoutSettings.LaunchTimeout(options.Timeout),
             ["env"] = options.Env?.ToProtocol(),
 #pragma warning disable CS0612 // Type or member is obsolete
             ["devtools"] = options.Devtools,
@@ -175,7 +175,8 @@ internal class BrowserType : ChannelOwner, IBrowserType
             {
                 new KeyValuePair<string, string>("x-playwright-browser", Name),
             }.ToDictionary(pair => pair.Key, pair => pair.Value);
-        var pipe = await _connection.LocalUtils!.ConnectAsync(wsEndpoint: wsEndpoint, headers: headers, slowMo: options.SlowMo, timeout: options.Timeout, exposeNetwork: options.ExposeNetwork).ConfigureAwait(false);
+        var timeout = options?.Timeout != null ? (int)options.Timeout : 0;
+        var pipe = await _connection.LocalUtils!.ConnectAsync(wsEndpoint: wsEndpoint, headers: headers, slowMo: options?.SlowMo, timeout: timeout, exposeNetwork: options?.ExposeNetwork).ConfigureAwait(false);
 
         void ClosePipe()
         {
@@ -254,7 +255,6 @@ internal class BrowserType : ChannelOwner, IBrowserType
             return playwright.PreLaunchedBrowser;
         }
         var task = CreateBrowserAsync();
-        var timeout = options?.Timeout != null ? (int)options.Timeout : 30_000;
         return await task.WithTimeout(timeout, _ => throw new TimeoutException($"BrowserType.ConnectAsync: Timeout {timeout}ms exceeded")).ConfigureAwait(false);
     }
 
@@ -271,7 +271,7 @@ internal class BrowserType : ChannelOwner, IBrowserType
                 { "endpointURL", endpointURL },
                 { "headers", options.Headers?.ToProtocol() },
                 { "slowMo", options.SlowMo },
-                { "timeout", options.Timeout },
+                { "timeout", TimeoutSettings.LaunchTimeout(options.Timeout) },
             }).ConfigureAwait(false);
         Browser browser = result.GetProperty("browser").ToObject<Browser>(_connection.DefaultJsonSerializerOptions);
         DidLaunchBrowser(browser);

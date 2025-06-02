@@ -49,7 +49,6 @@ internal class APIRequest : IAPIRequest
             ["httpCredentials"] = options?.HttpCredentials,
             ["maxRedirects"] = options?.MaxRedirects,
             ["proxy"] = options?.Proxy,
-            ["timeout"] = options?.Timeout,
             ["clientCertificates"] = Browser.ToClientCertificatesProtocol(options?.ClientCertificates),
             ["failOnStatusCode"] = options?.FailOnStatusCode,
         };
@@ -72,6 +71,7 @@ internal class APIRequest : IAPIRequest
             "newRequest",
             args).ConfigureAwait(false);
         context._request = this;
+        context._timeoutSettings.SetDefaultTimeout(options?.Timeout);
         return context;
     }
 }

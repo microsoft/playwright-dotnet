@@ -276,7 +276,13 @@ public class BrowserTypeLaunchPersistentContextOptions
     [JsonPropertyName("extraHTTPHeaders")]
     public IEnumerable<KeyValuePair<string, string>>? ExtraHTTPHeaders { get; set; }
 
-    /// <summary><para>Firefox user preferences. Learn more about the Firefox user preferences at <a href="https://support.mozilla.org/en-US/kb/about-config-editor-firefox"><c>about:config</c></a>.</para></summary>
+    /// <summary>
+    /// <para>Firefox user preferences. Learn more about the Firefox user preferences at <a href="https://support.mozilla.org/en-US/kb/about-config-editor-firefox"><c>about:config</c></a>.</para>
+    /// <para>
+    /// You can also provide a path to a custom <a href="https://mozilla.github.io/policy-templates/"><c>policies.json</c>
+    /// file</a> via <c>PLAYWRIGHT_FIREFOX_POLICIES_JSON</c> environment variable.
+    /// </para>
+    /// </summary>
     [JsonPropertyName("firefoxUserPrefs")]
     public IEnumerable<KeyValuePair<string, object>>? FirefoxUserPrefs { get; set; }
 

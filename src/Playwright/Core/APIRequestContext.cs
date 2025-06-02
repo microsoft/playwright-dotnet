@@ -40,6 +40,7 @@ internal class APIRequestContext : ChannelOwner, IAPIRequestContext
     private string? _closeReason;
 
     internal APIRequest? _request;
+    internal TimeoutSettings _timeoutSettings = new();
 
     public APIRequestContext(ChannelOwner parent, string guid, APIRequestContextInitializer initializer) : base(parent, guid)
     {
@@ -144,7 +145,7 @@ internal class APIRequestContext : ChannelOwner, IAPIRequestContext
             ["ignoreHTTPSErrors"] = options?.IgnoreHTTPSErrors,
             ["maxRedirects"] = options?.MaxRedirects,
             ["maxRetries"] = options?.MaxRetries,
-            ["timeout"] = options?.Timeout,
+            ["timeout"] = _timeoutSettings.Timeout(options?.Timeout),
             ["params"] = options?.Params?.ToDictionary(x => x.Key, x => x.Value.ToString()).ToProtocol(),
             ["encodedParams"] = options?.ParamsString,
             ["headers"] = options?.Headers?.ToProtocol(),

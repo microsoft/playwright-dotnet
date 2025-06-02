@@ -247,7 +247,8 @@ internal class Locator : ILocator
             new Dictionary<string, object?>
             {
                 ["selector"] = _selector,
-                ["options"] = options,
+                ["timeout"] = _frame.Timeout(options?.Timeout),
+                ["strict"] = true,
             });
 
     public Task<int> CountAsync()
@@ -359,14 +360,14 @@ internal class Locator : ILocator
         return _frame.SendMessageToServerAsync("waitForSelector", new Dictionary<string, object?>
         {
             ["selector"] = _selector,
-            ["timeout"] = options?.Timeout,
+            ["timeout"] = _frame.Timeout(options?.Timeout),
             ["state"] = options?.State,
             ["strict"] = true,
             ["omitReturnValue"] = true,
         });
     }
 
-    internal Task<FrameExpectResult> ExpectAsync(string expression, FrameExpectOptions? options = null)
+    internal Task<FrameExpectResult> ExpectAsync(string expression, FrameExpectOptions options)
         => _frame.ExpectAsync(
             _selector,
             expression,
@@ -398,7 +399,7 @@ internal class Locator : ILocator
 
     private Task<TResult> WithElementAsync<TResult>(Func<IElementHandle, float?, Task<TResult>> task, float? timeout)
     {
-        timeout = ((Page)this._frame.Page)._timeoutSettings.Timeout(timeout);
+        timeout = this._frame.Timeout(timeout);
         long? deadline = timeout.HasValue ? Stopwatch.GetTimestamp() + (long)(timeout.Value * 1000 * Stopwatch.Frequency / 1000) : null;
 
         return this._frame.WrapApiCallAsync(async () =>
@@ -436,6 +437,9 @@ internal class Locator : ILocator
             },
             timeout).ConfigureAwait(false);
     }
+
+    public ILocator Describe(string description)
+        => ((ILocator)this).Locator($"internal:describe={JsonSerializer.Serialize(description, _locatorSerializerOptions)}");
 
     public ILocator GetByAltText(string text, LocatorGetByAltTextOptions? options = null)
         => ((ILocator)this).Locator(GetByAltTextSelector(text, options?.Exact));
@@ -608,8 +612,7 @@ internal class Locator : ILocator
         var result = await _frame.SendMessageToServerAsync("ariaSnapshot", new Dictionary<string, object?>
         {
             ["selector"] = _selector,
-            ["timeout"] = options?.Timeout,
-            ["ref"] = options?.Ref,
+            ["timeout"] = _frame.Timeout(options?.Timeout),
         }).ConfigureAwait(false);
         return result.Value.GetProperty("snapshot").ToString();
     }

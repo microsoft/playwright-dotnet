@@ -211,7 +211,7 @@ public class BrowserContextCookiesTests : PageTestEx
                     Name = "doggo",
                     Value = "woofs"
                 },
-            ]);
+        ]);
 
         void ValidateCookies(IReadOnlyList<BrowserContextCookiesResult> cookies)
         {
@@ -230,6 +230,6 @@ public class BrowserContextCookiesTests : PageTestEx
         ValidateCookies(await Context.CookiesAsync("https://foo.com"));
         ValidateCookies(await Context.CookiesAsync(null as string));
         ValidateCookies(await Context.CookiesAsync(null as string[]));
-        ValidateCookies(await Context.CookiesAsync([]));
+        ValidateCookies(await Context.CookiesAsync(new string[] { }));
     }
 }
