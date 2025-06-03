@@ -1,0 +1,32 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<!-- https://learn.microsoft.com/dotnet/fundamentals/package-validation/diagnostic-ids -->
+<Suppressions xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <Suppression>
+    <DiagnosticId>CP0002</DiagnosticId>
+    <Target>M:Microsoft.Playwright.BindingSource.#ctor</Target>
+    <Left>lib/netstandard2.0/Microsoft.Playwright.dll</Left>
+    <Right>lib/netstandard2.0/Microsoft.Playwright.dll</Right>
+    <IsBaselineSuppression>true</IsBaselineSuppression>
+  </Suppression>
+  <Suppression>
+    <DiagnosticId>CP0002</DiagnosticId>
+    <Target>M:Microsoft.Playwright.LocatorAriaSnapshotOptions.get_Ref</Target>
+    <Left>lib/netstandard2.0/Microsoft.Playwright.dll</Left>
+    <Right>lib/netstandard2.0/Microsoft.Playwright.dll</Right>
+    <IsBaselineSuppression>true</IsBaselineSuppression>
+  </Suppression>
+  <Suppression>
+    <DiagnosticId>CP0002</DiagnosticId>
+    <Target>M:Microsoft.Playwright.LocatorAriaSnapshotOptions.set_Ref(System.Nullable{System.Boolean})</Target>
+    <Left>lib/netstandard2.0/Microsoft.Playwright.dll</Left>
+    <Right>lib/netstandard2.0/Microsoft.Playwright.dll</Right>
+    <IsBaselineSuppression>true</IsBaselineSuppression>
+  </Suppression>
+  <Suppression>
+    <DiagnosticId>CP0009</DiagnosticId>
+    <Target>T:Microsoft.Playwright.BindingSource</Target>
+    <Left>lib/netstandard2.0/Microsoft.Playwright.dll</Left>
+    <Right>lib/netstandard2.0/Microsoft.Playwright.dll</Right>
+    <IsBaselineSuppression>true</IsBaselineSuppression>
+  </Suppression>
+</Suppressions>
