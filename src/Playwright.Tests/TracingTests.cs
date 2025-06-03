@@ -66,13 +66,13 @@ public class TracingTests : ContextTestEx
         string[] expectedActionApiNames = new string[] { "BrowserContext.NewPageAsync", "Page.GotoAsync", "Page.SetContentAsync", "Page.ClickAsync", "Mouse.MoveAsync", "Mouse.DblClickAsync", "Keyboard.InsertTextAsync", "Page.WaitForTimeoutAsync", "Page.CloseAsync" };
         Assert.AreEqual(expectedActionApiNames, actualActionApiNames);
 
-        Assert.GreaterOrEqual(events.Where(e => e?.ApiName == "Page.GotoAsync").Count(), 1);
-        Assert.GreaterOrEqual(events.Where(e => e?.ApiName == "Page.SetContentAsync").Count(), 1);
-        Assert.GreaterOrEqual(events.Where(e => e?.ApiName == "Page.ClickAsync").Count(), 1);
-        Assert.GreaterOrEqual(events.Where(e => e?.ApiName == "Mouse.MoveAsync").Count(), 1);
-        Assert.GreaterOrEqual(events.Where(e => e?.ApiName == "Mouse.DblClickAsync").Count(), 1);
-        Assert.GreaterOrEqual(events.Where(e => e?.ApiName == "Keyboard.InsertTextAsync").Count(), 1);
-        Assert.GreaterOrEqual(events.Where(e => e?.ApiName == "Page.CloseAsync").Count(), 1);
+        Assert.GreaterOrEqual(events.Where(e => e?.Title == "Page.GotoAsync").Count(), 1);
+        Assert.GreaterOrEqual(events.Where(e => e?.Title == "Page.SetContentAsync").Count(), 1);
+        Assert.GreaterOrEqual(events.Where(e => e?.Title == "Page.ClickAsync").Count(), 1);
+        Assert.GreaterOrEqual(events.Where(e => e?.Title == "Mouse.MoveAsync").Count(), 1);
+        Assert.GreaterOrEqual(events.Where(e => e?.Title == "Mouse.DblClickAsync").Count(), 1);
+        Assert.GreaterOrEqual(events.Where(e => e?.Title == "Keyboard.InsertTextAsync").Count(), 1);
+        Assert.GreaterOrEqual(events.Where(e => e?.Title == "Page.CloseAsync").Count(), 1);
 
         Assert.GreaterOrEqual(events.Where(x => x.Type == "frame-snapshot").Count(), 1);
         Assert.GreaterOrEqual(events.Where(x => x.Type == "screencast-frame").Count(), 1);
@@ -101,21 +101,21 @@ public class TracingTests : ContextTestEx
         {
             var (events, resources) = ParseTrace(trace1Path);
             Assert.AreEqual("context-options", events[0].Type);
-            Assert.GreaterOrEqual(events.Where(x => x?.ApiName == "Page.GotoAsync").Count(), 1);
-            Assert.GreaterOrEqual(events.Where(x => x?.ApiName == "Page.SetContentAsync").Count(), 1);
-            Assert.GreaterOrEqual(events.Where(x => x?.ApiName == "Page.ClickAsync").Count(), 1);
-            Assert.AreEqual(0, events.Where(x => x?.ApiName == "Page.CloseAsync").Count());
-            Assert.AreEqual(0, events.Where(x => x?.ApiName == "Page.DblClickAsync").Count());
+            Assert.GreaterOrEqual(events.Where(x => x?.Title == "Page.GotoAsync").Count(), 1);
+            Assert.GreaterOrEqual(events.Where(x => x?.Title == "Page.SetContentAsync").Count(), 1);
+            Assert.GreaterOrEqual(events.Where(x => x?.Title == "Page.ClickAsync").Count(), 1);
+            Assert.AreEqual(0, events.Where(x => x?.Title == "Page.CloseAsync").Count());
+            Assert.AreEqual(0, events.Where(x => x?.Title == "Page.DblClickAsync").Count());
         }
 
         {
             var (events, resources) = ParseTrace(trace2Path);
             Assert.AreEqual("context-options", events[0].Type);
-            Assert.AreEqual(0, events.Where(x => x?.ApiName == "Page.GottoAsync").Count());
-            Assert.AreEqual(0, events.Where(x => x?.ApiName == "Page.SetContentAsync").Count());
-            Assert.AreEqual(0, events.Where(x => x?.ApiName == "Page.ClickAsync").Count());
-            Assert.GreaterOrEqual(events.Where(x => x?.ApiName == "Page.CloseAsync").Count(), 1);
-            Assert.GreaterOrEqual(events.Where(x => x?.ApiName == "Page.DblClickAsync").Count(), 1);
+            Assert.AreEqual(0, events.Where(x => x?.Title == "Page.GottoAsync").Count());
+            Assert.AreEqual(0, events.Where(x => x?.Title == "Page.SetContentAsync").Count());
+            Assert.AreEqual(0, events.Where(x => x?.Title == "Page.ClickAsync").Count());
+            Assert.GreaterOrEqual(events.Where(x => x?.Title == "Page.CloseAsync").Count(), 1);
+            Assert.GreaterOrEqual(events.Where(x => x?.Title == "Page.DblClickAsync").Count(), 1);
         }
 
     }
@@ -415,6 +415,7 @@ public class TracingTests : ContextTestEx
     private class TraceEventEntry
     {
         public string Type { get; set; }
+        public string Title { get; set; }
         public string ApiName { get; set; }
         public TraceEventError Error { get; set; }
         public double StartTime { get; set; }
@@ -428,5 +429,5 @@ public class TracingTests : ContextTestEx
         public string Message { get; set; }
     }
 
-    string[] GetActions(IReadOnlyList<TraceEventEntry> events) => events.Where(action => action.Type == "action").OrderBy(action => action.StartTime).Select(action => action.ApiName).ToArray();
+    string[] GetActions(IReadOnlyList<TraceEventEntry> events) => events.Where(action => action.Type == "action").OrderBy(action => action.StartTime).Select(action => action.Title).ToArray();
 }

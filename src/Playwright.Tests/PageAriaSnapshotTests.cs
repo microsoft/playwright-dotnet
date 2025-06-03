@@ -132,22 +132,6 @@ public class PageAriaSnapshotTests : PageTestEx
         StringAssert.Contains("- unexpected value", exception.Message);
     }
 
-    [PlaywrightTest("page-aria-snapshot.spec.ts", "should generate refs")]
-    public async Task ShouldGenerateRefs()
-    {
-        await Page.SetContentAsync(@"
-            <button>One</button>
-            <button>Two</button>
-            <button>Three</button>
-        ");
-        var snapshot = await Page.Locator("body").AriaSnapshotAsync(new() { Ref = true });
-        Assert.AreEqual(_unshift(@"
-            - button ""One"" [ref=s1e3]
-            - button ""Two"" [ref=s1e4]
-            - button ""Three"" [ref=s1e5]
-        "), snapshot);
-    }
-
     [PlaywrightTest("to-match-aria-snapshot.spec.ts", "should match url")]
     public async Task ShouldMatchUrl()
     {

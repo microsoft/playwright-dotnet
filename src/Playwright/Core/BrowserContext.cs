@@ -66,6 +66,7 @@ internal class BrowserContext : ChannelOwner, IBrowserContext
         _tracing = initializer.Tracing;
         _clock = new Clock(this);
         _request = initializer.RequestContext;
+        _request._timeoutSettings = this._timeoutSettings;
         _initializer = initializer;
     }
 
@@ -643,14 +644,6 @@ internal class BrowserContext : ChannelOwner, IBrowserContext
     internal void SetDefaultNavigationTimeoutImpl(float? timeout)
     {
         _timeoutSettings.SetDefaultNavigationTimeout(timeout);
-        WrapApiCallAsync(
-            () => SendMessageToServerAsync(
-            "setDefaultNavigationTimeoutNoReply",
-            new Dictionary<string, object?>
-            {
-                ["timeout"] = timeout,
-            }),
-            true).IgnoreException();
     }
 
     [MethodImpl(MethodImplOptions.NoInlining)]
@@ -659,14 +652,6 @@ internal class BrowserContext : ChannelOwner, IBrowserContext
     internal void SetDefaultTimeoutImpl(float? timeout)
     {
         _timeoutSettings.SetDefaultTimeout(timeout);
-        WrapApiCallAsync(
-            () => SendMessageToServerAsync(
-            "setDefaultTimeoutNoReply",
-            new Dictionary<string, object?>
-            {
-                ["timeout"] = timeout,
-            }),
-            true).IgnoreException();
     }
 
     internal async Task OnRouteAsync(Route route)
