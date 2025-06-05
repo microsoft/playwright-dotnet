@@ -47,7 +47,6 @@ internal class Route : ChannelOwner, IRoute
 
     internal Route(ChannelOwner parent, string guid, RouteInitializer initializer) : base(parent, guid)
     {
-        MarkAsInternalType();
         _initializer = initializer;
         _request = initializer.Request;
     }
@@ -61,19 +60,20 @@ internal class Route : ChannelOwner, IRoute
     [MethodImpl(MethodImplOptions.NoInlining)]
     public async Task FulfillAsync(RouteFulfillOptions? options = default)
     {
-        CheckNotHandled();
-        options ??= new RouteFulfillOptions();
-        var normalized = await NormalizeFulfillParametersAsync(
-            options.Status,
-            options.Headers,
-            options.ContentType,
-            options.Body,
-            options.BodyBytes,
-            options.Json,
-            options.Path,
-            options.Response).ConfigureAwait(false);
-        await RaceWithTargetCloseAsync(SendMessageToServerAsync("fulfill", normalized)).ConfigureAwait(false);
-        ReportHandled(true);
+        await HandleRouteAsync(async () =>
+        {
+            options ??= new RouteFulfillOptions();
+            var normalized = await NormalizeFulfillParametersAsync(
+                options.Status,
+                options.Headers,
+                options.ContentType,
+                options.Body,
+                options.BodyBytes,
+                options.Json,
+                options.Path,
+                options.Response).ConfigureAwait(false);
+            await RaceWithTargetCloseAsync(SendMessageToServerAsync("fulfill", normalized)).ConfigureAwait(false);
+        }).ConfigureAwait(false);
     }
 
     [MethodImpl(MethodImplOptions.NoInlining)]
@@ -93,10 +93,11 @@ internal class Route : ChannelOwner, IRoute
     [MethodImpl(MethodImplOptions.NoInlining)]
     public async Task ContinueAsync(RouteContinueOptions? options = default)
     {
-        CheckNotHandled();
-        _request.ApplyFallbackOverrides(new RouteFallbackOptions().FromRouteContinueOptions(options));
-        await InnerContinueAsync(false /* isFallback */).ConfigureAwait(false);
-        ReportHandled(true);
+        await HandleRouteAsync(async () =>
+        {
+            _request.ApplyFallbackOverrides(new RouteFallbackOptions().FromRouteContinueOptions(options));
+            await InnerContinueAsync(false /* isFallback */).ConfigureAwait(false);
+        }).ConfigureAwait(false);
     }
 
     internal async Task InnerContinueAsync(bool isFallback = false)

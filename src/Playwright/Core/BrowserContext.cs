@@ -43,7 +43,7 @@ internal class BrowserContext : ChannelOwner, IBrowserContext
     private readonly TaskCompletionSource<bool> _closeTcs = new();
     private readonly Dictionary<string, Delegate> _bindings = new();
     private readonly BrowserContextInitializer _initializer;
-    private readonly Tracing _tracing;
+    internal readonly Tracing _tracing;
     private readonly Clock _clock;
     internal readonly HashSet<IPage> _backgroundPages = new();
     internal readonly APIRequestContext _request;
@@ -52,7 +52,8 @@ internal class BrowserContext : ChannelOwner, IBrowserContext
     private readonly List<WebSocketRouteHandler> _webSocketRoutes = new();
     private List<RouteHandler> _routes = new();
     internal readonly List<Page> _pages = new();
-    private readonly Browser? _browser;
+    // Browser is null for browser contexts created outside of normal browser, e.g. android or electron.
+    internal Browser? _browser;
     private readonly List<HarRouter> _harRouters = new();
     private string? _closeReason;
 
@@ -60,9 +61,6 @@ internal class BrowserContext : ChannelOwner, IBrowserContext
 
     internal BrowserContext(ChannelOwner parent, string guid, BrowserContextInitializer initializer) : base(parent, guid)
     {
-        _browser = parent as Browser;
-        _browser?._contexts.Add(this);
-
         _tracing = initializer.Tracing;
         _clock = new Clock(this);
         _request = initializer.RequestContext;
@@ -138,11 +136,9 @@ internal class BrowserContext : ChannelOwner, IBrowserContext
 
     internal Page? OwnerPage { get; set; }
 
-    internal bool IsChromium => _initializer.IsChromium;
+    internal Options Options => _initializer.Options;
 
-    internal BrowserNewContextOptions Options { get; set; } = new();
-
-    internal bool CloseWasCalled { get; private set; }
+    internal bool ClosingOrClosed { get; private set; }
 
     public IAPIRequestContext APIRequest => _request;
 
@@ -267,6 +263,24 @@ internal class BrowserContext : ChannelOwner, IBrowserContext
         }
     }
 
+    internal async Task InitializeHarFromOptionsAsync(BrowserNewContextOptions options)
+    {
+        if (options.RecordHarPath.IsNullOrEmpty())
+        {
+            return;
+        }
+        var defaultPolicy = options.RecordHarPath.EndsWith(".zip") ? HarContentPolicy.Attach : HarContentPolicy.Embed;
+        var contentPolicy = options.RecordHarContent ?? (options.RecordHarOmitContent == true ? HarContentPolicy.Omit : defaultPolicy);
+        var routeFromHAROptions = new BrowserContextRouteFromHAROptions()
+        {
+            Url = options.RecordHarUrlFilter,
+            UrlString = options.RecordHarUrlFilter,
+            UrlRegex = options.RecordHarUrlFilterRegex,
+            UpdateMode = options.RecordHarMode ?? HarMode.Full,
+        };
+        await RecordIntoHarAsync(options.RecordHarPath, null, routeFromHAROptions, contentPolicy).ConfigureAwait(false);
+    }
+
     [MethodImpl(MethodImplOptions.NoInlining)]
     public Task AddCookiesAsync(IEnumerable<Cookie> cookies) => SendMessageToServerAsync(
             "addCookies",
@@ -316,18 +330,13 @@ internal class BrowserContext : ChannelOwner, IBrowserContext
     [MethodImpl(MethodImplOptions.NoInlining)]
     public async Task CloseAsync(BrowserContextCloseOptions? options = default)
     {
-        if (CloseWasCalled)
+        if (ClosingOrClosed)
         {
             return;
         }
         _closeReason = options?.Reason;
-        CloseWasCalled = true;
-        await WrapApiCallAsync(
-            async () =>
-        {
-            await _request.DisposeAsync(options?.Reason).ConfigureAwait(false);
-        },
-            true).ConfigureAwait(false);
+        ClosingOrClosed = true;
+        await _request.DisposeAsync(options?.Reason).ConfigureAwait(false);
         await WrapApiCallAsync(
             async () =>
         {
@@ -360,16 +369,6 @@ internal class BrowserContext : ChannelOwner, IBrowserContext
             ["reason"] = options?.Reason,
         }).ConfigureAwait(false);
         await _closeTcs.Task.ConfigureAwait(false);
-    }
-
-    internal void SetOptions(BrowserNewContextOptions contextOptions, string? tracesDir)
-    {
-        Options = contextOptions;
-        if (!string.IsNullOrEmpty(Options?.RecordHarPath) && Options != null)
-        {
-            _harRecorders.Add(string.Empty, new(Options.RecordHarPath!, Options.RecordHarContent));
-        }
-        _tracing._tracesDir = tracesDir;
     }
 
     [MethodImpl(MethodImplOptions.NoInlining)]
@@ -662,7 +661,7 @@ internal class BrowserContext : ChannelOwner, IBrowserContext
         foreach (var routeHandler in routeHandlers)
         {
             // If the page or the context was closed we stall all requests right away.
-            if (page?.CloseWasCalled == true || CloseWasCalled)
+            if (page?.CloseWasCalled == true || ClosingOrClosed)
             {
                 return;
             }
@@ -681,7 +680,7 @@ internal class BrowserContext : ChannelOwner, IBrowserContext
             var handled = await routeHandler.HandleAsync(route).ConfigureAwait(false);
             if (_routes.Count == 0)
             {
-                await UpdateInterceptionAsync().ConfigureAwait(false);
+                UpdateInterceptionAsync().IgnoreException();
             }
             if (handled)
             {
@@ -783,9 +782,11 @@ internal class BrowserContext : ChannelOwner, IBrowserContext
 
     internal void OnClose()
     {
+        ClosingOrClosed = true;
         if (Browser != null)
         {
             ((Browser)Browser)._contexts.Remove(this);
+            ((Browser)Browser)._browserType.Playwright._selectors._contextsForSelectors.Remove(this);
         }
 
         DisposeHarRouters();
@@ -855,13 +856,29 @@ internal class BrowserContext : ChannelOwner, IBrowserContext
         }
     }
 
-    internal async Task RecordIntoHarAsync(string har, Page? page, BrowserContextRouteFromHAROptions options)
+    internal async Task RecordIntoHarAsync(string har, Page? page, BrowserContextRouteFromHAROptions options, HarContentPolicy? contentPolicy)
     {
-        var contentPolicy = RouteFromHarUpdateContentPolicyToHarContentPolicy(options?.UpdateContent);
+        contentPolicy = contentPolicy ?? RouteFromHarUpdateContentPolicyToHarContentPolicy(options?.UpdateContent);
+        var urlGlob = options?.Url ?? options?.UrlString;
+
+        var recordHarArgs = new Dictionary<string, object?>();
+        recordHarArgs["zip"] = har.EndsWith(".zip");
+        recordHarArgs["content"] = contentPolicy ?? HarContentPolicy.Attach;
+        if (!string.IsNullOrEmpty(urlGlob))
+        {
+            recordHarArgs["urlGlob"] = urlGlob;
+        }
+        if (options?.UrlRegex != null)
+        {
+            recordHarArgs["urlRegexSource"] = options?.UrlRegex.ToString();
+            recordHarArgs["urlRegexFlags"] = options?.UrlRegex.Options.GetInlineFlags();
+        }
+        recordHarArgs["mode"] = options?.UpdateMode ?? HarMode.Minimal;
+
         var harId = (await SendMessageToServerAsync("harStart", new Dictionary<string, object?>
             {
                 { "page", page },
-                { "options", Core.Browser.PrepareHarOptions(contentPolicy ?? HarContentPolicy.Attach, options?.UpdateMode ?? HarMode.Minimal, har, null, options?.Url, options?.UrlString, options?.UrlRegex) },
+                { "options", recordHarArgs },
             }).ConfigureAwait(false)).Value.GetProperty("harId").ToString();
         _harRecorders.Add(harId, new(har, contentPolicy ?? HarContentPolicy.Attach));
     }
@@ -871,7 +888,7 @@ internal class BrowserContext : ChannelOwner, IBrowserContext
     {
         if (options?.Update == true)
         {
-            await RecordIntoHarAsync(har, null, options).ConfigureAwait(false);
+            await RecordIntoHarAsync(har, null, options, null).ConfigureAwait(false);
             return;
         }
         var harRouter = await HarRouter.CreateAsync(_connection.LocalUtils!, har, options?.NotFound ?? HarNotFound.Abort, new()

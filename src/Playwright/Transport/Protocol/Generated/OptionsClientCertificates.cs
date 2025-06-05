@@ -22,8 +22,24 @@
  * SOFTWARE.
  */
 
+using System.Text.Json.Serialization;
+
 namespace Microsoft.Playwright.Transport.Protocol;
 
-internal class SelectorsInitializer
+internal class OptionsClientCertificates
 {
+    [JsonPropertyName("origin")]
+    public string Origin { get; set; } = null!;
+
+    [JsonPropertyName("cert")]
+    public byte[] Cert { get; set; } = null!;
+
+    [JsonPropertyName("key")]
+    public byte[] Key { get; set; } = null!;
+
+    [JsonPropertyName("passphrase")]
+    public string Passphrase { get; set; } = null!;
+
+    [JsonPropertyName("pfx")]
+    public byte[] Pfx { get; set; } = null!;
 }

@@ -45,7 +45,6 @@ internal class Request : ChannelOwner, IRequest
 
     internal Request(ChannelOwner parent, string guid, RequestInitializer initializer) : base(parent, guid)
     {
-        MarkAsInternalType();
         _initializer = initializer;
         RedirectedFrom = _initializer.RedirectedFrom;
         Timing = new();
@@ -219,8 +218,13 @@ internal class Request : ChannelOwner, IRequest
 
     private async Task<RawHeaders> GetRawHeadersTaskAsync()
     {
-        var headerList = (await SendMessageToServerAsync("rawRequestHeaders").ConfigureAwait(false)).Value.GetProperty("headers").ToObject<List<NameValue>>();
-        return new(headerList);
+        return await WrapApiCallAsync(
+            async () =>
+        {
+            var headerList = (await SendMessageToServerAsync("rawRequestHeaders").ConfigureAwait(false)).Value.GetProperty("headers").ToObject<List<NameValue>>();
+            return new RawHeaders(headerList);
+        },
+            true).ConfigureAwait(false);
     }
 
     internal void ApplyFallbackOverrides(RouteFallbackOptions? overrides)

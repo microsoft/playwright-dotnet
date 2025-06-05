@@ -134,7 +134,8 @@ internal class Locator : ILocator
                     Y = bb.Y,
                 };
             },
-            options?.Timeout);
+            options?.Timeout,
+            "Bounding box");
 
     public Task CheckAsync(LocatorCheckOptions? options = null)
         => _frame.CheckAsync(
@@ -161,19 +162,20 @@ internal class Locator : ILocator
     public Task<T> EvaluateAsync<T>(string expression, object? arg = null, LocatorEvaluateOptions? options = null)
         => WithElementAsync(
             (h, _) => h.EvaluateAsync<T>(expression, arg),
-            options?.Timeout);
+            options?.Timeout,
+            "Evaluate");
 
     public Task<T> EvaluateAllAsync<T>(string expression, object? arg = null)
         => _frame.EvalOnSelectorAllAsync<T>(_selector, expression, arg);
 
     public Task<IJSHandle> EvaluateHandleAsync(string expression, object? arg = null, LocatorEvaluateHandleOptions? options = null)
-        => WithElementAsync((e, _) => e.EvaluateHandleAsync(expression, arg), options?.Timeout);
+        => WithElementAsync((e, _) => e.EvaluateHandleAsync(expression, arg), options?.Timeout, "Evaluate");
 
     public Task FillAsync(string value, LocatorFillOptions? options = null)
         => _frame.FillAsync(_selector, value, ConvertOptions<FrameFillOptions>(options));
 
     public Task ClearAsync(LocatorClearOptions? options = null)
-        => _frame.FillAsync(_selector, string.Empty, ConvertOptions<FrameFillOptions>(options));
+        => this._frame.WrapApiCallAsync(() => _frame.FillAsync(_selector, string.Empty, ConvertOptions<FrameFillOptions>(options)), false, "Clear");
 
     public Task HighlightAsync() => _frame.HighlightAsync(_selector);
 
@@ -291,10 +293,10 @@ internal class Locator : ILocator
         => _frame.PressAsync(_selector, key, ConvertOptions<FramePressOptions>(options));
 
     public Task<byte[]> ScreenshotAsync(LocatorScreenshotOptions? options = null)
-        => WithElementAsync((h, timeout) => h.ScreenshotAsync(ConvertOptions<ElementHandleScreenshotOptions>(options, new() { Timeout = timeout })), options?.Timeout);
+        => WithElementAsync((h, timeout) => h.ScreenshotAsync(ConvertOptions<ElementHandleScreenshotOptions>(options, new() { Timeout = timeout })), options?.Timeout, "Screenshot");
 
     public Task ScrollIntoViewIfNeededAsync(LocatorScrollIntoViewIfNeededOptions? options = null)
-        => WithElementAsync((h, timeout) => h.ScrollIntoViewIfNeededAsync(ConvertOptions<ElementHandleScrollIntoViewIfNeededOptions>(options, new() { Timeout = timeout })), options?.Timeout);
+        => WithElementAsync((h, timeout) => h.ScrollIntoViewIfNeededAsync(ConvertOptions<ElementHandleScrollIntoViewIfNeededOptions>(options, new() { Timeout = timeout })), options?.Timeout, "Scroll into view");
 
     public Task<IReadOnlyList<string>> SelectOptionAsync(string values, LocatorSelectOptionOptions? options = null)
         => _frame.SelectOptionAsync(_selector, values, ConvertOptions<FrameSelectOptionOptions>(options));
@@ -315,7 +317,7 @@ internal class Locator : ILocator
         => _frame.SelectOptionAsync(_selector, values, ConvertOptions<FrameSelectOptionOptions>(options));
 
     public Task SelectTextAsync(LocatorSelectTextOptions? options = null)
-        => WithElementAsync((h, timeout) => h.SelectTextAsync(ConvertOptions<ElementHandleSelectTextOptions>(options, new() { Timeout = timeout })), options?.Timeout);
+        => WithElementAsync((h, timeout) => h.SelectTextAsync(ConvertOptions<ElementHandleSelectTextOptions>(options, new() { Timeout = timeout })), options?.Timeout, "Select text");
 
     public Task SetCheckedAsync(bool @checked, LocatorSetCheckedOptions? options = null)
         => @checked ?
@@ -367,11 +369,11 @@ internal class Locator : ILocator
         });
     }
 
-    internal Task<FrameExpectResult> ExpectAsync(string expression, FrameExpectOptions options)
-        => _frame.ExpectAsync(
-            _selector,
-            expression,
-            options);
+    internal Task<FrameExpectResult> ExpectAsync(string expression, FrameExpectOptions options, string? title)
+        => this._frame.WrapApiCallAsync(
+              () => _frame.ExpectAsync(_selector, expression, options),
+              false,
+              title);
 
     public override string ToString() => "Locator@" + _selector;
 
@@ -397,12 +399,13 @@ internal class Locator : ILocator
         return target;
     }
 
-    private Task<TResult> WithElementAsync<TResult>(Func<IElementHandle, float?, Task<TResult>> task, float? timeout)
+    private Task<TResult> WithElementAsync<TResult>(Func<IElementHandle, float?, Task<TResult>> task, float? timeout, string title)
     {
         timeout = this._frame.Timeout(timeout);
         long? deadline = timeout.HasValue ? Stopwatch.GetTimestamp() + (long)(timeout.Value * 1000 * Stopwatch.Frequency / 1000) : null;
 
-        return this._frame.WrapApiCallAsync(async () =>
+        return this._frame.WrapApiCallAsync(
+            async () =>
         {
             var handle = await _frame.SendMessageToServerAsync<ElementHandle>("waitForSelector", new Dictionary<string, object?>
             {
@@ -424,10 +427,12 @@ internal class Locator : ILocator
             {
                 await handle.DisposeAsync().ConfigureAwait(false);
             }
-        });
+        },
+            false,
+            title);
     }
 
-    private async Task WithElementAsync(Func<IElementHandle, float?, Task> callback, float? timeout)
+    private async Task WithElementAsync(Func<IElementHandle, float?, Task> callback, float? timeout, string title)
     {
         await WithElementAsync<bool>(
             async (h, t) =>
@@ -435,7 +440,8 @@ internal class Locator : ILocator
                 await callback(h, t).ConfigureAwait(false);
                 return true;
             },
-            timeout).ConfigureAwait(false);
+            timeout,
+            title).ConfigureAwait(false);
     }
 
     public ILocator Describe(string description)

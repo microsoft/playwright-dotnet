@@ -346,6 +346,11 @@ public partial interface ILocator
     /// Describes the locator, description is used in the trace viewer and reports. Returns
     /// the locator pointing to the same element.
     /// </para>
+    /// <para>**Usage**</para>
+    /// <code>
+    /// var button = Page.GetByTestId("btn-sub").Describe("Subscribe button");<br/>
+    /// await button.ClickAsync();
+    /// </code>
     /// </summary>
     /// <param name="description">Locator description.</param>
     ILocator Describe(string description);

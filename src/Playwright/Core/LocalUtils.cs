@@ -36,7 +36,6 @@ internal class LocalUtils : ChannelOwner
 
     public LocalUtils(ChannelOwner parent, string guid, LocalUtilsInitializer initializer) : base(parent, guid)
     {
-        MarkAsInternalType();
         foreach (var entry in initializer.DeviceDescriptors)
         {
             _devices[entry.Name] = entry.Descriptor;

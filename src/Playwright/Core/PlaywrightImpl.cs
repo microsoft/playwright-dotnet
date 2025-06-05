@@ -34,7 +34,7 @@ namespace Microsoft.Playwright.Core;
 internal class PlaywrightImpl : ChannelOwner, IPlaywright
 {
     private readonly PlaywrightInitializer _initializer;
-    internal SelectorsAPI _selectors;
+    internal Selectors _selectors;
 
     private readonly Dictionary<string, BrowserNewContextOptions> _devices = new(StringComparer.InvariantCultureIgnoreCase);
 
@@ -50,10 +50,7 @@ internal class PlaywrightImpl : ChannelOwner, IPlaywright
         _initializer.Webkit.Playwright = this;
         APIRequest = new APIRequest(this);
 
-        _selectors = new SelectorsAPI();
-        var selectorsOwner = this._initializer.Selectors;
-        _selectors.AddChannel(selectorsOwner);
-        this._connection.Close += (_, _) => _selectors.RemoveChannel(selectorsOwner);
+        _selectors = new Selectors();
     }
 
     ~PlaywrightImpl() => Dispose(false);
@@ -87,14 +84,6 @@ internal class PlaywrightImpl : ChannelOwner, IPlaywright
             global::Microsoft.Playwright.BrowserType.Webkit => Webkit,
             _ => throw new ArgumentException($"Unknown browser type: {browserType}"),
         };
-
-    internal void SetSelectors(SelectorsAPI selectors)
-    {
-        var selectorsOwner = this._initializer.Selectors;
-        _selectors.RemoveChannel(selectorsOwner);
-        _selectors = selectors;
-        _selectors.AddChannel(selectorsOwner);
-    }
 
     public void Dispose()
     {

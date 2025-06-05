@@ -26,8 +26,11 @@ using System.Text.Json.Serialization;
 
 namespace Microsoft.Playwright.Transport.Protocol;
 
-internal class AndroidSelectorHasChild
+internal class OptionsRecordVideo
 {
-    [JsonPropertyName("androidSelector")]
-    public AndroidSelector AndroidSelector { get; set; } = null!;
+    [JsonPropertyName("dir")]
+    public string Dir { get; set; } = null!;
+
+    [JsonPropertyName("size")]
+    public ViewportSize Size { get; set; } = null!;
 }

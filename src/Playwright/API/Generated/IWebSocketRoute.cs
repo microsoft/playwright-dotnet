@@ -37,7 +37,7 @@ namespace Microsoft.Playwright;
 /// <para>**Mocking**</para>
 /// <para>
 /// By default, the routed WebSocket will not connect to the server. This way, you can
-/// mock entire communcation over the WebSocket. Here is an example that responds to
+/// mock entire communication over the WebSocket. Here is an example that responds to
 /// a <c>"request"</c> with a <c>"response"</c>.
 /// </para>
 /// <code>

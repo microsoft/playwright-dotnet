@@ -26,8 +26,17 @@ using System.Text.Json.Serialization;
 
 namespace Microsoft.Playwright.Transport.Protocol;
 
-internal class AndroidSelectorHasChild
+internal class OptionsHttpCredentials
 {
-    [JsonPropertyName("androidSelector")]
-    public AndroidSelector AndroidSelector { get; set; } = null!;
+    [JsonPropertyName("username")]
+    public string Username { get; set; } = null!;
+
+    [JsonPropertyName("password")]
+    public string Password { get; set; } = null!;
+
+    [JsonPropertyName("origin")]
+    public string Origin { get; set; } = null!;
+
+    [JsonPropertyName("send")]
+    public string Send { get; set; } = null!;
 }

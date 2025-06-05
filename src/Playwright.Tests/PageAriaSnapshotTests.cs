@@ -128,7 +128,7 @@ public class PageAriaSnapshotTests : PageTestEx
                     - listitem: ""Three""
             ", new() { Timeout = 300 });
         });
-        StringAssert.Contains("LocatorAssertions.ToMatchAriaSnapshotAsync with timeout 300ms", exception.Message);
+        StringAssert.Contains("Expect \"ToMatchAriaSnapshotAsync\" with timeout 300ms", exception.Message);
         StringAssert.Contains("- unexpected value", exception.Message);
     }
 

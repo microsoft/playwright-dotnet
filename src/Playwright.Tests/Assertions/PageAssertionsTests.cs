@@ -38,7 +38,7 @@ public class PageAssertionsTests : PageTestEx
         var exception = await PlaywrightAssert.ThrowsAsync<PlaywrightException>(() => Expect(Page).ToHaveTitleAsync("Hello", new() { Timeout = 100 }));
         StringAssert.Contains("Page title expected to be 'Hello'", exception.Message);
         StringAssert.Contains("But was: 'Bye'", exception.Message);
-        StringAssert.Contains("PageAssertions.ToHaveTitleAsync with timeout 100ms", exception.Message);
+        StringAssert.Contains("Expect \"ToHaveTitleAsync\" with timeout 100ms", exception.Message);
 
         await Page.SetContentAsync("<title>Foo Bar Kek</title>");
         await Expect(Page).ToHaveTitleAsync(new Regex("^Foo .* Kek$"));
@@ -60,7 +60,7 @@ public class PageAssertionsTests : PageTestEx
         var exception = await PlaywrightAssert.ThrowsAsync<PlaywrightException>(() => Expect(Page).ToHaveURLAsync("wrong", new() { Timeout = 1000 }));
         StringAssert.Contains("Page URL expected to be 'wrong'", exception.Message);
         StringAssert.Contains("But was: 'data:text/html,<div>B</div>'", exception.Message);
-        StringAssert.Contains("PageAssertions.ToHaveURLAsync with timeout 1000ms", exception.Message);
+        StringAssert.Contains("Expect \"ToHaveURLAsync\" with timeout 1000ms", exception.Message);
 
         // Fail with Regex
         await Page.GotoAsync(Server.EmptyPage);

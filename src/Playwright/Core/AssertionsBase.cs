@@ -75,7 +75,7 @@ internal class AssertionsBase
         {
             message = message.Replace("expected to", "expected not to");
         }
-        var result = await ActualLocator.ExpectAsync(expression, expectOptions).ConfigureAwait(false);
+        var result = await ActualLocator.ExpectAsync(expression, expectOptions, ExpectExpressionToTitle(expression)).ConfigureAwait(false);
         if (result.Matches == IsNot)
         {
             var actual = result.Received;
@@ -121,6 +121,48 @@ internal class AssertionsBase
         }
 
         return value.ToString();
+    }
+
+    private string? ExpectExpressionToTitle(string expression)
+    {
+        switch (expression)
+        {
+            case "to.be.attached": return "Expect \"ToBeAttachedAsync\"";
+            case "to.be.checked": return "Expect \"ToBeCheckedAsync\"";
+            case "to.be.detached": return "Expect \"ToBeDetachedAsync\"";
+            case "to.be.disabled": return "Expect \"ToBeDisabledAsync\"";
+            case "to.be.editable": return "Expect \"ToBeEditableAsync\"";
+            case "to.be.empty": return "Expect \"ToBeEmptyAsync\"";
+            case "to.be.enabled": return "Expect \"ToBeEnabledAsync\"";
+            case "to.be.focused": return "Expect \"ToBeFocusedAsync\"";
+            case "to.be.hidden": return "Expect \"ToBeHiddenAsync\"";
+            case "to.be.in.viewport": return "Expect \"ToBeInViewportAsync\"";
+            case "to.be.readonly": return "Expect \"ToBeReadonlyAsync\"";
+            case "to.be.visible": return "Expect \"ToBeVisibleAsync\"";
+            case "to.contain.class": return "Expect \"ToContainClassAsync\"";
+            case "to.contain.class.array": return "Expect \"ToHaveClassAsync\"";
+            case "to.contain.text": return "Expect \"ToContainTextAsync\"";
+            case "to.contain.text.array": return "Expect \"ToContainTextAsync\"";
+            case "to.have.accessible.description": return "Expect \"ToHaveAccessibleDescriptionAsync\"";
+            case "to.have.accessible.error.message": return "Expect \"ToHaveAccessibleErrorMessageAsync\"";
+            case "to.have.accessible.name": return "Expect \"ToHaveAccessibleNameAsync\"";
+            case "to.have.attribute.value": return "Expect \"ToHaveAttributeValueAsync\"";
+            case "to.have.css": return "Expect \"ToHaveCSSAsync\"";
+            case "to.have.class": return "Expect \"ToHaveClassAsync\"";
+            case "to.have.class.array": return "Expect \"ToHaveClassAsync\"";
+            case "to.have.count": return "Expect \"ToHaveCountAsync\"";
+            case "to.have.id": return "Expect \"ToHaveIdAsync\"";
+            case "to.have.property": return "Expect \"ToHaveJSPropertyAsync\"";
+            case "to.have.role": return "Expect \"ToHaveRoleAsync\"";
+            case "to.have.text": return "Expect \"ToHaveTextAsync\"";
+            case "to.have.text.array": return "Expect \"ToHaveTextAsync\"";
+            case "to.have.title": return "Expect \"ToHaveTitleAsync\"";
+            case "to.have.url": return "Expect \"ToHaveURLAsync\"";
+            case "to.have.value": return "Expect \"ToHaveValueAsync\"";
+            case "to.have.values": return "Expect \"ToHaveValuesAsync\"";
+            case "to.match.aria": return "Expect \"ToMatchAriaSnapshotAsync\"";
+        }
+        throw new PlaywrightException($"Unknown expect expression: {expression}");
     }
 
     public static void SetDefaultTimeout(float timeout)

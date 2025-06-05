@@ -90,9 +90,6 @@ internal enum ChannelOwnerType
     [EnumMember(Value = "electron")]
     Electron,
 
-    [EnumMember(Value = "selectors")]
-    Selectors,
-
     [EnumMember(Value = "SocksSupport")]
     SocksSupport,
 

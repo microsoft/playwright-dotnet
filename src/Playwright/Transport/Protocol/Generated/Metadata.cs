@@ -31,8 +31,8 @@ internal class Metadata
     [JsonPropertyName("location")]
     public MetadataLocation Location { get; set; } = null!;
 
-    [JsonPropertyName("apiName")]
-    public string ApiName { get; set; } = null!;
+    [JsonPropertyName("title")]
+    public string Title { get; set; } = null!;
 
     [JsonPropertyName("internal")]
     public bool? Internal { get; set; }

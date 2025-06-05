@@ -310,6 +310,22 @@ public class DefaultBrowsercontext2Tests : PlaywrightTestEx
         tmp.Dispose();
     }
 
+    [PlaywrightTest("defaultbrowsercontext-2.spec.ts", "exposes browser")]
+    public async Task ExposesBrowser()
+    {
+        var (tmp, context, page) = await LaunchAsync();
+        var browser = context.Browser;
+        Assert.NotNull(browser);
+        var page2 = await browser.NewPageAsync();
+        await page2.GotoAsync("data:text/html,<html><title>Title</title></html>");
+        Assert.AreEqual("Title", await page2.TitleAsync());
+        await browser.CloseAsync();
+        Assert.AreEqual(0, context.Pages.Count);
+        // Next line should not throw.
+        await context.CloseAsync();
+        tmp.Dispose();
+    }
+
     private async Task<(TempDirectory tmp, IBrowserContext context, IPage page)> LaunchAsync(BrowserTypeLaunchPersistentContextOptions options = null)
     {
         var tmp = new TempDirectory();

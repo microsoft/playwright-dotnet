@@ -78,7 +78,7 @@ internal class BrowserType : ChannelOwner, IBrowserType
                 { "slowMo", options.SlowMo },
                 { "timeout", TimeoutSettings.LaunchTimeout(options.Timeout) },
             }).ConfigureAwait(false);
-        DidLaunchBrowser(browser);
+        browser.ConnectToBrowserType(this, options.TracesDir);
         return browser;
     }
 
@@ -132,15 +132,9 @@ internal class BrowserType : ChannelOwner, IBrowserType
             ["ignoreDefaultArgs"] = options.IgnoreDefaultArgs,
             ["ignoreAllDefaultArgs"] = options.IgnoreAllDefaultArgs,
             ["baseURL"] = options.BaseURL,
-            ["recordHar"] = Browser.PrepareHarOptions(
-                    recordHarContent: options.RecordHarContent,
-                    recordHarMode: options.RecordHarMode,
-                    recordHarPath: options.RecordHarPath,
-                    recordHarOmitContent: options.RecordHarOmitContent,
-                    recordHarUrlFilter: options.RecordHarUrlFilter,
-                    recordHarUrlFilterString: options.RecordHarUrlFilterString,
-                    recordHarUrlFilterRegex: options.RecordHarUrlFilterRegex),
             ["clientCertificates"] = Browser.ToClientCertificatesProtocol(options.ClientCertificates),
+            ["selectorEngines"] = Playwright._selectors._selectorEngines,
+            ["testIdAttributeName"] = Playwright._selectors._testIdAttributeName,
         };
 
         if (options.AcceptDownloads.HasValue)
@@ -157,13 +151,20 @@ internal class BrowserType : ChannelOwner, IBrowserType
             channelArgs.Add("viewport", options.ViewportSize);
         }
 
-        var context = await SendMessageToServerAsync<BrowserContext>("launchPersistentContext", channelArgs).ConfigureAwait(false);
-
-        DidCreateContext(
-            context,
-            ClassUtils.Clone<BrowserNewContextOptions>(options),
-            options?.TracesDir);
-
+        JsonElement result = await SendMessageToServerAsync<JsonElement>("launchPersistentContext", channelArgs).ConfigureAwait(false);
+        var browser = result.GetProperty("browser").ToObject<Browser>(_connection.DefaultJsonSerializerOptions)!;
+        browser.ConnectToBrowserType(this, options.TracesDir);
+        var context = result.GetProperty("context").ToObject<BrowserContext>(_connection.DefaultJsonSerializerOptions)!;
+        await context.InitializeHarFromOptionsAsync(new()
+        {
+            RecordHarContent = options.RecordHarContent,
+            RecordHarMode = options.RecordHarMode,
+            RecordHarOmitContent = options.RecordHarOmitContent,
+            RecordHarPath = options.RecordHarPath,
+            RecordHarUrlFilter = options.RecordHarUrlFilter,
+            RecordHarUrlFilterRegex = options.RecordHarUrlFilterRegex,
+            RecordHarUrlFilterString = options.RecordHarUrlFilterString,
+        }).ConfigureAwait(false);
         return context;
     }
 
@@ -247,11 +248,11 @@ internal class BrowserType : ChannelOwner, IBrowserType
                 ClosePipe();
                 throw new ArgumentException("Malformed endpoint. Did you use launchServer method?");
             }
-            playwright.SetSelectors(this.Playwright._selectors);
+            playwright._selectors = this.Playwright._selectors;
             browser = playwright.PreLaunchedBrowser;
             browser.ShouldCloseConnectionOnClose = true;
             browser.Disconnected += (_, _) => ClosePipe();
-            DidLaunchBrowser(browser);
+            browser.ConnectToBrowserType(this, null);
             return playwright.PreLaunchedBrowser;
         }
         var task = CreateBrowserAsync();
@@ -274,22 +275,7 @@ internal class BrowserType : ChannelOwner, IBrowserType
                 { "timeout", TimeoutSettings.LaunchTimeout(options.Timeout) },
             }).ConfigureAwait(false);
         Browser browser = result.GetProperty("browser").ToObject<Browser>(_connection.DefaultJsonSerializerOptions);
-        DidLaunchBrowser(browser);
-        if (result.TryGetProperty("defaultContext", out JsonElement defaultContextValue))
-        {
-            var defaultContext = defaultContextValue.ToObject<BrowserContext>(_connection.DefaultJsonSerializerOptions);
-            DidCreateContext(defaultContext, new(), null);
-        }
+        browser.ConnectToBrowserType(this, null);
         return browser;
-    }
-
-    internal void DidLaunchBrowser(Browser browser)
-    {
-        browser._browserType = this;
-    }
-
-    internal void DidCreateContext(BrowserContext context, BrowserNewContextOptions contextOptions, string? tracesDir)
-    {
-        context.SetOptions(contextOptions, tracesDir);
     }
 }

@@ -26,8 +26,14 @@ using System.Text.Json.Serialization;
 
 namespace Microsoft.Playwright.Transport.Protocol;
 
-internal class AndroidSelectorHasChild
+internal class OptionsGeolocation
 {
-    [JsonPropertyName("androidSelector")]
-    public AndroidSelector AndroidSelector { get; set; } = null!;
+    [JsonPropertyName("longitude")]
+    public int Longitude { get; set; }
+
+    [JsonPropertyName("latitude")]
+    public int Latitude { get; set; }
+
+    [JsonPropertyName("accuracy")]
+    public int? Accuracy { get; set; }
 }

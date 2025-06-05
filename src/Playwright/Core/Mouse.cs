@@ -48,17 +48,25 @@ internal class Mouse : IMouse
                 ["clickCount"] = options?.ClickCount,
             });
 
-    public Task DblClickAsync(float x, float y, MouseDblClickOptions? options = default)
-        => _page.SendMessageToServerAsync(
-            "mouseClick",
-            new Dictionary<string, object?>
-            {
-                ["x"] = x,
-                ["y"] = y,
-                ["delay"] = options?.Delay,
-                ["button"] = options?.Button,
-                ["clickCount"] = 2,
-            });
+    public async Task DblClickAsync(float x, float y, MouseDblClickOptions? options = default)
+    {
+        await _page.WrapApiCallAsync(
+            async () =>
+        {
+            await _page.SendMessageToServerAsync(
+                "mouseClick",
+                new Dictionary<string, object?>
+                {
+                    ["x"] = x,
+                    ["y"] = y,
+                    ["delay"] = options?.Delay,
+                    ["button"] = options?.Button,
+                    ["clickCount"] = 2,
+                }).ConfigureAwait(false);
+        },
+            false,
+            "Double click").ConfigureAwait(false);
+    }
 
     public Task DownAsync(MouseDownOptions? options = default)
         => _page.SendMessageToServerAsync(

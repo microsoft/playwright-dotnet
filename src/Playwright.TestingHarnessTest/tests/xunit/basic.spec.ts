@@ -358,7 +358,7 @@ test('should be able to override context options', async ({ runTest }) => {
       using Microsoft.Playwright;
       using Microsoft.Playwright.Xunit;
       using Xunit;
-      
+
       namespace Playwright.TestingHarnessTest.Xunit;
 
       public class <class-name> : PageTest
@@ -448,7 +448,7 @@ test.describe('Expect() timeout', () => {
       using Microsoft.Playwright;
       using Microsoft.Playwright.Xunit;
       using Xunit;
-      
+
       namespace Playwright.TestingHarnessTest.Xunit;
 
       public class <class-name> : PageTest
@@ -465,7 +465,7 @@ test.describe('Expect() timeout', () => {
     expect(result.passed).toBe(0);
     expect(result.failed).toBe(1);
     expect(result.total).toBe(1);
-    expect(result.rawStdout).toContain("LocatorAssertions.ToHaveTextAsync with timeout 5000ms")
+    expect(result.rawStdout).toContain("Expect \"ToHaveTextAsync\" with timeout 5000ms")
   });
 
   test('should be able to override it via each Expect() call', async ({ runTest }) => {
@@ -477,7 +477,7 @@ test.describe('Expect() timeout', () => {
         using Microsoft.Playwright;
         using Microsoft.Playwright.Xunit;
         using Xunit;
-        
+
         namespace Playwright.TestingHarnessTest.Xunit;
 
         public class <class-name> : PageTest
@@ -494,7 +494,7 @@ test.describe('Expect() timeout', () => {
     expect(result.passed).toBe(0);
     expect(result.failed).toBe(1);
     expect(result.total).toBe(1);
-    expect(result.rawStdout).toContain("LocatorAssertions.ToHaveTextAsync with timeout 100ms")
+    expect(result.rawStdout).toContain("Expect \"ToHaveTextAsync\" with timeout 100ms")
   });
 
   test('should be able to override it via the global config', async ({ runTest }) => {
@@ -506,7 +506,7 @@ test.describe('Expect() timeout', () => {
       using Microsoft.Playwright;
       using Microsoft.Playwright.Xunit;
       using Xunit;
-      
+
       namespace Playwright.TestingHarnessTest.Xunit;
 
       public class <class-name> : PageTest
@@ -531,7 +531,7 @@ test.describe('Expect() timeout', () => {
     expect(result.passed).toBe(0);
     expect(result.failed).toBe(1);
     expect(result.total).toBe(1);
-    expect(result.rawStdout).toContain("LocatorAssertions.ToHaveTextAsync with timeout 123ms")
+    expect(result.rawStdout).toContain("Expect \"ToHaveTextAsync\" with timeout 123ms")
   });
 });
 
