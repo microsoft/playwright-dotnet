@@ -496,8 +496,7 @@ internal class Page : ChannelOwner, IPage
         var waitForEventTask = waiter.WaitForEventAsync(this, pageEvent.Name, predicate);
         if (action != null)
         {
-            await WrapApiBoundaryAsync(() => waiter.CancelWaitOnExceptionAsync(waitForEventTask, action))
-                .ConfigureAwait(false);
+            await waiter.CancelWaitOnExceptionAsync(waitForEventTask, action).ConfigureAwait(false);
         }
 
         return await waitForEventTask.ConfigureAwait(false);

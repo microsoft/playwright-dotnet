@@ -523,22 +523,6 @@ internal class Connection : IDisposable
             namespaceName.StartsWith("Microsoft.Playwright.Helpers", StringComparison.InvariantCultureIgnoreCase));
     }
 
-    // !!! remove
-    [MethodImpl(MethodImplOptions.NoInlining)] // This method is also a stacktrace marker.
-    internal async Task WrapApiBoundaryAsync(Func<Task> action)
-    {
-        EnsureApiZoneExists();
-        try
-        {
-            ApiZone.Value.Insert(0, null);
-            await action().ConfigureAwait(false);
-        }
-        finally
-        {
-            ApiZone.Value.RemoveAt(0);
-        }
-    }
-
     private void EnsureApiZoneExists()
     {
         if (ApiZone.Value == null)
