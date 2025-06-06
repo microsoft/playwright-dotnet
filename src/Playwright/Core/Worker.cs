@@ -108,7 +108,7 @@ internal class Worker : ChannelOwner, IWorker
         var result = waiterResult.Task.WithTimeout(Convert.ToInt32(timeout ?? 0));
         if (action != null)
         {
-            await WrapApiBoundaryAsync(() => waiter.CancelWaitOnExceptionAsync(result, action)).ConfigureAwait(false);
+            await waiter.CancelWaitOnExceptionAsync(result, action).ConfigureAwait(false);
         }
         else
         {

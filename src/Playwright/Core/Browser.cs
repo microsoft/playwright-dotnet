@@ -28,7 +28,6 @@ using System.IO;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text.Json;
-using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Microsoft.Playwright.Helpers;
 using Microsoft.Playwright.Transport;
@@ -41,6 +40,7 @@ internal class Browser : ChannelOwner, IBrowser
     private readonly BrowserInitializer _initializer;
     private readonly TaskCompletionSource<bool> _closedTcs = new();
     internal readonly List<BrowserContext> _contexts = new();
+    internal string? _tracesDir = null;
     internal BrowserType _browserType = null!;
     internal string? _closeReason;
 
@@ -66,6 +66,9 @@ internal class Browser : ChannelOwner, IBrowser
     {
         switch (method)
         {
+            case "context":
+                DidCreateContext(serverParams.GetProperty("context").ToObject<BrowserContext>(_connection.DefaultJsonSerializerOptions)!);
+                break;
             case "close":
                 DidClose();
                 break;
@@ -123,19 +126,13 @@ internal class Browser : ChannelOwner, IBrowser
             ["forcedColors"] = options.ForcedColors == ForcedColors.Null ? "no-override" : options.ForcedColors,
             ["contrast"] = options.Contrast == Contrast.Null ? "no-override" : options.Contrast,
             ["extraHTTPHeaders"] = options.ExtraHTTPHeaders?.Select(kv => new HeaderEntry { Name = kv.Key, Value = kv.Value }).ToArray(),
-            ["recordHar"] = PrepareHarOptions(
-                    recordHarContent: options.RecordHarContent,
-                    recordHarMode: options.RecordHarMode,
-                    recordHarPath: options.RecordHarPath,
-                    recordHarOmitContent: options.RecordHarOmitContent,
-                    recordHarUrlFilter: options.RecordHarUrlFilter,
-                    recordHarUrlFilterString: options.RecordHarUrlFilterString,
-                    recordHarUrlFilterRegex: options.RecordHarUrlFilterRegex),
             ["recordVideo"] = GetVideoArgs(options.RecordVideoDir, options.RecordVideoSize),
             ["timezoneId"] = options.TimezoneId,
             ["userAgent"] = options.UserAgent,
             ["baseURL"] = options.BaseURL,
             ["clientCertificates"] = ToClientCertificatesProtocol(options.ClientCertificates),
+            ["selectorEngines"] = _browserType.Playwright._selectors._selectorEngines,
+            ["testIdAttributeName"] = _browserType.Playwright._selectors._testIdAttributeName,
         };
 
         if (options.AcceptDownloads.HasValue)
@@ -170,8 +167,7 @@ internal class Browser : ChannelOwner, IBrowser
         }
 
         var context = await SendMessageToServerAsync<BrowserContext>("newContext", args).ConfigureAwait(false);
-
-        _browserType.DidCreateContext(context, options, null);
+        await context.InitializeHarFromOptionsAsync(options).ConfigureAwait(false);
         return context;
     }
 
@@ -221,16 +217,17 @@ internal class Browser : ChannelOwner, IBrowser
             ClientCertificates = options.ClientCertificates,
         };
 
-        var context = (BrowserContext)await NewContextAsync(contextOptions).ConfigureAwait(false);
-
-        return await WrapApiCallAsync(async () =>
+        return await WrapApiCallAsync(
+            async () =>
         {
+            var context = (BrowserContext)await NewContextAsync(contextOptions).ConfigureAwait(false);
             var page = (Page)await context.NewPageAsync().ConfigureAwait(false);
             page.OwnedContext = context;
-            context.Options = contextOptions;
             context.OwnerPage = page;
             return page;
-        }).ConfigureAwait(false);
+        },
+            false,
+            "Create page").ConfigureAwait(false);
     }
 
     [MethodImpl(MethodImplOptions.NoInlining)]
@@ -261,6 +258,32 @@ internal class Browser : ChannelOwner, IBrowser
         return recordVideoArgs;
     }
 
+    internal void ConnectToBrowserType(BrowserType browserType, string? tracesDir)
+    {
+        // Note: when using connect(), `browserType` is different from `this.parent`.
+        // This is why browser type is not wired up in the constructor, and instead this separate method is called later on.
+        _browserType = browserType;
+        _tracesDir = tracesDir;
+        foreach (var context in _contexts)
+        {
+            context._tracing._tracesDir = this._tracesDir;
+            browserType.Playwright._selectors._contextsForSelectors.Add(context);
+        }
+    }
+
+    private void DidCreateContext(BrowserContext context)
+    {
+        context._browser = this;
+        _contexts.Add(context);
+        // Note: when connecting to a browser, initial contexts arrive before `_browserType` is set,
+        // and will be configured later in `ConnectToBrowserType`.
+        if (_browserType != null)
+        {
+            context._tracing._tracesDir = _tracesDir;
+            _browserType.Playwright._selectors._contextsForSelectors.Add(context);
+        }
+    }
+
     internal void DidClose()
     {
         IsConnected = false;
@@ -272,54 +295,6 @@ internal class Browser : ChannelOwner, IBrowser
     public async Task<ICDPSession> NewBrowserCDPSessionAsync()
         => await SendMessageToServerAsync<CDPSession>(
         "newBrowserCDPSession").ConfigureAwait(false);
-
-    internal static Dictionary<string, object?>? PrepareHarOptions(
-        HarContentPolicy? recordHarContent,
-        HarMode? recordHarMode,
-        string? recordHarPath,
-        bool? recordHarOmitContent,
-        string? recordHarUrlFilter,
-        string? recordHarUrlFilterString,
-        Regex? recordHarUrlFilterRegex)
-    {
-        if (string.IsNullOrEmpty(recordHarPath))
-        {
-            return null;
-        }
-        var recordHarArgs = new Dictionary<string, object?>();
-        recordHarArgs["path"] = recordHarPath;
-        if (recordHarContent.HasValue)
-        {
-            recordHarArgs["content"] = recordHarContent;
-        }
-        else if (recordHarOmitContent == true)
-        {
-            recordHarArgs["content"] = HarContentPolicy.Omit;
-        }
-        if (!string.IsNullOrEmpty(recordHarUrlFilter))
-        {
-            recordHarArgs["urlGlob"] = recordHarUrlFilter;
-        }
-        else if (!string.IsNullOrEmpty(recordHarUrlFilterString))
-        {
-            recordHarArgs["urlGlob"] = recordHarUrlFilterString;
-        }
-        else if (recordHarUrlFilterRegex != null)
-        {
-            recordHarArgs["urlRegexSource"] = recordHarUrlFilterRegex.ToString();
-            recordHarArgs["urlRegexFlags"] = recordHarUrlFilterRegex.Options.GetInlineFlags();
-        }
-        if (recordHarMode.HasValue)
-        {
-            recordHarArgs["mode"] = recordHarMode;
-        }
-
-        if (recordHarArgs.Keys.Count > 0)
-        {
-            return recordHarArgs;
-        }
-        return null;
-    }
 
     internal static Dictionary<string, string?>[]? ToClientCertificatesProtocol(IEnumerable<ClientCertificate>? clientCertificates)
     {

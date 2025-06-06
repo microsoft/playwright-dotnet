@@ -48,7 +48,6 @@ internal class WebSocketRoute : ChannelOwner, IWebSocketRoute
     internal WebSocketRoute(ChannelOwner parent, string guid, WebSocketRouteInitializer initializer) : base(parent, guid)
     {
         _initializer = initializer;
-        MarkAsInternalType();
         _server = new ServerWebSocketRoute(this);
     }
 

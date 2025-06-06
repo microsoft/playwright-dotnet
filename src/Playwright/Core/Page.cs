@@ -198,7 +198,7 @@ internal class Page : ChannelOwner, IPage
     {
         get
         {
-            if (Context.Options.RecordVideoDir == null)
+            if (Context.Options?.RecordVideo?.Dir == null)
             {
                 return null;
             }
@@ -264,6 +264,10 @@ internal class Page : ChannelOwner, IPage
                 break;
             case "video":
                 ForceVideo().ArtifactReady(serverParams.GetProperty("artifact").ToObject<Artifact>(_connection.DefaultJsonSerializerOptions));
+                break;
+            case "viewportSizeChanged":
+                var size = serverParams.GetProperty("viewportSize").ToObject<ViewportSize>(_connection.DefaultJsonSerializerOptions);
+                ViewportSize = new() { Width = size.Width, Height = size.Height };
                 break;
             case "worker":
                 var worker = serverParams.GetProperty("worker").ToObject<Worker>(_connection.DefaultJsonSerializerOptions);
@@ -492,8 +496,7 @@ internal class Page : ChannelOwner, IPage
         var waitForEventTask = waiter.WaitForEventAsync(this, pageEvent.Name, predicate);
         if (action != null)
         {
-            await WrapApiBoundaryAsync(() => waiter.CancelWaitOnExceptionAsync(waitForEventTask, action))
-                .ConfigureAwait(false);
+            await waiter.CancelWaitOnExceptionAsync(waitForEventTask, action).ConfigureAwait(false);
         }
 
         return await waitForEventTask.ConfigureAwait(false);
@@ -891,11 +894,6 @@ internal class Page : ChannelOwner, IPage
     public async Task<byte[]> PdfAsync(PagePdfOptions? options = default)
     {
         options ??= new();
-        if (!Context.IsChromium)
-        {
-            throw new NotSupportedException("This browser doesn't support this action.");
-        }
-
         byte[] result = (await SendMessageToServerAsync("pdf", new Dictionary<string, object?>
         {
             ["scale"] = options?.Scale,
@@ -1311,7 +1309,7 @@ internal class Page : ChannelOwner, IPage
         foreach (var routeHandler in _routes.ToArray())
         {
             // If the page was closed we stall all requests right away.
-            if (CloseWasCalled || Context.CloseWasCalled)
+            if (CloseWasCalled || Context.ClosingOrClosed)
             {
                 return;
             }
@@ -1330,7 +1328,7 @@ internal class Page : ChannelOwner, IPage
             var handled = await routeHandler.HandleAsync(route).ConfigureAwait(false);
             if (_routes.Count == 0)
             {
-                await UpdateInterceptionAsync().ConfigureAwait(false);
+                UpdateInterceptionAsync().IgnoreException();
             }
             if (handled)
             {
@@ -1411,16 +1409,20 @@ internal class Page : ChannelOwner, IPage
     {
         if (options?.Update == true)
         {
-            await Context.RecordIntoHarAsync(har, this, new()
-            {
-                NotFound = options.NotFound,
-                Url = options.Url,
-                UrlString = options.UrlString,
-                UrlRegex = options.UrlRegex,
-                Update = options.Update,
-                UpdateContent = options.UpdateContent,
-                UpdateMode = options.UpdateMode,
-            }).ConfigureAwait(false);
+            await Context.RecordIntoHarAsync(
+                har,
+                this,
+                new()
+                {
+                    NotFound = options.NotFound,
+                    Url = options.Url,
+                    UrlString = options.UrlString,
+                    UrlRegex = options.UrlRegex,
+                    Update = options.Update,
+                    UpdateContent = options.UpdateContent,
+                    UpdateMode = options.UpdateMode,
+                },
+                null).ConfigureAwait(false);
             return;
         }
         var harRouter = await HarRouter.CreateAsync(_connection.LocalUtils!, har, options?.NotFound ?? HarNotFound.Abort, new()

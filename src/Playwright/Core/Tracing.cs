@@ -41,7 +41,6 @@ internal class Tracing : ChannelOwner, ITracing
 
     public Tracing(ChannelOwner parent, string guid) : base(parent, guid)
     {
-        MarkAsInternalType();
     }
 
     [MethodImpl(MethodImplOptions.NoInlining)]

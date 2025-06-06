@@ -46,9 +46,6 @@ internal class PlaywrightInitializer
     [JsonPropertyName("utils")]
     public Core.LocalUtils Utils { get; set; } = null!;
 
-    [JsonPropertyName("selectors")]
-    public Core.Selectors Selectors { get; set; } = null!;
-
     [JsonPropertyName("preLaunchedBrowser")]
     public Core.Browser PreLaunchedBrowser { get; set; } = null!;
 

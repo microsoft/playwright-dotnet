@@ -52,14 +52,14 @@ internal class PageAssertions : AssertionsBase, IPageAssertions
     }
 
     public Task ToHaveTitleAsync(string titleOrRegExp, PageAssertionsToHaveTitleOptions? options = null) =>
-        ExpectImplAsync("to.have.title", new ExpectedTextValue() { String = titleOrRegExp, NormalizeWhiteSpace = true }, titleOrRegExp, "Page title expected to be", ConvertToFrameExpectOptions(options));
+        ExpectImplAsync("to.have.title", new ExpectedTextValue() { String = titleOrRegExp, NormalizeWhiteSpace = true }, titleOrRegExp, "Page title expected to be", "Expect \"ToHaveTitleAsync\"", ConvertToFrameExpectOptions(options));
 
     public Task ToHaveTitleAsync(Regex titleOrRegExp, PageAssertionsToHaveTitleOptions? options = null) =>
-        ExpectImplAsync("to.have.title", ExpectedRegex(titleOrRegExp, new() { NormalizeWhiteSpace = true }), titleOrRegExp, "Page title expected to be", ConvertToFrameExpectOptions(options));
+        ExpectImplAsync("to.have.title", ExpectedRegex(titleOrRegExp, new() { NormalizeWhiteSpace = true }), titleOrRegExp, "Page title expected to be", "Expect \"ToHaveTitleAsync\"", ConvertToFrameExpectOptions(options));
 
     public Task ToHaveURLAsync(string urlOrRegExp, PageAssertionsToHaveURLOptions? options = null) =>
-        ExpectImplAsync("to.have.url", new ExpectedTextValue() { String = URLMatch.ConstructURLBasedOnBaseURL(_page.Context.Options.BaseURL, urlOrRegExp), IgnoreCase = options?.IgnoreCase }, urlOrRegExp, "Page URL expected to be", ConvertToFrameExpectOptions(options));
+        ExpectImplAsync("to.have.url", new ExpectedTextValue() { String = URLMatch.ConstructURLBasedOnBaseURL(_page.Context.Options.BaseURL, urlOrRegExp), IgnoreCase = options?.IgnoreCase }, urlOrRegExp, "Page URL expected to be", "Expect \"ToHaveURLAsync\"", ConvertToFrameExpectOptions(options));
 
     public Task ToHaveURLAsync(Regex urlOrRegExp, PageAssertionsToHaveURLOptions? options = null) =>
-        ExpectImplAsync("to.have.url", ExpectedRegex(urlOrRegExp, new() { IgnoreCase = options?.IgnoreCase }), urlOrRegExp, "Page URL expected to match regex", ConvertToFrameExpectOptions(options));
+        ExpectImplAsync("to.have.url", ExpectedRegex(urlOrRegExp, new() { IgnoreCase = options?.IgnoreCase }), urlOrRegExp, "Page URL expected to match regex", "Expect \"ToHaveURLAsync\"", ConvertToFrameExpectOptions(options));
 }

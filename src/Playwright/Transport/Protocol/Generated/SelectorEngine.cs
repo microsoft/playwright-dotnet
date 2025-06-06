@@ -26,8 +26,14 @@ using System.Text.Json.Serialization;
 
 namespace Microsoft.Playwright.Transport.Protocol;
 
-internal class AndroidSelectorHasChild
+internal class SelectorEngine
 {
-    [JsonPropertyName("androidSelector")]
-    public AndroidSelector AndroidSelector { get; set; } = null!;
+    [JsonPropertyName("name")]
+    public string Name { get; set; } = null!;
+
+    [JsonPropertyName("source")]
+    public string Source { get; set; } = null!;
+
+    [JsonPropertyName("contentScript")]
+    public bool? ContentScript { get; set; }
 }

@@ -130,7 +130,7 @@ internal class Connection : IDisposable
         ChannelOwner? @object,
         string method,
         Dictionary<string, object?>? args = null,
-        bool keepNulls = false) => WrapApiCallAsync(() => InnerSendMessageToServerAsync<T>(@object, method, args, keepNulls), @object?._isInternalType ?? false);
+        bool keepNulls = false) => WrapApiCallAsync(() => InnerSendMessageToServerAsync<T>(@object, method, args, keepNulls), false, null);
 
     private async Task<T> InnerSendMessageToServerAsync<T>(
         ChannelOwner? @object,
@@ -160,15 +160,15 @@ internal class Connection : IDisposable
                 .Where(f => f.Value != null)
                 .ToDictionary(f => f.Key, f => f.Value) as Dictionary<string, object>;
         }
-        var (apiName, frames) = (ApiZone.Value[0]!.ApiName, ApiZone.Value[0]!.Frames);
+        var (title, isInternal, frames) = (ApiZone.Value[0]!.Title, ApiZone.Value[0]!.Internal, ApiZone.Value[0]!.Frames);
         var metadata = new Dictionary<string, object?>
         {
-            ["internal"] = string.IsNullOrEmpty(apiName),
+            ["internal"] = isInternal,
             ["wallTime"] = DateTimeOffset.Now.ToUnixTimeMilliseconds(),
         };
-        if (!string.IsNullOrEmpty(apiName))
+        if (!string.IsNullOrEmpty(title))
         {
-            metadata["apiName"] = apiName;
+            metadata["title"] = title;
         }
         if (frames.Count > 0)
         {
@@ -383,9 +383,6 @@ internal class Connection : IDisposable
             case ChannelOwnerType.WebSocketRoute:
                 result = new WebSocketRoute(parent, guid, initializer?.ToObject<WebSocketRouteInitializer>(DefaultJsonSerializerOptions)!);
                 break;
-            case ChannelOwnerType.Selectors:
-                result = new Selectors(parent, guid);
-                break;
             case ChannelOwnerType.SocksSupport:
                 result = new SocksSupport(parent, guid);
                 break;
@@ -478,7 +475,7 @@ internal class Connection : IDisposable
     }
 
     [MethodImpl(MethodImplOptions.NoInlining)]
-    internal async Task<T> WrapApiCallAsync<T>(Func<Task<T>> action, bool isInternal = false)
+    internal async Task<T> WrapApiCallAsync<T>(Func<Task<T>> action, bool isInternal = false, string? title = null)
     {
         EnsureApiZoneExists();
         if (ApiZone.Value[0] != null)
@@ -487,45 +484,18 @@ internal class Connection : IDisposable
         }
         var st = new StackTrace(true);
         var stack = new List<Protocol.StackFrame>();
-        var lastInternalApiName = string.Empty;
-        var apiName = string.Empty;
-        var apiBoundaryReached = false;
         for (int i = 0; i < st.FrameCount; ++i)
         {
             var sf = st.GetFrame(i);
             string fileName = sf.GetFileName();
-            if (IsPlaywrightInternalNamespace(sf.GetMethod().ReflectedType?.Namespace))
-            {
-                string methodName = $"{sf?.GetMethod()?.DeclaringType?.Name}.{sf?.GetMethod()?.Name}";
-                if (methodName.Contains("WrapApiBoundaryAsync"))
-                {
-                    apiBoundaryReached = true;
-                }
-                var hasCleanMethodName = !methodName.StartsWith("<", StringComparison.InvariantCultureIgnoreCase);
-                if (hasCleanMethodName)
-                {
-                    lastInternalApiName = methodName;
-                }
-            }
-            else if (!string.IsNullOrEmpty(fileName))
+            if (!IsPlaywrightInternalNamespace(sf.GetMethod().ReflectedType?.Namespace) && !string.IsNullOrEmpty(fileName))
             {
                 stack.Add(new() { File = fileName, Line = sf.GetFileLineNumber(), Column = sf.GetFileColumnNumber() });
-                if (!string.IsNullOrEmpty(lastInternalApiName) && !apiBoundaryReached)
-                {
-                    apiName = lastInternalApiName;
-                }
             }
-        }
-        if (string.IsNullOrEmpty(apiName))
-        {
-            apiName = lastInternalApiName;
         }
         try
         {
-            if (!string.IsNullOrEmpty(apiName))
-            {
-                ApiZone.Value[0] = new() { ApiName = isInternal ? null : apiName, Frames = stack };
-            }
+            ApiZone.Value[0] = new() { Internal = isInternal, Title = title, Frames = stack };
             return await action().ConfigureAwait(false);
         }
         finally
@@ -534,14 +504,15 @@ internal class Connection : IDisposable
         }
     }
 
-    internal Task WrapApiCallAsync(Func<Task> action, bool isInternal = false)
+    internal Task WrapApiCallAsync(Func<Task> action, bool isInternal = false, string? title = null)
         => WrapApiCallAsync(
             async () =>
             {
                 await action().ConfigureAwait(false);
                 return true;
             },
-            isInternal);
+            isInternal,
+            title);
 
     private static bool IsPlaywrightInternalNamespace(string? namespaceName)
     {
@@ -550,21 +521,6 @@ internal class Connection : IDisposable
             namespaceName.StartsWith("Microsoft.Playwright.Core", StringComparison.InvariantCultureIgnoreCase) ||
             namespaceName.StartsWith("Microsoft.Playwright.Transport", StringComparison.InvariantCultureIgnoreCase) ||
             namespaceName.StartsWith("Microsoft.Playwright.Helpers", StringComparison.InvariantCultureIgnoreCase));
-    }
-
-    [MethodImpl(MethodImplOptions.NoInlining)] // This method is also a stacktrace marker.
-    internal async Task WrapApiBoundaryAsync(Func<Task> action)
-    {
-        EnsureApiZoneExists();
-        try
-        {
-            ApiZone.Value.Insert(0, null);
-            await action().ConfigureAwait(false);
-        }
-        finally
-        {
-            ApiZone.Value.RemoveAt(0);
-        }
     }
 
     private void EnsureApiZoneExists()

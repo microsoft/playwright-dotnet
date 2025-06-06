@@ -28,8 +28,8 @@ namespace Microsoft.Playwright.Transport.Protocol;
 
 internal class RecordHarOptions
 {
-    [JsonPropertyName("path")]
-    public string Path { get; set; } = null!;
+    [JsonPropertyName("zip")]
+    public bool? Zip { get; set; }
 
     [JsonPropertyName("content")]
     public string Content { get; set; } = null!;
