@@ -23,11 +23,9 @@
  */
 
 using System.Diagnostics;
-using System.IO.Compression;
-using System.Text;
-using System.Text.Json;
 using System.Text.RegularExpressions;
 using Microsoft.Playwright.Helpers;
+using Microsoft.Playwright.Tests.TestServer;
 
 namespace Microsoft.Playwright.Tests;
 
@@ -57,26 +55,25 @@ public class TracingTests : ContextTestEx
         var tracePath = Path.Combine(tmp.Path, "trace.zip");
         await Context.Tracing.StopAsync(new() { Path = tracePath });
 
-        var (events, resources) = ParseTrace(tracePath);
-        CollectionAssert.IsNotEmpty(events);
+        await ShowTraceViewerAsync(tracePath, async traceViewer =>
+        {
+            await Expect(traceViewer.ActionTitles).ToHaveTextAsync([
+                new Regex(@"Create page"),
+                new Regex(@"Navigate to ""/frames/frame.html"""),
+                new Regex(@"Set content"),
+                new Regex(@"Click"),
+                new Regex(@"Mouse move"),
+                new Regex(@"Double click"),
+                new Regex(@"Insert ""abc"""),
+                new Regex(@"Wait for timeout"),
+                new Regex(@"Close")
+            ]);
+            await traceViewer.SelectActionAsync("Set content");
+            await Expect(traceViewer.Page.Locator(".browser-frame-address-bar")).ToHaveTextAsync(Server.Prefix + "/frames/frame.html");
+            var frame = await traceViewer.SnapshotFrame("Set content", 0, false);
+            await Expect(frame.Locator("button")).ToHaveTextAsync("Click");
 
-        Assert.AreEqual("context-options", events[0].Type);
-
-        string[] actualActionTitles = GetActions(events);
-        string[] expectedActionTitles = new string[] { "BrowserContext.newPage", "Frame.goto", "Frame.setContent", "Frame.click", "Page.mouseMove", "Double click", "Page.keyboardInsertText", "Frame.waitForTimeout", "Page.close" };
-        Assert.AreEqual(expectedActionTitles, actualActionTitles);
-
-        Assert.GreaterOrEqual(events.Where(e => e?.RenderedTitle() == "Frame.goto").Count(), 1);
-        Assert.GreaterOrEqual(events.Where(e => e?.RenderedTitle() == "Frame.setContent").Count(), 1);
-        Assert.GreaterOrEqual(events.Where(e => e?.RenderedTitle() == "Frame.click").Count(), 1);
-        Assert.GreaterOrEqual(events.Where(e => e?.RenderedTitle() == "Page.mouseMove").Count(), 1);
-        Assert.GreaterOrEqual(events.Where(e => e?.RenderedTitle() == "Double click").Count(), 1);
-        Assert.GreaterOrEqual(events.Where(e => e?.RenderedTitle() == "Page.keyboardInsertText").Count(), 1);
-        Assert.GreaterOrEqual(events.Where(e => e?.RenderedTitle() == "Page.close").Count(), 1);
-
-        Assert.GreaterOrEqual(events.Where(x => x.Type == "frame-snapshot").Count(), 1);
-        Assert.GreaterOrEqual(events.Where(x => x.Type == "screencast-frame").Count(), 1);
-        Assert.GreaterOrEqual(events.Where(x => x.Type == "resource-snapshot").Count(), 1);
+        });
     }
 
     [PlaywrightTest("tracing.spec.ts", "should collect two traces")]
@@ -98,26 +95,22 @@ public class TracingTests : ContextTestEx
         var trace2Path = Path.Combine(tmp.Path, "trace2.zip");
         await Context.Tracing.StopAsync(new() { Path = trace2Path });
 
+        await ShowTraceViewerAsync(trace1Path, async traceViewer =>
         {
-            var (events, resources) = ParseTrace(trace1Path);
-            Assert.AreEqual("context-options", events[0].Type);
-            Assert.GreaterOrEqual(events.Where(x => x?.RenderedTitle() == "Frame.goto").Count(), 1);
-            Assert.GreaterOrEqual(events.Where(x => x?.RenderedTitle() == "Frame.setContent").Count(), 1);
-            Assert.GreaterOrEqual(events.Where(x => x?.RenderedTitle() == "Frame.click").Count(), 1);
-            Assert.AreEqual(0, events.Where(x => x?.RenderedTitle() == "Page.close").Count());
-            Assert.AreEqual(0, events.Where(x => x?.RenderedTitle() == "Frame.dblclick").Count());
-        }
+            await Expect(traceViewer.ActionTitles).ToHaveTextAsync([
+                new Regex(@"Navigate to ""/empty.html"""),
+                new Regex(@"Set content"),
+                new Regex(@"Click")
+            ]);
+        });
 
+        await ShowTraceViewerAsync(trace2Path, async traceViewer =>
         {
-            var (events, resources) = ParseTrace(trace2Path);
-            Assert.AreEqual("context-options", events[0].Type);
-            Assert.AreEqual(0, events.Where(x => x?.RenderedTitle() == "Page.GottoAsync").Count());
-            Assert.AreEqual(0, events.Where(x => x?.RenderedTitle() == "Frame.setContent").Count());
-            Assert.AreEqual(0, events.Where(x => x?.RenderedTitle() == "Frame.click").Count());
-            Assert.GreaterOrEqual(events.Where(x => x?.RenderedTitle() == "Page.close").Count(), 1);
-            Assert.GreaterOrEqual(events.Where(x => x?.RenderedTitle() == "Frame.dblclick").Count(), 1);
-        }
-
+            await Expect(traceViewer.ActionTitles).ToHaveTextAsync([
+                new Regex(@"Double click"),
+                new Regex(@"Close"),
+            ]);
+        });
     }
 
     [PlaywrightTest("tracing.spec.ts", "should work with multiple chunks")]
@@ -150,32 +143,25 @@ public class TracingTests : ContextTestEx
         await page.HoverAsync("'Click'");
         await Context.Tracing.StopChunkAsync(); // Should stop without a path.
 
+        await ShowTraceViewerAsync(traceFile1, async traceViewer =>
         {
-            var (events, resources) = ParseTrace(traceFile1);
-            Assert.AreEqual("context-options", events[0].Type);
-            string[] actualActionTitles = GetActions(events);
-            string[] expectedActionTitles = new string[] {
-                "Frame.setContent",
-                "Frame.click",
-                "Frame.click"
-            };
-            Assert.AreEqual(expectedActionTitles, actualActionTitles);
-
-            Assert.GreaterOrEqual(events.Where(x => x.Type == "frame-snapshot").Count(), 1);
-            Assert.GreaterOrEqual(events.Where(x => x.Type == "resource-snapshot").Count(), 1);
-        }
+            await Expect(traceViewer.ActionTitles).ToHaveTextAsync([
+                new Regex(@"Set content"),
+                new Regex(@"Click"),
+                new Regex(@"Click")
+            ]);
+            await traceViewer.SelectSnapshotAsync("After");
+            var frame = await traceViewer.SnapshotFrame("Set content", 0, false);
+            await Expect(frame.Locator("button")).ToHaveTextAsync("Click");
+        });
+        await ShowTraceViewerAsync(traceFile2, async traceViewer =>
         {
-            var (events, resources) = ParseTrace(traceFile2);
-            Assert.AreEqual("context-options", events[0].Type);
-            string[] actualActionTitles = GetActions(events);
-            string[] expectedActionTitles = new string[] {
-                "Frame.hover"
-            };
-            Assert.AreEqual(expectedActionTitles, actualActionTitles);
-
-            Assert.GreaterOrEqual(events.Where(x => x.Type == "frame-snapshot").Count(), 1);
-            Assert.GreaterOrEqual(events.Where(x => x.Type == "resource-snapshot").Count(), 1);
-        }
+            await Expect(traceViewer.ActionTitles).ToContainTextAsync([
+                "Hover"
+            ]);
+            var frame = await traceViewer.SnapshotFrame("Hover", 0, false);
+            await Expect(frame.Locator("button")).ToHaveTextAsync("Click");
+        });
     }
 
     [PlaywrightTest("tracing.spec.ts", "should collect sources")]
@@ -189,21 +175,41 @@ public class TracingTests : ContextTestEx
         var page = await Context.NewPageAsync();
         await page.GotoAsync(Server.Prefix + "/empty.html");
         await page.SetContentAsync("<button>Click</button>");
-        await page.ClickAsync("\"Click\"");
+        async Task MyMethodOuter()
+        {
+            async Task MyMethodInner()
+            {
+                await page.GetByText("Click").ClickAsync();
+            }
+            await MyMethodInner();
+        }
+        await MyMethodOuter();
         await page.CloseAsync();
 
         using var tmp = new TempDirectory();
         var tracePath = Path.Combine(tmp.Path, "trace.zip");
         await Context.Tracing.StopAsync(new() { Path = tracePath });
 
-        var (events, resources) = ParseTrace(tracePath);
-        var sourceNames = resources.Keys.Where(key => key.EndsWith(".txt")).ToArray();
-        Assert.AreEqual(1, sourceNames.Count());
-
-        var sourceTraceFileContent = resources[sourceNames[0]];
-        var currentFileContent = File.ReadAllText(new StackTrace(true).GetFrame(0).GetFileName());
-
-        Assert.AreEqual(sourceTraceFileContent, currentFileContent);
+        await ShowTraceViewerAsync(tracePath, async traceViewer =>
+        {
+            await Expect(traceViewer.ActionTitles).ToHaveTextAsync([
+                new Regex(@"Create page"),
+                new Regex(@"Navigate to ""/empty.html"""),
+                new Regex(@"Set content"),
+                new Regex(@"Click"),
+                new Regex(@"Close")
+            ]);
+            await traceViewer.ShowSourceTab();
+            // TODO: these should not be anonymous.
+            await Expect(traceViewer.StackFrames).ToHaveTextAsync([
+                new Regex(@"\(anonymous\)TracingTests\.cs:\d+"),
+                new Regex(@"\(anonymous\)TracingTests\.cs:\d+"),
+                new Regex(@"\(anonymous\)TracingTests\.cs:\d+")
+            ]);
+            await traceViewer.SelectActionAsync("Set content");
+            await Expect(traceViewer.Page.Locator(".source-tab-file-name")).ToHaveAttributeAsync("title", new StackTrace(true).GetFrame(0).GetFileName());
+            await Expect(traceViewer.Page.Locator(".source-line-running")).ToContainTextAsync("await page.SetContentAsync(\"<button>Click</button>\");");
+        });
     }
 
     [PlaywrightTest("tracing.spec.ts", "should not throw when stopping without start but not exporting")]
@@ -246,25 +252,24 @@ public class TracingTests : ContextTestEx
         var tracePath = Path.Combine(tmp.Path, "trace.zip");
         await Context.Tracing.StopAsync(new() { Path = tracePath });
 
-        var (events, resources) = ParseTrace(tracePath);
-        CollectionAssert.IsNotEmpty(events);
-
-        string[] actualActionTitles = GetActions(events);
-        string[] expectedActionTitles = new string[] {
-                "BrowserContext.newPage",
-                "Frame.goto",
-                "Frame.setContent",
-                "BrowserContext.waitForEventInfo",
-                "Frame.click",
-                "Frame.evaluateExpression",
-                "Frame.goto",
-                "Frame.goto"
-            };
-        Assert.AreEqual(expectedActionTitles, actualActionTitles);
+        await ShowTraceViewerAsync(tracePath, async traceViewer =>
+        {
+            await Expect(traceViewer.ActionTitles).ToHaveTextAsync([
+                new Regex(@"Create page"),
+                new Regex(@"Navigate to ""/empty.html"""),
+                new Regex(@"Set content"),
+                // TODO: Should be: Wait for event "Page"
+                new Regex(@"Wait for event ""context\.WaitForEventAsync\(""Page""\)"""),
+                new Regex(@"Click"),
+                new Regex(@"Evaluate"),
+                new Regex(@"Navigate to ""/empty.html"""),
+                new Regex(@"Navigate to ""/one-style.html"""),
+            ]);
+        });
     }
 
     [PlaywrightTest()]
-    public async Task ShouldDisplayWaitForLoadStateEvenIfDidNotWaitForIt()
+    public async Task ShouldDisplayWaitForLoadStateEventIfDidNotWaitForIt()
     {
         var page = await Context.NewPageAsync();
         await Context.Tracing.StartAsync();
@@ -277,16 +282,14 @@ public class TracingTests : ContextTestEx
         var tracePath = Path.Combine(tmp.Path, "trace.zip");
         await Context.Tracing.StopAsync(new() { Path = tracePath });
 
-        var (events, resources) = ParseTrace(tracePath);
-        CollectionAssert.IsNotEmpty(events);
-
-        string[] actualActionTitles = GetActions(events);
-        string[] expectedActionTitles = new string[] {
-                "Frame.goto",
-                "Page.waitForEventInfo",
-                "Page.waitForEventInfo"
-            };
-        Assert.AreEqual(expectedActionTitles, actualActionTitles);
+        await ShowTraceViewerAsync(tracePath, async traceViewer =>
+        {
+            await Expect(traceViewer.ActionTitles).ToHaveTextAsync([
+                new Regex(@"Navigate to ""/empty.html"""),
+                new Regex(@"Wait for event ""frame.WaitForLoadStateAsync"""),
+                new Regex(@"Wait for event ""frame.WaitForLoadStateAsync"""),
+            ]);
+        });
     }
 
     [PlaywrightTest("tracing.spec.ts", "should respect tracesDir and name")]
@@ -311,25 +314,26 @@ public class TracingTests : ContextTestEx
 
         await browser.CloseAsync();
 
-        string[] ResourceNames(Dictionary<string, byte[]> resources)
-        {
-            return resources.Keys
-                .Select(file => Regex.Replace(file, @"^resources/.*\.(html|css)$", "resources/XXX.$1"))
-                .OrderBy(file => file)
-                .ToArray();
-        }
 
+        await ShowTraceViewerAsync(Path.Combine(tracesDir.Path, "trace1.zip"), async traceViewer =>
         {
-            var (events, resources) = ParseTrace(Path.Combine(tracesDir.Path, "trace1.zip"));
-            Assert.AreEqual(new[] { "Frame.goto" }, GetActions(events));
-            Assert.AreEqual(new[] { "resources/XXX.css", "resources/XXX.html", "trace.network", "trace.stacks", "trace.trace" }, ResourceNames(resources));
-        }
+            await Expect(traceViewer.ActionTitles).ToHaveTextAsync([
+                new Regex(@"Navigate to ""/one-style.html"""),
+            ]);
+            var frame = await traceViewer.SnapshotFrame("Navigate", 0, false);
+            await Expect(frame.Locator("body")).ToHaveCSSAsync("background-color", "rgb(255, 192, 203)");
+            await Expect(frame.Locator("body")).ToHaveTextAsync("hello, world!");
+        });
 
+        await ShowTraceViewerAsync(Path.Combine(tracesDir.Path, "trace2.zip"), async traceViewer =>
         {
-            var (events, resources) = ParseTrace(Path.Combine(tracesDir.Path, "trace2.zip"));
-            Assert.AreEqual(new[] { "Frame.goto" }, GetActions(events));
-            Assert.AreEqual(new[] { "resources/XXX.css", "resources/XXX.html", "resources/XXX.html", "trace.network", "trace.stacks", "trace.trace" }, ResourceNames(resources));
-        }
+            await Expect(traceViewer.ActionTitles).ToHaveTextAsync([
+                new Regex(@"Navigate to ""/har.html"""),
+            ]);
+            var frame = await traceViewer.SnapshotFrame("Navigate", 0, false);
+            await Expect(frame.Locator("body")).ToHaveCSSAsync("background-color", "rgb(255, 192, 203)");
+            await Expect(frame.Locator("body")).ToHaveTextAsync("hello, world!");
+        });
     }
 
     [PlaywrightTest("tracing.spec.ts", "should show tracing.group in the action list with location")]
@@ -352,91 +356,80 @@ public class TracingTests : ContextTestEx
         var tracePath = Path.Combine(tracesDir.Path, "trace.zip");
         await Context.Tracing.StopAsync(new() { Path = tracePath });
 
-        var (events, resources) = ParseTrace(tracePath);
-        var actions = GetActions(events);
-
-        Assert.AreEqual(new[] {
-            "BrowserContext.newPage",
-            "outer group",
-            "Frame.goto",
-            "inner group 1",
-            "Frame.click",
-            "inner group 2",
-            "Expect \"ToBeVisibleAsync\""
-        }, actions);
+        await ShowTraceViewerAsync(tracePath, async traceViewer =>
+        {
+            await traceViewer.ExpandActionAsync("inner group 1");
+            await Expect(traceViewer.ActionTitles).ToHaveTextAsync([
+                new Regex(@"Create page"),
+                new Regex("outer group"),
+                new Regex(@"Navigate to ""data"),
+                new Regex("inner group 1"),
+                new Regex(@"Click"),
+                new Regex("inner group 2"),
+                new Regex(@"Expect ""ToBeVisibleAsync""")
+            ]);
+        });
     }
 
-    private static (IReadOnlyList<TraceEventEntry> Events, Dictionary<string, byte[]> Resources) ParseTrace(string path)
+    private async Task ShowTraceViewerAsync(string path, Func<TraceViewerPage, Task> callback)
     {
-        Dictionary<string, byte[]> resources = new();
-        using var archive = ZipFile.OpenRead(path);
-        foreach (var entry in archive.Entries)
+        var (executablePath, _) = Driver.GetExecutablePath();
+        var traceViewerPath = Path.GetFullPath(Path.Join(Path.GetDirectoryName(executablePath), "../../package/lib/vite/traceViewer/"));
+        var server = SimpleServer.Create(8907 + WorkerIndex * 4 + 2, traceViewerPath);
+        server.SetRoute("/trace.zip", context =>
         {
-            var memoryStream = new MemoryStream();
-            entry.Open().CopyTo(memoryStream);
-            resources.Add(entry.FullName, memoryStream.ToArray());
+            context.Response.ContentType = "application/zip";
+            return context.Response.SendFileAsync(path);
+        });
+        var page = await Browser.NewPageAsync();
+        try
+        {
+            await server.StartAsync(TestContext.CurrentContext.CancellationToken);
+            await page.GotoAsync(server.Prefix + $"/index.html?trace={server.Prefix}/trace.zip");
+            await callback(new(page));
         }
-        Dictionary<string, TraceEventEntry> actionMap = new();
-        List<TraceEventEntry> events = new();
-        foreach (var fileName in new[] { "trace.trace", "trace.network" })
+        finally
         {
-            foreach (var line in Encoding.UTF8.GetString(resources[fileName]).Split("\n"))
-            {
-                if (string.IsNullOrEmpty(line))
-                {
-                    continue;
-                }
-                var @event = JsonSerializer.Deserialize<TraceEventEntry>(line, new JsonSerializerOptions() { PropertyNameCaseInsensitive = true });
-                if (@event.Type == "before")
-                {
-                    @event.Type = "action";
-                    events.Add(@event);
-                    actionMap[@event.CallID] = @event;
-                }
-                else if (@event.Type == "input")
-                {
-                    // might be needed for future tests
-                }
-                else if (@event.Type == "after")
-                {
-                    var existing = actionMap[@event.CallID];
-                    existing.Error = @event.Error;
-                }
-                else
-                {
-                    events.Add(@event);
-                }
-            }
-        }
-        return (events, resources);
-    }
-
-    private class TraceEventEntry
-    {
-        public string Type { get; set; }
-        public string Title { get; set; }
-        public TraceEventError Error { get; set; }
-        public double StartTime { get; set; }
-        public string CallID { get; set; }
-        public string Class { get; set; }
-        public string Method { get; set; }
-
-        public string RenderedTitle()
-        {
-            if (string.IsNullOrEmpty(Title))
-            {
-                return $"{Class}.{Method}";
-            }
-            return Title;
+            await server.StopAsync();
+            await page.CloseAsync();
         }
     }
+}
 
-    private class TraceEventError
+class TraceViewerPage(IPage page)
+{
+    public IPage Page { get; } = page;
+
+    public ILocator ActionsTree => Page.GetByTestId("actions-tree");
+
+    public ILocator ActionTitles => Page.Locator(".action-title");
+
+    public ILocator StackFrames => Page.GetByTestId("stack-trace-list").Locator(".list-view-entry");
+
+    public async Task SelectActionAsync(string title, int ordinal = 0)
     {
-        public string Name { get; set; }
-
-        public string Message { get; set; }
+        await Page.Locator($".action-title:has-text(\"{title}\")").Nth(ordinal).ClickAsync();
     }
 
-    string[] GetActions(IReadOnlyList<TraceEventEntry> events) => events.Where(action => action.Type == "action").OrderBy(action => action.StartTime).Select(action => action.RenderedTitle()).ToArray();
+    public async Task SelectSnapshotAsync(string name)
+    {
+        await Page.ClickAsync($".snapshot-tab .tabbed-pane-tab-label:has-text(\"{name}\")");
+    }
+
+    public async Task<IFrameLocator> SnapshotFrame(string actionName, int ordinal = 0, bool hasSubframe = false)
+    {
+        await SelectActionAsync(actionName, ordinal);
+        while (Page.Frames.Count < (hasSubframe ? 4 : 3))
+        {
+            var tcs = new TaskCompletionSource();
+            Page.FrameAttached += (_, _) => tcs.TrySetResult();
+            await tcs.Task;
+        }
+        return Page.FrameLocator("iframe.snapshot-visible[name=snapshot]");
+    }
+
+    internal Task ShowSourceTab() => Page.ClickAsync("text='Source'");
+
+    internal Task ExpandActionAsync(string title, int ordinal = 0) =>
+        ActionsTree.Locator(".tree-view-entry", new() { HasText = title }).Nth(ordinal).Locator(".codicon-chevron-right").ClickAsync();
 }
