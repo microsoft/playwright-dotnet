@@ -438,7 +438,7 @@ public class LocatorAssertionsTests : PageTestEx
             var exeption = await PlaywrightAssert.ThrowsAsync<PlaywrightException>(() => Expect(Page.Locator("#node")).ToContainTextAsync(new Regex("ex2"), new() { Timeout = 100 }));
             StringAssert.Contains("Locator expected text matching regex 'ex2'", exeption.Message);
             StringAssert.Contains("But was: 'Text content'", exeption.Message);
-            StringAssert.Contains("Expect \"ToHaveTextAsync\" with timeout 100ms", exeption.Message);
+            StringAssert.Contains("Expect \"ToContainTextAsync\" with timeout 100ms", exeption.Message);
         }
         {
             await Page.SetContentAsync("<div id=node><span></span>Text \ncontent&nbsp;    </div>");
