@@ -374,7 +374,7 @@ public class TracingTests : ContextTestEx
     private async Task ShowTraceViewerAsync(string path, Func<TraceViewerPage, Task> callback)
     {
         var (executablePath, _) = Driver.GetExecutablePath();
-        var traceViewerPath = Path.GetFullPath(Path.Join(Path.GetDirectoryName(executablePath), "../../package/lib/vite/traceViewer/"));
+        var traceViewerPath = Path.GetFullPath(Path.Join(Path.GetDirectoryName(executablePath), "..", "..", "package", "lib", "vite", "traceViewer"));
         var server = SimpleServer.Create(8907 + WorkerIndex * 4 + 2, traceViewerPath);
         server.SetRoute("/trace.zip", context =>
         {
