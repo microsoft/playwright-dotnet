@@ -269,7 +269,7 @@ public class TracingTests : ContextTestEx
     }
 
     [PlaywrightTest()]
-    public async Task ShouldDisplayWaitForLoadStateEventIfDidNotWaitForIt()
+    public async Task ShouldDisplayWaitForLoadStateEvenIfDidNotWaitForIt()
     {
         var page = await Context.NewPageAsync();
         await Context.Tracing.StartAsync();
