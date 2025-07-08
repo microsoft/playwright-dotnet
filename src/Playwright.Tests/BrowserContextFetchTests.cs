@@ -607,8 +607,8 @@ public class BrowserContextFetchTests : PageTestEx
         {
             await Task.Delay(5000);
         });
-        var exception = await PlaywrightAssert.ThrowsAsync<PlaywrightException>(async () => await Context.APIRequest.GetAsync(Server.Prefix + "/slow", new() { Timeout = 10 }));
-        StringAssert.Contains("Request timed out after 10ms", exception.Message);
+        var exception = await PlaywrightAssert.ThrowsAsync<TimeoutException>(() => Context.APIRequest.GetAsync(Server.Prefix + "/slow", new() { Timeout = 1000 }));
+        StringAssert.Contains("Timeout 1000ms exceeded", exception.Message);
     }
 
     [PlaywrightTest("browsercontext-fetch.spec.ts", "should dispose")]

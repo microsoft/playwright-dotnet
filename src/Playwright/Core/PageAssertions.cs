@@ -22,7 +22,6 @@
  * SOFTWARE.
  */
 
-using System;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Microsoft.Playwright.Helpers;
@@ -34,21 +33,20 @@ internal class PageAssertions : AssertionsBase, IPageAssertions
 {
     private readonly Page _page;
 
-    public PageAssertions(IPage page, bool isNot) : base(PassThroughNonNull(page).Locator(":root"), isNot)
+    public PageAssertions(IPage page, bool isNot) : base(isNot)
     {
         _page = (Page)page;
     }
 
     public IPageAssertions Not => new PageAssertions(_page, !IsNot);
 
-    private static T PassThroughNonNull<T>(T value)
+    protected override Task<FrameExpectResult> CallExpectAsync(string expression, FrameExpectOptions expectOptions, string title)
     {
-        if (value == null)
-        {
-            throw new ArgumentNullException(nameof(value));
-        }
-
-        return value;
+        var frame = _page.MainFrame;
+        return frame.WrapApiCallAsync(
+              () => frame.ExpectAsync(null, expression, expectOptions),
+              false,
+              title);
     }
 
     public Task ToHaveTitleAsync(string titleOrRegExp, PageAssertionsToHaveTitleOptions? options = null) =>
@@ -58,7 +56,7 @@ internal class PageAssertions : AssertionsBase, IPageAssertions
         ExpectImplAsync("to.have.title", ExpectedRegex(titleOrRegExp, new() { NormalizeWhiteSpace = true }), titleOrRegExp, "Page title expected to be", "Expect \"ToHaveTitleAsync\"", ConvertToFrameExpectOptions(options));
 
     public Task ToHaveURLAsync(string urlOrRegExp, PageAssertionsToHaveURLOptions? options = null) =>
-        ExpectImplAsync("to.have.url", new ExpectedTextValue() { String = URLMatch.ConstructURLBasedOnBaseURL(_page.Context.Options.BaseURL, urlOrRegExp), IgnoreCase = options?.IgnoreCase }, urlOrRegExp, "Page URL expected to be", "Expect \"ToHaveURLAsync\"", ConvertToFrameExpectOptions(options));
+        ExpectImplAsync("to.have.url", new ExpectedTextValue() { String = URLMatch.ConstructURLBasedOnBaseURL(_page.Context.BaseURL, urlOrRegExp), IgnoreCase = options?.IgnoreCase }, urlOrRegExp, "Page URL expected to be", "Expect \"ToHaveURLAsync\"", ConvertToFrameExpectOptions(options));
 
     public Task ToHaveURLAsync(Regex urlOrRegExp, PageAssertionsToHaveURLOptions? options = null) =>
         ExpectImplAsync("to.have.url", ExpectedRegex(urlOrRegExp, new() { IgnoreCase = options?.IgnoreCase }), urlOrRegExp, "Page URL expected to match regex", "Expect \"ToHaveURLAsync\"", ConvertToFrameExpectOptions(options));

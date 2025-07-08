@@ -216,8 +216,8 @@ public class PageRequestInterceptTests : PageTestEx
         });
         await Page.RouteAsync("**/*", async (route) =>
         {
-            var error = await PlaywrightAssert.ThrowsAsync<PlaywrightException>(() => route.FetchAsync(new() { Timeout = 1000 }));
-            Assert.True(error.Message.Contains("Request timed out after 1000ms"));
+            var error = await PlaywrightAssert.ThrowsAsync<TimeoutException>(() => route.FetchAsync(new() { Timeout = 1000 }));
+            Assert.True(error.Message.Contains("Timeout 1000ms exceeded"));
         });
         var error = await PlaywrightAssert.ThrowsAsync<TimeoutException>(() => Page.GotoAsync(Server.Prefix + "/slow", new() { Timeout = 2000 }));
         Assert.True(error.Message.Contains("Timeout 2000ms exceeded"));

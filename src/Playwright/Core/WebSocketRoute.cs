@@ -177,7 +177,13 @@ internal class WebSocketRoute : ChannelOwner, IWebSocketRoute
             return;
         }
         // Ensure that websocket is "open" and can send messages without an actual server connection.
-        await SendMessageToServerAsync("ensureOpened").ConfigureAwait(false);
+        try
+        {
+            await SendMessageToServerAsync("ensureOpened").ConfigureAwait(false);
+        }
+        catch
+        {
+        }
     }
 }
 

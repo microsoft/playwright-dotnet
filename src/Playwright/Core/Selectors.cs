@@ -23,6 +23,7 @@
  */
 
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Playwright.Helpers;
 
@@ -36,6 +37,11 @@ internal class Selectors : ISelectors
 
     public async Task RegisterAsync(string name, SelectorsRegisterOptions? options = default)
     {
+        if (_selectorEngines.Where(engine => engine["name"]?.ToString() == name).Any())
+        {
+            throw new PlaywrightException($"\"{name}\" selector engine has been already registered");
+        }
+
         options ??= new SelectorsRegisterOptions();
         var source = ScriptsHelper.EvaluationScript(options.Script, options.Path, false);
         var engine = new Dictionary<string, object?>()

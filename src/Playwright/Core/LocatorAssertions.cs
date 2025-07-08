@@ -32,11 +32,19 @@ namespace Microsoft.Playwright.Core;
 
 internal class LocatorAssertions : AssertionsBase, ILocatorAssertions
 {
-    public LocatorAssertions(ILocator locator, bool isNot) : base(locator, isNot)
+    public LocatorAssertions(ILocator locator, bool isNot) : base(isNot)
     {
+        ActualLocator = (Locator)locator;
     }
 
+    private Locator ActualLocator { get; }
+
     public ILocatorAssertions Not => new LocatorAssertions(ActualLocator, !IsNot);
+
+    protected override Task<FrameExpectResult> CallExpectAsync(string expression, FrameExpectOptions expectOptions, string title)
+    {
+        return ActualLocator.ExpectAsync(expression, expectOptions, title);
+    }
 
     public Task ToBeAttachedAsync(LocatorAssertionsToBeAttachedOptions? options = null)
     {

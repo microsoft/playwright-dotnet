@@ -100,6 +100,13 @@ public class InterceptionTests : PageTestEx
         Assert.True(URLMatches("http://playwright.dev/foo", "http://playwright.dev/foo?bar", "\\\\?bar"));
         Assert.True(URLMatches("http://first.host/", "http://second.host/foo", "**/foo"));
         Assert.True(URLMatches("http://playwright.dev/", "http://localhost/", "*//localhost/"));
+
+        // Should work with baseURL and various non-http schemes.
+        Assert.True(URLMatches("http://playwright.dev/", "about:blank", "about:blank"));
+        Assert.False(URLMatches("http://playwright.dev/", "about:blank", "http://playwright.dev/"));
+        Assert.True(URLMatches("http://playwright.dev/", "about:blank", "about:*"));
+        Assert.True(URLMatches("http://playwright.dev/", "data:text/html,", "data:*/*"));
+        Assert.True(URLMatches("http://playwright.dev/", "file://path/to/file", "file://**"));
     }
 
     [PlaywrightTest("interception.spec.ts", "should intercept by glob")]

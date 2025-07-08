@@ -324,7 +324,7 @@ public class PageAddLocatorHandlerTests : PageTestEx
         }");
         var error = await PlaywrightAssert.ThrowsAsync<TimeoutException>(() => Page.Locator("#target").ClickAsync(new() { Timeout = 3000 }));
         Assert.AreEqual(0, await Page.EvaluateAsync<int>("window.clicked"));
-        await Expect(Page.Locator("#interstitial")).ToBeVisibleAsync();
+        Assert.True(await Page.Locator("#interstitial").IsVisibleAsync());
         Assert.AreEqual(1, called);
         StringAssert.Contains("locator handler has finished, waiting for GetByRole(AriaRole.Button, new() { Name = \"close\" }) to be hidden", error.Message);
     }

@@ -198,7 +198,7 @@ internal class Page : ChannelOwner, IPage
     {
         get
         {
-            if (Context.Options?.RecordVideo?.Dir == null)
+            if (Context.VideosDir() == null)
             {
                 return null;
             }
@@ -1228,7 +1228,7 @@ internal class Page : ChannelOwner, IPage
                 glob = globMatch,
                 re = reMatch,
                 func = funcMatch,
-                baseURL = Context.Options.BaseURL,
+                baseURL = Context.BaseURL,
             },
             Handler = handler,
             Times = options?.Times,
@@ -1246,7 +1246,7 @@ internal class Page : ChannelOwner, IPage
         var remaining = new List<RouteHandler>();
         foreach (var routeHandler in _routes)
         {
-            if (routeHandler.urlMatcher.Equals(globMatch, reMatch, funcMatch, Context.Options.BaseURL, false) && (handler == null || routeHandler.Handler == handler))
+            if (routeHandler.urlMatcher.Equals(globMatch, reMatch, funcMatch, Context.BaseURL, false) && (handler == null || routeHandler.Handler == handler))
             {
                 removed.Add(routeHandler);
             }
@@ -1261,13 +1261,13 @@ internal class Page : ChannelOwner, IPage
     private async Task UnrouteInternalAsync(List<RouteHandler> removed, List<RouteHandler> remaining, UnrouteBehavior? behavior)
     {
         _routes = remaining;
-        await UpdateInterceptionAsync().ConfigureAwait(false);
-        if (behavior == null || behavior == UnrouteBehavior.Default)
+        if (behavior != null && behavior != UnrouteBehavior.Default)
         {
+            var tasks = removed.Select(routeHandler => routeHandler.StopAsync(behavior.Value));
+            await Task.WhenAll(tasks).ConfigureAwait(false);
             return;
         }
-        var tasks = removed.Select(routeHandler => routeHandler.StopAsync(behavior.Value));
-        await Task.WhenAll(tasks).ConfigureAwait(false);
+        await UpdateInterceptionAsync().ConfigureAwait(false);
     }
 
     private async Task UpdateInterceptionAsync()
@@ -1594,7 +1594,7 @@ internal class Page : ChannelOwner, IPage
         {
             urlMatcher = new URLMatch()
             {
-                baseURL = Context.Options.BaseURL,
+                baseURL = Context.BaseURL,
                 glob = globMatch,
                 re = urlRegex,
                 func = urlFunc,

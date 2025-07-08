@@ -279,8 +279,8 @@ public partial interface IBrowserContext
 
     /// <summary>
     /// <para>
-    /// Returns the browser instance of the context. If it was launched as a persistent
-    /// context null gets returned.
+    /// Gets the browser instance that owns the context. Returns <c>null</c> if the context
+    /// is created outside of normal browser, e.g. Android or Electron.
     /// </para>
     /// </summary>
     IBrowser? Browser { get; }
@@ -471,6 +471,7 @@ public partial interface IBrowserContext
     /// <item><description><c>'notifications'</c></description></item>
     /// <item><description><c>'payment-handler'</c></description></item>
     /// <item><description><c>'storage-access'</c></description></item>
+    /// <item><description><c>'local-fonts'</c></description></item>
     /// </list>
     /// </param>
     /// <param name="options">Call options</param>

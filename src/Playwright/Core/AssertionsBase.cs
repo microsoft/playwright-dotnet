@@ -42,15 +42,17 @@ internal class AssertionsBase
 {
     private static float _defaultTimeout = 5_000;
 
-    public AssertionsBase(ILocator actual, bool isNot)
+    public AssertionsBase(bool isNot)
     {
-        ActualLocator = (Locator)actual;
         IsNot = isNot;
     }
 
     protected bool IsNot { get; }
 
-    protected Locator ActualLocator { get; }
+    protected virtual Task<FrameExpectResult> CallExpectAsync(string expression, FrameExpectOptions expectOptions, string title)
+    {
+        throw new NotImplementedException("CallExpectAsync must be implemented in a derived class.");
+    }
 
     protected async Task ExpectImplAsync(string expression, ExpectedTextValue textValue, object expected, string message, string title, FrameExpectOptions options)
     {
@@ -75,7 +77,7 @@ internal class AssertionsBase
         {
             message = message.Replace("expected to", "expected not to");
         }
-        var result = await ActualLocator.ExpectAsync(expression, expectOptions, title).ConfigureAwait(false);
+        var result = await CallExpectAsync(expression, expectOptions, title).ConfigureAwait(false);
         if (result.Matches == IsNot)
         {
             var actual = result.Received;

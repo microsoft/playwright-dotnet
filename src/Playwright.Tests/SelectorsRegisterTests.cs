@@ -77,6 +77,27 @@ public class SelectorsRegisterTests : PageTestEx
         StringAssert.Contains("Unknown engine \"tAG\" while parsing selector tAG=DIV", exception.Message);
     }
 
+    [PlaywrightTest("selectors-register.spec.ts", "should throw \"already registered\" error when registering")]
+    public async Task ShouldThrowAlreadyRegisteredErrorWhenRegistering()
+    {
+        const string createSelector = @"({
+                create(root, target) {
+                  return target.nodeName;
+                },
+                query(root, selector) {
+                  return root.querySelector(selector);
+                },
+                queryAll(root, selector) {
+                  return Array.from(root.querySelectorAll(selector));
+                }
+            })";
+
+        await TestUtils.RegisterEngineAsync(Playwright, "alreadyRegistered", createSelector);
+
+        var exception = await PlaywrightAssert.ThrowsAsync<PlaywrightException>(() => Playwright.Selectors.RegisterAsync("alreadyRegistered", new() { Script = createSelector }));
+        StringAssert.Contains("\"alreadyRegistered\" selector engine has been already registered", exception.Message);
+    }
+
     [PlaywrightTest("selectors-register.spec.ts", "should work with path")]
     public async Task ShouldWorkWithPath()
     {
