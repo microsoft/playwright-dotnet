@@ -38,5 +38,5 @@ internal class BrowserContextInitializer : EventTargetInitializer
     public Core.Tracing Tracing { get; set; } = null!;
 
     [JsonPropertyName("options")]
-    public Options Options { get; set; } = null!;
+    public System.Text.Json.JsonElement Options { get; set; }
 }

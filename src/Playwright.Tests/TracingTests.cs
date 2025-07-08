@@ -47,6 +47,7 @@ public class TracingTests : ContextTestEx
         await page.ClickAsync("\"Click\"");
         await page.Mouse.MoveAsync(20, 20);
         await page.Mouse.DblClickAsync(20, 30);
+        await page.APIRequest.GetAsync(Server.Prefix + "/empty.html");
         await page.Keyboard.InsertTextAsync("abc");
         await page.WaitForTimeoutAsync(2000); // Give it some time to produce screenshots.
         await page.CloseAsync();
@@ -64,6 +65,7 @@ public class TracingTests : ContextTestEx
                 new Regex(@"Click"),
                 new Regex(@"Mouse move"),
                 new Regex(@"Double click"),
+                new Regex(@"GET ""/empty.html"""),
                 new Regex(@"Insert ""abc"""),
                 new Regex(@"Wait for timeout"),
                 new Regex(@"Close")
@@ -404,7 +406,7 @@ class TraceViewerPage(IPage page)
 
     public ILocator ActionTitles => Page.Locator(".action-title");
 
-    public ILocator StackFrames => Page.GetByTestId("stack-trace-list").Locator(".list-view-entry");
+    public ILocator StackFrames => Page.GetByRole(AriaRole.List, new() { Name = "Stack trace" }).GetByRole(AriaRole.Listitem);
 
     public async Task SelectActionAsync(string title, int ordinal = 0)
     {

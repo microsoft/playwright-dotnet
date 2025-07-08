@@ -71,4 +71,13 @@ public partial class Cookie
     /// <summary><para>Optional.</para></summary>
     [JsonPropertyName("sameSite")]
     public SameSiteAttribute? SameSite { get; set; }
+
+    /// <summary>
+    /// <para>
+    /// For partitioned third-party cookies (aka <a href="https://developer.mozilla.org/en-US/docs/Web/Privacy/Guides/Privacy_sandbox/Partitioned_cookies">CHIPS</a>),
+    /// the partition key. Optional.
+    /// </para>
+    /// </summary>
+    [JsonPropertyName("partitionKey")]
+    public string? PartitionKey { get; set; }
 }

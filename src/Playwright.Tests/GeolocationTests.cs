@@ -72,7 +72,7 @@ public class GeolocationTests : PageTestEx
         await using var context2 = await Browser.NewContextAsync(new()
         {
             Permissions = new[] { "geolocation" },
-            Geolocation = new() { Latitude = 20, Longitude = 20 },
+            Geolocation = new() { Latitude = 10.5F, Longitude = 11.5F },
         });
 
         var page2 = await context2.NewPageAsync();
@@ -88,7 +88,7 @@ public class GeolocationTests : PageTestEx
             @"() => new Promise(resolve => navigator.geolocation.getCurrentPosition(position => {
                     resolve({latitude: position.coords.latitude, longitude: position.coords.longitude});
                 }))");
-        AssertEqual(20, 20, geolocation2);
+        AssertEqual(10.5F, 11.5F, geolocation2);
     }
 
     [PlaywrightTest("geolocation.spec.ts", "should not modify passed default options object")]

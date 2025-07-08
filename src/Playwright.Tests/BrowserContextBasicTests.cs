@@ -145,11 +145,11 @@ public class BrowserContextBasicTests : BrowserTestEx
     {
         await using var context = await Browser.NewContextAsync(new()
         {
-            DeviceScaleFactor = 3
+            DeviceScaleFactor = 3.5F
         });
 
         var page = await context.NewPageAsync();
-        Assert.AreEqual(3, await page.EvaluateAsync<int>("window.devicePixelRatio"));
+        Assert.AreEqual(3.5F, await page.EvaluateAsync<float>("window.devicePixelRatio"));
     }
 
     [PlaywrightTest("browsercontext-basic.spec.ts", "should not allow deviceScaleFactor with null viewport")]

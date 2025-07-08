@@ -170,7 +170,7 @@ internal class Frame : ChannelOwner, IFrame
             "waitForTimeout",
             new Dictionary<string, object?>
             {
-                ["timeout"] = timeout,
+                ["waitTimeout"] = timeout,
             });
 
     [MethodImpl(MethodImplOptions.NoInlining)]
@@ -314,7 +314,7 @@ internal class Frame : ChannelOwner, IFrame
                     glob = urlString,
                     re = urlRegex,
                     func = urlFunc,
-                    baseURL = (Page as Page)?.Context.Options.BaseURL,
+                    baseURL = (Page as Page)?.Context.BaseURL,
                 }.Match(e.Url);
             });
 
@@ -890,7 +890,7 @@ internal class Frame : ChannelOwner, IFrame
             ["targetPosition"] = options?.TargetPosition,
         });
 
-    internal async Task<FrameExpectResult> ExpectAsync(string selector, string expression, FrameExpectOptions options)
+    internal async Task<FrameExpectResult> ExpectAsync(string? selector, string expression, FrameExpectOptions options)
     {
         var result = await SendMessageToServerAsync("expect", new Dictionary<string, object?>
         {
@@ -919,7 +919,7 @@ internal class Frame : ChannelOwner, IFrame
             glob = urlString,
             re = urlRegex,
             func = urlFunc,
-            baseURL = (Page as Page)?.Context.Options.BaseURL,
+            baseURL = (Page as Page)?.Context.BaseURL,
         }.Match(Url))
         {
             return WaitForLoadStateAsync(ToLoadState(options?.WaitUntil), new() { Timeout = options?.Timeout });

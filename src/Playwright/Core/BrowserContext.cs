@@ -43,6 +43,7 @@ internal class BrowserContext : ChannelOwner, IBrowserContext
     private readonly TaskCompletionSource<bool> _closeTcs = new();
     private readonly Dictionary<string, Delegate> _bindings = new();
     private readonly BrowserContextInitializer _initializer;
+    private readonly string? _baseURL;
     internal readonly Tracing _tracing;
     private readonly Clock _clock;
     internal readonly HashSet<IPage> _backgroundPages = new();
@@ -66,6 +67,10 @@ internal class BrowserContext : ChannelOwner, IBrowserContext
         _request = initializer.RequestContext;
         _request._timeoutSettings = this._timeoutSettings;
         _initializer = initializer;
+        if (_initializer.Options.TryGetProperty("baseURL", out var baseURL))
+        {
+            _baseURL = baseURL.GetString();
+        }
     }
 
     private event EventHandler<IRequest>? _requestImpl;
@@ -136,7 +141,7 @@ internal class BrowserContext : ChannelOwner, IBrowserContext
 
     internal Page? OwnerPage { get; set; }
 
-    internal Options Options => _initializer.Options;
+    internal string? BaseURL => _baseURL;
 
     internal bool ClosingOrClosed { get; private set; }
 
@@ -279,6 +284,15 @@ internal class BrowserContext : ChannelOwner, IBrowserContext
             UpdateMode = options.RecordHarMode ?? HarMode.Full,
         };
         await RecordIntoHarAsync(options.RecordHarPath, null, routeFromHAROptions, contentPolicy).ConfigureAwait(false);
+    }
+
+    internal string? VideosDir()
+    {
+        if (_initializer.Options.TryGetProperty("recordVideo", out var recordVideo))
+        {
+            return recordVideo.GetProperty("dir").GetString();
+        }
+        return null;
     }
 
     [MethodImpl(MethodImplOptions.NoInlining)]
@@ -716,7 +730,7 @@ internal class BrowserContext : ChannelOwner, IBrowserContext
         => new URLMatch()
         {
             glob = globMatch,
-            baseURL = Options.BaseURL,
+            baseURL = BaseURL,
         }.Match(url);
 
     private Task RouteAsync(string? globMatch, Regex? reMatch, Func<string, bool>? funcMatch, Delegate handler, BrowserContextRouteOptions? options)
@@ -727,7 +741,7 @@ internal class BrowserContext : ChannelOwner, IBrowserContext
                 glob = globMatch,
                 re = reMatch,
                 func = funcMatch,
-                baseURL = Options.BaseURL,
+                baseURL = BaseURL,
             },
             Handler = handler,
             Times = options?.Times,
@@ -745,7 +759,7 @@ internal class BrowserContext : ChannelOwner, IBrowserContext
         var remaining = new List<RouteHandler>();
         foreach (var routeHandler in _routes)
         {
-            if (routeHandler.urlMatcher.Equals(globMatch, reMatch, funcMatch, Options.BaseURL, false) && (handler == null || routeHandler.Handler == handler))
+            if (routeHandler.urlMatcher.Equals(globMatch, reMatch, funcMatch, BaseURL, false) && (handler == null || routeHandler.Handler == handler))
             {
                 removed.Add(routeHandler);
             }
@@ -760,13 +774,12 @@ internal class BrowserContext : ChannelOwner, IBrowserContext
     private async Task UnrouteInternalAsync(List<RouteHandler> removed, List<RouteHandler> remaining, UnrouteBehavior? behavior)
     {
         _routes = remaining;
-        await UpdateInterceptionAsync().ConfigureAwait(false);
-        if (behavior == null || behavior == UnrouteBehavior.Default)
+        if (behavior != null && behavior != UnrouteBehavior.Default)
         {
-            return;
+            var tasks = removed.Select(routeHandler => routeHandler.StopAsync(behavior.Value));
+            await Task.WhenAll(tasks).ConfigureAwait(false);
         }
-        var tasks = removed.Select(routeHandler => routeHandler.StopAsync(behavior.Value));
-        await Task.WhenAll(tasks).ConfigureAwait(false);
+        await UpdateInterceptionAsync().ConfigureAwait(false);
     }
 
     private async Task UpdateInterceptionAsync()
@@ -928,7 +941,7 @@ internal class BrowserContext : ChannelOwner, IBrowserContext
         {
             urlMatcher = new URLMatch()
             {
-                baseURL = Options.BaseURL,
+                baseURL = BaseURL,
                 glob = globMatch,
                 re = reMatch,
                 func = funcMatch,

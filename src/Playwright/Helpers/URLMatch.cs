@@ -224,6 +224,12 @@ public class URLMatch
 
             // Escaped `\\?` behaves the same as `?` in our glob patterns.
             match = match.Replace("\\\\?", "?");
+            // Special case about: URLs as they are not relative to baseURL
+            if (match.StartsWith("about:") || match.StartsWith("data:") || match.StartsWith("chrome:") ||
+                match.StartsWith("edge:") || match.StartsWith("file:"))
+            {
+                return match;
+            }
             // Glob symbols may be escaped in the URL and some of them such as ? affect resolution,
             // so we replace them with safe components first.
             var relativePath = string.Join("/", match.Split('/').Select((token, index) =>

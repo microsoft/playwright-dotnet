@@ -380,4 +380,40 @@ public class UnrouteBehaviorTests : PageTestEx
         await Page.CloseAsync();
         await route.FulfillAsync(new() { Status = (int)HttpStatusCode.OK });
     }
+
+    [PlaywrightTest("unroute-behavior.spec.ts", "should not continue requests in flight (page)")]
+    public async Task ShouldNotContinueRequestsInFlightPage()
+    {
+        await Page.GotoAsync(Server.EmptyPage);
+
+        var routePromise = new TaskCompletionSource<IRoute>();
+        await Page.RouteAsync(new Regex(".*"), async (route) =>
+        {
+            routePromise.SetResult(route);
+            await Page.WaitForTimeoutAsync(3000);
+            await route.FulfillAsync(new() { Status = (int)HttpStatusCode.OK });
+        });
+
+        Page.EvaluateAsync("() => fetch('/')").IgnoreException();
+        await routePromise.Task;
+        await Page.UnrouteAllAsync(new() { Behavior = UnrouteBehavior.Wait });
+    }
+
+    [PlaywrightTest("unroute-behavior.spec.ts", "should not continue requests in flight (context)")]
+    public async Task ShouldNotContinueRequestsInFlightContext()
+    {
+        await Page.GotoAsync(Server.EmptyPage);
+
+        var routePromise = new TaskCompletionSource<IRoute>();
+        await Context.RouteAsync(new Regex(".*"), async (route) =>
+        {
+            routePromise.SetResult(route);
+            await Page.WaitForTimeoutAsync(3000);
+            await route.FulfillAsync(new() { Status = (int)HttpStatusCode.OK });
+        });
+
+        Page.EvaluateAsync("() => fetch('/')").IgnoreException();
+        await routePromise.Task;
+        await Context.UnrouteAllAsync(new() { Behavior = UnrouteBehavior.Wait });
+    }
 }

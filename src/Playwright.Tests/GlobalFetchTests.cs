@@ -81,8 +81,8 @@ public class GlobalFetchTests : PlaywrightTestEx
     {
         var request = await Playwright.APIRequest.NewContextAsync(new() { Timeout = 100 });
         Server.SetRoute("/empty.html", async request => await Task.Delay(5_000));
-        var exception = Assert.ThrowsAsync<PlaywrightException>(() => request.GetAsync(Server.EmptyPage));
-        StringAssert.Contains("Request timed out after 100ms", exception.Message);
+        var exception = Assert.ThrowsAsync<TimeoutException>(() => request.GetAsync(Server.EmptyPage));
+        StringAssert.Contains("Timeout 100ms exceeded", exception.Message);
         await request.DisposeAsync();
     }
 

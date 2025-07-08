@@ -68,4 +68,8 @@ public partial class BrowserContextCookiesResult
     [Required]
     [JsonPropertyName("sameSite")]
     public SameSiteAttribute SameSite { get; set; } = default!;
+
+    /// <summary><para></para></summary>
+    [JsonPropertyName("partitionKey")]
+    public string? PartitionKey { get; set; }
 }
