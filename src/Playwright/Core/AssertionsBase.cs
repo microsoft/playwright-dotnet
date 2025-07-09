@@ -38,7 +38,7 @@ using Microsoft.Playwright.Transport.Protocol;
 
 namespace Microsoft.Playwright.Core;
 
-internal class AssertionsBase
+internal abstract class AssertionsBase
 {
     private static float _defaultTimeout = 5_000;
 
@@ -49,10 +49,7 @@ internal class AssertionsBase
 
     protected bool IsNot { get; }
 
-    protected virtual Task<FrameExpectResult> CallExpectAsync(string expression, FrameExpectOptions expectOptions, string title)
-    {
-        throw new NotImplementedException("CallExpectAsync must be implemented in a derived class.");
-    }
+    protected abstract Task<FrameExpectResult> CallExpectAsync(string expression, FrameExpectOptions expectOptions, string title);
 
     protected async Task ExpectImplAsync(string expression, ExpectedTextValue textValue, object expected, string message, string title, FrameExpectOptions options)
     {
