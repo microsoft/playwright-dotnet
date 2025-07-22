@@ -4,7 +4,7 @@
 |          | Linux | macOS | Windows |
 |   :---   | :---: | :---: | :---:   |
 | Chromium <!-- GEN:chromium-version -->139.0.7258.5<!-- GEN:stop --> | ✅ | ✅ | ✅ |
-| WebKit <!-- GEN:webkit-version -->18.5<!-- GEN:stop --> | ✅ | ✅ | ✅ |
+| WebKit <!-- GEN:webkit-version -->26.0<!-- GEN:stop --> | ✅ | ✅ | ✅ |
 | Firefox <!-- GEN:firefox-version -->140.0.2<!-- GEN:stop --> | ✅ | ✅ | ✅ |
 
 Playwright for .NET is the official language port of [Playwright](https://playwright.dev), the library to automate [Chromium](https://www.chromium.org/Home), [Firefox](https://www.mozilla.org/en-US/firefox/new/) and [WebKit](https://webkit.org/) with a single API. Playwright is built to enable cross-browser web automation that is **ever-green**, **capable**, **reliable** and **fast**.
