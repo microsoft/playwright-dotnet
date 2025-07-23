@@ -53,7 +53,7 @@ internal class Selectors : ISelectors
         {
             engine["contentScript"] = options.ContentScript;
         }
-        foreach (var context in _contextsForSelectors)
+        foreach (var context in _contextsForSelectors.ToArray())
         {
             await context.SendMessageToServerAsync("registerSelectorEngine", new Dictionary<string, object?>
             {
@@ -67,7 +67,7 @@ internal class Selectors : ISelectors
     {
         Locator.SetTestIdAttribute(attributeName);
         _testIdAttributeName = attributeName;
-        foreach (var context in _contextsForSelectors)
+        foreach (var context in _contextsForSelectors.ToArray())
         {
             context.SendMessageToServerAsync(
             "setTestIdAttributeName",
