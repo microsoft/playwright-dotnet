@@ -1148,10 +1148,10 @@ internal class Page : ChannelOwner, IPage
     [MethodImpl(MethodImplOptions.NoInlining)]
     public async Task PauseAsync()
     {
-        var defaultNavigationTimeout = _timeoutSettings.DefaultNavigationTimeout;
-        var defaultTimeout = _timeoutSettings.DefaultTimeout;
-        _timeoutSettings.SetDefaultNavigationTimeout(0);
-        _timeoutSettings.SetDefaultTimeout(0);
+        var defaultNavigationTimeout = Context._timeoutSettings.DefaultNavigationTimeout;
+        var defaultTimeout = Context._timeoutSettings.DefaultTimeout;
+        Context.SetDefaultNavigationTimeout(0);
+        Context.SetDefaultTimeout(0);
         try
         {
             await Task.WhenAny(Context.SendMessageToServerAsync("pause"), ClosedOrCrashedTcs.Task).ConfigureAwait(false);
