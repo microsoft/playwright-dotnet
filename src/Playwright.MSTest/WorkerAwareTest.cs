@@ -10,7 +10,7 @@ namespace Microsoft.Playwright.MSTest;
 
 public class WorkerAwareTest
 {
-    public TestContext TestContext { get; set; } = null!;
+    public virtual TestContext TestContext { get; set; } = null!;
 
     private static readonly ConcurrentStack<Worker> _allWorkers = new();
     private Worker _currentWorker = null!;
