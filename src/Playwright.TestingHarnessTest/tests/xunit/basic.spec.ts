@@ -251,7 +251,7 @@ test('should be able to parse BrowserName and LaunchOptions.Headless from runset
   expect(result.stdout).not.toContain("Headless")
 });
 
-test('should be able to parse LaunchOptions.Proxy from runsettings', async ({ runTest, proxyServer }) => {
+test('should be able to parse LaunchOptions.Proxy from runsettings', async ({ runTest, proxyServer, server }) => {
   const result = await runTest({
     'ExampleTests.cs': `
       using System;
@@ -275,7 +275,7 @@ test('should be able to parse LaunchOptions.Proxy from runsettings', async ({ ru
           public async Task Test()
           {
               output.WriteLine("User-Agent: " + await Page.EvaluateAsync<string>("() => navigator.userAgent"));
-              await Page.GotoAsync("http://example.com");
+              await Page.GotoAsync("${server.EMPTY_PAGE}");
           }
       }`,
       '.runsettings': `
@@ -301,8 +301,8 @@ test('should be able to parse LaunchOptions.Proxy from runsettings', async ({ ru
 
   expect(result.stdout).not.toContain("Headless");
 
-  const { url, auth } = proxyServer.requests.find(r => r.url === 'http://example.com/')!;;
-  expect(url).toBe('http://example.com/');
+  const { url, auth } = proxyServer.requests.find(r => r.url === server.EMPTY_PAGE)!;
+  expect(url).toBe(server.EMPTY_PAGE);
   expect(auth).toBe('user:pwd');
 });
 
@@ -349,7 +349,7 @@ test('should be able to parse LaunchOptions.Args from runsettings', async ({ run
   expect(result.stdout).toContain("User-Agent: hello")
 });
 
-test('should be able to override context options', async ({ runTest }) => {
+test('should be able to override context options', async ({ runTest, server }) => {
   const result = await runTest({
     'ExampleTests.cs': `
       using System;
@@ -376,7 +376,7 @@ test('should be able to override context options', async ({ runTest }) => {
 
             Assert.Equal("Foobar", await Page.EvaluateAsync<string>("() => navigator.userAgent"));
 
-            var response = await Page.GotoAsync("https://example.com/");
+            var response = await Page.GotoAsync("${server.EMPTY_PAGE}");
             Assert.Equal("KekStarValue", await response.Request.HeaderValueAsync("Kekstar"));
         }
 
