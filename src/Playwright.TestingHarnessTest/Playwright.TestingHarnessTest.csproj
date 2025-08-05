@@ -29,7 +29,7 @@
 
     <!-- xUnit.v3 -->
     <ProjectReference Include="..\Playwright.Xunit.v3\Playwright.Xunit.v3.csproj" Condition="'$(TEST_MODE)' == 'xunit.v3'" />
-    <PackageReference Include="xunit.v3" Version="2.0.0" Condition="'$(TEST_MODE)' == 'xunit.v3'" />
+    <PackageReference Include="xunit.v3" Version="3.0.0" Condition="'$(TEST_MODE)' == 'xunit.v3'" />
     <PackageReference Include="xunit.runner.visualstudio" Version="3.0.2" Condition="'$(TEST_MODE)' == 'xunit.v3'" />
   </ItemGroup>
 

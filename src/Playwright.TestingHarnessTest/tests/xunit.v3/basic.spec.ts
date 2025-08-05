@@ -343,7 +343,7 @@ test('should be able to parse LaunchOptions.Args from runsettings', async ({ run
   expect(result.stdout).toContain("User-Agent: hello")
 });
 
-test('should be able to override context options', async ({ runTest }) => {
+test('should be able to override context options', async ({ runTest, server }) => {
   const result = await runTest({
     'ExampleTests.cs': `
       using System;
@@ -370,7 +370,7 @@ test('should be able to override context options', async ({ runTest }) => {
 
             Assert.Equal("Foobar", await Page.EvaluateAsync<string>("() => navigator.userAgent"));
 
-            var response = await Page.GotoAsync("https://example.com/");
+            var response = await Page.GotoAsync("${server.EMPTY_PAGE}");
             Assert.Equal("KekStarValue", await response.Request.HeaderValueAsync("Kekstar"));
         }
 
@@ -459,7 +459,7 @@ test.describe('Expect() timeout', () => {
     expect(result.passed).toBe(0);
     expect(result.failed).toBe(1);
     expect(result.total).toBe(1);
-    expect(result.rawStdout).toContain("LocatorAssertions.ToHaveTextAsync with timeout 5000ms")
+    expect(result.rawStdout).toContain("Expect \"ToHaveTextAsync\" with timeout 5000ms")
   });
 
   test('should be able to override it via each Expect() call', async ({ runTest }) => {
@@ -488,7 +488,7 @@ test.describe('Expect() timeout', () => {
     expect(result.passed).toBe(0);
     expect(result.failed).toBe(1);
     expect(result.total).toBe(1);
-    expect(result.rawStdout).toContain("LocatorAssertions.ToHaveTextAsync with timeout 100ms")
+    expect(result.rawStdout).toContain("Expect \"ToHaveTextAsync\" with timeout 100ms")
   });
 
   test('should be able to override it via the global config', async ({ runTest }) => {
@@ -525,7 +525,7 @@ test.describe('Expect() timeout', () => {
     expect(result.passed).toBe(0);
     expect(result.failed).toBe(1);
     expect(result.total).toBe(1);
-    expect(result.rawStdout).toContain("LocatorAssertions.ToHaveTextAsync with timeout 123ms")
+    expect(result.rawStdout).toContain("Expect \"ToHaveTextAsync\" with timeout 123ms")
   });
 });
 
