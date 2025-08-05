@@ -11,7 +11,7 @@
   <ItemGroup>
     <ProjectReference Include="..\Playwright\Playwright.csproj" />
 
-    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.12.0" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.13.0" />
     
     <!-- MSTest -->
     <ProjectReference Include="..\Playwright.MSTest\Playwright.MSTest.csproj" Condition="'$(TEST_MODE)' == 'mstest'" />
@@ -26,6 +26,11 @@
     <ProjectReference Include="..\Playwright.Xunit\Playwright.Xunit.csproj" Condition="'$(TEST_MODE)' == 'xunit'" />
     <PackageReference Include="xunit" Version="2.9.2" Condition="'$(TEST_MODE)' == 'xunit'" />
     <PackageReference Include="xunit.runner.visualstudio" Version="2.8.2" Condition="'$(TEST_MODE)' == 'xunit'" />
+
+    <!-- xUnit.v3 -->
+    <ProjectReference Include="..\Playwright.Xunit.v3\Playwright.Xunit.v3.csproj" Condition="'$(TEST_MODE)' == 'xunit.v3'" />
+    <PackageReference Include="xunit.v3" Version="3.0.0" Condition="'$(TEST_MODE)' == 'xunit.v3'" />
+    <PackageReference Include="xunit.runner.visualstudio" Version="3.0.2" Condition="'$(TEST_MODE)' == 'xunit.v3'" />
   </ItemGroup>
 
   <ItemGroup>

@@ -35,6 +35,10 @@ namespace Microsoft.Playwright.TestAdapter;
 
 public class PlaywrightSettingsXml
 {
+    public PlaywrightSettingsXml()
+    {
+    }
+
     public PlaywrightSettingsXml(XmlReader reader)
     {
         // Skip Playwright root Element
@@ -159,10 +163,10 @@ public class PlaywrightSettingsXml
         return JsonSerializer.Deserialize(value.Replace('\'', '"'), type)!;
     }
 
-    public BrowserTypeLaunchOptions? LaunchOptions { get; private set; }
-    public string? BrowserName { get; private set; }
-    public bool? Headless { get; private set; }
-    public float? ExpectTimeout { get; private set; }
-    public int? Retries { get; private set; }
+    public BrowserTypeLaunchOptions? LaunchOptions { get; set; }
+    public string? BrowserName { get; set; }
+    public bool? Headless { get; set; }
+    public float? ExpectTimeout { get; set; }
+    public int? Retries { get; set; }
 }
 
