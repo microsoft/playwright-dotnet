@@ -25,7 +25,7 @@
 using System.Threading.Tasks;
 using Microsoft.Playwright.TestAdapter;
 
-namespace Microsoft.Playwright.Xunit.v3;
+namespace Microsoft.Playwright.Xunit;
 
 public class PlaywrightTest : WorkerAwareTest
 {
@@ -36,7 +36,7 @@ public class PlaywrightTest : WorkerAwareTest
     public IPlaywright Playwright { get; private set; } = null!;
     public IBrowserType BrowserType { get; private set; } = null!;
 
-    public override async ValueTask InitializeAsync()
+    public override async Task InitializeAsync()
     {
         await base.InitializeAsync().ConfigureAwait(false);
         Playwright = await _playwrightTask.ConfigureAwait(false);

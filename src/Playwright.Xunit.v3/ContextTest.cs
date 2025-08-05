@@ -24,13 +24,13 @@
 
 using System.Threading.Tasks;
 
-namespace Microsoft.Playwright.Xunit.v3;
+namespace Microsoft.Playwright.Xunit;
 
 public class ContextTest : BrowserTest
 {
     public IBrowserContext Context { get; private set; } = null!;
 
-    public override async ValueTask InitializeAsync()
+    public override async Task InitializeAsync()
     {
         await base.InitializeAsync().ConfigureAwait(false);
         Context = await NewContext(ContextOptions()).ConfigureAwait(false);

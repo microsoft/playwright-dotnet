@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <Title>Microsoft.Playwright.Xunit.v3</Title>
-    <PackageId>Microsoft.Playwright.Xunit.v3</PackageId>
+    <Title>Microsoft.Playwright.Xunit</Title>
+    <PackageId>Microsoft.Playwright.Xunit</PackageId>
     <Summary>A set of helpers and fixtures to enable using Playwright in xUnit tests.</Summary>
     <Description>
       Playwright enables reliable end-to-end testing for modern web apps. This package brings in additional helpers
@@ -12,13 +12,15 @@
     <TargetFramework>netstandard2.0</TargetFramework>
     <PublishRepositoryUrl>true</PublishRepositoryUrl>
     <RunWithWarnings>true</RunWithWarnings>
-    <RootNamespace>Microsoft.Playwright.Xunit.v3</RootNamespace>
+    <RootNamespace>Microsoft.Playwright.Xunit</RootNamespace>
     <ReleaseVersion>0.0.0</ReleaseVersion>
     <BuildFromSource>True</BuildFromSource>
-    <AssemblyName>Microsoft.Playwright.Xunit.v3</AssemblyName>
+    <AssemblyName>Microsoft.Playwright.Xunit</AssemblyName>
     <PackageOutputPath>./nupkg</PackageOutputPath>
     <IsPackable>true</IsPackable>
     <Nullable>enable</Nullable>
+    <EnablePackageValidation>true</EnablePackageValidation>
+    <PackageValidationBaselineVersion>1.52.0</PackageValidationBaselineVersion>
   </PropertyGroup>
 
   <Import Project="../Common/Version.props" />
@@ -35,7 +37,7 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="xunit.v3.extensibility.core" Version="1.0.1" />
+    <PackageReference Include="xunit.extensibility.core" Version="2.8.0" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\Common\icon.png" Pack="true" Visible="false" PackagePath="icon.png" />

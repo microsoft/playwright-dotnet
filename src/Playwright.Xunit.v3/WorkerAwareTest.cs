@@ -31,17 +31,12 @@ using Microsoft.Playwright.Core;
 using Microsoft.Playwright.TestAdapter;
 using Xunit;
 
-namespace Microsoft.Playwright.Xunit.v3;
+namespace Microsoft.Playwright.Xunit;
 
-public class WorkerAwareTest : IAsyncLifetime
+public class WorkerAwareTest : ExceptionCapturer
 {
     private static readonly ConcurrentStack<Worker> _allWorkers = new();
     private Worker _currentWorker = null!;
-
-    public WorkerAwareTest()
-    {
-        PlaywrightSettingsProvider.LoadViaEnvIfNeeded();
-    }
 
     internal class Worker
     {
@@ -62,8 +57,9 @@ public class WorkerAwareTest : IAsyncLifetime
         return (_currentWorker.Services[name] as T)!;
     }
 
-    public virtual ValueTask InitializeAsync()
+    async public override Task InitializeAsync()
     {
+        await base.InitializeAsync().ConfigureAwait(false);
         if (!_allWorkers.TryPop(out _currentWorker!))
         {
             _currentWorker = new();
@@ -73,12 +69,11 @@ public class WorkerAwareTest : IAsyncLifetime
         {
             AssertionsBase.SetDefaultTimeout(PlaywrightSettingsProvider.ExpectTimeout.Value);
         }
-        return new ValueTask();
     }
 
-    public async virtual ValueTask DisposeAsync()
+    public async override Task DisposeAsync()
     {
-        if (TestOk())
+        if (TestOk)
         {
             foreach (var kv in _currentWorker.Services)
             {
@@ -94,18 +89,7 @@ public class WorkerAwareTest : IAsyncLifetime
             }
             _currentWorker.Services.Clear();
         }
-    }
-
-    protected bool TestOk()
-    {
-        // Test is still running.
-        if (TestContext.Current.TestState == null)
-        {
-            return false;
-        }
-        return
-            TestContext.Current.TestState.Result == TestResult.Passed ||
-            TestContext.Current.TestState.Result == TestResult.Skipped;
+        await base.DisposeAsync().ConfigureAwait(false);
     }
 }
 
@@ -113,4 +97,36 @@ public interface IWorkerService
 {
     public Task ResetAsync();
     public Task DisposeAsync();
+}
+
+/// <summary>
+/// ExceptionCapturer is a best-effort way of detecting if a test did pass or fail in xUnit.
+/// This class uses the AppDomain's FirstChanceException event to set a flag indicating
+/// whether an exception has occurred during the test execution.
+/// 
+/// Note: There is no way of getting the test status in xUnit in the dispose method.
+/// For more information, see: https://stackoverflow.com/questions/28895448/current-test-status-in-xunit-net
+/// </summary>
+public class ExceptionCapturer : IAsyncLifetime
+{
+    protected bool TestOk { get; private set; } = true;
+
+    public ExceptionCapturer()
+    {
+        AppDomain.CurrentDomain.FirstChanceException += (_, e) =>
+        {
+            TestOk = false;
+        };
+    }
+
+    public virtual Task InitializeAsync()
+    {
+        TestOk = true;
+        return Task.CompletedTask;
+    }
+
+    public virtual Task DisposeAsync()
+    {
+        return Task.CompletedTask;
+    }
 }

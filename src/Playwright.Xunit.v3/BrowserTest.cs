@@ -25,7 +25,7 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace Microsoft.Playwright.Xunit.v3;
+namespace Microsoft.Playwright.Xunit;
 
 public class BrowserTest : PlaywrightTest
 {
@@ -39,16 +39,16 @@ public class BrowserTest : PlaywrightTest
         return context;
     }
 
-    public override async ValueTask InitializeAsync()
+    public override async Task InitializeAsync()
     {
         await base.InitializeAsync().ConfigureAwait(false);
         var service = await BrowserService.Register(this, BrowserType, await ConnectOptionsAsync()).ConfigureAwait(false);
         Browser = service.Browser;
     }
 
-    public override async ValueTask DisposeAsync()
+    public override async Task DisposeAsync()
     {
-        if (TestOk())
+        if (TestOk)
         {
             foreach (var context in _contexts)
             {
