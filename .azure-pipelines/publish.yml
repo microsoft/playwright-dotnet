@@ -77,9 +77,9 @@ extends:
               src/Playwright/Playwright.csproj;
               src/Playwright.NUnit/Playwright.NUnit.csproj;
               src/Playwright.MSTest/Playwright.MSTest.csproj;
-              src/Playwright.MSTest/Playwright.MSTest.v4.csproj;
+              src/Playwright.MSTest.v4/Playwright.MSTest.v4.csproj;
               src/Playwright.Xunit/Playwright.Xunit.csproj;
-              src/Playwright.Xunit/Playwright.Xunit.v3.csproj;
+              src/Playwright.Xunit.v3/Playwright.Xunit.v3.csproj;
               src/Playwright.TestAdapter/Playwright.TestAdapter.csproj;
             packDirectory: '$(Build.ArtifactStagingDirectory)/nuget'
             versioningScheme: 'off'
