@@ -1,0 +1,113 @@
+{
+  "properties": {
+    "helpUri": "https://eng.ms/docs/microsoft-security/security/azure-security/cloudai-security-fundamentals-engineering/security-integration/guardian-wiki/microsoft-guardian/general/baselines"
+  },
+  "version": "1.0.0",
+  "baselines": {
+    "default": {
+      "name": "default",
+      "createdDate": "2025-08-12 12:02:09Z",
+      "lastUpdatedDate": "2025-08-12 12:02:09Z"
+    }
+  },
+  "results": {
+    "b2c126d95a9b96964d18d3a60b8100823a08da6340de51db534197aea137861b": {
+      "signature": "b2c126d95a9b96964d18d3a60b8100823a08da6340de51db534197aea137861b",
+      "alternativeSignatures": [],
+      "target": "src/Playwright.Tests/TestServer/key.pfx",
+      "line": 1,
+      "memberOf": [
+        "default"
+      ],
+      "tool": "credscan",
+      "ruleId": "CSCAN-GENERAL0020",
+      "createdDate": "2025-08-12 12:02:09Z",
+      "expirationDate": "2026-01-29 12:52:02Z",
+      "justification": "This error is baselined with an expiration date of 180 days from 2025-08-12 12:52:02Z"
+    },
+    "109e68661121356b830572b5e4140939c7da48a90a6824db38785bd42f904d03": {
+      "signature": "109e68661121356b830572b5e4140939c7da48a90a6824db38785bd42f904d03",
+      "alternativeSignatures": [],
+      "target": "src/Playwright.Tests/assets/client-certificates/server/server_key.pem",
+      "line": 1,
+      "memberOf": [
+        "default"
+      ],
+      "tool": "credscan",
+      "ruleId": "CSCAN-GENERAL0020",
+      "createdDate": "2025-08-12 12:02:09Z",
+      "expirationDate": "2026-01-29 12:52:02Z",
+      "justification": "This error is baselined with an expiration date of 180 days from 2025-08-12 12:52:02Z"
+    },
+    "a7f17efaa8efc6de4a0288d154928d8ae13dcd23350dc10bcb2ae54dcaf90878": {
+      "signature": "a7f17efaa8efc6de4a0288d154928d8ae13dcd23350dc10bcb2ae54dcaf90878",
+      "alternativeSignatures": [],
+      "target": "src/Playwright.Tests/assets/client-certificates/client/localhost/localhost.key",
+      "line": 1,
+      "memberOf": [
+        "default"
+      ],
+      "tool": "credscan",
+      "ruleId": "CSCAN-GENERAL0020",
+      "createdDate": "2025-08-12 12:02:09Z",
+      "expirationDate": "2026-01-29 12:52:02Z",
+      "justification": "This error is baselined with an expiration date of 180 days from 2025-08-12 12:52:02Z"
+    },
+    "fd3fe59c06490e9b3f4cc72ed4cc7e4110ee3676bbfc2efe9c617566701923bf": {
+      "signature": "fd3fe59c06490e9b3f4cc72ed4cc7e4110ee3676bbfc2efe9c617566701923bf",
+      "alternativeSignatures": [],
+      "target": "src/Playwright.Tests/assets/client-certificates/client/self-signed/key.pem",
+      "line": 1,
+      "memberOf": [
+        "default"
+      ],
+      "tool": "credscan",
+      "ruleId": "CSCAN-GENERAL0020",
+      "createdDate": "2025-08-12 12:02:09Z",
+      "expirationDate": "2026-01-29 12:52:02Z",
+      "justification": "This error is baselined with an expiration date of 180 days from 2025-08-12 12:52:02Z"
+    },
+    "9409e383d7ec985e0e5793d49c243881276800040b9e6686b1b464e6c92bd197": {
+      "signature": "9409e383d7ec985e0e5793d49c243881276800040b9e6686b1b464e6c92bd197",
+      "alternativeSignatures": [],
+      "target": "src/Playwright.Tests/assets/client-certificates/client/trusted/cert-legacy.pfx",
+      "line": 1,
+      "memberOf": [
+        "default"
+      ],
+      "tool": "credscan",
+      "ruleId": "CSCAN-GENERAL0020",
+      "createdDate": "2025-08-12 12:02:09Z",
+      "expirationDate": "2026-01-29 12:52:02Z",
+      "justification": "This error is baselined with an expiration date of 180 days from 2025-08-12 12:52:02Z"
+    },
+    "a9f444c2c883c71914cfa934ab765cf6cef61b629195695750493f8198e01b8e": {
+      "signature": "a9f444c2c883c71914cfa934ab765cf6cef61b629195695750493f8198e01b8e",
+      "alternativeSignatures": [],
+      "target": "src/Playwright.Tests/assets/client-certificates/client/trusted/cert.pfx",
+      "line": 1,
+      "memberOf": [
+        "default"
+      ],
+      "tool": "credscan",
+      "ruleId": "CSCAN-GENERAL0020",
+      "createdDate": "2025-08-12 12:02:09Z",
+      "expirationDate": "2026-01-29 12:52:02Z",
+      "justification": "This error is baselined with an expiration date of 180 days from 2025-08-12 12:52:02Z"
+    },
+    "f65b0b3a90f82519d4a24aaa87ae2ec94a812c6fb10562045839de0e9ab1ea66": {
+      "signature": "f65b0b3a90f82519d4a24aaa87ae2ec94a812c6fb10562045839de0e9ab1ea66",
+      "alternativeSignatures": [],
+      "target": "src/Playwright.Tests/assets/client-certificates/client/trusted/key.pem",
+      "line": 1,
+      "memberOf": [
+        "default"
+      ],
+      "tool": "credscan",
+      "ruleId": "CSCAN-GENERAL0020",
+      "createdDate": "2025-08-12 12:02:09Z",
+      "expirationDate": "2026-01-29 12:52:02Z",
+      "justification": "This error is baselined with an expiration date of 180 days from 2025-08-12 12:52:02Z"
+    }
+  }
+}
