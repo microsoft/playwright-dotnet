@@ -1,4 +1,5 @@
-﻿Microsoft Visual Studio Solution File, Format Version 12.00
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.0.31516.353
 MinimumVisualStudioVersion = 10.0.40219.1
@@ -35,6 +36,8 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Playwright.Xunit", "Playwright.Xunit\Playwright.Xunit.csproj", "{7E427229-793C-44E5-B90E-FB8E322066FA}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Playwright.Xunit.v3", "Playwright.Xunit.v3\Playwright.Xunit.v3.csproj", "{6CFF37A8-7C6B-4203-9BF7-3A83752653E8}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Playwright.MSTest.v4", "Playwright.MSTest.v4\Playwright.MSTest.v4.csproj", "{391F8C08-8C76-4D26-BBCF-8A3E00252075}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -86,6 +89,10 @@ Global
 		{6CFF37A8-7C6B-4203-9BF7-3A83752653E8}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6CFF37A8-7C6B-4203-9BF7-3A83752653E8}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{6CFF37A8-7C6B-4203-9BF7-3A83752653E8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{391F8C08-8C76-4D26-BBCF-8A3E00252075}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{391F8C08-8C76-4D26-BBCF-8A3E00252075}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{391F8C08-8C76-4D26-BBCF-8A3E00252075}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{391F8C08-8C76-4D26-BBCF-8A3E00252075}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
