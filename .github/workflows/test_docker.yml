@@ -26,7 +26,7 @@ jobs:
         flavor: [jammy, noble]
         runs-on: [ubuntu-24.04, ubuntu-24.04-arm]
     steps:
-    - uses: actions/checkout@v4
+    - uses: actions/checkout@v5
     - name: Setup .NET Core
       uses: actions/setup-dotnet@v4
       with:
