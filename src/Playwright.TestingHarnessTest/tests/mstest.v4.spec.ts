@@ -22,7 +22,7 @@
  * SOFTWARE.
  */
 
-import { test, expect } from '../baseTest';
+import { test, expect } from './baseTest';
 
 test.use({ testMode: 'mstest.v4' });
 
