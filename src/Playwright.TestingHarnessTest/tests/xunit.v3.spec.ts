@@ -22,24 +22,23 @@
  * SOFTWARE.
  */
 
-import { test, expect } from '../baseTest';
+import { test, expect } from './baseTest';
 
-test.use({ testMode: 'mstest' });
+test.use({ testMode: 'xunit.v3' });
 
 test('should be able to forward DEBUG=pw:api env var', async ({ runTest }) => {
   const result = await runTest({
     'ExampleTests.cs': `
       using System;
       using System.Threading.Tasks;
-      using Microsoft.Playwright.MSTest;
-      using Microsoft.VisualStudio.TestTools.UnitTesting;
+      using Microsoft.Playwright.Xunit.v3;
+      using Xunit;
 
-      namespace Playwright.TestingHarnessTest.MSTest;
+      namespace Playwright.TestingHarnessTest.Xunit;
 
-      [TestClass]
       public class <class-name> : PageTest
       {
-          [TestMethod]
+          [Fact]
           public async Task Test()
           {
               await Page.GotoAsync("about:blank");
@@ -62,13 +61,14 @@ test('should be able to forward DEBUG=pw:api env var', async ({ runTest }) => {
           </EnvironmentVariables>
         </RunConfiguration>
       </RunSettings>`,
-  }, 'dotnet test --settings=.runsettings');
+    }, 'dotnet test --settings=.runsettings');
   expect(result.passed).toBe(1);
   expect(result.failed).toBe(0);
   expect(result.total).toBe(1);
-  expect(result.stderr).toContain("pw:api")
-  expect(result.stderr).toContain("element is not enabled")
-  expect(result.stderr).toContain("retrying click action")
+  // TODO: change back to .stdout so the stdout is correlated with the test
+  expect(result.rawStdout).toContain("pw:api")
+  expect(result.rawStdout).toContain("element is not enabled")
+  expect(result.rawStdout).toContain("retrying click action")
 });
 
 test('should be able to set the browser via the runsettings file', async ({ runTest }) => {
@@ -76,21 +76,27 @@ test('should be able to set the browser via the runsettings file', async ({ runT
     'ExampleTests.cs': `
       using System;
       using System.Threading.Tasks;
-      using Microsoft.Playwright.MSTest;
-      using Microsoft.VisualStudio.TestTools.UnitTesting;
+      using Microsoft.Playwright.Xunit.v3;
+      using Xunit;
 
-      namespace Playwright.TestingHarnessTest.MSTest;
+      namespace Playwright.TestingHarnessTest.Xunit;
 
-      [TestClass]
       public class <class-name> : PageTest
       {
-          [TestMethod]
+          private readonly ITestOutputHelper output;
+
+          public <class-name>(ITestOutputHelper output)
+          {
+              this.output = output;
+          }
+
+          [Fact]
           public async Task Test()
           {
               await Page.GotoAsync("about:blank");
-              Console.WriteLine("BrowserName: " + BrowserName);
-              Console.WriteLine("BrowserType: " + BrowserType.Name);
-              Console.WriteLine("User-Agent: " + await Page.EvaluateAsync<string>("() => navigator.userAgent"));
+              output.WriteLine("BrowserName: " + BrowserName);
+              output.WriteLine("BrowserType: " + BrowserType.Name);
+              output.WriteLine("User-Agent: " + await Page.EvaluateAsync<string>("() => navigator.userAgent"));
           }
       }`,
     '.runsettings': `
@@ -115,21 +121,27 @@ test('should prioritize browser from env over the runsettings file', async ({ ru
     'ExampleTests.cs': `
       using System;
       using System.Threading.Tasks;
-      using Microsoft.Playwright.MSTest;
-      using Microsoft.VisualStudio.TestTools.UnitTesting;
+      using Microsoft.Playwright.Xunit.v3;
+      using Xunit;
 
-      namespace Playwright.TestingHarnessTest.MSTest;
+      namespace Playwright.TestingHarnessTest.Xunit;
 
-      [TestClass]
       public class <class-name> : PageTest
       {
-          [TestMethod]
+          private readonly ITestOutputHelper output;
+
+          public <class-name>(ITestOutputHelper output)
+          {
+              this.output = output;
+          }
+
+          [Fact]
           public async Task Test()
           {
               await Page.GotoAsync("about:blank");
-              Console.WriteLine("BrowserName: " + BrowserName);
-              Console.WriteLine("BrowserType: " + BrowserType.Name);
-              Console.WriteLine("User-Agent: " + await Page.EvaluateAsync<string>("() => navigator.userAgent"));
+              output.WriteLine("BrowserName: " + BrowserName);
+              output.WriteLine("BrowserType: " + BrowserType.Name);
+              output.WriteLine("User-Agent: " + await Page.EvaluateAsync<string>("() => navigator.userAgent"));
           }
       }`,
     '.runsettings': `
@@ -156,20 +168,26 @@ test('should be able to make the browser headed via the env', async ({ runTest }
     'ExampleTests.cs': `
       using System;
       using System.Threading.Tasks;
-      using Microsoft.Playwright.MSTest;
-      using Microsoft.VisualStudio.TestTools.UnitTesting;
+      using Microsoft.Playwright.Xunit.v3;
+      using Xunit;
 
-      namespace Playwright.TestingHarnessTest.MSTest;
+      namespace Playwright.TestingHarnessTest.Xunit;
 
-      [TestClass]
       public class <class-name> : PageTest
       {
-          [TestMethod]
+          private readonly ITestOutputHelper output;
+
+          public <class-name>(ITestOutputHelper output)
+          {
+              this.output = output;
+          }
+
+          [Fact]
           public async Task Test()
           {
               await Page.GotoAsync("about:blank");
-              Console.WriteLine("BrowserName: " + BrowserName);
-              Console.WriteLine("User-Agent: " + await Page.EvaluateAsync<string>("() => navigator.userAgent"));
+              output.WriteLine("BrowserName: " + BrowserName);
+              output.WriteLine("User-Agent: " + await Page.EvaluateAsync<string>("() => navigator.userAgent"));
           }
       }`,
   }, 'dotnet test', {
@@ -187,20 +205,26 @@ test('should be able to parse BrowserName and LaunchOptions.Headless from runset
     'ExampleTests.cs': `
       using System;
       using System.Threading.Tasks;
-      using Microsoft.Playwright.MSTest;
-      using Microsoft.VisualStudio.TestTools.UnitTesting;
+      using Microsoft.Playwright.Xunit.v3;
+      using Xunit;
 
-      namespace Playwright.TestingHarnessTest.MSTest;
+      namespace Playwright.TestingHarnessTest.Xunit;
 
-      [TestClass]
       public class <class-name> : PageTest
       {
-          [TestMethod]
+          private readonly ITestOutputHelper output;
+
+          public <class-name>(ITestOutputHelper output)
+          {
+              this.output = output;
+          }
+
+          [Fact]
           public async Task Test()
           {
               await Page.GotoAsync("about:blank");
-              Console.WriteLine("BrowserName: " + BrowserName);
-              Console.WriteLine("User-Agent: " + await Page.EvaluateAsync<string>("() => navigator.userAgent"));
+              output.WriteLine("BrowserName: " + BrowserName);
+              output.WriteLine("User-Agent: " + await Page.EvaluateAsync<string>("() => navigator.userAgent"));
           }
       }`,
       '.runsettings': `
@@ -228,18 +252,24 @@ test('should be able to parse LaunchOptions.Proxy from runsettings', async ({ ru
     'ExampleTests.cs': `
       using System;
       using System.Threading.Tasks;
-      using Microsoft.Playwright.MSTest;
-      using Microsoft.VisualStudio.TestTools.UnitTesting;
+      using Microsoft.Playwright.Xunit.v3;
+      using Xunit;
 
-      namespace Playwright.TestingHarnessTest.MSTest;
+      namespace Playwright.TestingHarnessTest.Xunit;
 
-      [TestClass]
       public class <class-name> : PageTest
       {
-          [TestMethod]
+          private readonly ITestOutputHelper output;
+
+          public <class-name>(ITestOutputHelper output)
+          {
+              this.output = output;
+          }
+
+          [Fact]
           public async Task Test()
           {
-              Console.WriteLine("User-Agent: " + await Page.EvaluateAsync<string>("() => navigator.userAgent"));
+              output.WriteLine("User-Agent: " + await Page.EvaluateAsync<string>("() => navigator.userAgent"));
               await Page.GotoAsync("${server.EMPTY_PAGE}");
           }
       }`,
@@ -276,18 +306,24 @@ test('should be able to parse LaunchOptions.Args from runsettings', async ({ run
     'ExampleTests.cs': `
       using System;
       using System.Threading.Tasks;
-      using Microsoft.Playwright.MSTest;
-      using Microsoft.VisualStudio.TestTools.UnitTesting;
+      using Microsoft.Playwright.Xunit.v3;
+      using Xunit;
 
-      namespace Playwright.TestingHarnessTest.MSTest;
+      namespace Playwright.TestingHarnessTest.Xunit;
 
-      [TestClass]
       public class <class-name> : PageTest
       {
-          [TestMethod]
+          private readonly ITestOutputHelper output;
+
+          public <class-name>(ITestOutputHelper output)
+          {
+              this.output = output;
+          }
+
+          [Fact]
           public async Task Test()
           {
-              Console.WriteLine("User-Agent: " + await Page.EvaluateAsync<string>("() => navigator.userAgent"));
+              output.WriteLine("User-Agent: " + await Page.EvaluateAsync<string>("() => navigator.userAgent"));
           }
       }`,
       '.runsettings': `
@@ -314,29 +350,28 @@ test('should be able to override context options', async ({ runTest, server }) =
       using System.Collections.Generic;
       using System.Threading.Tasks;
       using Microsoft.Playwright;
-      using Microsoft.Playwright.MSTest;
-      using Microsoft.VisualStudio.TestTools.UnitTesting;
+      using Microsoft.Playwright.Xunit.v3;
+      using Xunit;
+      
+      namespace Playwright.TestingHarnessTest.Xunit;
 
-      namespace Playwright.TestingHarnessTest.MSTest;
-
-      [TestClass]
       public class <class-name> : PageTest
       {
-        [TestMethod]
+        [Fact]
         public async Task Test()
         {
             await Page.GotoAsync("about:blank");
 
-            Assert.IsFalse(await Page.EvaluateAsync<bool>("() => matchMedia('(prefers-color-scheme: light)').matches"));
-            Assert.IsTrue(await Page.EvaluateAsync<bool>("() => matchMedia('(prefers-color-scheme: dark)').matches"));
+            Assert.False(await Page.EvaluateAsync<bool>("() => matchMedia('(prefers-color-scheme: light)').matches"));
+            Assert.True(await Page.EvaluateAsync<bool>("() => matchMedia('(prefers-color-scheme: dark)').matches"));
 
-            Assert.AreEqual(1920, await Page.EvaluateAsync<int>("() => window.innerWidth"));
-            Assert.AreEqual(1080, await Page.EvaluateAsync<int>("() => window.innerHeight"));
+            Assert.Equal(1920, await Page.EvaluateAsync<int>("() => window.innerWidth"));
+            Assert.Equal(1080, await Page.EvaluateAsync<int>("() => window.innerHeight"));
 
-            Assert.AreEqual("Foobar", await Page.EvaluateAsync<string>("() => navigator.userAgent"));
+            Assert.Equal("Foobar", await Page.EvaluateAsync<string>("() => navigator.userAgent"));
 
             var response = await Page.GotoAsync("${server.EMPTY_PAGE}");
-            Assert.AreEqual(await response.Request.HeaderValueAsync("Kekstar"), "KekStarValue");
+            Assert.Equal("KekStarValue", await response.Request.HeaderValueAsync("Kekstar"));
         }
 
         public override BrowserNewContextOptions ContextOptions()
@@ -366,15 +401,14 @@ test('should be able to override launch options', async ({ runTest }) => {
     'ExampleTests.cs': `
       using System;
       using System.Threading.Tasks;
-      using Microsoft.Playwright.MSTest;
-      using Microsoft.VisualStudio.TestTools.UnitTesting;
+      using Microsoft.Playwright.Xunit.v3;
+      using Xunit;
 
-      namespace Playwright.TestingHarnessTest.MSTest;
+      namespace Playwright.TestingHarnessTest.Xunit;
 
-      [TestClass]
       public class <class-name> : PageTest
       {
-          [TestMethod]
+          [Fact]
           public async Task Test()
           {
               await Page.GotoAsync("about:blank");
@@ -403,16 +437,17 @@ test.describe('Expect() timeout', () => {
     const result = await runTest({
       'ExampleTests.cs': `
       using System;
+      using System.Collections.Generic;
       using System.Threading.Tasks;
-      using Microsoft.Playwright.MSTest;
-      using Microsoft.VisualStudio.TestTools.UnitTesting;
+      using Microsoft.Playwright;
+      using Microsoft.Playwright.Xunit.v3;
+      using Xunit;
+      
+      namespace Playwright.TestingHarnessTest.Xunit;
 
-      namespace Playwright.TestingHarnessTest.MSTest;
-
-      [TestClass]
       public class <class-name> : PageTest
       {
-          [TestMethod]
+          [Fact]
           public async Task Test()
           {
               await Page.GotoAsync("about:blank");
@@ -431,16 +466,17 @@ test.describe('Expect() timeout', () => {
     const result = await runTest({
       'ExampleTests.cs': `
         using System;
+        using System.Collections.Generic;
         using System.Threading.Tasks;
-        using Microsoft.Playwright.MSTest;
-        using Microsoft.VisualStudio.TestTools.UnitTesting;
+        using Microsoft.Playwright;
+        using Microsoft.Playwright.Xunit.v3;
+        using Xunit;
+        
+        namespace Playwright.TestingHarnessTest.Xunit;
 
-        namespace Playwright.TestingHarnessTest.MSTest;
-
-        [TestClass]
         public class <class-name> : PageTest
         {
-            [TestMethod]
+            [Fact]
             public async Task Test()
             {
                 await Page.GotoAsync("about:blank");
@@ -454,20 +490,22 @@ test.describe('Expect() timeout', () => {
     expect(result.total).toBe(1);
     expect(result.rawStdout).toContain("Expect \"ToHaveTextAsync\" with timeout 100ms")
   });
-  test('should be able to override it via the global settings', async ({ runTest }) => {
+
+  test('should be able to override it via the global config', async ({ runTest }) => {
     const result = await runTest({
       'ExampleTests.cs': `
       using System;
+      using System.Collections.Generic;
       using System.Threading.Tasks;
-      using Microsoft.Playwright.MSTest;
-      using Microsoft.VisualStudio.TestTools.UnitTesting;
+      using Microsoft.Playwright;
+      using Microsoft.Playwright.Xunit.v3;
+      using Xunit;
+      
+      namespace Playwright.TestingHarnessTest.Xunit;
 
-      namespace Playwright.TestingHarnessTest.MSTest;
-
-      [TestClass]
       public class <class-name> : PageTest
       {
-          [TestMethod]
+          [Fact]
           public async Task Test()
           {
               await Page.GotoAsync("about:blank");
@@ -496,15 +534,14 @@ test.describe('ConnectOptions', () => {
     using System;
     using System.Threading.Tasks;
     using Microsoft.Playwright;
-    using Microsoft.Playwright.MSTest;
-    using Microsoft.VisualStudio.TestTools.UnitTesting;
+    using Microsoft.Playwright.Xunit.v3;
+    using Xunit;
 
-    namespace Playwright.TestingHarnessTest.MSTest;
+    namespace Playwright.TestingHarnessTest.Xunit;
 
-    [TestClass]
     public class <class-name> : PageTest
     {
-        [TestMethod]
+        [Fact]
         public async Task Test()
         {
             await Page.GotoAsync("about:blank");
