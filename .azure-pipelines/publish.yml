@@ -1,4 +1,10 @@
-trigger: none # We don't want CI builds, just a manual release process
+# Run only on tags (no PRs, no branch CI)
+pr: none
+trigger:
+  tags:
+    include:
+      - '*'
+
 parameters:
 - name: doRelease
   displayName: Push the Playwright Release to NuGet.org
@@ -12,9 +18,9 @@ parameters:
 
 variables:
 - name: BuildConfiguration
-  value: 'Release' 
+  value: 'Release'
 - name: TeamName
-  value: Playwright 
+  value: Playwright
 
 resources:
   repositories:
@@ -44,7 +50,7 @@ extends:
             signing:
               enabled: true
               signType: real
-              templateContext:
+              signWithProd: true
           outputs:
           - output: pipelineArtifact
             displayName: 'Publish Artifact'
@@ -85,7 +91,10 @@ extends:
             versioningScheme: 'off'
         - task: 1ES.PublishNuget@1
           displayName: Publish Microsoft.Playwright{NUnit,MSTest,Xunit,TestAdapter}
-          condition: eq('${{parameters.doRelease}}', true)
+          condition: or(
+              eq('${{ parameters.doRelease }}', true),
+              startsWith(variables['Build.SourceBranch'], 'refs/tags/')
+            )
           inputs:
             useDotNetTask: false
             # The reason for the 1.* after the package name is that we know the end of the package name in order to not
@@ -97,7 +106,7 @@ extends:
             publishFeedCredentials: 'NuGet-Playwright'
         - task: 1ES.PublishNuget@1
           displayName: Publish Microsoft.Playwright.CLI
-          condition: eq('${{parameters.doReleaseCLI}}', true)
+          condition: eq('${{ parameters.doReleaseCLI }}', true)
           inputs:
             useDotNetTask: false
             packagesToPush: '$(Build.ArtifactStagingDirectory)/nuget/Microsoft.Playwright.CLI.1.*.nupkg'
