@@ -18,6 +18,7 @@
     <PackageOutputPath>./nupkg</PackageOutputPath>
     <IsPackable>true</IsPackable>
     <Nullable>enable</Nullable>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
     <EnablePackageValidation>true</EnablePackageValidation>
     <PackageValidationBaselineVersion>1.52.0</PackageValidationBaselineVersion>
   </PropertyGroup>
@@ -40,5 +41,6 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="..\Common\icon.png" Pack="true" Visible="false" PackagePath="icon.png" />
+    <None Include="..\..\README.md" Pack="true" PackagePath="README.md" />
   </ItemGroup>
 </Project>
