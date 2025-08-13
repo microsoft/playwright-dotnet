@@ -20,7 +20,7 @@ variables:
 - name: BuildConfiguration
   value: 'Release'
 - name: TeamName
-  value: Playwright
+  value: 'Playwright'
 
 resources:
   repositories:
