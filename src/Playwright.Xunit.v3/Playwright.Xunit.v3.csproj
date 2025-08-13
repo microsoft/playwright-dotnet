@@ -19,6 +19,7 @@
     <PackageOutputPath>./nupkg</PackageOutputPath>
     <IsPackable>true</IsPackable>
     <Nullable>enable</Nullable>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
   </PropertyGroup>
 
   <Import Project="../Common/Version.props" />
@@ -39,5 +40,6 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="..\Common\icon.png" Pack="true" Visible="false" PackagePath="icon.png" />
+    <None Include="..\..\README.md" Pack="true" PackagePath="README.md" />
   </ItemGroup>
 </Project>

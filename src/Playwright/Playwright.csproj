@@ -23,6 +23,7 @@
     <EnablePackageValidation>true</EnablePackageValidation>
     <PackageValidationBaselineVersion>1.52.0</PackageValidationBaselineVersion>
     <Nullable>enable</Nullable>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
   </PropertyGroup>
   <Import Project="../Common/Version.props" />
   <Import Project="../Common/Dependencies.props" />
@@ -54,6 +55,7 @@
     <None Include="build\**" Pack="true" PackagePath="buildTransitive" />
     <None Include="build\**" Pack="true" PackagePath="build" />
     <None Include="..\Common\icon.png" Pack="true" Visible="false" PackagePath="icon.png" />
+    <None Include="..\..\README.md" Pack="true" PackagePath="README.md" />
   </ItemGroup>
   <Target Name="EnsurePrerequisitsRan" BeforeTargets="GetCopyToOutputDirectoryItems">
     <Error Text="Playwright prerequisites are missing. Ensure you've ran `dotnet run --project ./src/tools/Playwright.Tooling/Playwright.Tooling.csproj -- download-drivers --basepath .`" Condition="!Exists('$(MSBuildProjectDirectory)\.drivers')" />
