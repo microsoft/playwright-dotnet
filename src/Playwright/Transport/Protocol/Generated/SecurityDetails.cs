@@ -38,8 +38,8 @@ internal class SecurityDetails
     public string SubjectName { get; set; } = null!;
 
     [JsonPropertyName("validFrom")]
-    public int? ValidFrom { get; set; }
+    public float ValidFrom { get; set; }
 
     [JsonPropertyName("validTo")]
-    public int? ValidTo { get; set; }
+    public float ValidTo { get; set; }
 }

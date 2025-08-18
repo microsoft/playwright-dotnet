@@ -181,6 +181,12 @@ public class BrowserTypeLaunchPersistentContextOptions
     /// that the certificate is valid for.
     /// </para>
     /// <para>
+    /// Client certificate authentication is only active when at least one client certificate
+    /// is provided. If you want to reject all client certificates sent by the server, you
+    /// need to provide a client certificate with an <c>origin</c> that does not match any
+    /// of the domains you plan to visit.
+    /// </para>
+    /// <para>
     /// When using WebKit on macOS, accessing <c>localhost</c> will not pick up client certificates.
     /// You can make it work by replacing <c>localhost</c> with <c>local.playwright</c>.
     /// </para>

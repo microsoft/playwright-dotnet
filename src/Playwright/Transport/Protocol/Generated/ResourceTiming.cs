@@ -29,26 +29,26 @@ namespace Microsoft.Playwright.Transport.Protocol;
 internal class ResourceTiming
 {
     [JsonPropertyName("startTime")]
-    public int StartTime { get; set; }
+    public float StartTime { get; set; }
 
     [JsonPropertyName("domainLookupStart")]
-    public int DomainLookupStart { get; set; }
+    public float DomainLookupStart { get; set; }
 
     [JsonPropertyName("domainLookupEnd")]
-    public int DomainLookupEnd { get; set; }
+    public float DomainLookupEnd { get; set; }
 
     [JsonPropertyName("connectStart")]
-    public int ConnectStart { get; set; }
+    public float ConnectStart { get; set; }
 
     [JsonPropertyName("secureConnectionStart")]
-    public int SecureConnectionStart { get; set; }
+    public float SecureConnectionStart { get; set; }
 
     [JsonPropertyName("connectEnd")]
-    public int ConnectEnd { get; set; }
+    public float ConnectEnd { get; set; }
 
     [JsonPropertyName("requestStart")]
-    public int RequestStart { get; set; }
+    public float RequestStart { get; set; }
 
     [JsonPropertyName("responseStart")]
-    public int ResponseStart { get; set; }
+    public float ResponseStart { get; set; }
 }
