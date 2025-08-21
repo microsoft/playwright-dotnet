@@ -1582,7 +1582,7 @@ public partial interface IPage
     /// <summary>
     /// <para>
     /// Pauses script execution. Playwright will stop executing the script and wait for
-    /// the user to either press 'Resume' button in the page overlay or to call <c>playwright.resume()</c>
+    /// the user to either press the 'Resume' button in the page overlay or to call <c>playwright.resume()</c>
     /// in the DevTools console.
     /// </para>
     /// <para>

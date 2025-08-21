@@ -29,8 +29,8 @@ namespace Microsoft.Playwright.Transport.Protocol;
 internal class Point
 {
     [JsonPropertyName("x")]
-    public int X { get; set; }
+    public float X { get; set; }
 
     [JsonPropertyName("y")]
-    public int Y { get; set; }
+    public float Y { get; set; }
 }

@@ -90,11 +90,7 @@ public class URLMatch
     {
         try
         {
-            if (string.IsNullOrEmpty(baseUrl))
-            {
-                return FixupTrailingSlash(new Uri(url, UriKind.Absolute)).ToString();
-            }
-            return FixupTrailingSlash(new Uri(new Uri(baseUrl), new Uri(url, UriKind.RelativeOrAbsolute))).ToString();
+            return ResolveBaseURL(baseUrl, url).Resolved;
         }
         catch
         {
@@ -254,14 +250,43 @@ public class URLMatch
                 return newPrefix + newSuffix;
             }));
 
-            var resolved = ConstructURLBasedOnBaseURL(baseURL, relativePath);
+            var (resolved, caseInsensitivePart) = ResolveBaseURL(baseURL, relativePath);
             foreach (var kvp in tokenMap)
             {
-                resolved = resolved.Replace(kvp.Key, kvp.Value);
+                var normalize = caseInsensitivePart?.Contains(kvp.Key) == true;
+                resolved = resolved.Replace(kvp.Key, normalize ? kvp.Value.ToLowerInvariant() : kvp.Value);
             }
             match = resolved;
         }
         return match;
+    }
+
+    private static (string Resolved, string? CaseInsensitivePart) ResolveBaseURL(string? baseUrl, string url)
+    {
+        try
+        {
+            Uri uri;
+            if (string.IsNullOrEmpty(baseUrl))
+            {
+                uri = FixupTrailingSlash(new Uri(url, UriKind.Absolute));
+            }
+            else
+            {
+                uri = FixupTrailingSlash(new Uri(new Uri(baseUrl), new Uri(url, UriKind.RelativeOrAbsolute)));
+            }
+            var resolved = uri.ToString();
+            // Schema and domain are case-insensitive.
+            var caseInsensitivePrefix = $"{uri.Scheme}://{uri.Host}";
+            if (!uri.IsDefaultPort)
+            {
+                caseInsensitivePrefix += $":{uri.Port}";
+            }
+            return (resolved, caseInsensitivePrefix);
+        }
+        catch
+        {
+            return (url, null);
+        }
     }
 
     public bool Equals(string? globMatch, Regex? reMatch, Func<string, bool>? funcMatch, string? baseURL, bool isWebSocketUrl)

@@ -30,7 +30,7 @@ namespace Microsoft.Playwright.Transport.Protocol;
 internal class SerializedValue
 {
     [JsonPropertyName("n")]
-    public int? N { get; set; }
+    public float N { get; set; }
 
     [JsonPropertyName("b")]
     public bool? B { get; set; }
