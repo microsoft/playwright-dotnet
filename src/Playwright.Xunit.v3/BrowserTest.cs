@@ -61,4 +61,6 @@ public class BrowserTest : PlaywrightTest
     }
 
     public virtual Task<(string, BrowserTypeConnectOptions?)?> ConnectOptionsAsync() => Task.FromResult<(string, BrowserTypeConnectOptions?)?>(null);
+    
+    public virtual Task<BrowserTypeLaunchOptions?> LaunchOptionsAsync() => Task.FromResult<BrowserTypeLaunchOptions?>(null);
 }
