@@ -42,12 +42,12 @@ internal class BrowserService : IWorkerService
         Browser = browser;
     }
 
-    public static Task<BrowserService> Register(WorkerAwareTest test, IBrowserType browserType, (string, BrowserTypeConnectOptions?)? connectOptions)
+    public static Task<BrowserService> Register(WorkerAwareTest test, IBrowserType browserType, (string, BrowserTypeConnectOptions?)? connectOptions, BrowserTypeConnectOptions? launchOptions)
     {
-        return test.RegisterService("Browser", async () => new BrowserService(await CreateBrowser(browserType, connectOptions).ConfigureAwait(false)));
+        return test.RegisterService("Browser", async () => new BrowserService(await CreateBrowser(browserType, connectOptions, launchOptions).ConfigureAwait(false)));
     }
 
-    private static async Task<IBrowser> CreateBrowser(IBrowserType browserType, (string WSEndpoint, BrowserTypeConnectOptions? Options)? connectOptions)
+    private static async Task<IBrowser> CreateBrowser(IBrowserType browserType, (string WSEndpoint, BrowserTypeConnectOptions? Options)? connectOptions, BrowserTypeConnectOptions? launchOptions)
     {
         if (connectOptions.HasValue && connectOptions.Value.WSEndpoint != null)
         {
@@ -63,7 +63,9 @@ internal class BrowserService : IWorkerService
         {
             return legacyBrowser;
         }
-        return await browserType.LaunchAsync(PlaywrightSettingsProvider.LaunchOptions).ConfigureAwait(false);
+
+        var launchOptions = launchOptions ?? PlaywrightSettingsProvider.LaunchOptions;
+        return await browserType.LaunchAsync(launchOptions).ConfigureAwait(false);
     }
 
     // TODO: Remove at some point
