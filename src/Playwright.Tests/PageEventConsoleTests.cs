@@ -118,7 +118,7 @@ public class PageEventConsoleTests : PageTestEx
             Page.WaitForConsoleMessageAsync(),
             Page.EvaluateAsync("async url => fetch(url).catch (e => { })", Server.EmptyPage)
         );
-        StringAssert.Contains("Access-Control-Allow-Origin", messageEvent.Text);
+        Assert.True(messageEvent.Text.Contains("Access-Control-Allow-Origin") || messageEvent.Text.Contains("blocked by CORS policy"));
         Assert.AreEqual("error", messageEvent.Type);
     }
 
@@ -158,5 +158,26 @@ public class PageEventConsoleTests : PageTestEx
                 }"));
         // 4. Connect to the popup and make sure it doesn't throw.
         Assert.AreEqual(2, await popup.EvaluateAsync<int>("1 + 1"));
+    }
+
+    [PlaywrightTest("page-event-console.spec.ts", "consoleMessages should work")]
+    public async Task ConsoleMessagesShouldWork()
+    {
+        await Page.EvaluateAsync(@"() => {
+          for (let i = 0; i < 301; i++)
+            console.log('message' + i);
+        }");
+
+        var messages = await Page.ConsoleMessagesAsync();
+        Assert.True(messages.Count >= 100, "should be at least 100 messages");
+
+        int firstIndex = messages.Count - 100;
+        for (int i = 0; i < 100; i++)
+        {
+            var message = messages[firstIndex + i];
+            Assert.AreEqual("message" + (201 + i), message.Text);
+            Assert.AreEqual("log", message.Type);
+            Assert.AreEqual(Page, message.Page);
+        }
     }
 }

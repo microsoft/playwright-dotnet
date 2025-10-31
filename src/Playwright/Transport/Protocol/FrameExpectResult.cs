@@ -30,4 +30,6 @@ internal class FrameExpectResult
     public object Received { get; set; } = null!;
 
     public string[] Log { get; set; } = null!;
+
+    public string? ErrorMessage { get; set; }
 }

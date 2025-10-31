@@ -55,4 +55,7 @@ internal class RequestInitializer
 
     [JsonPropertyName("redirectedFrom")]
     public Core.Request RedirectedFrom { get; set; } = null!;
+
+    [JsonPropertyName("hasResponse")]
+    public bool HasResponse { get; set; }
 }

@@ -72,4 +72,47 @@ public class PageEventRequestTests : PageTestEx
         Assert.AreEqual(Server.Prefix + "/serviceworkers/fetchdummy/foo", response.Url);
         Assert.AreEqual("responseFromServiceWorker:foo", await response.TextAsync());
     }
+
+    [PlaywrightTest("page-event-request.spec.ts", "should return last requests")]
+    public async Task ShouldReturnLastRequests()
+    {
+        await Page.GotoAsync(Server.Prefix + "/title.html");
+
+        // Set up routes for 200 requests
+        for (int i = 0; i < 200; ++i)
+        {
+            Server.SetRoute("/fetch-" + i, context =>
+            {
+                context.Response.StatusCode = 200;
+                return context.Response.WriteAsync("url:" + Server.Prefix + context.Request.Path);
+            });
+        }
+
+        // #0 is the navigation request, so start with #1.
+        for (int i = 0; i < 99; ++i)
+        {
+            await Page.EvaluateAsync("url => fetch(url)", Server.Prefix + "/fetch-" + i);
+        }
+        var first99Requests = (await Page.RequestsAsync()).ToList();
+        first99Requests.RemoveAt(0); // Remove the navigation request
+
+        for (int i = 99; i < 199; ++i)
+        {
+            await Page.EvaluateAsync("url => fetch(url)", Server.Prefix + "/fetch-" + i);
+        }
+        var last100Requests = await Page.RequestsAsync();
+        var allRequests = new List<IRequest>();
+        allRequests.AddRange(first99Requests);
+        allRequests.AddRange(last100Requests);
+
+        // All 199 requests are fully functional.
+        int index = 0;
+        foreach (var request in allRequests)
+        {
+            var response = await request.ResponseAsync();
+            Assert.AreEqual("url:" + Server.Prefix + "/fetch-" + index, await response.TextAsync());
+            Assert.AreEqual(Server.Prefix + "/fetch-" + index, request.Url);
+            index++;
+        }
+    }
 }

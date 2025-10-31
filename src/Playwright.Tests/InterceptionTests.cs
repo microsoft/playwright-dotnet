@@ -95,6 +95,10 @@ public class InterceptionTests : PageTestEx
         Assert.False(URLMatches(null, "https://playwright.dev/foobar", "https://playwright.dev/fooBAR"));
         Assert.False(URLMatches(null, "https://playwright.dev/foobar?a=b", "https://playwright.dev/foobar?A=B"));
 
+        Assert.True(URLMatches(null, "https://localhost:3000/?a=b", "**/?a=b"));
+        Assert.True(URLMatches(null, "https://localhost:3000/?a=b", "**?a=b"));
+        Assert.True(URLMatches(null, "https://localhost:3000/?a=b", "**=b"));
+
         // This is not supported, we treat ? as a query separator.
         Assert.That("http://localhost:8080/Simple/path.js", Does.Not.Match(GlobToRegex("http://localhost:8080/?imple/path.js")));
         Assert.False(URLMatches(null, "http://playwright.dev/", "http://playwright.?ev"));

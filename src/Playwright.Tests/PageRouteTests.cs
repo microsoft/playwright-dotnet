@@ -507,14 +507,14 @@ public class PageRouteTests : PageTestEx
     {
         // The requestWillBeSent will report URL as-is, whereas interception will
         // report encoded URL for stylesheet. @see crbug.com/759388
+        await Page.GotoAsync(Server.EmptyPage);
         var requests = new List<IRequest>();
         await Page.RouteAsync("**/*", (route) =>
         {
             route.ContinueAsync();
             requests.Add(route.Request);
         });
-        var response = await Page.GotoAsync($"data:text/html,<meta charset=utf-8><link rel=\"stylesheet\" href=\"{Server.EmptyPage}/fonts?helvetica|arial\"/>");
-        Assert.Null(response);
+        await Page.SetContentAsync($"<link rel=\"stylesheet\" href=\"{Server.Prefix}/fonts?helvetica|arial\"/>");
         Assert.That(requests, Has.Count.EqualTo(1));
         Assert.AreEqual((int)HttpStatusCode.NotFound, (await requests[0].ResponseAsync()).Status);
     }

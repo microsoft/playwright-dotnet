@@ -1550,6 +1550,22 @@ public partial interface IPage
 
     /// <summary>
     /// <para>
+    /// Returns up to (currently) 200 last console messages from this page. See <see cref="IPage.Console"/>
+    /// for more details.
+    /// </para>
+    /// </summary>
+    Task<IReadOnlyList<IConsoleMessage>> ConsoleMessagesAsync();
+
+    /// <summary>
+    /// <para>
+    /// Returns up to (currently) 200 last page errors from this page. See <see cref="IPage.PageError"/>
+    /// for more details.
+    /// </para>
+    /// </summary>
+    Task<IReadOnlyList<string>> PageErrorsAsync();
+
+    /// <summary>
+    /// <para>
     /// The method returns an element locator that can be used to perform actions on this
     /// page / frame. Locator is resolved to the element immediately before performing an
     /// action, so a series of actions on the same locator can in fact be performed on different
@@ -1753,6 +1769,25 @@ public partial interface IPage
     /// </summary>
     /// <param name="selector">A selector to query for.</param>
     Task<IReadOnlyList<IElementHandle>> QuerySelectorAllAsync(string selector);
+
+    /// <summary>
+    /// <para>
+    /// Returns up to (currently) 100 last network request from this page. See <see cref="IPage.Request"/>
+    /// for more details.
+    /// </para>
+    /// <para>
+    /// Returned requests should be accessed immediately, otherwise they might be collected
+    /// to prevent unbounded memory growth as new requests come in. Once collected, retrieving
+    /// most information about the request is impossible.
+    /// </para>
+    /// <para>
+    /// Note that requests reported through the <see cref="IPage.Request"/> request are
+    /// not collected, so there is a trade off between efficient memory usage with <see
+    /// cref="IPage.RequestsAsync"/> and the amount of available information reported through
+    /// <see cref="IPage.Request"/>.
+    /// </para>
+    /// </summary>
+    Task<IReadOnlyList<IRequest>> RequestsAsync();
 
     /// <summary>
     /// <para>

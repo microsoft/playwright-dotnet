@@ -131,4 +131,26 @@ public class PageEventPageErrorTests : PageTestEx
 
         StringAssert.Contains(TestConstants.IsChromium ? "Window" : "[object Window]", error);
     }
+
+    [PlaywrightTest("page-event-pageerror.spec.ts", "pageErrors should work")]
+    public async Task PageErrorsShouldWork()
+    {
+        await Page.GotoAsync(Server.EmptyPage);
+        await Page.EvaluateAsync(@"async () => {
+          for (let i = 0; i < 301; i++)
+            window.setTimeout(() => { throw new Error('error' + i); }, 0);
+          await new Promise(f => window.setTimeout(f, 100));
+        }");
+
+        var errors = await Page.PageErrorsAsync();
+        Assert.True(errors.Count >= 100, "should be at least 100 errors");
+
+        // Check the last 100 errors (indices 201-300)
+        int firstIndex = errors.Count - 100;
+        for (int i = 0; i < 100; i++)
+        {
+            string error = errors[firstIndex + i];
+            Assert.True(error.StartsWith("Error: error" + (201 + i)), error);
+        }
+    }
 }
