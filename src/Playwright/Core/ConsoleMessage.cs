@@ -31,32 +31,32 @@ namespace Microsoft.Playwright.Core;
 
 internal class ConsoleMessage : IConsoleMessage
 {
-    private readonly BrowserContextConsoleEvent _event;
+    private readonly ConsoleMessageInitializer _initializer;
 
-    internal ConsoleMessage(BrowserContextConsoleEvent @event)
+    private readonly Page _page;
+
+    internal ConsoleMessage(ConsoleMessageInitializer initializer, Page page)
     {
-        _event = @event;
+        _initializer = initializer;
+        _page = page;
     }
 
-    public string Type => _event.Type;
+    public string Type => _initializer.Type;
 
-    public IReadOnlyList<IJSHandle> Args => _event.Args.Cast<IJSHandle>().ToList().AsReadOnly();
+    public IReadOnlyList<IJSHandle> Args => _initializer.Args.Cast<IJSHandle>().ToList().AsReadOnly();
 
-    public string Location => _event.Location.ToString();
+    public string Location => _initializer.Location.ToString();
 
-    public string Text => _event.Text;
+    public string Text => _initializer.Text;
 
     // Note: currently, we only report console messages for pages and they always have a page.
     // However, in the future we might report console messages for service workers or something else,
     // where page() would be null.
-    public IPage Page => _event.Page;
+    public IPage Page => _page;
 }
 
-internal class BrowserContextConsoleEvent
+internal class ConsoleMessageInitializer
 {
-    [JsonPropertyName("page")]
-    public Page Page { get; set; } = null!;
-
     [JsonPropertyName("type")]
     public string Type { get; set; } = null!;
 

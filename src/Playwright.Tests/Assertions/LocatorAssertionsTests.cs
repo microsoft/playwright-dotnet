@@ -819,4 +819,23 @@ public class LocatorAssertionsTests : PageTestEx
         await Expect(Page.Locator("div")).ToHaveRoleAsync(AriaRole.Button);
         await Expect(Page.Locator("div")).Not.ToHaveRoleAsync(AriaRole.Checkbox);
     }
+
+    [PlaywrightTest("page/expect-misc.spec.ts", "strict mode violation error format")]
+    public async Task StrictModeViolationErrorFormat()
+    {
+        await Page.SetContentAsync(@"<div>hello</div><div>hi</div>");
+        var exception = await PlaywrightAssert.ThrowsAsync<PlaywrightException>(() => Expect(Page.Locator("div")).ToBeVisibleAsync());
+        StringAssert.Contains("Locator expected to be visible", exception.Message);
+        StringAssert.Contains("Error: strict mode violation: Locator(\"div\") resolved to 2 elements:", exception.Message);
+    }
+
+
+    [PlaywrightTest("page/expect-misc.spec.ts", "invalid selector error format")]
+    public async Task InvalidSelectorErrorFormat()
+    {
+        await Page.SetContentAsync(@"<div>a</div><div>b</div>");
+        var exception = await PlaywrightAssert.ThrowsAsync<PlaywrightException>(() => Expect(Page.Locator("##")).ToBeVisibleAsync());
+        StringAssert.Contains("Locator expected to be visible", exception.Message);
+        StringAssert.Contains("Error: Unexpected token \"#\" while parsing css selector \"##\".", exception.Message);
+    }
 }

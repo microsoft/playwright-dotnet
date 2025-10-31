@@ -54,17 +54,13 @@ namespace Microsoft.Playwright;
 public partial interface IBrowserContext
 {
     /// <summary>
-    /// <para>Only works with Chromium browser's persistent context.</para>
-    /// <para>Emitted when new background page is created in the context.</para>
-    /// <code>
-    /// context.BackgroundPage += (_, backgroundPage) =&gt;<br/>
-    /// {<br/>
-    ///     Console.WriteLine(backgroundPage.Url);<br/>
-    /// };<br/>
-    ///
-    /// </code>
+    /// <para>
+    /// **DEPRECATED** Background pages have been removed from Chromium together with Manifest
+    /// V2 extensions.
+    /// </para>
+    /// <para>This event is not emitted.</para>
     /// </summary>
-    /// <remarks><para>Only works with Chromium browser's persistent context.</para></remarks>
+    [System.Obsolete]
     event EventHandler<IPage> BackgroundPage;
 
     /// <summary><para>Playwright has ability to mock clock and passage of time.</para></summary>
@@ -270,11 +266,8 @@ public partial interface IBrowserContext
     /// <param name="scriptPath">Instead of specifying <paramref name="script"/>, gives the file name to load from.</param>
     Task AddInitScriptAsync(string? script = default, string? scriptPath = default);
 
-    /// <summary>
-    /// <para>Background pages are only supported on Chromium-based browsers.</para>
-    /// <para>All existing background pages in the context.</para>
-    /// </summary>
-    /// <remarks><para>Background pages are only supported on Chromium-based browsers.</para></remarks>
+    /// <summary><para>Returns an empty list.</para></summary>
+    [System.Obsolete]
     IReadOnlyList<IPage> BackgroundPages { get; }
 
     /// <summary>
@@ -464,6 +457,8 @@ public partial interface IBrowserContext
     /// <item><description><c>'clipboard-write'</c></description></item>
     /// <item><description><c>'geolocation'</c></description></item>
     /// <item><description><c>'gyroscope'</c></description></item>
+    /// <item><description><c>'local-fonts'</c></description></item>
+    /// <item><description><c>'local-network-access'</c></description></item>
     /// <item><description><c>'magnetometer'</c></description></item>
     /// <item><description><c>'microphone'</c></description></item>
     /// <item><description><c>'midi-sysex'</c> (system-exclusive midi)</description></item>
@@ -471,7 +466,6 @@ public partial interface IBrowserContext
     /// <item><description><c>'notifications'</c></description></item>
     /// <item><description><c>'payment-handler'</c></description></item>
     /// <item><description><c>'storage-access'</c></description></item>
-    /// <item><description><c>'local-fonts'</c></description></item>
     /// </list>
     /// </param>
     /// <param name="options">Call options</param>

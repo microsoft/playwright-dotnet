@@ -119,22 +119,15 @@ public class URLMatch
             }
             if (c == '*')
             {
-                char? beforeDeep = i == 0 ? null : glob[i - 1];
                 int starCount = 1;
                 while (i < glob.Length - 1 && glob[i + 1] == '*')
                 {
                     starCount++;
                     i++;
                 }
-
-                char? afterDeep = i >= glob.Length - 1 ? null : glob[i + 1];
-                var isDeep = starCount > 1 &&
-                    (beforeDeep == '/' || beforeDeep == null) &&
-                    (afterDeep == '/' || afterDeep == null);
-                if (isDeep)
+                if (starCount > 1)
                 {
-                    tokens.Add("((?:[^/]*(?:\\/|$))*)");
-                    i++;
+                    tokens.Add("(.*)");
                 }
                 else
                 {

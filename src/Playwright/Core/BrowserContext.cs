@@ -46,7 +46,6 @@ internal class BrowserContext : ChannelOwner, IBrowserContext
     private readonly string? _baseURL;
     internal readonly Tracing _tracing;
     private readonly Clock _clock;
-    internal readonly HashSet<IPage> _backgroundPages = new();
     internal readonly APIRequestContext _request;
     private readonly Dictionary<string, HarRecorder> _harRecorders = new();
     internal readonly List<IWorker> _serviceWorkers = new();
@@ -149,7 +148,7 @@ internal class BrowserContext : ChannelOwner, IBrowserContext
 
     public IReadOnlyList<IWorker> ServiceWorkers => _serviceWorkers;
 
-    public IReadOnlyList<IPage> BackgroundPages => _backgroundPages.ToList();
+    public IReadOnlyList<IPage> BackgroundPages => new List<IPage>();
 
     internal override void OnMessage(string method, JsonElement serverParams)
     {
@@ -158,13 +157,6 @@ internal class BrowserContext : ChannelOwner, IBrowserContext
             case "close":
                 OnClose();
                 break;
-            case "backgroundPage":
-                {
-                    var page = serverParams.GetProperty("page").ToObject<Page>(_connection.DefaultJsonSerializerOptions)!;
-                    _backgroundPages.Add(page);
-                    BackgroundPage?.Invoke(this, page);
-                    break;
-                }
             case "bindingCall":
                 Channel_BindingCall(
                     serverParams.GetProperty("binding").ToObject<BindingCall>(_connection.DefaultJsonSerializerOptions)!);
@@ -173,10 +165,13 @@ internal class BrowserContext : ChannelOwner, IBrowserContext
                 OnDialog(serverParams.GetProperty("dialog").ToObject<Dialog>(_connection.DefaultJsonSerializerOptions)!);
                 break;
             case "console":
-                var consoleMessage = new ConsoleMessage(serverParams.ToObject<BrowserContextConsoleEvent>(_connection.DefaultJsonSerializerOptions));
-                _consoleImpl?.Invoke(this, consoleMessage);
-                (consoleMessage.Page as Page)?.FireConsole(consoleMessage);
-                break;
+                {
+                    var pageObject = serverParams.GetProperty("page").ToObject<Page>(_connection.DefaultJsonSerializerOptions);
+                    var consoleMessage = new ConsoleMessage(serverParams.ToObject<ConsoleMessageInitializer>(_connection.DefaultJsonSerializerOptions), pageObject);
+                    _consoleImpl?.Invoke(this, consoleMessage);
+                    pageObject?.FireConsole(consoleMessage);
+                    break;
+                }
             case "route":
                 var route = serverParams.GetProperty("route").ToObject<Route>(_connection.DefaultJsonSerializerOptions)!;
                 Channel_Route(this, route);

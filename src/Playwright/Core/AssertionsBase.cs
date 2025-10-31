@@ -81,6 +81,10 @@ internal abstract class AssertionsBase
         {
             var actual = result.Received;
             var log = Connection.FormatCallLog(result.Log);
+            if (result.ErrorMessage != null)
+            {
+                message += "\n" + result.ErrorMessage;
+            }
             if (expected == null)
             {
                 throw new PlaywrightException($"{message} {log}");

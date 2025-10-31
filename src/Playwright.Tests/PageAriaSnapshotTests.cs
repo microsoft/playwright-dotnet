@@ -143,4 +143,16 @@ public class PageAriaSnapshotTests : PageTestEx
                 - /url: /.*example.com/
         ");
     }
+
+    [PlaywrightTest("page-aria-snapshot.spec.ts", "match values both against regex and string")]
+    public async Task MatchValuesBothAgainstRegexAndString()
+    {
+        await Page.SetContentAsync(@"
+            <a href='/auth?r=/'>Log in</a>
+        ");
+        await Expect(Page.Locator("body")).ToMatchAriaSnapshotAsync(@"
+            - link ""Log in"":
+                - /url: /auth?r=/
+        ");
+    }
 }

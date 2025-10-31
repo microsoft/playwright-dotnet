@@ -1283,7 +1283,6 @@ internal class Page : ChannelOwner, IPage
     {
         IsClosed = true;
         Context._pages.Remove(this);
-        Context._backgroundPages.Remove(this);
         DisposeHarRouters();
         Close?.Invoke(this, this);
     }
@@ -1495,6 +1494,26 @@ internal class Page : ChannelOwner, IPage
     [MethodImpl(MethodImplOptions.NoInlining)]
     public ILocator GetByTitle(Regex text, PageGetByTitleOptions? options = null)
         => MainFrame.GetByTitle(text, new() { Exact = options?.Exact });
+
+    public async Task<IReadOnlyList<IConsoleMessage>> ConsoleMessagesAsync()
+    {
+        var response = await SendMessageToServerAsync("consoleMessages").ConfigureAwait(false);
+        var initializers = response.Value.GetProperty("messages").ToObject<List<ConsoleMessageInitializer>>(_connection.DefaultJsonSerializerOptions);
+        return initializers.Select(initializer => new ConsoleMessage(initializer, this)).ToList();
+    }
+
+    public async Task<IReadOnlyList<string>> PageErrorsAsync()
+    {
+        var response = await SendMessageToServerAsync("pageErrors").ConfigureAwait(false);
+        var errors = response.Value.GetProperty("errors").ToObject<List<SerializedError>>(_connection.DefaultJsonSerializerOptions);
+        return errors.Select(error => string.IsNullOrEmpty(error.Error.Stack) ? $"{error.Error.Name}: {error.Error.Message}" : error.Error.Stack).ToList();
+    }
+
+    public async Task<IReadOnlyList<IRequest>> RequestsAsync()
+    {
+        var response = await SendMessageToServerAsync("requests").ConfigureAwait(false);
+        return response.Value.GetProperty("requests").ToObject<List<Request>>(_connection.DefaultJsonSerializerOptions);
+    }
 
     public Task AddLocatorHandlerAsync(ILocator locator, Func<Task> handler, PageAddLocatorHandlerOptions? options = null)
         => AddLocatorHandlerImplAsync(locator, handler, options);
