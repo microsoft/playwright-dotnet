@@ -172,7 +172,7 @@ internal class Waiter : IDisposable
     {
         var info = eventSource.GetType().GetEvent(e) ?? eventSource.GetType().BaseType.GetEvent(e);
 
-        var eventTsc = new TaskCompletionSource<T>();
+        var eventTsc = new TaskCompletionSource<T>(TaskCreationOptions.RunContinuationsAsynchronously);
         void EventHandler(object sender, T e)
         {
             try
