@@ -66,7 +66,6 @@ internal class Page : ChannelOwner, IPage
         }
 
         IsClosed = initializer.IsClosed;
-        Accessibility = new Accessibility(this);
         Keyboard = new Keyboard(this);
         Touchscreen = new Touchscreen(this);
         Mouse = new Mouse(this);
@@ -171,11 +170,6 @@ internal class Page : ChannelOwner, IPage
     public BrowserContext Context { get; set; }
 
     public PageViewportSizeResult? ViewportSize { get; private set; }
-
-    public IAccessibility Accessibility
-    {
-        get;
-    }
 
     public IMouse Mouse
     {
@@ -1188,6 +1182,7 @@ internal class Page : ChannelOwner, IPage
         => MainFrame.DragAndDropAsync(source, target, new()
         {
             Force = options?.Force,
+            Steps = options?.Steps,
             Timeout = options?.Timeout,
             Trial = options?.Trial,
             Strict = options?.Strict,
@@ -1499,7 +1494,7 @@ internal class Page : ChannelOwner, IPage
     {
         var response = await SendMessageToServerAsync("consoleMessages").ConfigureAwait(false);
         var initializers = response.Value.GetProperty("messages").ToObject<List<ConsoleMessageInitializer>>(_connection.DefaultJsonSerializerOptions);
-        return initializers.Select(initializer => new ConsoleMessage(initializer, this)).ToList();
+        return initializers.Select(initializer => new ConsoleMessage(initializer, this, null)).ToList();
     }
 
     public async Task<IReadOnlyList<string>> PageErrorsAsync()

@@ -301,17 +301,6 @@ public partial interface IPage
     event EventHandler<IWorker> Worker;
 
     /// <summary>
-    /// <para>
-    /// **DEPRECATED** This property is discouraged. Please use other libraries such as
-    /// <a href="https://www.deque.com/axe/">Axe</a> if you need to test page accessibility.
-    /// See our Node.js <a href="https://playwright.dev/docs/accessibility-testing">guide</a>
-    /// for integration with Axe.
-    /// </para>
-    /// </summary>
-    [System.Obsolete]
-    public IAccessibility Accessibility { get; }
-
-    /// <summary>
     /// <para>Adds a script which would be evaluated in one of the following scenarios:</para>
     /// <list type="bullet">
     /// <item><description>Whenever the page is navigated.</description></item>

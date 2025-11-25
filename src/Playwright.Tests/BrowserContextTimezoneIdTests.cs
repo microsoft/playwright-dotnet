@@ -49,7 +49,8 @@ public class BrowserContextTimezoneIdTests : BrowserTestEx
                 await page.EvaluateAsync<string>(func));
         }
 
-        await using (var context = await browser.NewContextAsync(new() { TimezoneId = "America/Buenos_Aires", Locale = "en-US" }))
+        var buenosAires = BrowserName == "firefox" ? "America/Argentina/Buenos_Aires" : "America/Buenos_Aires";
+        await using (var context = await browser.NewContextAsync(new() { TimezoneId = buenosAires, Locale = "en-US" }))
         {
             var page = await context.NewPageAsync();
             Assert.AreEqual(
@@ -69,16 +70,16 @@ public class BrowserContextTimezoneIdTests : BrowserTestEx
     [PlaywrightTest("browsercontext-timezone-id.spec.ts", "should throw for invalid timezone IDs")]
     public async Task ShouldThrowForInvalidTimezoneId()
     {
-        await using (var context = await Browser.NewContextAsync(new() { TimezoneId = "Foo/Bar" }))
+        IBrowserContext context = null;
+        var exception = await PlaywrightAssert.ThrowsAsync<PlaywrightException>(async () =>
         {
-            var exception = await PlaywrightAssert.ThrowsAsync<PlaywrightException>(() => context.NewPageAsync());
-            StringAssert.Contains("Invalid timezone ID: Foo/Bar", exception.Message);
-        }
-
-        await using (var context = await Browser.NewContextAsync(new() { TimezoneId = "Baz/Qux" }))
+            context = await Browser.NewContextAsync(new() { TimezoneId = "Foo/Bar" });
+            await context.NewPageAsync();
+        });
+        StringAssert.Contains("Invalid timezone ID: Foo/Bar", exception.Message);
+        if (context != null)
         {
-            var exception = await PlaywrightAssert.ThrowsAsync<PlaywrightException>(() => context.NewPageAsync());
-            StringAssert.Contains("Invalid timezone ID: Baz/Qux", exception.Message);
+            await context.CloseAsync();
         }
     }
 

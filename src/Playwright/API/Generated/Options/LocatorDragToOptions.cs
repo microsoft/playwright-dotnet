@@ -40,6 +40,7 @@ public class LocatorDragToOptions
         Force = clone.Force;
         NoWaitAfter = clone.NoWaitAfter;
         SourcePosition = clone.SourcePosition;
+        Steps = clone.Steps;
         TargetPosition = clone.TargetPosition;
         Timeout = clone.Timeout;
         Trial = clone.Trial;
@@ -70,6 +71,16 @@ public class LocatorDragToOptions
     /// </summary>
     [JsonPropertyName("sourcePosition")]
     public SourcePosition? SourcePosition { get; set; }
+
+    /// <summary>
+    /// <para>
+    /// Defaults to 1. Sends <c>n</c> interpolated <c>mousemove</c> events to represent
+    /// travel between the <c>mousedown</c> and <c>mouseup</c> of the drag. When set to
+    /// 1, emits a single <c>mousemove</c> event at the destination location.
+    /// </para>
+    /// </summary>
+    [JsonPropertyName("steps")]
+    public int? Steps { get; set; }
 
     /// <summary>
     /// <para>

@@ -65,7 +65,17 @@ public partial interface IDownload
     /// Returns a readable stream for a successful download, or throws for a failed/canceled
     /// download.
     /// </para>
+    /// <para>
+    /// If you don't need a readable stream, it's usually simpler to read the file from
+    /// disk after the download completed. See <see cref="IDownload.PathAsync"/>.
+    /// </para>
     /// </summary>
+    /// <remarks>
+    /// <para>
+    /// If you don't need a readable stream, it's usually simpler to read the file from
+    /// disk after the download completed. See <see cref="IDownload.PathAsync"/>.
+    /// </para>
+    /// </remarks>
     Task<Stream> CreateReadStreamAsync();
 
     /// <summary><para>Deletes the downloaded file. Will wait for the download to finish if necessary.</para></summary>

@@ -43,6 +43,14 @@ internal class Worker : ChannelOwner, IWorker
         _initializer = initializer;
     }
 
+    private event EventHandler<IConsoleMessage>? _consoleImpl;
+
+    public event EventHandler<IConsoleMessage>? Console
+    {
+        add => this._consoleImpl = UpdateEventHandler("console", this._consoleImpl, value, true);
+        remove => this._consoleImpl = UpdateEventHandler("console", this._consoleImpl, value, false);
+    }
+
     public event EventHandler<IWorker>? Close;
 
     public string Url => _initializer.Url;
@@ -52,6 +60,8 @@ internal class Worker : ChannelOwner, IWorker
     internal BrowserContext? Context { get; set; }
 
     internal TaskCompletionSource<bool> ClosedTcs { get; } = new();
+
+    internal void FireConsole(IConsoleMessage message) => _consoleImpl?.Invoke(this, message);
 
     internal override void OnMessage(string method, JsonElement serverParams)
     {

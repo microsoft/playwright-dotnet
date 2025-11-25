@@ -45,6 +45,7 @@ public class LocatorClickOptions
         Modifiers = clone.Modifiers;
         NoWaitAfter = clone.NoWaitAfter;
         Position = clone.Position;
+        Steps = clone.Steps;
         Timeout = clone.Timeout;
         Trial = clone.Trial;
     }
@@ -107,6 +108,16 @@ public class LocatorClickOptions
     /// </summary>
     [JsonPropertyName("position")]
     public Position? Position { get; set; }
+
+    /// <summary>
+    /// <para>
+    /// Defaults to 1. Sends <c>n</c> interpolated <c>mousemove</c> events to represent
+    /// travel between Playwright's current cursor position and the provided destination.
+    /// When set to 1, emits a single <c>mousemove</c> event at the destination location.
+    /// </para>
+    /// </summary>
+    [JsonPropertyName("steps")]
+    public int? Steps { get; set; }
 
     /// <summary>
     /// <para>

@@ -356,6 +356,23 @@ public partial interface ILocator
     ILocator Describe(string description);
 
     /// <summary>
+    /// <para>
+    /// Returns locator description previously set with <see cref="ILocator.Describe"/>.
+    /// Returns <c>null</c> if no custom description has been set. Prefer <c>Locator.toString()</c>
+    /// for a human-readable representation, as it uses the description when available.
+    /// </para>
+    /// <para>**Usage**</para>
+    /// <code>
+    /// var button = Page.GetByRole(AriaRole.Button).Describe("Subscribe button");<br/>
+    /// Console.WriteLine(button.Description()); // "Subscribe button"<br/>
+    /// <br/>
+    /// var input = Page.GetByRole(AriaRole.Textbox);<br/>
+    /// Console.WriteLine(input.Description()); // null
+    /// </code>
+    /// </summary>
+    string? Description { get; }
+
+    /// <summary>
     /// <para>Programmatically dispatch an event on the matching element.</para>
     /// <para>**Usage**</para>
     /// <code>await locator.DispatchEventAsync("click");</code>

@@ -166,10 +166,20 @@ internal class BrowserContext : ChannelOwner, IBrowserContext
                 break;
             case "console":
                 {
-                    var pageObject = serverParams.GetProperty("page").ToObject<Page>(_connection.DefaultJsonSerializerOptions);
-                    var consoleMessage = new ConsoleMessage(serverParams.ToObject<ConsoleMessageInitializer>(_connection.DefaultJsonSerializerOptions), pageObject);
-                    _consoleImpl?.Invoke(this, consoleMessage);
+                    Worker? workerObject = null;
+                    if (serverParams.TryGetProperty("worker", out var workerProperty))
+                    {
+                        workerObject = workerProperty.ToObject<Worker>(_connection.DefaultJsonSerializerOptions);
+                    }
+                    Page? pageObject = null;
+                    if (serverParams.TryGetProperty("page", out var pageProperty))
+                    {
+                        pageObject = pageProperty.ToObject<Page>(_connection.DefaultJsonSerializerOptions);
+                    }
+                    var consoleMessage = new ConsoleMessage(serverParams.ToObject<ConsoleMessageInitializer>(_connection.DefaultJsonSerializerOptions), pageObject, workerObject);
+                    workerObject?.FireConsole(consoleMessage);
                     pageObject?.FireConsole(consoleMessage);
+                    _consoleImpl?.Invoke(this, consoleMessage);
                     break;
                 }
             case "route":
