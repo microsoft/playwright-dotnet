@@ -179,6 +179,7 @@ internal class ElementHandle : JSHandle, IElementHandle
 #pragma warning disable CS0612 // Type or member is obsolete
             ["noWaitAfter"] = options?.NoWaitAfter,
 #pragma warning restore CS0612 // Type or member is obsolete
+            ["steps"] = options?.Steps,
             ["timeout"] = _frame.Timeout(options?.Timeout),
             ["trial"] = options?.Trial,
             ["position"] = options?.Position,
@@ -191,6 +192,7 @@ internal class ElementHandle : JSHandle, IElementHandle
             ["delay"] = options?.Delay,
             ["button"] = options?.Button,
             ["force"] = options?.Force,
+            ["steps"] = options?.Steps,
             ["timeout"] = _frame.Timeout(options?.Timeout),
             ["trial"] = options?.Trial,
             ["position"] = options?.Position,

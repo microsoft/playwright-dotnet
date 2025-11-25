@@ -80,4 +80,12 @@ public partial interface IConsoleMessage
     /// </para>
     /// </summary>
     string Type { get; }
+
+    /// <summary>
+    /// <para>
+    /// The web worker or service worker that produced this console message, if any. Note
+    /// that console messages from web workers also have non-null <see cref="IConsoleMessage.Page"/>.
+    /// </para>
+    /// </summary>
+    IWorker? Worker { get; }
 }

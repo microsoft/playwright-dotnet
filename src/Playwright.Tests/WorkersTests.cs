@@ -209,4 +209,42 @@ public class WorkersTests : PageTestEx
 
         Assert.AreEqual("10\u00A0000,2", await worker.EvaluateAsync<string>("() => (10000.20).toLocaleString()"));
     }
+
+    [PlaywrightTest("workers.spec.ts", "should report console event on the worker")]
+    public async Task ShouldReportConsoleEventOnTheWorker()
+    {
+        var workerCreatedTcs = new TaskCompletionSource<IWorker>();
+        Page.Worker += (_, e) => workerCreatedTcs.TrySetResult(e);
+        await Page.EvaluateHandleAsync("() => { window.worker = new Worker(URL.createObjectURL(new Blob(['42'], {type: 'application/javascript'}))) }");
+        var worker = await workerCreatedTcs.Task;
+
+        var workerConsoleTcs = new TaskCompletionSource<IConsoleMessage>();
+        worker.Console += (_, e) => workerConsoleTcs.TrySetResult(e);
+        var contextConsoleTcs = new TaskCompletionSource<IConsoleMessage>();
+        Page.Context.Console += (_, e) => contextConsoleTcs.TrySetResult(e);
+
+        await worker.EvaluateAsync<JsonElement>("() => console.log('hello from worker')");
+
+        var workerMessage = await workerConsoleTcs.Task;
+        Assert.AreEqual("hello from worker", workerMessage.Text);
+        var contextMessage = await contextConsoleTcs.Task;
+        Assert.AreEqual(contextMessage, workerMessage);
+    }
+
+    [PlaywrightTest("workers.spec.ts", "should report console event on the worker when not listening on page or context")]
+    public async Task ShouldReportConsoleEventOnTheWorkerWhenNotListeningOnPageOrContext()
+    {
+        var workerCreatedTcs = new TaskCompletionSource<IWorker>();
+        Page.Worker += (_, e) => workerCreatedTcs.TrySetResult(e);
+        await Page.EvaluateHandleAsync("() => { window.worker = new Worker(URL.createObjectURL(new Blob(['42'], {type: 'application/javascript'}))) }");
+        var worker = await workerCreatedTcs.Task;
+
+        var workerConsoleTcs = new TaskCompletionSource<IConsoleMessage>();
+        worker.Console += (_, e) => workerConsoleTcs.TrySetResult(e);
+
+        await worker.EvaluateAsync<JsonElement>("() => console.log('hello from worker')");
+
+        var workerMessage = await workerConsoleTcs.Task;
+        Assert.AreEqual("hello from worker", workerMessage.Text);
+    }
 }

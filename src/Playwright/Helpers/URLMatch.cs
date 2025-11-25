@@ -119,6 +119,7 @@ public class URLMatch
             }
             if (c == '*')
             {
+                var charBefore = i > 0 ? glob[i - 1] : '\0';
                 int starCount = 1;
                 while (i < glob.Length - 1 && glob[i + 1] == '*')
                 {
@@ -127,7 +128,23 @@ public class URLMatch
                 }
                 if (starCount > 1)
                 {
-                    tokens.Add("(.*)");
+                    var charAfter = i + 1 < glob.Length ? glob[i + 1] : '\0';
+                    if (charAfter == '/')
+                    {
+                        if (charBefore == '/')
+                        {
+                            tokens.Add("((.+/)|)");
+                        }
+                        else
+                        {
+                            tokens.Add("(.*/)");
+                        }
+                        i++;
+                    }
+                    else
+                    {
+                        tokens.Add("(.*)");
+                    }
                 }
                 else
                 {
@@ -231,7 +248,13 @@ public class URLMatch
                 // a web schema so that slashes are properly inserted after domain.
                 if (index == 0 && token.EndsWith(":"))
                 {
-                    return MapToken(token, "http:");
+                    // Replace any pattern with http:
+                    if (token.IndexOf('*') != -1 || token.IndexOf('{') != -1)
+                    {
+                        return MapToken(token, "http:");
+                    }
+                    // Preserve explicit schema as is as it may affect trailing slashes after domain.
+                    return token;
                 }
                 int questionIndex = token.IndexOf('?');
                 if (questionIndex == -1)
@@ -259,15 +282,26 @@ public class URLMatch
         try
         {
             Uri uri;
+            string resolved;
             if (string.IsNullOrEmpty(baseUrl))
             {
                 uri = FixupTrailingSlash(new Uri(url, UriKind.Absolute));
+                // https://url.spec.whatwg.org/#special-scheme
+                if (uri.Scheme is "http" or "https" or "ws" or "wss" or "ftp" or "file")
+                {
+                    resolved = uri.ToString();
+                }
+                else
+                {
+                    // Disable canonicalization for non-special schemes to match Node.js URL behavior.
+                    resolved = url;
+                }
             }
             else
             {
                 uri = FixupTrailingSlash(new Uri(new Uri(baseUrl), new Uri(url, UriKind.RelativeOrAbsolute)));
+                resolved = uri.ToString();
             }
-            var resolved = uri.ToString();
             // Schema and domain are case-insensitive.
             var caseInsensitivePrefix = $"{uri.Scheme}://{uri.Host}";
             if (!uri.IsDefaultPort)

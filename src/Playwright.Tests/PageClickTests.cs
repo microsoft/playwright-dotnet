@@ -938,6 +938,37 @@ public class PageClickTests : PageTestEx
         Assert.AreEqual("Clicked", await Page.EvaluateAsync<string>("result"));
     }
 
+    [PlaywrightTest("page-click.spec.ts", "should click with tweened mouse movement")]
+    public async Task ShouldClickWithTweenedMouseMovement()
+    {
+        await Page.SetContentAsync($@"
+          <body style=""margin: 0; padding: 0; height: 500px; width: 500px;"">
+            <div style=""position: relative; top: 280px; left: 150px; width: 100px; height: 40px"">Click me</div>
+          </body>
+        ");
+        if (BrowserName == "webkit")
+        {
+            await Page.EvaluateAsync("() => new Promise(requestAnimationFrame)");
+        }
+        await Page.Mouse.MoveAsync(100, 100);
+        await Page.EvaluateAsync(@"() => {
+          window['result'] = [];
+          document.addEventListener('mousemove', event => {
+            window['result'].push([event.clientX, event.clientY]);
+          });
+        }");
+        // Centerpoint at 150 + 100/2, 280 + 40/2 = 200, 300
+        await Page.Locator("div").ClickAsync(new() { Steps = 5 });
+        Assert.AreEqual(await Page.EvaluateAsync<int[][]>("result"), new int[][]
+        {
+          new int[] {120, 140},
+          new int[] {140, 180},
+          new int[] {160, 220},
+          new int[] {180, 260},
+          new int[] {200, 300}
+        });
+    }
+
     private async Task GiveItAChanceToClick(IPage page)
     {
         for (int i = 0; i < 5; i++)

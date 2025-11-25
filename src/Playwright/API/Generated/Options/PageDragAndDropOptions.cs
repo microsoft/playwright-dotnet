@@ -40,6 +40,7 @@ public class PageDragAndDropOptions
         Force = clone.Force;
         NoWaitAfter = clone.NoWaitAfter;
         SourcePosition = clone.SourcePosition;
+        Steps = clone.Steps;
         Strict = clone.Strict;
         TargetPosition = clone.TargetPosition;
         Timeout = clone.Timeout;
@@ -71,6 +72,16 @@ public class PageDragAndDropOptions
     /// </summary>
     [JsonPropertyName("sourcePosition")]
     public SourcePosition? SourcePosition { get; set; }
+
+    /// <summary>
+    /// <para>
+    /// Defaults to 1. Sends <c>n</c> interpolated <c>mousemove</c> events to represent
+    /// travel between the <c>mousedown</c> and <c>mouseup</c> of the drag. When set to
+    /// 1, emits a single <c>mousemove</c> event at the destination location.
+    /// </para>
+    /// </summary>
+    [JsonPropertyName("steps")]
+    public int? Steps { get; set; }
 
     /// <summary>
     /// <para>

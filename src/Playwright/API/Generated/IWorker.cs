@@ -58,6 +58,14 @@ public partial interface IWorker
     event EventHandler<IWorker> Close;
 
     /// <summary>
+    /// <para>
+    /// Emitted when JavaScript within the worker calls one of console API methods, e.g.
+    /// <c>console.log</c> or <c>console.dir</c>.
+    /// </para>
+    /// </summary>
+    event EventHandler<IConsoleMessage> Console;
+
+    /// <summary>
     /// <para>Returns the return value of <see cref="IWorker.EvaluateAsync"/>.</para>
     /// <para>
     /// If the function passed to the <see cref="IWorker.EvaluateAsync"/> returns a <see

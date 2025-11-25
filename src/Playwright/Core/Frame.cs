@@ -562,6 +562,9 @@ internal class Frame : ChannelOwner, IFrame
 
     [MethodImpl(MethodImplOptions.NoInlining)]
     public Task ClickAsync(string selector, FrameClickOptions? options = default)
+        => ClickInternalAsync(selector, options, null);
+
+    internal Task ClickInternalAsync(string selector, FrameClickOptions? options, int? steps)
         => SendMessageToServerAsync("click", new Dictionary<string, object?>
         {
             ["selector"] = selector,
@@ -574,6 +577,7 @@ internal class Frame : ChannelOwner, IFrame
 #pragma warning disable CS0612 // Type or member is obsolete
             ["noWaitAfter"] = options?.NoWaitAfter,
 #pragma warning restore CS0612 // Type or member is obsolete
+            ["steps"] = steps,
             ["trial"] = options?.Trial,
             ["timeout"] = Timeout(options?.Timeout),
             ["strict"] = options?.Strict,
@@ -581,6 +585,9 @@ internal class Frame : ChannelOwner, IFrame
 
     [MethodImpl(MethodImplOptions.NoInlining)]
     public Task DblClickAsync(string selector, FrameDblClickOptions? options = default)
+        => DblClickInternalAsync(selector, options, null);
+
+    internal Task DblClickInternalAsync(string selector, FrameDblClickOptions? options, int? steps)
         => SendMessageToServerAsync("dblclick", new Dictionary<string, object?>
         {
             ["selector"] = selector,
@@ -589,6 +596,7 @@ internal class Frame : ChannelOwner, IFrame
             ["force"] = options?.Force,
             ["modifiers"] = options?.Modifiers?.Select(m => m.ToValueString()),
             ["position"] = options?.Position,
+            ["steps"] = steps,
             ["trial"] = options?.Trial,
             ["timeout"] = Timeout(options?.Timeout),
             ["strict"] = options?.Strict,
@@ -883,6 +891,7 @@ internal class Frame : ChannelOwner, IFrame
             ["source"] = source,
             ["target"] = target,
             ["force"] = options?.Force,
+            ["steps"] = options?.Steps,
             ["timeout"] = Timeout(options?.Timeout),
             ["trial"] = options?.Trial,
             ["strict"] = options?.Strict,
