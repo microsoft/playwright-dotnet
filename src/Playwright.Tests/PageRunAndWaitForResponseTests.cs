@@ -41,6 +41,17 @@ public class PageRunAndWaitForResponseTests : PageTestEx
         Assert.AreEqual(Server.Prefix + "/digits/2.png", response.Url);
     }
 
+    [PlaywrightTest]
+    public async Task ShouldWorkWithAsyncContinuation()
+    {
+        await Page.GotoAsync(Server.EmptyPage);
+        var response = await Page.RunAndWaitForResponseAsync(() => Page.EvaluateAsync<string>(@"() => {
+                    fetch('/digits/1.png');
+                }"), Server.Prefix + "/digits/1.png");
+        // Should not deadlock here
+        Task.Run(() => Page.GotoAsync(Server.EmptyPage)).Wait();
+    }
+
     [PlaywrightTest("page-wait-for-response.spec.ts", "should respect timeout")]
     public Task ShouldRespectTimeout()
     {
