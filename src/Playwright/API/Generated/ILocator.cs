@@ -358,8 +358,7 @@ public partial interface ILocator
     /// <summary>
     /// <para>
     /// Returns locator description previously set with <see cref="ILocator.Describe"/>.
-    /// Returns <c>null</c> if no custom description has been set. Prefer <c>Locator.toString()</c>
-    /// for a human-readable representation, as it uses the description when available.
+    /// Returns <c>null</c> if no custom description has been set.
     /// </para>
     /// <para>**Usage**</para>
     /// <code>
