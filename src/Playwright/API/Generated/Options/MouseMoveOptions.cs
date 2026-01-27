@@ -40,7 +40,13 @@ public class MouseMoveOptions
         Steps = clone.Steps;
     }
 
-    /// <summary><para>Defaults to 1. Sends intermediate <c>mousemove</c> events.</para></summary>
+    /// <summary>
+    /// <para>
+    /// Defaults to 1. Sends <c>n</c> interpolated <c>mousemove</c> events to represent
+    /// travel between Playwright's current cursor position and the provided destination.
+    /// When set to 1, emits a single <c>mousemove</c> event at the destination location.
+    /// </para>
+    /// </summary>
     [JsonPropertyName("steps")]
     public int? Steps { get; set; }
 }

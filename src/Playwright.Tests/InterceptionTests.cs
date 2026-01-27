@@ -64,6 +64,10 @@ public class InterceptionTests : PageTestEx
         Assert.That("http://localhost:3000/signin-oidc/foo", Does.Not.Match(GlobToRegex("http://localhost:3000/signin-oidc*")));
         Assert.That("http://localhost:3000/signin-oidcnice", Does.Match(GlobToRegex("http://localhost:3000/signin-oidc*")));
 
+        Assert.That("/foo.js", Does.Match(GlobToRegex("**/*.js")));
+        Assert.That("/foo.js", Does.Not.Match(GlobToRegex("asd/**.js")));
+        Assert.That("bar_foo.js", Does.Not.Match(GlobToRegex("**/*.js")));
+
         // range [] is NOT supported
         Assert.That("http://example.com/api/v[0-9]", Does.Match(GlobToRegex("**/api/v[0-9]")));
         Assert.That("http://example.com/api/version", Does.Not.Match(GlobToRegex("**/api/v[0-9]")));
@@ -99,6 +103,12 @@ public class InterceptionTests : PageTestEx
         Assert.True(URLMatches(null, "https://localhost:3000/?a=b", "**?a=b"));
         Assert.True(URLMatches(null, "https://localhost:3000/?a=b", "**=b"));
 
+        // Custom schema.
+        Assert.True(URLMatches(null, "my.custom.protocol://foo", "my.custom.protocol://**"));
+        Assert.False(URLMatches(null, "my.p://foo", "my.{p,y}://**"));
+        Assert.True(URLMatches(null, "my.p://foo/", "my.{p,y}://**"));
+        Assert.True(URLMatches(null, "file:///foo/", "f*e://**"));
+
         // This is not supported, we treat ? as a query separator.
         Assert.That("http://localhost:8080/Simple/path.js", Does.Not.Match(GlobToRegex("http://localhost:8080/?imple/path.js")));
         Assert.False(URLMatches(null, "http://playwright.dev/", "http://playwright.?ev"));
@@ -111,6 +121,10 @@ public class InterceptionTests : PageTestEx
         Assert.True(URLMatches("http://playwright.dev/foo", "http://playwright.dev/foo?bar", "\\\\?bar"));
         Assert.True(URLMatches("http://first.host/", "http://second.host/foo", "**/foo"));
         Assert.True(URLMatches("http://playwright.dev/", "http://localhost/", "*//localhost/"));
+
+        // /**/ should match /.
+        Assert.True(URLMatches(null, "https://foo/bar.js", "https://foo/**/bar.js"));
+        Assert.True(URLMatches(null, "https://foo/bar.js", "https://foo/**/**/bar.js"));
 
         // Should work with baseURL and various non-http schemes.
         Assert.True(URLMatches("http://playwright.dev/", "about:blank", "about:blank"));

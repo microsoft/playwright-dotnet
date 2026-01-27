@@ -114,6 +114,22 @@ internal class Locator : ILocator
 
     public IFrameLocator ContentFrame => new FrameLocator(_frame, _selector);
 
+    public string? Description
+    {
+        get
+        {
+            try
+            {
+                Match match = Regex.Match(_selector, @" >> internal:describe=((?:""(?:[^""\\]|\\.)*""))$");
+                return match.Success ? JsonSerializer.Deserialize<string>(match.Groups[1].Value) : null;
+            }
+            catch (JsonException)
+            {
+                return null;
+            }
+        }
+    }
+
     internal bool EqualLocator(Locator locator) => _frame == locator._frame && _selector == locator._selector;
 
     public Task<LocatorBoundingBoxResult?> BoundingBoxAsync(LocatorBoundingBoxOptions? options = null)
@@ -143,12 +159,16 @@ internal class Locator : ILocator
             ConvertOptions<FrameCheckOptions>(options));
 
     public Task ClickAsync(LocatorClickOptions? options = null)
-        => _frame.ClickAsync(
+        => _frame.ClickInternalAsync(
             _selector,
-            ConvertOptions<FrameClickOptions>(options));
+            ConvertOptions<FrameClickOptions>(options),
+            options?.Steps);
 
     public Task DblClickAsync(LocatorDblClickOptions? options = null)
-        => _frame.DblClickAsync(_selector, ConvertOptions<FrameDblClickOptions>(options));
+        => _frame.DblClickInternalAsync(
+            _selector,
+            ConvertOptions<FrameDblClickOptions>(options),
+            options?.Steps);
 
     public Task DispatchEventAsync(string type, object? eventInit = null, LocatorDispatchEventOptions? options = null)
         => _frame.DispatchEventAsync(_selector, type, eventInit, ConvertOptions<FrameDispatchEventOptions>(options));

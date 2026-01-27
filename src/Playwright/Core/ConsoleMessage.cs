@@ -33,12 +33,15 @@ internal class ConsoleMessage : IConsoleMessage
 {
     private readonly ConsoleMessageInitializer _initializer;
 
-    private readonly Page _page;
+    private readonly Page? _page;
 
-    internal ConsoleMessage(ConsoleMessageInitializer initializer, Page page)
+    private readonly Worker? _worker;
+
+    internal ConsoleMessage(ConsoleMessageInitializer initializer, Page? page, Worker? worker)
     {
         _initializer = initializer;
         _page = page;
+        _worker = worker;
     }
 
     public string Type => _initializer.Type;
@@ -49,10 +52,9 @@ internal class ConsoleMessage : IConsoleMessage
 
     public string Text => _initializer.Text;
 
-    // Note: currently, we only report console messages for pages and they always have a page.
-    // However, in the future we might report console messages for service workers or something else,
-    // where page() would be null.
-    public IPage Page => _page;
+    public IPage? Page => _page;
+
+    public IWorker? Worker => _worker;
 }
 
 internal class ConsoleMessageInitializer

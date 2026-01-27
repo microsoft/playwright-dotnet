@@ -233,4 +233,43 @@ public class LocatorMisc2Tests : PageTestEx
         Assert.AreEqual("outer", await divLocator.Locator("input").InputValueAsync());
         Assert.AreEqual("inner", await Page.FrameLocator("iframe").Locator(divLocator).Locator("input").InputValueAsync());
     }
+
+    [PlaywrightTest("locator-convenience.spec.ts", "description should return null for locator without description")]
+    public void DescriptionShouldReturnNullForLocatorWithoutDescription()
+    {
+        var locator = Page.Locator("button");
+        Assert.IsNull(locator.Description);
+    }
+
+    [PlaywrightTest("locator-convenience.spec.ts", "description should return description for locator with simple description")]
+    public void DescriptionShouldReturnDescriptionForLocatorWithSimpleDescription()
+    {
+        var locator = Page.Locator("button").Describe("Submit button");
+        Assert.AreEqual("Submit button", locator.Description);
+    }
+
+    [PlaywrightTest("locator-convenience.spec.ts", "description should return description with special characters")]
+    public void DescriptionShouldReturnDescriptionWithSpecialCharacters()
+    {
+        var locator = Page.Locator("div").Describe("Button with \"quotes\" and 'apostrophes'");
+        Assert.AreEqual("Button with \"quotes\" and 'apostrophes'", locator.Description);
+    }
+
+    [PlaywrightTest("locator-convenience.spec.ts", "description should return description for chained locators")]
+    public void DescriptionShouldReturnDescriptionForChainedLocators()
+    {
+        var locator = Page.Locator("form").Locator("input").Describe("Form input field");
+        Assert.AreEqual("Form input field", locator.Description);
+    }
+
+    [PlaywrightTest("locator-convenience.spec.ts", "description should return description for locator with multiple describe calls")]
+    public void DescriptionShouldReturnDescriptionForLocatorWithMultipleDescribeCalls()
+    {
+        var locator1 = Page.Locator("foo").Describe("First description");
+        Assert.AreEqual("First description", locator1.Description);
+        var locator2 = locator1.Locator("button").Describe("Second description");
+        Assert.AreEqual("Second description", locator2.Description);
+        var locator3 = locator2.Locator("button");
+        Assert.IsNull(locator3.Description);
+    }
 }
