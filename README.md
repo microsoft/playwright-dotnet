@@ -1,4 +1,4 @@
-# Playwright for .NET 🎭 
+# Playwright for .NET 🎭
 [![NuGet version](https://img.shields.io/nuget/v/Microsoft.Playwright?color=%2345ba4b)](https://www.nuget.org/packages/Microsoft.Playwright) [![Join Discord](https://img.shields.io/badge/join-discord-infomational)](https://aka.ms/playwright/discord)
 
 |          | Linux | macOS | Windows |
