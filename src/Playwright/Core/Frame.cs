@@ -326,7 +326,7 @@ internal class Frame : ChannelOwner, IFrame
             await waiter.WaitForPromiseAsync(Task.FromException<object>(ex)).ConfigureAwait(false);
         }
 
-        if (!_loadStates.Select(s => s.ToValueString()).Contains(waitUntil.Value.ToValueString()))
+        if (!_loadStates.ToArray().Select(s => s.ToValueString()).Contains(waitUntil.Value.ToValueString()))
         {
             await waiter.WaitForEventAsync<WaitUntilState>(
                 this,
