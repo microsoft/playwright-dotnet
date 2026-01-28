@@ -21,10 +21,6 @@ else
   exit 1
 fi
 
-# Ubuntu 22.04
-JAMMY_TAGS=(
-  "v${PW_VERSION}-jammy"
-)
 
 # Ubuntu 24.04
 NOBLE_TAGS=(
@@ -64,12 +60,10 @@ install_oras_if_needed() {
 publish_docker_images_with_arch_suffix() {
   local FLAVOR="$1"
   local TAGS=()
-  if [[ "$FLAVOR" == "jammy" ]]; then
-    TAGS=("${JAMMY_TAGS[@]}")
-  elif [[ "$FLAVOR" == "noble" ]]; then
+  if [[ "$FLAVOR" == "noble" ]]; then
     TAGS=("${NOBLE_TAGS[@]}")
   else
-    echo "ERROR: unknown flavor - $FLAVOR. Must be either 'jammy' or 'noble'"
+    echo "ERROR: unknown flavor - $FLAVOR. Must be 'noble'"
     exit 1
   fi
   local ARCH="$2"
@@ -90,12 +84,10 @@ publish_docker_images_with_arch_suffix() {
 publish_docker_manifest () {
   local FLAVOR="$1"
   local TAGS=()
-  if [[ "$FLAVOR" == "jammy" ]]; then
-    TAGS=("${JAMMY_TAGS[@]}")
-  elif [[ "$FLAVOR" == "noble" ]]; then
+  if [[ "$FLAVOR" == "noble" ]]; then
     TAGS=("${NOBLE_TAGS[@]}")
   else
-    echo "ERROR: unknown flavor - $FLAVOR. Must be either 'jammy' or 'noble'"
+    echo "ERROR: unknown flavor - $FLAVOR. Must be 'noble'"
     exit 1
   fi
 
@@ -113,10 +105,6 @@ publish_docker_manifest () {
     docker manifest push "${BASE_IMAGE_TAG}"
   done
 }
-
-publish_docker_images_with_arch_suffix jammy amd64
-publish_docker_images_with_arch_suffix jammy arm64
-publish_docker_manifest jammy amd64 arm64
 
 publish_docker_images_with_arch_suffix noble amd64
 publish_docker_images_with_arch_suffix noble arm64
