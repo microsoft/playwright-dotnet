@@ -152,7 +152,7 @@ internal class Waiter : IDisposable
 
         var cts = new CancellationTokenSource();
         RejectOn(
-            new TaskCompletionSource<bool>().Task.WithTimeout(timeout.Value, _ => new TimeoutException(message), cts.Token),
+            new TaskCompletionSource<bool>(TaskCreationOptions.RunContinuationsAsynchronously).Task.WithTimeout(timeout.Value, _ => new TimeoutException(message), cts.Token),
             () => cts.Cancel());
     }
 
