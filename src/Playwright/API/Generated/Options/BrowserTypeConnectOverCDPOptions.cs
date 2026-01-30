@@ -39,6 +39,7 @@ public class BrowserTypeConnectOverCDPOptions
         }
 
         Headers = clone.Headers;
+        IsLocal = clone.IsLocal;
         SlowMo = clone.SlowMo;
         Timeout = clone.Timeout;
     }
@@ -46,6 +47,16 @@ public class BrowserTypeConnectOverCDPOptions
     /// <summary><para>Additional HTTP headers to be sent with connect request. Optional.</para></summary>
     [JsonPropertyName("headers")]
     public IEnumerable<KeyValuePair<string, string>>? Headers { get; set; }
+
+    /// <summary>
+    /// <para>
+    /// Tells Playwright that it runs on the same host as the CDP server. It will enable
+    /// certain optimizations that rely upon the file system being the same between Playwright
+    /// and the Browser.
+    /// </para>
+    /// </summary>
+    [JsonPropertyName("isLocal")]
+    public bool? IsLocal { get; set; }
 
     /// <summary>
     /// <para>

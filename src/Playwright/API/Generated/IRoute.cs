@@ -94,16 +94,20 @@ public partial interface IRoute
     /// If you want next matching handler in the chain to be invoked.
     /// </para>
     /// <para>
-    /// The <c>Cookie</c> header cannot be overridden using this method. If a value is provided,
-    /// it will be ignored, and the cookie will be loaded from the browser's cookie store.
-    /// To set custom cookies, use <see cref="IBrowserContext.AddCookiesAsync"/>.
+    /// Some request headers are **forbidden** and cannot be overridden (for example, <c>Cookie</c>,
+    /// <c>Host</c>, <c>Content-Length</c> and others, see <a href="https://developer.mozilla.org/en-US/docs/Glossary/Forbidden_request_header">this
+    /// MDN page</a> for full list). If an override is provided for a forbidden header,
+    /// it will be ignored and the original request header will be used.
     /// </para>
+    /// <para>To set custom cookies, use <see cref="IBrowserContext.AddCookiesAsync"/>.</para>
     /// </summary>
     /// <remarks>
     /// <para>
-    /// The <c>Cookie</c> header cannot be overridden using this method. If a value is provided,
-    /// it will be ignored, and the cookie will be loaded from the browser's cookie store.
-    /// To set custom cookies, use <see cref="IBrowserContext.AddCookiesAsync"/>.
+    /// Some request headers are **forbidden** and cannot be overridden (for example, <c>Cookie</c>,
+    /// <c>Host</c>, <c>Content-Length</c> and others, see <a href="https://developer.mozilla.org/en-US/docs/Glossary/Forbidden_request_header">this
+    /// MDN page</a> for full list). If an override is provided for a forbidden header,
+    /// it will be ignored and the original request header will be used.  To set custom
+    /// cookies, use <see cref="IBrowserContext.AddCookiesAsync"/>.
     /// </para>
     /// </remarks>
     /// <param name="options">Call options</param>

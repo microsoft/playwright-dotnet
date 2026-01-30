@@ -49,7 +49,6 @@ public class BrowserTypeLaunchPersistentContextOptions
         ColorScheme = clone.ColorScheme;
         Contrast = clone.Contrast;
         DeviceScaleFactor = clone.DeviceScaleFactor;
-        Devtools = clone.Devtools;
         DownloadsPath = clone.DownloadsPath;
         Env = clone.Env;
         ExecutablePath = clone.ExecutablePath;
@@ -234,21 +233,6 @@ public class BrowserTypeLaunchPersistentContextOptions
 
     /// <summary>
     /// <para>
-    /// **DEPRECATED** Use <a href="https://playwright.dev/dotnet/docs/debug">debugging
-    /// tools</a> instead.
-    /// </para>
-    /// <para>
-    /// **Chromium-only** Whether to auto-open a Developer Tools panel for each tab. If
-    /// this option is <c>true</c>, the <see cref="IBrowserType.LaunchPersistentContextAsync"/>
-    /// option will be set <c>false</c>.
-    /// </para>
-    /// </summary>
-    [JsonPropertyName("devtools")]
-    [System.Obsolete]
-    public bool? Devtools { get; set; }
-
-    /// <summary>
-    /// <para>
     /// If specified, accepted downloads are downloaded into this directory. Otherwise,
     /// temporary directory is created and is deleted when browser is closed. In either
     /// case, the downloads are deleted when the browser context they were created in is
@@ -330,8 +314,7 @@ public class BrowserTypeLaunchPersistentContextOptions
     /// <para>
     /// Whether to run browser in headless mode. More details for <a href="https://developers.google.com/web/updates/2017/04/headless-chrome">Chromium</a>
     /// and <a href="https://hacks.mozilla.org/2017/12/using-headless-mode-in-firefox/">Firefox</a>.
-    /// Defaults to <c>true</c> unless the <see cref="IBrowserType.LaunchAsync"/> option
-    /// is <c>true</c>.
+    /// Defaults to <c>true</c>.
     /// </para>
     /// </summary>
     [JsonPropertyName("headless")]
