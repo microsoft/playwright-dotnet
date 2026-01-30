@@ -326,16 +326,26 @@ internal class Frame : ChannelOwner, IFrame
             await waiter.WaitForPromiseAsync(Task.FromException<object>(ex)).ConfigureAwait(false);
         }
 
-        if (!_loadStates.Select(s => s.ToValueString()).Contains(waitUntil.Value.ToValueString()))
+        // Set the subscription first
+        var (loadStateTask, loadStateDispose) = waiter.GetWaitForEventTask<WaitUntilState>(
+            this,
+            "LoadState",
+            e =>
+            {
+                waiter.Log($"  \"{e}\" event fired");
+                return e.ToValueString() == waitUntil.Value.ToValueString();
+            });
+
+        if (_loadStates.Any(s => s.ToValueString() == waitUntil.Value.ToValueString()))
         {
-            await waiter.WaitForEventAsync<WaitUntilState>(
-                this,
-                "LoadState",
-                e =>
-                {
-                    waiter.Log($"  \"{e}\" event fired");
-                    return e.ToValueString() == waitUntil.Value.ToValueString();
-                }).ConfigureAwait(false);
+            // State is already present, no need to wait
+            waiter.Log($"  \"{waitUntil}\" event was already fired");
+            loadStateDispose();
+        }
+        else
+        {
+            // Wait for the event
+            await waiter.WaitForPromiseAsync(loadStateTask, loadStateDispose).ConfigureAwait(false);
         }
 
         var request = navigatedEvent.NewDocument?.Request;
