@@ -66,9 +66,6 @@ internal class BrowserType : ChannelOwner, IBrowserType
                 { "handleSIGINT", options.HandleSIGINT },
                 { "handleSIGTERM", options.HandleSIGTERM },
                 { "headless", options.Headless },
-#pragma warning disable CS0612 // Type or member is obsolete
-                { "devtools", options.Devtools },
-#pragma warning restore CS0612 // Type or member is obsolete
                 { "env", options.Env?.ToProtocol() },
                 { "proxy", options.Proxy },
                 { "downloadsPath", options.DownloadsPath },
@@ -103,9 +100,6 @@ internal class BrowserType : ChannelOwner, IBrowserType
             ["handleSIGHUP"] = options.HandleSIGHUP,
             ["timeout"] = TimeoutSettings.LaunchTimeout(options.Timeout),
             ["env"] = options.Env?.ToProtocol(),
-#pragma warning disable CS0612 // Type or member is obsolete
-            ["devtools"] = options.Devtools,
-#pragma warning restore CS0612 // Type or member is obsolete
             ["slowMo"] = options.SlowMo,
             ["ignoreHTTPSErrors"] = options.IgnoreHTTPSErrors,
             ["bypassCSP"] = options.BypassCSP,
@@ -273,6 +267,7 @@ internal class BrowserType : ChannelOwner, IBrowserType
                 { "headers", options.Headers?.ToProtocol() },
                 { "slowMo", options.SlowMo },
                 { "timeout", TimeoutSettings.LaunchTimeout(options.Timeout) },
+                { "isLocal", options.IsLocal },
             }).ConfigureAwait(false);
         Browser browser = result.GetProperty("browser").ToObject<Browser>(_connection.DefaultJsonSerializerOptions);
         browser.ConnectToBrowserType(this, null);

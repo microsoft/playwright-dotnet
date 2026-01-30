@@ -301,7 +301,7 @@ public partial interface ILocatorAssertions
     /// <para>Let's see how we can use the assertion:</para>
     /// <code>
     /// // ✓ Contains the right items in the right order<br/>
-    /// await Expect(Page.Locator("ul &gt; li")).ToContainTextAsync(new string[] {"Text 1", "Text 3", "Text 4"});<br/>
+    /// await Expect(Page.Locator("ul &gt; li")).ToContainTextAsync(new string[] {"Text 1", "Text 3"});<br/>
     /// <br/>
     /// // ✖ Wrong order<br/>
     /// await Expect(Page.Locator("ul &gt; li")).ToContainTextAsync(new string[] {"Text 3", "Text 2"});<br/>
@@ -346,7 +346,7 @@ public partial interface ILocatorAssertions
     /// <para>Let's see how we can use the assertion:</para>
     /// <code>
     /// // ✓ Contains the right items in the right order<br/>
-    /// await Expect(Page.Locator("ul &gt; li")).ToContainTextAsync(new string[] {"Text 1", "Text 3", "Text 4"});<br/>
+    /// await Expect(Page.Locator("ul &gt; li")).ToContainTextAsync(new string[] {"Text 1", "Text 3"});<br/>
     /// <br/>
     /// // ✖ Wrong order<br/>
     /// await Expect(Page.Locator("ul &gt; li")).ToContainTextAsync(new string[] {"Text 3", "Text 2"});<br/>
@@ -391,7 +391,7 @@ public partial interface ILocatorAssertions
     /// <para>Let's see how we can use the assertion:</para>
     /// <code>
     /// // ✓ Contains the right items in the right order<br/>
-    /// await Expect(Page.Locator("ul &gt; li")).ToContainTextAsync(new string[] {"Text 1", "Text 3", "Text 4"});<br/>
+    /// await Expect(Page.Locator("ul &gt; li")).ToContainTextAsync(new string[] {"Text 1", "Text 3"});<br/>
     /// <br/>
     /// // ✖ Wrong order<br/>
     /// await Expect(Page.Locator("ul &gt; li")).ToContainTextAsync(new string[] {"Text 3", "Text 2"});<br/>
@@ -436,7 +436,7 @@ public partial interface ILocatorAssertions
     /// <para>Let's see how we can use the assertion:</para>
     /// <code>
     /// // ✓ Contains the right items in the right order<br/>
-    /// await Expect(Page.Locator("ul &gt; li")).ToContainTextAsync(new string[] {"Text 1", "Text 3", "Text 4"});<br/>
+    /// await Expect(Page.Locator("ul &gt; li")).ToContainTextAsync(new string[] {"Text 1", "Text 3"});<br/>
     /// <br/>
     /// // ✖ Wrong order<br/>
     /// await Expect(Page.Locator("ul &gt; li")).ToContainTextAsync(new string[] {"Text 3", "Text 2"});<br/>

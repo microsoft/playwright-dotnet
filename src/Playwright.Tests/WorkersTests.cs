@@ -207,7 +207,9 @@ public class WorkersTests : PageTestEx
             page.WaitForWorkerAsync(),
             page.EvaluateAsync("() => new Worker(URL.createObjectURL(new Blob(['console.log(1)'], {type: 'application/javascript'})))"));
 
-        Assert.AreEqual("10\u00A0000,2", await worker.EvaluateAsync<string>("() => (10000.20).toLocaleString()"));
+        // https://github.com/microsoft/playwright/issues/38919
+        var expected = TestConstants.IsFirefox ? "10,000.2" : "10\u00A0000,2";
+        Assert.AreEqual(expected, await worker.EvaluateAsync<string>("() => (10000.20).toLocaleString()"));
     }
 
     [PlaywrightTest("workers.spec.ts", "should report console event on the worker")]
