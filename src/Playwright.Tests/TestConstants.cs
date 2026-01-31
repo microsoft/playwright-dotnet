@@ -31,7 +31,7 @@ internal static class TestConstants
 {
     public static string BrowserName { get; set; } = null!;
 
-    public const int DefaultTestTimeout = 60_000;
+    public const int DefaultTestTimeout = 30_000;
     public const int SlowTestTimeout = DefaultTestTimeout * 5;
 
     internal static bool IsChromium => BrowserName == BrowserType.Chromium;
