@@ -42,7 +42,8 @@ namespace Microsoft.Playwright.Core;
 
 internal class Frame : ChannelOwner, IFrame
 {
-    private readonly List<WaitUntilState> _loadStates = new();
+    private readonly HashSet<WaitUntilState> _loadStates = new();
+    private readonly object _loadStatesLock = new();
     internal readonly List<Frame> _childFrames = new();
 
     internal Frame(ChannelOwner parent, string guid, FrameInitializer initializer) : base(parent, guid)
@@ -50,7 +51,11 @@ internal class Frame : ChannelOwner, IFrame
         Url = initializer.Url;
         Name = initializer.Name;
         ParentFrame = initializer.ParentFrame;
-        _loadStates = initializer.LoadStates;
+
+        foreach (var state in initializer.LoadStates)
+        {
+            _loadStates.Add(state);
+        }
     }
 
     /// <summary>
@@ -111,13 +116,19 @@ internal class Frame : ChannelOwner, IFrame
     {
         if (add.HasValue)
         {
-            _loadStates.Add(add.Value);
+            lock (_loadStatesLock)
+            {
+                _loadStates.Add(add.Value);
+            }
             LoadState?.Invoke(this, add.Value);
         }
 
         if (remove.HasValue)
         {
-            _loadStates.Remove(remove.Value);
+            lock (_loadStatesLock)
+            {
+                _loadStates.Remove(remove.Value);
+            }
         }
         if (this.ParentFrame == null && add == WaitUntilState.Load && this.Page != null)
         {
@@ -238,7 +249,13 @@ internal class Frame : ChannelOwner, IFrame
         {
             waiter = SetupNavigationWaiter("frame.WaitForLoadStateAsync", options?.Timeout);
 
-            if (_loadStates.Contains(loadState))
+            bool containsLoadState;
+            lock (_loadStatesLock)
+            {
+                containsLoadState = _loadStates.Contains(loadState);
+            }
+
+            if (containsLoadState)
             {
                 waiter.Log($"  not waiting, \"{state}\" event already fired");
             }
@@ -336,7 +353,13 @@ internal class Frame : ChannelOwner, IFrame
                 return e.ToValueString() == waitUntil.Value.ToValueString();
             });
 
-        if (_loadStates.Any(s => s.ToValueString() == waitUntil.Value.ToValueString()))
+        bool containsWaitUntilState;
+        lock (_loadStatesLock)
+        {
+            containsWaitUntilState = _loadStates.Any(s => s.ToValueString() == waitUntil.Value.ToValueString());
+        }
+
+        if (containsWaitUntilState)
         {
             // State is already present, no need to wait
             waiter.Log($"  \"{waitUntil}\" event was already fired");
