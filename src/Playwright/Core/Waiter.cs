@@ -170,32 +170,34 @@ internal class Waiter : IDisposable
 
     internal (Task<T> Task, Action Dispose) GetWaitForEventTask<T>(object eventSource, string e, Func<T, bool>? predicate)
     {
-        var info = eventSource.GetType().GetEvent(e) ?? eventSource.GetType().BaseType.GetEvent(e);
-
+        var info = (eventSource.GetType().GetEvent(e) ?? eventSource.GetType().BaseType?.GetEvent(e))
+            ?? throw new ArgumentException($"Event '{e}' not found on type {eventSource.GetType().Name}");
         var eventTsc = new TaskCompletionSource<T>(TaskCreationOptions.RunContinuationsAsynchronously);
-        void EventHandler(object sender, T e)
+        EventHandler<T>? handler = null;
+
+        handler = (sender, eventArgs) =>
         {
             try
             {
-                if (predicate == null || predicate(e))
+                if (predicate == null || predicate(eventArgs))
                 {
-                    eventTsc.TrySetResult(e);
-                }
-                else
-                {
-                    return;
+                    if (eventTsc.TrySetResult(eventArgs))
+                    {
+                        info.RemoveEventHandler(eventSource, handler);
+                    }
                 }
             }
             catch (Exception ex)
             {
-                eventTsc.TrySetException(ex);
+                if (eventTsc.TrySetException(ex))
+                {
+                    info.RemoveEventHandler(eventSource, handler);
+                }
             }
+        };
 
-            info.RemoveEventHandler(eventSource, (EventHandler<T>)EventHandler);
-        }
-
-        info.AddEventHandler(eventSource, (EventHandler<T>)EventHandler);
-        return (eventTsc.Task, () => info.RemoveEventHandler(eventSource, (EventHandler<T>)EventHandler));
+        info.AddEventHandler(eventSource, handler);
+        return (eventTsc.Task, () => info.RemoveEventHandler(eventSource, handler));
     }
 
     internal async Task<T> WaitForPromiseAsync<T>(Task<T> task, Action? dispose = null)
