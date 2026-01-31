@@ -139,7 +139,15 @@ internal class Waiter : IDisposable
 
         var (task, dispose) = GetWaitForEventTask(eventSource, e, predicate);
         RejectOn(
-            task.ContinueWith(_ => throw navigationException(), _onDisposeCts.Token, TaskContinuationOptions.RunContinuationsAsynchronously, TaskScheduler.Current),
+            task.ContinueWith(
+                t =>
+                {
+                    _ = t.Exception; // Observe the antecedent's exception
+                    throw navigationException();
+                },
+                _onDisposeCts.Token,
+                TaskContinuationOptions.RunContinuationsAsynchronously,
+                TaskScheduler.Default),
             dispose);
     }
 
@@ -152,7 +160,7 @@ internal class Waiter : IDisposable
 
         var cts = new CancellationTokenSource();
         RejectOn(
-            new TaskCompletionSource<bool>().Task.WithTimeout(timeout.Value, _ => new TimeoutException(message), cts.Token),
+            new TaskCompletionSource<bool>(TaskCreationOptions.RunContinuationsAsynchronously).Task.WithTimeout(timeout.Value, _ => new TimeoutException(message), cts.Token),
             () => cts.Cancel());
     }
 
@@ -170,32 +178,34 @@ internal class Waiter : IDisposable
 
     internal (Task<T> Task, Action Dispose) GetWaitForEventTask<T>(object eventSource, string e, Func<T, bool>? predicate)
     {
-        var info = eventSource.GetType().GetEvent(e) ?? eventSource.GetType().BaseType.GetEvent(e);
+        var info = (eventSource.GetType().GetEvent(e) ?? eventSource.GetType().BaseType?.GetEvent(e))
+            ?? throw new ArgumentException($"Event '{e}' not found on type {eventSource.GetType().Name}");
+        var eventTsc = new TaskCompletionSource<T>(TaskCreationOptions.RunContinuationsAsynchronously);
+        EventHandler<T>? handler = null;
 
-        var eventTsc = new TaskCompletionSource<T>();
-        void EventHandler(object sender, T e)
+        handler = (sender, eventArgs) =>
         {
             try
             {
-                if (predicate == null || predicate(e))
+                if (predicate == null || predicate(eventArgs))
                 {
-                    eventTsc.TrySetResult(e);
-                }
-                else
-                {
-                    return;
+                    if (eventTsc.TrySetResult(eventArgs))
+                    {
+                        info.RemoveEventHandler(eventSource, handler);
+                    }
                 }
             }
             catch (Exception ex)
             {
-                eventTsc.TrySetException(ex);
+                if (eventTsc.TrySetException(ex))
+                {
+                    info.RemoveEventHandler(eventSource, handler);
+                }
             }
+        };
 
-            info.RemoveEventHandler(eventSource, (EventHandler<T>)EventHandler);
-        }
-
-        info.AddEventHandler(eventSource, (EventHandler<T>)EventHandler);
-        return (eventTsc.Task, () => info.RemoveEventHandler(eventSource, (EventHandler<T>)EventHandler));
+        info.AddEventHandler(eventSource, handler);
+        return (eventTsc.Task, () => info.RemoveEventHandler(eventSource, handler));
     }
 
     internal async Task<T> WaitForPromiseAsync<T>(Task<T> task, Action? dispose = null)
