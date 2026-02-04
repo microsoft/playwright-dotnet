@@ -121,7 +121,12 @@ public class PlaywrightSettingsProvider : ISettingsProvider
     public void Load(XmlReader reader)
     {
         // NOTE: ISettingsProvider::Load is not called when there are no runsettings (either file or passed via command line).
-        _settings = new PlaywrightSettingsXml(reader);
+        Load(new PlaywrightSettingsXml(reader));
+    }
+
+    public static void Load(PlaywrightSettingsXml settings)
+    {
+        _settings = settings;
         Environment.SetEnvironmentVariable("PW_INTERNAL_ADAPTER_SETTINGS", JsonSerializer.Serialize(_settings));
     }
 }
