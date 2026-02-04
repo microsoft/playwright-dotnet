@@ -34,9 +34,26 @@ public class WorkerAwareTest
         return (_currentWorker.Services[name] as T)!;
     }
 
+    protected virtual PlaywrightSettings? PlaywrightSettings()
+    {
+        return null;
+    }
+
+    private void LoadPlaywrightSettings()
+    {
+        var settings = PlaywrightSettings();
+        if (settings != null)
+        {
+            PlaywrightSettingsProvider.Load(settings);
+        }
+    }
+
     [TestInitialize]
     public void WorkerSetup()
     {
+        // Must be run before accessing any static PlaywrightSettingsProvider.* properties
+        LoadPlaywrightSettings();
+
         if (PlaywrightSettingsProvider.ExpectTimeout.HasValue)
         {
             AssertionsBase.SetDefaultTimeout(PlaywrightSettingsProvider.ExpectTimeout.Value);
