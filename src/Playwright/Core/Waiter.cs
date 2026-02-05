@@ -170,34 +170,32 @@ internal class Waiter : IDisposable
 
     internal (Task<T> Task, Action Dispose) GetWaitForEventTask<T>(object eventSource, string e, Func<T, bool>? predicate)
     {
-        var info = (eventSource.GetType().GetEvent(e) ?? eventSource.GetType().BaseType?.GetEvent(e))
-            ?? throw new ArgumentException($"Event '{e}' not found on type {eventSource.GetType().Name}");
-        var eventTsc = new TaskCompletionSource<T>(TaskCreationOptions.RunContinuationsAsynchronously);
-        EventHandler<T>? handler = null;
+        var info = eventSource.GetType().GetEvent(e) ?? eventSource.GetType().BaseType.GetEvent(e);
 
-        handler = (sender, eventArgs) =>
+        var eventTsc = new TaskCompletionSource<T>(TaskCreationOptions.RunContinuationsAsynchronously);
+        void EventHandler(object sender, T e)
         {
             try
             {
-                if (predicate == null || predicate(eventArgs))
+                if (predicate == null || predicate(e))
                 {
-                    if (eventTsc.TrySetResult(eventArgs))
-                    {
-                        info.RemoveEventHandler(eventSource, handler);
-                    }
+                    eventTsc.TrySetResult(e);
+                }
+                else
+                {
+                    return;
                 }
             }
             catch (Exception ex)
             {
-                if (eventTsc.TrySetException(ex))
-                {
-                    info.RemoveEventHandler(eventSource, handler);
-                }
+                eventTsc.TrySetException(ex);
             }
-        };
 
-        info.AddEventHandler(eventSource, handler);
-        return (eventTsc.Task, () => info.RemoveEventHandler(eventSource, handler));
+            info.RemoveEventHandler(eventSource, (EventHandler<T>)EventHandler);
+        }
+
+        info.AddEventHandler(eventSource, (EventHandler<T>)EventHandler);
+        return (eventTsc.Task, () => info.RemoveEventHandler(eventSource, (EventHandler<T>)EventHandler));
     }
 
     internal async Task<T> WaitForPromiseAsync<T>(Task<T> task, Action? dispose = null)
