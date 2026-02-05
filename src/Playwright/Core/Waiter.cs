@@ -139,15 +139,7 @@ internal class Waiter : IDisposable
 
         var (task, dispose) = GetWaitForEventTask(eventSource, e, predicate);
         RejectOn(
-            task.ContinueWith(
-                t =>
-                {
-                    _ = t.Exception; // Observe the antecedent's exception
-                    throw navigationException();
-                },
-                _onDisposeCts.Token,
-                TaskContinuationOptions.RunContinuationsAsynchronously,
-                TaskScheduler.Default),
+            task.ContinueWith(_ => throw navigationException(), _onDisposeCts.Token, TaskContinuationOptions.RunContinuationsAsynchronously, TaskScheduler.Default),
             dispose);
     }
 
