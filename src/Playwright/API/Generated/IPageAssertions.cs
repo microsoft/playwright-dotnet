@@ -54,10 +54,9 @@ namespace Microsoft.Playwright;
 public partial interface IPageAssertions
 {
     /// <summary>
-    /// <para>
-    /// Makes the assertion check for the opposite condition. For example, this code tests
-    /// that the page URL doesn't contain <c>"error"</c>:
-    /// </para>
+    /// <para>Makes the assertion check for the opposite condition.</para>
+    /// <para>**Usage**</para>
+    /// <para>For example, this code tests that the page URL doesn't contain <c>"error"</c>:</para>
     /// <code>await Expect(Page).Not.ToHaveURLAsync("error");</code>
     /// </summary>
     public IPageAssertions Not { get; }

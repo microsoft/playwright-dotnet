@@ -39,4 +39,7 @@ internal class PageInitializer : EventTargetInitializer
 
     [JsonPropertyName("opener")]
     public Core.Page Opener { get; set; } = null!;
+
+    [JsonPropertyName("video")]
+    public Core.Artifact Video { get; set; } = null!;
 }

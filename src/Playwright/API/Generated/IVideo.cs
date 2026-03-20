@@ -22,6 +22,7 @@
  * SOFTWARE.
  */
 
+using System;
 using System.Threading.Tasks;
 
 namespace Microsoft.Playwright;
@@ -32,6 +33,16 @@ namespace Microsoft.Playwright;
 /// a video object associated with it.
 /// </para>
 /// <code>Console.WriteLine(await page.Video.GetPathAsync());</code>
+/// <para>
+/// Alternatively, you can use <see cref="IVideo.StartAsync"/> and <see cref="IVideo.StopAsync"/>
+/// to record video manually. This approach is mutually exclusive with the <c>recordVideo</c>
+/// option.
+/// </para>
+/// <code>
+/// await page.Video.StartAsync(new() { Path = "video.webm" });<br/>
+/// // ... perform actions ...<br/>
+/// await page.Video.StopAsync();
+/// </code>
 /// </summary>
 public partial interface IVideo
 {
@@ -56,4 +67,22 @@ public partial interface IVideo
     /// </summary>
     /// <param name="path">Path where the video should be saved.</param>
     Task SaveAsAsync(string path);
+
+    /// <summary>
+    /// <para>
+    /// Starts video recording. This method is mutually exclusive with the <c>recordVideo</c>
+    /// context option.
+    /// </para>
+    /// <para>**Usage**</para>
+    /// <code>
+    /// await page.Video.StartAsync(new() { Path = "video.webm" });<br/>
+    /// // ... perform actions ...<br/>
+    /// await page.Video.StopAsync();
+    /// </code>
+    /// </summary>
+    /// <param name="options">Call options</param>
+    Task<IAsyncDisposable> StartAsync(VideoStartOptions? options = default);
+
+    /// <summary><para>Stops video recording started with <see cref="IVideo.StartAsync"/>.</para></summary>
+    Task StopAsync();
 }

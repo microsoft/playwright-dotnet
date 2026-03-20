@@ -177,4 +177,27 @@ public sealed class BrowserContextStorageStateTests : PageTestEx
         // It should get replaced by the utf8 replacement char (U+FFFD)
         StringAssert.Contains(@"""value"":""\uFFFD""", storageState);
     }
+
+    [PlaywrightTest("browsercontext-storage-state.spec.ts", "should set local storage via setStorageState")]
+    public async Task ShouldSetLocalStorageViaSetStorageState()
+    {
+        await using var context = await Browser.NewContextAsync();
+        var page = await context.NewPageAsync();
+        await page.RouteAsync("**/*", (route) =>
+        {
+            route.FulfillAsync(new() { Body = "<html></html>" });
+        });
+        await page.GotoAsync("https://www.example.com");
+        var localStorage = await page.EvaluateAsync<string>("window.localStorage.getItem('name1')");
+        Assert.IsNull(localStorage);
+
+        using var tempDir = new TempDirectory();
+        string path = Path.Combine(tempDir.Path, "storage-state.json");
+        File.WriteAllText(path, @"{""cookies"":[],""origins"":[{""origin"":""https://www.example.com"",""localStorage"":[{""name"":""name1"",""value"":""value1""}]}]}");
+        await context.SetStorageStateAsync(path);
+
+        await page.GotoAsync("https://www.example.com");
+        localStorage = await page.EvaluateAsync<string>("window.localStorage.getItem('name1')");
+        Assert.AreEqual("value1", localStorage);
+    }
 }

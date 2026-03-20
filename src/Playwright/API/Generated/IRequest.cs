@@ -211,6 +211,19 @@ public partial interface IRequest
     /// </summary>
     Task<IResponse?> ResponseAsync();
 
+    /// <summary>
+    /// <para>
+    /// Returns the <see cref="IResponse"/> object if the response has already been received,
+    /// <c>null</c> otherwise.
+    /// </para>
+    /// <para>
+    /// Unlike <see cref="IRequest.ResponseAsync"/>, this method does not wait for the response
+    /// to arrive. It returns immediately with the response object if the response has been
+    /// received, or <c>null</c> if the response has not been received yet.
+    /// </para>
+    /// </summary>
+    IResponse? ExistingResponse { get; }
+
     /// <summary><para>Returns resource size information for given request.</para></summary>
     Task<RequestSizesResult> SizesAsync();
 

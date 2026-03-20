@@ -28,8 +28,8 @@ namespace Microsoft.Playwright.Transport.Protocol;
 
 internal class BrowserContextInitializer : EventTargetInitializer
 {
-    [JsonPropertyName("isChromium")]
-    public bool IsChromium { get; set; }
+    [JsonPropertyName("debugger")]
+    public Core.Debugger Debugger { get; set; } = null!;
 
     [JsonPropertyName("requestContext")]
     public Core.APIRequestContext RequestContext { get; set; } = null!;

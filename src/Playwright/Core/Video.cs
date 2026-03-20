@@ -22,59 +22,82 @@
  * SOFTWARE.
  */
 
+using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
+using Microsoft.Playwright.Helpers;
 using Microsoft.Playwright.Transport;
 
 namespace Microsoft.Playwright.Core;
 
 internal class Video : IVideo
 {
-    private readonly TaskCompletionSource<Artifact?> _artifactTcs = new();
+    private readonly Page _page;
     private readonly bool _isRemote;
+    private Artifact? _artifact;
+    private string? _savePath;
 
-    public Video(Page page, Connection connection)
+    public Video(Page page, Connection connection, Artifact? artifact = null)
     {
+        _page = page;
         _isRemote = connection.IsRemote;
-        page.Close += (_, _) => _artifactTcs.TrySetResult(null);
-        page.Crash += (_, _) => _artifactTcs.TrySetResult(null);
-        if (page.IsClosed)
+        _artifact = artifact;
+    }
+
+    public async Task<IAsyncDisposable> StartAsync(VideoStartOptions? options = default)
+    {
+        var result = await _page.SendMessageToServerAsync("videoStart", new Dictionary<string, object?>
         {
-            _artifactTcs.TrySetResult(null);
-        }
+            ["size"] = options?.Size,
+            ["annotate"] = options?.Annotate,
+        }).ConfigureAwait(false);
+        _artifact = result.GetObject<Artifact>("artifact", _page._connection);
+        _savePath = options?.Path;
+        return new DisposableStub(async () =>
+        {
+            await StopAsync().ConfigureAwait(false);
+        });
+    }
+
+    public async Task StopAsync()
+    {
+        await _page.WrapApiCallAsync(async () =>
+        {
+            await _page.SendMessageToServerAsync("videoStop").ConfigureAwait(false);
+            if (_savePath != null)
+            {
+                await SaveAsAsync(_savePath).ConfigureAwait(false);
+            }
+        }).ConfigureAwait(false);
     }
 
     public async Task DeleteAsync()
     {
-        var artifact = await _artifactTcs.Task.ConfigureAwait(false);
-        if (artifact != null)
+        if (_artifact != null)
         {
-            await artifact.DeleteAsync().ConfigureAwait(false);
+            await _artifact.DeleteAsync().ConfigureAwait(false);
         }
     }
 
-    public async Task<string> PathAsync()
+    public Task<string> PathAsync()
     {
         if (_isRemote)
         {
             throw new PlaywrightException("Path is not available when connecting remotely. Use SaveAsAsync() to save a local copy.");
         }
-        var artifact = await _artifactTcs.Task.ConfigureAwait(false);
-        if (artifact == null)
+        if (_artifact == null)
         {
-            throw new PlaywrightException("Page did not produce any video frames.");
+            throw new PlaywrightException("Video recording has not been started.");
         }
-        return artifact.AbsolutePath;
+        return Task.FromResult(_artifact.AbsolutePath);
     }
 
     public async Task SaveAsAsync(string path)
     {
-        var artifact = await _artifactTcs.Task.ConfigureAwait(false);
-        if (artifact == null)
+        if (_artifact == null)
         {
-            throw new PlaywrightException("Page did not produce any video frames.");
+            throw new PlaywrightException("Video recording has not been started.");
         }
-        await artifact.SaveAsAsync(path).ConfigureAwait(false);
+        await _artifact.SaveAsAsync(path).ConfigureAwait(false);
     }
-
-    internal void ArtifactReady(Artifact artifact) => _artifactTcs.TrySetResult(artifact);
 }

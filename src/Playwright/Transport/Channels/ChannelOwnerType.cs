@@ -46,8 +46,14 @@ internal enum ChannelOwnerType
     [EnumMember(Value = "cdpsession")]
     CDPSession,
 
+    [EnumMember(Value = "Debugger")]
+    Debugger,
+
     [EnumMember(Value = "dialog")]
     Dialog,
+
+    [EnumMember(Value = "Disposable")]
+    Disposable,
 
     [EnumMember(Value = "download")]
     Download,

@@ -71,12 +71,12 @@ public partial interface IBrowserType
     /// 1.2.x).
     /// </para>
     /// </remarks>
-    /// <param name="wsEndpoint">
+    /// <param name="endpoint">
     /// A Playwright browser websocket endpoint to connect to. You obtain this endpoint
     /// via <c>BrowserServer.wsEndpoint</c>.
     /// </param>
     /// <param name="options">Call options</param>
-    Task<IBrowser> ConnectAsync(string wsEndpoint, BrowserTypeConnectOptions? options = default);
+    Task<IBrowser> ConnectAsync(string endpoint, BrowserTypeConnectOptions? options = default);
 
     /// <summary>
     /// <para>

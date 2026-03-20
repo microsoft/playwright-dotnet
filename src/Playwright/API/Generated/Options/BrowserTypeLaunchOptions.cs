@@ -39,6 +39,7 @@ public class BrowserTypeLaunchOptions
         }
 
         Args = clone.Args;
+        ArtifactsDir = clone.ArtifactsDir;
         Channel = clone.Channel;
         ChromiumSandbox = clone.ChromiumSandbox;
         DownloadsPath = clone.DownloadsPath;
@@ -72,6 +73,16 @@ public class BrowserTypeLaunchOptions
     /// </remarks>
     [JsonPropertyName("args")]
     public IEnumerable<string>? Args { get; set; }
+
+    /// <summary>
+    /// <para>
+    /// If specified, artifacts (traces, videos, downloads, HAR files, etc.) are saved into
+    /// this directory. The directory is not cleaned up when the browser closes. If not
+    /// specified, a temporary directory is used and cleaned up when the browser closes.
+    /// </para>
+    /// </summary>
+    [JsonPropertyName("artifactsDir")]
+    public string? ArtifactsDir { get; set; }
 
     /// <summary>
     /// <para>Browser distribution channel.</para>

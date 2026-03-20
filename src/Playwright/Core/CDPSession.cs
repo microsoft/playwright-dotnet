@@ -22,6 +22,7 @@
  * SOFTWARE.
  */
 
+using System;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 using System.Text.Json;
@@ -38,6 +39,8 @@ internal class CDPSession : ChannelOwner, ICDPSession
     {
     }
 
+    public event EventHandler<ICDPSession>? Close;
+
     internal override void OnMessage(string method, JsonElement serverParams)
     {
         switch (method)
@@ -46,6 +49,9 @@ internal class CDPSession : ChannelOwner, ICDPSession
                 OnCDPEvent(
                     serverParams.GetProperty("method").ToString(),
                     serverParams.TryGetProperty("params", out var cdpParams) ? cdpParams : null);
+                break;
+            case "close":
+                Close?.Invoke(this, this);
                 break;
         }
     }

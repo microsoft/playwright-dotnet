@@ -26,42 +26,43 @@ using System.Text.Json.Serialization;
 
 namespace Microsoft.Playwright;
 
-public class LocatorAriaSnapshotOptions
+public class VideoStartOptions
 {
-    public LocatorAriaSnapshotOptions() { }
+    public VideoStartOptions() { }
 
-    public LocatorAriaSnapshotOptions(LocatorAriaSnapshotOptions clone)
+    public VideoStartOptions(VideoStartOptions clone)
     {
         if (clone == null)
         {
             return;
         }
 
-        Depth = clone.Depth;
-        Mode = clone.Mode;
-        Timeout = clone.Timeout;
+        Annotate = clone.Annotate;
+        Path = clone.Path;
+        Size = clone.Size;
     }
 
-    /// <summary><para>When specified, limits the depth of the snapshot.</para></summary>
-    [JsonPropertyName("depth")]
-    public int? Depth { get; set; }
+    /// <summary>
+    /// <para>
+    /// If specified, enables visual annotations on interacted elements during video recording.
+    /// Interacted elements are highlighted with a semi-transparent blue box and click points
+    /// are shown as red circles.
+    /// </para>
+    /// </summary>
+    [JsonPropertyName("annotate")]
+    public Annotate? Annotate { get; set; }
+
+    /// <summary><para>Path where the video should be saved when the recording is stopped.</para></summary>
+    [JsonPropertyName("path")]
+    public string? Path { get; set; }
 
     /// <summary>
     /// <para>
-    /// When set to <c>"ai"</c>, returns a snapshot optimized for AI consumption with element
-    /// references. Defaults to <c>"default"</c>.
+    /// Optional dimensions of the recorded video. If not specified the size will be equal
+    /// to page viewport scaled down to fit into 800x800. Actual picture of the page will
+    /// be scaled down if necessary to fit the specified size.
     /// </para>
     /// </summary>
-    [JsonPropertyName("mode")]
-    public AriaSnapshotMode? Mode { get; set; }
-
-    /// <summary>
-    /// <para>
-    /// Maximum time in milliseconds. Defaults to <c>30000</c> (30 seconds). Pass <c>0</c>
-    /// to disable timeout. The default value can be changed by using the <see cref="IBrowserContext.SetDefaultTimeout"/>
-    /// or <see cref="IPage.SetDefaultTimeout"/> methods.
-    /// </para>
-    /// </summary>
-    [JsonPropertyName("timeout")]
-    public float? Timeout { get; set; }
+    [JsonPropertyName("size")]
+    public RequestSizesResult? Size { get; set; }
 }

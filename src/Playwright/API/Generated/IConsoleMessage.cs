@@ -71,6 +71,9 @@ public partial interface IConsoleMessage
     /// <summary><para>The text of the console message.</para></summary>
     string Text { get; }
 
+    /// <summary><para>The timestamp of the console message in milliseconds since the Unix epoch.</para></summary>
+    float Timestamp { get; }
+
     /// <summary>
     /// <para>
     /// One of the following values: <c>'log'</c>, <c>'debug'</c>, <c>'info'</c>, <c>'error'</c>,

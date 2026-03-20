@@ -180,4 +180,55 @@ public class PageEventConsoleTests : PageTestEx
             Assert.AreEqual(Page, message.Page);
         }
     }
+
+    [PlaywrightTest("page-event-console.spec.ts", "should have timestamp")]
+    public async Task ShouldHaveTimestamp()
+    {
+        var before = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds() - 1;
+        var message = await Page.RunAndWaitForConsoleMessageAsync(
+            () => Page.EvaluateAsync("() => console.log('timestamp test')"));
+        var after = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds() + 1;
+        Assert.GreaterOrEqual(message.Timestamp, before);
+        Assert.LessOrEqual(message.Timestamp, after);
+    }
+
+    [PlaywrightTest("page-event-console.spec.ts", "clearConsoleMessages should work")]
+    public async Task ClearConsoleMessagesShouldWork()
+    {
+        await Page.EvaluateAsync(@"() => {
+            console.log('message1');
+            console.log('message2');
+        }");
+
+        var messages = await Page.ConsoleMessagesAsync(new() { Filter = ConsoleMessagesFilter.All });
+        Assert.True(messages.Any(m => m.Text == "message1"));
+        Assert.True(messages.Any(m => m.Text == "message2"));
+
+        await Page.ClearConsoleMessagesAsync();
+
+        messages = await Page.ConsoleMessagesAsync(new() { Filter = ConsoleMessagesFilter.All });
+        Assert.IsEmpty(messages);
+
+        await Page.EvaluateAsync("() => console.log('message3')");
+        messages = await Page.ConsoleMessagesAsync(new() { Filter = ConsoleMessagesFilter.All });
+        Assert.AreEqual(1, messages.Count);
+        Assert.AreEqual("message3", messages[0].Text);
+    }
+
+    [PlaywrightTest("page-event-console.spec.ts", "consoleMessages sinceNavigation filter should work")]
+    public async Task ConsoleMessagesSinceNavigationFilterShouldWork()
+    {
+        await Page.EvaluateAsync("() => console.log('before navigation')");
+        await Page.GotoAsync(Server.EmptyPage);
+        await Page.EvaluateAsync("() => console.log('after navigation')");
+
+        var all = await Page.ConsoleMessagesAsync(new() { Filter = ConsoleMessagesFilter.All });
+        Assert.True(all.Any(m => m.Text == "before navigation"));
+        Assert.True(all.Any(m => m.Text == "after navigation"));
+
+        // sinceNavigation is the default
+        var sinceNav = await Page.ConsoleMessagesAsync();
+        Assert.False(sinceNav.Any(m => m.Text == "before navigation"));
+        Assert.True(sinceNav.Any(m => m.Text == "after navigation"));
+    }
 }

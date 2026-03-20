@@ -22,6 +22,7 @@
  * SOFTWARE.
  */
 
+using System;
 using System.Threading.Tasks;
 
 namespace Microsoft.Playwright;
@@ -179,7 +180,7 @@ public partial interface ITracing
     /// <remarks><para>Use <c>test.step</c> instead when available.</para></remarks>
     /// <param name="name">Group name shown in the trace viewer.</param>
     /// <param name="options">Call options</param>
-    Task GroupAsync(string name, TracingGroupOptions? options = default);
+    Task<IAsyncDisposable> GroupAsync(string name, TracingGroupOptions? options = default);
 
     /// <summary><para>Closes the last group created by <see cref="ITracing.GroupAsync"/>.</para></summary>
     Task GroupEndAsync();
