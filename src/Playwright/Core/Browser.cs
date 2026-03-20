@@ -43,11 +43,14 @@ internal class Browser : ChannelOwner, IBrowser
     internal string? _tracesDir = null;
     internal BrowserType _browserType = null!;
     internal string? _closeReason;
+    private readonly EventHandler<Exception> _onConnectionClose;
 
     internal Browser(ChannelOwner parent, string guid, BrowserInitializer initializer) : base(parent, guid)
     {
         IsConnected = true;
         _initializer = initializer;
+        _onConnectionClose = (_, _) => DidClose();
+        _connection.Close += _onConnectionClose;
     }
 
     public event EventHandler<IBrowser>? Disconnected;
@@ -286,6 +289,11 @@ internal class Browser : ChannelOwner, IBrowser
 
     internal void DidClose()
     {
+        if (!IsConnected)
+        {
+            return;
+        }
+        _connection.Close -= _onConnectionClose;
         IsConnected = false;
         Disconnected?.Invoke(this, this);
         _closedTcs.TrySetResult(true);
