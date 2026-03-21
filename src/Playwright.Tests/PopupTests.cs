@@ -129,6 +129,7 @@ public class PopupTests : BrowserTestEx
     }
 
     [PlaywrightTest("popup.spec.ts", "should inherit touch support from browser context")]
+    [Skip(SkipAttribute.Targets.Firefox)] // https://bugzilla.mozilla.org/show_bug.cgi?id=2014330
     public async Task ShouldInheritTouchSupportFromBrowserContext()
     {
         await using var context = await Browser.NewContextAsync(new()
