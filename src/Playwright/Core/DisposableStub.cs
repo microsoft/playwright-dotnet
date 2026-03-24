@@ -22,37 +22,34 @@
  * SOFTWARE.
  */
 
-using System.Collections.Generic;
-using System.Text.Json.Serialization;
+using System;
+using System.Threading.Tasks;
 
-namespace Microsoft.Playwright.Transport.Protocol;
+namespace Microsoft.Playwright.Core;
 
-internal class RequestInitializer
+internal class DisposableStub : IAsyncDisposable
 {
-    [JsonPropertyName("frame")]
-    public Core.Frame Frame { get; set; } = null!;
+    private Func<Task>? _dispose;
 
-    [JsonPropertyName("serviceWorker")]
-    public Core.Worker ServiceWorker { get; set; } = null!;
+    internal DisposableStub(Func<Task> dispose)
+    {
+        _dispose = dispose;
+    }
 
-    [JsonPropertyName("url")]
-    public string Url { get; set; } = null!;
-
-    [JsonPropertyName("resourceType")]
-    public string ResourceType { get; set; } = null!;
-
-    [JsonPropertyName("method")]
-    public string Method { get; set; } = null!;
-
-    [JsonPropertyName("postData")]
-    public byte[] PostData { get; set; } = null!;
-
-    [JsonPropertyName("headers")]
-    public List<NameValue> Headers { get; set; } = null!;
-
-    [JsonPropertyName("isNavigationRequest")]
-    public bool IsNavigationRequest { get; set; }
-
-    [JsonPropertyName("redirectedFrom")]
-    public Core.Request RedirectedFrom { get; set; } = null!;
+    public async ValueTask DisposeAsync()
+    {
+        if (_dispose == null)
+        {
+            return;
+        }
+        try
+        {
+            var dispose = _dispose;
+            _dispose = null;
+            await dispose().ConfigureAwait(false);
+        }
+        catch (PlaywrightException)
+        {
+        }
+    }
 }

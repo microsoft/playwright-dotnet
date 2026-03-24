@@ -42,55 +42,55 @@ namespace Microsoft.Playwright;
 public partial interface IBrowserContext : IAsyncDisposable
 {
     /// <inheritdoc cref="ExposeBindingAsync(string, Action, BrowserContextExposeBindingOptions)"/>
-    Task ExposeBindingAsync(string name, Action<BindingSource> callback);
+    Task<IAsyncDisposable> ExposeBindingAsync(string name, Action<BindingSource> callback);
 
     /// <inheritdoc cref="ExposeBindingAsync(string, Action, BrowserContextExposeBindingOptions)"/>
-    Task ExposeBindingAsync<T>(string name, Action<BindingSource, T> callback);
+    Task<IAsyncDisposable> ExposeBindingAsync<T>(string name, Action<BindingSource, T> callback);
 
     /// <inheritdoc cref="ExposeBindingAsync(string, Action, BrowserContextExposeBindingOptions)"/>
-    Task ExposeBindingAsync<TResult>(string name, Func<BindingSource, TResult> callback);
+    Task<IAsyncDisposable> ExposeBindingAsync<TResult>(string name, Func<BindingSource, TResult> callback);
 
     /// <inheritdoc cref="ExposeBindingAsync(string, Action, BrowserContextExposeBindingOptions)"/>
-    Task ExposeBindingAsync<TResult>(string name, Func<BindingSource, IJSHandle, TResult> callback);
+    Task<IAsyncDisposable> ExposeBindingAsync<TResult>(string name, Func<BindingSource, IJSHandle, TResult> callback);
 
     /// <inheritdoc cref="ExposeBindingAsync(string, Action, BrowserContextExposeBindingOptions)"/>
-    Task ExposeBindingAsync<T, TResult>(string name, Func<BindingSource, T, TResult> callback);
+    Task<IAsyncDisposable> ExposeBindingAsync<T, TResult>(string name, Func<BindingSource, T, TResult> callback);
 
     /// <inheritdoc cref="ExposeBindingAsync(string, Action, BrowserContextExposeBindingOptions)"/>
-    Task ExposeBindingAsync<T1, T2, TResult>(string name, Func<BindingSource, T1, T2, TResult> callback);
+    Task<IAsyncDisposable> ExposeBindingAsync<T1, T2, TResult>(string name, Func<BindingSource, T1, T2, TResult> callback);
 
     /// <inheritdoc cref="ExposeBindingAsync(string, Action, BrowserContextExposeBindingOptions)"/>
-    Task ExposeBindingAsync<T1, T2, T3, TResult>(string name, Func<BindingSource, T1, T2, T3, TResult> callback);
+    Task<IAsyncDisposable> ExposeBindingAsync<T1, T2, T3, TResult>(string name, Func<BindingSource, T1, T2, T3, TResult> callback);
 
     /// <inheritdoc cref="ExposeBindingAsync(string, Action, BrowserContextExposeBindingOptions)"/>
-    Task ExposeBindingAsync<T1, T2, T3, T4, TResult>(string name, Func<BindingSource, T1, T2, T3, T4, TResult> callback);
+    Task<IAsyncDisposable> ExposeBindingAsync<T1, T2, T3, T4, TResult>(string name, Func<BindingSource, T1, T2, T3, T4, TResult> callback);
 
     /// <inheritdoc cref="ExposeFunctionAsync(string, Action)"/>
-    Task ExposeFunctionAsync<T>(string name, Action<T> callback);
+    Task<IAsyncDisposable> ExposeFunctionAsync<T>(string name, Action<T> callback);
 
     /// <inheritdoc cref="ExposeFunctionAsync(string, Action)"/>
-    Task ExposeFunctionAsync<TResult>(string name, Func<TResult> callback);
+    Task<IAsyncDisposable> ExposeFunctionAsync<TResult>(string name, Func<TResult> callback);
 
     /// <inheritdoc cref="ExposeFunctionAsync(string, Action)"/>
-    Task ExposeFunctionAsync<T, TResult>(string name, Func<T, TResult> callback);
+    Task<IAsyncDisposable> ExposeFunctionAsync<T, TResult>(string name, Func<T, TResult> callback);
 
     /// <inheritdoc cref="ExposeFunctionAsync(string, Action)"/>
-    Task ExposeFunctionAsync<T1, T2, TResult>(string name, Func<T1, T2, TResult> callback);
+    Task<IAsyncDisposable> ExposeFunctionAsync<T1, T2, TResult>(string name, Func<T1, T2, TResult> callback);
 
     /// <inheritdoc cref="ExposeFunctionAsync(string, Action)"/>
-    Task ExposeFunctionAsync<T1, T2, T3, TResult>(string name, Func<T1, T2, T3, TResult> callback);
+    Task<IAsyncDisposable> ExposeFunctionAsync<T1, T2, T3, TResult>(string name, Func<T1, T2, T3, TResult> callback);
 
     /// <inheritdoc cref="ExposeFunctionAsync(string, Action)"/>
-    Task ExposeFunctionAsync<T1, T2, T3, T4, TResult>(string name, Func<T1, T2, T3, T4, TResult> callback);
+    Task<IAsyncDisposable> ExposeFunctionAsync<T1, T2, T3, T4, TResult>(string name, Func<T1, T2, T3, T4, TResult> callback);
 
     /// <inheritdoc cref="RouteAsync(string, Action{IRoute}, BrowserContextRouteOptions?)"/>
-    Task RouteAsync(string url, Func<IRoute, Task> handler, BrowserContextRouteOptions? options = default);
+    Task<IAsyncDisposable> RouteAsync(string url, Func<IRoute, Task> handler, BrowserContextRouteOptions? options = default);
 
     /// <inheritdoc cref="RouteAsync(Regex, Action{IRoute}, BrowserContextRouteOptions?)"/>
-    Task RouteAsync(Regex url, Func<IRoute, Task> handler, BrowserContextRouteOptions? options = default);
+    Task<IAsyncDisposable> RouteAsync(Regex url, Func<IRoute, Task> handler, BrowserContextRouteOptions? options = default);
 
     /// <inheritdoc cref="RouteAsync(Func{string, bool}, Action{IRoute}, BrowserContextRouteOptions?)"/>
-    Task RouteAsync(Func<string, bool> url, Func<IRoute, Task> handler, BrowserContextRouteOptions? options = default);
+    Task<IAsyncDisposable> RouteAsync(Func<string, bool> url, Func<IRoute, Task> handler, BrowserContextRouteOptions? options = default);
 
     /// <inheritdoc cref="UnrouteAsync(string, Action{IRoute}?)"/>
     Task UnrouteAsync(string url, Func<IRoute, Task> handler);

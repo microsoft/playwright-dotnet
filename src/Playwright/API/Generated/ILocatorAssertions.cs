@@ -55,10 +55,9 @@ namespace Microsoft.Playwright;
 public partial interface ILocatorAssertions
 {
     /// <summary>
-    /// <para>
-    /// Makes the assertion check for the opposite condition. For example, this code tests
-    /// that the Locator doesn't contain text <c>"error"</c>:
-    /// </para>
+    /// <para>Makes the assertion check for the opposite condition.</para>
+    /// <para>**Usage**</para>
+    /// <para>For example, this code tests that the Locator doesn't contain text <c>"error"</c>:</para>
     /// <code>await Expect(locator).Not.ToContainTextAsync("error");</code>
     /// </summary>
     public ILocatorAssertions Not { get; }

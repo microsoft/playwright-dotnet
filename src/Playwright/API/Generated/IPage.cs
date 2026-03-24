@@ -329,7 +329,7 @@ public partial interface IPage
     /// </remarks>
     /// <param name="script">Script to be evaluated in all pages in the browser context.</param>
     /// <param name="scriptPath">Instead of specifying <paramref name="script"/>, gives the file name to load from.</param>
-    Task AddInitScriptAsync(string? script = default, string? scriptPath = default);
+    Task<IAsyncDisposable> AddInitScriptAsync(string? script = default, string? scriptPath = default);
 
     /// <summary>
     /// <para>
@@ -354,6 +354,14 @@ public partial interface IPage
 
     /// <summary><para>Brings page to front (activates tab).</para></summary>
     Task BringToFrontAsync();
+
+    /// <summary>
+    /// <para>
+    /// Cancels an ongoing <see cref="IPage.PickLocatorAsync"/> call by deactivating pick
+    /// locator mode. If no pick locator mode is active, this method is a no-op.
+    /// </para>
+    /// </summary>
+    Task CancelPickLocatorAsync();
 
     /// <summary>
     /// <para>
@@ -817,7 +825,7 @@ public partial interface IPage
     /// <param name="name">Name of the function on the window object.</param>
     /// <param name="callback">Callback function that will be called in the Playwright's context.</param>
     /// <param name="options">Call options</param>
-    Task ExposeBindingAsync(string name, Action callback, PageExposeBindingOptions? options = default);
+    Task<IAsyncDisposable> ExposeBindingAsync(string name, Action callback, PageExposeBindingOptions? options = default);
 
     /// <summary>
     /// <para>
@@ -879,7 +887,7 @@ public partial interface IPage
     /// </remarks>
     /// <param name="name">Name of the function on the window object</param>
     /// <param name="callback">Callback function which will be called in Playwright's context.</param>
-    Task ExposeFunctionAsync(string name, Action callback);
+    Task<IAsyncDisposable> ExposeFunctionAsync(string name, Action callback);
 
     /// <summary>
     /// <para>Use locator-based <see cref="ILocator.FillAsync"/> instead. Read more about <a href="https://playwright.dev/dotnet/docs/locators">locators</a>.</para>
@@ -1091,7 +1099,7 @@ public partial interface IPage
     /// </para>
     /// <para>**Usage**</para>
     /// <para>Consider the following DOM structure.</para>
-    /// <para>You can locate each element by it's implicit role:</para>
+    /// <para>You can locate each element by its implicit role:</para>
     /// <code>
     /// await Expect(Page<br/>
     ///     .GetByRole(AriaRole.Heading, new() { Name = "Sign up" }))<br/>
@@ -1128,7 +1136,7 @@ public partial interface IPage
     /// <para>Locate element by the test id.</para>
     /// <para>**Usage**</para>
     /// <para>Consider the following DOM structure.</para>
-    /// <para>You can locate the element by it's test id:</para>
+    /// <para>You can locate the element by its test id:</para>
     /// <code>await page.GetByTestId("directions").ClickAsync();</code>
     /// <para>**Details**</para>
     /// <para>
@@ -1143,7 +1151,7 @@ public partial interface IPage
     /// <para>Locate element by the test id.</para>
     /// <para>**Usage**</para>
     /// <para>Consider the following DOM structure.</para>
-    /// <para>You can locate the element by it's test id:</para>
+    /// <para>You can locate the element by its test id:</para>
     /// <code>await page.GetByTestId("directions").ClickAsync();</code>
     /// <para>**Details**</para>
     /// <para>
@@ -1539,11 +1547,28 @@ public partial interface IPage
 
     /// <summary>
     /// <para>
+    /// Clears all stored console messages from this page. Subsequent calls to <see cref="IPage.ConsoleMessagesAsync"/>
+    /// will only return messages logged after the clear.
+    /// </para>
+    /// </summary>
+    Task ClearConsoleMessagesAsync();
+
+    /// <summary>
+    /// <para>
+    /// Clears all stored page errors from this page. Subsequent calls to <see cref="IPage.PageErrorsAsync"/>
+    /// will only return errors thrown after the clear.
+    /// </para>
+    /// </summary>
+    Task ClearPageErrorsAsync();
+
+    /// <summary>
+    /// <para>
     /// Returns up to (currently) 200 last console messages from this page. See <see cref="IPage.Console"/>
     /// for more details.
     /// </para>
     /// </summary>
-    Task<IReadOnlyList<IConsoleMessage>> ConsoleMessagesAsync();
+    /// <param name="options">Call options</param>
+    Task<IReadOnlyList<IConsoleMessage>> ConsoleMessagesAsync(PageConsoleMessagesOptions? options = default);
 
     /// <summary>
     /// <para>
@@ -1676,6 +1701,20 @@ public partial interface IPage
     /// </remarks>
     /// <param name="options">Call options</param>
     Task<byte[]> PdfAsync(PagePdfOptions? options = default);
+
+    /// <summary>
+    /// <para>
+    /// Enters pick locator mode where hovering over page elements highlights them and shows
+    /// the corresponding locator. Once the user clicks an element, the mode is deactivated
+    /// and the <see cref="ILocator"/> for the picked element is returned.
+    /// </para>
+    /// <para>**Usage**</para>
+    /// <code>
+    /// var locator = await page.PickLocatorAsync();<br/>
+    /// Console.WriteLine(locator);
+    /// </code>
+    /// </summary>
+    Task<ILocator> PickLocatorAsync();
 
     /// <summary>
     /// <para>
@@ -1984,6 +2023,10 @@ public partial interface IPage
     /// });
     /// </code>
     /// <para>
+    /// If a request matches multiple registered routes, the most recently registered route
+    /// takes precedence.
+    /// </para>
+    /// <para>
     /// Page routes take precedence over browser context routes (set up with <see cref="IBrowserContext.RouteAsync"/>)
     /// when request matches both handlers.
     /// </para>
@@ -2016,7 +2059,7 @@ public partial interface IPage
     /// </param>
     /// <param name="handler">handler function to route the request.</param>
     /// <param name="options">Call options</param>
-    Task RouteAsync(string url, Action<IRoute> handler, PageRouteOptions? options = default);
+    Task<IAsyncDisposable> RouteAsync(string url, Action<IRoute> handler, PageRouteOptions? options = default);
 
     /// <summary>
     /// <para>Routing provides the capability to modify network requests that are made by a page.</para>
@@ -2062,6 +2105,10 @@ public partial interface IPage
     /// });
     /// </code>
     /// <para>
+    /// If a request matches multiple registered routes, the most recently registered route
+    /// takes precedence.
+    /// </para>
+    /// <para>
     /// Page routes take precedence over browser context routes (set up with <see cref="IBrowserContext.RouteAsync"/>)
     /// when request matches both handlers.
     /// </para>
@@ -2094,7 +2141,7 @@ public partial interface IPage
     /// </param>
     /// <param name="handler">handler function to route the request.</param>
     /// <param name="options">Call options</param>
-    Task RouteAsync(Regex url, Action<IRoute> handler, PageRouteOptions? options = default);
+    Task<IAsyncDisposable> RouteAsync(Regex url, Action<IRoute> handler, PageRouteOptions? options = default);
 
     /// <summary>
     /// <para>Routing provides the capability to modify network requests that are made by a page.</para>
@@ -2140,6 +2187,10 @@ public partial interface IPage
     /// });
     /// </code>
     /// <para>
+    /// If a request matches multiple registered routes, the most recently registered route
+    /// takes precedence.
+    /// </para>
+    /// <para>
     /// Page routes take precedence over browser context routes (set up with <see cref="IBrowserContext.RouteAsync"/>)
     /// when request matches both handlers.
     /// </para>
@@ -2172,7 +2223,7 @@ public partial interface IPage
     /// </param>
     /// <param name="handler">handler function to route the request.</param>
     /// <param name="options">Call options</param>
-    Task RouteAsync(Func<string, bool> url, Action<IRoute> handler, PageRouteOptions? options = default);
+    Task<IAsyncDisposable> RouteAsync(Func<string, bool> url, Action<IRoute> handler, PageRouteOptions? options = default);
 
     /// <summary>
     /// <para>
@@ -2799,6 +2850,15 @@ public partial interface IPage
     Task SetViewportSizeAsync(int width, int height);
 
     /// <summary>
+    /// <para>
+    /// Captures the aria snapshot of the page. Read more about <a href="https://playwright.dev/dotnet/docs/aria-snapshots">aria
+    /// snapshots</a>.
+    /// </para>
+    /// </summary>
+    /// <param name="options">Call options</param>
+    Task<string> AriaSnapshotAsync(PageAriaSnapshotOptions? options = default);
+
+    /// <summary>
     /// <para>Use locator-based <see cref="ILocator.TapAsync"/> instead. Read more about <a href="https://playwright.dev/dotnet/docs/locators">locators</a>.</para>
     /// <para>
     /// This method taps an element matching <see cref="IPage.TapAsync"/> by performing
@@ -2936,7 +2996,7 @@ public partial interface IPage
     /// </para>
     /// </summary>
     /// <param name="url">
-    /// A glob pattern, regex pattern or predicate receiving <see cref="URL"/> to match
+    /// A glob pattern, regex pattern, or predicate receiving <see cref="URL"/> to match
     /// while routing.
     /// </param>
     /// <param name="handler">Optional handler function to route the request.</param>
@@ -2949,7 +3009,7 @@ public partial interface IPage
     /// </para>
     /// </summary>
     /// <param name="url">
-    /// A glob pattern, regex pattern or predicate receiving <see cref="URL"/> to match
+    /// A glob pattern, regex pattern, or predicate receiving <see cref="URL"/> to match
     /// while routing.
     /// </param>
     /// <param name="handler">Optional handler function to route the request.</param>
@@ -2962,7 +3022,7 @@ public partial interface IPage
     /// </para>
     /// </summary>
     /// <param name="url">
-    /// A glob pattern, regex pattern or predicate receiving <see cref="URL"/> to match
+    /// A glob pattern, regex pattern, or predicate receiving <see cref="URL"/> to match
     /// while routing.
     /// </param>
     /// <param name="handler">Optional handler function to route the request.</param>
@@ -2970,8 +3030,14 @@ public partial interface IPage
 
     string Url { get; }
 
-    /// <summary><para>Video object associated with this page.</para></summary>
-    IVideo? Video { get; }
+    /// <summary>
+    /// <para>
+    /// Video object associated with this page. Can be used to control video recording with
+    /// <see cref="IVideo.StartAsync"/> and <see cref="IVideo.StopAsync"/>, or to access
+    /// the video file when using the <c>recordVideo</c> context option.
+    /// </para>
+    /// </summary>
+    IVideo Video { get; }
 
     PageViewportSizeResult? ViewportSize { get; }
 
@@ -3713,7 +3779,7 @@ public partial interface IPage
     /// </code>
     /// </summary>
     /// <param name="url">
-    /// A glob pattern, regex pattern or predicate receiving <see cref="URL"/> to match
+    /// A glob pattern, regex pattern, or predicate receiving <see cref="URL"/> to match
     /// while waiting for the navigation. Note that if the parameter is a string without
     /// wildcard characters, the method will wait for navigation to URL that is exactly
     /// equal to the string.
@@ -3730,7 +3796,7 @@ public partial interface IPage
     /// </code>
     /// </summary>
     /// <param name="url">
-    /// A glob pattern, regex pattern or predicate receiving <see cref="URL"/> to match
+    /// A glob pattern, regex pattern, or predicate receiving <see cref="URL"/> to match
     /// while waiting for the navigation. Note that if the parameter is a string without
     /// wildcard characters, the method will wait for navigation to URL that is exactly
     /// equal to the string.
@@ -3747,7 +3813,7 @@ public partial interface IPage
     /// </code>
     /// </summary>
     /// <param name="url">
-    /// A glob pattern, regex pattern or predicate receiving <see cref="URL"/> to match
+    /// A glob pattern, regex pattern, or predicate receiving <see cref="URL"/> to match
     /// while waiting for the navigation. Note that if the parameter is a string without
     /// wildcard characters, the method will wait for navigation to URL that is exactly
     /// equal to the string.

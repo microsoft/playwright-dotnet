@@ -94,10 +94,10 @@ internal class LocalUtils : ChannelOwner
     internal async Task<JsonPipe> ConnectAsync(string wsEndpoint, IEnumerable<KeyValuePair<string, string>>? headers = default, float? slowMo = default, float? timeout = default, string? exposeNetwork = default)
          => (await SendMessageToServerAsync("connect", new Dictionary<string, object?>
             {
-                { "wsEndpoint", wsEndpoint },
+                { "endpoint", wsEndpoint },
                 { "headers", headers },
                 { "slowMo", slowMo },
-                { "timeout", timeout },
+                { "timeout", timeout ?? 0 },
                 { "exposeNetwork", exposeNetwork },
             }).ConfigureAwait(false)).Value.GetObject<JsonPipe>("pipe", _connection);
 

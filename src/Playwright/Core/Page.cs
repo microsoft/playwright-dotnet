@@ -48,8 +48,8 @@ internal class Page : ChannelOwner, IPage
     private readonly List<HarRouter> _harRouters = new();
     private readonly Dictionary<int, LocatorHandler> _locatorHandlers = new();
     private readonly List<WebSocketRouteHandler> _webSocketRoutes = new();
+    private readonly Video _video;
     private List<RouteHandler> _routes = new();
-    private Video? _video;
     private string? _closeReason;
 
     internal Page(ChannelOwner parent, string guid, PageInitializer initializer) : base(parent, guid)
@@ -72,6 +72,7 @@ internal class Page : ChannelOwner, IPage
         APIRequest = Context._request;
 
         _initializer = initializer;
+        _video = new Video(this, _connection, initializer.Video);
 
         Close += (_, _) => ClosedOrCrashedTcs.TrySetResult(true);
         Crash += (_, _) => ClosedOrCrashedTcs.TrySetResult(true);
@@ -188,19 +189,7 @@ internal class Page : ChannelOwner, IPage
 
     public IReadOnlyList<IWorker> Workers => _workers;
 
-    public IVideo? Video
-    {
-        get
-        {
-            if (Context.VideosDir() == null)
-            {
-                return null;
-            }
-
-            return ForceVideo();
-        }
-        set => _video = value as Video;
-    }
+    public IVideo Video => _video;
 
     internal BrowserContext? OwnedContext { get; set; }
 
@@ -255,9 +244,6 @@ internal class Page : ChannelOwner, IPage
                 break;
             case "download":
                 Download?.Invoke(this, new Download(this, serverParams.GetProperty("url").ToObject<string>(_connection.DefaultJsonSerializerOptions), serverParams.GetProperty("suggestedFilename").ToObject<string>(_connection.DefaultJsonSerializerOptions), serverParams.GetProperty("artifact").ToObject<Artifact>(_connection.DefaultJsonSerializerOptions)));
-                break;
-            case "video":
-                ForceVideo().ArtifactReady(serverParams.GetProperty("artifact").ToObject<Artifact>(_connection.DefaultJsonSerializerOptions));
                 break;
             case "viewportSizeChanged":
                 var size = serverParams.GetProperty("viewportSize").ToObject<ViewportSize>(_connection.DefaultJsonSerializerOptions);
@@ -819,69 +805,69 @@ internal class Page : ChannelOwner, IPage
         }).ConfigureAwait(false);
 
     [MethodImpl(MethodImplOptions.NoInlining)]
-    public Task ExposeBindingAsync(string name, Action callback, PageExposeBindingOptions? options = default)
+    public Task<IAsyncDisposable> ExposeBindingAsync(string name, Action callback, PageExposeBindingOptions? options = default)
 #pragma warning disable CS0612 // Type or member is obsolete
         => InnerExposeBindingAsync(name, callback, options?.Handle ?? false);
 #pragma warning restore CS0612 // Type or member is obsolete
 
     [MethodImpl(MethodImplOptions.NoInlining)]
-    public Task ExposeBindingAsync(string name, Action<BindingSource> callback)
+    public Task<IAsyncDisposable> ExposeBindingAsync(string name, Action<BindingSource> callback)
         => InnerExposeBindingAsync(name, callback);
 
     [MethodImpl(MethodImplOptions.NoInlining)]
-    public Task ExposeBindingAsync<T>(string name, Action<BindingSource, T> callback)
+    public Task<IAsyncDisposable> ExposeBindingAsync<T>(string name, Action<BindingSource, T> callback)
         => InnerExposeBindingAsync(name, callback);
 
     [MethodImpl(MethodImplOptions.NoInlining)]
-    public Task ExposeBindingAsync<TResult>(string name, Func<BindingSource, TResult> callback)
+    public Task<IAsyncDisposable> ExposeBindingAsync<TResult>(string name, Func<BindingSource, TResult> callback)
         => InnerExposeBindingAsync(name, callback);
 
     [MethodImpl(MethodImplOptions.NoInlining)]
-    public Task ExposeBindingAsync<TResult>(string name, Func<BindingSource, IJSHandle, TResult> callback)
+    public Task<IAsyncDisposable> ExposeBindingAsync<TResult>(string name, Func<BindingSource, IJSHandle, TResult> callback)
         => InnerExposeBindingAsync(name, callback, true);
 
     [MethodImpl(MethodImplOptions.NoInlining)]
-    public Task ExposeBindingAsync<T, TResult>(string name, Func<BindingSource, T, TResult> callback)
+    public Task<IAsyncDisposable> ExposeBindingAsync<T, TResult>(string name, Func<BindingSource, T, TResult> callback)
         => InnerExposeBindingAsync(name, callback);
 
     [MethodImpl(MethodImplOptions.NoInlining)]
-    public Task ExposeBindingAsync<T1, T2, TResult>(string name, Func<BindingSource, T1, T2, TResult> callback)
+    public Task<IAsyncDisposable> ExposeBindingAsync<T1, T2, TResult>(string name, Func<BindingSource, T1, T2, TResult> callback)
         => InnerExposeBindingAsync(name, callback);
 
     [MethodImpl(MethodImplOptions.NoInlining)]
-    public Task ExposeBindingAsync<T1, T2, T3, TResult>(string name, Func<BindingSource, T1, T2, T3, TResult> callback)
+    public Task<IAsyncDisposable> ExposeBindingAsync<T1, T2, T3, TResult>(string name, Func<BindingSource, T1, T2, T3, TResult> callback)
         => InnerExposeBindingAsync(name, callback);
 
     [MethodImpl(MethodImplOptions.NoInlining)]
-    public Task ExposeBindingAsync<T1, T2, T3, T4, TResult>(string name, Func<BindingSource, T1, T2, T3, T4, TResult> callback)
+    public Task<IAsyncDisposable> ExposeBindingAsync<T1, T2, T3, T4, TResult>(string name, Func<BindingSource, T1, T2, T3, T4, TResult> callback)
         => InnerExposeBindingAsync(name, callback);
 
     [MethodImpl(MethodImplOptions.NoInlining)]
-    public Task ExposeFunctionAsync(string name, Action callback)
+    public Task<IAsyncDisposable> ExposeFunctionAsync(string name, Action callback)
         => ExposeBindingAsync(name, (BindingSource _) => callback());
 
     [MethodImpl(MethodImplOptions.NoInlining)]
-    public Task ExposeFunctionAsync<T>(string name, Action<T> callback)
+    public Task<IAsyncDisposable> ExposeFunctionAsync<T>(string name, Action<T> callback)
         => ExposeBindingAsync(name, (BindingSource _, T t) => callback(t));
 
     [MethodImpl(MethodImplOptions.NoInlining)]
-    public Task ExposeFunctionAsync<TResult>(string name, Func<TResult> callback)
+    public Task<IAsyncDisposable> ExposeFunctionAsync<TResult>(string name, Func<TResult> callback)
         => ExposeBindingAsync(name, (BindingSource _) => callback());
 
     [MethodImpl(MethodImplOptions.NoInlining)]
-    public Task ExposeFunctionAsync<T, TResult>(string name, Func<T, TResult> callback)
+    public Task<IAsyncDisposable> ExposeFunctionAsync<T, TResult>(string name, Func<T, TResult> callback)
         => ExposeBindingAsync(name, (BindingSource _, T t) => callback(t));
 
     [MethodImpl(MethodImplOptions.NoInlining)]
-    public Task ExposeFunctionAsync<T1, T2, TResult>(string name, Func<T1, T2, TResult> callback)
+    public Task<IAsyncDisposable> ExposeFunctionAsync<T1, T2, TResult>(string name, Func<T1, T2, TResult> callback)
         => ExposeBindingAsync(name, (BindingSource _, T1 t1, T2 t2) => callback(t1, t2));
 
     [MethodImpl(MethodImplOptions.NoInlining)]
-    public Task ExposeFunctionAsync<T1, T2, T3, TResult>(string name, Func<T1, T2, T3, TResult> callback)
+    public Task<IAsyncDisposable> ExposeFunctionAsync<T1, T2, T3, TResult>(string name, Func<T1, T2, T3, TResult> callback)
         => ExposeBindingAsync(name, (BindingSource _, T1 t1, T2 t2, T3 t3) => callback(t1, t2, t3));
 
     [MethodImpl(MethodImplOptions.NoInlining)]
-    public Task ExposeFunctionAsync<T1, T2, T3, T4, TResult>(string name, Func<T1, T2, T3, T4, TResult> callback)
+    public Task<IAsyncDisposable> ExposeFunctionAsync<T1, T2, T3, T4, TResult>(string name, Func<T1, T2, T3, T4, TResult> callback)
         => ExposeBindingAsync(name, (BindingSource _, T1 t1, T2 t2, T3 t3, T4 t4) => callback(t1, t2, t3, t4));
 
     [MethodImpl(MethodImplOptions.NoInlining)]
@@ -916,36 +902,39 @@ internal class Page : ChannelOwner, IPage
     }
 
     [MethodImpl(MethodImplOptions.NoInlining)]
-    public Task AddInitScriptAsync(string? script, string? scriptPath)
-        => SendMessageToServerAsync(
+    public async Task<IAsyncDisposable> AddInitScriptAsync(string? script, string? scriptPath)
+    {
+        var result = await SendMessageToServerAsync(
             "addInitScript",
             new Dictionary<string, object?>
             {
                 ["source"] = ScriptsHelper.EvaluationScript(script, scriptPath, true),
-            });
+            }).ConfigureAwait(false);
+        return result.GetObject<Disposable>("disposable", _connection)!;
+    }
 
     [MethodImpl(MethodImplOptions.NoInlining)]
-    public Task RouteAsync(string globMatch, Func<IRoute, Task> handler, PageRouteOptions? options = null)
+    public Task<IAsyncDisposable> RouteAsync(string globMatch, Func<IRoute, Task> handler, PageRouteOptions? options = null)
         => RouteAsync(globMatch, null, null, handler, options);
 
     [MethodImpl(MethodImplOptions.NoInlining)]
-    public Task RouteAsync(string globMatch, Action<IRoute> handler, PageRouteOptions? options = null)
+    public Task<IAsyncDisposable> RouteAsync(string globMatch, Action<IRoute> handler, PageRouteOptions? options = null)
         => RouteAsync(globMatch, null, null, handler, options);
 
     [MethodImpl(MethodImplOptions.NoInlining)]
-    public Task RouteAsync(Regex reMatch, Action<IRoute> handler, PageRouteOptions? options = null)
+    public Task<IAsyncDisposable> RouteAsync(Regex reMatch, Action<IRoute> handler, PageRouteOptions? options = null)
          => RouteAsync(null, reMatch, null, handler, options);
 
     [MethodImpl(MethodImplOptions.NoInlining)]
-    public Task RouteAsync(Regex reMatch, Func<IRoute, Task> handler, PageRouteOptions? options = null)
+    public Task<IAsyncDisposable> RouteAsync(Regex reMatch, Func<IRoute, Task> handler, PageRouteOptions? options = null)
          => RouteAsync(null, reMatch, null, handler, options);
 
     [MethodImpl(MethodImplOptions.NoInlining)]
-    public Task RouteAsync(Func<string, bool> funcMatch, Action<IRoute> handler, PageRouteOptions? options = null)
+    public Task<IAsyncDisposable> RouteAsync(Func<string, bool> funcMatch, Action<IRoute> handler, PageRouteOptions? options = null)
         => RouteAsync(null, null, funcMatch, handler, options);
 
     [MethodImpl(MethodImplOptions.NoInlining)]
-    public Task RouteAsync(Func<string, bool> funcMatch, Func<IRoute, Task> handler, PageRouteOptions? options = null)
+    public Task<IAsyncDisposable> RouteAsync(Func<string, bool> funcMatch, Func<IRoute, Task> handler, PageRouteOptions? options = null)
         => RouteAsync(null, null, funcMatch, handler, options);
 
     [MethodImpl(MethodImplOptions.NoInlining)]
@@ -1215,8 +1204,9 @@ internal class Page : ChannelOwner, IPage
 
     internal void FirePageError(string error) => PageError?.Invoke(this, error);
 
-    private Task RouteAsync(string? globMatch, Regex? reMatch, Func<string, bool>? funcMatch, Delegate handler, PageRouteOptions? options)
-        => RouteAsync(new()
+    private async Task<IAsyncDisposable> RouteAsync(string? globMatch, Regex? reMatch, Func<string, bool>? funcMatch, Delegate handler, PageRouteOptions? options)
+    {
+        var setting = new RouteHandler()
         {
             urlMatcher = new URLMatch()
             {
@@ -1227,12 +1217,13 @@ internal class Page : ChannelOwner, IPage
             },
             Handler = handler,
             Times = options?.Times,
-        });
-
-    private Task RouteAsync(RouteHandler setting)
-    {
+        };
         _routes.Insert(0, setting);
-        return UpdateInterceptionAsync();
+        await UpdateInterceptionAsync().ConfigureAwait(false);
+        return new DisposableStub(async () =>
+        {
+            await UnrouteAsync(globMatch, reMatch, funcMatch, handler).ConfigureAwait(false);
+        });
     }
 
     private async Task UnrouteAsync(string? globMatch, Regex? reMatch, Func<string, bool>? funcMatch, Delegate? handler)
@@ -1364,7 +1355,7 @@ internal class Page : ChannelOwner, IPage
         FrameAttached?.Invoke(this, args);
     }
 
-    private async Task InnerExposeBindingAsync(string name, Delegate callback, bool handle = false)
+    private async Task<IAsyncDisposable> InnerExposeBindingAsync(string name, Delegate callback, bool handle = false)
     {
         if (Bindings.ContainsKey(name))
         {
@@ -1373,16 +1364,16 @@ internal class Page : ChannelOwner, IPage
 
         Bindings.Add(name, callback);
 
-        await SendMessageToServerAsync(
+        var result = await SendMessageToServerAsync(
             "exposeBinding",
             new Dictionary<string, object?>
             {
                 ["name"] = name,
                 ["needsHandle"] = handle,
             }).ConfigureAwait(false);
+        return result.GetObject<Disposable>("disposable", _connection)!;
     }
 
-    private Video ForceVideo() => _video ??= new(this, _connection);
 
     private FrameSetInputFilesOptions? Map(PageSetInputFilesOptions? options)
     {
@@ -1490,12 +1481,24 @@ internal class Page : ChannelOwner, IPage
     public ILocator GetByTitle(Regex text, PageGetByTitleOptions? options = null)
         => MainFrame.GetByTitle(text, new() { Exact = options?.Exact });
 
-    public async Task<IReadOnlyList<IConsoleMessage>> ConsoleMessagesAsync()
+    [MethodImpl(MethodImplOptions.NoInlining)]
+    public async Task<IReadOnlyList<IConsoleMessage>> ConsoleMessagesAsync(PageConsoleMessagesOptions? options = default)
     {
-        var response = await SendMessageToServerAsync("consoleMessages").ConfigureAwait(false);
+        var response = await SendMessageToServerAsync("consoleMessages", new Dictionary<string, object?>
+        {
+            ["filter"] = options?.Filter,
+        }).ConfigureAwait(false);
         var initializers = response.Value.GetProperty("messages").ToObject<List<ConsoleMessageInitializer>>(_connection.DefaultJsonSerializerOptions);
         return initializers.Select(initializer => new ConsoleMessage(initializer, this, null)).ToList();
     }
+
+    [MethodImpl(MethodImplOptions.NoInlining)]
+    public Task ClearConsoleMessagesAsync()
+        => SendMessageToServerAsync("clearConsoleMessages");
+
+    [MethodImpl(MethodImplOptions.NoInlining)]
+    public Task ClearPageErrorsAsync()
+        => SendMessageToServerAsync("clearPageErrors");
 
     public async Task<IReadOnlyList<string>> PageErrorsAsync()
     {
@@ -1509,6 +1512,30 @@ internal class Page : ChannelOwner, IPage
         var response = await SendMessageToServerAsync("requests").ConfigureAwait(false);
         return response.Value.GetProperty("requests").ToObject<List<Request>>(_connection.DefaultJsonSerializerOptions);
     }
+
+    [MethodImpl(MethodImplOptions.NoInlining)]
+    public async Task<string> AriaSnapshotAsync(PageAriaSnapshotOptions? options = default)
+    {
+        var result = await MainFrame.SendMessageToServerAsync("ariaSnapshot", new Dictionary<string, object?>
+        {
+            ["timeout"] = MainFrame.Timeout(options?.Timeout),
+            ["mode"] = options?.Mode,
+            ["depth"] = options?.Depth,
+        }).ConfigureAwait(false);
+        return result.Value.GetProperty("snapshot").ToString();
+    }
+
+    [MethodImpl(MethodImplOptions.NoInlining)]
+    public async Task<ILocator> PickLocatorAsync()
+    {
+        var result = await SendMessageToServerAsync("pickLocator").ConfigureAwait(false);
+        var selector = result.Value.GetProperty("selector").ToString();
+        return Locator(selector);
+    }
+
+    [MethodImpl(MethodImplOptions.NoInlining)]
+    public Task CancelPickLocatorAsync()
+        => SendMessageToServerAsync("cancelPickLocator");
 
     public Task AddLocatorHandlerAsync(ILocator locator, Func<Task> handler, PageAddLocatorHandlerOptions? options = null)
         => AddLocatorHandlerImplAsync(locator, handler, options);

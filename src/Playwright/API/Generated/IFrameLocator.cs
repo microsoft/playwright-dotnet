@@ -171,7 +171,7 @@ public partial interface IFrameLocator
     /// </para>
     /// <para>**Usage**</para>
     /// <para>Consider the following DOM structure.</para>
-    /// <para>You can locate each element by it's implicit role:</para>
+    /// <para>You can locate each element by its implicit role:</para>
     /// <code>
     /// await Expect(Page<br/>
     ///     .GetByRole(AriaRole.Heading, new() { Name = "Sign up" }))<br/>
@@ -208,7 +208,7 @@ public partial interface IFrameLocator
     /// <para>Locate element by the test id.</para>
     /// <para>**Usage**</para>
     /// <para>Consider the following DOM structure.</para>
-    /// <para>You can locate the element by it's test id:</para>
+    /// <para>You can locate the element by its test id:</para>
     /// <code>await page.GetByTestId("directions").ClickAsync();</code>
     /// <para>**Details**</para>
     /// <para>
@@ -223,7 +223,7 @@ public partial interface IFrameLocator
     /// <para>Locate element by the test id.</para>
     /// <para>**Usage**</para>
     /// <para>Consider the following DOM structure.</para>
-    /// <para>You can locate the element by it's test id:</para>
+    /// <para>You can locate the element by its test id:</para>
     /// <code>await page.GetByTestId("directions").ClickAsync();</code>
     /// <para>**Details**</para>
     /// <para>

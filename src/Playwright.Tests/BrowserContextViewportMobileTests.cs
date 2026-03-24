@@ -89,8 +89,7 @@ public class BrowserContextViewportMobileTests : BrowserTestEx
 
         var page = await context.NewPageAsync();
         await page.GotoAsync(Server.EmptyPage);
-        await page.AddScriptTagAsync(new() { Url = Server.Prefix + "/modernizr.js" });
-        Assert.True(await page.EvaluateAsync<bool>("() => Modernizr.touchevents"));
+        Assert.True(await page.EvaluateAsync<bool>("() => 'ontouchstart' in window || !!window.TouchEvent"));
     }
 
     [PlaywrightTest("browsercontext-viewport-mobile.spec.ts", "should support landscape emulation")]

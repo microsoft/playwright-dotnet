@@ -26,11 +26,11 @@ using System.Text.Json.Serialization;
 
 namespace Microsoft.Playwright;
 
-public class LocatorAriaSnapshotOptions
+public class PageAriaSnapshotOptions
 {
-    public LocatorAriaSnapshotOptions() { }
+    public PageAriaSnapshotOptions() { }
 
-    public LocatorAriaSnapshotOptions(LocatorAriaSnapshotOptions clone)
+    public PageAriaSnapshotOptions(PageAriaSnapshotOptions clone)
     {
         if (clone == null)
         {

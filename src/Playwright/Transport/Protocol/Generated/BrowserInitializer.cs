@@ -33,4 +33,7 @@ internal class BrowserInitializer
 
     [JsonPropertyName("name")]
     public string Name { get; set; } = null!;
+
+    [JsonPropertyName("browserName")]
+    public string BrowserName { get; set; } = null!;
 }

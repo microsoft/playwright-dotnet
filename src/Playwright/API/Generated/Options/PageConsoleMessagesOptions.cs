@@ -6,7 +6,7 @@
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
- * to use, copy, modify, merge, publish, distribute, sublicense, and / or sell
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
  * copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions:
  *
@@ -24,16 +24,23 @@
 
 using System.Text.Json.Serialization;
 
-namespace Microsoft.Playwright.Transport.Protocol;
+namespace Microsoft.Playwright;
 
-internal class AgentUsage
+public class PageConsoleMessagesOptions
 {
-    [JsonPropertyName("turns")]
-    public int Turns { get; set; }
+    public PageConsoleMessagesOptions() { }
 
-    [JsonPropertyName("inputTokens")]
-    public int InputTokens { get; set; }
+    public PageConsoleMessagesOptions(PageConsoleMessagesOptions clone)
+    {
+        if (clone == null)
+        {
+            return;
+        }
 
-    [JsonPropertyName("outputTokens")]
-    public int OutputTokens { get; set; }
+        Filter = clone.Filter;
+    }
+
+    /// <summary><para>Controls which messages are returned:</para></summary>
+    [JsonPropertyName("filter")]
+    public ConsoleMessagesFilter? Filter { get; set; }
 }

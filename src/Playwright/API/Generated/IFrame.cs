@@ -628,7 +628,7 @@ public partial interface IFrame
     /// </para>
     /// <para>**Usage**</para>
     /// <para>Consider the following DOM structure.</para>
-    /// <para>You can locate each element by it's implicit role:</para>
+    /// <para>You can locate each element by its implicit role:</para>
     /// <code>
     /// await Expect(Page<br/>
     ///     .GetByRole(AriaRole.Heading, new() { Name = "Sign up" }))<br/>
@@ -665,7 +665,7 @@ public partial interface IFrame
     /// <para>Locate element by the test id.</para>
     /// <para>**Usage**</para>
     /// <para>Consider the following DOM structure.</para>
-    /// <para>You can locate the element by it's test id:</para>
+    /// <para>You can locate the element by its test id:</para>
     /// <code>await page.GetByTestId("directions").ClickAsync();</code>
     /// <para>**Details**</para>
     /// <para>
@@ -680,7 +680,7 @@ public partial interface IFrame
     /// <para>Locate element by the test id.</para>
     /// <para>**Usage**</para>
     /// <para>Consider the following DOM structure.</para>
-    /// <para>You can locate the element by it's test id:</para>
+    /// <para>You can locate the element by its test id:</para>
     /// <code>await page.GetByTestId("directions").ClickAsync();</code>
     /// <para>**Details**</para>
     /// <para>
@@ -1923,7 +1923,7 @@ public partial interface IFrame
     /// </code>
     /// </summary>
     /// <param name="url">
-    /// A glob pattern, regex pattern or predicate receiving <see cref="URL"/> to match
+    /// A glob pattern, regex pattern, or predicate receiving <see cref="URL"/> to match
     /// while waiting for the navigation. Note that if the parameter is a string without
     /// wildcard characters, the method will wait for navigation to URL that is exactly
     /// equal to the string.
@@ -1940,7 +1940,7 @@ public partial interface IFrame
     /// </code>
     /// </summary>
     /// <param name="url">
-    /// A glob pattern, regex pattern or predicate receiving <see cref="URL"/> to match
+    /// A glob pattern, regex pattern, or predicate receiving <see cref="URL"/> to match
     /// while waiting for the navigation. Note that if the parameter is a string without
     /// wildcard characters, the method will wait for navigation to URL that is exactly
     /// equal to the string.
@@ -1957,7 +1957,7 @@ public partial interface IFrame
     /// </code>
     /// </summary>
     /// <param name="url">
-    /// A glob pattern, regex pattern or predicate receiving <see cref="URL"/> to match
+    /// A glob pattern, regex pattern, or predicate receiving <see cref="URL"/> to match
     /// while waiting for the navigation. Note that if the parameter is a string without
     /// wildcard characters, the method will wait for navigation to URL that is exactly
     /// equal to the string.

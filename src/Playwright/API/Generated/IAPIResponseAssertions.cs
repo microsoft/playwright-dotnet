@@ -31,20 +31,38 @@ namespace Microsoft.Playwright;
 /// The <see cref="IAPIResponseAssertions"/> class provides assertion methods that can
 /// be used to make assertions about the <see cref="IAPIResponse"/> in the tests.
 /// </para>
+/// <code>
+/// using Microsoft.Playwright;<br/>
+/// using Microsoft.Playwright.MSTest;<br/>
+/// <br/>
+/// namespace PlaywrightTests;<br/>
+/// <br/>
+/// [TestClass]<br/>
+/// public class ExampleTests : PageTest<br/>
+/// {<br/>
+///     [TestMethod]<br/>
+///     public async Task NavigatesToLoginPage()<br/>
+///     {<br/>
+///         var response = await Page.APIRequest.GetAsync("https://playwright.dev");<br/>
+///         await Expect(response).ToBeOKAsync();<br/>
+///     }<br/>
+/// }
+/// </code>
 /// </summary>
 public partial interface IAPIResponseAssertions
 {
     /// <summary>
-    /// <para>
-    /// Makes the assertion check for the opposite condition. For example, this code tests
-    /// that the response status is not successful:
-    /// </para>
+    /// <para>Makes the assertion check for the opposite condition.</para>
+    /// <para>**Usage**</para>
+    /// <para>For example, this code tests that the response status is not successful:</para>
+    /// <code>await Expect(response).Not.ToBeOKAsync();</code>
     /// </summary>
     public IAPIResponseAssertions Not { get; }
 
     /// <summary>
     /// <para>Ensures the response status code is within <c>200..299</c> range.</para>
     /// <para>**Usage**</para>
+    /// <code>await Expect(response).ToBeOKAsync();</code>
     /// </summary>
     Task ToBeOKAsync();
 }

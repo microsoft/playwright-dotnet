@@ -308,6 +308,21 @@ public class PageNetworkResponseTests : PageTestEx
         Assert.AreEqual(response.Headers, allHeaders);
     }
 
+    [PlaywrightTest("page-network-response.spec.ts", "should return http version")]
+    public async Task ShouldReturnHttpVersion()
+    {
+        var response = await Page.GotoAsync(Server.EmptyPage);
+        Assert.AreEqual("HTTP/1.1", await response.HttpVersionAsync());
+    }
+
+    [PlaywrightTest("page-network-response.spec.ts", "request.existingResponse should return the response after it is received")]
+    public async Task RequestExistingResponseShouldReturnTheResponseAfterItIsReceived()
+    {
+        var response = await Page.GotoAsync(Server.EmptyPage);
+        var request = response.Request;
+        Assert.AreEqual(response, request.ExistingResponse);
+    }
+
     [PlaywrightTest("page-network-response.spec.ts", "should report if request was fromServiceWorker")]
     public async Task ShouldReportIfRequestWasFromServiceWorker()
     {

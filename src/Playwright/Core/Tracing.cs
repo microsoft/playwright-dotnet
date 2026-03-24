@@ -22,6 +22,7 @@
  * SOFTWARE.
  */
 
+using System;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 using System.Text.Json;
@@ -56,6 +57,7 @@ internal class Tracing : ChannelOwner, ITracing
             ["screenshots"] = options?.Screenshots,
             ["snapshots"] = options?.Snapshots,
             ["sources"] = options?.Sources,
+            ["live"] = options?.Live,
         }).ConfigureAwait(false);
         var traceName = (await SendMessageToServerAsync("tracingStartChunk", new Dictionary<string, object?>
         {
@@ -182,12 +184,18 @@ internal class Tracing : ChannelOwner, ITracing
         }
     }
 
-    public Task GroupAsync(string name, TracingGroupOptions? options = null)
-        => SendMessageToServerAsync("tracingGroup", new Dictionary<string, object?>
+    public async Task<IAsyncDisposable> GroupAsync(string name, TracingGroupOptions? options = null)
+    {
+        await SendMessageToServerAsync("tracingGroup", new Dictionary<string, object?>
         {
             ["name"] = name,
             ["location"] = options?.Location,
+        }).ConfigureAwait(false);
+        return new DisposableStub(async () =>
+        {
+            await GroupEndAsync().ConfigureAwait(false);
         });
+    }
 
     public Task GroupEndAsync()
         => SendMessageToServerAsync("tracingGroupEnd");

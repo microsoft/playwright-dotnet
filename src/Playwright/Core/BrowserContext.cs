@@ -144,6 +144,10 @@ internal class BrowserContext : ChannelOwner, IBrowserContext
 
     internal bool ClosingOrClosed { get; private set; }
 
+    public bool IsClosed => ClosingOrClosed;
+
+    public IDebugger Debugger => _initializer.Debugger;
+
     public IAPIRequestContext APIRequest => _request;
 
     public IReadOnlyList<IWorker> ServiceWorkers => _serviceWorkers;
@@ -309,19 +313,20 @@ internal class BrowserContext : ChannelOwner, IBrowserContext
             });
 
     [MethodImpl(MethodImplOptions.NoInlining)]
-    public Task AddInitScriptAsync(string? script = null, string? scriptPath = null)
+    public async Task<IAsyncDisposable> AddInitScriptAsync(string? script = null, string? scriptPath = null)
     {
         if (string.IsNullOrEmpty(script))
         {
             script = ScriptsHelper.EvaluationScript(script, scriptPath, true);
         }
 
-        return SendMessageToServerAsync(
+        var result = await SendMessageToServerAsync(
             "addInitScript",
             new Dictionary<string, object?>
             {
                 ["source"] = script,
-            });
+            }).ConfigureAwait(false);
+        return result.GetObject<Disposable>("disposable", _connection)!;
     }
 
     [MethodImpl(MethodImplOptions.NoInlining)]
@@ -405,69 +410,69 @@ internal class BrowserContext : ChannelOwner, IBrowserContext
             }).ConfigureAwait(false))?.GetProperty("cookies").ToObject<IReadOnlyList<BrowserContextCookiesResult>>()!;
 
     [MethodImpl(MethodImplOptions.NoInlining)]
-    public Task ExposeBindingAsync(string name, Action callback, BrowserContextExposeBindingOptions? options = default)
+    public Task<IAsyncDisposable> ExposeBindingAsync(string name, Action callback, BrowserContextExposeBindingOptions? options = default)
 #pragma warning disable CS0612 // Type or member is obsolete
         => ExposeBindingAsync(name, callback, handle: options?.Handle ?? false);
 #pragma warning restore CS0612 // Type or member is obsolete
 
     [MethodImpl(MethodImplOptions.NoInlining)]
-    public Task ExposeBindingAsync(string name, Action<BindingSource> callback)
+    public Task<IAsyncDisposable> ExposeBindingAsync(string name, Action<BindingSource> callback)
         => ExposeBindingAsync(name, (Delegate)callback);
 
     [MethodImpl(MethodImplOptions.NoInlining)]
-    public Task ExposeBindingAsync<T>(string name, Action<BindingSource, T> callback)
+    public Task<IAsyncDisposable> ExposeBindingAsync<T>(string name, Action<BindingSource, T> callback)
         => ExposeBindingAsync(name, (Delegate)callback);
 
     [MethodImpl(MethodImplOptions.NoInlining)]
-    public Task ExposeBindingAsync<TResult>(string name, Func<BindingSource, TResult> callback)
+    public Task<IAsyncDisposable> ExposeBindingAsync<TResult>(string name, Func<BindingSource, TResult> callback)
         => ExposeBindingAsync(name, (Delegate)callback);
 
     [MethodImpl(MethodImplOptions.NoInlining)]
-    public Task ExposeBindingAsync<TResult>(string name, Func<BindingSource, IJSHandle, TResult> callback)
+    public Task<IAsyncDisposable> ExposeBindingAsync<TResult>(string name, Func<BindingSource, IJSHandle, TResult> callback)
         => ExposeBindingAsync(name, callback, true);
 
     [MethodImpl(MethodImplOptions.NoInlining)]
-    public Task ExposeBindingAsync<T, TResult>(string name, Func<BindingSource, T, TResult> callback)
+    public Task<IAsyncDisposable> ExposeBindingAsync<T, TResult>(string name, Func<BindingSource, T, TResult> callback)
         => ExposeBindingAsync(name, (Delegate)callback);
 
     [MethodImpl(MethodImplOptions.NoInlining)]
-    public Task ExposeBindingAsync<T1, T2, TResult>(string name, Func<BindingSource, T1, T2, TResult> callback)
+    public Task<IAsyncDisposable> ExposeBindingAsync<T1, T2, TResult>(string name, Func<BindingSource, T1, T2, TResult> callback)
         => ExposeBindingAsync(name, (Delegate)callback);
 
     [MethodImpl(MethodImplOptions.NoInlining)]
-    public Task ExposeBindingAsync<T1, T2, T3, TResult>(string name, Func<BindingSource, T1, T2, T3, TResult> callback)
+    public Task<IAsyncDisposable> ExposeBindingAsync<T1, T2, T3, TResult>(string name, Func<BindingSource, T1, T2, T3, TResult> callback)
         => ExposeBindingAsync(name, (Delegate)callback);
 
     [MethodImpl(MethodImplOptions.NoInlining)]
-    public Task ExposeBindingAsync<T1, T2, T3, T4, TResult>(string name, Func<BindingSource, T1, T2, T3, T4, TResult> callback)
+    public Task<IAsyncDisposable> ExposeBindingAsync<T1, T2, T3, T4, TResult>(string name, Func<BindingSource, T1, T2, T3, T4, TResult> callback)
         => ExposeBindingAsync(name, (Delegate)callback);
 
     [MethodImpl(MethodImplOptions.NoInlining)]
-    public Task ExposeFunctionAsync(string name, Action callback)
+    public Task<IAsyncDisposable> ExposeFunctionAsync(string name, Action callback)
         => ExposeBindingAsync(name, (BindingSource _) => callback());
 
     [MethodImpl(MethodImplOptions.NoInlining)]
-    public Task ExposeFunctionAsync<T>(string name, Action<T> callback)
+    public Task<IAsyncDisposable> ExposeFunctionAsync<T>(string name, Action<T> callback)
         => ExposeBindingAsync(name, (BindingSource _, T t) => callback(t));
 
     [MethodImpl(MethodImplOptions.NoInlining)]
-    public Task ExposeFunctionAsync<TResult>(string name, Func<TResult> callback)
+    public Task<IAsyncDisposable> ExposeFunctionAsync<TResult>(string name, Func<TResult> callback)
         => ExposeBindingAsync(name, (BindingSource _) => callback());
 
     [MethodImpl(MethodImplOptions.NoInlining)]
-    public Task ExposeFunctionAsync<T, TResult>(string name, Func<T, TResult> callback)
+    public Task<IAsyncDisposable> ExposeFunctionAsync<T, TResult>(string name, Func<T, TResult> callback)
         => ExposeBindingAsync(name, (BindingSource _, T t) => callback(t));
 
     [MethodImpl(MethodImplOptions.NoInlining)]
-    public Task ExposeFunctionAsync<T1, T2, TResult>(string name, Func<T1, T2, TResult> callback)
+    public Task<IAsyncDisposable> ExposeFunctionAsync<T1, T2, TResult>(string name, Func<T1, T2, TResult> callback)
         => ExposeBindingAsync(name, (BindingSource _, T1 t1, T2 t2) => callback(t1, t2));
 
     [MethodImpl(MethodImplOptions.NoInlining)]
-    public Task ExposeFunctionAsync<T1, T2, T3, TResult>(string name, Func<T1, T2, T3, TResult> callback)
+    public Task<IAsyncDisposable> ExposeFunctionAsync<T1, T2, T3, TResult>(string name, Func<T1, T2, T3, TResult> callback)
         => ExposeBindingAsync(name, (BindingSource _, T1 t1, T2 t2, T3 t3) => callback(t1, t2, t3));
 
     [MethodImpl(MethodImplOptions.NoInlining)]
-    public Task ExposeFunctionAsync<T1, T2, T3, T4, TResult>(string name, Func<T1, T2, T3, T4, TResult> callback)
+    public Task<IAsyncDisposable> ExposeFunctionAsync<T1, T2, T3, T4, TResult>(string name, Func<T1, T2, T3, T4, TResult> callback)
         => ExposeBindingAsync(name, (BindingSource _, T1 t1, T2 t2, T3 t3, T4 t4) => callback(t1, t2, t3, t4));
 
     [MethodImpl(MethodImplOptions.NoInlining)]
@@ -508,27 +513,27 @@ internal class BrowserContext : ChannelOwner, IBrowserContext
     }
 
     [MethodImpl(MethodImplOptions.NoInlining)]
-    public Task RouteAsync(string globMatch, Func<IRoute, Task> handler, BrowserContextRouteOptions? options = null)
+    public Task<IAsyncDisposable> RouteAsync(string globMatch, Func<IRoute, Task> handler, BrowserContextRouteOptions? options = null)
         => RouteAsync(globMatch, null, null, handler, options);
 
     [MethodImpl(MethodImplOptions.NoInlining)]
-    public Task RouteAsync(string globMatch, Action<IRoute> handler, BrowserContextRouteOptions? options = null)
+    public Task<IAsyncDisposable> RouteAsync(string globMatch, Action<IRoute> handler, BrowserContextRouteOptions? options = null)
         => RouteAsync(globMatch, null, null, handler, options);
 
     [MethodImpl(MethodImplOptions.NoInlining)]
-    public Task RouteAsync(Regex reMatch, Action<IRoute> handler, BrowserContextRouteOptions? options = null)
+    public Task<IAsyncDisposable> RouteAsync(Regex reMatch, Action<IRoute> handler, BrowserContextRouteOptions? options = null)
          => RouteAsync(null, reMatch, null, handler, options);
 
     [MethodImpl(MethodImplOptions.NoInlining)]
-    public Task RouteAsync(Regex reMatch, Func<IRoute, Task> handler, BrowserContextRouteOptions? options = null)
+    public Task<IAsyncDisposable> RouteAsync(Regex reMatch, Func<IRoute, Task> handler, BrowserContextRouteOptions? options = null)
          => RouteAsync(null, reMatch, null, handler, options);
 
     [MethodImpl(MethodImplOptions.NoInlining)]
-    public Task RouteAsync(Func<string, bool> funcMatch, Action<IRoute> handler, BrowserContextRouteOptions? options = null)
+    public Task<IAsyncDisposable> RouteAsync(Func<string, bool> funcMatch, Action<IRoute> handler, BrowserContextRouteOptions? options = null)
         => RouteAsync(null, null, funcMatch, handler, options);
 
     [MethodImpl(MethodImplOptions.NoInlining)]
-    public Task RouteAsync(Func<string, bool> funcMatch, Func<IRoute, Task> handler, BrowserContextRouteOptions? options = null)
+    public Task<IAsyncDisposable> RouteAsync(Func<string, bool> funcMatch, Func<IRoute, Task> handler, BrowserContextRouteOptions? options = null)
         => RouteAsync(null, null, funcMatch, handler, options);
 
     [MethodImpl(MethodImplOptions.NoInlining)]
@@ -574,6 +579,23 @@ internal class BrowserContext : ChannelOwner, IBrowserContext
         }
 
         return state;
+    }
+
+    [MethodImpl(MethodImplOptions.NoInlining)]
+    public async Task SetStorageStateAsync(string storageStatePath)
+    {
+        if (!File.Exists(storageStatePath))
+        {
+            throw new PlaywrightException($"The specified storage state file does not exist: {storageStatePath}");
+        }
+        var content = File.ReadAllText(storageStatePath);
+        var storageState = JsonSerializer.Deserialize<object>(content, JsonExtensions.DefaultJsonSerializerOptions);
+        await SendMessageToServerAsync(
+            "setStorageState",
+            new Dictionary<string, object?>
+            {
+                ["storageState"] = storageState,
+            }).ConfigureAwait(false);
     }
 
     [MethodImpl(MethodImplOptions.NoInlining)]
@@ -738,8 +760,9 @@ internal class BrowserContext : ChannelOwner, IBrowserContext
             baseURL = BaseURL,
         }.Match(url);
 
-    private Task RouteAsync(string? globMatch, Regex? reMatch, Func<string, bool>? funcMatch, Delegate handler, BrowserContextRouteOptions? options)
-        => RouteAsync(new()
+    private async Task<IAsyncDisposable> RouteAsync(string? globMatch, Regex? reMatch, Func<string, bool>? funcMatch, Delegate handler, BrowserContextRouteOptions? options)
+    {
+        var setting = new RouteHandler()
         {
             urlMatcher = new URLMatch()
             {
@@ -750,12 +773,13 @@ internal class BrowserContext : ChannelOwner, IBrowserContext
             },
             Handler = handler,
             Times = options?.Times,
-        });
-
-    private Task RouteAsync(RouteHandler setting)
-    {
+        };
         _routes.Insert(0, setting);
-        return UpdateInterceptionAsync();
+        await UpdateInterceptionAsync().ConfigureAwait(false);
+        return new DisposableStub(async () =>
+        {
+            await UnrouteAsync(globMatch, reMatch, funcMatch, handler).ConfigureAwait(false);
+        });
     }
 
     private async Task UnrouteAsync(string? globMatch, Regex? reMatch, Func<string, bool>? funcMatch, Delegate? handler)
@@ -835,7 +859,7 @@ internal class BrowserContext : ChannelOwner, IBrowserContext
 
     private void Channel_Route(object sender, Route route) => _ = OnRouteAsync(route).ConfigureAwait(false);
 
-    private async Task ExposeBindingAsync(string name, Delegate callback, bool handle = false)
+    private async Task<IAsyncDisposable> ExposeBindingAsync(string name, Delegate callback, bool handle = false)
     {
         foreach (var page in _pages)
         {
@@ -852,13 +876,14 @@ internal class BrowserContext : ChannelOwner, IBrowserContext
 
         _bindings.Add(name, callback);
 
-        await SendMessageToServerAsync(
+        var result = await SendMessageToServerAsync(
             "exposeBinding",
             new Dictionary<string, object?>
             {
                 ["name"] = name,
                 ["needsHandle"] = handle,
             }).ConfigureAwait(false);
+        return result.GetObject<Disposable>("disposable", _connection)!;
     }
 
     private HarContentPolicy? RouteFromHarUpdateContentPolicyToHarContentPolicy(RouteFromHarUpdateContentPolicy? policy)
