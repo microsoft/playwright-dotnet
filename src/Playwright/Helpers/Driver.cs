@@ -118,8 +118,10 @@ internal static class Driver
         string nodeExecutable;
         if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
         {
-            platformId = "win32_x64";
             nodeExecutable = "node.exe";
+            platformId = RuntimeInformation.ProcessArchitecture == Architecture.Arm64
+                ? "win32_arm64"
+                : "win32_x64";
         }
         else if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
         {

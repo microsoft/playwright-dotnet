@@ -19,7 +19,7 @@ jobs:
       fail-fast: false
       matrix:
         browser: [chromium, firefox, webkit]
-        os: [windows-latest, ubuntu-latest, macos-15-large]
+        os: [windows-latest, windows-11-arm, ubuntu-latest, macos-15-large]
     steps:
       - uses: actions/checkout@v5
       - name: Setup .NET Core
