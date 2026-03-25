@@ -43,6 +43,7 @@ internal class DriverDownloader
             "linux",
             "linux-arm64",
             "win32_x64",
+            "win32_arm64",
     };
 
     public string BasePath { get; set; }
