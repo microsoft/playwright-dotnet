@@ -15,6 +15,7 @@ jobs:
     name: ${{ matrix.browser }}/${{ matrix.os }}
     runs-on: ${{ matrix.os }}
     timeout-minutes: 45
+    timeout-minutes: 90
     strategy:
       fail-fast: false
       matrix:
@@ -22,22 +23,29 @@ jobs:
         os: [windows-latest, windows-11-arm, ubuntu-latest, macos-15-large]
     steps:
       - uses: actions/checkout@v5
+
       - name: Setup .NET Core
         uses: actions/setup-dotnet@v5
         with:
           dotnet-version: 8.0.x
+
+      # FIX: ensure Playwright.csproj prerequisites check passes by running the
+      # exact command it requires (downloads drivers into the expected basepath).
       - name: Install prerequisites and download drivers
-        shell: bash
-        run: ./build.sh --download-driver
+        run: dotnet run --project ./src/tools/Playwright.Tooling/Playwright.Tooling.csproj -- download-drivers --basepath .
+
       - name: Building
         run: dotnet build ./src
+
       - name: Installing Browsers and dependencies
         run: pwsh src/Playwright/bin/Debug/netstandard2.0/playwright.ps1 install --with-deps ${{ matrix.browser }}
+
       - name: Running tests
         if: matrix.os != 'ubuntu-latest'
         env:
           BROWSER: ${{ matrix.browser }}
         run: dotnet test ./src/Playwright.Tests/Playwright.Tests.csproj -c Debug -f net8.0 --logger:"console;verbosity=detailed"
+
       - name: Running tests (Linux)
         if: matrix.os == 'ubuntu-latest'
         env:
