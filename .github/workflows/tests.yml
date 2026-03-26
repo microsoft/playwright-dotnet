@@ -14,7 +14,6 @@ jobs:
   test:
     name: ${{ matrix.browser }}/${{ matrix.os }}
     runs-on: ${{ matrix.os }}
-    timeout-minutes: 45
     timeout-minutes: 90
     strategy:
       fail-fast: false
@@ -29,8 +28,6 @@ jobs:
         with:
           dotnet-version: 8.0.x
 
-      # FIX: ensure Playwright.csproj prerequisites check passes by running the
-      # exact command it requires (downloads drivers into the expected basepath).
       - name: Install prerequisites and download drivers
         run: dotnet run --project ./src/tools/Playwright.Tooling/Playwright.Tooling.csproj -- download-drivers --basepath .
 
