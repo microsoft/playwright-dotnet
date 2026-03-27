@@ -22,21 +22,22 @@
  * SOFTWARE.
  */
 
-using System.Text.Json.Serialization;
+using System.Runtime.Serialization;
 
 namespace Microsoft.Playwright;
 
-public partial class Annotate
+public enum AnnotatePosition
 {
-    /// <summary><para>How long each annotation is displayed in milliseconds. Defaults to <c>500</c>.</para></summary>
-    [JsonPropertyName("duration")]
-    public float? Duration { get; set; }
-
-    /// <summary><para>Position of the action title overlay. Defaults to <c>"top-right"</c>.</para></summary>
-    [JsonPropertyName("position")]
-    public AnnotatePosition? Position { get; set; }
-
-    /// <summary><para>Font size of the action title in pixels. Defaults to <c>24</c>.</para></summary>
-    [JsonPropertyName("fontSize")]
-    public int? FontSize { get; set; }
+    [EnumMember(Value = "top-left")]
+    TopLeft,
+    [EnumMember(Value = "top")]
+    Top,
+    [EnumMember(Value = "top-right")]
+    TopRight,
+    [EnumMember(Value = "bottom-left")]
+    BottomLeft,
+    [EnumMember(Value = "bottom")]
+    Bottom,
+    [EnumMember(Value = "bottom-right")]
+    BottomRight,
 }

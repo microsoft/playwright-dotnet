@@ -1601,6 +1601,8 @@ public partial interface IPage
 
     public IMouse Mouse { get; }
 
+    public IOverlay Overlay { get; }
+
     /// <summary>
     /// <para>
     /// Returns the opener for popup pages and <c>null</c> for others. If the opener has

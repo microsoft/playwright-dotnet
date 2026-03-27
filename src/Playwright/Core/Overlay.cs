@@ -25,50 +25,50 @@
 using System;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
-using System.Text.Json;
 using System.Threading.Tasks;
-using Microsoft.Playwright.Helpers;
-using Microsoft.Playwright.Transport;
 
 namespace Microsoft.Playwright.Core;
 
-internal class Debugger : ChannelOwner, IDebugger
+internal class Overlay : IOverlay
 {
-    private PausedDetail? _pausedDetails;
+    private readonly Page _page;
 
-    public Debugger(ChannelOwner parent, string guid) : base(parent, guid)
+    internal Overlay(Page page)
     {
+        _page = page;
     }
 
-    public event EventHandler? PausedStateChanged;
-
-    public PausedDetail? PausedDetails => _pausedDetails;
-
-    internal override void OnMessage(string method, JsonElement serverParams)
+    [MethodImpl(MethodImplOptions.NoInlining)]
+    public async Task<IAsyncDisposable> ShowAsync(string html, OverlayShowOptions? options = default)
     {
-        switch (method)
+        var result = await _page.SendMessageToServerAsync("overlayShow", new Dictionary<string, object?>
         {
-            case "pausedStateChanged":
-                _pausedDetails = serverParams.TryGetProperty("pausedDetails", out var details) && details.ValueKind != JsonValueKind.Null
-                    ? details.ToObject<PausedDetail>(_connection.DefaultJsonSerializerOptions)
-                    : null;
-                PausedStateChanged?.Invoke(this, EventArgs.Empty);
-                break;
-        }
+            ["html"] = html,
+            ["duration"] = options?.Duration,
+        }).ConfigureAwait(false);
+        var id = result.Value.GetProperty("id").GetString()!;
+        return new DisposableStub(async () =>
+        {
+            await _page.SendMessageToServerAsync("overlayRemove", new Dictionary<string, object?>
+            {
+                ["id"] = id,
+            }).ConfigureAwait(false);
+        });
     }
 
     [MethodImpl(MethodImplOptions.NoInlining)]
-    public Task RequestPauseAsync() => SendMessageToServerAsync("requestPause");
+    public Task ChapterAsync(string title, OverlayChapterOptions? options = default) =>
+        _page.SendMessageToServerAsync("overlayChapter", new Dictionary<string, object?>
+        {
+            ["title"] = title,
+            ["description"] = options?.Description,
+            ["duration"] = options?.Duration,
+        });
 
     [MethodImpl(MethodImplOptions.NoInlining)]
-    public Task ResumeAsync() => SendMessageToServerAsync("resume");
-
-    [MethodImpl(MethodImplOptions.NoInlining)]
-    public Task NextAsync() => SendMessageToServerAsync("next");
-
-    [MethodImpl(MethodImplOptions.NoInlining)]
-    public Task RunToAsync(Location location) => SendMessageToServerAsync("runTo", new Dictionary<string, object?>
-    {
-        ["location"] = location,
-    });
+    public Task SetVisibleAsync(bool visible) =>
+        _page.SendMessageToServerAsync("overlaySetVisible", new Dictionary<string, object?>
+        {
+            ["visible"] = visible,
+        });
 }

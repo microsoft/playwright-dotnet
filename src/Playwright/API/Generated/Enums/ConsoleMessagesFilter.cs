@@ -30,6 +30,6 @@ public enum ConsoleMessagesFilter
 {
     [EnumMember(Value = "all")]
     All,
-    [EnumMember(Value = "sinceNavigation")]
+    [EnumMember(Value = "since-navigation")]
     SinceNavigation,
 }

@@ -148,6 +148,17 @@ public partial interface ILocator
     /// <item><description>Generic static text can be represented with the <c>text</c> key.</description></item>
     /// </list>
     /// <para>Below is the HTML markup and the respective ARIA snapshot:</para>
+    /// <para>
+    /// An AI-optimized snapshot, controlled by <see cref="ILocator.AriaSnapshotAsync"/>,
+    /// is different from a default snapshot:
+    /// </para>
+    /// <list type="ordinal">
+    /// <item><description>
+    /// Includes element references <c>[ref=e2]</c>. 2. Does not wait for an element matching
+    /// the locator, and throws when no elements match. 3. Includes snapshots of <c>&lt;iframe&gt;</c>s
+    /// inside the target.
+    /// </description></item>
+    /// </list>
     /// </summary>
     /// <param name="options">Call options</param>
     Task<string> AriaSnapshotAsync(LocatorAriaSnapshotOptions? options = default);

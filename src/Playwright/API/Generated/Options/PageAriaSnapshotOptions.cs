@@ -48,8 +48,9 @@ public class PageAriaSnapshotOptions
 
     /// <summary>
     /// <para>
-    /// When set to <c>"ai"</c>, returns a snapshot optimized for AI consumption with element
-    /// references. Defaults to <c>"default"</c>.
+    /// When set to <c>"ai"</c>, returns a snapshot optimized for AI consumption: including
+    /// element references like <c>[ref=e2]</c> and snapshots of <c>&lt;iframe&gt;</c>s.
+    /// Defaults to <c>"default"</c>.
     /// </para>
     /// </summary>
     [JsonPropertyName("mode")]
