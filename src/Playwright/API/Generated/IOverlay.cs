@@ -22,46 +22,41 @@
  * SOFTWARE.
  */
 
-using System.Text.Json.Serialization;
+using System;
+using System.Threading.Tasks;
 
 namespace Microsoft.Playwright;
 
-public class LocatorAriaSnapshotOptions
+/// <summary>
+/// <para>
+/// Interface for managing page overlays that display persistent visual indicators on
+/// top of the page.
+/// </para>
+/// </summary>
+public partial interface IOverlay
 {
-    public LocatorAriaSnapshotOptions() { }
-
-    public LocatorAriaSnapshotOptions(LocatorAriaSnapshotOptions clone)
-    {
-        if (clone == null)
-        {
-            return;
-        }
-
-        Depth = clone.Depth;
-        Mode = clone.Mode;
-        Timeout = clone.Timeout;
-    }
-
-    /// <summary><para>When specified, limits the depth of the snapshot.</para></summary>
-    [JsonPropertyName("depth")]
-    public int? Depth { get; set; }
+    /// <summary>
+    /// <para>
+    /// Adds an overlay with the given HTML content. The overlay is displayed on top of
+    /// the page until removed. Returns a disposable that removes the overlay when disposed.
+    /// </para>
+    /// </summary>
+    /// <param name="html">HTML content for the overlay.</param>
+    /// <param name="options">Call options</param>
+    Task<IAsyncDisposable> ShowAsync(string html, OverlayShowOptions? options = default);
 
     /// <summary>
     /// <para>
-    /// When set to <c>"ai"</c>, returns a snapshot optimized for AI consumption. Defaults
-    /// to <c>"default"</c>. See details for more information.
+    /// Shows a chapter overlay with a title and optional description, centered on the page
+    /// with a blurred backdrop. Useful for narrating video recordings. The overlay is removed
+    /// after the specified duration, or 2000ms.
     /// </para>
     /// </summary>
-    [JsonPropertyName("mode")]
-    public AriaSnapshotMode? Mode { get; set; }
+    /// <param name="title">Title text displayed prominently in the overlay.</param>
+    /// <param name="options">Call options</param>
+    Task ChapterAsync(string title, OverlayChapterOptions? options = default);
 
-    /// <summary>
-    /// <para>
-    /// Maximum time in milliseconds. Defaults to <c>30000</c> (30 seconds). Pass <c>0</c>
-    /// to disable timeout. The default value can be changed by using the <see cref="IBrowserContext.SetDefaultTimeout"/>
-    /// or <see cref="IPage.SetDefaultTimeout"/> methods.
-    /// </para>
-    /// </summary>
-    [JsonPropertyName("timeout")]
-    public float? Timeout { get; set; }
+    /// <summary><para>Sets visibility of all overlays without removing them.</para></summary>
+    /// <param name="visible">Whether overlays should be visible.</param>
+    Task SetVisibleAsync(bool visible);
 }

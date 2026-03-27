@@ -23,7 +23,6 @@
  */
 
 using System;
-using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace Microsoft.Playwright;
@@ -41,11 +40,11 @@ public partial interface IDebugger
 
     /// <summary>
     /// <para>
-    /// Returns details about the currently paused calls. Returns an empty array if the
-    /// debugger is not paused.
+    /// Returns details about the currently paused call. Returns <c>null</c> if the debugger
+    /// is not paused.
     /// </para>
     /// </summary>
-    IReadOnlyList<PausedDetail> PausedDetails { get; }
+    PausedDetail? PausedDetails { get; }
 
     /// <summary>
     /// <para>Configures the debugger to pause before the next action is executed.</para>
@@ -55,12 +54,12 @@ public partial interface IDebugger
     /// </para>
     /// <para>
     /// Note that <see cref="IPage.PauseAsync"/> is equivalent to a "debugger" statement
-    /// — it pauses execution at the call site immediately. On the contrary, <see cref="IDebugger.PauseAsync"/>
+    /// — it pauses execution at the call site immediately. On the contrary, <see cref="IDebugger.RequestPauseAsync"/>
     /// is equivalent to "pause on next statement" — it configures the debugger to pause
     /// before the next action is executed.
     /// </para>
     /// </summary>
-    Task PauseAsync();
+    Task RequestPauseAsync();
 
     /// <summary><para>Resumes script execution. Throws if the debugger is not paused.</para></summary>
     Task ResumeAsync();

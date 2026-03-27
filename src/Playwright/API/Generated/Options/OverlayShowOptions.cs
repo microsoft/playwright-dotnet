@@ -26,42 +26,26 @@ using System.Text.Json.Serialization;
 
 namespace Microsoft.Playwright;
 
-public class LocatorAriaSnapshotOptions
+public class OverlayShowOptions
 {
-    public LocatorAriaSnapshotOptions() { }
+    public OverlayShowOptions() { }
 
-    public LocatorAriaSnapshotOptions(LocatorAriaSnapshotOptions clone)
+    public OverlayShowOptions(OverlayShowOptions clone)
     {
         if (clone == null)
         {
             return;
         }
 
-        Depth = clone.Depth;
-        Mode = clone.Mode;
-        Timeout = clone.Timeout;
+        Duration = clone.Duration;
     }
 
-    /// <summary><para>When specified, limits the depth of the snapshot.</para></summary>
-    [JsonPropertyName("depth")]
-    public int? Depth { get; set; }
-
     /// <summary>
     /// <para>
-    /// When set to <c>"ai"</c>, returns a snapshot optimized for AI consumption. Defaults
-    /// to <c>"default"</c>. See details for more information.
+    /// Duration in milliseconds after which the overlay is automatically removed. Overlay
+    /// stays until dismissed if not provided.
     /// </para>
     /// </summary>
-    [JsonPropertyName("mode")]
-    public AriaSnapshotMode? Mode { get; set; }
-
-    /// <summary>
-    /// <para>
-    /// Maximum time in milliseconds. Defaults to <c>30000</c> (30 seconds). Pass <c>0</c>
-    /// to disable timeout. The default value can be changed by using the <see cref="IBrowserContext.SetDefaultTimeout"/>
-    /// or <see cref="IPage.SetDefaultTimeout"/> methods.
-    /// </para>
-    /// </summary>
-    [JsonPropertyName("timeout")]
-    public float? Timeout { get; set; }
+    [JsonPropertyName("duration")]
+    public float? Duration { get; set; }
 }

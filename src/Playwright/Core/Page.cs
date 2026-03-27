@@ -49,6 +49,7 @@ internal class Page : ChannelOwner, IPage
     private readonly Dictionary<int, LocatorHandler> _locatorHandlers = new();
     private readonly List<WebSocketRouteHandler> _webSocketRoutes = new();
     private readonly Video _video;
+    private readonly Overlay _overlay;
     private List<RouteHandler> _routes = new();
     private string? _closeReason;
 
@@ -73,6 +74,7 @@ internal class Page : ChannelOwner, IPage
 
         _initializer = initializer;
         _video = new Video(this, _connection, initializer.Video);
+        _overlay = new Overlay(this);
 
         Close += (_, _) => ClosedOrCrashedTcs.TrySetResult(true);
         Crash += (_, _) => ClosedOrCrashedTcs.TrySetResult(true);
@@ -176,6 +178,8 @@ internal class Page : ChannelOwner, IPage
     {
         get;
     }
+
+    public IOverlay Overlay => _overlay;
 
     public IClock Clock => Context.Clock;
 

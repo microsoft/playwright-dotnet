@@ -6,7 +6,7 @@
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
- * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * to use, copy, modify, merge, publish, distribute, sublicense, and / or sell
  * copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions:
  *
@@ -24,19 +24,16 @@
 
 using System.Text.Json.Serialization;
 
-namespace Microsoft.Playwright;
+namespace Microsoft.Playwright.Transport.Protocol;
 
-public partial class Annotate
+internal class AnnotateOptions
 {
-    /// <summary><para>How long each annotation is displayed in milliseconds. Defaults to <c>500</c>.</para></summary>
     [JsonPropertyName("duration")]
-    public float? Duration { get; set; }
+    public float Duration { get; set; }
 
-    /// <summary><para>Position of the action title overlay. Defaults to <c>"top-right"</c>.</para></summary>
     [JsonPropertyName("position")]
-    public AnnotatePosition? Position { get; set; }
+    public string Position { get; set; } = null!;
 
-    /// <summary><para>Font size of the action title in pixels. Defaults to <c>24</c>.</para></summary>
     [JsonPropertyName("fontSize")]
     public int? FontSize { get; set; }
 }

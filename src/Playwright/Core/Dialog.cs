@@ -21,6 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
+using System;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
@@ -57,5 +58,14 @@ internal class Dialog : ChannelOwner, IDialog
             });
 
     [MethodImpl(MethodImplOptions.NoInlining)]
-    public Task DismissAsync() => SendMessageToServerAsync("dismiss");
+    public async Task DismissAsync()
+    {
+        try
+        {
+            await SendMessageToServerAsync("dismiss").ConfigureAwait(false);
+        }
+        catch (Exception e) when (DriverMessages.IsTargetClosedError(e))
+        {
+        }
+    }
 }
