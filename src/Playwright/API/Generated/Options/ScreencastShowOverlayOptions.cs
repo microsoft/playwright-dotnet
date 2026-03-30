@@ -22,22 +22,30 @@
  * SOFTWARE.
  */
 
-using System.Runtime.Serialization;
+using System.Text.Json.Serialization;
 
 namespace Microsoft.Playwright;
 
-public enum AnnotatePosition
+public class ScreencastShowOverlayOptions
 {
-    [EnumMember(Value = "top-left")]
-    TopLeft,
-    [EnumMember(Value = "top")]
-    Top,
-    [EnumMember(Value = "top-right")]
-    TopRight,
-    [EnumMember(Value = "bottom-left")]
-    BottomLeft,
-    [EnumMember(Value = "bottom")]
-    Bottom,
-    [EnumMember(Value = "bottom-right")]
-    BottomRight,
+    public ScreencastShowOverlayOptions() { }
+
+    public ScreencastShowOverlayOptions(ScreencastShowOverlayOptions clone)
+    {
+        if (clone == null)
+        {
+            return;
+        }
+
+        Duration = clone.Duration;
+    }
+
+    /// <summary>
+    /// <para>
+    /// Duration in milliseconds after which the overlay is automatically removed. Overlay
+    /// stays until dismissed if not provided.
+    /// </para>
+    /// </summary>
+    [JsonPropertyName("duration")]
+    public float? Duration { get; set; }
 }

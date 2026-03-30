@@ -44,7 +44,7 @@ public partial interface IDebugger
     /// is not paused.
     /// </para>
     /// </summary>
-    PausedDetail? PausedDetails { get; }
+    DebuggerPausedDetails? PausedDetails { get; }
 
     /// <summary>
     /// <para>Configures the debugger to pause before the next action is executed.</para>

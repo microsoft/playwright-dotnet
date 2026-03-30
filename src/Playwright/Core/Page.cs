@@ -49,7 +49,7 @@ internal class Page : ChannelOwner, IPage
     private readonly Dictionary<int, LocatorHandler> _locatorHandlers = new();
     private readonly List<WebSocketRouteHandler> _webSocketRoutes = new();
     private readonly Video _video;
-    private readonly Overlay _overlay;
+    private readonly Screencast _screencast;
     private List<RouteHandler> _routes = new();
     private string? _closeReason;
 
@@ -74,7 +74,7 @@ internal class Page : ChannelOwner, IPage
 
         _initializer = initializer;
         _video = new Video(this, _connection, initializer.Video);
-        _overlay = new Overlay(this);
+        _screencast = new Screencast(this);
 
         Close += (_, _) => ClosedOrCrashedTcs.TrySetResult(true);
         Crash += (_, _) => ClosedOrCrashedTcs.TrySetResult(true);
@@ -179,8 +179,6 @@ internal class Page : ChannelOwner, IPage
         get;
     }
 
-    public IOverlay Overlay => _overlay;
-
     public IClock Clock => Context.Clock;
 
     public string Url => MainFrame.Url;
@@ -191,9 +189,22 @@ internal class Page : ChannelOwner, IPage
 
     public ITouchscreen Touchscreen { get; }
 
+    public IScreencast Screencast => _screencast;
+
     public IReadOnlyList<IWorker> Workers => _workers;
 
-    public IVideo Video => _video;
+    public IVideo? Video
+    {
+        get
+        {
+            if (!Context.HasVideo())
+            {
+                return null;
+            }
+
+            return _video;
+        }
+    }
 
     internal BrowserContext? OwnedContext { get; set; }
 
@@ -252,6 +263,9 @@ internal class Page : ChannelOwner, IPage
             case "viewportSizeChanged":
                 var size = serverParams.GetProperty("viewportSize").ToObject<ViewportSize>(_connection.DefaultJsonSerializerOptions);
                 ViewportSize = new() { Width = size.Width, Height = size.Height };
+                break;
+            case "screencastFrame":
+                _screencast.OnScreencastFrame(serverParams.GetProperty("data").GetBytesFromBase64());
                 break;
             case "worker":
                 var worker = serverParams.GetProperty("worker").ToObject<Worker>(_connection.DefaultJsonSerializerOptions);

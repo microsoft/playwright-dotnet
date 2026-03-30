@@ -22,53 +22,20 @@
  * SOFTWARE.
  */
 
-using System;
-using System.Collections.Generic;
 using System.Threading.Tasks;
-using Microsoft.Playwright.Helpers;
 using Microsoft.Playwright.Transport;
 
 namespace Microsoft.Playwright.Core;
 
 internal class Video : IVideo
 {
-    private readonly Page _page;
     private readonly bool _isRemote;
-    private Artifact? _artifact;
-    private string? _savePath;
+    private readonly Artifact? _artifact;
 
     public Video(Page page, Connection connection, Artifact? artifact = null)
     {
-        _page = page;
         _isRemote = connection.IsRemote;
         _artifact = artifact;
-    }
-
-    public async Task<IAsyncDisposable> StartAsync(VideoStartOptions? options = default)
-    {
-        var result = await _page.SendMessageToServerAsync("videoStart", new Dictionary<string, object?>
-        {
-            ["size"] = options?.Size,
-            ["annotate"] = options?.Annotate,
-        }).ConfigureAwait(false);
-        _artifact = result.GetObject<Artifact>("artifact", _page._connection);
-        _savePath = options?.Path;
-        return new DisposableStub(async () =>
-        {
-            await StopAsync().ConfigureAwait(false);
-        });
-    }
-
-    public async Task StopAsync()
-    {
-        await _page.WrapApiCallAsync(async () =>
-        {
-            await _page.SendMessageToServerAsync("videoStop").ConfigureAwait(false);
-            if (_savePath != null)
-            {
-                await SaveAsAsync(_savePath).ConfigureAwait(false);
-            }
-        }).ConfigureAwait(false);
     }
 
     public async Task DeleteAsync()

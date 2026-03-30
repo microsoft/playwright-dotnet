@@ -26,43 +26,31 @@ using System.Text.Json.Serialization;
 
 namespace Microsoft.Playwright;
 
-public class VideoStartOptions
+public class ScreencastShowChapterOptions
 {
-    public VideoStartOptions() { }
+    public ScreencastShowChapterOptions() { }
 
-    public VideoStartOptions(VideoStartOptions clone)
+    public ScreencastShowChapterOptions(ScreencastShowChapterOptions clone)
     {
         if (clone == null)
         {
             return;
         }
 
-        Annotate = clone.Annotate;
-        Path = clone.Path;
-        Size = clone.Size;
+        Description = clone.Description;
+        Duration = clone.Duration;
     }
 
-    /// <summary>
-    /// <para>
-    /// If specified, enables visual annotations on interacted elements during video recording.
-    /// Interacted elements are highlighted with a semi-transparent blue box and click points
-    /// are shown as red circles.
-    /// </para>
-    /// </summary>
-    [JsonPropertyName("annotate")]
-    public Annotate? Annotate { get; set; }
-
-    /// <summary><para>Path where the video should be saved when the recording is stopped.</para></summary>
-    [JsonPropertyName("path")]
-    public string? Path { get; set; }
+    /// <summary><para>Optional description text displayed below the title.</para></summary>
+    [JsonPropertyName("description")]
+    public string? Description { get; set; }
 
     /// <summary>
     /// <para>
-    /// Optional dimensions of the recorded video. If not specified the size will be equal
-    /// to page viewport scaled down to fit into 800x800. Actual picture of the page will
-    /// be scaled down if necessary to fit the specified size.
+    /// Duration in milliseconds after which the overlay is automatically removed. Defaults
+    /// to <c>2000</c>.
     /// </para>
     /// </summary>
-    [JsonPropertyName("size")]
-    public RequestSizesResult? Size { get; set; }
+    [JsonPropertyName("duration")]
+    public float? Duration { get; set; }
 }

@@ -27,14 +27,28 @@ using System.Threading.Tasks;
 
 namespace Microsoft.Playwright;
 
-/// <summary>
-/// <para>
-/// Interface for managing page overlays that display persistent visual indicators on
-/// top of the page.
-/// </para>
-/// </summary>
-public partial interface IOverlay
+/// <summary><para>Interface for capturing screencast frames from a page.</para></summary>
+public partial interface IScreencast
 {
+    /// <summary>
+    /// <para>
+    /// Starts the screencast. When <see cref="IScreencast.StartAsync"/> is provided, it
+    /// saves video recording to the specified file. When <see cref="IScreencast.StartAsync"/>
+    /// is provided, delivers JPEG-encoded frames to the callback. Both can be used together.
+    /// </para>
+    /// <para>**Usage**</para>
+    /// </summary>
+    /// <param name="options">Call options</param>
+    Task<IAsyncDisposable> StartAsync(ScreencastStartOptions? options = default);
+
+    /// <summary>
+    /// <para>
+    /// Stops the screencast and video recording if active. If a video was being recorded,
+    /// saves it to the path specified in <see cref="IScreencast.StartAsync"/>.
+    /// </para>
+    /// </summary>
+    Task StopAsync();
+
     /// <summary>
     /// <para>
     /// Adds an overlay with the given HTML content. The overlay is displayed on top of
@@ -43,7 +57,7 @@ public partial interface IOverlay
     /// </summary>
     /// <param name="html">HTML content for the overlay.</param>
     /// <param name="options">Call options</param>
-    Task<IAsyncDisposable> ShowAsync(string html, OverlayShowOptions? options = default);
+    Task<IAsyncDisposable> ShowOverlayAsync(string html, ScreencastShowOverlayOptions? options = default);
 
     /// <summary>
     /// <para>
@@ -54,9 +68,11 @@ public partial interface IOverlay
     /// </summary>
     /// <param name="title">Title text displayed prominently in the overlay.</param>
     /// <param name="options">Call options</param>
-    Task ChapterAsync(string title, OverlayChapterOptions? options = default);
+    Task ShowChapterAsync(string title, ScreencastShowChapterOptions? options = default);
 
-    /// <summary><para>Sets visibility of all overlays without removing them.</para></summary>
-    /// <param name="visible">Whether overlays should be visible.</param>
-    Task SetVisibleAsync(bool visible);
+    /// <summary><para>Shows overlays.</para></summary>
+    Task ShowOverlaysAsync();
+
+    /// <summary><para>Hides overlays without removing them.</para></summary>
+    Task HideOverlaysAsync();
 }

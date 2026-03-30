@@ -22,21 +22,42 @@
  * SOFTWARE.
  */
 
+using System;
 using System.Text.Json.Serialization;
+using System.Threading.Tasks;
 
 namespace Microsoft.Playwright;
 
-public partial class Annotate
+public class ScreencastStartOptions
 {
-    /// <summary><para>How long each annotation is displayed in milliseconds. Defaults to <c>500</c>.</para></summary>
-    [JsonPropertyName("duration")]
-    public float? Duration { get; set; }
+    public ScreencastStartOptions() { }
 
-    /// <summary><para>Position of the action title overlay. Defaults to <c>"top-right"</c>.</para></summary>
-    [JsonPropertyName("position")]
-    public AnnotatePosition? Position { get; set; }
+    public ScreencastStartOptions(ScreencastStartOptions clone)
+    {
+        if (clone == null)
+        {
+            return;
+        }
 
-    /// <summary><para>Font size of the action title in pixels. Defaults to <c>24</c>.</para></summary>
-    [JsonPropertyName("fontSize")]
-    public int? FontSize { get; set; }
+        OnFrame = clone.OnFrame;
+        Path = clone.Path;
+        Quality = clone.Quality;
+    }
+
+    /// <summary><para>Callback that receives JPEG-encoded frame data.</para></summary>
+    [JsonPropertyName("onFrame")]
+    public Func<ScreencastFrame, Task>? OnFrame { get; set; }
+
+    /// <summary>
+    /// <para>
+    /// Path where the video should be saved when the screencast is stopped. When provided,
+    /// video recording is started.
+    /// </para>
+    /// </summary>
+    [JsonPropertyName("path")]
+    public string? Path { get; set; }
+
+    /// <summary><para>The quality of the image, between 0-100.</para></summary>
+    [JsonPropertyName("quality")]
+    public int? Quality { get; set; }
 }

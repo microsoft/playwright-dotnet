@@ -127,48 +127,6 @@ public class ScreencastTests : BrowserTestEx
         Assert.True(new FileInfo(path).Exists);
     }
 
-    [PlaywrightTest("screencast.spec.ts", "should expose video path blank popup")]
-    [Ignore("We don't need to test video details")]
-    public void ShouldExposeVideoPathBlankPopup()
-    {
-    }
-
-    [PlaywrightTest("screencast.spec.ts", "should capture navigation")]
-    [Ignore("We don't need to test video details")]
-    public void ShouldCaptureNavigation()
-    {
-    }
-
-    [PlaywrightTest("screencast.spec.ts", "should capture css transformation")]
-    [Ignore("We don't need to test video details")]
-    public void ShouldCaptureCssTransformation()
-    {
-    }
-
-    [PlaywrightTest("screencast.spec.ts", "should work for popups")]
-    [Ignore("We don't need to test video details")]
-    public void ShouldWorkForPopups()
-    {
-    }
-
-    [PlaywrightTest("screencast.spec.ts", "should scale frames down to the requested size")]
-    [Ignore("We don't need to test video details")]
-    public void ShouldScaleFramesDownToTheRequestedSize()
-    {
-    }
-
-    [PlaywrightTest("screencast.spec.ts", "should use viewport as default size")]
-    [Ignore("We don't need to test video details")]
-    public void ShouldUseViewportAsDefaultSize()
-    {
-    }
-
-    [PlaywrightTest("screencast.spec.ts", "should be 1280x720 by default")]
-    [Ignore("We don't need to test video details")]
-    public void ShouldBe1280x720ByDefault()
-    {
-    }
-
     [PlaywrightTest("screencast.spec.ts", "should capture static page in persistent context")]
     [Skip(SkipAttribute.Targets.Webkit, SkipAttribute.Targets.Firefox)]
     public async Task ShouldCaptureStaticPageInPersistentContext()
@@ -257,6 +215,70 @@ public class ScreencastTests : BrowserTestEx
         // and other browsers are sometimes fast as well.
         if (!File.Exists(saveAsPath))
             StringAssert.Contains("Page did not produce any video frames", exception.Message);
+        await context.CloseAsync();
+    }
+
+    [PlaywrightTest("screencast.spec.ts", "start throws if screencast is already started")]
+    public async Task StartThrowsIfScreencastIsAlreadyStarted()
+    {
+        var context = await Browser.NewContextAsync(new() { ViewportSize = new() { Width = 500, Height = 400 } });
+        var page = await context.NewPageAsync();
+
+        await page.Screencast.StartAsync(new() { OnFrame = _ => Task.CompletedTask });
+        var exception = await PlaywrightAssert.ThrowsAsync<PlaywrightException>(() =>
+            page.Screencast.StartAsync(new() { OnFrame = _ => Task.CompletedTask }));
+        StringAssert.Contains("Screencast is already started", exception.Message);
+
+        await page.Screencast.StopAsync();
+        await context.CloseAsync();
+    }
+
+    [PlaywrightTest("screencast.spec.ts", "start should record video to file")]
+    public async Task StartShouldRecordVideoToFile()
+    {
+        using var tempDirectory = new TempDirectory();
+        var context = await Browser.NewContextAsync(new()
+        {
+            ViewportSize = new() { Width = 500, Height = 400 }
+        });
+        var page = await context.NewPageAsync();
+
+        var videoPath = Path.Combine(tempDirectory.Path, "video.webm");
+        await page.Screencast.StartAsync(new() { Path = videoPath });
+        await page.EvaluateAsync("() => document.body.style.backgroundColor = 'red'");
+        await Task.Delay(1000);
+        await page.Screencast.StopAsync();
+
+        Assert.True(File.Exists(videoPath));
+        Assert.Greater(new FileInfo(videoPath).Length, 0);
+        await context.CloseAsync();
+    }
+
+    [PlaywrightTest("screencast.spec.ts", "start delivers frames via onFrame callback")]
+    public async Task StartDeliversFramesViaOnFrameCallback()
+    {
+        var context = await Browser.NewContextAsync(new() { ViewportSize = new() { Width = 500, Height = 400 } });
+        var page = await context.NewPageAsync();
+
+        var frames = new List<byte[]>();
+        await page.Screencast.StartAsync(new()
+        {
+            OnFrame = async frame =>
+            {
+                frames.Add(frame.Data);
+            }
+        });
+        await page.EvaluateAsync("() => document.body.style.backgroundColor = 'red'");
+        await Task.Delay(1000);
+        await page.Screencast.StopAsync();
+
+        Assert.Greater(frames.Count, 0);
+        // Each frame must be a valid JPEG (starts with FF D8).
+        foreach (var frame in frames)
+        {
+            Assert.AreEqual(0xFF, frame[0]);
+            Assert.AreEqual(0xD8, frame[1]);
+        }
         await context.CloseAsync();
     }
 }
