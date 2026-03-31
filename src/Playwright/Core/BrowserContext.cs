@@ -295,13 +295,13 @@ internal class BrowserContext : ChannelOwner, IBrowserContext
         await RecordIntoHarAsync(options.RecordHarPath, null, routeFromHAROptions, contentPolicy).ConfigureAwait(false);
     }
 
-    internal string? VideosDir()
+    internal bool HasVideo()
     {
         if (_initializer.Options.TryGetProperty("recordVideo", out var recordVideo))
         {
-            return recordVideo.GetProperty("dir").GetString();
+            return true;
         }
-        return null;
+        return false;
     }
 
     [MethodImpl(MethodImplOptions.NoInlining)]

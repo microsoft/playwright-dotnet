@@ -22,30 +22,15 @@
  * SOFTWARE.
  */
 
+using System.ComponentModel.DataAnnotations;
 using System.Text.Json.Serialization;
 
 namespace Microsoft.Playwright;
 
-public class OverlayShowOptions
+public partial class ScreencastFrame
 {
-    public OverlayShowOptions() { }
-
-    public OverlayShowOptions(OverlayShowOptions clone)
-    {
-        if (clone == null)
-        {
-            return;
-        }
-
-        Duration = clone.Duration;
-    }
-
-    /// <summary>
-    /// <para>
-    /// Duration in milliseconds after which the overlay is automatically removed. Overlay
-    /// stays until dismissed if not provided.
-    /// </para>
-    /// </summary>
-    [JsonPropertyName("duration")]
-    public float? Duration { get; set; }
+    /// <summary><para>JPEG-encoded frame data.</para></summary>
+    [Required]
+    [JsonPropertyName("data")]
+    public byte[] Data { get; set; } = default!;
 }

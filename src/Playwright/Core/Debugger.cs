@@ -34,7 +34,7 @@ namespace Microsoft.Playwright.Core;
 
 internal class Debugger : ChannelOwner, IDebugger
 {
-    private PausedDetail? _pausedDetails;
+    private DebuggerPausedDetails? _pausedDetails;
 
     public Debugger(ChannelOwner parent, string guid) : base(parent, guid)
     {
@@ -42,7 +42,7 @@ internal class Debugger : ChannelOwner, IDebugger
 
     public event EventHandler? PausedStateChanged;
 
-    public PausedDetail? PausedDetails => _pausedDetails;
+    public DebuggerPausedDetails? PausedDetails => _pausedDetails;
 
     internal override void OnMessage(string method, JsonElement serverParams)
     {
@@ -50,7 +50,7 @@ internal class Debugger : ChannelOwner, IDebugger
         {
             case "pausedStateChanged":
                 _pausedDetails = serverParams.TryGetProperty("pausedDetails", out var details) && details.ValueKind != JsonValueKind.Null
-                    ? details.ToObject<PausedDetail>(_connection.DefaultJsonSerializerOptions)
+                    ? details.ToObject<DebuggerPausedDetails>(_connection.DefaultJsonSerializerOptions)
                     : null;
                 PausedStateChanged?.Invoke(this, EventArgs.Empty);
                 break;

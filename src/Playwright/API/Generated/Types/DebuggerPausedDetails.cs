@@ -27,7 +27,7 @@ using System.Text.Json.Serialization;
 
 namespace Microsoft.Playwright;
 
-public partial class PausedDetail
+public partial class DebuggerPausedDetails
 {
     /// <summary><para></para></summary>
     [Required]

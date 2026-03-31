@@ -1601,8 +1601,6 @@ public partial interface IPage
 
     public IMouse Mouse { get; }
 
-    public IOverlay Overlay { get; }
-
     /// <summary>
     /// <para>
     /// Returns the opener for popup pages and <c>null</c> for others. If the opener has
@@ -3034,12 +3032,11 @@ public partial interface IPage
 
     /// <summary>
     /// <para>
-    /// Video object associated with this page. Can be used to control video recording with
-    /// <see cref="IVideo.StartAsync"/> and <see cref="IVideo.StopAsync"/>, or to access
-    /// the video file when using the <c>recordVideo</c> context option.
+    /// Video object associated with this page. Can be used to access the video file when
+    /// using the <c>recordVideo</c> context option.
     /// </para>
     /// </summary>
-    IVideo Video { get; }
+    IVideo? Video { get; }
 
     PageViewportSizeResult? ViewportSize { get; }
 
