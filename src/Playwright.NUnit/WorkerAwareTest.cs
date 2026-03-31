@@ -70,6 +70,8 @@ public class WorkerAwareTest
         {
             AssertionsBase.SetDefaultTimeout(PlaywrightSettingsProvider.ExpectTimeout.Value);
         }
+
+        new Program().Run(["install", "--with-deps", PlaywrightSettingsProvider.BrowserName], throwOnError: true);
     }
 
     [TearDown]
