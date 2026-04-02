@@ -148,6 +148,17 @@ public partial interface ILocator
     /// <item><description>Generic static text can be represented with the <c>text</c> key.</description></item>
     /// </list>
     /// <para>Below is the HTML markup and the respective ARIA snapshot:</para>
+    /// <para>
+    /// An AI-optimized snapshot, controlled by <see cref="ILocator.AriaSnapshotAsync"/>,
+    /// is different from a default snapshot:
+    /// </para>
+    /// <list type="ordinal">
+    /// <item><description>
+    /// Includes element references <c>[ref=e2]</c>. 2. Does not wait for an element matching
+    /// the locator, and throws when no elements match. 3. Includes snapshots of <c>&lt;iframe&gt;</c>s
+    /// inside the target.
+    /// </description></item>
+    /// </list>
     /// </summary>
     /// <param name="options">Call options</param>
     Task<string> AriaSnapshotAsync(LocatorAriaSnapshotOptions? options = default);
@@ -760,7 +771,7 @@ public partial interface ILocator
     /// </para>
     /// <para>**Usage**</para>
     /// <para>Consider the following DOM structure.</para>
-    /// <para>You can locate each element by it's implicit role:</para>
+    /// <para>You can locate each element by its implicit role:</para>
     /// <code>
     /// await Expect(Page<br/>
     ///     .GetByRole(AriaRole.Heading, new() { Name = "Sign up" }))<br/>
@@ -797,7 +808,7 @@ public partial interface ILocator
     /// <para>Locate element by the test id.</para>
     /// <para>**Usage**</para>
     /// <para>Consider the following DOM structure.</para>
-    /// <para>You can locate the element by it's test id:</para>
+    /// <para>You can locate the element by its test id:</para>
     /// <code>await page.GetByTestId("directions").ClickAsync();</code>
     /// <para>**Details**</para>
     /// <para>
@@ -812,7 +823,7 @@ public partial interface ILocator
     /// <para>Locate element by the test id.</para>
     /// <para>**Usage**</para>
     /// <para>Consider the following DOM structure.</para>
-    /// <para>You can locate the element by it's test id:</para>
+    /// <para>You can locate the element by its test id:</para>
     /// <code>await page.GetByTestId("directions").ClickAsync();</code>
     /// <para>**Details**</para>
     /// <para>
@@ -1174,6 +1185,16 @@ public partial interface ILocator
     /// <param name="selectorOrLocator">A selector or locator to use when resolving DOM element.</param>
     /// <param name="options">Call options</param>
     ILocator Locator(ILocator selectorOrLocator, LocatorLocatorOptions? options = default);
+
+    /// <summary>
+    /// <para>
+    /// Returns a new locator that uses best practices for referencing the matched element,
+    /// prioritizing test ids, aria roles, and other user-facing attributes over CSS selectors.
+    /// This is useful for converting implementation-detail selectors into more resilient,
+    /// human-readable locators.
+    /// </para>
+    /// </summary>
+    Task<ILocator> NormalizeAsync();
 
     /// <summary>
     /// <para>

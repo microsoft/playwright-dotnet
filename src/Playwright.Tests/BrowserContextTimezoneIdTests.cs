@@ -29,6 +29,8 @@ public class BrowserContextTimezoneIdTests : BrowserTestEx
     [PlaywrightTest("browsercontext-timezone-id.spec.ts", "should work")]
     public async Task ShouldWork()
     {
+        // Note: timezone names are rendered differently between browsers and platforms,
+        // so we only check the GMT offset.
         await using var browser = await Playwright[TestConstants.BrowserName].LaunchAsync();
 
         const string func = "() => new Date(1479579154987).toString()";
@@ -36,16 +38,16 @@ public class BrowserContextTimezoneIdTests : BrowserTestEx
         {
             var page = await context.NewPageAsync();
             string result = await page.EvaluateAsync<string>(func);
-            Assert.AreEqual(
-                "Sat Nov 19 2016 13:12:34 GMT-0500 (Eastern Standard Time)",
+            StringAssert.Contains(
+                "Sat Nov 19 2016 13:12:34 GMT-0500",
                 result);
         }
 
         await using (var context = await browser.NewContextAsync(new() { TimezoneId = "Pacific/Honolulu", Locale = "en-US" }))
         {
             var page = await context.NewPageAsync();
-            Assert.AreEqual(
-                "Sat Nov 19 2016 08:12:34 GMT-1000 (Hawaii-Aleutian Standard Time)",
+            StringAssert.Contains(
+                "Sat Nov 19 2016 08:12:34 GMT-1000",
                 await page.EvaluateAsync<string>(func));
         }
 
@@ -53,16 +55,16 @@ public class BrowserContextTimezoneIdTests : BrowserTestEx
         await using (var context = await browser.NewContextAsync(new() { TimezoneId = buenosAires, Locale = "en-US" }))
         {
             var page = await context.NewPageAsync();
-            Assert.AreEqual(
-                "Sat Nov 19 2016 15:12:34 GMT-0300 (Argentina Standard Time)",
+            StringAssert.Contains(
+                "Sat Nov 19 2016 15:12:34 GMT-0300",
                 await page.EvaluateAsync<string>(func));
         }
 
         await using (var context = await browser.NewContextAsync(new() { TimezoneId = "Europe/Berlin", Locale = "en-US" }))
         {
             var page = await context.NewPageAsync();
-            Assert.AreEqual(
-                "Sat Nov 19 2016 19:12:34 GMT+0100 (Central European Standard Time)",
+            StringAssert.Contains(
+                "Sat Nov 19 2016 19:12:34 GMT+0100",
                 await page.EvaluateAsync<string>(func));
         }
     }

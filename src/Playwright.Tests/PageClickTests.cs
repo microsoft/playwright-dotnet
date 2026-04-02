@@ -420,9 +420,8 @@ public class PageClickTests : PageTestEx
         await Page.EvalOnSelectorAsync("button", "button => button.style.borderWidth = '8px'");
         await Page.ClickAsync("button", new() { Position = new() { X = 20, Y = 10 } });
         Assert.AreEqual("Clicked", await Page.EvaluateAsync<string>("window.result"));
-        // Safari reports border-relative offsetX/offsetY.
-        Assert.AreEqual(TestConstants.IsWebKit ? 20 + 8 : 20, await Page.EvaluateAsync<int>("offsetX"));
-        Assert.AreEqual(TestConstants.IsWebKit ? 10 + 8 : 10, await Page.EvaluateAsync<int>("offsetY"));
+        Assert.AreEqual(20, await Page.EvaluateAsync<int>("offsetX"));
+        Assert.AreEqual(10, await Page.EvaluateAsync<int>("offsetY"));
     }
 
     [PlaywrightTest("page-click.spec.ts", "should click the button with em border with offset")]
@@ -433,9 +432,8 @@ public class PageClickTests : PageTestEx
         await Page.EvalOnSelectorAsync("button", "button => button.style.fontSize = '12px'");
         await Page.ClickAsync("button", new() { Position = new() { X = 20, Y = 10 } });
         Assert.AreEqual("Clicked", await Page.EvaluateAsync<string>("window.result"));
-        // Safari reports border-relative offsetX/offsetY.
-        Assert.AreEqual(TestConstants.IsWebKit ? 12 * 2 + 20 : 20, await Page.EvaluateAsync<int>("offsetX"));
-        Assert.AreEqual(TestConstants.IsWebKit ? 12 * 2 + 10 : 10, await Page.EvaluateAsync<int>("offsetY"));
+        Assert.AreEqual(20, await Page.EvaluateAsync<int>("offsetX"));
+        Assert.AreEqual(10, await Page.EvaluateAsync<int>("offsetY"));
     }
 
     [PlaywrightTest("page-click.spec.ts", "should click a very large button with offset")]
@@ -446,9 +444,8 @@ public class PageClickTests : PageTestEx
         await Page.EvalOnSelectorAsync("button", "button => button.style.height = button.style.width = '2000px'");
         await Page.ClickAsync("button", new() { Position = new() { X = 1900, Y = 1910 } });
         Assert.AreEqual("Clicked", await Page.EvaluateAsync<string>("window.result"));
-        // Safari reports border-relative offsetX/offsetY.
-        Assert.AreEqual(TestConstants.IsWebKit ? 1900 + 8 : 1900, await Page.EvaluateAsync<int>("offsetX"));
-        Assert.AreEqual(TestConstants.IsWebKit ? 1910 + 8 : 1910, await Page.EvaluateAsync<int>("offsetY"));
+        Assert.AreEqual(1900, await Page.EvaluateAsync<int>("offsetX"));
+        Assert.AreEqual(1910, await Page.EvaluateAsync<int>("offsetY"));
     }
 
     [PlaywrightTest("page-click.spec.ts", "should click a button in scrolling container with offset")]
@@ -469,9 +466,8 @@ public class PageClickTests : PageTestEx
 
         await Page.ClickAsync("button", new() { Position = new() { X = 1900, Y = 1910 } });
         Assert.AreEqual("Clicked", await Page.EvaluateAsync<string>("window.result"));
-        // Safari reports border-relative offsetX/offsetY.
-        Assert.AreEqual(TestConstants.IsWebKit ? 1900 + 8 : 1900, await Page.EvaluateAsync<int>("offsetX"));
-        Assert.AreEqual(TestConstants.IsWebKit ? 1910 + 8 : 1910, await Page.EvaluateAsync<int>("offsetY"));
+        Assert.AreEqual(1900, await Page.EvaluateAsync<int>("offsetX"));
+        Assert.AreEqual(1910, await Page.EvaluateAsync<int>("offsetY"));
     }
 
     [PlaywrightTest("page-click.spec.ts", "should click the button with offset with page scale")]

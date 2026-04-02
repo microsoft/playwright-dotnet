@@ -29,52 +29,42 @@ namespace Microsoft.Playwright.Core;
 
 internal class Video : IVideo
 {
-    private readonly TaskCompletionSource<Artifact?> _artifactTcs = new();
     private readonly bool _isRemote;
+    private readonly Artifact? _artifact;
 
-    public Video(Page page, Connection connection)
+    public Video(Page page, Connection connection, Artifact? artifact = null)
     {
         _isRemote = connection.IsRemote;
-        page.Close += (_, _) => _artifactTcs.TrySetResult(null);
-        page.Crash += (_, _) => _artifactTcs.TrySetResult(null);
-        if (page.IsClosed)
-        {
-            _artifactTcs.TrySetResult(null);
-        }
+        _artifact = artifact;
     }
 
     public async Task DeleteAsync()
     {
-        var artifact = await _artifactTcs.Task.ConfigureAwait(false);
-        if (artifact != null)
+        if (_artifact != null)
         {
-            await artifact.DeleteAsync().ConfigureAwait(false);
+            await _artifact.DeleteAsync().ConfigureAwait(false);
         }
     }
 
-    public async Task<string> PathAsync()
+    public Task<string> PathAsync()
     {
         if (_isRemote)
         {
             throw new PlaywrightException("Path is not available when connecting remotely. Use SaveAsAsync() to save a local copy.");
         }
-        var artifact = await _artifactTcs.Task.ConfigureAwait(false);
-        if (artifact == null)
+        if (_artifact == null)
         {
-            throw new PlaywrightException("Page did not produce any video frames.");
+            throw new PlaywrightException("Video recording has not been started.");
         }
-        return artifact.AbsolutePath;
+        return Task.FromResult(_artifact.AbsolutePath);
     }
 
     public async Task SaveAsAsync(string path)
     {
-        var artifact = await _artifactTcs.Task.ConfigureAwait(false);
-        if (artifact == null)
+        if (_artifact == null)
         {
-            throw new PlaywrightException("Page did not produce any video frames.");
+            throw new PlaywrightException("Video recording has not been started.");
         }
-        await artifact.SaveAsAsync(path).ConfigureAwait(false);
+        await _artifact.SaveAsAsync(path).ConfigureAwait(false);
     }
-
-    internal void ArtifactReady(Artifact artifact) => _artifactTcs.TrySetResult(artifact);
 }

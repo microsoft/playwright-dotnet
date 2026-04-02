@@ -22,6 +22,7 @@
  * SOFTWARE.
  */
 
+using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
@@ -84,10 +85,28 @@ internal sealed class HarRouter
             {
                 return;
             }
+            // route.fulfill does not support multiple set-cookie headers.
+            // We need to merge them into one.
+            var transformedHeaders = new Dictionary<string, string>(System.StringComparer.OrdinalIgnoreCase);
+            foreach (var header in response.Headers!)
+            {
+                if (!string.Equals(header.Name, "set-cookie", System.StringComparison.OrdinalIgnoreCase))
+                {
+                    transformedHeaders[header.Name] = header.Value;
+                }
+                else if (!transformedHeaders.ContainsKey("set-cookie"))
+                {
+                    transformedHeaders["set-cookie"] = header.Value;
+                }
+                else
+                {
+                    transformedHeaders["set-cookie"] += "\n" + header.Value;
+                }
+            }
             await route.FulfillAsync(new()
             {
                 Status = response.Status,
-                Headers = new RawHeaders(response.Headers!).Headers,
+                Headers = transformedHeaders,
                 BodyBytes = response.Body,
             }).ConfigureAwait(false);
             return;

@@ -37,12 +37,23 @@ public class TracingStartOptions
             return;
         }
 
+        Live = clone.Live;
         Name = clone.Name;
         Screenshots = clone.Screenshots;
         Snapshots = clone.Snapshots;
         Sources = clone.Sources;
         Title = clone.Title;
     }
+
+    /// <summary>
+    /// <para>
+    /// When enabled, the trace is written to an unarchived file that is updated in real
+    /// time as actions occur, instead of caching changes and archiving them into a zip
+    /// file at the end. This is useful for live trace viewing during test execution.
+    /// </para>
+    /// </summary>
+    [JsonPropertyName("live")]
+    public bool? Live { get; set; }
 
     /// <summary>
     /// <para>

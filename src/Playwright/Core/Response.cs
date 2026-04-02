@@ -45,6 +45,7 @@ internal class Response : ChannelOwner, IResponse
     {
         _initializer = initializer;
         _initializer.Request.Timing = _initializer.Timing;
+        _initializer.Request._response = this;
         _finishedTask = new();
 
         _headers = new RawHeaders(_initializer.Headers.ConvertAll(x => new NameValue() { Name = x.Name, Value = x.Value }).ToList());
@@ -65,6 +66,10 @@ internal class Response : ChannelOwner, IResponse
     public string Url => _initializer.Url;
 
     public bool FromServiceWorker => _initializer.FromServiceWorker;
+
+    [MethodImpl(MethodImplOptions.NoInlining)]
+    public async Task<string> HttpVersionAsync()
+        => (await SendMessageToServerAsync("httpVersion").ConfigureAwait(false)).Value.GetProperty("value").ToString();
 
     [MethodImpl(MethodImplOptions.NoInlining)]
     public async Task<Dictionary<string, string>> AllHeadersAsync()

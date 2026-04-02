@@ -90,6 +90,9 @@ public partial interface IResponse
     /// <param name="name">Name of the header.</param>
     Task<IReadOnlyList<string>> HeaderValuesAsync(string name);
 
+    /// <summary><para>Returns the http version used by the response.</para></summary>
+    Task<string> HttpVersionAsync();
+
     /// <summary>
     /// <para>Returns the JSON representation of response body.</para>
     /// <para>This method will throw if the response body is not parsable via <c>JSON.parse</c>.</para>

@@ -134,4 +134,31 @@ public class PageAddInitScriptTests : PageTestEx
         await Page.GotoAsync(Server.Prefix + "/tamperable.html");
         Assert.AreEqual(123, await Page.EvaluateAsync<int>("() => window.result"));
     }
+
+    [PlaywrightTest("page-add-init-script.spec.ts", "should remove init script after dispose")]
+    public async Task ShouldRemoveInitScriptAfterDispose()
+    {
+        var disposable = await Page.AddInitScriptAsync("window.injected = 123;");
+        await Page.GotoAsync(Server.Prefix + "/tamperable.html");
+        Assert.AreEqual(123, await Page.EvaluateAsync<int>("() => window.result"));
+
+        await disposable.DisposeAsync();
+        await Page.GotoAsync(Server.Prefix + "/tamperable.html");
+        Assert.IsNull(await Page.EvaluateAsync("() => window.injected"));
+    }
+
+    [PlaywrightTest("page-add-init-script.spec.ts", "should remove one of multiple init scripts after dispose")]
+    public async Task ShouldRemoveOneOfMultipleInitScriptsAfterDispose()
+    {
+        var disposable1 = await Page.AddInitScriptAsync("window.script1 = 1;");
+        await Page.AddInitScriptAsync("window.script2 = 2;");
+        await Page.GotoAsync(Server.Prefix + "/tamperable.html");
+        Assert.AreEqual(1, await Page.EvaluateAsync<int>("() => window.script1"));
+        Assert.AreEqual(2, await Page.EvaluateAsync<int>("() => window.script2"));
+
+        await disposable1.DisposeAsync();
+        await Page.GotoAsync(Server.Prefix + "/tamperable.html");
+        Assert.IsNull(await Page.EvaluateAsync("() => window.script1"));
+        Assert.AreEqual(2, await Page.EvaluateAsync<int>("() => window.script2"));
+    }
 }

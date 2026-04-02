@@ -22,12 +22,26 @@
  * SOFTWARE.
  */
 
-using System.Text.Json.Serialization;
+using System;
+using System.Threading.Tasks;
+using Microsoft.Playwright.Transport;
 
-namespace Microsoft.Playwright.Transport.Protocol;
+namespace Microsoft.Playwright.Core;
 
-internal class PageAgentInitializer : EventTargetInitializer
+internal class Disposable : ChannelOwner, IAsyncDisposable
 {
-    [JsonPropertyName("page")]
-    public Core.Page Page { get; set; } = null!;
+    public Disposable(ChannelOwner parent, string guid) : base(parent, guid)
+    {
+    }
+
+    public async ValueTask DisposeAsync()
+    {
+        try
+        {
+            await SendMessageToServerAsync("dispose").ConfigureAwait(false);
+        }
+        catch (PlaywrightException)
+        {
+        }
+    }
 }

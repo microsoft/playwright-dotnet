@@ -66,6 +66,9 @@ public partial interface IBrowserContext
     /// <summary><para>Playwright has ability to mock clock and passage of time.</para></summary>
     public IClock Clock { get; }
 
+    /// <summary><para>Debugger allows to pause and resume the execution.</para></summary>
+    public IDebugger Debugger { get; }
+
     /// <summary>
     /// <para>
     /// Emitted when Browser context gets closed. This might happen because of one of the
@@ -264,7 +267,7 @@ public partial interface IBrowserContext
     /// </remarks>
     /// <param name="script">Script to be evaluated in all pages in the browser context.</param>
     /// <param name="scriptPath">Instead of specifying <paramref name="script"/>, gives the file name to load from.</param>
-    Task AddInitScriptAsync(string? script = default, string? scriptPath = default);
+    Task<IAsyncDisposable> AddInitScriptAsync(string? script = default, string? scriptPath = default);
 
     /// <summary><para>Returns an empty list.</para></summary>
     [System.Obsolete]
@@ -382,7 +385,7 @@ public partial interface IBrowserContext
     /// <param name="name">Name of the function on the window object.</param>
     /// <param name="callback">Callback function that will be called in the Playwright's context.</param>
     /// <param name="options">Call options</param>
-    Task ExposeBindingAsync(string name, Action callback, BrowserContextExposeBindingOptions? options = default);
+    Task<IAsyncDisposable> ExposeBindingAsync(string name, Action callback, BrowserContextExposeBindingOptions? options = default);
 
     /// <summary>
     /// <para>
@@ -435,7 +438,7 @@ public partial interface IBrowserContext
     /// </summary>
     /// <param name="name">Name of the function on the window object.</param>
     /// <param name="callback">Callback function that will be called in the Playwright's context.</param>
-    Task ExposeFunctionAsync(string name, Action callback);
+    Task<IAsyncDisposable> ExposeFunctionAsync(string name, Action callback);
 
     /// <summary>
     /// <para>
@@ -466,10 +469,19 @@ public partial interface IBrowserContext
     /// <item><description><c>'notifications'</c></description></item>
     /// <item><description><c>'payment-handler'</c></description></item>
     /// <item><description><c>'storage-access'</c></description></item>
+    /// <item><description><c>'screen-wake-lock'</c></description></item>
     /// </list>
     /// </param>
     /// <param name="options">Call options</param>
     Task GrantPermissionsAsync(IEnumerable<string> permissions, BrowserContextGrantPermissionsOptions? options = default);
+
+    /// <summary>
+    /// <para>
+    /// Indicates that the browser context is in the process of closing or has already been
+    /// closed.
+    /// </para>
+    /// </summary>
+    bool IsClosed { get; }
 
     /// <summary>
     /// <para>CDP sessions are only supported on Chromium-based browsers.</para>
@@ -574,7 +586,7 @@ public partial interface IBrowserContext
     /// </param>
     /// <param name="handler">handler function to route the request.</param>
     /// <param name="options">Call options</param>
-    Task RouteAsync(string url, Action<IRoute> handler, BrowserContextRouteOptions? options = default);
+    Task<IAsyncDisposable> RouteAsync(string url, Action<IRoute> handler, BrowserContextRouteOptions? options = default);
 
     /// <summary>
     /// <para>
@@ -643,7 +655,7 @@ public partial interface IBrowserContext
     /// </param>
     /// <param name="handler">handler function to route the request.</param>
     /// <param name="options">Call options</param>
-    Task RouteAsync(Regex url, Action<IRoute> handler, BrowserContextRouteOptions? options = default);
+    Task<IAsyncDisposable> RouteAsync(Regex url, Action<IRoute> handler, BrowserContextRouteOptions? options = default);
 
     /// <summary>
     /// <para>
@@ -712,7 +724,7 @@ public partial interface IBrowserContext
     /// </param>
     /// <param name="handler">handler function to route the request.</param>
     /// <param name="options">Call options</param>
-    Task RouteAsync(Func<string, bool> url, Action<IRoute> handler, BrowserContextRouteOptions? options = default);
+    Task<IAsyncDisposable> RouteAsync(Func<string, bool> url, Action<IRoute> handler, BrowserContextRouteOptions? options = default);
 
     /// <summary>
     /// <para>
@@ -944,6 +956,24 @@ public partial interface IBrowserContext
     /// <param name="options">Call options</param>
     Task<string> StorageStateAsync(BrowserContextStorageStateOptions? options = default);
 
+    /// <summary>
+    /// <para>
+    /// Clears the existing cookies, local storage and IndexedDB entries for all origins
+    /// and sets the new storage state.
+    /// </para>
+    /// <para>**Usage**</para>
+    /// <code>
+    /// // Load storage state from a file and apply it to the context.<br/>
+    /// await context.SetStorageStateAsync("state.json");
+    /// </code>
+    /// </summary>
+    /// <param name="storageStatePath">
+    /// Populates context with given storage state. This option can be used to initialize
+    /// context with logged-in information obtained via <see cref="IBrowserContext.StorageStateAsync"/>.
+    /// Path to the file with saved storage state.
+    /// </param>
+    Task SetStorageStateAsync(string storageStatePath);
+
     public ITracing Tracing { get; }
 
     /// <summary>
@@ -963,8 +993,8 @@ public partial interface IBrowserContext
     /// </para>
     /// </summary>
     /// <param name="url">
-    /// A glob pattern, regex pattern or predicate receiving <see cref="URL"/> used to register
-    /// a routing with <see cref="IBrowserContext.RouteAsync"/>.
+    /// A glob pattern, regex pattern, or predicate receiving <see cref="URL"/> used to
+    /// register a routing with <see cref="IBrowserContext.RouteAsync"/>.
     /// </param>
     /// <param name="handler">Optional handler function used to register a routing with <see cref="IBrowserContext.RouteAsync"/>.</param>
     Task UnrouteAsync(string url, Action<IRoute>? handler = default);
@@ -977,8 +1007,8 @@ public partial interface IBrowserContext
     /// </para>
     /// </summary>
     /// <param name="url">
-    /// A glob pattern, regex pattern or predicate receiving <see cref="URL"/> used to register
-    /// a routing with <see cref="IBrowserContext.RouteAsync"/>.
+    /// A glob pattern, regex pattern, or predicate receiving <see cref="URL"/> used to
+    /// register a routing with <see cref="IBrowserContext.RouteAsync"/>.
     /// </param>
     /// <param name="handler">Optional handler function used to register a routing with <see cref="IBrowserContext.RouteAsync"/>.</param>
     Task UnrouteAsync(Regex url, Action<IRoute>? handler = default);
@@ -991,8 +1021,8 @@ public partial interface IBrowserContext
     /// </para>
     /// </summary>
     /// <param name="url">
-    /// A glob pattern, regex pattern or predicate receiving <see cref="URL"/> used to register
-    /// a routing with <see cref="IBrowserContext.RouteAsync"/>.
+    /// A glob pattern, regex pattern, or predicate receiving <see cref="URL"/> used to
+    /// register a routing with <see cref="IBrowserContext.RouteAsync"/>.
     /// </param>
     /// <param name="handler">Optional handler function used to register a routing with <see cref="IBrowserContext.RouteAsync"/>.</param>
     Task UnrouteAsync(Func<string, bool> url, Action<IRoute>? handler = default);

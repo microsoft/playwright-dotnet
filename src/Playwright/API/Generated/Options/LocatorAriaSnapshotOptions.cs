@@ -37,8 +37,23 @@ public class LocatorAriaSnapshotOptions
             return;
         }
 
+        Depth = clone.Depth;
+        Mode = clone.Mode;
         Timeout = clone.Timeout;
     }
+
+    /// <summary><para>When specified, limits the depth of the snapshot.</para></summary>
+    [JsonPropertyName("depth")]
+    public int? Depth { get; set; }
+
+    /// <summary>
+    /// <para>
+    /// When set to <c>"ai"</c>, returns a snapshot optimized for AI consumption. Defaults
+    /// to <c>"default"</c>. See details for more information.
+    /// </para>
+    /// </summary>
+    [JsonPropertyName("mode")]
+    public AriaSnapshotMode? Mode { get; set; }
 
     /// <summary>
     /// <para>

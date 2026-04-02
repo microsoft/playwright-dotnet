@@ -52,6 +52,8 @@ internal class ConsoleMessage : IConsoleMessage
 
     public string Text => _initializer.Text;
 
+    public float Timestamp => _initializer.Timestamp;
+
     public IPage? Page => _page;
 
     public IWorker? Worker => _worker;
@@ -70,4 +72,7 @@ internal class ConsoleMessageInitializer
 
     [JsonPropertyName("location")]
     public ConsoleMessageLocation Location { get; set; } = null!;
+
+    [JsonPropertyName("timestamp")]
+    public float Timestamp { get; set; }
 }

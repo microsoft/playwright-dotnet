@@ -340,6 +340,12 @@ internal class Connection : IDisposable
             case ChannelOwnerType.CDPSession:
                 result = new CDPSession(parent, guid);
                 break;
+            case ChannelOwnerType.Debugger:
+                result = new Core.Debugger(parent, guid);
+                break;
+            case ChannelOwnerType.Disposable:
+                result = new Disposable(parent, guid);
+                break;
             case ChannelOwnerType.Dialog:
                 result = new Dialog(parent, guid, initializer?.ToObject<DialogInitializer>(DefaultJsonSerializerOptions)!);
                 break;

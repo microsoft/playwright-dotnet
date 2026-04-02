@@ -22,6 +22,7 @@
  * SOFTWARE.
  */
 
+using System;
 using System.Collections.Generic;
 using System.Text.Json;
 using System.Threading.Tasks;
@@ -54,6 +55,14 @@ namespace Microsoft.Playwright;
 /// </summary>
 public partial interface ICDPSession
 {
+    /// <summary>
+    /// <para>
+    /// Emitted when the session is closed, either because the target was closed or <c>session.detach()</c>
+    /// was called.
+    /// </para>
+    /// </summary>
+    event EventHandler<ICDPSession> Close;
+
     /// <summary>
     /// <para>
     /// Detaches the CDPSession from the target. Once detached, the CDPSession object won't

@@ -42,6 +42,7 @@ internal class Request : ChannelOwner, IRequest
     private readonly RawHeaders _provisionalHeaders;
     private readonly RouteFallbackOptions _fallbackOverrides = new();
     private Task<RawHeaders>? _rawHeadersTask;
+    internal Response? _response;
 
     internal Request(ChannelOwner parent, string guid, RequestInitializer initializer) : base(parent, guid)
     {
@@ -58,6 +59,8 @@ internal class Request : ChannelOwner, IRequest
     }
 
     public string? Failure { get; internal set; }
+
+    public IResponse? ExistingResponse => _response;
 
     public IFrame Frame
     {

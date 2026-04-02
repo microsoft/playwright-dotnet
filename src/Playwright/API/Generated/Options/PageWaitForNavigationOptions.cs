@@ -60,7 +60,7 @@ public class PageWaitForNavigationOptions
 
     /// <summary>
     /// <para>
-    /// A glob pattern, regex pattern or predicate receiving <see cref="URL"/> to match
+    /// A glob pattern, regex pattern, or predicate receiving <see cref="URL"/> to match
     /// while waiting for the navigation. Note that if the parameter is a string without
     /// wildcard characters, the method will wait for navigation to URL that is exactly
     /// equal to the string.
@@ -71,7 +71,7 @@ public class PageWaitForNavigationOptions
 
     /// <summary>
     /// <para>
-    /// A glob pattern, regex pattern or predicate receiving <see cref="URL"/> to match
+    /// A glob pattern, regex pattern, or predicate receiving <see cref="URL"/> to match
     /// while waiting for the navigation. Note that if the parameter is a string without
     /// wildcard characters, the method will wait for navigation to URL that is exactly
     /// equal to the string.
@@ -82,7 +82,7 @@ public class PageWaitForNavigationOptions
 
     /// <summary>
     /// <para>
-    /// A glob pattern, regex pattern or predicate receiving <see cref="URL"/> to match
+    /// A glob pattern, regex pattern, or predicate receiving <see cref="URL"/> to match
     /// while waiting for the navigation. Note that if the parameter is a string without
     /// wildcard characters, the method will wait for navigation to URL that is exactly
     /// equal to the string.
@@ -93,7 +93,7 @@ public class PageWaitForNavigationOptions
 
     /// <summary>
     /// <para>
-    /// A glob pattern, regex pattern or predicate receiving <see cref="URL"/> to match
+    /// A glob pattern, regex pattern, or predicate receiving <see cref="URL"/> to match
     /// while waiting for the navigation. Note that if the parameter is a string without
     /// wildcard characters, the method will wait for navigation to URL that is exactly
     /// equal to the string.
