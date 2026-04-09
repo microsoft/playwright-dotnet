@@ -113,6 +113,20 @@ internal class Screencast : IScreencast
             ["duration"] = options?.Duration,
         });
 
+    public async Task<IAsyncDisposable> ShowActionsAsync(ScreencastShowActionsOptions? options = default)
+    {
+        await _page.SendMessageToServerAsync("screencastShowActions", new Dictionary<string, object?>
+        {
+            ["duration"] = options?.Duration,
+            ["position"] = options?.Position,
+            ["fontSize"] = options?.FontSize,
+        }).ConfigureAwait(false);
+        return new DisposableStub(() => _page.SendMessageToServerAsync("screencastHideActions"));
+    }
+
+    public Task HideActionsAsync()
+        => _page.SendMessageToServerAsync("screencastHideActions");
+
     public Task ShowOverlaysAsync()
         => _page.SendMessageToServerAsync("overlaySetVisible", new Dictionary<string, object?> { ["visible"] = true });
 

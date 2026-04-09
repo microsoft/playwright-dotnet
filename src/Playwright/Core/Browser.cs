@@ -300,6 +300,24 @@ internal class Browser : ChannelOwner, IBrowser
     }
 
     [MethodImpl(MethodImplOptions.NoInlining)]
+    public async Task<BrowserBindResult> BindAsync(string title, BrowserBindOptions? options = default)
+    {
+        options ??= new();
+        var result = await SendMessageToServerAsync("startServer", new Dictionary<string, object?>
+        {
+            ["title"] = title,
+            ["workspaceDir"] = options.WorkspaceDir,
+            ["host"] = options.Host,
+            ["port"] = options.Port,
+        }).ConfigureAwait(false);
+        return new BrowserBindResult { Endpoint = result!.Value.GetProperty("endpoint").GetString()! };
+    }
+
+    [MethodImpl(MethodImplOptions.NoInlining)]
+    public Task UnbindAsync()
+        => SendMessageToServerAsync("stopServer");
+
+    [MethodImpl(MethodImplOptions.NoInlining)]
     public async Task<ICDPSession> NewBrowserCDPSessionAsync()
         => await SendMessageToServerAsync<CDPSession>(
         "newBrowserCDPSession").ConfigureAwait(false);

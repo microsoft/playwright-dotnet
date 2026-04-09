@@ -43,6 +43,41 @@ tail -5 /tmp/test-results.txt                  # summary
 - New channel object types require: enum entry in `ChannelOwnerType.cs`, case in `Connection.cs`, initializer in `Transport/Protocol/Generated/`, and a `Core/` class.
 - Public APIs should use .NET standard types (e.g. `IAsyncDisposable`) not custom Playwright types. Internal helpers (e.g. `Disposable` class in `Core/`) stay internal.
 
+## Commit Convention
+
+Before committing, run `dotnet format ./src/ -v:diag` and fix style issues.
+
+Semantic commit messages: `label(scope): description`
+
+Labels: `fix`, `feat`, `chore`, `docs`, `test`, `devops`
+
+```bash
+git checkout -b fix-39562
+# ... make changes ...
+git add <changed-files>
+git commit -m "$(cat <<'EOF'
+fix(proxy): handle SOCKS proxy authentication
+
+Fixes: https://github.com/microsoft/playwright/issues/39562
+EOF
+)"
+git push origin fix-39562
+gh pr create --repo microsoft/playwright --head username:fix-39562 \
+  --title "fix(proxy): handle SOCKS proxy authentication" \
+  --body "$(cat <<'EOF'
+## Summary
+- <describe the change very! briefly>
+
+Fixes https://github.com/microsoft/playwright/issues/39562
+EOF
+)"
+```
+
+Never add Co-Authored-By agents in commit message.
+Never add "Generated with" in commit message.
+Never add test plan to PR description. Keep PR description short — a few bullet points at most.
+Branch naming for issue fixes: `fix-<issue-number>`
+
 ## Commits
 - Do not include "co-authored" block in the commit message.
 
