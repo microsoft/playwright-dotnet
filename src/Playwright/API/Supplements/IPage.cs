@@ -31,9 +31,6 @@ namespace Microsoft.Playwright;
 
 public partial interface IPage
 {
-    /// <summary><para><see cref="IScreencast"/> object associated with this page.</para></summary>
-    IScreencast Screencast { get; }
-
     Task<JsonElement?> EvaluateAsync(string expression, object? arg = default);
 
     Task<JsonElement?> EvalOnSelectorAsync(string selector, string expression, object? arg = default);

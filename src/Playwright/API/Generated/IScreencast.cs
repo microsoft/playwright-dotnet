@@ -70,8 +70,20 @@ public partial interface IScreencast
     /// <param name="options">Call options</param>
     Task ShowChapterAsync(string title, ScreencastShowChapterOptions? options = default);
 
+    /// <summary>
+    /// <para>
+    /// Enables visual annotations on interacted elements. Returns a disposable that stops
+    /// showing actions when disposed.
+    /// </para>
+    /// </summary>
+    /// <param name="options">Call options</param>
+    Task<IAsyncDisposable> ShowActionsAsync(ScreencastShowActionsOptions? options = default);
+
     /// <summary><para>Shows overlays.</para></summary>
     Task ShowOverlaysAsync();
+
+    /// <summary><para>Removes action decorations.</para></summary>
+    Task HideActionsAsync();
 
     /// <summary><para>Hides overlays without removing them.</para></summary>
     Task HideOverlaysAsync();

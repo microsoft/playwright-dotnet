@@ -6,7 +6,7 @@
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
- * to use, copy, modify, merge, publish, distribute, sublicense, and / or sell
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
  * copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions:
  *
@@ -22,18 +22,22 @@
  * SOFTWARE.
  */
 
-using System.Text.Json.Serialization;
+using System.Runtime.Serialization;
 
-namespace Microsoft.Playwright.Transport.Protocol;
+namespace Microsoft.Playwright;
 
-internal class AnnotateOptions
+public enum AnnotatePosition
 {
-    [JsonPropertyName("duration")]
-    public float Duration { get; set; }
-
-    [JsonPropertyName("position")]
-    public string Position { get; set; } = null!;
-
-    [JsonPropertyName("fontSize")]
-    public int? FontSize { get; set; }
+    [EnumMember(Value = "top-left")]
+    TopLeft,
+    [EnumMember(Value = "top")]
+    Top,
+    [EnumMember(Value = "top-right")]
+    TopRight,
+    [EnumMember(Value = "bottom-left")]
+    BottomLeft,
+    [EnumMember(Value = "bottom")]
+    Bottom,
+    [EnumMember(Value = "bottom-right")]
+    BottomRight,
 }

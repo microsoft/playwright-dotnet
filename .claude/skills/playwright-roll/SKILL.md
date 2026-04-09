@@ -29,6 +29,20 @@ Rolling includes:
 - updating client implementation to match changes in the upstream JS implementation (see ../playwright/packages/playwright-core/src/client)
 - adding a couple of new tests to verify new/changed functionality
 
+## Renaming generated types
+
+When the API generator produces an unhelpful name for a return type (e.g. `Bind` instead of `BrowserBindResult`), you can control it by adding a struct alias in the upstream docs.
+
+In the docs markdown file (e.g. `docs/src/api/class-browser.md`), change the return type from `<[Object]>` to `<[Object=DesiredName]>`:
+
+```diff
+-- returns: <[Object]>
++- returns: <[Object=BrowserBindResult]>
+   - `endpoint` <[string]>
+```
+
+The `=Name` syntax sets `structName` on the parsed type, which the .NET generator uses directly as the class name. After making this change, re-run `./build.sh --roll <version>` to regenerate, then update any hand-written implementation code to use the new type name.
+
 ## Tips & Tricks
 - Project checkouts are in the parent directory (`../`).
 - When updating checkboxes, store the issue content into /tmp and edit it there, then update the issue based on the file.

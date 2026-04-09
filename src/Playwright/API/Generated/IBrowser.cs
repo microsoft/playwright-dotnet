@@ -170,6 +170,19 @@ public partial interface IBrowser
     /// <param name="options">Call options</param>
     Task<IPage> NewPageAsync(BrowserNewPageOptions? options = default);
 
+    /// <summary>
+    /// <para>
+    /// Binds the browser to a named pipe or web socket, making it available for other clients
+    /// to connect to.
+    /// </para>
+    /// </summary>
+    /// <param name="title">Title of the browser server, used for identification.</param>
+    /// <param name="options">Call options</param>
+    Task<BrowserBindResult> BindAsync(string title, BrowserBindOptions? options = default);
+
+    /// <summary><para>Unbinds the browser server previously bound with <see cref="IBrowser.BindAsync"/>.</para></summary>
+    Task UnbindAsync();
+
     /// <summary><para>Returns the browser version.</para></summary>
     string Version { get; }
 }

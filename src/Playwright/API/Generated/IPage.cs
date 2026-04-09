@@ -2327,6 +2327,12 @@ public partial interface IPage
     /// <param name="handler">Handler function to route the WebSocket.</param>
     Task RouteWebSocketAsync(Func<string, bool> url, Action<IWebSocketRoute> handler);
 
+    /// <summary>
+    /// <para><see cref="IScreencast"/> object associated with this page.</para>
+    /// <para>**Usage**</para>
+    /// </summary>
+    public IScreencast Screencast { get; }
+
     /// <summary><para>Returns the buffer with the captured screenshot.</para></summary>
     /// <param name="options">Call options</param>
     Task<byte[]> ScreenshotAsync(PageScreenshotOptions? options = default);
