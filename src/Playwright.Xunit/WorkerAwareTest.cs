@@ -69,6 +69,8 @@ public class WorkerAwareTest : ExceptionCapturer
         {
             AssertionsBase.SetDefaultTimeout(PlaywrightSettingsProvider.ExpectTimeout.Value);
         }
+
+        new Program().Run(["install", "--with-deps", PlaywrightSettingsProvider.BrowserName], throwOnError: true);
     }
 
     public async override Task DisposeAsync()
