@@ -96,17 +96,17 @@ internal class Screencast : IScreencast
 
     public async Task<IAsyncDisposable> ShowOverlayAsync(string html, ScreencastShowOverlayOptions? options = default)
     {
-        var result = await _page.SendMessageToServerAsync("overlayShow", new Dictionary<string, object?>
+        var result = await _page.SendMessageToServerAsync("screencastShowOverlay", new Dictionary<string, object?>
         {
             ["html"] = html,
             ["duration"] = options?.Duration,
         }).ConfigureAwait(false);
         var id = result!.Value.GetProperty("id").GetString();
-        return new DisposableStub(() => _page.SendMessageToServerAsync("overlayRemove", new Dictionary<string, object?> { ["id"] = id }));
+        return new DisposableStub(() => _page.SendMessageToServerAsync("screencastRemoveOverlay", new Dictionary<string, object?> { ["id"] = id }));
     }
 
     public Task ShowChapterAsync(string title, ScreencastShowChapterOptions? options = default)
-        => _page.SendMessageToServerAsync("overlayChapter", new Dictionary<string, object?>
+        => _page.SendMessageToServerAsync("screencastChapter", new Dictionary<string, object?>
         {
             ["title"] = title,
             ["description"] = options?.Description,
@@ -128,8 +128,8 @@ internal class Screencast : IScreencast
         => _page.SendMessageToServerAsync("screencastHideActions");
 
     public Task ShowOverlaysAsync()
-        => _page.SendMessageToServerAsync("overlaySetVisible", new Dictionary<string, object?> { ["visible"] = true });
+        => _page.SendMessageToServerAsync("screencastSetOverlayVisible", new Dictionary<string, object?> { ["visible"] = true });
 
     public Task HideOverlaysAsync()
-        => _page.SendMessageToServerAsync("overlaySetVisible", new Dictionary<string, object?> { ["visible"] = false });
+        => _page.SendMessageToServerAsync("screencastSetOverlayVisible", new Dictionary<string, object?> { ["visible"] = false });
 }
