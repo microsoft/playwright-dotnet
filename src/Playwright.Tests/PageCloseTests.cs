@@ -26,4 +26,15 @@ namespace Microsoft.Playwright.Tests;
 
 public class PageCloseTests : PageTestEx
 {
+    [PlaywrightTest("page-close.spec.ts", "should close the page using await using")]
+    public async Task ShouldClosePageWithAwaitUsing()
+    {
+        IPage closedPage;
+        await using (var page = await Context.NewPageAsync())
+        {
+            closedPage = page;
+            Assert.False(page.IsClosed);
+        }
+        Assert.True(closedPage.IsClosed);
+    }
 }
