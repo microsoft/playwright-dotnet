@@ -33,12 +33,12 @@ internal class PageAssertions : AssertionsBase, IPageAssertions
 {
     private readonly Page _page;
 
-    public PageAssertions(IPage page, bool isNot) : base(isNot)
+    public PageAssertions(IPage page, bool isNot, string? customMessage = null) : base(isNot, customMessage)
     {
         _page = (Page)page;
     }
 
-    public IPageAssertions Not => new PageAssertions(_page, !IsNot);
+    public IPageAssertions Not => new PageAssertions(_page, !IsNot, CustomMessage);
 
     protected override Task<FrameExpectResult> CallExpectAsync(string expression, FrameExpectOptions expectOptions, string title)
     {

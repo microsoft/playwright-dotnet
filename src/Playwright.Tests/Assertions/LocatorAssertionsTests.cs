@@ -73,6 +73,24 @@ public class LocatorAssertionsTests : PageTestEx
         StringAssert.Contains("Expect \"ToBeCheckedAsync\" with timeout 1000ms", exception.Message);
     }
 
+    [PlaywrightTest("playwright-test/playwright.expect.spec.ts", "should support a custom expect message")]
+    public async Task ShouldSupportCustomExpectMessage()
+    {
+        await Page.SetContentAsync("<div></div>");
+        var locator = Page.Locator("input");
+        var exception = await PlaywrightAssert.ThrowsAsync<PlaywrightException>(
+            () => Expect(locator, "should be logged in").ToBeVisibleAsync(new() { Timeout = 1000 }));
+        StringAssert.StartsWith("should be logged in", exception.Message);
+        StringAssert.Contains("Locator expected to be visible", exception.Message);
+
+        // Custom message also propagates through Not.
+        await Page.SetContentAsync("<input>");
+        var present = Page.Locator("input");
+        var notException = await PlaywrightAssert.ThrowsAsync<PlaywrightException>(
+            () => Expect(present, "should not be present").Not.ToBeVisibleAsync(new() { Timeout = 1000 }));
+        StringAssert.StartsWith("should not be present", notException.Message);
+    }
+
     [PlaywrightTest("playwright-test/playwright.expect.spec.ts", "should be able to set default timeout")]
     public async Task ShouldBeAbleToSetDefaultTimeout()
     {
