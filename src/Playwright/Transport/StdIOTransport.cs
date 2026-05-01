@@ -44,14 +44,8 @@ internal class StdIOTransport : IDisposable
     {
         _process = GetProcess("run-driver");
         StartProcessWithUTF8IOEncoding(_process);
-        _process.Exited += (_, _) => Close(new TargetClosedException("Process exited"));
-        _process.ErrorDataReceived += (_, error) =>
-        {
-            if (error.Data != null)
-            {
-                LogReceived?.Invoke(this, error.Data);
-            }
-        };
+        _process.Exited += OnProcessExited;
+        _process.ErrorDataReceived += OnProcessErrorDataReceived;
         _process.BeginErrorReadLine();
 
         _getResponseTask = ScheduleTransportTaskAsync(GetResponseAsync, _readerCancellationSource.Token);
@@ -195,9 +189,25 @@ internal class StdIOTransport : IDisposable
             return;
         }
 
+        if (_process != null)
+        {
+            _process.Exited -= OnProcessExited;
+            _process.ErrorDataReceived -= OnProcessErrorDataReceived;
+            _process.Dispose();
+        }
         _readerCancellationSource?.Dispose();
-        _process?.Dispose();
         _getResponseTask?.Dispose();
+    }
+
+    private void OnProcessExited(object? sender, EventArgs e)
+        => Close(new TargetClosedException("Process exited"));
+
+    private void OnProcessErrorDataReceived(object? sender, DataReceivedEventArgs e)
+    {
+        if (e.Data != null)
+        {
+            LogReceived?.Invoke(this, e.Data);
+        }
     }
 
     private async Task GetResponseAsync(CancellationToken token)

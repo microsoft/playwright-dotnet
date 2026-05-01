@@ -41,25 +41,41 @@ public static class Playwright
     {
         var transport = new StdIOTransport();
         var connection = new Connection();
-        transport.MessageReceived += (_, message) =>
+
+        EventHandler<byte[]> onMessageReceived = (_, message) =>
         {
             Connection.TraceMessage("pw:channel:recv", message);
             connection.Dispatch(JsonSerializer.Deserialize<PlaywrightServerMessage>(message, JsonExtensions.DefaultJsonSerializerOptions)!);
         };
-        transport.LogReceived += (_, log) =>
+        EventHandler<string> onLogReceived = (_, log) =>
         {
             // workaround for https://github.com/nunit/nunit/issues/4144
             var writer = Environment.GetEnvironmentVariable("PWAPI_TO_STDOUT") != null ? Console.Out : Console.Error;
             writer.WriteLine(log);
         };
-        transport.TransportClosed += (_, reason) => connection.DoClose(reason);
+        EventHandler<Exception> onTransportClosed = (_, reason) => connection.DoClose(reason);
+
+        transport.MessageReceived += onMessageReceived;
+        transport.LogReceived += onLogReceived;
+        transport.TransportClosed += onTransportClosed;
         connection.OnMessage = (message, keepNulls) =>
         {
             var rawMessage = JsonSerializer.SerializeToUtf8Bytes(message, keepNulls ? connection.DefaultJsonSerializerOptionsKeepNulls : connection.DefaultJsonSerializerOptions);
             Connection.TraceMessage("pw:channel:send", rawMessage);
             return transport.SendAsync(rawMessage);
         };
-        connection.Close += (_, reason) => transport.Close(reason);
+        connection.Close += (_, reason) =>
+        {
+            // Break Connection<->Transport closure cycles and release the underlying
+            // process / token / reader task, so that callers who call `Dispose` on a
+            // short-lived Playwright don't accumulate orphaned graphs.
+            transport.MessageReceived -= onMessageReceived;
+            transport.LogReceived -= onLogReceived;
+            transport.TransportClosed -= onTransportClosed;
+            connection.OnMessage = null!;
+            transport.Close(reason);
+            transport.Dispose();
+        };
         return await connection.InitializePlaywrightAsync().ConfigureAwait(false);
     }
 }
