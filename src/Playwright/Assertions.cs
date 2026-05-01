@@ -44,4 +44,23 @@ public static class Assertions
     public static IPageAssertions Expect(IPage page) => new PageAssertions(page, false);
 
     public static IAPIResponseAssertions Expect(IAPIResponse response) => new APIResponseAssertions(response, false);
+
+    /// <summary>
+    /// Creates assertions that prefix any failure message with <paramref name="message"/>, providing
+    /// extra context in test reports.
+    /// </summary>
+    /// <param name="locator">The locator to assert against.</param>
+    /// <param name="message">Message to prepend to any assertion failure.</param>
+    /// <returns>Assertions for the given locator.</returns>
+    public static ILocatorAssertions Expect(ILocator locator, string message) => new LocatorAssertions(locator, false, message);
+
+    /// <inheritdoc cref="Expect(ILocator, string)" />
+    /// <param name="page">The page to assert against.</param>
+    /// <param name="message">Message to prepend to any assertion failure.</param>
+    public static IPageAssertions Expect(IPage page, string message) => new PageAssertions(page, false, message);
+
+    /// <inheritdoc cref="Expect(ILocator, string)" />
+    /// <param name="response">The API response to assert against.</param>
+    /// <param name="message">Message to prepend to any assertion failure.</param>
+    public static IAPIResponseAssertions Expect(IAPIResponse response, string message) => new APIResponseAssertions(response, false, message);
 }

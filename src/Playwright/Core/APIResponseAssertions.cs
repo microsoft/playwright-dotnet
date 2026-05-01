@@ -33,8 +33,9 @@ internal class APIResponseAssertions : IAPIResponseAssertions
 {
     private readonly APIResponse _actual;
     private readonly bool _isNot;
+    private readonly string? _customMessage;
 
-    public APIResponseAssertions(IAPIResponse response, bool isNot)
+    public APIResponseAssertions(IAPIResponse response, bool isNot, string? customMessage = null)
     {
         if (response == null)
         {
@@ -42,9 +43,10 @@ internal class APIResponseAssertions : IAPIResponseAssertions
         }
         _actual = (APIResponse)response;
         _isNot = isNot;
+        _customMessage = customMessage;
     }
 
-    public IAPIResponseAssertions Not => new APIResponseAssertions(_actual, !_isNot);
+    public IAPIResponseAssertions Not => new APIResponseAssertions(_actual, !_isNot, _customMessage);
 
     public async Task ToBeOKAsync()
     {
@@ -72,7 +74,8 @@ internal class APIResponseAssertions : IAPIResponseAssertions
                 responseText = $"\nResponse text:\n{trimmedText}";
             }
         }
-        throw new PlaywrightException(message + responseText);
+        var prefix = _customMessage != null ? _customMessage + "\n\n" : string.Empty;
+        throw new PlaywrightException(prefix + message + responseText);
     }
 
     private static bool IsTextualMimeType(string contentType)

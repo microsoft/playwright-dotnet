@@ -44,12 +44,15 @@ internal abstract class AssertionsBase
 {
     private static float _defaultTimeout = 5_000;
 
-    public AssertionsBase(bool isNot)
+    public AssertionsBase(bool isNot, string? customMessage = null)
     {
         IsNot = isNot;
+        CustomMessage = customMessage;
     }
 
     protected bool IsNot { get; }
+
+    protected string? CustomMessage { get; }
 
     protected abstract Task<FrameExpectResult> CallExpectAsync(string expression, FrameExpectOptions expectOptions, string title);
 
@@ -85,11 +88,12 @@ internal abstract class AssertionsBase
             {
                 message += "\n" + result.ErrorMessage;
             }
+            var prefix = CustomMessage != null ? CustomMessage + "\n\n" : string.Empty;
             if (expected == null)
             {
-                throw new PlaywrightException($"{message} {log}");
+                throw new PlaywrightException($"{prefix}{message} {log}");
             }
-            throw new PlaywrightException($"{message} '{FormatValue(expected)}'\nBut was: '{FormatValue(actual)}' {log}");
+            throw new PlaywrightException($"{prefix}{message} '{FormatValue(expected)}'\nBut was: '{FormatValue(actual)}' {log}");
         }
     }
 

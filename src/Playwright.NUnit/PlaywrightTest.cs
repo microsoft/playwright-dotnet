@@ -53,4 +53,10 @@ public class PlaywrightTest : WorkerAwareTest
     public IPageAssertions Expect(IPage page) => Assertions.Expect(page);
 
     public IAPIResponseAssertions Expect(IAPIResponse response) => Assertions.Expect(response);
+
+    public ILocatorAssertions Expect(ILocator locator, string message) => Assertions.Expect(locator, message);
+
+    public IPageAssertions Expect(IPage page, string message) => Assertions.Expect(page, message);
+
+    public IAPIResponseAssertions Expect(IAPIResponse response, string message) => Assertions.Expect(response, message);
 }
