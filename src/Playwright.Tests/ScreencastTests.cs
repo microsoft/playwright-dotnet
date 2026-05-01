@@ -281,4 +281,45 @@ public class ScreencastTests : BrowserTestEx
         }
         await context.CloseAsync();
     }
+
+    [PlaywrightTest()]
+    public async Task ShowOverlayAsync_ReturnsDisposableThatCompletesOnDispose()
+    {
+        var context = await Browser.NewContextAsync();
+        var page = await context.NewPageAsync();
+
+        await using (var overlay = await page.Screencast.ShowOverlayAsync("<div>overlay</div>"))
+        {
+            Assert.IsNotNull(overlay);
+        }
+
+        await context.CloseAsync();
+    }
+
+    [PlaywrightTest()]
+    public async Task ShowChapterAsync_CompletesWithTitleAndOptions()
+    {
+        var context = await Browser.NewContextAsync();
+        var page = await context.NewPageAsync();
+
+        await page.Screencast.ShowChapterAsync("Chapter title", new()
+        {
+            Description = "Chapter description",
+            Duration = 500f,
+        });
+
+        await context.CloseAsync();
+    }
+
+    [PlaywrightTest()]
+    public async Task ShowOverlaysAsync_AndHideOverlaysAsync_Complete()
+    {
+        var context = await Browser.NewContextAsync();
+        var page = await context.NewPageAsync();
+
+        await page.Screencast.HideOverlaysAsync();
+        await page.Screencast.ShowOverlaysAsync();
+
+        await context.CloseAsync();
+    }
 }
