@@ -616,8 +616,9 @@ internal class Locator : ILocator
 
     private static string EscapeRegexForSelector(Regex text)
     {
+        var (source, flags) = text.GetSourceAndFlags();
         // Even number of backslashes followed by the quote -> insert a backslash.
-        return Regex.Replace($"/{text}/{text.Options.GetInlineFlags()}", @"(^|[^\\])(\\\\)*([\""'`])", "$1$2\\$3").Replace(">>", "\\>\\>");
+        return Regex.Replace($"/{source}/{flags}", @"(^|[^\\])(\\\\)*([\""'`])", "$1$2\\$3").Replace(">>", "\\>\\>");
     }
 
     private static string EscapeForTextSelector(Regex text, bool? exact)

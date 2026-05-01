@@ -49,8 +49,9 @@ internal class WebSocketRouteHandler
             }
             else if (handler.urlMatcher.re != null)
             {
-                pattern["regexSource"] = handler.urlMatcher.re.ToString();
-                pattern["regexFlags"] = handler.urlMatcher.re.Options.GetInlineFlags();
+                var (source, flags) = handler.urlMatcher.re.GetSourceAndFlags();
+                pattern["regexSource"] = source;
+                pattern["regexFlags"] = flags;
             }
             else
             {

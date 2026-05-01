@@ -101,8 +101,9 @@ internal abstract class AssertionsBase
         }
 
         ExpectedTextValue textValue = options ?? new() { };
-        textValue.RegexSource = pattern.ToString();
-        textValue.RegexFlags = pattern.Options.GetInlineFlags();
+        var (source, flags) = pattern.GetSourceAndFlags();
+        textValue.RegexSource = source;
+        textValue.RegexFlags = flags;
         return textValue;
     }
 

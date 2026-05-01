@@ -268,6 +268,18 @@ public class PageRouteTests : PageTestEx
         Assert.AreEqual(1, failedRequests);
     }
 
+    [PlaywrightTest("page-route.spec.ts", "should honour leading inline regex flags")]
+    public async Task ShouldHonourLeadingInlineRegexFlags()
+    {
+        await Page.RouteAsync(new Regex(@"(?i).+\.CSS$"), (route) => route.AbortAsync());
+
+        int failedRequests = 0;
+        Page.RequestFailed += (_, _) => ++failedRequests;
+        var response = await Page.GotoAsync(Server.Prefix + "/one-style.html");
+        Assert.True(response.Ok);
+        Assert.AreEqual(1, failedRequests);
+    }
+
     [PlaywrightTest("page-route.spec.ts", "should be abortable with custom error codes")]
     public async Task ShouldBeAbortableWithCustomErrorCodes()
     {
