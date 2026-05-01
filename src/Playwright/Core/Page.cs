@@ -501,6 +501,9 @@ internal class Page : ChannelOwner, IPage
     }
 
     [MethodImpl(MethodImplOptions.NoInlining)]
+    public ValueTask DisposeAsync() => new(CloseAsync());
+
+    [MethodImpl(MethodImplOptions.NoInlining)]
     public async Task CloseAsync(PageCloseOptions? options = default)
     {
         _closeReason = options?.Reason;

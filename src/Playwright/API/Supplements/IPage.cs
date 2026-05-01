@@ -29,7 +29,7 @@ using System.Threading.Tasks;
 
 namespace Microsoft.Playwright;
 
-public partial interface IPage
+public partial interface IPage : IAsyncDisposable
 {
     Task<JsonElement?> EvaluateAsync(string expression, object? arg = default);
 
