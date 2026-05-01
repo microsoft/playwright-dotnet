@@ -43,4 +43,30 @@ public class ExtensionTests
             Assert.AreEqual(new Regex("foo", RegexOptions.IgnorePatternWhitespace).Options.GetInlineFlags(), "ism");
         });
     }
+
+    [Test]
+    public void ShouldExtractLeadingInlineFlags()
+    {
+        Assert.AreEqual(("foo", ""), new Regex("foo").GetSourceAndFlags());
+        Assert.AreEqual((".+\\.css$", "i"), new Regex(@"(?i).+\.css$").GetSourceAndFlags());
+        Assert.AreEqual(("bar", "im"), new Regex("(?im)bar").GetSourceAndFlags());
+        Assert.AreEqual(("bar", "ism"), new Regex("(?ims)bar").GetSourceAndFlags());
+
+        // Constructor flags merge with inline flags.
+        Assert.AreEqual(("bar", "im"), new Regex("(?i)bar", RegexOptions.Multiline).GetSourceAndFlags());
+
+        // Disable form: (?-i) clears the constructor flag.
+        Assert.AreEqual(("bar", ""), new Regex("(?-i)bar", RegexOptions.IgnoreCase).GetSourceAndFlags());
+        Assert.AreEqual(("bar", "i"), new Regex("(?i-m)bar", RegexOptions.Multiline).GetSourceAndFlags());
+
+        // Only the leading group is stripped; later groups stay in the source.
+        Assert.AreEqual(("foo(?m)bar", "i"), new Regex("(?i)foo(?m)bar").GetSourceAndFlags());
+
+        // Non-modifier groups (e.g., non-capturing) are not touched.
+        Assert.AreEqual(("(?:foo)", ""), new Regex("(?:foo)").GetSourceAndFlags());
+
+        // Unsupported inline flags throw.
+        Assert.Throws<System.ArgumentException>(() => new Regex("(?n)foo").GetSourceAndFlags());
+        Assert.Throws<System.ArgumentException>(() => new Regex("(?x)foo").GetSourceAndFlags());
+    }
 }

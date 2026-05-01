@@ -137,7 +137,8 @@ internal static class EvaluateArgumentValueConverter
 
         if (value is Regex regex)
         {
-            return new { r = new { p = regex.ToString(), f = regex.Options.GetInlineFlags() } };
+            var (p, f) = regex.GetSourceAndFlags();
+            return new { r = new { p, f } };
         }
 
         if (value is Guid guid)

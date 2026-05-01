@@ -32,6 +32,51 @@ namespace Microsoft.Playwright.Helpers;
 /// </summary>
 internal static class RegexOptionsExtensions
 {
+    private static readonly Regex LeadingInlineFlags = new(@"^\(\?([imnsx]*)(?:-([imnsx]+))?\)", RegexOptions.Compiled);
+
+    /// <summary>
+    /// Returns the regex pattern (with any leading inline flag group like <c>(?i)</c> stripped) and the
+    /// combined flag string, merging <see cref="Regex.Options"/> with the stripped inline flags.
+    /// </summary>
+    public static (string Source, string Flags) GetSourceAndFlags(this Regex regex)
+    {
+        var source = regex.ToString();
+        var options = regex.Options;
+        var match = LeadingInlineFlags.Match(source);
+        if (match.Success && (match.Groups[1].Length > 0 || match.Groups[2].Success))
+        {
+            ApplyInlineFlags(ref options, match.Groups[1].Value, set: true);
+            if (match.Groups[2].Success)
+            {
+                ApplyInlineFlags(ref options, match.Groups[2].Value, set: false);
+            }
+            source = source.Substring(match.Length);
+        }
+        return (source, options.GetInlineFlags());
+    }
+
+    private static void ApplyInlineFlags(ref RegexOptions options, string flags, bool set)
+    {
+        foreach (var c in flags)
+        {
+            var bit = c switch
+            {
+                'i' => RegexOptions.IgnoreCase,
+                's' => RegexOptions.Singleline,
+                'm' => RegexOptions.Multiline,
+                _ => throw new ArgumentException("Unsupported RegularExpression flags"),
+            };
+            if (set)
+            {
+                options |= bit;
+            }
+            else
+            {
+                options &= ~bit;
+            }
+        }
+    }
+
     public static string GetInlineFlags(this System.Text.RegularExpressions.RegexOptions options)
     {
         string flags = string.Empty;

@@ -332,17 +332,20 @@ internal class BrowserContext : ChannelOwner, IBrowserContext
     [MethodImpl(MethodImplOptions.NoInlining)]
     public async Task ClearCookiesAsync(BrowserContextClearCookiesOptions? options = default)
     {
+        var nameRegex = options?.NameRegex?.GetSourceAndFlags();
+        var domainRegex = options?.DomainRegex?.GetSourceAndFlags();
+        var pathRegex = options?.PathRegex?.GetSourceAndFlags();
         var @params = new Dictionary<string, object?>
         {
             ["name"] = options?.Name ?? options?.NameString,
-            ["nameRegexSource"] = options?.NameRegex?.ToString(),
-            ["nameRegexFlags"] = options?.NameRegex?.Options.GetInlineFlags(),
+            ["nameRegexSource"] = nameRegex?.Source,
+            ["nameRegexFlags"] = nameRegex?.Flags,
             ["domain"] = options?.Domain ?? options?.DomainString,
-            ["domainRegexSource"] = options?.DomainRegex?.ToString(),
-            ["domainRegexFlags"] = options?.DomainRegex?.Options.GetInlineFlags(),
+            ["domainRegexSource"] = domainRegex?.Source,
+            ["domainRegexFlags"] = domainRegex?.Flags,
             ["path"] = options?.Path ?? options?.PathString,
-            ["pathRegexSource"] = options?.PathRegex?.ToString(),
-            ["pathRegexFlags"] = options?.PathRegex?.Options.GetInlineFlags(),
+            ["pathRegexSource"] = pathRegex?.Source,
+            ["pathRegexFlags"] = pathRegex?.Flags,
         };
 
         await SendMessageToServerAsync("clearCookies", @params).ConfigureAwait(false);
@@ -913,8 +916,9 @@ internal class BrowserContext : ChannelOwner, IBrowserContext
         }
         if (options?.UrlRegex != null)
         {
-            recordHarArgs["urlRegexSource"] = options?.UrlRegex.ToString();
-            recordHarArgs["urlRegexFlags"] = options?.UrlRegex.Options.GetInlineFlags();
+            var (source, flags) = options.UrlRegex.GetSourceAndFlags();
+            recordHarArgs["urlRegexSource"] = source;
+            recordHarArgs["urlRegexFlags"] = flags;
         }
         recordHarArgs["mode"] = options?.UpdateMode ?? HarMode.Minimal;
 
