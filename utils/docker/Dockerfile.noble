@@ -1,4 +1,4 @@
-FROM mcr.microsoft.com/dotnet/sdk:8.0-noble
+FROM mcr.microsoft.com/dotnet/sdk:10.0-noble
 
 ARG DEBIAN_FRONTEND=noninteractive
 ARG TZ=America/Los_Angeles
