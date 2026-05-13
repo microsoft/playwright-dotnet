@@ -274,7 +274,7 @@ public class SelectorsRoleTests : PageTestEx
         StringAssert.Contains("Role must not be empty", exception0.Message);
 
         var exception1 = await PlaywrightAssert.ThrowsAsync<PlaywrightException>(() => Page.QuerySelectorAsync("role=foo[sElected]"));
-        StringAssert.Contains("Unknown attribute \"sElected\", must be one of \"checked\", \"disabled\", \"expanded\", \"include-hidden\", \"level\", \"name\", \"pressed\", \"selected\"", exception1.Message);
+        StringAssert.Contains("Unknown attribute \"sElected\", must be one of \"checked\", \"description\", \"disabled\", \"expanded\", \"include-hidden\", \"level\", \"name\", \"pressed\", \"selected\"", exception1.Message);
 
         var exception2 = await PlaywrightAssert.ThrowsAsync<PlaywrightException>(() => Page.QuerySelectorAsync("role=foo[bar . qux=true]"));
         StringAssert.Contains("Unknown attribute \"bar.qux\"", exception2.Message);

@@ -899,6 +899,37 @@ internal class Frame : ChannelOwner, IFrame
             ["targetPosition"] = options?.TargetPosition,
         });
 
+    internal async Task DropAsync(string selector, DropPayload payload, Position? position, float? timeout, bool strict)
+    {
+        SetInputFilesFiles? fileParams = null;
+        if (payload.FilePaths != null)
+        {
+            fileParams = await SetInputFilesHelpers.ConvertInputFilesAsync(payload.FilePaths, (BrowserContext)Page.Context).ConfigureAwait(false);
+        }
+        else if (payload.Files != null)
+        {
+            fileParams = SetInputFilesHelpers.ConvertInputFiles(payload.Files);
+        }
+
+        var data = payload.Data?.Select(kv => new Dictionary<string, object?>
+        {
+            ["mimeType"] = kv.Key,
+            ["value"] = kv.Value,
+        }).ToArray();
+
+        await SendMessageToServerAsync("drop", new Dictionary<string, object?>
+        {
+            ["selector"] = selector,
+            ["strict"] = strict,
+            ["position"] = position,
+            ["payloads"] = fileParams?.Payloads,
+            ["localPaths"] = fileParams?.LocalPaths,
+            ["streams"] = fileParams?.Streams,
+            ["data"] = data,
+            ["timeout"] = Timeout(timeout),
+        }).ConfigureAwait(false);
+    }
+
     internal async Task<FrameExpectResult> ExpectAsync(string? selector, string expression, FrameExpectOptions options)
     {
         var result = await SendMessageToServerAsync("expect", new Dictionary<string, object?>
@@ -914,9 +945,16 @@ internal class Frame : ChannelOwner, IFrame
             ["timeout"] = options.Timeout,
         }).ConfigureAwait(false);
         var parsed = result.Value.ToObject<FrameExpectResult>();
-        if (result.Value.TryGetProperty("received", out var received))
+        if (result.Value.TryGetProperty("received", out var received) && received.ValueKind == JsonValueKind.Object)
         {
-            parsed.Received = ScriptsHelper.ParseEvaluateResult<object>(received);
+            if (received.TryGetProperty("value", out var receivedValue))
+            {
+                parsed.Received = ScriptsHelper.ParseEvaluateResult<object>(receivedValue);
+            }
+            if (received.TryGetProperty("ariaSnapshot", out var ariaSnapshot) && ariaSnapshot.ValueKind == JsonValueKind.String)
+            {
+                parsed.ReceivedAriaSnapshot = ariaSnapshot.GetString();
+            }
         }
         return parsed;
     }
@@ -981,8 +1019,15 @@ internal class Frame : ChannelOwner, IFrame
         return waiter;
     }
 
-    internal Task HighlightAsync(string selector)
+    internal Task HighlightAsync(string selector, string? style = null)
         => SendMessageToServerAsync("highlight", new Dictionary<string, object?>
+        {
+            ["selector"] = selector,
+            ["style"] = style,
+        });
+
+    internal Task HideHighlightAsync(string selector)
+        => SendMessageToServerAsync("hideHighlight", new Dictionary<string, object?>
         {
             ["selector"] = selector,
         });

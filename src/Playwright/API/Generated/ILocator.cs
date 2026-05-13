@@ -457,6 +457,32 @@ public partial interface ILocator
     Task DragToAsync(ILocator target, LocatorDragToOptions? options = default);
 
     /// <summary>
+    /// <para>Simulate an external drag-and-drop of files or clipboard-like data onto this locator.</para>
+    /// <para>**Details**</para>
+    /// <para>
+    /// Dispatches the native <c>dragenter</c>, <c>dragover</c>, and <c>drop</c> events
+    /// at the center of the target element with a synthetic <see cref="DataTransfer"/>
+    /// carrying the provided files and/or data entries. Works cross-browser by constructing
+    /// the <see cref="DataTransfer"/> in the page context.
+    /// </para>
+    /// <para>
+    /// If the target element's <c>dragover</c> listener does not call <c>preventDefault()</c>,
+    /// the target is considered to have rejected the drop: Playwright dispatches <c>dragleave</c>
+    /// and this method throws.
+    /// </para>
+    /// <para>**Usage**</para>
+    /// <para>Drop a file buffer onto an upload area:</para>
+    /// <para>Drop plain text and a URL together:</para>
+    /// </summary>
+    /// <param name="payload">
+    /// Data to drop onto the target. Provide <c>files</c> (file paths or in-memory buffers),
+    /// <c>data</c> (a mime-type → string map for clipboard-like content such as <c>text/plain</c>,
+    /// <c>text/html</c>, <c>text/uri-list</c>), or both.
+    /// </param>
+    /// <param name="options">Call options</param>
+    Task DropAsync(DropPayload payload, LocatorDropOptions? options = default);
+
+    /// <summary>
     /// <para>
     /// Always prefer using <see cref="ILocator"/>s and web assertions over <see cref="IElementHandle"/>s
     /// because latter are inherently racy.
@@ -938,13 +964,17 @@ public partial interface ILocator
     /// <param name="options">Call options</param>
     ILocator GetByTitle(Regex text, LocatorGetByTitleOptions? options = default);
 
+    /// <summary><para>Hides the element highlight previously added by <see cref="ILocator.HighlightAsync"/>.</para></summary>
+    Task HideHighlightAsync();
+
     /// <summary>
     /// <para>
     /// Highlight the corresponding element(s) on the screen. Useful for debugging, don't
     /// commit the code that uses <see cref="ILocator.HighlightAsync"/>.
     /// </para>
     /// </summary>
-    Task HighlightAsync();
+    /// <param name="options">Call options</param>
+    Task<IAsyncDisposable> HighlightAsync(LocatorHighlightOptions? options = default);
 
     /// <summary>
     /// <para>Hover over the matching element.</para>

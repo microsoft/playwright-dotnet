@@ -40,6 +40,7 @@ public class BrowserTypeConnectOverCDPOptions
 
         Headers = clone.Headers;
         IsLocal = clone.IsLocal;
+        NoDefaults = clone.NoDefaults;
         SlowMo = clone.SlowMo;
         Timeout = clone.Timeout;
     }
@@ -57,6 +58,21 @@ public class BrowserTypeConnectOverCDPOptions
     /// </summary>
     [JsonPropertyName("isLocal")]
     public bool? IsLocal { get; set; }
+
+    /// <summary>
+    /// <para>
+    /// When true, Playwright will not apply its default overrides to the existing default
+    /// browser context. Specifically, <see cref="IBrowser.NewContextAsync"/> is left at
+    /// the browser's setting, focus emulation is not enabled, and media emulation options
+    /// (such as <see cref="IBrowser.NewContextAsync"/>, <see cref="IBrowser.NewContextAsync"/>,
+    /// <see cref="IBrowser.NewContextAsync"/>, and <see cref="IBrowser.NewContextAsync"/>)
+    /// are not applied. Useful when attaching to a user's daily-driver browser where these
+    /// overrides would interfere with existing browser state. New contexts created via
+    /// <see cref="IBrowser.NewContextAsync"/> are not affected. Defaults to <c>false</c>.
+    /// </para>
+    /// </summary>
+    [JsonPropertyName("noDefaults")]
+    public bool? NoDefaults { get; set; }
 
     /// <summary>
     /// <para>

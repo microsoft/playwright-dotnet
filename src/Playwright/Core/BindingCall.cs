@@ -57,16 +57,9 @@ internal class BindingCall : ChannelOwner
                 new BindingSource(_initializer.Frame.Page.Context, _initializer.Frame.Page, _initializer.Frame),
             };
 
-            if (methodParams.Length == 1 && methodParams[0] == typeof(IJSHandle))
+            for (int i = 0; i < methodParams.Length; i++)
             {
-                args.Add(_initializer.Handle);
-            }
-            else
-            {
-                for (int i = 0; i < methodParams.Length; i++)
-                {
-                    args.Add(ScriptsHelper.ParseEvaluateResult(_initializer.Args[i], methodParams[i]));
-                }
+                args.Add(ScriptsHelper.ParseEvaluateResult(_initializer.Args[i], methodParams[i]));
             }
 
             object? result = binding.DynamicInvoke(args.ToArray());

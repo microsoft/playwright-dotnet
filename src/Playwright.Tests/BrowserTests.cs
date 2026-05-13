@@ -76,4 +76,22 @@ public class BrowserTests : BrowserTestEx
             Assert.That(version, Does.Match("\\d+\\.\\d+"));
         }
     }
+
+    [PlaywrightTest("browser.spec.ts", "should fire Context event when a context is created")]
+    public async Task ShouldFireContextEvent()
+    {
+        var tcs = new TaskCompletionSource<IBrowserContext>();
+        EventHandler<IBrowserContext> handler = (_, c) => tcs.TrySetResult(c);
+        Browser.Context += handler;
+        try
+        {
+            await using var context = await Browser.NewContextAsync();
+            var emitted = await tcs.Task;
+            Assert.AreSame(context, emitted);
+        }
+        finally
+        {
+            Browser.Context -= handler;
+        }
+    }
 }

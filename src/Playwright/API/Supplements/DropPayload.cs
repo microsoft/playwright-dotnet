@@ -22,33 +22,28 @@
  * SOFTWARE.
  */
 
+using System.Collections.Generic;
 using System.Text.Json.Serialization;
 
 namespace Microsoft.Playwright;
 
-public class BrowserContextExposeBindingOptions
+public partial class DropPayload
 {
-    public BrowserContextExposeBindingOptions() { }
-
-    public BrowserContextExposeBindingOptions(BrowserContextExposeBindingOptions clone)
-    {
-        if (clone == null)
-        {
-            return;
-        }
-
-        Handle = clone.Handle;
-    }
-
     /// <summary>
-    /// <para>**DEPRECATED** This option will be removed in the future.</para>
     /// <para>
-    /// Whether to pass the argument as a handle, instead of passing by value. When passing
-    /// a handle, only one argument is supported. When passing by value, multiple arguments
-    /// are supported.
+    /// File paths to drop onto the target. The files are read from disk and dispatched
+    /// as a synthetic <c>DataTransfer</c>.
     /// </para>
     /// </summary>
-    [JsonPropertyName("handle")]
-    [System.Obsolete]
-    public bool? Handle { get; set; }
+    [JsonIgnore]
+    public IEnumerable<string>? FilePaths { get; set; }
+
+    /// <summary>
+    /// <para>
+    /// In-memory file payloads to drop onto the target. Use this when the file content
+    /// is not on disk.
+    /// </para>
+    /// </summary>
+    [JsonIgnore]
+    public IEnumerable<FilePayload>? Files { get; set; }
 }

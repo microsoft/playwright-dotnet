@@ -32,26 +32,24 @@ namespace Microsoft.Playwright;
 /// configure micro-services, prepare environment or the service to your e2e test.
 /// </para>
 /// <para>
-/// Each Playwright browser context has associated with it <see cref="IAPIRequestContext"/>
-/// instance which shares cookie storage with the browser context and can be accessed
-/// via <see cref="IBrowserContext.APIRequest"/> or <see cref="IPage.APIRequest"/>.
-/// It is also possible to create a new APIRequestContext instance manually by calling
-/// <see cref="IAPIRequest.NewContextAsync"/>.
+/// Each Playwright browser context has an associated <see cref="IAPIRequestContext"/>,
+/// accessible via <see cref="IBrowserContext.APIRequest"/> or <see cref="IPage.APIRequest"/>
+/// (these return the
+/// </para>
+/// <para>
+/// **same instance** — <c>page.request</c> is a shortcut for <c>page.context().request</c>).
+/// You can also create a standalone, isolated instance with <see cref="IAPIRequest.NewContextAsync"/>.
 /// </para>
 /// <para>**Cookie management**</para>
 /// <para>
-/// <see cref="IAPIRequestContext"/> returned by <see cref="IBrowserContext.APIRequest"/>
-/// and <see cref="IPage.APIRequest"/> shares cookie storage with the corresponding
-/// <see cref="IBrowserContext"/>. Each API request will have <c>Cookie</c> header populated
-/// with the values from the browser context. If the API response contains <c>Set-Cookie</c>
-/// header it will automatically update <see cref="IBrowserContext"/> cookies and requests
-/// made from the page will pick them up. This means that if you log in using this API,
-/// your e2e test will be logged in and vice versa.
+/// The <see cref="IAPIRequestContext"/> returned by <see cref="IBrowserContext.APIRequest"/>
+/// and
 /// </para>
+/// <para><see cref="IPage.APIRequest"/> uses the same cookie jar as its <see cref="IBrowserContext"/>:</para>
 /// <para>
-/// If you want API requests to not interfere with the browser cookies you should create
-/// a new <see cref="IAPIRequestContext"/> by calling <see cref="IAPIRequest.NewContextAsync"/>.
-/// Such <c>APIRequestContext</c> object will have its own isolated cookie storage.
+/// If you want API requests that do **not** share cookies with the browser, create
+/// an isolated context via <see cref="IAPIRequest.NewContextAsync"/>. Such <c>APIRequestContext</c>
+/// object will have its own isolated cookie storage.
 /// </para>
 /// </summary>
 public partial interface IAPIRequestContext
@@ -265,4 +263,6 @@ public partial interface IAPIRequestContext
     /// </summary>
     /// <param name="options">Call options</param>
     Task<string> StorageStateAsync(APIRequestContextStorageStateOptions? options = default);
+
+    public ITracing Tracing { get; }
 }

@@ -28,9 +28,6 @@ namespace Microsoft.Playwright.Transport.Protocol;
 
 internal class RecordHarOptions
 {
-    [JsonPropertyName("zip")]
-    public bool? Zip { get; set; }
-
     [JsonPropertyName("content")]
     public string Content { get; set; } = null!;
 
@@ -45,4 +42,10 @@ internal class RecordHarOptions
 
     [JsonPropertyName("urlRegexFlags")]
     public string UrlRegexFlags { get; set; } = null!;
+
+    [JsonPropertyName("harPath")]
+    public string HarPath { get; set; } = null!;
+
+    [JsonPropertyName("resourcesDir")]
+    public string ResourcesDir { get; set; } = null!;
 }

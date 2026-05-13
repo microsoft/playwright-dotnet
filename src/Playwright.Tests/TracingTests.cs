@@ -373,6 +373,33 @@ public class TracingTests : ContextTestEx
         });
     }
 
+    [PlaywrightTest("tracing.spec.ts", "should record HAR via startHar/stopHar")]
+    public async Task ShouldRecordHarViaStartHarStopHar()
+    {
+        using var tmp = new TempDirectory();
+        var harPath = Path.Combine(tmp.Path, "test.har");
+
+        await Context.Tracing.StartHarAsync(harPath);
+        var page = await Context.NewPageAsync();
+        await page.GotoAsync(Server.EmptyPage);
+        await Context.Tracing.StopHarAsync();
+
+        Assert.True(File.Exists(harPath));
+        var content = File.ReadAllText(harPath);
+        StringAssert.Contains(Server.EmptyPage, content);
+    }
+
+    [PlaywrightTest("tracing.spec.ts", "should throw on duplicate startHar")]
+    public async Task ShouldThrowOnDuplicateStartHar()
+    {
+        using var tmp = new TempDirectory();
+        var harPath = Path.Combine(tmp.Path, "test.har");
+        await Context.Tracing.StartHarAsync(harPath);
+        var exception = await PlaywrightAssert.ThrowsAsync<PlaywrightException>(() => Context.Tracing.StartHarAsync(harPath));
+        StringAssert.Contains("HAR recording has already been started", exception.Message);
+        await Context.Tracing.StopHarAsync();
+    }
+
     private async Task ShowTraceViewerAsync(string path, Func<TraceViewerPage, Task> callback)
     {
         var (executablePath, _) = Driver.GetExecutablePath();

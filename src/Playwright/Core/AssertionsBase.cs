@@ -88,12 +88,13 @@ internal abstract class AssertionsBase
             {
                 message += "\n" + result.ErrorMessage;
             }
+            var ariaSnapshotSuffix = string.IsNullOrEmpty(result.ReceivedAriaSnapshot) ? string.Empty : $"\nAria snapshot:\n{result.ReceivedAriaSnapshot}";
             var prefix = CustomMessage != null ? CustomMessage + "\n\n" : string.Empty;
             if (expected == null)
             {
-                throw new PlaywrightException($"{prefix}{message} {log}");
+                throw new PlaywrightException($"{prefix}{message} {log}{ariaSnapshotSuffix}");
             }
-            throw new PlaywrightException($"{prefix}{message} '{FormatValue(expected)}'\nBut was: '{FormatValue(actual)}' {log}");
+            throw new PlaywrightException($"{prefix}{message} '{FormatValue(expected)}'\nBut was: '{FormatValue(actual)}' {log}{ariaSnapshotSuffix}");
         }
     }
 

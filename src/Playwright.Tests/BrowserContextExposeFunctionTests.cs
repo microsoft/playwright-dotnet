@@ -103,43 +103,4 @@ public class BrowserContextExposeFunctionTests : ContextTestEx
         CollectionAssert.Contains(args, "page");
     }
 
-    [PlaywrightTest("browsercontext-expose-function.spec.ts", "exposeBindingHandle should work")]
-    public async Task ExposeBindingHandleShouldWork()
-    {
-        IJSHandle target = null;
-        await Context.ExposeBindingAsync(
-            "logme",
-            (BindingSource _, IJSHandle t) =>
-            {
-                target = t;
-                return 17;
-            });
-
-        var page = await Context.NewPageAsync();
-        int result = await page.EvaluateAsync<int>(@"async function() {
-                return window['logme']({ foo: 42 });
-            }");
-
-        Assert.AreEqual(42, await target.EvaluateAsync<int>("x => x.foo"));
-        Assert.AreEqual(17, result);
-    }
-
-    public async Task ExposeBindingHandleLikeInDocumentation()
-    {
-        var result = new TaskCompletionSource<string>();
-        var page = await Context.NewPageAsync();
-        await Context.ExposeBindingAsync("clicked", async (BindingSource _, IJSHandle t) =>
-        {
-            return result.TrySetResult(await t.AsElement().TextContentAsync());
-        });
-
-        await page.SetContentAsync("<script>\n" +
-         "  document.addEventListener('click', event => window.clicked(event.target));\n" +
-         "</script>\n" +
-         "<div>Click me</div>\n" +
-         "<div>Or click me</div>\n");
-
-        await page.ClickAsync("div");
-        Assert.AreEqual("Click me", await result.Task);
-    }
 }

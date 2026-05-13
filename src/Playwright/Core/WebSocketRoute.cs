@@ -53,6 +53,8 @@ internal class WebSocketRoute : ChannelOwner, IWebSocketRoute
 
     public string Url => _initializer.Url;
 
+    public IReadOnlyList<string> Protocols => _initializer.Protocols ?? (IReadOnlyList<string>)Array.Empty<string>();
+
     internal override void OnMessage(string method, JsonElement serverParams)
     {
         switch (method)
@@ -197,6 +199,8 @@ internal class ServerWebSocketRoute : IWebSocketRoute
     }
 
     public string Url => _webSocketRoute._initializer.Url;
+
+    public IReadOnlyList<string> Protocols => _webSocketRoute.Protocols;
 
     public async Task CloseAsync(WebSocketRouteCloseOptions? options = null)
     {

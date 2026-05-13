@@ -55,6 +55,8 @@ internal class Browser : ChannelOwner, IBrowser
 
     public event EventHandler<IBrowser>? Disconnected;
 
+    public event EventHandler<IBrowserContext>? Context;
+
     public IReadOnlyList<IBrowserContext> Contexts => _contexts.ToArray();
 
     public bool IsConnected { get; private set; }
@@ -285,6 +287,7 @@ internal class Browser : ChannelOwner, IBrowser
             context._tracing._tracesDir = _tracesDir;
             _browserType.Playwright._selectors._contextsForSelectors.Add(context);
         }
+        Context?.Invoke(this, context);
     }
 
     internal void DidClose()

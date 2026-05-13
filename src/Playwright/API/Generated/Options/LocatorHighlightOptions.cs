@@ -26,26 +26,26 @@ using System.Text.Json.Serialization;
 
 namespace Microsoft.Playwright;
 
-public class LocatorAssertionsToHaveCSSOptions
+public class LocatorHighlightOptions
 {
-    public LocatorAssertionsToHaveCSSOptions() { }
+    public LocatorHighlightOptions() { }
 
-    public LocatorAssertionsToHaveCSSOptions(LocatorAssertionsToHaveCSSOptions clone)
+    public LocatorHighlightOptions(LocatorHighlightOptions clone)
     {
         if (clone == null)
         {
             return;
         }
 
-        Pseudo = clone.Pseudo;
-        Timeout = clone.Timeout;
+        Style = clone.Style;
     }
 
-    /// <summary><para>Pseudo-element to read computed styles from.</para></summary>
-    [JsonPropertyName("pseudo")]
-    public PseudoElement? Pseudo { get; set; }
-
-    /// <summary><para>Time to retry the assertion for in milliseconds. Defaults to <c>5000</c>.</para></summary>
-    [JsonPropertyName("timeout")]
-    public float? Timeout { get; set; }
+    /// <summary>
+    /// <para>
+    /// Additional inline CSS applied to the highlight overlay, e.g. <c>"outline: 2px dashed
+    /// red"</c>.
+    /// </para>
+    /// </summary>
+    [JsonPropertyName("style")]
+    public string? Style { get; set; }
 }

@@ -133,6 +133,41 @@ public partial interface IBrowserContext
 
     /// <summary>
     /// <para>
+    /// Emitted when attachment download started in any page belonging to this context.
+    /// User can access basic file operations on downloaded content via the passed <see
+    /// cref="IDownload"/> instance. See also <see cref="IPage.Download"/> to receive events
+    /// about a specific page.
+    /// </para>
+    /// </summary>
+    event EventHandler<IDownload> Download;
+
+    /// <summary>
+    /// <para>
+    /// Emitted when a frame is attached in any page belonging to this context. See also
+    /// <see cref="IPage.FrameAttached"/> to receive events about a specific page.
+    /// </para>
+    /// </summary>
+    event EventHandler<IFrame> FrameAttached;
+
+    /// <summary>
+    /// <para>
+    /// Emitted when a frame is detached in any page belonging to this context. See also
+    /// <see cref="IPage.FrameDetached"/> to receive events about a specific page.
+    /// </para>
+    /// </summary>
+    event EventHandler<IFrame> FrameDetached;
+
+    /// <summary>
+    /// <para>
+    /// Emitted when a frame is navigated to a new url in any page belonging to this context.
+    /// See also <see cref="IPage.FrameNavigated"/> to receive events about navigations
+    /// in a specific page.
+    /// </para>
+    /// </summary>
+    event EventHandler<IFrame> FrameNavigated;
+
+    /// <summary>
+    /// <para>
     /// The event is emitted when a new Page is created in the BrowserContext. The page
     /// may still be loading. The event will also fire for popup pages. See also <see cref="IPage.Popup"/>
     /// to receive events about popups relevant to a specific page.
@@ -164,6 +199,23 @@ public partial interface IBrowserContext
     /// </para>
     /// </remarks>
     event EventHandler<IPage> Page;
+
+    /// <summary>
+    /// <para>
+    /// Emitted when a page in this context is closed. See also <see cref="IPage.Close"/>
+    /// to receive events about a specific page.
+    /// </para>
+    /// </summary>
+    event EventHandler<IPage> PageClose;
+
+    /// <summary>
+    /// <para>
+    /// Emitted when the JavaScript <a href="https://developer.mozilla.org/en-US/docs/Web/Events/load"><c>load</c></a>
+    /// event is dispatched in any page belonging to this context. See also <see cref="IPage.Load"/>
+    /// to receive events about a specific page.
+    /// </para>
+    /// </summary>
+    event EventHandler<IPage> PageLoad;
 
     /// <summary>
     /// <para>
@@ -384,8 +436,7 @@ public partial interface IBrowserContext
     /// </summary>
     /// <param name="name">Name of the function on the window object.</param>
     /// <param name="callback">Callback function that will be called in the Playwright's context.</param>
-    /// <param name="options">Call options</param>
-    Task<IAsyncDisposable> ExposeBindingAsync(string name, Action callback, BrowserContextExposeBindingOptions? options = default);
+    Task<IAsyncDisposable> ExposeBindingAsync(string name, Action callback);
 
     /// <summary>
     /// <para>

@@ -44,7 +44,12 @@ public class ScreencastStartOptions
         Quality = clone.Quality;
     }
 
-    /// <summary><para>Callback that receives JPEG-encoded frame data.</para></summary>
+    /// <summary>
+    /// <para>
+    /// Callback that receives JPEG-encoded frame data along with the page viewport size
+    /// at the time of capture.
+    /// </para>
+    /// </summary>
     [JsonPropertyName("onFrame")]
     public Func<ScreencastFrame, Task>? OnFrame { get; set; }
 

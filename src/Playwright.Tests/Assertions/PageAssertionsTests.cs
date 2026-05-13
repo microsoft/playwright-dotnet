@@ -90,4 +90,28 @@ public class PageAssertionsTests : PageTestEx
         await Expect(Page).ToHaveURLAsync("DATA:teXT/HTml,<div>a</div>", new() { IgnoreCase = true });
         await Expect(Page).ToHaveURLAsync(new Regex("DATA:teXT/HTml,<div>a</div>"), new() { IgnoreCase = true });
     }
+
+    [PlaywrightTest("playwright-test/playwright.expect.misc.spec.ts", "should support toMatchAriaSnapshot on page")]
+    public async Task ShouldSupportToMatchAriaSnapshotOnPage()
+    {
+        await Page.SetContentAsync("<h1>title</h1><button>click me</button>");
+        await Expect(Page).ToMatchAriaSnapshotAsync(@"
+            - heading ""title""
+            - button ""click me""
+        ");
+
+        var exception = await PlaywrightAssert.ThrowsAsync<PlaywrightException>(() => Expect(Page).ToMatchAriaSnapshotAsync(@"
+            - heading ""missing""
+        ", new() { Timeout = 100 }));
+        StringAssert.Contains("Page expected to match Aria snapshot", exception.Message);
+    }
+
+    [PlaywrightTest("playwright-test/playwright.expect.misc.spec.ts", "should include aria snapshot in failure message")]
+    public async Task ShouldIncludeAriaSnapshotInFailureMessage()
+    {
+        await Page.SetContentAsync("<h1>actual title</h1>");
+        var exception = await PlaywrightAssert.ThrowsAsync<PlaywrightException>(() => Expect(Page.Locator("h1")).ToHaveTextAsync("wrong", new() { Timeout = 100 }));
+        StringAssert.Contains("Aria snapshot", exception.Message);
+        StringAssert.Contains("heading", exception.Message);
+    }
 }

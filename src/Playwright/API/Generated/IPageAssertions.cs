@@ -62,6 +62,25 @@ public partial interface IPageAssertions
     public IPageAssertions Not { get; }
 
     /// <summary>
+    /// <para>
+    /// Asserts that the page body matches the given <a href="https://playwright.dev/dotnet/docs/aria-snapshots">accessibility
+    /// snapshot</a>.
+    /// </para>
+    /// <para>**Usage**</para>
+    /// <code>
+    /// await page.GotoAsync("https://demo.playwright.dev/todomvc/");<br/>
+    /// await Expect(page).ToMatchAriaSnapshotAsync(@"<br/>
+    ///   - heading ""todos""<br/>
+    ///   - textbox ""What needs to be done?""<br/>
+    /// ");
+    /// </code>
+    /// </summary>
+    /// <param name="expected">
+    /// </param>
+    /// <param name="options">Call options</param>
+    Task ToMatchAriaSnapshotAsync(string expected, PageAssertionsToMatchAriaSnapshotOptions? options = default);
+
+    /// <summary>
     /// <para>Ensures the page has the given title.</para>
     /// <para>**Usage**</para>
     /// <code>await Expect(Page).ToHaveTitleAsync("Playwright");</code>

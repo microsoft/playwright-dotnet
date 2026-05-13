@@ -32,7 +32,7 @@ public class PageRouteWebSocketTests : PageTestEx
 
     private async Task SetupWS(IFrame target, int port, string path)
     {
-        await target.GotoAsync("about:blank");
+        await target.GotoAsync(Server.EmptyPage);
         await target.EvaluateAsync(@"({ port, binaryType }) => {
             window.log = [];
             window.ws = new WebSocket('ws://localhost:' + port + '/ws');
@@ -118,7 +118,7 @@ public class PageRouteWebSocketTests : PageTestEx
 
         var wsPromise = Server.WaitForWebSocketAsync();
 
-        await Page.GotoAsync("about:blank");
+        await Page.GotoAsync(Server.EmptyPage);
         await Page.EvaluateAsync(@"async ({ port }) => {
             window.log = [];
             window.ws1 = new WebSocket('ws://localhost:' + port + '/ws');
@@ -328,7 +328,7 @@ public class PageRouteWebSocketTests : PageTestEx
             });
         });
 
-        await Page.GotoAsync("about:blank");
+        await Page.GotoAsync(Server.EmptyPage);
         await Page.EvaluateAsync(@"({ port }) => {
             window.log = [];
             // No trailing slash in WebSocket URL
@@ -347,5 +347,29 @@ public class PageRouteWebSocketTests : PageTestEx
         await AssertAreEqualWithRetriesAsync(
             () => Page.EvaluateAsync<string[]>("() => window.log"),
             ["response"]);
+    }
+
+    [PlaywrightTest("page-route-web-socket.spec.ts", "should expose protocols to the route handler")]
+    public async Task ShouldExposeProtocolsToRouteHandler()
+    {
+        var routes = new List<IWebSocketRoute>();
+        await Page.RouteWebSocketAsync(new Regex(".*"), ws =>
+        {
+            routes.Add(ws);
+        });
+
+        await Page.GotoAsync(Server.EmptyPage);
+        await Page.EvaluateAsync(@"({ port }) => {
+            window.wsNone = new WebSocket('ws://localhost:' + port + '/ws-none');
+            window.wsString = new WebSocket('ws://localhost:' + port + '/ws-string', 'chat.v1');
+            window.wsArray = new WebSocket('ws://localhost:' + port + '/ws-array', ['chat.v2', 'chat.v1']);
+        }", new Dictionary<string, object> { ["port"] = Server.Port });
+
+        await AssertAreEqualWithRetriesAsync(() => Task.FromResult(new[] { routes.Count.ToString(System.Globalization.CultureInfo.InvariantCulture) }), new[] { "3" });
+
+        var byPath = routes.ToDictionary(r => new Uri(r.Url).AbsolutePath, r => r.Protocols);
+        CollectionAssert.AreEqual(System.Array.Empty<string>(), byPath["/ws-none"]);
+        CollectionAssert.AreEqual(new[] { "chat.v1" }, byPath["/ws-string"]);
+        CollectionAssert.AreEqual(new[] { "chat.v2", "chat.v1" }, byPath["/ws-array"]);
     }
 }

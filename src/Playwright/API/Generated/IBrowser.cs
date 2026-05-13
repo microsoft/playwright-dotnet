@@ -46,6 +46,9 @@ namespace Microsoft.Playwright;
 /// </summary>
 public partial interface IBrowser
 {
+    /// <summary><para>Emitted when a new browser context is created.</para></summary>
+    event EventHandler<IBrowserContext> Context;
+
     /// <summary>
     /// <para>
     /// Emitted when Browser gets disconnected from the browser application. This might

@@ -37,10 +37,22 @@ public class LocatorAriaSnapshotOptions
             return;
         }
 
+        Boxes = clone.Boxes;
         Depth = clone.Depth;
         Mode = clone.Mode;
         Timeout = clone.Timeout;
     }
+
+    /// <summary>
+    /// <para>
+    /// When <c>true</c>, appends each element's bounding box as <c>[box=x,y,width,height]</c>
+    /// to the snapshot. Coordinates are relative to the viewport, in CSS pixels, as returned
+    /// by <a href="https://developer.mozilla.org/en-US/docs/Web/API/Element/getBoundingClientRect"><c>Element.getBoundingClientRect()</c></a>.
+    /// Defaults to <c>false</c>.
+    /// </para>
+    /// </summary>
+    [JsonPropertyName("boxes")]
+    public bool? Boxes { get; set; }
 
     /// <summary><para>When specified, limits the depth of the snapshot.</para></summary>
     [JsonPropertyName("depth")]

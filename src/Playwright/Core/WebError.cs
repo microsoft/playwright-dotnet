@@ -26,13 +26,16 @@ namespace Microsoft.Playwright.Core;
 
 internal class WebError : IWebError
 {
-    public WebError(Page page, string error)
+    public WebError(Page page, string error, WebErrorLocation location)
     {
         Page = page;
         Error = error;
+        Location = location;
     }
 
     public IPage Page { get; }
 
     public string Error { get; }
+
+    public WebErrorLocation Location { get; }
 }
