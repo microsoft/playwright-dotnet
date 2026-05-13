@@ -40,7 +40,7 @@ export const test = base.extend<{
   launchServer: async ({ playwright }, use) => {
     const servers: BrowserServer[] = [];
     await use(async ({port}: {port: number}) => {
-      servers.push(await playwright.chromium.launchServer({ port }));
+      servers.push(await playwright.chromium.launchServer({ host: '127.0.0.1', port }));
     });
     for (const server of servers)
       await server.close();

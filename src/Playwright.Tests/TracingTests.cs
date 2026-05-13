@@ -433,7 +433,7 @@ class TraceViewerPage(IPage page)
 
     public ILocator ActionTitles => Page.Locator(".action-title");
 
-    public ILocator StackFrames => Page.GetByRole(AriaRole.List, new() { Name = "Stack trace" }).GetByRole(AriaRole.Listitem);
+    public ILocator StackFrames => Page.GetByRole(AriaRole.Listbox, new() { Name = "Stack trace" }).GetByRole(AriaRole.Option);
 
     public async Task SelectActionAsync(string title, int ordinal = 0)
     {

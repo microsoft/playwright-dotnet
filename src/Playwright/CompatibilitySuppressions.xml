@@ -10,7 +10,21 @@
   </Suppression>
   <Suppression>
     <DiagnosticId>CP0001</DiagnosticId>
+    <Target>T:Microsoft.Playwright.BrowserContextExposeBindingOptions</Target>
+    <Left>lib/netstandard2.0/Microsoft.Playwright.dll</Left>
+    <Right>lib/netstandard2.0/Microsoft.Playwright.dll</Right>
+    <IsBaselineSuppression>true</IsBaselineSuppression>
+  </Suppression>
+  <Suppression>
+    <DiagnosticId>CP0001</DiagnosticId>
     <Target>T:Microsoft.Playwright.IAccessibility</Target>
+    <Left>lib/netstandard2.0/Microsoft.Playwright.dll</Left>
+    <Right>lib/netstandard2.0/Microsoft.Playwright.dll</Right>
+    <IsBaselineSuppression>true</IsBaselineSuppression>
+  </Suppression>
+  <Suppression>
+    <DiagnosticId>CP0001</DiagnosticId>
+    <Target>T:Microsoft.Playwright.PageExposeBindingOptions</Target>
     <Left>lib/netstandard2.0/Microsoft.Playwright.dll</Left>
     <Right>lib/netstandard2.0/Microsoft.Playwright.dll</Right>
     <IsBaselineSuppression>true</IsBaselineSuppression>
@@ -207,6 +221,13 @@
   <Suppression>
     <DiagnosticId>CP0002</DiagnosticId>
     <Target>M:Microsoft.Playwright.IBrowserContext.RouteAsync(System.Text.RegularExpressions.Regex,System.Func{Microsoft.Playwright.IRoute,System.Threading.Tasks.Task},Microsoft.Playwright.BrowserContextRouteOptions)</Target>
+    <Left>lib/netstandard2.0/Microsoft.Playwright.dll</Left>
+    <Right>lib/netstandard2.0/Microsoft.Playwright.dll</Right>
+    <IsBaselineSuppression>true</IsBaselineSuppression>
+  </Suppression>
+  <Suppression>
+    <DiagnosticId>CP0002</DiagnosticId>
+    <Target>M:Microsoft.Playwright.ILocator.HighlightAsync</Target>
     <Left>lib/netstandard2.0/Microsoft.Playwright.dll</Left>
     <Right>lib/netstandard2.0/Microsoft.Playwright.dll</Right>
     <IsBaselineSuppression>true</IsBaselineSuppression>
