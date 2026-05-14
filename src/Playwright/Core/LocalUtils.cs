@@ -84,11 +84,12 @@ internal class LocalUtils : ChannelOwner
                   { "harId", harId },
         });
 
-    internal Task HarUnzipAsync(string zipFile, string harFile)
+    internal Task HarUnzipAsync(string zipFile, string harFile, string? resourcesDir = null)
          => SendMessageToServerAsync("harUnzip", new Dictionary<string, object?>
         {
                   { "zipFile", zipFile },
                   { "harFile", harFile },
+                  { "resourcesDir", resourcesDir },
         });
 
     internal async Task<JsonPipe> ConnectAsync(string wsEndpoint, IEnumerable<KeyValuePair<string, string>>? headers = default, float? slowMo = default, float? timeout = default, string? exposeNetwork = default)

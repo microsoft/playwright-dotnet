@@ -22,6 +22,7 @@
  * SOFTWARE.
  */
 
+using System.Collections.Generic;
 using System.Text.Json.Serialization;
 
 namespace Microsoft.Playwright.Transport.Protocol;
@@ -30,4 +31,7 @@ internal class WebSocketRouteInitializer
 {
     [JsonPropertyName("url")]
     public string Url { get; set; } = null!;
+
+    [JsonPropertyName("protocols")]
+    public List<string> Protocols { get; set; } = null!;
 }

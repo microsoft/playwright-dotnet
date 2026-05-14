@@ -258,7 +258,9 @@ internal class Page : ChannelOwner, IPage
                 WebSocket?.Invoke(this, serverParams.GetProperty("webSocket").ToObject<WebSocket>(_connection.DefaultJsonSerializerOptions));
                 break;
             case "download":
-                Download?.Invoke(this, new Download(this, serverParams.GetProperty("url").ToObject<string>(_connection.DefaultJsonSerializerOptions), serverParams.GetProperty("suggestedFilename").ToObject<string>(_connection.DefaultJsonSerializerOptions), serverParams.GetProperty("artifact").ToObject<Artifact>(_connection.DefaultJsonSerializerOptions)));
+                var download = new Download(this, serverParams.GetProperty("url").ToObject<string>(_connection.DefaultJsonSerializerOptions), serverParams.GetProperty("suggestedFilename").ToObject<string>(_connection.DefaultJsonSerializerOptions), serverParams.GetProperty("artifact").ToObject<Artifact>(_connection.DefaultJsonSerializerOptions));
+                Download?.Invoke(this, download);
+                Context?.FireDownload(download);
                 break;
             case "viewportSizeChanged":
                 var size = serverParams.GetProperty("viewportSize").ToObject<ViewportSize>(_connection.DefaultJsonSerializerOptions);
@@ -826,10 +828,11 @@ internal class Page : ChannelOwner, IPage
         }).ConfigureAwait(false);
 
     [MethodImpl(MethodImplOptions.NoInlining)]
-    public Task<IAsyncDisposable> ExposeBindingAsync(string name, Action callback, PageExposeBindingOptions? options = default)
-#pragma warning disable CS0612 // Type or member is obsolete
-        => InnerExposeBindingAsync(name, callback, options?.Handle ?? false);
-#pragma warning restore CS0612 // Type or member is obsolete
+    public Task HideHighlightAsync() => SendMessageToServerAsync("hideHighlight");
+
+    [MethodImpl(MethodImplOptions.NoInlining)]
+    public Task<IAsyncDisposable> ExposeBindingAsync(string name, Action callback)
+        => InnerExposeBindingAsync(name, callback);
 
     [MethodImpl(MethodImplOptions.NoInlining)]
     public Task<IAsyncDisposable> ExposeBindingAsync(string name, Action<BindingSource> callback)
@@ -842,10 +845,6 @@ internal class Page : ChannelOwner, IPage
     [MethodImpl(MethodImplOptions.NoInlining)]
     public Task<IAsyncDisposable> ExposeBindingAsync<TResult>(string name, Func<BindingSource, TResult> callback)
         => InnerExposeBindingAsync(name, callback);
-
-    [MethodImpl(MethodImplOptions.NoInlining)]
-    public Task<IAsyncDisposable> ExposeBindingAsync<TResult>(string name, Func<BindingSource, IJSHandle, TResult> callback)
-        => InnerExposeBindingAsync(name, callback, true);
 
     [MethodImpl(MethodImplOptions.NoInlining)]
     public Task<IAsyncDisposable> ExposeBindingAsync<T, TResult>(string name, Func<BindingSource, T, TResult> callback)
@@ -1203,7 +1202,10 @@ internal class Page : ChannelOwner, IPage
     internal void NotifyPopup(Page page) => Popup?.Invoke(this, page);
 
     internal void OnFrameNavigated(Frame frame)
-        => FrameNavigated?.Invoke(this, frame);
+    {
+        FrameNavigated?.Invoke(this, frame);
+        Context?.FireFrameNavigated(frame);
+    }
 
     internal void FireConsole(IConsoleMessage message) => _consoleImpl?.Invoke(this, message);
 
@@ -1219,7 +1221,11 @@ internal class Page : ChannelOwner, IPage
 
     internal void FireResponse(IResponse response) => _responseImpl?.Invoke(this, response);
 
-    internal void FireLoad() => Load?.Invoke(this, this);
+    internal void FireLoad()
+    {
+        Load?.Invoke(this, this);
+        Context?.FirePageLoad(this);
+    }
 
     internal void FireDOMContentLoaded() => DOMContentLoaded?.Invoke(this, this);
 
@@ -1292,6 +1298,7 @@ internal class Page : ChannelOwner, IPage
         Context._pages.Remove(this);
         DisposeHarRouters();
         Close?.Invoke(this, this);
+        Context?.FirePageClose(this);
     }
 
     private void Channel_Crashed()
@@ -1365,6 +1372,7 @@ internal class Page : ChannelOwner, IPage
         frame.IsDetached = true;
         frame.ParentFrame?._childFrames?.Remove(frame);
         FrameDetached?.Invoke(this, args);
+        Context?.FireFrameDetached(args);
     }
 
     private void Channel_FrameAttached(object sender, IFrame args)
@@ -1374,9 +1382,10 @@ internal class Page : ChannelOwner, IPage
         _frames.Add(frame);
         frame.ParentFrame?._childFrames?.Add(frame);
         FrameAttached?.Invoke(this, args);
+        Context?.FireFrameAttached(args);
     }
 
-    private async Task<IAsyncDisposable> InnerExposeBindingAsync(string name, Delegate callback, bool handle = false)
+    private async Task<IAsyncDisposable> InnerExposeBindingAsync(string name, Delegate callback)
     {
         if (Bindings.ContainsKey(name))
         {
@@ -1390,7 +1399,6 @@ internal class Page : ChannelOwner, IPage
             new Dictionary<string, object?>
             {
                 ["name"] = name,
-                ["needsHandle"] = handle,
             }).ConfigureAwait(false);
         return result.GetObject<Disposable>("disposable", _connection)!;
     }

@@ -176,6 +176,9 @@ internal class Locator : ILocator
     public Task DragToAsync(ILocator target, LocatorDragToOptions? options = null)
         => _frame.DragAndDropAsync(_selector, ((Locator)target)._selector, ConvertOptions<FrameDragAndDropOptions>(options));
 
+    public Task DropAsync(DropPayload payload, LocatorDropOptions? options = null)
+        => _frame.DropAsync(_selector, payload, options?.Position, options?.Timeout, strict: true);
+
     public Task<JsonElement?> EvaluateAsync(string expression, object? arg = null, LocatorEvaluateOptions? options = null)
         => EvaluateAsync<JsonElement?>(expression, arg, options);
 
@@ -197,7 +200,13 @@ internal class Locator : ILocator
     public Task ClearAsync(LocatorClearOptions? options = null)
         => this._frame.WrapApiCallAsync(() => _frame.FillAsync(_selector, string.Empty, ConvertOptions<FrameFillOptions>(options)), false, "Clear");
 
-    public Task HighlightAsync() => _frame.HighlightAsync(_selector);
+    public async Task<IAsyncDisposable> HighlightAsync(LocatorHighlightOptions? options = default)
+    {
+        await _frame.HighlightAsync(_selector, options?.Style).ConfigureAwait(false);
+        return new DisposableStub(() => HideHighlightAsync());
+    }
+
+    public Task HideHighlightAsync() => _frame.HideHighlightAsync(_selector);
 
     ILocator ILocator.Locator(string selector, LocatorLocatorOptions? options)
         => new Locator(_frame, $"{_selector} >> {selector}", options);

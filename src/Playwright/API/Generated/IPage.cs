@@ -824,8 +824,7 @@ public partial interface IPage
     /// </remarks>
     /// <param name="name">Name of the function on the window object.</param>
     /// <param name="callback">Callback function that will be called in the Playwright's context.</param>
-    /// <param name="options">Call options</param>
-    Task<IAsyncDisposable> ExposeBindingAsync(string name, Action callback, PageExposeBindingOptions? options = default);
+    Task<IAsyncDisposable> ExposeBindingAsync(string name, Action callback);
 
     /// <summary>
     /// <para>
@@ -1356,6 +1355,14 @@ public partial interface IPage
     /// </param>
     /// <param name="options">Call options</param>
     Task<IResponse?> GotoAsync(string url, PageGotoOptions? options = default);
+
+    /// <summary>
+    /// <para>
+    /// Hide all locator highlight overlays previously added by <see cref="ILocator.HighlightAsync"/>
+    /// on this page.
+    /// </para>
+    /// </summary>
+    Task HideHighlightAsync();
 
     /// <summary>
     /// <para>

@@ -34,4 +34,38 @@ public class LocatorHighlightTests : PageTestEx
         await Page.Locator(".box").Nth(3).HighlightAsync();
         Assert.AreEqual(await Page.Locator("x-pw-glass").IsVisibleAsync(), true);
     }
+
+    [PlaywrightTest("locator-highlight.spec.ts", "highlight should accept a CSS string style")]
+    public async Task HighlightShouldAcceptCssStringStyle()
+    {
+        await Page.GotoAsync(Server.Prefix + "/grid.html");
+        await Page.Locator(".box").Nth(3).HighlightAsync(new() { Style = "outline: 3px solid rgb(255, 0, 0)" });
+        Assert.AreEqual(await Page.Locator("x-pw-glass").IsVisibleAsync(), true);
+    }
+
+    [PlaywrightTest("locator-highlight.spec.ts", "hideHighlight should not throw")]
+    public async Task HideHighlightShouldNotThrow()
+    {
+        await Page.GotoAsync(Server.Prefix + "/grid.html");
+        var locator = Page.Locator(".box").Nth(3);
+        await locator.HighlightAsync();
+        await locator.HideHighlightAsync();
+    }
+
+    [PlaywrightTest("locator-highlight.spec.ts", "page.hideHighlight should work")]
+    public async Task PageHideHighlightShouldWork()
+    {
+        await Page.GotoAsync(Server.Prefix + "/grid.html");
+        await Page.Locator(".box").Nth(3).HighlightAsync();
+        await Page.HideHighlightAsync();
+    }
+
+    [PlaywrightTest("locator-highlight.spec.ts", "highlight returns disposable")]
+    public async Task HighlightReturnsDisposable()
+    {
+        await Page.GotoAsync(Server.Prefix + "/grid.html");
+        var locator = Page.Locator(".box").Nth(3);
+        await using var disposable = await locator.HighlightAsync();
+        Assert.IsNotNull(disposable);
+    }
 }

@@ -26,24 +26,19 @@ using System.Text.Json.Serialization;
 
 namespace Microsoft.Playwright;
 
-public class LocatorAssertionsToHaveCSSOptions
+public class PageAssertionsToMatchAriaSnapshotOptions
 {
-    public LocatorAssertionsToHaveCSSOptions() { }
+    public PageAssertionsToMatchAriaSnapshotOptions() { }
 
-    public LocatorAssertionsToHaveCSSOptions(LocatorAssertionsToHaveCSSOptions clone)
+    public PageAssertionsToMatchAriaSnapshotOptions(PageAssertionsToMatchAriaSnapshotOptions clone)
     {
         if (clone == null)
         {
             return;
         }
 
-        Pseudo = clone.Pseudo;
         Timeout = clone.Timeout;
     }
-
-    /// <summary><para>Pseudo-element to read computed styles from.</para></summary>
-    [JsonPropertyName("pseudo")]
-    public PseudoElement? Pseudo { get; set; }
 
     /// <summary><para>Time to retry the assertion for in milliseconds. Defaults to <c>5000</c>.</para></summary>
     [JsonPropertyName("timeout")]

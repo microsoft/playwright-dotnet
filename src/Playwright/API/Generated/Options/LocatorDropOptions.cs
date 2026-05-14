@@ -26,47 +26,29 @@ using System.Text.Json.Serialization;
 
 namespace Microsoft.Playwright;
 
-public class PageAriaSnapshotOptions
+public class LocatorDropOptions
 {
-    public PageAriaSnapshotOptions() { }
+    public LocatorDropOptions() { }
 
-    public PageAriaSnapshotOptions(PageAriaSnapshotOptions clone)
+    public LocatorDropOptions(LocatorDropOptions clone)
     {
         if (clone == null)
         {
             return;
         }
 
-        Boxes = clone.Boxes;
-        Depth = clone.Depth;
-        Mode = clone.Mode;
+        Position = clone.Position;
         Timeout = clone.Timeout;
     }
 
     /// <summary>
     /// <para>
-    /// When <c>true</c>, appends each element's bounding box as <c>[box=x,y,width,height]</c>
-    /// to the snapshot. Coordinates are relative to the viewport, in CSS pixels, as returned
-    /// by <a href="https://developer.mozilla.org/en-US/docs/Web/API/Element/getBoundingClientRect"><c>Element.getBoundingClientRect()</c></a>.
-    /// Defaults to <c>false</c>.
+    /// A point to use relative to the top-left corner of element padding box. If not specified,
+    /// uses some visible point of the element.
     /// </para>
     /// </summary>
-    [JsonPropertyName("boxes")]
-    public bool? Boxes { get; set; }
-
-    /// <summary><para>When specified, limits the depth of the snapshot.</para></summary>
-    [JsonPropertyName("depth")]
-    public int? Depth { get; set; }
-
-    /// <summary>
-    /// <para>
-    /// When set to <c>"ai"</c>, returns a snapshot optimized for AI consumption: including
-    /// element references like <c>[ref=e2]</c> and snapshots of <c>&lt;iframe&gt;</c>s.
-    /// Defaults to <c>"default"</c>.
-    /// </para>
-    /// </summary>
-    [JsonPropertyName("mode")]
-    public AriaSnapshotMode? Mode { get; set; }
+    [JsonPropertyName("position")]
+    public Position? Position { get; set; }
 
     /// <summary>
     /// <para>

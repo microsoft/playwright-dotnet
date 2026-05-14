@@ -39,6 +39,9 @@ public class LocatorGetByRoleOptions
         }
 
         Checked = clone.Checked;
+        Description = clone.Description;
+        DescriptionRegex = clone.DescriptionRegex;
+        DescriptionString = clone.DescriptionString;
         Disabled = clone.Disabled;
         Exact = clone.Exact;
         Expanded = clone.Expanded;
@@ -62,6 +65,48 @@ public class LocatorGetByRoleOptions
     public bool? Checked { get; set; }
 
     /// <summary>
+    /// <para>
+    /// Option to match the <a href="https://w3c.github.io/accname/#dfn-accessible-description">accessible
+    /// description</a>. By default, matching is case-insensitive and searches for a substring,
+    /// use <see cref="ILocator.GetByRole"/> to control this behavior.
+    /// </para>
+    /// <para>
+    /// Learn more about <a href="https://w3c.github.io/accname/#dfn-accessible-description">accessible
+    /// description</a>.
+    /// </para>
+    /// </summary>
+    [JsonPropertyName("description")]
+    public string? Description { get; set; }
+
+    /// <summary>
+    /// <para>
+    /// Option to match the <a href="https://w3c.github.io/accname/#dfn-accessible-description">accessible
+    /// description</a>. By default, matching is case-insensitive and searches for a substring,
+    /// use <see cref="ILocator.GetByRole"/> to control this behavior.
+    /// </para>
+    /// <para>
+    /// Learn more about <a href="https://w3c.github.io/accname/#dfn-accessible-description">accessible
+    /// description</a>.
+    /// </para>
+    /// </summary>
+    [JsonPropertyName("descriptionRegex")]
+    public Regex? DescriptionRegex { get; set; }
+
+    /// <summary>
+    /// <para>
+    /// Option to match the <a href="https://w3c.github.io/accname/#dfn-accessible-description">accessible
+    /// description</a>. By default, matching is case-insensitive and searches for a substring,
+    /// use <see cref="ILocator.GetByRole"/> to control this behavior.
+    /// </para>
+    /// <para>
+    /// Learn more about <a href="https://w3c.github.io/accname/#dfn-accessible-description">accessible
+    /// description</a>.
+    /// </para>
+    /// </summary>
+    [JsonPropertyName("descriptionString")]
+    public string? DescriptionString { get; set; }
+
+    /// <summary>
     /// <para>An attribute that is usually set by <c>aria-disabled</c> or <c>disabled</c>.</para>
     /// <para>
     /// Unlike most other attributes, <c>disabled</c> is inherited through the DOM hierarchy.
@@ -80,9 +125,9 @@ public class LocatorGetByRoleOptions
 
     /// <summary>
     /// <para>
-    /// Whether <see cref="ILocator.GetByRole"/> is matched exactly: case-sensitive and
-    /// whole-string. Defaults to false. Ignored when <see cref="ILocator.GetByRole"/> is
-    /// a regular expression. Note that exact match still trims whitespace.
+    /// Whether <see cref="ILocator.GetByRole"/> and <see cref="ILocator.GetByRole"/> are
+    /// matched exactly: case-sensitive and whole-string. Defaults to false. Ignored when
+    /// the value is a regular expression. Note that exact match still trims whitespace.
     /// </para>
     /// </summary>
     [JsonPropertyName("exact")]

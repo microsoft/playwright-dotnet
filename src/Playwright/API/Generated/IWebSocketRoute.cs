@@ -23,6 +23,7 @@
  */
 
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace Microsoft.Playwright;
@@ -200,6 +201,25 @@ public partial interface IWebSocketRoute
     /// </summary>
     /// <param name="message">Message to send.</param>
     void Send(byte[] message);
+
+    /// <summary>
+    /// <para>
+    /// The list of WebSocket subprotocols requested by the page, as passed via the second
+    /// argument to the <a href="https://developer.mozilla.org/en-US/docs/Web/API/WebSocket/WebSocket"><c>WebSocket</c>
+    /// constructor</a>. Corresponds to the <c>Sec-WebSocket-Protocol</c> request header.
+    /// </para>
+    /// <para>Returns an empty array if no protocols were specified.</para>
+    /// <para>**Usage**</para>
+    /// <code>
+    /// await page.RouteWebSocketAsync("wss://example.com/ws", ws =&gt; {<br/>
+    ///   if (ws.Protocols.Contains("chat.v2"))<br/>
+    ///     ws.OnMessage(frame =&gt; ws.Send($"v2:{frame.Text}"));<br/>
+    ///   else<br/>
+    ///     ws.CloseAsync(new() { Code = 1002, Reason = "Unsupported protocol" });<br/>
+    /// });
+    /// </code>
+    /// </summary>
+    IReadOnlyList<string> Protocols { get; }
 
     /// <summary><para>URL of the WebSocket created in the page.</para></summary>
     string Url { get; }

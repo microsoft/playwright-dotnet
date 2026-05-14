@@ -47,7 +47,6 @@ internal class BrowserContext : ChannelOwner, IBrowserContext
     internal readonly Tracing _tracing;
     private readonly Clock _clock;
     internal readonly APIRequestContext _request;
-    private readonly Dictionary<string, HarRecorder> _harRecorders = new();
     internal readonly List<IWorker> _serviceWorkers = new();
     private readonly List<WebSocketRouteHandler> _webSocketRoutes = new();
     private List<RouteHandler> _routes = new();
@@ -99,6 +98,18 @@ internal class BrowserContext : ChannelOwner, IBrowserContext
     }
 
     public event EventHandler<IPage>? Page;
+
+    public event EventHandler<IPage>? PageClose;
+
+    public event EventHandler<IPage>? PageLoad;
+
+    public event EventHandler<IFrame>? FrameAttached;
+
+    public event EventHandler<IFrame>? FrameDetached;
+
+    public event EventHandler<IFrame>? FrameNavigated;
+
+    public event EventHandler<IDownload>? Download;
 
     public event EventHandler<IPage>? BackgroundPage;
 
@@ -204,7 +215,10 @@ internal class BrowserContext : ChannelOwner, IBrowserContext
                     var error = serverParams.GetProperty("error").ToObject<SerializedError>(_connection.DefaultJsonSerializerOptions)!;
                     var pageObject = serverParams.GetProperty("page").ToObject<Page>(_connection.DefaultJsonSerializerOptions);
                     var parsedError = string.IsNullOrEmpty(error.Error.Stack) ? $"{error.Error.Name}: {error.Error.Message}" : error.Error.Stack;
-                    WebError?.Invoke(this, new WebError(pageObject, parsedError));
+                    var location = serverParams.TryGetProperty("location", out var locElement)
+                        ? locElement.ToObject<WebErrorLocation>(_connection.DefaultJsonSerializerOptions)
+                        : null;
+                    WebError?.Invoke(this, new WebError(pageObject, parsedError, location!));
                     pageObject?.FirePageError(parsedError);
                     break;
                 }
@@ -365,31 +379,7 @@ internal class BrowserContext : ChannelOwner, IBrowserContext
         ClosingOrClosed = true;
         await _request.DisposeAsync(options?.Reason).ConfigureAwait(false);
         await WrapApiCallAsync(
-            async () =>
-        {
-            foreach (var harRecorder in _harRecorders)
-            {
-                var artifact = (await SendMessageToServerAsync(
-                    "harExport",
-                    new Dictionary<string, object?>
-                    {
-                        ["harId"] = harRecorder.Key,
-                    }).ConfigureAwait(false)).GetObject<Artifact>("artifact", _connection)!;
-                // Server side will compress artifact if content is attach or if file is .zip.
-                var isCompressed = harRecorder.Value.Content == HarContentPolicy.Attach || harRecorder.Value.Path.EndsWith(".zip", StringComparison.Ordinal);
-                var needCompressed = harRecorder.Value.Path.EndsWith(".zip", StringComparison.Ordinal);
-                if (isCompressed && !needCompressed)
-                {
-                    await artifact.SaveAsAsync(harRecorder.Value.Path + ".tmp").ConfigureAwait(false);
-                    await _connection.LocalUtils!.HarUnzipAsync(harRecorder.Value.Path + ".tmp", harRecorder.Value.Path).ConfigureAwait(false);
-                }
-                else
-                {
-                    await artifact.SaveAsAsync(harRecorder.Value.Path).ConfigureAwait(false);
-                }
-                await artifact.DeleteAsync().ConfigureAwait(false);
-            }
-        },
+            async () => await _tracing.ExportAllHarsAsync().ConfigureAwait(false),
             true).ConfigureAwait(false);
         await SendMessageToServerAsync("close", new Dictionary<string, object?>
         {
@@ -413,10 +403,8 @@ internal class BrowserContext : ChannelOwner, IBrowserContext
             }).ConfigureAwait(false))?.GetProperty("cookies").ToObject<IReadOnlyList<BrowserContextCookiesResult>>()!;
 
     [MethodImpl(MethodImplOptions.NoInlining)]
-    public Task<IAsyncDisposable> ExposeBindingAsync(string name, Action callback, BrowserContextExposeBindingOptions? options = default)
-#pragma warning disable CS0612 // Type or member is obsolete
-        => ExposeBindingAsync(name, callback, handle: options?.Handle ?? false);
-#pragma warning restore CS0612 // Type or member is obsolete
+    public Task<IAsyncDisposable> ExposeBindingAsync(string name, Action callback)
+        => ExposeBindingAsync(name, (Delegate)callback);
 
     [MethodImpl(MethodImplOptions.NoInlining)]
     public Task<IAsyncDisposable> ExposeBindingAsync(string name, Action<BindingSource> callback)
@@ -429,10 +417,6 @@ internal class BrowserContext : ChannelOwner, IBrowserContext
     [MethodImpl(MethodImplOptions.NoInlining)]
     public Task<IAsyncDisposable> ExposeBindingAsync<TResult>(string name, Func<BindingSource, TResult> callback)
         => ExposeBindingAsync(name, (Delegate)callback);
-
-    [MethodImpl(MethodImplOptions.NoInlining)]
-    public Task<IAsyncDisposable> ExposeBindingAsync<TResult>(string name, Func<BindingSource, IJSHandle, TResult> callback)
-        => ExposeBindingAsync(name, callback, true);
 
     [MethodImpl(MethodImplOptions.NoInlining)]
     public Task<IAsyncDisposable> ExposeBindingAsync<T, TResult>(string name, Func<BindingSource, T, TResult> callback)
@@ -840,6 +824,18 @@ internal class BrowserContext : ChannelOwner, IBrowserContext
         _closeTcs.TrySetResult(true);
     }
 
+    internal void FirePageClose(IPage page) => PageClose?.Invoke(this, page);
+
+    internal void FirePageLoad(IPage page) => PageLoad?.Invoke(this, page);
+
+    internal void FireFrameAttached(IFrame frame) => FrameAttached?.Invoke(this, frame);
+
+    internal void FireFrameDetached(IFrame frame) => FrameDetached?.Invoke(this, frame);
+
+    internal void FireFrameNavigated(IFrame frame) => FrameNavigated?.Invoke(this, frame);
+
+    internal void FireDownload(IDownload download) => Download?.Invoke(this, download);
+
     private void Channel_OnPage(object sender, Page page)
     {
         page.Context = this;
@@ -862,7 +858,7 @@ internal class BrowserContext : ChannelOwner, IBrowserContext
 
     private void Channel_Route(object sender, Route route) => _ = OnRouteAsync(route).ConfigureAwait(false);
 
-    private async Task<IAsyncDisposable> ExposeBindingAsync(string name, Delegate callback, bool handle = false)
+    private async Task<IAsyncDisposable> ExposeBindingAsync(string name, Delegate callback)
     {
         foreach (var page in _pages)
         {
@@ -884,7 +880,6 @@ internal class BrowserContext : ChannelOwner, IBrowserContext
             new Dictionary<string, object?>
             {
                 ["name"] = name,
-                ["needsHandle"] = handle,
             }).ConfigureAwait(false);
         return result.GetObject<Disposable>("disposable", _connection)!;
     }
@@ -902,33 +897,8 @@ internal class BrowserContext : ChannelOwner, IBrowserContext
         }
     }
 
-    internal async Task RecordIntoHarAsync(string har, Page? page, BrowserContextRouteFromHAROptions options, HarContentPolicy? contentPolicy)
-    {
-        contentPolicy = contentPolicy ?? RouteFromHarUpdateContentPolicyToHarContentPolicy(options?.UpdateContent);
-        var urlGlob = options?.Url ?? options?.UrlString;
-
-        var recordHarArgs = new Dictionary<string, object?>();
-        recordHarArgs["zip"] = har.EndsWith(".zip");
-        recordHarArgs["content"] = contentPolicy ?? HarContentPolicy.Attach;
-        if (!string.IsNullOrEmpty(urlGlob))
-        {
-            recordHarArgs["urlGlob"] = urlGlob;
-        }
-        if (options?.UrlRegex != null)
-        {
-            var (source, flags) = options.UrlRegex.GetSourceAndFlags();
-            recordHarArgs["urlRegexSource"] = source;
-            recordHarArgs["urlRegexFlags"] = flags;
-        }
-        recordHarArgs["mode"] = options?.UpdateMode ?? HarMode.Minimal;
-
-        var harId = (await SendMessageToServerAsync("harStart", new Dictionary<string, object?>
-            {
-                { "page", page },
-                { "options", recordHarArgs },
-            }).ConfigureAwait(false)).Value.GetProperty("harId").ToString();
-        _harRecorders.Add(harId, new(har, contentPolicy ?? HarContentPolicy.Attach));
-    }
+    internal Task<string> RecordIntoHarAsync(string har, Page? page, BrowserContextRouteFromHAROptions options, HarContentPolicy? contentPolicy, string? resourcesDir = null)
+        => _tracing.RecordIntoHarAsync(har, page, contentPolicy ?? RouteFromHarUpdateContentPolicyToHarContentPolicy(options?.UpdateContent), options?.Url ?? options?.UrlString, options?.UrlRegex, options?.UpdateMode ?? HarMode.Minimal, resourcesDir);
 
     [MethodImpl(MethodImplOptions.NoInlining)]
     public async Task RouteFromHARAsync(string har, BrowserContextRouteFromHAROptions? options = null)
@@ -994,17 +964,4 @@ internal class BrowserContext : ChannelOwner, IBrowserContext
             ["patterns"] = patterns,
         }).ConfigureAwait(false);
     }
-}
-
-internal class HarRecorder
-{
-    internal HarRecorder(string path, HarContentPolicy? content)
-    {
-        Path = path;
-        Content = content;
-    }
-
-    internal string Path { get; }
-
-    internal HarContentPolicy? Content { get; }
 }

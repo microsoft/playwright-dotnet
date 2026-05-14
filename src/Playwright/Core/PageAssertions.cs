@@ -60,4 +60,11 @@ internal class PageAssertions : AssertionsBase, IPageAssertions
 
     public Task ToHaveURLAsync(Regex urlOrRegExp, PageAssertionsToHaveURLOptions? options = null) =>
         ExpectImplAsync("to.have.url", ExpectedRegex(urlOrRegExp, new() { IgnoreCase = options?.IgnoreCase }), urlOrRegExp, "Page URL expected to match regex", "Expect \"ToHaveURLAsync\"", ConvertToFrameExpectOptions(options));
+
+    public Task ToMatchAriaSnapshotAsync(string expected, PageAssertionsToMatchAriaSnapshotOptions? options = null)
+    {
+        var commonOptions = ConvertToFrameExpectOptions(options);
+        commonOptions.ExpectedValue = ScriptsHelper.SerializedArgument(expected);
+        return ExpectImplAsync("to.match.aria", null as ExpectedTextValue[], expected, "Page expected to match Aria snapshot", "Expect \"ToMatchAriaSnapshotAsync\"", commonOptions);
+    }
 }

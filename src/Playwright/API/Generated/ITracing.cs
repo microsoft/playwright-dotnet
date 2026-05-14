@@ -161,6 +161,28 @@ public partial interface ITracing
     Task StartChunkAsync(TracingStartChunkOptions? options = default);
 
     /// <summary>
+    /// <para>
+    /// Start recording a HAR (HTTP Archive) of network activity in this context. The HAR
+    /// file is written to disk when <see cref="ITracing.StopHarAsync"/> is called, or when
+    /// the returned <see cref="Disposable"/> is disposed.
+    /// </para>
+    /// <para>Only one HAR recording can be active at a time per <see cref="IBrowserContext"/>.</para>
+    /// <para>**Usage**</para>
+    /// <code>
+    /// await context.Tracing.StartHarAsync("trace.har");<br/>
+    /// var page = await context.NewPageAsync();<br/>
+    /// await page.GotoAsync("https://playwright.dev");<br/>
+    /// await context.Tracing.StopHarAsync();
+    /// </code>
+    /// </summary>
+    /// <param name="path">
+    /// Path on the filesystem to write the HAR file to. If the file name ends with <c>.zip</c>,
+    /// the HAR is saved as a zip archive with response bodies attached as separate files.
+    /// </param>
+    /// <param name="options">Call options</param>
+    Task<IAsyncDisposable> StartHarAsync(string path, TracingStartHarOptions? options = default);
+
+    /// <summary>
     /// <para>Use <c>test.step</c> instead when available.</para>
     /// <para>
     /// Creates a new group within the trace, assigning any subsequent API calls to this
@@ -197,4 +219,7 @@ public partial interface ITracing
     /// </summary>
     /// <param name="options">Call options</param>
     Task StopChunkAsync(TracingStopChunkOptions? options = default);
+
+    /// <summary><para>Stop HAR recording and save the HAR file to the path given to <see cref="ITracing.StartHarAsync"/>.</para></summary>
+    Task StopHarAsync();
 }

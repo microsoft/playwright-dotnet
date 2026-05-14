@@ -216,4 +216,62 @@ public class BrowserContextEventsTests : PageTestEx
         Assert.AreEqual(Page, webError.Page);
         StringAssert.Contains("boom", webError.Error);
     }
+
+    [PlaywrightTest("browsercontext-events.spec.ts", "weberror event should include location")]
+    public async Task WebErrorEventShouldIncludeLocation()
+    {
+        var tsc = new TaskCompletionSource<IWebError>();
+        Context.WebError += (sender, e) => tsc.TrySetResult(e);
+        await Page.SetContentAsync(@"<script>throw new Error(""boom"")</script>");
+        var webError = await tsc.Task;
+        Assert.IsNotNull(webError.Location);
+        StringAssert.Contains("boom", webError.Error);
+    }
+
+    [PlaywrightTest("browsercontext-events.spec.ts", "should fire pageLoad")]
+    public async Task ShouldFirePageLoad()
+    {
+        var tcs = new TaskCompletionSource<IPage>();
+        Context.PageLoad += (_, p) => tcs.TrySetResult(p);
+        var page = await Context.NewPageAsync();
+        await page.GotoAsync(Server.EmptyPage);
+        var loaded = await tcs.Task;
+        Assert.AreSame(page, loaded);
+    }
+
+    [PlaywrightTest("browsercontext-events.spec.ts", "should fire pageClose")]
+    public async Task ShouldFirePageClose()
+    {
+        var tcs = new TaskCompletionSource<IPage>();
+        Context.PageClose += (_, p) => tcs.TrySetResult(p);
+        var page = await Context.NewPageAsync();
+        await page.CloseAsync();
+        var closed = await tcs.Task;
+        Assert.AreSame(page, closed);
+    }
+
+    [PlaywrightTest("browsercontext-events.spec.ts", "should fire frameAttached and frameNavigated")]
+    public async Task ShouldFireFrameAttachedAndFrameNavigated()
+    {
+        var attachedTcs = new TaskCompletionSource<IFrame>();
+        var navigatedTcs = new TaskCompletionSource<IFrame>();
+        Context.FrameAttached += (_, f) =>
+        {
+            if (f.ParentFrame != null)
+            {
+                attachedTcs.TrySetResult(f);
+            }
+        };
+        Context.FrameNavigated += (_, f) =>
+        {
+            if (f.ParentFrame != null)
+            {
+                navigatedTcs.TrySetResult(f);
+            }
+        };
+        var page = await Context.NewPageAsync();
+        await page.GotoAsync(Server.Prefix + "/frames/one-frame.html");
+        await attachedTcs.Task;
+        await navigatedTcs.Task;
+    }
 }

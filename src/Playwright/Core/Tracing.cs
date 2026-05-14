@@ -24,8 +24,10 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text.Json;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Microsoft.Playwright.Helpers;
 using Microsoft.Playwright.Transport;
@@ -35,10 +37,12 @@ namespace Microsoft.Playwright.Core;
 
 internal class Tracing : ChannelOwner, ITracing
 {
+    private readonly Dictionary<string, HarRecorder> _harRecorders = new();
     internal string? _tracesDir;
     private bool _includeSources;
     private string? _stacksId;
     private bool _isTracing;
+    private string? _harId;
 
     public Tracing(ChannelOwner parent, string guid) : base(parent, guid)
     {
@@ -199,4 +203,164 @@ internal class Tracing : ChannelOwner, ITracing
 
     public Task GroupEndAsync()
         => SendMessageToServerAsync("tracingGroupEnd");
+
+    [MethodImpl(MethodImplOptions.NoInlining)]
+    public async Task<IAsyncDisposable> StartHarAsync(string path, TracingStartHarOptions? options = default)
+    {
+        if (_harId != null)
+        {
+            throw new PlaywrightException("HAR recording has already been started");
+        }
+        var defaultContent = path.EndsWith(".zip", StringComparison.Ordinal) ? HarContentPolicy.Attach : HarContentPolicy.Embed;
+        _harId = await RecordIntoHarAsync(
+            path,
+            null,
+            options?.Content ?? defaultContent,
+            options?.UrlFilter ?? options?.UrlFilterString,
+            options?.UrlFilterRegex,
+            options?.Mode ?? HarMode.Full,
+            null).ConfigureAwait(false);
+        return new DisposableStub(() => StopHarAsync());
+    }
+
+    [MethodImpl(MethodImplOptions.NoInlining)]
+    public async Task StopHarAsync()
+    {
+        var harId = _harId;
+        if (harId == null)
+        {
+            throw new PlaywrightException("HAR recording has not been started");
+        }
+        _harId = null;
+        await ExportHarAsync(harId).ConfigureAwait(false);
+    }
+
+    internal async Task<string> RecordIntoHarAsync(string har, Page? page, HarContentPolicy? content, string? urlGlob, Regex? urlRegex, HarMode? mode, string? resourcesDir)
+    {
+        var isZip = har.EndsWith(".zip", StringComparison.Ordinal);
+        var recordHarArgs = new Dictionary<string, object?>();
+        var contentPolicy = content ?? HarContentPolicy.Attach;
+        recordHarArgs["content"] = contentPolicy;
+        if (!isZip)
+        {
+            recordHarArgs["harPath"] = har;
+        }
+        if (!string.IsNullOrEmpty(resourcesDir))
+        {
+            recordHarArgs["resourcesDir"] = resourcesDir;
+        }
+        if (!string.IsNullOrEmpty(urlGlob))
+        {
+            recordHarArgs["urlGlob"] = urlGlob;
+        }
+        if (urlRegex != null)
+        {
+            var (source, flags) = urlRegex.GetSourceAndFlags();
+            recordHarArgs["urlRegexSource"] = source;
+            recordHarArgs["urlRegexFlags"] = flags;
+        }
+        recordHarArgs["mode"] = mode ?? HarMode.Minimal;
+
+        var harId = (await SendMessageToServerAsync("harStart", new Dictionary<string, object?>
+        {
+            ["page"] = page,
+            ["options"] = recordHarArgs,
+        }).ConfigureAwait(false)).Value.GetProperty("harId").ToString();
+        _harRecorders.Add(harId, new(har, contentPolicy, resourcesDir));
+        return harId;
+    }
+
+    internal async Task ExportAllHarsAsync()
+    {
+        foreach (var harId in _harRecorders.Keys.ToArray())
+        {
+            await ExportHarAsync(harId).ConfigureAwait(false);
+        }
+    }
+
+    private async Task ExportHarAsync(string harId)
+    {
+        if (!_harRecorders.TryGetValue(harId, out var recorder))
+        {
+            return;
+        }
+        _harRecorders.Remove(harId);
+        var isZip = recorder.Path.EndsWith(".zip", StringComparison.Ordinal);
+        var isLocal = !_connection.IsRemote;
+
+        if (isLocal)
+        {
+            var entriesResult = await SendMessageToServerAsync("harExport", new Dictionary<string, object?>
+            {
+                ["harId"] = harId,
+                ["mode"] = "entries",
+            }).ConfigureAwait(false);
+            if (!isZip)
+            {
+                // Server wrote HAR and resources to the user's chosen paths.
+                return;
+            }
+            if (_connection.LocalUtils == null)
+            {
+                throw new PlaywrightException("Cannot save zipped HAR in thin clients");
+            }
+            List<NameValue> entries = new();
+            if (entriesResult.Value.TryGetProperty("entries", out var entriesElement))
+            {
+                foreach (var current in entriesElement.EnumerateArray())
+                {
+                    var entry = current.Deserialize<NameValue>();
+                    if (entry != null)
+                    {
+                        entries.Add(entry);
+                    }
+                }
+            }
+            await _connection.LocalUtils.ZipAsync(recorder.Path, entries, "write", null, false).ConfigureAwait(false);
+            return;
+        }
+
+        var archiveResult = await SendMessageToServerAsync("harExport", new Dictionary<string, object?>
+        {
+            ["harId"] = harId,
+            ["mode"] = "archive",
+        }).ConfigureAwait(false);
+        var artifact = archiveResult.GetObject<Artifact>("artifact", _connection);
+        if (artifact == null)
+        {
+            return;
+        }
+        // The server always returns a zipped artifact in archive mode.
+        // Unzip when the target file is not a .zip.
+        if (!isZip)
+        {
+            if (_connection.LocalUtils == null)
+            {
+                throw new PlaywrightException("Uncompressed HAR is not supported in thin clients");
+            }
+            await artifact.SaveAsAsync(recorder.Path + ".tmp").ConfigureAwait(false);
+            await _connection.LocalUtils.HarUnzipAsync(recorder.Path + ".tmp", recorder.Path, recorder.ResourcesDir).ConfigureAwait(false);
+        }
+        else
+        {
+            await artifact.SaveAsAsync(recorder.Path).ConfigureAwait(false);
+        }
+        await artifact.DeleteAsync().ConfigureAwait(false);
+    }
+
+    internal class HarRecorder
+    {
+        internal HarRecorder(string path, HarContentPolicy? content, string? resourcesDir)
+        {
+            Path = path;
+            Content = content;
+            ResourcesDir = resourcesDir;
+        }
+
+        internal string Path { get; }
+
+        internal HarContentPolicy? Content { get; }
+
+        internal string? ResourcesDir { get; }
+    }
 }

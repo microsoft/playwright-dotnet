@@ -29,6 +29,8 @@ internal class FrameExpectResult
 
     public object Received { get; set; } = null!;
 
+    public string? ReceivedAriaSnapshot { get; set; }
+
     public string[] Log { get; set; } = null!;
 
     public string? ErrorMessage { get; set; }

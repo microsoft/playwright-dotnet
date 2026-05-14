@@ -194,46 +194,6 @@ public class PageExposeFunctionTests : PageTestEx
         Assert.AreEqual(7, result.x);
     }
 
-    [PlaywrightTest("page-expose-function.spec.ts", "exposeBindingHandle should work")]
-    public async Task ExposeBindingHandleShouldWork()
-    {
-        IJSHandle target = null;
-        await Page.ExposeBindingAsync(
-            "logme",
-            (_, t) =>
-            {
-                target = t;
-                return 17;
-            });
-
-        int result = await Page.EvaluateAsync<int>(@"async function() {
-                return window['logme']({ foo: 42 });
-            }");
-
-        Assert.AreEqual(42, await target.EvaluateAsync<int>("x => x.foo"));
-        Assert.AreEqual(17, result);
-    }
-
-    [PlaywrightTest("page-expose-function.spec.ts", "exposeBindingHandle should not throw during navigation")]
-    public async Task ExposeBindingHandleShouldNotThrowDuringNavigation()
-    {
-        IJSHandle target = null;
-        await Page.ExposeBindingAsync(
-            "logme",
-            (_, t) =>
-            {
-                target = t;
-                return 17;
-            });
-
-        await TaskUtils.WhenAll(
-            Page.WaitForNavigationAsync(new() { WaitUntil = WaitUntilState.Load }),
-            Page.EvaluateAsync(@"async url => {
-                    window['logme']({ foo: 42 });
-                    window.location.href = url;
-                }", Server.Prefix + "/one-style.html"));
-    }
-
     [PlaywrightTest("browsercontext-expose-function.spec.ts", "should throw for duplicate registrations")]
     public async Task ShouldThrowForDuplicateRegistrations()
     {

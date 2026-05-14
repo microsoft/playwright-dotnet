@@ -22,33 +22,25 @@
  * SOFTWARE.
  */
 
+using System.ComponentModel.DataAnnotations;
 using System.Text.Json.Serialization;
 
 namespace Microsoft.Playwright;
 
-public class PageExposeBindingOptions
+public partial class WebErrorLocation
 {
-    public PageExposeBindingOptions() { }
+    /// <summary><para>URL of the resource.</para></summary>
+    [Required]
+    [JsonPropertyName("url")]
+    public string Url { get; set; } = default!;
 
-    public PageExposeBindingOptions(PageExposeBindingOptions clone)
-    {
-        if (clone == null)
-        {
-            return;
-        }
+    /// <summary><para>0-based line number in the resource.</para></summary>
+    [Required]
+    [JsonPropertyName("line")]
+    public int Line { get; set; } = default!;
 
-        Handle = clone.Handle;
-    }
-
-    /// <summary>
-    /// <para>**DEPRECATED** This option will be removed in the future.</para>
-    /// <para>
-    /// Whether to pass the argument as a handle, instead of passing by value. When passing
-    /// a handle, only one argument is supported. When passing by value, multiple arguments
-    /// are supported.
-    /// </para>
-    /// </summary>
-    [JsonPropertyName("handle")]
-    [System.Obsolete]
-    public bool? Handle { get; set; }
+    /// <summary><para>0-based column number in the resource.</para></summary>
+    [Required]
+    [JsonPropertyName("column")]
+    public int Column { get; set; } = default!;
 }

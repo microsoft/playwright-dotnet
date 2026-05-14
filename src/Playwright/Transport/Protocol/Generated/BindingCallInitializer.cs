@@ -37,7 +37,4 @@ internal class BindingCallInitializer
 
     [JsonPropertyName("args")]
     public List<System.Text.Json.JsonElement> Args { get; set; } = null!;
-
-    [JsonPropertyName("handle")]
-    public Core.JSHandle Handle { get; set; } = null!;
 }

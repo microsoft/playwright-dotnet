@@ -33,4 +33,14 @@ public partial class ScreencastFrame
     [Required]
     [JsonPropertyName("data")]
     public byte[] Data { get; set; } = default!;
+
+    /// <summary><para>Width of the page viewport at the time the frame was captured.</para></summary>
+    [Required]
+    [JsonPropertyName("viewportWidth")]
+    public int ViewportWidth { get; set; } = default!;
+
+    /// <summary><para>Height of the page viewport at the time the frame was captured.</para></summary>
+    [Required]
+    [JsonPropertyName("viewportHeight")]
+    public int ViewportHeight { get; set; } = default!;
 }

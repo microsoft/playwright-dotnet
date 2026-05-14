@@ -44,4 +44,6 @@ public partial interface IWebError
 
     /// <summary><para>Unhandled error that was thrown.</para></summary>
     string Error { get; }
+
+    WebErrorLocation Location { get; }
 }

@@ -47,6 +47,8 @@ internal class APIRequestContext : ChannelOwner, IAPIRequestContext
         _tracing = initializer.Tracing;
     }
 
+    public ITracing Tracing => _tracing;
+
     [MethodImpl(MethodImplOptions.NoInlining)]
     public async ValueTask DisposeAsync()
     {
