@@ -100,7 +100,7 @@ internal class LocalUtils : ChannelOwner
                 { "slowMo", slowMo },
                 { "timeout", timeout ?? 0 },
                 { "exposeNetwork", exposeNetwork },
-            }).ConfigureAwait(false)).Value.GetObject<JsonPipe>("pipe", _connection);
+            }).ConfigureAwait(false))!.Value.GetObject<JsonPipe>("pipe", _connection);
 
     internal void AddStackToTracingNoReply(List<StackFrame> stack, int id)
          => SendMessageToServerAsync("addStackToTracingNoReply", new Dictionary<string, object?>
@@ -127,7 +127,7 @@ internal class LocalUtils : ChannelOwner
             { "tracesDir", tracesDir },
             { "traceName", traceName },
         }).ConfigureAwait(false);
-        return response.Value.GetProperty("stacksId").ToString();
+        return response!.Value.GetProperty("stacksId").ToString();
     }
 }
 

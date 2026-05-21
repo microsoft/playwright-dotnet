@@ -120,7 +120,7 @@ internal class ElementHandle : JSHandle, IElementHandle
             }).ToArray();
         }
 
-        var result = (await SendMessageToServerAsync("screenshot", args).ConfigureAwait(false)).Value.GetProperty("binary").GetBytesFromBase64();
+        var result = (await SendMessageToServerAsync("screenshot", args).ConfigureAwait(false))!.Value.GetProperty("binary").GetBytesFromBase64();
 
         if (!string.IsNullOrEmpty(options.Path))
         {
@@ -161,7 +161,7 @@ internal class ElementHandle : JSHandle, IElementHandle
 
     public async Task<ElementHandleBoundingBoxResult?> BoundingBoxAsync()
     {
-        var result = (await SendMessageToServerAsync("boundingBox").ConfigureAwait(false)).Value;
+        var result = (await SendMessageToServerAsync("boundingBox").ConfigureAwait(false))!.Value;
         if (result.TryGetProperty("value", out var value))
         {
             return value.ToObject<ElementHandleBoundingBoxResult>();
@@ -303,9 +303,9 @@ internal class ElementHandle : JSHandle, IElementHandle
         return null;
     }
 
-    public async Task<string> InnerHTMLAsync() => (await SendMessageToServerAsync("innerHTML").ConfigureAwait(false)).Value.GetProperty("value").ToString();
+    public async Task<string> InnerHTMLAsync() => (await SendMessageToServerAsync("innerHTML").ConfigureAwait(false))!.Value.GetProperty("value").ToString();
 
-    public async Task<string> InnerTextAsync() => (await SendMessageToServerAsync("innerText").ConfigureAwait(false)).Value.GetProperty("value").ToString();
+    public async Task<string> InnerTextAsync() => (await SendMessageToServerAsync("innerText").ConfigureAwait(false))!.Value.GetProperty("value").ToString();
 
     public async Task<string?> TextContentAsync() => (await SendMessageToServerAsync("textContent").ConfigureAwait(false))?.GetProperty("value").ToString();
 
@@ -353,7 +353,7 @@ internal class ElementHandle : JSHandle, IElementHandle
             ["options"] = values,
             ["force"] = force,
             ["timeout"] = _frame.Timeout(timeout),
-        }).ConfigureAwait(false)).Value.GetProperty("values").ToObject<string[]>();
+        }).ConfigureAwait(false))!.Value.GetProperty("values").ToObject<string[]>();
     }
 
     private async Task<IReadOnlyList<string>> _selectOptionAsync(IEnumerable<IElementHandle> values, bool? noWaitAfter, bool? force, float? timeout)
@@ -363,7 +363,7 @@ internal class ElementHandle : JSHandle, IElementHandle
             ["elements"] = values,
             ["force"] = force,
             ["timeout"] = _frame.Timeout(timeout),
-        }).ConfigureAwait(false)).Value.GetProperty("values").ToObject<string[]>();
+        }).ConfigureAwait(false))!.Value.GetProperty("values").ToObject<string[]>();
     }
 
     public Task CheckAsync(ElementHandleCheckOptions? options = default)
@@ -407,7 +407,7 @@ internal class ElementHandle : JSHandle, IElementHandle
     public async Task<bool> IsVisibleAsync() => (await SendMessageToServerAsync("isVisible").ConfigureAwait(false))?.GetProperty("value").GetBoolean() ?? default;
 
     public async Task<string> InputValueAsync(ElementHandleInputValueOptions? options = null)
-        => (await SendMessageToServerAsync("inputValue").ConfigureAwait(false)).Value.GetProperty("value").ToString();
+        => (await SendMessageToServerAsync("inputValue").ConfigureAwait(false))!.Value.GetProperty("value").ToString();
 
     public Task SetCheckedAsync(bool checkedState, ElementHandleSetCheckedOptions? options = null)
         => SendMessageToServerAsync(checkedState ? "check" : "uncheck", new Dictionary<string, object?>

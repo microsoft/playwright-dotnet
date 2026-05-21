@@ -202,7 +202,7 @@ internal class Connection : IDisposable
 
         if (typeof(T) == typeof(JsonElement?))
         {
-            return (T)(object)result;
+            return (T)(object)result!;
         }
         else if (result == null)
         {

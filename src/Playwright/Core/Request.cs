@@ -190,7 +190,7 @@ internal class Request : ChannelOwner, IRequest
             throw new PlaywrightException("Unable to fetch resources sizes.");
         }
 
-        return (await res.SendMessageToServerAsync("sizes").ConfigureAwait(false)).Value.GetProperty("sizes").ToObject<RequestSizesResult>();
+        return (await res.SendMessageToServerAsync("sizes").ConfigureAwait(false))!.Value.GetProperty("sizes").ToObject<RequestSizesResult>();
     }
 
     [MethodImpl(MethodImplOptions.NoInlining)]
@@ -224,7 +224,7 @@ internal class Request : ChannelOwner, IRequest
         return await WrapApiCallAsync(
             async () =>
         {
-            var headerList = (await SendMessageToServerAsync("rawRequestHeaders").ConfigureAwait(false)).Value.GetProperty("headers").ToObject<List<NameValue>>();
+            var headerList = (await SendMessageToServerAsync("rawRequestHeaders").ConfigureAwait(false))!.Value.GetProperty("headers").ToObject<List<NameValue>>();
             return new RawHeaders(headerList);
         },
             true).ConfigureAwait(false);

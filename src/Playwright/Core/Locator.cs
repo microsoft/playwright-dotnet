@@ -652,7 +652,7 @@ internal class Locator : ILocator
             ["mode"] = options?.Mode,
             ["depth"] = options?.Depth,
         }).ConfigureAwait(false);
-        return result.Value.GetProperty("snapshot").ToString();
+        return result!.Value.GetProperty("snapshot").ToString();
     }
 
     public async Task<ILocator> NormalizeAsync()
@@ -661,7 +661,7 @@ internal class Locator : ILocator
         {
             ["selector"] = _selector,
         }).ConfigureAwait(false);
-        var resolvedSelector = result.Value.GetProperty("resolvedSelector").ToString();
+        var resolvedSelector = result!.Value.GetProperty("resolvedSelector").ToString();
         return new Locator(_frame, resolvedSelector);
     }
 }

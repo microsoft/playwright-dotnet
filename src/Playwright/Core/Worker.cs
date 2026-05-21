@@ -97,7 +97,7 @@ internal class Worker : ChannelOwner, IWorker
                 {
                     ["expression"] = expression,
                     ["arg"] = ScriptsHelper.SerializedArgument(arg),
-                }).ConfigureAwait(false)).Value.GetProperty("value"));
+                }).ConfigureAwait(false))!.Value.GetProperty("value"));
 
     [MethodImpl(MethodImplOptions.NoInlining)]
     public async Task<IJSHandle> EvaluateHandleAsync(string expression, object? arg = null)

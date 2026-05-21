@@ -162,7 +162,7 @@ internal class Frame : ChannelOwner, IFrame
         => new FrameLocator(this, selector);
 
     [MethodImpl(MethodImplOptions.NoInlining)]
-    public async Task<string> TitleAsync() => (await SendMessageToServerAsync("title").ConfigureAwait(false)).Value.GetProperty("value").ToString();
+    public async Task<string> TitleAsync() => (await SendMessageToServerAsync("title").ConfigureAwait(false))!.Value.GetProperty("value").ToString();
 
     [MethodImpl(MethodImplOptions.NoInlining)]
     public Task WaitForTimeoutAsync(float timeout)
@@ -194,7 +194,7 @@ internal class Frame : ChannelOwner, IFrame
             ["strict"] = options?.Strict,
             ["force"] = options?.Force,
             ["timeout"] = Timeout(options?.Timeout),
-        }).ConfigureAwait(false)).Value.GetProperty("values").ToObject<string[]>().ToList().AsReadOnly();
+        }).ConfigureAwait(false))!.Value.GetProperty("values").ToObject<string[]>().ToList().AsReadOnly();
 
     [MethodImpl(MethodImplOptions.NoInlining)]
     public Task<IReadOnlyList<string>> SelectOptionAsync(string selector, SelectOptionValue values, FrameSelectOptionOptions? options = default)
@@ -215,7 +215,7 @@ internal class Frame : ChannelOwner, IFrame
             ["strict"] = options?.Strict,
             ["force"] = options?.Force,
             ["timeout"] = Timeout(options?.Timeout),
-        }).ConfigureAwait(false)).Value.GetProperty("values").ToObject<string[]>().ToList().AsReadOnly();
+        }).ConfigureAwait(false))!.Value.GetProperty("values").ToObject<string[]>().ToList().AsReadOnly();
 
     [MethodImpl(MethodImplOptions.NoInlining)]
     public async Task WaitForLoadStateAsync(LoadState? state = default, FrameWaitForLoadStateOptions? options = default)
@@ -364,12 +364,12 @@ internal class Frame : ChannelOwner, IFrame
         {
             ["selector"] = selector,
         }).ConfigureAwait(false);
-        return result.Value.GetProperty("value").GetInt32();
+        return result!.Value.GetProperty("value").GetInt32();
     }
 
     [MethodImpl(MethodImplOptions.NoInlining)]
     public async Task<string> ContentAsync()
-        => (await SendMessageToServerAsync("content").ConfigureAwait(false)).Value.GetProperty("value").ToString();
+        => (await SendMessageToServerAsync("content").ConfigureAwait(false))!.Value.GetProperty("value").ToString();
 
     [MethodImpl(MethodImplOptions.NoInlining)]
     public Task FocusAsync(string selector, FrameFocusOptions? options = default)
@@ -414,7 +414,7 @@ internal class Frame : ChannelOwner, IFrame
             ["selector"] = selector,
             ["timeout"] = Timeout(options?.Timeout),
             ["strict"] = options?.Strict,
-        }).ConfigureAwait(false)).Value.GetProperty("value").ToString();
+        }).ConfigureAwait(false))!.Value.GetProperty("value").ToString();
 
     [MethodImpl(MethodImplOptions.NoInlining)]
     public async Task<string> InnerTextAsync(string selector, FrameInnerTextOptions? options = default)
@@ -423,7 +423,7 @@ internal class Frame : ChannelOwner, IFrame
             ["selector"] = selector,
             ["timeout"] = Timeout(options?.Timeout),
             ["strict"] = options?.Strict,
-        }).ConfigureAwait(false)).Value.GetProperty("value").ToString();
+        }).ConfigureAwait(false))!.Value.GetProperty("value").ToString();
 
     [MethodImpl(MethodImplOptions.NoInlining)]
     public async Task<string?> TextContentAsync(string selector, FrameTextContentOptions? options = default)
@@ -654,7 +654,7 @@ internal class Frame : ChannelOwner, IFrame
             ["selector"] = selector,
             ["timeout"] = Timeout(options?.Timeout),
             ["strict"] = options?.Strict,
-        }).ConfigureAwait(false)).Value.GetProperty("value").ToString();
+        }).ConfigureAwait(false))!.Value.GetProperty("value").ToString();
 
     [MethodImpl(MethodImplOptions.NoInlining)]
     public async Task<IElementHandle> QuerySelectorAsync(string selector)
@@ -944,8 +944,8 @@ internal class Frame : ChannelOwner, IFrame
             ["isNot"] = options.IsNot,
             ["timeout"] = options.Timeout,
         }).ConfigureAwait(false);
-        var parsed = result.Value.ToObject<FrameExpectResult>();
-        if (result.Value.TryGetProperty("received", out var received) && received.ValueKind == JsonValueKind.Object)
+        var parsed = result!.Value.ToObject<FrameExpectResult>();
+        if (result!.Value.TryGetProperty("received", out var received) && received.ValueKind == JsonValueKind.Object)
         {
             if (received.TryGetProperty("value", out var receivedValue))
             {

@@ -67,7 +67,7 @@ internal class Tracing : ChannelOwner, ITracing
         {
             ["title"] = options?.Title,
             ["name"] = options?.Name,
-        }).ConfigureAwait(false)).Value.GetProperty("traceName").ToString();
+        }).ConfigureAwait(false))!.Value.GetProperty("traceName").ToString();
         await StartCollectingStacksAsync(traceName).ConfigureAwait(false);
     }
 
@@ -78,7 +78,7 @@ internal class Tracing : ChannelOwner, ITracing
         {
             ["title"] = options?.Title,
             ["name"] = options?.Name,
-        }).ConfigureAwait(false)).Value.GetProperty("traceName").ToString();
+        }).ConfigureAwait(false))!.Value.GetProperty("traceName").ToString();
         await StartCollectingStacksAsync(traceName).ConfigureAwait(false);
     }
 
@@ -169,7 +169,7 @@ internal class Tracing : ChannelOwner, ITracing
 
         var artifact = result.GetObject<Artifact>("artifact", _connection);
         List<NameValue?> entries = new();
-        if (result.Value.TryGetProperty("entries", out var entriesElement))
+        if (result!.Value.TryGetProperty("entries", out var entriesElement))
         {
             foreach (var current in entriesElement.EnumerateArray())
             {
@@ -265,7 +265,7 @@ internal class Tracing : ChannelOwner, ITracing
         {
             ["page"] = page,
             ["options"] = recordHarArgs,
-        }).ConfigureAwait(false)).Value.GetProperty("harId").ToString();
+        }).ConfigureAwait(false))!.Value.GetProperty("harId").ToString();
         _harRecorders.Add(harId, new(har, contentPolicy, resourcesDir));
         return harId;
     }
@@ -305,7 +305,7 @@ internal class Tracing : ChannelOwner, ITracing
                 throw new PlaywrightException("Cannot save zipped HAR in thin clients");
             }
             List<NameValue> entries = new();
-            if (entriesResult.Value.TryGetProperty("entries", out var entriesElement))
+            if (entriesResult!.Value.TryGetProperty("entries", out var entriesElement))
             {
                 foreach (var current in entriesElement.EnumerateArray())
                 {

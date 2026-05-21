@@ -713,7 +713,7 @@ internal class Page : ChannelOwner, IPage
                 ["frame"] = ((Locator)locator)._frame,
                 ["selector"] = ((Locator)locator)._selector,
             }).ToArray(),
-        }).ConfigureAwait(false)).Value.GetProperty("binary").GetBytesFromBase64();
+        }).ConfigureAwait(false))!.Value.GetProperty("binary").GetBytesFromBase64();
 
         if (!string.IsNullOrEmpty(options.Path))
         {
@@ -910,7 +910,7 @@ internal class Page : ChannelOwner, IPage
             ["height"] = options?.Height,
             ["outline"] = options?.Outline,
             ["tagged"] = options?.Tagged,
-        }).ConfigureAwait(false)).Value.GetProperty("pdf").GetBytesFromBase64();
+        }).ConfigureAwait(false))!.Value.GetProperty("pdf").GetBytesFromBase64();
 
         if (!string.IsNullOrEmpty(options?.Path))
         {
@@ -1517,7 +1517,7 @@ internal class Page : ChannelOwner, IPage
         {
             ["filter"] = options?.Filter,
         }).ConfigureAwait(false);
-        var initializers = response.Value.GetProperty("messages").ToObject<List<ConsoleMessageInitializer>>(_connection.DefaultJsonSerializerOptions);
+        var initializers = response!.Value.GetProperty("messages").ToObject<List<ConsoleMessageInitializer>>(_connection.DefaultJsonSerializerOptions);
         return initializers.Select(initializer => new ConsoleMessage(initializer, this, null)).ToList();
     }
 
@@ -1532,14 +1532,14 @@ internal class Page : ChannelOwner, IPage
     public async Task<IReadOnlyList<string>> PageErrorsAsync()
     {
         var response = await SendMessageToServerAsync("pageErrors").ConfigureAwait(false);
-        var errors = response.Value.GetProperty("errors").ToObject<List<SerializedError>>(_connection.DefaultJsonSerializerOptions);
+        var errors = response!.Value.GetProperty("errors").ToObject<List<SerializedError>>(_connection.DefaultJsonSerializerOptions);
         return errors.Select(error => string.IsNullOrEmpty(error.Error.Stack) ? $"{error.Error.Name}: {error.Error.Message}" : error.Error.Stack).ToList();
     }
 
     public async Task<IReadOnlyList<IRequest>> RequestsAsync()
     {
         var response = await SendMessageToServerAsync("requests").ConfigureAwait(false);
-        return response.Value.GetProperty("requests").ToObject<List<Request>>(_connection.DefaultJsonSerializerOptions);
+        return response!.Value.GetProperty("requests").ToObject<List<Request>>(_connection.DefaultJsonSerializerOptions);
     }
 
     [MethodImpl(MethodImplOptions.NoInlining)]
@@ -1551,14 +1551,14 @@ internal class Page : ChannelOwner, IPage
             ["mode"] = options?.Mode,
             ["depth"] = options?.Depth,
         }).ConfigureAwait(false);
-        return result.Value.GetProperty("snapshot").ToString();
+        return result!.Value.GetProperty("snapshot").ToString();
     }
 
     [MethodImpl(MethodImplOptions.NoInlining)]
     public async Task<ILocator> PickLocatorAsync()
     {
         var result = await SendMessageToServerAsync("pickLocator").ConfigureAwait(false);
-        var selector = result.Value.GetProperty("selector").ToString();
+        var selector = result!.Value.GetProperty("selector").ToString();
         return Locator(selector);
     }
 
@@ -1588,7 +1588,7 @@ internal class Page : ChannelOwner, IPage
             ["noWaitAfter"] = options?.NoWaitAfter,
         }).ConfigureAwait(false);
 
-        _locatorHandlers.Add(response.Value.GetProperty("uid").GetInt32(), new LocatorHandler((Locator)locator, handler, options?.Times));
+        _locatorHandlers.Add(response!.Value.GetProperty("uid").GetInt32(), new LocatorHandler((Locator)locator, handler, options?.Times));
     }
 
     private async Task Channel_LocatorHandlerTriggeredAsync(int uid)

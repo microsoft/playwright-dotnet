@@ -49,7 +49,7 @@ internal class Stream : ChannelOwner, IAsyncDisposable
             {
                 ["size"] = size,
             }).ConfigureAwait(false);
-        return response.Value.GetProperty("binary").GetBytesFromBase64();
+        return response!.Value.GetProperty("binary").GetBytesFromBase64();
     }
 
     [MethodImpl(MethodImplOptions.NoInlining)]

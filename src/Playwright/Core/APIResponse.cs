@@ -94,7 +94,7 @@ internal class APIResponse : IAPIResponse
     internal async Task<string[]> FetchLogAsync()
     {
         var response = await _context.SendMessageToServerAsync("fetchLog", new Dictionary<string, object?> { ["fetchUid"] = FetchUid() }).ConfigureAwait(false);
-        return response.Value.GetProperty("log").ToObject<string[]>();
+        return response!.Value.GetProperty("log").ToObject<string[]>();
     }
 
     public ValueTask DisposeAsync() => new(_context.SendMessageToServerAsync("disposeAPIResponse", new Dictionary<string, object?> { ["fetchUid"] = FetchUid() }));

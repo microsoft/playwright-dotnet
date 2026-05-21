@@ -90,7 +90,7 @@ internal class JSHandle : ChannelOwner, IJSHandle
     public async Task<Dictionary<string, IJSHandle>> GetPropertiesAsync()
     {
         var result = new Dictionary<string, IJSHandle>();
-        var channelResult = (await SendMessageToServerAsync("getPropertyList").ConfigureAwait(false)).Value
+        var channelResult = (await SendMessageToServerAsync("getPropertyList").ConfigureAwait(false))!.Value
             .GetProperty("properties").ToObject<List<JSElementProperty>>(_connection.DefaultJsonSerializerOptions);
 
         foreach (var kv in channelResult)

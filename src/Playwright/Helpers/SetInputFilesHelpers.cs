@@ -96,7 +96,7 @@ internal static class SetInputFilesHelpers
                     ["lastModifiedMs"] = new DateTimeOffset(File.GetLastWriteTime(file)).ToUnixTimeMilliseconds(),
                 }).ToArray(),
             }).ConfigureAwait(false);
-            var writableStreams = result.Value.GetProperty("writableStreams").EnumerateArray();
+            var writableStreams = result!.Value.GetProperty("writableStreams").EnumerateArray();
             if (writableStreams.Count() != files.Count())
             {
                 throw new Exception("Mismatch between the number of files and the number of writeable streams");
@@ -118,7 +118,7 @@ internal static class SetInputFilesHelpers
             }
             return new()
             {
-                DirectoryStream = result.Value.TryGetProperty("rootDir", out var rootDir) ? rootDir.ToObject<WritableStream>(context._connection.DefaultJsonSerializerOptions) : null,
+                DirectoryStream = result!.Value.TryGetProperty("rootDir", out var rootDir) ? rootDir.ToObject<WritableStream>(context._connection.DefaultJsonSerializerOptions) : null,
                 Streams = localDirectory != null ? null : [.. streams],
             };
         }

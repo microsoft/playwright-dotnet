@@ -69,14 +69,14 @@ internal class Response : ChannelOwner, IResponse
 
     [MethodImpl(MethodImplOptions.NoInlining)]
     public async Task<string> HttpVersionAsync()
-        => (await SendMessageToServerAsync("httpVersion").ConfigureAwait(false)).Value.GetProperty("value").ToString();
+        => (await SendMessageToServerAsync("httpVersion").ConfigureAwait(false))!.Value.GetProperty("value").ToString();
 
     [MethodImpl(MethodImplOptions.NoInlining)]
     public async Task<Dictionary<string, string>> AllHeadersAsync()
         => (await GetRawHeadersAsync().ConfigureAwait(false)).Headers;
 
     [MethodImpl(MethodImplOptions.NoInlining)]
-    public async Task<byte[]> BodyAsync() => (await SendMessageToServerAsync("body").ConfigureAwait(false)).Value.GetProperty("binary").GetBytesFromBase64();
+    public async Task<byte[]> BodyAsync() => (await SendMessageToServerAsync("body").ConfigureAwait(false))!.Value.GetProperty("binary").GetBytesFromBase64();
 
     [MethodImpl(MethodImplOptions.NoInlining)]
     public async Task<string?> FinishedAsync()
@@ -144,6 +144,6 @@ internal class Response : ChannelOwner, IResponse
 
     private async Task<RawHeaders> GetRawHeadersTaskAsync()
     {
-        return new((await SendMessageToServerAsync("rawResponseHeaders").ConfigureAwait(false)).Value.GetProperty("headers").ToObject<List<NameValue>>());
+        return new((await SendMessageToServerAsync("rawResponseHeaders").ConfigureAwait(false))!.Value.GetProperty("headers").ToObject<List<NameValue>>());
     }
 }
