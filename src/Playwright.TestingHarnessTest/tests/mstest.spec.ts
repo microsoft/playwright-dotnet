@@ -535,3 +535,41 @@ test.describe('ConnectOptions', () => {
     expect(result.total).toBe(1);
   });
 });
+
+test.describe('LaunchOptions', () => {
+  test('should be able to override launch options via LaunchOptionsAsync', async ({ runTest }) => {
+    const result = await runTest({
+      'ExampleTests.cs': `
+        using System;
+        using System.Threading.Tasks;
+        using Microsoft.Playwright;
+        using Microsoft.Playwright.MSTest;
+        using Microsoft.VisualStudio.TestTools.UnitTesting;
+
+        namespace Playwright.TestingHarnessTest.MSTest;
+
+        [TestClass]
+        public class <class-name> : PageTest
+        {
+            [TestMethod]
+            public async Task Test()
+            {
+                await Page.GotoAsync("about:blank");
+                Console.WriteLine("User-Agent: " + await Page.EvaluateAsync<string>("() => navigator.userAgent"));
+            }
+
+            public override Task<BrowserTypeLaunchOptions?> LaunchOptionsAsync()
+            {
+                return Task.FromResult<BrowserTypeLaunchOptions?>(new BrowserTypeLaunchOptions
+                {
+                    Args = new[] { "--user-agent=hello" },
+                });
+            }
+        }`,
+    }, 'dotnet test');
+    expect(result.passed).toBe(1);
+    expect(result.failed).toBe(0);
+    expect(result.total).toBe(1);
+    expect(result.stdout).toContain("User-Agent: hello");
+  });
+});
