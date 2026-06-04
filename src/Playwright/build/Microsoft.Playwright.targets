@@ -13,6 +13,10 @@
     </PropertyGroup>
     <ItemGroup Condition="'$(PlaywrightPlatform)' != 'none'">
       <_PlaywrightPlatforms Include="$(PlaywrightPlatform)" />
+    </ItemGroup>
+    <!-- Per-platform node binaries, batched over %(_PlaywrightPlatforms.Identity) so that
+         multiple runtime identifiers each contribute their own folder. -->
+    <ItemGroup Condition="'$(PlaywrightPlatform)' != 'none'">
        <!-- 'linux' to stay backwards compatible -->
       <_PlaywrightCopyItems Include="$(MSBuildThisFileDirectory)..\.playwright\node\linux-x64\**" Condition="'%(_PlaywrightPlatforms.Identity)' == 'linux' OR '%(_PlaywrightPlatforms.Identity)' == 'linux-x64'">
         <PlaywrightFolder>node\linux-x64\</PlaywrightFolder>
@@ -30,9 +34,15 @@
       <_PlaywrightCopyItems Include="$(MSBuildThisFileDirectory)..\.playwright\node\win32_x64\**" Condition="'%(_PlaywrightPlatforms.Identity)' == 'win' OR '%(_PlaywrightPlatforms.Identity)' == 'win-x64'">
         <PlaywrightFolder>node\win32_x64\</PlaywrightFolder>
       </_PlaywrightCopyItems>
-      <_PlaywrightCopyItems Include="$(MSBuildThisFileDirectory)..\.playwright\node\**" Condition="'@(_PlaywrightCopyItems->Count())' == '0'">
+      <!-- Fallback: copy every platform's binaries when the identity is not recognized.
+           LICENSE is excluded here because it is added exactly once below. -->
+      <_PlaywrightCopyItems Include="$(MSBuildThisFileDirectory)..\.playwright\node\**" Exclude="$(MSBuildThisFileDirectory)..\.playwright\node\LICENSE" Condition="'%(_PlaywrightPlatforms.Identity)' != 'linux' AND '%(_PlaywrightPlatforms.Identity)' != 'linux-x64' AND '%(_PlaywrightPlatforms.Identity)' != 'linux-arm64' AND '%(_PlaywrightPlatforms.Identity)' != 'osx' AND '%(_PlaywrightPlatforms.Identity)' != 'osx-x64' AND '%(_PlaywrightPlatforms.Identity)' != 'osx-arm64' AND '%(_PlaywrightPlatforms.Identity)' != 'win' AND '%(_PlaywrightPlatforms.Identity)' != 'win-x64'">
         <PlaywrightFolder>node\</PlaywrightFolder>
       </_PlaywrightCopyItems>
+    </ItemGroup>
+    <!-- LICENSE and the JS package are platform independent. Declare them outside the batched
+         group above so they are added exactly once, regardless of how many platforms are listed. -->
+    <ItemGroup Condition="'$(PlaywrightPlatform)' != 'none'">
       <_PlaywrightCopyItems Include="$(MSBuildThisFileDirectory)..\.playwright\node\LICENSE">
         <PlaywrightFolder>node\</PlaywrightFolder>
       </_PlaywrightCopyItems>
