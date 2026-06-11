@@ -36,11 +36,13 @@ function download_driver() {
 function roll_driver() {
   new_driver_version="$1"
   upstream_package_version=$(node -e "console.log(require('${upstream_repo_path}/package.json').version)")
-  echo "Rolling .NET driver to driver ${new_driver_version} and upstream version ${upstream_package_version}..."
+  new_node_version=$(sed -n 's/^NODE_VERSION="\([^"]*\)".*/\1/p' "${upstream_repo_path}/utils/build/build-playwright-driver.sh")
+  echo "Rolling .NET driver to driver ${new_driver_version} (Node.js ${new_node_version}) and upstream version ${upstream_package_version}..."
 
   xml_file_path="./src/Common/Version.props"
   xml_file_contents=$(cat "${xml_file_path}")
   xml_file_contents=$(echo "${xml_file_contents}" | sed "s|<DriverVersion>.*</DriverVersion>|<DriverVersion>${new_driver_version}</DriverVersion>|")
+  xml_file_contents=$(echo "${xml_file_contents}" | sed "s|<DriverNodeVersion>.*</DriverNodeVersion>|<DriverNodeVersion>${new_node_version}</DriverNodeVersion>|")
   echo "${xml_file_contents}" > "${xml_file_path}"
 
   echo "Generating API..."
