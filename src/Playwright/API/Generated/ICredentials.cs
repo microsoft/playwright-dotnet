@@ -36,7 +36,55 @@ namespace Microsoft.Playwright;
 /// </para>
 /// <para>There are two common ways to use it:</para>
 /// <para>**Usage: seed a known credential**</para>
+/// <code>
+/// var context = await browser.NewContextAsync();<br/>
+/// <br/>
+/// // A passkey your backend already provisioned for a test user.<br/>
+/// await context.Credentials.CreateAsync("example.com", new()<br/>
+/// {<br/>
+///     Id = knownCredentialId, // base64url<br/>
+///     UserHandle = knownUserHandle, // base64url<br/>
+///     PrivateKey = knownPrivateKey, // base64url PKCS#8 (DER)<br/>
+///     PublicKey = knownPublicKey, // base64url SPKI (DER)<br/>
+/// });<br/>
+/// await context.Credentials.InstallAsync();<br/>
+/// <br/>
+/// var page = await context.NewPageAsync();<br/>
+/// await page.GotoAsync("https://example.com/login");<br/>
+/// // The page's navigator.credentials.get() is answered with the seeded passkey.
+/// </code>
 /// <para>**Usage: capture a passkey, then reuse it**</para>
+/// <code>
+/// // setup test: let the app register a passkey, then save it.<br/>
+/// var context = await browser.NewContextAsync();<br/>
+/// await context.Credentials.InstallAsync();<br/>
+/// <br/>
+/// var page = await context.NewPageAsync();<br/>
+/// await page.GotoAsync("https://example.com/register");<br/>
+/// await page.GetByRole(AriaRole.Button, new() { Name = "Create a passkey" }).ClickAsync();<br/>
+/// <br/>
+/// // Read back the passkey the page registered — it includes the private key.<br/>
+/// var credentials = await context.Credentials.GetAsync(new() { RpId = "example.com" });<br/>
+/// File.WriteAllText("playwright/.auth/passkey.json", JsonSerializer.Serialize(credentials[0]));
+/// </code>
+/// <code>
+/// // later test: seed the captured passkey so the app starts already enrolled.<br/>
+/// var credential = JsonSerializer.Deserialize&lt;VirtualCredential&gt;(<br/>
+///     File.ReadAllText("playwright/.auth/passkey.json"));<br/>
+/// var context = await browser.NewContextAsync();<br/>
+/// await context.Credentials.CreateAsync(credential.RpId, new()<br/>
+/// {<br/>
+///     Id = credential.Id,<br/>
+///     UserHandle = credential.UserHandle,<br/>
+///     PrivateKey = credential.PrivateKey,<br/>
+///     PublicKey = credential.PublicKey,<br/>
+/// });<br/>
+/// await context.Credentials.InstallAsync();<br/>
+/// <br/>
+/// var page = await context.NewPageAsync();<br/>
+/// await page.GotoAsync("https://example.com/login");<br/>
+/// // navigator.credentials.get() resolves the captured passkey — already signed in.
+/// </code>
 /// <para>**Defaults**</para>
 /// </summary>
 public partial interface ICredentials

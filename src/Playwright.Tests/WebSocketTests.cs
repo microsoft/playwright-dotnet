@@ -154,14 +154,8 @@ public class WebSocketTests : PageTestEx
 
         await socketErrorTcs.Task;
 
-        if (TestConstants.IsFirefox)
-        {
-            Assert.AreEqual("CLOSE_ABNORMAL", socketErrorTcs.Task.Result);
-        }
-        else
-        {
-            StringAssert.Contains(": 40", socketErrorTcs.Task.Result);
-        }
+        // Upstream test server responds with 400 here, while ours responds with 404.
+        StringAssert.Contains(": 404", socketErrorTcs.Task.Result);
     }
 
     [PlaywrightTest("web-socket.spec.ts", "should not have stray error events")]
