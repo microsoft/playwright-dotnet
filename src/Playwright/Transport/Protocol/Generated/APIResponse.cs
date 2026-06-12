@@ -43,4 +43,10 @@ internal class APIResponse
 
     [JsonPropertyName("headers")]
     public List<NameValue> Headers { get; set; } = null!;
+
+    [JsonPropertyName("securityDetails")]
+    public SecurityDetails SecurityDetails { get; set; } = null!;
+
+    [JsonPropertyName("serverAddr")]
+    public RemoteAddr ServerAddr { get; set; } = null!;
 }

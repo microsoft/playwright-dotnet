@@ -26,7 +26,7 @@ using System.Text.Json.Serialization;
 
 namespace Microsoft.Playwright.Transport.Protocol;
 
-internal class AndroidDeviceInitializer : EventTargetInitializer
+internal class AndroidDeviceInitializer
 {
     [JsonPropertyName("model")]
     public string Model { get; set; } = null!;

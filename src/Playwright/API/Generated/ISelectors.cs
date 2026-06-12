@@ -81,6 +81,9 @@ public partial interface ISelectors
     /// is used by default.
     /// </para>
     /// </summary>
-    /// <param name="attributeName">Test id attribute name.</param>
+    /// <param name="attributeName">
+    /// Test id attribute name. To match elements with any of several attributes, pass them
+    /// as a comma-separated list, e.g. <c>"data-pw,data-ti"</c>.
+    /// </param>
     void SetTestIdAttribute(string attributeName);
 }

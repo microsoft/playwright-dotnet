@@ -75,6 +75,8 @@ internal class Page : ChannelOwner, IPage
         _initializer = initializer;
         _video = new Video(this, _connection, initializer.Video);
         _screencast = new Screencast(this);
+        LocalStorage = new WebStorage(this, "local");
+        SessionStorage = new WebStorage(this, "session");
 
         Close += (_, _) => ClosedOrCrashedTcs.TrySetResult(true);
         Crash += (_, _) => ClosedOrCrashedTcs.TrySetResult(true);
@@ -191,6 +193,10 @@ internal class Page : ChannelOwner, IPage
 
     public IScreencast Screencast => _screencast;
 
+    public IWebStorage LocalStorage { get; }
+
+    public IWebStorage SessionStorage { get; }
+
     public IReadOnlyList<IWorker> Workers => _workers;
 
     public IVideo? Video
@@ -267,7 +273,7 @@ internal class Page : ChannelOwner, IPage
                 ViewportSize = new() { Width = size.Width, Height = size.Height };
                 break;
             case "screencastFrame":
-                _screencast.OnScreencastFrame(serverParams.GetProperty("data").GetBytesFromBase64());
+                _screencast.OnScreencastFrame(serverParams.ToObject<ScreencastFrame>(_connection.DefaultJsonSerializerOptions));
                 break;
             case "worker":
                 var worker = serverParams.GetProperty("worker").ToObject<Worker>(_connection.DefaultJsonSerializerOptions);
@@ -512,15 +518,22 @@ internal class Page : ChannelOwner, IPage
         CloseWasCalled = true;
         try
         {
-            await SendMessageToServerAsync(
-            "close",
-            new Dictionary<string, object?>
-            {
-                ["runBeforeUnload"] = options?.RunBeforeUnload ?? false,
-            }).ConfigureAwait(false);
             if (OwnedContext != null)
             {
                 await OwnedContext.CloseAsync().ConfigureAwait(false);
+            }
+            else if (options?.RunBeforeUnload == true)
+            {
+                await SendMessageToServerAsync("runBeforeUnload").ConfigureAwait(false);
+            }
+            else
+            {
+                await SendMessageToServerAsync(
+                "close",
+                new Dictionary<string, object?>
+                {
+                    ["reason"] = options?.Reason,
+                }).ConfigureAwait(false);
             }
         }
         catch (Exception e) when (DriverMessages.IsTargetClosedError(e) && options?.RunBeforeUnload != true)

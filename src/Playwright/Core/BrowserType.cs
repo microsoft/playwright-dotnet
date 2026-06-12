@@ -270,6 +270,8 @@ internal class BrowserType : ChannelOwner, IBrowserType
                 { "slowMo", options.SlowMo },
                 { "timeout", TimeoutSettings.LaunchTimeout(options.Timeout) },
                 { "isLocal", options.IsLocal },
+                { "noDefaults", options.NoDefaults },
+                { "artifactsDir", options.ArtifactsDir },
             }).ConfigureAwait(false);
         Browser browser = result.GetProperty("browser").ToObject<Browser>(_connection.DefaultJsonSerializerOptions);
         browser.ConnectToBrowserType(this, null);

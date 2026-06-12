@@ -52,15 +52,17 @@ internal class Waiter : IDisposable
 
         var beforeArgs = new Dictionary<string, object?>
         {
-            ["info"] = new Dictionary<string, object>
-            {
-                ["event"] = @event,
-                ["waitId"] = _waitId,
-                ["phase"] = "before",
-            },
+            ["event"] = @event,
+            ["waitId"] = _waitId,
+            ["phase"] = "before",
         };
         _failures.Add(Task.Delay(-1, _manualCts.Token));
-        _channelOwner._connection.SendMessageToServerAsync(_channelOwner, "waitForEventInfo", beforeArgs).IgnoreException();
+        // An outer WrapApiCallAsync may have set its own title (e.g. "Wait for navigation");
+        // fall back to ours only when there is no outer zone.
+        _channelOwner.WrapApiCallAsync(
+            () => _channelOwner._connection.SendMessageToServerAsync(_channelOwner, "__waitInfo__", beforeArgs),
+            false,
+            $"Wait for event \"{@event}\"").IgnoreException();
     }
 
     public void Dispose()
@@ -73,21 +75,17 @@ internal class Waiter : IDisposable
                 dispose();
             }
 
-            var info = new Dictionary<string, object>
+            var afterArgs = new Dictionary<string, object?>
             {
                 ["waitId"] = _waitId,
                 ["phase"] = "after",
             };
             if (!_error.IsNullOrEmpty())
             {
-                info["error"] = _error;
+                afterArgs["error"] = _error;
             }
-            var afterArgs = new Dictionary<string, object?>
-            {
-                ["info"] = info,
-            };
 
-            _channelOwner.WrapApiCallAsync(() => _channelOwner._connection.SendMessageToServerAsync(_channelOwner, "waitForEventInfo", afterArgs), true).IgnoreException();
+            _channelOwner.WrapApiCallAsync(() => _channelOwner._connection.SendMessageToServerAsync(_channelOwner, "__waitInfo__", afterArgs), true).IgnoreException();
 
             _onDisposeCts.Cancel();
             _onDisposeCts.Dispose();
@@ -102,14 +100,11 @@ internal class Waiter : IDisposable
 
         var logArgs = new Dictionary<string, object?>
         {
-            ["info"] = new Dictionary<string, object>
-            {
-                ["waitId"] = _waitId,
-                ["phase"] = "log",
-                ["message"] = log,
-            },
+            ["waitId"] = _waitId,
+            ["phase"] = "log",
+            ["message"] = log,
         };
-        _channelOwner.WrapApiCallAsync(() => _channelOwner._connection.SendMessageToServerAsync(_channelOwner, "waitForEventInfo", logArgs), true).IgnoreException();
+        _channelOwner.WrapApiCallAsync(() => _channelOwner._connection.SendMessageToServerAsync(_channelOwner, "__waitInfo__", logArgs), true).IgnoreException();
     }
 
     internal void RejectImmediately(Exception exception)

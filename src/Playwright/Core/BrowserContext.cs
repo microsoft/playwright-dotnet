@@ -62,6 +62,7 @@ internal class BrowserContext : ChannelOwner, IBrowserContext
     {
         _tracing = initializer.Tracing;
         _clock = new Clock(this);
+        Credentials = new Credentials(this);
         _request = initializer.RequestContext;
         _request._timeoutSettings = this._timeoutSettings;
         _initializer = initializer;
@@ -144,6 +145,8 @@ internal class BrowserContext : ChannelOwner, IBrowserContext
     public ITracing Tracing => _tracing;
 
     public IClock Clock => _clock;
+
+    public ICredentials Credentials { get; }
 
     public IBrowser? Browser => _browser;
 

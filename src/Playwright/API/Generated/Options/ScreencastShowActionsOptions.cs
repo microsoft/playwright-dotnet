@@ -37,10 +37,21 @@ public class ScreencastShowActionsOptions
             return;
         }
 
+        Cursor = clone.Cursor;
         Duration = clone.Duration;
         FontSize = clone.FontSize;
         Position = clone.Position;
     }
+
+    /// <summary>
+    /// <para>
+    /// Cursor decoration shown for pointer actions. <c>"pointer"</c> (the default) renders
+    /// a mouse pointer that animates from the previous action point to the next one. <c>"none"</c>
+    /// disables the cursor decoration.
+    /// </para>
+    /// </summary>
+    [JsonPropertyName("cursor")]
+    public ScreencastCursor? Cursor { get; set; }
 
     /// <summary><para>How long each annotation is displayed in milliseconds. Defaults to <c>500</c>.</para></summary>
     [JsonPropertyName("duration")]

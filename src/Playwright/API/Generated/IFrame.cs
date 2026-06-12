@@ -387,7 +387,7 @@ public partial interface IFrame
     /// cref="IFrame.EvaluateAsync"/>:
     /// </para>
     /// <code>
-    /// var bodyHandle = await frame.EvaluateAsync("document.body");<br/>
+    /// var bodyHandle = await frame.EvaluateHandleAsync("document.body");<br/>
     /// var html = await frame.EvaluateAsync&lt;string&gt;("([body, suffix]) =&gt; body.innerHTML + suffix", new object [] { bodyHandle, "hello" });<br/>
     /// await bodyHandle.DisposeAsync();
     /// </code>

@@ -43,6 +43,11 @@ namespace Microsoft.Playwright.Transport;
 
 internal class Connection : IDisposable
 {
+    // Keys used to attach server-provided error information to the exception,
+    // marking it as a server error. The details shape is declared in the protocol.
+    internal const string ErrorDetailsDataKey = "playwright.errorDetails";
+    internal const string LogDataKey = "playwright.log";
+
     private readonly ConcurrentDictionary<int, ConnectionCallback> _callbacks = new();
     private readonly Root _rootObject;
     private readonly TaskQueue _queue = new();
@@ -138,6 +143,13 @@ internal class Connection : IDisposable
         Dictionary<string, object?>? dictionary = null,
         bool keepNulls = false)
     {
+        // Fire-and-forget: server intentionally never replies to __waitInfo__,
+        // so silently drop it after the connection is closed or the object was collected.
+        bool isWaitInfo = method == "__waitInfo__";
+        if (isWaitInfo && (_closedError != null || @object?._wasCollected == true))
+        {
+            return default!;
+        }
         if (_closedError != null)
         {
             throw _closedError;
@@ -151,7 +163,10 @@ internal class Connection : IDisposable
         var tcs = new TaskCompletionSource<JsonElement?>(TaskCreationOptions.RunContinuationsAsynchronously);
         var callback = new ConnectionCallback(tcs);
 
-        _callbacks.TryAdd(id, callback);
+        if (!isWaitInfo)
+        {
+            _callbacks.TryAdd(id, callback);
+        }
 
         var sanitizedArgs = new Dictionary<string, object>();
         if (dictionary?.Keys.Any(f => f != null) == true)
@@ -197,6 +212,12 @@ internal class Connection : IDisposable
             };
             return OnMessage(message, keepNulls);
         }).ConfigureAwait(false);
+
+        // Fire-and-forget: server intentionally never replies to __waitInfo__.
+        if (isWaitInfo)
+        {
+            return default!;
+        }
 
         var result = await tcs.Task.ConfigureAwait(false);
 
@@ -258,6 +279,8 @@ internal class Connection : IDisposable
             if (message.Error != null && message.Result == null)
             {
                 var exception = ParseException(message.Error.Error, FormatCallLog(message.Log));
+                exception.Data[ErrorDetailsDataKey] = message.ErrorDetails;
+                exception.Data[LogDataKey] = message.Log;
                 callback.TaskCompletionSource.TrySetException(exception);
             }
             else

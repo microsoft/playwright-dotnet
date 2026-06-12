@@ -235,6 +235,42 @@ public class GlobalFetchTests : PlaywrightTestEx
         await request.DisposeAsync();
     }
 
+    [PlaywrightTest("global-fetch.spec.ts", "should return server address from response")]
+    [Ignore("Server address is not reported for reused keep-alive sockets, pending an upstream fix")]
+    public async Task ShouldReturnServerAddressFromResponse()
+    {
+        var request = await Playwright.APIRequest.NewContextAsync();
+        var response = await request.GetAsync(Server.EmptyPage);
+        var addr = await response.ServerAddrAsync();
+        Assert.IsNotNull(addr);
+        StringAssert.IsMatch("^(127\\.0\\.0\\.1|::1)$", addr.IpAddress);
+        Assert.AreEqual(Server.Port, addr.Port);
+        await request.DisposeAsync();
+    }
+
+    [PlaywrightTest("global-fetch.spec.ts", "should return security details from response")]
+    [Ignore("Security details are not reported for reused keep-alive sockets, pending an upstream fix")]
+    public async Task ShouldReturnSecurityDetailsFromResponse()
+    {
+        var request = await Playwright.APIRequest.NewContextAsync(new() { IgnoreHTTPSErrors = true });
+        var response = await request.GetAsync(HttpsServer.EmptyPage);
+        var details = await response.SecurityDetailsAsync();
+        Assert.IsNotNull(details);
+        Assert.AreEqual("puppeteer-tests", details.SubjectName);
+        Assert.AreEqual("puppeteer-tests", details.Issuer);
+        StringAssert.Contains("TLS", details.Protocol);
+        await request.DisposeAsync();
+    }
+
+    [PlaywrightTest("global-fetch.spec.ts", "should return null security details for http response")]
+    public async Task ShouldReturnNullSecurityDetailsForHttpResponse()
+    {
+        var request = await Playwright.APIRequest.NewContextAsync();
+        var response = await request.GetAsync(Server.EmptyPage);
+        Assert.IsNull(await response.SecurityDetailsAsync());
+        await request.DisposeAsync();
+    }
+
     [PlaywrightTest("global-fetch.spec.ts", "should resolve url relative to global baseURL option")]
     public async Task ShouldResolveUrlRelativeToGlobalBaseURLOption()
     {

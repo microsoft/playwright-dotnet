@@ -6,7 +6,7 @@
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
- * to use, copy, modify, merge, publish, distribute, sublicense, and / or sell
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
  * copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions:
  *
@@ -22,12 +22,20 @@
  * SOFTWARE.
  */
 
+using System.ComponentModel.DataAnnotations;
 using System.Text.Json.Serialization;
 
-namespace Microsoft.Playwright.Transport.Protocol;
+namespace Microsoft.Playwright;
 
-internal class WebSocketInitializer
+public partial class ScreencastSize
 {
-    [JsonPropertyName("url")]
-    public string Url { get; set; } = null!;
+    /// <summary><para>Max frame width in pixels.</para></summary>
+    [Required]
+    [JsonPropertyName("width")]
+    public int Width { get; set; } = default!;
+
+    /// <summary><para>Max frame height in pixels.</para></summary>
+    [Required]
+    [JsonPropertyName("height")]
+    public int Height { get; set; } = default!;
 }

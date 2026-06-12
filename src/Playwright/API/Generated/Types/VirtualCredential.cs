@@ -6,7 +6,7 @@
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
- * to use, copy, modify, merge, publish, distribute, sublicense, and / or sell
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
  * copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions:
  *
@@ -22,12 +22,35 @@
  * SOFTWARE.
  */
 
+using System.ComponentModel.DataAnnotations;
 using System.Text.Json.Serialization;
 
-namespace Microsoft.Playwright.Transport.Protocol;
+namespace Microsoft.Playwright;
 
-internal class WebSocketInitializer
+public partial class VirtualCredential
 {
-    [JsonPropertyName("url")]
-    public string Url { get; set; } = null!;
+    /// <summary><para>Base64url-encoded credential id.</para></summary>
+    [Required]
+    [JsonPropertyName("id")]
+    public string Id { get; set; } = default!;
+
+    /// <summary><para>Relying party id.</para></summary>
+    [Required]
+    [JsonPropertyName("rpId")]
+    public string RpId { get; set; } = default!;
+
+    /// <summary><para>Base64url-encoded user handle.</para></summary>
+    [Required]
+    [JsonPropertyName("userHandle")]
+    public string UserHandle { get; set; } = default!;
+
+    /// <summary><para>Base64url-encoded PKCS#8 (DER) private key.</para></summary>
+    [Required]
+    [JsonPropertyName("privateKey")]
+    public string PrivateKey { get; set; } = default!;
+
+    /// <summary><para>Base64url-encoded SPKI (DER) public key.</para></summary>
+    [Required]
+    [JsonPropertyName("publicKey")]
+    public string PublicKey { get; set; } = default!;
 }

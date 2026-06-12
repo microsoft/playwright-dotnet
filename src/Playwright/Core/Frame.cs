@@ -932,31 +932,49 @@ internal class Frame : ChannelOwner, IFrame
 
     internal async Task<FrameExpectResult> ExpectAsync(string? selector, string expression, FrameExpectOptions options)
     {
-        var result = await SendMessageToServerAsync("expect", new Dictionary<string, object?>
+        try
         {
-            ["selector"] = selector,
-            ["expression"] = expression,
-            ["expressionArg"] = options.ExpressionArg,
-            ["expectedText"] = options.ExpectedText,
-            ["expectedNumber"] = options.ExpectedNumber,
-            ["expectedValue"] = options.ExpectedValue,
-            ["useInnerText"] = options.UseInnerText,
-            ["isNot"] = options.IsNot,
-            ["timeout"] = options.Timeout,
-        }).ConfigureAwait(false);
-        var parsed = result!.Value.ToObject<FrameExpectResult>();
-        if (result!.Value.TryGetProperty("received", out var received) && received.ValueKind == JsonValueKind.Object)
-        {
-            if (received.TryGetProperty("value", out var receivedValue))
+            await SendMessageToServerAsync("expect", new Dictionary<string, object?>
             {
-                parsed.Received = ScriptsHelper.ParseEvaluateResult<object>(receivedValue);
-            }
-            if (received.TryGetProperty("ariaSnapshot", out var ariaSnapshot) && ariaSnapshot.ValueKind == JsonValueKind.String)
-            {
-                parsed.ReceivedAriaSnapshot = ariaSnapshot.GetString();
-            }
+                ["selector"] = selector,
+                ["expression"] = expression,
+                ["expressionArg"] = options.ExpressionArg,
+                ["expectedText"] = options.ExpectedText,
+                ["expectedNumber"] = options.ExpectedNumber,
+                ["expectedValue"] = options.ExpectedValue,
+                ["useInnerText"] = options.UseInnerText,
+                ["isNot"] = options.IsNot,
+                ["timeout"] = options.Timeout,
+            }).ConfigureAwait(false);
+            return new FrameExpectResult { Matches = !options.IsNot };
         }
-        return parsed;
+        catch (Exception e) when (e.Data.Contains(Connection.ErrorDetailsDataKey))
+        {
+            var result = new FrameExpectResult
+            {
+                Matches = options.IsNot,
+                Log = (e.Data[Connection.LogDataKey] as string[]) ?? Array.Empty<string>(),
+            };
+            if (e.Data[Connection.ErrorDetailsDataKey] is JsonElement details && details.ValueKind == JsonValueKind.Object)
+            {
+                if (details.TryGetProperty("customErrorMessage", out var customErrorMessage) && customErrorMessage.ValueKind == JsonValueKind.String)
+                {
+                    result.ErrorMessage = "Error: " + customErrorMessage.GetString();
+                }
+                if (details.TryGetProperty("received", out var received) && received.ValueKind == JsonValueKind.Object)
+                {
+                    if (received.TryGetProperty("value", out var receivedValue))
+                    {
+                        result.Received = ScriptsHelper.ParseEvaluateResult<object>(receivedValue);
+                    }
+                    if (received.TryGetProperty("ariaSnapshot", out var ariaSnapshot) && ariaSnapshot.ValueKind == JsonValueKind.String)
+                    {
+                        result.ReceivedAriaSnapshot = ariaSnapshot.GetString();
+                    }
+                }
+            }
+            return result;
+        }
     }
 
     private Task WaitForURLAsync(string? urlString, Regex? urlRegex, Func<string, bool>? urlFunc, FrameWaitForURLOptions? options = default)

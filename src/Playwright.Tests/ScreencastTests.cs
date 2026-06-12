@@ -282,6 +282,36 @@ public class ScreencastTests : BrowserTestEx
         await context.CloseAsync();
     }
 
+    [PlaywrightTest("screencast.spec.ts", "onFrame receives viewport size")]
+    public async Task OnFrameReceivesViewportSize()
+    {
+        var context = await Browser.NewContextAsync(new() { ViewportSize = new() { Width = 1000, Height = 400 } });
+        var page = await context.NewPageAsync();
+
+        var frames = new List<ScreencastFrame>();
+        await page.Screencast.StartAsync(new()
+        {
+            OnFrame = frame =>
+            {
+                frames.Add(frame);
+                return Task.CompletedTask;
+            },
+            Size = new() { Width = 500, Height = 400 },
+        });
+        await page.EvaluateAsync("() => document.body.style.backgroundColor = 'red'");
+        await Task.Delay(1000);
+        await page.Screencast.StopAsync();
+
+        Assert.Greater(frames.Count, 0);
+        foreach (var frame in frames)
+        {
+            Assert.AreEqual(1000, frame.ViewportWidth);
+            Assert.AreEqual(400, frame.ViewportHeight);
+            Assert.Greater(frame.Timestamp, 0);
+        }
+        await context.CloseAsync();
+    }
+
     [PlaywrightTest()]
     public async Task ShowOverlayAsync_ReturnsDisposableThatCompletesOnDispose()
     {

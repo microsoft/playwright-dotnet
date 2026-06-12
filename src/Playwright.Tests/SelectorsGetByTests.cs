@@ -48,6 +48,23 @@ public class SelectorsGetByTests : PageTestEx
         await Expect(Page.Locator("div").GetByTestId("Hello")).ToHaveTextAsync("Hello world");
     }
 
+    [PlaywrightTest("selector-get-by.spec.ts", "getByTestId with comma-separated testIdAttributes should match any")]
+    public async Task GetByTestIdWithCommaSeparatedTestIdAttributesShouldMatchAny()
+    {
+        await Page.SetContentAsync(@"
+            <section>
+              <div data-pw=""Hello"">first</div>
+              <div data-ti=""Hello"">second</div>
+              <div data-testid=""Hello"">third</div>
+            </section>
+        ");
+        Playwright.Selectors.SetTestIdAttribute("data-pw,data-ti");
+        await Expect(Page.GetByTestId("Hello")).ToHaveCountAsync(2);
+        await Expect(Page.GetByTestId("Hello")).ToHaveTextAsync(new string[] { "first", "second" });
+        await Expect(Page.MainFrame.GetByTestId("Hello")).ToHaveCountAsync(2);
+        await Expect(Page.Locator("section").GetByTestId("Hello")).ToHaveCountAsync(2);
+    }
+
     [PlaywrightTest("selector-get-by.spec.ts", "getByTestId should escape id")]
     public async Task GetByTestIdShouldEscapeId()
     {

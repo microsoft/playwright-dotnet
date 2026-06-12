@@ -39,6 +39,8 @@ internal class PlaywrightServerMessage
 
     public ErrorEntry? Error { get; set; }
 
+    public JsonElement? ErrorDetails { get; set; }
+
     public string[]? Log { get; set; }
 }
 

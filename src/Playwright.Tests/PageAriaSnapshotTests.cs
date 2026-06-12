@@ -155,4 +155,48 @@ public class PageAriaSnapshotTests : PageTestEx
                 - /url: /auth?r=/
         ");
     }
+
+    [PlaywrightTest("to-match-aria-snapshot.spec.ts", "invalid attribute")]
+    public async Task InvalidAttribute()
+    {
+        await Page.SetContentAsync(@"
+            <input type=""text"" aria-label=""Email"" aria-invalid=""true"" value=""not-an-email"">
+            <input type=""text"" aria-label=""Name"" value=""Alice"">
+        ");
+
+        await Expect(Page.Locator("body")).ToMatchAriaSnapshotAsync(@"
+            - textbox ""Email"" [invalid]: not-an-email
+            - textbox ""Name"": Alice
+        ");
+
+        await Expect(Page.Locator("body")).ToMatchAriaSnapshotAsync(@"
+            - textbox ""Email"" [invalid=true]: not-an-email
+            - textbox ""Name"" [invalid=false]: Alice
+        ");
+
+        // `aria-invalid="grammar"` and `aria-invalid="spelling"` surface their underlying value.
+        await Page.SetContentAsync(@"
+            <input type=""text"" aria-label=""Bio"" aria-invalid=""grammar"">
+            <input type=""text"" aria-label=""Note"" aria-invalid=""spelling"">
+        ");
+        await Expect(Page.Locator("body")).ToMatchAriaSnapshotAsync(@"
+            - textbox ""Bio"" [invalid=grammar]
+            - textbox ""Note"" [invalid=spelling]
+        ");
+
+        // A `grammar` value is distinct from a plain `true` invalid state.
+        var exception = await PlaywrightAssert.ThrowsAsync<PlaywrightException>(() =>
+        {
+            return Expect(Page.Locator("body")).ToMatchAriaSnapshotAsync(@"
+                - textbox ""Bio"" [invalid]
+            ", new() { Timeout = 300 });
+        });
+        StringAssert.Contains("[invalid=grammar]", exception.Message);
+
+        // Any other non-false value falls back to `true`.
+        await Page.SetContentAsync(@"<input type=""text"" aria-label=""Zip"" aria-invalid=""garbage"">");
+        await Expect(Page.Locator("body")).ToMatchAriaSnapshotAsync(@"
+            - textbox ""Zip"" [invalid]
+        ");
+    }
 }

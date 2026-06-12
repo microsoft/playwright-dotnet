@@ -26,8 +26,20 @@ using System.Text.Json.Serialization;
 
 namespace Microsoft.Playwright.Transport.Protocol;
 
-internal class WebSocketInitializer
+internal class VirtualCredential
 {
-    [JsonPropertyName("url")]
-    public string Url { get; set; } = null!;
+    [JsonPropertyName("id")]
+    public string Id { get; set; } = null!;
+
+    [JsonPropertyName("rpId")]
+    public string RpId { get; set; } = null!;
+
+    [JsonPropertyName("userHandle")]
+    public string UserHandle { get; set; } = null!;
+
+    [JsonPropertyName("privateKey")]
+    public string PrivateKey { get; set; } = null!;
+
+    [JsonPropertyName("publicKey")]
+    public string PublicKey { get; set; } = null!;
 }

@@ -26,8 +26,20 @@ using System.Text.Json.Serialization;
 
 namespace Microsoft.Playwright.Transport.Protocol;
 
-internal class WebSocketInitializer
+internal class WaitInfo
 {
-    [JsonPropertyName("url")]
-    public string Url { get; set; } = null!;
+    [JsonPropertyName("waitId")]
+    public string WaitId { get; set; } = null!;
+
+    [JsonPropertyName("phase")]
+    public string Phase { get; set; } = null!;
+
+    [JsonPropertyName("event")]
+    public string Event { get; set; } = null!;
+
+    [JsonPropertyName("message")]
+    public string Message { get; set; } = null!;
+
+    [JsonPropertyName("error")]
+    public string Error { get; set; } = null!;
 }

@@ -26,7 +26,7 @@ using System.Text.Json.Serialization;
 
 namespace Microsoft.Playwright.Transport.Protocol;
 
-internal class BrowserContextInitializer : EventTargetInitializer
+internal class BrowserContextInitializer
 {
     [JsonPropertyName("debugger")]
     public Core.Debugger Debugger { get; set; } = null!;

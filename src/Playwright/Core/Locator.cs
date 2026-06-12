@@ -521,10 +521,14 @@ internal class Locator : ILocator
         => _testIdAttributeName = attributeName;
 
     internal static string GetByTestIdSelector(string testIdAttributeName, string testId)
-        => $"internal:testid=[{testIdAttributeName}={EscapeForAttributeSelector(testId, true)}]";
+        => $"internal:testid=[{EncodeTestIdAttributeName(testIdAttributeName)}={EscapeForAttributeSelector(testId, true)}]";
 
     internal static string GetByTestIdSelector(string testIdAttributeName, Regex testId)
-        => $"internal:testid=[{testIdAttributeName}={EscapeForAttributeSelector(testId, true)}]";
+        => $"internal:testid=[{EncodeTestIdAttributeName(testIdAttributeName)}={EscapeForAttributeSelector(testId, true)}]";
+
+    // Multiple test id attribute names can be joined with a comma. Attribute names cannot contain commas.
+    private static string EncodeTestIdAttributeName(string testIdAttributeName)
+        => testIdAttributeName.Contains(",") ? JsonSerializer.Serialize(testIdAttributeName) : testIdAttributeName;
 
     internal static string GetByAttributeTextSelector(string attrName, string text, bool? exact)
         => $"internal:attr=[{attrName}={EscapeForAttributeSelector(text, exact ?? false)}]";

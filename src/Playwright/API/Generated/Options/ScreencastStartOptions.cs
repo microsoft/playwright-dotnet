@@ -42,6 +42,7 @@ public class ScreencastStartOptions
         OnFrame = clone.OnFrame;
         Path = clone.Path;
         Quality = clone.Quality;
+        Size = clone.Size;
     }
 
     /// <summary>
@@ -65,4 +66,17 @@ public class ScreencastStartOptions
     /// <summary><para>The quality of the image, between 0-100.</para></summary>
     [JsonPropertyName("quality")]
     public int? Quality { get; set; }
+
+    /// <summary>
+    /// <para>
+    /// Specifies the dimensions of screencast frames. The actual frame is scaled to preserve
+    /// the page's aspect ratio and may be smaller than these bounds. If a screencast is
+    /// already active (e.g. started by tracing or video recording), the existing configuration
+    /// takes precedence and the frame size may exceed these bounds or this option may be
+    /// ignored. If not specified the size will be equal to page viewport scaled down to
+    /// fit into 800×800.
+    /// </para>
+    /// </summary>
+    [JsonPropertyName("size")]
+    public ScreencastSize? Size { get; set; }
 }

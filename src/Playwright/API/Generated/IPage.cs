@@ -722,7 +722,7 @@ public partial interface IPage
     /// cref="IPage.EvaluateAsync"/>:
     /// </para>
     /// <code>
-    /// var bodyHandle = await page.EvaluateAsync("document.body");<br/>
+    /// var bodyHandle = await page.EvaluateHandleAsync("document.body");<br/>
     /// var html = await page.EvaluateAsync&lt;string&gt;("([body, suffix]) =&gt; body.innerHTML + suffix", new object [] { bodyHandle, "hello" });<br/>
     /// await bodyHandle.DisposeAsync();
     /// </code>
@@ -1567,6 +1567,22 @@ public partial interface IPage
     /// </para>
     /// </summary>
     Task ClearPageErrorsAsync();
+
+    /// <summary>
+    /// <para>
+    /// Provides access to the page's <c>localStorage</c> for the current origin. See <see
+    /// cref="IWebStorage"/>.
+    /// </para>
+    /// </summary>
+    public IWebStorage LocalStorage { get; }
+
+    /// <summary>
+    /// <para>
+    /// Provides access to the page's <c>sessionStorage</c> for the current origin. See
+    /// <see cref="IWebStorage"/>.
+    /// </para>
+    /// </summary>
+    public IWebStorage SessionStorage { get; }
 
     /// <summary>
     /// <para>
@@ -2899,13 +2915,13 @@ public partial interface IPage
     /// this.
     /// </para>
     /// <para>
-    /// <see cref="IPage.TapAsync"/> the method will throw if <see cref="IBrowser.NewContextAsync"/>
+    /// <see cref="IPage.TapAsync"/> will throw if the <see cref="IBrowser.NewContextAsync"/>
     /// option of the browser context is false.
     /// </para>
     /// </summary>
     /// <remarks>
     /// <para>
-    /// <see cref="IPage.TapAsync"/> the method will throw if <see cref="IBrowser.NewContextAsync"/>
+    /// <see cref="IPage.TapAsync"/> will throw if the <see cref="IBrowser.NewContextAsync"/>
     /// option of the browser context is false.
     /// </para>
     /// </remarks>

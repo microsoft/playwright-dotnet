@@ -26,7 +26,7 @@ using System.Text.Json.Serialization;
 
 namespace Microsoft.Playwright.Transport.Protocol;
 
-internal class WorkerInitializer : EventTargetInitializer
+internal class WorkerInitializer
 {
     [JsonPropertyName("url")]
     public string Url { get; set; } = null!;

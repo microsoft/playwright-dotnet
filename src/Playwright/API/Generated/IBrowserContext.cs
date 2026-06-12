@@ -66,6 +66,15 @@ public partial interface IBrowserContext
     /// <summary><para>Playwright has ability to mock clock and passage of time.</para></summary>
     public IClock Clock { get; }
 
+    /// <summary>
+    /// <para>
+    /// Virtual WebAuthn authenticator for this context. Lets tests seed credentials and
+    /// intercept <c>navigator.credentials.create()</c> / <c>navigator.credentials.get()</c>
+    /// ceremonies.
+    /// </para>
+    /// </summary>
+    public ICredentials Credentials { get; }
+
     /// <summary><para>Debugger allows to pause and resume the execution.</para></summary>
     public IDebugger Debugger { get; }
 

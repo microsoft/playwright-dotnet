@@ -26,7 +26,7 @@ using System.Text.Json.Serialization;
 
 namespace Microsoft.Playwright.Transport.Protocol;
 
-internal class PageInitializer : EventTargetInitializer
+internal class PageInitializer
 {
     [JsonPropertyName("mainFrame")]
     public Core.Frame MainFrame { get; set; } = null!;

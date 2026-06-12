@@ -42,12 +42,12 @@ internal class Screencast : IScreencast
         _page = page;
     }
 
-    internal void OnScreencastFrame(byte[] data)
+    internal void OnScreencastFrame(ScreencastFrame frame)
     {
         var handler = _onFrame;
         if (handler != null)
         {
-            _ = handler(new ScreencastFrame { Data = data });
+            _ = handler(frame);
         }
     }
 
@@ -65,6 +65,7 @@ internal class Screencast : IScreencast
         }
         var result = await _page.SendMessageToServerAsync("screencastStart", new Dictionary<string, object?>
         {
+            ["size"] = options.Size,
             ["quality"] = options.Quality,
             ["sendFrames"] = options.OnFrame != null,
             ["record"] = options.Path != null,
@@ -120,6 +121,7 @@ internal class Screencast : IScreencast
             ["duration"] = options?.Duration,
             ["position"] = options?.Position,
             ["fontSize"] = options?.FontSize,
+            ["cursor"] = options?.Cursor,
         }).ConfigureAwait(false);
         return new DisposableStub(() => _page.SendMessageToServerAsync("screencastHideActions"));
     }

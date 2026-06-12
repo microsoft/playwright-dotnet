@@ -57,6 +57,23 @@ internal class APIResponse : IAPIResponse
 
     public string Url => _initializer.Url;
 
+    public Task<ResponseSecurityDetailsResult?> SecurityDetailsAsync()
+        => Task.FromResult(_initializer.SecurityDetails == null ? null : new ResponseSecurityDetailsResult
+        {
+            Issuer = _initializer.SecurityDetails.Issuer,
+            Protocol = _initializer.SecurityDetails.Protocol,
+            SubjectName = _initializer.SecurityDetails.SubjectName,
+            ValidFrom = _initializer.SecurityDetails.ValidFrom,
+            ValidTo = _initializer.SecurityDetails.ValidTo,
+        });
+
+    public Task<ResponseServerAddrResult?> ServerAddrAsync()
+        => Task.FromResult(_initializer.ServerAddr == null ? null : new ResponseServerAddrResult
+        {
+            IpAddress = _initializer.ServerAddr.IpAddress,
+            Port = _initializer.ServerAddr.Port,
+        });
+
     public async Task<byte[]> BodyAsync()
     {
         try

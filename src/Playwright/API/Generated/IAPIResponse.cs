@@ -65,6 +65,24 @@ public partial interface IAPIResponse
     /// </summary>
     bool Ok { get; }
 
+    /// <summary>
+    /// <para>
+    /// Returns SSL and other security information. Resolves to <c>null</c> for non-HTTPS
+    /// responses. For redirected requests, returns the information for the last request
+    /// in the redirect chain.
+    /// </para>
+    /// </summary>
+    Task<ResponseSecurityDetailsResult?> SecurityDetailsAsync();
+
+    /// <summary>
+    /// <para>
+    /// Returns the IP address and port of the server. Resolves to <c>null</c> if the server
+    /// address is not available. For redirected requests, returns the information for the
+    /// last request in the redirect chain.
+    /// </para>
+    /// </summary>
+    Task<ResponseServerAddrResult?> ServerAddrAsync();
+
     /// <summary><para>Contains the status code of the response (e.g., 200 for a success).</para></summary>
     int Status { get; }
 

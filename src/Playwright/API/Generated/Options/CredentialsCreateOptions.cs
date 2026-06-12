@@ -22,35 +22,40 @@
  * SOFTWARE.
  */
 
-using System.ComponentModel.DataAnnotations;
 using System.Text.Json.Serialization;
 
 namespace Microsoft.Playwright;
 
-public partial class ScreencastFrame
+public class CredentialsCreateOptions
 {
-    /// <summary><para>JPEG-encoded frame data.</para></summary>
-    [Required]
-    [JsonPropertyName("data")]
-    public byte[] Data { get; set; } = default!;
+    public CredentialsCreateOptions() { }
 
-    /// <summary>
-    /// <para>
-    /// The timestamp of when the frame was presented by the browser, in milliseconds since
-    /// the Unix epoch.
-    /// </para>
-    /// </summary>
-    [Required]
-    [JsonPropertyName("timestamp")]
-    public float Timestamp { get; set; } = default!;
+    public CredentialsCreateOptions(CredentialsCreateOptions clone)
+    {
+        if (clone == null)
+        {
+            return;
+        }
 
-    /// <summary><para>Width of the page viewport at the time the frame was captured.</para></summary>
-    [Required]
-    [JsonPropertyName("viewportWidth")]
-    public int ViewportWidth { get; set; } = default!;
+        Id = clone.Id;
+        PrivateKey = clone.PrivateKey;
+        PublicKey = clone.PublicKey;
+        UserHandle = clone.UserHandle;
+    }
 
-    /// <summary><para>Height of the page viewport at the time the frame was captured.</para></summary>
-    [Required]
-    [JsonPropertyName("viewportHeight")]
-    public int ViewportHeight { get; set; } = default!;
+    /// <summary><para>Base64url-encoded credential id. Auto-generated if omitted.</para></summary>
+    [JsonPropertyName("id")]
+    public string? Id { get; set; }
+
+    /// <summary><para>Base64url-encoded PKCS#8 (DER) private key. Auto-generated if omitted.</para></summary>
+    [JsonPropertyName("privateKey")]
+    public string? PrivateKey { get; set; }
+
+    /// <summary><para>Base64url-encoded SPKI (DER) public key. Auto-generated if omitted.</para></summary>
+    [JsonPropertyName("publicKey")]
+    public string? PublicKey { get; set; }
+
+    /// <summary><para>Base64url-encoded user handle. Auto-generated if omitted.</para></summary>
+    [JsonPropertyName("userHandle")]
+    public string? UserHandle { get; set; }
 }

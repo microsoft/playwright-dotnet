@@ -26,7 +26,7 @@ using System.Text.Json.Serialization;
 
 namespace Microsoft.Playwright.Transport.Protocol;
 
-internal class ElectronApplicationInitializer : EventTargetInitializer
+internal class ElectronApplicationInitializer
 {
     [JsonPropertyName("context")]
     public Core.BrowserContext Context { get; set; } = null!;

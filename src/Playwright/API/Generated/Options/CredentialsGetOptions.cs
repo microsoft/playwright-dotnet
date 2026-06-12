@@ -6,7 +6,7 @@
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
- * to use, copy, modify, merge, publish, distribute, sublicense, and / or sell
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
  * copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions:
  *
@@ -24,10 +24,28 @@
 
 using System.Text.Json.Serialization;
 
-namespace Microsoft.Playwright.Transport.Protocol;
+namespace Microsoft.Playwright;
 
-internal class WebSocketInitializer
+public class CredentialsGetOptions
 {
-    [JsonPropertyName("url")]
-    public string Url { get; set; } = null!;
+    public CredentialsGetOptions() { }
+
+    public CredentialsGetOptions(CredentialsGetOptions clone)
+    {
+        if (clone == null)
+        {
+            return;
+        }
+
+        Id = clone.Id;
+        RpId = clone.RpId;
+    }
+
+    /// <summary><para>Only return the credential with this base64url-encoded id.</para></summary>
+    [JsonPropertyName("id")]
+    public string? Id { get; set; }
+
+    /// <summary><para>Only return credentials for this relying party id.</para></summary>
+    [JsonPropertyName("rpId")]
+    public string? RpId { get; set; }
 }

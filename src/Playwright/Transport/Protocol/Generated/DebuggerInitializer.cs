@@ -24,6 +24,6 @@
 
 namespace Microsoft.Playwright.Transport.Protocol;
 
-internal class DebuggerInitializer : EventTargetInitializer
+internal class DebuggerInitializer
 {
 }

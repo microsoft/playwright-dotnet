@@ -38,12 +38,22 @@ public class BrowserTypeConnectOverCDPOptions
             return;
         }
 
+        ArtifactsDir = clone.ArtifactsDir;
         Headers = clone.Headers;
         IsLocal = clone.IsLocal;
         NoDefaults = clone.NoDefaults;
         SlowMo = clone.SlowMo;
         Timeout = clone.Timeout;
     }
+
+    /// <summary>
+    /// <para>
+    /// If specified, browser artifacts (such as traces and downloads) are saved into this
+    /// directory.
+    /// </para>
+    /// </summary>
+    [JsonPropertyName("artifactsDir")]
+    public string? ArtifactsDir { get; set; }
 
     /// <summary><para>Additional HTTP headers to be sent with connect request. Optional.</para></summary>
     [JsonPropertyName("headers")]
