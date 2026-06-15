@@ -24,7 +24,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        flavor: [noble]
+        flavor: [noble, resolute]
         runs-on: [ubuntu-24.04, ubuntu-24.04-arm]
     steps:
     - uses: actions/checkout@v6

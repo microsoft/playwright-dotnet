@@ -28,6 +28,11 @@ NOBLE_TAGS=(
   "v${PW_VERSION}-noble"
 )
 
+# Ubuntu 26.04
+RESOLUTE_TAGS=(
+  "v${PW_VERSION}-resolute"
+)
+
 tag_and_push() {
   local source="$1"
   local target="$2"
@@ -62,8 +67,10 @@ publish_docker_images_with_arch_suffix() {
   local TAGS=()
   if [[ "$FLAVOR" == "noble" ]]; then
     TAGS=("${NOBLE_TAGS[@]}")
+  elif [[ "$FLAVOR" == "resolute" ]]; then
+    TAGS=("${RESOLUTE_TAGS[@]}")
   else
-    echo "ERROR: unknown flavor - $FLAVOR. Must be 'noble'"
+    echo "ERROR: unknown flavor - $FLAVOR. Must be 'noble' or 'resolute'"
     exit 1
   fi
   local ARCH="$2"
@@ -86,8 +93,10 @@ publish_docker_manifest () {
   local TAGS=()
   if [[ "$FLAVOR" == "noble" ]]; then
     TAGS=("${NOBLE_TAGS[@]}")
+  elif [[ "$FLAVOR" == "resolute" ]]; then
+    TAGS=("${RESOLUTE_TAGS[@]}")
   else
-    echo "ERROR: unknown flavor - $FLAVOR. Must be 'noble'"
+    echo "ERROR: unknown flavor - $FLAVOR. Must be 'noble' or 'resolute'"
     exit 1
   fi
 
@@ -109,3 +118,7 @@ publish_docker_manifest () {
 publish_docker_images_with_arch_suffix noble amd64
 publish_docker_images_with_arch_suffix noble arm64
 publish_docker_manifest noble amd64 arm64
+
+publish_docker_images_with_arch_suffix resolute amd64
+publish_docker_images_with_arch_suffix resolute arm64
+publish_docker_manifest resolute amd64 arm64
