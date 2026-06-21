@@ -1,4 +1,4 @@
-﻿namespace Microsoft.Playwright.Tests;
+namespace Microsoft.Playwright.Tests;
 
 public class PlaywrightDisposeTests : PlaywrightTestEx
 {
