@@ -2,7 +2,7 @@
   "name": "playwright.testingharnesstest",
   "private": true,
   "devDependencies": {
-    "@playwright/test": "1.62.0-alpha-1781285727000",
+    "@playwright/test": "1.61.1-beta-1782139630000",
     "@types/node": "^22.12.0",
     "fast-xml-parser": "^4.5.0"
   }

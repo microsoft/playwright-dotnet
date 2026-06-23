@@ -20,13 +20,13 @@ Afterwards, walk through the upstream changes that affect the Java client and po
 
 ## Determining what to port
 
-List the upstream commits that touched a client-relevant path since the last release. The paths cover everything that can change the public Java surface or the wire protocol:
+List the upstream commits that touched a client-relevant path since the last roll. The paths cover everything that can change the public Java surface or the wire protocol:
 
 - `docs/src/api/` — the source of truth for `api.json`. Method/option additions, removals, and `langs:` filter changes flow from here.
 - `packages/playwright-core/src/client/` — the JS client implementation that the Java client mirrors.
 - `packages/isomorphic/` — selector engines, locator generation/parsing, and aria-snapshot logic shared between client and server. Changes here can affect client-side helpers like `getByRoleSelector`.
 - `packages/playwright/src/matchers/matchers.ts` — assertion-method definitions. Changes here usually correspond to new options on `LocatorAssertions` / `PageAssertions`.
-- `packages/protocol/src/protocol.yml` and `packages/protocol/spec/**.yml` — the wire protocol schema. Method/event additions, parameter renames, and result-shape changes affect what the .NET implementation classes need to send/receive.
+- `packages/protocol/spec/**.yml` — the wire protocol schema. Method/event additions, parameter renames, and result-shape changes affect what the .NET implementation classes need to send/receive.
 
 ```bash
 cd ~/playwright
@@ -36,8 +36,7 @@ git log "$PREV_TAG"..HEAD --oneline -- \
   'packages/playwright-core/src/client/' \
   'packages/isomorphic/' \
   'packages/playwright/src/matchers/matchers.ts' \
-  'packages/protocol/src/protocol.yml' \
-  'packages/protocol/spec/'
+  'packages/protocol/spec/**.yml'
 ```
 
 Walk that list top-to-bottom (oldest-first is easier — newest is at top, so reverse). For each commit:
