@@ -84,6 +84,7 @@ public partial interface IPage : IAsyncDisposable
     /// <inheritdoc cref="AddLocatorHandlerAsync(ILocator, Func{ILocator, Task}, PageAddLocatorHandlerOptions?)" />
     Task AddLocatorHandlerAsync(ILocator locator, Func<Task> handler, PageAddLocatorHandlerOptions? options = default);
 
-
+    /// <inheritdoc cref="PauseAsync()" />
+    /// <param name="outputLocation">File path where Playwright can save Inspector window content.</param>
     Task PauseAsync(string? outputLocation);
 }
