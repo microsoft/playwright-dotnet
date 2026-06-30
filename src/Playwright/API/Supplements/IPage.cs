@@ -83,4 +83,7 @@ public partial interface IPage : IAsyncDisposable
 
     /// <inheritdoc cref="AddLocatorHandlerAsync(ILocator, Func{ILocator, Task}, PageAddLocatorHandlerOptions?)" />
     Task AddLocatorHandlerAsync(ILocator locator, Func<Task> handler, PageAddLocatorHandlerOptions? options = default);
+
+
+    Task PauseAsync(string? outputLocation);
 }
