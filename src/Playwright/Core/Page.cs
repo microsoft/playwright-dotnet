@@ -1173,10 +1173,10 @@ internal class Page : ChannelOwner, IPage
         Context.SetDefaultTimeout(0);
         try
         {
-            var args = new Dictionary<string, object?>();
+            Dictionary<string, object?>? args = null;
             if (outputLocation != null)
             {
-                args["outputFile"] = outputLocation;
+                args = new() { ["outputFile"] = outputLocation };
             }
             await Task.WhenAny(Context.SendMessageToServerAsync("pause", args), ClosedOrCrashedTcs.Task).ConfigureAwait(false);
         }
