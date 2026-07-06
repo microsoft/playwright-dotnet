@@ -23,6 +23,7 @@
  */
 
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text;
@@ -109,6 +110,8 @@ internal class Response : ChannelOwner, IResponse
     }
 
     [MethodImpl(MethodImplOptions.NoInlining)]
+    [RequiresUnreferencedCode("Response.JsonAsync<T> deserializes to a user-specified type")]
+    [RequiresDynamicCode("Response.JsonAsync<T> deserializes to a user-specified type")]
     public async Task<T> JsonAsync<T>()
         => JsonSerializer.Deserialize<T>(await BodyAsync().ConfigureAwait(false))!;
 

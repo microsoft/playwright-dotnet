@@ -28,9 +28,8 @@ using System.Text.Json.Serialization;
 
 namespace Microsoft.Playwright.Transport.Converters;
 
-internal class ChannelOwnerListToGuidListConverter<T>
-    : JsonConverter<IEnumerable<T>>
-    where T : ChannelOwner
+internal class ChannelOwnerListToGuidListConverter
+    : JsonConverter<IEnumerable<ChannelOwner>>
 {
     private readonly Connection _connection;
 
@@ -39,18 +38,15 @@ internal class ChannelOwnerListToGuidListConverter<T>
         _connection = connection;
     }
 
-    public override bool CanConvert(Type type)
-        => type.IsArray && type.GetElementType() == typeof(T);
-
-    public override IEnumerable<T> Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
+    public override IEnumerable<ChannelOwner> Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
     {
-        throw new NotImplementedException();
+        throw new System.NotImplementedException();
     }
 
-    public override void Write(Utf8JsonWriter writer, IEnumerable<T> value, JsonSerializerOptions options)
+    public override void Write(Utf8JsonWriter writer, IEnumerable<ChannelOwner> value, JsonSerializerOptions options)
     {
         writer.WriteStartArray();
-        foreach (T item in value)
+        foreach (var item in value)
         {
             writer.WriteStartObject();
             writer.WriteString("guid", item.Guid);

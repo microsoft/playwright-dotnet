@@ -166,7 +166,7 @@ internal class Route : ChannelOwner, IRoute
             {
                 throw new ArgumentException("Cannot provide both 'json' and 'body', 'bodyBytes' or 'path'");
             }
-            body = JsonSerializer.Serialize(json);
+            body = JsonSerializer.Serialize(json, PlaywrightJsonContext.Default.DictionaryOfStringToObject);
         }
 
         if (response != null)

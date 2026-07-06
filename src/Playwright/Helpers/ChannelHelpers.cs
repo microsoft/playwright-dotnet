@@ -80,7 +80,7 @@ internal static class ChannelHelpers
 
     // this method is needed, because a converter for <see cref="Exception"/> is no longer supported
     // since .NET5 and throws an exception of "Serialization and deserialization of 'System.Type' instances are not supported and should be avoided since they can lead to security issues."}
-    internal static dynamic ToObject(this Exception exception)
+    internal static object ToObject(this Exception exception)
     {
         if (exception == null)
         {

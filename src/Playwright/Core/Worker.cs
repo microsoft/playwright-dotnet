@@ -24,6 +24,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Runtime.CompilerServices;
 using System.Text.Json;
 using System.Threading.Tasks;
@@ -90,7 +91,7 @@ internal class Worker : ChannelOwner, IWorker
     }
 
     [MethodImpl(MethodImplOptions.NoInlining)]
-    public async Task<T> EvaluateAsync<T>(string expression, object? arg = null)
+    public async Task<T> EvaluateAsync<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors | DynamicallyAccessedMemberTypes.PublicProperties)] T>(string expression, object? arg = null)
         => ScriptsHelper.ParseEvaluateResult<T>((await SendMessageToServerAsync(
                 "evaluateExpression",
                 new Dictionary<string, object?>
@@ -114,7 +115,7 @@ internal class Worker : ChannelOwner, IWorker
     public async Task<IWorker> WaitForCloseAsync(Func<Task>? action = default, float? timeout = default)
     {
         using var waiter = new Waiter(this, "worker.WaitForCloseAsync");
-        var waiterResult = waiter.GetWaitForEventTask<IWorker>(this, nameof(Close), null);
+        var waiterResult = waiter.GetWaitForEventTask<Worker, IWorker>(this, nameof(Close), null);
         var result = waiterResult.Task.WithTimeout(Convert.ToInt32(timeout ?? 0));
         if (action != null)
         {

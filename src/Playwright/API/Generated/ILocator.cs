@@ -24,6 +24,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
@@ -553,7 +554,7 @@ public partial interface ILocator
     /// </param>
     /// <param name="arg">Optional argument to pass to <see cref="ILocator.EvaluateAsync"/>.</param>
     /// <param name="options">Call options</param>
-    Task<T> EvaluateAsync<T>(string expression, object? arg = default, LocatorEvaluateOptions? options = default);
+    Task<T> EvaluateAsync<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors | DynamicallyAccessedMemberTypes.PublicProperties)] T>(string expression, object? arg = default, LocatorEvaluateOptions? options = default);
 
     /// <summary>
     /// <para>Execute JavaScript code in the page, taking all matching elements as an argument.</para>
@@ -579,7 +580,7 @@ public partial interface ILocator
     /// evaluates to a function, the function is automatically invoked.
     /// </param>
     /// <param name="arg">Optional argument to pass to <see cref="ILocator.EvaluateAllAsync"/>.</param>
-    Task<T> EvaluateAllAsync<T>(string expression, object? arg = default);
+    Task<T> EvaluateAllAsync<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors | DynamicallyAccessedMemberTypes.PublicProperties)] T>(string expression, object? arg = default);
 
     /// <summary>
     /// <para>

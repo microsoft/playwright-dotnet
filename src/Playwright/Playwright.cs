@@ -45,7 +45,7 @@ public static class Playwright
         EventHandler<byte[]> onMessageReceived = (_, message) =>
         {
             Connection.TraceMessage("pw:channel:recv", message);
-            connection.Dispatch(JsonSerializer.Deserialize<PlaywrightServerMessage>(message, JsonExtensions.DefaultJsonSerializerOptions)!);
+            connection.Dispatch(JsonSerializer.Deserialize(message, PlaywrightJsonContext.Default.PlaywrightServerMessage)!);
         };
         EventHandler<string> onLogReceived = (_, log) =>
         {
@@ -60,7 +60,7 @@ public static class Playwright
         transport.TransportClosed += onTransportClosed;
         connection.OnMessage = (message, keepNulls) =>
         {
-            var rawMessage = JsonSerializer.SerializeToUtf8Bytes(message, keepNulls ? connection.DefaultJsonSerializerOptionsKeepNulls : connection.DefaultJsonSerializerOptions);
+            var rawMessage = JsonSerializer.SerializeToUtf8Bytes(message, PlaywrightJsonContext.Default.DictionaryOfStringToObject);
             Connection.TraceMessage("pw:channel:send", rawMessage);
             return transport.SendAsync(rawMessage);
         };

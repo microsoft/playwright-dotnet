@@ -22,6 +22,7 @@
  * SOFTWARE.
  */
 
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Dynamic;
 using System.Numerics;
@@ -42,7 +43,7 @@ public class PageEvaluateTests : PageTestEx
     [PlaywrightTest()]
     public async Task ShouldSerializeArguments()
     {
-        int result = await Page.EvaluateAsync<int>("a => a.m * a.n", new { m = 7, n = 3 });
+        int result = await Page.EvaluateAsync<int>("a => a.m * a.n", new Dictionary<string, object?> { ["m"] = 7, ["n"] = 3 });
         Assert.AreEqual(21, result);
     }
 
@@ -253,7 +254,7 @@ public class PageEvaluateTests : PageTestEx
     public async Task ShouldWorkFromInsideAnExposedFunction()
     {
         // Setup inpage callback, which calls Page.evaluate
-        await Page.ExposeFunctionAsync("callController", async (int a, int b) => await Page.EvaluateAsync<int>("({a, b}) => a * b", new { a, b }));
+        await Page.ExposeFunctionAsync("callController", async (int a, int b) => await Page.EvaluateAsync<int>("({a, b}) => a * b", new Dictionary<string, object?> { ["a"] = a, ["b"] = b }));
         int result = await Page.EvaluateAsync<int>(@"async function() {
                 return await callController(9, 3);
             }");
@@ -284,7 +285,7 @@ public class PageEvaluateTests : PageTestEx
     [PlaywrightTest("page-evaluate.spec.ts", "should return complex objects")]
     public async Task ShouldReturnComplexObjects()
     {
-        var obj = new { foo = "bar!" };
+        var obj = new Dictionary<string, object?> { ["foo"] = "bar!" };
         var result = await Page.EvaluateAsync<JsonElement>("a => a", obj);
         Assert.AreEqual("bar!", result.GetProperty("foo").GetString());
     }
@@ -368,7 +369,7 @@ public class PageEvaluateTests : PageTestEx
                 console.log(a);
                 console.log(b);
                 return Object.is (a, null) && Object.is (b, 'foo')
-            }", new { a = (object)null, b = "foo" });
+            }", new Dictionary<string, object?> { ["a"] = null, ["b"] = "foo" });
         Assert.True(result);
     }
 
@@ -711,13 +712,8 @@ public class PageEvaluateTests : PageTestEx
     [PlaywrightTest()]
     public async Task ShouldSerializeEnumProperty()
     {
-        int result = await Page.EvaluateAsync<int>("a => a.TestEnum", new ClassWithEnumProperty());
+        int result = await Page.EvaluateAsync<int>("a => a.TestEnum", new Dictionary<string, object?> { ["TestEnum"] = (int)TestEnum.Test });
         Assert.AreEqual(1, result);
-    }
-
-    private class ClassWithEnumProperty
-    {
-        public TestEnum TestEnum { get; set; } = TestEnum.Test;
     }
 
     private enum TestEnum

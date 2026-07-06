@@ -130,6 +130,11 @@ public partial interface IAPIRequestContext
     /// fields with <c>multipart/form-data</c> encoding, by specifiying the <c>multipart</c>
     /// parameter:
     /// </para>
+    /// <para>
+    /// The common way to send file(s) in the body of a request is to upload them as form
+    /// fields with <c>multipart/form-data</c> encoding. Use <see cref="IFormData"/> to
+    /// construct request body and pass it to the request as <c>multipart</c> parameter:
+    /// </para>
     /// <code>
     /// var file = new FilePayload()<br/>
     /// {<br/>

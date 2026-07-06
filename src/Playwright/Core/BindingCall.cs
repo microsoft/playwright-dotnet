@@ -35,8 +35,7 @@ namespace Microsoft.Playwright.Core;
 
 internal class BindingCall : ChannelOwner
 {
-    private static readonly Type VoidTaskResultType = Type.GetType("System.Threading.Tasks.VoidTaskResult");
-
+    private static readonly PropertyInfo TaskResultProperty = typeof(Task<>).GetProperty("Result", BindingFlags.Public | BindingFlags.Instance)!;
     private readonly BindingCallInitializer _initializer;
 
     public BindingCall(ChannelOwner parent, string guid, BindingCallInitializer initializer) : base(parent, guid)
@@ -50,8 +49,7 @@ internal class BindingCall : ChannelOwner
     {
         try
         {
-            const string taskResultPropertyName = "Result";
-            var methodParams = binding.Method.GetParameters().Select(parameter => parameter.ParameterType).Skip(1).ToArray();
+            var methodParams = binding.Method.GetParameters().Skip(1).ToArray();
             var args = new List<object>
             {
                 new BindingSource(_initializer.Frame.Page.Context, _initializer.Frame.Page, _initializer.Frame),
@@ -59,7 +57,7 @@ internal class BindingCall : ChannelOwner
 
             for (int i = 0; i < methodParams.Length; i++)
             {
-                args.Add(ScriptsHelper.ParseEvaluateResult(_initializer.Args[i], methodParams[i]));
+                args.Add(ScriptsHelper.ParseEvaluateResultUntyped(_initializer.Args[i])!);
             }
 
             object? result = binding.DynamicInvoke(args.ToArray());
@@ -71,10 +69,9 @@ internal class BindingCall : ChannelOwner
                 await taskResult.ConfigureAwait(false);
 
                 var taskResultType = taskResult.GetType();
-                if (taskResultType.IsGenericType && taskResultType.GenericTypeArguments[0] != VoidTaskResultType)
+                if (taskResultType.IsGenericType)
                 {
-                    // the task is already awaited and therefore the call to property Result will not deadlock
-                    result = taskResult.GetType().GetProperty(taskResultPropertyName).GetValue(taskResult);
+                    result = TaskResultProperty.GetValue(taskResult);
                 }
             }
 
@@ -89,7 +86,7 @@ internal class BindingCall : ChannelOwner
                 "reject",
                 new Dictionary<string, object?>
                 {
-                    ["error"] = ex.InnerException.ToObject(),
+                    ["error"] = ex.InnerException!.ToObject(),
                 }).ConfigureAwait(false);
         }
         catch (Exception ex)

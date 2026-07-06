@@ -554,18 +554,17 @@ internal class BrowserContext : ChannelOwner, IBrowserContext
     [MethodImpl(MethodImplOptions.NoInlining)]
     public async Task<string> StorageStateAsync(BrowserContextStorageStateOptions? options = default)
     {
-        string state = JsonSerializer.Serialize(
-            await SendMessageToServerAsync<object>(
-                "storageState",
-                new Dictionary<string, object?>
-                {
-                    ["indexedDB"] = options?.IndexedDB,
-                }).ConfigureAwait(false),
-            JsonExtensions.DefaultJsonSerializerOptions);
+        var result = await SendMessageToServerAsync(
+            "storageState",
+            new Dictionary<string, object?>
+            {
+                ["indexedDB"] = options?.IndexedDB,
+            }).ConfigureAwait(false);
+        string state = result?.GetRawText() ?? "null";
 
         if (!string.IsNullOrEmpty(options?.Path))
         {
-            File.WriteAllText(options?.Path, state);
+            File.WriteAllText(options?.Path!, state);
         }
 
         return state;
@@ -579,7 +578,7 @@ internal class BrowserContext : ChannelOwner, IBrowserContext
             throw new PlaywrightException($"The specified storage state file does not exist: {storageStatePath}");
         }
         var content = File.ReadAllText(storageStatePath);
-        var storageState = JsonSerializer.Deserialize<object>(content, JsonExtensions.DefaultJsonSerializerOptions);
+        var storageState = JsonDocument.Parse(content).RootElement;
         await SendMessageToServerAsync(
             "setStorageState",
             new Dictionary<string, object?>
@@ -637,7 +636,7 @@ internal class BrowserContext : ChannelOwner, IBrowserContext
 
         if (playwrightEvent.Name != BrowserContextEvent.Close.Name)
         {
-            waiter.RejectOnEvent<IBrowserContext>(this, BrowserContextEvent.Close.Name, () => new TargetClosedException(_effectiveCloseReason()));
+            waiter.RejectOnEvent<BrowserContext, IBrowserContext>(this, BrowserContextEvent.Close.Name, () => new TargetClosedException(_effectiveCloseReason()));
         }
 
         var result = waiter.WaitForEventAsync(this, playwrightEvent.Name, predicate);

@@ -25,6 +25,7 @@
  */
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.IO;
 using System.Linq;
@@ -285,17 +286,17 @@ internal class Page : ChannelOwner, IPage
     }
 
     [MethodImpl(MethodImplOptions.NoInlining)]
-    public IFrame Frame(string name)
+    public IFrame? Frame(string name)
         => Frames.FirstOrDefault(f => f.Name == name);
 
     [MethodImpl(MethodImplOptions.NoInlining)]
-    public IFrame FrameByUrl(string urlString) => Frames.FirstOrDefault(f => Context.UrlMatches(f.Url, urlString));
+    public IFrame? FrameByUrl(string urlString) => Frames.FirstOrDefault(f => Context.UrlMatches(f.Url, urlString));
 
     [MethodImpl(MethodImplOptions.NoInlining)]
-    public IFrame FrameByUrl(Regex urlRegex) => Frames.FirstOrDefault(f => urlRegex.IsMatch(f.Url));
+    public IFrame? FrameByUrl(Regex urlRegex) => Frames.FirstOrDefault(f => urlRegex.IsMatch(f.Url));
 
     [MethodImpl(MethodImplOptions.NoInlining)]
-    public IFrame FrameByUrl(Func<string, bool> urlFunc) => Frames.FirstOrDefault(f => urlFunc(f.Url));
+    public IFrame? FrameByUrl(Func<string, bool> urlFunc) => Frames.FirstOrDefault(f => urlFunc(f.Url));
 
     IFrameLocator IPage.FrameLocator(string selector) => MainFrame.FrameLocator(selector);
 
@@ -491,12 +492,12 @@ internal class Page : ChannelOwner, IPage
 
         if (pageEvent.Name != PageEvent.Crash.Name)
         {
-            waiter.RejectOnEvent<IPage>(this, PageEvent.Crash.Name, new PlaywrightException("Page crashed"));
+            waiter.RejectOnEvent<Page, IPage>(this, PageEvent.Crash.Name, new PlaywrightException("Page crashed"));
         }
 
         if (pageEvent.Name != PageEvent.Close.Name)
         {
-            waiter.RejectOnEvent<IPage>(this, PageEvent.Close.Name, () => _closeErrorWithReason());
+            waiter.RejectOnEvent<Page, IPage>(this, PageEvent.Close.Name, () => _closeErrorWithReason());
         }
 
         var waitForEventTask = waiter.WaitForEventAsync(this, pageEvent.Name, predicate);
@@ -543,13 +544,13 @@ internal class Page : ChannelOwner, IPage
     }
 
     [MethodImpl(MethodImplOptions.NoInlining)]
-    public Task<T> EvaluateAsync<T>(string expression, object? arg) => MainFrame.EvaluateAsync<T>(expression, arg);
+    public Task<T> EvaluateAsync<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors | DynamicallyAccessedMemberTypes.PublicProperties)] T>(string expression, object? arg) => MainFrame.EvaluateAsync<T>(expression, arg);
 
     [MethodImpl(MethodImplOptions.NoInlining)]
     public Task<JsonElement?> EvalOnSelectorAsync(string selector, string expression, object? arg) => MainFrame.EvalOnSelectorAsync(selector, expression, arg);
 
     [MethodImpl(MethodImplOptions.NoInlining)]
-    public Task<T> EvalOnSelectorAsync<T>(string selector, string expression, object? arg = null, PageEvalOnSelectorOptions? options = null)
+    public Task<T> EvalOnSelectorAsync<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors | DynamicallyAccessedMemberTypes.PublicProperties)] T>(string selector, string expression, object? arg = null, PageEvalOnSelectorOptions? options = null)
         => MainFrame.EvalOnSelectorAsync<T>(selector, expression, arg, new() { Strict = options?.Strict });
 
     [MethodImpl(MethodImplOptions.NoInlining)]
@@ -567,13 +568,13 @@ internal class Page : ChannelOwner, IPage
         => MainFrame.QuerySelectorAsync(selector, new() { Strict = options?.Strict });
 
     [MethodImpl(MethodImplOptions.NoInlining)]
-    public Task<T> EvalOnSelectorAsync<T>(string selector, string expression, object? arg) => MainFrame.EvalOnSelectorAsync<T>(selector, expression, arg);
+    public Task<T> EvalOnSelectorAsync<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors | DynamicallyAccessedMemberTypes.PublicProperties)] T>(string selector, string expression, object? arg) => MainFrame.EvalOnSelectorAsync<T>(selector, expression, arg);
 
     [MethodImpl(MethodImplOptions.NoInlining)]
     public Task<JsonElement?> EvalOnSelectorAllAsync(string selector, string expression, object? arg) => MainFrame.EvalOnSelectorAllAsync(selector, expression, arg);
 
     [MethodImpl(MethodImplOptions.NoInlining)]
-    public Task<T> EvalOnSelectorAllAsync<T>(string selector, string expression, object? arg) => MainFrame.EvalOnSelectorAllAsync<T>(selector, expression, arg);
+    public Task<T> EvalOnSelectorAllAsync<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors | DynamicallyAccessedMemberTypes.PublicProperties)] T>(string selector, string expression, object? arg) => MainFrame.EvalOnSelectorAllAsync<T>(selector, expression, arg);
 
     [MethodImpl(MethodImplOptions.NoInlining)]
     public Task FillAsync(string selector, string value, PageFillOptions? options = default)
@@ -730,7 +731,7 @@ internal class Page : ChannelOwner, IPage
 
         if (!string.IsNullOrEmpty(options.Path))
         {
-            Directory.CreateDirectory(new FileInfo(options.Path).Directory.FullName);
+            Directory.CreateDirectory(new FileInfo(options.Path).Directory!.FullName);
             File.WriteAllBytes(options.Path, result);
         }
 
@@ -927,8 +928,8 @@ internal class Page : ChannelOwner, IPage
 
         if (!string.IsNullOrEmpty(options?.Path))
         {
-            Directory.CreateDirectory(new FileInfo(options?.Path).Directory.FullName);
-            File.WriteAllBytes(options?.Path, result);
+            Directory.CreateDirectory(new FileInfo(options?.Path!).Directory!.FullName);
+            File.WriteAllBytes(options?.Path!, result);
         }
 
         return result;

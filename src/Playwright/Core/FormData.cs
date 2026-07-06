@@ -71,7 +71,7 @@ internal class FormData : IFormData
             }
             else
             {
-                output.Add(new NameValue() { Name = kvp.Name, Value = kvp.Value.ToString() });
+                output.Add(new NameValue() { Name = kvp.Name, Value = kvp.Value!.ToString()! });
             }
         }
         return output;

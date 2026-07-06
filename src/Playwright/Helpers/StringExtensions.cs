@@ -636,11 +636,11 @@ internal static class StringExtensions
             return defaultContentType;
         }
 
-        return _mappings.TryGetValue(extension, out string contentType) ? contentType : defaultContentType;
+        return _mappings.TryGetValue(extension, out string? contentType) ? contentType! : defaultContentType;
     }
 
     internal static string MimeType(this string file)
-        => _mappings.TryGetValue(new FileInfo(file).Extension, out string mime) ? mime : "application/octet-stream";
+        => _mappings.TryGetValue(new FileInfo(file).Extension, out string? mime) ? mime! : "application/octet-stream";
 
     private static string? GetExtension(string path)
     {

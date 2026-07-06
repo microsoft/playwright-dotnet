@@ -68,7 +68,7 @@ public class URLMatch
                 return true;
             }
             var match = ResolveGlobToRegexPattern(baseURL, glob, isWebSocketUrl);
-            return new Regex(match).IsMatch(url);
+            return new Regex(match!).IsMatch(url);
         }
 
         return true;

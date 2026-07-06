@@ -66,7 +66,7 @@ internal class Artifact : ChannelOwner
             }).ConfigureAwait(false);
             return;
         }
-        Directory.CreateDirectory(Path.GetDirectoryName(Path.GetFullPath(path)));
+        Directory.CreateDirectory(Path.GetDirectoryName(Path.GetFullPath(path))!);
         var stream = (await SendMessageToServerAsync("saveAsStream")
             .ConfigureAwait(false)).GetObject<Stream>("stream", _connection)!;
         await using (stream.ConfigureAwait(false))

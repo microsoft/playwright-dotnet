@@ -24,6 +24,7 @@
  */
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Linq;
 using System.Text.Json;
@@ -124,7 +125,7 @@ internal class ElementHandle : JSHandle, IElementHandle
 
         if (!string.IsNullOrEmpty(options.Path))
         {
-            Directory.CreateDirectory(new FileInfo(options.Path).Directory.FullName);
+            Directory.CreateDirectory(new FileInfo(options.Path).Directory!.FullName);
             File.WriteAllBytes(options.Path, result);
         }
 
@@ -262,7 +263,7 @@ internal class ElementHandle : JSHandle, IElementHandle
                 ["arg"] = ScriptsHelper.SerializedArgument(arg),
             }).ConfigureAwait(false));
 
-    public async Task<T> EvalOnSelectorAsync<T>(string selector, string expression, object? arg = null)
+    public async Task<T> EvalOnSelectorAsync<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors | DynamicallyAccessedMemberTypes.PublicProperties)] T>(string selector, string expression, object? arg = null)
         => ScriptsHelper.ParseEvaluateResult<T>(await SendMessageToServerAsync<JsonElement?>(
             "evalOnSelector",
             new Dictionary<string, object?>
@@ -272,7 +273,7 @@ internal class ElementHandle : JSHandle, IElementHandle
                 ["arg"] = ScriptsHelper.SerializedArgument(arg),
             }).ConfigureAwait(false));
 
-    public async Task<T> EvalOnSelectorAllAsync<T>(string selector, string expression, object? arg = null)
+    public async Task<T> EvalOnSelectorAllAsync<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors | DynamicallyAccessedMemberTypes.PublicProperties)] T>(string selector, string expression, object? arg = null)
         => ScriptsHelper.ParseEvaluateResult<T>(await SendMessageToServerAsync<JsonElement?>(
             "evalOnSelectorAll",
             new Dictionary<string, object?>

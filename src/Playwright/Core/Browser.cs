@@ -158,7 +158,7 @@ internal class Browser : ChannelOwner, IBrowser
 
         if (!storageState.IsNullOrEmpty())
         {
-            args.Add("storageState", JsonSerializer.Deserialize<object>(storageState, Helpers.JsonExtensions.DefaultJsonSerializerOptions));
+            args.Add("storageState", JsonDocument.Parse(storageState).RootElement);
         }
 
         if (options.ViewportSize?.Width == -1)

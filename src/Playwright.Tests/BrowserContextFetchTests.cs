@@ -129,7 +129,7 @@ public class BrowserContextFetchTests : PageTestEx
                 responseTask
             );
             CollectionAssert.AreEquivalent(new[] { "value1", "value2" }, receivedQueryString["param1"]);
-            Assert.AreEqual("знач2", string.Join(",", receivedQueryString["парам2"]));
+            Assert.AreEqual("знач2", string.Join(",", (string?[])receivedQueryString["парам2"]!));
         }, Server.Prefix + "/empty.html", requestOptions);
     }
 

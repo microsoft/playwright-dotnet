@@ -131,7 +131,7 @@ internal abstract class AssertionsBase
             return "[" + string.Join(", ", ((IEnumerable<object>)value).Select(value => $"'{value}'")) + "]";
         }
 
-        return value.ToString();
+        return value.ToString()!;
     }
 
     public static void SetDefaultTimeout(float timeout)

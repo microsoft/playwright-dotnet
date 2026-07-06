@@ -27,10 +27,11 @@ using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
-using System.Runtime.CompilerServices;
+
 using System.Text;
 using System.Text.Json;
+using System.Text.Json.Nodes;
+using System.Text.Json.Serialization;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Playwright.Core;
@@ -63,11 +64,11 @@ internal class Connection : IDisposable
         JsonSerializerOptions NewJsonSerializerOptions(bool keepNulls)
         {
             var options = JsonExtensions.GetNewDefaultSerializerOptions(keepNulls);
-
-            // Workaround for https://github.com/dotnet/runtime/issues/46522
-            options.Converters.Add(new ChannelOwnerConverterFactory(this));
-            // Workaround for https://github.com/dotnet/runtime/issues/46522
-            options.Converters.Add(new ChannelOwnerListToGuidListConverter<WritableStream>(this));
+#if NET9_0_OR_GREATER
+            options.TypeInfoResolver = PlaywrightJsonContext.Default;
+#endif
+            options.Converters.Add(new ChannelOwnerToGuidConverter(this));
+            options.Converters.Add(new ChannelOwnerListToGuidListConverter(this));
             return options;
         }
         DefaultJsonSerializerOptions = NewJsonSerializerOptions(false);
@@ -99,11 +100,37 @@ internal class Connection : IDisposable
         {
             return string.Empty;
         }
-        if (!log.Any(l => l != null))
+        bool hasAny = false;
+        foreach (var l in log)
+        {
+            if (l != null)
+            {
+                hasAny = true;
+                break;
+            }
+        }
+        if (!hasAny)
         {
             return string.Empty;
         }
         return "\nCall log:\n" + string.Join("\n", log);
+    }
+
+    internal static object? NormalizeValue(object? value)
+    {
+        if (value == null)
+        {
+            return null;
+        }
+        if (value is ChannelOwner co)
+        {
+            return new JsonObject { ["guid"] = JsonValue.Create(co.Guid) };
+        }
+        if (value is Enum e)
+        {
+            return AotEnumMemberConverter.ToWireString(e);
+        }
+        return value;
     }
 
     public void Dispose()
@@ -169,13 +196,17 @@ internal class Connection : IDisposable
         }
 
         var sanitizedArgs = new Dictionary<string, object>();
-        if (dictionary?.Keys.Any(f => f != null) == true)
+        if (dictionary != null)
         {
-            sanitizedArgs = dictionary
-                .Where(f => f.Value != null)
-                .ToDictionary(f => f.Key, f => f.Value) as Dictionary<string, object>;
+            foreach (var kv in dictionary)
+            {
+                if (kv.Key != null && kv.Value != null)
+                {
+                    sanitizedArgs[kv.Key] = NormalizeValue(kv.Value)!;
+                }
+            }
         }
-        var (title, isInternal, frames) = (ApiZone.Value[0]!.Title, ApiZone.Value[0]!.Internal, ApiZone.Value[0]!.Frames);
+        var (title, isInternal, frames) = (ApiZone.Value![0]!.Title, ApiZone.Value![0]!.Internal, ApiZone.Value![0]!.Frames);
         var metadata = new Dictionary<string, object?>
         {
             ["internal"] = isInternal,
@@ -183,7 +214,7 @@ internal class Connection : IDisposable
         };
         if (!string.IsNullOrEmpty(title))
         {
-            metadata["title"] = title;
+            metadata["title"] = NormalizeValue(title);
         }
         if (frames.Count > 0)
         {
@@ -231,11 +262,12 @@ internal class Connection : IDisposable
         }
         else if (typeof(ChannelOwner).IsAssignableFrom(typeof(T)) || typeof(ChannelOwner[]).IsAssignableFrom(typeof(T)))
         {
-            var enumerate = result.Value.EnumerateObject();
+            foreach (var property in result.Value.EnumerateObject())
+            {
+                return property.Value.ToObject<T>(DefaultJsonSerializerOptions)!;
+            }
 
-            return enumerate.Any()
-                ? enumerate.FirstOrDefault().Value.ToObject<T>(DefaultJsonSerializerOptions)
-                : default!;
+            return default!;
         }
         else
         {
@@ -246,7 +278,7 @@ internal class Connection : IDisposable
     internal ChannelOwner GetObject(string guid)
     {
         Objects.TryGetValue(guid, out var result);
-        return result;
+        return result!;
     }
 
     internal void MarkAsRemote() => IsRemote = true;
@@ -488,7 +520,7 @@ internal class Connection : IDisposable
 
     internal static void TraceMessage(string logLevel, byte[] rawMessage)
     {
-        string actualLogLevel = Environment.GetEnvironmentVariable("DEBUG");
+        string? actualLogLevel = Environment.GetEnvironmentVariable("DEBUG");
         if (string.IsNullOrEmpty(actualLogLevel))
         {
             return;
@@ -503,28 +535,16 @@ internal class Connection : IDisposable
         Console.Error.WriteLine(line);
     }
 
-    [MethodImpl(MethodImplOptions.NoInlining)]
     internal async Task<T> WrapApiCallAsync<T>(Func<Task<T>> action, bool isInternal = false, string? title = null)
     {
         EnsureApiZoneExists();
-        if (ApiZone.Value[0] != null)
+        if (ApiZone.Value![0] != null)
         {
             return await action().ConfigureAwait(false);
         }
-        var st = new StackTrace(true);
-        var stack = new List<Protocol.StackFrame>();
-        for (int i = 0; i < st.FrameCount; ++i)
-        {
-            var sf = st.GetFrame(i);
-            string fileName = sf.GetFileName();
-            if (!IsPlaywrightInternalNamespace(sf.GetMethod().ReflectedType?.Namespace) && !string.IsNullOrEmpty(fileName))
-            {
-                stack.Add(new() { File = fileName, Line = sf.GetFileLineNumber(), Column = sf.GetFileColumnNumber() });
-            }
-        }
         try
         {
-            ApiZone.Value[0] = new() { Internal = isInternal, Title = title, Frames = stack };
+            ApiZone.Value[0] = new() { Internal = isInternal, Title = title, Frames = new() };
             return await action().ConfigureAwait(false);
         }
         finally
@@ -542,15 +562,6 @@ internal class Connection : IDisposable
             },
             isInternal,
             title);
-
-    private static bool IsPlaywrightInternalNamespace(string? namespaceName)
-    {
-        return namespaceName != null &&
-            (namespaceName == "Microsoft.Playwright" ||
-            namespaceName.StartsWith("Microsoft.Playwright.Core", StringComparison.InvariantCultureIgnoreCase) ||
-            namespaceName.StartsWith("Microsoft.Playwright.Transport", StringComparison.InvariantCultureIgnoreCase) ||
-            namespaceName.StartsWith("Microsoft.Playwright.Helpers", StringComparison.InvariantCultureIgnoreCase));
-    }
 
     private void EnsureApiZoneExists()
     {

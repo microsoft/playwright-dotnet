@@ -22,6 +22,7 @@
  * SOFTWARE.
  */
 
+using System.Collections.Generic;
 using System.Text.Json;
 
 namespace Microsoft.Playwright.Tests;
@@ -94,7 +95,7 @@ public class BrowserContextWebAuthnTests : BrowserTestEx
                 hasSignature: resp.signature.byteLength > 0,
                 authDataFlags: new Uint8Array(resp.authenticatorData)[32],
             };
-        }", new { rpId = RpId, credentialId = known.Id });
+        }", new Dictionary<string, object?> { ["rpId"] = RpId, ["credentialId"] = known.Id });
 
         Assert.AreEqual(known.Id, result.GetProperty("id").GetString());
         Assert.AreEqual("public-key", result.GetProperty("type").GetString());
@@ -132,7 +133,7 @@ public class BrowserContextWebAuthnTests : BrowserTestEx
             } catch (e) {
                 return e.name;
             }
-        }", new { rpId = RpId, credentialId = known.Id });
+        }", new Dictionary<string, object?> { ["rpId"] = RpId, ["credentialId"] = known.Id });
         Assert.AreEqual("NotAllowedError", error);
     }
 
@@ -157,7 +158,7 @@ public class BrowserContextWebAuthnTests : BrowserTestEx
                 },
             });
             return created.id;
-        }", new { rpId = RpId });
+        }", new Dictionary<string, object?> { ["rpId"] = RpId });
 
         var credentials = await setupContext.Credentials.GetAsync(new() { RpId = RpId });
         Assert.AreEqual(1, credentials.Count);
@@ -186,7 +187,7 @@ public class BrowserContextWebAuthnTests : BrowserTestEx
                 publicKey: { challenge, rpId, userVerification: 'preferred' },
             });
             return cred.id;
-        }", new { rpId = RpId });
+        }", new Dictionary<string, object?> { ["rpId"] = RpId });
 
         Assert.AreEqual(createdId, gotId);
     }

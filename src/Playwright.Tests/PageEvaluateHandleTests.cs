@@ -22,6 +22,7 @@
  * SOFTWARE.
  */
 
+using System.Collections.Generic;
 using System.Dynamic;
 using System.Text.Json;
 
@@ -56,7 +57,7 @@ public class PageEvaluateHandleTests : PageTestEx
     public async Task ShouldAcceptNestedHandle()
     {
         var foo = await Page.EvaluateHandleAsync("() => ({x: 1, y: 'foo'})");
-        dynamic result = await Page.EvaluateAsync<ExpandoObject>("({ foo }) => foo", new { foo });
+        dynamic result = await Page.EvaluateAsync<ExpandoObject>("({ foo }) => foo", new Dictionary<string, object?> { ["foo"] = foo });
 
         Assert.AreEqual(1, result.x);
         Assert.AreEqual("foo", result.y);
@@ -66,7 +67,7 @@ public class PageEvaluateHandleTests : PageTestEx
     public async Task ShouldAcceptNestedWindowHandle()
     {
         var foo = await Page.EvaluateHandleAsync("() => window");
-        Assert.True(await Page.EvaluateAsync<bool>("({ foo }) => foo === window", new { foo }));
+        Assert.True(await Page.EvaluateAsync<bool>("({ foo }) => foo === window", new Dictionary<string, object?> { ["foo"] = foo }));
     }
 
     [PlaywrightTest("page-evaluate-handle.spec.ts", "should accept multiple nested handles")]
@@ -78,13 +79,13 @@ public class PageEvaluateHandleTests : PageTestEx
 
         string result = await Page.EvaluateAsync<string>(
             "x => JSON.stringify(x)",
-            new
+            new Dictionary<string, object?>
             {
-                a1 = new { foo },
-                a2 = new
+                ["a1"] = new Dictionary<string, object?> { ["foo"] = foo },
+                ["a2"] = new Dictionary<string, object?>
                 {
-                    bar,
-                    arr = new[] { new { baz } },
+                    ["bar"] = bar,
+                    ["arr"] = new[] { new Dictionary<string, object?> { ["baz"] = baz } },
                 },
             });
 
@@ -126,14 +127,14 @@ public class PageEvaluateHandleTests : PageTestEx
     [PlaywrightTest("page-evaluate-handle.spec.ts", "should accept same nested object multiple times")]
     public async Task ShouldAcceptSameNestedObjectMultipleTimes()
     {
-        dynamic foo = new { x = 1 };
+        var foo = new Dictionary<string, object?> { ["x"] = 1 };
         string result = await Page.EvaluateAsync<string>(
             "x => JSON.stringify(x)",
-            new
+            new Dictionary<string, object?>
             {
-                foo,
-                bar = new[] { foo },
-                baz = new { foo },
+                ["foo"] = foo,
+                ["bar"] = new[] { foo },
+                ["baz"] = new Dictionary<string, object?> { ["foo"] = foo },
             });
 
         var json = JsonDocument.Parse(result).RootElement;
@@ -167,7 +168,7 @@ public class PageEvaluateHandleTests : PageTestEx
                     throw new Error('Still 17');
                   return arg;
                 }",
-            new { foo = 42 });
+            new Dictionary<string, object?> { ["foo"] = 42 });
 
         Assert.AreEqual("{\"$id\":\"1\"}", result.ToString());
     }

@@ -27,27 +27,7 @@ using System.Text.Json.Serialization;
 
 namespace Microsoft.Playwright.Transport.Converters;
 
-internal class ChannelOwnerConverterFactory : JsonConverterFactory
-{
-    private readonly Connection _connection;
-
-    public ChannelOwnerConverterFactory(Connection connection)
-    {
-        _connection = connection;
-    }
-
-    public override bool CanConvert(Type typeToConvert) => typeof(ChannelOwner).IsAssignableFrom(typeToConvert);
-
-    public override JsonConverter CreateConverter(Type typeToConvert, JsonSerializerOptions options)
-    {
-        return (JsonConverter)Activator.CreateInstance(
-            typeof(ChannelOwnerToGuidConverter<>).MakeGenericType(new Type[] { typeToConvert }),
-            new object[] { _connection });
-    }
-}
-
-internal class ChannelOwnerToGuidConverter<T> : JsonConverter<T>
-    where T : ChannelOwner
+internal class ChannelOwnerToGuidConverter : JsonConverter<ChannelOwner>
 {
     private readonly Connection _connection;
 
@@ -56,14 +36,17 @@ internal class ChannelOwnerToGuidConverter<T> : JsonConverter<T>
         _connection = connection;
     }
 
-    public override T? Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
+    public override bool CanConvert(Type typeToConvert)
+        => typeof(ChannelOwner).IsAssignableFrom(typeToConvert);
+
+    public override ChannelOwner? Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
     {
         using JsonDocument document = JsonDocument.ParseValue(ref reader);
         string guid = document.RootElement.GetProperty("guid").ToString();
-        return _connection.GetObject(guid) as T;
+        return _connection.GetObject(guid) as ChannelOwner;
     }
 
-    public override void Write(Utf8JsonWriter writer, T value, JsonSerializerOptions options)
+    public override void Write(Utf8JsonWriter writer, ChannelOwner value, JsonSerializerOptions options)
     {
         writer.WriteStartObject();
         writer.WriteString("guid", value.Guid);

@@ -23,6 +23,8 @@
  * SOFTWARE.
  */
 
+using System.Collections.Generic;
+
 namespace Microsoft.Playwright.Tests;
 
 public class PageWaitForFunctionTests : PageTestEx
@@ -263,5 +265,5 @@ public class PageWaitForFunctionTests : PageTestEx
 
     [PlaywrightTest("page-wait-for-function.spec.ts", "should wait for predicate with arguments")]
     public Task ShouldWaitForPredicateWithArguments()
-        => Page.WaitForFunctionAsync(@"({arg1, arg2}) => arg1 + arg2 === 3", new { arg1 = 1, arg2 = 2 });
+        => Page.WaitForFunctionAsync(@"({arg1, arg2}) => arg1 + arg2 === 3", new Dictionary<string, object?> { ["arg1"] = 1, ["arg2"] = 2 });
 }

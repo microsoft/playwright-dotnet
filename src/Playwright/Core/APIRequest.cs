@@ -60,11 +60,11 @@ internal class APIRequest : IAPIRequest
                 throw new PlaywrightException($"The specified storage state file does not exist: {options?.StorageStatePath}");
             }
 
-            storageState = File.ReadAllText(options?.StorageStatePath);
+            storageState = File.ReadAllText(options?.StorageStatePath!);
         }
         if (!storageState.IsNullOrEmpty())
         {
-            args.Add("storageState", JsonSerializer.Deserialize<object>(storageState, Helpers.JsonExtensions.DefaultJsonSerializerOptions));
+            args.Add("storageState", JsonDocument.Parse(storageState!).RootElement);
         }
 
         var context = await _playwright.SendMessageToServerAsync<APIRequestContext>(

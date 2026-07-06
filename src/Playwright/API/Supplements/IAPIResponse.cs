@@ -23,6 +23,7 @@
  */
 
 using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Text.Json;
 using System.Threading.Tasks;
 
@@ -30,5 +31,7 @@ namespace Microsoft.Playwright;
 
 public partial interface IAPIResponse : IAsyncDisposable
 {
+    [RequiresUnreferencedCode("IAPIResponse.JsonAsync<T> deserializes to a user-specified type")]
+    [RequiresDynamicCode("IAPIResponse.JsonAsync<T> deserializes to a user-specified type")]
     Task<T?> JsonAsync<T>(JsonSerializerOptions? options = null);
 }

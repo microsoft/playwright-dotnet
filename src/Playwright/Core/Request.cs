@@ -160,18 +160,18 @@ internal class Request : ChannelOwner, IRequest
         }
 
         string content = PostData;
-        Headers.TryGetValue("content-type", out string contentType);
-        if (contentType.Contains("application/x-www-form-urlencoded"))
+        Headers.TryGetValue("content-type", out string? contentType);
+        if (contentType?.Contains("application/x-www-form-urlencoded") == true)
         {
             var parsed = HttpUtility.ParseQueryString(PostData);
             var dictionary = new Dictionary<string, string>();
 
             foreach (string key in parsed.Keys)
             {
-                dictionary[key] = parsed[key];
+                dictionary[key] = parsed[key]!;
             }
 
-            content = JsonSerializer.Serialize(dictionary);
+            content = dictionary.ToJson();
         }
 
         if (content == null)

@@ -23,6 +23,7 @@
  */
 
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
 
 namespace Microsoft.Playwright;
@@ -71,7 +72,7 @@ public partial interface IJSHandle
     /// evaluates to a function, the function is automatically invoked.
     /// </param>
     /// <param name="arg">Optional argument to pass to <see cref="IJSHandle.EvaluateAsync"/>.</param>
-    Task<T> EvaluateAsync<T>(string expression, object? arg = default);
+    Task<T> EvaluateAsync<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors | DynamicallyAccessedMemberTypes.PublicProperties)] T>(string expression, object? arg = default);
 
     /// <summary>
     /// <para>
@@ -133,5 +134,5 @@ public partial interface IJSHandle
     /// It will throw an error if the object has circular references.
     /// </para>
     /// </remarks>
-    Task<T> JsonValueAsync<T>();
+    Task<T> JsonValueAsync<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors | DynamicallyAccessedMemberTypes.PublicProperties)] T>();
 }

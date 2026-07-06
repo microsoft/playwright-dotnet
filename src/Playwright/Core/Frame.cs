@@ -25,6 +25,7 @@
  */
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.IO;
 using System.Linq;
@@ -244,7 +245,7 @@ internal class Frame : ChannelOwner, IFrame
             }
             else
             {
-                await waiter.WaitForEventAsync<WaitUntilState>(this, "LoadState", s =>
+                await waiter.WaitForEventAsync<Frame, WaitUntilState>(this, "LoadState", s =>
                 {
                     waiter.Log($"  \"{s}\" event fired");
                     return s == loadState;
@@ -297,7 +298,7 @@ internal class Frame : ChannelOwner, IFrame
 
         waiter.Log($"waiting for navigation{toUrl} until \"{waitUntil}\"");
 
-        var navigatedEventTask = waiter.WaitForEventAsync<FrameNavigatedEventArgs>(
+        var navigatedEventTask = waiter.WaitForEventAsync<Frame, FrameNavigatedEventArgs>(
             this,
             "Navigated",
             e =>
@@ -328,7 +329,7 @@ internal class Frame : ChannelOwner, IFrame
 
         if (!_loadStates.Select(s => s.ToValueString()).Contains(waitUntil.Value.ToValueString()))
         {
-            await waiter.WaitForEventAsync<WaitUntilState>(
+            await waiter.WaitForEventAsync<Frame, WaitUntilState>(
                 this,
                 "LoadState",
                 e =>
@@ -718,7 +719,7 @@ internal class Frame : ChannelOwner, IFrame
             }).ConfigureAwait(false));
 
     [MethodImpl(MethodImplOptions.NoInlining)]
-    public async Task<T> EvaluateAsync<T>(string script, object? arg = null)
+    public async Task<T> EvaluateAsync<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors | DynamicallyAccessedMemberTypes.PublicProperties)] T>(string script, object? arg = null)
         => ScriptsHelper.ParseEvaluateResult<T>(await SendMessageToServerAsync<JsonElement?>(
             "evaluateExpression",
             new Dictionary<string, object?>
@@ -736,7 +737,7 @@ internal class Frame : ChannelOwner, IFrame
             strict: null).ConfigureAwait(false));
 
     [MethodImpl(MethodImplOptions.NoInlining)]
-    public async Task<T> EvalOnSelectorAsync<T>(string selector, string script, object? arg = null)
+    public async Task<T> EvalOnSelectorAsync<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors | DynamicallyAccessedMemberTypes.PublicProperties)] T>(string selector, string script, object? arg = null)
         => ScriptsHelper.ParseEvaluateResult<T>(await _evalOnSelectorAsync(
             selector: selector,
             script,
@@ -744,7 +745,7 @@ internal class Frame : ChannelOwner, IFrame
             strict: null).ConfigureAwait(false));
 
     [MethodImpl(MethodImplOptions.NoInlining)]
-    public async Task<T> EvalOnSelectorAsync<T>(string selector, string expression, object? arg = null, FrameEvalOnSelectorOptions? options = null)
+    public async Task<T> EvalOnSelectorAsync<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors | DynamicallyAccessedMemberTypes.PublicProperties)] T>(string selector, string expression, object? arg = null, FrameEvalOnSelectorOptions? options = null)
         => ScriptsHelper.ParseEvaluateResult<T>(await _evalOnSelectorAsync(
             selector: selector,
             expression,
@@ -770,7 +771,7 @@ internal class Frame : ChannelOwner, IFrame
             arg: ScriptsHelper.SerializedArgument(arg)).ConfigureAwait(false));
 
     [MethodImpl(MethodImplOptions.NoInlining)]
-    public async Task<T> EvalOnSelectorAllAsync<T>(string selector, string script, object? arg = null)
+    public async Task<T> EvalOnSelectorAllAsync<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors | DynamicallyAccessedMemberTypes.PublicProperties)] T>(string selector, string script, object? arg = null)
         => ScriptsHelper.ParseEvaluateResult<T>(await _evalOnSelectorAllAsync(
             selector: selector,
             script,
@@ -1024,9 +1025,9 @@ internal class Frame : ChannelOwner, IFrame
         {
             waiter.RejectImmediately(((Page)Page)._closeErrorWithReason());
         }
-        waiter.RejectOnEvent<IPage>(Page, PageEvent.Close.Name, () => ((Page)Page)._closeErrorWithReason());
-        waiter.RejectOnEvent<IPage>(Page, PageEvent.Crash.Name, new PlaywrightException("Navigation failed because page was crashed!"));
-        waiter.RejectOnEvent<IFrame>(
+        waiter.RejectOnEvent<IPage, IPage>(Page, PageEvent.Close.Name, () => ((Page)Page)._closeErrorWithReason());
+        waiter.RejectOnEvent<IPage, IPage>(Page, PageEvent.Crash.Name, new PlaywrightException("Navigation failed because page was crashed!"));
+        waiter.RejectOnEvent<IPage, IFrame>(
             Page,
             "FrameDetached",
             new PlaywrightException("Navigating frame was detached!"),

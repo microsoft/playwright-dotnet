@@ -26,7 +26,7 @@ namespace Microsoft.Playwright.Helpers;
 
 internal static class ClassUtils
 {
-    internal static T Clone<T>(object? source)
+    internal static T Clone<[System.Diagnostics.CodeAnalysis.DynamicallyAccessedMembers(System.Diagnostics.CodeAnalysis.DynamicallyAccessedMemberTypes.PublicProperties)] T>(object? source)
         where T : new()
     {
         T target = new();
@@ -35,11 +35,9 @@ internal static class ClassUtils
             return target;
         }
 
-        var sourceType = source.GetType();
-        var targetType = target.GetType();
-        foreach (var sourceProperty in sourceType.GetProperties())
+        foreach (var sourceProperty in typeof(T).GetProperties())
         {
-            var targetProperty = targetType.GetProperty(sourceProperty.Name);
+            var targetProperty = typeof(T).GetProperty(sourceProperty.Name);
             if (targetProperty == null)
             {
                 continue;

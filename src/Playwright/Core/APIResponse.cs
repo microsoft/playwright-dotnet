@@ -23,6 +23,7 @@
  */
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Text.Json;
 using System.Threading.Tasks;
@@ -96,8 +97,14 @@ internal class APIResponse : IAPIResponse
         }
     }
 
-    public async Task<JsonElement?> JsonAsync() => JsonSerializer.Deserialize<JsonElement>(await BodyAsync().ConfigureAwait(false));
+    public async Task<JsonElement?> JsonAsync()
+    {
+        var bytes = await BodyAsync().ConfigureAwait(false);
+        return JsonDocument.Parse(bytes).RootElement;
+    }
 
+    [RequiresUnreferencedCode("APIResponse.JsonAsync<T> deserializes to a user-specified type")]
+    [RequiresDynamicCode("APIResponse.JsonAsync<T> deserializes to a user-specified type")]
     public async Task<T?> JsonAsync<T>(JsonSerializerOptions? options) => JsonSerializer.Deserialize<T>(await BodyAsync().ConfigureAwait(false), options);
 
     public async Task<string> TextAsync()

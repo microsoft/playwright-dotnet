@@ -24,14 +24,16 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.ComponentModel;
+using System.Diagnostics.CodeAnalysis;
 using System.Dynamic;
 using System.Globalization;
 using System.Linq;
 using System.Numerics;
-using System.Runtime.Serialization;
+using System.Runtime.CompilerServices;
 using System.Text.Json;
+using System.Text.Json.Nodes;
 using System.Text.RegularExpressions;
+using System.Threading;
 using Microsoft.Playwright.Core;
 using Microsoft.Playwright.Helpers;
 
@@ -39,98 +41,102 @@ namespace Microsoft.Playwright.Transport.Converters;
 
 internal static class EvaluateArgumentValueConverter
 {
-    private static readonly JsonSerializerOptions _evaluateArgumentValueConverterSerializerOptions = new()
+    internal static JsonObject Serialize(object? value, List<EvaluateArgumentGuidElement> handles, VisitorInfo visitorInfo)
     {
-        ReferenceHandler = System.Text.Json.Serialization.ReferenceHandler.Preserve,
-    };
-
-    internal static object Serialize(object? value, List<EvaluateArgumentGuidElement> handles, VisitorInfo visitorInfo)
-    {
-        int id;
         if (value == null)
         {
-            return new { v = "null" };
+            return new JsonObject { ["v"] = JsonValue.Create("null") };
         }
 
         if (visitorInfo.Visited.TryGetValue(visitorInfo.Identity(value), out var @ref))
         {
-            return new Dictionary<string, object> { ["ref"] = @ref };
+            return new JsonObject { ["ref"] = JsonValue.Create(@ref) };
         }
 
         if (value is double nan && double.IsNaN(nan))
         {
-            return new { v = "NaN" };
+            return new JsonObject { ["v"] = JsonValue.Create("NaN") };
         }
 
         if (value is double infinity && double.IsPositiveInfinity(infinity))
         {
-            return new { v = "Infinity" };
+            return new JsonObject { ["v"] = JsonValue.Create("Infinity") };
         }
 
         if (value is double negativeInfinity && double.IsNegativeInfinity(negativeInfinity))
         {
-            return new { v = "-Infinity" };
+            return new JsonObject { ["v"] = JsonValue.Create("-Infinity") };
         }
 
         if (value is double negativeZero && negativeZero.IsNegativeZero())
         {
-            return new { v = "-0" };
+            return new JsonObject { ["v"] = JsonValue.Create("-0") };
         }
 
         if (value.GetType() == typeof(string))
         {
-            return new { s = value };
+            return new JsonObject { ["s"] = JsonValue.Create((string)value) };
         }
 
         if (value.GetType().IsEnum)
         {
-            return new { n = (int)value };
+            return new JsonObject { ["n"] = JsonValue.Create((int)value) };
         }
 
-        if (
-            value.GetType() == typeof(int) ||
-            value.GetType() == typeof(decimal) ||
-            value.GetType() == typeof(long) ||
-            value.GetType() == typeof(short) ||
-            value.GetType() == typeof(double) ||
-            value.GetType() == typeof(int?) ||
-            value.GetType() == typeof(decimal?) ||
-            value.GetType() == typeof(long?) ||
-            value.GetType() == typeof(short?) ||
-            value.GetType() == typeof(double?))
+        if (value is int i)
         {
-            return new { n = value };
+            return new JsonObject { ["n"] = JsonValue.Create(i) };
         }
 
-        if (value.GetType() == typeof(bool) || value.GetType() == typeof(bool?))
+        if (value is decimal)
         {
-            return new { b = value };
+            return new JsonObject { ["n"] = JsonValue.Create((double)value) };
+        }
+
+        if (value is long l)
+        {
+            return new JsonObject { ["n"] = JsonValue.Create(l) };
+        }
+
+        if (value is short s)
+        {
+            return new JsonObject { ["n"] = JsonValue.Create((int)s) };
+        }
+
+        if (value is double dbl)
+        {
+            return new JsonObject { ["n"] = JsonValue.Create(dbl) };
+        }
+
+        if (value is bool b)
+        {
+            return new JsonObject { ["b"] = JsonValue.Create(b) };
         }
 
         if (value is DateTime date)
         {
-            return new { d = date.ToString("o", CultureInfo.InvariantCulture) };
+            return new JsonObject { ["d"] = JsonValue.Create(date.ToString("o", CultureInfo.InvariantCulture)) };
         }
 
         if (value is Uri uri)
         {
-            return new { u = uri.ToString() };
+            return new JsonObject { ["u"] = JsonValue.Create(uri.ToString()) };
         }
 
         if (value is BigInteger bigInteger)
         {
-            return new { bi = bigInteger.ToString(CultureInfo.InvariantCulture) };
+            return new JsonObject { ["bi"] = JsonValue.Create(bigInteger.ToString(CultureInfo.InvariantCulture)) };
         }
 
         if (value is Exception exception)
         {
-            return new Dictionary<string, object>
+            return new JsonObject
             {
-                ["e"] = new Dictionary<string, object>
+                ["e"] = new JsonObject
                 {
-                    ["n"] = exception.GetType().Name,
-                    ["m"] = exception.Message,
-                    ["s"] = exception.StackTrace ?? string.Empty,
+                    ["n"] = JsonValue.Create(exception.GetType().Name),
+                    ["m"] = JsonValue.Create(exception.Message),
+                    ["s"] = JsonValue.Create(exception.StackTrace ?? string.Empty),
                 },
             };
         }
@@ -138,72 +144,90 @@ internal static class EvaluateArgumentValueConverter
         if (value is Regex regex)
         {
             var (p, f) = regex.GetSourceAndFlags();
-            return new { r = new { p, f } };
+            return new JsonObject
+            {
+                ["r"] = new JsonObject
+                {
+                    ["p"] = JsonValue.Create(p),
+                    ["f"] = JsonValue.Create(f),
+                },
+            };
         }
 
         if (value is Guid guid)
         {
-            return new { s = guid.ToString() };
+            return new JsonObject { ["s"] = JsonValue.Create(guid.ToString()) };
         }
 
         if (value is ExpandoObject)
         {
-            var o = new List<object>();
-            id = ++visitorInfo.LastId;
+            var entries = new List<JsonNode?>();
+            int id = ++visitorInfo.LastId;
             visitorInfo.Visited.Add(visitorInfo.Identity(value), id);
-            foreach (KeyValuePair<string, object> property in (IDictionary<string, object>)value)
+            foreach (KeyValuePair<string, object?> property in (IDictionary<string, object?>)value)
             {
-                o.Add(new { k = property.Key, v = Serialize(property.Value, handles, visitorInfo) });
+                entries.Add(new JsonObject
+                {
+                    ["k"] = JsonValue.Create(property.Key),
+                    ["v"] = Serialize(property.Value, handles, visitorInfo),
+                });
             }
-            return new { o, id };
+            return new JsonObject { ["o"] = new JsonArray(entries.ToArray()), ["id"] = JsonValue.Create(id) };
         }
 
-        if (value is IDictionary dictionary && dictionary.Keys.OfType<string>().Any())
+        if (value is IDictionary dictionary)
         {
-            var o = new List<object>();
-            id = ++visitorInfo.LastId;
-            visitorInfo.Visited.Add(visitorInfo.Identity(value), id);
+            bool hasStringKey = false;
             foreach (object key in dictionary.Keys)
             {
-                object obj = dictionary[key];
-                o.Add(new { k = key.ToString(), v = Serialize(obj, handles, visitorInfo) });
+                if (key is string)
+                {
+                    hasStringKey = true;
+                    break;
+                }
             }
 
-            return new { o, id };
+            if (hasStringKey)
+            {
+                var entries = new List<JsonNode?>();
+                int id = ++visitorInfo.LastId;
+                visitorInfo.Visited.Add(visitorInfo.Identity(value), id);
+                foreach (object key in dictionary.Keys)
+                {
+                    entries.Add(new JsonObject
+                    {
+                        ["k"] = JsonValue.Create(key.ToString()),
+                        ["v"] = Serialize(dictionary[key], handles, visitorInfo),
+                    });
+                }
+
+                return new JsonObject { ["o"] = new JsonArray(entries.ToArray()), ["id"] = JsonValue.Create(id) };
+            }
         }
 
-        if (value is IEnumerable array)
+        if (value is IEnumerable enumerable)
         {
-            var a = new List<object>();
-            id = ++visitorInfo.LastId;
+            var items = new List<JsonNode?>();
+            int id = ++visitorInfo.LastId;
             visitorInfo.Visited.Add(visitorInfo.Identity(value), id);
-            foreach (object item in array)
+            foreach (object item in enumerable)
             {
-                a.Add(Serialize(item, handles, visitorInfo));
+                items.Add(Serialize(item, handles, visitorInfo));
             }
 
-            return new { a, id };
+            return new JsonObject { ["a"] = new JsonArray(items.ToArray()), ["id"] = JsonValue.Create(id) };
         }
 
         if (value is ChannelOwner channelOwner)
         {
             handles.Add(new() { Guid = channelOwner.Guid });
-            return new { h = handles.Count - 1 };
+            return new JsonObject { ["h"] = JsonValue.Create(handles.Count - 1) };
         }
 
-        id = ++visitorInfo.LastId;
-        visitorInfo.Visited.Add(visitorInfo.Identity(value), id);
-        var entries = new List<object>();
-        foreach (PropertyDescriptor propertyDescriptor in TypeDescriptor.GetProperties(value))
-        {
-            object obj = propertyDescriptor.GetValue(value);
-            entries.Add(new { k = propertyDescriptor.Name, v = Serialize(obj, handles, visitorInfo) });
-        }
-
-        return new { o = entries, id };
+        throw new PlaywrightException($"Cannot serialize type '{value.GetType().FullName}'. Pass IDictionary<string, object?>, a supported primitive type, or an array of supported types.");
     }
 
-    internal static object? Deserialize(JsonElement result, Type t)
+    internal static object? Deserialize(JsonElement result, [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors | DynamicallyAccessedMemberTypes.PublicProperties)] Type t)
     {
         var parsed = ParseEvaluateResultToExpando(result, new Dictionary<int, object>());
 
@@ -220,14 +244,15 @@ internal static class EvaluateArgumentValueConverter
             {
                 return null;
             }
-            return JsonSerializer.SerializeToElement(parsed, _evaluateArgumentValueConverterSerializerOptions);
+            var jsonStr = JsonSerializer.Serialize(parsed, parsed!.GetType(), PlaywrightJsonContext.Default);
+            return JsonDocument.Parse(jsonStr).RootElement;
         }
 
         // Convert recursively to a requested type.
         return ToExpectedType(parsed, t, new Dictionary<object, object>());
     }
 
-    private static object? ToExpectedType(object? parsed, Type t, IDictionary<object, object> visited)
+    private static object? ToExpectedType(object? parsed, [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors | DynamicallyAccessedMemberTypes.PublicProperties)] Type t, IDictionary<object, object> visited)
     {
         if (parsed == null)
         {
@@ -241,11 +266,12 @@ internal static class EvaluateArgumentValueConverter
 
         if (parsed is Array parsedArray)
         {
-            var result = (IList)Activator.CreateInstance(t, parsedArray.Length);
+            var result = (IList)Activator.CreateInstance(t, parsedArray.Length)!;
             visited.Add(parsed, result);
+            var elementType = t.GetElementType()!;
             for (int i = 0; i < parsedArray.Length; ++i)
             {
-                result[i] = ToExpectedType(parsedArray.GetValue(i), t.GetElementType(), visited);
+                result[i] = InterpretValue(parsedArray.GetValue(i), elementType);
             }
             return result;
         }
@@ -255,7 +281,7 @@ internal static class EvaluateArgumentValueConverter
             object objResult;
             try
             {
-                objResult = Activator.CreateInstance(t);
+                objResult = Activator.CreateInstance(t)!;
             }
             catch (Exception ex)
             {
@@ -266,13 +292,25 @@ internal static class EvaluateArgumentValueConverter
             foreach (var kv in parsedExpando)
             {
                 var property = Array.Find(t.GetProperties(), prop => string.Equals(prop.Name, kv.Key, StringComparison.OrdinalIgnoreCase));
-                property?.SetValue(objResult, ToExpectedType(kv.Value, property.PropertyType, visited));
+                if (property != null)
+                {
+                    property.SetValue(objResult, InterpretValue(kv.Value, property.PropertyType));
+                }
             }
 
             return objResult;
         }
 
         return ChangeType(parsed, t);
+    }
+
+    private static object? InterpretValue(object? parsed, Type targetType)
+    {
+        if (parsed == null)
+        {
+            return null;
+        }
+        return ChangeType(parsed, targetType);
     }
 
     private static object? ChangeType(object value, Type conversion)
@@ -286,7 +324,7 @@ internal static class EvaluateArgumentValueConverter
                 return null;
             }
 
-            t = Nullable.GetUnderlyingType(t);
+            t = Nullable.GetUnderlyingType(t)!;
         }
 
         if (t == typeof(Guid))
@@ -295,10 +333,10 @@ internal static class EvaluateArgumentValueConverter
             {
                 return Guid.Empty;
             }
-            return Guid.Parse(value.ToString());
+            return Guid.Parse(value.ToString()!);
         }
 
-        return Convert.ChangeType(value, t, CultureInfo.InvariantCulture);
+        return Convert.ChangeType(value, t, CultureInfo.InvariantCulture)!;
     }
 
     private static object? ParseEvaluateResultToExpando(JsonElement result, IDictionary<int, object> refs)
@@ -416,19 +454,35 @@ internal static class EvaluateArgumentValueConverter
 
     internal class VisitorInfo
     {
+        private readonly Dictionary<object, long> _objectIds = new(ReferenceEqualityComparer.Instance);
+        private long _nextId;
+
         internal VisitorInfo()
         {
             Visited = new Dictionary<long, int>();
-            IDGenerator = new ObjectIDGenerator();
         }
 
         internal Dictionary<long, int> Visited { get; set; }
 
         internal int LastId { get; set; }
 
-        private ObjectIDGenerator IDGenerator { get; }
-
         internal long Identity(object obj)
-            => IDGenerator.GetId(obj, out _);
+        {
+            if (!_objectIds.TryGetValue(obj, out var id))
+            {
+                id = Interlocked.Increment(ref _nextId);
+                _objectIds[obj] = id;
+            }
+            return id;
+        }
+    }
+
+    internal sealed class ReferenceEqualityComparer : IEqualityComparer<object>
+    {
+        public static ReferenceEqualityComparer Instance { get; } = new();
+
+        public new bool Equals(object? x, object? y) => ReferenceEquals(x, y);
+
+        public int GetHashCode(object obj) => System.Runtime.CompilerServices.RuntimeHelpers.GetHashCode(obj);
     }
 }

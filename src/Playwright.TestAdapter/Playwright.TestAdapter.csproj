@@ -9,7 +9,7 @@
       Microsoft.Playwright.NUnit and Microsoft.Playwright.MSTest packages.
     </Description>
     <PackageIcon>icon.png</PackageIcon>
-    <TargetFramework>netstandard2.0</TargetFramework>
+    <TargetFramework>net8.0</TargetFramework>
     <PublishRepositoryUrl>true</PublishRepositoryUrl>
     <RootNamespace>Microsoft.Playwright.TestAdapter</RootNamespace>
     <ReleaseVersion>0.0.0</ReleaseVersion>

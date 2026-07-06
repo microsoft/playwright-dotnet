@@ -22,6 +22,8 @@
  * SOFTWARE.
  */
 
+using System.Collections.Generic;
+
 namespace Microsoft.Playwright.Tests;
 
 ///<playwright-file>dispatchevent.spec.ts</playwright-file>
@@ -166,14 +168,14 @@ public class PageDispatchEventTests : PageTestEx
     {
         await Page.GotoAsync(Server.Prefix + "/drag-n-drop.html");
         var dataTransfer = await Page.EvaluateHandleAsync("() => new DataTransfer()");
-        await Page.DispatchEventAsync("#source", "dragstart", new { dataTransfer });
-        await Page.DispatchEventAsync("#target", "drop", new { dataTransfer });
+        await Page.DispatchEventAsync("#source", "dragstart", new Dictionary<string, object?> { ["dataTransfer"] = dataTransfer });
+        await Page.DispatchEventAsync("#target", "drop", new Dictionary<string, object?> { ["dataTransfer"] = dataTransfer });
 
         var source = await Page.QuerySelectorAsync("#source");
         var target = await Page.QuerySelectorAsync("#target");
         Assert.True(await Page.EvaluateAsync<bool>(@"() => {
                 return source.parentElement === target;
-            }", new { source, target }));
+            }", new Dictionary<string, object?> { ["source"] = source, ["target"] = target }));
     }
 
     [PlaywrightTest("page-dispatchevent.spec.ts", "should dispatch drag drop events")]
@@ -183,13 +185,13 @@ public class PageDispatchEventTests : PageTestEx
         await Page.GotoAsync(Server.Prefix + "/drag-n-drop.html");
         var dataTransfer = await Page.EvaluateHandleAsync("() => new DataTransfer()");
         var source = await Page.QuerySelectorAsync("#source");
-        await source.DispatchEventAsync("dragstart", new { dataTransfer });
+        await source.DispatchEventAsync("dragstart", new Dictionary<string, object?> { ["dataTransfer"] = dataTransfer });
         var target = await Page.QuerySelectorAsync("#target");
-        await target.DispatchEventAsync("drop", new { dataTransfer });
+        await target.DispatchEventAsync("drop", new Dictionary<string, object?> { ["dataTransfer"] = dataTransfer });
 
         Assert.True(await Page.EvaluateAsync<bool>(@"() => {
                 return source.parentElement === target;
-            }", new { source, target }));
+            }", new Dictionary<string, object?> { ["source"] = source, ["target"] = target }));
     }
 
     [PlaywrightTest("page-dispatchevent.spec.ts", "should dispatch click event")]

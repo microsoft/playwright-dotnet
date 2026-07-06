@@ -24,6 +24,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -112,27 +113,29 @@ internal class Waiter : IDisposable
         _immediateError = exception;
     }
 
-    internal void RejectOnEvent<T>(
-        object eventSource,
+    internal void RejectOnEvent<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicEvents)] TEventSource, T>(
+        TEventSource eventSource,
         string e,
         PlaywrightException navigationException,
         Func<T, bool>? predicate = null)
+        where TEventSource : class
     {
-        RejectOnEvent(eventSource, e, () => navigationException, predicate);
+        RejectOnEvent<TEventSource, T>(eventSource, e, () => navigationException, predicate);
     }
 
-    internal void RejectOnEvent<T>(
-        object eventSource,
+    internal void RejectOnEvent<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicEvents)] TEventSource, T>(
+        TEventSource eventSource,
         string e,
         Func<PlaywrightException> navigationException,
         Func<T, bool>? predicate = null)
+        where TEventSource : class
     {
         if (eventSource == null)
         {
             return;
         }
 
-        var (task, dispose) = GetWaitForEventTask(eventSource, e, predicate);
+        var (task, dispose) = GetWaitForEventTask<TEventSource, T>(eventSource, e, predicate);
         RejectOn(
             task.ContinueWith(_ => throw navigationException(), _onDisposeCts.Token, TaskContinuationOptions.RunContinuationsAsynchronously, TaskScheduler.Current),
             dispose);
@@ -151,24 +154,27 @@ internal class Waiter : IDisposable
             () => cts.Cancel());
     }
 
-    internal Task<T> WaitForEventAsync<T>(object eventSource, string e, Func<T, bool>? predicate)
+    internal Task<T> WaitForEventAsync<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicEvents)] TEventSource, T>(TEventSource eventSource, string e, Func<T, bool>? predicate)
+        where TEventSource : class
     {
-        var (task, dispose) = GetWaitForEventTask(eventSource, e, predicate);
+        var (task, dispose) = GetWaitForEventTask<TEventSource, T>(eventSource, e, predicate);
         return WaitForPromiseAsync(task, dispose);
     }
 
-    internal Task<object> WaitForEventAsync(object eventSource, string e)
+    internal Task<object> WaitForEventAsync<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicEvents)] TEventSource>(TEventSource eventSource, string e)
+        where TEventSource : class
     {
-        var (task, dispose) = GetWaitForEventTask<object>(eventSource, e, null);
+        var (task, dispose) = GetWaitForEventTask<TEventSource, object>(eventSource, e, null);
         return WaitForPromiseAsync(task, dispose);
     }
 
-    internal (Task<T> Task, Action Dispose) GetWaitForEventTask<T>(object eventSource, string e, Func<T, bool>? predicate)
+    internal (Task<T> Task, Action Dispose) GetWaitForEventTask<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicEvents)] TEventSource, T>(TEventSource eventSource, string e, Func<T, bool>? predicate)
+        where TEventSource : class
     {
-        var info = eventSource.GetType().GetEvent(e) ?? eventSource.GetType().BaseType.GetEvent(e);
+        var info = GetEvent(typeof(TEventSource), e);
 
         var eventTsc = new TaskCompletionSource<T>();
-        void EventHandler(object sender, T e)
+        void EventHandler(object? sender, T e)
         {
             try
             {
@@ -186,11 +192,11 @@ internal class Waiter : IDisposable
                 eventTsc.TrySetException(ex);
             }
 
-            info.RemoveEventHandler(eventSource, (EventHandler<T>)EventHandler);
+            info!.RemoveEventHandler(eventSource, (EventHandler<T>)EventHandler);
         }
 
-        info.AddEventHandler(eventSource, (EventHandler<T>)EventHandler);
-        return (eventTsc.Task, () => info.RemoveEventHandler(eventSource, (EventHandler<T>)EventHandler));
+        info!.AddEventHandler(eventSource, (EventHandler<T>)EventHandler);
+        return (eventTsc.Task, () => info!.RemoveEventHandler(eventSource, (EventHandler<T>)EventHandler));
     }
 
     internal async Task<T> WaitForPromiseAsync<T>(Task<T> task, Action? dispose = null)
@@ -245,9 +251,16 @@ internal class Waiter : IDisposable
         }
         catch
         {
-            cts.Cancel();
+            await cts.CancelAsync().ConfigureAwait(false);
             throw;
         }
+    }
+
+    private static System.Reflection.EventInfo? GetEvent(
+        [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicEvents)] Type type,
+        string name)
+    {
+        return type.GetEvent(name) ?? type.BaseType?.GetEvent(name);
     }
 
     private static string FormatLogRecording(List<string> logs)

@@ -22,6 +22,7 @@
  * SOFTWARE.
  */
 
+using System.Collections.Generic;
 using System.Text.Json;
 
 namespace Microsoft.Playwright.Tests;
@@ -66,7 +67,7 @@ public class PageExposeFunctionTests : PageTestEx
                 return window['fooValue'];
             }");
 
-        await Page.ExposeFunctionAsync("handle", () => new[] { new { foo = fooHandle } });
+        await Page.ExposeFunctionAsync("handle", () => new Dictionary<string, object?>[] { new Dictionary<string, object?> { ["foo"] = fooHandle } });
 
         Assert.True(await Page.EvaluateAsync<bool>(@"async function() {
                 const value = await window['handle']();

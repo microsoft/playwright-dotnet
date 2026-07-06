@@ -24,6 +24,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
@@ -334,7 +335,7 @@ public partial interface IFrame
     /// </param>
     /// <param name="arg">Optional argument to pass to <see cref="IFrame.EvalOnSelectorAsync"/>.</param>
     /// <param name="options">Call options</param>
-    Task<T> EvalOnSelectorAsync<T>(string selector, string expression, object? arg = default, FrameEvalOnSelectorOptions? options = default);
+    Task<T> EvalOnSelectorAsync<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors | DynamicallyAccessedMemberTypes.PublicProperties)] T>(string selector, string expression, object? arg = default, FrameEvalOnSelectorOptions? options = default);
 
     /// <summary>
     /// <para>
@@ -360,7 +361,7 @@ public partial interface IFrame
     /// evaluates to a function, the function is automatically invoked.
     /// </param>
     /// <param name="arg">Optional argument to pass to <see cref="IFrame.EvalOnSelectorAllAsync"/>.</param>
-    Task<T> EvalOnSelectorAllAsync<T>(string selector, string expression, object? arg = default);
+    Task<T> EvalOnSelectorAllAsync<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors | DynamicallyAccessedMemberTypes.PublicProperties)] T>(string selector, string expression, object? arg = default);
 
     /// <summary>
     /// <para>Returns the return value of <see cref="IFrame.EvaluateAsync"/>.</para>
@@ -397,7 +398,7 @@ public partial interface IFrame
     /// evaluates to a function, the function is automatically invoked.
     /// </param>
     /// <param name="arg">Optional argument to pass to <see cref="IFrame.EvaluateAsync"/>.</param>
-    Task<T> EvaluateAsync<T>(string expression, object? arg = default);
+    Task<T> EvaluateAsync<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors | DynamicallyAccessedMemberTypes.PublicProperties)] T>(string expression, object? arg = default);
 
     /// <summary>
     /// <para>Returns the return value of <see cref="IFrame.EvaluateHandleAsync"/> as a <see cref="IJSHandle"/>.</para>
