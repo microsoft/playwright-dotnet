@@ -18,6 +18,7 @@ var launchOptions = new ClearcoteLaunchOptions
     ClearcotePlatform = "windows",
     Brand = "Chrome",
     BrandVersion = "149",
+    TlsProfile = "match-persona",
     GpuVendor = "Google",
     GpuRenderer = "ANGLE (Google, Vulkan 1.3.0 (SwiftShader Device))",
     HardwareConcurrency = 8,

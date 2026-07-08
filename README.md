@@ -63,6 +63,9 @@ var browser = await ClearcoteBrowser.LaunchAsync(playwright.Chromium, new()
     Headless = true,
     Fingerprint = "my-persona",
     ClearcotePlatform = "windows",
+    Brand = "Chrome",
+    BrandVersion = "149",
+    TlsProfile = "match-persona",
     Humanize = true,
 });
 
