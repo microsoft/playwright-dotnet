@@ -3,7 +3,7 @@
   <PropertyGroup>
     <OutputType>Exe</OutputType>
     <Title>Playwright.AOTFork</Title>
-    <PackageId>Playwright.AOTFork</PackageId>
+    <PackageId>Playwright.Clearcote</PackageId>
     <Summary>The .NET port of Playwright, used to automate Chromium, Firefox and WebKit with a single API.</Summary>
     <Description>Playwright enables reliable end-to-end testing for modern web apps. It is built to enable cross-browser web automation that is ever-green, capable, reliable and fast. Learn more at https://playwright.dev/dotnet/.</Description>
     <PackageIcon>icon.png</PackageIcon>

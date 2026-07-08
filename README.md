@@ -16,6 +16,12 @@ A **NativeAOT-compatible** fork of [playwright-dotnet](https://github.com/micros
 
 [Clearcote]: https://github.com/clearcotelabs/clearcote-browser
 
+## Install
+
+```bash
+dotnet add package Playwright.Clearcote --version 1.0.0
+```
+
 ## Quick start
 
 ```bash

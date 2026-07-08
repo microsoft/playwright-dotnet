@@ -827,8 +827,49 @@ internal static partial class Clearcote
         return ResolveExecutablePathAsync(cacheDir, quiet, autoUpdate, honorEnvironmentBinary: true);
     }
 
-    internal static Task<string> DownloadAsync(string? cacheDir, bool quiet, bool autoUpdate)
-        => ResolveExecutablePathAsync(cacheDir, quiet, autoUpdate, honorEnvironmentBinary: false);
+    internal static Task<string> DownloadAsync(string? destPath, string? cacheDir, bool quiet, bool autoUpdate)
+        => string.IsNullOrEmpty(destPath)
+            ? ResolveExecutablePathAsync(cacheDir, quiet, autoUpdate, honorEnvironmentBinary: false)
+            : DownloadToDestinationAsync(destPath, quiet, autoUpdate);
+
+    private static async Task<string> DownloadToDestinationAsync(string destPath, bool quiet, bool autoUpdate)
+    {
+        var rel = await ResolveReleaseAsync(quiet, autoUpdate).ConfigureAwait(false);
+        var tempDir = Path.Combine(Path.GetTempPath(), "clearcote-download-" + Guid.NewGuid().ToString("N"));
+        try
+        {
+            Directory.CreateDirectory(tempDir);
+            var binaryPath = await FetchAndVerifyAsync(rel, tempDir, quiet).ConfigureAwait(false);
+            var destDir = Path.GetDirectoryName(destPath);
+            if (!string.IsNullOrEmpty(destDir))
+            {
+                Directory.CreateDirectory(destDir);
+            }
+
+            if (OperatingSystem.IsWindows())
+            {
+                File.Copy(binaryPath, destPath, overwrite: true);
+            }
+            else
+            {
+                File.Copy(binaryPath, destPath, overwrite: true);
+                File.SetUnixFileMode(destPath, UnixFileMode.UserRead | UnixFileMode.UserWrite | UnixFileMode.UserExecute | UnixFileMode.GroupRead | UnixFileMode.GroupExecute | UnixFileMode.OtherRead | UnixFileMode.OtherExecute);
+            }
+
+            Log(quiet, "ready: " + destPath);
+            return destPath;
+        }
+        finally
+        {
+            try
+            {
+                Directory.Delete(tempDir, recursive: true);
+            }
+            catch (Exception)
+            {
+            }
+        }
+    }
 
     private static async Task<string> ResolveExecutablePathAsync(string? cacheDir, bool quiet, bool autoUpdate, bool honorEnvironmentBinary)
     {

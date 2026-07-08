@@ -50,6 +50,7 @@ public static class ClearcoteBrowser
     /// <returns>The verified Clearcote browser executable path.</returns>
     public static Task<string> DownloadAsync(ClearcoteDownloadOptions? options = default)
         => Helpers.Clearcote.DownloadAsync(
+            options?.Dest,
             options?.CacheDir,
             options?.Quiet == true,
             Helpers.Clearcote.AutoUpdateRequested(options?.AutoUpdate));
