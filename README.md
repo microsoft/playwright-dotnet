@@ -1,9 +1,9 @@
 # Playwright for .NET — NativeAOT
 
-[!INCLUDE[Chromium](https://img.shields.io/badge/Chromium-149.0.7827-45ba4b)]()
-[!INCLUDE[Firefox](https://img.shields.io/badge/Firefox-151.0-45ba4b)]()
-[!INCLUDE[WebKit](https://img.shields.io/badge/WebKit-26.5-45ba4b)]()
-[!INCLUDE[Clearcote](https://img.shields.io/badge/Clearcote-v0.1.0--pre.18-blue)]()
+![Chromium 149](https://img.shields.io/badge/Chromium-149.0.7827-45ba4b)
+![Firefox 151](https://img.shields.io/badge/Firefox-151.0-45ba4b)
+![WebKit 26.5](https://img.shields.io/badge/WebKit-26.5-45ba4b)
+![Clearcote v0.1.0-pre.18](https://img.shields.io/badge/Clearcote-v0.1.0--pre.18-blue)
 
 A **NativeAOT-compatible** fork of [Playwright](https://playwright.dev) targeting `net10.0` with full trimming and ahead-of-time compilation — zero reflection, zero build warnings, zero runtime dynamic code.
 
