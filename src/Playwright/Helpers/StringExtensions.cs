@@ -659,8 +659,7 @@ internal static class StringExtensions
     }
 
     /// <summary>
-    /// Checks if the string is null or empty. This should be used instead of string.IsNullOrEmpty to avoid nullability warnings.
-    /// If we drop netstandard2.0 support, we can migrate to string.IsNullOrEmpty().
+    /// Checks if the string is null or empty while preserving nullable flow information for existing call sites.
     /// Relates https://stackoverflow.com/a/64066801.
     /// </summary>
     internal static bool IsNullOrEmpty([NotNullWhen(false)] this string? data)

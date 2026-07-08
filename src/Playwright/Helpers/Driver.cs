@@ -26,7 +26,6 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Reflection;
 using System.Runtime.InteropServices;
 
 namespace Microsoft.Playwright.Helpers;
@@ -37,7 +36,7 @@ internal static class Driver
     {
         ["PW_LANG_NAME"] = "csharp",
         ["PW_LANG_NAME_VERSION"] = $"{Environment.Version.Major}.{Environment.Version.Minor}",
-        ["PW_CLI_DISPLAY_VERSION"] = (typeof(Driver).Assembly.GetName().Version ?? new Version(1, 0)).ToString(3),
+        ["PW_CLI_DISPLAY_VERSION"] = "1.0.0",
     };
 
     internal static (string ExecutablePath, Func<string?, string> GetArgs) GetExecutablePath()

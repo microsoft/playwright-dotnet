@@ -39,11 +39,14 @@ internal class Browser : ChannelOwner, IBrowser
 {
     private readonly BrowserInitializer _initializer;
     private readonly TaskCompletionSource<bool> _closedTcs = new();
+    private readonly EventHandler<Exception> _onConnectionClose;
     internal readonly List<BrowserContext> _contexts = new();
     internal string? _tracesDir = null;
     internal BrowserType _browserType = null!;
     internal string? _closeReason;
-    private readonly EventHandler<Exception> _onConnectionClose;
+    private bool _clearcoteHeaded;
+    private bool _clearcoteHumanize;
+    private bool _clearcoteShowCursor;
 
     internal Browser(ChannelOwner parent, string guid, BrowserInitializer initializer) : base(parent, guid)
     {
@@ -165,6 +168,10 @@ internal class Browser : ChannelOwner, IBrowser
         {
             args.Add("noDefaultViewport", true);
         }
+        else if (_clearcoteHeaded && options.ViewportSize == null)
+        {
+            args.Add("noDefaultViewport", true);
+        }
         else
         {
             args.Add("viewport", options.ViewportSize);
@@ -172,6 +179,10 @@ internal class Browser : ChannelOwner, IBrowser
         }
 
         var context = await SendMessageToServerAsync<BrowserContext>("newContext", args).ConfigureAwait(false);
+        if (_clearcoteHumanize || _clearcoteShowCursor)
+        {
+            await context.ApplyClearcoteAsync(_clearcoteHumanize, _clearcoteShowCursor).ConfigureAwait(false);
+        }
         await context.InitializeHarFromOptionsAsync(options).ConfigureAwait(false);
         return context;
     }
@@ -273,6 +284,17 @@ internal class Browser : ChannelOwner, IBrowser
         {
             context._tracing._tracesDir = this._tracesDir;
             browserType.Playwright._selectors._contextsForSelectors.Add(context);
+        }
+    }
+
+    internal void ApplyClearcote(Clearcote.LaunchPatch patch)
+    {
+        _clearcoteHeaded = patch.Headed;
+        _clearcoteHumanize = patch.Humanize;
+        _clearcoteShowCursor = patch.ShowCursor;
+        foreach (var context in _contexts)
+        {
+            context.ApplyClearcoteAsync(_clearcoteHumanize, _clearcoteShowCursor).IgnoreException();
         }
     }
 

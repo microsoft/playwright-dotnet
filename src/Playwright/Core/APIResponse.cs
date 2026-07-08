@@ -23,9 +23,9 @@
  */
 using System;
 using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Text.Json;
+using System.Text.Json.Serialization.Metadata;
 using System.Threading.Tasks;
 using Microsoft.Playwright.Helpers;
 
@@ -103,9 +103,14 @@ internal class APIResponse : IAPIResponse
         return JsonDocument.Parse(bytes).RootElement;
     }
 
-    [RequiresUnreferencedCode("APIResponse.JsonAsync<T> deserializes to a user-specified type")]
-    [RequiresDynamicCode("APIResponse.JsonAsync<T> deserializes to a user-specified type")]
-    public async Task<T?> JsonAsync<T>(JsonSerializerOptions? options) => JsonSerializer.Deserialize<T>(await BodyAsync().ConfigureAwait(false), options);
+    public async Task<T?> JsonAsync<T>(JsonSerializerOptions? options)
+        => JsonSerializer.Deserialize(await BodyAsync().ConfigureAwait(false), ResolveUserJsonTypeInfo<T>(options));
+
+    public async Task<T?> JsonAsync<T>(JsonTypeInfo<T> jsonTypeInfo)
+    {
+        ArgumentNullException.ThrowIfNull(jsonTypeInfo);
+        return JsonSerializer.Deserialize(await BodyAsync().ConfigureAwait(false), jsonTypeInfo);
+    }
 
     public async Task<string> TextAsync()
     {
@@ -114,6 +119,17 @@ internal class APIResponse : IAPIResponse
     }
 
     internal string FetchUid() => _initializer.FetchUid;
+
+    private static JsonTypeInfo<T> ResolveUserJsonTypeInfo<T>(JsonSerializerOptions? options)
+    {
+        if (options?.TypeInfoResolver == null)
+        {
+            throw new PlaywrightException("JsonAsync<T>() requires source-generated JSON metadata in this NativeAOT fork. Pass a JsonTypeInfo<T> overload, or pass JsonSerializerOptions with TypeInfoResolver set to your JsonSerializerContext.");
+        }
+
+        return options.GetTypeInfo(typeof(T)) as JsonTypeInfo<T>
+            ?? throw new PlaywrightException($"JsonSerializerOptions did not resolve JSON metadata for '{typeof(T)}'. Add the type to your JsonSerializerContext or call JsonAsync<T>(JsonTypeInfo<T>).");
+    }
 
     internal async Task<string[]> FetchLogAsync()
     {

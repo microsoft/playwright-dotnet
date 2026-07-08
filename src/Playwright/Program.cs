@@ -98,7 +98,7 @@ public class Program
         var startInfo = new ProcessStartInfo(executablePath, getArgs(args.Length > 0 ? "\"" + string.Join("\" \"", args) + "\"" : null))
         {
             UseShellExecute = false,
-            // This works after net8.0-preview-4
+            // Supported after the .NET 8 preview that introduced ProcessStartInfo.WindowStyle on this path.
             // https://github.com/dotnet/runtime/pull/82662
             WindowStyle = ProcessWindowStyle.Hidden,
             RedirectStandardOutput = captureOutput,

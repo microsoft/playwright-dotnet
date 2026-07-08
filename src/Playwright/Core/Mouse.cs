@@ -24,6 +24,7 @@
 
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Microsoft.Playwright.Helpers;
 
 namespace Microsoft.Playwright.Core;
 
@@ -37,7 +38,9 @@ internal class Mouse : IMouse
     }
 
     public Task ClickAsync(float x, float y, MouseClickOptions? options = default)
-        => _page.SendMessageToServerAsync(
+        => _page.ClearcoteHumanizeState?.Humanize == true
+            ? ClearcoteHumanize.ClickAsync(_page, _page.ClearcoteHumanizeState, x, y, options?.Button, options?.ClickCount, options?.Delay)
+            : _page.SendMessageToServerAsync(
             "mouseClick",
             new Dictionary<string, object?>
             {
@@ -78,7 +81,9 @@ internal class Mouse : IMouse
             });
 
     public Task MoveAsync(float x, float y, MouseMoveOptions? options = default)
-        => _page.SendMessageToServerAsync(
+        => _page.ClearcoteHumanizeState?.Humanize == true
+            ? ClearcoteHumanize.GlideAsync(_page, _page.ClearcoteHumanizeState, x, y)
+            : _page.SendMessageToServerAsync(
             "mouseMove",
             new Dictionary<string, object?>
             {
@@ -97,7 +102,9 @@ internal class Mouse : IMouse
             });
 
     public Task WheelAsync(float deltaX, float deltaY)
-        => _page.SendMessageToServerAsync(
+        => _page.ClearcoteHumanizeState?.Humanize == true
+            ? ClearcoteHumanize.WheelAsync(_page, deltaX, deltaY)
+            : _page.SendMessageToServerAsync(
             "mouseWheel",
             new Dictionary<string, object?>
             {

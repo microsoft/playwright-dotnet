@@ -9,7 +9,7 @@
       and fixtures to enable using it within NUnit.
     </Description>
     <PackageIcon>icon.png</PackageIcon>
-    <TargetFrameworks>net8.0</TargetFrameworks>
+    <TargetFramework>net10.0</TargetFramework>
     <PublishRepositoryUrl>true</PublishRepositoryUrl>
     <RunWithWarnings>true</RunWithWarnings>
     <RootNamespace>Microsoft.Playwright.NUnit</RootNamespace>
@@ -22,7 +22,7 @@
     <NoWarn>CA2007</NoWarn>
     <PackageReadmeFile>README.md</PackageReadmeFile>
     <EnablePackageValidation>true</EnablePackageValidation>
-    <PackageValidationBaselineVersion>1.52.0</PackageValidationBaselineVersion>
+    <DisablePackageBaselineValidation>true</DisablePackageBaselineValidation>
   </PropertyGroup>
 
   <Import Project="../Common/Version.props" />

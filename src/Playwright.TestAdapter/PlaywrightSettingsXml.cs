@@ -72,7 +72,8 @@ public class PlaywrightSettingsXml
     private static object ParseXmlIntoClass(Type classType, XmlReader reader)
     {
         var endTag = reader.Name;
-        var options = Activator.CreateInstance(classType);
+        var options = Activator.CreateInstance(classType)
+            ?? throw new InvalidOperationException($"Could not create settings type {classType.FullName}");
         while (reader.Read())
         {
             if (reader.NodeType == XmlNodeType.EndElement && reader.Name == endTag)
@@ -133,7 +134,7 @@ public class PlaywrightSettingsXml
                     var enumValue = Enum.GetNames(t).Where(name =>
                     {
                         var field = t.GetField(name);
-                        return field.GetCustomAttribute<EnumMemberAttribute>()?.Value == value;
+                        return field != null && field.GetCustomAttribute<EnumMemberAttribute>()?.Value == value;
                     }).FirstOrDefault();
                     if (enumValue == null)
                     {
@@ -169,4 +170,3 @@ public class PlaywrightSettingsXml
     public float? ExpectTimeout { get; set; }
     public int? Retries { get; set; }
 }
-

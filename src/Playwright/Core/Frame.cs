@@ -382,15 +382,22 @@ internal class Frame : ChannelOwner, IFrame
         });
 
     [MethodImpl(MethodImplOptions.NoInlining)]
-    public Task TypeAsync(string selector, string text, FrameTypeOptions? options = default)
-        => SendMessageToServerAsync("type", new Dictionary<string, object?>
+    public async Task TypeAsync(string selector, string text, FrameTypeOptions? options = default)
+    {
+        if (await ClearcoteHumanize.TypeSelectorAsync(this, selector, text, options).ConfigureAwait(false))
+        {
+            return;
+        }
+
+        await SendMessageToServerAsync("type", new Dictionary<string, object?>
         {
             ["selector"] = selector,
             ["text"] = text,
             ["delay"] = options?.Delay,
             ["timeout"] = Timeout(options?.Timeout),
             ["strict"] = options?.Strict,
-        });
+        }).ConfigureAwait(false);
+    }
 
     [MethodImpl(MethodImplOptions.NoInlining)]
     public async Task<string?> GetAttributeAsync(string selector, string name, FrameGetAttributeOptions? options = default)
@@ -436,8 +443,14 @@ internal class Frame : ChannelOwner, IFrame
         }).ConfigureAwait(false))?.GetProperty("value").ToString();
 
     [MethodImpl(MethodImplOptions.NoInlining)]
-    public Task HoverAsync(string selector, FrameHoverOptions? options = default)
-        => SendMessageToServerAsync("hover", new Dictionary<string, object?>
+    public async Task HoverAsync(string selector, FrameHoverOptions? options = default)
+    {
+        if (await ClearcoteHumanize.HoverSelectorAsync(this, selector, options).ConfigureAwait(false))
+        {
+            return;
+        }
+
+        await SendMessageToServerAsync("hover", new Dictionary<string, object?>
         {
             ["selector"] = selector,
             ["force"] = options?.Force,
@@ -446,11 +459,18 @@ internal class Frame : ChannelOwner, IFrame
             ["trial"] = options?.Trial,
             ["timeout"] = Timeout(options?.Timeout),
             ["strict"] = options?.Strict,
-        });
+        }).ConfigureAwait(false);
+    }
 
     [MethodImpl(MethodImplOptions.NoInlining)]
-    public Task PressAsync(string selector, string key, FramePressOptions? options = default)
-        => SendMessageToServerAsync("press", new Dictionary<string, object?>
+    public async Task PressAsync(string selector, string key, FramePressOptions? options = default)
+    {
+        if (await ClearcoteHumanize.PressSelectorAsync(this, selector, key, options).ConfigureAwait(false))
+        {
+            return;
+        }
+
+        await SendMessageToServerAsync("press", new Dictionary<string, object?>
         {
             ["selector"] = selector,
             ["key"] = key,
@@ -460,7 +480,8 @@ internal class Frame : ChannelOwner, IFrame
             ["noWaitAfter"] = options?.NoWaitAfter,
 #pragma warning restore CS0612 // Type or member is obsolete
             ["strict"] = options?.Strict,
-        });
+        }).ConfigureAwait(false);
+    }
 
     [MethodImpl(MethodImplOptions.NoInlining)]
     public Task DispatchEventAsync(string selector, string type, object? eventInit = default, FrameDispatchEventOptions? options = default)
@@ -474,15 +495,22 @@ internal class Frame : ChannelOwner, IFrame
         });
 
     [MethodImpl(MethodImplOptions.NoInlining)]
-    public Task FillAsync(string selector, string value, FrameFillOptions? options = default)
-        => SendMessageToServerAsync("fill", new Dictionary<string, object?>
+    public async Task FillAsync(string selector, string value, FrameFillOptions? options = default)
+    {
+        if (await ClearcoteHumanize.FillSelectorAsync(this, selector, value, options).ConfigureAwait(false))
+        {
+            return;
+        }
+
+        await SendMessageToServerAsync("fill", new Dictionary<string, object?>
         {
             ["selector"] = selector,
             ["value"] = value,
             ["force"] = options?.Force,
             ["timeout"] = Timeout(options?.Timeout),
             ["strict"] = options?.Strict,
-        });
+        }).ConfigureAwait(false);
+    }
 
     [MethodImpl(MethodImplOptions.NoInlining)]
     public async Task<IElementHandle> AddScriptTagAsync(FrameAddScriptTagOptions? options = default)
@@ -565,8 +593,14 @@ internal class Frame : ChannelOwner, IFrame
     public Task ClickAsync(string selector, FrameClickOptions? options = default)
         => ClickInternalAsync(selector, options, null);
 
-    internal Task ClickInternalAsync(string selector, FrameClickOptions? options, int? steps)
-        => SendMessageToServerAsync("click", new Dictionary<string, object?>
+    internal async Task ClickInternalAsync(string selector, FrameClickOptions? options, int? steps)
+    {
+        if (await ClearcoteHumanize.ClickSelectorAsync(this, selector, options, steps).ConfigureAwait(false))
+        {
+            return;
+        }
+
+        await SendMessageToServerAsync("click", new Dictionary<string, object?>
         {
             ["selector"] = selector,
             ["button"] = options?.Button,
@@ -582,14 +616,21 @@ internal class Frame : ChannelOwner, IFrame
             ["trial"] = options?.Trial,
             ["timeout"] = Timeout(options?.Timeout),
             ["strict"] = options?.Strict,
-        });
+        }).ConfigureAwait(false);
+    }
 
     [MethodImpl(MethodImplOptions.NoInlining)]
     public Task DblClickAsync(string selector, FrameDblClickOptions? options = default)
         => DblClickInternalAsync(selector, options, null);
 
-    internal Task DblClickInternalAsync(string selector, FrameDblClickOptions? options, int? steps)
-        => SendMessageToServerAsync("dblclick", new Dictionary<string, object?>
+    internal async Task DblClickInternalAsync(string selector, FrameDblClickOptions? options, int? steps)
+    {
+        if (await ClearcoteHumanize.DblClickSelectorAsync(this, selector, options, steps).ConfigureAwait(false))
+        {
+            return;
+        }
+
+        await SendMessageToServerAsync("dblclick", new Dictionary<string, object?>
         {
             ["selector"] = selector,
             ["button"] = options?.Button,
@@ -601,7 +642,8 @@ internal class Frame : ChannelOwner, IFrame
             ["trial"] = options?.Trial,
             ["timeout"] = Timeout(options?.Timeout),
             ["strict"] = options?.Strict,
-        });
+        }).ConfigureAwait(false);
+    }
 
     [MethodImpl(MethodImplOptions.NoInlining)]
     public Task CheckAsync(string selector, FrameCheckOptions? options = default)
@@ -886,8 +928,14 @@ internal class Frame : ChannelOwner, IFrame
         => WaitForURLAsync(null, null, url, options);
 
     [MethodImpl(MethodImplOptions.NoInlining)]
-    public Task DragAndDropAsync(string source, string target, FrameDragAndDropOptions? options = null)
-        => SendMessageToServerAsync("dragAndDrop", new Dictionary<string, object?>
+    public async Task DragAndDropAsync(string source, string target, FrameDragAndDropOptions? options = null)
+    {
+        if (await ClearcoteHumanize.DragAndDropAsync(this, source, target, options).ConfigureAwait(false))
+        {
+            return;
+        }
+
+        await SendMessageToServerAsync("dragAndDrop", new Dictionary<string, object?>
         {
             ["source"] = source,
             ["target"] = target,
@@ -898,7 +946,8 @@ internal class Frame : ChannelOwner, IFrame
             ["strict"] = options?.Strict,
             ["sourcePosition"] = options?.SourcePosition,
             ["targetPosition"] = options?.TargetPosition,
-        });
+        }).ConfigureAwait(false);
+    }
 
     internal async Task DropAsync(string selector, DropPayload payload, Position? position, float? timeout, bool strict)
     {

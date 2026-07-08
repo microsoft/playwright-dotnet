@@ -52,7 +52,7 @@
     </ItemGroup>
     <ItemGroup>
       <Content Include="@(_PlaywrightCopyItems)">
-        <NuGetPackageId>Microsoft.Playwright</NuGetPackageId>
+        <NuGetPackageId>Playwright.AOTFork</NuGetPackageId>
         <Link>.playwright\%(_PlaywrightCopyItems.PlaywrightFolder)%(RecursiveDir)%(FileName)%(Extension)</Link>
         <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
         <PublishState>Included</PublishState>
@@ -60,7 +60,7 @@
         <Pack>false</Pack>
       </Content>
       <Content Include="$(MSBuildThisFileDirectory)playwright.ps1">
-        <NuGetPackageId>Microsoft.Playwright</NuGetPackageId>
+        <NuGetPackageId>Playwright.AOTFork</NuGetPackageId>
         <Link>playwright.ps1</Link>
         <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
         <PublishState>Included</PublishState>

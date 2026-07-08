@@ -6,12 +6,9 @@
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
- * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * to use, copy, modify, merge, publish, distribute, sublicense, and / or sell
  * copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions:
- *
- * The above copyright notice and this permission notice shall be included in all
- * copies or substantial portions of the Software.
  *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
@@ -22,16 +19,16 @@
  * SOFTWARE.
  */
 
-using System;
-using System.Text.Json;
-using System.Text.Json.Serialization.Metadata;
-using System.Threading.Tasks;
-
 namespace Microsoft.Playwright;
 
-public partial interface IAPIResponse : IAsyncDisposable
+/// <summary>
+/// Options for fetching or seeding the opt-in Widevine CDM.
+/// </summary>
+public sealed class ClearcoteWidevineOptions
 {
-    Task<T?> JsonAsync<T>(JsonSerializerOptions? options = null);
+    /// <summary><para>Destination root. Defaults to <c>~/.clearcote/WidevineCdm</c>.</para></summary>
+    public string? Dest { get; set; }
 
-    Task<T?> JsonAsync<T>(JsonTypeInfo<T> jsonTypeInfo);
+    /// <summary><para>Suppress progress logging.</para></summary>
+    public bool? Quiet { get; set; }
 }

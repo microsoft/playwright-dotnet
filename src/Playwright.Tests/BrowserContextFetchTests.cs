@@ -820,7 +820,7 @@ public class BrowserContextFetchTests : PageTestEx
     public async Task ShouldParseResponseJSONWhilePassingATypeWithSerializerOptions()
     {
         var response = await Context.APIRequest.GetAsync(Server.Prefix + "/simple.json");
-        var json = await response.JsonAsync<SimpleObject>(new() { PropertyNameCaseInsensitive = true });
+        var json = await response.JsonAsync<SimpleObject>(new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
         Assert.AreEqual("bar", json.Foo);
     }
 

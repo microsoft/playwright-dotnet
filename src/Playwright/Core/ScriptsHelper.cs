@@ -52,7 +52,7 @@ internal static class ScriptsHelper
         return result;
     }
 
-    internal static T ParseEvaluateResult<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors | DynamicallyAccessedMemberTypes.PublicProperties)] T>(JsonElement? resultOrNull)
+    internal static T ParseEvaluateResult<T>(JsonElement? resultOrNull)
     {
         if (resultOrNull == null)
         {

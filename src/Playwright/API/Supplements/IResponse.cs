@@ -22,14 +22,14 @@
  * SOFTWARE.
  */
 
-using System.Diagnostics.CodeAnalysis;
+using System.Text.Json.Serialization.Metadata;
 using System.Threading.Tasks;
 
 namespace Microsoft.Playwright;
 
 public partial interface IResponse
 {
-    [RequiresUnreferencedCode("IResponse.JsonAsync<T> deserializes to a user-specified type")]
-    [RequiresDynamicCode("IResponse.JsonAsync<T> deserializes to a user-specified type")]
     Task<T> JsonAsync<T>();
+
+    Task<T> JsonAsync<T>(JsonTypeInfo<T> jsonTypeInfo);
 }

@@ -94,13 +94,6 @@ internal static class JsonExtensions
                 return (T)AotEnumMemberConverter.FromWireString(actualType, str);
             }
 
-#if !NET9_0_OR_GREATER
-            // .NET 8 fallback for types not in context (protocol initializers with ChannelOwner properties).
-#pragma warning disable IL2026, IL3050 // Uses converters only; no reflection at runtime.
-            return JsonSerializer.Deserialize<T>(element.GetRawText(), options)!;
-#pragma warning restore IL2026, IL3050
-#endif
-
             throw new InvalidOperationException($"Type '{typeof(T)}' is not registered in PlaywrightJsonContext. Add [JsonSerializable(typeof({typeof(T).Name}))] to enable AOT-safe deserialization.");
         }
 
@@ -159,12 +152,6 @@ internal static class JsonExtensions
                 var str = element.GetString() ?? throw new JsonException("Expected string value for enum.");
                 return AotEnumMemberConverter.FromWireString(nuType, str);
             }
-
-#if !NET9_0_OR_GREATER
-#pragma warning disable IL2026, IL3050
-            return JsonSerializer.Deserialize(element.GetRawText(), type, options)!;
-#pragma warning restore IL2026, IL3050
-#endif
 
             throw new InvalidOperationException($"Type '{type}' is not registered in PlaywrightJsonContext. Add [JsonSerializable(typeof({type.Name}))] to enable AOT-safe deserialization.");
         }

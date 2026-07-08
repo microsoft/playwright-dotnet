@@ -58,7 +58,7 @@ internal class BrowserService : IWorkerService
             return await browserType.ConnectAsync(connectOptions!.Value.WSEndpoint, options).ConfigureAwait(false);
         }
 
-        var legacyBrowser = await ConnectBasedOnEnv(browserType);
+        var legacyBrowser = await ConnectBasedOnEnv(browserType).ConfigureAwait(false);
         if (legacyBrowser != null)
         {
             return legacyBrowser;

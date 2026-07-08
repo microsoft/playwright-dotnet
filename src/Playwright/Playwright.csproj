@@ -2,12 +2,12 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <OutputType>Exe</OutputType>
-    <Title>Microsoft.Playwright</Title>
-    <PackageId>Microsoft.Playwright</PackageId>
+    <Title>Playwright.AOTFork</Title>
+    <PackageId>Playwright.AOTFork</PackageId>
     <Summary>The .NET port of Playwright, used to automate Chromium, Firefox and WebKit with a single API.</Summary>
     <Description>Playwright enables reliable end-to-end testing for modern web apps. It is built to enable cross-browser web automation that is ever-green, capable, reliable and fast. Learn more at https://playwright.dev/dotnet/.</Description>
     <PackageIcon>icon.png</PackageIcon>
-    <TargetFrameworks>net8.0;net10.0</TargetFrameworks>
+    <TargetFramework>net10.0</TargetFramework>
     <IsAotCompatible Condition="'$(TargetFramework)' == 'net10.0'">true</IsAotCompatible>
     <EnableTrimAnalyzer Condition="'$(TargetFramework)' == 'net10.0'">true</EnableTrimAnalyzer>
     <EnableAotAnalyzer Condition="'$(TargetFramework)' == 'net10.0'">true</EnableAotAnalyzer>
@@ -25,7 +25,7 @@
     <AssemblyName>Microsoft.Playwright</AssemblyName>
     <NoWin32Manifest>true</NoWin32Manifest>
     <EnablePackageValidation>true</EnablePackageValidation>
-    <PackageValidationBaselineVersion>1.52.0</PackageValidationBaselineVersion>
+    <DisablePackageBaselineValidation>true</DisablePackageBaselineValidation>
     <Nullable>enable</Nullable>
     <PackageReadmeFile>README.md</PackageReadmeFile>
   </PropertyGroup>

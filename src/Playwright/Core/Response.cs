@@ -22,12 +22,13 @@
  * SOFTWARE.
  */
 
+using System;
 using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text;
 using System.Text.Json;
+using System.Text.Json.Serialization.Metadata;
 using System.Threading.Tasks;
 using Microsoft.Playwright.Helpers;
 using Microsoft.Playwright.Transport;
@@ -110,10 +111,23 @@ internal class Response : ChannelOwner, IResponse
     }
 
     [MethodImpl(MethodImplOptions.NoInlining)]
-    [RequiresUnreferencedCode("Response.JsonAsync<T> deserializes to a user-specified type")]
-    [RequiresDynamicCode("Response.JsonAsync<T> deserializes to a user-specified type")]
     public async Task<T> JsonAsync<T>()
-        => JsonSerializer.Deserialize<T>(await BodyAsync().ConfigureAwait(false))!;
+    {
+        var typeInfo = PlaywrightJsonContext.Default.GetTypeInfo(typeof(T)) as JsonTypeInfo<T>;
+        if (typeInfo == null)
+        {
+            throw new PlaywrightException("JsonAsync<T>() requires source-generated JSON metadata in this NativeAOT fork. Pass JsonAsync<T>(JsonTypeInfo<T>) with metadata from your JsonSerializerContext.");
+        }
+
+        return JsonSerializer.Deserialize(await BodyAsync().ConfigureAwait(false), typeInfo)!;
+    }
+
+    [MethodImpl(MethodImplOptions.NoInlining)]
+    public async Task<T> JsonAsync<T>(JsonTypeInfo<T> jsonTypeInfo)
+    {
+        ArgumentNullException.ThrowIfNull(jsonTypeInfo);
+        return JsonSerializer.Deserialize(await BodyAsync().ConfigureAwait(false), jsonTypeInfo)!;
+    }
 
     [MethodImpl(MethodImplOptions.NoInlining)]
     public async Task<ResponseSecurityDetailsResult?> SecurityDetailsAsync() => (await SendMessageToServerAsync("securityDetails").ConfigureAwait(false))

@@ -28,7 +28,7 @@ namespace Microsoft.Playwright.Tests;
 
 public class CLITests : PlaywrightTest
 {
-    private readonly string playwrightPs1Path = Path.Join(TestContext.CurrentContext.TestDirectory, "..", "..", "..", "..", "Playwright", "bin", "Debug", "netstandard2.0", "playwright.ps1");
+    private readonly string playwrightPs1Path = Path.Join(TestContext.CurrentContext.TestDirectory, "..", "..", "..", "..", "Playwright", "bin", "Debug", "net10.0", "playwright.ps1");
 
     [PlaywrightTest("cli.spec.ts", "")]
     public void ShouldBeAbleToRunCLICommands()

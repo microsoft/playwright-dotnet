@@ -24,6 +24,7 @@
 
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Microsoft.Playwright.Helpers;
 
 namespace Microsoft.Playwright.Core;
 
@@ -62,7 +63,9 @@ internal class Keyboard : IKeyboard
             });
 
     public Task TypeAsync(string text, KeyboardTypeOptions? options = default)
-        => _page.SendMessageToServerAsync(
+        => _page.ClearcoteHumanizeState?.Humanize == true && options?.Delay == null
+            ? ClearcoteHumanize.TypeTextAsync(_page, text)
+            : _page.SendMessageToServerAsync(
             "keyboardType",
             new Dictionary<string, object?>
             {

@@ -55,6 +55,8 @@ internal class BrowserContext : ChannelOwner, IBrowserContext
     internal Browser? _browser;
     private readonly List<HarRouter> _harRouters = new();
     private string? _closeReason;
+    private bool _clearcoteHumanize;
+    private bool _clearcoteShowCursor;
 
     internal TimeoutSettings _timeoutSettings = new();
 
@@ -326,7 +328,7 @@ internal class BrowserContext : ChannelOwner, IBrowserContext
             "addCookies",
             new Dictionary<string, object?>
             {
-                ["cookies"] = cookies,
+                ["cookies"] = cookies.ToArray(),
             });
 
     [MethodImpl(MethodImplOptions.NoInlining)]
@@ -499,7 +501,9 @@ internal class BrowserContext : ChannelOwner, IBrowserContext
             throw new PlaywrightException("Please use Browser.NewContextAsync()");
         }
 
-        return await SendMessageToServerAsync<Page>("newPage").ConfigureAwait(false);
+        var page = await SendMessageToServerAsync<Page>("newPage").ConfigureAwait(false);
+        await ApplyClearcoteToPageAsync(page).ConfigureAwait(false);
+        return page;
     }
 
     [MethodImpl(MethodImplOptions.NoInlining)]
@@ -842,12 +846,47 @@ internal class BrowserContext : ChannelOwner, IBrowserContext
     {
         page.Context = this;
         _pages.Add(page);
+        ApplyClearcoteToPageAsync(page).IgnoreException();
         Page?.Invoke(this, page);
 
         if (page.Opener?.IsClosed == false)
         {
             page.Opener.NotifyPopup(page);
         }
+    }
+
+    internal async Task ApplyClearcoteAsync(Clearcote.LaunchPatch patch)
+        => await ApplyClearcoteAsync(patch.Humanize, patch.ShowCursor).ConfigureAwait(false);
+
+    internal async Task ApplyClearcoteAsync(bool humanize, bool showCursor)
+    {
+        _clearcoteHumanize = humanize;
+        _clearcoteShowCursor = showCursor;
+        if (showCursor)
+        {
+            try
+            {
+                await AddInitScriptAsync(Clearcote.CursorOverlayScript()).ConfigureAwait(false);
+            }
+            catch
+            {
+            }
+        }
+
+        foreach (var page in _pages)
+        {
+            await ApplyClearcoteToPageAsync(page).ConfigureAwait(false);
+        }
+    }
+
+    private async Task ApplyClearcoteToPageAsync(Page page)
+    {
+        if (!_clearcoteHumanize && !_clearcoteShowCursor)
+        {
+            return;
+        }
+
+        await page.ApplyClearcoteAsync(_clearcoteHumanize, _clearcoteShowCursor).ConfigureAwait(false);
     }
 
     private void Channel_BindingCall(BindingCall bindingCall)

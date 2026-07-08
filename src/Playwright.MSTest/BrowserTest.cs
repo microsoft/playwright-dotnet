@@ -44,7 +44,9 @@ public class BrowserTest : PlaywrightTest
     [TestInitialize]
     public async Task BrowserSetup()
     {
-        var service = await BrowserService.Register(this, BrowserType, await ConnectOptionsAsync(), await LaunchOptionsAsync()).ConfigureAwait(false);
+        var connectOptions = await ConnectOptionsAsync().ConfigureAwait(false);
+        var launchOptions = await LaunchOptionsAsync().ConfigureAwait(false);
+        var service = await BrowserService.Register(this, BrowserType, connectOptions, launchOptions).ConfigureAwait(false);
         Browser = service.Browser;
     }
 

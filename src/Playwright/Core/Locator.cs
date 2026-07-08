@@ -33,6 +33,7 @@ using System.Linq;
 using System.Text;
 using System.Text.Encodings.Web;
 using System.Text.Json;
+using System.Text.Json.Nodes;
 using System.Text.Json.Serialization.Metadata;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
@@ -423,23 +424,35 @@ internal class Locator : ILocator
 
     public override string ToString() => "Locator@" + _selector;
 
-    private T ConvertOptions<[System.Diagnostics.CodeAnalysis.DynamicallyAccessedMembers(System.Diagnostics.CodeAnalysis.DynamicallyAccessedMemberTypes.PublicProperties)] T>(object? source, T? inheritFrom = default)
+    private T ConvertOptions<T>(object? source, T? inheritFrom = default)
         where T : class, new()
     {
         T target = inheritFrom ?? new();
+        var targetTypeInfo = PlaywrightJsonContext.Default.GetTypeInfo(typeof(T));
+        if (targetTypeInfo == null)
+        {
+            throw new InvalidOperationException(
+                $"Type '{typeof(T).FullName}' is not registered in PlaywrightJsonContext. " +
+                $"Add [JsonSerializable(typeof({typeof(T).Name}))] to enable AOT-safe option conversion.");
+        }
         if (source != null)
         {
-            foreach (var sourceProperty in typeof(T).GetProperties())
+            var sourceTypeInfo = PlaywrightJsonContext.Default.GetTypeInfo(source.GetType());
+            if (sourceTypeInfo == null)
             {
-                var value = sourceProperty.GetValue(source);
-                var targetProperty = typeof(T).GetProperty(sourceProperty.Name);
-                targetProperty?.SetValue(target, value);
+                throw new InvalidOperationException(
+                    $"Type '{source.GetType().FullName}' is not registered in PlaywrightJsonContext. " +
+                    $"Add [JsonSerializable(typeof({source.GetType().Name}))] to enable AOT-safe option conversion.");
             }
+            var node = JsonSerializer.SerializeToNode(source, sourceTypeInfo);
+            target = (T)JsonSerializer.Deserialize(node, targetTypeInfo)!;
         }
-        var strictProperty = typeof(T).GetProperty("Strict");
-        if (strictProperty != null && strictProperty.GetValue(target) == null)
+        // Set Strict=true by default for types that have a "strict" property.
+        var targetNode = JsonSerializer.SerializeToNode(target, targetTypeInfo);
+        if (targetNode is JsonObject targetObj && targetObj.TryGetPropertyValue("strict", out var strictVal) && (strictVal == null || strictVal.GetValueKind() == JsonValueKind.Null))
         {
-            strictProperty.SetValue(target, true);
+            targetObj["strict"] = JsonValue.Create(true);
+            target = (T)JsonSerializer.Deserialize(targetObj, targetTypeInfo)!;
         }
         return target;
     }

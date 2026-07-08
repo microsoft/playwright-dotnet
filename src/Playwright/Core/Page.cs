@@ -192,6 +192,8 @@ internal class Page : ChannelOwner, IPage
 
     public ITouchscreen Touchscreen { get; }
 
+    internal ClearcoteHumanizeState? ClearcoteHumanizeState { get; private set; }
+
     public IScreencast Screencast => _screencast;
 
     public IWebStorage LocalStorage { get; }
@@ -305,6 +307,21 @@ internal class Page : ChannelOwner, IPage
 
     [MethodImpl(MethodImplOptions.NoInlining)]
     public Task BringToFrontAsync() => SendMessageToServerAsync("bringToFront");
+
+    internal async Task ApplyClearcoteAsync(bool humanize, bool showCursor)
+    {
+        ClearcoteHumanizeState = new ClearcoteHumanizeState(humanize, showCursor);
+        if (showCursor)
+        {
+            try
+            {
+                await EvaluateAsync<JsonElement?>(Clearcote.CursorOverlayScript(), null).ConfigureAwait(false);
+            }
+            catch
+            {
+            }
+        }
+    }
 
     [MethodImpl(MethodImplOptions.NoInlining)]
     public Task<IPage?> OpenerAsync() => Task.FromResult<IPage?>(Opener?.IsClosed == false ? Opener : null);
