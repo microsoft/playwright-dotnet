@@ -594,6 +594,7 @@ internal static partial class Clearcote
         WriteString(writer, "timezone", options.Timezone);
         WriteString(writer, "acceptLanguage", options.AcceptLanguage);
         WriteString(writer, "webrtcIp", options.WebrtcIp);
+        WriteString(writer, "tlsProfile", options.TlsProfile);
         WriteBool(writer, "disableGpuFingerprint", options.DisableGpuFingerprint);
         WriteBool(writer, "fingerprintNoise", options.FingerprintNoise);
         WriteString(writer, "fingerprintProfile", options.FingerprintProfile);
@@ -641,6 +642,7 @@ internal static partial class Clearcote
                 case "timezone": target.Timezone = ReadString(value); break;
                 case "acceptLanguage": target.AcceptLanguage = ReadString(value); break;
                 case "webrtcIp": target.WebrtcIp = ReadString(value); break;
+                case "tlsProfile": target.TlsProfile = ReadString(value); break;
                 case "disableGpuFingerprint": target.DisableGpuFingerprint = ReadBool(value); break;
                 case "fingerprintNoise": target.FingerprintNoise = ReadBool(value); break;
                 case "fingerprintProfile": target.FingerprintProfile = ReadString(value); break;
@@ -685,6 +687,7 @@ internal static partial class Clearcote
         target.Timezone = Pick(target.Timezone, source.Timezone, overrideExisting);
         target.AcceptLanguage = Pick(target.AcceptLanguage, source.AcceptLanguage, overrideExisting);
         target.WebrtcIp = Pick(target.WebrtcIp, source.WebrtcIp, overrideExisting);
+        target.TlsProfile = Pick(target.TlsProfile, source.TlsProfile, overrideExisting);
         target.DisableGpuFingerprint = Pick(target.DisableGpuFingerprint, source.DisableGpuFingerprint, overrideExisting);
         target.FingerprintNoise = Pick(target.FingerprintNoise, source.FingerprintNoise, overrideExisting);
         target.FingerprintProfile = Pick(target.FingerprintProfile, source.FingerprintProfile, overrideExisting);
@@ -725,6 +728,7 @@ internal static partial class Clearcote
         target.Timezone = Pick(target.Timezone, source.Timezone, overrideExisting);
         target.AcceptLanguage = Pick(target.AcceptLanguage, source.AcceptLanguage, overrideExisting);
         target.WebrtcIp = Pick(target.WebrtcIp, source.WebrtcIp, overrideExisting);
+        target.TlsProfile = Pick(target.TlsProfile, source.TlsProfile, overrideExisting);
         target.DisableGpuFingerprint = Pick(target.DisableGpuFingerprint, source.DisableGpuFingerprint, overrideExisting);
         target.FingerprintNoise = Pick(target.FingerprintNoise, source.FingerprintNoise, overrideExisting);
         target.FingerprintProfile = Pick(target.FingerprintProfile, source.FingerprintProfile, overrideExisting);
@@ -766,6 +770,7 @@ internal static partial class Clearcote
             Timezone = source.Timezone,
             AcceptLanguage = source.AcceptLanguage,
             WebrtcIp = source.WebrtcIp,
+            TlsProfile = source.TlsProfile,
             DisableGpuFingerprint = source.DisableGpuFingerprint,
             FingerprintNoise = source.FingerprintNoise,
             FingerprintProfile = source.FingerprintProfile,

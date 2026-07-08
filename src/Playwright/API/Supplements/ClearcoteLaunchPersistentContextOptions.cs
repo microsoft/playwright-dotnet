@@ -48,6 +48,7 @@ public class ClearcoteLaunchPersistentContextOptions : BrowserTypeLaunchPersiste
             Timezone = clearcote.Timezone;
             AcceptLanguage = clearcote.AcceptLanguage;
             WebrtcIp = clearcote.WebrtcIp;
+            TlsProfile = clearcote.TlsProfile;
             DisableGpuFingerprint = clearcote.DisableGpuFingerprint;
             FingerprintNoise = clearcote.FingerprintNoise;
             FingerprintProfile = clearcote.FingerprintProfile;
@@ -106,6 +107,12 @@ public class ClearcoteLaunchPersistentContextOptions : BrowserTypeLaunchPersiste
 
     /// <summary><para>WebRTC egress IP to report.</para></summary>
     public string? WebrtcIp { get; set; }
+
+    /// <summary><para>
+    /// TLS network persona — keep the TLS ClientHello coherent with the persona's claimed Chrome
+    /// version, so the network layer follows the UA.
+    /// </para></summary>
+    public string? TlsProfile { get; set; }
 
     /// <summary><para>Use the real host GPU instead of a spoofed GPU.</para></summary>
     public bool? DisableGpuFingerprint { get; set; }

@@ -40,31 +40,31 @@ internal static partial class Clearcote
 {
     private const string VerifiedFileName = ".verified";
     private const string DefaultAcceptLanguage = "en-US,en";
-    private const string Repo = "clearcotelabs/clearcote-browser";
     private const string SigningKeyFingerprint = "CA96F185F96A693AEDB3AC1FCB00D851B7A86B0F";
+    internal const string Repo = "clearcotelabs/clearcote-browser";
     private static readonly SemaphoreSlim _downloadLock = new(1, 1);
     private static readonly HashSet<string> _seenCoherenceNotes = new(StringComparer.Ordinal);
 
     private static readonly ReleaseInfo _windows = new(
-        Tag: "v0.1.0-pre.16",
+        Tag: "v0.1.0-pre.18",
         Version: "149.0.7827.114",
         Asset: "clearcote-149.0.7827.114-windows-x64.zip",
-        Url: "https://github.com/clearcotelabs/clearcote-browser/releases/download/v0.1.0-pre.16/clearcote-149.0.7827.114-windows-x64.zip",
-        Sha256: "4b24af67433f7de7e335b400f470cc99c920e9bc614f2b1e8ebb01f3c6e585fd",
-        ExeSha256: "5743595256c89c6874804bf3315acce592fc7f1883760c8d380c010151a73b23",
-        Size: 242642508,
+        Url: "https://github.com/clearcotelabs/clearcote-browser/releases/download/v0.1.0-pre.18/clearcote-149.0.7827.114-windows-x64.zip",
+        Sha256: "935d43daba8ce6f336b4ede21b326744f7804c2fb4f0384bafa2d2a80a71a88c",
+        ExeSha256: "09a9f5ed46be45b54babc91872256fcdd5ef61cef6bf65cbec3928cbb38ee17a",
+        Size: 242649591,
         Archive: "zip",
         Binary: "chrome.exe",
         AssetGlob: "windows-x64");
 
     private static readonly ReleaseInfo _linux = new(
-        Tag: "v0.1.0-pre.17",
+        Tag: "v0.1.0-pre.18",
         Version: "149.0.7827.114",
         Asset: "clearcote-149.0.7827.114-linux-x64.tar.xz",
-        Url: "https://github.com/clearcotelabs/clearcote-browser/releases/download/v0.1.0-pre.17/clearcote-149.0.7827.114-linux-x64.tar.xz",
-        Sha256: "4beb6ef0df2ea9b35ed654a356094a27ed1ac0d34ea6cb284719a957da6f5981",
-        ExeSha256: "b4f60c1dc1858173a0b41624c5d2cf7340a915cc000bae0ea1465f118374b3e0",
-        Size: 147074836,
+        Url: "https://github.com/clearcotelabs/clearcote-browser/releases/download/v0.1.0-pre.18/clearcote-149.0.7827.114-linux-x64.tar.xz",
+        Sha256: "fd96497e921b4fc9f384a5c1377896c8ee7e8a3a1991835c0256b010811e97aa",
+        ExeSha256: "f4e8c1161938769d6a6c50aee1497c76b4f6723a6a0a3f02a19e0b5a9d4b141a",
+        Size: 142700100,
         Archive: "tar.xz",
         Binary: "chrome",
         AssetGlob: "linux-x64");
@@ -262,6 +262,7 @@ internal static partial class Clearcote
         AddFlag(args, "fingerprint-hardware-concurrency", settings.HardwareConcurrency?.ToString(CultureInfo.InvariantCulture));
         AddFlag(args, "fingerprint-location", settings.Location);
         AddFlag(args, "fingerprint-storage-quota", settings.StorageQuota?.ToString(CultureInfo.InvariantCulture));
+        AddFlag(args, "fingerprint-tls-profile", settings.TlsProfile);
         AddFlag(args, "timezone", settings.Timezone);
 
         var cleanLang = CleanAcceptLanguage(settings.AcceptLanguage ?? DefaultAcceptLanguage);
@@ -1549,6 +1550,8 @@ internal static partial class Clearcote
 
         internal string? WebrtcIp { get; private init; }
 
+        internal string? TlsProfile { get; private init; }
+
         internal bool? DisableGpuFingerprint { get; private init; }
 
         internal bool? FingerprintNoise { get; private init; }
@@ -1609,6 +1612,7 @@ internal static partial class Clearcote
                 Timezone = Timezone ?? geo.Timezone,
                 AcceptLanguage = AcceptLanguage ?? geo.AcceptLanguage,
                 WebrtcIp = WebrtcIp ?? geo.Ip,
+                TlsProfile = TlsProfile,
                 DisableGpuFingerprint = DisableGpuFingerprint,
                 FingerprintNoise = FingerprintNoise,
                 FingerprintProfile = FingerprintProfile,
@@ -1644,6 +1648,7 @@ internal static partial class Clearcote
                 Timezone = options.Timezone,
                 AcceptLanguage = options.AcceptLanguage,
                 WebrtcIp = options.WebrtcIp,
+                TlsProfile = options.TlsProfile,
                 DisableGpuFingerprint = options.DisableGpuFingerprint,
                 FingerprintNoise = options.FingerprintNoise,
                 FingerprintProfile = options.FingerprintProfile,
@@ -1679,6 +1684,7 @@ internal static partial class Clearcote
                 Timezone = options.Timezone,
                 AcceptLanguage = options.AcceptLanguage,
                 WebrtcIp = options.WebrtcIp,
+                TlsProfile = options.TlsProfile,
                 DisableGpuFingerprint = options.DisableGpuFingerprint,
                 FingerprintNoise = options.FingerprintNoise,
                 FingerprintProfile = options.FingerprintProfile,

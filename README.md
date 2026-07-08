@@ -5,7 +5,7 @@
 | Chromium <!-- GEN:chromium-version -->149.0.7827.55<!-- GEN:stop --> | ✅ | ✅ | ✅ |
 | WebKit <!-- GEN:webkit-version -->26.5<!-- GEN:stop --> | ✅ | ✅ | ✅ |
 | Firefox <!-- GEN:firefox-version -->151.0<!-- GEN:stop --> | ✅ | ✅ | ✅ |
-| [Clearcote Browser](https://github.com/clearcotelabs/clearcote-browser) v0.1.0-pre.17 (Chromium 149) | ✅ | — | — |
+| [Clearcote Browser](https://github.com/clearcotelabs/clearcote-browser) v0.1.0-pre.18 (Chromium 149) | ✅ | — | ✅ |
 
 This is a **NativeAOT-compatible fork** of [Playwright](https://playwright.dev) for .NET. It targets `net10.0` with full trimming and AOT compilation — zero reflection, zero warnings, zero runtime dynamic code.
 
