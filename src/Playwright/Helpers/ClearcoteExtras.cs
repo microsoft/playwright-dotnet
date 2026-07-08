@@ -583,7 +583,7 @@ internal static partial class Clearcote
     {
         writer.WriteStartObject();
         WriteString(writer, "fingerprint", options.Fingerprint);
-        WriteString(writer, "platform", options.ClearcotePlatform);
+        WriteString(writer, "platform", options.ClearcotePlatform?.ToString().ToLowerInvariant());
         WriteString(writer, "platformVersion", options.PlatformVersion);
         WriteString(writer, "brand", options.Brand);
         WriteString(writer, "brandVersion", options.BrandVersion);
@@ -594,7 +594,8 @@ internal static partial class Clearcote
         WriteString(writer, "timezone", options.Timezone);
         WriteString(writer, "acceptLanguage", options.AcceptLanguage);
         WriteString(writer, "webrtcIp", options.WebrtcIp);
-        WriteString(writer, "tlsProfile", options.TlsProfile);
+        WriteString(writer, "tlsProfile", options.TlsProfile?.ToString());
+        WriteString(writer, "tlsProfileCustom", options.TlsProfileCustom);
         WriteBool(writer, "disableGpuFingerprint", options.DisableGpuFingerprint);
         WriteBool(writer, "fingerprintNoise", options.FingerprintNoise);
         WriteString(writer, "fingerprintProfile", options.FingerprintProfile);
@@ -631,7 +632,7 @@ internal static partial class Clearcote
             {
                 case "fingerprint": target.Fingerprint = ReadString(value); break;
                 case "platform":
-                case "clearcotePlatform": target.ClearcotePlatform = ReadString(value); break;
+                case "clearcotePlatform": target.ClearcotePlatform = ReadEnum<ClearcotePlatform>(value); break;
                 case "platformVersion": target.PlatformVersion = ReadString(value); break;
                 case "brand": target.Brand = ReadString(value); break;
                 case "brandVersion": target.BrandVersion = ReadString(value); break;
@@ -642,7 +643,8 @@ internal static partial class Clearcote
                 case "timezone": target.Timezone = ReadString(value); break;
                 case "acceptLanguage": target.AcceptLanguage = ReadString(value); break;
                 case "webrtcIp": target.WebrtcIp = ReadString(value); break;
-                case "tlsProfile": target.TlsProfile = ReadString(value); break;
+                case "tlsProfile": target.TlsProfile = ReadEnum<ClearcoteTlsProfile>(value); break;
+                case "tlsProfileCustom": target.TlsProfileCustom = ReadString(value); break;
                 case "disableGpuFingerprint": target.DisableGpuFingerprint = ReadBool(value); break;
                 case "fingerprintNoise": target.FingerprintNoise = ReadBool(value); break;
                 case "fingerprintProfile": target.FingerprintProfile = ReadString(value); break;
@@ -688,6 +690,7 @@ internal static partial class Clearcote
         target.AcceptLanguage = Pick(target.AcceptLanguage, source.AcceptLanguage, overrideExisting);
         target.WebrtcIp = Pick(target.WebrtcIp, source.WebrtcIp, overrideExisting);
         target.TlsProfile = Pick(target.TlsProfile, source.TlsProfile, overrideExisting);
+        target.TlsProfileCustom = Pick(target.TlsProfileCustom, source.TlsProfileCustom, overrideExisting);
         target.DisableGpuFingerprint = Pick(target.DisableGpuFingerprint, source.DisableGpuFingerprint, overrideExisting);
         target.FingerprintNoise = Pick(target.FingerprintNoise, source.FingerprintNoise, overrideExisting);
         target.FingerprintProfile = Pick(target.FingerprintProfile, source.FingerprintProfile, overrideExisting);
@@ -729,6 +732,7 @@ internal static partial class Clearcote
         target.AcceptLanguage = Pick(target.AcceptLanguage, source.AcceptLanguage, overrideExisting);
         target.WebrtcIp = Pick(target.WebrtcIp, source.WebrtcIp, overrideExisting);
         target.TlsProfile = Pick(target.TlsProfile, source.TlsProfile, overrideExisting);
+        target.TlsProfileCustom = Pick(target.TlsProfileCustom, source.TlsProfileCustom, overrideExisting);
         target.DisableGpuFingerprint = Pick(target.DisableGpuFingerprint, source.DisableGpuFingerprint, overrideExisting);
         target.FingerprintNoise = Pick(target.FingerprintNoise, source.FingerprintNoise, overrideExisting);
         target.FingerprintProfile = Pick(target.FingerprintProfile, source.FingerprintProfile, overrideExisting);
@@ -771,6 +775,7 @@ internal static partial class Clearcote
             AcceptLanguage = source.AcceptLanguage,
             WebrtcIp = source.WebrtcIp,
             TlsProfile = source.TlsProfile,
+            TlsProfileCustom = source.TlsProfileCustom,
             DisableGpuFingerprint = source.DisableGpuFingerprint,
             FingerprintNoise = source.FingerprintNoise,
             FingerprintProfile = source.FingerprintProfile,
@@ -863,6 +868,18 @@ internal static partial class Clearcote
 
     private static long? ReadLong(JsonElement value)
         => value.ValueKind == JsonValueKind.Number && value.TryGetInt64(out var number) ? number : null;
+
+    private static T? ReadEnum<T>(JsonElement value)
+        where T : struct, Enum
+    {
+        var s = ReadString(value);
+        if (s == null) return null;
+        if (Enum.TryParse<T>(s, ignoreCase: true, out var result))
+        {
+            return result;
+        }
+        return null;
+    }
 
     private static IEnumerable<string>? ReadStrings(JsonElement value)
     {

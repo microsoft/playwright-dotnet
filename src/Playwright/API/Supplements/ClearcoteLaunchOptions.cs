@@ -49,6 +49,7 @@ public class ClearcoteLaunchOptions : BrowserTypeLaunchOptions
             AcceptLanguage = clearcote.AcceptLanguage;
             WebrtcIp = clearcote.WebrtcIp;
             TlsProfile = clearcote.TlsProfile;
+            TlsProfileCustom = clearcote.TlsProfileCustom;
             DisableGpuFingerprint = clearcote.DisableGpuFingerprint;
             FingerprintNoise = clearcote.FingerprintNoise;
             FingerprintProfile = clearcote.FingerprintProfile;
@@ -74,8 +75,8 @@ public class ClearcoteLaunchOptions : BrowserTypeLaunchOptions
     /// <summary><para>Master fingerprint seed. Same seed produces the same identity.</para></summary>
     public string? Fingerprint { get; set; }
 
-    /// <summary><para>Persona platform: <c>windows</c>, <c>linux</c>, or <c>macos</c>.</para></summary>
-    public string? ClearcotePlatform { get; set; }
+    /// <summary><para>Target platform for the persona fingerprint.</para></summary>
+    public ClearcotePlatform? ClearcotePlatform { get; set; }
 
     /// <summary><para>UA-CH platform version.</para></summary>
     public string? PlatformVersion { get; set; }
@@ -109,10 +110,14 @@ public class ClearcoteLaunchOptions : BrowserTypeLaunchOptions
 
     /// <summary><para>
     /// TLS network persona — keep the TLS ClientHello coherent with the persona's claimed Chrome
-    /// version, so the network layer follows the UA. "match-persona" (default) follows brandVersion;
-    /// "native"/"off" leaves native TLS; "chrome-&lt;major&gt;" or a number pins the TLS shape.
+    /// version. <see cref="ClearcoteTlsProfile.MatchPersona"/> (default) follows brandVersion;
+    /// <see cref="ClearcoteTlsProfile.Native"/> leaves native TLS.
+    /// For a specific Chrome major version, use <see cref="TlsProfileCustom"/>.
     /// </para></summary>
-    public string? TlsProfile { get; set; }
+    public ClearcoteTlsProfile? TlsProfile { get; set; }
+
+    /// <summary><para>Pin TLS to a specific Chrome major version, for example <c>"120"</c> or <c>"chrome-120"</c>.</para></summary>
+    public string? TlsProfileCustom { get; set; }
 
     /// <summary><para>Use the real host GPU instead of a spoofed GPU.</para></summary>
     public bool? DisableGpuFingerprint { get; set; }

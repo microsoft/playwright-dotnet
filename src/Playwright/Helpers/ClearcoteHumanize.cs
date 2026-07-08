@@ -21,7 +21,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Security.Cryptography;
 using System.Threading.Tasks;
 using Microsoft.Playwright.Core;
@@ -56,11 +55,32 @@ internal static class ClearcoteHumanize
 {
     private static readonly Dictionary<char, string> _nearby = new()
     {
-        ['a'] = "sqwz", ['b'] = "vghn", ['c'] = "xdfv", ['d'] = "sfecx", ['e'] = "wrsdf", ['f'] = "dgrtcv",
-        ['g'] = "fhtyb", ['h'] = "gjybn", ['i'] = "ujko", ['j'] = "hkunm", ['k'] = "jloi", ['l'] = "kop",
-        ['m'] = "njk", ['n'] = "bhjm", ['o'] = "iklp", ['p'] = "ol", ['q'] = "wa", ['r'] = "edft",
-        ['s'] = "awedxz", ['t'] = "rfgy", ['u'] = "yhji", ['v'] = "cfgb", ['w'] = "qase", ['x'] = "zsdc",
-        ['y'] = "tghu", ['z'] = "asx",
+        ['a'] = "sqwz",
+        ['b'] = "vghn",
+        ['c'] = "xdfv",
+        ['d'] = "sfecx",
+        ['e'] = "wrsdf",
+        ['f'] = "dgrtcv",
+        ['g'] = "fhtyb",
+        ['h'] = "gjybn",
+        ['i'] = "ujko",
+        ['j'] = "hkunm",
+        ['k'] = "jloi",
+        ['l'] = "kop",
+        ['m'] = "njk",
+        ['n'] = "bhjm",
+        ['o'] = "iklp",
+        ['p'] = "ol",
+        ['q'] = "wa",
+        ['r'] = "edft",
+        ['s'] = "awedxz",
+        ['t'] = "rfgy",
+        ['u'] = "yhji",
+        ['v'] = "cfgb",
+        ['w'] = "qase",
+        ['x'] = "zsdc",
+        ['y'] = "tghu",
+        ['z'] = "asx",
     };
 
     internal static double Rand(double min, double max)

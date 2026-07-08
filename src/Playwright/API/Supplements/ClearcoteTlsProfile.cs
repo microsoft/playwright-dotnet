@@ -10,6 +10,9 @@
  * copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions:
  *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
  * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -22,22 +25,17 @@
 namespace Microsoft.Playwright;
 
 /// <summary>
-/// Options for resolving or downloading the Clearcote browser binary.
+/// TLS network persona — keeps the TLS ClientHello coherent with the claimed Chrome version.
 /// </summary>
-public class ClearcoteDownloadOptions
+public enum ClearcoteTlsProfile
 {
-    /// <summary><para>Explicit browser executable path. Used by <see cref="ClearcoteBrowser.ExecutablePathAsync"/>.</para></summary>
-    public string? ExecutablePath { get; set; }
+    /// <summary>
+    /// Match the TLS ClientHello to the persona's claimed brand version (default).
+    /// </summary>
+    MatchPersona,
 
-    /// <summary><para>Download destination. If set, the browser binary is saved to this path instead of the default cache directory.</para></summary>
-    public string? Dest { get; set; }
-
-    /// <summary><para>Override the Clearcote browser cache directory.</para></summary>
-    public string? CacheDir { get; set; }
-
-    /// <summary><para>Suppress Clearcote download progress messages.</para></summary>
-    public bool? Quiet { get; set; }
-
-    /// <summary><para>Resolve the latest compatible Clearcote GitHub release instead of the pinned release.</para></summary>
-    public bool? AutoUpdate { get; set; }
+    /// <summary>
+    /// Keep the build's native TLS ClientHello unchanged.
+    /// </summary>
+    Native,
 }

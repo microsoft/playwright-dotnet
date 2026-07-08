@@ -5,7 +5,7 @@
 ![WebKit 26.5](https://img.shields.io/badge/WebKit-26.5-45ba4b)
 ![Clearcote v0.1.0-pre.18](https://img.shields.io/badge/Clearcote-v0.1.0--pre.18-blue)
 
-A **NativeAOT-compatible** fork of [Playwright](https://playwright.dev) targeting `net10.0` with full trimming and ahead-of-time compilation — zero reflection, zero build warnings, zero runtime dynamic code.
+A **NativeAOT-compatible** fork of [playwright-dotnet](https://github.com/microsoft/playwright-dotnet) targeting `net10.0` with full trimming and ahead-of-time compilation — zero reflection, zero build warnings, zero runtime dynamic code.
 
 | Browser | Linux | macOS | Windows |
 |---------|:-----:|:-----:|:-------:|
@@ -55,29 +55,47 @@ This fork bundles [Clearcote Browser](https://github.com/clearcotelabs/clearcote
 ```cs
 using Microsoft.Playwright;
 
-var playwright = await Playwright.CreateAsync();
+Console.WriteLine("Playwright .NET + Clearcote Browser — NativeAOT sample");
+Console.WriteLine();
 
-// Launch with a Windows persona.
-var browser = await ClearcoteBrowser.LaunchAsync(playwright.Chromium, new()
+var downloadPath = await ClearcoteBrowser.DownloadAsync(new() { Quiet = true });
+Console.WriteLine($"Clearcote browser binary: {downloadPath}");
+
+var launchOptions = new ClearcoteLaunchOptions
 {
     Headless = true,
-    Fingerprint = "my-persona",
-    ClearcotePlatform = "windows",
-    Brand = "Chrome",
+    Fingerprint = "playwright-aot-sample",
+    ClearcotePlatform = ClearcotePlatform.Linux,
+    Brand = "Edge",
     BrandVersion = "149",
-    TlsProfile = "match-persona",
+    TlsProfile = ClearcoteTlsProfile.MatchPersona,
+    GpuVendor = "Google",
+    GpuRenderer = "ANGLE (Google, Vulkan 1.3.0 (SwiftShader Device))",
+    HardwareConcurrency = 8,
     Humanize = true,
-});
+};
 
+var playwright = await Playwright.CreateAsync();
+var browser = await ClearcoteBrowser.LaunchAsync(playwright.Chromium, launchOptions);
 var page = await browser.NewPageAsync();
-await page.GotoAsync("https://example.com");
 
-// Clearcote-specific APIs.
+await page.GotoAsync("https://browserleaks.com/client-hints");
+Console.WriteLine($"Page title: {await page.TitleAsync()}");
+
 var verdict = await ClearcoteBrowser.CheckRenderCoherenceAsync(page);
-var result = await ClearcoteBrowser.RunAgentTaskAsync(page, "click the login button");
+Console.WriteLine($"Render coherent: {verdict.Coherent}");
+Console.WriteLine($"  Vendor:   {verdict.Vendor}");
+Console.WriteLine($"  Renderer: {verdict.Renderer}");
+Console.WriteLine($"  WebGL:    {verdict.Webgl}");
+
+await page.ScreenshotAsync(new() { Path = "clearcote-screenshot.png", FullPage = true });
+Console.WriteLine("Screenshot saved to clearcote-screenshot.png");
+
+await browser.CloseAsync();
+Console.WriteLine("Done.");
 ```
 
-Pass `ClearcoteLaunchOptions` to standard `chromium.LaunchAsync()` — patching is automatic. Set `CLEARCOTE=1` to enable Clearcote without code changes.
+Pass `ClearcoteLaunchOptions` to standard `chromium.LaunchAsync()` — patching is automatic. Set `CLEARCOTE=1` to use Clearcote without code changes.
 
 ### Clearcote features
 
@@ -106,7 +124,7 @@ Pass `ClearcoteLaunchOptions` to standard `chromium.LaunchAsync()` — patching 
 | Sample | Description | Build |
 |--------|-------------|-------|
 | [`samples/Playwright.AotSample`](samples/Playwright.AotSample) | Basic Chromium launch + screenshot | `dotnet publish … -p:PublishAot=true` |
-| [`samples/Playwright.AotSample.Clearcote`](samples/Playwright.AotSample.Clearcote) | Clearcote launch + render coherence + screenshot | `dotnet publish … -p:PublishAot=true` |
+| [`samples/Playwright.AotSample.Clearcote`](samples/Playwright.AotSample.Clearcote) | Full Clearcote sample (above) | `dotnet publish … -p:PublishAot=true` |
 
 ```bash
 dotnet publish samples/Playwright.AotSample.Clearcote \
@@ -116,14 +134,7 @@ dotnet publish samples/Playwright.AotSample.Clearcote \
 ./samples/Playwright.AotSample.Clearcote/bin/Release/net10.0/linux-x64/publish/Playwright.AotSample.Clearcote
 ```
 
-## Documentation
+## Resources
 
-- [Playwright .NET docs](https://playwright.dev/dotnet/docs/intro)
-- [API reference](https://playwright.dev/dotnet/docs/api/class-playwright)
 - [Clearcote Browser](https://github.com/clearcotelabs/clearcote-browser)
-
-## Other languages
-
-- [TypeScript](https://playwright.dev/docs/intro)
-- [Python](https://playwright.dev/python/docs/intro)
-- [Java](https://playwright.dev/java/docs/intro)
+- [playwright-dotnet (upstream)](https://github.com/microsoft/playwright-dotnet)

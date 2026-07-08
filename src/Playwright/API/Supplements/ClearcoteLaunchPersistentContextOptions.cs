@@ -49,6 +49,7 @@ public class ClearcoteLaunchPersistentContextOptions : BrowserTypeLaunchPersiste
             AcceptLanguage = clearcote.AcceptLanguage;
             WebrtcIp = clearcote.WebrtcIp;
             TlsProfile = clearcote.TlsProfile;
+            TlsProfileCustom = clearcote.TlsProfileCustom;
             DisableGpuFingerprint = clearcote.DisableGpuFingerprint;
             FingerprintNoise = clearcote.FingerprintNoise;
             FingerprintProfile = clearcote.FingerprintProfile;
@@ -75,8 +76,8 @@ public class ClearcoteLaunchPersistentContextOptions : BrowserTypeLaunchPersiste
     /// <summary><para>Master fingerprint seed. Same seed produces the same identity.</para></summary>
     public string? Fingerprint { get; set; }
 
-    /// <summary><para>Persona platform: <c>windows</c>, <c>linux</c>, or <c>macos</c>.</para></summary>
-    public string? ClearcotePlatform { get; set; }
+    /// <summary><para>Target platform for the persona fingerprint.</para></summary>
+    public ClearcotePlatform? ClearcotePlatform { get; set; }
 
     /// <summary><para>UA-CH platform version.</para></summary>
     public string? PlatformVersion { get; set; }
@@ -110,9 +111,12 @@ public class ClearcoteLaunchPersistentContextOptions : BrowserTypeLaunchPersiste
 
     /// <summary><para>
     /// TLS network persona — keep the TLS ClientHello coherent with the persona's claimed Chrome
-    /// version, so the network layer follows the UA.
+    /// version. Use <see cref="ClearcoteLaunchPersistentContextOptions.TlsProfileCustom"/> for a specific Chrome major.
     /// </para></summary>
-    public string? TlsProfile { get; set; }
+    public ClearcoteTlsProfile? TlsProfile { get; set; }
+
+    /// <summary><para>Pin TLS to a specific Chrome major version, for example <c>"120"</c> or <c>"chrome-120"</c>.</para></summary>
+    public string? TlsProfileCustom { get; set; }
 
     /// <summary><para>Use the real host GPU instead of a spoofed GPU.</para></summary>
     public bool? DisableGpuFingerprint { get; set; }

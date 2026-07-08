@@ -253,7 +253,7 @@ internal static partial class Clearcote
     {
         var args = new List<string>();
         AddFlag(args, "fingerprint", settings.Fingerprint);
-        AddFlag(args, "fingerprint-platform", settings.ClearcotePlatform ?? HostPersonaPlatform());
+        AddFlag(args, "fingerprint-platform", PlatformToString(settings.ClearcotePlatform ?? HostPersonaPlatform()));
         AddFlag(args, "fingerprint-platform-version", settings.PlatformVersion);
         AddFlag(args, "fingerprint-brand", settings.Brand ?? "chrome");
         AddFlag(args, "fingerprint-brand-version", settings.BrandVersion);
@@ -262,7 +262,7 @@ internal static partial class Clearcote
         AddFlag(args, "fingerprint-hardware-concurrency", settings.HardwareConcurrency?.ToString(CultureInfo.InvariantCulture));
         AddFlag(args, "fingerprint-location", settings.Location);
         AddFlag(args, "fingerprint-storage-quota", settings.StorageQuota?.ToString(CultureInfo.InvariantCulture));
-        AddFlag(args, "fingerprint-tls-profile", settings.TlsProfile);
+        AddFlag(args, "fingerprint-tls-profile", ResolveTlsProfile(settings.TlsProfile, settings.TlsProfileCustom, settings.BrandVersion));
         AddFlag(args, "timezone", settings.Timezone);
 
         var cleanLang = CleanAcceptLanguage(settings.AcceptLanguage ?? DefaultAcceptLanguage);
@@ -305,6 +305,38 @@ internal static partial class Clearcote
         }
 
         return args;
+    }
+
+    private static string? ResolveTlsProfile(ClearcoteTlsProfile? profile, string? custom, string? brandVersion)
+    {
+        if (!string.IsNullOrEmpty(custom))
+        {
+            var text = custom.Trim().ToLowerInvariant();
+            if (text.StartsWith("chrome-"))
+            {
+                return text;
+            }
+            if (int.TryParse(text, out _))
+            {
+                return "chrome-" + text;
+            }
+            return null;
+        }
+
+        if (profile == ClearcoteTlsProfile.MatchPersona)
+        {
+            if (!string.IsNullOrEmpty(brandVersion))
+            {
+                var major = brandVersion.Split('.')[0];
+                if (int.TryParse(major, out _))
+                {
+                    return "chrome-" + major;
+                }
+            }
+            return null;
+        }
+
+        return null; // Native / default
     }
 
     private static IEnumerable<string> AgentArgs(ClearcoteSettings settings)
@@ -380,24 +412,19 @@ internal static partial class Clearcote
         return items.Length == 0 ? null : string.Join(",", items);
     }
 
-    private static string HostPersonaPlatform()
+    private static ClearcotePlatform HostPersonaPlatform()
     {
-        if (OperatingSystem.IsWindows())
-        {
-            return "windows";
-        }
-
         if (OperatingSystem.IsLinux())
         {
-            return "linux";
+            return ClearcotePlatform.Linux;
         }
 
         if (OperatingSystem.IsMacOS())
         {
-            return "macos";
+            return ClearcotePlatform.Macos;
         }
 
-        return "windows";
+        return ClearcotePlatform.Windows;
     }
 
     private static string CleanAcceptLanguage(string value)
@@ -645,19 +672,19 @@ internal static partial class Clearcote
         }
 
         var hostFamily = HostPersonaPlatform();
-        if (!string.IsNullOrEmpty(settings.ClearcotePlatform)
-            && !string.Equals(settings.ClearcotePlatform, hostFamily, StringComparison.Ordinal)
+        if (settings.ClearcotePlatform.HasValue
+            && settings.ClearcotePlatform.Value != hostFamily
             && string.IsNullOrEmpty(settings.FingerprintProfile))
         {
-            warnings.Add((false, "platform-host-fonts", $"platform='{settings.ClearcotePlatform}' on a {hostFamily} host without a fingerprintProfile may leave host-native font/canvas metrics."));
+            warnings.Add((false, "platform-host-fonts", $"platform='{PlatformToString(settings.ClearcotePlatform.Value)}' on a {PlatformToString(hostFamily)} host without a fingerprintProfile may leave host-native font/canvas metrics."));
         }
 
-        if (!string.IsNullOrEmpty(settings.GpuRenderer) && !string.IsNullOrEmpty(settings.ClearcotePlatform))
+        if (!string.IsNullOrEmpty(settings.GpuRenderer) && settings.ClearcotePlatform.HasValue)
         {
-            var gpuMismatch = GpuPlatformMismatch(settings.GpuRenderer, settings.ClearcotePlatform);
+            var gpuMismatch = GpuPlatformMismatch(settings.GpuRenderer, settings.ClearcotePlatform.Value);
             if (!string.IsNullOrEmpty(gpuMismatch))
             {
-                warnings.Add((false, "gpu-platform", $"gpuRenderer is incoherent with platform='{settings.ClearcotePlatform}' ({gpuMismatch}): '{settings.GpuRenderer}'."));
+                warnings.Add((false, "gpu-platform", $"gpuRenderer is incoherent with platform='{PlatformToString(settings.ClearcotePlatform.Value)}' ({gpuMismatch}): '{settings.GpuRenderer}'."));
             }
         }
 
@@ -700,17 +727,26 @@ internal static partial class Clearcote
         return warnings;
     }
 
-    private static string? GpuPlatformMismatch(string renderer, string platform)
+    private static string? GpuPlatformMismatch(string renderer, ClearcotePlatform platform)
     {
         var value = renderer.ToLowerInvariant();
         return platform switch
         {
-            "macos" when value.Contains("direct3d", StringComparison.Ordinal) || value.Contains("d3d", StringComparison.Ordinal) => "macOS uses Metal/OpenGL, never Direct3D",
-            "windows" when value.Contains("metal", StringComparison.Ordinal) => "Windows uses Direct3D/ANGLE, never Metal",
-            "linux" when value.Contains("direct3d", StringComparison.Ordinal) || value.Contains("d3d", StringComparison.Ordinal) || value.Contains("metal", StringComparison.Ordinal) => "Linux uses OpenGL/Vulkan, never Direct3D/Metal",
+            ClearcotePlatform.Macos when value.Contains("direct3d", StringComparison.Ordinal) || value.Contains("d3d", StringComparison.Ordinal) => "macOS uses Metal/OpenGL, never Direct3D",
+            ClearcotePlatform.Windows when value.Contains("metal", StringComparison.Ordinal) => "Windows uses Direct3D/ANGLE, never Metal",
+            ClearcotePlatform.Linux when value.Contains("direct3d", StringComparison.Ordinal) || value.Contains("d3d", StringComparison.Ordinal) || value.Contains("metal", StringComparison.Ordinal) => "Linux uses OpenGL/Vulkan, never Direct3D/Metal",
             _ => null,
         };
     }
+
+    private static string PlatformToString(ClearcotePlatform platform)
+        => platform switch
+        {
+            ClearcotePlatform.Windows => "windows",
+            ClearcotePlatform.Linux => "linux",
+            ClearcotePlatform.Macos => "macos",
+            _ => "windows",
+        };
 
     private static bool IsSoftwareGpu(string renderer)
     {
@@ -1528,7 +1564,7 @@ internal static partial class Clearcote
     {
         internal string? Fingerprint { get; private init; }
 
-        internal string? ClearcotePlatform { get; private init; }
+        internal ClearcotePlatform? ClearcotePlatform { get; private init; }
 
         internal string? PlatformVersion { get; private init; }
 
@@ -1550,7 +1586,9 @@ internal static partial class Clearcote
 
         internal string? WebrtcIp { get; private init; }
 
-        internal string? TlsProfile { get; private init; }
+        internal ClearcoteTlsProfile? TlsProfile { get; private init; }
+
+        internal string? TlsProfileCustom { get; private init; }
 
         internal bool? DisableGpuFingerprint { get; private init; }
 
@@ -1613,6 +1651,7 @@ internal static partial class Clearcote
                 AcceptLanguage = AcceptLanguage ?? geo.AcceptLanguage,
                 WebrtcIp = WebrtcIp ?? geo.Ip,
                 TlsProfile = TlsProfile,
+                TlsProfileCustom = TlsProfileCustom,
                 DisableGpuFingerprint = DisableGpuFingerprint,
                 FingerprintNoise = FingerprintNoise,
                 FingerprintProfile = FingerprintProfile,
@@ -1649,6 +1688,7 @@ internal static partial class Clearcote
                 AcceptLanguage = options.AcceptLanguage,
                 WebrtcIp = options.WebrtcIp,
                 TlsProfile = options.TlsProfile,
+                TlsProfileCustom = options.TlsProfileCustom,
                 DisableGpuFingerprint = options.DisableGpuFingerprint,
                 FingerprintNoise = options.FingerprintNoise,
                 FingerprintProfile = options.FingerprintProfile,
@@ -1685,6 +1725,7 @@ internal static partial class Clearcote
                 AcceptLanguage = options.AcceptLanguage,
                 WebrtcIp = options.WebrtcIp,
                 TlsProfile = options.TlsProfile,
+                TlsProfileCustom = options.TlsProfileCustom,
                 DisableGpuFingerprint = options.DisableGpuFingerprint,
                 FingerprintNoise = options.FingerprintNoise,
                 FingerprintProfile = options.FingerprintProfile,
