@@ -139,6 +139,17 @@ public static class ClearcoteBrowser
         => Helpers.Clearcote.CheckRenderCoherenceAsync(page, claimedGpu);
 
     /// <summary>
+    /// Launch Clearcote with a raw CDP endpoint — the drop-in-for-the-whole-ecosystem mode.
+    /// Unlike <see cref="ClearcoteBrowser.LaunchAsync(IPlaywright, ClearcoteLaunchOptions)"/>
+    /// (which spawns and owns a Playwright browser), <c>ServeAsync</c> leaves a standing
+    /// browser any CDP client can attach to. The binary is launched directly (not through
+    /// Playwright), so <c>--enable-automation</c> is never present and
+    /// <c>navigator.webdriver</c> stays <c>false</c>.
+    /// </summary>
+    public static Task<ClearcoteServer> ServeAsync(ClearcoteServeOptions? options = default)
+        => Helpers.Clearcote.ServeAsync(options ?? new ClearcoteServeOptions());
+
+    /// <summary>
     /// Download and verify the opt-in Widevine CDM.
     /// </summary>
     public static Task<string> FetchWidevineAsync(ClearcoteWidevineOptions? options = default)

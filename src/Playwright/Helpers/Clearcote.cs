@@ -28,6 +28,7 @@ using System.IO.Compression;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
+using System.Net.Sockets;
 using System.Security.Cryptography;
 using System.Text;
 using System.Text.Json;
@@ -1785,6 +1786,172 @@ internal static partial class Clearcote
         if (!quiet && Environment.GetEnvironmentVariable("CLEARCOTE_NO_WARN") != "1")
         {
             Console.Error.WriteLine("[clearcote] " + message);
+        }
+    }
+
+    internal static async Task<ClearcoteServer> ServeAsync(ClearcoteServeOptions options)
+    {
+        var settings = ClearcoteSettings.From((BrowserTypeLaunchOptions)options);
+        settings = await ApplyGeoipAsync(settings, options.Proxy).ConfigureAwait(false);
+        EmitCoherenceWarnings(settings, options.Proxy, options.Headless ?? true, options.Args);
+        var (proxyArgs, _) = ResolveProxy(options.Proxy, settings.Quiet);
+        var exe = await ResolveExecutablePathAsync(settings.CacheDir, settings.Quiet, settings.AutoUpdate, honorEnvironmentBinary: true).ConfigureAwait(false);
+
+        var engineArgs = new List<string>();
+        engineArgs.AddRange(FingerprintArgs(settings));
+        engineArgs.AddRange(AgentArgs(settings));
+        engineArgs.AddRange(ExtensionArgs(settings.Extensions));
+        engineArgs.AddRange(proxyArgs);
+        if (!string.IsNullOrEmpty(options.Proxy?.Server))
+        {
+            engineArgs.Add("--disable-quic");
+        }
+
+        if (settings.DisablePrivacySandbox != false)
+        {
+            engineArgs.Add("--disable-features=" + string.Join(",", _privacySandboxFeatures));
+        }
+
+        var userArgs = options.Args?.ToArray() ?? Array.Empty<string>();
+        if (string.IsNullOrEmpty(settings.WebrtcIp)
+            && !engineArgs.Concat(userArgs).Any(static a => a.StartsWith("--webrtc-ip-handling-policy", StringComparison.Ordinal)
+                || a.StartsWith("--force-webrtc-ip-handling-policy", StringComparison.Ordinal)))
+        {
+            engineArgs.Add("--webrtc-ip-handling-policy=disable_non_proxied_udp");
+        }
+
+        engineArgs.AddRange(userArgs);
+        engineArgs = MergeFeatureFlags(engineArgs).ToList();
+
+        var port = options.Port ?? FindFreePort();
+        var host = options.Host ?? "127.0.0.1";
+        var allowOrigins = options.AllowOrigins ?? $"http://{host}:{port},http://localhost:{port}";
+        var ownUdd = string.IsNullOrEmpty(options.UserDataDir);
+        var userDataDir = options.UserDataDir ?? Path.Combine(Path.GetTempPath(), "clearcote-serve-" + Guid.NewGuid().ToString("N"));
+
+        var cdpArgs = new List<string>
+        {
+            $"--remote-debugging-port={port}",
+            $"--remote-debugging-address={host}",
+            $"--remote-allow-origins={allowOrigins}",
+            $"--user-data-dir={userDataDir}",
+        };
+        if (options.Headless != false)
+        {
+            cdpArgs.Add("--headless=new");
+        }
+
+        if (!string.IsNullOrEmpty(options.Proxy?.Server))
+        {
+            cdpArgs.Add("--proxy-server=" + options.Proxy.Server.Trim());
+        }
+
+        var env = FontLaunchEnv(exe, options.Env);
+        var psi = new ProcessStartInfo(exe);
+        foreach (var arg in engineArgs.Concat(cdpArgs))
+        {
+            psi.ArgumentList.Add(arg);
+        }
+
+        psi.UseShellExecute = false;
+        psi.RedirectStandardError = true;
+        psi.RedirectStandardOutput = true;
+        if (env != null)
+        {
+            foreach (var kvp in env)
+            {
+                psi.EnvironmentVariables[kvp.Key] = kvp.Value;
+            }
+        }
+
+        var process = await WinAvRetryAsync(
+            async (exePath) =>
+            {
+                var p = new ProcessStartInfo(exePath);
+                foreach (var arg in engineArgs.Concat(cdpArgs))
+                {
+                    p.ArgumentList.Add(arg);
+                }
+
+                p.UseShellExecute = false;
+                p.RedirectStandardError = true;
+                p.RedirectStandardOutput = true;
+                if (env != null)
+                {
+                    foreach (var kvp in env)
+                    {
+                        p.EnvironmentVariables[kvp.Key] = kvp.Value;
+                    }
+                }
+
+                var proc = Process.Start(p) ?? throw new PlaywrightException("Failed to start Clearcote browser process.");
+                return proc;
+            },
+            exe).ConfigureAwait(false);
+
+        var timeout = options.ReadyTimeoutMs ?? 30000;
+        var deadline = Environment.TickCount + timeout;
+        while (Environment.TickCount < deadline)
+        {
+            if (process.HasExited)
+            {
+                break;
+            }
+
+            try
+            {
+                using var client = new HttpClient { Timeout = TimeSpan.FromSeconds(1) };
+                using var response = await client.GetAsync($"http://{host}:{port}/json/version").ConfigureAwait(false);
+                if (response.IsSuccessStatusCode)
+                {
+                    Log(settings.Quiet, $"CDP endpoint ready: http://{host}:{port}");
+                    return new ClearcoteServer(process, host, port, userDataDir, ownUdd);
+                }
+            }
+            catch
+            {
+            }
+
+            await Task.Delay(250).ConfigureAwait(false);
+        }
+
+        try
+        {
+            if (!process.HasExited)
+            {
+                process.Kill(entireProcessTree: true);
+                process.WaitForExit(3000);
+            }
+        }
+        catch
+        {
+        }
+
+        if (ownUdd)
+        {
+            try
+            {
+                Directory.Delete(userDataDir, recursive: true);
+            }
+            catch
+            {
+            }
+        }
+
+        throw new PlaywrightException($"Clearcote CDP endpoint at http://{host}:{port} did not come up within {timeout}ms.");
+    }
+
+    private static int FindFreePort()
+    {
+        using var listener = new TcpListener(IPAddress.Loopback, 0);
+        listener.Start();
+        try
+        {
+            return ((IPEndPoint)listener.LocalEndpoint!).Port;
+        }
+        finally
+        {
+            listener.Stop();
         }
     }
 
