@@ -33,6 +33,10 @@ public class CLITests : PlaywrightTest
     [PlaywrightTest("cli.spec.ts", "")]
     public void ShouldBeAbleToRunCLICommands()
     {
+        if (!OperatingSystem.IsWindows())
+        {
+            Assert.Ignore("CLI tests require PowerShell (pwsh) which is only available on Windows");
+        }
         using var tempDir = new TempDirectory();
         string screenshotFile = Path.Combine(tempDir.Path, "screenshot.png");
         var (stdout, stderr, exitCode) = ExecutePlaywrightPs1(new[] { "screenshot", "-b", BrowserName, "data:text/html,Foobar", screenshotFile });
@@ -45,6 +49,10 @@ public class CLITests : PlaywrightTest
     [PlaywrightTest("cli.spec.ts", "")]
     public void ShouldReturnExitCode1ForCommandNotFound()
     {
+        if (!OperatingSystem.IsWindows())
+        {
+            Assert.Ignore("CLI tests require PowerShell (pwsh) which is only available on Windows");
+        }
         var (stdout, stderr, exitCode) = ExecutePlaywrightPs1(new[] { "this-command-is-not-found" });
 
         Assert.AreEqual(1, exitCode);

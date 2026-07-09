@@ -124,7 +124,7 @@ internal class APIResponse : IAPIResponse
     {
         if (options?.TypeInfoResolver == null)
         {
-            throw new PlaywrightException("JsonAsync<T>() requires source-generated JSON metadata in this NativeAOT fork. Pass a JsonTypeInfo<T> overload, or pass JsonSerializerOptions with TypeInfoResolver set to your JsonSerializerContext.");
+            throw new PlaywrightException("JsonAsync<T>() requires source-generated JSON metadata. Pass a JsonTypeInfo<T> overload, or set JsonSerializerOptions.TypeInfoResolver to your JsonSerializerContext.");
         }
 
         return options.GetTypeInfo(typeof(T)) as JsonTypeInfo<T>

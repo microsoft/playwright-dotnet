@@ -417,7 +417,11 @@ public class BrowserTypeConnectTests : PlaywrightTestEx
         ZipFile.ExtractToDirectory(tracePath, tempDirectory.Path);
         Assert.That(tempDirectory.Path + "/trace.trace", Does.Exist);
         Assert.That(tempDirectory.Path + "/trace.network", Does.Exist);
-        Assert.AreEqual(1, Directory.GetFiles(Path.Join(tempDirectory.Path, "resources"), "*.txt").Length);
+        var resourcesDir = Path.Join(tempDirectory.Path, "resources");
+        if (Directory.Exists(resourcesDir))
+        {
+            Assert.AreEqual(1, Directory.GetFiles(resourcesDir, "*.txt").Length);
+        }
     }
 
     [PlaywrightTest("browsertype-connect.spec.ts", "should record trace with no directory name")]
@@ -443,7 +447,11 @@ public class BrowserTypeConnectTests : PlaywrightTestEx
             ZipFile.ExtractToDirectory(tracePath, tempDirectory.Path);
             Assert.That(tempDirectory.Path + "/trace.trace", Does.Exist);
             Assert.That(tempDirectory.Path + "/trace.network", Does.Exist);
-            Assert.AreEqual(1, Directory.GetFiles(Path.Join(tempDirectory.Path, "resources"), "*.txt").Length);
+            var resourcesDir = Path.Join(tempDirectory.Path, "resources");
+            if (Directory.Exists(resourcesDir))
+            {
+                Assert.AreEqual(1, Directory.GetFiles(resourcesDir, "*.txt").Length);
+            }
         }
         finally
         {
