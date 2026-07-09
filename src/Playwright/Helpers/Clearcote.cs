@@ -52,7 +52,7 @@ internal static partial class Clearcote
         Url: "https://github.com/clearcotelabs/clearcote-browser/releases/download/v0.1.0-pre.19/clearcote-149.0.7827.114-windows-x64.zip",
         Sha256: "da47f325053a98130baf6f4907e13ba5135d37645fb5c150e59c8081e7df48b3",
         ExeSha256: "09a9f5ed46be45b54babc91872256fcdd5ef61cef6bf65cbec3928cbb38ee17a",
-        Size: 146861776,
+        Size: 242656951,
         Archive: "zip",
         Binary: "chrome.exe",
         AssetGlob: "windows-x64");

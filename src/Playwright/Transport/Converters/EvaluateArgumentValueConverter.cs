@@ -28,7 +28,6 @@ using System.Diagnostics.CodeAnalysis;
 using System.Dynamic;
 using System.Globalization;
 using System.Numerics;
-using System.Reflection;
 using System.Text.Json;
 using System.Text.Json.Nodes;
 using System.Text.RegularExpressions;
@@ -40,7 +39,6 @@ namespace Microsoft.Playwright.Transport.Converters;
 
 internal static class EvaluateArgumentValueConverter
 {
-    [UnconditionalSuppressMessage("ReflectionAnalysis", "IL2026", Justification = "Reflection fallback only reached for user-supplied objects on the evaluate boundary.")]
     internal static JsonObject Serialize(object? value, List<EvaluateArgumentGuidElement> handles, VisitorInfo visitorInfo)
     {
         if (value == null)
@@ -224,32 +222,34 @@ internal static class EvaluateArgumentValueConverter
             return new JsonObject { ["h"] = JsonValue.Create(handles.Count - 1) };
         }
 
-        // Fallback: attempt to serialize complex objects (e.g. anonymous types) via reflection.
-        // This path requires unreferenced code since we enumerate properties dynamically.
-        return SerializeObjectViaReflection(value, handles, visitorInfo);
-    }
-
-    [RequiresUnreferencedCode("Uses reflection to enumerate object properties for serialization.")]
-    private static JsonObject SerializeObjectViaReflection(object value, List<EvaluateArgumentGuidElement> handles, VisitorInfo visitorInfo)
-    {
-        var entries = new List<JsonNode?>();
-        int id = ++visitorInfo.LastId;
-        visitorInfo.Visited.Add(visitorInfo.Identity(value), id);
-        foreach (var prop in value.GetType().GetProperties(BindingFlags.Public | BindingFlags.Instance))
+        // Try source-gen serialization for types registered in PlaywrightJsonContext.
+        var knownTypeInfo = PlaywrightJsonContext.Default.GetTypeInfo(value.GetType());
+        if (knownTypeInfo != null)
         {
-            if (prop.CanRead)
+            var node = JsonSerializer.SerializeToNode(value, knownTypeInfo);
+            if (node is JsonObject obj)
             {
-                entries.Add(new JsonObject
+                var entries = new List<JsonNode?>();
+                int id = ++visitorInfo.LastId;
+                visitorInfo.Visited.Add(visitorInfo.Identity(value), id);
+                foreach (var kvp in obj)
                 {
-                    ["k"] = JsonValue.Create(prop.Name),
-                    ["v"] = Serialize(prop.GetValue(value), handles, visitorInfo),
-                });
+                    entries.Add(new JsonObject
+                    {
+                        ["k"] = JsonValue.Create(kvp.Key),
+                        ["v"] = Serialize(kvp.Value, handles, visitorInfo),
+                    });
+                }
+                return new JsonObject { ["o"] = new JsonArray(entries.ToArray()), ["id"] = JsonValue.Create(id) };
             }
         }
-        return new JsonObject { ["o"] = new JsonArray(entries.ToArray()), ["id"] = JsonValue.Create(id) };
+
+        // No reflection fallback for AOT: user must use primitives, Dictionary, ExpandoObject, or a registered type.
+        throw new PlaywrightException(
+            $"Type '{value.GetType().FullName}' is not registered for AOT-safe serialization. " +
+            "Use primitives, Dictionary<string, object?>, ExpandoObject, arrays, or register your type in PlaywrightJsonContext.");
     }
 
-    [UnconditionalSuppressMessage("ReflectionAnalysis", "IL2067", Justification = "Activator.CreateInstance for value types is safe.")]
     internal static object? Deserialize(JsonElement result, Type t)
     {
         var refCounter = new RefCounter();
@@ -291,7 +291,15 @@ internal static class EvaluateArgumentValueConverter
 
         if (parsed == null)
         {
-            return t.IsValueType ? Activator.CreateInstance(t) : null!;
+            if (!t.IsValueType)
+            {
+                return null!;
+            }
+            if (t.IsEnum)
+            {
+                return Enum.ToObject(t, 0);
+            }
+            return Convert.ChangeType(0, t, CultureInfo.InvariantCulture);
         }
 
         if (TryConvertJsonValue(parsed, t, out var converted))

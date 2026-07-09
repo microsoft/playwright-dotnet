@@ -217,13 +217,33 @@ internal class Page : ChannelOwner, IPage
 
     internal BrowserContext? OwnedContext { get; set; }
 
-    internal Dictionary<string, Delegate> Bindings { get; } = new();
+    internal Dictionary<string, (Func<BindingSource, object?[], Task<object?>> Callback, Type[] ParamTypes)> Bindings { get; } = new();
 
     internal Page Opener => _initializer.Opener;
 
     internal TaskCompletionSource<bool> ClosedOrCrashedTcs { get; } = new();
 
     public IAPIRequestContext APIRequest { get; }
+
+    private static async Task<object?> NormalizeFuncResultAsync<TResult>(TResult result)
+    {
+        return result is Task task ? await BindingCall.UnwrapTaskResultAsync(task).ConfigureAwait(false) : result;
+    }
+
+    private static Func<BindingSource, object?[], Task<object?>> CreateFuncWrapper<TResult>(Func<BindingSource, TResult> callback)
+        => async (source, args) => await NormalizeFuncResultAsync(callback(source)).ConfigureAwait(false);
+
+    private static Func<BindingSource, object?[], Task<object?>> CreateFuncWrapper<T, TResult>(Func<BindingSource, T, TResult> callback)
+        => async (source, args) => await NormalizeFuncResultAsync(callback(source, (T)args[0]!)).ConfigureAwait(false);
+
+    private static Func<BindingSource, object?[], Task<object?>> CreateFuncWrapper<T1, T2, TResult>(Func<BindingSource, T1, T2, TResult> callback)
+        => async (source, args) => await NormalizeFuncResultAsync(callback(source, (T1)args[0]!, (T2)args[1]!)).ConfigureAwait(false);
+
+    private static Func<BindingSource, object?[], Task<object?>> CreateFuncWrapper<T1, T2, T3, TResult>(Func<BindingSource, T1, T2, T3, TResult> callback)
+        => async (source, args) => await NormalizeFuncResultAsync(callback(source, (T1)args[0]!, (T2)args[1]!, (T3)args[2]!)).ConfigureAwait(false);
+
+    private static Func<BindingSource, object?[], Task<object?>> CreateFuncWrapper<T1, T2, T3, T4, TResult>(Func<BindingSource, T1, T2, T3, T4, TResult> callback)
+        => async (source, args) => await NormalizeFuncResultAsync(callback(source, (T1)args[0]!, (T2)args[1]!, (T3)args[2]!, (T4)args[3]!)).ConfigureAwait(false);
 
     internal override void OnMessage(string method, JsonElement serverParams)
     {
@@ -863,35 +883,56 @@ internal class Page : ChannelOwner, IPage
 
     [MethodImpl(MethodImplOptions.NoInlining)]
     public Task<IAsyncDisposable> ExposeBindingAsync(string name, Action callback)
-        => InnerExposeBindingAsync(name, callback);
+        => InnerExposeBindingAsync(
+            name,
+            (source, args) =>
+            {
+                callback();
+                return Task.FromResult<object?>(null);
+            },
+            Type.EmptyTypes);
 
     [MethodImpl(MethodImplOptions.NoInlining)]
     public Task<IAsyncDisposable> ExposeBindingAsync(string name, Action<BindingSource> callback)
-        => InnerExposeBindingAsync(name, callback);
+        => InnerExposeBindingAsync(
+            name,
+            (source, args) =>
+            {
+                callback(source);
+                return Task.FromResult<object?>(null);
+            },
+            Type.EmptyTypes);
 
     [MethodImpl(MethodImplOptions.NoInlining)]
     public Task<IAsyncDisposable> ExposeBindingAsync<T>(string name, Action<BindingSource, T> callback)
-        => InnerExposeBindingAsync(name, callback);
+        => InnerExposeBindingAsync(
+            name,
+            (source, args) =>
+            {
+                callback(source, (T)args[0]!);
+                return Task.FromResult<object?>(null);
+            },
+            new[] { typeof(T) });
 
     [MethodImpl(MethodImplOptions.NoInlining)]
     public Task<IAsyncDisposable> ExposeBindingAsync<TResult>(string name, Func<BindingSource, TResult> callback)
-        => InnerExposeBindingAsync(name, callback);
+        => InnerExposeBindingAsync(name, CreateFuncWrapper(callback), Type.EmptyTypes);
 
     [MethodImpl(MethodImplOptions.NoInlining)]
     public Task<IAsyncDisposable> ExposeBindingAsync<T, TResult>(string name, Func<BindingSource, T, TResult> callback)
-        => InnerExposeBindingAsync(name, callback);
+        => InnerExposeBindingAsync(name, CreateFuncWrapper<T, TResult>(callback), new[] { typeof(T) });
 
     [MethodImpl(MethodImplOptions.NoInlining)]
     public Task<IAsyncDisposable> ExposeBindingAsync<T1, T2, TResult>(string name, Func<BindingSource, T1, T2, TResult> callback)
-        => InnerExposeBindingAsync(name, callback);
+        => InnerExposeBindingAsync(name, CreateFuncWrapper<T1, T2, TResult>(callback), new[] { typeof(T1), typeof(T2) });
 
     [MethodImpl(MethodImplOptions.NoInlining)]
     public Task<IAsyncDisposable> ExposeBindingAsync<T1, T2, T3, TResult>(string name, Func<BindingSource, T1, T2, T3, TResult> callback)
-        => InnerExposeBindingAsync(name, callback);
+        => InnerExposeBindingAsync(name, CreateFuncWrapper<T1, T2, T3, TResult>(callback), new[] { typeof(T1), typeof(T2), typeof(T3) });
 
     [MethodImpl(MethodImplOptions.NoInlining)]
     public Task<IAsyncDisposable> ExposeBindingAsync<T1, T2, T3, T4, TResult>(string name, Func<BindingSource, T1, T2, T3, T4, TResult> callback)
-        => InnerExposeBindingAsync(name, callback);
+        => InnerExposeBindingAsync(name, CreateFuncWrapper<T1, T2, T3, T4, TResult>(callback), new[] { typeof(T1), typeof(T2), typeof(T3), typeof(T4) });
 
     [MethodImpl(MethodImplOptions.NoInlining)]
     public Task<IAsyncDisposable> ExposeFunctionAsync(string name, Action callback)
@@ -1341,7 +1382,7 @@ internal class Page : ChannelOwner, IPage
     {
         if (Bindings.TryGetValue(bindingCall.Name, out var binding))
         {
-            _ = bindingCall.CallAsync(binding);
+            _ = bindingCall.CallAsync(binding.Callback, binding.ParamTypes);
         }
     }
 
@@ -1416,14 +1457,14 @@ internal class Page : ChannelOwner, IPage
         Context?.FireFrameAttached(args);
     }
 
-    private async Task<IAsyncDisposable> InnerExposeBindingAsync(string name, Delegate callback)
+    private async Task<IAsyncDisposable> InnerExposeBindingAsync(string name, Func<BindingSource, object?[], Task<object?>> callback, Type[] paramTypes)
     {
         if (Bindings.ContainsKey(name))
         {
             throw new PlaywrightException($"Function \"{name}\" has been already registered");
         }
 
-        Bindings.Add(name, callback);
+        Bindings.Add(name, (callback, paramTypes));
 
         var result = await SendMessageToServerAsync(
             "exposeBinding",

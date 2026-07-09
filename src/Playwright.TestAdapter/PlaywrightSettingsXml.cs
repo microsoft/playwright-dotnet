@@ -24,6 +24,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.Linq;
 using System.Reflection;
@@ -69,6 +70,8 @@ public class PlaywrightSettingsXml
         }
     }
 
+    [RequiresDynamicCode("TestAdapter uses Activator.CreateInstance and MakeGenericType.")]
+    [RequiresUnreferencedCode("TestAdapter uses reflection on option types.")]
     private static object ParseXmlIntoClass(Type classType, XmlReader reader)
     {
         var endTag = reader.Name;
@@ -110,6 +113,8 @@ public class PlaywrightSettingsXml
         return options;
     }
 
+    [RequiresUnreferencedCode("TestAdapter uses reflection on option type properties.")]
+    [RequiresDynamicCode("TestAdapter uses MakeGenericType for dictionary types.")]
     private static void ApplyParameter(string key, string value, object options)
     {
         var property = options.GetType().GetProperty(key);

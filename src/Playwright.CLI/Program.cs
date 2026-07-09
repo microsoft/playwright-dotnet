@@ -23,6 +23,7 @@
  */
 
 using System;
+using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Reflection;
 
@@ -30,6 +31,8 @@ namespace Microsoft.Playwright.CLI;
 
 static class Program
 {
+    [RequiresDynamicCode("CLI uses Assembly.LoadFile and dynamic dispatch.")]
+    [RequiresUnreferencedCode("CLI uses reflection to load and invoke Playwright assembly.")]
     static int Main(string[] args)
     {
         var path = Directory.GetCurrentDirectory();

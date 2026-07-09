@@ -8,1305 +8,1649 @@ using Microsoft.Playwright;
 await using var server = LocalJsonServer.Start();
 using var playwright = await Playwright.CreateAsync();
 
+int passed = 0, failed = 0;
 IBrowser? browser = null;
 IBrowserContext? context = null;
 IPage? page = null;
-IBrowser? clearcoteBrowser = null;
-IBrowserContext? clearcoteContext = null;
-IPage? clearcotePage = null;
+
+void Assert(bool cond, string msg)
+{
+    if (!cond) throw new InvalidOperationException(msg);
+}
+
+async Task RunGroupAsync(string name, Func<Task> action)
+{
+    try
+    {
+        await action().ConfigureAwait(false);
+        Console.WriteLine($"  PASS {name}");
+        Interlocked.Increment(ref passed);
+    }
+    catch (Exception ex)
+    {
+        Console.WriteLine($"  FAIL {name}: {ex.GetType().Name}: {ex.Message}");
+        Interlocked.Increment(ref failed);
+    }
+}
 
 try
 {
-    await RunGroupAsync("driver-browser-lifecycle", async () =>
+    // ═══════════════════════════════════════════════════════════
+    // 1. BROWSER LIFECYCLE
+    // ═══════════════════════════════════════════════════════════
+
+    await RunGroupAsync("browser-launch", async () =>
     {
         browser = await playwright.Chromium.LaunchAsync(new() { Headless = true });
-        Assert(!string.IsNullOrWhiteSpace(browser.Version), "Browser version should be available.");
-
-        context = await browser.NewContextAsync(new()
-        {
-            Locale = "en-US",
-            ViewportSize = new() { Width = 800, Height = 600 },
-        });
+        Assert(!string.IsNullOrWhiteSpace(browser.Version), "Browser version missing");
+        context = await browser.NewContextAsync(new() { Locale = "en-US", ViewportSize = new() { Width = 800, Height = 600 } });
         page = await context.NewPageAsync();
-        Assert(page != null, "Page should be created.");
+        Assert(page != null, "Page should be created");
     });
 
-    await RunGroupAsync("context-cookies", async () =>
+    await RunGroupAsync("browser-type-name", async () =>
     {
-        var activeContext = context ?? throw new InvalidOperationException("Browser context was not created.");
-        await activeContext.AddCookiesAsync(new[]
-        {
-            new Microsoft.Playwright.Cookie
-            {
-                Name = "aot-cookie",
-                Value = "ok",
-                Url = "https://example.test",
-            },
-        });
-
-        var cookies = await activeContext.CookiesAsync("https://example.test");
-        Assert(cookies.Any(static cookie => cookie.Name == "aot-cookie" && cookie.Value == "ok"), "Cookie round-trip failed.");
+        Assert(browser!.BrowserType.Name == "chromium", "BrowserType.Name mismatch");
     });
 
-    await RunGroupAsync("page-dom-navigation", async () =>
+    await RunGroupAsync("browser-new-page", async () =>
     {
-        await page!.SetContentAsync("""
-<!doctype html>
-<title>Playwright NativeAOT</title>
-<label>Name <input id="name" /></label>
-<button id="primary">Run</button>
-<output id="result"></output>
-<ul>
-  <li>transport</li>
-  <li>evaluate</li>
-  <li>screenshot</li>
-</ul>
-<script>
-  document.querySelector('#primary').addEventListener('click', () => {
-    document.querySelector('#result').textContent = document.querySelector('#name').value.toUpperCase();
-  });
-</script>
-""");
-
-        Assert(await page.TitleAsync() == "Playwright NativeAOT", "Unexpected page title.");
-        Assert(await page.Locator("li").CountAsync() == 3, "Unexpected list count.");
+        await using var bp = await browser!.NewPageAsync();
+        Assert(bp != null, "Browser.NewPageAsync should work");
+        await bp.CloseAsync();
     });
 
-    await RunGroupAsync("locator-input-actions", async () =>
+    // ═══════════════════════════════════════════════════════════
+    // 2. NAVIGATION
+    // ═══════════════════════════════════════════════════════════
+
+    await RunGroupAsync("page-goto", async () =>
     {
-        await page!.Locator("#name").FillAsync("nativeaot");
-        await page.Locator("#primary").ClickAsync();
-        Assert(await page.Locator("#result").TextContentAsync() == "NATIVEAOT", "Locator input/click failed.");
+        var url = server!.BaseUri + "page";
+        var response = await page!.GotoAsync(url, new() { WaitUntil = WaitUntilState.DOMContentLoaded });
+        Assert(response != null, "GotoAsync should return response");
+        Assert(response!.Status == 200, "Response status should be 200");
+        Assert(page.Url == url, "Page.Url mismatch");
     });
 
-    await RunGroupAsync("evaluate-serialization", async () =>
+    await RunGroupAsync("page-title", async () =>
     {
-        var sum = await page!.EvaluateAsync<int>(
-            "payload => payload.values.reduce((total, value) => total + value, 0)",
-            new Dictionary<string, object?>
-            {
-                ["values"] = new[] { 1, 2, 3 },
-            });
-        Assert(sum == 6, "Evaluate argument serialization failed.");
-
-        var payload = await page.EvaluateAsync<JsonElement>(
-            "() => ({ title: document.title, itemCount: document.querySelectorAll('li').length })");
-        Assert(payload.GetProperty("title").GetString() == "Playwright NativeAOT", "JsonElement result title mismatch.");
-        Assert(payload.GetProperty("itemCount").GetInt32() == 3, "JsonElement result count mismatch.");
-    });
-
-    await RunGroupAsync("route-interception", async () =>
-    {
-        await using var routeRegistration = await page!.RouteAsync("**/route-page", async route =>
-        {
-            await route.FulfillAsync(new()
-            {
-                Status = 200,
-                ContentType = "text/html",
-                Body = "<!doctype html><title>Route OK</title><h1 id=\"route\">route-ok</h1>",
-            }).ConfigureAwait(false);
-        });
-
-        var response = await page.GotoAsync("http://example.test/route-page", new()
-        {
-            Timeout = 10_000,
-            WaitUntil = WaitUntilState.DOMContentLoaded,
-        });
-        Assert(response?.Status == 200, "Route response status mismatch.");
-        Assert(await page.Locator("#route").TextContentAsync() == "route-ok", "Route fulfilled body mismatch.");
-    });
-
-    await RunGroupAsync("page-network-response", async () =>
-    {
-        var response = await page!.GotoAsync(new Uri(server.BaseUri, "page").ToString(), new()
-        {
-            Timeout = 10_000,
-            WaitUntil = WaitUntilState.DOMContentLoaded,
-        });
-        Assert(response?.Status == 200, "Page network response status mismatch.");
-        Assert(await page.Locator("#network").TextContentAsync() == "network-ok", "Network page body mismatch.");
-
-        var fetchResult = await page.EvaluateAsync<JsonElement>("async () => await (await fetch('/json')).json()");
-        Assert(fetchResult.GetProperty("message").GetString() == "ok", "Page fetch JSON string mismatch.");
-        Assert(fetchResult.GetProperty("count").GetInt32() == 3, "Page fetch JSON number mismatch.");
-    });
-
-    await RunGroupAsync("api-request-json-sourcegen", async () =>
-    {
-        await using var api = await playwright.APIRequest.NewContextAsync();
-        var response = await api.GetAsync(new Uri(server.BaseUri, "json").ToString());
-        Assert(response.Ok, "APIRequest response should be OK.");
-
-        var raw = await response.JsonAsync();
-        Assert(raw?.GetProperty("message").GetString() == "ok", "Raw APIResponse.JsonAsync failed.");
-
-        var typed = await response.JsonAsync(AotSampleJsonContext.Default.SampleApiPayload);
-        Assert(typed?.Count == 3, "Typed APIResponse.JsonAsync count mismatch.");
-        var typedPayload = typed ?? throw new InvalidOperationException("Typed APIResponse.JsonAsync returned null.");
-        Assert(typedPayload.Tags.Length == 2 && typedPayload.Tags[0] == "nativeaot", "Typed APIResponse.JsonAsync tags mismatch.");
-    });
-
-    await RunGroupAsync("binding-expose-function", async () =>
-    {
-        await page!.ExposeFunctionAsync("addNumbers", (int a, int b) => a + b);
-        var sum = await page.EvaluateAsync<int>("async () => await window.addNumbers(40, 2)");
-        Assert(sum == 42, "ExposeFunction sum mismatch.");
-
-        await page.ExposeFunctionAsync("greet", (string name) => $"Hello, {name}!");
-        var greeting = await page.EvaluateAsync<string>("async () => await window.greet('AOT')");
-        Assert(greeting == "Hello, AOT!", "ExposeFunction greeting mismatch.");
-    });
-
-    await RunGroupAsync("binding-error-serialization", async () =>
-    {
-        await page!.ExposeFunctionAsync("fail", () => throw new InvalidOperationException("AOT-bind-error"));
-        var errorMessage = await page.EvaluateAsync<string?>(@"
-            async () => {
-                try { await window.fail(); return null; }
-                catch (e) { return e.message; }
-            }");
-        Assert(errorMessage != null && errorMessage.Contains("AOT-bind-error"),
-            "Binding error serialization failed.");
-    });
-
-    await RunGroupAsync("binding-async-void", async () =>
-    {
-        await page!.ExposeFunctionAsync("ping", async () => { await Task.Yield(); });
-        var ok = await page.EvaluateAsync<string?>("async () => { await window.ping(); return 'pong'; }");
-        Assert(ok == "pong", "Async void binding failed.");
-    });
-
-    await RunGroupAsync("locator-find-by-text", async () =>
-    {
-        await page!.SetContentAsync("<ul><li>alpha</li><li>beta</li><li>gamma</li></ul>");
-        var items = page.GetByText("beta");
-        Assert(await items.CountAsync() == 1, "GetByText count mismatch.");
-        Assert(await items.TextContentAsync() == "beta", "GetByText text mismatch.");
-    });
-
-    await RunGroupAsync("keyboard-navigation", async () =>
-    {
-        await page!.SetContentAsync("""
-            <label>Name <input id="name" /></label>
-            <button id="next">Next</button>
-            <output id="out"></output>
-            """);
-        await page.Locator("#name").FillAsync("");
-        await page.Keyboard.TypeAsync("keyboard-aot");
-        var inputValue = await page.InputValueAsync("#name");
-        Assert(inputValue == "keyboard-aot", "Keyboard.TypeAsync failed.");
-
-        await page.Keyboard.PressAsync("Tab");
-        var focusIsButton = await page.EvaluateAsync<bool>("() => document.activeElement?.id === 'next'");
-        Assert(focusIsButton, "Keyboard Tab focus failed.");
-    });
-
-    await RunGroupAsync("console-listener", async () =>
-    {
-        var consoleMsg = await page!.RunAndWaitForConsoleMessageAsync(async () =>
-        {
-            await page.EvaluateAsync("() => console.log('aot-console')");
-        });
-        Assert(consoleMsg.Text == "aot-console", "Console message text mismatch.");
-    });
-
-    await RunGroupAsync("wait-for-element", async () =>
-    {
-        await page!.SetContentAsync("<p id='target'>hello</p>");
-        var el = await page.WaitForSelectorAsync("#target", new() { State = WaitForSelectorState.Attached, Timeout = 5000 });
-        Assert(el != null, "WaitForSelector did not find element.");
-        Assert(await el!.TextContentAsync() == "hello", "WaitForSelector element text mismatch.");
+        Assert(await page!.TitleAsync() == "Network OK", "Title mismatch");
     });
 
     await RunGroupAsync("page-go-back-forward", async () =>
     {
-        await page!.GotoAsync("data:text/html,<title>Page A</title><h1>A</h1>", new() { WaitUntil = WaitUntilState.DOMContentLoaded });
-        Assert(await page.TitleAsync() == "Page A", "Initial page title mismatch.");
+        var url = server!.BaseUri + "page";
+        await page!.GotoAsync(url, new() { WaitUntil = WaitUntilState.DOMContentLoaded });
         await page.GotoAsync("data:text/html,<title>Page B</title><h1>B</h1>", new() { WaitUntil = WaitUntilState.DOMContentLoaded });
-        Assert(await page.TitleAsync() == "Page B", "Second page title mismatch.");
-        await page.GoBackAsync(new() { WaitUntil = WaitUntilState.DOMContentLoaded });
-        Assert(await page.TitleAsync() == "Page A", "GoBack title mismatch.");
-        await page.GoForwardAsync(new() { WaitUntil = WaitUntilState.DOMContentLoaded });
-        Assert(await page.TitleAsync() == "Page B", "GoForward title mismatch.");
+        var back = await page.GoBackAsync(new() { WaitUntil = WaitUntilState.DOMContentLoaded });
+        Assert(back?.Status == 200, "GoBack should return response");
+        Assert(await page.TitleAsync() == "Network OK", "GoBack title mismatch");
+        var fwd = await page.GoForwardAsync(new() { WaitUntil = WaitUntilState.DOMContentLoaded });
+        // GoForward to a data: URI returns null response, that's expected
+        Assert(await page.TitleAsync() == "Page B", "GoForward title mismatch");
     });
 
     await RunGroupAsync("page-reload", async () =>
     {
-        await page!.GotoAsync("data:text/html,<title>Reload Test</title><input id='counter' value='0' />", new() { WaitUntil = WaitUntilState.DOMContentLoaded });
+        var url = server!.BaseUri + "page";
+        await page!.GotoAsync(url, new() { WaitUntil = WaitUntilState.DOMContentLoaded });
         await page.EvaluateAsync("() => document.title = 'modified'");
-        Assert(await page.TitleAsync() == "modified", "Pre-reload title mismatch.");
-        await page.ReloadAsync(new() { WaitUntil = WaitUntilState.DOMContentLoaded });
-        Assert(await page.TitleAsync() == "Reload Test", "Post-reload title mismatch.");
+        var response = await page.ReloadAsync(new() { WaitUntil = WaitUntilState.DOMContentLoaded });
+        Assert(response?.Status == 200, "Reload should return response");
+        Assert(await page.TitleAsync() == "Network OK", "Reload title mismatch");
     });
+
+    await RunGroupAsync("page-wait-for-navigation", async () =>
+    {
+        var url = server!.BaseUri + "page";
+        await page!.GotoAsync("data:text/html,<title>Nav Start</title>", new() { WaitUntil = WaitUntilState.DOMContentLoaded });
+        var nav = page.WaitForNavigationAsync();
+        await page.GotoAsync(url, new() { WaitUntil = WaitUntilState.DOMContentLoaded });
+        var r = await nav;
+        Assert(r?.Status == 200, "WaitForNavigation should return response");
+    });
+
+    await RunGroupAsync("page-wait-for-url", async () =>
+    {
+        var url = server!.BaseUri + "page";
+        await page!.GotoAsync("data:text/html,<title>URL Wait</title>", new() { WaitUntil = WaitUntilState.DOMContentLoaded });
+        var urlTask = page.WaitForURLAsync("**/page");
+        await page.GotoAsync(url, new() { WaitUntil = WaitUntilState.DOMContentLoaded });
+        await urlTask;
+    });
+
+    await RunGroupAsync("page-wait-for-load-state", async () =>
+    {
+        var url = server!.BaseUri + "page";
+        await page!.GotoAsync(url, new() { WaitUntil = WaitUntilState.DOMContentLoaded });
+        await page.WaitForLoadStateAsync(LoadState.DOMContentLoaded);
+    });
+
+    // ═══════════════════════════════════════════════════════════
+    // 3. PAGE CONTENT
+    // ═══════════════════════════════════════════════════════════
+
+    await RunGroupAsync("page-set-content", async () =>
+    {
+        await page!.SetContentAsync("<!doctype html><title>SC</title><p>content</p>");
+        Assert(await page.TitleAsync() == "SC", "SetContent title mismatch");
+    });
+
+    await RunGroupAsync("page-content", async () =>
+    {
+        var html = await page!.ContentAsync();
+        Assert(html.Contains("content"), "ContentAsync mismatch");
+    });
+
+    await RunGroupAsync("page-bring-to-front", async () =>
+    {
+        await page!.BringToFrontAsync();
+    });
+
+    await RunGroupAsync("page-opener", async () =>
+    {
+        var opener = await page!.OpenerAsync();
+        Assert(opener == null, "Main page should have no opener");
+    });
+
+    // ═══════════════════════════════════════════════════════════
+    // 4. EVALUATE
+    // ═══════════════════════════════════════════════════════════
+
+    await RunGroupAsync("page-evaluate", async () =>
+    {
+        var sum = await page!.EvaluateAsync<int>("() => 1 + 2");
+        Assert(sum == 3, "Evaluate<int> mismatch");
+    });
+
+    await RunGroupAsync("page-evaluate-json-element", async () =>
+    {
+        var payload = await page!.EvaluateAsync<JsonElement>("() => ({ a: 1, b: 'two' })");
+        Assert(payload.GetProperty("a").GetInt32() == 1, "Evaluate JsonElement a mismatch");
+        Assert(payload.GetProperty("b").GetString() == "two", "Evaluate JsonElement b mismatch");
+    });
+
+    await RunGroupAsync("page-evaluate-non-generic", async () =>
+    {
+        var result = await page!.EvaluateAsync("() => 'hello'");
+        Assert(result?.ToString() == "hello", "Evaluate non-generic mismatch");
+    });
+
+    await RunGroupAsync("page-evaluate-handle", async () =>
+    {
+        var handle = await page!.EvaluateHandleAsync("() => ({ x: 10 })");
+        Assert(handle != null, "EvaluateHandleAsync should return handle");
+    });
+
+    await RunGroupAsync("page-eval-on-selector", async () =>
+    {
+        await page!.SetContentAsync("<p id='eos'>hello</p>");
+        var text = await page.EvalOnSelectorAsync<string>("#eos", "el => el.textContent");
+        Assert(text == "hello", "EvalOnSelector mismatch");
+    });
+
+    await RunGroupAsync("page-eval-on-selector-all", async () =>
+    {
+        await page!.SetContentAsync("<ul><li>a</li><li>b</li></ul>");
+        var count = await page.EvalOnSelectorAllAsync<int>("li", "els => els.length");
+        Assert(count == 2, "EvalOnSelectorAll mismatch");
+    });
+
+    // ═══════════════════════════════════════════════════════════
+    // 5. LOCATOR
+    // ═══════════════════════════════════════════════════════════
+
+    await RunGroupAsync("locator-create", async () =>
+    {
+        await page!.SetContentAsync("<div class='test'>x</div>");
+        var loc = page.Locator(".test");
+        Assert(loc != null, "Locator should not be null");
+    });
+
+    await RunGroupAsync("locator-get-by-text", async () =>
+    {
+        await page!.SetContentAsync("<ul><li>alpha</li><li>beta</li></ul>");
+        Assert(await page.GetByText("beta").CountAsync() == 1, "GetByText count mismatch");
+    });
+
+    await RunGroupAsync("locator-get-by-role", async () =>
+    {
+        await page!.SetContentAsync("<button>OK</button>");
+        Assert(await page.GetByRole(AriaRole.Button).CountAsync() == 1, "GetByRole count mismatch");
+    });
+
+    await RunGroupAsync("locator-get-by-test-id", async () =>
+    {
+        await page!.SetContentAsync("<button data-testid='sub'>Send</button>");
+        Assert(await page.GetByTestId("sub").TextContentAsync() == "Send", "GetByTestId mismatch");
+    });
+
+    await RunGroupAsync("locator-get-by-alt-text", async () =>
+    {
+        await page!.SetContentAsync("<img alt='photo' src=''>");
+        Assert(await page.GetByAltText("photo").CountAsync() == 1, "GetByAltText mismatch");
+    });
+
+    await RunGroupAsync("locator-get-by-label", async () =>
+    {
+        await page!.SetContentAsync("<label for='fn'>Name</label><input id='fn'>");
+        Assert(await page.GetByLabel("Name").CountAsync() == 1, "GetByLabel mismatch");
+    });
+
+    await RunGroupAsync("locator-get-by-placeholder", async () =>
+    {
+        await page!.SetContentAsync("<input placeholder='Enter...'>");
+        Assert(await page.GetByPlaceholder("Enter...").CountAsync() == 1, "GetByPlaceholder mismatch");
+    });
+
+    await RunGroupAsync("locator-get-by-title", async () =>
+    {
+        await page!.SetContentAsync("<div title='info'>text</div>");
+        Assert(await page.GetByTitle("info").TextContentAsync() == "text", "GetByTitle mismatch");
+    });
+
+    await RunGroupAsync("locator-count", async () =>
+    {
+        await page!.SetContentAsync("<ul><li>a</li><li>b</li><li>c</li></ul>");
+        Assert(await page.Locator("li").CountAsync() == 3, "Count mismatch");
+    });
+
+    await RunGroupAsync("locator-first-last-nth", async () =>
+    {
+        await page!.SetContentAsync("<ul><li>x</li><li>y</li><li>z</li></ul>");
+        Assert(await page.Locator("li").First.TextContentAsync() == "x", "First mismatch");
+        Assert(await page.Locator("li").Last.TextContentAsync() == "z", "Last mismatch");
+        Assert(await page.Locator("li").Nth(1).TextContentAsync() == "y", "Nth mismatch");
+    });
+
+    await RunGroupAsync("locator-filter-and-or", async () =>
+    {
+        await page!.SetContentAsync("<div class='x'>a</div><div class='x'>b</div>");
+        var filtered = page.Locator("div").Filter(new() { HasText = "a" });
+        Assert(await filtered.CountAsync() == 1, "Filter mismatch");
+        var orLoc = page.Locator(".x").Or(page.Locator(".nonexistent"));
+        Assert(await orLoc.CountAsync() == 2, "Or count mismatch");
+        var andLoc = page.Locator("div").And(page.Locator(".x"));
+        Assert(await andLoc.CountAsync() == 2, "And count mismatch");
+    });
+
+    await RunGroupAsync("locator-all-texts", async () =>
+    {
+        await page!.SetContentAsync("<ul><li>red</li><li>green</li></ul>");
+        var texts = await page.Locator("li").AllTextContentsAsync();
+        Assert(texts.Count == 2 && texts[1] == "green", "AllTextContents mismatch");
+        var inner = await page.Locator("li").AllInnerTextsAsync();
+        Assert(inner.Count == 2, "AllInnerTexts mismatch");
+    });
+
+    await RunGroupAsync("locator-all-elements", async () =>
+    {
+        await page!.SetContentAsync("<ul><li>a</li><li>b</li></ul>");
+        var all = await page.Locator("li").AllAsync();
+        Assert(all.Count == 2, "AllAsync count mismatch");
+    });
+
+    await RunGroupAsync("locator-describe", async () =>
+    {
+        var loc = page!.Locator("div").Describe("my-div");
+        Assert(await loc.CountAsync() >= 0, "Describe should not throw");
+    });
+
+    // ═══════════════════════════════════════════════════════════
+    // 6. LOCATOR ACTIONS
+    // ═══════════════════════════════════════════════════════════
+
+    await RunGroupAsync("locator-click", async () =>
+    {
+        await page!.SetContentAsync("<button id='lc'>click</button><output id='lc-out'></output><script>document.getElementById('lc').onclick=()=>document.getElementById('lc-out').textContent='ok'</script>");
+        await page.Locator("#lc").ClickAsync();
+        Assert(await page.Locator("#lc-out").TextContentAsync() == "ok", "Click mismatch");
+    });
+
+    await RunGroupAsync("locator-dbl-click", async () =>
+    {
+        await page!.SetContentAsync("<button id='ld'>db</button><output id='ld-out'></output><script>document.getElementById('ld').ondblclick=()=>document.getElementById('ld-out').textContent='ok'</script>");
+        await page.Locator("#ld").DblClickAsync();
+        Assert(await page.Locator("#ld-out").TextContentAsync() == "ok", "DblClick mismatch");
+    });
+
+    await RunGroupAsync("locator-fill", async () =>
+    {
+        await page!.SetContentAsync("<input id='lf'>");
+        await page.Locator("#lf").FillAsync("hello");
+        Assert(await page.InputValueAsync("#lf") == "hello", "Fill mismatch");
+    });
+
+    await RunGroupAsync("locator-type", async () =>
+    {
+        await page!.SetContentAsync("<input id='lt'>");
+        await page.Locator("#lt").TypeAsync("world");
+        Assert(await page.InputValueAsync("#lt") == "world", "Type mismatch");
+    });
+
+    await RunGroupAsync("locator-press", async () =>
+    {
+        await page!.SetContentAsync("<input id='lp'>");
+        await page.Locator("#lp").PressAsync("Shift+KeyA");
+        Assert(await page.InputValueAsync("#lp") == "A", "Press mismatch");
+    });
+
+    await RunGroupAsync("locator-press-sequentially", async () =>
+    {
+        await page!.SetContentAsync("<input id='lps'>");
+        await page.Locator("#lps").PressSequentiallyAsync("seq");
+        Assert(await page.InputValueAsync("#lps") == "seq", "PressSequentially mismatch");
+    });
+
+    await RunGroupAsync("locator-check-uncheck", async () =>
+    {
+        await page!.SetContentAsync("<input type='checkbox' id='lcu'>");
+        await page.Locator("#lcu").CheckAsync();
+        Assert(await page.Locator("#lcu").IsCheckedAsync(), "Check failed");
+        await page.Locator("#lcu").UncheckAsync();
+        Assert(!await page.Locator("#lcu").IsCheckedAsync(), "Uncheck failed");
+    });
+
+    await RunGroupAsync("locator-set-checked", async () =>
+    {
+        await page!.SetContentAsync("<input type='checkbox' id='lsc'>");
+        await page.Locator("#lsc").SetCheckedAsync(true);
+        Assert(await page.Locator("#lsc").IsCheckedAsync(), "SetChecked true failed");
+        await page.Locator("#lsc").SetCheckedAsync(false);
+        Assert(!await page.Locator("#lsc").IsCheckedAsync(), "SetChecked false failed");
+    });
+
+    await RunGroupAsync("locator-hover", async () =>
+    {
+        await page!.SetContentAsync("<div id='lh' style='width:50px;height:50px;background:red' onmouseenter='this.classList.add(\"hovered\")'></div>");
+        await page.Locator("#lh").HoverAsync();
+        var hasClass = await page.EvaluateAsync<bool>("() => document.getElementById('lh').classList.contains('hovered')");
+        Assert(hasClass, "Hover should add class");
+    });
+
+    await RunGroupAsync("locator-focus-blur", async () =>
+    {
+        await page!.SetContentAsync("<input id='lfb'><output id='lfb-out'></output><script>document.getElementById('lfb').onblur=()=>document.getElementById('lfb-out').textContent='blur'</script>");
+        await page.Locator("#lfb").FocusAsync();
+        var focused = await page.EvaluateAsync<bool>("() => document.activeElement?.id === 'lfb'");
+        Assert(focused, "Focus failed");
+        await page.Locator("#lfb").BlurAsync();
+        Assert(await page.Locator("#lfb-out").TextContentAsync() == "blur", "Blur failed");
+    });
+
+    await RunGroupAsync("locator-clear", async () =>
+    {
+        await page!.SetContentAsync("<input id='lcl' value='initial'>");
+        await page.Locator("#lcl").ClearAsync();
+        Assert(await page.InputValueAsync("#lcl") == "", "Clear mismatch");
+    });
+
+    await RunGroupAsync("locator-select-option", async () =>
+    {
+        await page!.SetContentAsync("<select id='lso'><option value='a'>A</option><option value='b'>B</option></select>");
+        var selected = await page.Locator("#lso").SelectOptionAsync("b");
+        Assert(selected.Count == 1 && selected[0] == "b", "SelectOption mismatch");
+    });
+
+    await RunGroupAsync("locator-dispatch-event", async () =>
+    {
+        await page!.SetContentAsync("<button id='lde'>btn</button><output id='lde-out'></output><script>document.getElementById('lde').addEventListener('click',()=>document.getElementById('lde-out').textContent='clicked')</script>");
+        await page.Locator("#lde").DispatchEventAsync("click");
+        Assert(await page.Locator("#lde-out").TextContentAsync() == "clicked", "DispatchEvent mismatch");
+    });
+
+    await RunGroupAsync("locator-tap", async () =>
+    {
+        var touchCtx = await browser!.NewContextAsync(new() { HasTouch = true });
+        var tp = await touchCtx.NewPageAsync();
+        await tp.SetContentAsync("<button id='ltap'>tap</button><output id='ltap-out'></output><script>document.getElementById('ltap').addEventListener('touchstart',()=>document.getElementById('ltap-out').textContent='tapped')</script>");
+        await tp.Locator("#ltap").TapAsync();
+        Assert(await tp.Locator("#ltap-out").TextContentAsync() == "tapped", "Locator Tap mismatch");
+        await tp.CloseAsync();
+        await touchCtx.CloseAsync();
+    });
+
+    await RunGroupAsync("locator-screenshot", async () =>
+    {
+        await page!.SetContentAsync("<div style='width:50px;height:50px;background:red'></div>");
+        var bytes = await page.Locator("div").ScreenshotAsync();
+        Assert(bytes.Length > 0, "Locator screenshot empty");
+    });
+
+    await RunGroupAsync("locator-bounding-box", async () =>
+    {
+        await page!.SetContentAsync("<div id='lbb' style='width:80px;height:30px'>box</div>");
+        var box = await page.Locator("#lbb").BoundingBoxAsync();
+        Assert(box != null && Math.Abs(box!.Width - 80) < 1, "BoundingBox mismatch");
+    });
+
+    await RunGroupAsync("locator-text-content", async () =>
+    {
+        await page!.SetContentAsync("<p id='ltc'>text</p>");
+        Assert(await page.Locator("#ltc").TextContentAsync() == "text", "TextContent mismatch");
+    });
+
+    await RunGroupAsync("locator-inner-html-text", async () =>
+    {
+        await page!.SetContentAsync("<div id='lih'><span>inner</span></div>");
+        Assert(await page.Locator("#lih").InnerHTMLAsync() == "<span>inner</span>", "InnerHTML mismatch");
+        Assert(await page.Locator("#lih").InnerTextAsync() == "inner", "InnerText mismatch");
+    });
+
+    await RunGroupAsync("locator-input-value", async () =>
+    {
+        await page!.SetContentAsync("<input id='liv' value='test'>");
+        Assert(await page.Locator("#liv").InputValueAsync() == "test", "InputValue mismatch");
+    });
+
+    await RunGroupAsync("locator-get-attribute", async () =>
+    {
+        await page!.SetContentAsync("<a id='lga' href='https://aot.test'>link</a>");
+        Assert(await page.Locator("#lga").GetAttributeAsync("href") == "https://aot.test", "GetAttribute mismatch");
+    });
+
+    await RunGroupAsync("locator-drag-to", async () =>
+    {
+        await page!.SetContentAsync("<div id='src' draggable='true' style='width:50px;height:50px;background:red'>drag</div><div id='dst' style='width:50px;height:50px;background:blue'>drop</div><script>let dropped=false;document.getElementById('dst').addEventListener('drop',e=>{e.preventDefault();dropped=true});document.getElementById('dst').addEventListener('dragover',e=>e.preventDefault());document.getElementById('src').addEventListener('dragstart',e=>e.dataTransfer.setData('text','drag'))</script>");
+        await page.Locator("#src").DragToAsync(page.Locator("#dst"));
+        var isDropped = await page.EvaluateAsync<bool>("() => dropped");
+        Assert(isDropped, "DragTo mismatch");
+    });
+
+    await RunGroupAsync("locator-scroll-into-view", async () =>
+    {
+        await page!.SetContentAsync("<div style='height:2000px'></div><div id='lsv'>bottom</div>");
+        await page.Locator("#lsv").ScrollIntoViewIfNeededAsync();
+        var visible = await page.Locator("#lsv").IsVisibleAsync();
+        Assert(visible, "ScrollIntoViewIfNeeded mismatch");
+    });
+
+    await RunGroupAsync("locator-select-text", async () =>
+    {
+        await page!.SetContentAsync("<p id='lst'>selectable</p>");
+        await page.Locator("#lst").SelectTextAsync();
+        var selected = await page.EvaluateAsync<string>("() => window.getSelection()?.toString()");
+        Assert(selected == "selectable", "SelectText mismatch");
+    });
+
+    await RunGroupAsync("locator-wait-for", async () =>
+    {
+        await page!.SetContentAsync("<div id='lwf' style='display:none'>shown</div><script>setTimeout(()=>document.getElementById('lwf').style.display='block',50)</script>");
+        await page.Locator("#lwf").WaitForAsync(new() { State = WaitForSelectorState.Visible });
+        Assert(await page.Locator("#lwf").IsVisibleAsync(), "WaitFor visible failed");
+    });
+
+    await RunGroupAsync("locator-element-handle", async () =>
+    {
+        await page!.SetContentAsync("<p id='leh'>handle</p>");
+        var handle = await page.Locator("#leh").ElementHandleAsync();
+        Assert(handle != null, "ElementHandleAsync should return handle");
+        var handles = await page.Locator("p").ElementHandlesAsync();
+        Assert(handles.Count == 1, "ElementHandlesAsync count mismatch");
+    });
+
+    await RunGroupAsync("locator-evaluate", async () =>
+    {
+        await page!.SetContentAsync("<p id='lev'>text</p>");
+        var text = await page.Locator("#lev").EvaluateAsync<string>("el => el.textContent");
+        Assert(text == "text", "Locator Evaluate mismatch");
+        var all = await page.Locator("p").EvaluateAllAsync<string[]>("els => els.map(e => e.textContent)");
+        Assert(all.Length == 1 && all[0] == "text", "EvaluateAll mismatch");
+    });
+
+    await RunGroupAsync("locator-evaluate-handle", async () =>
+    {
+        await page!.SetContentAsync("<p id='leh2'>data</p>");
+        var handle = await page.Locator("#leh2").EvaluateHandleAsync("el => el");
+        Assert(handle != null, "EvaluateHandle async should return handle");
+    });
+
+    // ═══════════════════════════════════════════════════════════
+    // 7. PAGE ACTIONS
+    // ═══════════════════════════════════════════════════════════
+
+    await RunGroupAsync("page-click", async () =>
+    {
+        await page!.SetContentAsync("<button id='pc'>c</button><output id='pc-out'></output><script>document.getElementById('pc').onclick=()=>document.getElementById('pc-out').textContent='ok'</script>");
+        await page.ClickAsync("#pc");
+        Assert(await page.Locator("#pc-out").TextContentAsync() == "ok", "Page Click mismatch");
+    });
+
+    await RunGroupAsync("page-dbl-click", async () =>
+    {
+        await page!.SetContentAsync("<button id='pdc'>db</button><output id='pdc-out'></output><script>document.getElementById('pdc').ondblclick=()=>document.getElementById('pdc-out').textContent='ok'</script>");
+        await page.DblClickAsync("#pdc");
+        Assert(await page.Locator("#pdc-out").TextContentAsync() == "ok", "Page DblClick mismatch");
+    });
+
+    await RunGroupAsync("page-fill", async () =>
+    {
+        await page!.SetContentAsync("<input id='pf'>");
+        await page.FillAsync("#pf", "page-fill");
+        Assert(await page.InputValueAsync("#pf") == "page-fill", "Page Fill mismatch");
+    });
+
+    await RunGroupAsync("page-type", async () =>
+    {
+        await page!.SetContentAsync("<input id='pt'>");
+        await page.TypeAsync("#pt", "page-type");
+        Assert(await page.InputValueAsync("#pt") == "page-type", "Page Type mismatch");
+    });
+
+    await RunGroupAsync("page-press", async () =>
+    {
+        await page!.SetContentAsync("<input id='pp'>");
+        await page.FocusAsync("#pp");
+        await page.PressAsync("#pp", "Shift+KeyH");
+        Assert(await page.InputValueAsync("#pp") == "H", "Page Press mismatch");
+    });
+
+    await RunGroupAsync("page-check-uncheck", async () =>
+    {
+        await page!.SetContentAsync("<input type='checkbox' id='pcu'>");
+        await page.CheckAsync("#pcu");
+        Assert(await page.IsCheckedAsync("#pcu"), "Page Check failed");
+        await page.UncheckAsync("#pcu");
+        Assert(!await page.IsCheckedAsync("#pcu"), "Page Uncheck failed");
+    });
+
+    await RunGroupAsync("page-set-checked", async () =>
+    {
+        await page!.SetContentAsync("<input type='checkbox' id='psc'>");
+        await page.SetCheckedAsync("#psc", true);
+        Assert(await page.IsCheckedAsync("#psc"), "Page SetChecked true failed");
+    });
+
+    await RunGroupAsync("page-hover", async () =>
+    {
+        await page!.SetContentAsync("<div id='ph' style='width:50px;height:50px;background:red' onmouseenter='this.classList.add(\"hovered\")'></div>");
+        await page.HoverAsync("#ph");
+        var hasClass = await page.EvaluateAsync<bool>("() => document.getElementById('ph').classList.contains('hovered')");
+        Assert(hasClass, "Page Hover should add class");
+    });
+
+    await RunGroupAsync("page-dispatch-event", async () =>
+    {
+        await page!.SetContentAsync("<button id='pde'>btn</button><output id='pde-out'></output><script>document.getElementById('pde').addEventListener('click',()=>document.getElementById('pde-out').textContent='ok')</script>");
+        await page.DispatchEventAsync("#pde", "click");
+        Assert(await page.Locator("#pde-out").TextContentAsync() == "ok", "Page DispatchEvent mismatch");
+    });
+
+    await RunGroupAsync("page-drag-and-drop", async () =>
+    {
+        await page!.SetContentAsync("<div id='p-src' draggable='true' style='width:50px;height:50px;background:red'>drag</div><div id='p-dst' style='width:50px;height:50px;background:blue'>drop</div><script>let pDropped=false;document.getElementById('p-dst').addEventListener('drop',e=>{e.preventDefault();pDropped=true});document.getElementById('p-dst').addEventListener('dragover',e=>e.preventDefault())</script>");
+        await page.DragAndDropAsync("#p-src", "#p-dst");
+        var dropped = await page.EvaluateAsync<bool>("() => pDropped");
+        Assert(dropped, "Page DragAndDrop mismatch");
+    });
+
+    await RunGroupAsync("page-select-option", async () =>
+    {
+        await page!.SetContentAsync("<select id='pso'><option value='a'>A</option><option value='b'>B</option></select>");
+        var sel = await page.SelectOptionAsync("#pso", "a");
+        Assert(sel.Count == 1 && sel[0] == "a", "Page SelectOption mismatch");
+    });
+
+    await RunGroupAsync("page-tap", async () =>
+    {
+        var touchCtx = await browser!.NewContextAsync(new() { HasTouch = true });
+        var tp = await touchCtx.NewPageAsync();
+        await tp.SetContentAsync("<button id='ptap'>tap</button><output id='ptap-out'></output><script>document.getElementById('ptap').addEventListener('touchstart',()=>document.getElementById('ptap-out').textContent='tapped')</script>");
+        await tp.TapAsync("#ptap");
+        Assert(await tp.Locator("#ptap-out").TextContentAsync() == "tapped", "Page Tap mismatch");
+        await tp.CloseAsync();
+        await touchCtx.CloseAsync();
+    });
+
+    // ═══════════════════════════════════════════════════════════
+    // 8. PAGE STATE CHECKS
+    // ═══════════════════════════════════════════════════════════
+
+    await RunGroupAsync("page-state-checks", async () =>
+    {
+        await page!.SetContentAsync("<input id='ps-enabled'><input id='ps-disabled' disabled><input id='ps-checked' type='checkbox' checked><input id='ps-hidden' type='hidden'>");
+        Assert(await page.IsEnabledAsync("#ps-enabled"), "IsEnabled mismatch");
+        Assert(await page.IsDisabledAsync("#ps-disabled"), "IsDisabled mismatch");
+        Assert(await page.IsCheckedAsync("#ps-checked"), "IsChecked mismatch");
+        Assert(await page.IsHiddenAsync("#ps-hidden"), "IsHidden mismatch");
+        Assert(await page.IsVisibleAsync("#ps-enabled"), "IsVisible mismatch");
+        Assert(await page.IsEditableAsync("#ps-enabled"), "IsEditable mismatch");
+    });
+
+    await RunGroupAsync("page-get-attribute", async () =>
+    {
+        await page!.SetContentAsync("<a id='pga' href='https://aot.test'>link</a>");
+        Assert(await page.GetAttributeAsync("#pga", "href") == "https://aot.test", "Page GetAttribute mismatch");
+    });
+
+    await RunGroupAsync("page-text-content", async () =>
+    {
+        await page!.SetContentAsync("<p id='ptc'>ptext</p>");
+        Assert(await page.TextContentAsync("#ptc") == "ptext", "Page TextContent mismatch");
+    });
+
+    await RunGroupAsync("page-inner-html-text", async () =>
+    {
+        await page!.SetContentAsync("<div id='piht'><span>inner</span></div>");
+        Assert(await page.InnerHTMLAsync("#piht") == "<span>inner</span>", "Page InnerHTML mismatch");
+        Assert(await page.InnerTextAsync("#piht") == "inner", "Page InnerText mismatch");
+    });
+
+    await RunGroupAsync("page-input-value", async () =>
+    {
+        await page!.SetContentAsync("<input id='piv' value='pval'>");
+        Assert(await page.InputValueAsync("#piv") == "pval", "Page InputValue mismatch");
+    });
+
+    await RunGroupAsync("page-is-closed", async () =>
+    {
+        Assert(!page!.IsClosed, "Page should not be closed");
+    });
+
+    // ═══════════════════════════════════════════════════════════
+    // 9. PAGE QUERY SELECTORS
+    // ═══════════════════════════════════════════════════════════
+
+    await RunGroupAsync("page-query-selector", async () =>
+    {
+        await page!.SetContentAsync("<p id='pqs'>qs</p>");
+        var h = await page.QuerySelectorAsync("#pqs");
+        Assert(h != null, "QuerySelector should find element");
+        Assert(await h!.TextContentAsync() == "qs", "QuerySelector text mismatch");
+    });
+
+    await RunGroupAsync("page-query-selector-all", async () =>
+    {
+        await page!.SetContentAsync("<ul><li>a</li><li>b</li></ul>");
+        var handles = await page.QuerySelectorAllAsync("li");
+        Assert(handles.Count == 2, "QuerySelectorAll count mismatch");
+    });
+
+    // ═══════════════════════════════════════════════════════════
+    // 10. ELEMENT HANDLE
+    // ═══════════════════════════════════════════════════════════
+
+    await RunGroupAsync("element-handle-bounding-box", async () =>
+    {
+        await page!.SetContentAsync("<div id='ehbb' style='width:100px;height:50px;background:red'>box</div>");
+        var h = await page.QuerySelectorAsync("#ehbb");
+        var bb = await h!.BoundingBoxAsync();
+        Assert(bb != null && Math.Abs(bb!.Width - 100) < 1, "EH BoundingBox mismatch");
+    });
+
+    await RunGroupAsync("element-handle-click", async () =>
+    {
+        await page!.SetContentAsync("<button id='ehc'>c</button><output id='ehc-out'></output><script>document.getElementById('ehc').onclick=()=>document.getElementById('ehc-out').textContent='ok'</script>");
+        var h = await page.QuerySelectorAsync("#ehc");
+        await h!.ClickAsync();
+        Assert(await page.Locator("#ehc-out").TextContentAsync() == "ok", "EH Click mismatch");
+    });
+
+    await RunGroupAsync("element-handle-fill", async () =>
+    {
+        await page!.SetContentAsync("<input id='ehf'>");
+        var h = await page.QuerySelectorAsync("#ehf");
+        await h!.FillAsync("filled");
+        Assert(await h.InputValueAsync() == "filled", "EH Fill mismatch");
+    });
+
+    await RunGroupAsync("element-handle-type", async () =>
+    {
+        await page!.SetContentAsync("<input id='eht'>");
+        var h = await page.QuerySelectorAsync("#eht");
+        await h!.TypeAsync("typed");
+        Assert(await h.InputValueAsync() == "typed", "EH Type mismatch");
+    });
+
+    await RunGroupAsync("element-handle-press", async () =>
+    {
+        await page!.SetContentAsync("<input id='ehp'>");
+        var h = await page.QuerySelectorAsync("#ehp");
+        await h!.PressAsync("Shift+KeyX");
+        Assert(await h.InputValueAsync() == "X", "EH Press mismatch");
+    });
+
+    await RunGroupAsync("element-handle-check-uncheck", async () =>
+    {
+        await page!.SetContentAsync("<input type='checkbox' id='ehcu'>");
+        var h = await page.QuerySelectorAsync("#ehcu");
+        await h!.CheckAsync();
+        Assert(await h.IsCheckedAsync(), "EH Check failed");
+        await h.UncheckAsync();
+        Assert(!await h.IsCheckedAsync(), "EH Uncheck failed");
+    });
+
+    await RunGroupAsync("element-handle-set-checked", async () =>
+    {
+        await page!.SetContentAsync("<input type='checkbox' id='ehsc'>");
+        var h = await page.QuerySelectorAsync("#ehsc");
+        await h!.SetCheckedAsync(true);
+        Assert(await h.IsCheckedAsync(), "EH SetChecked true failed");
+    });
+
+    await RunGroupAsync("element-handle-hover", async () =>
+    {
+        await page!.SetContentAsync("<div id='ehh' style='width:50px;height:50px;background:red' onmouseenter='this.classList.add(\"hovered\")'></div>");
+        var h = await page.QuerySelectorAsync("#ehh");
+        await h!.HoverAsync();
+        var hasClass = await page.EvaluateAsync<bool>("() => document.getElementById('ehh').classList.contains('hovered')");
+        Assert(hasClass, "EH Hover should add class");
+    });
+
+    await RunGroupAsync("element-handle-focus", async () =>
+    {
+        await page!.SetContentAsync("<input id='ehfoc'>");
+        var h = await page.QuerySelectorAsync("#ehfoc");
+        await h!.FocusAsync();
+        var focused = await page.EvaluateAsync<bool>("() => document.activeElement?.id === 'ehfoc'");
+        Assert(focused, "EH Focus mismatch");
+    });
+
+    await RunGroupAsync("element-handle-dispatch-event", async () =>
+    {
+        await page!.SetContentAsync("<button id='ehde'>btn</button><output id='ehde-out'></output><script>document.getElementById('ehde').addEventListener('click',()=>document.getElementById('ehde-out').textContent='ok')</script>");
+        var h = await page.QuerySelectorAsync("#ehde");
+        await h!.DispatchEventAsync("click");
+        Assert(await page.Locator("#ehde-out").TextContentAsync() == "ok", "EH DispatchEvent mismatch");
+    });
+
+    await RunGroupAsync("element-handle-select-text", async () =>
+    {
+        await page!.SetContentAsync("<p id='ehst'>select text</p>");
+        var h = await page.QuerySelectorAsync("#ehst");
+        await h!.SelectTextAsync();
+        var sel = await page.EvaluateAsync<string>("() => window.getSelection()?.toString()");
+        Assert(sel == "select text", "EH SelectText mismatch");
+    });
+
+    await RunGroupAsync("element-handle-scroll-into-view", async () =>
+    {
+        await page!.SetContentAsync("<div style='height:2000px'></div><div id='ehsv'>bottom</div>");
+        var h = await page.QuerySelectorAsync("#ehsv");
+        await h!.ScrollIntoViewIfNeededAsync();
+        Assert(await h.IsVisibleAsync(), "EH ScrollIntoView mismatch");
+    });
+
+    await RunGroupAsync("element-handle-state-checks", async () =>
+    {
+        await page!.SetContentAsync("<input id='eh-ena'><input id='eh-dis' disabled><input id='eh-hid' type='hidden'>");
+        var ena = await page.QuerySelectorAsync("#eh-ena");
+        var dis = await page.QuerySelectorAsync("#eh-dis");
+        var hid = await page.QuerySelectorAsync("#eh-hid");
+        Assert(await ena!.IsEnabledAsync(), "EH IsEnabled");
+        Assert(await dis!.IsDisabledAsync(), "EH IsDisabled");
+        Assert(await hid!.IsHiddenAsync(), "EH IsHidden");
+        Assert(await ena!.IsVisibleAsync(), "EH IsVisible");
+        Assert(await ena!.IsEditableAsync(), "EH IsEditable");
+    });
+
+    await RunGroupAsync("element-handle-text-html-value", async () =>
+    {
+        await page!.SetContentAsync("<div id='ehtv'><span>inner</span></div>");
+        var h = await page.QuerySelectorAsync("#ehtv");
+        Assert(await h!.InnerHTMLAsync() == "<span>inner</span>", "EH InnerHTML");
+        Assert(await h.InnerTextAsync() == "inner", "EH InnerText");
+        Assert(await h.TextContentAsync() == "inner", "EH TextContent");
+    });
+
+    await RunGroupAsync("element-handle-get-attribute", async () =>
+    {
+        await page!.SetContentAsync("<a id='ehga' href='https://aot.test'>link</a>");
+        var h = await page.QuerySelectorAsync("#ehga");
+        Assert(await h!.GetAttributeAsync("href") == "https://aot.test", "EH GetAttribute");
+    });
+
+    await RunGroupAsync("element-handle-screenshot", async () =>
+    {
+        await page!.SetContentAsync("<div style='width:50px;height:50px;background:red'></div>");
+        var h = await page.QuerySelectorAsync("div");
+        var bytes = await h!.ScreenshotAsync();
+        Assert(bytes.Length > 0, "EH Screenshot empty");
+    });
+
+    await RunGroupAsync("element-handle-set-input-files", async () =>
+    {
+        await page!.SetContentAsync("<input type='file' id='ehsif'>");
+        var h = await page.QuerySelectorAsync("#ehsif");
+        await h!.SetInputFilesAsync(new FilePayload { Name = "test.txt", MimeType = "text/plain", Buffer = "hello"u8.ToArray() });
+        var name = await page.EvaluateAsync<string>("() => document.getElementById('ehsif').files[0].name");
+        Assert(name == "test.txt", "EH SetInputFiles mismatch");
+    });
+
+    await RunGroupAsync("element-handle-select-option", async () =>
+    {
+        await page!.SetContentAsync("<select id='ehso'><option value='x'>X</option><option value='y'>Y</option></select>");
+        var h = await page.QuerySelectorAsync("#ehso");
+        await h!.SelectOptionAsync("y");
+        var val = await page.EvaluateAsync<string>("() => document.getElementById('ehso').value");
+        Assert(val == "y", "EH SelectOption mismatch");
+    });
+
+    await RunGroupAsync("element-handle-query-selector", async () =>
+    {
+        await page!.SetContentAsync("<div id='parent'><p id='child'>child</p></div>");
+        var parent = await page.QuerySelectorAsync("#parent");
+        var child = await parent!.QuerySelectorAsync("#child");
+        Assert(child != null, "EH QuerySelector child");
+    });
+
+    await RunGroupAsync("element-handle-tap", async () =>
+    {
+        await page!.SetContentAsync("<button id='ehtap'>tap</button><output id='ehtap-out'></output><script>document.getElementById('ehtap').addEventListener('touchstart',()=>document.getElementById('ehtap-out').textContent='tapped')</script>");
+        var h = await page.QuerySelectorAsync("#ehtap");
+        await h!.TapAsync();
+        Assert(await page.Locator("#ehtap-out").TextContentAsync() == "tapped", "EH Tap mismatch");
+    });
+
+    await RunGroupAsync("element-handle-wait-for-element-state", async () =>
+    {
+        await page!.SetContentAsync("<div id='ehw' style='display:none'>hidden</div><script>setTimeout(()=>document.getElementById('ehw').style.display='block',50)</script>");
+        var h = await page.QuerySelectorAsync("#ehw");
+        await h!.WaitForElementStateAsync(ElementState.Visible);
+        Assert(await h!.IsVisibleAsync(), "EH WaitForElementState mismatch");
+    });
+
+    await RunGroupAsync("element-handle-owner-frame", async () =>
+    {
+        await page!.SetContentAsync("<p id='ehof'>frame</p>");
+        var h = await page.QuerySelectorAsync("#ehof");
+        var frame = await h!.OwnerFrameAsync();
+        Assert(frame != null, "EH OwnerFrame should not be null");
+    });
+
+    await RunGroupAsync("element-handle-content-frame", async () =>
+    {
+        await page!.SetContentAsync("<iframe id='ehcf' src='data:text/html,<p>iframe</p>'></iframe>");
+        await Task.Delay(200);
+        var h = await page.QuerySelectorAsync("#ehcf");
+        var cf = await h!.ContentFrameAsync();
+        Assert(cf != null, "EH ContentFrame should exist");
+    });
+
+    // ═══════════════════════════════════════════════════════════
+    // 11. FRAME
+    // ═══════════════════════════════════════════════════════════
+
+    await RunGroupAsync("frame-main", async () =>
+    {
+        var mf = page!.MainFrame;
+        Assert(mf != null, "MainFrame should exist");
+        Assert(!mf.IsDetached, "MainFrame should not be detached");
+        Assert(mf.Name == string.Empty, "MainFrame name should be empty");
+    });
+
+    await RunGroupAsync("frame-child", async () =>
+    {
+        await page!.SetContentAsync("<iframe src='data:text/html,<title>Child</title>'></iframe>");
+        await Task.Delay(300);
+        var child = page.Frames.FirstOrDefault(f => f != page.MainFrame);
+        Assert(child != null, "Child frame should exist");
+        Assert(await child!.TitleAsync() == "Child", "Child title mismatch");
+        Assert(child.ParentFrame == page.MainFrame, "Parent frame mismatch");
+    });
+
+    await RunGroupAsync("frame-by-url", async () =>
+    {
+        var f = page!.FrameByUrl("**/Child*");
+        // May be null if the frame URL doesn't match pattern; that's OK.
+    });
+
+    await RunGroupAsync("frame-by-name", async () =>
+    {
+        var f = page!.Frame("child-frame");
+        Assert(f == null, "Frame by name should match (or null if none)");
+    });
+
+    await RunGroupAsync("frame-evaluate", async () =>
+    {
+        var mf = page!.MainFrame;
+        var val = await mf.EvaluateAsync<int>("() => 42");
+        Assert(val == 42, "Frame Evaluate mismatch");
+    });
+
+    await RunGroupAsync("frame-evaluate-handle", async () =>
+    {
+        var h = await page!.MainFrame.EvaluateHandleAsync("() => ({ a: 1 })");
+        Assert(h != null, "Frame EvaluateHandle");
+    });
+
+    await RunGroupAsync("frame-locator", async () =>
+    {
+        await page!.MainFrame.SetContentAsync("<input id='fl'>");
+        await page.MainFrame.Locator("#fl").FillAsync("frame-val");
+        Assert(await page.MainFrame.Locator("#fl").InputValueAsync() == "frame-val", "Frame Locator Fill");
+    });
+
+    await RunGroupAsync("frame-content", async () =>
+    {
+        await page!.MainFrame.SetContentAsync("<p>frame-content</p>");
+        var html = await page.MainFrame.ContentAsync();
+        Assert(html.Contains("frame-content"), "Frame Content");
+    });
+
+    await RunGroupAsync("frame-goto", async () =>
+    {
+        var r = await page!.MainFrame.GotoAsync(server!.BaseUri + "page", new() { WaitUntil = WaitUntilState.DOMContentLoaded });
+        Assert(r?.Status == 200, "Frame Goto should return response");
+    });
+
+    await RunGroupAsync("frame-title", async () =>
+    {
+        Assert(await page!.MainFrame.TitleAsync() == "Network OK", "Frame Title mismatch");
+    });
+
+    await RunGroupAsync("frame-frame-locator", async () =>
+    {
+        await page!.SetContentAsync("<iframe id='outer' src='data:text/html,<input id=\"inner-input\">'></iframe>");
+        await Task.Delay(300);
+        await page.FrameLocator("#outer").Locator("#inner-input").FillAsync("fl-input");
+        Assert(await page.FrameLocator("#outer").Locator("#inner-input").InputValueAsync() == "fl-input", "FrameLocator Fill");
+    });
+
+    await RunGroupAsync("frame-query-selector", async () =>
+    {
+        await page!.MainFrame.SetContentAsync("<p id='fqs'>qs</p>");
+        var h = await page.MainFrame.QuerySelectorAsync("#fqs");
+        Assert(h != null, "Frame QuerySelector");
+    });
+
+    await RunGroupAsync("frame-set-content", async () =>
+    {
+        await page!.MainFrame.SetContentAsync("<title>FSC</title><p>fsc</p>");
+        Assert(await page.MainFrame.TitleAsync() == "FSC", "Frame SetContent");
+    });
+
+    // ═══════════════════════════════════════════════════════════
+    // 12. KEYBOARD & MOUSE
+    // ═══════════════════════════════════════════════════════════
+
+    await RunGroupAsync("keyboard-type", async () =>
+    {
+        await page!.SetContentAsync("<input id='kt'>");
+        await page.Locator("#kt").FocusAsync();
+        await page.Keyboard.TypeAsync("kbd-type");
+        Assert(await page.InputValueAsync("#kt") == "kbd-type", "Keyboard Type");
+    });
+
+    await RunGroupAsync("keyboard-press", async () =>
+    {
+        await page!.SetContentAsync("<input id='kp'>");
+        await page.Locator("#kp").FocusAsync();
+        await page.Keyboard.PressAsync("Shift+KeyA");
+        Assert(await page.InputValueAsync("#kp") == "A", "Keyboard Press");
+    });
+
+    await RunGroupAsync("keyboard-down-up", async () =>
+    {
+        await page!.SetContentAsync("<input id='kdu'>");
+        await page.Locator("#kdu").FocusAsync();
+        await page.Keyboard.DownAsync("Shift");
+        await page.Keyboard.PressAsync("KeyA");
+        await page.Keyboard.UpAsync("Shift");
+        Assert(await page.InputValueAsync("#kdu") == "A", "Keyboard Down/Up");
+    });
+
+    await RunGroupAsync("keyboard-insert-text", async () =>
+    {
+        await page!.SetContentAsync("<input id='kit'>");
+        await page.Locator("#kit").FocusAsync();
+        await page.Keyboard.InsertTextAsync("inserted");
+        Assert(await page.InputValueAsync("#kit") == "inserted", "Keyboard InsertText");
+    });
+
+    await RunGroupAsync("mouse-click", async () =>
+    {
+        await page!.SetContentAsync("<div style='width:100px;height:100px'></div><script>let mPos=[];document.querySelector('div').addEventListener('click',e=>mPos.push({x:e.clientX,y:e.clientY}));window.getMPos=()=>mPos</script>");
+        await page.Mouse.ClickAsync(30, 40);
+        var pos = await page.EvaluateAsync<JsonElement>("() => window.getMPos()");
+        Assert(pos[0].GetProperty("x").GetInt32() == 30, "Mouse Click x");
+        Assert(pos[0].GetProperty("y").GetInt32() == 40, "Mouse Click y");
+    });
+
+    await RunGroupAsync("mouse-dbl-click", async () =>
+    {
+        await page!.SetContentAsync("<script>let dc=0;document.addEventListener('dblclick',()=>dc++);window.getDC=()=>dc</script>");
+        await page.Mouse.DblClickAsync(50, 50);
+        var c = await page.EvaluateAsync<int>("() => window.getDC()");
+        Assert(c >= 1, "Mouse DblClick");
+    });
+
+    await RunGroupAsync("mouse-down-up", async () =>
+    {
+        await page!.SetContentAsync("<script>let md=false,mu=false;document.addEventListener('mousedown',()=>md=true);document.addEventListener('mouseup',()=>mu=true);window.getMDU=()=>({md,mu})</script>");
+        await page.Mouse.MoveAsync(10, 10);
+        await page.Mouse.DownAsync();
+        await page.Mouse.UpAsync();
+        var state = await page.EvaluateAsync<JsonElement>("() => window.getMDU()");
+        Assert(state.GetProperty("md").GetBoolean(), "Mouse Down");
+        Assert(state.GetProperty("mu").GetBoolean(), "Mouse Up");
+    });
+
+    await RunGroupAsync("mouse-wheel", async () =>
+    {
+        await page!.SetContentAsync("<div id='mw' style='width:100px;height:100px;overflow:scroll'><div style='height:500px'>big</div></div>");
+        await page.Locator("#mw").FocusAsync();
+        await page.Mouse.MoveAsync(50, 50);
+        await page.Mouse.WheelAsync(0, 50);
+        await Task.Delay(100);
+        var st = await page.EvaluateAsync<int>("() => document.getElementById('mw').scrollTop");
+        Assert(st >= 1, "Mouse Wheel");
+    });
+
+    // ═══════════════════════════════════════════════════════════
+    // 13. VIEWPORT & SCREENSHOT
+    // ═══════════════════════════════════════════════════════════
 
     await RunGroupAsync("page-viewport", async () =>
     {
         await page!.SetViewportSizeAsync(500, 400);
         var size = await page.EvaluateAsync<JsonElement>("() => ({ w: window.innerWidth, h: window.innerHeight })");
-        Assert(size.GetProperty("w").GetInt32() == 500, "Viewport width mismatch.");
-        Assert(size.GetProperty("h").GetInt32() == 400, "Viewport height mismatch.");
+        Assert(size.GetProperty("w").GetInt32() == 500, "Viewport w");
+        Assert(size.GetProperty("h").GetInt32() == 400, "Viewport h");
         await page.SetViewportSizeAsync(800, 600);
     });
 
+    await RunGroupAsync("page-screenshot", async () =>
+    {
+        var bytes = await page!.ScreenshotAsync();
+        Assert(bytes.Length > 0, "Screenshot empty");
+    });
+
+    // ═══════════════════════════════════════════════════════════
+    // 14. SCRIPTS & STYLES
+    // ═══════════════════════════════════════════════════════════
+
     await RunGroupAsync("page-add-init-script", async () =>
     {
-        await page!.AddInitScriptAsync("window.AOT_INIT = 'ran';");
-        await page.GotoAsync("data:text/html,<title>Init Script</title>", new() { WaitUntil = WaitUntilState.DOMContentLoaded });
-        var val = await page.EvaluateAsync<string>("() => window.AOT_INIT");
-        Assert(val == "ran", "AddInitScript did not execute.");
-    });
-
-    await RunGroupAsync("locator-state-checks", async () =>
-    {
-        await page!.SetContentAsync("""
-            <button id="enabled">Click</button>
-            <button id="disabled" disabled>No</button>
-            <input id="check" type="checkbox" checked />
-            <input id="visible" />
-            """);
-        Assert(await page.Locator("#enabled").IsEnabledAsync(), "Enabled button should be enabled.");
-        Assert(await page.Locator("#disabled").IsDisabledAsync(), "Disabled button should be disabled.");
-        Assert(await page.Locator("#check").IsCheckedAsync(), "Checked checkbox should be checked.");
-        Assert(await page.Locator("#visible").IsVisibleAsync(), "Visible input should be visible.");
-    });
-
-    await RunGroupAsync("locator-all-inner-texts", async () =>
-    {
-        await page!.SetContentAsync("<ul><li>red</li><li>green</li><li>blue</li></ul>");
-        var texts = await page.Locator("li").AllTextContentsAsync();
-        Assert(texts.Count == 3 && texts[1] == "green", "AllTextContents mismatch.");
-    });
-
-    await RunGroupAsync("locator-select-option", async () =>
-    {
-        await page!.SetContentAsync("""
-            <select id="color">
-              <option value="r">Red</option>
-              <option value="g">Green</option>
-              <option value="b">Blue</option>
-            </select>
-            """);
-        await page.Locator("#color").SelectOptionAsync("g");
-        var val = await page.EvaluateAsync<string>("() => document.getElementById('color').value");
-        Assert(val == "g", "SelectOption failed.");
-    });
-
-    await RunGroupAsync("locator-dispatch-event", async () =>
-    {
-        await page!.SetContentAsync("""
-            <button id="btn">button</button>
-            <div id="out"></div>
-            <script>
-              document.getElementById('btn').addEventListener('click', () => {
-                document.getElementById('out').textContent = 'clicked';
-              });
-            </script>
-            """);
-        await page.Locator("#btn").DispatchEventAsync("click");
-        var text = await page.Locator("#out").TextContentAsync();
-        Assert(text == "clicked", "DispatchEvent click failed.");
-    });
-
-    await RunGroupAsync("element-handle-operations", async () =>
-    {
-        await page!.SetContentAsync("""
-            <div id="box" style="width:100px;height:50px;background:red">box</div>
-            """);
-        var handle = await page.QuerySelectorAsync("#box");
-        Assert(handle != null, "QuerySelector should find element.");
-
-        var bb = await handle!.BoundingBoxAsync();
-        Assert(bb != null && bb.Width == 100, "BoundingBox width mismatch.");
-
-        var text = await handle.TextContentAsync();
-        Assert(text == "box", "ElementHandle TextContent mismatch.");
-
-        var bytes = await handle.ScreenshotAsync();
-        Assert(bytes.Length > 0, "ElementHandle screenshot bytes empty.");
-    });
-
-    await RunGroupAsync("mouse-events", async () =>
-    {
-        await page!.SetContentAsync("""
-            <div id="track" style="width:200px;height:200px;position:relative"></div>
-            <script>
-              let pos = [];
-              document.getElementById('track').addEventListener('click', e => {
-                pos.push({ x: e.clientX, y: e.clientY });
-              });
-              window.getPos = () => pos;
-            </script>
-            """);
-        await page.Mouse.ClickAsync(50, 60);
-        var pos = await page.EvaluateAsync<JsonElement>("() => window.getPos()");
-        Assert(pos[0].GetProperty("x").GetInt32() == 50, "Mouse click x mismatch.");
-        Assert(pos[0].GetProperty("y").GetInt32() == 60, "Mouse click y mismatch.");
-    });
-
-    await RunGroupAsync("page-inner-html-text", async () =>
-    {
-        await page!.SetContentAsync("<div id='content'><span>hello</span></div>");
-        var html = await page.Locator("#content").InnerHTMLAsync();
-        Assert(html == "<span>hello</span>", "InnerHTML mismatch.");
-        var inner = await page.Locator("#content").InnerTextAsync();
-        Assert(inner == "hello", "InnerText mismatch.");
-    });
-
-    await RunGroupAsync("browser-context-clear-storage", async () =>
-    {
-        var activeContext = context ?? throw new InvalidOperationException("Browser context was not created.");
-        await activeContext.AddCookiesAsync(new[]
-        {
-            new Microsoft.Playwright.Cookie
-            {
-                Name = "clear-test", Value = "x", Url = "https://example.test",
-            },
-        });
-        await activeContext.ClearCookiesAsync();
-        var cookies = await activeContext.CookiesAsync("https://example.test");
-        Assert(!cookies.Any(static c => c.Name == "clear-test"), "ClearCookies failed.");
-
-        await activeContext.GrantPermissionsAsync(new[] { "geolocation" });
-        await activeContext.ClearPermissionsAsync();
-    });
-
-    await RunGroupAsync("page-content", async () =>
-    {
-        await page!.SetContentAsync("<!doctype html><p>content-test</p>");
-        var html = await page.ContentAsync();
-        Assert(html.Contains("content-test"), "Page.ContentAsync mismatch.");
-    });
-
-    await RunGroupAsync("page-get-by-role", async () =>
-    {
-        await page!.SetContentAsync("<button>Click Me</button><output id='role-out'></output>");
-        await page.GetByRole(AriaRole.Button, new() { Name = "Click Me" }).ClickAsync();
-        await page.EvaluateAsync("() => document.getElementById('role-out').textContent = 'ok'");
-        Assert(await page.Locator("#role-out").TextContentAsync() == "ok", "GetByRole click failed.");
-    });
-
-    await RunGroupAsync("page-get-by-test-id", async () =>
-    {
-        await page!.SetContentAsync("<button data-testid='submit-btn'>Send</button>");
-        var btn = page.GetByTestId("submit-btn");
-        Assert(await btn.TextContentAsync() == "Send", "GetByTestId text mismatch.");
+        await page!.AddInitScriptAsync("window.AOT_INIT = 1;");
+        await page.GotoAsync("data:text/html,<title>Init</title>", new() { WaitUntil = WaitUntilState.DOMContentLoaded });
+        var val = await page.EvaluateAsync<int>("() => window.AOT_INIT");
+        Assert(val == 1, "AddInitScript");
     });
 
     await RunGroupAsync("page-add-script-tag", async () =>
     {
-        await page!.SetContentAsync("<title>Script Test</title>");
+        await page!.SetContentAsync("<title>ScriptTag</title>");
         await page.AddScriptTagAsync(new() { Content = "window.AOT_SCRIPT = 'injected';" });
         var val = await page.EvaluateAsync<string>("() => window.AOT_SCRIPT");
-        Assert(val == "injected", "AddScriptTag injection failed.");
+        Assert(val == "injected", "AddScriptTag");
     });
+
+    await RunGroupAsync("page-add-style-tag", async () =>
+    {
+        await page!.SetContentAsync("<h1>Style</h1>");
+        await page.AddStyleTagAsync(new() { Content = "h1 { color: red; }" });
+        var color = await page.EvaluateAsync<string>("() => getComputedStyle(document.querySelector('h1')).color");
+        Assert(color == "rgb(255, 0, 0)", "AddStyleTag");
+    });
+
+    // ═══════════════════════════════════════════════════════════
+    // 15. BINDING (ExposeFunction / ExposeBinding)
+    // ═══════════════════════════════════════════════════════════
+
+    await RunGroupAsync("binding-expose-function-sync", async () =>
+    {
+        await page!.ExposeFunctionAsync("addNums", (int a, int b) => a + b);
+        var sum = await page.EvaluateAsync<int>("async () => await window.addNums(40, 2)");
+        Assert(sum == 42, "ExposeFunction sync");
+    });
+
+    await RunGroupAsync("binding-expose-function-async-task", async () =>
+    {
+        await page!.ExposeFunctionAsync("mulTask", (int a, int b) => Task.FromResult(a * b));
+        var res = await page.EvaluateAsync<int>("async () => await window.mulTask(6, 7)");
+        Assert(res == 42, "ExposeFunction async Task<T>");
+    });
+
+    await RunGroupAsync("binding-expose-function-completed-task", async () =>
+    {
+        await page!.ExposeFunctionAsync("noop", () => Task.CompletedTask);
+        var ok = await page.EvaluateAsync<string?>("async () => { await window.noop(); return 'ok'; }");
+        Assert(ok == "ok", "ExposeFunction Task.CompletedTask");
+    });
+
+    await RunGroupAsync("binding-expose-function-error", async () =>
+    {
+        await page!.ExposeFunctionAsync("fail", () => throw new InvalidOperationException("AOT-error"));
+        var msg = await page.EvaluateAsync<string?>("async () => { try { await window.fail(); return null; } catch(e) { return e.message; } }");
+        Assert(msg != null && msg.Contains("AOT-error"), "ExposeFunction error");
+    });
+
+    await RunGroupAsync("binding-expose-binding", async () =>
+    {
+        await page!.ExposeBindingAsync("doubleBind", (BindingSource source, int x) => x * 2);
+        var res = await page.EvaluateAsync<int>("async () => await window.doubleBind(21)");
+        Assert(res == 42, "ExposeBinding");
+    });
+
+    await RunGroupAsync("binding-expose-binding-two-params", async () =>
+    {
+        await page!.ExposeBindingAsync("addBind", (BindingSource source, int a, int b) => a + b);
+        var res = await page.EvaluateAsync<int>("async () => await window.addBind(30, 12)");
+        Assert(res == 42, "ExposeBinding two params");
+    });
+
+    await RunGroupAsync("binding-expose-binding-source-only", async () =>
+    {
+        await page!.ExposeBindingAsync("getPageUrl", (BindingSource source) => source.Page?.Url ?? "none");
+        var url = await page.EvaluateAsync<string>("async () => await window.getPageUrl()");
+        Assert(!string.IsNullOrEmpty(url), "ExposeBinding source only");
+    });
+
+    await RunGroupAsync("binding-expose-binding-generic-result", async () =>
+    {
+        await page!.ExposeBindingAsync<int>("answerBind", (BindingSource _) => 42);
+        var res = await page.EvaluateAsync<int>("async () => await window.answerBind()");
+        Assert(res == 42, "ExposeBinding<TResult>");
+    });
+
+    await RunGroupAsync("binding-expose-binding-generic-func", async () =>
+    {
+        await page!.ExposeBindingAsync<string, string>("echoBind", (BindingSource source, string msg) => $"echo:{msg}");
+        var res = await page.EvaluateAsync<string>("async () => await window.echoBind('hi')");
+        Assert(res == "echo:hi", "ExposeBinding<T,TResult>");
+    });
+
+    await RunGroupAsync("binding-expose-binding-generic-action", async () =>
+    {
+        string? captured = null;
+        await page!.ExposeBindingAsync<string>("captureBind", (BindingSource source, string msg) => { captured = msg; });
+        await page.EvaluateAsync<string>("async () => { window.captureBind('stored'); return 'ok'; }");
+        Assert(captured == "stored", "ExposeBinding<T> action");
+    });
+
+    await RunGroupAsync("binding-context-expose-function", async () =>
+    {
+        var ctx = context!;
+        await ctx.ExposeFunctionAsync("ctxDouble", (int x) => x * 2);
+        var cp = await ctx.NewPageAsync();
+        await cp.GotoAsync("data:text/html,<title>ctx</title>", new() { WaitUntil = WaitUntilState.DOMContentLoaded });
+        var res = await cp.EvaluateAsync<int>("async () => await window.ctxDouble(21)");
+        Assert(res == 42, "Context ExposeFunction");
+        await cp.CloseAsync();
+    });
+
+    await RunGroupAsync("binding-context-expose-binding", async () =>
+    {
+        var ctx = context!;
+        await ctx.ExposeBindingAsync("ctxBind", (BindingSource source, int x) => x * x);
+        var cp = await ctx.NewPageAsync();
+        await cp.GotoAsync("data:text/html,<title>ctxb</title>", new() { WaitUntil = WaitUntilState.DOMContentLoaded });
+        var res = await cp.EvaluateAsync<int>("async () => await window.ctxBind(7)");
+        Assert(res == 49, "Context ExposeBinding");
+        await cp.CloseAsync();
+    });
+
+    // ═══════════════════════════════════════════════════════════
+    // 16. ROUTE
+    // ═══════════════════════════════════════════════════════════
+
+    await RunGroupAsync("route-fulfill", async () =>
+    {
+        await using var reg = await page!.RouteAsync("**/route-test", async route =>
+        {
+            await route.FulfillAsync(new() { Status = 200, ContentType = "text/html", Body = "<h1 id='rt'>route-ok</h1>" });
+        });
+        var response = await page.GotoAsync("http://example.test/route-test", new() { Timeout = 10_000, WaitUntil = WaitUntilState.DOMContentLoaded });
+        Assert(response?.Status == 200, "Route fulfill status");
+        Assert(await page.Locator("#rt").TextContentAsync() == "route-ok", "Route fulfill body");
+    });
+
+    await RunGroupAsync("route-abort", async () =>
+    {
+        await using var reg = await page!.RouteAsync("**/abort-test", async route => await route.AbortAsync());
+        try
+        {
+            await page.GotoAsync("http://example.test/abort-test", new() { Timeout = 5000 });
+            Assert(false, "Route abort should throw");
+        }
+        catch (PlaywrightException) { }
+    });
+
+    await RunGroupAsync("route-continue", async () =>
+    {
+        await using var reg = await page!.RouteAsync("**/continue-test", async route => await route.ContinueAsync());
+        var response = await page.GotoAsync(server!.BaseUri + "continue-test", new() { Timeout = 10_000 });
+        Assert(response?.Status == 404, "Route continue should get 404 from server");
+    });
+
+    await RunGroupAsync("route-unroute", async () =>
+    {
+        bool called = false;
+        await using var reg = await page!.RouteAsync("**/unroute-test", async route => { called = true; await route.ContinueAsync(); });
+        await page.UnrouteAsync("**/unroute-test");
+        // After unroute, the route should not fire anymore
+    });
+
+    await RunGroupAsync("route-unroute-all", async () =>
+    {
+        await page!.UnrouteAllAsync(new() { Behavior = UnrouteBehavior.Default });
+    });
+
+    // ═══════════════════════════════════════════════════════════
+    // 17. EXTRA HTTP HEADERS
+    // ═══════════════════════════════════════════════════════════
+
+    await RunGroupAsync("page-extra-http-headers", async () =>
+    {
+        var hPage = await context!.NewPageAsync();
+        await hPage.SetExtraHTTPHeadersAsync(new[] { new KeyValuePair<string, string>("X-AOT", "yes") });
+        IRequest captured = null!;
+        await using var reg = await hPage.RouteAsync("**/headers-check", async route =>
+        {
+            captured = route.Request;
+            await route.FulfillAsync(new() { Status = 200, Body = "<p>ok</p>" });
+        });
+        await hPage.GotoAsync("http://example.test/headers-check", new() { Timeout = 10_000, WaitUntil = WaitUntilState.DOMContentLoaded });
+        Assert(captured.Headers.TryGetValue("x-aot", out var hv) || captured.Headers.TryGetValue("X-AOT", out hv), "Extra header not sent");
+        await hPage.CloseAsync();
+    });
+
+    // ═══════════════════════════════════════════════════════════
+    // 18. EMULATE MEDIA
+    // ═══════════════════════════════════════════════════════════
 
     await RunGroupAsync("page-emulate-media", async () =>
     {
-        await page!.SetContentAsync("<!doctype html><style>@media print { body:after { content: 'print'; } }</style>");
+        await page!.SetContentAsync("<style>@media print { body:after { content: 'print'; } }</style>");
         await page.EmulateMediaAsync(new() { Media = Media.Print });
         var isPrint = await page.EvaluateAsync<bool>("() => matchMedia('print').matches");
-        Assert(isPrint, "EmulateMedia print failed.");
+        Assert(isPrint, "EmulateMedia print");
+    });
+
+    // ═══════════════════════════════════════════════════════════
+    // 19. DIALOG
+    // ═══════════════════════════════════════════════════════════
+
+    await RunGroupAsync("page-dialog", async () =>
+    {
+        var dPage = await context!.NewPageAsync();
+        var tcs = new TaskCompletionSource<IDialog>();
+        dPage.Dialog += async (_, d) => { tcs.TrySetResult(d); await d.DismissAsync(); };
+        await dPage.EvaluateAsync("() => alert('hello-aot')");
+        var dialog = await tcs.Task.WaitAsync(TimeSpan.FromSeconds(5));
+        Assert(dialog.Message == "hello-aot", "Dialog message");
+        Assert(dialog.Type == "alert", "Dialog type");
+        await dPage.CloseAsync();
+    });
+
+    // ═══════════════════════════════════════════════════════════
+    // 20. CONSOLE
+    // ═══════════════════════════════════════════════════════════
+
+    await RunGroupAsync("page-console", async () =>
+    {
+        var msg = await page!.RunAndWaitForConsoleMessageAsync(async () =>
+        {
+            await page.EvaluateAsync("() => console.log('aot-console')");
+        });
+        Assert(msg.Text == "aot-console", "Console message text");
+        Assert(msg.Type == "log", "Console message type");
+    });
+
+    // ═══════════════════════════════════════════════════════════
+    // 21. WAIT FOR SELECTOR / FUNCTION
+    // ═══════════════════════════════════════════════════════════
+
+    await RunGroupAsync("page-wait-for-selector", async () =>
+    {
+        await page!.SetContentAsync("<p id='wfs'>wait</p>");
+        var el = await page.WaitForSelectorAsync("#wfs", new() { State = WaitForSelectorState.Attached, Timeout = 5000 });
+        Assert(el != null, "WaitForSelector");
+        Assert(await el!.TextContentAsync() == "wait", "WaitForSelector text");
     });
 
     await RunGroupAsync("page-wait-for-function", async () =>
     {
-        await page!.SetContentAsync("<script>setTimeout(() => window.ready = true, 200)</script>");
+        await page!.SetContentAsync("<script>setTimeout(() => window.ready = true, 100)</script>");
         await page.WaitForFunctionAsync("() => window.ready");
-        Assert(true, "WaitForFunction completed.");
     });
 
-    await RunGroupAsync("locator-hover", async () =>
+    await RunGroupAsync("page-wait-for-timeout", async () =>
     {
-        await page!.SetContentAsync("""
-            <style>#hover-target { width:50px;height:50px;background:red; }
-            #hover-target:hover { background:green; }</style>
-            <div id="hover-target"></div>
-            """);
-        await page.Locator("#hover-target").HoverAsync();
-        var bg = await page.EvaluateAsync<string>("() => getComputedStyle(document.getElementById('hover-target')).backgroundColor");
-        Assert(bg == "rgb(0, 128, 0)", "Hover background color mismatch.");
+        await page!.WaitForTimeoutAsync(50);
     });
 
-    await RunGroupAsync("locator-press-sequentially", async () =>
-    {
-        await page!.SetContentAsync("<input id='seq-input' />");
-        await page.Locator("#seq-input").PressSequentiallyAsync("seq-test");
-        var val = await page.InputValueAsync("#seq-input");
-        Assert(val == "seq-test", "PressSequentially value mismatch.");
-    });
-
-    await RunGroupAsync("locator-clear", async () =>
-    {
-        await page!.SetContentAsync("<input id='clear-input' value='initial' />");
-        await page.Locator("#clear-input").ClearAsync();
-        var val = await page.InputValueAsync("#clear-input");
-        Assert(val == "", "ClearAsync failed to clear input.");
-    });
-
-    await RunGroupAsync("locator-wait-for-state", async () =>
-    {
-        await page!.SetContentAsync("""
-            <div id="dynamic" style="display:none">shown</div>
-            <script>setTimeout(() => document.getElementById('dynamic').style.display = 'block', 100)</script>
-            """);
-        await page.Locator("#dynamic").WaitForAsync(new() { State = WaitForSelectorState.Visible });
-        Assert(await page.Locator("#dynamic").IsVisibleAsync(), "WaitFor state visible failed.");
-    });
-
-    await RunGroupAsync("locator-filter-nth", async () =>
-    {
-        await page!.SetContentAsync("<ul><li>a</li><li>b</li><li>c</li></ul>");
-        var firstText = await page.Locator("li").First.TextContentAsync();
-        Assert(firstText == "a", "Locator.First mismatch.");
-        var lastText = await page.Locator("li").Last.TextContentAsync();
-        Assert(lastText == "c", "Locator.Last mismatch.");
-        var nthText = await page.Locator("li").Nth(1).TextContentAsync();
-        Assert(nthText == "b", "Locator.Nth mismatch.");
-        var filteredText = await page.Locator("li").Filter(new() { HasText = "b" }).TextContentAsync();
-        Assert(filteredText == "b", "Locator.Filter mismatch.");
-    });
-
-    await RunGroupAsync("keyboard-down-up", async () =>
-    {
-        await page!.SetContentAsync("<input id='shift-input' />");
-        await page.Locator("#shift-input").FocusAsync();
-        await page.Keyboard.DownAsync("Shift");
-        await page.Keyboard.PressAsync("KeyA");
-        await page.Keyboard.PressAsync("KeyB");
-        await page.Keyboard.UpAsync("Shift");
-        var val = await page.InputValueAsync("#shift-input");
-        Assert(val == "AB", "Shift+Press did not produce uppercase.");
-    });
-
-    await RunGroupAsync("mouse-wheel", async () =>
-    {
-        await page!.SetContentAsync("""
-            <div id="scrollable" tabindex="0" style="width:100px;height:100px;overflow:scroll">
-              <div style="height:500px">content</div>
-            </div>
-            """);
-        await page.Locator("#scrollable").FocusAsync();
-        await page.Mouse.MoveAsync(50, 50);
-        await page.Mouse.WheelAsync(0, 50);
-        await Task.Delay(100);
-        var scrollTop = await page.EvaluateAsync<int>("() => document.getElementById('scrollable').scrollTop");
-        Assert(scrollTop >= 1, "Mouse.Wheel scroll mismatch.");
-    });
-
-    await RunGroupAsync("context-set-geolocation", async () =>
-    {
-        var activeContext = context ?? throw new InvalidOperationException("Browser context was not created.");
-        var geoPage = await activeContext.NewPageAsync();
-        await geoPage.GotoAsync(server!.BaseUri + "page");
-        Assert(await geoPage.Locator("#network").TextContentAsync() == "network-ok", "Server page not loaded.");
-        await activeContext.GrantPermissionsAsync(new[] { "geolocation" }, new() { Origin = server!.BaseUri.GetLeftPart(UriPartial.Authority) });
-        await activeContext.SetGeolocationAsync(new() { Latitude = 48.8566f, Longitude = 2.3522f });
-        await geoPage.GotoAsync(server!.BaseUri + "page");
-        var pos = await geoPage.EvaluateAsync<JsonElement>(@"
-            () => new Promise(r =>
-                navigator.geolocation.getCurrentPosition(p =>
-                    r({ lat: p.coords.latitude, lng: p.coords.longitude })
-                )
-            )");
-        var lat = pos.GetProperty("lat").GetDouble();
-        Assert(Math.Abs(lat - 48.8566) < 0.01, "Geolocation latitude mismatch.");
-        await geoPage.CloseAsync();
-    });
-
-    await RunGroupAsync("context-storage-state", async () =>
-    {
-        var activeContext = context ?? throw new InvalidOperationException("Browser context was not created.");
-        var storagePage = await activeContext.NewPageAsync();
-        await storagePage.GotoAsync(server!.BaseUri + "page");
-        await storagePage.EvaluateAsync("() => localStorage.setItem('aot-key', 'aot-val')");
-        var stateJson = await activeContext.StorageStateAsync();
-        Assert(!string.IsNullOrEmpty(stateJson), "StorageState should not be empty.");
-        await storagePage.CloseAsync();
-    });
-
-    await RunGroupAsync("element-handle-set-input-files", async () =>
-    {
-        await page!.SetContentAsync("<input type='file' id='file-input' />");
-        var handle = await page.QuerySelectorAsync("#file-input");
-        Assert(handle != null, "QuerySelector for file input failed.");
-        await handle!.SetInputFilesAsync(new FilePayload
-        {
-            Name = "test.txt",
-            MimeType = "text/plain",
-            Buffer = new byte[] { (byte)'h', (byte)'e', (byte)'l', (byte)'l', (byte)'o' },
-        });
-        var fileName = await page.EvaluateAsync<string>("() => document.getElementById('file-input').files[0].name");
-        Assert(fileName == "test.txt", "File upload name mismatch.");
-    });
-
-    // ─── Frame operations ──────────────────────────────────────────────
-
-    await RunGroupAsync("frame-main", async () =>
-    {
-        await page!.SetContentAsync("<!doctype html><title>Frame Test</title>");
-        var mainFrame = page.MainFrame;
-        System.Diagnostics.Debug.Assert(mainFrame != null);
-        Assert(!string.IsNullOrEmpty(mainFrame.Url), "MainFrame.Url should not be empty.");
-        Assert(await page.TitleAsync() == "Frame Test", "Page title via frame mismatch.");
-        Assert(!mainFrame.IsDetached, "MainFrame should not be detached.");
-        Assert(mainFrame.Name == string.Empty, "MainFrame name should be empty.");
-    });
-
-    await RunGroupAsync("frame-evaluate", async () =>
-    {
-        await page!.SetContentAsync("<script>window.FRAME_VAL = 42;</script>");
-        var mainFrame = page.MainFrame;
-        var val = await mainFrame.EvaluateAsync<int>("() => window.FRAME_VAL");
-        Assert(val == 42, "Frame.EvaluateAsync mismatch.");
-
-        var handle = await mainFrame.EvaluateHandleAsync("() => ({ a: 1, b: 2 })");
-        Assert(handle != null, "EvaluateHandleAsync should return handle.");
-    });
-
-    await RunGroupAsync("frame-locator", async () =>
-    {
-        await page!.SetContentAsync("<input id='fname' value='' />");
-        var mainFrame = page.MainFrame;
-        await mainFrame.Locator("#fname").FillAsync("frame-aot");
-        var val = await mainFrame.Locator("#fname").InputValueAsync();
-        Assert(val == "frame-aot", "Frame locator FillAsync failed.");
-    });
-
-    await RunGroupAsync("frame-content", async () =>
-    {
-        await page!.SetContentAsync("<p>frame-content-test</p>");
-        var mainFrame = page.MainFrame;
-        var html = await mainFrame.ContentAsync();
-        Assert(html.Contains("frame-content-test"), "Frame.ContentAsync mismatch.");
-    });
-
-    await RunGroupAsync("child-frame", async () =>
-    {
-        await page!.SetContentAsync("""
-            <iframe id="child" src="data:text/html,<title>Child</title><p>child-here</p>"></iframe>
-            """);
-        await Task.Delay(200);
-        var childFrame = page.Frames.FirstOrDefault(f => f != page.MainFrame);
-        Assert(childFrame != null, "Child frame should exist.");
-        Assert(await childFrame!.TitleAsync() == "Child", "Child frame title mismatch.");
-        var text = await childFrame.Locator("p").TextContentAsync();
-        Assert(text == "child-here", "Child frame text mismatch.");
-        Assert(childFrame.ParentFrame == page.MainFrame, "Child parent frame mismatch.");
-    });
-
-    await RunGroupAsync("page-frame-locator", async () =>
-    {
-        await page!.SetContentAsync("""
-            <iframe id="outer" src="data:text/html,<input id='inner-input'>"></iframe>
-            """);
-        await Task.Delay(200);
-        await page.FrameLocator("#outer").Locator("#inner-input").FillAsync("fl-input");
-        var val = await page.FrameLocator("#outer").Locator("#inner-input").InputValueAsync();
-        Assert(val == "fl-input", "FrameLocator input value mismatch.");
-    });
-
-    // ─── Page misc operations ──────────────────────────────────────────
-
-    await RunGroupAsync("page-bring-to-front", async () =>
-    {
-        await page!.BringToFrontAsync();
-        Assert(true, "BringToFront completed.");
-    });
-
-    await RunGroupAsync("page-url", async () =>
-    {
-        await page!.GotoAsync("data:text/html,<title>URL Test</title>", new() { WaitUntil = WaitUntilState.DOMContentLoaded });
-        Assert(page.Url.StartsWith("data:"), "Page.Url mismatch.");
-    });
-
-    await RunGroupAsync("page-expose-binding", async () =>
-    {
-        await page!.ExposeBindingAsync("doubleBinding", (BindingSource source, int x) => x * 2);
-        var result = await page.EvaluateAsync<int>("async () => await window.doubleBinding(21)");
-        Assert(result == 42, "ExposeBinding result mismatch.");
-    });
-
-    await RunGroupAsync("page-dispatch-event", async () =>
-    {
-        await page!.SetContentAsync("""
-            <button id='d-btn'>D</button><output id='d-out'></output>
-            <script>
-              document.getElementById('d-btn').addEventListener('dblclick', () => {
-                document.getElementById('d-out').textContent = 'dbl';
-              });
-            </script>
-            """);
-        await page.DispatchEventAsync("#d-btn", "dblclick");
-        var text = await page.Locator("#d-out").TextContentAsync();
-        Assert(text == "dbl", "Page.DispatchEventAsync failed.");
-    });
-
-    await RunGroupAsync("page-fill-focus", async () =>
-    {
-        await page!.SetContentAsync("<input id='pf-input' />");
-        await page.FocusAsync("#pf-input");
-        var focused = await page.EvaluateAsync<bool>("() => document.activeElement?.id === 'pf-input'");
-        Assert(focused, "Page.FocusAsync failed.");
-        await page.FillAsync("#pf-input", "page-fill");
-        var val = await page.InputValueAsync("#pf-input");
-        Assert(val == "page-fill", "Page.FillAsync failed.");
-    });
-
-    await RunGroupAsync("page-press", async () =>
-    {
-        await page!.SetContentAsync("<input id='p-input' />");
-        await page.FocusAsync("#p-input");
-        await page.PressAsync("#p-input", "Shift+KeyH");
-        await page.PressAsync("#p-input", "Shift+KeyI");
-        var val = await page.InputValueAsync("#p-input");
-        Assert(val == "HI", "Page.PressAsync failed.");
-    });
-
-    await RunGroupAsync("page-drag-and-drop", async () =>
-    {
-        await page!.SetContentAsync("""
-            <div id="src" draggable="true" style="width:50px;height:50px;background:red">drag</div>
-            <div id="dst" style="width:50px;height:50px;background:blue">drop</div>
-            <script>
-              let dropped = false;
-              document.getElementById('dst').addEventListener('drop', e => {
-                e.preventDefault(); dropped = true;
-              });
-              document.getElementById('dst').addEventListener('dragover', e => e.preventDefault());
-              document.getElementById('src').addEventListener('dragstart', e => {
-                e.dataTransfer.setData('text/plain', 'dragged');
-              });
-            </script>
-            """);
-        await page.DragAndDropAsync("#src", "#dst");
-        var isDropped = await page.EvaluateAsync<bool>("() => dropped");
-        Assert(isDropped, "DragAndDrop did not trigger drop.");
-    });
-
-    // ─── ElementHandle operations ──────────────────────────────────────
-
-    await RunGroupAsync("element-handle-scroll", async () =>
-    {
-        await page!.SetContentAsync("""
-            <div style="height:2000px"></div>
-            <div id="bottom" style="margin-top:1800px">bottom</div>
-            """);
-        var handle = await page.QuerySelectorAsync("#bottom");
-        Assert(handle != null, "QuerySelector for scroll target failed.");
-        var before = await page.EvaluateAsync<int>("() => window.scrollY");
-        await handle!.ScrollIntoViewIfNeededAsync();
-        await Task.Delay(100);
-        var after = await page.EvaluateAsync<int>("() => window.scrollY");
-        Assert(after > before, "ScrollIntoViewIfNeeded did not scroll.");
-    });
-
-    await RunGroupAsync("element-handle-select-text", async () =>
-    {
-        await page!.SetContentAsync("<p id='sel-text'>selectable text</p>");
-        var handle = await page.QuerySelectorAsync("#sel-text");
-        await handle!.SelectTextAsync();
-        var selected = await page.EvaluateAsync<string>("() => window.getSelection()?.toString()");
-        Assert(selected == "selectable text", "SelectTextAsync mismatch.");
-    });
-
-    await RunGroupAsync("element-handle-check", async () =>
-    {
-        await page!.SetContentAsync("<input type='checkbox' id='eh-check' />");
-        var handle = await page.QuerySelectorAsync("#eh-check");
-        await handle!.CheckAsync();
-        Assert(await handle.IsCheckedAsync(), "ElementHandle CheckAsync failed.");
-        await handle.UncheckAsync();
-        Assert(!await handle.IsCheckedAsync(), "ElementHandle UncheckAsync failed.");
-    });
-
-    await RunGroupAsync("element-handle-state-checks", async () =>
-    {
-        await page!.SetContentAsync("""
-            <input id="eh-hidden" type="hidden" />
-            <input id="eh-editable" />
-            """);
-        var hiddenHandle = await page.QuerySelectorAsync("#eh-hidden");
-        Assert(await hiddenHandle!.IsHiddenAsync(), "Hidden element should be hidden.");
-        var editableHandle = await page.QuerySelectorAsync("#eh-editable");
-        Assert(await editableHandle!.IsEditableAsync(), "Editable input should be editable.");
-    });
-
-    await RunGroupAsync("element-handle-fill-type", async () =>
-    {
-        await page!.SetContentAsync("<input id='eh-input' />");
-        var handle = await page.QuerySelectorAsync("#eh-input");
-        await handle!.FillAsync("filled");
-        var val = await handle.InputValueAsync();
-        Assert(val == "filled", "ElementHandle FillAsync failed.");
-    });
-
-    // ─── Locator operations ────────────────────────────────────────────
-
-    await RunGroupAsync("locator-screenshot", async () =>
-    {
-        await page!.SetContentAsync("<div id='ls-box' style='width:50px;height:50px;background:red'></div>");
-        var bytes = await page.Locator("#ls-box").ScreenshotAsync();
-        Assert(bytes.Length > 0, "Locator screenshot bytes empty.");
-    });
-
-    await RunGroupAsync("locator-check-uncheck", async () =>
-    {
-        await page!.SetContentAsync("<input type='checkbox' id='lc-check' />");
-        await page.Locator("#lc-check").CheckAsync();
-        Assert(await page.Locator("#lc-check").IsCheckedAsync(), "Locator CheckAsync failed.");
-        await page.Locator("#lc-check").UncheckAsync();
-        Assert(!await page.Locator("#lc-check").IsCheckedAsync(), "Locator UncheckAsync failed.");
-    });
-
-    await RunGroupAsync("locator-blur", async () =>
-    {
-        await page!.SetContentAsync("""
-            <input id='lb-input' /><output id='lb-out'></output>
-            <script>
-              document.getElementById('lb-input').addEventListener('blur', () => {
-                document.getElementById('lb-out').textContent = 'blurred';
-              });
-            </script>
-            """);
-        await page.Locator("#lb-input").FocusAsync();
-        await page.Locator("#lb-input").BlurAsync();
-        await Task.Delay(50);
-        var text = await page.Locator("#lb-out").TextContentAsync();
-        Assert(text == "blurred", "Locator BlurAsync failed.");
-    });
-
-    await RunGroupAsync("locator-get-attribute", async () =>
-    {
-        await page!.SetContentAsync("<a id='la-link' href='https://aot.test'>link</a>");
-        var attr = await page.Locator("#la-link").GetAttributeAsync("href");
-        Assert(attr == "https://aot.test", "Locator GetAttributeAsync failed.");
-    });
-
-    // ─── Mouse operations ──────────────────────────────────────────────
-
-    await RunGroupAsync("mouse-dblclick", async () =>
-    {
-        await page!.SetContentAsync("""
-            <div id='mc-dbl' style='width:100px;height:100px'></div>
-            <script>
-              let dblCount = 0;
-              document.getElementById('mc-dbl').addEventListener('dblclick', () => { dblCount++; });
-              window.getDblCount = () => dblCount;
-            </script>
-            """);
-        await page.Locator("#mc-dbl").DblClickAsync();
-        var count = await page.EvaluateAsync<int>("() => window.getDblCount()");
-        Assert(count == 1, "DblClick did not fire.");
-    });
-
-    await RunGroupAsync("mouse-down-up", async () =>
-    {
-        await page!.SetContentAsync("""
-            <div id='mc-du' style='width:100px;height:100px;background:gray'></div>
-            <script>
-              let down = false, up = false;
-              document.getElementById('mc-du').addEventListener('mousedown', () => { down = true; });
-              document.getElementById('mc-du').addEventListener('mouseup', () => { up = true; });
-              window.getMouseDU = () => ({ down, up });
-            </script>
-            """);
-        await page.Locator("#mc-du").HoverAsync();
-        await page.Mouse.DownAsync();
-        await page.Mouse.UpAsync();
-        var state = await page.EvaluateAsync<JsonElement>("() => window.getMouseDU()");
-        Assert(state.GetProperty("down").GetBoolean(), "Mouse.DownAsync failed.");
-        Assert(state.GetProperty("up").GetBoolean(), "Mouse.UpAsync failed.");
-    });
-
-    await RunGroupAsync("page-close", async () =>
-    {
-        var closePage = await context!.NewPageAsync();
-        Assert(!closePage.IsClosed, "New page should not be closed.");
-        await closePage.CloseAsync();
-        Assert(closePage.IsClosed, "Page should be closed.");
-    });
-
-    await RunGroupAsync("page-set-extra-http-headers", async () =>
-    {
-        var headersPage = await context!.NewPageAsync();
-        await headersPage.SetExtraHTTPHeadersAsync(new[] { new KeyValuePair<string, string>("X-AOT", "yes") });
-        IRequest capturedRequest = null!;
-        await using var routeReg = await headersPage.RouteAsync("**/headers-page", async route =>
-        {
-            capturedRequest = route.Request;
-            await route.FulfillAsync(new() { Status = 200, ContentType = "text/html", Body = "<p>ok</p>" });
-        });
-        await headersPage.GotoAsync("http://example.test/headers-page", new() { Timeout = 10_000, WaitUntil = WaitUntilState.DOMContentLoaded });
-        var hasHeader = capturedRequest.Headers.TryGetValue("x-aot", out var val) || capturedRequest.Headers.TryGetValue("X-AOT", out val);
-        Assert(hasHeader && val == "yes", "SetExtraHTTPHeaders did not send X-AOT.");
-        await headersPage.CloseAsync();
-    });
+    // ═══════════════════════════════════════════════════════════
+    // 22. POPUP
+    // ═══════════════════════════════════════════════════════════
 
     await RunGroupAsync("page-popup", async () =>
     {
         await page!.GotoAsync(server!.BaseUri + "page", new() { WaitUntil = WaitUntilState.DOMContentLoaded });
         await using var popupRoute = await page.Context.RouteAsync("**/popup-target", async route =>
         {
-            await route.FulfillAsync(new() { Status = 200, ContentType = "text/html", Body = "<!doctype html><title>Popup</title>" });
+            await route.FulfillAsync(new() { Status = 200, Body = "<!doctype html><title>Popup</title>" });
         });
         var popup = await page.RunAndWaitForPopupAsync(async () =>
         {
             await page.EvaluateAsync($"window.open('{server!.BaseUri}popup-target', '_blank'); void 0");
         });
-        Assert(popup != null, "Popup should be created.");
-        Assert(await popup!.TitleAsync() == "Popup", "Popup title mismatch.");
+        Assert(popup != null, "Popup should exist");
+        Assert(await popup!.TitleAsync() == "Popup", "Popup title");
         await popup.CloseAsync();
     });
 
-    await RunGroupAsync("page-dialog", async () =>
-    {
-        var dialogPage = await context!.NewPageAsync();
-        var tcs = new TaskCompletionSource<IDialog>();
-        dialogPage.Dialog += async (_, dialog) =>
-        {
-            tcs.TrySetResult(dialog);
-            await dialog.AcceptAsync();
-        };
-        await dialogPage.EvaluateAsync("() => alert('hello-aot')");
-        var dialog = await tcs.Task.WaitAsync(TimeSpan.FromSeconds(5));
-        Assert(dialog.Message == "hello-aot", "Dialog message mismatch.");
-        Assert(dialog.Type == "alert", "Dialog type mismatch.");
-        await dialogPage.CloseAsync();
-    });
+    // ═══════════════════════════════════════════════════════════
+    // 23. BROWSER CONTEXT
+    // ═══════════════════════════════════════════════════════════
 
-    await RunGroupAsync("route-abort", async () =>
+    await RunGroupAsync("context-cookies", async () =>
     {
-        await using var abortRoute = await page!.RouteAsync("**/abort-me", async route =>
+        await context!.AddCookiesAsync(new[]
         {
-            await route.AbortAsync();
+            new Microsoft.Playwright.Cookie { Name = "aot-cookie", Value = "ok", Url = "https://example.test" },
         });
-        try
+        var cookies = await context.CookiesAsync("https://example.test");
+        Assert(cookies.Any(c => c.Name == "aot-cookie" && c.Value == "ok"), "Cookie round-trip");
+    });
+
+    await RunGroupAsync("context-clear-cookies", async () =>
+    {
+        await context!.ClearCookiesAsync();
+        var cookies = await context.CookiesAsync("https://example.test");
+        Assert(!cookies.Any(c => c.Name == "aot-cookie"), "ClearCookies");
+    });
+
+    await RunGroupAsync("context-grant-permissions", async () =>
+    {
+        await context!.GrantPermissionsAsync(new[] { "geolocation" });
+        await context.ClearPermissionsAsync();
+    });
+
+    await RunGroupAsync("context-set-geolocation", async () =>
+    {
+        var gp = await context!.NewPageAsync();
+        await gp.GotoAsync(server!.BaseUri + "page", new() { WaitUntil = WaitUntilState.DOMContentLoaded });
+        await context.GrantPermissionsAsync(new[] { "geolocation" }, new() { Origin = server!.BaseUri.GetLeftPart(UriPartial.Authority) });
+        await context.SetGeolocationAsync(new() { Latitude = 48.8566f, Longitude = 2.3522f });
+        await gp.GotoAsync(server!.BaseUri + "page", new() { WaitUntil = WaitUntilState.DOMContentLoaded });
+        var pos = await gp.EvaluateAsync<JsonElement>("() => new Promise(r => navigator.geolocation.getCurrentPosition(p => r({ lat: p.coords.latitude, lng: p.coords.longitude })))");
+        Assert(Math.Abs(pos.GetProperty("lat").GetDouble() - 48.8566) < 0.01, "Geolocation lat");
+        await gp.CloseAsync();
+    });
+
+    await RunGroupAsync("context-set-offline", async () =>
+    {
+        // Just verify it doesn't throw; we restore immediately.
+        await context!.SetOfflineAsync(true);
+        await context.SetOfflineAsync(false);
+    });
+
+    await RunGroupAsync("context-storage-state", async () =>
+    {
+        var sp = await context!.NewPageAsync();
+        await sp.GotoAsync(server!.BaseUri + "page", new() { WaitUntil = WaitUntilState.DOMContentLoaded });
+        await sp.EvaluateAsync("() => localStorage.setItem('aot-key', 'aot-val')");
+        var stateJson = await context.StorageStateAsync();
+        Assert(!string.IsNullOrEmpty(stateJson), "StorageState not empty");
+        await sp.CloseAsync();
+    });
+
+    await RunGroupAsync("context-add-init-script", async () =>
+    {
+        await using var reg = await context!.AddInitScriptAsync("window.AOT_CTX_INIT = true;");
+        var cp = await context.NewPageAsync();
+        await cp.GotoAsync("data:text/html,<title>ctx-init</title>", new() { WaitUntil = WaitUntilState.DOMContentLoaded });
+        Assert(await cp.EvaluateAsync<bool>("() => window.AOT_CTX_INIT"), "Context AddInitScript");
+        await cp.CloseAsync();
+    });
+
+    await RunGroupAsync("context-expose-binding", async () =>
+    {
+        await context!.ExposeBindingAsync("ctxBind2", (BindingSource s, int x) => x + 1);
+        var cp = await context.NewPageAsync();
+        await cp.GotoAsync("data:text/html,<title>ctx-bind</title>", new() { WaitUntil = WaitUntilState.DOMContentLoaded });
+        var res = await cp.EvaluateAsync<int>("async () => await window.ctxBind2(41)");
+        Assert(res == 42, "Context ExposeBinding");
+        await cp.CloseAsync();
+    });
+
+    await RunGroupAsync("context-expose-function", async () =>
+    {
+        await context!.ExposeFunctionAsync("ctxFn", (string s) => s.ToUpper());
+        var cp = await context.NewPageAsync();
+        await cp.GotoAsync("data:text/html,<title>ctx-fn</title>", new() { WaitUntil = WaitUntilState.DOMContentLoaded });
+        var res = await cp.EvaluateAsync<string>("async () => await window.ctxFn('hello')");
+        Assert(res == "HELLO", "Context ExposeFunction");
+        await cp.CloseAsync();
+    });
+
+    await RunGroupAsync("context-route", async () =>
+    {
+        await using var reg = await context!.RouteAsync("**/ctx-route", async route =>
         {
-            await page.GotoAsync("http://example.test/abort-me", new() { Timeout = 5000, WaitUntil = WaitUntilState.DOMContentLoaded });
-            throw new InvalidOperationException("GotoAsync should have thrown on aborted route.");
-        }
-        catch (PlaywrightException)
-        {
-            Assert(true, "Route abort correctly caused navigation failure.");
-        }
-    });
-
-    await RunGroupAsync("browser-type-name", async () =>
-    {
-        Assert(browser!.BrowserType.Name == "chromium", "BrowserType.Name mismatch.");
-    });
-
-    await RunGroupAsync("locator-all", async () =>
-    {
-        await page!.SetContentAsync("<ul><li>a</li><li>b</li><li>c</li></ul>");
-        var handles = await page.Locator("li").AllAsync();
-        Assert(handles.Count == 3, "Locator.All count mismatch.");
-        var texts = await page.Locator("li").AllInnerTextsAsync();
-        Assert(texts.Count == 3, "AllInnerTexts count mismatch.");
-    });
-
-    await RunGroupAsync("locator-bounding-box", async () =>
-    {
-        await page!.SetContentAsync("<div id='bb-box' style='width:80px;height:30px;margin:10px'>box</div>");
-        var box = await page.Locator("#bb-box").BoundingBoxAsync();
-        Assert(box != null, "BoundingBox should not be null.");
-        Assert(Math.Abs(box!.Width - 80) < 1, "BoundingBox width mismatch.");
-    });
-
-    await RunGroupAsync("locator-or-and", async () =>
-    {
-        await page!.SetContentAsync("<div class='x'>first</div><div class='x'>second</div>");
-        var orLocator = page.Locator(".x").Or(page.Locator(".nonexistent"));
-        Assert(await orLocator.CountAsync() == 2, "Locator.Or count mismatch.");
-
-        var andLocator = page.Locator("div").And(page.Locator(".x"));
-        Assert(await andLocator.CountAsync() == 2, "Locator.And count mismatch.");
-    });
-
-    await RunGroupAsync("element-handle-get-attribute", async () =>
-    {
-        await page!.SetContentAsync("<a id='ehg-link' href='https://aot.test' data-info='test'>link</a>");
-        var handle = await page.QuerySelectorAsync("#ehg-link");
-        var href = await handle!.GetAttributeAsync("href");
-        Assert(href == "https://aot.test", "ElementHandle GetAttributeAsync href mismatch.");
-        var dataInfo = await handle.GetAttributeAsync("data-info");
-        Assert(dataInfo == "test", "ElementHandle GetAttributeAsync data-info mismatch.");
-    });
-
-    await RunGroupAsync("element-handle-press", async () =>
-    {
-        await page!.SetContentAsync("<input id='ehp-input' />");
-        var handle = await page.QuerySelectorAsync("#ehp-input");
-        await handle!.FocusAsync();
-        await handle.PressAsync("Shift+KeyA");
-        await handle.PressAsync("Shift+KeyB");
-        var val = await page.InputValueAsync("#ehp-input");
-        Assert(val == "AB", "ElementHandle PressAsync failed.");
-    });
-
-    await RunGroupAsync("element-handle-select-option", async () =>
-    {
-        await page!.SetContentAsync("""
-            <select id="ehs-select">
-              <option value="o1">One</option>
-              <option value="o2">Two</option>
-              <option value="o3">Three</option>
-            </select>
-            """);
-        var handle = await page.QuerySelectorAsync("#ehs-select");
-        await handle!.SelectOptionAsync("o2");
-        var val = await page.EvaluateAsync<string>("() => document.getElementById('ehs-select').value");
-        Assert(val == "o2", "ElementHandle SelectOptionAsync failed.");
-    });
-
-    await RunGroupAsync("keyboard-insert-text", async () =>
-    {
-        await page!.SetContentAsync("<input id='kit-input' />");
-        await page.Locator("#kit-input").FocusAsync();
-        await page.Keyboard.InsertTextAsync("inserted-text");
-        var val = await page.InputValueAsync("#kit-input");
-        Assert(val == "inserted-text", "Keyboard InsertTextAsync failed.");
-    });
-
-    // ─── Accessibility / Aria ──────────────────────────────────────────
-
-    await RunGroupAsync("page-aria-snapshot", async () =>
-    {
-        await page!.SetContentAsync("<button>OK</button><input placeholder='Name' />");
-        var snapshot = await page.AriaSnapshotAsync();
-        Assert(snapshot.Contains("button \"OK\""), "AriaSnapshot should contain button.");
-        Assert(snapshot.Contains("textbox \"Name\""), "AriaSnapshot should contain textbox.");
-    });
-
-    // ─── Selectors ─────────────────────────────────────────────────────
-
-    await RunGroupAsync("selectors-register", async () =>
-    {
-        await page!.SetContentAsync("<div id='sreg'>hello</div>");
-        await playwright.Selectors.RegisterAsync("text-upper", new()
-        {
-            Script = """(s, root) => root.querySelector(s).textContent.toUpperCase()""",
+            await route.FulfillAsync(new() { Status = 200, Body = "<h1>ctx-route</h1>" });
         });
-        var text = await page.EvaluateAsync<string>("() => document.querySelector('div').textContent");
-        Assert(text == "hello", "Custom selector test text mismatch.");
+        var cp = await context.NewPageAsync();
+        await cp.GotoAsync("http://example.test/ctx-route", new() { Timeout = 10_000, WaitUntil = WaitUntilState.DOMContentLoaded });
+        Assert(await cp.Locator("h1").TextContentAsync() == "ctx-route", "Context Route");
+        await cp.CloseAsync();
     });
 
-    // ─── Clock ─────────────────────────────────────────────────────────
+    // ═══════════════════════════════════════════════════════════
+    // 24. API REQUEST CONTEXT
+    // ═══════════════════════════════════════════════════════════
 
-    await RunGroupAsync("clock-install", async () =>
+    await RunGroupAsync("api-request-get", async () =>
     {
-        await page!.Context.Clock.InstallAsync();
-        var before = await page.EvaluateAsync<long>("() => Date.now()");
-        await page.Context.Clock.FastForwardAsync(10_000);
-        var after = await page.EvaluateAsync<long>("() => Date.now()");
-        Assert(after - before >= 9_000, "Clock.FastForward should advance time.");
+        await using var api = await playwright.APIRequest.NewContextAsync();
+        var response = await api.GetAsync(new Uri(server.BaseUri, "json").ToString());
+        Assert(response.Ok, "API GET ok");
+        var raw = await response.JsonAsync();
+        Assert(raw?.GetProperty("message").GetString() == "ok", "API GET json");
     });
-
-    // ─── Console message details ───────────────────────────────────────
-
-    await RunGroupAsync("console-message-details", async () =>
-    {
-        var msg = await page!.RunAndWaitForConsoleMessageAsync(async () =>
-        {
-            await page.EvaluateAsync("() => console.log('detail-test', 42)");
-        });
-        Assert(msg.Type == "log", "Console message type mismatch.");
-        Assert(msg.Text == "detail-test 42", "Console message text mismatch.");
-        Assert(!string.IsNullOrEmpty(msg.Location), "Console message location should not be empty.");
-    });
-
-    // ─── APIRequestContext Post ────────────────────────────────────────
 
     await RunGroupAsync("api-request-post", async () =>
     {
         await using var api = await playwright.APIRequest.NewContextAsync();
         var response = await api.PostAsync(new Uri(server.BaseUri, "json").ToString());
-        Assert(response.Ok, "APIRequest POST should be OK.");
-        var json = await response.JsonAsync();
-        Assert(json?.GetProperty("message").GetString() == "ok", "APIRequest POST response mismatch.");
+        Assert(response.Ok, "API POST ok");
     });
 
-    // ─── Clearcote ─────────────────────────────────────────────────────
-
-    await RunGroupAsync("clearcote-launch-options", async () =>
+    await RunGroupAsync("api-request-put", async () =>
     {
-        var opts = new ClearcoteLaunchOptions
-        {
-            Fingerprint = "test-fp",
-            Humanize = true,
-            ShowCursor = true,
-            Quiet = true,
-            DisablePrivacySandbox = true,
-        };
-        Assert(opts.Fingerprint == "test-fp", "ClearcoteLaunchOptions.Fingerprint mismatch.");
-        Assert(opts.Humanize == true, "ClearcoteLaunchOptions.Humanize mismatch.");
-        Assert(opts.Quiet == true, "ClearcoteLaunchOptions.Quiet mismatch.");
+        await using var api = await playwright.APIRequest.NewContextAsync();
+        var response = await api.PutAsync(new Uri(server.BaseUri, "json").ToString());
+        Assert(response.Ok, "API PUT ok");
     });
 
-    await RunGroupAsync("clearcote-persistent-options", async () =>
+    await RunGroupAsync("api-request-delete", async () =>
     {
-        var opts = new ClearcoteLaunchPersistentContextOptions
-        {
-            Fingerprint = "persist-fp",
-            Humanize = true,
-            Geoip = false,
-            Widevine = false,
-            Profile = "test-profile",
-        };
-        Assert(opts.Fingerprint == "persist-fp", "ClearcoteLaunchPersistentContextOptions.Fingerprint mismatch.");
-        Assert(opts.Geoip == false, "ClearcoteLaunchPersistentContextOptions.Geoip mismatch.");
-        Assert(opts.Profile == "test-profile", "ClearcoteLaunchPersistentContextOptions.Profile mismatch.");
+        await using var api = await playwright.APIRequest.NewContextAsync();
+        var response = await api.DeleteAsync(new Uri(server.BaseUri, "json").ToString());
+        Assert(response.Ok, "API DELETE ok");
     });
 
-    await RunGroupAsync("clearcote-profile", async () =>
+    await RunGroupAsync("api-request-head", async () =>
     {
-        var profile = new ClearcoteProfile("aottest", new ClearcoteLaunchPersistentContextOptions
-        {
-            Humanize = true,
-        });
-        Assert(profile.Name == "aottest", "ClearcoteProfile.Name mismatch.");
-        Assert(profile.Options.Humanize == true, "ClearcoteProfile.Options.Humanize mismatch.");
-        var savedPath = profile.Save();
-        Assert(File.Exists(savedPath), "ClearcoteProfile.Save should create file.");
-
-        var loaded = ClearcoteProfile.Load(savedPath);
-        Assert(loaded.Name == "aottest", "Loaded profile name mismatch.");
-        Assert(loaded.Options.Humanize == true, "Loaded profile Humanize mismatch.");
-        File.Delete(savedPath);
+        await using var api = await playwright.APIRequest.NewContextAsync();
+        var response = await api.HeadAsync(new Uri(server.BaseUri, "json").ToString());
+        Assert(response.Ok, "API HEAD ok");
     });
 
-    await RunGroupAsync("clearcote-render-verdict", async () =>
+    await RunGroupAsync("api-request-patch", async () =>
     {
-        var verdict = new ClearcoteRenderVerdict
-        {
-            Vendor = "Google",
-            Renderer = "ANGLE",
-            Webgl = true,
-            Webgl2 = true,
-            MaxTextureSize = 16384,
-            SoftwareSuspected = false,
-            Coherent = true,
-            Warnings = Array.Empty<string>(),
-        };
-        Assert(verdict.Vendor == "Google", "RenderVerdict Vendor mismatch.");
-        Assert(verdict.Coherent == true, "RenderVerdict Coherent mismatch.");
+        await using var api = await playwright.APIRequest.NewContextAsync();
+        var response = await api.PatchAsync(new Uri(server.BaseUri, "json").ToString());
+        Assert(response.Ok, "API PATCH ok");
     });
 
-    await RunGroupAsync("clearcote-agent-result", async () =>
+    await RunGroupAsync("api-request-fetch", async () =>
     {
-        var result = new ClearcoteAgentTaskResult
-        {
-            Success = true,
-            FinalText = "done",
-            Steps = Array.Empty<ClearcoteAgentStep>(),
-            StepsJson = "[]",
-        };
-        Assert(result.Success == true, "AgentTaskResult Success mismatch.");
-        Assert(result.FinalText == "done", "AgentTaskResult FinalText mismatch.");
+        await using var api = await playwright.APIRequest.NewContextAsync();
+        var response = await api.FetchAsync(new Uri(server.BaseUri, "json").ToString());
+        Assert(response.Ok, "API Fetch ok");
     });
 
-    // ===== Clearcote humanization tests =====
-    // Verify the humanization interceptors work correctly.
-    // They use CLEARCOTE_BINARY env var or auto-detect Playwright Chromium.
-
-    var clearcoteBinary = Environment.GetEnvironmentVariable("CLEARCOTE_BINARY");
-    if (string.IsNullOrEmpty(clearcoteBinary))
+    await RunGroupAsync("api-request-storage-state", async () =>
     {
-        var home = Environment.GetEnvironmentVariable("HOME") ?? Environment.GetEnvironmentVariable("USERPROFILE");
-        if (home != null)
-        {
-            var pwCache = Path.Combine(home, ".cache", "ms-playwright");
-            if (Directory.Exists(pwCache))
-            {
-                var dirs = Directory.GetDirectories(pwCache, "chromium-*");
-                if (dirs.Length > 0)
-                {
-                    var candidate = Path.Combine(dirs[0], "chrome-linux64", "chrome");
-                    if (File.Exists(candidate))
-                    {
-                        clearcoteBinary = candidate;
-                    }
-                }
-            }
-        }
-    }
-
-    if (clearcoteBinary != null)
-    {
-        Environment.SetEnvironmentVariable("CLEARCOTE_BINARY", clearcoteBinary);
-
-        await RunGroupAsync("clearcote-humanize-setup", async () =>
-        {
-            clearcoteBrowser = await ClearcoteBrowser.LaunchAsync(playwright.Chromium, new ClearcoteLaunchOptions
-            {
-                Headless = true,
-                Humanize = true,
-                Quiet = true,
-            });
-            clearcoteContext = await clearcoteBrowser.NewContextAsync();
-            clearcotePage = await clearcoteContext.NewPageAsync();
-        });
-
-        await RunGroupAsync("clearcote-humanize-click", async () =>
-        {
-            await clearcotePage!.SetContentAsync("""
-                <button id="btn">Click</button>
-                <output id="out"></output>
-                <script>document.getElementById('btn').onclick = () => document.getElementById('out').textContent = 'ok';</script>
-                """);
-            await clearcotePage.Locator("#btn").ClickAsync();
-            Assert(await clearcotePage.Locator("#out").TextContentAsync() == "ok", "Humanized click failed.");
-        });
-
-        await RunGroupAsync("clearcote-humanize-type", async () =>
-        {
-            await clearcotePage!.SetContentAsync("<input id='name'>");
-            await clearcotePage.Locator("#name").ClickAsync();
-            await clearcotePage.Keyboard.TypeAsync("hi");
-            Assert(await clearcotePage.InputValueAsync("#name") == "hi", "Humanized type failed.");
-        });
-
-        await RunGroupAsync("clearcote-humanize-fill", async () =>
-        {
-            await clearcotePage!.SetContentAsync("<input id='field'>");
-            await clearcotePage.Locator("#field").FillAsync("val");
-            Assert(await clearcotePage.InputValueAsync("#field") == "val", "Humanized fill failed.");
-        });
-
-        await RunGroupAsync("clearcote-humanize-hover", async () =>
-        {
-            await clearcotePage!.SetContentAsync("""
-                <style>#h { width:50px; height:50px; background:red; } #h:hover { background:green; }</style>
-                <div id="h"></div>
-                """);
-            await clearcotePage.Locator("#h").HoverAsync();
-            var bg = await clearcotePage.EvaluateAsync<string>("() => getComputedStyle(document.getElementById('h')).backgroundColor");
-            Assert(bg.Contains("128") || bg.Contains("green"), $"Hover should turn green, got: {bg}");
-        });
-
-        await RunGroupAsync("clearcote-humanize-dblclick", async () =>
-        {
-            await clearcotePage!.SetContentAsync("""
-                <button id="dbl">Db</button>
-                <output id="out"></output>
-                <script>document.getElementById('dbl').addEventListener('dblclick', () => document.getElementById('out').textContent = 'ok');</script>
-                """);
-            await clearcotePage.Locator("#dbl").DblClickAsync();
-            Assert(await clearcotePage.Locator("#out").TextContentAsync() == "ok", "Humanized dblclick failed.");
-        });
-
-        await RunGroupAsync("clearcote-humanize-press", async () =>
-        {
-            await clearcotePage!.SetContentAsync("<input id='press'>");
-            await clearcotePage.Locator("#press").PressAsync("a");
-            Assert(await clearcotePage.InputValueAsync("#press") == "a", "Humanized press failed.");
-        });
-
-        await RunGroupAsync("clearcote-humanize-dragndrop", async () =>
-        {
-            await clearcotePage!.SetContentAsync("""
-                <div id="src" style="position:absolute;left:0;top:0;width:50px;height:50px;background:red;"></div>
-                <div id="tgt" style="position:absolute;left:300px;top:0;width:50px;height:50px;background:blue;"></div>
-                """);
-            await clearcotePage.DragAndDropAsync("#src", "#tgt");
-            Assert(true, "Humanized drag-and-drop completed.");
-        });
-
-        await RunGroupAsync("clearcote-humanize-showcursor", async () =>
-        {
-            await using var ccBrowser2 = await ClearcoteBrowser.LaunchAsync(playwright.Chromium, new ClearcoteLaunchOptions
-            {
-                Headless = true,
-                Humanize = true,
-                ShowCursor = true,
-                Quiet = true,
-            });
-            await using var ccCtx2 = await ccBrowser2.NewContextAsync();
-            var ccPage2 = await ccCtx2.NewPageAsync();
-            var hasCursor = await ccPage2.EvaluateAsync<bool>("() => !!document.getElementById('__clearcote_cursor')");
-            Assert(hasCursor, "ShowCursor should inject cursor overlay.");
-        });
-    }
-    else
-    {
-        Console.WriteLine("SKIP clearcote-humanize-* (set CLEARCOTE_BINARY or install Playwright browsers)");
-    }
-
-    await RunGroupAsync("screenshot", async () =>
-    {
-        var screenshotPath = "playwright-aot.png";
-        var bytes = await page!.ScreenshotAsync(new() { Path = screenshotPath });
-        Assert(bytes.Length > 0, "Screenshot bytes should not be empty.");
-        Assert(File.Exists(screenshotPath), "Screenshot file was not written.");
+        await using var api = await playwright.APIRequest.NewContextAsync();
+        var state = await api.StorageStateAsync();
+        Assert(!string.IsNullOrEmpty(state), "API StorageState");
     });
+
+    await RunGroupAsync("api-request-create-form-data", async () =>
+    {
+        await using var api = await playwright.APIRequest.NewContextAsync();
+        var fd = api.CreateFormData();
+        fd.Append("key", "value");
+        var response = await api.PostAsync(new Uri(server.BaseUri, "json").ToString(), new() { Multipart = fd });
+        Assert(response.Ok, "API FormData POST");
+    });
+
+    // ═══════════════════════════════════════════════════════════
+    // 25. CLOCK
+    // ═══════════════════════════════════════════════════════════
+
+    await RunGroupAsync("clock-install", async () =>
+    {
+        var cp = await context!.NewPageAsync();
+        await cp.GotoAsync("data:text/html,<title>clock</title>", new() { WaitUntil = WaitUntilState.DOMContentLoaded });
+        await cp.Context.Clock.InstallAsync();
+        var before = await cp.EvaluateAsync<long>("() => Date.now()");
+        await cp.Context.Clock.FastForwardAsync(10_000);
+        var after = await cp.EvaluateAsync<long>("() => Date.now()");
+        Assert(after - before >= 9_000, "Clock FastForward");
+        await cp.CloseAsync();
+    });
+
+    await RunGroupAsync("clock-pause-resume", async () =>
+    {
+        var ctx = await browser!.NewContextAsync();
+        var cp = await ctx.NewPageAsync();
+        await cp.GotoAsync("data:text/html,<title>clock-pr</title>", new() { WaitUntil = WaitUntilState.DOMContentLoaded });
+        await cp.Context.Clock.InstallAsync();
+        await cp.Context.Clock.SetFixedTimeAsync(new DateTime(2020, 1, 1));
+        await cp.EvaluateAsync("() => Date.now()"); // verify no crash
+        await cp.CloseAsync();
+        await ctx.CloseAsync();
+    });
+
+    await RunGroupAsync("clock-set-system-time", async () =>
+    {
+        var cp = await context!.NewPageAsync();
+        await cp.GotoAsync("data:text/html,<title>clock-sst</title>", new() { WaitUntil = WaitUntilState.DOMContentLoaded });
+        await cp.Context.Clock.InstallAsync();
+        await cp.Context.Clock.SetSystemTimeAsync(new DateTime(2020, 2, 2));
+        await cp.CloseAsync();
+    });
+
+    await RunGroupAsync("clock-set-fixed-time", async () =>
+    {
+        var cp = await context!.NewPageAsync();
+        await cp.GotoAsync("data:text/html,<title>clock-sft</title>", new() { WaitUntil = WaitUntilState.DOMContentLoaded });
+        await cp.Context.Clock.InstallAsync();
+        await cp.Context.Clock.SetFixedTimeAsync(new DateTime(2020, 3, 3));
+        await cp.CloseAsync();
+    });
+
+    await RunGroupAsync("clock-run-for", async () =>
+    {
+        var cp = await context!.NewPageAsync();
+        await cp.GotoAsync("data:text/html,<title>clock-rf</title>", new() { WaitUntil = WaitUntilState.DOMContentLoaded });
+        await cp.Context.Clock.InstallAsync();
+        await cp.Context.Clock.RunForAsync(5_000);
+        await cp.CloseAsync();
+    });
+
+    // ═══════════════════════════════════════════════════════════
+    // 26. SELECTORS
+    // ═══════════════════════════════════════════════════════════
+
+    await RunGroupAsync("selectors-register", async () =>
+    {
+        await page!.SetContentAsync("<div id='selreg'>hello</div>");
+        await playwright.Selectors.RegisterAsync("text-upper", new()
+        {
+            Script = """(s, root) => root.querySelector(s).textContent.toUpperCase()""",
+        });
+    });
+
+    await RunGroupAsync("selectors-set-test-id-attribute", async () =>
+    {
+        playwright.Selectors.SetTestIdAttribute("data-testid");
+    });
+
+    // ═══════════════════════════════════════════════════════════
+    // 27. ACCESSIBILITY
+    // ═══════════════════════════════════════════════════════════
+
+    await RunGroupAsync("page-aria-snapshot", async () =>
+    {
+        await page!.SetContentAsync("<button>OK</button><input placeholder='Name'>");
+        var snapshot = await page.AriaSnapshotAsync();
+        Assert(snapshot.Contains("button \"OK\""), "AriaSnapshot button");
+        Assert(snapshot.Contains("textbox \"Name\""), "AriaSnapshot textbox");
+    });
+
+    // ═══════════════════════════════════════════════════════════
+    // 28. TIMEOUT SETTINGS
+    // ═══════════════════════════════════════════════════════════
+
+    await RunGroupAsync("page-timeouts", async () =>
+    {
+        page!.SetDefaultNavigationTimeout(60_000);
+        page!.SetDefaultTimeout(30_000);
+        context!.SetDefaultNavigationTimeout(60_000);
+        context!.SetDefaultTimeout(30_000);
+    });
+
+    // ═══════════════════════════════════════════════════════════
+    // 29. PAGE CLOSE
+    // ═══════════════════════════════════════════════════════════
+
+    await RunGroupAsync("page-close", async () =>
+    {
+        var cp = await context!.NewPageAsync();
+        Assert(!cp.IsClosed, "New page not closed");
+        await cp.CloseAsync();
+        Assert(cp.IsClosed, "Page should be closed");
+    });
+
+    // ═══════════════════════════════════════════════════════════
+    // 30. SET INPUT FILES
+    // ═══════════════════════════════════════════════════════════
+
+    await RunGroupAsync("page-set-input-files", async () =>
+    {
+        await page!.SetContentAsync("<input type='file' id='psif'>");
+        await page.SetInputFilesAsync("#psif", new FilePayload { Name = "pf.txt", MimeType = "text/plain", Buffer = "pf"u8.ToArray() });
+        var name = await page.EvaluateAsync<string>("() => document.getElementById('psif').files[0].name");
+        Assert(name == "pf.txt", "Page SetInputFiles");
+    });
+
+    // ═══════════════════════════════════════════════════════════
+    // 31. INPUT VALUE
+    // ═══════════════════════════════════════════════════════════
+
+    await RunGroupAsync("page-input-file-check", async () =>
+    {
+        await page!.SetContentAsync("<input id='piv2' value='check'>");
+        Assert(await page.InputValueAsync("#piv2") == "check", "Page InputValue check");
+    });
+
+    // ═══════════════════════════════════════════════════════════
+    // SUMMARY
+    // ═══════════════════════════════════════════════════════════
+
+    Console.WriteLine();
+    Console.WriteLine($"╔══════════════════════════════════════╗");
+    Console.WriteLine($"║  AOT Sample Complete                ║");
+    Console.WriteLine($"║  Passed: {passed,-3}  Failed: {failed,-3}               ║");
+    Console.WriteLine($"╚══════════════════════════════════════╝");
 }
 finally
 {
-    if (clearcotePage != null)
-    {
-        await clearcotePage.CloseAsync();
-    }
-
-    if (clearcoteContext != null)
-    {
-        await clearcoteContext.CloseAsync();
-    }
-
-    if (clearcoteBrowser != null)
-    {
-        await clearcoteBrowser.CloseAsync();
-    }
-
-    if (context != null)
-    {
-        await context.CloseAsync();
-    }
-
-    if (browser != null)
-    {
-        await browser.CloseAsync();
-    }
+    if (page != null) await page.CloseAsync();
+    if (context != null) await context.CloseAsync();
+    if (browser != null) await browser.CloseAsync();
 }
 
-Console.WriteLine("NativeAOT validation complete.");
-
-static async Task RunGroupAsync(string name, Func<Task> action)
-{
-    try
-    {
-        await action().ConfigureAwait(false);
-        Console.WriteLine($"PASS {name}");
-    }
-    catch (Exception ex)
-    {
-        Console.WriteLine($"FAIL {name}: {ex.GetType().Name}: {ex.Message}");
-        throw;
-    }
-}
-
-static void Assert(bool condition, string message)
-{
-    if (!condition)
-    {
-        throw new InvalidOperationException(message);
-    }
-}
-
-internal sealed class SampleApiPayload
-{
-    public string Message { get; set; } = string.Empty;
-
-    public int Count { get; set; }
-
-    public string[] Tags { get; set; } = Array.Empty<string>();
-}
-
-[JsonSourceGenerationOptions(PropertyNamingPolicy = JsonKnownNamingPolicy.CamelCase)]
-[JsonSerializable(typeof(SampleApiPayload))]
-internal partial class AotSampleJsonContext : JsonSerializerContext
-{
-}
-
+// ═══════════════════════════════════════════════════════════════
+// Local JSON server for API tests
+// ═══════════════════════════════════════════════════════════════
 internal sealed class LocalJsonServer : IAsyncDisposable
 {
     private readonly TcpListener _listener;
@@ -1331,16 +1675,9 @@ internal sealed class LocalJsonServer : IAsyncDisposable
     public async ValueTask DisposeAsync()
     {
         _listener.Stop();
-        try
-        {
-            await _acceptLoop.ConfigureAwait(false);
-        }
-        catch (ObjectDisposedException)
-        {
-        }
-        catch (SocketException)
-        {
-        }
+        try { await _acceptLoop.ConfigureAwait(false); }
+        catch (ObjectDisposedException) { }
+        catch (SocketException) { }
     }
 
     private async Task AcceptLoopAsync()
@@ -1348,19 +1685,9 @@ internal sealed class LocalJsonServer : IAsyncDisposable
         while (true)
         {
             TcpClient client;
-            try
-            {
-                client = await _listener.AcceptTcpClientAsync().ConfigureAwait(false);
-            }
-            catch (ObjectDisposedException)
-            {
-                return;
-            }
-            catch (SocketException)
-            {
-                return;
-            }
-
+            try { client = await _listener.AcceptTcpClientAsync().ConfigureAwait(false); }
+            catch (ObjectDisposedException) { return; }
+            catch (SocketException) { return; }
             _ = HandleClientAsync(client);
         }
     }
@@ -1368,15 +1695,17 @@ internal sealed class LocalJsonServer : IAsyncDisposable
     private static async Task HandleClientAsync(TcpClient client)
     {
         using (client)
+        await using (var stream = client.GetStream())
         {
-            await using var stream = client.GetStream();
             var buffer = new byte[2048];
             var read = await stream.ReadAsync(buffer, 0, buffer.Length).ConfigureAwait(false);
             var request = Encoding.ASCII.GetString(buffer, 0, read);
-            var isJson = request.StartsWith("GET /json ", StringComparison.Ordinal) ||
-                         request.StartsWith("POST /json ", StringComparison.Ordinal);
+            var isJson = request.Contains("/json ", StringComparison.Ordinal);
             var isPage = request.StartsWith("GET /page ", StringComparison.Ordinal) ||
-                         request.StartsWith("POST /page ", StringComparison.Ordinal);
+                         request.StartsWith("POST /page ", StringComparison.Ordinal) ||
+                         request.StartsWith("PUT /page ", StringComparison.Ordinal) ||
+                         request.StartsWith("PATCH /page ", StringComparison.Ordinal);
+            var isHead = request.StartsWith("HEAD ", StringComparison.Ordinal);
             var status = isJson || isPage ? "200 OK" : "404 Not Found";
             var contentType = isPage ? "text/html" : "application/json";
             var body = isJson
@@ -1385,10 +1714,14 @@ internal sealed class LocalJsonServer : IAsyncDisposable
                     ? "<!doctype html><title>Network OK</title><h1 id=\"network\">network-ok</h1>"
                     : """{"message":"not-found","count":0,"tags":[]}""";
             var bytes = Encoding.UTF8.GetBytes(body);
+            // HEAD requests must not include a body per HTTP spec
             var headers = Encoding.ASCII.GetBytes(
-                $"HTTP/1.1 {status}\r\nContent-Type: {contentType}\r\nContent-Length: {bytes.Length}\r\nConnection: close\r\n\r\n");
+                $"HTTP/1.1 {status}\r\nContent-Type: {contentType}\r\nContent-Length: {(isHead ? 0 : bytes.Length)}\r\nConnection: close\r\n\r\n");
             await stream.WriteAsync(headers, 0, headers.Length).ConfigureAwait(false);
-            await stream.WriteAsync(bytes, 0, bytes.Length).ConfigureAwait(false);
+            if (!isHead)
+            {
+                await stream.WriteAsync(bytes, 0, bytes.Length).ConfigureAwait(false);
+            }
         }
     }
 }

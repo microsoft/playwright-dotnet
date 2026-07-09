@@ -182,6 +182,7 @@ namespace Microsoft.Playwright.Transport;
 [JsonSerializable(typeof(ElectronApplicationInitializer))]
 [JsonSerializable(typeof(ElectronInitializer))]
 [JsonSerializable(typeof(ElementHandleInitializer))]
+[JsonSerializable(typeof(Core.ElementHandle[]))]
 [JsonSerializable(typeof(ExpectedTextValue))]
 [JsonSerializable(typeof(ExpectedTextValue[]))]
 [JsonSerializable(typeof(FormField))]

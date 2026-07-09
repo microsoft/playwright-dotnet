@@ -1,7 +1,7 @@
 <Project>
   <PropertyGroup>
-    <AssemblyVersion>1.0.3</AssemblyVersion>
-    <PackageVersion>1.0.3</PackageVersion>
+    <AssemblyVersion>1.0.4</AssemblyVersion>
+    <PackageVersion>1.0.4</PackageVersion>
     <DriverVersion>1.61.1-beta-1782139630000</DriverVersion>
     <!-- The Node.js version bundled with the driver. Kept in sync with NODE_VERSION
          in upstream's utils/build/build-playwright-driver.sh by the roll script. -->
