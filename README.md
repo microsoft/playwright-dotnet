@@ -19,7 +19,7 @@ A **NativeAOT-compatible** fork of [playwright-dotnet](https://github.com/micros
 ## Install
 
 ```bash
-dotnet add package Playwright.Clearcote --version 1.0.3
+dotnet add package Playwright.Clearcote
 ```
 
 ## Quick start
