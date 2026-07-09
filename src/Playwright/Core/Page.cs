@@ -768,8 +768,9 @@ internal class Page : ChannelOwner, IPage
 
         if (!string.IsNullOrEmpty(options.Path))
         {
-            Directory.CreateDirectory(new FileInfo(options.Path).Directory!.FullName);
-            File.WriteAllBytes(options.Path, result);
+            var safePath = SecurityHelpers.ResolveAndValidatePath(options.Path, "ScreenshotAsync.Path");
+            Directory.CreateDirectory(new FileInfo(safePath).Directory!.FullName);
+            File.WriteAllBytes(safePath, result);
         }
 
         return result;
@@ -986,8 +987,9 @@ internal class Page : ChannelOwner, IPage
 
         if (!string.IsNullOrEmpty(options?.Path))
         {
-            Directory.CreateDirectory(new FileInfo(options?.Path!).Directory!.FullName);
-            File.WriteAllBytes(options?.Path!, result);
+            var safePath = SecurityHelpers.ResolveAndValidatePath(options.Path, "PdfAsync.Path");
+            Directory.CreateDirectory(new FileInfo(safePath).Directory!.FullName);
+            File.WriteAllBytes(safePath, result);
         }
 
         return result;

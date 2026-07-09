@@ -136,7 +136,7 @@ internal class APIRequestContext : ChannelOwner, IAPIRequestContext
         }
         else if (options.DataObject != null)
         {
-            jsonData = JsonSerializer.Serialize(options.DataObject, PlaywrightJsonContext.Default.DictionaryOfStringToObject);
+            jsonData = UserJsonSerializer.Serialize(options.DataObject);
         }
 
         var message = new Dictionary<string, object?>

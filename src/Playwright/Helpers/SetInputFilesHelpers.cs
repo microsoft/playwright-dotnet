@@ -42,18 +42,19 @@ internal static class SetInputFilesHelpers
         string? localDirectory = null;
         foreach (var item in items)
         {
-            if ((File.GetAttributes(item) & FileAttributes.Directory) == FileAttributes.Directory)
+            var safeItem = SecurityHelpers.ResolveAndValidatePath(item, "SetInputFiles");
+            if ((File.GetAttributes(safeItem) & FileAttributes.Directory) == FileAttributes.Directory)
             {
                 if (localDirectory != null)
                 {
                     throw new PlaywrightException("Multiple directories are not supported");
                 }
-                localDirectory = Path.GetFullPath(item);
+                localDirectory = Path.GetFullPath(safeItem);
             }
             else
             {
                 localPaths ??= [];
-                localPaths.Add(Path.GetFullPath(item));
+                localPaths.Add(Path.GetFullPath(safeItem));
             }
         }
 

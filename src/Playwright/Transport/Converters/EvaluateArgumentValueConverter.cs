@@ -23,13 +23,14 @@
  */
 using System;
 using System.Collections;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
 using System.Dynamic;
 using System.Globalization;
 using System.Numerics;
 using System.Text.Json;
 using System.Text.Json.Nodes;
+using System.Text.Json.Serialization.Metadata;
 using System.Text.RegularExpressions;
 using System.Threading;
 using Microsoft.Playwright.Core;
@@ -39,6 +40,34 @@ namespace Microsoft.Playwright.Transport.Converters;
 
 internal static class EvaluateArgumentValueConverter
 {
+    /// <summary>
+    /// Registry for user-supplied JsonTypeInfo entries that augment the built-in PlaywrightJsonContext.
+    /// This enables AOT-safe serialization/deserialization of user DTOs without modifying PlaywrightJsonContext.
+    /// </summary>
+    private static readonly ConcurrentDictionary<Type, object> _extraTypeInfos = new();
+
+    internal static void RegisterTypeInfo(object typeInfo)
+    {
+        if (typeInfo == null)
+        {
+            throw new ArgumentNullException(nameof(typeInfo));
+        }
+
+        var type = typeInfo.GetType();
+        if (!type.IsGenericType || type.GetGenericTypeDefinition() != typeof(System.Text.Json.Serialization.Metadata.JsonTypeInfo<>))
+        {
+            throw new ArgumentException("Value must be a JsonTypeInfo<T> instance.", nameof(typeInfo));
+        }
+
+        var typeArg = type.GetGenericArguments()[0];
+        _extraTypeInfos[typeArg] = typeInfo;
+    }
+
+    internal static JsonTypeInfo? GetExtraTypeInfo(Type type)
+    {
+        return _extraTypeInfos.TryGetValue(type, out var info) ? info as JsonTypeInfo : null;
+    }
+
     internal static JsonObject Serialize(object? value, List<EvaluateArgumentGuidElement> handles, VisitorInfo visitorInfo)
     {
         if (value == null)
@@ -222,8 +251,10 @@ internal static class EvaluateArgumentValueConverter
             return new JsonObject { ["h"] = JsonValue.Create(handles.Count - 1) };
         }
 
-        // Try source-gen serialization for types registered in PlaywrightJsonContext.
-        var knownTypeInfo = PlaywrightJsonContext.Default.GetTypeInfo(value.GetType());
+        // Try source-gen serialization for types registered in PlaywrightJsonContext
+        // or via RegisterTypeInfo.
+        var knownTypeInfo = PlaywrightJsonContext.Default.GetTypeInfo(value.GetType())
+            ?? GetExtraTypeInfo(value.GetType());
         if (knownTypeInfo != null)
         {
             var node = JsonSerializer.SerializeToNode(value, knownTypeInfo);
@@ -247,7 +278,7 @@ internal static class EvaluateArgumentValueConverter
         // No reflection fallback for AOT: user must use primitives, Dictionary, ExpandoObject, or a registered type.
         throw new PlaywrightException(
             $"Type '{value.GetType().FullName}' is not registered for AOT-safe serialization. " +
-            "Use primitives, Dictionary<string, object?>, ExpandoObject, arrays, or register your type in PlaywrightJsonContext.");
+            "Use primitives, Dictionary<string, object?>, ExpandoObject, arrays, or register your type via EvaluateArgumentValueConverter.RegisterTypeInfo().");
     }
 
     internal static object? Deserialize(JsonElement result, Type t)
@@ -307,14 +338,54 @@ internal static class EvaluateArgumentValueConverter
             return converted;
         }
 
-        // Handle Regex: reconstruct from pattern and flags.
+        // Map TypedArray results (JsonArray of primitives) to typed .NET arrays directly,
+        // avoiding JSON round-trip allocation.
+        if (parsed is JsonArray jarr)
+        {
+            if (t == typeof(byte[]))
+            {
+                var arr = new byte[jarr.Count];
+                for (int i = 0; i < jarr.Count; i++)
+                {
+                    arr[i] = (byte)(int)jarr[i]!;
+                }
+
+                return arr;
+            }
+            if (t == typeof(int[]))
+            {
+                var arr = new int[jarr.Count];
+                for (int i = 0; i < jarr.Count; i++)
+                {
+                    arr[i] = (int)jarr[i]!;
+                }
+
+                return arr;
+            }
+            if (t == typeof(double[]))
+            {
+                var arr = new double[jarr.Count];
+                for (int i = 0; i < jarr.Count; i++)
+                {
+                    arr[i] = (double)jarr[i]!;
+                }
+
+                return arr;
+            }
+        }
+
+        // Handle Regex: reconstruct from pattern and flags with timeout to prevent ReDoS.
         if (t == typeof(Regex) && parsed is JsonObject regexObj)
         {
             var pattern = regexObj.TryGetPropertyValue("p", out var p) ? p?.ToString() : null;
             var flagsVal = regexObj.TryGetPropertyValue("f", out var f) ? (int)(f ?? 0) : 0;
             if (pattern != null)
             {
-                return new Regex(pattern, (RegexOptions)flagsVal);
+                if (pattern.Length > 1000)
+                {
+                    throw new PlaywrightException("Regex pattern too long (max 1000 characters).");
+                }
+                return new Regex(pattern, (RegexOptions)flagsVal, TimeSpan.FromSeconds(1));
             }
         }
 
@@ -327,7 +398,8 @@ internal static class EvaluateArgumentValueConverter
 
         if (parsed != null)
         {
-            var typeInfo = PlaywrightJsonContext.Default.GetTypeInfo(t);
+            var typeInfo = PlaywrightJsonContext.Default.GetTypeInfo(t)
+                ?? GetExtraTypeInfo(t);
             if (typeInfo != null)
             {
                 var json = parsed.ToJsonString();
@@ -337,7 +409,7 @@ internal static class EvaluateArgumentValueConverter
 
         throw new PlaywrightException(
             $"Return type '{t.FullName}' is not registered for AOT-safe deserialization. " +
-            "Use object, JsonElement, or add [JsonSerializable(typeof(T))] to PlaywrightJsonContext.");
+            "Use object, JsonElement, or register your type via EvaluateArgumentValueConverter.RegisterTypeInfo().");
     }
 
     private static object? ConvertJsonNodeToObject(JsonNode? node)
@@ -565,6 +637,95 @@ internal static class EvaluateArgumentValueConverter
         return false;
     }
 
+    private static JsonArray ConvertTypedArray(JsonElement ta)
+    {
+        var kind = ta.GetProperty("k").ToString();
+        var bEl = ta.GetProperty("b");
+        byte[] bytes;
+        if (bEl.ValueKind == JsonValueKind.String)
+        {
+            bytes = bEl.ToObject<byte[]>() ?? [];
+        }
+        else if (bEl.ValueKind == JsonValueKind.Array)
+        {
+            var innerList = new List<byte>();
+            foreach (var e in bEl.EnumerateArray())
+            {
+                innerList.Add((byte)e.GetInt32());
+            }
+            bytes = innerList.ToArray();
+        }
+        else
+        {
+            bytes = [];
+        }
+        var array = new JsonArray();
+        switch (kind)
+        {
+            case "i8" or "Int8Array":
+                for (int idx = 0; idx < bytes.Length; idx++)
+                {
+                    array.Add((JsonNode?)JsonValue.Create((int)(sbyte)bytes[idx]));
+                }
+                break;
+            case "ui8" or "Uint8Array" or "Uint8ClampedArray":
+                for (int idx = 0; idx < bytes.Length; idx++)
+                {
+                    array.Add((JsonNode?)JsonValue.Create((int)bytes[idx]));
+                }
+                break;
+            case "i16" or "Int16Array":
+                for (int idx = 0; idx < bytes.Length - 1; idx += 2)
+                {
+                    array.Add((JsonNode?)JsonValue.Create((int)BitConverter.ToInt16(bytes, idx)));
+                }
+                break;
+            case "ui16" or "Uint16Array":
+                for (int idx = 0; idx < bytes.Length - 1; idx += 2)
+                {
+                    array.Add((JsonNode?)JsonValue.Create((int)BitConverter.ToUInt16(bytes, idx)));
+                }
+                break;
+            case "i32" or "Int32Array":
+                for (int idx = 0; idx < bytes.Length - 3; idx += 4)
+                {
+                    array.Add((JsonNode?)JsonValue.Create(BitConverter.ToInt32(bytes, idx)));
+                }
+                break;
+            case "ui32" or "Uint32Array":
+                for (int idx = 0; idx < bytes.Length - 3; idx += 4)
+                {
+                    array.Add((JsonNode?)JsonValue.Create((long)BitConverter.ToUInt32(bytes, idx)));
+                }
+                break;
+            case "flt32" or "Float32Array":
+                for (int idx = 0; idx < bytes.Length - 3; idx += 4)
+                {
+                    array.Add((JsonNode?)JsonValue.Create(BitConverter.ToSingle(bytes, idx)));
+                }
+                break;
+            case "flt64" or "Float64Array":
+                for (int idx = 0; idx < bytes.Length - 7; idx += 8)
+                {
+                    array.Add((JsonNode?)JsonValue.Create(BitConverter.ToDouble(bytes, idx)));
+                }
+                break;
+            case "i64" or "BigInt64Array":
+                for (int idx = 0; idx < bytes.Length - 7; idx += 8)
+                {
+                    array.Add((JsonNode?)JsonValue.Create(BitConverter.ToInt64(bytes, idx)));
+                }
+                break;
+            case "ui64" or "BigUint64Array":
+                for (int idx = 0; idx < bytes.Length - 7; idx += 8)
+                {
+                    array.Add((JsonNode?)JsonValue.Create(BitConverter.ToUInt64(bytes, idx)));
+                }
+                break;
+        }
+        return array;
+    }
+
     private static JsonNode? ParseEvaluateResultToJsonNode(JsonElement result, Dictionary<int, JsonNode> refs, RefCounter? refCounter = null)
     {
         if (result.TryGetProperty("v", out var value))
@@ -626,19 +787,19 @@ internal static class EvaluateArgumentValueConverter
             var flagsEl = regex.GetProperty("f");
             if (flagsEl.ValueKind == JsonValueKind.String)
             {
-            var flagsStr = flagsEl.ToString();
-            if (flagsStr.Contains('i'))
-            {
-                flags |= (int)RegexOptions.IgnoreCase;
-            }
-            if (flagsStr.Contains('m'))
-            {
-                flags |= (int)RegexOptions.Multiline;
-            }
-            if (flagsStr.Contains('s'))
-            {
-                flags |= (int)RegexOptions.Singleline;
-            }
+                var flagsStr = flagsEl.ToString();
+                if (flagsStr.Contains('i'))
+                {
+                    flags |= (int)RegexOptions.IgnoreCase;
+                }
+                if (flagsStr.Contains('m'))
+                {
+                    flags |= (int)RegexOptions.Multiline;
+                }
+                if (flagsStr.Contains('s'))
+                {
+                    flags |= (int)RegexOptions.Singleline;
+                }
             }
             else if (flagsEl.ValueKind == JsonValueKind.Number)
             {
@@ -653,74 +814,7 @@ internal static class EvaluateArgumentValueConverter
 
         if (result.TryGetProperty("ta", out var ta))
         {
-            var kind = ta.GetProperty("k").ToString();
-            var bEl = ta.GetProperty("b");
-            var bytes = bEl.ToObject<byte[]>();
-            var array = new JsonArray();
-            switch (kind)
-            {
-                case "Int8Array":
-                    for (int i = 0; i < bytes.Length; i++)
-                    {
-                        array.Add((JsonNode?)JsonValue.Create((int)(sbyte)bytes[i]));
-                    }
-                    break;
-                case "Uint8Array" or "Uint8ClampedArray":
-                    for (int i = 0; i < bytes.Length; i++)
-                    {
-                        array.Add((JsonNode?)JsonValue.Create((int)bytes[i]));
-                    }
-                    break;
-                case "Int16Array":
-                    for (int i = 0; i < bytes.Length - 1; i += 2)
-                    {
-                        array.Add((JsonNode?)JsonValue.Create((int)BitConverter.ToInt16(bytes, i)));
-                    }
-                    break;
-                case "Uint16Array":
-                    for (int i = 0; i < bytes.Length - 1; i += 2)
-                    {
-                        array.Add((JsonNode?)JsonValue.Create((int)BitConverter.ToUInt16(bytes, i)));
-                    }
-                    break;
-                case "Int32Array":
-                    for (int i = 0; i < bytes.Length - 3; i += 4)
-                    {
-                        array.Add((JsonNode?)JsonValue.Create(BitConverter.ToInt32(bytes, i)));
-                    }
-                    break;
-                case "Uint32Array":
-                    for (int i = 0; i < bytes.Length - 3; i += 4)
-                    {
-                        array.Add((JsonNode?)JsonValue.Create((long)BitConverter.ToUInt32(bytes, i)));
-                    }
-                    break;
-                case "Float32Array":
-                    for (int i = 0; i < bytes.Length - 3; i += 4)
-                    {
-                        array.Add((JsonNode?)JsonValue.Create(BitConverter.ToSingle(bytes, i)));
-                    }
-                    break;
-                case "Float64Array":
-                    for (int i = 0; i < bytes.Length - 7; i += 8)
-                    {
-                        array.Add((JsonNode?)JsonValue.Create(BitConverter.ToDouble(bytes, i)));
-                    }
-                    break;
-                case "BigInt64Array":
-                    for (int i = 0; i < bytes.Length - 7; i += 8)
-                    {
-                        array.Add((JsonNode?)JsonValue.Create(BitConverter.ToInt64(bytes, i)));
-                    }
-                    break;
-                case "BigUint64Array":
-                    for (int i = 0; i < bytes.Length - 7; i += 8)
-                    {
-                        array.Add((JsonNode?)JsonValue.Create(BitConverter.ToUInt64(bytes, i)));
-                    }
-                    break;
-            }
-            throw new InvalidOperationException($"ta returns {array.ToJsonString()}");
+            return ConvertTypedArray(ta);
         }
 
         if (result.TryGetProperty("b", out var boolean))

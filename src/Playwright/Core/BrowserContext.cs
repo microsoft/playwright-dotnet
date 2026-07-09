@@ -611,7 +611,8 @@ internal class BrowserContext : ChannelOwner, IBrowserContext
 
         if (!string.IsNullOrEmpty(options?.Path))
         {
-            File.WriteAllText(options?.Path!, state);
+            var safePath = SecurityHelpers.ResolveAndValidatePath(options.Path, "StorageStateAsync.Path");
+            File.WriteAllText(safePath, state);
         }
 
         return state;
@@ -620,11 +621,12 @@ internal class BrowserContext : ChannelOwner, IBrowserContext
     [MethodImpl(MethodImplOptions.NoInlining)]
     public async Task SetStorageStateAsync(string storageStatePath)
     {
-        if (!File.Exists(storageStatePath))
+        var safePath = SecurityHelpers.ResolveAndValidatePath(storageStatePath, "SetStorageStateAsync");
+        if (!File.Exists(safePath))
         {
-            throw new PlaywrightException($"The specified storage state file does not exist: {storageStatePath}");
+            throw new PlaywrightException($"The specified storage state file does not exist: {safePath}");
         }
-        var content = File.ReadAllText(storageStatePath);
+        var content = File.ReadAllText(safePath);
         var storageState = JsonDocument.Parse(content).RootElement;
         await SendMessageToServerAsync(
             "setStorageState",

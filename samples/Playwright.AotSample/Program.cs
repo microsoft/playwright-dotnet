@@ -170,6 +170,16 @@ try
         Assert(payload.GetProperty("b").GetString() == "two", "Evaluate JsonElement b mismatch");
     });
 
+    await RunGroupAsync("page-evaluate-typed-array", async () =>
+    {
+        var arr = await page!.EvaluateAsync<JsonElement>("() => new Uint8Array([1, 2, 3])");
+        Assert(arr.ValueKind == JsonValueKind.Array, $"TypedArray should be array but was {arr.ValueKind}: {arr.GetRawText()}");
+        Assert(arr.GetArrayLength() == 3, $"TypedArray length should be 3 but was {arr.GetArrayLength()}: {arr.GetRawText()}");
+        Assert(arr[0].GetInt32() == 1, $"TypedArray[0] mismatch: {arr[0].GetInt32()}");
+        Assert(arr[1].GetInt32() == 2, $"TypedArray[1] mismatch: {arr[1].GetInt32()}");
+        Assert(arr[2].GetInt32() == 3, $"TypedArray[2] mismatch: {arr[2].GetInt32()}");
+    });
+
     await RunGroupAsync("page-evaluate-non-generic", async () =>
     {
         var result = await page!.EvaluateAsync("() => 'hello'");

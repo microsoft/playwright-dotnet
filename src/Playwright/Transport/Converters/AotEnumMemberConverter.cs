@@ -6,6 +6,27 @@ namespace Microsoft.Playwright.Transport.Converters;
 
 internal sealed class AotEnumMemberConverter : JsonConverter<object>
 {
+    private static readonly EnumMapping[] _specialMappings = new[]
+    {
+        new EnumMapping(typeof(AnnotatePosition), "top-left", AnnotatePosition.TopLeft),
+        new EnumMapping(typeof(AnnotatePosition), "top-right", AnnotatePosition.TopRight),
+        new EnumMapping(typeof(AnnotatePosition), "bottom-left", AnnotatePosition.BottomLeft),
+        new EnumMapping(typeof(AnnotatePosition), "bottom-right", AnnotatePosition.BottomRight),
+        new EnumMapping(typeof(ColorScheme), "no-preference", ColorScheme.NoPreference),
+        new EnumMapping(typeof(ConsoleMessagesFilter), "since-navigation", ConsoleMessagesFilter.SinceNavigation),
+        new EnumMapping(typeof(Contrast), "no-preference", Contrast.NoPreference),
+        new EnumMapping(typeof(KeyboardModifier), "Alt", KeyboardModifier.Alt),
+        new EnumMapping(typeof(KeyboardModifier), "Control", KeyboardModifier.Control),
+        new EnumMapping(typeof(KeyboardModifier), "ControlOrMeta", KeyboardModifier.ControlOrMeta),
+        new EnumMapping(typeof(KeyboardModifier), "Meta", KeyboardModifier.Meta),
+        new EnumMapping(typeof(KeyboardModifier), "Shift", KeyboardModifier.Shift),
+        new EnumMapping(typeof(ReducedMotion), "no-preference", ReducedMotion.NoPreference),
+        new EnumMapping(typeof(SameSiteAttribute), "Strict", SameSiteAttribute.Strict),
+        new EnumMapping(typeof(SameSiteAttribute), "Lax", SameSiteAttribute.Lax),
+        new EnumMapping(typeof(SameSiteAttribute), "None", SameSiteAttribute.None),
+        new EnumMapping(typeof(UnrouteBehavior), "ignoreErrors", UnrouteBehavior.IgnoreErrors),
+    };
+
     public override bool CanConvert(Type typeToConvert)
     {
         var actualType = Nullable.GetUnderlyingType(typeToConvert) ?? typeToConvert;
@@ -24,16 +45,7 @@ internal sealed class AotEnumMemberConverter : JsonConverter<object>
         if (reader.TokenType == JsonTokenType.String)
         {
             var str = reader.GetString()!;
-            if (TryFromSpecialWireString(actualType, str, out var specialValue))
-            {
-                return specialValue;
-            }
-
-            if (Enum.TryParse(actualType, str, ignoreCase: true, out var parsed))
-            {
-                return parsed;
-            }
-            throw new JsonException($"Unknown enum value '{str}' for '{actualType.Name}'.");
+            return FromWireString(actualType, str);
         }
 
         if (reader.TokenType == JsonTokenType.Number)
@@ -58,117 +70,46 @@ internal sealed class AotEnumMemberConverter : JsonConverter<object>
 
     internal static string ToWireString(Enum value)
     {
-        if (TryToSpecialWireString(value, out var wireValue))
+        foreach (var m in _specialMappings)
         {
-            return wireValue;
+            if (m.EnumType == value.GetType() && Equals(m.EnumValue, value))
+            {
+                return m.WireName;
+            }
         }
         return value.ToString().ToLowerInvariant();
     }
 
     internal static object FromWireString(Type enumType, string value)
     {
-        if (TryFromSpecialWireString(enumType, value, out var specialValue))
+        foreach (var m in _specialMappings)
         {
-            return specialValue;
+            if (m.EnumType == enumType && string.Equals(m.WireName, value, StringComparison.OrdinalIgnoreCase))
+            {
+                return m.EnumValue;
+            }
         }
 
-        return Enum.TryParse(enumType, value, ignoreCase: true, out var result)
-            ? result
-            : throw new JsonException($"Unknown enum value '{value}' for '{enumType.Name}'.");
+        if (Enum.TryParse(enumType, value, ignoreCase: true, out var result))
+        {
+            return result;
+        }
+        throw new JsonException($"Unknown enum value '{value}' for '{enumType.Name}'.");
     }
 
-    private static bool TryToSpecialWireString(Enum value, out string wireValue)
+    private readonly struct EnumMapping
     {
-        switch (value)
+        internal EnumMapping(Type enumType, string wireName, Enum enumValue)
         {
-            case AnnotatePosition.TopLeft: wireValue = "top-left"; return true;
-            case AnnotatePosition.TopRight: wireValue = "top-right"; return true;
-            case AnnotatePosition.BottomLeft: wireValue = "bottom-left"; return true;
-            case AnnotatePosition.BottomRight: wireValue = "bottom-right"; return true;
-            case ColorScheme.NoPreference: wireValue = "no-preference"; return true;
-            case ConsoleMessagesFilter.SinceNavigation: wireValue = "since-navigation"; return true;
-            case Contrast.NoPreference: wireValue = "no-preference"; return true;
-            case KeyboardModifier.Alt: wireValue = "Alt"; return true;
-            case KeyboardModifier.Control: wireValue = "Control"; return true;
-            case KeyboardModifier.ControlOrMeta: wireValue = "ControlOrMeta"; return true;
-            case KeyboardModifier.Meta: wireValue = "Meta"; return true;
-            case KeyboardModifier.Shift: wireValue = "Shift"; return true;
-            case ReducedMotion.NoPreference: wireValue = "no-preference"; return true;
-            case SameSiteAttribute.Strict: wireValue = "Strict"; return true;
-            case SameSiteAttribute.Lax: wireValue = "Lax"; return true;
-            case SameSiteAttribute.None: wireValue = "None"; return true;
-            case UnrouteBehavior.IgnoreErrors: wireValue = "ignoreErrors"; return true;
-            default:
-                wireValue = string.Empty;
-                return false;
-        }
-    }
-
-    private static bool TryFromSpecialWireString(Type enumType, string value, out object enumValue)
-    {
-        if (enumType == typeof(AnnotatePosition))
-        {
-            enumValue = value switch
-            {
-                "top-left" => AnnotatePosition.TopLeft,
-                "top-right" => AnnotatePosition.TopRight,
-                "bottom-left" => AnnotatePosition.BottomLeft,
-                "bottom-right" => AnnotatePosition.BottomRight,
-                _ => default(AnnotatePosition),
-            };
-            return value is "top-left" or "top-right" or "bottom-left" or "bottom-right";
-        }
-        if (enumType == typeof(ColorScheme) && string.Equals(value, "no-preference", StringComparison.OrdinalIgnoreCase))
-        {
-            enumValue = ColorScheme.NoPreference;
-            return true;
-        }
-        if (enumType == typeof(ConsoleMessagesFilter) && string.Equals(value, "since-navigation", StringComparison.OrdinalIgnoreCase))
-        {
-            enumValue = ConsoleMessagesFilter.SinceNavigation;
-            return true;
-        }
-        if (enumType == typeof(Contrast) && string.Equals(value, "no-preference", StringComparison.OrdinalIgnoreCase))
-        {
-            enumValue = Contrast.NoPreference;
-            return true;
-        }
-        if (enumType == typeof(KeyboardModifier))
-        {
-            enumValue = value switch
-            {
-                "Alt" => KeyboardModifier.Alt,
-                "Control" => KeyboardModifier.Control,
-                "ControlOrMeta" => KeyboardModifier.ControlOrMeta,
-                "Meta" => KeyboardModifier.Meta,
-                "Shift" => KeyboardModifier.Shift,
-                _ => default(KeyboardModifier),
-            };
-            return value is "Alt" or "Control" or "ControlOrMeta" or "Meta" or "Shift";
-        }
-        if (enumType == typeof(ReducedMotion) && string.Equals(value, "no-preference", StringComparison.OrdinalIgnoreCase))
-        {
-            enumValue = ReducedMotion.NoPreference;
-            return true;
-        }
-        if (enumType == typeof(SameSiteAttribute))
-        {
-            enumValue = value switch
-            {
-                "Strict" => SameSiteAttribute.Strict,
-                "Lax" => SameSiteAttribute.Lax,
-                "None" => SameSiteAttribute.None,
-                _ => default(SameSiteAttribute),
-            };
-            return value is "Strict" or "Lax" or "None";
-        }
-        if (enumType == typeof(UnrouteBehavior) && string.Equals(value, "ignoreErrors", StringComparison.Ordinal))
-        {
-            enumValue = UnrouteBehavior.IgnoreErrors;
-            return true;
+            EnumType = enumType;
+            WireName = wireName;
+            EnumValue = enumValue;
         }
 
-        enumValue = default!;
-        return false;
+        internal Type EnumType { get; }
+
+        internal string WireName { get; }
+
+        internal Enum EnumValue { get; }
     }
 }

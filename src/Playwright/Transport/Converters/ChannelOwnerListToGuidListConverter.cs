@@ -40,7 +40,73 @@ internal class ChannelOwnerListToGuidListConverter
 
     public override IEnumerable<ChannelOwner> Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
     {
-        throw new System.NotImplementedException();
+        if (reader.TokenType == JsonTokenType.None)
+        {
+            reader.Read();
+        }
+
+        if (reader.TokenType == JsonTokenType.Null)
+        {
+            return null!;
+        }
+
+        if (reader.TokenType != JsonTokenType.StartArray)
+        {
+            throw new JsonException($"Expected start of array or null, got {reader.TokenType}.");
+        }
+
+        var results = new List<ChannelOwner>();
+        while (reader.Read())
+        {
+            if (reader.TokenType == JsonTokenType.EndArray)
+            {
+                break;
+            }
+
+            if (reader.TokenType != JsonTokenType.StartObject)
+            {
+                throw new JsonException("Expected start of object.");
+            }
+
+            string? guid = null;
+            while (reader.Read())
+            {
+                if (reader.TokenType == JsonTokenType.EndObject)
+                {
+                    break;
+                }
+
+                if (reader.TokenType == JsonTokenType.PropertyName)
+                {
+                    var propertyName = reader.GetString();
+                    if (string.Equals(propertyName, "guid", StringComparison.OrdinalIgnoreCase))
+                    {
+                        reader.Read();
+                        guid = reader.GetString();
+                    }
+                    else
+                    {
+                        reader.Read();
+                        reader.Skip();
+                    }
+                }
+            }
+
+            if (guid != null)
+            {
+                var channelOwner = _connection.GetObject(guid);
+                if (channelOwner != null)
+                {
+                    results.Add(channelOwner);
+                }
+                else
+                {
+                    throw new JsonException($"ChannelOwner with guid '{guid}' not found in connection.");
+                }
+            }
+        }
+
+        return results;
     }
 
     public override void Write(Utf8JsonWriter writer, IEnumerable<ChannelOwner> value, JsonSerializerOptions options)

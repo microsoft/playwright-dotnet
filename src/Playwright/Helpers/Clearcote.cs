@@ -29,6 +29,7 @@ using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Net.Sockets;
+using System.Runtime.InteropServices;
 using System.Security.Cryptography;
 using System.Text;
 using System.Text.Json;
@@ -84,15 +85,32 @@ internal static partial class Clearcote
 
     private static readonly Dictionary<string, string> _localeTimezoneMap = new()
     {
-        ["en-US"] = "America/New_York", ["en-CA"] = "America/Toronto", ["en-GB"] = "Europe/London",
-        ["en-AU"] = "Australia/Sydney", ["en-NZ"] = "Pacific/Auckland", ["en-IE"] = "Europe/Dublin",
-        ["de-DE"] = "Europe/Berlin", ["de-AT"] = "Europe/Vienna", ["fr-FR"] = "Europe/Paris",
-        ["es-ES"] = "Europe/Madrid", ["es-MX"] = "America/Mexico_City", ["it-IT"] = "Europe/Rome",
-        ["nl-NL"] = "Europe/Amsterdam", ["pt-BR"] = "America/Sao_Paulo", ["pt-PT"] = "Europe/Lisbon",
-        ["pl-PL"] = "Europe/Warsaw", ["sv-SE"] = "Europe/Stockholm", ["ja-JP"] = "Asia/Tokyo",
-        ["ko-KR"] = "Asia/Seoul", ["zh-CN"] = "Asia/Shanghai", ["zh-TW"] = "Asia/Taipei",
-        ["ru-RU"] = "Europe/Moscow", ["tr-TR"] = "Europe/Istanbul", ["ar-SA"] = "Asia/Riyadh",
-        ["hi-IN"] = "Asia/Kolkata", ["id-ID"] = "Asia/Jakarta",
+        ["en-US"] = "America/New_York",
+        ["en-CA"] = "America/Toronto",
+        ["en-GB"] = "Europe/London",
+        ["en-AU"] = "Australia/Sydney",
+        ["en-NZ"] = "Pacific/Auckland",
+        ["en-IE"] = "Europe/Dublin",
+        ["de-DE"] = "Europe/Berlin",
+        ["de-AT"] = "Europe/Vienna",
+        ["fr-FR"] = "Europe/Paris",
+        ["es-ES"] = "Europe/Madrid",
+        ["es-MX"] = "America/Mexico_City",
+        ["it-IT"] = "Europe/Rome",
+        ["nl-NL"] = "Europe/Amsterdam",
+        ["pt-BR"] = "America/Sao_Paulo",
+        ["pt-PT"] = "Europe/Lisbon",
+        ["pl-PL"] = "Europe/Warsaw",
+        ["sv-SE"] = "Europe/Stockholm",
+        ["ja-JP"] = "Asia/Tokyo",
+        ["ko-KR"] = "Asia/Seoul",
+        ["zh-CN"] = "Asia/Shanghai",
+        ["zh-TW"] = "Asia/Taipei",
+        ["ru-RU"] = "Europe/Moscow",
+        ["tr-TR"] = "Europe/Istanbul",
+        ["ar-SA"] = "Asia/Riyadh",
+        ["hi-IN"] = "Asia/Kolkata",
+        ["id-ID"] = "Asia/Jakarta",
     };
 
     private enum GpgVerdict
@@ -1509,12 +1527,13 @@ internal static partial class Clearcote
     {
         var allArgs = new List<string> { "--homedir", home, "--batch" };
         allArgs.AddRange(args);
-        return RunProcess("gpg", allArgs.ToArray());
+        return RunProcess(SecurityHelpers.GetAbsoluteToolPath("gpg"), allArgs.ToArray());
     }
 
     private static (int ExitCode, string Stdout, string Stderr) RunProcess(string fileName, params string[] args)
     {
-        var psi = new ProcessStartInfo(fileName)
+        var safeFileName = SecurityHelpers.ResolveAndValidatePath(fileName, "RunProcess");
+        var psi = new ProcessStartInfo(safeFileName)
         {
             UseShellExecute = false,
             RedirectStandardError = true,
@@ -1711,7 +1730,8 @@ internal static partial class Clearcote
             return;
         }
 
-        var psi = new ProcessStartInfo("tar")
+        var tarPath = SecurityHelpers.GetAbsoluteToolPath(RuntimeInformation.IsOSPlatform(OSPlatform.Windows) ? "tar.exe" : "tar");
+        var psi = new ProcessStartInfo(tarPath)
         {
             UseShellExecute = false,
             RedirectStandardError = true,
@@ -1812,7 +1832,7 @@ internal static partial class Clearcote
             engineArgs.Add("--disable-features=" + string.Join(",", _privacySandboxFeatures));
         }
 
-        var userArgs = options.Args?.ToArray() ?? Array.Empty<string>();
+        var userArgs = SecurityHelpers.FilterChromiumArgs(options.Args?.ToArray());
         if (string.IsNullOrEmpty(settings.WebrtcIp)
             && !engineArgs.Concat(userArgs).Any(static a => a.StartsWith("--webrtc-ip-handling-policy", StringComparison.Ordinal)
                 || a.StartsWith("--force-webrtc-ip-handling-policy", StringComparison.Ordinal)))
@@ -1825,9 +1845,18 @@ internal static partial class Clearcote
 
         var port = options.Port ?? FindFreePort();
         var host = options.Host ?? "127.0.0.1";
+        if (!string.Equals(host, "127.0.0.1", StringComparison.Ordinal) &&
+            !string.Equals(host, "localhost", StringComparison.OrdinalIgnoreCase))
+        {
+            await Console.Error.WriteLineAsync($"[clearcote] WARNING: CDP endpoint exposed on '{host}' with no authentication. Use 127.0.0.1 unless remote debugging is intentionally required.").ConfigureAwait(false);
+        }
         var allowOrigins = options.AllowOrigins ?? $"http://{host}:{port},http://localhost:{port}";
         var ownUdd = string.IsNullOrEmpty(options.UserDataDir);
         var userDataDir = options.UserDataDir ?? Path.Combine(Path.GetTempPath(), "clearcote-serve-" + Guid.NewGuid().ToString("N"));
+        if (ownUdd)
+        {
+            SecurityHelpers.SetSecureDirectoryPermissions(userDataDir);
+        }
 
         var cdpArgs = new List<string>
         {
@@ -1843,7 +1872,8 @@ internal static partial class Clearcote
 
         if (!string.IsNullOrEmpty(options.Proxy?.Server))
         {
-            cdpArgs.Add("--proxy-server=" + options.Proxy.Server.Trim());
+            var safeProxy = SecurityHelpers.ValidateProxyServer(options.Proxy.Server);
+            cdpArgs.Add("--proxy-server=" + safeProxy);
         }
 
         var env = FontLaunchEnv(exe, options.Env);

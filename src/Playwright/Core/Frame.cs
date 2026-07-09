@@ -516,9 +516,10 @@ internal class Frame : ChannelOwner, IFrame
     public async Task<IElementHandle> AddScriptTagAsync(FrameAddScriptTagOptions? options = default)
     {
         var content = options?.Content;
-        if (!string.IsNullOrEmpty(options?.Path) && options?.Path != null)
+        if (!string.IsNullOrEmpty(options?.Path))
         {
-            content = ScriptsHelper.AddSourceUrlToScript(File.ReadAllText(options.Path), options.Path);
+            var safePath = SecurityHelpers.ResolveAndValidatePath(options.Path, "AddScriptTagAsync.Path");
+            content = ScriptsHelper.AddSourceUrlToScript(File.ReadAllText(safePath), safePath);
         }
 
         return await SendMessageToServerAsync<ElementHandle>("addScriptTag", new Dictionary<string, object?>
@@ -534,10 +535,11 @@ internal class Frame : ChannelOwner, IFrame
     public async Task<IElementHandle> AddStyleTagAsync(FrameAddStyleTagOptions? options = default)
     {
         var content = options?.Content;
-        if (!string.IsNullOrEmpty(options?.Path) && options?.Path != null)
+        if (!string.IsNullOrEmpty(options?.Path))
         {
-            content = File.ReadAllText(options.Path);
-            content += "//# sourceURL=" + options.Path.Replace("\n", string.Empty);
+            var safePath = SecurityHelpers.ResolveAndValidatePath(options.Path, "AddStyleTagAsync.Path");
+            content = File.ReadAllText(safePath);
+            content += "//# sourceURL=" + safePath.Replace("\n", string.Empty);
         }
 
         return await SendMessageToServerAsync<ElementHandle>("addStyleTag", new Dictionary<string, object?>

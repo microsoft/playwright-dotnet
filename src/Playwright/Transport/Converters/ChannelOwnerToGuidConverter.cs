@@ -41,8 +41,49 @@ internal class ChannelOwnerToGuidConverter : JsonConverter<ChannelOwner>
 
     public override ChannelOwner? Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
     {
-        using JsonDocument document = JsonDocument.ParseValue(ref reader);
-        string guid = document.RootElement.GetProperty("guid").ToString();
+        if (reader.TokenType == JsonTokenType.None)
+        {
+            reader.Read();
+        }
+
+        if (reader.TokenType == JsonTokenType.Null)
+        {
+            return null;
+        }
+
+        if (reader.TokenType != JsonTokenType.StartObject)
+        {
+            throw new JsonException($"Expected start of object or null, got {reader.TokenType}.");
+        }
+
+        string? guid = null;
+        while (reader.Read())
+        {
+            if (reader.TokenType == JsonTokenType.EndObject)
+            {
+                break;
+            }
+
+            if (reader.TokenType == JsonTokenType.PropertyName)
+            {
+                var propertyName = reader.GetString();
+                reader.Read();
+                if (string.Equals(propertyName, "guid", StringComparison.OrdinalIgnoreCase))
+                {
+                    guid = reader.GetString();
+                }
+                else
+                {
+                    reader.Skip();
+                }
+            }
+        }
+
+        if (guid == null)
+        {
+            return null;
+        }
+
         return _connection.GetObject(guid) as ChannelOwner;
     }
 

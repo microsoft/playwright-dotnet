@@ -139,7 +139,110 @@ internal class Connection : IDisposable
         {
             return AotEnumMemberConverter.ToWireString(e);
         }
+
+        // For types registered in PlaywrightJsonContext, serialize to JsonNode
+        // instead of passing raw objects that Dictionary<string, object?>.Serialize
+        // cannot handle in AOT.
+        var type = value.GetType();
+        if (type == typeof(string) || type.IsPrimitive || type == typeof(decimal))
+        {
+            return value;
+        }
+        if (value is JsonNode || value is JsonElement)
+        {
+            return value;
+        }
+        var knownTypeInfo = PlaywrightJsonContext.Default.GetTypeInfo(type)
+            ?? EvaluateArgumentValueConverter.GetExtraTypeInfo(type);
+        if (knownTypeInfo != null)
+        {
+            return JsonSerializer.SerializeToNode(value, knownTypeInfo) ?? value;
+        }
+
+        // Recursively convert common collection types to JsonNode-compatible forms
+        // so that the outgoing Dictionary<string, object?> message serializes cleanly in AOT.
+        if (value is IDictionary<string, object?> dict)
+        {
+            var node = new JsonObject();
+            foreach (var kv in dict)
+            {
+                node[kv.Key] = ToJsonNode(NormalizeValue(kv.Value));
+            }
+
+            return node;
+        }
+        if (value is System.Collections.IList list)
+        {
+            var node = new JsonArray();
+            foreach (var item in list)
+            {
+                node.Add(ToJsonNode(NormalizeValue(item)));
+            }
+
+            return node;
+        }
+
         return value;
+    }
+
+    private static JsonNode? ToJsonNode(object? value)
+    {
+        if (value == null)
+        {
+            return null;
+        }
+
+        if (value is JsonNode jn)
+        {
+            return jn;
+        }
+
+        if (value is string s)
+        {
+            return JsonValue.Create(s);
+        }
+
+        if (value is int i)
+        {
+            return JsonValue.Create(i);
+        }
+
+        if (value is long l)
+        {
+            return JsonValue.Create(l);
+        }
+
+        if (value is double d)
+        {
+            return JsonValue.Create(d);
+        }
+
+        if (value is bool b)
+        {
+            return JsonValue.Create(b);
+        }
+
+        if (value is decimal m)
+        {
+            return JsonValue.Create(m);
+        }
+
+        if (value is float f)
+        {
+            return JsonValue.Create(f);
+        }
+
+        if (value is short sh)
+        {
+            return JsonValue.Create((int)sh);
+        }
+
+        if (value is byte by)
+        {
+            return JsonValue.Create((int)by);
+        }
+
+        return JsonValue.Create(value.ToString());
     }
 
     public void Dispose()
@@ -539,9 +642,30 @@ internal class Connection : IDisposable
             return;
         }
         var message = UTF8Encoding.UTF8.GetString(rawMessage);
+
+        // Redact sensitive fields before logging to prevent credential leakage.
+        string[] sensitiveKeys = ["password", "secret", "token", "authorization", "set-cookie", "cookie", "storageState", "credentials", "auth", "key", "apiKey", "api_key", "accessKey", "secretKey", "privateKey"];
+        foreach (var key in sensitiveKeys)
+        {
+            message = RedactJsonValue(message, key);
+        }
+
         string line = $"{logLevel}: {message}";
         Trace.WriteLine(line);
         Console.Error.WriteLine(line);
+    }
+
+    private static string RedactJsonValue(string json, string key)
+    {
+        var pattern = $"(?i)\"{key}\"\\s*:\\s*\"(?<value>[^\"]+)\"";
+        try
+        {
+            return System.Text.RegularExpressions.Regex.Replace(json, pattern, $"\"{key}\": \"***REDACTED***\"", System.Text.RegularExpressions.RegexOptions.IgnoreCase, TimeSpan.FromMilliseconds(100));
+        }
+        catch
+        {
+            return json;
+        }
     }
 
     internal async Task<T> WrapApiCallAsync<T>(Func<Task<T>> action, bool isInternal = false, string? title = null)

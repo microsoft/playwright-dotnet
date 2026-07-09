@@ -59,7 +59,18 @@ public static class Playwright
         transport.TransportClosed += onTransportClosed;
         connection.OnMessage = (message, keepNulls) =>
         {
-            var rawMessage = JsonSerializer.SerializeToUtf8Bytes(message, PlaywrightJsonContext.Default.DictionaryOfStringToObject);
+            byte[] rawMessage;
+            if (keepNulls)
+            {
+                // Convert to JsonObject to preserve null entries,
+                // since the source-generated context drops nulls.
+                var obj = JsonSerializer.SerializeToNode(message, PlaywrightJsonContext.Default.DictionaryOfStringToObject);
+                rawMessage = JsonSerializer.SerializeToUtf8Bytes(obj, PlaywrightJsonContext.Default.JsonObject);
+            }
+            else
+            {
+                rawMessage = JsonSerializer.SerializeToUtf8Bytes(message, PlaywrightJsonContext.Default.DictionaryOfStringToObject);
+            }
             Connection.TraceMessage("pw:channel:send", rawMessage);
             return transport.SendAsync(rawMessage);
         };

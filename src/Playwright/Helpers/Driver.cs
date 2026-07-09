@@ -55,7 +55,9 @@ internal static class Driver
         var driverSearchPath = Environment.GetEnvironmentVariable("PLAYWRIGHT_DRIVER_SEARCH_PATH");
         if (!string.IsNullOrEmpty(driverSearchPath))
         {
-            (executableFile, getArgs) = GetPath(driverSearchPath);
+            var safeSearchPath = SecurityHelpers.ResolveAndValidatePath(driverSearchPath, "PLAYWRIGHT_DRIVER_SEARCH_PATH");
+            Console.Error.WriteLine("[playwright] WARNING: Using PLAYWRIGHT_DRIVER_SEARCH_PATH override. This bypasses built-in driver resolution.");
+            (executableFile, getArgs) = GetPath(safeSearchPath);
             if (!File.Exists(executableFile))
             {
                 throw new PlaywrightException("Couldn't find driver in \"PLAYWRIGHT_DRIVER_SEARCH_PATH\"");
@@ -110,8 +112,30 @@ internal static class Driver
         {
             return !string.IsNullOrEmpty(args) ? $"\"{cliEntrypoint}\" {args}" : cliEntrypoint;
         }
-        return (
-            Environment.GetEnvironmentVariable("PLAYWRIGHT_NODEJS_PATH") ?? Path.GetFullPath(Path.Combine(driversPath, ".playwright", "node", platformId, nodeExecutable)),
-            getArgs);
+        var envNodePath = Environment.GetEnvironmentVariable("PLAYWRIGHT_NODEJS_PATH");
+        string resolvedNodePath;
+        if (!string.IsNullOrEmpty(envNodePath))
+        {
+            resolvedNodePath = SecurityHelpers.ResolveAndValidatePath(envNodePath, "PLAYWRIGHT_NODEJS_PATH");
+            if (!File.Exists(resolvedNodePath))
+            {
+                throw new PlaywrightException($"PLAYWRIGHT_NODEJS_PATH points to non-existent file: {resolvedNodePath}");
+            }
+
+            var fileName = Path.GetFileName(resolvedNodePath);
+            if (!string.Equals(fileName, "node", StringComparison.OrdinalIgnoreCase) &&
+                !string.Equals(fileName, "node.exe", StringComparison.OrdinalIgnoreCase))
+            {
+                Console.Error.WriteLine($"[playwright] WARNING: PLAYWRIGHT_NODEJS_PATH points to '{fileName}', expected 'node' or 'node.exe'.");
+            }
+
+            Console.Error.WriteLine("[playwright] WARNING: Using PLAYWRIGHT_NODEJS_PATH override. This bypasses built-in driver resolution.");
+        }
+        else
+        {
+            resolvedNodePath = Path.GetFullPath(Path.Combine(driversPath, ".playwright", "node", platformId, nodeExecutable));
+        }
+
+        return (resolvedNodePath, getArgs);
     }
 }

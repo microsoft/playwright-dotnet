@@ -151,12 +151,13 @@ internal class Browser : ChannelOwner, IBrowser
         var storageState = options.StorageState;
         if (!string.IsNullOrEmpty(options.StorageStatePath))
         {
-            if (!File.Exists(options.StorageStatePath))
+            var safePath = SecurityHelpers.ResolveAndValidatePath(options.StorageStatePath, "StorageStatePath");
+            if (!File.Exists(safePath))
             {
                 throw new PlaywrightException($"The specified storage state file does not exist: {options.StorageStatePath}");
             }
 
-            storageState = File.ReadAllText(options.StorageStatePath);
+            storageState = File.ReadAllText(safePath);
         }
 
         if (!storageState.IsNullOrEmpty())
@@ -347,21 +348,21 @@ internal class Browser : ChannelOwner, IBrowser
         => await SendMessageToServerAsync<CDPSession>(
         "newBrowserCDPSession").ConfigureAwait(false);
 
-    internal static Dictionary<string, string?>[]? ToClientCertificatesProtocol(IEnumerable<ClientCertificate>? clientCertificates)
+    internal static Dictionary<string, string>[]? ToClientCertificatesProtocol(IEnumerable<ClientCertificate>? clientCertificates)
     {
         if (clientCertificates == null)
         {
             return null;
         }
-        return clientCertificates.Select(clientCertificate => new Dictionary<string, string?>
+        return clientCertificates.Select(clientCertificate => new Dictionary<string, string>
         {
-            ["origin"] = clientCertificate.Origin,
-            ["passphrase"] = clientCertificate.Passphrase,
-            ["cert"] = ReadClientCertificateFile(clientCertificate.CertPath, clientCertificate.Cert),
-            ["key"] = ReadClientCertificateFile(clientCertificate.KeyPath, clientCertificate.Key),
-            ["pfx"] = ReadClientCertificateFile(clientCertificate.PfxPath, clientCertificate.Pfx),
+            ["origin"] = clientCertificate.Origin ?? string.Empty,
+            ["passphrase"] = clientCertificate.Passphrase ?? string.Empty,
+            ["cert"] = ReadClientCertificateFile(clientCertificate.CertPath, clientCertificate.Cert) ?? string.Empty,
+            ["key"] = ReadClientCertificateFile(clientCertificate.KeyPath, clientCertificate.Key) ?? string.Empty,
+            ["pfx"] = ReadClientCertificateFile(clientCertificate.PfxPath, clientCertificate.Pfx) ?? string.Empty,
         }
-                .Where(kv => kv.Value != null)
+                .Where(kv => !string.IsNullOrEmpty(kv.Value))
                 .ToDictionary(kv => kv.Key, kv => kv.Value))
             .ToArray();
     }

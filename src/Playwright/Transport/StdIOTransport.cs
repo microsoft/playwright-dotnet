@@ -38,6 +38,7 @@ internal class StdIOTransport : IDisposable
     private readonly CancellationTokenSource _readerCancellationSource = new();
     private readonly Task _getResponseTask;
     private readonly List<byte> _data = new();
+    private int _consumed;
     private int? _currentMessageSize;
 
     internal StdIOTransport()
@@ -240,37 +241,47 @@ internal class StdIOTransport : IDisposable
 
     private void ProcessStream(CancellationToken token)
     {
-        var offset = 0;
         try
         {
             while (!token.IsCancellationRequested)
             {
                 if (_currentMessageSize == null)
                 {
-                    if (_data.Count < (uint)offset + 4)
+                    if (_data.Count < _consumed + 4)
                     {
                         break;
                     }
 
-                    _currentMessageSize = _data[offset + 0] + (_data[offset + 1] << 8) + (_data[offset + 2] << 16) + (_data[offset + 3] << 24);
-                    offset += 4;
+                    _currentMessageSize = _data[_consumed + 0] + (_data[_consumed + 1] << 8) + (_data[_consumed + 2] << 16) + (_data[_consumed + 3] << 24);
+                    _consumed += 4;
                 }
 
-                if (_data.Count < (uint)offset + _currentMessageSize)
+                if (_data.Count < _consumed + _currentMessageSize)
                 {
                     break;
                 }
 
                 byte[] result = new byte[_currentMessageSize.Value];
-                _data.CopyTo(offset, result, 0, result.Length);
-                offset += result.Length;
+                _data.CopyTo(_consumed, result, 0, result.Length);
+                _consumed += result.Length;
                 _currentMessageSize = null;
                 MessageReceived?.Invoke(this, result);
+
+                // Compact buffer when more than half is consumed to avoid unbounded growth.
+                if (_consumed > _data.Count / 2)
+                {
+                    _data.RemoveRange(0, _consumed);
+                    _consumed = 0;
+                }
             }
         }
         finally
         {
-            _data.RemoveRange(0, offset);
+            if (_consumed > 0)
+            {
+                _data.RemoveRange(0, _consumed);
+                _consumed = 0;
+            }
         }
     }
 }
