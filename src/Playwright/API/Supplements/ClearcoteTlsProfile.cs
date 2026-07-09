@@ -35,6 +35,11 @@ public enum ClearcoteTlsProfile
     MatchPersona,
 
     /// <summary>
+    /// Alias for <see cref="MatchPersona"/> — follow the persona's brand version.
+    /// </summary>
+    Auto,
+
+    /// <summary>
     /// Keep the build's native TLS ClientHello unchanged.
     /// </summary>
     Native,

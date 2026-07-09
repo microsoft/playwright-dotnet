@@ -546,5 +546,17 @@ public class PageClockTests : PageTestEx
             await Page.WaitForTimeoutAsync(100);
             var newTime = await Page.EvaluateAsync<long>("Date.now()");
         }
+
+        [PlaywrightTest("page-clock.spec.ts", "")]
+        public async Task ResumeShouldResumeClock()
+        {
+            await Page.Clock.InstallAsync();
+            await Page.GotoAsync("data:text/html,");
+            var pausedTime = await Page.EvaluateAsync<long>("Date.now()");
+            await Page.Clock.ResumeAsync();
+            await Task.Delay(200);
+            var resumedTime = await Page.EvaluateAsync<long>("Date.now()");
+            Assert.Greater(resumedTime, pausedTime);
+        }
     }
 }

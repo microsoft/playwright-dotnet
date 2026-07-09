@@ -37,4 +37,7 @@ public enum ClearcotePlatform
 
     /// <summary>macOS persona.</summary>
     Macos,
+
+    /// <summary>Android mobile persona (best-effort: Android UA, touch, mobile viewport).</summary>
+    Android,
 }

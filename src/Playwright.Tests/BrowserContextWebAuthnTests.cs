@@ -22,7 +22,6 @@
  * SOFTWARE.
  */
 
-using System.Collections.Generic;
 using System.Text.Json;
 
 namespace Microsoft.Playwright.Tests;

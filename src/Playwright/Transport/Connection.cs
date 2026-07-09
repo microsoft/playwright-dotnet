@@ -125,6 +125,16 @@ internal class Connection : IDisposable
         {
             return new JsonObject { ["guid"] = JsonValue.Create(co.Guid) };
         }
+        if (value is IEnumerable<ChannelOwner> channelOwners)
+        {
+            var array = new JsonArray();
+            foreach (var channelOwner in channelOwners)
+            {
+                array.Add((JsonNode?)new JsonObject { ["guid"] = JsonValue.Create(channelOwner.Guid) });
+            }
+
+            return array;
+        }
         if (value is Enum e)
         {
             return AotEnumMemberConverter.ToWireString(e);

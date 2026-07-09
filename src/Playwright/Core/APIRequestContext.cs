@@ -208,7 +208,7 @@ internal class APIRequestContext : ChannelOwner, IAPIRequestContext
 
     private APIRequestContextOptions WithMethod(APIRequestContextOptions? options, string method)
     {
-        options = ClassUtils.Clone<APIRequestContextOptions>(options);
+        options = options == null ? new APIRequestContextOptions() : new APIRequestContextOptions(options);
         options.Method = method;
         return options;
     }
@@ -217,7 +217,9 @@ internal class APIRequestContext : ChannelOwner, IAPIRequestContext
     public async Task<string> StorageStateAsync(APIRequestContextStorageStateOptions? options = null)
     {
         var result = await SendMessageToServerAsync("storageState").ConfigureAwait(false);
-        string state = result?.GetRawText() ?? "null";
+        string state = result == null
+            ? "null"
+            : JsonSerializer.Serialize(result.Value, PlaywrightJsonContext.Default.JsonElement);
 
         if (!string.IsNullOrEmpty(options?.Path))
         {

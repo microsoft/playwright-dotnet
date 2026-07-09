@@ -24,18 +24,19 @@
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
 using Microsoft.Playwright.Helpers;
 using Microsoft.Playwright.Transport;
+using Microsoft.Playwright.Transport.Converters;
 using Microsoft.Playwright.Transport.Protocol;
 
 namespace Microsoft.Playwright.Core;
 
 internal class BindingCall : ChannelOwner
 {
-    private static readonly PropertyInfo TaskResultProperty = typeof(Task<>).GetProperty("Result", BindingFlags.Public | BindingFlags.Instance)!;
     private readonly BindingCallInitializer _initializer;
 
     public BindingCall(ChannelOwner parent, string guid, BindingCallInitializer initializer) : base(parent, guid)
@@ -44,6 +45,14 @@ internal class BindingCall : ChannelOwner
     }
 
     public string Name => _initializer.Name;
+
+    [UnconditionalSuppressMessage("ReflectionAnalysis", "IL2070", Justification = "Task<T> result extraction on binding boundary.")]
+    [UnconditionalSuppressMessage("ReflectionAnalysis", "IL2067", Justification = "Task<T> result extraction on binding boundary.")]
+    private static object? ExtractTaskResult(Task task, Type taskType)
+    {
+        var resultProp = taskType.GetProperty("Result", BindingFlags.Public | BindingFlags.Instance);
+        return resultProp?.GetValue(task);
+    }
 
     internal async Task CallAsync(Delegate binding)
     {
@@ -57,21 +66,23 @@ internal class BindingCall : ChannelOwner
 
             for (int i = 0; i < methodParams.Length; i++)
             {
-                args.Add(ScriptsHelper.ParseEvaluateResultUntyped(_initializer.Args[i])!);
+                var argElement = _initializer.Args[i];
+                args.Add(EvaluateArgumentValueConverter.Deserialize(argElement, methodParams[i].ParameterType)!);
             }
 
             object? result = binding.DynamicInvoke(args.ToArray());
 
             if (result is Task taskResult)
             {
-                result = null;
-
                 await taskResult.ConfigureAwait(false);
-
-                var taskResultType = taskResult.GetType();
-                if (taskResultType.IsGenericType)
+                var taskType = result.GetType();
+                if (taskType.IsGenericType && taskType.GetGenericTypeDefinition() == typeof(Task<>))
                 {
-                    result = TaskResultProperty.GetValue(taskResult);
+                    result = ExtractTaskResult(taskResult, taskType);
+                }
+                else
+                {
+                    result = null;
                 }
             }
 

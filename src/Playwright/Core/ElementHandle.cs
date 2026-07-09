@@ -149,7 +149,7 @@ internal class ElementHandle : JSHandle, IElementHandle
             ["position"] = options?.Position,
             ["timeout"] = _frame.Timeout(options?.Timeout),
             ["trial"] = options?.Trial,
-            ["modifiers"] = options?.Modifiers?.Select(m => m.ToValueString()),
+            ["modifiers"] = options?.Modifiers?.Select(m => m.ToValueString()).ToArray(),
         });
 
     public Task ScrollIntoViewIfNeededAsync(ElementHandleScrollIntoViewIfNeededOptions? options = default)
@@ -184,7 +184,7 @@ internal class ElementHandle : JSHandle, IElementHandle
             ["timeout"] = _frame.Timeout(options?.Timeout),
             ["trial"] = options?.Trial,
             ["position"] = options?.Position,
-            ["modifiers"] = options?.Modifiers?.Select(m => m.ToValueString()),
+            ["modifiers"] = options?.Modifiers?.Select(m => m.ToValueString()).ToArray(),
         });
 
     public Task DblClickAsync(ElementHandleDblClickOptions? options = default)
@@ -197,7 +197,7 @@ internal class ElementHandle : JSHandle, IElementHandle
             ["timeout"] = _frame.Timeout(options?.Timeout),
             ["trial"] = options?.Trial,
             ["position"] = options?.Position,
-            ["modifiers"] = options?.Modifiers?.Select(m => m.ToValueString()),
+            ["modifiers"] = options?.Modifiers?.Select(m => m.ToValueString()).ToArray(),
         });
 
     public Task SetInputFilesAsync(string files, ElementHandleSetInputFilesOptions? options = default)
@@ -329,7 +329,7 @@ internal class ElementHandle : JSHandle, IElementHandle
 
     public Task<IReadOnlyList<string>> SelectOptionAsync(IEnumerable<string> values, ElementHandleSelectOptionOptions? options = default)
 #pragma warning disable CS0612 // Type or member is obsolete
-        => _selectOptionAsync(values.Select(x => new SelectOptionValueProtocol() { ValueOrLabel = x }), options?.NoWaitAfter, options?.Force, options?.Timeout);
+        => _selectOptionAsync(values.Select(x => new SelectOptionValueProtocol() { ValueOrLabel = x }).ToArray(), options?.NoWaitAfter, options?.Force, options?.Timeout);
 #pragma warning restore CS0612 // Type or member is obsolete
 
     public Task<IReadOnlyList<string>> SelectOptionAsync(SelectOptionValue values, ElementHandleSelectOptionOptions? options = default)
@@ -344,7 +344,7 @@ internal class ElementHandle : JSHandle, IElementHandle
 
     public Task<IReadOnlyList<string>> SelectOptionAsync(IEnumerable<SelectOptionValue> values, ElementHandleSelectOptionOptions? options = default)
 #pragma warning disable CS0612 // Type or member is obsolete
-        => _selectOptionAsync(values.Select(v => SelectOptionValueProtocol.From(v)), options?.NoWaitAfter, options?.Force, options?.Timeout);
+        => _selectOptionAsync(values.Select(v => SelectOptionValueProtocol.From(v)).ToArray(), options?.NoWaitAfter, options?.Force, options?.Timeout);
 #pragma warning restore CS0612 // Type or member is obsolete
 
     private async Task<IReadOnlyList<string>> _selectOptionAsync(IEnumerable<SelectOptionValueProtocol> values, bool? noWaitAfter, bool? force, float? timeout)
@@ -361,7 +361,7 @@ internal class ElementHandle : JSHandle, IElementHandle
     {
         return (await SendMessageToServerAsync("selectOption", new Dictionary<string, object?>
         {
-            ["elements"] = values,
+            ["elements"] = values.ToArray(),
             ["force"] = force,
             ["timeout"] = _frame.Timeout(timeout),
         }).ConfigureAwait(false))!.Value.GetProperty("values").ToObject<string[]>();
@@ -390,7 +390,7 @@ internal class ElementHandle : JSHandle, IElementHandle
         {
             ["force"] = options?.Force,
             ["position"] = options?.Position,
-            ["modifiers"] = options?.Modifiers?.Select(m => m.ToValueString()),
+            ["modifiers"] = options?.Modifiers?.Select(m => m.ToValueString()).ToArray(),
             ["trial"] = options?.Trial,
             ["timeout"] = _frame.Timeout(options?.Timeout),
         });

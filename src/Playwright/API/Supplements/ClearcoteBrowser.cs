@@ -19,6 +19,7 @@
  * SOFTWARE.
  */
 
+using System;
 using System.Threading.Tasks;
 
 #pragma warning disable SA1611
@@ -62,6 +63,19 @@ public static class ClearcoteBrowser
         => chromium.LaunchAsync(options ?? new ClearcoteLaunchOptions());
 
     /// <summary>
+    /// Launch Clearcote through a Playwright instance.
+    /// </summary>
+    public static Task<IBrowser> LaunchAsync(IPlaywright playwright, ClearcoteLaunchOptions? options = default)
+    {
+        if (playwright == null)
+        {
+            throw new ArgumentNullException(nameof(playwright));
+        }
+
+        return LaunchAsync(playwright.Chromium, options);
+    }
+
+    /// <summary>
     /// Launch Clearcote with a persistent context through a Playwright Chromium browser type.
     /// </summary>
     public static Task<IBrowserContext> LaunchPersistentContextAsync(
@@ -71,12 +85,43 @@ public static class ClearcoteBrowser
         => chromium.LaunchPersistentContextAsync(userDataDir, options ?? new ClearcoteLaunchPersistentContextOptions());
 
     /// <summary>
+    /// Launch Clearcote with a persistent context through a Playwright instance.
+    /// </summary>
+    public static Task<IBrowserContext> LaunchPersistentContextAsync(
+        IPlaywright playwright,
+        string userDataDir,
+        ClearcoteLaunchPersistentContextOptions? options = default)
+    {
+        if (playwright == null)
+        {
+            throw new ArgumentNullException(nameof(playwright));
+        }
+
+        return LaunchPersistentContextAsync(playwright.Chromium, userDataDir, options);
+    }
+
+    /// <summary>
     /// Launch a persistent Clearcote context prepared for the in-browser AI agent.
     /// </summary>
     public static Task<IBrowserContext> LaunchAgentAsync(
         IBrowserType chromium,
         ClearcoteLaunchAgentOptions? options = default)
         => Helpers.Clearcote.LaunchAgentAsync(chromium, options);
+
+    /// <summary>
+    /// Launch a persistent Clearcote context prepared for the in-browser AI agent.
+    /// </summary>
+    public static Task<IBrowserContext> LaunchAgentAsync(
+        IPlaywright playwright,
+        ClearcoteLaunchAgentOptions? options = default)
+    {
+        if (playwright == null)
+        {
+            throw new ArgumentNullException(nameof(playwright));
+        }
+
+        return LaunchAgentAsync(playwright.Chromium, options);
+    }
 
     /// <summary>
     /// Run an in-browser Clearcote AI agent task against a page.

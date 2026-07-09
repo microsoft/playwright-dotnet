@@ -180,7 +180,7 @@ internal class Frame : ChannelOwner, IFrame
 
     [MethodImpl(MethodImplOptions.NoInlining)]
     public Task<IReadOnlyList<string>> SelectOptionAsync(string selector, IEnumerable<string> values, FrameSelectOptionOptions? options = default)
-        => SelectOptionAsync(selector, values.Select(valueOrLabel => new SelectOptionValueProtocol() { ValueOrLabel = valueOrLabel }), options);
+        => SelectOptionAsync(selector, values.Select(valueOrLabel => new SelectOptionValueProtocol() { ValueOrLabel = valueOrLabel }).ToArray(), options);
 
     [MethodImpl(MethodImplOptions.NoInlining)]
     public Task<IReadOnlyList<string>> SelectOptionAsync(string selector, IElementHandle values, FrameSelectOptionOptions? options = default)
@@ -191,7 +191,7 @@ internal class Frame : ChannelOwner, IFrame
         => (await SendMessageToServerAsync("selectOption", new Dictionary<string, object?>
         {
             ["selector"] = selector,
-            ["elements"] = values.Select(x => x as ElementHandle),
+            ["elements"] = values.Select(x => x as ElementHandle).ToArray(),
             ["strict"] = options?.Strict,
             ["force"] = options?.Force,
             ["timeout"] = Timeout(options?.Timeout),
@@ -203,7 +203,7 @@ internal class Frame : ChannelOwner, IFrame
 
     [MethodImpl(MethodImplOptions.NoInlining)]
     public Task<IReadOnlyList<string>> SelectOptionAsync(string selector, IEnumerable<SelectOptionValue> values, FrameSelectOptionOptions? options = default)
-        => SelectOptionAsync(selector, values.Select(value => SelectOptionValueProtocol.From(value)), options);
+        => SelectOptionAsync(selector, values.Select(value => SelectOptionValueProtocol.From(value)).ToArray(), options);
 
     internal async Task<IReadOnlyList<string>> SelectOptionAsync(string selector, IEnumerable<SelectOptionValueProtocol> values, FrameSelectOptionOptions? options = default)
         => (await SendMessageToServerAsync("selectOption", new Dictionary<string, object?>
@@ -352,7 +352,7 @@ internal class Frame : ChannelOwner, IFrame
         {
             ["selector"] = selector,
             ["force"] = options?.Force,
-            ["modifiers"] = options?.Modifiers?.Select(m => m.ToValueString()),
+            ["modifiers"] = options?.Modifiers?.Select(m => m.ToValueString()).ToArray(),
             ["trial"] = options?.Trial,
             ["timeout"] = Timeout(options?.Timeout),
             ["position"] = options?.Position,
@@ -454,7 +454,7 @@ internal class Frame : ChannelOwner, IFrame
         {
             ["selector"] = selector,
             ["force"] = options?.Force,
-            ["modifiers"] = options?.Modifiers?.Select(m => m.ToValueString()),
+            ["modifiers"] = options?.Modifiers?.Select(m => m.ToValueString()).ToArray(),
             ["position"] = options?.Position,
             ["trial"] = options?.Trial,
             ["timeout"] = Timeout(options?.Timeout),
@@ -607,7 +607,7 @@ internal class Frame : ChannelOwner, IFrame
             ["force"] = options?.Force,
             ["delay"] = options?.Delay,
             ["clickCount"] = options?.ClickCount,
-            ["modifiers"] = options?.Modifiers?.Select(m => m.ToValueString()),
+            ["modifiers"] = options?.Modifiers?.Select(m => m.ToValueString()).ToArray(),
             ["position"] = options?.Position,
 #pragma warning disable CS0612 // Type or member is obsolete
             ["noWaitAfter"] = options?.NoWaitAfter,
@@ -636,7 +636,7 @@ internal class Frame : ChannelOwner, IFrame
             ["button"] = options?.Button,
             ["delay"] = options?.Delay,
             ["force"] = options?.Force,
-            ["modifiers"] = options?.Modifiers?.Select(m => m.ToValueString()),
+            ["modifiers"] = options?.Modifiers?.Select(m => m.ToValueString()).ToArray(),
             ["position"] = options?.Position,
             ["steps"] = steps,
             ["trial"] = options?.Trial,

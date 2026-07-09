@@ -372,4 +372,48 @@ public class PageRouteWebSocketTests : PageTestEx
         CollectionAssert.AreEqual(new[] { "chat.v1" }, byPath["/ws-string"]);
         CollectionAssert.AreEqual(new[] { "chat.v2", "chat.v1" }, byPath["/ws-array"]);
     }
+
+    [PlaywrightTest("page-route-web-socket.spec.ts", "send string should work")]
+    public async Task SendStringShouldWork()
+    {
+        await Page.RouteWebSocketAsync(new Regex(".*\\/ws$"), ws =>
+        {
+            ws.ConnectToServer();
+            ws.Send("hello from string overload");
+        });
+
+        var wsTask = Server.WaitForWebSocketAsync();
+        await SetupWS(Page, Server.Port, "blob");
+        var ws = await wsTask;
+        await AssertAreEqualWithRetriesAsync(() => Page.EvaluateAsync<string[]>(@"() => window.log"),
+            new[] { "open", $"message: data=hello from string overload origin=ws://localhost:{Server.Port} lastEventId=" });
+    }
+
+    [PlaywrightTest("web-route-web-socket.spec.ts", "onClose should work")]
+    public async Task OnCloseShouldWork()
+    {
+        var closeCode = 0;
+        var closeReason = "";
+        var routeTcs = new TaskCompletionSource<IWebSocketRoute>();
+        await Page.RouteWebSocketAsync(new Regex(".*\\/ws$"), ws =>
+        {
+            ws.ConnectToServer();
+            ws.OnClose((code, reason) =>
+            {
+                closeCode = code ?? 0;
+                closeReason = reason ?? "";
+            });
+            routeTcs.SetResult(ws);
+        });
+
+        var wsTask = Server.WaitForWebSocketAsync();
+        await SetupWS(Page, Server.Port, "blob");
+        var ws = await wsTask;
+        var route = await routeTcs.Task;
+
+        await Page.EvaluateAsync("() => window.ws.close(1000, 'done')");
+        await Task.Delay(200);
+        Assert.AreEqual(1000, closeCode);
+        Assert.AreEqual("done", closeReason);
+    }
 }

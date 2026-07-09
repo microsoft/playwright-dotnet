@@ -664,7 +664,7 @@ internal class Page : ChannelOwner, IPage
 
     [MethodImpl(MethodImplOptions.NoInlining)]
     public Task<IReadOnlyList<string>> SelectOptionAsync(string selector, IEnumerable<string> values, PageSelectOptionOptions? options = default)
-        => SelectOptionAsync(selector, values.Select(x => new SelectOptionValueProtocol() { ValueOrLabel = x }), options);
+        => SelectOptionAsync(selector, values.Select(x => new SelectOptionValueProtocol() { ValueOrLabel = x }).ToArray(), options);
 
     [MethodImpl(MethodImplOptions.NoInlining)]
     public Task<IReadOnlyList<string>> SelectOptionAsync(string selector, IElementHandle values, PageSelectOptionOptions? options = default)
@@ -688,7 +688,7 @@ internal class Page : ChannelOwner, IPage
 
     [MethodImpl(MethodImplOptions.NoInlining)]
     public Task<IReadOnlyList<string>> SelectOptionAsync(string selector, IEnumerable<SelectOptionValue> values, PageSelectOptionOptions? options = default)
-        => SelectOptionAsync(selector, values.Select(x => SelectOptionValueProtocol.From(x)), options);
+        => SelectOptionAsync(selector, values.Select(x => SelectOptionValueProtocol.From(x)).ToArray(), options);
 
     internal Task<IReadOnlyList<string>> SelectOptionAsync(string selector, IEnumerable<SelectOptionValueProtocol> values, PageSelectOptionOptions? options = default)
         => MainFrame.SelectOptionAsync(selector, values, new()
@@ -768,7 +768,7 @@ internal class Page : ChannelOwner, IPage
             "setExtraHTTPHeaders",
             new Dictionary<string, object?>
             {
-                ["headers"] = headers.Select(kv => new HeaderEntry { Name = kv.Key, Value = kv.Value }),
+                ["headers"] = headers.Select(kv => new HeaderEntry { Name = kv.Key, Value = kv.Value }).ToArray(),
             });
 
     [MethodImpl(MethodImplOptions.NoInlining)]

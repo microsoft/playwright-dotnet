@@ -59,40 +59,63 @@ Every `Activator.CreateInstance`, `MakeGenericType`, `GetProperties()`, `Convert
 This fork bundles [Clearcote Browser](https://github.com/clearcotelabs/clearcote-browser) — an open-source, fingerprint-resistant Chromium build. The binary is auto-downloaded, SHA-256 verified, and cached on first use.
 
 ```cs
+using System;
+using System.IO;
 using Microsoft.Playwright;
 
 Console.WriteLine("Playwright .NET + Clearcote Browser — NativeAOT sample");
 Console.WriteLine();
 
-var downloadPath = await ClearcoteBrowser.DownloadAsync(new() { Quiet = true });
+var cacheDir = Path.Combine(Path.GetTempPath(), "clearcote-cache");
+var downloadPath = await ClearcoteBrowser.DownloadAsync(new()
+{
+    CacheDir = cacheDir,
+    Quiet = true,
+});
 Console.WriteLine($"Clearcote browser binary: {downloadPath}");
 
 var launchOptions = new ClearcoteLaunchOptions
 {
     Headless = true,
     Fingerprint = "playwright-aot-sample",
-    ClearcotePlatform = ClearcotePlatform.Linux,
-    Brand = "Edge",
+    Brand = "Chrome",
     BrandVersion = "149",
     TlsProfile = ClearcoteTlsProfile.MatchPersona,
-    GpuVendor = "Google",
-    GpuRenderer = "ANGLE (Google, Vulkan 1.3.0 (SwiftShader Device))",
     HardwareConcurrency = 8,
+    DisableGpuFingerprint = true,
+    FingerprintNoise = false,
     Humanize = true,
+    CacheDir = cacheDir,
+    Quiet = true,
 };
 
 var playwright = await Playwright.CreateAsync();
-var browser = await ClearcoteBrowser.LaunchAsync(playwright.Chromium, launchOptions);
+var browser = await ClearcoteBrowser.LaunchAsync(playwright, launchOptions);
 var page = await browser.NewPageAsync();
 
-await page.GotoAsync("https://browserleaks.com/client-hints");
+var html = """
+<!doctype html>
+<title>Clearcote NativeAOT</title>
+<main>
+  <h1>Clearcote NativeAOT smoke</h1>
+  <p>Offline page used to validate launch, JavaScript evaluation, WebGL probing, and screenshots.</p>
+</main>
+""";
+await page.GotoAsync(
+    "data:text/html;charset=utf-8," + Uri.EscapeDataString(html),
+    new() { WaitUntil = WaitUntilState.DOMContentLoaded });
 Console.WriteLine($"Page title: {await page.TitleAsync()}");
+Console.WriteLine($"User agent: {await page.EvaluateAsync<string>("() => navigator.userAgent")}");
 
 var verdict = await ClearcoteBrowser.CheckRenderCoherenceAsync(page);
-Console.WriteLine($"Render coherent: {verdict.Coherent}");
+Console.WriteLine($"Render coherent on this host: {verdict.Coherent}");
 Console.WriteLine($"  Vendor:   {verdict.Vendor}");
 Console.WriteLine($"  Renderer: {verdict.Renderer}");
 Console.WriteLine($"  WebGL:    {verdict.Webgl}");
+foreach (var warning in verdict.Warnings)
+{
+    Console.WriteLine($"  Warning:  {warning}");
+}
 
 await page.ScreenshotAsync(new() { Path = "clearcote-screenshot.png", FullPage = true });
 Console.WriteLine("Screenshot saved to clearcote-screenshot.png");
@@ -101,7 +124,9 @@ await browser.CloseAsync();
 Console.WriteLine("Done.");
 ```
 
-Pass `ClearcoteLaunchOptions` to standard `chromium.LaunchAsync()` — patching is automatic. Set `CLEARCOTE=1` to use Clearcote without code changes.
+Use `ClearcoteBrowser.LaunchAsync(playwright, options)` for the shortest path, or pass `ClearcoteLaunchOptions` to standard `playwright.Chromium.LaunchAsync()`; patching is automatic. Set `CLEARCOTE=1` to use Clearcote without code changes.
+
+The pinned browser release is `v0.1.0-pre.18`. `CLEARCOTE_AUTO_UPDATE=1` / `AutoUpdate = true` is opt-in and falls back to the pinned browser when the latest GitHub release is SDK-only or has no compatible browser asset.
 
 ### Clearcote features
 

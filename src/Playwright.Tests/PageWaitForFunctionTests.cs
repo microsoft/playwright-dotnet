@@ -23,8 +23,6 @@
  * SOFTWARE.
  */
 
-using System.Collections.Generic;
-
 namespace Microsoft.Playwright.Tests;
 
 public class PageWaitForFunctionTests : PageTestEx

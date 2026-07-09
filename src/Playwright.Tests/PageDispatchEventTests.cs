@@ -22,8 +22,6 @@
  * SOFTWARE.
  */
 
-using System.Collections.Generic;
-
 namespace Microsoft.Playwright.Tests;
 
 ///<playwright-file>dispatchevent.spec.ts</playwright-file>

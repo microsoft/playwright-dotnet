@@ -38,10 +38,10 @@
 
 ## NuGet packaging
 
-- Package id/title are `Playwright.AOTFork`.
+- Package id is `Playwright.Clearcote`; assembly/title remain `Microsoft.Playwright` / `Playwright.AOTFork` for compatibility with the forked binary.
 - The fork now targets only `net10.0`; the previous `net8.0`/`netstandard2.0` compatibility targets were removed from the fork packages.
 - The package includes the bundled Playwright Node driver under `.playwright`.
-- `build/Playwright.AOTFork.targets` and `buildTransitive/Playwright.AOTFork.targets` copy the platform Node binary, including Windows `win32_x64\node.exe`, driver package, and `playwright.ps1` into consumer build and publish outputs.
+- `build/Playwright.Clearcote.targets` and `buildTransitive/Playwright.Clearcote.targets` copy the platform Node binary, driver package, and `playwright.ps1` into consumer build and publish outputs.
 - A consumer `PackageReference` imports the transitive target automatically; no separate post-install script is required.
 
 ## AOT hardening
@@ -51,8 +51,21 @@
 - Removed reflection-based fallback deserialization in protocol JSON helpers. Missing source-generated metadata now throws instead of silently falling back.
 - Added `JsonTypeInfo<T>` overloads for `IResponse.JsonAsync<T>` and `IAPIResponse.JsonAsync<T>`.
 - Existing generic JSON response methods no longer call reflection-based `JsonSerializer.Deserialize<T>`; they require source-generated metadata or fail with an explicit message.
+- `ChannelHelpers.ToObject(Exception)` no longer returns an anonymous type boxed as `object`. It returns `JsonObject` (registered in `PlaywrightJsonContext`), making binding error serialization AOT-safe.
+- `BindingCall.CallAsync` now deserializes binding arguments from protocol `JsonElement` to the target parameter type via `EvaluateArgumentValueConverter.Deserialize`, fixing a previous `JsonElement` → `int` conversion failure.
+- `BindingCall.CallAsync` removed the static `TaskResultProperty` (`typeof(Task<>).GetProperty("Result")`) field that failed at runtime for `Task<T>`. Async binding delegates returning `Task<T>` have a known AOT limitation: the return value is not extracted. Use sync delegates or non-generic `Task` instead.
+- `EvaluateArgumentValueConverter` now clones protocol `ref` targets when materializing evaluate results as JSON, so repeated or cyclic JavaScript references do not attach the same `JsonNode` in multiple places.
 
 ## .NET-specific implementation notes
 
 - The offline GPL MaxMind database is downloaded and cached at runtime like the Node SDK; it is not vendored into this NuGet package and does not require the reflection-heavy `MaxMind.Db` reader package.
 - JavaScript-style monkey-patching is implemented as .NET core routing: supported .NET page/frame/locator/mouse/keyboard paths are humanized when `Humanize = true`, while unsupported action shapes fall back to Playwright's native implementation.
+
+## Validation status
+
+- `dotnet build src/Playwright/Playwright.csproj -p:TargetFramework=net10.0 -p:PublishAot=true -p:TrimMode=full -p:UseSharedCompilation=false` passes with 0 warnings.
+- `dotnet publish samples/Playwright.AotSample/Playwright.AotSample.csproj -c Release -r linux-x64 -p:PublishAot=true -p:SelfContained=true -p:TrimMode=full -p:UseSharedCompilation=false` passes and the native executable exercises launch, locators, evaluate arguments/results, route interception, network/API request round-trips, source-gen JSON deserialization, cookie round-trips, sync/async binding invocation with error serialization, locator/page/frame/element/mouse/keyboard actions, `Console` event listeners, offline local-server fetches, screenshots, and Clearcote humanized input hooks offline (100 test groups).
+- `dotnet publish samples/Playwright.AotSample.Clearcote/Playwright.AotSample.Clearcote.csproj -c Release -r linux-x64 -p:PublishAot=true -p:SelfContained=true -p:TrimMode=full -p:UseSharedCompilation=false` passes and the native executable resolves the pinned Clearcote browser from the verified cache, launches it, evaluates JavaScript, probes WebGL render info, and captures a screenshot offline (6 test groups).
+- `dotnet test ./src/Playwright.Tests/Playwright.Tests.csproj -c Debug -f net10.0 --no-restore --filter "FullyQualifiedName~BrowserContextBasicTests.ShouldWorkWithOfflineOption|FullyQualifiedName~DefaultBrowserContext1Tests.ShouldSupportOfflineOption|FullyQualifiedName~PopupTests.ShouldInheritOfflineFromBrowserContext" --logger:"console;verbosity=detailed"` passes 3/3 upstream offline-emulation tests.
+- `dotnet pack src/Playwright/Playwright.csproj -c Debug --no-build --no-restore -p:UseSharedCompilation=false -p:BuildInParallel=false -v:minimal` creates `Playwright.Clearcote.1.0.0.nupkg`.
+- A throwaway `PackageReference` consumer restored and built against `Playwright.Clearcote.1.0.0` with the transitive target copying `.playwright/package`, `node/linux-x64/node`, and `playwright.ps1`.

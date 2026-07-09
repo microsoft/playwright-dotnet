@@ -26,7 +26,7 @@ dotnet pack src/Playwright/Playwright.csproj \
 Expected package:
 
 ```text
-src/Playwright/bin/Debug/Playwright.AOTFork.1.61.0.nupkg
+src/Playwright/bin/Debug/Playwright.Clearcote.1.0.0.nupkg
 ```
 
 The package should contain:
@@ -36,8 +36,8 @@ lib/net10.0/Microsoft.Playwright.dll
 .playwright/node/linux-x64/node
 .playwright/node/win32_x64/node.exe
 .playwright/package/cli.js
-buildTransitive/Playwright.AOTFork.targets
-build/Playwright.AOTFork.targets
+buildTransitive/Playwright.Clearcote.targets
+build/Playwright.Clearcote.targets
 ```
 
 ## Validate package consumption
@@ -45,16 +45,17 @@ build/Playwright.AOTFork.targets
 Use a throwaway project and a temp NuGet cache:
 
 ```bash
-dotnet new console -o /tmp/playwright-aotfork-consumer --framework net10.0
-dotnet add /tmp/playwright-aotfork-consumer/playwright-aotfork-consumer.csproj package Playwright.AOTFork \
-  --version 1.61.0 \
-  --source src/Playwright/bin/Debug
-dotnet restore /tmp/playwright-aotfork-consumer/playwright-aotfork-consumer.csproj \
+dotnet new console -o /tmp/playwright-clearcote-consumer --framework net10.0
+dotnet add /tmp/playwright-clearcote-consumer/playwright-clearcote-consumer.csproj package Playwright.Clearcote \
+  --version 1.0.0 \
+  --source src/Playwright/bin/Debug \
+  --package-directory /tmp/nuget-clearcote-consumer
+dotnet restore /tmp/playwright-clearcote-consumer/playwright-clearcote-consumer.csproj \
   -p:RestoreAdditionalProjectSources=$PWD/src/Playwright/bin/Debug \
-  -p:RestorePackagesPath=/tmp/nuget-packages
-dotnet build /tmp/playwright-aotfork-consumer/playwright-aotfork-consumer.csproj \
+  -p:RestorePackagesPath=/tmp/nuget-clearcote-consumer
+dotnet build /tmp/playwright-clearcote-consumer/playwright-clearcote-consumer.csproj \
   --no-restore \
-  -p:RestorePackagesPath=/tmp/nuget-packages \
+  -p:RestorePackagesPath=/tmp/nuget-clearcote-consumer \
   -p:UseSharedCompilation=false
 ```
 

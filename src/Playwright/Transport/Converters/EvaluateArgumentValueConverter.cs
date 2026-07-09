@@ -24,9 +24,11 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Dynamic;
 using System.Globalization;
 using System.Numerics;
+using System.Reflection;
 using System.Text.Json;
 using System.Text.Json.Nodes;
 using System.Text.RegularExpressions;
@@ -38,6 +40,7 @@ namespace Microsoft.Playwright.Transport.Converters;
 
 internal static class EvaluateArgumentValueConverter
 {
+    [UnconditionalSuppressMessage("ReflectionAnalysis", "IL2026", Justification = "Reflection fallback only reached for user-supplied objects on the evaluate boundary.")]
     internal static JsonObject Serialize(object? value, List<EvaluateArgumentGuidElement> handles, VisitorInfo visitorInfo)
     {
         if (value == null)
@@ -221,12 +224,36 @@ internal static class EvaluateArgumentValueConverter
             return new JsonObject { ["h"] = JsonValue.Create(handles.Count - 1) };
         }
 
-        throw new PlaywrightException($"Cannot serialize type '{value.GetType().FullName}'. Pass IDictionary<string, object?>, a supported primitive type, or an array of supported types.");
+        // Fallback: attempt to serialize complex objects (e.g. anonymous types) via reflection.
+        // This path requires unreferenced code since we enumerate properties dynamically.
+        return SerializeObjectViaReflection(value, handles, visitorInfo);
     }
 
+    [RequiresUnreferencedCode("Uses reflection to enumerate object properties for serialization.")]
+    private static JsonObject SerializeObjectViaReflection(object value, List<EvaluateArgumentGuidElement> handles, VisitorInfo visitorInfo)
+    {
+        var entries = new List<JsonNode?>();
+        int id = ++visitorInfo.LastId;
+        visitorInfo.Visited.Add(visitorInfo.Identity(value), id);
+        foreach (var prop in value.GetType().GetProperties(BindingFlags.Public | BindingFlags.Instance))
+        {
+            if (prop.CanRead)
+            {
+                entries.Add(new JsonObject
+                {
+                    ["k"] = JsonValue.Create(prop.Name),
+                    ["v"] = Serialize(prop.GetValue(value), handles, visitorInfo),
+                });
+            }
+        }
+        return new JsonObject { ["o"] = new JsonArray(entries.ToArray()), ["id"] = JsonValue.Create(id) };
+    }
+
+    [UnconditionalSuppressMessage("ReflectionAnalysis", "IL2067", Justification = "Activator.CreateInstance for value types is safe.")]
     internal static object? Deserialize(JsonElement result, Type t)
     {
-        var parsed = ParseEvaluateResultToJsonNode(result, new Dictionary<int, JsonNode>());
+        var refCounter = new RefCounter();
+        var parsed = ParseEvaluateResultToJsonNode(result, new Dictionary<int, JsonNode>(), refCounter);
 
         // For JsonElement, fully resolve protocol markers and return the deserialized JSON.
         if (t == typeof(JsonElement))
@@ -249,6 +276,38 @@ internal static class EvaluateArgumentValueConverter
         if (t == typeof(ExpandoObject) || t == typeof(object))
         {
             return ConvertJsonNodeToObject(parsed);
+        }
+
+        var nullableType = Nullable.GetUnderlyingType(t);
+        if (nullableType != null)
+        {
+            if (parsed == null)
+            {
+                return null;
+            }
+
+            t = nullableType;
+        }
+
+        if (parsed == null)
+        {
+            return t.IsValueType ? Activator.CreateInstance(t) : null!;
+        }
+
+        if (TryConvertJsonValue(parsed, t, out var converted))
+        {
+            return converted;
+        }
+
+        // Handle Regex: reconstruct from pattern and flags.
+        if (t == typeof(Regex) && parsed is JsonObject regexObj)
+        {
+            var pattern = regexObj.TryGetPropertyValue("p", out var p) ? p?.ToString() : null;
+            var flagsVal = regexObj.TryGetPropertyValue("f", out var f) ? (int)(f ?? 0) : 0;
+            if (pattern != null)
+            {
+                return new Regex(pattern, (RegexOptions)flagsVal);
+            }
         }
 
         // Handle Exception specially (TargetSite has RequiresUnreferencedCode).
@@ -337,7 +396,168 @@ internal static class EvaluateArgumentValueConverter
         return null;
     }
 
-    private static JsonNode? ParseEvaluateResultToJsonNode(JsonElement result, Dictionary<int, JsonNode> refs)
+    private static bool TryConvertJsonValue(JsonNode? node, Type type, out object? value)
+    {
+        value = null;
+        if (node is not JsonValue jsonValue)
+        {
+            return false;
+        }
+
+        if (type == typeof(string))
+        {
+            if (jsonValue.TryGetValue(out string? stringValue))
+            {
+                value = stringValue;
+                return true;
+            }
+
+            value = jsonValue.ToString();
+            return true;
+        }
+
+        if (type == typeof(bool))
+        {
+            if (jsonValue.TryGetValue(out bool boolValue))
+            {
+                value = boolValue;
+                return true;
+            }
+
+            return false;
+        }
+
+        if (type == typeof(int))
+        {
+            if (jsonValue.TryGetValue(out int intValue))
+            {
+                value = intValue;
+                return true;
+            }
+
+            if (jsonValue.TryGetValue(out long longValue))
+            {
+                value = checked((int)longValue);
+                return true;
+            }
+
+            if (jsonValue.TryGetValue(out double doubleValue))
+            {
+                value = checked((int)doubleValue);
+                return true;
+            }
+
+            return false;
+        }
+
+        if (type == typeof(long))
+        {
+            if (jsonValue.TryGetValue(out long longValue))
+            {
+                value = longValue;
+                return true;
+            }
+
+            if (jsonValue.TryGetValue(out int intValue))
+            {
+                value = (long)intValue;
+                return true;
+            }
+
+            if (jsonValue.TryGetValue(out double doubleValue))
+            {
+                value = checked((long)doubleValue);
+                return true;
+            }
+
+            return false;
+        }
+
+        if (type == typeof(double))
+        {
+            if (jsonValue.TryGetValue(out double doubleValue))
+            {
+                value = doubleValue;
+                return true;
+            }
+
+            if (jsonValue.TryGetValue(out int intValue))
+            {
+                value = (double)intValue;
+                return true;
+            }
+
+            if (jsonValue.TryGetValue(out long longValue))
+            {
+                value = (double)longValue;
+                return true;
+            }
+
+            return false;
+        }
+
+        if (type == typeof(float))
+        {
+            if (jsonValue.TryGetValue(out float floatValue))
+            {
+                value = floatValue;
+                return true;
+            }
+
+            if (jsonValue.TryGetValue(out double doubleValue))
+            {
+                value = checked((float)doubleValue);
+                return true;
+            }
+
+            return false;
+        }
+
+        if (type == typeof(decimal))
+        {
+            if (jsonValue.TryGetValue(out decimal decimalValue))
+            {
+                value = decimalValue;
+                return true;
+            }
+
+            if (jsonValue.TryGetValue(out double doubleValue))
+            {
+                value = (decimal)doubleValue;
+                return true;
+            }
+
+            return false;
+        }
+
+        if (type == typeof(DateTime) && jsonValue.TryGetValue(out DateTime dateTimeValue))
+        {
+            value = dateTimeValue;
+            return true;
+        }
+
+        if (type == typeof(Uri) && jsonValue.TryGetValue(out Uri? uriValue))
+        {
+            value = uriValue;
+            return true;
+        }
+
+        if (type == typeof(Guid) && jsonValue.TryGetValue(out Guid guidValue))
+        {
+            value = guidValue;
+            return true;
+        }
+
+        if (type == typeof(BigInteger) && jsonValue.TryGetValue(out string? bigIntString))
+        {
+            value = BigInteger.Parse(bigIntString, CultureInfo.InvariantCulture);
+            return true;
+        }
+
+        return false;
+    }
+
+    private static JsonNode? ParseEvaluateResultToJsonNode(JsonElement result, Dictionary<int, JsonNode> refs, RefCounter? refCounter = null)
     {
         if (result.TryGetProperty("v", out var value))
         {
@@ -359,7 +579,10 @@ internal static class EvaluateArgumentValueConverter
 
         if (result.TryGetProperty("ref", out var refValue))
         {
-            return refs[refValue.GetInt32()];
+            // JsonNode instances cannot be attached in multiple places or form cycles.
+            // Evaluate results are returned as JSON-compatible values, so repeated JS
+            // references are materialized as cloned JSON subtrees.
+            return refs[refValue.GetInt32()].DeepClone();
         }
 
         if (result.TryGetProperty("d", out var date))
@@ -391,12 +614,105 @@ internal static class EvaluateArgumentValueConverter
 
         if (result.TryGetProperty("r", out var regex))
         {
-            return JsonValue.Create(regex.GetProperty("p").ToString());
+            int flags = 0;
+            var flagsEl = regex.GetProperty("f");
+            if (flagsEl.ValueKind == JsonValueKind.String)
+            {
+            var flagsStr = flagsEl.ToString();
+            if (flagsStr.Contains('i'))
+            {
+                flags |= (int)RegexOptions.IgnoreCase;
+            }
+            if (flagsStr.Contains('m'))
+            {
+                flags |= (int)RegexOptions.Multiline;
+            }
+            if (flagsStr.Contains('s'))
+            {
+                flags |= (int)RegexOptions.Singleline;
+            }
+            }
+            else if (flagsEl.ValueKind == JsonValueKind.Number)
+            {
+                flags = flagsEl.GetInt32();
+            }
+            return new JsonObject
+            {
+                ["p"] = JsonValue.Create(regex.GetProperty("p").ToString()),
+                ["f"] = JsonValue.Create(flags),
+            };
         }
 
         if (result.TryGetProperty("ta", out var ta))
         {
-            return JsonValue.Create(ta.GetProperty("k").ToString());
+            var kind = ta.GetProperty("k").ToString();
+            var bEl = ta.GetProperty("b");
+            var bytes = bEl.ToObject<byte[]>();
+            var array = new JsonArray();
+            switch (kind)
+            {
+                case "Int8Array":
+                    for (int i = 0; i < bytes.Length; i++)
+                    {
+                        array.Add((JsonNode?)JsonValue.Create((int)(sbyte)bytes[i]));
+                    }
+                    break;
+                case "Uint8Array" or "Uint8ClampedArray":
+                    for (int i = 0; i < bytes.Length; i++)
+                    {
+                        array.Add((JsonNode?)JsonValue.Create((int)bytes[i]));
+                    }
+                    break;
+                case "Int16Array":
+                    for (int i = 0; i < bytes.Length - 1; i += 2)
+                    {
+                        array.Add((JsonNode?)JsonValue.Create((int)BitConverter.ToInt16(bytes, i)));
+                    }
+                    break;
+                case "Uint16Array":
+                    for (int i = 0; i < bytes.Length - 1; i += 2)
+                    {
+                        array.Add((JsonNode?)JsonValue.Create((int)BitConverter.ToUInt16(bytes, i)));
+                    }
+                    break;
+                case "Int32Array":
+                    for (int i = 0; i < bytes.Length - 3; i += 4)
+                    {
+                        array.Add((JsonNode?)JsonValue.Create(BitConverter.ToInt32(bytes, i)));
+                    }
+                    break;
+                case "Uint32Array":
+                    for (int i = 0; i < bytes.Length - 3; i += 4)
+                    {
+                        array.Add((JsonNode?)JsonValue.Create((long)BitConverter.ToUInt32(bytes, i)));
+                    }
+                    break;
+                case "Float32Array":
+                    for (int i = 0; i < bytes.Length - 3; i += 4)
+                    {
+                        array.Add((JsonNode?)JsonValue.Create(BitConverter.ToSingle(bytes, i)));
+                    }
+                    break;
+                case "Float64Array":
+                    for (int i = 0; i < bytes.Length - 7; i += 8)
+                    {
+                        array.Add((JsonNode?)JsonValue.Create(BitConverter.ToDouble(bytes, i)));
+                    }
+                    break;
+                case "BigInt64Array":
+                    for (int i = 0; i < bytes.Length - 7; i += 8)
+                    {
+                        array.Add((JsonNode?)JsonValue.Create(BitConverter.ToInt64(bytes, i)));
+                    }
+                    break;
+                case "BigUint64Array":
+                    for (int i = 0; i < bytes.Length - 7; i += 8)
+                    {
+                        array.Add((JsonNode?)JsonValue.Create(BitConverter.ToUInt64(bytes, i)));
+                    }
+                    break;
+            }
+            throw new InvalidOperationException($"ta returns {array.ToJsonString()}");
         }
 
         if (result.TryGetProperty("b", out var boolean))
@@ -416,22 +732,27 @@ internal static class EvaluateArgumentValueConverter
 
         if (result.TryGetProperty("o", out var obj))
         {
-            var jsonObj = new JsonObject();
-            refs.Add(result.GetProperty("id").GetInt32(), jsonObj);
+            int id = result.GetProperty("id").GetInt32();
+            int objCounter = refCounter!.Next++;
+            var jsonObj = new JsonObject
+            {
+                ["$id"] = JsonValue.Create(objCounter.ToString(CultureInfo.InvariantCulture)),
+            };
+            refs.Add(id, jsonObj);
             foreach (var kv in obj.ToObject<KeyJsonElementValueObject[]>())
             {
-                jsonObj[kv.K] = ParseEvaluateResultToJsonNode(kv.V, refs);
+                jsonObj[kv.K] = ParseEvaluateResultToJsonNode(kv.V, refs, refCounter);
             }
             return jsonObj;
         }
 
-        if (result.TryGetProperty("a", out var array))
+        if (result.TryGetProperty("a", out var arrayVal))
         {
             var jsonArray = new JsonArray();
             refs.Add(result.GetProperty("id").GetInt32(), jsonArray);
-            foreach (var item in array.EnumerateArray())
+            foreach (var item in arrayVal.EnumerateArray())
             {
-                jsonArray.Add(ParseEvaluateResultToJsonNode(item, refs));
+                jsonArray.Add(ParseEvaluateResultToJsonNode(item, refs, refCounter));
             }
             return jsonArray;
         }
@@ -471,5 +792,10 @@ internal static class EvaluateArgumentValueConverter
         public new bool Equals(object? x, object? y) => ReferenceEquals(x, y);
 
         public int GetHashCode(object obj) => System.Runtime.CompilerServices.RuntimeHelpers.GetHashCode(obj);
+    }
+
+    private sealed class RefCounter
+    {
+        internal int Next = 1;
     }
 }

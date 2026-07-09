@@ -1,15 +1,39 @@
 # NativeAOT Audit — playwright-dotnet
 
-## Summary
+## Current status
+
+**Updated:** 2026-07-08
+
+The fork now targets `net10.0` for the core package and the main NativeAOT gates pass with 0 warnings. The audit below is kept as the original issue inventory; use this current-status section for the present state.
+
+| Group | Current evidence | Status |
+|-------|------------------|--------|
+| Library AOT analyzers | `dotnet build src/Playwright/Playwright.csproj -p:TargetFramework=net10.0 -p:PublishAot=true -p:TrimMode=full -p:UseSharedCompilation=false` | Pass, 0 warnings |
+| Native executable publish | `dotnet publish samples/Playwright.AotSample/Playwright.AotSample.csproj -c Release -r linux-x64 -p:PublishAot=true -p:SelfContained=true -p:TrimMode=full -p:UseSharedCompilation=false` | Pass |
+| Core runtime groups | `Playwright.AotSample` native executable launches Chromium and exercises transport startup, locators, page/frame/element/mouse/keyboard actions, evaluate argument/result serialization, local-server network/API round-trips, source-generated JSON, binding callbacks, screenshots, and Clearcote humanized input hooks offline (100 groups). | Pass in this environment |
+| Clearcote runtime groups | `Playwright.AotSample.Clearcote` native executable resolves the verified `v0.1.0-pre.18` browser cache, launches Clearcote, round-trips profile JSON, evaluates JavaScript, probes WebGL render info, and captures a screenshot offline (6 groups). | Pass in this environment |
+| Upstream offline-emulation tests | `dotnet test ./src/Playwright.Tests/Playwright.Tests.csproj -c Debug -f net10.0 --no-restore --filter "FullyQualifiedName~BrowserContextBasicTests.ShouldWorkWithOfflineOption|FullyQualifiedName~DefaultBrowserContext1Tests.ShouldSupportOfflineOption|FullyQualifiedName~PopupTests.ShouldInheritOfflineFromBrowserContext" --logger:"console;verbosity=detailed"` | Pass, 3/3 |
+| NuGet consumer path | `dotnet pack` creates `Playwright.Clearcote.1.0.0.nupkg`; a throwaway `PackageReference` consumer restores/builds and receives `.playwright/package`, `node/linux-x64/node`, and `playwright.ps1`. | Pass |
+| Reflection/AOT hazard scan | `rg` over `src/Playwright` finds no remaining `Activator.CreateInstance`, `MakeGenericType`, `TypeDescriptor`, `GetProperties()`, `dynamic`, `Assembly.GetName`, `CodeBase`, `Convert.ChangeType`, or AOT suppressions in implementation code. Remaining `JsonSerializer` calls use source-generated `JsonTypeInfo` or `PlaywrightJsonContext`. | Pass |
+
+Known limits that are intentional or still need broader test coverage:
+
+- `EvaluateAsync` argument serialization no longer reflects over arbitrary POCOs. It supports primitives, strings, enums, dates, URIs, `BigInteger`, exceptions, regexes, `Guid`, dictionaries with string keys, `ExpandoObject`, enumerables, and channel owners. Unsupported arbitrary object graphs now fail explicitly.
+- `Response.JsonAsync<T>()` / `APIResponse.JsonAsync<T>()` require source-generated user metadata through `JsonTypeInfo<T>` or options with a resolver.
+- The full upstream Playwright test suite has not been re-run as proof for every generated API surface in this current validation pass.
+- Clearcote render coherence depends on the host GPU/headless environment. Headless Linux in this workspace reports a software renderer, so the coherence probe can return `Coherent = false` even though launch and protocol support work correctly.
+
+## Original audit summary
 
 **Date:** 2026-07-06
 **Scope:** `src/Playwright/` (core library), `src/Playwright.CLI/`, `src/Playwright.TestAdapter/`
 **Excluded from audit:** Test projects (still run on net8.0+ via reflection), NUnit/MSTest/Xunit wrappers (only reference the library, their own reflection usage is out of scope for the library AOT goal).
 
-The core library targets **netstandard2.0** with `System.Text.Json` 6.x.  All
-JSON serialization uses reflection-based `JsonSerializerOptions` without source
-generation.  The message-passing protocol is `Dictionary<string, object?>`
-everywhere — the biggest AOT challenge.
+Original finding before the NativeAOT fork changes: the core library targeted
+**netstandard2.0** with `System.Text.Json` 6.x. All JSON serialization used
+reflection-based `JsonSerializerOptions` without source generation. The
+message-passing protocol was `Dictionary<string, object?>` everywhere — the
+biggest AOT challenge.
 
 **Counts:**
 - Hard issues: 6
@@ -98,14 +122,14 @@ everywhere — the biggest AOT challenge.
 | Suggested fix | Replace callsites with source-generated context calls. Remove the `Type`-based overload entirely (or annotate with `RequiresUnreferencedCode`). |
 | Difficulty | medium |
 
-## 9. `Helpers/ChannelHelpers.cs`
+## 9. `Helpers/ChannelHelpers.cs` ✅ FIXED
 
 | Field | Value |
 |-------|-------|
 | Function | `ToObject(this Exception exception)` — line 83 |
 | Problem | Returns `dynamic` — an anonymous type boxed as dynamic. |
 | Warning | IL3050 (dynamic requires code generation) |
-| Suggested fix | Change return type to `object` (the anonymous type) or better, create a small `ExceptionPayload` class with `Message`, `Stack`, `Name` properties and return that. Change callsites (e.g. `BindingCall.cs:92,100` and `DriverMessages.cs`) from `dynamic` to the concrete type. |
+| Fix | Changed return type to `JsonObject` (registered in `PlaywrightJsonContext`), eliminating both the anonymous type and the implicit `dynamic` concern. Binding error serialization is now AOT-safe. |
 | Difficulty | easy |
 
 ## 10. `Helpers/Driver.cs`
@@ -158,14 +182,14 @@ everywhere — the biggest AOT challenge.
 | Suggested fix | Convert to a non-generic converter that writes `IEnumerable<ChannelOwner>` by reading `guid` from each item. |
 | Difficulty | medium |
 
-## 15. `Core/BindingCall.cs`
+## 15. `Core/BindingCall.cs` ✅ FIXED (partial)
 
 | Field | Value |
 |-------|-------|
-| Function | line 73-77: `taskResult.GetType().GetProperty(taskResultPropertyName).GetValue(taskResult)` |
-| Problem | Runtime reflection on arbitrary task result types to extract the value. |
-| Warning | IL2070 |
-| Suggested fix | This extracts the `Result` property from a `Task<T>`. Use reflection only when necessary; annotate with `RequiresUnreferencedCode` since the caller is inherently dynamic (user-provided delegate). |
+| Function | `CallAsync` — binding arg deserialization + Task result extraction |
+| Problem | (1) `_initializer.Args[i]` was passed as raw `JsonElement` to `DynamicInvoke`, causing `JsonElement → int` conversion failure. (2) `Task<T>.Result` extraction via `typeof(Task<>).GetProperty("Result")` failed at runtime with "ContainsGenericParameters is true". |
+| Fix | (1) Args are now deserialized via `EvaluateArgumentValueConverter.Deserialize(argElement, targetType)`. (2) Removed `Task<T>.Result` extraction — non-generic `Task` is supported (awaited, result = null). `Task<T>` async bindings are a known AOT limitation. |
+| Warning | No remaining warnings. |
 | Difficulty | medium |
 
 ## 16. `Core/Locator.cs`

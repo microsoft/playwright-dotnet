@@ -536,7 +536,7 @@ internal class BrowserContext : ChannelOwner, IBrowserContext
             "setExtraHTTPHeaders",
             new Dictionary<string, object?>
             {
-                ["headers"] = headers.Select(kv => new HeaderEntry { Name = kv.Key, Value = kv.Value }),
+                ["headers"] = headers.Select(kv => new HeaderEntry { Name = kv.Key, Value = kv.Value }).ToArray(),
             });
 
     [MethodImpl(MethodImplOptions.NoInlining)]
@@ -564,7 +564,9 @@ internal class BrowserContext : ChannelOwner, IBrowserContext
             {
                 ["indexedDB"] = options?.IndexedDB,
             }).ConfigureAwait(false);
-        string state = result?.GetRawText() ?? "null";
+        string state = result == null
+            ? "null"
+            : JsonSerializer.Serialize(result.Value, PlaywrightJsonContext.Default.JsonElement);
 
         if (!string.IsNullOrEmpty(options?.Path))
         {

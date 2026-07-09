@@ -22,7 +22,6 @@
  * SOFTWARE.
  */
 
-using System.Collections.Generic;
 using System.ComponentModel;
 using System.Dynamic;
 using System.Numerics;

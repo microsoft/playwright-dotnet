@@ -81,6 +81,19 @@ internal static partial class Clearcote
         "WebUSB",
     };
 
+    private static readonly Dictionary<string, string> _localeTimezoneMap = new()
+    {
+        ["en-US"] = "America/New_York", ["en-CA"] = "America/Toronto", ["en-GB"] = "Europe/London",
+        ["en-AU"] = "Australia/Sydney", ["en-NZ"] = "Pacific/Auckland", ["en-IE"] = "Europe/Dublin",
+        ["de-DE"] = "Europe/Berlin", ["de-AT"] = "Europe/Vienna", ["fr-FR"] = "Europe/Paris",
+        ["es-ES"] = "Europe/Madrid", ["es-MX"] = "America/Mexico_City", ["it-IT"] = "Europe/Rome",
+        ["nl-NL"] = "Europe/Amsterdam", ["pt-BR"] = "America/Sao_Paulo", ["pt-PT"] = "Europe/Lisbon",
+        ["pl-PL"] = "Europe/Warsaw", ["sv-SE"] = "Europe/Stockholm", ["ja-JP"] = "Asia/Tokyo",
+        ["ko-KR"] = "Asia/Seoul", ["zh-CN"] = "Asia/Shanghai", ["zh-TW"] = "Asia/Taipei",
+        ["ru-RU"] = "Europe/Moscow", ["tr-TR"] = "Europe/Istanbul", ["ar-SA"] = "Asia/Riyadh",
+        ["hi-IN"] = "Asia/Kolkata", ["id-ID"] = "Asia/Jakarta",
+    };
+
     private enum GpgVerdict
     {
         Ok,
@@ -249,6 +262,76 @@ internal static partial class Clearcote
         return new[] { "--load-extension=" + joined, "--disable-extensions-except=" + joined };
     }
 
+    private static string? DefaultTimezoneForLocale(string? primaryLanguageTag)
+    {
+        if (string.IsNullOrEmpty(primaryLanguageTag))
+        {
+            return null;
+        }
+
+        if (_localeTimezoneMap.TryGetValue(primaryLanguageTag, out var tz))
+        {
+            return tz;
+        }
+
+        var lang = primaryLanguageTag.Split('-')[0].ToLowerInvariant();
+        foreach (var (key, value) in _localeTimezoneMap)
+        {
+            if (key.ToLowerInvariant().StartsWith(lang + "-", StringComparison.Ordinal))
+            {
+                return value;
+            }
+        }
+
+        return "America/New_York";
+    }
+
+    private static string? ProfileAcceptLanguage(string? fingerprintProfile)
+    {
+        if (string.IsNullOrEmpty(fingerprintProfile))
+        {
+            return null;
+        }
+
+        try
+        {
+            string json;
+            if (fingerprintProfile.EndsWith(".json", StringComparison.OrdinalIgnoreCase) && File.Exists(fingerprintProfile))
+            {
+                json = File.ReadAllText(fingerprintProfile);
+            }
+            else
+            {
+                json = fingerprintProfile;
+            }
+
+            using var doc = JsonDocument.Parse(json);
+            if (doc.RootElement.TryGetProperty("navigator", out var nav) && nav.ValueKind == JsonValueKind.Object
+                && nav.TryGetProperty("languages", out var langs) && langs.ValueKind == JsonValueKind.Array)
+            {
+                var list = new List<string>();
+                foreach (var lang in langs.EnumerateArray())
+                {
+                    if (lang.ValueKind == JsonValueKind.String)
+                    {
+                        var s = lang.GetString();
+                        if (!string.IsNullOrEmpty(s))
+                        {
+                            list.Add(s);
+                        }
+                    }
+                }
+
+                return list.Count > 0 ? string.Join(",", list) : null;
+            }
+        }
+        catch
+        {
+        }
+
+        return null;
+    }
+
     private static IEnumerable<string> FingerprintArgs(ClearcoteSettings settings)
     {
         var args = new List<string>();
@@ -263,15 +346,18 @@ internal static partial class Clearcote
         AddFlag(args, "fingerprint-location", settings.Location);
         AddFlag(args, "fingerprint-storage-quota", settings.StorageQuota?.ToString(CultureInfo.InvariantCulture));
         AddFlag(args, "fingerprint-tls-profile", ResolveTlsProfile(settings.TlsProfile, settings.TlsProfileCustom, settings.BrandVersion));
-        AddFlag(args, "timezone", settings.Timezone);
 
-        var cleanLang = CleanAcceptLanguage(settings.AcceptLanguage ?? DefaultAcceptLanguage);
+        var acceptLanguage = settings.AcceptLanguage ?? ProfileAcceptLanguage(settings.FingerprintProfile) ?? DefaultAcceptLanguage;
+        var cleanLang = CleanAcceptLanguage(acceptLanguage);
         args.Add("--accept-lang=" + cleanLang);
         var primaryLang = cleanLang.Split(',')[0];
         if (!string.IsNullOrEmpty(primaryLang))
         {
             args.Add("--lang=" + primaryLang);
         }
+
+        var timezone = settings.Timezone ?? DefaultTimezoneForLocale(primaryLang);
+        AddFlag(args, "timezone", timezone);
 
         AddFlag(args, "webrtc-ip", settings.WebrtcIp);
         if (settings.DisableGpuFingerprint == true)
@@ -304,6 +390,11 @@ internal static partial class Clearcote
             }
         }
 
+        if (settings.ClearcotePlatform == ClearcotePlatform.Android && !args.Any(static a => a.StartsWith("--window-size", StringComparison.Ordinal)))
+        {
+            args.Add("--window-size=412,915");
+        }
+
         return args;
     }
 
@@ -323,7 +414,7 @@ internal static partial class Clearcote
             return null;
         }
 
-        if (profile == ClearcoteTlsProfile.MatchPersona)
+        if (profile is ClearcoteTlsProfile.MatchPersona or ClearcoteTlsProfile.Auto)
         {
             if (!string.IsNullOrEmpty(brandVersion))
             {
@@ -745,6 +836,7 @@ internal static partial class Clearcote
             ClearcotePlatform.Windows => "windows",
             ClearcotePlatform.Linux => "linux",
             ClearcotePlatform.Macos => "macos",
+            ClearcotePlatform.Android => "android",
             _ => "windows",
         };
 

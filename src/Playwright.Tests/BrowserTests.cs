@@ -94,4 +94,13 @@ public class BrowserTests : BrowserTestEx
             Browser.Context -= handler;
         }
     }
+
+    [PlaywrightTest("browser.spec.ts", "bindAsync and unbindAsync should work")]
+    public async Task BindAndUnbindShouldWork()
+    {
+        var result = await Browser.BindAsync("test-browser");
+        Assert.NotNull(result);
+        Assert.NotNull(result.Endpoint);
+        await Browser.UnbindAsync();
+    }
 }
