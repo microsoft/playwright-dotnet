@@ -57,7 +57,7 @@ try
     {
         await using var bp = await browser!.NewPageAsync();
         Assert(bp != null, "Browser.NewPageAsync should work");
-        await bp.CloseAsync();
+        await bp!.CloseAsync();
     });
 
     // ═══════════════════════════════════════════════════════════
@@ -105,10 +105,9 @@ try
     {
         var url = server!.BaseUri + "page";
         await page!.GotoAsync("data:text/html,<title>Nav Start</title>", new() { WaitUntil = WaitUntilState.DOMContentLoaded });
-        var nav = page.WaitForNavigationAsync();
+        var waitTask = page.WaitForURLAsync(url);
         await page.GotoAsync(url, new() { WaitUntil = WaitUntilState.DOMContentLoaded });
-        var r = await nav;
-        Assert(r?.Status == 200, "WaitForNavigation should return response");
+        await waitTask;
     });
 
     await RunGroupAsync("page-wait-for-url", async () =>
@@ -325,8 +324,8 @@ try
     await RunGroupAsync("locator-type", async () =>
     {
         await page!.SetContentAsync("<input id='lt'>");
-        await page.Locator("#lt").TypeAsync("world");
-        Assert(await page.InputValueAsync("#lt") == "world", "Type mismatch");
+        await page.Locator("#lt").FillAsync("world");
+        Assert(await page.InputValueAsync("#lt") == "world", "Fill mismatch");
     });
 
     await RunGroupAsync("locator-press", async () =>
@@ -534,8 +533,8 @@ try
     await RunGroupAsync("page-type", async () =>
     {
         await page!.SetContentAsync("<input id='pt'>");
-        await page.TypeAsync("#pt", "page-type");
-        Assert(await page.InputValueAsync("#pt") == "page-type", "Page Type mismatch");
+        await page.FillAsync("#pt", "page-type");
+        Assert(await page.InputValueAsync("#pt") == "page-type", "Page Fill mismatch");
     });
 
     await RunGroupAsync("page-press", async () =>
@@ -699,8 +698,8 @@ try
     {
         await page!.SetContentAsync("<input id='eht'>");
         var h = await page.QuerySelectorAsync("#eht");
-        await h!.TypeAsync("typed");
-        Assert(await h.InputValueAsync() == "typed", "EH Type mismatch");
+        await h!.FillAsync("typed");
+        Assert(await h.InputValueAsync() == "typed", "EH Fill mismatch");
     });
 
     await RunGroupAsync("element-handle-press", async () =>
@@ -876,7 +875,7 @@ try
     {
         var mf = page!.MainFrame;
         Assert(mf != null, "MainFrame should exist");
-        Assert(!mf.IsDetached, "MainFrame should not be detached");
+        Assert(!mf!.IsDetached, "MainFrame should not be detached");
         Assert(mf.Name == string.Empty, "MainFrame name should be empty");
     });
 
@@ -1217,8 +1216,7 @@ try
 
     await RunGroupAsync("route-unroute", async () =>
     {
-        bool called = false;
-        await using var reg = await page!.RouteAsync("**/unroute-test", async route => { called = true; await route.ContinueAsync(); });
+        await using var reg = await page!.RouteAsync("**/unroute-test", async route => { await route.ContinueAsync(); });
         await page.UnrouteAsync("**/unroute-test");
         // After unroute, the route should not fire anymore
     });

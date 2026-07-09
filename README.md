@@ -74,9 +74,11 @@ dotnet build src/Playwright/Playwright.csproj \
   -p:PublishAot=true \
   -p:TrimMode=full
 
-# Run tests
-BROWSER=chromium dotnet test ./src/Playwright.Tests/Playwright.Tests.csproj \
-  -c Debug -f net8.0 --logger:"console;verbosity=detailed"
+# Run AOT sample
+dotnet run --project samples/Playwright.AotSample
+
+# Run Clearcote sample
+dotnet run --project samples/Playwright.AotSample.Clearcote
 ```
 
 ---
@@ -205,7 +207,7 @@ var profile = new ClearcoteProfile("work-profile", new()
 profile.Save();
 
 var loaded = ClearcoteProfile.Load("work-profile");
-var browser2 = await loaded.LaunchAsync(playwright, new()
+var browser2 = await loaded.LaunchAsync(playwright.Chromium, new()
 {
     Headless = true,
     CacheDir = "/tmp/clearcote-cache",
@@ -390,10 +392,20 @@ Inherits all `BrowserTypeLaunchOptions`. Adds:
 
 | Sample | Description | Build command |
 |---|---|---|
-| [`samples/Playwright.AotSample`](samples/Playwright.AotSample) | Basic Chromium launch + screenshot | `dotnet publish -c Release -r linux-x64 -p:PublishAot=true` |
-| [`samples/Playwright.AotSample.Clearcote`](samples/Playwright.AotSample.Clearcote) | Full Clearcote example with fingerprinting, AI agent, Widevine | `dotnet publish -c Release -r linux-x64 -p:PublishAot=true -p:SelfContained=true` |
+| [`samples/Playwright.AotSample`](samples/Playwright.AotSample) | 186 validation groups covering all core Playwright APIs (navigation, locators, evaluate, binding, routes, clock, API request context, etc.) | `dotnet publish -c Release -r linux-x64 -p:PublishAot=true` |
+| [`samples/Playwright.AotSample.Clearcote`](samples/Playwright.AotSample.Clearcote) | Clearcote Browser validation: download, profile round-trip, launch, page evaluate, render coherence probe, screenshot | `dotnet publish -c Release -r linux-x64 -p:PublishAot=true -p:SelfContained=true` |
+
+Build and run the AOT samples:
 
 ```bash
+# Regular Playwright API sample
+dotnet publish samples/Playwright.AotSample \
+  -c Release -r linux-x64 \
+  -p:PublishAot=true
+
+./samples/Playwright.AotSample/bin/Release/net10.0/linux-x64/publish/Playwright.AotSample
+
+# Clearcote Browser sample
 dotnet publish samples/Playwright.AotSample.Clearcote \
   -c Release -r linux-x64 \
   -p:PublishAot=true -p:SelfContained=true
