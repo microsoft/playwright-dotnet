@@ -46,25 +46,25 @@ internal static partial class Clearcote
     private static readonly HashSet<string> _seenCoherenceNotes = new(StringComparer.Ordinal);
 
     private static readonly ReleaseInfo _windows = new(
-        Tag: "v0.1.0-pre.19",
+        Tag: "v0.1.0-pre.20",
         Version: "149.0.7827.114",
         Asset: "clearcote-149.0.7827.114-windows-x64.zip",
-        Url: "https://github.com/clearcotelabs/clearcote-browser/releases/download/v0.1.0-pre.19/clearcote-149.0.7827.114-windows-x64.zip",
-        Sha256: "da47f325053a98130baf6f4907e13ba5135d37645fb5c150e59c8081e7df48b3",
+        Url: "https://github.com/clearcotelabs/clearcote-browser/releases/download/v0.1.0-pre.20/clearcote-149.0.7827.114-windows-x64.zip",
+        Sha256: "94701098015c56edd8fac0bf2f767e383c7be89615a1731820de3fa7c71a2f10",
         ExeSha256: "09a9f5ed46be45b54babc91872256fcdd5ef61cef6bf65cbec3928cbb38ee17a",
-        Size: 242656951,
+        Size: 242658604,
         Archive: "zip",
         Binary: "chrome.exe",
         AssetGlob: "windows-x64");
 
     private static readonly ReleaseInfo _linux = new(
-        Tag: "v0.1.0-pre.19",
+        Tag: "v0.1.0-pre.20",
         Version: "149.0.7827.114",
         Asset: "clearcote-149.0.7827.114-linux-x64.tar.xz",
-        Url: "https://github.com/clearcotelabs/clearcote-browser/releases/download/v0.1.0-pre.19/clearcote-149.0.7827.114-linux-x64.tar.xz",
-        Sha256: "1be5a9f83f8f8217d97caf52553b5fe8e24a3360dfc83c471ba91d2d95a97ac1",
-        ExeSha256: "7c5ea6ce563bd6c12642f12b1c85d308c09096814e9d7fcd59dd360fdfe6bb63",
-        Size: 146861776,
+        Url: "https://github.com/clearcotelabs/clearcote-browser/releases/download/v0.1.0-pre.20/clearcote-149.0.7827.114-linux-x64.tar.xz",
+        Sha256: "d8ec083ee9c21e55cde406cc3a633f8bbba779690f56a60c38d216f11d9ce735",
+        ExeSha256: "386a47899d28297639de4d7cef134c2341ad203bc92e13f21f62a083d8694c51",
+        Size: 146841832,
         Archive: "tar.xz",
         Binary: "chrome",
         AssetGlob: "linux-x64");
