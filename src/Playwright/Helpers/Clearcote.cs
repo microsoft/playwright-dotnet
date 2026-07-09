@@ -129,7 +129,8 @@ internal static partial class Clearcote
         EmitCoherenceWarnings(settings, options.Proxy, options.Headless, options.Args);
         var (proxyArgs, proxy) = ResolveProxy(options.Proxy, settings.Quiet);
         var executablePath = await ResolveExecutablePathAsync(settings.CacheDir, settings.Quiet, settings.AutoUpdate, honorEnvironmentBinary: true).ConfigureAwait(false);
-        var args = AssembleArgs(settings, proxyArgs, options.Args, options.Proxy);
+        var args = new List<string>(AssembleArgs(settings, proxyArgs, options.Args, options.Proxy));
+        InstallHeadedViewport(args, options.Headless == false, settings.Humanize, null);
         return new LaunchPatch(
             executablePath,
             args,
@@ -138,7 +139,8 @@ internal static partial class Clearcote
             false,
             options.Headless == false,
             settings.Humanize,
-            settings.ShowCursor);
+            settings.ShowCursor,
+            FontLaunchEnv(executablePath, options.Env));
     }
 
     internal static async Task<LaunchPatch> PatchAsync(string userDataDir, BrowserTypeLaunchPersistentContextOptions options)
@@ -166,7 +168,8 @@ internal static partial class Clearcote
             }
         }
 
-        var args = AssembleArgs(settings, proxyArgs, userArgs, options.Proxy);
+        var args = new List<string>(AssembleArgs(settings, proxyArgs, userArgs, options.Proxy));
+        InstallHeadedViewport(args, options.Headless == false, settings.Humanize, options.ViewportSize);
         return new LaunchPatch(
             executablePath,
             args,
@@ -175,7 +178,8 @@ internal static partial class Clearcote
             options.Headless == false && options.ViewportSize == null,
             options.Headless == false,
             settings.Humanize,
-            settings.ShowCursor);
+            settings.ShowCursor,
+            FontLaunchEnv(executablePath, options.Env));
     }
 
     private static IEnumerable<string>? DefaultIgnoreDefaultArgs(IEnumerable<string>? ignoreDefaultArgs, bool? ignoreAllDefaultArgs)
@@ -186,6 +190,159 @@ internal static partial class Clearcote
         }
 
         return new[] { "--enable-automation" };
+    }
+
+    /// <summary>
+    /// On Linux, point FONTCONFIG_FILE at the bundled metric-compatible font clones (Segoe UI -> Selawik,
+    /// Arial -> Arimo, etc.). Returns the COMPLETE env map (process env + font overlay + user env) so
+    /// Playwright's env= replacement doesn't lose the host environment. Returns null when there is nothing
+    /// to add (preserve Playwright's default env behavior).
+    /// </summary>
+    internal static Dictionary<string, string?>? FontLaunchEnv(string executablePath, IEnumerable<KeyValuePair<string, string>>? userEnv)
+    {
+        var result = new Dictionary<string, string?>();
+        if (OperatingSystem.IsLinux())
+        {
+            var fontsDir = Path.Combine(Path.GetDirectoryName(executablePath) ?? string.Empty, "fonts");
+            var template = Path.Combine(fontsDir, "fonts.conf.template");
+            if (File.Exists(template))
+            {
+                try
+                {
+                    var cacheDir = Path.Combine(Path.GetTempPath(), "cc-fc-cache");
+                    Directory.CreateDirectory(cacheDir);
+                    var templateText = File.ReadAllText(template)
+                        .Replace("@FONTS_DIR@", fontsDir)
+                        .Replace("@CACHE_DIR@", cacheDir);
+                    var confPath = Path.Combine(fontsDir, "fonts.generated.conf");
+                    File.WriteAllText(confPath, templateText);
+                    result["FONTCONFIG_FILE"] = confPath;
+                }
+                catch
+                {
+                }
+            }
+        }
+
+        if (result.Count == 0 && userEnv == null)
+        {
+            return null;
+        }
+
+        // Start with current process env
+        foreach (var key in Environment.GetEnvironmentVariables().Keys)
+        {
+            var keyStr = key?.ToString();
+            if (keyStr != null)
+            {
+                result.TryAdd(keyStr, Environment.GetEnvironmentVariable(keyStr));
+            }
+        }
+
+        // Overlay user env (caller wins)
+        if (userEnv != null)
+        {
+            foreach (var kv in userEnv)
+            {
+                result[kv.Key] = kv.Value;
+            }
+        }
+
+        return result;
+    }
+
+    /// <summary>
+    /// Check whether an exception signals the Windows first-launch antivirus-scan race
+    /// (a just-extracted chrome.exe failing with "spawn UNKNOWN" / "side-by-side" while AV
+    /// scans the SxS assembly member). Pass-through <c>false</c> on non-Windows.
+    /// </summary>
+    internal static bool IsWinLaunchRace(Exception ex)
+    {
+        if (!OperatingSystem.IsWindows())
+        {
+            return false;
+        }
+
+        var msg = ex.Message.ToLowerInvariant();
+        return msg.Contains("spawn unknown") || msg.Contains("side-by-side") || msg.Contains("side by side");
+    }
+
+    /// <summary>
+    /// When launching headed with humanize enabled and no explicit viewport, add
+    /// window position <c>--window-size=0,0,W,H</c> so the browser window appears
+    /// without visible OS window decorations (matching the frameless kiosk look).
+    /// Mirrors the Node SDK <c>installHeadedViewport()</c>.
+    /// </summary>
+    internal static void InstallHeadedViewport(List<string> args, bool headed, bool humanize, ViewportSize? viewport)
+    {
+        if (!headed || viewport != null || !humanize)
+        {
+            return;
+        }
+
+        var wIdx = args.FindIndex(static a => a.StartsWith("--window-size=", StringComparison.Ordinal));
+        if (wIdx >= 0)
+        {
+            var value = args[wIdx].Split('=', 2)[1];
+            args[wIdx] = $"--window-size=0,0,{value}";
+        }
+        else
+        {
+            args.Add("--window-size=0,0,1280,720");
+        }
+    }
+
+    /// <summary>
+    /// Retry a browser launch on Windows when the freshly-extracted binary is still
+    /// being scanned by Windows Defender (spawn UNKNOWN / side-by-side error).
+    /// After 3 failed attempts, copies the browser to a temp directory and retries
+    /// once more with the copy, bypassing the AV lock.
+    /// Mirrors the Node SDK <c>winAvRetry()</c>.
+    /// </summary>
+    internal static async Task<T> WinAvRetryAsync<T>(Func<string, Task<T>> launch, string executablePath)
+    {
+        if (!OperatingSystem.IsWindows())
+        {
+            return await launch(executablePath).ConfigureAwait(false);
+        }
+
+        for (var i = 0; i < 3; i++)
+        {
+            try
+            {
+                return await launch(executablePath).ConfigureAwait(false);
+            }
+            catch (Exception ex) when (IsWinLaunchRace(ex))
+            {
+                if (i == 2)
+                {
+                    // Fallback: copy to temp to bypass AV lock
+                    var exeDir = Path.GetDirectoryName(executablePath) ?? string.Empty;
+                    var recoverDir = Path.Combine(Path.GetTempPath(), $"cc-recover-{Guid.NewGuid():n}");
+                    Directory.CreateDirectory(recoverDir);
+                    foreach (var entry in Directory.GetFileSystemEntries(exeDir))
+                    {
+                        var dest = Path.Combine(recoverDir, Path.GetFileName(entry));
+                        if (Directory.Exists(entry))
+                        {
+                            Directory.CreateDirectory(dest);
+                        }
+                        else
+                        {
+                            File.Copy(entry, dest, overwrite: true);
+                        }
+                    }
+
+                    var recoverExe = Path.Combine(recoverDir, Path.GetFileName(executablePath));
+                    return await launch(recoverExe).ConfigureAwait(false);
+                }
+
+                await Task.Delay(800 * (i + 1)).ConfigureAwait(false);
+            }
+        }
+
+        // Should not reach here
+        throw new InvalidOperationException("winAvRetry: all retries exhausted");
     }
 
     private static IEnumerable<string> AssembleArgs(
@@ -1639,7 +1796,8 @@ internal static partial class Clearcote
         bool NoDefaultViewport,
         bool Headed,
         bool Humanize,
-        bool ShowCursor);
+        bool ShowCursor,
+        Dictionary<string, string?>? EnvironmentVariables = null);
 
     private sealed record ReleaseInfo(
         string Tag,

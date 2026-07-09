@@ -3,7 +3,7 @@
 ![Chromium 149](https://img.shields.io/badge/Chromium-149.0.7827-45ba4b)
 ![Firefox 151](https://img.shields.io/badge/Firefox-151.0-45ba4b)
 ![WebKit 26.5](https://img.shields.io/badge/WebKit-26.5-45ba4b)
-![Clearcote v0.1.0-pre.18](https://img.shields.io/badge/Clearcote-v0.1.0--pre.18-blue)
+![Clearcote v0.1.0-pre.19](https://img.shields.io/badge/Clearcote-v0.1.0--pre.19-blue)
 
 A **NativeAOT-compatible** fork of [playwright-dotnet](https://github.com/microsoft/playwright-dotnet) targeting `net10.0` with full trimming and ahead-of-time compilation — zero reflection, zero build warnings, zero runtime dynamic code.
 
@@ -12,14 +12,14 @@ A **NativeAOT-compatible** fork of [playwright-dotnet](https://github.com/micros
 | Chromium 149 | ✅ | ✅ | ✅ |
 | WebKit 26.5 | ✅ | ✅ | ✅ |
 | Firefox 151 | ✅ | ✅ | ✅ |
-| [Clearcote] v0.1.0-pre.18 | ✅ | — | ✅ |
+| [Clearcote] v0.1.0-pre.19 | ✅ | — | ✅ |
 
 [Clearcote]: https://github.com/clearcotelabs/clearcote-browser
 
 ## Install
 
 ```bash
-dotnet add package Playwright.Clearcote --version 1.0.0
+dotnet add package Playwright.Clearcote --version 1.0.3
 ```
 
 ## Quick start
@@ -56,99 +56,182 @@ Every `Activator.CreateInstance`, `MakeGenericType`, `GetProperties()`, `Convert
 
 ## Clearcote Browser
 
-This fork bundles [Clearcote Browser](https://github.com/clearcotelabs/clearcote-browser) — an open-source, fingerprint-resistant Chromium build. The binary is auto-downloaded, SHA-256 verified, and cached on first use.
+This fork bundles [Clearcote Browser](https://github.com/clearcotelabs/clearcote-browser) — an open-source, fingerprint-resistant Chromium build targeting `net10.0` NativeAOT.
 
 ```cs
-using System;
-using System.IO;
 using Microsoft.Playwright;
 
-Console.WriteLine("Playwright .NET + Clearcote Browser — NativeAOT sample");
-Console.WriteLine();
-
-var cacheDir = Path.Combine(Path.GetTempPath(), "clearcote-cache");
+// 1. Download browser binary (cached after first use)
 var downloadPath = await ClearcoteBrowser.DownloadAsync(new()
 {
-    CacheDir = cacheDir,
+    CacheDir = "/tmp/clearcote-cache",
     Quiet = true,
 });
-Console.WriteLine($"Clearcote browser binary: {downloadPath}");
+Console.WriteLine($"Downloaded: {downloadPath}");
 
-var launchOptions = new ClearcoteLaunchOptions
+// 2. Create Playwright and launch Clearcote with full fingerprint config
+var playwright = await Playwright.CreateAsync();
+var browser = await ClearcoteBrowser.LaunchAsync(playwright, new()
 {
-    Headless = true,
-    Fingerprint = "playwright-aot-sample",
+    Headless = false,
+    ClearcotePlatform = ClearcotePlatform.Windows,
     Brand = "Chrome",
     BrandVersion = "149",
+    Fingerprint = "my-fingerprint-seed",
+
+    // TLS ClientHello
     TlsProfile = ClearcoteTlsProfile.MatchPersona,
+
+    // Hardware
     HardwareConcurrency = 8,
-    DisableGpuFingerprint = true,
-    FingerprintNoise = false,
+    DisableGpuFingerprint = false,
+
+    // Geo-location
+    Geoip = true,                       // auto-resolve from proxy egress
+    Location = "US,New York",           // or manual
+    Timezone = "America/New_York",
+    AcceptLanguage = "en-US,en;q=0.9",
+
+    // WebRTC
+    WebrtcIp = "192.168.1.100",
+
+    // Humanized input
     Humanize = true,
-    CacheDir = cacheDir,
+    ShowCursor = true,
+
+    // Canvas bridge (remote GPU)
+    CanvasBridge = new()
+    {
+        Url = "ws://canvas-bridge:9090",
+        Auth = "token-secret",
+        Mode = "passthrough",
+    },
+
+    // Storage
+    StorageQuota = 500_000_000,          // 500 MB
+
+    // Cache & downloads
+    CacheDir = "/tmp/clearcote-cache",
     Quiet = true,
-};
+});
 
-var playwright = await Playwright.CreateAsync();
-var browser = await ClearcoteBrowser.LaunchAsync(playwright, launchOptions);
 var page = await browser.NewPageAsync();
+await page.GotoAsync("https://example.com");
 
-var html = """
-<!doctype html>
-<title>Clearcote NativeAOT</title>
-<main>
-  <h1>Clearcote NativeAOT smoke</h1>
-  <p>Offline page used to validate launch, JavaScript evaluation, WebGL probing, and screenshots.</p>
-</main>
-""";
-await page.GotoAsync(
-    "data:text/html;charset=utf-8," + Uri.EscapeDataString(html),
-    new() { WaitUntil = WaitUntilState.DOMContentLoaded });
-Console.WriteLine($"Page title: {await page.TitleAsync()}");
-Console.WriteLine($"User agent: {await page.EvaluateAsync<string>("() => navigator.userAgent")}");
-
+// 3. Check render coherence (software vs GPU)
 var verdict = await ClearcoteBrowser.CheckRenderCoherenceAsync(page);
-Console.WriteLine($"Render coherent on this host: {verdict.Coherent}");
+Console.WriteLine($"Coherent: {verdict.Coherent}");
 Console.WriteLine($"  Vendor:   {verdict.Vendor}");
 Console.WriteLine($"  Renderer: {verdict.Renderer}");
 Console.WriteLine($"  WebGL:    {verdict.Webgl}");
-foreach (var warning in verdict.Warnings)
-{
-    Console.WriteLine($"  Warning:  {warning}");
-}
+foreach (var w in verdict.Warnings) Console.WriteLine($"  Warning:  {w}");
 
-await page.ScreenshotAsync(new() { Path = "clearcote-screenshot.png", FullPage = true });
-Console.WriteLine("Screenshot saved to clearcote-screenshot.png");
-
+// 4. Screenshot
+await page.ScreenshotAsync(new() { Path = "screenshot.png" });
 await browser.CloseAsync();
-Console.WriteLine("Done.");
+
+// 5. Save / load profiles
+var profile = new ClearcoteProfile("work-profile", new()
+{
+    Fingerprint = "work-laptop",
+    Brand = "Chrome",
+    BrandVersion = "149",
+    Humanize = true,
+});
+profile.Save();                          // persists to CLEARCOTE_PROFILE_DIR
+var loaded = ClearcoteProfile.Load("work-profile");
+var browser2 = await loaded.LaunchAsync(playwright, new()
+{
+    Headless = true,
+    CacheDir = "/tmp/clearcote-cache",
+});
+Console.WriteLine($"Loaded profile: {loaded.Name}");
+await browser2.CloseAsync();
+
+// 6. Persistent context with Widevine DRM
+var context = await ClearcoteBrowser.LaunchPersistentContextAsync(
+    playwright, "/tmp/clearcote-userdata", new()
+    {
+        Fingerprint = "drm-profile",
+        Widevine = true,            // auto-fetch + seed Widevine CDM
+        Headless = false,
+    });
+var drmPage = await context.NewPageAsync();
+await drmPage.GotoAsync("https://bitmovin.com/demos/drm");
+Console.WriteLine($"DRM page: {await drmPage.TitleAsync()}");
+await context.CloseAsync();
+
+// 7. AI browser agent
+var agentCtx = await ClearcoteBrowser.LaunchAgentAsync(playwright, new()
+{
+    Headless = true,
+    AgentLlmUrl = "https://openrouter.ai/api/v1/chat/completions",
+    AgentLlmKey = "sk-or-v1-...",
+    AgentModel = "openai/gpt-4o",
+    AgentToolMode = "auto",
+    AgentTyping = "human",
+});
+var agentPage = await agentCtx.NewPageAsync();
+var result = await ClearcoteBrowser.RunAgentTaskAsync(agentPage,
+    "Navigate to github.com and search for playwright-dotnet",
+    new() { MaxSteps = 20 });
+Console.WriteLine($"Agent success: {result.Success}");
+Console.WriteLine($"  Final: {result.FinalText}");
+foreach (var step in result.Steps)
+    Console.WriteLine($"  [{step.Status}] {step.Action}");
+await agentCtx.CloseAsync();
+
+playwright.Dispose();
 ```
 
 Use `ClearcoteBrowser.LaunchAsync(playwright, options)` for the shortest path, or pass `ClearcoteLaunchOptions` to standard `playwright.Chromium.LaunchAsync()`; patching is automatic. Set `CLEARCOTE=1` to use Clearcote without code changes.
 
-The pinned browser release is `v0.1.0-pre.18`. `CLEARCOTE_AUTO_UPDATE=1` / `AutoUpdate = true` is opt-in and falls back to the pinned browser when the latest GitHub release is SDK-only or has no compatible browser asset.
+The pinned browser release is `v0.1.0-pre.19`. `CLEARCOTE_AUTO_UPDATE=1` / `AutoUpdate = true` is opt-in and falls back to the pinned browser when the latest GitHub release is SDK-only or has no compatible browser asset.
 
 ### Clearcote features
 
-- **Fingerprint masking** — seed-derived persona for WebGL, Canvas, audio, fonts, timezone, geolocation, WebRTC, TLS ClientHello
-- **Canvas bridge** — remote real-GPU rendering for canvas/WebGL readbacks
-- **Humanized input** — Bezier mouse paths, multi-peak velocity profile, fat-finger typos
-- **In-browser AI agent** — autonomous browser tasks via OpenRouter LLM
-- **Persistent profiles** — save/load personas with full fingerprint + canvas bridge config
-- **Render coherence probing** — detect software rasterizer / GPU family mismatches
-- **Widevine CDM** — fetch and seed Google's CDM for DRM playback
-- **Geo-IP auto-resolution** — fill timezone/language/location/WebRTC IP from proxy egress
+| Feature | API | Description |
+|---------|-----|-------------|
+| **Fingerprint masking** | `ClearcoteLaunchOptions` (`Fingerprint`, `Brand`, `BrandVersion`, `Platform`) | Seed-derived persona for WebGL, Canvas, audio, fonts, timezone, geolocation, WebRTC, TLS ClientHello |
+| **Platform personas** | `ClearcotePlatform` (Windows/Linux/Macos/Android) | Full platform fingerprint suite (UA, TLS, screen, touch, window size) |
+| **Canvas bridge** | `ClearcoteCanvasBridgeOptions` | Remote real-GPU rendering for canvas/WebGL readbacks (WebSocket relay) |
+| **Humanized input** | `Humanize = true` | Bezier mouse paths, multi-peak velocity profile, fat-finger typos |
+| **AI browser agent** | `LaunchAgentAsync` / `RunAgentTaskAsync` | Autonomous browser tasks via OpenRouter LLM (GPT-4o, Claude, etc.) |
+| **Persistent profiles** | `ClearcoteProfile` (Save/Load/ListProfiles) | Save/load personas with full fingerprint + canvas bridge config |
+| **Render coherence** | `CheckRenderCoherenceAsync` | Detect software rasterizer / GPU family mismatches |
+| **Widevine DRM** | `Widevine = true` | Auto-fetch and seed Google's CDM for DRM playback (Chrome ≥ 149 required) |
+| **GeoIP auto-resolution** | `Geoip = true` | Fill timezone/language/location/WebRTC IP from proxy egress IP |
+| **Fingerprint noise** | `FingerprintNoise` | Add sub-pixel jitter to Canvas/WebGL/audio fingerprints per session |
+| **Storage quota** | `StorageQuota` | Limit IndexedDB / localStorage to N bytes |
+| **Screenshot probe** | `CheckRenderCoherenceAsync(page).Screenshot` | Visual renderer detection via WebGL + Canvas2D snapshots |
 
 ### Environment variables
 
 | Variable | Purpose |
 |----------|---------|
-| `CLEARCOTE=1` | Opt-in without ClearcoteLaunchOptions |
+| `CLEARCOTE=1` | Opt-in without `ClearcoteLaunchOptions` |
 | `CLEARCOTE_BINARY` | Direct path to Clearcote binary (bypasses download) |
 | `CLEARCOTE_CACHE` | Override download cache directory |
 | `CLEARCOTE_AUTO_UPDATE=1` | Auto-resolve latest GitHub release |
-| `CLEARCOTE_PROFILE_DIR` | Override profile storage directory |
+| `CLEARCOTE_PROFILE_DIR` | Override profile storage directory (default `~/.clearcote/profiles`) |
 | `CLEARCOTE_NO_WARN=1` | Suppress coherence warnings |
+| `PLAYWRIGHT_BROWSERS_PATH` | Common Playwright browser cache (fallback for `CacheDir`) |
+
+### Platform support
+
+| `ClearcotePlatform` | TLS ClientHello | User-Agent | Window size | Touch |
+|---------------------|:---------------:|:----------:|:-----------:|:-----:|
+| `Windows` | Windows Chrome | `Windows NT 10.0` | `1280,720` | — |
+| `Linux` | Linux Chrome | `X11; Linux x86_64` | `1280,720` | — |
+| `Macos` | macOS Chrome | `Macintosh; Intel Mac OS X` | `1280,720` | — |
+| `Android` | Android Chrome | `Linux; Android 14` | `412,915` | Multi-touch |
+
+### TLS profiles
+
+| `ClearcoteTlsProfile` | Effect |
+|-----------------------|--------|
+| `MatchPersona` / `Auto` | Grease + cipher suites match the persona's claimed Chrome version |
+| `Native` | Keep the build's native TLS ClientHello unchanged |
 
 ## Samples
 
