@@ -48,25 +48,25 @@ internal static partial class Clearcote
     private static readonly HashSet<string> _seenCoherenceNotes = new(StringComparer.Ordinal);
 
     private static readonly ReleaseInfo _windows = new(
-        Tag: "v0.1.0-pre.20",
+        Tag: "v0.1.0-pre.21",
         Version: "149.0.7827.114",
         Asset: "clearcote-149.0.7827.114-windows-x64.zip",
-        Url: "https://github.com/clearcotelabs/clearcote-browser/releases/download/v0.1.0-pre.20/clearcote-149.0.7827.114-windows-x64.zip",
-        Sha256: "94701098015c56edd8fac0bf2f767e383c7be89615a1731820de3fa7c71a2f10",
+        Url: "https://github.com/clearcotelabs/clearcote-browser/releases/download/v0.1.0-pre.21/clearcote-149.0.7827.114-windows-x64.zip",
+        Sha256: "79b03d2d875b374970b2d54eae54f77070eba06b6a446dc163420854ec068c4d",
         ExeSha256: "09a9f5ed46be45b54babc91872256fcdd5ef61cef6bf65cbec3928cbb38ee17a",
-        Size: 242658604,
+        Size: 242655762,
         Archive: "zip",
         Binary: "chrome.exe",
         AssetGlob: "windows-x64");
 
     private static readonly ReleaseInfo _linux = new(
-        Tag: "v0.1.0-pre.20",
+        Tag: "v0.1.0-pre.21",
         Version: "149.0.7827.114",
         Asset: "clearcote-149.0.7827.114-linux-x64.tar.xz",
-        Url: "https://github.com/clearcotelabs/clearcote-browser/releases/download/v0.1.0-pre.20/clearcote-149.0.7827.114-linux-x64.tar.xz",
-        Sha256: "d8ec083ee9c21e55cde406cc3a633f8bbba779690f56a60c38d216f11d9ce735",
-        ExeSha256: "386a47899d28297639de4d7cef134c2341ad203bc92e13f21f62a083d8694c51",
-        Size: 146841832,
+        Url: "https://github.com/clearcotelabs/clearcote-browser/releases/download/v0.1.0-pre.21/clearcote-149.0.7827.114-linux-x64.tar.xz",
+        Sha256: "5e7241a3e90033bc84f6079821829e99a6e6f0f6479eaa291d8b6590363aa292",
+        ExeSha256: "dd5aef845b47f63ebf84d769cc349dae69178639fe5c703fc52779c5a0606cce",
+        Size: 146851212,
         Archive: "tar.xz",
         Binary: "chrome",
         AssetGlob: "linux-x64");
@@ -159,6 +159,7 @@ internal static partial class Clearcote
             options.Headless == false,
             settings.Humanize,
             settings.ShowCursor,
+            settings.Fingerprint,
             FontLaunchEnv(executablePath, options.Env));
     }
 
@@ -198,6 +199,7 @@ internal static partial class Clearcote
             options.Headless == false,
             settings.Humanize,
             settings.ShowCursor,
+            settings.Fingerprint,
             FontLaunchEnv(executablePath, options.Env));
     }
 
@@ -1994,6 +1996,7 @@ internal static partial class Clearcote
         bool Headed,
         bool Humanize,
         bool ShowCursor,
+        string? HumanizeSeed,
         Dictionary<string, string?>? EnvironmentVariables = null);
 
     private sealed record ReleaseInfo(

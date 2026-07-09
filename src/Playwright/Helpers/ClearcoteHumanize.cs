@@ -1,55 +1,15 @@
-/*
- * MIT License
- *
- * Copyright (c) Microsoft Corporation.
- *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
- * of this software and associated documentation files (the "Software"), to deal
- * in the Software without restriction, including without limitation the rights
- * to use, copy, modify, merge, publish, distribute, sublicense, and / or sell
- * copies of the Software, and to permit persons to whom the Software is
- * furnished to do so, subject to the following conditions:
- *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
- * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
- * SOFTWARE.
- */
-
 using System;
 using System.Collections.Generic;
-using System.Security.Cryptography;
+using System.Text.Json;
 using System.Threading.Tasks;
 using Microsoft.Playwright.Core;
 
-#pragma warning disable SA1204
-#pragma warning disable SA1407
-#pragma warning disable SA1649
+#pragma warning disable SA1407 // dense math for motion model
+#pragma warning disable SA1117 // compact parameter placement
+#pragma warning disable SA1649 // first type name != file name
 #pragma warning disable RCS1007
 
 namespace Microsoft.Playwright.Helpers;
-
-internal sealed class ClearcoteHumanizeState
-{
-    internal ClearcoteHumanizeState(bool humanize, bool showCursor)
-    {
-        Humanize = humanize;
-        ShowCursor = showCursor;
-        X = ClearcoteHumanize.Rand(140, 380);
-        Y = ClearcoteHumanize.Rand(90, 240);
-    }
-
-    internal bool Humanize { get; }
-
-    internal bool ShowCursor { get; }
-
-    internal double X { get; set; }
-
-    internal double Y { get; set; }
-}
 
 internal static class ClearcoteHumanize
 {
@@ -86,34 +46,23 @@ internal static class ClearcoteHumanize
     internal static double Rand(double min, double max)
         => min + (NextDouble() * (max - min));
 
-    internal static async Task GlideAsync(Page page, ClearcoteHumanizeState state, float x, float y, double jitter = 0.6)
+    internal static async Task GlideAsync(Page page, ClearcoteHumanizeState state, double x, double y)
     {
-        var x0 = state.X;
-        var y0 = state.Y;
-        var dx = x - x0;
-        var dy = y - y0;
-        var dist = Math.Sqrt(dx * dx + dy * dy);
-        var steps = (int)Math.Floor(Math.Max(10, Math.Min(38, dist / 14)));
-        var nx = dist > 0.000001 ? -dy / dist : 0;
-        var ny = dist > 0.000001 ? dx / dist : 0;
-        var bow = ((NextDouble() * 0.22) - 0.11) * dist;
-        var cp1x = x0 + dx * 0.33 + nx * bow;
-        var cp1y = y0 + dy * 0.33 + ny * bow;
-        var cp2x = x0 + dx * 0.66 + nx * bow;
-        var cp2y = y0 + dy * 0.66 + ny * bow;
-
-        for (var i = 1; i <= steps; i++)
+        if (state.Persona == null)
         {
-            var t = (double)i / steps;
-            var e = t * t * (3 - 2 * t);
-            var mt = 1 - e;
-            var bx = mt * mt * mt * x0 + 3 * mt * mt * e * cp1x + 3 * mt * e * e * cp2x + e * e * e * x;
-            var by = mt * mt * mt * y0 + 3 * mt * mt * e * cp1y + 3 * mt * e * e * cp2y + e * e * e * y;
-            await DirectMoveAsync(page, (float)(bx + Gaussian() * jitter), (float)(by + Gaussian() * jitter)).ConfigureAwait(false);
-            await Task.Delay((int)Rand(7, 20)).ConfigureAwait(false);
+            state.X = x;
+            state.Y = y;
+            return;
         }
-
-        await DirectMoveAsync(page, x, y).ConfigureAwait(false);
+        var steps = ClearcoteMotion.PlanMove(
+            new ClearcoteMotion.MotionPoint(state.X, state.Y),
+            new ClearcoteMotion.MotionPoint(x, y),
+            state.Persona);
+        foreach (var s in steps)
+        {
+            await DirectMoveAsync(page, (float)s.X, (float)s.Y).ConfigureAwait(false);
+            await Task.Delay((int)Math.Round(s.SleepMs)).ConfigureAwait(false);
+        }
         state.X = x;
         state.Y = y;
     }
@@ -122,7 +71,8 @@ internal static class ClearcoteHumanize
     {
         await GlideAsync(page, state, x, y).ConfigureAwait(false);
         await Task.Delay((int)Rand(40, 130)).ConfigureAwait(false);
-        await DirectClickAsync(page, x, y, button, clickCount, delay).ConfigureAwait(false);
+        var hold = state.Persona != null ? ClearcoteMotion.ClickHold(state.Persona) : (double?)null;
+        await DirectClickAsync(page, x, y, button, clickCount, delay ?? (float?)hold).ConfigureAwait(false);
     }
 
     internal static async Task WheelAsync(Page page, float deltaX, float deltaY)
@@ -151,7 +101,7 @@ internal static class ClearcoteHumanize
         }
     }
 
-    internal static async Task TypeTextAsync(Page page, string text)
+    internal static async Task TypeTextAsync(Page page, ClearcoteHumanizeState state, string text)
     {
         for (var i = 0; i < text.Length; i++)
         {
@@ -164,7 +114,8 @@ internal static class ClearcoteHumanize
                 await Task.Delay((int)Rand(80, 200)).ConfigureAwait(false);
             }
 
-            await DirectTypeAsync(page, ch.ToString()).ConfigureAwait(false);
+            var dwell = state.Persona != null ? ClearcoteMotion.KeyDwell(state.Persona) : (double?)null;
+            await DirectPressAsync(page, ch.ToString(), (float?)dwell).ConfigureAwait(false);
             if (i < text.Length - 1)
             {
                 await Task.Delay((int)(NextDouble() < 0.06 ? Rand(180, 450) : Rand(45, 150))).ConfigureAwait(false);
@@ -247,7 +198,7 @@ internal static class ClearcoteHumanize
         await Task.Delay((int)Rand(30, 80)).ConfigureAwait(false);
         await DirectPressAsync(page, "Backspace", null).ConfigureAwait(false);
         await Task.Delay((int)Rand(40, 120)).ConfigureAwait(false);
-        await TypeTextAsync(page, value).ConfigureAwait(false);
+        await TypeTextAsync(page, page.ClearcoteHumanizeState!, value).ConfigureAwait(false);
         return true;
     }
 
@@ -267,7 +218,7 @@ internal static class ClearcoteHumanize
         var page = (Page)frame.Page;
         await ClickAsync(page, page.ClearcoteHumanizeState!, point.Value.X, point.Value.Y, MouseButton.Left, 1, null).ConfigureAwait(false);
         await Task.Delay((int)Rand(40, 120)).ConfigureAwait(false);
-        await TypeTextAsync(page, text).ConfigureAwait(false);
+        await TypeTextAsync(page, page.ClearcoteHumanizeState!, text).ConfigureAwait(false);
         return true;
     }
 
@@ -287,7 +238,8 @@ internal static class ClearcoteHumanize
         var page = (Page)frame.Page;
         await ClickAsync(page, page.ClearcoteHumanizeState!, point.Value.X, point.Value.Y, MouseButton.Left, 1, null).ConfigureAwait(false);
         await Task.Delay((int)Rand(40, 120)).ConfigureAwait(false);
-        await DirectPressAsync(page, key, options?.Delay).ConfigureAwait(false);
+        var dwell = page.ClearcoteHumanizeState?.Persona != null ? ClearcoteMotion.KeyDwell(page.ClearcoteHumanizeState.Persona) : (double?)null;
+        await DirectPressAsync(page, key, options?.Delay ?? (float?)dwell).ConfigureAwait(false);
         return true;
     }
 
@@ -307,14 +259,49 @@ internal static class ClearcoteHumanize
 
         var page = (Page)frame.Page;
         var state = page.ClearcoteHumanizeState!;
+        var (grabMs, releaseMs) = state.Persona != null
+            ? ClearcoteMotion.DragDwell(state.Persona)
+            : (Rand(130, 360), Rand(90, 230));
         await GlideAsync(page, state, sourcePoint.Value.X, sourcePoint.Value.Y).ConfigureAwait(false);
         await Task.Delay((int)Rand(100, 200)).ConfigureAwait(false);
         await DirectDownAsync(page).ConfigureAwait(false);
-        await Task.Delay((int)Rand(80, 150)).ConfigureAwait(false);
+        await Task.Delay((int)grabMs).ConfigureAwait(false);
         await GlideAsync(page, state, targetPoint.Value.X, targetPoint.Value.Y).ConfigureAwait(false);
-        await Task.Delay((int)Rand(80, 150)).ConfigureAwait(false);
+        await Task.Delay((int)releaseMs).ConfigureAwait(false);
         await DirectUpAsync(page).ConfigureAwait(false);
         return true;
+    }
+
+    internal static async Task AmbientMotionAsync(Page page, ClearcoteHumanizeState state, double ms = 1200)
+    {
+        if (state.Persona == null) return;
+        try
+        {
+            var vp = await page.EvaluateAsync<JsonElement?>("({width: window.innerWidth, height: window.innerHeight})", null).ConfigureAwait(false);
+            double vw = 1280, vh = 800;
+            if (vp.HasValue)
+            {
+                vw = vp.Value.TryGetProperty("width", out var w) ? w.GetDouble() : 1280;
+                vh = vp.Value.TryGetProperty("height", out var h) ? h.GetDouble() : 800;
+            }
+            var steps = ClearcoteMotion.PlanAmbient(
+                new ClearcoteMotion.MotionPoint(state.X, state.Y),
+                new ClearcoteMotion.MotionViewport(vw, vh),
+                state.Persona, ms);
+            foreach (var s in steps)
+            {
+                await DirectMoveAsync(page, (float)s.X, (float)s.Y).ConfigureAwait(false);
+                await Task.Delay((int)Math.Round(s.SleepMs)).ConfigureAwait(false);
+            }
+            if (steps.Count > 0)
+            {
+                state.X = steps[steps.Count - 1].X;
+                state.Y = steps[steps.Count - 1].Y;
+            }
+        }
+        catch
+        {
+        }
     }
 
     private static bool CanTarget(Frame frame, bool? trial, bool? force, IEnumerable<KeyboardModifier>? modifiers)
@@ -350,9 +337,17 @@ internal static class ClearcoteHumanize
 
         if (position != null)
         {
-            return (second.X + position.X, second.Y + position.Y);
+            return ((float)(second.X + position.X), (float)(second.Y + position.Y));
         }
 
+        if (((Page)frame.Page).ClearcoteHumanizeState?.Persona is ClearcoteMotion.Persona persona)
+        {
+            var cp = ClearcoteMotion.ClickPoint(
+                new ClearcoteMotion.MotionBox(second.X, second.Y, second.Width, second.Height),
+                new ClearcoteMotion.MotionPoint(((Page)frame.Page).ClearcoteHumanizeState!.X, ((Page)frame.Page).ClearcoteHumanizeState!.Y),
+                persona);
+            return ((float)cp.X, (float)cp.Y);
+        }
         return ((float)(second.X + second.Width * Rand(0.3, 0.7)), (float)(second.Y + second.Height * Rand(0.3, 0.7)));
     }
 
@@ -392,17 +387,17 @@ internal static class ClearcoteHumanize
             ["deltaY"] = deltaY,
         });
 
-    private static Task DirectTypeAsync(Page page, string text)
-        => page.SendMessageToServerAsync("keyboardType", new Dictionary<string, object?>
-        {
-            ["text"] = text,
-        });
-
     private static Task DirectPressAsync(Page page, string key, float? delay)
         => page.SendMessageToServerAsync("keyboardPress", new Dictionary<string, object?>
         {
             ["key"] = key,
             ["delay"] = delay,
+        });
+
+    private static Task DirectTypeAsync(Page page, string text)
+        => page.SendMessageToServerAsync("keyboardType", new Dictionary<string, object?>
+        {
+            ["text"] = text,
         });
 
     private static double Gaussian()
@@ -428,10 +423,33 @@ internal static class ClearcoteHumanize
             return ch;
         }
 
-        var selected = nearby[RandomNumberGenerator.GetInt32(nearby.Length)];
+        var selected = nearby[System.Security.Cryptography.RandomNumberGenerator.GetInt32(nearby.Length)];
         return char.IsUpper(ch) ? char.ToUpperInvariant(selected) : selected;
     }
 
     private static double NextDouble()
-        => RandomNumberGenerator.GetInt32(int.MaxValue) / (double)int.MaxValue;
+        => System.Security.Cryptography.RandomNumberGenerator.GetInt32(int.MaxValue) / (double)int.MaxValue;
+}
+
+internal sealed class ClearcoteHumanizeState
+{
+    internal ClearcoteHumanizeState(bool humanize, bool showCursor, object? seed)
+    {
+        Humanize = humanize;
+        ShowCursor = showCursor;
+        Persona = humanize ? ClearcoteMotion.MakePersona(seed) : null;
+        var rng = humanize ? ClearcoteMotion.Mulberry32(ClearcoteMotion.HashSeed(seed)) : ClearcoteMotion.Mulberry32(42);
+        X = rng() * 240 + 140;
+        Y = rng() * 150 + 90;
+    }
+
+    internal bool Humanize { get; }
+
+    internal bool ShowCursor { get; }
+
+    internal ClearcoteMotion.Persona? Persona { get; }
+
+    internal double X { get; set; }
+
+    internal double Y { get; set; }
 }

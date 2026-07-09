@@ -4,7 +4,7 @@
   <img src="https://img.shields.io/badge/Chromium-149.0.7827-45ba4b" alt="Chromium 149" />
   <img src="https://img.shields.io/badge/Firefox-151.0-45ba4b" alt="Firefox 151" />
   <img src="https://img.shields.io/badge/WebKit-26.5-45ba4b" alt="WebKit 26.5" />
-  <img src="https://img.shields.io/badge/Clearcote-v0.1.0--pre.19-blue" alt="Clearcote v0.1.0-pre.19" />
+  <img src="https://img.shields.io/badge/Clearcote-v0.1.0--pre.21-blue" alt="Clearcote v0.1.0-pre.21" />
   <img src="https://img.shields.io/badge/NativeAOT-✓-brightgreen" alt="NativeAOT" />
   <img src="https://img.shields.io/badge/TrimMode-full-blueviolet" alt="TrimMode=full" />
 </p>
@@ -38,7 +38,7 @@ A **NativeAOT-compatible** fork of [playwright-dotnet](https://github.com/micros
 | Chromium 149 | ✅ | ✅ | ✅ |
 | WebKit 26.5 | ✅ | ✅ | ✅ |
 | Firefox 151 | ✅ | ✅ | ✅ |
-| [Clearcote] v0.1.0-pre.19 | ✅ | — | ✅ |
+| [Clearcote] v0.1.0-pre.21 | ✅ | — | ✅ |
 
 [Clearcote]: https://github.com/clearcotelabs/clearcote-browser
 
@@ -114,13 +114,13 @@ open-source Chromium build engineered for bot / automation use cases:
   screen, touch, and TLS suite matching
 - **Canvas bridge** — remote real-GPU rendering via WebSocket relay
   (no software rasterizer)
-- **Humanized input** — Bezier mouse paths, multi-peak velocity, fat-finger
-  typos
+- **Humanized input** — Seeded motor persona with minimum-jerk submovements,
+  Fitts's law timing, colored noise, ambient motion, fat-finger typos
 - **AI agent** — in-browser autonomous task execution via OpenRouter LLMs
 - **Widevine DRM** — auto-fetch and seed Google's CDM for DRM playback
 - **GeoIP** — auto-resolve timezone/language/location from proxy egress IP
 
-Pinned release: **v0.1.0-pre.19** (Chromium 149.0.7827.114)
+Pinned release: **v0.1.0-pre.21** (Chromium 149.0.7827.114)
 
 ---
 
@@ -258,7 +258,7 @@ playwright.Dispose();
 | **Fingerprint masking** | `ClearcoteLaunchOptions` (`Fingerprint`, `Brand`, `BrandVersion`, `Platform`) | Seed-derived persona covering WebGL, Canvas, Audio, Fonts, Timezone, Geolocation, WebRTC, TLS ClientHello |
 | **Platform personas** | `ClearcotePlatform` enum (Windows, Linux, Macos, Android) | Full platform suite — UA, TLS, screen resolution, touch support |
 | **Canvas bridge** | `ClearcoteCanvasBridgeOptions` | Remote real-GPU rendering via WebSocket relay |
-| **Humanized input** | `Humanize = true` / `ShowCursor = true` | Bezier curves, multi-peak velocity, fat-finger typos |
+| **Humanized input** | `Humanize = true` / `ShowCursor = true` | Seeded motor persona, min-jerk submovements, Fitts's law, colored noise, ambient pre-challenge motion, key/click/drag dwells, fat-finger typos |
 | **AI agent** | `LaunchAgentAsync` / `RunAgentTaskAsync` | In-browser autonomous tasks via OpenRouter LLMs |
 | **Persistent profiles** | `ClearcoteProfile` (Save, Load, List) | Save/restore full persona config |
 | **Render coherence** | `CheckRenderCoherenceAsync` | Detect software rasterizer / GPU mismatches |

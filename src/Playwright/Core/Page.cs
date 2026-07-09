@@ -328,9 +328,9 @@ internal class Page : ChannelOwner, IPage
     [MethodImpl(MethodImplOptions.NoInlining)]
     public Task BringToFrontAsync() => SendMessageToServerAsync("bringToFront");
 
-    internal async Task ApplyClearcoteAsync(bool humanize, bool showCursor)
+    internal async Task ApplyClearcoteAsync(bool humanize, bool showCursor, string? seed = null)
     {
-        ClearcoteHumanizeState = new ClearcoteHumanizeState(humanize, showCursor);
+        ClearcoteHumanizeState = new ClearcoteHumanizeState(humanize, showCursor, seed);
         if (showCursor)
         {
             try

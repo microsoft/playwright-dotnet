@@ -64,7 +64,7 @@ internal class Keyboard : IKeyboard
 
     public Task TypeAsync(string text, KeyboardTypeOptions? options = default)
         => _page.ClearcoteHumanizeState?.Humanize == true && options?.Delay == null
-            ? ClearcoteHumanize.TypeTextAsync(_page, text)
+            ? ClearcoteHumanize.TypeTextAsync(_page, _page.ClearcoteHumanizeState!, text)
             : _page.SendMessageToServerAsync(
             "keyboardType",
             new Dictionary<string, object?>

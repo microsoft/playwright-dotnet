@@ -56,8 +56,10 @@ internal class BrowserContext : ChannelOwner, IBrowserContext
     private readonly List<HarRouter> _harRouters = new();
     private string? _closeReason;
     private bool _clearcoteHumanize;
+
     private bool _clearcoteShowCursor;
 
+    private string? _clearcoteHumanizeSeed;
     internal TimeoutSettings _timeoutSettings = new();
 
     internal BrowserContext(ChannelOwner parent, string guid, BrowserContextInitializer initializer) : base(parent, guid)
@@ -901,12 +903,13 @@ internal class BrowserContext : ChannelOwner, IBrowserContext
     }
 
     internal async Task ApplyClearcoteAsync(Clearcote.LaunchPatch patch)
-        => await ApplyClearcoteAsync(patch.Humanize, patch.ShowCursor).ConfigureAwait(false);
+        => await ApplyClearcoteAsync(patch.Humanize, patch.ShowCursor, patch.HumanizeSeed).ConfigureAwait(false);
 
-    internal async Task ApplyClearcoteAsync(bool humanize, bool showCursor)
+    internal async Task ApplyClearcoteAsync(bool humanize, bool showCursor, string? seed = null)
     {
         _clearcoteHumanize = humanize;
         _clearcoteShowCursor = showCursor;
+        _clearcoteHumanizeSeed = seed;
         if (showCursor)
         {
             try
@@ -931,7 +934,7 @@ internal class BrowserContext : ChannelOwner, IBrowserContext
             return;
         }
 
-        await page.ApplyClearcoteAsync(_clearcoteHumanize, _clearcoteShowCursor).ConfigureAwait(false);
+        await page.ApplyClearcoteAsync(_clearcoteHumanize, _clearcoteShowCursor, _clearcoteHumanizeSeed).ConfigureAwait(false);
     }
 
     private void Channel_BindingCall(BindingCall bindingCall)
