@@ -15,9 +15,9 @@ jobs:
       contents: read    # This is required for actions/checkout to succeed
     environment: Docker
     steps:
-    - uses: actions/checkout@v6
+    - uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6.0.3
     - name: Azure login
-      uses: azure/login@v3
+      uses: azure/login@532459ea530d8321f2fb9bb10d1e0bcf23869a43 # v3.0.0
       with:
         client-id: ${{ secrets.AZURE_DOCKER_CLIENT_ID }}
         tenant-id: ${{ secrets.AZURE_DOCKER_TENANT_ID }}
@@ -25,14 +25,14 @@ jobs:
     - name: Login to ACR via OIDC
       run: az acr login --name playwright
     - name: Setup .NET Core
-      uses: actions/setup-dotnet@v5
+      uses: actions/setup-dotnet@26b0ec14cb23fa6904739307f278c14f94c95bf1 # v5.4.0
       with:
         dotnet-version: 8.0.x
     - name: Install prerequisites and download drivers
       shell: bash
       run: ./build.sh --download-driver
     - name: Set up Docker QEMU for arm64 docker builds
-      uses: docker/setup-qemu-action@v4
+      uses: docker/setup-qemu-action@96fe6ef7f33517b61c61be40b68a1882f3264fb8 # v4.2.0
       with:
         platforms: arm64
     - run: ./utils/docker/publish_docker.sh stable
