@@ -47,6 +47,7 @@ internal class Browser : ChannelOwner, IBrowser
     private bool _clearcoteHeaded;
     private bool _clearcoteHumanize;
     private bool _clearcoteShowCursor;
+    private string? _clearcoteHumanizeSeed;
 
     internal Browser(ChannelOwner parent, string guid, BrowserInitializer initializer) : base(parent, guid)
     {
@@ -182,7 +183,7 @@ internal class Browser : ChannelOwner, IBrowser
         var context = await SendMessageToServerAsync<BrowserContext>("newContext", args).ConfigureAwait(false);
         if (_clearcoteHumanize || _clearcoteShowCursor)
         {
-            await context.ApplyClearcoteAsync(_clearcoteHumanize, _clearcoteShowCursor).ConfigureAwait(false);
+            await context.ApplyClearcoteAsync(_clearcoteHumanize, _clearcoteShowCursor, _clearcoteHumanizeSeed).ConfigureAwait(false);
         }
         await context.InitializeHarFromOptionsAsync(options).ConfigureAwait(false);
         return context;
@@ -293,9 +294,10 @@ internal class Browser : ChannelOwner, IBrowser
         _clearcoteHeaded = patch.Headed;
         _clearcoteHumanize = patch.Humanize;
         _clearcoteShowCursor = patch.ShowCursor;
+        _clearcoteHumanizeSeed = patch.HumanizeSeed;
         foreach (var context in _contexts)
         {
-            context.ApplyClearcoteAsync(_clearcoteHumanize, _clearcoteShowCursor).IgnoreException();
+            context.ApplyClearcoteAsync(_clearcoteHumanize, _clearcoteShowCursor, _clearcoteHumanizeSeed).IgnoreException();
         }
     }
 
