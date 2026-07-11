@@ -24,11 +24,7 @@
 
 using System;
 using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
-using System.Linq;
-using System.Reflection;
-using System.Runtime.Serialization;
 using System.Text.Json;
 using System.Xml;
 
@@ -42,7 +38,7 @@ public class PlaywrightSettingsXml
 
     public PlaywrightSettingsXml(XmlReader reader)
     {
-        // Skip Playwright root Element
+        // Skip Playwright root Element.
         reader.Read();
         while (reader.Read())
         {
@@ -53,120 +49,201 @@ public class PlaywrightSettingsXml
             switch (reader.Name)
             {
                 case "BrowserName":
-                    reader.Read();
-                    BrowserName = reader.Value;
+                    BrowserName = ReadTextElement(reader, "Playwright>BrowserName");
                     break;
                 case "LaunchOptions":
-                    LaunchOptions = (BrowserTypeLaunchOptions)ParseXmlIntoClass(typeof(BrowserTypeLaunchOptions), reader);
+                    LaunchOptions = ParseLaunchOptions(reader);
                     break;
                 case "ExpectTimeout":
-                    reader.Read();
-                    ExpectTimeout = float.Parse(reader.Value, CultureInfo.InvariantCulture);
+                    ExpectTimeout = ParseFloat(ReadTextElement(reader, "Playwright>ExpectTimeout")!);
+                    break;
+                case "Headless":
+                    Headless = bool.Parse(ReadTextElement(reader, "Playwright>Headless")!);
+                    break;
+                case "Retries":
+                    Retries = int.Parse(ReadTextElement(reader, "Playwright>Retries")!, CultureInfo.InvariantCulture);
                     break;
                 default:
                     Console.WriteLine($"Playwright RunSettings Parsing Error: Playwright>{reader.Name} is not implemented");
+                    SkipCurrentElement(reader);
                     break;
             }
         }
     }
 
-    [RequiresDynamicCode("TestAdapter uses Activator.CreateInstance and MakeGenericType.")]
-    [RequiresUnreferencedCode("TestAdapter uses reflection on option types.")]
-    private static object ParseXmlIntoClass(Type classType, XmlReader reader)
+    private static BrowserTypeLaunchOptions ParseLaunchOptions(XmlReader reader)
     {
         var endTag = reader.Name;
-        var options = Activator.CreateInstance(classType)
-            ?? throw new InvalidOperationException($"Could not create settings type {classType.FullName}");
+        var options = new BrowserTypeLaunchOptions();
         while (reader.Read())
         {
             if (reader.NodeType == XmlNodeType.EndElement && reader.Name == endTag)
             {
                 break;
             }
-            if (reader.NodeType == XmlNodeType.Element)
+            if (reader.NodeType != XmlNodeType.Element)
             {
-                var key = reader.Name;
-                var property = classType.GetProperty(key);
-                if (property == null)
-                {
-                    Console.WriteLine($"Playwright RunSettings Parsing Error: Playwright>{endTag}>{key} is not supported");
-                    continue;
-                }
-                var type = Nullable.GetUnderlyingType(property.PropertyType) ?? property.PropertyType;
-                var isArrayLike = type.IsArray || (type.IsGenericType && type.GetGenericTypeDefinition() == typeof(IEnumerable<>));
-                if (type.IsPrimitive || type == typeof(string) || isArrayLike)
-                {
-                    reader.Read();
-                    if (reader.NodeType != XmlNodeType.Text)
-                    {
-                        Console.WriteLine($"Playwright RunSettings Parsing Error: Playwright>{endTag}>{key} is not supported");
-                        continue;
-                    }
-                    ApplyParameter(key, reader.Value, options);
-                }
-                else
-                {
-                    property.SetValue(options, ParseXmlIntoClass(type, reader));
-                }
+                continue;
+            }
+
+            var key = reader.Name;
+            var path = $"Playwright>{endTag}>{key}";
+            switch (key)
+            {
+                case nameof(BrowserTypeLaunchOptions.Args):
+                    options.Args = ParseStringList(ReadTextElement(reader, path)!);
+                    break;
+                case nameof(BrowserTypeLaunchOptions.ArtifactsDir):
+                    options.ArtifactsDir = ReadTextElement(reader, path);
+                    break;
+                case nameof(BrowserTypeLaunchOptions.Channel):
+                    options.Channel = ReadTextElement(reader, path);
+                    break;
+                case nameof(BrowserTypeLaunchOptions.ChromiumSandbox):
+                    options.ChromiumSandbox = bool.Parse(ReadTextElement(reader, path)!);
+                    break;
+                case nameof(BrowserTypeLaunchOptions.DownloadsPath):
+                    options.DownloadsPath = ReadTextElement(reader, path);
+                    break;
+                case nameof(BrowserTypeLaunchOptions.Env):
+                    options.Env = ParseStringDictionary(ReadTextElement(reader, path)!);
+                    break;
+                case nameof(BrowserTypeLaunchOptions.ExecutablePath):
+                    options.ExecutablePath = ReadTextElement(reader, path);
+                    break;
+                case nameof(BrowserTypeLaunchOptions.FirefoxUserPrefs):
+                    options.FirefoxUserPrefs = ParseObjectDictionary(ReadTextElement(reader, path)!);
+                    break;
+                case nameof(BrowserTypeLaunchOptions.HandleSIGHUP):
+                    options.HandleSIGHUP = bool.Parse(ReadTextElement(reader, path)!);
+                    break;
+                case nameof(BrowserTypeLaunchOptions.HandleSIGINT):
+                    options.HandleSIGINT = bool.Parse(ReadTextElement(reader, path)!);
+                    break;
+                case nameof(BrowserTypeLaunchOptions.HandleSIGTERM):
+                    options.HandleSIGTERM = bool.Parse(ReadTextElement(reader, path)!);
+                    break;
+                case nameof(BrowserTypeLaunchOptions.Headless):
+                    options.Headless = bool.Parse(ReadTextElement(reader, path)!);
+                    break;
+                case nameof(BrowserTypeLaunchOptions.IgnoreAllDefaultArgs):
+                    options.IgnoreAllDefaultArgs = bool.Parse(ReadTextElement(reader, path)!);
+                    break;
+                case nameof(BrowserTypeLaunchOptions.IgnoreDefaultArgs):
+                    options.IgnoreDefaultArgs = ParseStringList(ReadTextElement(reader, path)!);
+                    break;
+                case nameof(BrowserTypeLaunchOptions.Proxy):
+                    options.Proxy = ParseProxy(reader);
+                    break;
+                case nameof(BrowserTypeLaunchOptions.SlowMo):
+                    options.SlowMo = ParseFloat(ReadTextElement(reader, path)!);
+                    break;
+                case nameof(BrowserTypeLaunchOptions.Timeout):
+                    options.Timeout = ParseFloat(ReadTextElement(reader, path)!);
+                    break;
+                case nameof(BrowserTypeLaunchOptions.TracesDir):
+                    options.TracesDir = ReadTextElement(reader, path);
+                    break;
+                default:
+                    Console.WriteLine($"Playwright RunSettings Parsing Error: {path} is not supported");
+                    SkipCurrentElement(reader);
+                    break;
             }
         }
+
         return options;
     }
 
-    [RequiresUnreferencedCode("TestAdapter uses reflection on option type properties.")]
-    [RequiresDynamicCode("TestAdapter uses MakeGenericType for dictionary types.")]
-    private static void ApplyParameter(string key, string value, object options)
+    private static Proxy ParseProxy(XmlReader reader)
     {
-        var property = options.GetType().GetProperty(key);
-        if (property == null)
+        var endTag = reader.Name;
+        var proxy = new Proxy();
+        while (reader.Read())
         {
-            return;
-        }
-        var type = Nullable.GetUnderlyingType(property.PropertyType) ?? property.PropertyType;
-        switch (type)
-        {
-            case Type t when t == typeof(string):
-                property.SetValue(options, value);
+            if (reader.NodeType == XmlNodeType.EndElement && reader.Name == endTag)
+            {
                 break;
-            case Type t when t == typeof(bool):
-                property.SetValue(options, bool.Parse(value));
-                break;
-            case Type t when t == typeof(float):
-                property.SetValue(options, float.Parse(value, CultureInfo.InvariantCulture));
-                break;
-            case Type t when t?.IsEnum == true:
-                {
-                    var enumValue = Enum.GetNames(t).Where(name =>
-                    {
-                        var field = t.GetField(name);
-                        return field != null && field.GetCustomAttribute<EnumMemberAttribute>()?.Value == value;
-                    }).FirstOrDefault();
-                    if (enumValue == null)
-                    {
-                        throw new ArgumentException($"Invalid value '{value}' for enum {t.Name}");
-                    }
-                    property.SetValue(options, Enum.Parse(t, enumValue));
-                }
-                break;
-            // special case for IEnumerable<KeyValuePair<X, Y>> which we need to convert into a Dictionary<X, Y>
-            case Type t when t.IsGenericType && t.GetGenericTypeDefinition() == typeof(IEnumerable<>) && t.GetGenericArguments()[0].IsGenericType && t.GetGenericArguments()[0].GetGenericTypeDefinition() == typeof(KeyValuePair<,>):
-                {
-                    var dictKvGenericTypes = t.GetGenericArguments()[0].GetGenericArguments();
-                    var dictType = typeof(Dictionary<,>).MakeGenericType(dictKvGenericTypes[0], dictKvGenericTypes[1]);
-                    property.SetValue(options, ParseAsJson(value, dictType));
-                }
-                break;
-            default:
-                {
-                    property.SetValue(options, ParseAsJson(value, type));
+            }
+            if (reader.NodeType != XmlNodeType.Element)
+            {
+                continue;
+            }
+
+            var key = reader.Name;
+            var path = $"Playwright>LaunchOptions>{endTag}>{key}";
+            switch (key)
+            {
+                case nameof(Proxy.Server):
+                    proxy.Server = ReadTextElement(reader, path)!;
                     break;
-                }
+                case nameof(Proxy.Bypass):
+                    proxy.Bypass = ReadTextElement(reader, path);
+                    break;
+                case nameof(Proxy.Username):
+                    proxy.Username = ReadTextElement(reader, path);
+                    break;
+                case nameof(Proxy.Password):
+                    proxy.Password = ReadTextElement(reader, path);
+                    break;
+                default:
+                    Console.WriteLine($"Playwright RunSettings Parsing Error: {path} is not supported");
+                    SkipCurrentElement(reader);
+                    break;
+            }
+        }
+
+        return proxy;
+    }
+
+    private static string[] ParseStringList(string value)
+        => JsonSerializer.Deserialize(NormalizeJson(value), TestAdapterJsonContext.Default.StringArray)!;
+
+    private static Dictionary<string, string> ParseStringDictionary(string value)
+        => JsonSerializer.Deserialize(NormalizeJson(value), TestAdapterJsonContext.Default.DictionaryOfStringToString)!;
+
+    private static Dictionary<string, object> ParseObjectDictionary(string value)
+        => JsonSerializer.Deserialize(NormalizeJson(value), TestAdapterJsonContext.Default.DictionaryOfStringToObject)!;
+
+    private static float ParseFloat(string value)
+        => float.Parse(value, CultureInfo.InvariantCulture);
+
+    private static string NormalizeJson(string value)
+        => value.Replace('\'', '"');
+
+    private static string? ReadTextElement(XmlReader reader, string path)
+    {
+        var elementName = reader.Name;
+        if (reader.IsEmptyElement)
+        {
+            Console.WriteLine($"Playwright RunSettings Parsing Error: {path} is not supported");
+            return null;
+        }
+
+        if (!reader.Read() || reader.NodeType != XmlNodeType.Text)
+        {
+            Console.WriteLine($"Playwright RunSettings Parsing Error: {path} is not supported");
+            SkipToEndElement(reader, elementName);
+            return null;
+        }
+
+        var value = reader.Value;
+        SkipToEndElement(reader, elementName);
+        return value;
+    }
+
+    private static void SkipCurrentElement(XmlReader reader)
+    {
+        if (!reader.IsEmptyElement)
+        {
+            SkipToEndElement(reader, reader.Name);
         }
     }
 
-    private static object ParseAsJson(string value, Type type)
+    private static void SkipToEndElement(XmlReader reader, string elementName)
     {
-        return JsonSerializer.Deserialize(value.Replace('\'', '"'), type)!;
+        while (!(reader.NodeType == XmlNodeType.EndElement && reader.Name == elementName) && reader.Read())
+        {
+        }
     }
 
     public BrowserTypeLaunchOptions? LaunchOptions { get; set; }

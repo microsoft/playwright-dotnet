@@ -23,16 +23,14 @@
  */
 
 using System;
-using System.Diagnostics.CodeAnalysis;
+using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
-using System.Reflection;
 
 namespace Microsoft.Playwright.CLI;
 
-static class Program
+public static class Program
 {
-    [RequiresDynamicCode("CLI uses Assembly.LoadFile and dynamic dispatch.")]
-    [RequiresUnreferencedCode("CLI uses reflection to load and invoke Playwright assembly.")]
     static int Main(string[] args)
     {
         var path = Directory.GetCurrentDirectory();
@@ -47,7 +45,7 @@ static class Program
 
             if (isFile)
             {
-                path = Path.Combine(path, "..");
+                path = Path.GetDirectoryName(path)!;
             }
 
             var argsCloned = new string[args.Length - 2];
@@ -67,7 +65,7 @@ static class Program
             }
         }
 
-        var file = Traverse(new(path));
+        var file = FindPlaywrightAssembly(new(Path.GetFullPath(path)));
 
         if (string.IsNullOrEmpty(file))
         {
@@ -76,31 +74,138 @@ static class Program
    dotnet build");
         }
 
-        // Only Microsoft.Playwright.Program::Run knows how to run the driver.
-        // Each version of Microsoft.Playwright has its own way and we must
-        // delegate to it.
-        var dll = Assembly.LoadFile(file);
-        dynamic c = dll.CreateInstance("Microsoft.Playwright.Program");
-
-        return c.Run(args);
+        return RunPlaywrightProgram(file, args);
     }
 
-    private static string Traverse(DirectoryInfo root)
+    private static int RunPlaywrightProgram(string file, string[] args)
     {
-        foreach (var dir in root.EnumerateDirectories())
+        var startInfo = new ProcessStartInfo(DotnetHostPath())
         {
+            UseShellExecute = false,
+        };
+        startInfo.ArgumentList.Add(file);
+        foreach (var arg in args)
+        {
+            startInfo.ArgumentList.Add(arg);
+        }
+
+        using var process = Process.Start(startInfo);
+        if (process == null)
+        {
+            return PrintError("Could not start the dotnet host to run Playwright.");
+        }
+
+        process.WaitForExit();
+        return process.ExitCode;
+    }
+
+    public static string DotnetHostPath()
+    {
+        var hostPath = Environment.GetEnvironmentVariable("DOTNET_HOST_PATH");
+        if (!string.IsNullOrWhiteSpace(hostPath) && TryResolveDotnetHostPath(hostPath, out var resolvedHostPath))
+        {
+            return resolvedHostPath;
+        }
+
+        return "dotnet";
+    }
+
+    private static bool TryResolveDotnetHostPath(string hostPath, out string resolvedHostPath)
+    {
+        resolvedHostPath = string.Empty;
+        try
+        {
+            if (hostPath.IndexOfAny(Path.GetInvalidPathChars()) >= 0 || !Path.IsPathFullyQualified(hostPath))
+            {
+                return false;
+            }
+
+            var fullPath = Path.GetFullPath(hostPath);
+            var fileName = Path.GetFileName(fullPath);
+            if (!string.Equals(fileName, "dotnet", StringComparison.OrdinalIgnoreCase) &&
+                !string.Equals(fileName, "dotnet.exe", StringComparison.OrdinalIgnoreCase))
+            {
+                return false;
+            }
+
+            if (!File.Exists(fullPath))
+            {
+                return false;
+            }
+
+            resolvedHostPath = fullPath;
+            return true;
+        }
+        catch (Exception ex) when (ex is ArgumentException or IOException or NotSupportedException or UnauthorizedAccessException)
+        {
+            return false;
+        }
+    }
+
+    private static string FindPlaywrightAssembly(DirectoryInfo root)
+    {
+        string best = null;
+        var bestTfm = -1;
+        var bestWriteTime = DateTime.MinValue;
+        Traverse(root, ref best, ref bestTfm, ref bestWriteTime);
+        return best;
+    }
+
+    private static void Traverse(DirectoryInfo root, ref string best, ref int bestTfm, ref DateTime bestWriteTime)
+    {
+        IEnumerable<DirectoryInfo> directories;
+        try
+        {
+            directories = root.EnumerateDirectories();
+        }
+        catch (Exception ex) when (ex is IOException or UnauthorizedAccessException)
+        {
+            return;
+        }
+
+        foreach (var dir in directories)
+        {
+            if ((dir.Attributes & FileAttributes.ReparsePoint) != 0)
+            {
+                continue;
+            }
+
             var candidate = Path.Combine(dir.ToString(), "Microsoft.Playwright.dll");
             if (File.Exists(candidate))
             {
-                return candidate;
+                ConsiderCandidate(candidate, ref best, ref bestTfm, ref bestWriteTime);
             }
-            string result = Traverse(dir);
-            if (!string.IsNullOrEmpty(result))
-            {
-                return result;
-            }
+            Traverse(dir, ref best, ref bestTfm, ref bestWriteTime);
         }
-        return null;
+    }
+
+    private static void ConsiderCandidate(string candidate, ref string best, ref int bestTfm, ref DateTime bestWriteTime)
+    {
+        var tfm = TargetFrameworkScore(candidate);
+        var writeTime = File.GetLastWriteTimeUtc(candidate);
+        if (best == null || tfm > bestTfm || (tfm == bestTfm && writeTime > bestWriteTime))
+        {
+            best = candidate;
+            bestTfm = tfm;
+            bestWriteTime = writeTime;
+        }
+    }
+
+    private static int TargetFrameworkScore(string candidate)
+    {
+        var tfm = Path.GetFileName(Path.GetDirectoryName(candidate));
+        if (tfm == null || !tfm.StartsWith("net", StringComparison.OrdinalIgnoreCase))
+        {
+            return 0;
+        }
+
+        var version = tfm.Substring(3);
+        var dot = version.IndexOf('.');
+        var majorText = dot >= 0 ? version.Substring(0, dot) : version;
+        var minorText = dot >= 0 ? version.Substring(dot + 1) : "0";
+        return int.TryParse(majorText, out var major) && int.TryParse(minorText, out var minor)
+            ? checked((major * 100) + minor)
+            : 0;
     }
 
     private static int PrintError(string error)

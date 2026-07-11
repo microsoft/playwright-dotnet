@@ -42,7 +42,10 @@ public static class ClearcoteBrowser
             options?.ExecutablePath,
             options?.CacheDir,
             options?.Quiet == true,
-            Helpers.Clearcote.AutoUpdateRequested(options?.AutoUpdate));
+            Helpers.Clearcote.AutoUpdateRequested(options?.AutoUpdate),
+            options?.Version,
+            options?.LicenseKey,
+            options?.LicenseApiBase);
 
     /// <summary>
     /// Download, verify, extract, and return the Clearcote browser executable path.
@@ -54,7 +57,10 @@ public static class ClearcoteBrowser
             options?.Dest,
             options?.CacheDir,
             options?.Quiet == true,
-            Helpers.Clearcote.AutoUpdateRequested(options?.AutoUpdate));
+            Helpers.Clearcote.AutoUpdateRequested(options?.AutoUpdate),
+            options?.Version,
+            options?.LicenseKey,
+            options?.LicenseApiBase);
 
     /// <summary>
     /// Launch Clearcote through a Playwright Chromium browser type.

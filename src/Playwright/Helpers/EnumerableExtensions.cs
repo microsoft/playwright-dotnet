@@ -24,6 +24,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Playwright.Transport.Protocol;
@@ -40,6 +41,36 @@ internal static class EnumerableExtensions
         }
 
         return input.Select(x => new NameValue() { Name = x.Key, Value = x.Value }).ToArray();
+    }
+
+    public static IEnumerable<NameValue>? ToProtocol(this IEnumerable<KeyValuePair<string, object>> input)
+    {
+        if (input == null)
+        {
+            return null;
+        }
+
+        return input.Select(x => new NameValue() { Name = x.Key, Value = ToInvariantString(x.Value) }).ToArray();
+    }
+
+    private static string ToInvariantString(object? value)
+    {
+        if (value == null)
+        {
+            return string.Empty;
+        }
+
+        if (value is bool boolValue)
+        {
+            return boolValue ? "true" : "false";
+        }
+
+        if (value is IFormattable formattable)
+        {
+            return formattable.ToString(null, CultureInfo.InvariantCulture);
+        }
+
+        return value.ToString() ?? string.Empty;
     }
 
     public static async Task<IEnumerable<TResult>> SelectAsync<TSource, TResult>(this IEnumerable<TSource> source, Func<TSource, Task<TResult>> method)

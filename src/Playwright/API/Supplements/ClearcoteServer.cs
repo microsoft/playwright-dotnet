@@ -25,9 +25,9 @@
 using System;
 using System.Diagnostics;
 using System.IO;
-using System.Net.Http;
 using System.Text.Json;
 using System.Threading.Tasks;
+using Microsoft.Playwright.Helpers;
 
 namespace Microsoft.Playwright;
 
@@ -40,13 +40,15 @@ public sealed class ClearcoteServer : IAsyncDisposable
     private readonly Process _process;
     private readonly string _userDataDir;
     private readonly bool _ownsUserDataDir;
+    private readonly LeaseSession? _lease;
     private bool _disposed;
 
-    internal ClearcoteServer(Process process, string host, int port, string userDataDir, bool ownsUserDataDir)
+    internal ClearcoteServer(Process process, string host, int port, string userDataDir, bool ownsUserDataDir, LeaseSession? lease = null)
     {
         _process = process;
         _userDataDir = userDataDir;
         _ownsUserDataDir = ownsUserDataDir;
+        _lease = lease;
         Host = host;
         Port = port;
     }
@@ -71,7 +73,7 @@ public sealed class ClearcoteServer : IAsyncDisposable
     {
         try
         {
-            using var client = new HttpClient { Timeout = TimeSpan.FromSeconds(5) };
+            using var client = Helpers.Clearcote.CreateHttpClient(TimeSpan.FromSeconds(5));
             var json = await client.GetStringAsync($"{CdpUrl}/json/version").ConfigureAwait(false);
             using var doc = JsonDocument.Parse(json);
             if (doc.RootElement.TryGetProperty("webSocketDebuggerUrl", out var ws)
@@ -91,7 +93,7 @@ public sealed class ClearcoteServer : IAsyncDisposable
     /// Stop the browser and clean up the profile directory.
     /// </summary>
     /// <returns>A task that completes when the browser has exited and the profile directory has been cleaned.</returns>
-    public Task CloseAsync()
+    public async Task CloseAsync()
     {
         ObjectDisposedException.ThrowIf(_disposed, this);
         _disposed = true;
@@ -112,6 +114,17 @@ public sealed class ClearcoteServer : IAsyncDisposable
             _process.Dispose();
         }
 
+        if (_lease is not null)
+        {
+            try
+            {
+                await _lease.StopAsync().ConfigureAwait(false);
+            }
+            catch
+            {
+            }
+        }
+
         if (_ownsUserDataDir)
         {
             try
@@ -122,8 +135,6 @@ public sealed class ClearcoteServer : IAsyncDisposable
             {
             }
         }
-
-        return Task.CompletedTask;
     }
 
     /// <inheritdoc />

@@ -43,7 +43,7 @@ public class PlaywrightSettingsProvider : ISettingsProvider
             var settings = Environment.GetEnvironmentVariable("PW_INTERNAL_ADAPTER_SETTINGS");
             if (!string.IsNullOrEmpty(settings))
             {
-                _settings = JsonSerializer.Deserialize<PlaywrightSettingsXml>(settings);
+                _settings = JsonSerializer.Deserialize(settings, TestAdapterJsonContext.Default.PlaywrightSettingsXml);
             }
             else
             {
@@ -106,6 +106,9 @@ public class PlaywrightSettingsProvider : ISettingsProvider
         }
     }
 
+    public static string SerializeLaunchOptions()
+        => JsonSerializer.Serialize(LaunchOptions, TestAdapterJsonContext.Default.BrowserTypeLaunchOptions);
+
     private static void ValidateBrowserName(string browserName, string fromText, string suffix)
     {
         if (browserName != BrowserType.Chromium &&
@@ -122,7 +125,6 @@ public class PlaywrightSettingsProvider : ISettingsProvider
     {
         // NOTE: ISettingsProvider::Load is not called when there are no runsettings (either file or passed via command line).
         _settings = new PlaywrightSettingsXml(reader);
-        Environment.SetEnvironmentVariable("PW_INTERNAL_ADAPTER_SETTINGS", JsonSerializer.Serialize(_settings));
+        Environment.SetEnvironmentVariable("PW_INTERNAL_ADAPTER_SETTINGS", JsonSerializer.Serialize(_settings, TestAdapterJsonContext.Default.PlaywrightSettingsXml));
     }
 }
-

@@ -148,7 +148,7 @@ internal class APIRequestContext : ChannelOwner, IAPIRequestContext
             ["maxRedirects"] = options?.MaxRedirects,
             ["maxRetries"] = options?.MaxRetries,
             ["timeout"] = _timeoutSettings.Timeout(options?.Timeout),
-            ["params"] = options?.Params?.ToDictionary(x => x.Key, x => x.Value!.ToString()!).ToProtocol(),
+            ["params"] = options?.Params?.ToProtocol(),
             ["encodedParams"] = options?.ParamsString,
             ["headers"] = options?.Headers?.ToProtocol(),
             ["jsonData"] = jsonData,
@@ -223,7 +223,8 @@ internal class APIRequestContext : ChannelOwner, IAPIRequestContext
 
         if (!string.IsNullOrEmpty(options?.Path))
         {
-            File.WriteAllText(options?.Path!, state);
+            var safePath = SecurityHelpers.ResolveAndValidatePath(options.Path, "APIRequestContext.StorageStateAsync.Path");
+            File.WriteAllText(safePath, state);
         }
 
         return state;

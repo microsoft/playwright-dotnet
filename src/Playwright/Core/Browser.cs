@@ -295,6 +295,11 @@ internal class Browser : ChannelOwner, IBrowser
         _clearcoteHumanize = patch.Humanize;
         _clearcoteShowCursor = patch.ShowCursor;
         _clearcoteHumanizeSeed = patch.HumanizeSeed;
+        if (patch.Lease is not null)
+        {
+            Disconnected += (_, _) => { _ = patch.Lease.StopAsync(); };
+        }
+
         foreach (var context in _contexts)
         {
             context.ApplyClearcoteAsync(_clearcoteHumanize, _clearcoteShowCursor, _clearcoteHumanizeSeed).IgnoreException();

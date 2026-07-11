@@ -70,6 +70,9 @@ public class ClearcoteLaunchPersistentContextOptions : BrowserTypeLaunchPersiste
             AgentToolMode = clearcote.AgentToolMode;
             AgentTyping = clearcote.AgentTyping;
             Widevine = clearcote.Widevine;
+            Version = clearcote.Version;
+            LicenseKey = clearcote.LicenseKey;
+            LicenseApiBase = clearcote.LicenseApiBase;
         }
     }
 
@@ -177,4 +180,13 @@ public class ClearcoteLaunchPersistentContextOptions : BrowserTypeLaunchPersiste
 
     /// <summary><para>Fetch and seed the opt-in Widevine CDM into this persistent profile.</para></summary>
     public bool? Widevine { get; set; }
+
+    /// <summary><para>Clearcote browser version (e.g. <c>"150"</c>, <c>"latest"</c>, or full version). Resolved against the public version catalog.</para></summary>
+    public string? Version { get; set; }
+
+    /// <summary><para>Clearcote PRO license key. When set, the SDK downloads the licensed build and acquires a floating-concurrency lease.</para></summary>
+    public string? LicenseKey { get; set; }
+
+    /// <summary><para>License API base URL (default: <c>CLEARCOTE_LICENSE_API</c> env or <c>https://www.clearcotelabs.com</c>).</para></summary>
+    public string? LicenseApiBase { get; set; }
 }

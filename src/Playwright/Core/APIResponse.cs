@@ -104,7 +104,7 @@ internal class APIResponse : IAPIResponse
     }
 
     public async Task<T?> JsonAsync<T>(JsonSerializerOptions? options)
-        => JsonSerializer.Deserialize(await BodyAsync().ConfigureAwait(false), ResolveUserJsonTypeInfo<T>(options));
+        => UserJsonSerializer.Deserialize<T>(await BodyAsync().ConfigureAwait(false), options, nameof(JsonAsync));
 
     public async Task<T?> JsonAsync<T>(JsonTypeInfo<T> jsonTypeInfo)
     {
@@ -119,17 +119,6 @@ internal class APIResponse : IAPIResponse
     }
 
     internal string FetchUid() => _initializer.FetchUid;
-
-    private static JsonTypeInfo<T> ResolveUserJsonTypeInfo<T>(JsonSerializerOptions? options)
-    {
-        if (options?.TypeInfoResolver == null)
-        {
-            throw new PlaywrightException("JsonAsync<T>() requires source-generated JSON metadata. Pass a JsonTypeInfo<T> overload, or set JsonSerializerOptions.TypeInfoResolver to your JsonSerializerContext.");
-        }
-
-        return options.GetTypeInfo(typeof(T)) as JsonTypeInfo<T>
-            ?? throw new PlaywrightException($"JsonSerializerOptions did not resolve JSON metadata for '{typeof(T)}'. Add the type to your JsonSerializerContext or call JsonAsync<T>(JsonTypeInfo<T>).");
-    }
 
     internal async Task<string[]> FetchLogAsync()
     {

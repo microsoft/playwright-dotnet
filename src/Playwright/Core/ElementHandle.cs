@@ -125,8 +125,9 @@ internal class ElementHandle : JSHandle, IElementHandle
 
         if (!string.IsNullOrEmpty(options.Path))
         {
-            Directory.CreateDirectory(new FileInfo(options.Path).Directory!.FullName);
-            File.WriteAllBytes(options.Path, result);
+            var safePath = SecurityHelpers.ResolveAndValidatePath(options.Path, "ElementHandle.ScreenshotAsync.Path");
+            Directory.CreateDirectory(new FileInfo(safePath).Directory!.FullName);
+            File.WriteAllBytes(safePath, result);
         }
 
         return result;

@@ -24,15 +24,16 @@ using System.Buffers;
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
-using System.IO.Compression;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Security.Cryptography;
 using System.Text;
 using System.Text.Json;
+using System.Text.Json.Nodes;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using Microsoft.Playwright.Transport.Converters;
 
 #pragma warning disable SA1201
 #pragma warning disable SA1203
@@ -51,14 +52,21 @@ internal static partial class Clearcote
     private const int MmdbMaxAgeDays = 30;
 
     private static readonly Regex _safeProfileName = new("^[A-Za-z0-9][A-Za-z0-9._-]*$", RegexOptions.CultureInvariant);
-    private static readonly string[] _ipEchoUrls = { "http://api.ipify.org", "http://ip-api.com/line/?fields=query" };
+    private static readonly string[] _ipEchoUrls = { "https://api.ipify.org", "https://checkip.amazonaws.com" };
     private static ClearcoteMmdbReader? _mmdbReader;
     private static string? _mmdbReaderPath;
     private static Task<string?>? _mmdbInflight;
 
     internal static string ProfileDirectory
-        => Environment.GetEnvironmentVariable("CLEARCOTE_PROFILE_DIR")
-            ?? Path.Combine(HomeDirectory(), ".clearcote", "profiles");
+    {
+        get
+        {
+            var env = Environment.GetEnvironmentVariable("CLEARCOTE_PROFILE_DIR");
+            return string.IsNullOrEmpty(env)
+                ? ResolveDirectoryRoot(Path.Combine(HomeDirectory(), ".clearcote", "profiles"), "Clearcote profile directory")
+                : ResolveEnvironmentDirectoryRoot(env, "CLEARCOTE_PROFILE_DIR");
+        }
+    }
 
     internal static string ProfilePath(string nameOrPath)
     {
@@ -66,7 +74,7 @@ internal static partial class Clearcote
             || nameOrPath.Contains(Path.AltDirectorySeparatorChar)
             || nameOrPath.EndsWith(".json", StringComparison.OrdinalIgnoreCase))
         {
-            return nameOrPath;
+            return SecurityHelpers.ResolveAndValidatePath(nameOrPath, "Clearcote profile path");
         }
 
         if (!_safeProfileName.IsMatch(nameOrPath))
@@ -74,13 +82,17 @@ internal static partial class Clearcote
             throw new PlaywrightException($"invalid profile name '{nameOrPath}' - use [A-Za-z0-9._-] or pass an explicit path");
         }
 
-        return Path.Combine(ProfileDirectory, nameOrPath + ".json");
+        return SecurityHelpers.ResolveAndValidatePath(Path.Combine(ProfileDirectory, nameOrPath + ".json"), "Clearcote profile path");
     }
 
     internal static string SaveProfile(ClearcoteProfile profile, string? path)
     {
-        var dest = path ?? profile.Path;
-        Directory.CreateDirectory(Path.GetDirectoryName(dest)!);
+        var dest = SecurityHelpers.ResolveAndValidatePath(path ?? profile.Path, "Clearcote profile path");
+        var parentDirectory = Path.GetDirectoryName(dest);
+        if (!string.IsNullOrEmpty(parentDirectory))
+        {
+            Directory.CreateDirectory(parentDirectory);
+        }
         using var stream = File.Create(dest);
         using var writer = new Utf8JsonWriter(stream, new JsonWriterOptions { Indented = true });
         writer.WriteStartObject();
@@ -90,7 +102,10 @@ internal static partial class Clearcote
         writer.WriteEndObject();
         writer.Flush();
         TryChmod(dest, "600");
-        TryChmod(Path.GetDirectoryName(dest)!, "700");
+        if (!string.IsNullOrEmpty(parentDirectory))
+        {
+            TryChmod(parentDirectory, "700");
+        }
         return dest;
     }
 
@@ -244,7 +259,7 @@ internal static partial class Clearcote
             try
             {
                 using var client = CreateGeoHttpClient(proxy);
-                var body = await client.GetStringAsync(new Uri(url)).ConfigureAwait(false);
+                var body = await client.GetStringAsync(SecurityHelpers.ValidateHttpsUri(url, "GeoIP exit IP probe")).ConfigureAwait(false);
                 var ip = body.Split((char[]?)null, StringSplitOptions.RemoveEmptyEntries).FirstOrDefault();
                 if (ip != null && IPAddress.TryParse(ip, out _))
                 {
@@ -343,40 +358,46 @@ internal static partial class Clearcote
         try
         {
             Directory.CreateDirectory(directory);
-            var zip = Path.Combine(directory, "geoip-aio-all.mmdb.zip");
-            var extract = Path.Combine(directory, ".extract");
-            if (Directory.Exists(extract))
-            {
-                Directory.Delete(extract, recursive: true);
-            }
+            var suffix = Guid.NewGuid().ToString("N");
+            var zip = Path.Combine(directory, "geoip-aio-all.mmdb.zip.download-" + suffix);
+            var extract = Path.Combine(directory, ".extract-" + suffix);
+            var staging = Path.Combine(directory, ".geoip-aio-all.mmdb-" + suffix);
 
             Log(quiet, "geoip: downloading the geoip-all-in-one database (~52 MB, first run only)");
-            using (var client = CreateHttpClient(TimeSpan.FromMinutes(5)))
-            using (var response = await client.GetAsync(new Uri(MmdbUrl), HttpCompletionOption.ResponseHeadersRead).ConfigureAwait(false))
+            try
             {
-                response.EnsureSuccessStatusCode();
-                using var input = await response.Content.ReadAsStreamAsync().ConfigureAwait(false);
-                using var output = File.Create(zip);
-                await input.CopyToAsync(output).ConfigureAwait(false);
+                using (var client = CreateHttpClient(TimeSpan.FromMinutes(5)))
+                using (var response = await client.GetAsync(SecurityHelpers.ValidateHttpsUri(MmdbUrl, "GeoIP MMDB download"), HttpCompletionOption.ResponseHeadersRead).ConfigureAwait(false))
+                {
+                    response.EnsureSuccessStatusCode();
+                    using var input = await response.Content.ReadAsStreamAsync().ConfigureAwait(false);
+                    using var output = File.Create(zip);
+                    await input.CopyToAsync(output).ConfigureAwait(false);
+                }
+
+                SecurityHelpers.ExtractZipToDirectorySafely(zip, extract, overwriteFiles: true);
+                var found = FindMmdb(extract);
+                if (found == null)
+                {
+                    throw new PlaywrightException("no .mmdb in archive");
+                }
+
+                File.Move(found, staging, overwrite: false);
+                File.Move(staging, file, overwrite: true);
+            }
+            finally
+            {
+                TryDeleteFile(staging);
+                TryDeleteFile(zip);
+                TryDeleteDirectory(extract);
             }
 
-            ZipFile.ExtractToDirectory(zip, extract, overwriteFiles: true);
-            var found = FindMmdb(extract);
-            if (found == null)
-            {
-                throw new PlaywrightException("no .mmdb in archive");
-            }
-
-            File.Delete(file);
-            File.Move(found, file);
-            File.Delete(zip);
-            Directory.Delete(extract, recursive: true);
             Log(quiet, "geoip: database ready");
             return file;
         }
         catch (Exception ex) when (ex is HttpRequestException or IOException or InvalidDataException or UnauthorizedAccessException or PlaywrightException)
         {
-            Log(quiet, "geoip: database fetch failed (" + ex.Message + ") - falling back to ip-api");
+            Log(quiet, "geoip: database fetch failed (" + ex.Message + ") - falling back to HTTPS IP lookup");
             return null;
         }
     }
@@ -438,7 +459,7 @@ internal static partial class Clearcote
         var root = options.Dest
             ?? Environment.GetEnvironmentVariable("CLEARCOTE_WIDEVINE_DIR")
             ?? Path.Combine(HomeDirectory(), ".clearcote", "WidevineCdm");
-        var version = string.IsNullOrEmpty(update.Version) ? "current" : update.Version;
+        var version = SecurityHelpers.ValidatePathSegment(string.IsNullOrEmpty(update.Version) ? "current" : update.Version, "Widevine version");
         var versionDir = Path.Combine(root, version);
         var platform = WidevinePlatform();
         var libraryPath = Path.Combine(versionDir, "_platform_specific", platform.Subdir, platform.FileName);
@@ -450,7 +471,7 @@ internal static partial class Clearcote
 
         WidevineLog(options.Quiet == true, "fetching CDM " + version);
         using var client = new HttpClient { Timeout = TimeSpan.FromSeconds(120) };
-        using var request = new HttpRequestMessage(HttpMethod.Get, update.Url);
+        using var request = new HttpRequestMessage(HttpMethod.Get, SecurityHelpers.ValidateHttpsUri(update.Url, "Widevine CDM download"));
         request.Headers.UserAgent.ParseAdd(WidevineUserAgent());
         using var response = await client.SendAsync(request).ConfigureAwait(false);
         response.EnsureSuccessStatusCode();
@@ -473,7 +494,7 @@ internal static partial class Clearcote
         {
             var zipPath = Path.Combine(temp, "cdm.zip");
             await File.WriteAllBytesAsync(zipPath, Crx3ToZip(blob)).ConfigureAwait(false);
-            ZipFile.ExtractToDirectory(zipPath, versionDir, overwriteFiles: true);
+            SecurityHelpers.ExtractZipToDirectorySafely(zipPath, versionDir, overwriteFiles: true);
         }
         finally
         {
@@ -494,18 +515,42 @@ internal static partial class Clearcote
         options ??= new();
         var source = await FetchWidevineAsync(options).ConfigureAwait(false);
         var version = Path.GetFileName(source);
-        var root = Path.Combine(userDataDir, "WidevineCdm");
+        var root = Path.Combine(SecurityHelpers.ResolveAndValidatePath(userDataDir, "Widevine user data directory"), "WidevineCdm");
         var target = Path.Combine(root, version);
         var platform = WidevinePlatform();
         if (!File.Exists(Path.Combine(target, "_platform_specific", platform.Subdir, platform.FileName)))
         {
             Directory.CreateDirectory(root);
-            CopyDirectory(source, target);
+            if (Directory.Exists(target))
+            {
+                throw new PlaywrightException($"existing Widevine CDM directory is incomplete: {target}");
+            }
+
+            var staging = Path.Combine(root, "." + version + ".seed-" + Guid.NewGuid().ToString("N"));
+            try
+            {
+                CopyDirectorySafely(source, staging);
+                Directory.Move(staging, target);
+            }
+            finally
+            {
+                TryDeleteDirectory(staging);
+            }
         }
 
         try
         {
-            File.WriteAllText(Path.Combine(root, WidevineHintFile), "{\"Path\":\"" + JsonEscape(target) + "\"}");
+            var hint = Path.Combine(root, WidevineHintFile);
+            var stagingHint = Path.Combine(root, "." + WidevineHintFile + "-" + Guid.NewGuid().ToString("N"));
+            try
+            {
+                File.WriteAllText(stagingHint, "{\"Path\":\"" + JsonEscape(target) + "\"}");
+                File.Move(stagingHint, hint, overwrite: true);
+            }
+            finally
+            {
+                TryDeleteFile(stagingHint);
+            }
         }
         catch
         {
@@ -619,6 +664,44 @@ internal static partial class Clearcote
         WriteString(writer, "executablePath", options.ExecutablePath);
         WriteString(writer, "channel", options.Channel);
         WriteStrings(writer, "args", options.Args);
+        WriteString(writer, "artifactsDir", options.ArtifactsDir);
+        WriteBool(writer, "chromiumSandbox", options.ChromiumSandbox);
+        WriteString(writer, "downloadsPath", options.DownloadsPath);
+        WriteStringPairs(writer, "env", options.Env);
+        WriteObjectPairs(writer, "firefoxUserPrefs", options.FirefoxUserPrefs);
+        WriteBool(writer, "handleSIGHUP", options.HandleSIGHUP);
+        WriteBool(writer, "handleSIGINT", options.HandleSIGINT);
+        WriteBool(writer, "handleSIGTERM", options.HandleSIGTERM);
+        WriteBool(writer, "ignoreAllDefaultArgs", options.IgnoreAllDefaultArgs);
+        WriteStrings(writer, "ignoreDefaultArgs", options.IgnoreDefaultArgs);
+        WriteNumber(writer, "slowMo", options.SlowMo);
+        WriteNumber(writer, "timeout", options.Timeout);
+        WriteString(writer, "tracesDir", options.TracesDir);
+        WriteBool(writer, "acceptDownloads", options.AcceptDownloads);
+        WriteString(writer, "baseURL", options.BaseURL);
+        WriteBool(writer, "bypassCSP", options.BypassCSP);
+        WriteEnum(writer, "colorScheme", options.ColorScheme);
+        WriteEnum(writer, "contrast", options.Contrast);
+        WriteNumber(writer, "deviceScaleFactor", options.DeviceScaleFactor);
+        WriteStringPairs(writer, "extraHTTPHeaders", options.ExtraHTTPHeaders);
+        WriteEnum(writer, "forcedColors", options.ForcedColors);
+        WriteGeolocation(writer, "geolocation", options.Geolocation);
+        WriteBool(writer, "hasTouch", options.HasTouch);
+        WriteHttpCredentials(writer, "httpCredentials", options.HttpCredentials);
+        WriteBool(writer, "ignoreHTTPSErrors", options.IgnoreHTTPSErrors);
+        WriteBool(writer, "isMobile", options.IsMobile);
+        WriteBool(writer, "javaScriptEnabled", options.JavaScriptEnabled);
+        WriteString(writer, "locale", options.Locale);
+        WriteBool(writer, "offline", options.Offline);
+        WriteStrings(writer, "permissions", options.Permissions);
+        WriteProxy(writer, "proxy", options.Proxy);
+        WriteEnum(writer, "reducedMotion", options.ReducedMotion);
+        WriteScreenSize(writer, "screenSize", options.ScreenSize);
+        WriteEnum(writer, "serviceWorkers", options.ServiceWorkers);
+        WriteBool(writer, "strictSelectors", options.StrictSelectors);
+        WriteString(writer, "timezoneId", options.TimezoneId);
+        WriteString(writer, "userAgent", options.UserAgent);
+        WriteViewportSize(writer, "viewportSize", options.ViewportSize);
         writer.WriteEndObject();
     }
 
@@ -668,6 +751,44 @@ internal static partial class Clearcote
                 case "executablePath": target.ExecutablePath = ReadString(value); break;
                 case "channel": target.Channel = ReadString(value); break;
                 case "args": target.Args = ReadStrings(value); break;
+                case "artifactsDir": target.ArtifactsDir = ReadString(value); break;
+                case "chromiumSandbox": target.ChromiumSandbox = ReadBool(value); break;
+                case "downloadsPath": target.DownloadsPath = ReadString(value); break;
+                case "env": target.Env = ReadStringPairs(value); break;
+                case "firefoxUserPrefs": target.FirefoxUserPrefs = ReadObjectPairs(value); break;
+                case "handleSIGHUP": target.HandleSIGHUP = ReadBool(value); break;
+                case "handleSIGINT": target.HandleSIGINT = ReadBool(value); break;
+                case "handleSIGTERM": target.HandleSIGTERM = ReadBool(value); break;
+                case "ignoreAllDefaultArgs": target.IgnoreAllDefaultArgs = ReadBool(value); break;
+                case "ignoreDefaultArgs": target.IgnoreDefaultArgs = ReadStrings(value); break;
+                case "slowMo": target.SlowMo = ReadFloat(value); break;
+                case "timeout": target.Timeout = ReadFloat(value); break;
+                case "tracesDir": target.TracesDir = ReadString(value); break;
+                case "acceptDownloads": target.AcceptDownloads = ReadBool(value); break;
+                case "baseURL": target.BaseURL = ReadString(value); break;
+                case "bypassCSP": target.BypassCSP = ReadBool(value); break;
+                case "colorScheme": target.ColorScheme = ReadEnum<ColorScheme>(value); break;
+                case "contrast": target.Contrast = ReadEnum<Contrast>(value); break;
+                case "deviceScaleFactor": target.DeviceScaleFactor = ReadFloat(value); break;
+                case "extraHTTPHeaders": target.ExtraHTTPHeaders = ReadStringPairs(value); break;
+                case "forcedColors": target.ForcedColors = ReadEnum<ForcedColors>(value); break;
+                case "geolocation": target.Geolocation = ReadGeolocation(value); break;
+                case "hasTouch": target.HasTouch = ReadBool(value); break;
+                case "httpCredentials": target.HttpCredentials = ReadHttpCredentials(value); break;
+                case "ignoreHTTPSErrors": target.IgnoreHTTPSErrors = ReadBool(value); break;
+                case "isMobile": target.IsMobile = ReadBool(value); break;
+                case "javaScriptEnabled": target.JavaScriptEnabled = ReadBool(value); break;
+                case "locale": target.Locale = ReadString(value); break;
+                case "offline": target.Offline = ReadBool(value); break;
+                case "permissions": target.Permissions = ReadStrings(value); break;
+                case "proxy": target.Proxy = ReadProxy(value); break;
+                case "reducedMotion": target.ReducedMotion = ReadEnum<ReducedMotion>(value); break;
+                case "screenSize": target.ScreenSize = ReadScreenSize(value); break;
+                case "serviceWorkers": target.ServiceWorkers = ReadEnum<ServiceWorkerPolicy>(value); break;
+                case "strictSelectors": target.StrictSelectors = ReadBool(value); break;
+                case "timezoneId": target.TimezoneId = ReadString(value); break;
+                case "userAgent": target.UserAgent = ReadString(value); break;
+                case "viewportSize": target.ViewportSize = ReadViewportSize(value); break;
             }
         }
     }
@@ -715,6 +836,31 @@ internal static partial class Clearcote
         target.ExecutablePath = Pick(target.ExecutablePath, source.ExecutablePath, overrideExisting);
         target.Channel = Pick(target.Channel, source.Channel, overrideExisting);
         target.Args = Pick(target.Args, source.Args, overrideExisting);
+        target.AcceptDownloads = Pick(target.AcceptDownloads, source.AcceptDownloads, overrideExisting);
+        target.BaseURL = Pick(target.BaseURL, source.BaseURL, overrideExisting);
+        target.BypassCSP = Pick(target.BypassCSP, source.BypassCSP, overrideExisting);
+        target.ColorScheme = Pick(target.ColorScheme, source.ColorScheme, overrideExisting);
+        target.Contrast = Pick(target.Contrast, source.Contrast, overrideExisting);
+        target.DeviceScaleFactor = Pick(target.DeviceScaleFactor, source.DeviceScaleFactor, overrideExisting);
+        target.ExtraHTTPHeaders = Pick(target.ExtraHTTPHeaders, source.ExtraHTTPHeaders, overrideExisting);
+        target.ForcedColors = Pick(target.ForcedColors, source.ForcedColors, overrideExisting);
+        target.Geolocation = Pick(target.Geolocation, source.Geolocation, overrideExisting);
+        target.HasTouch = Pick(target.HasTouch, source.HasTouch, overrideExisting);
+        target.HttpCredentials = Pick(target.HttpCredentials, source.HttpCredentials, overrideExisting);
+        target.IgnoreHTTPSErrors = Pick(target.IgnoreHTTPSErrors, source.IgnoreHTTPSErrors, overrideExisting);
+        target.IsMobile = Pick(target.IsMobile, source.IsMobile, overrideExisting);
+        target.JavaScriptEnabled = Pick(target.JavaScriptEnabled, source.JavaScriptEnabled, overrideExisting);
+        target.Locale = Pick(target.Locale, source.Locale, overrideExisting);
+        target.Offline = Pick(target.Offline, source.Offline, overrideExisting);
+        target.Permissions = Pick(target.Permissions, source.Permissions, overrideExisting);
+        target.Proxy = Pick(target.Proxy, source.Proxy, overrideExisting);
+        target.ReducedMotion = Pick(target.ReducedMotion, source.ReducedMotion, overrideExisting);
+        target.ScreenSize = Pick(target.ScreenSize, source.ScreenSize, overrideExisting);
+        target.ServiceWorkers = Pick(target.ServiceWorkers, source.ServiceWorkers, overrideExisting);
+        target.StrictSelectors = Pick(target.StrictSelectors, source.StrictSelectors, overrideExisting);
+        target.TimezoneId = Pick(target.TimezoneId, source.TimezoneId, overrideExisting);
+        target.UserAgent = Pick(target.UserAgent, source.UserAgent, overrideExisting);
+        target.ViewportSize = Pick(target.ViewportSize, source.ViewportSize, overrideExisting);
     }
 
     internal static void MergeInto(ClearcoteLaunchOptions target, ClearcoteLaunchOptions source, bool overrideExisting)
@@ -752,10 +898,7 @@ internal static partial class Clearcote
         target.AgentModel = Pick(target.AgentModel, source.AgentModel, overrideExisting);
         target.AgentToolMode = Pick(target.AgentToolMode, source.AgentToolMode, overrideExisting);
         target.AgentTyping = Pick(target.AgentTyping, source.AgentTyping, overrideExisting);
-        target.Headless = Pick(target.Headless, source.Headless, overrideExisting);
-        target.ExecutablePath = Pick(target.ExecutablePath, source.ExecutablePath, overrideExisting);
-        target.Channel = Pick(target.Channel, source.Channel, overrideExisting);
-        target.Args = Pick(target.Args, source.Args, overrideExisting);
+        MergeLaunchBaseInto(target, source, overrideExisting);
     }
 
     internal static ClearcoteLaunchOptions ToLaunchOptions(ClearcoteLaunchPersistentContextOptions source)
@@ -795,12 +938,50 @@ internal static partial class Clearcote
             AgentModel = source.AgentModel,
             AgentToolMode = source.AgentToolMode,
             AgentTyping = source.AgentTyping,
-            Headless = source.Headless,
-            ExecutablePath = source.ExecutablePath,
-            Channel = source.Channel,
             Args = source.Args,
+            ArtifactsDir = source.ArtifactsDir,
+            Channel = source.Channel,
+            ChromiumSandbox = source.ChromiumSandbox,
+            DownloadsPath = source.DownloadsPath,
+            Env = source.Env,
+            ExecutablePath = source.ExecutablePath,
+            FirefoxUserPrefs = source.FirefoxUserPrefs,
+            HandleSIGHUP = source.HandleSIGHUP,
+            HandleSIGINT = source.HandleSIGINT,
+            HandleSIGTERM = source.HandleSIGTERM,
+            Headless = source.Headless,
+            IgnoreAllDefaultArgs = source.IgnoreAllDefaultArgs,
+            IgnoreDefaultArgs = source.IgnoreDefaultArgs,
+            Proxy = source.Proxy,
+            SlowMo = source.SlowMo,
+            Timeout = source.Timeout,
+            TracesDir = source.TracesDir,
         };
         return target;
+    }
+
+    private static void MergeLaunchBaseInto<TTarget, TSource>(TTarget target, TSource source, bool overrideExisting)
+        where TTarget : BrowserTypeLaunchOptions
+        where TSource : BrowserTypeLaunchOptions
+    {
+        target.Args = Pick(target.Args, source.Args, overrideExisting);
+        target.ArtifactsDir = Pick(target.ArtifactsDir, source.ArtifactsDir, overrideExisting);
+        target.Channel = Pick(target.Channel, source.Channel, overrideExisting);
+        target.ChromiumSandbox = Pick(target.ChromiumSandbox, source.ChromiumSandbox, overrideExisting);
+        target.DownloadsPath = Pick(target.DownloadsPath, source.DownloadsPath, overrideExisting);
+        target.Env = Pick(target.Env, source.Env, overrideExisting);
+        target.ExecutablePath = Pick(target.ExecutablePath, source.ExecutablePath, overrideExisting);
+        target.FirefoxUserPrefs = Pick(target.FirefoxUserPrefs, source.FirefoxUserPrefs, overrideExisting);
+        target.HandleSIGHUP = Pick(target.HandleSIGHUP, source.HandleSIGHUP, overrideExisting);
+        target.HandleSIGINT = Pick(target.HandleSIGINT, source.HandleSIGINT, overrideExisting);
+        target.HandleSIGTERM = Pick(target.HandleSIGTERM, source.HandleSIGTERM, overrideExisting);
+        target.Headless = Pick(target.Headless, source.Headless, overrideExisting);
+        target.IgnoreAllDefaultArgs = Pick(target.IgnoreAllDefaultArgs, source.IgnoreAllDefaultArgs, overrideExisting);
+        target.IgnoreDefaultArgs = Pick(target.IgnoreDefaultArgs, source.IgnoreDefaultArgs, overrideExisting);
+        target.Proxy = Pick(target.Proxy, source.Proxy, overrideExisting);
+        target.SlowMo = Pick(target.SlowMo, source.SlowMo, overrideExisting);
+        target.Timeout = Pick(target.Timeout, source.Timeout, overrideExisting);
+        target.TracesDir = Pick(target.TracesDir, source.TracesDir, overrideExisting);
     }
 
     private static T? Pick<T>(T? target, T? source, bool overrideExisting)
@@ -831,6 +1012,17 @@ internal static partial class Clearcote
         if (value.HasValue) writer.WriteNumber(name, value.Value);
     }
 
+    private static void WriteNumber(Utf8JsonWriter writer, string name, float? value)
+    {
+        if (value.HasValue) writer.WriteNumber(name, value.Value);
+    }
+
+    private static void WriteEnum<T>(Utf8JsonWriter writer, string name, T? value)
+        where T : struct, Enum
+    {
+        if (value.HasValue) writer.WriteString(name, AotEnumMemberConverter.ToWireString(value.Value));
+    }
+
     private static void WriteStrings(Utf8JsonWriter writer, string name, IEnumerable<string>? values)
     {
         if (values == null) return;
@@ -841,6 +1033,148 @@ internal static partial class Clearcote
             writer.WriteStringValue(value);
         }
         writer.WriteEndArray();
+    }
+
+    private static void WriteStringPairs(Utf8JsonWriter writer, string name, IEnumerable<KeyValuePair<string, string>>? values)
+    {
+        if (values == null) return;
+        writer.WritePropertyName(name);
+        writer.WriteStartObject();
+        foreach (var pair in values)
+        {
+            writer.WriteString(pair.Key, pair.Value);
+        }
+        writer.WriteEndObject();
+    }
+
+    private static void WriteObjectPairs(Utf8JsonWriter writer, string name, IEnumerable<KeyValuePair<string, object>>? values)
+    {
+        if (values == null) return;
+        writer.WritePropertyName(name);
+        writer.WriteStartObject();
+        foreach (var pair in values)
+        {
+            writer.WritePropertyName(pair.Key);
+            WriteProfileJsonValue(writer, pair.Value);
+        }
+        writer.WriteEndObject();
+    }
+
+    private static void WriteProfileJsonValue(Utf8JsonWriter writer, object? value)
+    {
+        switch (value)
+        {
+            case null:
+                writer.WriteNullValue();
+                break;
+            case string stringValue:
+                writer.WriteStringValue(stringValue);
+                break;
+            case bool boolValue:
+                writer.WriteBooleanValue(boolValue);
+                break;
+            case byte byteValue:
+                writer.WriteNumberValue(byteValue);
+                break;
+            case sbyte sbyteValue:
+                writer.WriteNumberValue(sbyteValue);
+                break;
+            case short shortValue:
+                writer.WriteNumberValue(shortValue);
+                break;
+            case ushort ushortValue:
+                writer.WriteNumberValue(ushortValue);
+                break;
+            case int intValue:
+                writer.WriteNumberValue(intValue);
+                break;
+            case uint uintValue:
+                writer.WriteNumberValue(uintValue);
+                break;
+            case long longValue:
+                writer.WriteNumberValue(longValue);
+                break;
+            case ulong ulongValue:
+                writer.WriteNumberValue(ulongValue);
+                break;
+            case float floatValue:
+                writer.WriteNumberValue(floatValue);
+                break;
+            case double doubleValue:
+                writer.WriteNumberValue(doubleValue);
+                break;
+            case decimal decimalValue:
+                writer.WriteNumberValue(decimalValue);
+                break;
+            case JsonElement jsonElement:
+                jsonElement.WriteTo(writer);
+                break;
+            case JsonNode jsonNode:
+                jsonNode.WriteTo(writer);
+                break;
+            case Enum enumValue:
+                writer.WriteStringValue(AotEnumMemberConverter.ToWireString(enumValue));
+                break;
+            default:
+                throw new PlaywrightException(
+                    $"Clearcote profile values do not support '{value.GetType().FullName}'. " +
+                    "Use JSON primitives or JsonNode values.");
+        }
+    }
+
+    private static void WriteProxy(Utf8JsonWriter writer, string name, Proxy? proxy)
+    {
+        if (proxy == null) return;
+        writer.WritePropertyName(name);
+        writer.WriteStartObject();
+        WriteString(writer, "server", proxy.Server);
+        WriteString(writer, "bypass", proxy.Bypass);
+        WriteString(writer, "username", proxy.Username);
+        WriteString(writer, "password", proxy.Password);
+        writer.WriteEndObject();
+    }
+
+    private static void WriteHttpCredentials(Utf8JsonWriter writer, string name, HttpCredentials? credentials)
+    {
+        if (credentials == null) return;
+        writer.WritePropertyName(name);
+        writer.WriteStartObject();
+        WriteString(writer, "username", credentials.Username);
+        WriteString(writer, "password", credentials.Password);
+        WriteString(writer, "origin", credentials.Origin);
+        WriteEnum(writer, "send", credentials.Send);
+        writer.WriteEndObject();
+    }
+
+    private static void WriteGeolocation(Utf8JsonWriter writer, string name, Geolocation? geolocation)
+    {
+        if (geolocation == null) return;
+        writer.WritePropertyName(name);
+        writer.WriteStartObject();
+        writer.WriteNumber("latitude", geolocation.Latitude);
+        writer.WriteNumber("longitude", geolocation.Longitude);
+        WriteNumber(writer, "accuracy", geolocation.Accuracy);
+        writer.WriteEndObject();
+    }
+
+    private static void WriteViewportSize(Utf8JsonWriter writer, string name, ViewportSize? size)
+    {
+        if (size == null) return;
+        writer.WritePropertyName(name);
+        writer.WriteStartObject();
+        writer.WriteNumber("width", size.Width);
+        writer.WriteNumber("height", size.Height);
+        writer.WriteEndObject();
+    }
+
+    private static void WriteScreenSize(Utf8JsonWriter writer, string name, ScreenSize? size)
+    {
+        if (size == null) return;
+        writer.WritePropertyName(name);
+        writer.WriteStartObject();
+        writer.WriteNumber("width", size.Width);
+        writer.WriteNumber("height", size.Height);
+        writer.WriteEndObject();
     }
 
     private static void WriteCanvasBridge(Utf8JsonWriter writer, ClearcoteCanvasBridgeOptions? options)
@@ -869,12 +1203,22 @@ internal static partial class Clearcote
     private static long? ReadLong(JsonElement value)
         => value.ValueKind == JsonValueKind.Number && value.TryGetInt64(out var number) ? number : null;
 
+    private static float? ReadFloat(JsonElement value)
+        => value.ValueKind == JsonValueKind.Number && value.TryGetSingle(out var number) ? number : null;
+
     private static T? ReadEnum<T>(JsonElement value)
         where T : struct, Enum
     {
         var s = ReadString(value);
         if (s == null) return null;
-        if (Enum.TryParse<T>(s, ignoreCase: true, out var result))
+        try
+        {
+            return (T)AotEnumMemberConverter.FromWireString(typeof(T), s);
+        }
+        catch (JsonException)
+        {
+        }
+        if (Enum.TryParse<T>(s.Replace("-", string.Empty), ignoreCase: true, out var result))
         {
             return result;
         }
@@ -898,6 +1242,226 @@ internal static partial class Clearcote
         }
 
         return values;
+    }
+
+    private static IEnumerable<KeyValuePair<string, string>>? ReadStringPairs(JsonElement value)
+    {
+        var values = new List<KeyValuePair<string, string>>();
+        if (value.ValueKind == JsonValueKind.Object)
+        {
+            foreach (var property in value.EnumerateObject())
+            {
+                if (property.Value.ValueKind == JsonValueKind.String)
+                {
+                    values.Add(new(property.Name, property.Value.GetString()!));
+                }
+            }
+
+            return values;
+        }
+
+        if (value.ValueKind != JsonValueKind.Array)
+        {
+            return null;
+        }
+
+        foreach (var item in value.EnumerateArray())
+        {
+            if (item.ValueKind != JsonValueKind.Object)
+            {
+                continue;
+            }
+
+            var name = item.TryGetProperty("name", out var nameValue)
+                && nameValue.ValueKind == JsonValueKind.String
+                    ? nameValue.GetString()
+                    : null;
+            var pairValue = item.TryGetProperty("value", out var valueElement)
+                && valueElement.ValueKind == JsonValueKind.String
+                    ? valueElement.GetString()
+                    : null;
+            if (name != null && pairValue != null)
+            {
+                values.Add(new(name, pairValue));
+            }
+        }
+
+        return values;
+    }
+
+    private static IEnumerable<KeyValuePair<string, object>>? ReadObjectPairs(JsonElement value)
+    {
+        var values = new List<KeyValuePair<string, object>>();
+        if (value.ValueKind == JsonValueKind.Object)
+        {
+            foreach (var property in value.EnumerateObject())
+            {
+                values.Add(new(property.Name, ReadProfileJsonValue(property.Value)!));
+            }
+
+            return values;
+        }
+
+        if (value.ValueKind != JsonValueKind.Array)
+        {
+            return null;
+        }
+
+        foreach (var item in value.EnumerateArray())
+        {
+            if (item.ValueKind != JsonValueKind.Object)
+            {
+                continue;
+            }
+
+            var name = item.TryGetProperty("name", out var nameValue)
+                && nameValue.ValueKind == JsonValueKind.String
+                    ? nameValue.GetString()
+                    : null;
+            if (name != null && item.TryGetProperty("value", out var pairValue))
+            {
+                values.Add(new(name, ReadProfileJsonValue(pairValue)!));
+            }
+        }
+
+        return values;
+    }
+
+    private static object? ReadProfileJsonValue(JsonElement value)
+    {
+        switch (value.ValueKind)
+        {
+            case JsonValueKind.String:
+                return value.GetString();
+            case JsonValueKind.True:
+                return true;
+            case JsonValueKind.False:
+                return false;
+            case JsonValueKind.Number:
+                if (value.TryGetInt32(out var intValue))
+                {
+                    return intValue;
+                }
+                if (value.TryGetInt64(out var longValue))
+                {
+                    return longValue;
+                }
+                return value.GetDouble();
+            case JsonValueKind.Object:
+            case JsonValueKind.Array:
+                return JsonNode.Parse(value.GetRawText())!;
+            case JsonValueKind.Null:
+            case JsonValueKind.Undefined:
+            default:
+                return null;
+        }
+    }
+
+    private static Proxy? ReadProxy(JsonElement value)
+    {
+        if (value.ValueKind != JsonValueKind.Object)
+        {
+            return null;
+        }
+
+        var server = value.TryGetProperty("server", out var serverValue)
+            ? ReadString(serverValue)
+            : null;
+        if (string.IsNullOrEmpty(server))
+        {
+            return null;
+        }
+
+        return new()
+        {
+            Server = server,
+            Bypass = value.TryGetProperty("bypass", out var bypassValue) ? ReadString(bypassValue) : null,
+            Username = value.TryGetProperty("username", out var usernameValue) ? ReadString(usernameValue) : null,
+            Password = value.TryGetProperty("password", out var passwordValue) ? ReadString(passwordValue) : null,
+        };
+    }
+
+    private static HttpCredentials? ReadHttpCredentials(JsonElement value)
+    {
+        if (value.ValueKind != JsonValueKind.Object)
+        {
+            return null;
+        }
+
+        var username = value.TryGetProperty("username", out var usernameValue)
+            ? ReadString(usernameValue)
+            : null;
+        var password = value.TryGetProperty("password", out var passwordValue)
+            ? ReadString(passwordValue)
+            : null;
+        if (username == null || password == null)
+        {
+            return null;
+        }
+
+        return new()
+        {
+            Username = username,
+            Password = password,
+            Origin = value.TryGetProperty("origin", out var originValue) ? ReadString(originValue) : null,
+            Send = value.TryGetProperty("send", out var sendValue) ? ReadEnum<HttpCredentialsSend>(sendValue) : null,
+        };
+    }
+
+    private static Geolocation? ReadGeolocation(JsonElement value)
+    {
+        if (value.ValueKind != JsonValueKind.Object
+            || !value.TryGetProperty("latitude", out var latitudeValue)
+            || !value.TryGetProperty("longitude", out var longitudeValue))
+        {
+            return null;
+        }
+
+        var latitude = ReadFloat(latitudeValue);
+        var longitude = ReadFloat(longitudeValue);
+        if (!latitude.HasValue || !longitude.HasValue)
+        {
+            return null;
+        }
+
+        return new()
+        {
+            Latitude = latitude.Value,
+            Longitude = longitude.Value,
+            Accuracy = value.TryGetProperty("accuracy", out var accuracyValue) ? ReadFloat(accuracyValue) : null,
+        };
+    }
+
+    private static ViewportSize? ReadViewportSize(JsonElement value)
+    {
+        if (value.ValueKind != JsonValueKind.Object
+            || !value.TryGetProperty("width", out var widthValue)
+            || !value.TryGetProperty("height", out var heightValue))
+        {
+            return null;
+        }
+
+        var width = ReadInt(widthValue);
+        var height = ReadInt(heightValue);
+        return width.HasValue && height.HasValue
+            ? new() { Width = width.Value, Height = height.Value }
+            : null;
+    }
+
+    private static ScreenSize? ReadScreenSize(JsonElement value)
+    {
+        if (value.ValueKind != JsonValueKind.Object
+            || !value.TryGetProperty("width", out var widthValue)
+            || !value.TryGetProperty("height", out var heightValue))
+        {
+            return null;
+        }
+
+        var width = ReadInt(widthValue);
+        var height = ReadInt(heightValue);
+        return width.HasValue && height.HasValue
+            ? new() { Width = width.Value, Height = height.Value }
+            : null;
     }
 
     private static ClearcoteCanvasBridgeOptions? ReadCanvasBridge(JsonElement value)
@@ -1079,16 +1643,29 @@ internal static partial class Clearcote
         return output;
     }
 
-    private static void CopyDirectory(string source, string target)
+    internal static void CopyDirectorySafely(string source, string target)
     {
         Directory.CreateDirectory(target);
-        foreach (var file in Directory.GetFiles(source))
+        foreach (var file in new DirectoryInfo(source).EnumerateFiles())
         {
-            File.Copy(file, Path.Combine(target, Path.GetFileName(file)), overwrite: true);
+            if ((file.Attributes & FileAttributes.ReparsePoint) != 0)
+            {
+                throw new PlaywrightException($"Refusing to copy reparse point from Widevine directory: {file.FullName}");
+            }
+
+            using var input = file.OpenRead();
+            using var output = new FileStream(Path.Combine(target, file.Name), FileMode.CreateNew, FileAccess.Write, FileShare.None);
+            input.CopyTo(output);
         }
-        foreach (var directory in Directory.GetDirectories(source))
+
+        foreach (var directory in new DirectoryInfo(source).EnumerateDirectories())
         {
-            CopyDirectory(directory, Path.Combine(target, Path.GetFileName(directory)));
+            if ((directory.Attributes & FileAttributes.ReparsePoint) != 0)
+            {
+                throw new PlaywrightException($"Refusing to copy reparse point from Widevine directory: {directory.FullName}");
+            }
+
+            CopyDirectorySafely(directory.FullName, Path.Combine(target, directory.Name));
         }
     }
 

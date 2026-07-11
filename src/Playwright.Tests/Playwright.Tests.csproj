@@ -35,6 +35,8 @@
     </ItemGroup>
     <ItemGroup>
         <ProjectReference Include="..\Playwright\Playwright.csproj" />
+        <ProjectReference Include="..\Playwright.CLI\Playwright.CLI.csproj" />
         <ProjectReference Include="..\Playwright.NUnit\Playwright.NUnit.csproj" />
+        <ProjectReference Include="..\tools\Playwright.Tooling\Playwright.Tooling.csproj" />
     </ItemGroup>
 </Project>

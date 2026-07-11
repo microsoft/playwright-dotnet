@@ -122,6 +122,7 @@ internal static class JsonExtensions
         var options = new JsonSerializerOptions()
         {
             PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
+            TypeInfoResolver = PlaywrightJsonContext.Default,
         };
         options.Converters.Add(new AotEnumMemberConverter());
         if (!keepNulls)

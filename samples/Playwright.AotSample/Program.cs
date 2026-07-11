@@ -163,6 +163,13 @@ try
         Assert(sum == 3, "Evaluate<int> mismatch");
     });
 
+    await RunGroupAsync("page-evaluate-null-value-types", async () =>
+    {
+        Assert(await page!.EvaluateAsync<int>("() => null") == 0, "Evaluate null int should default to 0");
+        Assert(await page.EvaluateAsync<bool>("() => undefined") == false, "Evaluate undefined bool should default to false");
+        Assert(await page.EvaluateAsync<Guid>("() => null") == Guid.Empty, "Evaluate null Guid should default to empty");
+    });
+
     await RunGroupAsync("page-evaluate-json-element", async () =>
     {
         var payload = await page!.EvaluateAsync<JsonElement>("() => ({ a: 1, b: 'two' })");

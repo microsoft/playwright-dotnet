@@ -154,6 +154,7 @@ namespace Microsoft.Playwright.Transport;
 [JsonSerializable(typeof(ClearcoteLaunchOptions))]
 [JsonSerializable(typeof(ClearcoteLaunchPersistentContextOptions))]
 [JsonSerializable(typeof(ClearcoteRenderVerdict))]
+[JsonSerializable(typeof(ClearcoteServeOptions))]
 [JsonSerializable(typeof(ClearcoteWidevineOptions))]
 [JsonSerializable(typeof(IReadOnlyList<ClearcoteAgentStep>), TypeInfoPropertyName = "IReadOnlyListOfClearcoteAgentStep")]
 [JsonSerializable(typeof(IReadOnlyList<string>), TypeInfoPropertyName = "IReadOnlyListOfString")]

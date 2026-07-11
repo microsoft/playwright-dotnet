@@ -40,4 +40,13 @@ public class ClearcoteDownloadOptions
 
     /// <summary><para>Resolve the latest compatible Clearcote GitHub release instead of the pinned release.</para></summary>
     public bool? AutoUpdate { get; set; }
+
+    /// <summary><para>Clearcote browser version (e.g. <c>"150"</c>, <c>"latest"</c>, or full version). Resolved against the public version catalog.</para></summary>
+    public string? Version { get; set; }
+
+    /// <summary><para>Clearcote PRO license key. When set, the SDK downloads the licensed build.</para></summary>
+    public string? LicenseKey { get; set; }
+
+    /// <summary><para>License API base URL (default: <c>CLEARCOTE_LICENSE_API</c> env or <c>https://www.clearcotelabs.com</c>).</para></summary>
+    public string? LicenseApiBase { get; set; }
 }

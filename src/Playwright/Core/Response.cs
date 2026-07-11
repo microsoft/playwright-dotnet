@@ -112,15 +112,7 @@ internal class Response : ChannelOwner, IResponse
 
     [MethodImpl(MethodImplOptions.NoInlining)]
     public async Task<T> JsonAsync<T>()
-    {
-        var typeInfo = PlaywrightJsonContext.Default.GetTypeInfo(typeof(T)) as JsonTypeInfo<T>;
-        if (typeInfo == null)
-        {
-            throw new PlaywrightException("JsonAsync<T>() requires source-generated JSON metadata in this NativeAOT fork. Pass JsonAsync<T>(JsonTypeInfo<T>) with metadata from your JsonSerializerContext.");
-        }
-
-        return JsonSerializer.Deserialize(await BodyAsync().ConfigureAwait(false), typeInfo)!;
-    }
+        => UserJsonSerializer.Deserialize<T>(await BodyAsync().ConfigureAwait(false), null, nameof(JsonAsync))!;
 
     [MethodImpl(MethodImplOptions.NoInlining)]
     public async Task<T> JsonAsync<T>(JsonTypeInfo<T> jsonTypeInfo)

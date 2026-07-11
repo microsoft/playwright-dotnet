@@ -94,8 +94,8 @@ public class Program
 
     private static Process CreateDriverProcess(string[] args, bool captureOutput)
     {
-        var (executablePath, getArgs) = Driver.GetExecutablePath();
-        var startInfo = new ProcessStartInfo(executablePath, getArgs(args.Length > 0 ? "\"" + string.Join("\" \"", args) + "\"" : null))
+        var (executablePath, cliEntrypoint) = Driver.GetExecutablePath();
+        var startInfo = new ProcessStartInfo(executablePath)
         {
             UseShellExecute = false,
             // Supported after the .NET 8 preview that introduced ProcessStartInfo.WindowStyle on this path.
@@ -104,6 +104,12 @@ public class Program
             RedirectStandardOutput = captureOutput,
             RedirectStandardError = captureOutput,
         };
+        startInfo.ArgumentList.Add(cliEntrypoint);
+        foreach (var arg in args)
+        {
+            startInfo.ArgumentList.Add(arg);
+        }
+
         foreach (var pair in Driver.EnvironmentVariables)
         {
             startInfo.EnvironmentVariables[pair.Key] = pair.Value;

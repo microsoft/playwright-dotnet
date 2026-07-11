@@ -46,6 +46,7 @@ internal static partial class Clearcote
     internal const string Repo = "clearcotelabs/clearcote-browser";
     private static readonly SemaphoreSlim _downloadLock = new(1, 1);
     private static readonly HashSet<string> _seenCoherenceNotes = new(StringComparer.Ordinal);
+    internal static HttpMessageHandler? _httpHandlerOverride;
 
     private static readonly ReleaseInfo _windows = new(
         Tag: "v0.1.0-pre.21",
@@ -70,6 +71,32 @@ internal static partial class Clearcote
         Archive: "tar.xz",
         Binary: "chrome",
         AssetGlob: "linux-x64");
+
+    internal static readonly Catalog CatalogFallback = new()
+    {
+        Schema = 1,
+        Builds = new List<CatalogBuild>
+        {
+            new()
+            {
+                Major = 149, Version = "149.0.7827.114", Tier = "free", Tag = "v0.1.0-pre.21",
+                Platforms = new Dictionary<string, CatalogPlatform>
+                {
+                    ["windows"] = new() { Asset = _windows.Asset, Url = _windows.Url, Sha256 = _windows.Sha256, ExeSha256 = _windows.ExeSha256, Size = _windows.Size, Archive = "zip", Binary = "chrome.exe" },
+                    ["linux"] = new() { Asset = _linux.Asset, Url = _linux.Url, Sha256 = _linux.Sha256, ExeSha256 = _linux.ExeSha256, Size = _linux.Size, Archive = "tar.xz", Binary = "chrome" },
+                },
+            },
+            new()
+            {
+                Major = 150, Version = "150.0.7871.115", Tier = "pro", Tag = "pro-150.0.7871.115",
+                Platforms = new Dictionary<string, CatalogPlatform>
+                {
+                    ["windows"] = new() { Archive = "zip", Binary = "chrome.exe" },
+                    ["linux"] = new() { Archive = "tar.xz", Binary = "chrome" },
+                },
+            },
+        },
+    };
 
     private static readonly string[] _privacySandboxFeatures =
     {
@@ -147,9 +174,23 @@ internal static partial class Clearcote
         settings = await ApplyGeoipAsync(settings, options.Proxy).ConfigureAwait(false);
         EmitCoherenceWarnings(settings, options.Proxy, options.Headless, options.Args);
         var (proxyArgs, proxy) = ResolveProxy(options.Proxy, settings.Quiet);
-        var executablePath = await ResolveExecutablePathAsync(settings.CacheDir, settings.Quiet, settings.AutoUpdate, honorEnvironmentBinary: true).ConfigureAwait(false);
+        var executablePath = await ResolveExecutablePathAsync(
+            settings.CacheDir,
+            settings.Quiet,
+            settings.AutoUpdate,
+            honorEnvironmentBinary: true,
+            settings.Version,
+            settings.LicenseKey,
+            settings.LicenseApiBase).ConfigureAwait(false);
         var args = new List<string>(AssembleArgs(settings, proxyArgs, options.Args, options.Proxy));
         InstallHeadedViewport(args, options.Headless == false, settings.Humanize, null);
+        var env = FontLaunchEnv(executablePath, options.Env);
+        var lease = await AcquireLeaseAsync(settings.LicenseKey, settings.LicenseApiBase, quiet: settings.Quiet).ConfigureAwait(false);
+        if (lease is not null)
+        {
+            env = WithRunToken(lease.Token, env);
+        }
+
         return new LaunchPatch(
             executablePath,
             args,
@@ -160,7 +201,8 @@ internal static partial class Clearcote
             settings.Humanize,
             settings.ShowCursor,
             settings.Fingerprint,
-            FontLaunchEnv(executablePath, options.Env));
+            env,
+            lease);
     }
 
     internal static async Task<LaunchPatch> PatchAsync(string userDataDir, BrowserTypeLaunchPersistentContextOptions options)
@@ -170,7 +212,14 @@ internal static partial class Clearcote
         settings = await ApplyGeoipAsync(settings, options.Proxy).ConfigureAwait(false);
         EmitCoherenceWarnings(settings, options.Proxy, options.Headless, options.Args);
         var (proxyArgs, proxy) = ResolveProxy(options.Proxy, settings.Quiet);
-        var executablePath = await ResolveExecutablePathAsync(settings.CacheDir, settings.Quiet, settings.AutoUpdate, honorEnvironmentBinary: true).ConfigureAwait(false);
+        var executablePath = await ResolveExecutablePathAsync(
+            settings.CacheDir,
+            settings.Quiet,
+            settings.AutoUpdate,
+            honorEnvironmentBinary: true,
+            settings.Version,
+            settings.LicenseKey,
+            settings.LicenseApiBase).ConfigureAwait(false);
         var userArgs = options.Args;
         var ignoreDefaultArgs = DefaultIgnoreDefaultArgs(options.IgnoreDefaultArgs, options.IgnoreAllDefaultArgs);
         if (options is ClearcoteLaunchPersistentContextOptions clearcote && clearcote.Widevine == true)
@@ -190,6 +239,12 @@ internal static partial class Clearcote
 
         var args = new List<string>(AssembleArgs(settings, proxyArgs, userArgs, options.Proxy));
         InstallHeadedViewport(args, options.Headless == false, settings.Humanize, options.ViewportSize);
+        var env = FontLaunchEnv(executablePath, options.Env);
+        var lease = await AcquireLeaseAsync(settings.LicenseKey, settings.LicenseApiBase, quiet: settings.Quiet).ConfigureAwait(false);
+        if (lease is not null)
+        {
+            env = WithRunToken(lease.Token, env);
+        }
         return new LaunchPatch(
             executablePath,
             args,
@@ -200,8 +255,11 @@ internal static partial class Clearcote
             settings.Humanize,
             settings.ShowCursor,
             settings.Fingerprint,
-            FontLaunchEnv(executablePath, options.Env));
+            env,
+            lease);
     }
+
+
 
     private static IEnumerable<string>? DefaultIgnoreDefaultArgs(IEnumerable<string>? ignoreDefaultArgs, bool? ignoreAllDefaultArgs)
     {
@@ -231,11 +289,11 @@ internal static partial class Clearcote
                 try
                 {
                     var cacheDir = Path.Combine(Path.GetTempPath(), "cc-fc-cache");
-                    Directory.CreateDirectory(cacheDir);
+                    SecurityHelpers.SetSecureDirectoryPermissions(cacheDir);
                     var templateText = File.ReadAllText(template)
                         .Replace("@FONTS_DIR@", fontsDir)
                         .Replace("@CACHE_DIR@", cacheDir);
-                    var confPath = Path.Combine(fontsDir, "fonts.generated.conf");
+                    var confPath = Path.Combine(cacheDir, "fonts-" + Guid.NewGuid().ToString("N") + ".conf");
                     File.WriteAllText(confPath, templateText);
                     result["FONTCONFIG_FILE"] = confPath;
                 }
@@ -320,6 +378,63 @@ internal static partial class Clearcote
     /// once more with the copy, bypassing the AV lock.
     /// Mirrors the Node SDK <c>winAvRetry()</c>.
     /// </summary>
+    /// <summary>
+    /// Sequentially read every file under a directory so on-access AV finishes scanning freshly-extracted
+    /// binaries BEFORE the browser launches. Best-effort, safe to call anywhere.
+    /// </summary>
+    internal static void WarmFiles(string dir)
+    {
+        var buf = new byte[1 << 20];
+        void Walk(string d)
+        {
+            string[] entries;
+            try
+            {
+                entries = Directory.GetFileSystemEntries(d);
+            }
+            catch
+            {
+                return;
+            }
+
+            foreach (var p in entries)
+            {
+                if (Directory.Exists(p))
+                {
+                    Walk(p);
+                    continue;
+                }
+
+                try
+                {
+                    using var fs = new FileStream(p, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
+                    while (fs.Read(buf, 0, buf.Length) > 0)
+                    {
+                    }
+                }
+                catch
+                {
+                }
+            }
+        }
+
+        Walk(dir);
+    }
+
+    internal static void CopyDir(string src, string dest)
+    {
+        Directory.CreateDirectory(dest);
+        foreach (var dir in Directory.GetDirectories(src, "*", SearchOption.AllDirectories))
+        {
+            Directory.CreateDirectory(dir.Replace(src, dest));
+        }
+
+        foreach (var file in Directory.GetFiles(src, "*", SearchOption.AllDirectories))
+        {
+            File.Copy(file, file.Replace(src, dest), overwrite: true);
+        }
+    }
+
     internal static async Task<T> WinAvRetryAsync<T>(Func<string, Task<T>> launch, string executablePath)
     {
         if (!OperatingSystem.IsWindows())
@@ -335,34 +450,23 @@ internal static partial class Clearcote
             }
             catch (Exception ex) when (IsWinLaunchRace(ex))
             {
-                if (i == 2)
+                if (i < 2)
+                {
+                    WarmFiles(Path.GetDirectoryName(executablePath) ?? ".");
+                    await Task.Delay(800 * (i + 1)).ConfigureAwait(false);
+                }
+                else
                 {
                     // Fallback: copy to temp to bypass AV lock
                     var exeDir = Path.GetDirectoryName(executablePath) ?? string.Empty;
                     var recoverDir = Path.Combine(Path.GetTempPath(), $"cc-recover-{Guid.NewGuid():n}");
-                    Directory.CreateDirectory(recoverDir);
-                    foreach (var entry in Directory.GetFileSystemEntries(exeDir))
-                    {
-                        var dest = Path.Combine(recoverDir, Path.GetFileName(entry));
-                        if (Directory.Exists(entry))
-                        {
-                            Directory.CreateDirectory(dest);
-                        }
-                        else
-                        {
-                            File.Copy(entry, dest, overwrite: true);
-                        }
-                    }
-
+                    CopyDir(exeDir, recoverDir);
                     var recoverExe = Path.Combine(recoverDir, Path.GetFileName(executablePath));
                     return await launch(recoverExe).ConfigureAwait(false);
                 }
-
-                await Task.Delay(800 * (i + 1)).ConfigureAwait(false);
             }
         }
 
-        // Should not reach here
         throw new InvalidOperationException("winAvRetry: all retries exhausted");
     }
 
@@ -756,14 +860,22 @@ internal static partial class Clearcote
             return (Array.Empty<string>(), proxy);
         }
 
+        var normalizedServer = SecurityHelpers.ValidateProxyServer(proxy.Server);
+        var normalizedProxy = new Proxy
+        {
+            Server = normalizedServer,
+            Bypass = proxy.Bypass,
+            Username = proxy.Username,
+            Password = proxy.Password,
+        };
         var hasCredentials = !string.IsNullOrEmpty(proxy.Username) || !string.IsNullOrEmpty(proxy.Password);
-        if (proxy.Server.StartsWith("socks", StringComparison.OrdinalIgnoreCase) && hasCredentials)
+        if (normalizedServer.StartsWith("socks", StringComparison.OrdinalIgnoreCase) && hasCredentials)
         {
             Log(quiet, "routed credentialed SOCKS proxy via --proxy-server; Chromium cannot authenticate SOCKS credentials directly.");
-            return (new[] { "--proxy-server=" + proxy.Server.Trim() }, null);
+            return (new[] { "--proxy-server=" + normalizedServer }, null);
         }
 
-        return (Array.Empty<string>(), proxy);
+        return (Array.Empty<string>(), normalizedProxy);
     }
 
     private static async Task<ClearcoteSettings> ApplyGeoipAsync(ClearcoteSettings settings, Proxy? proxy)
@@ -805,30 +917,37 @@ internal static partial class Clearcote
         try
         {
             using var client = CreateGeoHttpClient(proxy);
-            using var response = await client.GetAsync(new Uri("http://ip-api.com/json/?fields=status,message,countryCode,timezone,lat,lon,query")).ConfigureAwait(false);
+            using var response = await client.GetAsync(SecurityHelpers.ValidateHttpsUri("https://ipwho.is/", "GeoIP fallback lookup")).ConfigureAwait(false);
             if (!response.IsSuccessStatusCode)
             {
-                Log(quiet, $"geoip: ip-api returned HTTP {(int)response.StatusCode}");
+                Log(quiet, $"geoip: fallback lookup returned HTTP {(int)response.StatusCode}");
                 return null;
             }
 
             using var stream = await response.Content.ReadAsStreamAsync().ConfigureAwait(false);
             using var document = await JsonDocument.ParseAsync(stream).ConfigureAwait(false);
             var root = document.RootElement;
-            if (!string.Equals(GetStringProperty(root, "status"), "success", StringComparison.Ordinal))
+            if (root.TryGetProperty("success", out var success) && success.ValueKind == JsonValueKind.False)
             {
-                Log(quiet, "geoip: ip-api did not return a successful lookup");
+                Log(quiet, "geoip: fallback lookup did not return a successful result");
                 return null;
             }
 
-            var country = GetStringProperty(root, "countryCode");
-            var location = TryGetDoubleProperty(root, "lat", out var lat) && TryGetDoubleProperty(root, "lon", out var lon)
+            var country = GetStringProperty(root, "country_code") ?? GetStringProperty(root, "countryCode");
+            var timezone = GetStringProperty(root, "timezone");
+            if (root.TryGetProperty("timezone", out var timezoneElement) && timezoneElement.ValueKind == JsonValueKind.Object)
+            {
+                timezone = GetStringProperty(timezoneElement, "id");
+            }
+
+            var location = (TryGetDoubleProperty(root, "latitude", out var lat) || TryGetDoubleProperty(root, "lat", out lat))
+                && (TryGetDoubleProperty(root, "longitude", out var lon) || TryGetDoubleProperty(root, "lon", out lon))
                 ? lat.ToString(CultureInfo.InvariantCulture) + "," + lon.ToString(CultureInfo.InvariantCulture)
                 : null;
             var geo = new ClearcoteGeo(
-                Ip: GetStringProperty(root, "query"),
+                Ip: GetStringProperty(root, "ip") ?? GetStringProperty(root, "query"),
                 Country: country,
-                Timezone: GetStringProperty(root, "timezone"),
+                Timezone: timezone,
                 AcceptLanguage: AcceptLanguageForCountry(country),
                 Location: location);
             return geo;
@@ -1087,19 +1206,47 @@ internal static partial class Clearcote
             _ => DefaultAcceptLanguage,
         };
 
-    internal static Task<string> ExecutablePathAsync(string? executablePath, string? cacheDir, bool quiet, bool autoUpdate)
+    internal static Task<string> ExecutablePathAsync(
+        string? executablePath,
+        string? cacheDir,
+        bool quiet,
+        bool autoUpdate,
+        string? version = null,
+        string? licenseKey = null,
+        string? licenseApiBase = null)
     {
         if (!string.IsNullOrEmpty(executablePath))
         {
-            return Task.FromResult(executablePath);
+            return Task.FromResult(ResolveBrowserExecutableOverride(executablePath, "Clearcote executable path"));
         }
 
-        return ResolveExecutablePathAsync(cacheDir, quiet, autoUpdate, honorEnvironmentBinary: true);
+        return ResolveExecutablePathAsync(
+            cacheDir,
+            quiet,
+            autoUpdate,
+            honorEnvironmentBinary: true,
+            version,
+            licenseKey,
+            licenseApiBase);
     }
 
-    internal static Task<string> DownloadAsync(string? destPath, string? cacheDir, bool quiet, bool autoUpdate)
+    internal static Task<string> DownloadAsync(
+        string? destPath,
+        string? cacheDir,
+        bool quiet,
+        bool autoUpdate,
+        string? version = null,
+        string? licenseKey = null,
+        string? licenseApiBase = null)
         => string.IsNullOrEmpty(destPath)
-            ? ResolveExecutablePathAsync(cacheDir, quiet, autoUpdate, honorEnvironmentBinary: false)
+            ? ResolveExecutablePathAsync(
+                cacheDir,
+                quiet,
+                autoUpdate,
+                honorEnvironmentBinary: false,
+                version,
+                licenseKey,
+                licenseApiBase)
             : DownloadToDestinationAsync(destPath, quiet, autoUpdate);
 
     private static async Task<string> DownloadToDestinationAsync(string destPath, bool quiet, bool autoUpdate)
@@ -1110,24 +1257,9 @@ internal static partial class Clearcote
         {
             Directory.CreateDirectory(tempDir);
             var binaryPath = await FetchAndVerifyAsync(rel, tempDir, quiet).ConfigureAwait(false);
-            var destDir = Path.GetDirectoryName(destPath);
-            if (!string.IsNullOrEmpty(destDir))
-            {
-                Directory.CreateDirectory(destDir);
-            }
-
-            if (OperatingSystem.IsWindows())
-            {
-                File.Copy(binaryPath, destPath, overwrite: true);
-            }
-            else
-            {
-                File.Copy(binaryPath, destPath, overwrite: true);
-                File.SetUnixFileMode(destPath, UnixFileMode.UserRead | UnixFileMode.UserWrite | UnixFileMode.UserExecute | UnixFileMode.GroupRead | UnixFileMode.GroupExecute | UnixFileMode.OtherRead | UnixFileMode.OtherExecute);
-            }
-
-            Log(quiet, "ready: " + destPath);
-            return destPath;
+            var publishedPath = PublishDownloadedExecutable(binaryPath, destPath);
+            Log(quiet, "ready: " + publishedPath);
+            return publishedPath;
         }
         finally
         {
@@ -1141,39 +1273,94 @@ internal static partial class Clearcote
         }
     }
 
-    private static async Task<string> ResolveExecutablePathAsync(string? cacheDir, bool quiet, bool autoUpdate, bool honorEnvironmentBinary)
+    internal static string PublishDownloadedExecutable(string binaryPath, string destPath)
+    {
+        var safeDestination = SecurityHelpers.ResolveAndValidatePath(destPath, "Clearcote download destination");
+        if (string.IsNullOrEmpty(Path.GetFileName(safeDestination)))
+        {
+            throw new PlaywrightException($"Clearcote download destination must include a file name: {safeDestination}");
+        }
+
+        var destDir = Path.GetDirectoryName(safeDestination)!;
+        Directory.CreateDirectory(destDir);
+
+        var stagingPath = Path.Combine(destDir, "." + Path.GetFileName(safeDestination) + ".download-" + Guid.NewGuid().ToString("N"));
+        try
+        {
+            File.Copy(binaryPath, stagingPath, overwrite: false);
+            if (!OperatingSystem.IsWindows())
+            {
+                File.SetUnixFileMode(stagingPath, UnixFileMode.UserRead | UnixFileMode.UserWrite | UnixFileMode.UserExecute | UnixFileMode.GroupRead | UnixFileMode.GroupExecute | UnixFileMode.OtherRead | UnixFileMode.OtherExecute);
+            }
+
+            File.Move(stagingPath, safeDestination, overwrite: true);
+            return safeDestination;
+        }
+        finally
+        {
+            TryDeleteFile(stagingPath);
+        }
+    }
+
+    private static async Task<string> ResolveExecutablePathAsync(
+        string? cacheDir,
+        bool quiet,
+        bool autoUpdate,
+        bool honorEnvironmentBinary,
+        string? version = null,
+        string? licenseKey = null,
+        string? licenseApiBase = null)
     {
         var envBinary = honorEnvironmentBinary ? Environment.GetEnvironmentVariable("CLEARCOTE_BINARY") : null;
         if (!string.IsNullOrEmpty(envBinary))
         {
-            return envBinary;
+            return ResolveBrowserExecutableOverride(envBinary, "CLEARCOTE_BINARY");
+        }
+
+        if (!string.IsNullOrEmpty(version))
+        {
+            return await EnsureVersionAsync(version, licenseKey, licenseApiBase, cacheDir, quiet).ConfigureAwait(false);
+        }
+
+        var resolvedKey = ResolveLicenseKey(licenseKey);
+        if (!string.IsNullOrEmpty(resolvedKey))
+        {
+            return await ProEnsureBinaryAsync(
+                resolvedKey,
+                new ProDownloadOptions { ApiBase = licenseApiBase, CacheDir = cacheDir, Quiet = quiet }).ConfigureAwait(false);
         }
 
         var rel = await ResolveReleaseAsync(quiet, autoUpdate).ConfigureAwait(false);
-        var cacheRoot = !string.IsNullOrEmpty(cacheDir) ? cacheDir : DefaultCacheRoot();
+        var cacheRoot = ResolveCacheRoot(cacheDir);
         var basePath = Path.Combine(cacheRoot, rel.Tag);
         var browserDir = Path.Combine(basePath, "browser");
         var verifiedPath = Path.Combine(basePath, VerifiedFileName);
 
-        if (File.Exists(verifiedPath))
+        var cached = await TryGetVerifiedCachedExecutableAsync(
+            browserDir,
+            verifiedPath,
+            rel.Binary,
+            rel.Sha256,
+            rel.ExeSha256,
+            quiet).ConfigureAwait(false);
+        if (!string.IsNullOrEmpty(cached))
         {
-            var cached = FindFile(browserDir, rel.Binary);
-            if (!string.IsNullOrEmpty(cached))
-            {
-                return cached;
-            }
+            return cached;
         }
 
         await _downloadLock.WaitAsync().ConfigureAwait(false);
         try
         {
-            if (File.Exists(verifiedPath))
+            cached = await TryGetVerifiedCachedExecutableAsync(
+                browserDir,
+                verifiedPath,
+                rel.Binary,
+                rel.Sha256,
+                rel.ExeSha256,
+                quiet).ConfigureAwait(false);
+            if (!string.IsNullOrEmpty(cached))
             {
-                var cached = FindFile(browserDir, rel.Binary);
-                if (!string.IsNullOrEmpty(cached))
-                {
-                    return cached;
-                }
+                return cached;
             }
 
             return await FetchAndVerifyAsync(rel, basePath, quiet).ConfigureAwait(false);
@@ -1184,18 +1371,96 @@ internal static partial class Clearcote
         }
     }
 
+    private static string ResolveBrowserExecutableOverride(string path, string purpose)
+    {
+        if (!Path.IsPathFullyQualified(path))
+        {
+            throw new PlaywrightException($"{purpose} must be a fully-qualified path: {path}");
+        }
+
+        var fullPath = SecurityHelpers.ResolveAndValidatePath(path, purpose);
+        if (!File.Exists(fullPath))
+        {
+            throw new PlaywrightException($"{purpose} points to a non-existent file: {fullPath}");
+        }
+
+        return fullPath;
+    }
+
+    internal static async Task<string?> TryGetVerifiedCachedExecutableAsync(
+        string browserDir,
+        string verifiedPath,
+        string binaryName,
+        string expectedArchiveSha256,
+        string expectedExecutableSha256,
+        bool quiet)
+    {
+        if (!File.Exists(verifiedPath))
+        {
+            return null;
+        }
+
+        string verifiedStamp;
+        try
+        {
+            verifiedStamp = (await File.ReadAllTextAsync(verifiedPath).ConfigureAwait(false)).Trim();
+        }
+        catch (Exception ex) when (ex is IOException or UnauthorizedAccessException)
+        {
+            Log(quiet, $"ignoring unreadable Clearcote cache stamp: {ex.Message}");
+            return null;
+        }
+
+        if (!string.Equals(verifiedStamp, expectedArchiveSha256, StringComparison.OrdinalIgnoreCase))
+        {
+            Log(quiet, "ignoring Clearcote cache with stale verification stamp");
+            return null;
+        }
+
+        var cached = FindFile(browserDir, binaryName);
+        if (string.IsNullOrEmpty(cached))
+        {
+            Log(quiet, "ignoring Clearcote cache because the browser executable is missing");
+            return null;
+        }
+
+        if (string.IsNullOrEmpty(expectedExecutableSha256))
+        {
+            return cached;
+        }
+
+        string executableSha256;
+        try
+        {
+            executableSha256 = await Sha256FileAsync(cached).ConfigureAwait(false);
+        }
+        catch (Exception ex) when (ex is IOException or UnauthorizedAccessException)
+        {
+            Log(quiet, $"ignoring unreadable Clearcote browser executable: {ex.Message}");
+            return null;
+        }
+
+        if (!string.Equals(executableSha256, expectedExecutableSha256, StringComparison.OrdinalIgnoreCase))
+        {
+            Log(quiet, "ignoring Clearcote cache with mismatched browser executable hash");
+            return null;
+        }
+
+        return cached;
+    }
+
     private static async Task<ResolvedRelease> ResolveReleaseAsync(bool quiet, bool autoUpdate)
     {
         var pinned = CurrentRelease();
         if (!autoUpdate)
         {
-            return ResolvedRelease.FromPinned(pinned);
+            return ResolvedReleaseFromPinned(pinned);
         }
 
         var latest = await ResolveLatestReleaseAsync(pinned, quiet).ConfigureAwait(false);
         if (latest == null || string.Equals(latest.Tag, pinned.Tag, StringComparison.Ordinal))
         {
-            return ResolvedRelease.FromPinned(pinned);
+            return ResolvedReleaseFromPinned(pinned);
         }
 
         return latest;
@@ -1207,7 +1472,7 @@ internal static partial class Clearcote
         JsonDocument document;
         try
         {
-            using var response = await client.GetAsync(new Uri($"https://api.github.com/repos/{Repo}/releases?per_page=30")).ConfigureAwait(false);
+            using var response = await client.GetAsync(SecurityHelpers.ValidateHttpsUri($"https://api.github.com/repos/{Repo}/releases?per_page=30", "Clearcote release metadata")).ConfigureAwait(false);
             if (!response.IsSuccessStatusCode)
             {
                 Log(quiet, $"auto-update: GitHub API returned HTTP {(int)response.StatusCode}; using pinned {pinned.Tag}");
@@ -1330,9 +1595,18 @@ internal static partial class Clearcote
             KeyUrl: keyAsset?.Url);
     }
 
-    private static HttpClient CreateHttpClient(TimeSpan timeout)
+    internal static HttpClient CreateHttpClient(TimeSpan timeout)
     {
-        var client = new HttpClient { Timeout = timeout };
+        var handler = _httpHandlerOverride;
+        HttpClient client;
+        if (handler is null)
+        {
+            client = new HttpClient(new SocketsHttpHandler { AllowAutoRedirect = true }) { Timeout = timeout };
+        }
+        else
+        {
+            client = new HttpClient(handler, disposeHandler: false) { Timeout = timeout };
+        }
         client.DefaultRequestHeaders.UserAgent.ParseAdd("clearcote-dotnet");
         client.DefaultRequestHeaders.Accept.ParseAdd("application/vnd.github+json");
         return client;
@@ -1340,7 +1614,7 @@ internal static partial class Clearcote
 
     private static async Task<string> FetchTextAsync(HttpClient client, string url)
     {
-        using var response = await client.GetAsync(new Uri(url)).ConfigureAwait(false);
+        using var response = await client.GetAsync(SecurityHelpers.ValidateHttpsUri(url, "Clearcote metadata fetch")).ConfigureAwait(false);
         if (!response.IsSuccessStatusCode)
         {
             throw new PlaywrightException($"Clearcote metadata fetch failed: HTTP {(int)response.StatusCode} {response.ReasonPhrase} for {url}");
@@ -1460,7 +1734,7 @@ internal static partial class Clearcote
 
     private static async Task<GpgVerdict> GpgVerifyAsync(HttpClient client, ResolvedRelease rel, string sumsBody, string tempRoot, bool quiet)
     {
-        if (string.IsNullOrEmpty(rel.AscUrl) || string.IsNullOrEmpty(rel.KeyUrl) || !HasGpg())
+        if (string.IsNullOrEmpty(rel.AscUrl) || string.IsNullOrEmpty(rel.KeyUrl) || !await HasGpgAsync().ConfigureAwait(false))
         {
             if (!quiet)
             {
@@ -1481,18 +1755,18 @@ internal static partial class Clearcote
             await File.WriteAllTextAsync(keyPath, await FetchTextAsync(client, rel.KeyUrl).ConfigureAwait(false)).ConfigureAwait(false);
             await File.WriteAllTextAsync(ascPath, await FetchTextAsync(client, rel.AscUrl).ConfigureAwait(false)).ConfigureAwait(false);
 
-            if (RunGpg(home, "--import", keyPath).ExitCode != 0)
+            if ((await RunGpgAsync(home, "--import", keyPath).ConfigureAwait(false)).ExitCode != 0)
             {
                 return GpgVerdict.Failed;
             }
 
-            var fingerprint = RunGpg(home, "--with-colons", "--fingerprint");
+            var fingerprint = await RunGpgAsync(home, "--with-colons", "--fingerprint").ConfigureAwait(false);
             if (fingerprint.ExitCode != 0 || !ContainsSigningFingerprint(fingerprint.Stdout))
             {
                 return GpgVerdict.Failed;
             }
 
-            var verified = RunGpg(home, "--verify", ascPath, sumsPath);
+            var verified = await RunGpgAsync(home, "--verify", ascPath, sumsPath).ConfigureAwait(false);
             return verified.ExitCode == 0 ? GpgVerdict.Ok : GpgVerdict.Failed;
         }
         catch (Exception ex) when (ex is IOException or UnauthorizedAccessException or HttpRequestException or TaskCanceledException)
@@ -1513,26 +1787,29 @@ internal static partial class Clearcote
         }
     }
 
-    private static bool HasGpg()
+    private static async Task<bool> HasGpgAsync()
     {
         try
         {
-            return RunProcess("gpg", "--version").ExitCode == 0;
+            return (await RunProcessAsync(SecurityHelpers.GetAbsoluteToolPath("gpg"), "--version").ConfigureAwait(false)).ExitCode == 0;
         }
-        catch (Exception ex) when (ex is InvalidOperationException or System.ComponentModel.Win32Exception)
+        catch (Exception ex) when (ex is InvalidOperationException or System.ComponentModel.Win32Exception or PlaywrightException)
         {
             return false;
         }
     }
 
-    private static (int ExitCode, string Stdout, string Stderr) RunGpg(string home, params string[] args)
+    private static Task<(int ExitCode, string Stdout, string Stderr)> RunGpgAsync(string home, params string[] args)
     {
         var allArgs = new List<string> { "--homedir", home, "--batch" };
         allArgs.AddRange(args);
-        return RunProcess(SecurityHelpers.GetAbsoluteToolPath("gpg"), allArgs.ToArray());
+        return RunProcessAsync(SecurityHelpers.GetAbsoluteToolPath("gpg"), allArgs.ToArray());
     }
 
-    private static (int ExitCode, string Stdout, string Stderr) RunProcess(string fileName, params string[] args)
+    internal static Task<(int ExitCode, string Stdout, string Stderr)> RunProcessAsync(string fileName, params string[] args)
+        => RunProcessAsync(fileName, TimeSpan.FromSeconds(30), args);
+
+    private static async Task<(int ExitCode, string Stdout, string Stderr)> RunProcessAsync(string fileName, TimeSpan timeoutAfter, params string[] args)
     {
         var safeFileName = SecurityHelpers.ResolveAndValidatePath(fileName, "RunProcess");
         var psi = new ProcessStartInfo(safeFileName)
@@ -1547,9 +1824,31 @@ internal static partial class Clearcote
         }
 
         using var process = Process.Start(psi) ?? throw new PlaywrightException($"Could not start {fileName}.");
-        var stdout = process.StandardOutput.ReadToEnd();
-        var stderr = process.StandardError.ReadToEnd();
-        process.WaitForExit();
+        var stdoutTask = process.StandardOutput.ReadToEndAsync();
+        var stderrTask = process.StandardError.ReadToEndAsync();
+        using var timeout = new CancellationTokenSource(timeoutAfter);
+        try
+        {
+            await process.WaitForExitAsync(timeout.Token).ConfigureAwait(false);
+        }
+        catch (OperationCanceledException)
+        {
+            try
+            {
+                process.Kill(entireProcessTree: true);
+            }
+            catch (Exception ex) when (ex is InvalidOperationException or System.ComponentModel.Win32Exception)
+            {
+            }
+
+            await process.WaitForExitAsync().ConfigureAwait(false);
+            var timeoutStdout = await stdoutTask.ConfigureAwait(false);
+            var timeoutStderr = await stderrTask.ConfigureAwait(false);
+            return (-1, timeoutStdout, string.IsNullOrEmpty(timeoutStderr) ? "process timed out" : timeoutStderr);
+        }
+
+        var stdout = await stdoutTask.ConfigureAwait(false);
+        var stderr = await stderrTask.ConfigureAwait(false);
         return (process.ExitCode, stdout, stderr);
     }
 
@@ -1587,12 +1886,17 @@ internal static partial class Clearcote
         throw new PlaywrightException("Clearcote currently ships Windows x64 and Linux x64 binaries. Pass ExecutablePath or set CLEARCOTE_BINARY to use a compatible build.");
     }
 
+    internal static string ResolveCacheRoot(string? cacheDir)
+        => string.IsNullOrEmpty(cacheDir)
+            ? DefaultCacheRoot()
+            : ResolveDirectoryRoot(cacheDir, "Clearcote cache directory");
+
     private static string DefaultCacheRoot()
     {
         var env = Environment.GetEnvironmentVariable("CLEARCOTE_CACHE");
         if (!string.IsNullOrEmpty(env))
         {
-            return env;
+            return ResolveEnvironmentDirectoryRoot(env, "CLEARCOTE_CACHE");
         }
 
         if (OperatingSystem.IsWindows())
@@ -1603,94 +1907,185 @@ internal static partial class Clearcote
                 local = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), "AppData", "Local");
             }
 
-            return Path.Combine(local, "clearcote", "Cache");
+            return ResolveDirectoryRoot(Path.Combine(local, "clearcote", "Cache"), "Clearcote cache directory");
         }
 
         if (OperatingSystem.IsMacOS())
         {
-            return Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), "Library", "Caches", "clearcote");
+            return ResolveDirectoryRoot(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), "Library", "Caches", "clearcote"), "Clearcote cache directory");
         }
 
         var xdg = Environment.GetEnvironmentVariable("XDG_CACHE_HOME");
-        return Path.Combine(string.IsNullOrEmpty(xdg) ? Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), ".cache") : xdg, "clearcote");
+        var cacheHome = string.IsNullOrEmpty(xdg)
+            ? Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), ".cache")
+            : ResolveEnvironmentDirectoryRoot(xdg, "XDG_CACHE_HOME");
+        return ResolveDirectoryRoot(Path.Combine(cacheHome, "clearcote"), "Clearcote cache directory");
+    }
+
+    private static string ResolveDirectoryRoot(string path, string purpose)
+        => SecurityHelpers.ResolveAndValidatePath(path, purpose);
+
+    private static string ResolveEnvironmentDirectoryRoot(string path, string purpose)
+    {
+        if (!Path.IsPathFullyQualified(path))
+        {
+            throw new PlaywrightException($"{purpose} must be a fully-qualified path: {path}");
+        }
+
+        return ResolveDirectoryRoot(path, purpose);
     }
 
     private static async Task<string> FetchAndVerifyAsync(ResolvedRelease rel, string basePath, bool quiet)
     {
         Directory.CreateDirectory(basePath);
         var browserDir = Path.Combine(basePath, "browser");
-        var archivePath = Path.Combine(basePath, rel.Asset);
-
-        if (Directory.Exists(browserDir))
-        {
-            Directory.Delete(browserDir, recursive: true);
-        }
+        var verifiedPath = Path.Combine(basePath, VerifiedFileName);
+        var stagingBrowserDir = Path.Combine(basePath, "browser-" + Guid.NewGuid().ToString("N"));
+        var archivePath = Path.Combine(basePath, rel.Asset + ".download-" + Guid.NewGuid().ToString("N"));
 
         Log(quiet, $"fetching Clearcote {rel.Version} ({rel.Tag}, ~{rel.Size / 1_000_000} MB)");
-        using var client = CreateHttpClient(TimeSpan.FromMinutes(10));
-        await DownloadToAsync(client, rel.Url, archivePath, rel.Size, quiet).ConfigureAwait(false);
-
-        Log(quiet, "verifying SHA-256");
-        var archiveHash = await Sha256FileAsync(archivePath).ConfigureAwait(false);
-        if (!string.Equals(archiveHash, rel.Sha256, StringComparison.OrdinalIgnoreCase))
+        try
         {
-            File.Delete(archivePath);
-            throw new PlaywrightException($"Clearcote archive SHA-256 mismatch. Expected {rel.Sha256}, got {archiveHash}.");
-        }
+            using var client = CreateHttpClient(TimeSpan.FromMinutes(10));
+            await DownloadToAsync(client, rel.Url, archivePath, rel.Size, quiet).ConfigureAwait(false);
 
-        if (rel.Unpinned && !string.IsNullOrEmpty(rel.AscUrl) && !string.IsNullOrEmpty(rel.KeyUrl) && !string.IsNullOrEmpty(rel.SumsUrl))
-        {
-            var sumsBody = await FetchTextAsync(client, rel.SumsUrl).ConfigureAwait(false);
-            var verdict = await GpgVerifyAsync(client, rel, sumsBody, basePath, quiet).ConfigureAwait(false);
-            if (verdict == GpgVerdict.Failed)
+            Log(quiet, "verifying SHA-256");
+            var archiveHash = await Sha256FileAsync(archivePath).ConfigureAwait(false);
+            if (!string.Equals(archiveHash, rel.Sha256, StringComparison.OrdinalIgnoreCase))
             {
-                File.Delete(archivePath);
-                throw new PlaywrightException($"Clearcote {rel.Tag}: GPG signature verification failed against the pinned key {SigningKeyFingerprint}.");
+                throw new PlaywrightException($"Clearcote archive SHA-256 mismatch. Expected {rel.Sha256}, got {archiveHash}.");
             }
 
-            if (verdict == GpgVerdict.Ok)
+            if (rel.Unpinned && !string.IsNullOrEmpty(rel.AscUrl) && !string.IsNullOrEmpty(rel.KeyUrl) && !string.IsNullOrEmpty(rel.SumsUrl))
             {
-                Log(quiet, $"auto-update: GPG signature OK (key {SigningKeyFingerprint})");
+                var sumsBody = await FetchTextAsync(client, rel.SumsUrl).ConfigureAwait(false);
+                var verdict = await GpgVerifyAsync(client, rel, sumsBody, basePath, quiet).ConfigureAwait(false);
+                if (verdict == GpgVerdict.Failed)
+                {
+                    throw new PlaywrightException($"Clearcote {rel.Tag}: GPG signature verification failed against the pinned key {SigningKeyFingerprint}.");
+                }
+
+                if (verdict == GpgVerdict.Ok)
+                {
+                    Log(quiet, $"auto-update: GPG signature OK (key {SigningKeyFingerprint})");
+                }
+            }
+
+            Log(quiet, "extracting");
+            Directory.CreateDirectory(stagingBrowserDir);
+            await ExtractArchiveAsync(rel, archivePath, stagingBrowserDir).ConfigureAwait(false);
+
+            var exe = FindFile(stagingBrowserDir, rel.Binary);
+            if (string.IsNullOrEmpty(exe))
+            {
+                throw new PlaywrightException($"Clearcote archive verified but {rel.Binary} was not found inside it.");
+            }
+
+            var exeHash = await Sha256FileAsync(exe).ConfigureAwait(false);
+            if (!string.IsNullOrEmpty(rel.ExeSha256) && !string.Equals(exeHash, rel.ExeSha256, StringComparison.OrdinalIgnoreCase))
+            {
+                throw new PlaywrightException($"Clearcote {rel.Binary} SHA-256 mismatch. Expected {rel.ExeSha256}, got {exeHash}.");
+            }
+
+            if (!OperatingSystem.IsWindows())
+            {
+                try
+                {
+                    File.SetUnixFileMode(exe, UnixFileMode.UserRead | UnixFileMode.UserWrite | UnixFileMode.UserExecute | UnixFileMode.GroupRead | UnixFileMode.GroupExecute | UnixFileMode.OtherRead | UnixFileMode.OtherExecute);
+                }
+                catch (Exception ex) when (ex is IOException or UnauthorizedAccessException or PlatformNotSupportedException)
+                {
+                    Log(quiet, $"could not chmod Clearcote binary: {ex.Message}");
+                }
+            }
+
+            if (OperatingSystem.IsWindows())
+            {
+                WarmFiles(stagingBrowserDir);
+            }
+
+            var relativeExe = Path.GetRelativePath(stagingBrowserDir, exe);
+            PublishVerifiedBrowserDirectory(stagingBrowserDir, browserDir, verifiedPath, rel.Sha256);
+            var finalExe = Path.Combine(browserDir, relativeExe);
+            Log(quiet, "ready: " + finalExe);
+            return finalExe;
+        }
+        finally
+        {
+            TryDeleteFile(archivePath);
+            if (Directory.Exists(stagingBrowserDir))
+            {
+                TryDeleteDirectory(stagingBrowserDir);
             }
         }
+    }
 
-        Log(quiet, "extracting");
-        Directory.CreateDirectory(browserDir);
-        await ExtractArchiveAsync(rel, archivePath, browserDir).ConfigureAwait(false);
-
-        var exe = FindFile(browserDir, rel.Binary);
-        if (string.IsNullOrEmpty(exe))
+    internal static void PublishVerifiedBrowserDirectory(string stagingBrowserDir, string browserDir, string verifiedPath, string sha256)
+    {
+        var backupDir = browserDir + ".backup-" + Guid.NewGuid().ToString("N");
+        var hadExistingBrowser = Directory.Exists(browserDir);
+        if (hadExistingBrowser)
         {
-            throw new PlaywrightException($"Clearcote archive verified but {rel.Binary} was not found inside it.");
+            Directory.Move(browserDir, backupDir);
         }
 
-        var exeHash = await Sha256FileAsync(exe).ConfigureAwait(false);
-        if (!string.IsNullOrEmpty(rel.ExeSha256) && !string.Equals(exeHash, rel.ExeSha256, StringComparison.OrdinalIgnoreCase))
+        try
         {
-            throw new PlaywrightException($"Clearcote {rel.Binary} SHA-256 mismatch. Expected {rel.ExeSha256}, got {exeHash}.");
+            Directory.Move(stagingBrowserDir, browserDir);
+            File.WriteAllText(verifiedPath, sha256 + Environment.NewLine);
         }
-
-        if (!OperatingSystem.IsWindows())
+        catch
         {
-            try
+            if (Directory.Exists(browserDir))
             {
-                File.SetUnixFileMode(exe, UnixFileMode.UserRead | UnixFileMode.UserWrite | UnixFileMode.UserExecute | UnixFileMode.GroupRead | UnixFileMode.GroupExecute | UnixFileMode.OtherRead | UnixFileMode.OtherExecute);
+                TryDeleteDirectory(browserDir);
             }
-            catch (Exception ex) when (ex is IOException or UnauthorizedAccessException or PlatformNotSupportedException)
+
+            if (hadExistingBrowser && Directory.Exists(backupDir) && !Directory.Exists(browserDir))
             {
-                Log(quiet, $"could not chmod Clearcote binary: {ex.Message}");
+                Directory.Move(backupDir, browserDir);
             }
+
+            throw;
         }
 
-        File.WriteAllText(Path.Combine(basePath, VerifiedFileName), rel.Sha256 + Environment.NewLine);
-        File.Delete(archivePath);
-        Log(quiet, "ready: " + exe);
-        return exe;
+        if (hadExistingBrowser && Directory.Exists(backupDir))
+        {
+            TryDeleteDirectory(backupDir);
+        }
+    }
+
+    private static void TryDeleteFile(string path)
+    {
+        try
+        {
+            if (File.Exists(path))
+            {
+                File.Delete(path);
+            }
+        }
+        catch (Exception ex) when (ex is IOException or UnauthorizedAccessException)
+        {
+        }
+    }
+
+    private static void TryDeleteDirectory(string path)
+    {
+        try
+        {
+            if (Directory.Exists(path))
+            {
+                Directory.Delete(path, recursive: true);
+            }
+        }
+        catch (Exception ex) when (ex is IOException or UnauthorizedAccessException)
+        {
+        }
     }
 
     private static async Task DownloadToAsync(HttpClient client, string url, string destination, long expectedSize, bool quiet)
     {
-        using var response = await client.GetAsync(new Uri(url), HttpCompletionOption.ResponseHeadersRead).ConfigureAwait(false);
+        using var response = await client.GetAsync(SecurityHelpers.ValidateHttpsUri(url, "Clearcote download"), HttpCompletionOption.ResponseHeadersRead).ConfigureAwait(false);
         if (!response.IsSuccessStatusCode)
         {
             throw new PlaywrightException($"Clearcote download failed: HTTP {(int)response.StatusCode} {response.ReasonPhrase} for {url}");
@@ -1728,29 +2123,50 @@ internal static partial class Clearcote
     {
         if (rel.Archive == "zip")
         {
-            ZipFile.ExtractToDirectory(archivePath, destination);
+            SecurityHelpers.ExtractZipToDirectorySafely(archivePath, destination, overwriteFiles: false);
             return;
         }
 
         var tarPath = SecurityHelpers.GetAbsoluteToolPath(RuntimeInformation.IsOSPlatform(OSPlatform.Windows) ? "tar.exe" : "tar");
-        var psi = new ProcessStartInfo(tarPath)
+        await ValidateTarArchiveEntriesAsync(tarPath, archivePath).ConfigureAwait(false);
+        var result = await RunProcessAsync(tarPath, TimeSpan.FromMinutes(10), "-xf", archivePath, "-C", destination).ConfigureAwait(false);
+        if (result.ExitCode != 0)
         {
-            UseShellExecute = false,
-            RedirectStandardError = true,
-            RedirectStandardOutput = true,
-        };
-        psi.ArgumentList.Add("-xf");
-        psi.ArgumentList.Add(archivePath);
-        psi.ArgumentList.Add("-C");
-        psi.ArgumentList.Add(destination);
-
-        using var process = Process.Start(psi) ?? throw new PlaywrightException("Could not start tar to extract Clearcote archive.");
-        var stderrTask = process.StandardError.ReadToEndAsync();
-        await process.WaitForExitAsync().ConfigureAwait(false);
-        if (process.ExitCode != 0)
-        {
-            throw new PlaywrightException($"tar failed to extract Clearcote archive: {await stderrTask.ConfigureAwait(false)}");
+            throw new PlaywrightException($"tar failed to extract Clearcote archive: {result.Stderr}");
         }
+    }
+
+    private static async Task ValidateTarArchiveEntriesAsync(string tarPath, string archivePath)
+    {
+        var nameListing = await ReadTarListingAsync(tarPath, archivePath, verbose: false).ConfigureAwait(false);
+        var foundEntry = false;
+        foreach (var line in nameListing.Split(new[] { '\r', '\n' }, StringSplitOptions.RemoveEmptyEntries))
+        {
+            SecurityHelpers.ValidateArchiveEntryName(line, "tar");
+            foundEntry = true;
+        }
+
+        if (!foundEntry)
+        {
+            throw new PlaywrightException("Clearcote tar archive did not contain any entries.");
+        }
+
+        var verboseListing = await ReadTarListingAsync(tarPath, archivePath, verbose: true).ConfigureAwait(false);
+        foreach (var line in verboseListing.Split(new[] { '\r', '\n' }, StringSplitOptions.RemoveEmptyEntries))
+        {
+            SecurityHelpers.ValidateTarVerboseEntryType(line, "tar");
+        }
+    }
+
+    private static async Task<string> ReadTarListingAsync(string tarPath, string archivePath, bool verbose)
+    {
+        var result = await RunProcessAsync(tarPath, TimeSpan.FromMinutes(2), verbose ? "-tvf" : "-tf", archivePath).ConfigureAwait(false);
+        if (result.ExitCode != 0)
+        {
+            throw new PlaywrightException($"tar failed to list Clearcote archive: {result.Stderr}");
+        }
+
+        return result.Stdout;
     }
 
     private static async Task<string> Sha256FileAsync(string path)
@@ -1879,43 +2295,16 @@ internal static partial class Clearcote
         }
 
         var env = FontLaunchEnv(exe, options.Env);
-        var psi = new ProcessStartInfo(exe);
-        foreach (var arg in engineArgs.Concat(cdpArgs))
+        var lease = await AcquireLeaseAsync(settings.LicenseKey, settings.LicenseApiBase, quiet: settings.Quiet).ConfigureAwait(false);
+        if (lease is not null)
         {
-            psi.ArgumentList.Add(arg);
-        }
-
-        psi.UseShellExecute = false;
-        psi.RedirectStandardError = true;
-        psi.RedirectStandardOutput = true;
-        if (env != null)
-        {
-            foreach (var kvp in env)
-            {
-                psi.EnvironmentVariables[kvp.Key] = kvp.Value;
-            }
+            env = WithRunToken(lease.Token, env);
         }
 
         var process = await WinAvRetryAsync(
             async (exePath) =>
             {
-                var p = new ProcessStartInfo(exePath);
-                foreach (var arg in engineArgs.Concat(cdpArgs))
-                {
-                    p.ArgumentList.Add(arg);
-                }
-
-                p.UseShellExecute = false;
-                p.RedirectStandardError = true;
-                p.RedirectStandardOutput = true;
-                if (env != null)
-                {
-                    foreach (var kvp in env)
-                    {
-                        p.EnvironmentVariables[kvp.Key] = kvp.Value;
-                    }
-                }
-
+                var p = CreateServeProcessStartInfo(exePath, engineArgs.Concat(cdpArgs), env);
                 var proc = Process.Start(p) ?? throw new PlaywrightException("Failed to start Clearcote browser process.");
                 return proc;
             },
@@ -1937,7 +2326,7 @@ internal static partial class Clearcote
                 if (response.IsSuccessStatusCode)
                 {
                     Log(settings.Quiet, $"CDP endpoint ready: http://{host}:{port}");
-                    return new ClearcoteServer(process, host, port, userDataDir, ownUdd);
+                    return new ClearcoteServer(process, host, port, userDataDir, ownUdd, lease);
                 }
             }
             catch
@@ -1959,6 +2348,17 @@ internal static partial class Clearcote
         {
         }
 
+        if (lease is not null)
+        {
+            try
+            {
+                await lease.StopAsync().ConfigureAwait(false);
+            }
+            catch
+            {
+            }
+        }
+
         if (ownUdd)
         {
             try
@@ -1971,6 +2371,34 @@ internal static partial class Clearcote
         }
 
         throw new PlaywrightException($"Clearcote CDP endpoint at http://{host}:{port} did not come up within {timeout}ms.");
+    }
+
+    internal static ProcessStartInfo CreateServeProcessStartInfo(
+        string executablePath,
+        IEnumerable<string> args,
+        IReadOnlyDictionary<string, string?>? env)
+    {
+        var startInfo = new ProcessStartInfo(executablePath)
+        {
+            UseShellExecute = false,
+            RedirectStandardError = false,
+            RedirectStandardOutput = false,
+        };
+
+        foreach (var arg in args)
+        {
+            startInfo.ArgumentList.Add(arg);
+        }
+
+        if (env != null)
+        {
+            foreach (var kvp in env)
+            {
+                startInfo.EnvironmentVariables[kvp.Key] = kvp.Value;
+            }
+        }
+
+        return startInfo;
     }
 
     private static int FindFreePort()
@@ -1987,6 +2415,23 @@ internal static partial class Clearcote
         }
     }
 
+    internal static ResolvedRelease ResolvedReleaseFromPinned(ReleaseInfo release)
+        => new(
+            release.Tag,
+            release.Version,
+            release.Asset,
+            release.Url,
+            release.Sha256,
+            release.ExeSha256,
+            release.Size,
+            release.Archive,
+            release.Binary,
+            release.AssetGlob,
+            false,
+            null,
+            null,
+            null);
+
     internal sealed record LaunchPatch(
         string ExecutablePath,
         IEnumerable<string> Args,
@@ -1997,53 +2442,8 @@ internal static partial class Clearcote
         bool Humanize,
         bool ShowCursor,
         string? HumanizeSeed,
-        Dictionary<string, string?>? EnvironmentVariables = null);
-
-    private sealed record ReleaseInfo(
-        string Tag,
-        string Version,
-        string Asset,
-        string Url,
-        string Sha256,
-        string ExeSha256,
-        long Size,
-        string Archive,
-        string Binary,
-        string AssetGlob);
-
-    private sealed record ResolvedRelease(
-        string Tag,
-        string Version,
-        string Asset,
-        string Url,
-        string Sha256,
-        string ExeSha256,
-        long Size,
-        string Archive,
-        string Binary,
-        string AssetGlob,
-        bool Unpinned,
-        string? SumsUrl,
-        string? AscUrl,
-        string? KeyUrl)
-    {
-        internal static ResolvedRelease FromPinned(ReleaseInfo release)
-            => new(
-                release.Tag,
-                release.Version,
-                release.Asset,
-                release.Url,
-                release.Sha256,
-                release.ExeSha256,
-                release.Size,
-                release.Archive,
-                release.Binary,
-                release.AssetGlob,
-                false,
-                null,
-                null,
-                null);
-    }
+        Dictionary<string, string?>? EnvironmentVariables = null,
+        LeaseSession? Lease = null);
 
     private sealed record GitHubRelease(string Tag, string PublishedAt, JsonElement Assets);
 
@@ -2117,6 +2517,12 @@ internal static partial class Clearcote
 
         internal string? AgentTyping { get; private init; }
 
+        internal string? Version { get; private init; }
+
+        internal string? LicenseKey { get; private init; }
+
+        internal string? LicenseApiBase { get; private init; }
+
         internal static ClearcoteSettings From(BrowserTypeLaunchOptions options)
             => options is ClearcoteLaunchOptions clearcote ? FromClearcote(clearcote) : FromEnvironment();
 
@@ -2161,6 +2567,9 @@ internal static partial class Clearcote
                 AgentModel = AgentModel,
                 AgentToolMode = AgentToolMode,
                 AgentTyping = AgentTyping,
+                Version = Version,
+                LicenseKey = LicenseKey,
+                LicenseApiBase = LicenseApiBase,
             };
 
         private static ClearcoteSettings FromClearcote(ClearcoteLaunchOptions options)
@@ -2198,6 +2607,9 @@ internal static partial class Clearcote
                 AgentModel = options.AgentModel,
                 AgentToolMode = options.AgentToolMode,
                 AgentTyping = options.AgentTyping,
+                Version = options.Version,
+                LicenseKey = options.LicenseKey,
+                LicenseApiBase = options.LicenseApiBase,
             };
 
         private static ClearcoteSettings FromClearcote(ClearcoteLaunchPersistentContextOptions options)
@@ -2235,6 +2647,37 @@ internal static partial class Clearcote
                 AgentModel = options.AgentModel,
                 AgentToolMode = options.AgentToolMode,
                 AgentTyping = options.AgentTyping,
+                Version = options.Version,
+                LicenseKey = options.LicenseKey,
+                LicenseApiBase = options.LicenseApiBase,
             };
     }
 }
+
+internal sealed record ReleaseInfo(
+    string Tag,
+    string Version,
+    string Asset,
+    string Url,
+    string Sha256,
+    string ExeSha256,
+    long Size,
+    string Archive,
+    string Binary,
+    string AssetGlob);
+
+public sealed record ResolvedRelease(
+    string Tag,
+    string Version,
+    string Asset,
+    string Url,
+    string Sha256,
+    string ExeSha256,
+    long Size,
+    string Archive,
+    string Binary,
+    string AssetGlob,
+    bool Unpinned,
+    string? SumsUrl,
+    string? AscUrl,
+    string? KeyUrl);

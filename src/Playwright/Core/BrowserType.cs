@@ -180,6 +180,10 @@ internal class BrowserType : ChannelOwner, IBrowserType
         if (clearcote != null)
         {
             await context.ApplyClearcoteAsync(clearcote).ConfigureAwait(false);
+            if (clearcote.Lease is not null)
+            {
+                context.Close += (_, _) => { _ = clearcote.Lease.StopAsync(); };
+            }
         }
         await context.InitializeHarFromOptionsAsync(new()
         {

@@ -39,51 +39,48 @@ internal static class Driver
         ["PW_CLI_DISPLAY_VERSION"] = "1.0.0",
     };
 
-    internal static (string ExecutablePath, Func<string?, string> GetArgs) GetExecutablePath()
+    internal static (string ExecutablePath, string CliEntrypoint) GetExecutablePath()
     {
         var baseDir = AppContext.BaseDirectory;
         var assemblyDirectory = new DirectoryInfo(baseDir);
 
-        if (!File.Exists(Path.Combine(assemblyDirectory.FullName, "Microsoft.Playwright.dll")))
-        {
-            assemblyDirectory = new DirectoryInfo(baseDir);
-        }
-
         string executableFile;
-        Func<string?, string> getArgs;
+        string cliEntrypoint;
 
         var driverSearchPath = Environment.GetEnvironmentVariable("PLAYWRIGHT_DRIVER_SEARCH_PATH");
         if (!string.IsNullOrEmpty(driverSearchPath))
         {
-            var safeSearchPath = SecurityHelpers.ResolveAndValidatePath(driverSearchPath, "PLAYWRIGHT_DRIVER_SEARCH_PATH");
-            Console.Error.WriteLine("[playwright] WARNING: Using PLAYWRIGHT_DRIVER_SEARCH_PATH override. This bypasses built-in driver resolution.");
-            (executableFile, getArgs) = GetPath(safeSearchPath);
-            if (!File.Exists(executableFile))
+            var safeSearchPath = ResolveEnvironmentPath(driverSearchPath, "PLAYWRIGHT_DRIVER_SEARCH_PATH");
+            if (!Directory.Exists(safeSearchPath))
             {
-                throw new PlaywrightException("Couldn't find driver in \"PLAYWRIGHT_DRIVER_SEARCH_PATH\"");
+                throw new PlaywrightException($"PLAYWRIGHT_DRIVER_SEARCH_PATH points to non-existent directory: {safeSearchPath}");
             }
-            return (executableFile, getArgs);
+
+            Console.Error.WriteLine("[playwright] WARNING: Using PLAYWRIGHT_DRIVER_SEARCH_PATH override. This bypasses built-in driver resolution.");
+            (executableFile, cliEntrypoint) = GetPath(safeSearchPath);
+            ValidateResolvedDriverPath(executableFile, cliEntrypoint, "PLAYWRIGHT_DRIVER_SEARCH_PATH");
+            return (executableFile, cliEntrypoint);
         }
 
-        (executableFile, getArgs) = GetPath(assemblyDirectory.FullName);
-        if (File.Exists(executableFile))
+        (executableFile, cliEntrypoint) = GetPath(assemblyDirectory.FullName);
+        if (File.Exists(executableFile) && File.Exists(cliEntrypoint))
         {
-            return (executableFile, getArgs);
+            return (executableFile, cliEntrypoint);
         }
 
         if (assemblyDirectory.Parent?.Parent != null)
         {
-            (executableFile, getArgs) = GetPath(assemblyDirectory.Parent.Parent.FullName);
-            if (File.Exists(executableFile))
+            (executableFile, cliEntrypoint) = GetPath(assemblyDirectory.Parent.Parent.FullName);
+            if (File.Exists(executableFile) && File.Exists(cliEntrypoint))
             {
-                return (executableFile, getArgs);
+                return (executableFile, cliEntrypoint);
             }
         }
 
         throw new PlaywrightException($"Driver not found: {executableFile}");
     }
 
-    private static (string ExecutablePath, Func<string?, string> GetArgs) GetPath(string driversPath)
+    private static (string ExecutablePath, string CliEntrypoint) GetPath(string driversPath)
     {
         string platformId;
         string nodeExecutable;
@@ -108,15 +105,11 @@ internal static class Driver
         }
 
         var cliEntrypoint = Path.Combine(driversPath, ".playwright", "package", "cli.js");
-        string getArgs(string? args)
-        {
-            return !string.IsNullOrEmpty(args) ? $"\"{cliEntrypoint}\" {args}" : cliEntrypoint;
-        }
         var envNodePath = Environment.GetEnvironmentVariable("PLAYWRIGHT_NODEJS_PATH");
         string resolvedNodePath;
         if (!string.IsNullOrEmpty(envNodePath))
         {
-            resolvedNodePath = SecurityHelpers.ResolveAndValidatePath(envNodePath, "PLAYWRIGHT_NODEJS_PATH");
+            resolvedNodePath = ResolveEnvironmentPath(envNodePath, "PLAYWRIGHT_NODEJS_PATH");
             if (!File.Exists(resolvedNodePath))
             {
                 throw new PlaywrightException($"PLAYWRIGHT_NODEJS_PATH points to non-existent file: {resolvedNodePath}");
@@ -136,6 +129,29 @@ internal static class Driver
             resolvedNodePath = Path.GetFullPath(Path.Combine(driversPath, ".playwright", "node", platformId, nodeExecutable));
         }
 
-        return (resolvedNodePath, getArgs);
+        return (resolvedNodePath, cliEntrypoint);
+    }
+
+    private static string ResolveEnvironmentPath(string path, string purpose)
+    {
+        if (!Path.IsPathFullyQualified(path))
+        {
+            throw new PlaywrightException($"{purpose} must be a fully-qualified path: {path}");
+        }
+
+        return SecurityHelpers.ResolveAndValidatePath(path, purpose);
+    }
+
+    private static void ValidateResolvedDriverPath(string executableFile, string cliEntrypoint, string source)
+    {
+        if (!File.Exists(executableFile))
+        {
+            throw new PlaywrightException($"Couldn't find Node.js executable from {source}: {executableFile}");
+        }
+
+        if (!File.Exists(cliEntrypoint))
+        {
+            throw new PlaywrightException($"Couldn't find Playwright driver entrypoint from {source}: {cliEntrypoint}");
+        }
     }
 }
