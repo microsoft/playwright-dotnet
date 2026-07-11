@@ -2142,7 +2142,18 @@ internal static partial class Clearcote
         var foundEntry = false;
         foreach (var line in nameListing.Split(new[] { '\r', '\n' }, StringSplitOptions.RemoveEmptyEntries))
         {
-            SecurityHelpers.ValidateArchiveEntryName(line, "tar");
+            var normalized = line.Trim();
+            if (normalized.StartsWith("./", StringComparison.Ordinal))
+            {
+                normalized = normalized.Substring(2);
+            }
+
+            if (normalized.Length == 0 || normalized == ".")
+            {
+                continue;
+            }
+
+            SecurityHelpers.ValidateArchiveEntryName(normalized, "tar");
             foundEntry = true;
         }
 
