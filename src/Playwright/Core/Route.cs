@@ -28,7 +28,6 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Runtime.CompilerServices;
-using System.Text.Json;
 using System.Threading.Tasks;
 using Microsoft.Playwright.Helpers;
 using Microsoft.Playwright.Transport;
@@ -166,7 +165,7 @@ internal class Route : ChannelOwner, IRoute
             {
                 throw new ArgumentException("Cannot provide both 'json' and 'body', 'bodyBytes' or 'path'");
             }
-            body = JsonSerializer.Serialize(json);
+            body = UserJsonSerializer.Serialize(json);
         }
 
         if (response != null)

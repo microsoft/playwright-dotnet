@@ -25,6 +25,7 @@
  */
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.IO;
 using System.Linq;
@@ -179,7 +180,7 @@ internal class Frame : ChannelOwner, IFrame
 
     [MethodImpl(MethodImplOptions.NoInlining)]
     public Task<IReadOnlyList<string>> SelectOptionAsync(string selector, IEnumerable<string> values, FrameSelectOptionOptions? options = default)
-        => SelectOptionAsync(selector, values.Select(valueOrLabel => new SelectOptionValueProtocol() { ValueOrLabel = valueOrLabel }), options);
+        => SelectOptionAsync(selector, values.Select(valueOrLabel => new SelectOptionValueProtocol() { ValueOrLabel = valueOrLabel }).ToArray(), options);
 
     [MethodImpl(MethodImplOptions.NoInlining)]
     public Task<IReadOnlyList<string>> SelectOptionAsync(string selector, IElementHandle values, FrameSelectOptionOptions? options = default)
@@ -190,7 +191,7 @@ internal class Frame : ChannelOwner, IFrame
         => (await SendMessageToServerAsync("selectOption", new Dictionary<string, object?>
         {
             ["selector"] = selector,
-            ["elements"] = values.Select(x => x as ElementHandle),
+            ["elements"] = values.Select(x => x as ElementHandle).ToArray(),
             ["strict"] = options?.Strict,
             ["force"] = options?.Force,
             ["timeout"] = Timeout(options?.Timeout),
@@ -202,7 +203,7 @@ internal class Frame : ChannelOwner, IFrame
 
     [MethodImpl(MethodImplOptions.NoInlining)]
     public Task<IReadOnlyList<string>> SelectOptionAsync(string selector, IEnumerable<SelectOptionValue> values, FrameSelectOptionOptions? options = default)
-        => SelectOptionAsync(selector, values.Select(value => SelectOptionValueProtocol.From(value)), options);
+        => SelectOptionAsync(selector, values.Select(value => SelectOptionValueProtocol.From(value)).ToArray(), options);
 
     internal async Task<IReadOnlyList<string>> SelectOptionAsync(string selector, IEnumerable<SelectOptionValueProtocol> values, FrameSelectOptionOptions? options = default)
         => (await SendMessageToServerAsync("selectOption", new Dictionary<string, object?>
@@ -244,7 +245,7 @@ internal class Frame : ChannelOwner, IFrame
             }
             else
             {
-                await waiter.WaitForEventAsync<WaitUntilState>(this, "LoadState", s =>
+                await waiter.WaitForEventAsync<Frame, WaitUntilState>(this, "LoadState", s =>
                 {
                     waiter.Log($"  \"{s}\" event fired");
                     return s == loadState;
@@ -297,7 +298,7 @@ internal class Frame : ChannelOwner, IFrame
 
         waiter.Log($"waiting for navigation{toUrl} until \"{waitUntil}\"");
 
-        var navigatedEventTask = waiter.WaitForEventAsync<FrameNavigatedEventArgs>(
+        var navigatedEventTask = waiter.WaitForEventAsync<Frame, FrameNavigatedEventArgs>(
             this,
             "Navigated",
             e =>
@@ -328,7 +329,7 @@ internal class Frame : ChannelOwner, IFrame
 
         if (!_loadStates.Select(s => s.ToValueString()).Contains(waitUntil.Value.ToValueString()))
         {
-            await waiter.WaitForEventAsync<WaitUntilState>(
+            await waiter.WaitForEventAsync<Frame, WaitUntilState>(
                 this,
                 "LoadState",
                 e =>
@@ -351,7 +352,7 @@ internal class Frame : ChannelOwner, IFrame
         {
             ["selector"] = selector,
             ["force"] = options?.Force,
-            ["modifiers"] = options?.Modifiers?.Select(m => m.ToValueString()),
+            ["modifiers"] = options?.Modifiers?.Select(m => m.ToValueString()).ToArray(),
             ["trial"] = options?.Trial,
             ["timeout"] = Timeout(options?.Timeout),
             ["position"] = options?.Position,
@@ -381,15 +382,22 @@ internal class Frame : ChannelOwner, IFrame
         });
 
     [MethodImpl(MethodImplOptions.NoInlining)]
-    public Task TypeAsync(string selector, string text, FrameTypeOptions? options = default)
-        => SendMessageToServerAsync("type", new Dictionary<string, object?>
+    public async Task TypeAsync(string selector, string text, FrameTypeOptions? options = default)
+    {
+        if (await ClearcoteHumanize.TypeSelectorAsync(this, selector, text, options).ConfigureAwait(false))
+        {
+            return;
+        }
+
+        await SendMessageToServerAsync("type", new Dictionary<string, object?>
         {
             ["selector"] = selector,
             ["text"] = text,
             ["delay"] = options?.Delay,
             ["timeout"] = Timeout(options?.Timeout),
             ["strict"] = options?.Strict,
-        });
+        }).ConfigureAwait(false);
+    }
 
     [MethodImpl(MethodImplOptions.NoInlining)]
     public async Task<string?> GetAttributeAsync(string selector, string name, FrameGetAttributeOptions? options = default)
@@ -435,21 +443,34 @@ internal class Frame : ChannelOwner, IFrame
         }).ConfigureAwait(false))?.GetProperty("value").ToString();
 
     [MethodImpl(MethodImplOptions.NoInlining)]
-    public Task HoverAsync(string selector, FrameHoverOptions? options = default)
-        => SendMessageToServerAsync("hover", new Dictionary<string, object?>
+    public async Task HoverAsync(string selector, FrameHoverOptions? options = default)
+    {
+        if (await ClearcoteHumanize.HoverSelectorAsync(this, selector, options).ConfigureAwait(false))
+        {
+            return;
+        }
+
+        await SendMessageToServerAsync("hover", new Dictionary<string, object?>
         {
             ["selector"] = selector,
             ["force"] = options?.Force,
-            ["modifiers"] = options?.Modifiers?.Select(m => m.ToValueString()),
+            ["modifiers"] = options?.Modifiers?.Select(m => m.ToValueString()).ToArray(),
             ["position"] = options?.Position,
             ["trial"] = options?.Trial,
             ["timeout"] = Timeout(options?.Timeout),
             ["strict"] = options?.Strict,
-        });
+        }).ConfigureAwait(false);
+    }
 
     [MethodImpl(MethodImplOptions.NoInlining)]
-    public Task PressAsync(string selector, string key, FramePressOptions? options = default)
-        => SendMessageToServerAsync("press", new Dictionary<string, object?>
+    public async Task PressAsync(string selector, string key, FramePressOptions? options = default)
+    {
+        if (await ClearcoteHumanize.PressSelectorAsync(this, selector, key, options).ConfigureAwait(false))
+        {
+            return;
+        }
+
+        await SendMessageToServerAsync("press", new Dictionary<string, object?>
         {
             ["selector"] = selector,
             ["key"] = key,
@@ -459,7 +480,8 @@ internal class Frame : ChannelOwner, IFrame
             ["noWaitAfter"] = options?.NoWaitAfter,
 #pragma warning restore CS0612 // Type or member is obsolete
             ["strict"] = options?.Strict,
-        });
+        }).ConfigureAwait(false);
+    }
 
     [MethodImpl(MethodImplOptions.NoInlining)]
     public Task DispatchEventAsync(string selector, string type, object? eventInit = default, FrameDispatchEventOptions? options = default)
@@ -473,23 +495,31 @@ internal class Frame : ChannelOwner, IFrame
         });
 
     [MethodImpl(MethodImplOptions.NoInlining)]
-    public Task FillAsync(string selector, string value, FrameFillOptions? options = default)
-        => SendMessageToServerAsync("fill", new Dictionary<string, object?>
+    public async Task FillAsync(string selector, string value, FrameFillOptions? options = default)
+    {
+        if (await ClearcoteHumanize.FillSelectorAsync(this, selector, value, options).ConfigureAwait(false))
+        {
+            return;
+        }
+
+        await SendMessageToServerAsync("fill", new Dictionary<string, object?>
         {
             ["selector"] = selector,
             ["value"] = value,
             ["force"] = options?.Force,
             ["timeout"] = Timeout(options?.Timeout),
             ["strict"] = options?.Strict,
-        });
+        }).ConfigureAwait(false);
+    }
 
     [MethodImpl(MethodImplOptions.NoInlining)]
     public async Task<IElementHandle> AddScriptTagAsync(FrameAddScriptTagOptions? options = default)
     {
         var content = options?.Content;
-        if (!string.IsNullOrEmpty(options?.Path) && options?.Path != null)
+        if (!string.IsNullOrEmpty(options?.Path))
         {
-            content = ScriptsHelper.AddSourceUrlToScript(File.ReadAllText(options.Path), options.Path);
+            var safePath = SecurityHelpers.ResolveAndValidatePath(options.Path, "AddScriptTagAsync.Path");
+            content = ScriptsHelper.AddSourceUrlToScript(File.ReadAllText(safePath), safePath);
         }
 
         return await SendMessageToServerAsync<ElementHandle>("addScriptTag", new Dictionary<string, object?>
@@ -505,10 +535,11 @@ internal class Frame : ChannelOwner, IFrame
     public async Task<IElementHandle> AddStyleTagAsync(FrameAddStyleTagOptions? options = default)
     {
         var content = options?.Content;
-        if (!string.IsNullOrEmpty(options?.Path) && options?.Path != null)
+        if (!string.IsNullOrEmpty(options?.Path))
         {
-            content = File.ReadAllText(options.Path);
-            content += "//# sourceURL=" + options.Path.Replace("\n", string.Empty);
+            var safePath = SecurityHelpers.ResolveAndValidatePath(options.Path, "AddStyleTagAsync.Path");
+            content = File.ReadAllText(safePath);
+            content += "//# sourceURL=" + safePath.Replace("\n", string.Empty);
         }
 
         return await SendMessageToServerAsync<ElementHandle>("addStyleTag", new Dictionary<string, object?>
@@ -564,15 +595,21 @@ internal class Frame : ChannelOwner, IFrame
     public Task ClickAsync(string selector, FrameClickOptions? options = default)
         => ClickInternalAsync(selector, options, null);
 
-    internal Task ClickInternalAsync(string selector, FrameClickOptions? options, int? steps)
-        => SendMessageToServerAsync("click", new Dictionary<string, object?>
+    internal async Task ClickInternalAsync(string selector, FrameClickOptions? options, int? steps)
+    {
+        if (await ClearcoteHumanize.ClickSelectorAsync(this, selector, options, steps).ConfigureAwait(false))
+        {
+            return;
+        }
+
+        await SendMessageToServerAsync("click", new Dictionary<string, object?>
         {
             ["selector"] = selector,
             ["button"] = options?.Button,
             ["force"] = options?.Force,
             ["delay"] = options?.Delay,
             ["clickCount"] = options?.ClickCount,
-            ["modifiers"] = options?.Modifiers?.Select(m => m.ToValueString()),
+            ["modifiers"] = options?.Modifiers?.Select(m => m.ToValueString()).ToArray(),
             ["position"] = options?.Position,
 #pragma warning disable CS0612 // Type or member is obsolete
             ["noWaitAfter"] = options?.NoWaitAfter,
@@ -581,26 +618,34 @@ internal class Frame : ChannelOwner, IFrame
             ["trial"] = options?.Trial,
             ["timeout"] = Timeout(options?.Timeout),
             ["strict"] = options?.Strict,
-        });
+        }).ConfigureAwait(false);
+    }
 
     [MethodImpl(MethodImplOptions.NoInlining)]
     public Task DblClickAsync(string selector, FrameDblClickOptions? options = default)
         => DblClickInternalAsync(selector, options, null);
 
-    internal Task DblClickInternalAsync(string selector, FrameDblClickOptions? options, int? steps)
-        => SendMessageToServerAsync("dblclick", new Dictionary<string, object?>
+    internal async Task DblClickInternalAsync(string selector, FrameDblClickOptions? options, int? steps)
+    {
+        if (await ClearcoteHumanize.DblClickSelectorAsync(this, selector, options, steps).ConfigureAwait(false))
+        {
+            return;
+        }
+
+        await SendMessageToServerAsync("dblclick", new Dictionary<string, object?>
         {
             ["selector"] = selector,
             ["button"] = options?.Button,
             ["delay"] = options?.Delay,
             ["force"] = options?.Force,
-            ["modifiers"] = options?.Modifiers?.Select(m => m.ToValueString()),
+            ["modifiers"] = options?.Modifiers?.Select(m => m.ToValueString()).ToArray(),
             ["position"] = options?.Position,
             ["steps"] = steps,
             ["trial"] = options?.Trial,
             ["timeout"] = Timeout(options?.Timeout),
             ["strict"] = options?.Strict,
-        });
+        }).ConfigureAwait(false);
+    }
 
     [MethodImpl(MethodImplOptions.NoInlining)]
     public Task CheckAsync(string selector, FrameCheckOptions? options = default)
@@ -718,7 +763,7 @@ internal class Frame : ChannelOwner, IFrame
             }).ConfigureAwait(false));
 
     [MethodImpl(MethodImplOptions.NoInlining)]
-    public async Task<T> EvaluateAsync<T>(string script, object? arg = null)
+    public async Task<T> EvaluateAsync<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors | DynamicallyAccessedMemberTypes.PublicProperties)] T>(string script, object? arg = null)
         => ScriptsHelper.ParseEvaluateResult<T>(await SendMessageToServerAsync<JsonElement?>(
             "evaluateExpression",
             new Dictionary<string, object?>
@@ -736,7 +781,7 @@ internal class Frame : ChannelOwner, IFrame
             strict: null).ConfigureAwait(false));
 
     [MethodImpl(MethodImplOptions.NoInlining)]
-    public async Task<T> EvalOnSelectorAsync<T>(string selector, string script, object? arg = null)
+    public async Task<T> EvalOnSelectorAsync<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors | DynamicallyAccessedMemberTypes.PublicProperties)] T>(string selector, string script, object? arg = null)
         => ScriptsHelper.ParseEvaluateResult<T>(await _evalOnSelectorAsync(
             selector: selector,
             script,
@@ -744,7 +789,7 @@ internal class Frame : ChannelOwner, IFrame
             strict: null).ConfigureAwait(false));
 
     [MethodImpl(MethodImplOptions.NoInlining)]
-    public async Task<T> EvalOnSelectorAsync<T>(string selector, string expression, object? arg = null, FrameEvalOnSelectorOptions? options = null)
+    public async Task<T> EvalOnSelectorAsync<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors | DynamicallyAccessedMemberTypes.PublicProperties)] T>(string selector, string expression, object? arg = null, FrameEvalOnSelectorOptions? options = null)
         => ScriptsHelper.ParseEvaluateResult<T>(await _evalOnSelectorAsync(
             selector: selector,
             expression,
@@ -770,7 +815,7 @@ internal class Frame : ChannelOwner, IFrame
             arg: ScriptsHelper.SerializedArgument(arg)).ConfigureAwait(false));
 
     [MethodImpl(MethodImplOptions.NoInlining)]
-    public async Task<T> EvalOnSelectorAllAsync<T>(string selector, string script, object? arg = null)
+    public async Task<T> EvalOnSelectorAllAsync<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors | DynamicallyAccessedMemberTypes.PublicProperties)] T>(string selector, string script, object? arg = null)
         => ScriptsHelper.ParseEvaluateResult<T>(await _evalOnSelectorAllAsync(
             selector: selector,
             script,
@@ -885,8 +930,14 @@ internal class Frame : ChannelOwner, IFrame
         => WaitForURLAsync(null, null, url, options);
 
     [MethodImpl(MethodImplOptions.NoInlining)]
-    public Task DragAndDropAsync(string source, string target, FrameDragAndDropOptions? options = null)
-        => SendMessageToServerAsync("dragAndDrop", new Dictionary<string, object?>
+    public async Task DragAndDropAsync(string source, string target, FrameDragAndDropOptions? options = null)
+    {
+        if (await ClearcoteHumanize.DragAndDropAsync(this, source, target, options).ConfigureAwait(false))
+        {
+            return;
+        }
+
+        await SendMessageToServerAsync("dragAndDrop", new Dictionary<string, object?>
         {
             ["source"] = source,
             ["target"] = target,
@@ -897,7 +948,8 @@ internal class Frame : ChannelOwner, IFrame
             ["strict"] = options?.Strict,
             ["sourcePosition"] = options?.SourcePosition,
             ["targetPosition"] = options?.TargetPosition,
-        });
+        }).ConfigureAwait(false);
+    }
 
     internal async Task DropAsync(string selector, DropPayload payload, Position? position, float? timeout, bool strict)
     {
@@ -1024,9 +1076,9 @@ internal class Frame : ChannelOwner, IFrame
         {
             waiter.RejectImmediately(((Page)Page)._closeErrorWithReason());
         }
-        waiter.RejectOnEvent<IPage>(Page, PageEvent.Close.Name, () => ((Page)Page)._closeErrorWithReason());
-        waiter.RejectOnEvent<IPage>(Page, PageEvent.Crash.Name, new PlaywrightException("Navigation failed because page was crashed!"));
-        waiter.RejectOnEvent<IFrame>(
+        waiter.RejectOnEvent<IPage, IPage>(Page, PageEvent.Close.Name, () => ((Page)Page)._closeErrorWithReason());
+        waiter.RejectOnEvent<IPage, IPage>(Page, PageEvent.Crash.Name, new PlaywrightException("Navigation failed because page was crashed!"));
+        waiter.RejectOnEvent<IPage, IFrame>(
             Page,
             "FrameDetached",
             new PlaywrightException("Navigating frame was detached!"),

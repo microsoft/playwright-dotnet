@@ -112,7 +112,117 @@ internal abstract class AssertionsBase
         return textValue;
     }
 
-    protected FrameExpectOptions ConvertToFrameExpectOptions(object? source) => ClassUtils.Clone<FrameExpectOptions>(source);
+    protected FrameExpectOptions ConvertToFrameExpectOptions(object? source)
+    {
+        var target = new FrameExpectOptions();
+        switch (source)
+        {
+            case null:
+                break;
+            case LocatorAssertionsToBeAttachedOptions o:
+                target.Timeout = o.Timeout;
+                break;
+            case LocatorAssertionsToBeCheckedOptions o:
+                target.Timeout = o.Timeout;
+                break;
+            case LocatorAssertionsToBeDisabledOptions o:
+                target.Timeout = o.Timeout;
+                break;
+            case LocatorAssertionsToBeEditableOptions o:
+                target.Timeout = o.Timeout;
+                break;
+            case LocatorAssertionsToBeEmptyOptions o:
+                target.Timeout = o.Timeout;
+                break;
+            case LocatorAssertionsToBeEnabledOptions o:
+                target.Timeout = o.Timeout;
+                break;
+            case LocatorAssertionsToBeFocusedOptions o:
+                target.Timeout = o.Timeout;
+                break;
+            case LocatorAssertionsToBeHiddenOptions o:
+                target.Timeout = o.Timeout;
+                break;
+            case LocatorAssertionsToBeInViewportOptions o:
+                target.Timeout = o.Timeout;
+                break;
+            case LocatorAssertionsToBeVisibleOptions o:
+                target.Timeout = o.Timeout;
+                break;
+            case LocatorAssertionsToContainClassOptions o:
+                target.Timeout = o.Timeout;
+                break;
+            case LocatorAssertionsToContainTextOptions o:
+                target.Timeout = o.Timeout;
+                target.UseInnerText = o.UseInnerText == true;
+                break;
+            case LocatorAssertionsToHaveAccessibleDescriptionOptions o:
+                target.Timeout = o.Timeout;
+                break;
+            case LocatorAssertionsToHaveAccessibleErrorMessageOptions o:
+                target.Timeout = o.Timeout;
+                break;
+            case LocatorAssertionsToHaveAccessibleNameOptions o:
+                target.Timeout = o.Timeout;
+                break;
+            case LocatorAssertionsToHaveAttributeOptions o:
+                target.Timeout = o.Timeout;
+                break;
+            case LocatorAssertionsToHaveClassOptions o:
+                target.Timeout = o.Timeout;
+                break;
+            case LocatorAssertionsToHaveCountOptions o:
+                target.Timeout = o.Timeout;
+                break;
+            case LocatorAssertionsToHaveCSSOptions o:
+                target.Timeout = o.Timeout;
+                break;
+            case LocatorAssertionsToHaveIdOptions o:
+                target.Timeout = o.Timeout;
+                break;
+            case LocatorAssertionsToHaveJSPropertyOptions o:
+                target.Timeout = o.Timeout;
+                break;
+            case LocatorAssertionsToHaveRoleOptions o:
+                target.Timeout = o.Timeout;
+                break;
+            case LocatorAssertionsToHaveTextOptions o:
+                target.Timeout = o.Timeout;
+                target.UseInnerText = o.UseInnerText == true;
+                break;
+            case LocatorAssertionsToHaveValueOptions o:
+                target.Timeout = o.Timeout;
+                break;
+            case LocatorAssertionsToHaveValuesOptions o:
+                target.Timeout = o.Timeout;
+                break;
+            case LocatorAssertionsToMatchAriaSnapshotOptions o:
+                target.Timeout = o.Timeout;
+                break;
+            case PageAssertionsToHaveTitleOptions o:
+                target.Timeout = o.Timeout;
+                break;
+            case PageAssertionsToHaveURLOptions o:
+                target.Timeout = o.Timeout;
+                break;
+            case PageAssertionsToMatchAriaSnapshotOptions o:
+                target.Timeout = o.Timeout;
+                break;
+            case FrameExpectOptions o:
+                target.ExpressionArg = o.ExpressionArg;
+                target.ExpectedText = o.ExpectedText;
+                target.ExpectedNumber = o.ExpectedNumber;
+                target.ExpectedValue = o.ExpectedValue;
+                target.UseInnerText = o.UseInnerText;
+                target.IsNot = o.IsNot;
+                target.Timeout = o.Timeout;
+                break;
+            default:
+                throw new ArgumentException($"Unsupported assertion options type: {source.GetType().FullName}", nameof(source));
+        }
+
+        return target;
+    }
 
     private string FormatValue(object value)
     {
@@ -131,7 +241,7 @@ internal abstract class AssertionsBase
             return "[" + string.Join(", ", ((IEnumerable<object>)value).Select(value => $"'{value}'")) + "]";
         }
 
-        return value.ToString();
+        return value.ToString()!;
     }
 
     public static void SetDefaultTimeout(float timeout)

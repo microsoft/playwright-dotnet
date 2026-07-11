@@ -24,6 +24,7 @@
 
 using System;
 using System.Text.Json;
+using System.Text.Json.Serialization.Metadata;
 using System.Threading.Tasks;
 
 namespace Microsoft.Playwright;
@@ -31,4 +32,6 @@ namespace Microsoft.Playwright;
 public partial interface IAPIResponse : IAsyncDisposable
 {
     Task<T?> JsonAsync<T>(JsonSerializerOptions? options = null);
+
+    Task<T?> JsonAsync<T>(JsonTypeInfo<T> jsonTypeInfo);
 }

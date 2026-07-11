@@ -357,6 +357,8 @@ src/Playwright/Microsoft.Playwright.xml
 
 testCert.cer
 
+*.png
+
 coverage-report/
 src/Playwright.Tests/coverage.*.xml
  

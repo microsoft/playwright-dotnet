@@ -22,11 +22,13 @@
  * SOFTWARE.
  */
 
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text;
 using System.Text.Json;
+using System.Text.Json.Serialization.Metadata;
 using System.Threading.Tasks;
 using Microsoft.Playwright.Helpers;
 using Microsoft.Playwright.Transport;
@@ -110,7 +112,14 @@ internal class Response : ChannelOwner, IResponse
 
     [MethodImpl(MethodImplOptions.NoInlining)]
     public async Task<T> JsonAsync<T>()
-        => JsonSerializer.Deserialize<T>(await BodyAsync().ConfigureAwait(false))!;
+        => UserJsonSerializer.Deserialize<T>(await BodyAsync().ConfigureAwait(false), null, nameof(JsonAsync))!;
+
+    [MethodImpl(MethodImplOptions.NoInlining)]
+    public async Task<T> JsonAsync<T>(JsonTypeInfo<T> jsonTypeInfo)
+    {
+        ArgumentNullException.ThrowIfNull(jsonTypeInfo);
+        return JsonSerializer.Deserialize(await BodyAsync().ConfigureAwait(false), jsonTypeInfo)!;
+    }
 
     [MethodImpl(MethodImplOptions.NoInlining)]
     public async Task<ResponseSecurityDetailsResult?> SecurityDetailsAsync() => (await SendMessageToServerAsync("securityDetails").ConfigureAwait(false))

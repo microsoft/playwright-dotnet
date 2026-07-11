@@ -38,7 +38,7 @@ internal static class FrameUtils
               document.body.appendChild(frame);
               await new Promise(x => frame.onload = x);
               return frame
-            }", new { frameId, url });
+            }", new Dictionary<string, object?> { ["frameId"] = frameId, ["url"] = url });
         return await handle.ContentFrameAsync();
     }
 

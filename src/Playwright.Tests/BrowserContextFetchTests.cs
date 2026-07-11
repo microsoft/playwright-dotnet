@@ -129,7 +129,7 @@ public class BrowserContextFetchTests : PageTestEx
                 responseTask
             );
             CollectionAssert.AreEquivalent(new[] { "value1", "value2" }, receivedQueryString["param1"]);
-            Assert.AreEqual("знач2", string.Join(",", receivedQueryString["парам2"]));
+            Assert.AreEqual("знач2", string.Join(",", (string?[])receivedQueryString["парам2"]!));
         }, Server.Prefix + "/empty.html", requestOptions);
     }
 
@@ -806,11 +806,11 @@ public class BrowserContextFetchTests : PageTestEx
     public async Task ShouldParseResponseJSONWhilePassingAType()
     {
         var response = await Context.APIRequest.GetAsync(Server.Prefix + "/simple.json");
-        var json = await response.JsonAsync<SimpleObject>();
+        var json = await response.JsonAsync(BrowserContextFetchJsonContext.Default.SimpleObject);
         Assert.AreEqual("bar", json.Foo);
     }
 
-    record SimpleObject
+    public record SimpleObject
     {
         [JsonPropertyName("foo")]
         public string Foo { get; set; }
@@ -820,11 +820,23 @@ public class BrowserContextFetchTests : PageTestEx
     public async Task ShouldParseResponseJSONWhilePassingATypeWithSerializerOptions()
     {
         var response = await Context.APIRequest.GetAsync(Server.Prefix + "/simple.json");
-        var json = await response.JsonAsync<SimpleObject>(new() { PropertyNameCaseInsensitive = true });
+        var json = await response.JsonAsync<SimpleObject>(new JsonSerializerOptions
+        {
+            PropertyNameCaseInsensitive = true,
+            TypeInfoResolver = BrowserContextFetchJsonContext.Default,
+        });
         Assert.AreEqual("bar", json.Foo);
     }
 
-    record SimplerObject
+    [PlaywrightTest("", "should require source-generated metadata for typed response JSON options")]
+    public async Task ShouldRequireSourceGeneratedMetadataForTypedResponseJSONOptions()
+    {
+        var response = await Context.APIRequest.GetAsync(Server.Prefix + "/simple.json");
+        var exception = await PlaywrightAssert.ThrowsAsync<PlaywrightException>(() => response.JsonAsync<SimpleObject>(new JsonSerializerOptions()));
+        StringAssert.Contains("requires source-generated JSON metadata", exception.Message);
+    }
+
+    public record SimplerObject
     {
         public string Foo { get; set; }
     }
@@ -941,4 +953,10 @@ public class BrowserContextFetchTests : PageTestEx
             }
         }
     }
+}
+
+[JsonSerializable(typeof(BrowserContextFetchTests.SimpleObject))]
+[JsonSerializable(typeof(BrowserContextFetchTests.SimplerObject))]
+internal partial class BrowserContextFetchJsonContext : JsonSerializerContext
+{
 }

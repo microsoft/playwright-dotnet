@@ -58,10 +58,10 @@ internal class FormData : IFormData
                 {
                     throw new PlaywrightException("Form requests don't support file payloads, use Multipart=formData instead.");
                 }
-                output.Add(new Dictionary<string, object>()
+                output.Add(new Dictionary<string, object?>()
                 {
                     ["name"] = kvp.Name,
-                    ["file"] = new Dictionary<string, string>()
+                    ["file"] = new Dictionary<string, string>
                     {
                         ["name"] = file.Name,
                         ["buffer"] = Convert.ToBase64String(file.Buffer),
@@ -71,7 +71,7 @@ internal class FormData : IFormData
             }
             else
             {
-                output.Add(new NameValue() { Name = kvp.Name, Value = kvp.Value.ToString() });
+                output.Add(new NameValue() { Name = kvp.Name, Value = kvp.Value!.ToString()! });
             }
         }
         return output;

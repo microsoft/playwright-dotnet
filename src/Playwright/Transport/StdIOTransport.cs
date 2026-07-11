@@ -34,10 +34,12 @@ namespace Microsoft.Playwright.Transport;
 internal class StdIOTransport : IDisposable
 {
     private const int DefaultBufferSize = 1024;  // Byte buffer size
+    internal const int MaxMessageSize = 256 * 1024 * 1024;
     private readonly Process _process;
     private readonly CancellationTokenSource _readerCancellationSource = new();
     private readonly Task _getResponseTask;
     private readonly List<byte> _data = new();
+    private int _consumed;
     private int? _currentMessageSize;
 
     internal StdIOTransport()
@@ -75,8 +77,15 @@ internal class StdIOTransport : IDisposable
             IsClosed = true;
             TransportClosed?.Invoke(this, closeReason);
             _readerCancellationSource?.Cancel();
-            _process.StandardInput.Close();
-            _process.WaitForExit();
+            try
+            {
+                _process.StandardInput.Close();
+            }
+            catch (Exception ex) when (ex is InvalidOperationException or ObjectDisposedException)
+            {
+            }
+
+            WaitForExitOrKill(_process, 3000);
         }
     }
 
@@ -88,10 +97,20 @@ internal class StdIOTransport : IDisposable
             {
                 int len = message.Length;
                 byte[] ll = new byte[4];
-                ll[0] = (byte)(len & 0xFF);
-                ll[1] = (byte)((len >> 8) & 0xFF);
-                ll[2] = (byte)((len >> 16) & 0xFF);
-                ll[3] = (byte)((len >> 24) & 0xFF);
+                if (BitConverter.IsLittleEndian)
+                {
+                    ll[0] = (byte)(len & 0xFF);
+                    ll[1] = (byte)((len >> 8) & 0xFF);
+                    ll[2] = (byte)((len >> 16) & 0xFF);
+                    ll[3] = (byte)((len >> 24) & 0xFF);
+                }
+                else
+                {
+                    ll[0] = (byte)((len >> 24) & 0xFF);
+                    ll[1] = (byte)((len >> 16) & 0xFF);
+                    ll[2] = (byte)((len >> 8) & 0xFF);
+                    ll[3] = (byte)(len & 0xFF);
+                }
 
                 await _process.StandardInput.BaseStream.WriteAsync(ll, 0, 4, _readerCancellationSource.Token).ConfigureAwait(false);
                 await _process.StandardInput.BaseStream.WriteAsync(message, 0, len, _readerCancellationSource.Token).ConfigureAwait(false);
@@ -106,8 +125,8 @@ internal class StdIOTransport : IDisposable
 
     private static Process GetProcess(string driverArgs)
     {
-        var (executablePath, getArgs) = Driver.GetExecutablePath();
-        var startInfo = new ProcessStartInfo(executablePath, getArgs(driverArgs))
+        var (executablePath, cliEntrypoint) = Driver.GetExecutablePath();
+        var startInfo = new ProcessStartInfo(executablePath)
         {
             UseShellExecute = false,
             RedirectStandardOutput = true,
@@ -115,6 +134,9 @@ internal class StdIOTransport : IDisposable
             RedirectStandardError = true,
             CreateNoWindow = true,
         };
+        startInfo.ArgumentList.Add(cliEntrypoint);
+        startInfo.ArgumentList.Add(driverArgs);
+
         foreach (var pair in Driver.EnvironmentVariables)
         {
             startInfo.EnvironmentVariables[pair.Key] = pair.Value;
@@ -123,6 +145,39 @@ internal class StdIOTransport : IDisposable
         {
             StartInfo = startInfo,
         };
+    }
+
+    internal static bool WaitForExitOrKill(Process process, int timeoutMs)
+    {
+        try
+        {
+            if (process.HasExited || process.WaitForExit(timeoutMs))
+            {
+                return true;
+            }
+        }
+        catch (InvalidOperationException)
+        {
+            return true;
+        }
+
+        try
+        {
+            process.Kill(entireProcessTree: true);
+        }
+        catch (Exception ex) when (ex is InvalidOperationException or System.ComponentModel.Win32Exception)
+        {
+            return false;
+        }
+
+        try
+        {
+            return process.WaitForExit(timeoutMs);
+        }
+        catch (InvalidOperationException)
+        {
+            return true;
+        }
     }
 
     /// <summary>
@@ -179,8 +234,29 @@ internal class StdIOTransport : IDisposable
         }
     }
 
-    private static Task ScheduleTransportTaskAsync(Func<CancellationToken, Task> func, CancellationToken cancellationToken)
-        => Task.Factory.StartNew(() => func(cancellationToken), cancellationToken, TaskCreationOptions.LongRunning, TaskScheduler.Current);
+    internal static Task ScheduleTransportTaskAsync(Func<CancellationToken, Task> func, CancellationToken cancellationToken)
+        => Task.Factory.StartNew(() => func(cancellationToken), cancellationToken, TaskCreationOptions.LongRunning, TaskScheduler.Default).Unwrap();
+
+    internal static int DecodeMessageSize(IReadOnlyList<byte> data, int offset)
+    {
+        // The protocol always uses little-endian for the length prefix.
+        // On big-endian systems, swap the byte order.
+        int messageSize;
+        if (BitConverter.IsLittleEndian)
+        {
+            messageSize = data[offset + 0] + (data[offset + 1] << 8) + (data[offset + 2] << 16) + (data[offset + 3] << 24);
+        }
+        else
+        {
+            messageSize = (data[offset + 0] << 24) + (data[offset + 1] << 16) + (data[offset + 2] << 8) + data[offset + 3];
+        }
+        if (messageSize <= 0 || messageSize > MaxMessageSize)
+        {
+            throw new PlaywrightException($"Invalid driver message size: {messageSize}");
+        }
+
+        return messageSize;
+    }
 
     private void Dispose(bool disposing)
     {
@@ -220,6 +296,12 @@ internal class StdIOTransport : IDisposable
             while (!token.IsCancellationRequested && !_process.HasExited)
             {
                 int read = await stream.BaseStream.ReadAsync(buffer, 0, DefaultBufferSize, token).ConfigureAwait(false);
+                if (read == 0)
+                {
+                    Close(new TargetClosedException("Driver connection closed"));
+                    break;
+                }
+
                 if (!token.IsCancellationRequested)
                 {
                     _data.AddRange(new ArraySegment<byte>(buffer, 0, read));
@@ -240,37 +322,47 @@ internal class StdIOTransport : IDisposable
 
     private void ProcessStream(CancellationToken token)
     {
-        var offset = 0;
         try
         {
             while (!token.IsCancellationRequested)
             {
                 if (_currentMessageSize == null)
                 {
-                    if (_data.Count < (uint)offset + 4)
+                    if (_data.Count < _consumed + 4)
                     {
                         break;
                     }
 
-                    _currentMessageSize = _data[offset + 0] + (_data[offset + 1] << 8) + (_data[offset + 2] << 16) + (_data[offset + 3] << 24);
-                    offset += 4;
+                    _currentMessageSize = DecodeMessageSize(_data, _consumed);
+                    _consumed += 4;
                 }
 
-                if (_data.Count < (uint)offset + _currentMessageSize)
+                if (_data.Count - _consumed < _currentMessageSize)
                 {
                     break;
                 }
 
                 byte[] result = new byte[_currentMessageSize.Value];
-                _data.CopyTo(offset, result, 0, result.Length);
-                offset += result.Length;
+                _data.CopyTo(_consumed, result, 0, result.Length);
+                _consumed += result.Length;
                 _currentMessageSize = null;
                 MessageReceived?.Invoke(this, result);
+
+                // Compact buffer when more than half is consumed to avoid unbounded growth.
+                if (_consumed > _data.Count / 2)
+                {
+                    _data.RemoveRange(0, _consumed);
+                    _consumed = 0;
+                }
             }
         }
         finally
         {
-            _data.RemoveRange(0, offset);
+            if (_consumed > 0)
+            {
+                _data.RemoveRange(0, _consumed);
+                _consumed = 0;
+            }
         }
     }
 }

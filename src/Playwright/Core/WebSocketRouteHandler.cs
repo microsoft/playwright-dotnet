@@ -34,13 +34,13 @@ internal class WebSocketRouteHandler
 
     public Delegate Handler { get; set; } = null!;
 
-    public static List<Dictionary<string, object>> PrepareInterceptionPatterns(List<WebSocketRouteHandler> handlers)
+    public static List<Dictionary<string, object?>> PrepareInterceptionPatterns(List<WebSocketRouteHandler> handlers)
     {
         bool all = false;
-        var patterns = new List<Dictionary<string, object>>();
+        var patterns = new List<Dictionary<string, object?>>();
         foreach (var handler in handlers)
         {
-            var pattern = new Dictionary<string, object>();
+            var pattern = new Dictionary<string, object?>();
             patterns.Add(pattern);
 
             if (!string.IsNullOrEmpty(handler.urlMatcher.glob) && handler.urlMatcher.glob != null)
@@ -62,7 +62,7 @@ internal class WebSocketRouteHandler
         if (all)
         {
             return [
-            new Dictionary<string, object>
+            new Dictionary<string, object?>
             {
                 ["glob"] = "**/*",
             }
@@ -74,10 +74,22 @@ internal class WebSocketRouteHandler
 
     public async Task HandleAsync(WebSocketRoute route)
     {
-        var maybeTask = Handler.DynamicInvoke(new object[] { route });
-        if (maybeTask is Task task)
+        switch (Handler)
         {
-            await task.ConfigureAwait(false);
+            case Func<IWebSocketRoute, Task> asyncHandler:
+                await asyncHandler(route).ConfigureAwait(false);
+                break;
+            case Action<IWebSocketRoute> handler:
+                handler(route);
+                break;
+            case Func<WebSocketRoute, Task> asyncHandler:
+                await asyncHandler(route).ConfigureAwait(false);
+                break;
+            case Action<WebSocketRoute> handler:
+                handler(route);
+                break;
+            default:
+                throw new InvalidOperationException($"Unsupported WebSocket route handler delegate '{Handler.GetType()}'.");
         }
         await route.AfterHandleAsync().ConfigureAwait(false);
     }

@@ -39,11 +39,15 @@ internal class Browser : ChannelOwner, IBrowser
 {
     private readonly BrowserInitializer _initializer;
     private readonly TaskCompletionSource<bool> _closedTcs = new();
+    private readonly EventHandler<Exception> _onConnectionClose;
     internal readonly List<BrowserContext> _contexts = new();
     internal string? _tracesDir = null;
     internal BrowserType _browserType = null!;
     internal string? _closeReason;
-    private readonly EventHandler<Exception> _onConnectionClose;
+    private bool _clearcoteHeaded;
+    private bool _clearcoteHumanize;
+    private bool _clearcoteShowCursor;
+    private string? _clearcoteHumanizeSeed;
 
     internal Browser(ChannelOwner parent, string guid, BrowserInitializer initializer) : base(parent, guid)
     {
@@ -148,20 +152,25 @@ internal class Browser : ChannelOwner, IBrowser
         var storageState = options.StorageState;
         if (!string.IsNullOrEmpty(options.StorageStatePath))
         {
-            if (!File.Exists(options.StorageStatePath))
+            var safePath = SecurityHelpers.ResolveAndValidatePath(options.StorageStatePath, "StorageStatePath");
+            if (!File.Exists(safePath))
             {
                 throw new PlaywrightException($"The specified storage state file does not exist: {options.StorageStatePath}");
             }
 
-            storageState = File.ReadAllText(options.StorageStatePath);
+            storageState = File.ReadAllText(safePath);
         }
 
         if (!storageState.IsNullOrEmpty())
         {
-            args.Add("storageState", JsonSerializer.Deserialize<object>(storageState, Helpers.JsonExtensions.DefaultJsonSerializerOptions));
+            args.Add("storageState", JsonDocument.Parse(storageState).RootElement);
         }
 
         if (options.ViewportSize?.Width == -1)
+        {
+            args.Add("noDefaultViewport", true);
+        }
+        else if (_clearcoteHeaded && options.ViewportSize == null)
         {
             args.Add("noDefaultViewport", true);
         }
@@ -172,6 +181,10 @@ internal class Browser : ChannelOwner, IBrowser
         }
 
         var context = await SendMessageToServerAsync<BrowserContext>("newContext", args).ConfigureAwait(false);
+        if (_clearcoteHumanize || _clearcoteShowCursor)
+        {
+            await context.ApplyClearcoteAsync(_clearcoteHumanize, _clearcoteShowCursor, _clearcoteHumanizeSeed).ConfigureAwait(false);
+        }
         await context.InitializeHarFromOptionsAsync(options).ConfigureAwait(false);
         return context;
     }
@@ -276,6 +289,23 @@ internal class Browser : ChannelOwner, IBrowser
         }
     }
 
+    internal void ApplyClearcote(Clearcote.LaunchPatch patch)
+    {
+        _clearcoteHeaded = patch.Headed;
+        _clearcoteHumanize = patch.Humanize;
+        _clearcoteShowCursor = patch.ShowCursor;
+        _clearcoteHumanizeSeed = patch.HumanizeSeed;
+        if (patch.Lease is not null)
+        {
+            Disconnected += (_, _) => { _ = patch.Lease.StopAsync(); };
+        }
+
+        foreach (var context in _contexts)
+        {
+            context.ApplyClearcoteAsync(_clearcoteHumanize, _clearcoteShowCursor, _clearcoteHumanizeSeed).IgnoreException();
+        }
+    }
+
     private void DidCreateContext(BrowserContext context)
     {
         context._browser = this;
@@ -325,21 +355,21 @@ internal class Browser : ChannelOwner, IBrowser
         => await SendMessageToServerAsync<CDPSession>(
         "newBrowserCDPSession").ConfigureAwait(false);
 
-    internal static Dictionary<string, string?>[]? ToClientCertificatesProtocol(IEnumerable<ClientCertificate>? clientCertificates)
+    internal static Dictionary<string, string>[]? ToClientCertificatesProtocol(IEnumerable<ClientCertificate>? clientCertificates)
     {
         if (clientCertificates == null)
         {
             return null;
         }
-        return clientCertificates.Select(clientCertificate => new Dictionary<string, string?>
+        return clientCertificates.Select(clientCertificate => new Dictionary<string, string>
         {
-            ["origin"] = clientCertificate.Origin,
-            ["passphrase"] = clientCertificate.Passphrase,
-            ["cert"] = ReadClientCertificateFile(clientCertificate.CertPath, clientCertificate.Cert),
-            ["key"] = ReadClientCertificateFile(clientCertificate.KeyPath, clientCertificate.Key),
-            ["pfx"] = ReadClientCertificateFile(clientCertificate.PfxPath, clientCertificate.Pfx),
+            ["origin"] = clientCertificate.Origin ?? string.Empty,
+            ["passphrase"] = clientCertificate.Passphrase ?? string.Empty,
+            ["cert"] = ReadClientCertificateFile(clientCertificate.CertPath, clientCertificate.Cert) ?? string.Empty,
+            ["key"] = ReadClientCertificateFile(clientCertificate.KeyPath, clientCertificate.Key) ?? string.Empty,
+            ["pfx"] = ReadClientCertificateFile(clientCertificate.PfxPath, clientCertificate.Pfx) ?? string.Empty,
         }
-                .Where(kv => kv.Value != null)
+                .Where(kv => !string.IsNullOrEmpty(kv.Value))
                 .ToDictionary(kv => kv.Key, kv => kv.Value))
             .ToArray();
     }

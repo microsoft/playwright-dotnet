@@ -25,7 +25,6 @@ using System;
 using System.Diagnostics.CodeAnalysis;
 using System.Text.Json;
 using System.Threading.Tasks;
-using Microsoft.Playwright.Helpers;
 using Microsoft.Playwright.Transport;
 
 namespace Microsoft.Playwright;
@@ -45,7 +44,7 @@ public static class Playwright
         EventHandler<byte[]> onMessageReceived = (_, message) =>
         {
             Connection.TraceMessage("pw:channel:recv", message);
-            connection.Dispatch(JsonSerializer.Deserialize<PlaywrightServerMessage>(message, JsonExtensions.DefaultJsonSerializerOptions)!);
+            connection.Dispatch(JsonSerializer.Deserialize(message, PlaywrightJsonContext.Default.PlaywrightServerMessage)!);
         };
         EventHandler<string> onLogReceived = (_, log) =>
         {
@@ -60,7 +59,18 @@ public static class Playwright
         transport.TransportClosed += onTransportClosed;
         connection.OnMessage = (message, keepNulls) =>
         {
-            var rawMessage = JsonSerializer.SerializeToUtf8Bytes(message, keepNulls ? connection.DefaultJsonSerializerOptionsKeepNulls : connection.DefaultJsonSerializerOptions);
+            byte[] rawMessage;
+            if (keepNulls)
+            {
+                // Convert to JsonObject to preserve null entries,
+                // since the source-generated context drops nulls.
+                var obj = JsonSerializer.SerializeToNode(message, PlaywrightJsonContext.Default.DictionaryOfStringToObject);
+                rawMessage = JsonSerializer.SerializeToUtf8Bytes(obj, PlaywrightJsonContext.Default.JsonObject);
+            }
+            else
+            {
+                rawMessage = JsonSerializer.SerializeToUtf8Bytes(message, PlaywrightJsonContext.Default.DictionaryOfStringToObject);
+            }
             Connection.TraceMessage("pw:channel:send", rawMessage);
             return transport.SendAsync(rawMessage);
         };

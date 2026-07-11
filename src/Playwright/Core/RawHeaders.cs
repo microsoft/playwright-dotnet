@@ -39,7 +39,7 @@ internal class RawHeaders
         foreach (var entry in headers)
         {
             var name = entry.Name.ToLowerInvariant();
-            if (!_headersMap.TryGetValue(name, out List<string> values))
+            if (!_headersMap.TryGetValue(name, out List<string>? values))
             {
                 values = new List<string>();
                 _headersMap[name] = values;
@@ -66,7 +66,7 @@ internal class RawHeaders
 
     public string[] GetAll(string name)
     {
-        if (_headersMap.TryGetValue(name.ToLowerInvariant(), out List<string> values))
+        if (_headersMap.TryGetValue(name.ToLowerInvariant(), out List<string>? values))
         {
             return values.ToArray();
         }

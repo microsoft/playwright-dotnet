@@ -22,8 +22,11 @@
  * SOFTWARE.
  */
 using System;
+using System.Text;
 using System.Text.Json;
 using System.Text.Json.Serialization;
+using System.Text.Json.Serialization.Metadata;
+using Microsoft.Playwright.Transport;
 using Microsoft.Playwright.Transport.Converters;
 
 namespace Microsoft.Playwright.Helpers;
@@ -40,35 +43,62 @@ internal static class JsonExtensions
     /// </summary>
     public static JsonSerializerOptions DefaultJsonSerializerOptions { get; }
 
-    /// <summary>
-    /// Convert a <see cref="JsonElement"/> to an object.
-    /// </summary>
-    /// <typeparam name="T">Type to convert the <see cref="JsonElement"/> to.</typeparam>
-    /// <param name="element">Element to convert.</param>
-    /// <param name="options">Serialization options.</param>
-    /// <returns>Converted value.</returns>
     public static T ToObject<T>(this JsonElement element, JsonSerializerOptions? options = null)
-        => element.Deserialize<T>(options ?? DefaultJsonSerializerOptions)!;
+        => (T)element.ToObject(typeof(T), options);
 
-    /// <summary>
-    /// Convert a <see cref="JsonElement"/> to an object.
-    /// </summary>
-    /// <param name="element">Element to convert.</param>
-    /// <param name="type">Type to convert the <see cref="JsonElement"/> to.</param>
-    /// <param name="options">Serialization options.</param>
-    /// <returns>Converted value.</returns>
     public static object ToObject(this JsonElement element, Type type, JsonSerializerOptions? options = null)
-        => element.Deserialize(type, options ?? DefaultJsonSerializerOptions)!;
+    {
+        JsonTypeInfo? ResolveTypeInfo()
+        {
+            if (options != null)
+            {
+                return options.GetTypeInfo(type);
+            }
+            return PlaywrightJsonContext.Default.GetTypeInfo(type);
+        }
 
-    /// <summary>
-    /// Serialize an object.
-    /// </summary>
-    /// <typeparam name="T">Object type.</typeparam>
-    /// <param name="value">Object to serialize.</param>
-    /// <param name="options">Serialization options.</param>
-    /// <returns>Serialized object.</returns>
+        if (typeof(ChannelOwner).IsAssignableFrom(type))
+        {
+            if (options != null)
+            {
+                foreach (var converter in options.Converters)
+                {
+                    if (converter is ChannelOwnerToGuidConverter coConv && coConv.CanConvert(type))
+                    {
+                        var bytes = Encoding.UTF8.GetBytes(element.GetRawText());
+                        var reader = new Utf8JsonReader(bytes);
+                        return coConv.Read(ref reader, type, options)!;
+                    }
+                }
+            }
+            throw new InvalidOperationException($"Cannot deserialize ChannelOwner '{type.Name}': ChannelOwnerToGuidConverter not found in options.");
+        }
+
+        var typeInfo = ResolveTypeInfo();
+        if (typeInfo != null)
+        {
+            return JsonSerializer.Deserialize(element.GetRawText(), typeInfo)!;
+        }
+
+        var effectiveType = Nullable.GetUnderlyingType(type) ?? type;
+        if (effectiveType.IsEnum)
+        {
+            var str = element.GetString() ?? throw new JsonException("Expected string value for enum.");
+            return AotEnumMemberConverter.FromWireString(effectiveType, str);
+        }
+
+        throw new InvalidOperationException($"Type '{type}' is not registered in PlaywrightJsonContext. Add [JsonSerializable(typeof({type.Name}))] to enable AOT-safe deserialization.");
+    }
+
     public static string ToJson<T>(this T value, JsonSerializerOptions? options = null)
-        => JsonSerializer.Serialize(value, options ?? DefaultJsonSerializerOptions);
+    {
+        var typeInfo = options?.GetTypeInfo(typeof(T)) ?? PlaywrightJsonContext.Default.GetTypeInfo(typeof(T));
+        if (typeInfo == null)
+        {
+            throw new InvalidOperationException($"Type '{typeof(T)}' is not registered in PlaywrightJsonContext. Add [JsonSerializable(typeof({typeof(T).Name}))] to enable AOT-safe serialization.");
+        }
+        return JsonSerializer.Serialize(value, typeInfo);
+    }
 
     /// <summary>
     /// Convert a <see cref="JsonDocument"/> to an object.
@@ -92,11 +122,9 @@ internal static class JsonExtensions
         var options = new JsonSerializerOptions()
         {
             PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
-            Converters =
-            {
-                    new JsonStringEnumMemberConverter(),
-            },
+            TypeInfoResolver = PlaywrightJsonContext.Default,
         };
+        options.Converters.Add(new AotEnumMemberConverter());
         if (!keepNulls)
         {
             options.DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull;

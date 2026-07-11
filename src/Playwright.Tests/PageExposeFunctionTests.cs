@@ -66,7 +66,7 @@ public class PageExposeFunctionTests : PageTestEx
                 return window['fooValue'];
             }");
 
-        await Page.ExposeFunctionAsync("handle", () => new[] { new { foo = fooHandle } });
+        await Page.ExposeFunctionAsync("handle", () => new Dictionary<string, object?>[] { new Dictionary<string, object?> { ["foo"] = fooHandle } });
 
         Assert.True(await Page.EvaluateAsync<bool>(@"async function() {
                 const value = await window['handle']();
@@ -186,12 +186,12 @@ public class PageExposeFunctionTests : PageTestEx
     [PlaywrightTest("page-expose-function.spec.ts", "should work with complex objects")]
     public async Task ShouldWorkWithComplexObjects()
     {
-        await Page.ExposeFunctionAsync("complexObject", (ComplexObject a, ComplexObject b) =>
+        await Page.ExposeFunctionAsync("complexObject", (JsonElement a, JsonElement b) =>
         {
-            return new ComplexObject { x = a.x + b.x };
+            return new Dictionary<string, object?> { ["x"] = a.GetProperty("x").GetInt32() + b.GetProperty("x").GetInt32() };
         });
-        var result = await Page.EvaluateAsync<ComplexObject>("async () => complexObject({ x: 5}, { x: 2})");
-        Assert.AreEqual(7, result.x);
+        var result = await Page.EvaluateAsync<JsonElement>("async () => complexObject({ x: 5}, { x: 2})");
+        Assert.AreEqual(7, result.GetProperty("x").GetInt32());
     }
 
     [PlaywrightTest("browsercontext-expose-function.spec.ts", "should throw for duplicate registrations")]
@@ -224,8 +224,4 @@ public class PageExposeFunctionTests : PageTestEx
         Assert.IsNull(result);
     }
 
-    internal class ComplexObject
-    {
-        public int x { get; set; }
-    }
 }

@@ -42,10 +42,11 @@ public class WorkerAwareTest
             AssertionsBase.SetDefaultTimeout(PlaywrightSettingsProvider.ExpectTimeout.Value);
         }
 
-        if (!_allWorkers.TryPop(out _currentWorker))
+        if (!_allWorkers.TryPop(out var worker))
         {
-            _currentWorker = new();
+            worker = new();
         }
+        _currentWorker = worker;
     }
 
     [TestCleanup]

@@ -26,7 +26,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.CompilerServices;
-using System.Text.Json;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Microsoft.Playwright.Helpers;
@@ -173,7 +172,7 @@ internal class Tracing : ChannelOwner, ITracing
         {
             foreach (var current in entriesElement.EnumerateArray())
             {
-                entries.Add(current.Deserialize<NameValue>());
+                entries.Add(current.ToObject<NameValue>());
             }
         }
         return (artifact, entries);
@@ -309,7 +308,7 @@ internal class Tracing : ChannelOwner, ITracing
             {
                 foreach (var current in entriesElement.EnumerateArray())
                 {
-                    var entry = current.Deserialize<NameValue>();
+                    var entry = current.ToObject<NameValue>();
                     if (entry != null)
                     {
                         entries.Add(entry);

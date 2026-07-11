@@ -26,8 +26,6 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
-using System.Text.Json;
-using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 using Microsoft.Playwright.TestAdapter;
 
@@ -53,12 +51,12 @@ internal class BrowserService : IWorkerService
         {
             var options = new BrowserTypeConnectOptions(connectOptions?.Options ?? new());
             var headers = options.Headers?.ToDictionary(kvp => kvp.Key, kvp => kvp.Value) ?? [];
-            headers.Add("x-playwright-launch-options", JsonSerializer.Serialize(PlaywrightSettingsProvider.LaunchOptions, new JsonSerializerOptions() { DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull }));
+            headers.Add("x-playwright-launch-options", PlaywrightSettingsProvider.SerializeLaunchOptions());
             options.Headers = headers;
             return await browserType.ConnectAsync(connectOptions!.Value.WSEndpoint, options).ConfigureAwait(false);
         }
 
-        var legacyBrowser = await ConnectBasedOnEnv(browserType);
+        var legacyBrowser = await ConnectBasedOnEnv(browserType).ConfigureAwait(false);
         if (legacyBrowser != null)
         {
             return legacyBrowser;
@@ -90,7 +88,7 @@ internal class BrowserService : IWorkerService
             Headers = new Dictionary<string, string>
             {
                 ["Authorization"] = $"Bearer {accessToken}",
-                ["x-playwright-launch-options"] = JsonSerializer.Serialize(PlaywrightSettingsProvider.LaunchOptions, new JsonSerializerOptions() { DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull })
+                ["x-playwright-launch-options"] = PlaywrightSettingsProvider.SerializeLaunchOptions()
             }
         }).ConfigureAwait(false);
     }

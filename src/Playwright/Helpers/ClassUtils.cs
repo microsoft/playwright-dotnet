@@ -22,6 +22,9 @@
  * SOFTWARE.
  */
 
+using System.Text.Json;
+using Microsoft.Playwright.Transport;
+
 namespace Microsoft.Playwright.Helpers;
 
 internal static class ClassUtils
@@ -35,17 +38,21 @@ internal static class ClassUtils
             return target;
         }
 
-        var sourceType = source.GetType();
-        var targetType = target.GetType();
-        foreach (var sourceProperty in sourceType.GetProperties())
+        var sourceTypeInfo = PlaywrightJsonContext.Default.GetTypeInfo(source.GetType());
+        if (sourceTypeInfo == null)
         {
-            var targetProperty = targetType.GetProperty(sourceProperty.Name);
-            if (targetProperty == null)
-            {
-                continue;
-            }
-            targetProperty.SetValue(target, sourceProperty.GetValue(source));
+            throw new System.InvalidOperationException(
+                $"Type '{source.GetType().FullName}' is not registered in PlaywrightJsonContext. " +
+                $"Add [JsonSerializable(typeof({source.GetType().Name}))] to enable AOT-safe cloning.");
         }
-        return target;
+        var targetTypeInfo = PlaywrightJsonContext.Default.GetTypeInfo(typeof(T));
+        if (targetTypeInfo == null)
+        {
+            throw new System.InvalidOperationException(
+                $"Type '{typeof(T).FullName}' is not registered in PlaywrightJsonContext. " +
+                $"Add [JsonSerializable(typeof({typeof(T).Name}))] to enable AOT-safe cloning.");
+        }
+        var node = JsonSerializer.SerializeToNode(source, sourceTypeInfo);
+        return (T)JsonSerializer.Deserialize(node, targetTypeInfo)!;
     }
 }

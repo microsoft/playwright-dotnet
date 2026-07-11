@@ -26,13 +26,19 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
+using System.IO;
 using System.Linq;
+using System.Text;
 using System.Text.Encodings.Web;
 using System.Text.Json;
+using System.Text.Json.Nodes;
+using System.Text.Json.Serialization.Metadata;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Microsoft.Playwright.Helpers;
+using Microsoft.Playwright.Transport;
 using Microsoft.Playwright.Transport.Protocol;
 
 namespace Microsoft.Playwright.Core;
@@ -41,10 +47,8 @@ internal class Locator : ILocator
 {
     internal readonly Frame _frame;
     internal readonly string _selector;
-    private static readonly JsonSerializerOptions _locatorSerializerOptions = new()
-    {
-        Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping,
-    };
+    private static readonly JsonTypeInfo<string> StringTypeInfo =
+        (JsonTypeInfo<string>)PlaywrightJsonContext.Default.GetTypeInfo(typeof(string))!;
 
     private static string _testIdAttributeName = "data-testid";
 
@@ -86,7 +90,7 @@ internal class Locator : ILocator
                 throw new ArgumentException("Inner \"Has\" locator must belong to the same frame.");
             }
 
-            _selector += " >> internal:has=" + JsonSerializer.Serialize(locator._selector, _locatorSerializerOptions);
+            _selector += " >> internal:has=" + SerializeLocatorString(locator._selector);
         }
 
         if (options?.HasNot != null)
@@ -97,7 +101,7 @@ internal class Locator : ILocator
                 throw new ArgumentException("Inner \"HasNot\" locator must belong to the same frame.");
             }
 
-            _selector += $" >> internal:has-not={JsonSerializer.Serialize(locator._selector, _locatorSerializerOptions)}";
+            _selector += $" >> internal:has-not={SerializeLocatorString(locator._selector)}";
         }
 
         if (visible != null)
@@ -121,13 +125,27 @@ internal class Locator : ILocator
             try
             {
                 Match match = Regex.Match(_selector, @" >> internal:describe=((?:""(?:[^""\\]|\\.)*""))$");
-                return match.Success ? JsonSerializer.Deserialize<string>(match.Groups[1].Value) : null;
+                return match.Success ? DeserializeLocatorString(match.Groups[1].Value) : null;
             }
             catch (JsonException)
             {
                 return null;
             }
         }
+    }
+
+    private static string SerializeLocatorString(string value)
+    {
+        using var ms = new MemoryStream();
+        using var writer = new Utf8JsonWriter(ms, new JsonWriterOptions { Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping });
+        JsonSerializer.Serialize(writer, value, StringTypeInfo);
+        writer.Flush();
+        return Encoding.UTF8.GetString(ms.ToArray());
+    }
+
+    private static string DeserializeLocatorString(string value)
+    {
+        return JsonSerializer.Deserialize(value, StringTypeInfo)!;
     }
 
     internal bool EqualLocator(Locator locator) => _frame == locator._frame && _selector == locator._selector;
@@ -182,13 +200,13 @@ internal class Locator : ILocator
     public Task<JsonElement?> EvaluateAsync(string expression, object? arg = null, LocatorEvaluateOptions? options = null)
         => EvaluateAsync<JsonElement?>(expression, arg, options);
 
-    public Task<T> EvaluateAsync<T>(string expression, object? arg = null, LocatorEvaluateOptions? options = null)
+    public Task<T> EvaluateAsync<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors | DynamicallyAccessedMemberTypes.PublicProperties)] T>(string expression, object? arg = null, LocatorEvaluateOptions? options = null)
         => WithElementAsync(
             (h, _) => h.EvaluateAsync<T>(expression, arg),
             options?.Timeout,
             "Evaluate");
 
-    public Task<T> EvaluateAllAsync<T>(string expression, object? arg = null)
+    public Task<T> EvaluateAllAsync<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors | DynamicallyAccessedMemberTypes.PublicProperties)] T>(string expression, object? arg = null)
         => _frame.EvalOnSelectorAllAsync<T>(_selector, expression, arg);
 
     public Task<IJSHandle> EvaluateHandleAsync(string expression, object? arg = null, LocatorEvaluateHandleOptions? options = null)
@@ -218,7 +236,7 @@ internal class Locator : ILocator
         {
             throw new ArgumentException("Locators must belong to the same frame.");
         }
-        return new Locator(_frame, $"{_selector} >> internal:chain={JsonSerializer.Serialize(locatorImpl._selector, _locatorSerializerOptions)}", options);
+        return new Locator(_frame, $"{_selector} >> internal:chain={SerializeLocatorString(locatorImpl._selector)}", options);
     }
 
     IFrameLocator ILocator.FrameLocator(string selector) =>
@@ -257,7 +275,7 @@ internal class Locator : ILocator
         {
             throw new ArgumentException("Locators must belong to the same frame.");
         }
-        return new Locator(this._frame, this._selector + $" >> internal:or={JsonSerializer.Serialize(((Locator)locator)._selector, _locatorSerializerOptions)}");
+        return new Locator(this._frame, this._selector + $" >> internal:or={SerializeLocatorString(((Locator)locator)._selector)}");
     }
 
     public ILocator And(ILocator locator)
@@ -266,7 +284,7 @@ internal class Locator : ILocator
         {
             throw new ArgumentException("Locators must belong to the same frame.");
         }
-        return new Locator(this._frame, this._selector + $" >> internal:and={JsonSerializer.Serialize(((Locator)locator)._selector, _locatorSerializerOptions)}");
+        return new Locator(this._frame, this._selector + $" >> internal:and={SerializeLocatorString(((Locator)locator)._selector)}");
     }
 
     public Task FocusAsync(LocatorFocusOptions? options = null)
@@ -410,20 +428,31 @@ internal class Locator : ILocator
         where T : class, new()
     {
         T target = inheritFrom ?? new();
-        var targetType = target.GetType();
+        var targetTypeInfo = PlaywrightJsonContext.Default.GetTypeInfo(typeof(T));
+        if (targetTypeInfo == null)
+        {
+            throw new InvalidOperationException(
+                $"Type '{typeof(T).FullName}' is not registered in PlaywrightJsonContext. " +
+                $"Add [JsonSerializable(typeof({typeof(T).Name}))] to enable AOT-safe option conversion.");
+        }
         if (source != null)
         {
-            var sourceType = source.GetType();
-            foreach (var sourceProperty in sourceType.GetProperties())
+            var sourceTypeInfo = PlaywrightJsonContext.Default.GetTypeInfo(source.GetType());
+            if (sourceTypeInfo == null)
             {
-                var targetProperty = targetType.GetProperty(sourceProperty.Name);
-                targetProperty?.SetValue(target, sourceProperty.GetValue(source));
+                throw new InvalidOperationException(
+                    $"Type '{source.GetType().FullName}' is not registered in PlaywrightJsonContext. " +
+                    $"Add [JsonSerializable(typeof({source.GetType().Name}))] to enable AOT-safe option conversion.");
             }
+            var node = JsonSerializer.SerializeToNode(source, sourceTypeInfo);
+            target = (T)JsonSerializer.Deserialize(node, targetTypeInfo)!;
         }
-        var strictProperty = targetType.GetProperty("Strict");
-        if (strictProperty != null && strictProperty.GetValue(target) == null)
+        // Set Strict=true by default for types that have a "strict" property.
+        var targetNode = JsonSerializer.SerializeToNode(target, targetTypeInfo);
+        if (targetNode is JsonObject targetObj && targetObj.TryGetPropertyValue("strict", out var strictVal) && (strictVal == null || strictVal.GetValueKind() == JsonValueKind.Null))
         {
-            strictProperty.SetValue(target, true);
+            targetObj["strict"] = JsonValue.Create(true);
+            target = (T)JsonSerializer.Deserialize(targetObj, targetTypeInfo)!;
         }
         return target;
     }
@@ -474,7 +503,7 @@ internal class Locator : ILocator
     }
 
     public ILocator Describe(string description)
-        => ((ILocator)this).Locator($"internal:describe={JsonSerializer.Serialize(description, _locatorSerializerOptions)}");
+        => ((ILocator)this).Locator($"internal:describe={SerializeLocatorString(description)}");
 
     public ILocator GetByAltText(string text, LocatorGetByAltTextOptions? options = null)
         => ((ILocator)this).Locator(GetByAltTextSelector(text, options?.Exact));
@@ -528,7 +557,7 @@ internal class Locator : ILocator
 
     // Multiple test id attribute names can be joined with a comma. Attribute names cannot contain commas.
     private static string EncodeTestIdAttributeName(string testIdAttributeName)
-        => testIdAttributeName.Contains(",") ? JsonSerializer.Serialize(testIdAttributeName) : testIdAttributeName;
+        => testIdAttributeName.Contains(",") ? SerializeLocatorString(testIdAttributeName) : testIdAttributeName;
 
     internal static string GetByAttributeTextSelector(string attrName, string text, bool? exact)
         => $"internal:attr=[{attrName}={EscapeForAttributeSelector(text, exact ?? false)}]";
@@ -641,7 +670,7 @@ internal class Locator : ILocator
 
     private static string EscapeForTextSelector(string text, bool? exact)
     {
-        return JsonSerializer.Serialize(text, _locatorSerializerOptions) + (exact == true ? "s" : "i");
+        return SerializeLocatorString(text) + (exact == true ? "s" : "i");
     }
 
     async Task<IReadOnlyList<ILocator>> ILocator.AllAsync()

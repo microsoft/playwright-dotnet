@@ -24,13 +24,14 @@
  * SOFTWARE.
  */
 using System;
+using System.Collections;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
-using System.Runtime.CompilerServices;
+
 using System.Text;
 using System.Text.Json;
+using System.Text.Json.Nodes;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Playwright.Core;
@@ -48,6 +49,25 @@ internal class Connection : IDisposable
     internal const string ErrorDetailsDataKey = "playwright.errorDetails";
     internal const string LogDataKey = "playwright.log";
 
+    private static readonly string[] SensitiveLogKeys =
+    [
+        "password",
+        "secret",
+        "token",
+        "authorization",
+        "set-cookie",
+        "cookie",
+        "storageState",
+        "credentials",
+        "auth",
+        "key",
+        "apiKey",
+        "api_key",
+        "accessKey",
+        "secretKey",
+        "privateKey",
+    ];
+
     private readonly ConcurrentDictionary<int, ConnectionCallback> _callbacks = new();
     private readonly Root _rootObject;
     private readonly TaskQueue _queue = new();
@@ -63,11 +83,8 @@ internal class Connection : IDisposable
         JsonSerializerOptions NewJsonSerializerOptions(bool keepNulls)
         {
             var options = JsonExtensions.GetNewDefaultSerializerOptions(keepNulls);
-
-            // Workaround for https://github.com/dotnet/runtime/issues/46522
-            options.Converters.Add(new ChannelOwnerConverterFactory(this));
-            // Workaround for https://github.com/dotnet/runtime/issues/46522
-            options.Converters.Add(new ChannelOwnerListToGuidListConverter<WritableStream>(this));
+            options.Converters.Add(new ChannelOwnerToGuidConverter(this));
+            options.Converters.Add(new ChannelOwnerListToGuidListConverter(this));
             return options;
         }
         DefaultJsonSerializerOptions = NewJsonSerializerOptions(false);
@@ -99,11 +116,252 @@ internal class Connection : IDisposable
         {
             return string.Empty;
         }
-        if (!log.Any(l => l != null))
+        bool hasAny = false;
+        foreach (var l in log)
+        {
+            if (l != null)
+            {
+                hasAny = true;
+                break;
+            }
+        }
+        if (!hasAny)
         {
             return string.Empty;
         }
         return "\nCall log:\n" + string.Join("\n", log);
+    }
+
+    internal static object? NormalizeValue(object? value)
+        => NormalizeValue(value, new NormalizationState());
+
+    private static object? NormalizeValue(object? value, NormalizationState state)
+    {
+        if (value == null)
+        {
+            return null;
+        }
+        if (value is ChannelOwner co)
+        {
+            return new JsonObject { ["guid"] = JsonValue.Create(co.Guid) };
+        }
+        if (value is IEnumerable<ChannelOwner> channelOwners)
+        {
+            var array = new JsonArray();
+            foreach (var channelOwner in channelOwners)
+            {
+                array.Add((JsonNode?)new JsonObject { ["guid"] = JsonValue.Create(channelOwner.Guid) });
+            }
+
+            return array;
+        }
+        if (value is Enum e)
+        {
+            return AotEnumMemberConverter.ToWireString(e);
+        }
+
+        var type = value.GetType();
+        if (type == typeof(string) || type.IsPrimitive || type == typeof(decimal))
+        {
+            return value;
+        }
+
+        if (value is byte[] bytes)
+        {
+            return JsonValue.Create(Convert.ToBase64String(bytes));
+        }
+
+        if (value is JsonNode jsonNode)
+        {
+            return jsonNode.DeepClone();
+        }
+
+        if (value is JsonElement jsonElement)
+        {
+            return JsonNode.Parse(jsonElement.GetRawText());
+        }
+
+        if (value is IDictionary dictionary)
+        {
+            state.Enter(value, type);
+            try
+            {
+                var node = new JsonObject();
+                foreach (DictionaryEntry entry in dictionary)
+                {
+                    if (entry.Key is not string key)
+                    {
+                        throw new PlaywrightException(
+                            $"Dictionary type '{type.FullName}' contains a non-string key. " +
+                            "Protocol message arguments require Dictionary<string, object?> or another dictionary with string keys.");
+                    }
+
+                    node[key] = ToJsonNode(NormalizeValue(entry.Value, state));
+                }
+
+                return node;
+            }
+            finally
+            {
+                state.Leave(value);
+            }
+        }
+
+        if (value is IEnumerable<KeyValuePair<string, object>> objectPairs)
+        {
+            state.Enter(value, type);
+            try
+            {
+                var node = new JsonObject();
+                foreach (var pair in objectPairs)
+                {
+                    node[pair.Key] = ToJsonNode(NormalizeValue(pair.Value, state));
+                }
+
+                return node;
+            }
+            finally
+            {
+                state.Leave(value);
+            }
+        }
+
+        if (value is IList list)
+        {
+            state.Enter(value, type);
+            try
+            {
+                var node = new JsonArray();
+                foreach (var item in list)
+                {
+                    node.Add(ToJsonNode(NormalizeValue(item, state)));
+                }
+
+                return node;
+            }
+            finally
+            {
+                state.Leave(value);
+            }
+        }
+
+        if (value is IEnumerable enumerable)
+        {
+            state.Enter(value, type);
+            try
+            {
+                var node = new JsonArray();
+                foreach (var item in enumerable)
+                {
+                    node.Add(ToJsonNode(NormalizeValue(item, state)));
+                }
+
+                return node;
+            }
+            finally
+            {
+                state.Leave(value);
+            }
+        }
+
+        // For non-collection types registered in PlaywrightJsonContext, serialize
+        // to JsonNode instead of passing raw objects to Dictionary<string, object?>.
+        var knownTypeInfo = PlaywrightJsonContext.Default.GetTypeInfo(type)
+            ?? EvaluateArgumentValueConverter.GetExtraTypeInfo(type);
+        if (knownTypeInfo != null)
+        {
+            return JsonSerializer.SerializeToNode(value, knownTypeInfo) ?? value;
+        }
+
+        throw new PlaywrightException(
+            $"Type '{type.FullName}' is not registered for AOT-safe protocol argument serialization. " +
+            "Use primitives, JsonElement, JsonNode, dictionaries with string keys, arrays, or a type registered in PlaywrightJsonContext.");
+    }
+
+    private static JsonNode? ToJsonNode(object? value)
+    {
+        if (value == null)
+        {
+            return null;
+        }
+
+        if (value is JsonNode jn)
+        {
+            return jn;
+        }
+
+        if (value is string s)
+        {
+            return JsonValue.Create(s);
+        }
+
+        if (value is int i)
+        {
+            return JsonValue.Create(i);
+        }
+
+        if (value is long l)
+        {
+            return JsonValue.Create(l);
+        }
+
+        if (value is double d)
+        {
+            return JsonValue.Create(d);
+        }
+
+        if (value is bool b)
+        {
+            return JsonValue.Create(b);
+        }
+
+        if (value is decimal m)
+        {
+            return JsonValue.Create(m);
+        }
+
+        if (value is float f)
+        {
+            return JsonValue.Create(f);
+        }
+
+        if (value is short sh)
+        {
+            return JsonValue.Create((int)sh);
+        }
+
+        if (value is ushort ush)
+        {
+            return JsonValue.Create((int)ush);
+        }
+
+        if (value is byte by)
+        {
+            return JsonValue.Create((int)by);
+        }
+
+        if (value is sbyte sby)
+        {
+            return JsonValue.Create((int)sby);
+        }
+
+        if (value is uint ui)
+        {
+            return JsonValue.Create(ui);
+        }
+
+        if (value is ulong ul)
+        {
+            return JsonValue.Create(ul);
+        }
+
+        if (value is char ch)
+        {
+            return JsonValue.Create(ch.ToString());
+        }
+
+        throw new PlaywrightException(
+            $"Value of type '{value.GetType().FullName}' cannot be converted to an AOT-safe JSON protocol argument.");
     }
 
     public void Dispose()
@@ -168,14 +426,18 @@ internal class Connection : IDisposable
             _callbacks.TryAdd(id, callback);
         }
 
-        var sanitizedArgs = new Dictionary<string, object>();
-        if (dictionary?.Keys.Any(f => f != null) == true)
+        var sanitizedArgs = new Dictionary<string, object?>();
+        if (dictionary != null)
         {
-            sanitizedArgs = dictionary
-                .Where(f => f.Value != null)
-                .ToDictionary(f => f.Key, f => f.Value) as Dictionary<string, object>;
+            foreach (var kv in dictionary)
+            {
+                if (kv.Key != null && (keepNulls || kv.Value != null))
+                {
+                    sanitizedArgs[kv.Key] = NormalizeValue(kv.Value);
+                }
+            }
         }
-        var (title, isInternal, frames) = (ApiZone.Value[0]!.Title, ApiZone.Value[0]!.Internal, ApiZone.Value[0]!.Frames);
+        var (title, isInternal, frames) = (ApiZone.Value![0]!.Title, ApiZone.Value![0]!.Internal, ApiZone.Value![0]!.Frames);
         var metadata = new Dictionary<string, object?>
         {
             ["internal"] = isInternal,
@@ -183,7 +445,7 @@ internal class Connection : IDisposable
         };
         if (!string.IsNullOrEmpty(title))
         {
-            metadata["title"] = title;
+            metadata["title"] = NormalizeValue(title);
         }
         if (frames.Count > 0)
         {
@@ -231,11 +493,12 @@ internal class Connection : IDisposable
         }
         else if (typeof(ChannelOwner).IsAssignableFrom(typeof(T)) || typeof(ChannelOwner[]).IsAssignableFrom(typeof(T)))
         {
-            var enumerate = result.Value.EnumerateObject();
+            foreach (var property in result.Value.EnumerateObject())
+            {
+                return property.Value.ToObject<T>(DefaultJsonSerializerOptions)!;
+            }
 
-            return enumerate.Any()
-                ? enumerate.FirstOrDefault().Value.ToObject<T>(DefaultJsonSerializerOptions)
-                : default!;
+            return default!;
         }
         else
         {
@@ -246,7 +509,7 @@ internal class Connection : IDisposable
     internal ChannelOwner GetObject(string guid)
     {
         Objects.TryGetValue(guid, out var result);
-        return result;
+        return result!;
     }
 
     internal void MarkAsRemote() => IsRemote = true;
@@ -429,8 +692,7 @@ internal class Connection : IDisposable
                 result = null;
                 break;
             default:
-                Debug.Fail($"Missing Playwright type binding for '{type}'");
-                break;
+                throw new PlaywrightException($"Missing Playwright type binding for '{type}'.");
         }
         return result;
     }
@@ -439,7 +701,7 @@ internal class Connection : IDisposable
         => DoCloseImpl(cause != null ? new TargetClosedException(cause.Message, cause) : new TargetClosedException());
 
     internal void DoClose(string? cause = null)
-        => DoCloseImpl(!string.IsNullOrEmpty(cause) && cause != null ? new TargetClosedException(cause) : new TargetClosedException());
+        => DoCloseImpl(!string.IsNullOrEmpty(cause) ? new TargetClosedException(cause) : new TargetClosedException());
 
     internal void DoCloseImpl(Exception closeError)
     {
@@ -488,7 +750,7 @@ internal class Connection : IDisposable
 
     internal static void TraceMessage(string logLevel, byte[] rawMessage)
     {
-        string actualLogLevel = Environment.GetEnvironmentVariable("DEBUG");
+        string? actualLogLevel = Environment.GetEnvironmentVariable("DEBUG");
         if (string.IsNullOrEmpty(actualLogLevel))
         {
             return;
@@ -498,33 +760,109 @@ internal class Connection : IDisposable
             return;
         }
         var message = UTF8Encoding.UTF8.GetString(rawMessage);
+
+        message = RedactTraceMessage(message);
+
         string line = $"{logLevel}: {message}";
         Trace.WriteLine(line);
         Console.Error.WriteLine(line);
     }
 
-    [MethodImpl(MethodImplOptions.NoInlining)]
+    internal static string RedactTraceMessage(string message)
+    {
+        try
+        {
+            var node = JsonNode.Parse(message);
+            if (node == null)
+            {
+                return message;
+            }
+
+            RedactJsonNode(node);
+            return node.ToJsonString();
+        }
+        catch (JsonException)
+        {
+        }
+
+        foreach (var key in SensitiveLogKeys)
+        {
+            message = RedactJsonValue(message, key);
+        }
+
+        return message;
+    }
+
+    private static void RedactJsonNode(JsonNode? node)
+    {
+        if (node is JsonObject obj)
+        {
+            List<string>? keysToRedact = null;
+            foreach (var property in obj)
+            {
+                if (IsSensitiveLogKey(property.Key))
+                {
+                    (keysToRedact ??= []).Add(property.Key);
+                }
+                else
+                {
+                    RedactJsonNode(property.Value);
+                }
+            }
+
+            if (keysToRedact != null)
+            {
+                foreach (var key in keysToRedact)
+                {
+                    obj[key] = "***REDACTED***";
+                }
+            }
+        }
+        else if (node is JsonArray array)
+        {
+            foreach (var item in array)
+            {
+                RedactJsonNode(item);
+            }
+        }
+    }
+
+    private static bool IsSensitiveLogKey(string key)
+    {
+        foreach (var sensitiveKey in SensitiveLogKeys)
+        {
+            if (string.Equals(key, sensitiveKey, StringComparison.OrdinalIgnoreCase))
+            {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    private static string RedactJsonValue(string json, string key)
+    {
+        var pattern = $"\"{System.Text.RegularExpressions.Regex.Escape(key)}\"\\s*:\\s*\"(?<value>[^\"]+)\"";
+        try
+        {
+            return System.Text.RegularExpressions.Regex.Replace(json, pattern, $"\"{key}\": \"***REDACTED***\"", System.Text.RegularExpressions.RegexOptions.IgnoreCase, TimeSpan.FromMilliseconds(100));
+        }
+        catch
+        {
+            return json;
+        }
+    }
+
     internal async Task<T> WrapApiCallAsync<T>(Func<Task<T>> action, bool isInternal = false, string? title = null)
     {
         EnsureApiZoneExists();
-        if (ApiZone.Value[0] != null)
+        if (ApiZone.Value![0] != null)
         {
             return await action().ConfigureAwait(false);
         }
-        var st = new StackTrace(true);
-        var stack = new List<Protocol.StackFrame>();
-        for (int i = 0; i < st.FrameCount; ++i)
-        {
-            var sf = st.GetFrame(i);
-            string fileName = sf.GetFileName();
-            if (!IsPlaywrightInternalNamespace(sf.GetMethod().ReflectedType?.Namespace) && !string.IsNullOrEmpty(fileName))
-            {
-                stack.Add(new() { File = fileName, Line = sf.GetFileLineNumber(), Column = sf.GetFileColumnNumber() });
-            }
-        }
         try
         {
-            ApiZone.Value[0] = new() { Internal = isInternal, Title = title, Frames = stack };
+            ApiZone.Value[0] = new() { Internal = isInternal, Title = title, Frames = new() };
             return await action().ConfigureAwait(false);
         }
         finally
@@ -543,21 +881,37 @@ internal class Connection : IDisposable
             isInternal,
             title);
 
-    private static bool IsPlaywrightInternalNamespace(string? namespaceName)
-    {
-        return namespaceName != null &&
-            (namespaceName == "Microsoft.Playwright" ||
-            namespaceName.StartsWith("Microsoft.Playwright.Core", StringComparison.InvariantCultureIgnoreCase) ||
-            namespaceName.StartsWith("Microsoft.Playwright.Transport", StringComparison.InvariantCultureIgnoreCase) ||
-            namespaceName.StartsWith("Microsoft.Playwright.Helpers", StringComparison.InvariantCultureIgnoreCase));
-    }
-
     private void EnsureApiZoneExists()
     {
         if (ApiZone.Value == null)
         {
             ApiZone.Value = new() { null };
         }
+    }
+
+    private sealed class NormalizationState
+    {
+        private readonly HashSet<object> _active = new(ReferenceEqualityComparer.Instance);
+
+        internal void Enter(object value, Type type)
+        {
+            if (!_active.Add(value))
+            {
+                throw new PlaywrightException(
+                    $"Type '{type.FullName}' contains a cycle and cannot be serialized as an AOT-safe protocol message argument.");
+            }
+        }
+
+        internal void Leave(object value) => _active.Remove(value);
+    }
+
+    private sealed class ReferenceEqualityComparer : IEqualityComparer<object>
+    {
+        internal static ReferenceEqualityComparer Instance { get; } = new();
+
+        public new bool Equals(object? x, object? y) => ReferenceEquals(x, y);
+
+        public int GetHashCode(object obj) => System.Runtime.CompilerServices.RuntimeHelpers.GetHashCode(obj);
     }
 }
 

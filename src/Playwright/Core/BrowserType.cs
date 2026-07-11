@@ -53,30 +53,52 @@ internal class BrowserType : ChannelOwner, IBrowserType
     public async Task<IBrowser> LaunchAsync(BrowserTypeLaunchOptions? options = default)
     {
         options ??= new BrowserTypeLaunchOptions();
-        Browser browser = await SendMessageToServerAsync<Browser>(
-            "launch",
-            new Dictionary<string, object?>
-            {
-                { "channel", options.Channel },
-                { "executablePath", options.ExecutablePath },
-                { "args", options.Args },
-                { "ignoreAllDefaultArgs", options.IgnoreAllDefaultArgs },
-                { "ignoreDefaultArgs", options.IgnoreDefaultArgs },
-                { "handleSIGHUP", options.HandleSIGHUP },
-                { "handleSIGINT", options.HandleSIGINT },
-                { "handleSIGTERM", options.HandleSIGTERM },
-                { "headless", options.Headless },
-                { "env", options.Env?.ToProtocol() },
-                { "proxy", options.Proxy },
-                { "downloadsPath", options.DownloadsPath },
-                { "tracesDir", options.TracesDir },
-                { "artifactsDir", options.ArtifactsDir },
-                { "firefoxUserPrefs", options.FirefoxUserPrefs },
-                { "chromiumSandbox", options.ChromiumSandbox },
-                { "slowMo", options.SlowMo },
-                { "timeout", TimeoutSettings.LaunchTimeout(options.Timeout) },
-            }).ConfigureAwait(false);
+        var clearcote = Clearcote.ShouldPatchLaunch(Name, options)
+            ? await Clearcote.PatchAsync(options).ConfigureAwait(false)
+            : null;
+        var launchArgs = new Dictionary<string, object?>
+        {
+            { "channel", options.Channel },
+            { "executablePath", clearcote?.ExecutablePath ?? options.ExecutablePath },
+            { "args", clearcote?.Args ?? options.Args },
+            { "ignoreAllDefaultArgs", options.IgnoreAllDefaultArgs },
+            { "ignoreDefaultArgs", clearcote?.IgnoreDefaultArgs ?? options.IgnoreDefaultArgs },
+            { "handleSIGHUP", options.HandleSIGHUP },
+            { "handleSIGINT", options.HandleSIGINT },
+            { "handleSIGTERM", options.HandleSIGTERM },
+            { "headless", options.Headless },
+            { "env", EnvToProtocol(clearcote?.EnvironmentVariables, options.Env) },
+            { "proxy", clearcote?.Proxy ?? options.Proxy },
+            { "downloadsPath", options.DownloadsPath },
+            { "tracesDir", options.TracesDir },
+            { "artifactsDir", options.ArtifactsDir },
+            { "firefoxUserPrefs", options.FirefoxUserPrefs },
+            { "chromiumSandbox", options.ChromiumSandbox },
+            { "slowMo", options.SlowMo },
+            { "timeout", TimeoutSettings.LaunchTimeout(options.Timeout) },
+        };
+        Browser browser;
+        if (clearcote != null)
+        {
+            var exePath = clearcote.ExecutablePath ?? options.ExecutablePath ?? string.Empty;
+            browser = await Clearcote.WinAvRetryAsync(
+                async (exe) =>
+                {
+                    launchArgs["executablePath"] = exe;
+                    return await SendMessageToServerAsync<Browser>("launch", launchArgs).ConfigureAwait(false);
+                },
+                exePath).ConfigureAwait(false);
+        }
+        else
+        {
+            browser = await SendMessageToServerAsync<Browser>("launch", launchArgs).ConfigureAwait(false);
+        }
+
         browser.ConnectToBrowserType(this, options.TracesDir);
+        if (clearcote != null)
+        {
+            browser.ApplyClearcote(clearcote);
+        }
         return browser;
     }
 
@@ -84,24 +106,28 @@ internal class BrowserType : ChannelOwner, IBrowserType
     public async Task<IBrowserContext> LaunchPersistentContextAsync(string userDataDir, BrowserTypeLaunchPersistentContextOptions? options = default)
     {
         options ??= new BrowserTypeLaunchPersistentContextOptions();
+        var resolvedUserDataDir = !string.IsNullOrEmpty(userDataDir) ? System.IO.Path.Combine(Environment.CurrentDirectory, userDataDir) : userDataDir;
+        var clearcote = Clearcote.ShouldPatchLaunch(Name, options)
+            ? await Clearcote.PatchAsync(resolvedUserDataDir, options).ConfigureAwait(false)
+            : null;
         var channelArgs = new Dictionary<string, object?>
         {
-            ["userDataDir"] = !string.IsNullOrEmpty(userDataDir) ? System.IO.Path.Combine(Environment.CurrentDirectory, userDataDir) : userDataDir,
+            ["userDataDir"] = resolvedUserDataDir,
             ["headless"] = options.Headless,
             ["channel"] = options.Channel,
-            ["executablePath"] = options.ExecutablePath,
-            ["args"] = options.Args,
+            ["executablePath"] = clearcote?.ExecutablePath ?? options.ExecutablePath,
+            ["args"] = clearcote?.Args ?? options.Args,
             ["downloadsPath"] = options.DownloadsPath,
             ["tracesDir"] = options.TracesDir,
             ["artifactsDir"] = options.ArtifactsDir,
-            ["proxy"] = options.Proxy,
+            ["proxy"] = clearcote?.Proxy ?? options.Proxy,
             ["chromiumSandbox"] = options.ChromiumSandbox,
             ["firefoxUserPrefs"] = options.FirefoxUserPrefs,
             ["handleSIGINT"] = options.HandleSIGINT,
             ["handleSIGTERM"] = options.HandleSIGTERM,
             ["handleSIGHUP"] = options.HandleSIGHUP,
             ["timeout"] = TimeoutSettings.LaunchTimeout(options.Timeout),
-            ["env"] = options.Env?.ToProtocol(),
+            ["env"] = EnvToProtocol(clearcote?.EnvironmentVariables, options.Env),
             ["slowMo"] = options.SlowMo,
             ["ignoreHTTPSErrors"] = options.IgnoreHTTPSErrors,
             ["bypassCSP"] = options.BypassCSP,
@@ -125,7 +151,7 @@ internal class BrowserType : ChannelOwner, IBrowserType
             ["forcedColors"] = options.ForcedColors == ForcedColors.Null ? "no-override" : options.ForcedColors,
             ["contrast"] = options.Contrast == Contrast.Null ? "no-override" : options.Contrast,
             ["recordVideo"] = Browser.GetVideoArgs(options.RecordVideoDir, options.RecordVideoSize),
-            ["ignoreDefaultArgs"] = options.IgnoreDefaultArgs,
+            ["ignoreDefaultArgs"] = clearcote?.IgnoreDefaultArgs ?? options.IgnoreDefaultArgs,
             ["ignoreAllDefaultArgs"] = options.IgnoreAllDefaultArgs,
             ["baseURL"] = options.BaseURL,
             ["clientCertificates"] = Browser.ToClientCertificatesProtocol(options.ClientCertificates),
@@ -138,7 +164,7 @@ internal class BrowserType : ChannelOwner, IBrowserType
             channelArgs.Add("acceptDownloads", options.AcceptDownloads.Value ? "accept" : "deny");
         }
 
-        if (options.ViewportSize?.Width == -1)
+        if (options.ViewportSize?.Width == -1 || clearcote?.NoDefaultViewport == true)
         {
             channelArgs.Add("noDefaultViewport", true);
         }
@@ -151,6 +177,14 @@ internal class BrowserType : ChannelOwner, IBrowserType
         var browser = result.GetProperty("browser").ToObject<Browser>(_connection.DefaultJsonSerializerOptions)!;
         browser.ConnectToBrowserType(this, options.TracesDir);
         var context = result.GetProperty("context").ToObject<BrowserContext>(_connection.DefaultJsonSerializerOptions)!;
+        if (clearcote != null)
+        {
+            await context.ApplyClearcoteAsync(clearcote).ConfigureAwait(false);
+            if (clearcote.Lease is not null)
+            {
+                context.Close += (_, _) => { _ = clearcote.Lease.StopAsync(); };
+            }
+        }
         await context.InitializeHarFromOptionsAsync(new()
         {
             RecordHarContent = options.RecordHarContent,
@@ -276,5 +310,17 @@ internal class BrowserType : ChannelOwner, IBrowserType
         Browser browser = result.GetProperty("browser").ToObject<Browser>(_connection.DefaultJsonSerializerOptions);
         browser.ConnectToBrowserType(this, null);
         return browser;
+    }
+
+    private static IEnumerable<NameValue>? EnvToProtocol(
+        Dictionary<string, string?>? clearcoteEnv,
+        IEnumerable<KeyValuePair<string, string>>? userEnv)
+    {
+        if (clearcoteEnv != null)
+        {
+            return clearcoteEnv.Select(kv => new NameValue { Name = kv.Key, Value = kv.Value ?? string.Empty }).ToList();
+        }
+
+        return userEnv?.ToProtocol();
     }
 }

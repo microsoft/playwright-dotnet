@@ -44,13 +44,13 @@ internal class RouteHandler
 
     public int HandledCount { get; set; }
 
-    public static List<Dictionary<string, object>> PrepareInterceptionPatterns(List<RouteHandler> handlers)
+    public static List<Dictionary<string, object?>> PrepareInterceptionPatterns(List<RouteHandler> handlers)
     {
         bool all = false;
-        var patterns = new List<Dictionary<string, object>>();
+        var patterns = new List<Dictionary<string, object?>>();
         foreach (var handler in handlers)
         {
-            var pattern = new Dictionary<string, object>();
+            var pattern = new Dictionary<string, object?>();
             patterns.Add(pattern);
 
             if (!string.IsNullOrEmpty(handler.urlMatcher.glob) && handler.urlMatcher.glob != null)
@@ -73,7 +73,7 @@ internal class RouteHandler
         if (all)
         {
             return [
-                new Dictionary<string, object>
+                new Dictionary<string, object?>
                 {
                     ["glob"] = "**/*",
                 }
@@ -140,10 +140,22 @@ internal class RouteHandler
     {
         ++HandledCount;
         var handledTask = route.StartHandlingAsync();
-        var maybeTask = Handler.DynamicInvoke(new object[] { route });
-        if (maybeTask is Task task)
+        switch (Handler)
         {
-            await task.ConfigureAwait(false);
+            case Func<IRoute, Task> asyncHandler:
+                await asyncHandler(route).ConfigureAwait(false);
+                break;
+            case Action<IRoute> handler:
+                handler(route);
+                break;
+            case Func<Route, Task> asyncHandler:
+                await asyncHandler(route).ConfigureAwait(false);
+                break;
+            case Action<Route> handler:
+                handler(route);
+                break;
+            default:
+                throw new InvalidOperationException($"Unsupported route handler delegate '{Handler.GetType()}'.");
         }
         return await handledTask.ConfigureAwait(false);
     }

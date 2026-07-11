@@ -207,4 +207,15 @@ public class SessionTests : PageTestEx
 
         void eventHandler(object sender, JsonElement? eventArgs) => events.Add(eventArgs);
     }
+
+    [PlaywrightTest("chromium/session.spec.ts", "disposeAsync should detach session")]
+    [Skip(SkipAttribute.Targets.Firefox, SkipAttribute.Targets.Webkit)]
+    public async Task DisposeAsyncShouldDetachSession()
+    {
+        var client = await Browser.NewBrowserCDPSessionAsync();
+        await client.SendAsync("SystemInfo.getInfo");
+        await client.DisposeAsync();
+        var exception = await PlaywrightAssert.ThrowsAsync<PlaywrightException>(() => client.SendAsync("SystemInfo.getInfo"));
+        Assert.NotNull(exception);
+    }
 }

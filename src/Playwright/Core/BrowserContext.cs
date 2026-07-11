@@ -41,7 +41,7 @@ namespace Microsoft.Playwright.Core;
 internal class BrowserContext : ChannelOwner, IBrowserContext
 {
     private readonly TaskCompletionSource<bool> _closeTcs = new();
-    private readonly Dictionary<string, Delegate> _bindings = new();
+    private readonly Dictionary<string, (Func<BindingSource, object?[], Task<object?>> Callback, Type[] ParamTypes)> _bindings = new();
     private readonly BrowserContextInitializer _initializer;
     private readonly string? _baseURL;
     internal readonly Tracing _tracing;
@@ -55,7 +55,11 @@ internal class BrowserContext : ChannelOwner, IBrowserContext
     internal Browser? _browser;
     private readonly List<HarRouter> _harRouters = new();
     private string? _closeReason;
+    private bool _clearcoteHumanize;
 
+    private bool _clearcoteShowCursor;
+
+    private string? _clearcoteHumanizeSeed;
     internal TimeoutSettings _timeoutSettings = new();
 
     internal BrowserContext(ChannelOwner parent, string guid, BrowserContextInitializer initializer) : base(parent, guid)
@@ -167,6 +171,26 @@ internal class BrowserContext : ChannelOwner, IBrowserContext
     public IReadOnlyList<IWorker> ServiceWorkers => _serviceWorkers;
 
     public IReadOnlyList<IPage> BackgroundPages => new List<IPage>();
+
+    private static async Task<object?> NormalizeFuncResultAsync<TResult>(TResult result)
+    {
+        return result is Task task ? await BindingCall.UnwrapTaskResultAsync(task).ConfigureAwait(false) : result;
+    }
+
+    private static Func<BindingSource, object?[], Task<object?>> CreateFuncWrapper<TResult>(Func<BindingSource, TResult> callback)
+        => async (source, args) => await NormalizeFuncResultAsync(callback(source)).ConfigureAwait(false);
+
+    private static Func<BindingSource, object?[], Task<object?>> CreateFuncWrapper<T, TResult>(Func<BindingSource, T, TResult> callback)
+        => async (source, args) => await NormalizeFuncResultAsync(callback(source, (T)args[0]!)).ConfigureAwait(false);
+
+    private static Func<BindingSource, object?[], Task<object?>> CreateFuncWrapper<T1, T2, TResult>(Func<BindingSource, T1, T2, TResult> callback)
+        => async (source, args) => await NormalizeFuncResultAsync(callback(source, (T1)args[0]!, (T2)args[1]!)).ConfigureAwait(false);
+
+    private static Func<BindingSource, object?[], Task<object?>> CreateFuncWrapper<T1, T2, T3, TResult>(Func<BindingSource, T1, T2, T3, TResult> callback)
+        => async (source, args) => await NormalizeFuncResultAsync(callback(source, (T1)args[0]!, (T2)args[1]!, (T3)args[2]!)).ConfigureAwait(false);
+
+    private static Func<BindingSource, object?[], Task<object?>> CreateFuncWrapper<T1, T2, T3, T4, TResult>(Func<BindingSource, T1, T2, T3, T4, TResult> callback)
+        => async (source, args) => await NormalizeFuncResultAsync(callback(source, (T1)args[0]!, (T2)args[1]!, (T3)args[2]!, (T4)args[3]!)).ConfigureAwait(false);
 
     internal override void OnMessage(string method, JsonElement serverParams)
     {
@@ -326,7 +350,7 @@ internal class BrowserContext : ChannelOwner, IBrowserContext
             "addCookies",
             new Dictionary<string, object?>
             {
-                ["cookies"] = cookies,
+                ["cookies"] = cookies.ToArray(),
             });
 
     [MethodImpl(MethodImplOptions.NoInlining)]
@@ -407,35 +431,56 @@ internal class BrowserContext : ChannelOwner, IBrowserContext
 
     [MethodImpl(MethodImplOptions.NoInlining)]
     public Task<IAsyncDisposable> ExposeBindingAsync(string name, Action callback)
-        => ExposeBindingAsync(name, (Delegate)callback);
+        => InnerExposeBindingAsync(
+            name,
+            (source, args) =>
+            {
+                callback();
+                return Task.FromResult<object?>(null);
+            },
+            Type.EmptyTypes);
 
     [MethodImpl(MethodImplOptions.NoInlining)]
     public Task<IAsyncDisposable> ExposeBindingAsync(string name, Action<BindingSource> callback)
-        => ExposeBindingAsync(name, (Delegate)callback);
+        => InnerExposeBindingAsync(
+            name,
+            (source, args) =>
+            {
+                callback(source);
+                return Task.FromResult<object?>(null);
+            },
+            Type.EmptyTypes);
 
     [MethodImpl(MethodImplOptions.NoInlining)]
     public Task<IAsyncDisposable> ExposeBindingAsync<T>(string name, Action<BindingSource, T> callback)
-        => ExposeBindingAsync(name, (Delegate)callback);
+        => InnerExposeBindingAsync(
+            name,
+            (source, args) =>
+            {
+                callback(source, (T)args[0]!);
+                return Task.FromResult<object?>(null);
+            },
+            new[] { typeof(T) });
 
     [MethodImpl(MethodImplOptions.NoInlining)]
     public Task<IAsyncDisposable> ExposeBindingAsync<TResult>(string name, Func<BindingSource, TResult> callback)
-        => ExposeBindingAsync(name, (Delegate)callback);
+        => InnerExposeBindingAsync(name, CreateFuncWrapper(callback), Type.EmptyTypes);
 
     [MethodImpl(MethodImplOptions.NoInlining)]
     public Task<IAsyncDisposable> ExposeBindingAsync<T, TResult>(string name, Func<BindingSource, T, TResult> callback)
-        => ExposeBindingAsync(name, (Delegate)callback);
+        => InnerExposeBindingAsync(name, CreateFuncWrapper<T, TResult>(callback), new[] { typeof(T) });
 
     [MethodImpl(MethodImplOptions.NoInlining)]
     public Task<IAsyncDisposable> ExposeBindingAsync<T1, T2, TResult>(string name, Func<BindingSource, T1, T2, TResult> callback)
-        => ExposeBindingAsync(name, (Delegate)callback);
+        => InnerExposeBindingAsync(name, CreateFuncWrapper<T1, T2, TResult>(callback), new[] { typeof(T1), typeof(T2) });
 
     [MethodImpl(MethodImplOptions.NoInlining)]
     public Task<IAsyncDisposable> ExposeBindingAsync<T1, T2, T3, TResult>(string name, Func<BindingSource, T1, T2, T3, TResult> callback)
-        => ExposeBindingAsync(name, (Delegate)callback);
+        => InnerExposeBindingAsync(name, CreateFuncWrapper<T1, T2, T3, TResult>(callback), new[] { typeof(T1), typeof(T2), typeof(T3) });
 
     [MethodImpl(MethodImplOptions.NoInlining)]
     public Task<IAsyncDisposable> ExposeBindingAsync<T1, T2, T3, T4, TResult>(string name, Func<BindingSource, T1, T2, T3, T4, TResult> callback)
-        => ExposeBindingAsync(name, (Delegate)callback);
+        => InnerExposeBindingAsync(name, CreateFuncWrapper<T1, T2, T3, T4, TResult>(callback), new[] { typeof(T1), typeof(T2), typeof(T3), typeof(T4) });
 
     [MethodImpl(MethodImplOptions.NoInlining)]
     public Task<IAsyncDisposable> ExposeFunctionAsync(string name, Action callback)
@@ -499,7 +544,9 @@ internal class BrowserContext : ChannelOwner, IBrowserContext
             throw new PlaywrightException("Please use Browser.NewContextAsync()");
         }
 
-        return await SendMessageToServerAsync<Page>("newPage").ConfigureAwait(false);
+        var page = await SendMessageToServerAsync<Page>("newPage").ConfigureAwait(false);
+        await ApplyClearcoteToPageAsync(page).ConfigureAwait(false);
+        return page;
     }
 
     [MethodImpl(MethodImplOptions.NoInlining)]
@@ -532,7 +579,7 @@ internal class BrowserContext : ChannelOwner, IBrowserContext
             "setExtraHTTPHeaders",
             new Dictionary<string, object?>
             {
-                ["headers"] = headers.Select(kv => new HeaderEntry { Name = kv.Key, Value = kv.Value }),
+                ["headers"] = headers.Select(kv => new HeaderEntry { Name = kv.Key, Value = kv.Value }).ToArray(),
             });
 
     [MethodImpl(MethodImplOptions.NoInlining)]
@@ -554,18 +601,20 @@ internal class BrowserContext : ChannelOwner, IBrowserContext
     [MethodImpl(MethodImplOptions.NoInlining)]
     public async Task<string> StorageStateAsync(BrowserContextStorageStateOptions? options = default)
     {
-        string state = JsonSerializer.Serialize(
-            await SendMessageToServerAsync<object>(
-                "storageState",
-                new Dictionary<string, object?>
-                {
-                    ["indexedDB"] = options?.IndexedDB,
-                }).ConfigureAwait(false),
-            JsonExtensions.DefaultJsonSerializerOptions);
+        var result = await SendMessageToServerAsync(
+            "storageState",
+            new Dictionary<string, object?>
+            {
+                ["indexedDB"] = options?.IndexedDB,
+            }).ConfigureAwait(false);
+        string state = result == null
+            ? "null"
+            : JsonSerializer.Serialize(result.Value, PlaywrightJsonContext.Default.JsonElement);
 
         if (!string.IsNullOrEmpty(options?.Path))
         {
-            File.WriteAllText(options?.Path, state);
+            var safePath = SecurityHelpers.ResolveAndValidatePath(options.Path, "StorageStateAsync.Path");
+            File.WriteAllText(safePath, state);
         }
 
         return state;
@@ -574,12 +623,13 @@ internal class BrowserContext : ChannelOwner, IBrowserContext
     [MethodImpl(MethodImplOptions.NoInlining)]
     public async Task SetStorageStateAsync(string storageStatePath)
     {
-        if (!File.Exists(storageStatePath))
+        var safePath = SecurityHelpers.ResolveAndValidatePath(storageStatePath, "SetStorageStateAsync");
+        if (!File.Exists(safePath))
         {
-            throw new PlaywrightException($"The specified storage state file does not exist: {storageStatePath}");
+            throw new PlaywrightException($"The specified storage state file does not exist: {safePath}");
         }
-        var content = File.ReadAllText(storageStatePath);
-        var storageState = JsonSerializer.Deserialize<object>(content, JsonExtensions.DefaultJsonSerializerOptions);
+        var content = File.ReadAllText(safePath);
+        var storageState = JsonDocument.Parse(content).RootElement;
         await SendMessageToServerAsync(
             "setStorageState",
             new Dictionary<string, object?>
@@ -637,7 +687,7 @@ internal class BrowserContext : ChannelOwner, IBrowserContext
 
         if (playwrightEvent.Name != BrowserContextEvent.Close.Name)
         {
-            waiter.RejectOnEvent<IBrowserContext>(this, BrowserContextEvent.Close.Name, () => new TargetClosedException(_effectiveCloseReason()));
+            waiter.RejectOnEvent<BrowserContext, IBrowserContext>(this, BrowserContextEvent.Close.Name, () => new TargetClosedException(_effectiveCloseReason()));
         }
 
         var result = waiter.WaitForEventAsync(this, playwrightEvent.Name, predicate);
@@ -843,6 +893,7 @@ internal class BrowserContext : ChannelOwner, IBrowserContext
     {
         page.Context = this;
         _pages.Add(page);
+        ApplyClearcoteToPageAsync(page).IgnoreException();
         Page?.Invoke(this, page);
 
         if (page.Opener?.IsClosed == false)
@@ -851,17 +902,52 @@ internal class BrowserContext : ChannelOwner, IBrowserContext
         }
     }
 
+    internal async Task ApplyClearcoteAsync(Clearcote.LaunchPatch patch)
+        => await ApplyClearcoteAsync(patch.Humanize, patch.ShowCursor, patch.HumanizeSeed).ConfigureAwait(false);
+
+    internal async Task ApplyClearcoteAsync(bool humanize, bool showCursor, string? seed = null)
+    {
+        _clearcoteHumanize = humanize;
+        _clearcoteShowCursor = showCursor;
+        _clearcoteHumanizeSeed = seed;
+        if (showCursor)
+        {
+            try
+            {
+                await AddInitScriptAsync(Clearcote.CursorOverlayScript()).ConfigureAwait(false);
+            }
+            catch
+            {
+            }
+        }
+
+        foreach (var page in _pages)
+        {
+            await ApplyClearcoteToPageAsync(page).ConfigureAwait(false);
+        }
+    }
+
+    private async Task ApplyClearcoteToPageAsync(Page page)
+    {
+        if (!_clearcoteHumanize && !_clearcoteShowCursor)
+        {
+            return;
+        }
+
+        await page.ApplyClearcoteAsync(_clearcoteHumanize, _clearcoteShowCursor, _clearcoteHumanizeSeed).ConfigureAwait(false);
+    }
+
     private void Channel_BindingCall(BindingCall bindingCall)
     {
         if (_bindings.TryGetValue(bindingCall.Name, out var binding))
         {
-            _ = bindingCall.CallAsync(binding);
+            _ = bindingCall.CallAsync(binding.Callback, binding.ParamTypes);
         }
     }
 
     private void Channel_Route(object sender, Route route) => _ = OnRouteAsync(route).ConfigureAwait(false);
 
-    private async Task<IAsyncDisposable> ExposeBindingAsync(string name, Delegate callback)
+    private async Task<IAsyncDisposable> InnerExposeBindingAsync(string name, Func<BindingSource, object?[], Task<object?>> callback, Type[] paramTypes)
     {
         foreach (var page in _pages)
         {
@@ -876,7 +962,7 @@ internal class BrowserContext : ChannelOwner, IBrowserContext
             throw new PlaywrightException($"Function \"{name}\" has been already registered");
         }
 
-        _bindings.Add(name, callback);
+        _bindings.Add(name, (callback, paramTypes));
 
         var result = await SendMessageToServerAsync(
             "exposeBinding",

@@ -24,6 +24,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Runtime.CompilerServices;
 using System.Text.Json;
 using System.Threading.Tasks;
@@ -66,7 +67,7 @@ internal class JSHandle : ChannelOwner, IJSHandle
             }).ConfigureAwait(false);
 
     [MethodImpl(MethodImplOptions.NoInlining)]
-    public async Task<T> EvaluateAsync<T>(string expression, object? arg = null)
+    public async Task<T> EvaluateAsync<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors | DynamicallyAccessedMemberTypes.PublicProperties)] T>(string expression, object? arg = null)
         => ScriptsHelper.ParseEvaluateResult<T>(await SendMessageToServerAsync<JsonElement?>(
             "evaluateExpression",
             new Dictionary<string, object?>
@@ -76,7 +77,7 @@ internal class JSHandle : ChannelOwner, IJSHandle
             }).ConfigureAwait(false));
 
     [MethodImpl(MethodImplOptions.NoInlining)]
-    public async Task<T> JsonValueAsync<T>() => ScriptsHelper.ParseEvaluateResult<T>(await SendMessageToServerAsync<JsonElement>("jsonValue").ConfigureAwait(false));
+    public async Task<T> JsonValueAsync<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors | DynamicallyAccessedMemberTypes.PublicProperties)] T>() => ScriptsHelper.ParseEvaluateResult<T>(await SendMessageToServerAsync<JsonElement>("jsonValue").ConfigureAwait(false));
 
     [MethodImpl(MethodImplOptions.NoInlining)]
     public async Task<IJSHandle> GetPropertyAsync(string propertyName) => await SendMessageToServerAsync<JSHandle>(

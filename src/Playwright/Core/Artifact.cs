@@ -56,22 +56,23 @@ internal class Artifact : ChannelOwner
     [MethodImpl(MethodImplOptions.NoInlining)]
     public async Task SaveAsAsync(string path)
     {
+        var safePath = SecurityHelpers.ResolveAndValidatePath(path, "Artifact.SaveAsAsync.Path");
         if (!_connection.IsRemote)
         {
             await SendMessageToServerAsync(
             "saveAs",
             new Dictionary<string, object?>
             {
-                ["path"] = path,
+                ["path"] = safePath,
             }).ConfigureAwait(false);
             return;
         }
-        Directory.CreateDirectory(Path.GetDirectoryName(Path.GetFullPath(path)));
+        Directory.CreateDirectory(Path.GetDirectoryName(safePath)!);
         var stream = (await SendMessageToServerAsync("saveAsStream")
             .ConfigureAwait(false)).GetObject<Stream>("stream", _connection)!;
         await using (stream.ConfigureAwait(false))
         {
-            using (var fileStream = new FileStream(path, FileMode.Create, FileAccess.Write))
+            using (var fileStream = new FileStream(safePath, FileMode.Create, FileAccess.Write))
             {
                 await stream.StreamImpl.CopyToAsync(fileStream, bufferSize: 1024 * 1024).ConfigureAwait(false);
             }

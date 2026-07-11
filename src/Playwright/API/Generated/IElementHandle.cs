@@ -24,6 +24,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
 
 namespace Microsoft.Playwright;
@@ -308,7 +309,7 @@ public partial interface IElementHandle : IJSHandle
     /// evaluates to a function, the function is automatically invoked.
     /// </param>
     /// <param name="arg">Optional argument to pass to <see cref="IElementHandle.EvalOnSelectorAsync"/>.</param>
-    Task<T> EvalOnSelectorAsync<T>(string selector, string expression, object? arg = default);
+    Task<T> EvalOnSelectorAsync<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors | DynamicallyAccessedMemberTypes.PublicProperties)] T>(string selector, string expression, object? arg = default);
 
     /// <summary>
     /// <para>
@@ -337,7 +338,7 @@ public partial interface IElementHandle : IJSHandle
     /// evaluates to a function, the function is automatically invoked.
     /// </param>
     /// <param name="arg">Optional argument to pass to <see cref="IElementHandle.EvalOnSelectorAllAsync"/>.</param>
-    Task<T> EvalOnSelectorAllAsync<T>(string selector, string expression, object? arg = default);
+    Task<T> EvalOnSelectorAllAsync<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors | DynamicallyAccessedMemberTypes.PublicProperties)] T>(string selector, string expression, object? arg = default);
 
     /// <summary>
     /// <para>Use locator-based <see cref="ILocator.FillAsync"/> instead. Read more about <a href="https://playwright.dev/dotnet/docs/locators">locators</a>.</para>

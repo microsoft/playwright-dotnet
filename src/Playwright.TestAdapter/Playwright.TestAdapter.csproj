@@ -9,7 +9,7 @@
       Microsoft.Playwright.NUnit and Microsoft.Playwright.MSTest packages.
     </Description>
     <PackageIcon>icon.png</PackageIcon>
-    <TargetFramework>netstandard2.0</TargetFramework>
+    <TargetFramework>net10.0</TargetFramework>
     <PublishRepositoryUrl>true</PublishRepositoryUrl>
     <RootNamespace>Microsoft.Playwright.TestAdapter</RootNamespace>
     <ReleaseVersion>0.0.0</ReleaseVersion>
@@ -20,7 +20,7 @@
     <Nullable>enable</Nullable>
     <PackageReadmeFile>README.md</PackageReadmeFile>
     <EnablePackageValidation>true</EnablePackageValidation>
-    <PackageValidationBaselineVersion>1.52.0</PackageValidationBaselineVersion>
+    <DisablePackageBaselineValidation>true</DisablePackageBaselineValidation>
   </PropertyGroup>
 
   <Import Project="../Common/Version.props" />

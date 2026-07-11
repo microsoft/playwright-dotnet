@@ -123,7 +123,7 @@ internal class APIRequestContext : ChannelOwner, IAPIRequestContext
         {
             if (IsJsonContentType(options.Headers?.ToDictionary(x => x.Key, x => x.Value)))
             {
-                jsonData = IsJsonParsable(dataString) ? dataString : JsonSerializer.Serialize(dataString, _connection.DefaultJsonSerializerOptionsKeepNulls);
+                jsonData = IsJsonParsable(dataString) ? dataString : dataString.ToJson();
             }
             else
             {
@@ -136,7 +136,7 @@ internal class APIRequestContext : ChannelOwner, IAPIRequestContext
         }
         else if (options.DataObject != null)
         {
-            jsonData = JsonSerializer.Serialize(options.DataObject, _connection.DefaultJsonSerializerOptionsKeepNulls);
+            jsonData = UserJsonSerializer.Serialize(options.DataObject);
         }
 
         var message = new Dictionary<string, object?>
@@ -148,7 +148,7 @@ internal class APIRequestContext : ChannelOwner, IAPIRequestContext
             ["maxRedirects"] = options?.MaxRedirects,
             ["maxRetries"] = options?.MaxRetries,
             ["timeout"] = _timeoutSettings.Timeout(options?.Timeout),
-            ["params"] = options?.Params?.ToDictionary(x => x.Key, x => x.Value.ToString()).ToProtocol(),
+            ["params"] = options?.Params?.ToProtocol(),
             ["encodedParams"] = options?.ParamsString,
             ["headers"] = options?.Headers?.ToProtocol(),
             ["jsonData"] = jsonData,
@@ -159,6 +159,19 @@ internal class APIRequestContext : ChannelOwner, IAPIRequestContext
 
         var response = await SendMessageToServerAsync("fetch", message).ConfigureAwait(false);
         return new APIResponse(this, response?.GetProperty("response").ToObject<Transport.Protocol.APIResponse>()!);
+    }
+
+    private static bool IsJsonParsable(string dataString)
+    {
+        try
+        {
+            JsonDocument.Parse(dataString);
+            return true;
+        }
+        catch (JsonException)
+        {
+            return false;
+        }
     }
 
     private bool IsJsonContentType(IDictionary<string, string>? headers)
@@ -173,19 +186,6 @@ internal class APIRequestContext : ChannelOwner, IAPIRequestContext
             return false;
         }
         return contentType.Value.Contains("application/json");
-    }
-
-    private bool IsJsonParsable(string dataString)
-    {
-        try
-        {
-            JsonSerializer.Deserialize<JsonElement>(dataString);
-            return true;
-        }
-        catch (JsonException)
-        {
-            return false;
-        }
     }
 
     [MethodImpl(MethodImplOptions.NoInlining)]
@@ -208,7 +208,7 @@ internal class APIRequestContext : ChannelOwner, IAPIRequestContext
 
     private APIRequestContextOptions WithMethod(APIRequestContextOptions? options, string method)
     {
-        options = ClassUtils.Clone<APIRequestContextOptions>(options);
+        options = options == null ? new APIRequestContextOptions() : new APIRequestContextOptions(options);
         options.Method = method;
         return options;
     }
@@ -216,13 +216,15 @@ internal class APIRequestContext : ChannelOwner, IAPIRequestContext
     [MethodImpl(MethodImplOptions.NoInlining)]
     public async Task<string> StorageStateAsync(APIRequestContextStorageStateOptions? options = null)
     {
-        string state = JsonSerializer.Serialize(
-            await SendMessageToServerAsync<object>("storageState").ConfigureAwait(false),
-            JsonExtensions.DefaultJsonSerializerOptions);
+        var result = await SendMessageToServerAsync("storageState").ConfigureAwait(false);
+        string state = result == null
+            ? "null"
+            : JsonSerializer.Serialize(result.Value, PlaywrightJsonContext.Default.JsonElement);
 
         if (!string.IsNullOrEmpty(options?.Path))
         {
-            File.WriteAllText(options?.Path, state);
+            var safePath = SecurityHelpers.ResolveAndValidatePath(options.Path, "APIRequestContext.StorageStateAsync.Path");
+            File.WriteAllText(safePath, state);
         }
 
         return state;

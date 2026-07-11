@@ -24,6 +24,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
@@ -668,7 +669,7 @@ public partial interface IPage
     /// </param>
     /// <param name="arg">Optional argument to pass to <see cref="IPage.EvalOnSelectorAsync"/>.</param>
     /// <param name="options">Call options</param>
-    Task<T> EvalOnSelectorAsync<T>(string selector, string expression, object? arg = default, PageEvalOnSelectorOptions? options = default);
+    Task<T> EvalOnSelectorAsync<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors | DynamicallyAccessedMemberTypes.PublicProperties)] T>(string selector, string expression, object? arg = default, PageEvalOnSelectorOptions? options = default);
 
     /// <summary>
     /// <para>
@@ -694,7 +695,7 @@ public partial interface IPage
     /// evaluates to a function, the function is automatically invoked.
     /// </param>
     /// <param name="arg">Optional argument to pass to <see cref="IPage.EvalOnSelectorAllAsync"/>.</param>
-    Task<T> EvalOnSelectorAllAsync<T>(string selector, string expression, object? arg = default);
+    Task<T> EvalOnSelectorAllAsync<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors | DynamicallyAccessedMemberTypes.PublicProperties)] T>(string selector, string expression, object? arg = default);
 
     /// <summary>
     /// <para>Returns the value of the <see cref="IPage.EvaluateAsync"/> invocation.</para>
@@ -732,7 +733,7 @@ public partial interface IPage
     /// evaluates to a function, the function is automatically invoked.
     /// </param>
     /// <param name="arg">Optional argument to pass to <see cref="IPage.EvaluateAsync"/>.</param>
-    Task<T> EvaluateAsync<T>(string expression, object? arg = default);
+    Task<T> EvaluateAsync<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors | DynamicallyAccessedMemberTypes.PublicProperties)] T>(string expression, object? arg = default);
 
     /// <summary>
     /// <para>

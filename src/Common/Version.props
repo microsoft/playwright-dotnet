@@ -1,22 +1,23 @@
 <Project>
   <PropertyGroup>
-    <AssemblyVersion>1.61.0</AssemblyVersion>
-    <PackageVersion>$(AssemblyVersion)</PackageVersion>
+    <AssemblyVersion>1.5.0</AssemblyVersion>
+    <PackageVersion>1.5.0</PackageVersion>
     <DriverVersion>1.61.1-beta-1782139630000</DriverVersion>
     <!-- The Node.js version bundled with the driver. Kept in sync with NODE_VERSION
          in upstream's utils/build/build-playwright-driver.sh by the roll script. -->
     <DriverNodeVersion>24.16.0</DriverNodeVersion>
-    <ReleaseVersion>$(AssemblyVersion)</ReleaseVersion>
+    <ReleaseVersion>$(PackageVersion)</ReleaseVersion>
     <FileVersion>$(AssemblyVersion)</FileVersion>
     <NoDefaultExcludes>true</NoDefaultExcludes>
-    <Authors>Microsoft</Authors>
-    <Owners>Microsoft</Owners>
-    <PackageProjectUrl>https://github.com/microsoft/playwright-dotnet</PackageProjectUrl>
-    <PackageTags>headless,chrome,firefox,webkit,playwright</PackageTags>
-    <RepositoryUrl>https://github.com/microsoft/playwright-dotnet.git</RepositoryUrl>
+    <Authors>aizen218</Authors>
+    <Owners>aizen218</Owners>
+    <PackageProjectUrl>https://github.com/anomalyco/playwright-dotnet</PackageProjectUrl>
+    <PackageTags>headless,chrome,firefox,webkit,playwright,clearcote,nativeaot</PackageTags>
+    <RepositoryUrl>https://github.com/anomalyco/playwright-dotnet.git</RepositoryUrl>
     <PackageReleaseNotes><![CDATA[
+NativeAOT fork — zero reflection, Clearcote Browser support.
 ]]></PackageReleaseNotes>
-    <Copyright>© Microsoft Corporation. All rights reserved.</Copyright>
+    <Copyright>© aizen218. All rights reserved.</Copyright>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
   </PropertyGroup>
 </Project>

@@ -23,16 +23,21 @@
  */
 
 using System.Diagnostics;
+using NUnit.Framework;
 
 namespace Microsoft.Playwright.Tests;
 
 public class CLITests : PlaywrightTest
 {
-    private readonly string playwrightPs1Path = Path.Join(TestContext.CurrentContext.TestDirectory, "..", "..", "..", "..", "Playwright", "bin", "Debug", "netstandard2.0", "playwright.ps1");
+    private readonly string playwrightPs1Path = Path.Join(TestContext.CurrentContext.TestDirectory, "..", "..", "..", "..", "Playwright", "bin", "Debug", "net10.0", "playwright.ps1");
 
     [PlaywrightTest("cli.spec.ts", "")]
     public void ShouldBeAbleToRunCLICommands()
     {
+        if (!OperatingSystem.IsWindows())
+        {
+            Assert.Ignore("CLI tests require PowerShell (pwsh) which is only available on Windows");
+        }
         using var tempDir = new TempDirectory();
         string screenshotFile = Path.Combine(tempDir.Path, "screenshot.png");
         var (stdout, stderr, exitCode) = ExecutePlaywrightPs1(new[] { "screenshot", "-b", BrowserName, "data:text/html,Foobar", screenshotFile });
@@ -45,11 +50,65 @@ public class CLITests : PlaywrightTest
     [PlaywrightTest("cli.spec.ts", "")]
     public void ShouldReturnExitCode1ForCommandNotFound()
     {
+        if (!OperatingSystem.IsWindows())
+        {
+            Assert.Ignore("CLI tests require PowerShell (pwsh) which is only available on Windows");
+        }
         var (stdout, stderr, exitCode) = ExecutePlaywrightPs1(new[] { "this-command-is-not-found" });
 
         Assert.AreEqual(1, exitCode);
         StringAssert.Contains("this-command-is-not-found", stderr);
         StringAssert.Contains("unknown command", stderr);
+    }
+
+    [Test]
+    public void RunWithResultShouldPreserveSingleArgumentWithSpacesAndQuotes()
+    {
+        var result = new Microsoft.Playwright.Program().RunWithResult(new[] { "bad command \"quoted\"" });
+
+        Assert.AreEqual(1, result.ExitCode);
+        StringAssert.Contains("bad command \"quoted\"", result.StandardError);
+        StringAssert.Contains("unknown command", result.StandardError);
+    }
+
+    [Test]
+    public void DotnetHostPathShouldIgnoreRelativeEnvironmentOverride()
+    {
+        var original = Environment.GetEnvironmentVariable("DOTNET_HOST_PATH");
+        using var tempDir = new TempDirectory();
+        var oldCwd = Directory.GetCurrentDirectory();
+        try
+        {
+            File.WriteAllText(Path.Combine(tempDir.Path, OperatingSystem.IsWindows() ? "dotnet.exe" : "dotnet"), string.Empty);
+            Directory.SetCurrentDirectory(tempDir.Path);
+            Environment.SetEnvironmentVariable("DOTNET_HOST_PATH", OperatingSystem.IsWindows() ? "dotnet.exe" : "dotnet");
+
+            Assert.AreEqual("dotnet", Microsoft.Playwright.CLI.Program.DotnetHostPath());
+        }
+        finally
+        {
+            Environment.SetEnvironmentVariable("DOTNET_HOST_PATH", original);
+            Directory.SetCurrentDirectory(oldCwd);
+        }
+    }
+
+    [Test]
+    public void DotnetHostPathShouldUseCanonicalAbsoluteDotnetHostPath()
+    {
+        var original = Environment.GetEnvironmentVariable("DOTNET_HOST_PATH");
+        using var tempDir = new TempDirectory();
+        try
+        {
+            var dotnetPath = Path.Combine(tempDir.Path, OperatingSystem.IsWindows() ? "dotnet.exe" : "dotnet");
+            File.WriteAllText(dotnetPath, string.Empty);
+            Environment.SetEnvironmentVariable("DOTNET_HOST_PATH", dotnetPath);
+
+            Assert.AreEqual(Path.GetFullPath(dotnetPath), Microsoft.Playwright.CLI.Program.DotnetHostPath());
+        }
+        finally
+        {
+            Environment.SetEnvironmentVariable("DOTNET_HOST_PATH", original);
+        }
     }
 
     // Out of process execution of playwright.ps1

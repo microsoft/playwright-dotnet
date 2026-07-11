@@ -24,10 +24,10 @@
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.IO;
-using System.Linq;
-using System.Reflection;
 using System.Text.Json;
+using System.Text.Json.Nodes;
 using Microsoft.Playwright.Helpers;
 using Microsoft.Playwright.Transport.Converters;
 
@@ -35,17 +35,24 @@ namespace Microsoft.Playwright.Core;
 
 internal static class ScriptsHelper
 {
-    private static readonly MethodInfo _parseEvaluateResult = typeof(ScriptsHelper)
-        .GetMethods(BindingFlags.NonPublic | BindingFlags.Static)
-        .Single(m => m.Name == nameof(ParseEvaluateResult) && m.IsGenericMethod);
-
-    internal static object ParseEvaluateResult(JsonElement? element, Type t)
+    internal static object? ParseEvaluateResultUntyped(JsonElement? element)
     {
-        var genericMethod = _parseEvaluateResult.MakeGenericMethod(t);
-        return genericMethod.Invoke(null, new object?[] { element });
+        if (element == null)
+        {
+            return null;
+        }
+
+        var result = (JsonElement)element;
+
+        if (result.ValueKind == JsonValueKind.Object && result.TryGetProperty("value", out var valueProperty))
+        {
+            result = valueProperty;
+        }
+
+        return result;
     }
 
-    internal static T ParseEvaluateResult<T>(JsonElement? resultOrNull)
+    internal static T ParseEvaluateResult<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors | DynamicallyAccessedMemberTypes.PublicProperties)] T>(JsonElement? resultOrNull)
     {
         if (resultOrNull == null)
         {
@@ -68,10 +75,20 @@ internal static class ScriptsHelper
         return (T)parsed;
     }
 
-    internal static object SerializedArgument(object? arg)
+    internal static JsonObject SerializedArgument(object? arg)
     {
         var handles = new List<EvaluateArgumentGuidElement>();
-        return new { value = EvaluateArgumentValueConverter.Serialize(arg, handles, new()), handles };
+        var value = EvaluateArgumentValueConverter.Serialize(arg, handles, new());
+        var handlesList = new List<JsonNode?>();
+        foreach (var h in handles)
+        {
+            handlesList.Add(new JsonObject { ["guid"] = JsonValue.Create(h.Guid) });
+        }
+        return new JsonObject
+        {
+            ["value"] = value,
+            ["handles"] = new JsonArray(handlesList.ToArray()),
+        };
     }
 
     internal static string EvaluationScript(string? content, string? path, bool addSourceUrl)

@@ -72,11 +72,11 @@ public class PageNetworkResponseTests : PageTestEx
     public async Task ShouldWorkWithGenerics()
     {
         var response = await Page.GotoAsync(Server.Prefix + "/simple.json");
-        var root = await response.JsonAsync<SimpleObject>();
+        var root = await response.JsonAsync(PageNetworkResponseJsonContext.Default.SimpleObject);
         Assert.AreEqual("bar", root.Foo);
     }
 
-    record SimpleObject
+    public record SimpleObject
     {
         [JsonPropertyName("foo")]
         public string Foo { get; set; }
@@ -339,4 +339,9 @@ public class PageNetworkResponseTests : PageTestEx
             Assert.True(res.FromServiceWorker);
         }
     }
+}
+
+[JsonSerializable(typeof(PageNetworkResponseTests.SimpleObject))]
+internal partial class PageNetworkResponseJsonContext : JsonSerializerContext
+{
 }

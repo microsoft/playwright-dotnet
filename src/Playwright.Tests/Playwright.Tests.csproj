@@ -1,11 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Project Sdk="Microsoft.NET.Sdk.Web">
     <PropertyGroup>
-        <TargetFrameworks>net8.0</TargetFrameworks>
-        <LangVersion>12</LangVersion>
+        <TargetFrameworks>net10.0</TargetFrameworks>
+        <LangVersion>13</LangVersion>
         <IsTestProject>true</IsTestProject>
         <ReleaseVersion>0.0.0</ReleaseVersion>
-        <NoWarn>1701;1702</NoWarn>
+        <NoWarn>1701;1702;CS8632</NoWarn>
+        <AllowMissingPrunePackageData>true</AllowMissingPrunePackageData>
+        <RollForward>LatestMajor</RollForward>
         <AssemblyName>Microsoft.Playwright.Tests</AssemblyName>
         <RootNamespace>Microsoft.Playwright.Tests</RootNamespace>
         <ImplicitUsings>enable</ImplicitUsings>
@@ -33,6 +35,8 @@
     </ItemGroup>
     <ItemGroup>
         <ProjectReference Include="..\Playwright\Playwright.csproj" />
+        <ProjectReference Include="..\Playwright.CLI\Playwright.CLI.csproj" />
         <ProjectReference Include="..\Playwright.NUnit\Playwright.NUnit.csproj" />
+        <ProjectReference Include="..\tools\Playwright.Tooling\Playwright.Tooling.csproj" />
     </ItemGroup>
 </Project>

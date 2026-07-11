@@ -25,6 +25,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.Json;
+using System.Text.Json.Serialization.Metadata;
 using System.Threading.Tasks;
 using Microsoft.Playwright.Helpers;
 
@@ -96,9 +97,20 @@ internal class APIResponse : IAPIResponse
         }
     }
 
-    public async Task<JsonElement?> JsonAsync() => JsonSerializer.Deserialize<JsonElement>(await BodyAsync().ConfigureAwait(false));
+    public async Task<JsonElement?> JsonAsync()
+    {
+        var bytes = await BodyAsync().ConfigureAwait(false);
+        return JsonDocument.Parse(bytes).RootElement;
+    }
 
-    public async Task<T?> JsonAsync<T>(JsonSerializerOptions? options) => JsonSerializer.Deserialize<T>(await BodyAsync().ConfigureAwait(false), options);
+    public async Task<T?> JsonAsync<T>(JsonSerializerOptions? options)
+        => UserJsonSerializer.Deserialize<T>(await BodyAsync().ConfigureAwait(false), options, nameof(JsonAsync));
+
+    public async Task<T?> JsonAsync<T>(JsonTypeInfo<T> jsonTypeInfo)
+    {
+        ArgumentNullException.ThrowIfNull(jsonTypeInfo);
+        return JsonSerializer.Deserialize(await BodyAsync().ConfigureAwait(false), jsonTypeInfo);
+    }
 
     public async Task<string> TextAsync()
     {

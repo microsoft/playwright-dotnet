@@ -234,6 +234,16 @@ public class LocatorMisc2Tests : PageTestEx
         Assert.AreEqual("inner", await Page.FrameLocator("iframe").Locator(divLocator).Locator("input").InputValueAsync());
     }
 
+    [PlaywrightTest("locator-misc-2.spec.ts", "normalize should resolve the selector")]
+    public async Task NormalizeShouldResolveSelector()
+    {
+        await Page.SetContentAsync("<div><button id='btn'>click me</button></div>");
+        var locator = Page.Locator("button");
+        var resolvedLocator = await locator.NormalizeAsync();
+        Assert.NotNull(resolvedLocator);
+        await Expect(resolvedLocator).ToHaveTextAsync("click me");
+    }
+
     [PlaywrightTest("locator-convenience.spec.ts", "description should return null for locator without description")]
     public void DescriptionShouldReturnNullForLocatorWithoutDescription()
     {

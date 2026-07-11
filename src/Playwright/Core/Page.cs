@@ -25,6 +25,7 @@
  */
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.IO;
 using System.Linq;
@@ -191,6 +192,8 @@ internal class Page : ChannelOwner, IPage
 
     public ITouchscreen Touchscreen { get; }
 
+    internal ClearcoteHumanizeState? ClearcoteHumanizeState { get; private set; }
+
     public IScreencast Screencast => _screencast;
 
     public IWebStorage LocalStorage { get; }
@@ -214,13 +217,33 @@ internal class Page : ChannelOwner, IPage
 
     internal BrowserContext? OwnedContext { get; set; }
 
-    internal Dictionary<string, Delegate> Bindings { get; } = new();
+    internal Dictionary<string, (Func<BindingSource, object?[], Task<object?>> Callback, Type[] ParamTypes)> Bindings { get; } = new();
 
     internal Page Opener => _initializer.Opener;
 
     internal TaskCompletionSource<bool> ClosedOrCrashedTcs { get; } = new();
 
     public IAPIRequestContext APIRequest { get; }
+
+    private static async Task<object?> NormalizeFuncResultAsync<TResult>(TResult result)
+    {
+        return result is Task task ? await BindingCall.UnwrapTaskResultAsync(task).ConfigureAwait(false) : result;
+    }
+
+    private static Func<BindingSource, object?[], Task<object?>> CreateFuncWrapper<TResult>(Func<BindingSource, TResult> callback)
+        => async (source, args) => await NormalizeFuncResultAsync(callback(source)).ConfigureAwait(false);
+
+    private static Func<BindingSource, object?[], Task<object?>> CreateFuncWrapper<T, TResult>(Func<BindingSource, T, TResult> callback)
+        => async (source, args) => await NormalizeFuncResultAsync(callback(source, (T)args[0]!)).ConfigureAwait(false);
+
+    private static Func<BindingSource, object?[], Task<object?>> CreateFuncWrapper<T1, T2, TResult>(Func<BindingSource, T1, T2, TResult> callback)
+        => async (source, args) => await NormalizeFuncResultAsync(callback(source, (T1)args[0]!, (T2)args[1]!)).ConfigureAwait(false);
+
+    private static Func<BindingSource, object?[], Task<object?>> CreateFuncWrapper<T1, T2, T3, TResult>(Func<BindingSource, T1, T2, T3, TResult> callback)
+        => async (source, args) => await NormalizeFuncResultAsync(callback(source, (T1)args[0]!, (T2)args[1]!, (T3)args[2]!)).ConfigureAwait(false);
+
+    private static Func<BindingSource, object?[], Task<object?>> CreateFuncWrapper<T1, T2, T3, T4, TResult>(Func<BindingSource, T1, T2, T3, T4, TResult> callback)
+        => async (source, args) => await NormalizeFuncResultAsync(callback(source, (T1)args[0]!, (T2)args[1]!, (T3)args[2]!, (T4)args[3]!)).ConfigureAwait(false);
 
     internal override void OnMessage(string method, JsonElement serverParams)
     {
@@ -285,17 +308,17 @@ internal class Page : ChannelOwner, IPage
     }
 
     [MethodImpl(MethodImplOptions.NoInlining)]
-    public IFrame Frame(string name)
+    public IFrame? Frame(string name)
         => Frames.FirstOrDefault(f => f.Name == name);
 
     [MethodImpl(MethodImplOptions.NoInlining)]
-    public IFrame FrameByUrl(string urlString) => Frames.FirstOrDefault(f => Context.UrlMatches(f.Url, urlString));
+    public IFrame? FrameByUrl(string urlString) => Frames.FirstOrDefault(f => Context.UrlMatches(f.Url, urlString));
 
     [MethodImpl(MethodImplOptions.NoInlining)]
-    public IFrame FrameByUrl(Regex urlRegex) => Frames.FirstOrDefault(f => urlRegex.IsMatch(f.Url));
+    public IFrame? FrameByUrl(Regex urlRegex) => Frames.FirstOrDefault(f => urlRegex.IsMatch(f.Url));
 
     [MethodImpl(MethodImplOptions.NoInlining)]
-    public IFrame FrameByUrl(Func<string, bool> urlFunc) => Frames.FirstOrDefault(f => urlFunc(f.Url));
+    public IFrame? FrameByUrl(Func<string, bool> urlFunc) => Frames.FirstOrDefault(f => urlFunc(f.Url));
 
     IFrameLocator IPage.FrameLocator(string selector) => MainFrame.FrameLocator(selector);
 
@@ -304,6 +327,21 @@ internal class Page : ChannelOwner, IPage
 
     [MethodImpl(MethodImplOptions.NoInlining)]
     public Task BringToFrontAsync() => SendMessageToServerAsync("bringToFront");
+
+    internal async Task ApplyClearcoteAsync(bool humanize, bool showCursor, string? seed = null)
+    {
+        ClearcoteHumanizeState = new ClearcoteHumanizeState(humanize, showCursor, seed);
+        if (showCursor)
+        {
+            try
+            {
+                await EvaluateAsync<JsonElement?>(Clearcote.CursorOverlayScript(), null).ConfigureAwait(false);
+            }
+            catch
+            {
+            }
+        }
+    }
 
     [MethodImpl(MethodImplOptions.NoInlining)]
     public Task<IPage?> OpenerAsync() => Task.FromResult<IPage?>(Opener?.IsClosed == false ? Opener : null);
@@ -491,12 +529,12 @@ internal class Page : ChannelOwner, IPage
 
         if (pageEvent.Name != PageEvent.Crash.Name)
         {
-            waiter.RejectOnEvent<IPage>(this, PageEvent.Crash.Name, new PlaywrightException("Page crashed"));
+            waiter.RejectOnEvent<Page, IPage>(this, PageEvent.Crash.Name, new PlaywrightException("Page crashed"));
         }
 
         if (pageEvent.Name != PageEvent.Close.Name)
         {
-            waiter.RejectOnEvent<IPage>(this, PageEvent.Close.Name, () => _closeErrorWithReason());
+            waiter.RejectOnEvent<Page, IPage>(this, PageEvent.Close.Name, () => _closeErrorWithReason());
         }
 
         var waitForEventTask = waiter.WaitForEventAsync(this, pageEvent.Name, predicate);
@@ -543,13 +581,13 @@ internal class Page : ChannelOwner, IPage
     }
 
     [MethodImpl(MethodImplOptions.NoInlining)]
-    public Task<T> EvaluateAsync<T>(string expression, object? arg) => MainFrame.EvaluateAsync<T>(expression, arg);
+    public Task<T> EvaluateAsync<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors | DynamicallyAccessedMemberTypes.PublicProperties)] T>(string expression, object? arg) => MainFrame.EvaluateAsync<T>(expression, arg);
 
     [MethodImpl(MethodImplOptions.NoInlining)]
     public Task<JsonElement?> EvalOnSelectorAsync(string selector, string expression, object? arg) => MainFrame.EvalOnSelectorAsync(selector, expression, arg);
 
     [MethodImpl(MethodImplOptions.NoInlining)]
-    public Task<T> EvalOnSelectorAsync<T>(string selector, string expression, object? arg = null, PageEvalOnSelectorOptions? options = null)
+    public Task<T> EvalOnSelectorAsync<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors | DynamicallyAccessedMemberTypes.PublicProperties)] T>(string selector, string expression, object? arg = null, PageEvalOnSelectorOptions? options = null)
         => MainFrame.EvalOnSelectorAsync<T>(selector, expression, arg, new() { Strict = options?.Strict });
 
     [MethodImpl(MethodImplOptions.NoInlining)]
@@ -567,13 +605,13 @@ internal class Page : ChannelOwner, IPage
         => MainFrame.QuerySelectorAsync(selector, new() { Strict = options?.Strict });
 
     [MethodImpl(MethodImplOptions.NoInlining)]
-    public Task<T> EvalOnSelectorAsync<T>(string selector, string expression, object? arg) => MainFrame.EvalOnSelectorAsync<T>(selector, expression, arg);
+    public Task<T> EvalOnSelectorAsync<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors | DynamicallyAccessedMemberTypes.PublicProperties)] T>(string selector, string expression, object? arg) => MainFrame.EvalOnSelectorAsync<T>(selector, expression, arg);
 
     [MethodImpl(MethodImplOptions.NoInlining)]
     public Task<JsonElement?> EvalOnSelectorAllAsync(string selector, string expression, object? arg) => MainFrame.EvalOnSelectorAllAsync(selector, expression, arg);
 
     [MethodImpl(MethodImplOptions.NoInlining)]
-    public Task<T> EvalOnSelectorAllAsync<T>(string selector, string expression, object? arg) => MainFrame.EvalOnSelectorAllAsync<T>(selector, expression, arg);
+    public Task<T> EvalOnSelectorAllAsync<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicConstructors | DynamicallyAccessedMemberTypes.PublicProperties)] T>(string selector, string expression, object? arg) => MainFrame.EvalOnSelectorAllAsync<T>(selector, expression, arg);
 
     [MethodImpl(MethodImplOptions.NoInlining)]
     public Task FillAsync(string selector, string value, PageFillOptions? options = default)
@@ -646,7 +684,7 @@ internal class Page : ChannelOwner, IPage
 
     [MethodImpl(MethodImplOptions.NoInlining)]
     public Task<IReadOnlyList<string>> SelectOptionAsync(string selector, IEnumerable<string> values, PageSelectOptionOptions? options = default)
-        => SelectOptionAsync(selector, values.Select(x => new SelectOptionValueProtocol() { ValueOrLabel = x }), options);
+        => SelectOptionAsync(selector, values.Select(x => new SelectOptionValueProtocol() { ValueOrLabel = x }).ToArray(), options);
 
     [MethodImpl(MethodImplOptions.NoInlining)]
     public Task<IReadOnlyList<string>> SelectOptionAsync(string selector, IElementHandle values, PageSelectOptionOptions? options = default)
@@ -670,7 +708,7 @@ internal class Page : ChannelOwner, IPage
 
     [MethodImpl(MethodImplOptions.NoInlining)]
     public Task<IReadOnlyList<string>> SelectOptionAsync(string selector, IEnumerable<SelectOptionValue> values, PageSelectOptionOptions? options = default)
-        => SelectOptionAsync(selector, values.Select(x => SelectOptionValueProtocol.From(x)), options);
+        => SelectOptionAsync(selector, values.Select(x => SelectOptionValueProtocol.From(x)).ToArray(), options);
 
     internal Task<IReadOnlyList<string>> SelectOptionAsync(string selector, IEnumerable<SelectOptionValueProtocol> values, PageSelectOptionOptions? options = default)
         => MainFrame.SelectOptionAsync(selector, values, new()
@@ -730,8 +768,9 @@ internal class Page : ChannelOwner, IPage
 
         if (!string.IsNullOrEmpty(options.Path))
         {
-            Directory.CreateDirectory(new FileInfo(options.Path).Directory.FullName);
-            File.WriteAllBytes(options.Path, result);
+            var safePath = SecurityHelpers.ResolveAndValidatePath(options.Path, "ScreenshotAsync.Path");
+            Directory.CreateDirectory(new FileInfo(safePath).Directory!.FullName);
+            File.WriteAllBytes(safePath, result);
         }
 
         return result;
@@ -750,7 +789,7 @@ internal class Page : ChannelOwner, IPage
             "setExtraHTTPHeaders",
             new Dictionary<string, object?>
             {
-                ["headers"] = headers.Select(kv => new HeaderEntry { Name = kv.Key, Value = kv.Value }),
+                ["headers"] = headers.Select(kv => new HeaderEntry { Name = kv.Key, Value = kv.Value }).ToArray(),
             });
 
     [MethodImpl(MethodImplOptions.NoInlining)]
@@ -845,35 +884,56 @@ internal class Page : ChannelOwner, IPage
 
     [MethodImpl(MethodImplOptions.NoInlining)]
     public Task<IAsyncDisposable> ExposeBindingAsync(string name, Action callback)
-        => InnerExposeBindingAsync(name, callback);
+        => InnerExposeBindingAsync(
+            name,
+            (source, args) =>
+            {
+                callback();
+                return Task.FromResult<object?>(null);
+            },
+            Type.EmptyTypes);
 
     [MethodImpl(MethodImplOptions.NoInlining)]
     public Task<IAsyncDisposable> ExposeBindingAsync(string name, Action<BindingSource> callback)
-        => InnerExposeBindingAsync(name, callback);
+        => InnerExposeBindingAsync(
+            name,
+            (source, args) =>
+            {
+                callback(source);
+                return Task.FromResult<object?>(null);
+            },
+            Type.EmptyTypes);
 
     [MethodImpl(MethodImplOptions.NoInlining)]
     public Task<IAsyncDisposable> ExposeBindingAsync<T>(string name, Action<BindingSource, T> callback)
-        => InnerExposeBindingAsync(name, callback);
+        => InnerExposeBindingAsync(
+            name,
+            (source, args) =>
+            {
+                callback(source, (T)args[0]!);
+                return Task.FromResult<object?>(null);
+            },
+            new[] { typeof(T) });
 
     [MethodImpl(MethodImplOptions.NoInlining)]
     public Task<IAsyncDisposable> ExposeBindingAsync<TResult>(string name, Func<BindingSource, TResult> callback)
-        => InnerExposeBindingAsync(name, callback);
+        => InnerExposeBindingAsync(name, CreateFuncWrapper(callback), Type.EmptyTypes);
 
     [MethodImpl(MethodImplOptions.NoInlining)]
     public Task<IAsyncDisposable> ExposeBindingAsync<T, TResult>(string name, Func<BindingSource, T, TResult> callback)
-        => InnerExposeBindingAsync(name, callback);
+        => InnerExposeBindingAsync(name, CreateFuncWrapper<T, TResult>(callback), new[] { typeof(T) });
 
     [MethodImpl(MethodImplOptions.NoInlining)]
     public Task<IAsyncDisposable> ExposeBindingAsync<T1, T2, TResult>(string name, Func<BindingSource, T1, T2, TResult> callback)
-        => InnerExposeBindingAsync(name, callback);
+        => InnerExposeBindingAsync(name, CreateFuncWrapper<T1, T2, TResult>(callback), new[] { typeof(T1), typeof(T2) });
 
     [MethodImpl(MethodImplOptions.NoInlining)]
     public Task<IAsyncDisposable> ExposeBindingAsync<T1, T2, T3, TResult>(string name, Func<BindingSource, T1, T2, T3, TResult> callback)
-        => InnerExposeBindingAsync(name, callback);
+        => InnerExposeBindingAsync(name, CreateFuncWrapper<T1, T2, T3, TResult>(callback), new[] { typeof(T1), typeof(T2), typeof(T3) });
 
     [MethodImpl(MethodImplOptions.NoInlining)]
     public Task<IAsyncDisposable> ExposeBindingAsync<T1, T2, T3, T4, TResult>(string name, Func<BindingSource, T1, T2, T3, T4, TResult> callback)
-        => InnerExposeBindingAsync(name, callback);
+        => InnerExposeBindingAsync(name, CreateFuncWrapper<T1, T2, T3, T4, TResult>(callback), new[] { typeof(T1), typeof(T2), typeof(T3), typeof(T4) });
 
     [MethodImpl(MethodImplOptions.NoInlining)]
     public Task<IAsyncDisposable> ExposeFunctionAsync(string name, Action callback)
@@ -927,8 +987,9 @@ internal class Page : ChannelOwner, IPage
 
         if (!string.IsNullOrEmpty(options?.Path))
         {
-            Directory.CreateDirectory(new FileInfo(options?.Path).Directory.FullName);
-            File.WriteAllBytes(options?.Path, result);
+            var safePath = SecurityHelpers.ResolveAndValidatePath(options.Path, "PdfAsync.Path");
+            Directory.CreateDirectory(new FileInfo(safePath).Directory!.FullName);
+            File.WriteAllBytes(safePath, result);
         }
 
         return result;
@@ -1323,7 +1384,7 @@ internal class Page : ChannelOwner, IPage
     {
         if (Bindings.TryGetValue(bindingCall.Name, out var binding))
         {
-            _ = bindingCall.CallAsync(binding);
+            _ = bindingCall.CallAsync(binding.Callback, binding.ParamTypes);
         }
     }
 
@@ -1398,14 +1459,14 @@ internal class Page : ChannelOwner, IPage
         Context?.FireFrameAttached(args);
     }
 
-    private async Task<IAsyncDisposable> InnerExposeBindingAsync(string name, Delegate callback)
+    private async Task<IAsyncDisposable> InnerExposeBindingAsync(string name, Func<BindingSource, object?[], Task<object?>> callback, Type[] paramTypes)
     {
         if (Bindings.ContainsKey(name))
         {
             throw new PlaywrightException($"Function \"{name}\" has been already registered");
         }
 
-        Bindings.Add(name, callback);
+        Bindings.Add(name, (callback, paramTypes));
 
         var result = await SendMessageToServerAsync(
             "exposeBinding",
