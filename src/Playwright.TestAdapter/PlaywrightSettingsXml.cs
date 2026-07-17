@@ -167,6 +167,7 @@ public class PlaywrightSettingsXml
     public string? BrowserName { get; set; }
     public bool? Headless { get; set; }
     public float? ExpectTimeout { get; set; }
+
+    [Obsolete("Use MSTest RetryAttribute or Microsoft.Testing.Extensions.Retry instead.")]
     public int? Retries { get; set; }
 }
-

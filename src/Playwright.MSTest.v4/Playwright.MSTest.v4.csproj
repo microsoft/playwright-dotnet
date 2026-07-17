@@ -38,7 +38,7 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="MSTest.TestFramework" Version="4.0.0-preview.25372.6" />
+    <PackageReference Include="MSTest.TestFramework" Version="4.2.3" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\Common\icon.png" Pack="true" Visible="false" PackagePath="icon.png" />
