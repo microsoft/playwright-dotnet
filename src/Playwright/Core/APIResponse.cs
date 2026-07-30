@@ -57,6 +57,26 @@ internal class APIResponse : IAPIResponse
 
     public string Url => _initializer.Url;
 
+    public RequestTimingResult Timing
+    {
+        get
+        {
+            var timing = _initializer.Timing;
+            return new RequestTimingResult
+            {
+                StartTime = timing?.StartTime ?? -1,
+                DomainLookupStart = timing?.DomainLookupStart ?? -1,
+                DomainLookupEnd = timing?.DomainLookupEnd ?? -1,
+                ConnectStart = timing?.ConnectStart ?? -1,
+                SecureConnectionStart = timing?.SecureConnectionStart ?? -1,
+                ConnectEnd = timing?.ConnectEnd ?? -1,
+                RequestStart = timing?.RequestStart ?? -1,
+                ResponseStart = timing?.ResponseStart ?? -1,
+                ResponseEnd = timing == null ? -1 : _initializer.ResponseEndTiming,
+            };
+        }
+    }
+
     public Task<ResponseSecurityDetailsResult?> SecurityDetailsAsync()
         => Task.FromResult(_initializer.SecurityDetails == null ? null : new ResponseSecurityDetailsResult
         {

@@ -37,9 +37,24 @@ public class BrowserContextStorageStateOptions
             return;
         }
 
+        Credentials = clone.Credentials;
         IndexedDB = clone.IndexedDB;
         Path = clone.Path;
     }
+
+    /// <summary>
+    /// <para>
+    /// Set to <c>true</c> to include the context's virtual WebAuthn <see cref="IBrowserContext.Credentials"/>
+    /// (passkeys) in the storage state snapshot. The captured credentials carry their private
+    /// keys, so they can be re-seeded into a later context via the <see cref="IBrowser.NewContextAsync"/>
+    /// option or <see cref="IBrowserContext.SetStorageStateAsync"/>. Note that restoring
+    /// the storage state that contains credentials will automatically install the virtual
+    /// WebAuthn authenticator (see <see cref="ICredentials.InstallAsync"/>), and prevent
+    /// all real authenticators from working in this context.
+    /// </para>
+    /// </summary>
+    [JsonPropertyName("credentials")]
+    public bool? Credentials { get; set; }
 
     /// <summary>
     /// <para>

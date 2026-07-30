@@ -39,4 +39,7 @@ internal class Metadata
 
     [JsonPropertyName("stepId")]
     public string StepId { get; set; } = null!;
+
+    [JsonPropertyName("timeout")]
+    public float Timeout { get; set; }
 }

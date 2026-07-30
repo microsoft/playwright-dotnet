@@ -357,7 +357,7 @@ public class PageScreenshotTests : PageTestEx
         {
             try
             {
-                await Page.ScreenshotAsync();
+                await Page.ScreenshotAsync(new() { FullPage = true });
             }
             catch (Exception ex) when (ex.Message.Contains("Cannot take a screenshot while page is navigating"))
             {

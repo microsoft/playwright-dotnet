@@ -1983,4 +1983,32 @@ public partial interface ILocator
     /// </summary>
     /// <param name="options">Call options</param>
     Task WaitForAsync(LocatorWaitForOptions? options = default);
+
+    /// <summary>
+    /// <para>
+    /// Returns when <see cref="ILocator.WaitForFunctionAsync"/> returns a truthy value,
+    /// called with the matching element as a first argument, and <see cref="ILocator.WaitForFunctionAsync"/>
+    /// as a second argument.
+    /// </para>
+    /// <para>
+    /// This is a generic way to wait for an element to reach a custom condition without
+    /// asserting it. The locator is re-resolved on each retry, so it tolerates the element
+    /// being re-rendered while waiting.
+    /// </para>
+    /// <para>
+    /// If <see cref="ILocator.WaitForFunctionAsync"/> returns a <see cref="Task"/>, this
+    /// method will wait for the promise to resolve before checking its value.
+    /// </para>
+    /// <para>If <see cref="ILocator.WaitForFunctionAsync"/> throws or rejects, this method throws.</para>
+    /// <para>**Usage**</para>
+    /// <para>Wait for an attribute to appear:</para>
+    /// <para>Passing argument to <see cref="ILocator.WaitForFunctionAsync"/>:</para>
+    /// </summary>
+    /// <param name="expression">
+    /// JavaScript expression to be evaluated in the browser context. If the expression
+    /// evaluates to a function, the function is automatically invoked.
+    /// </param>
+    /// <param name="arg">Optional argument to pass to <see cref="ILocator.WaitForFunctionAsync"/>.</param>
+    /// <param name="options">Call options</param>
+    Task WaitForFunctionAsync(string expression, object? arg = default, LocatorWaitForFunctionOptions? options = default);
 }

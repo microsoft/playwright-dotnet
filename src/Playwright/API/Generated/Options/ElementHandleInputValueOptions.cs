@@ -40,13 +40,8 @@ public class ElementHandleInputValueOptions
         Timeout = clone.Timeout;
     }
 
-    /// <summary>
-    /// <para>
-    /// Maximum time in milliseconds. Defaults to <c>30000</c> (30 seconds). Pass <c>0</c>
-    /// to disable timeout. The default value can be changed by using the <see cref="IBrowserContext.SetDefaultTimeout"/>
-    /// or <see cref="IPage.SetDefaultTimeout"/> methods.
-    /// </para>
-    /// </summary>
+    /// <summary><para>**DEPRECATED** This option is ignored. The value is returned immediately.</para></summary>
     [JsonPropertyName("timeout")]
+    [System.Obsolete]
     public float? Timeout { get; set; }
 }

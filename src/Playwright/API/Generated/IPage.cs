@@ -1272,7 +1272,25 @@ public partial interface IPage
     /// <c>null</c>.
     /// </para>
     /// <para>Navigate to the previous page in history.</para>
+    /// <para>
+    /// **Testing Back/Forward Cache (BFCache) is not supported.**  By default, Playwright
+    /// disables the Back/Forward Cache across all browsers. Even if explicitly enabled,
+    /// Playwright's internal state relies on network-level navigation events. Because BFCache
+    /// restores unfreeze the DOM without firing these events, using <c>page.goBack()</c>
+    /// or <c>page.goForward()</c> to trigger a BFCache restore will result in timeouts
+    /// and a desynchronized <c>Page</c> state.
+    /// </para>
     /// </summary>
+    /// <remarks>
+    /// <para>
+    /// **Testing Back/Forward Cache (BFCache) is not supported.**  By default, Playwright
+    /// disables the Back/Forward Cache across all browsers. Even if explicitly enabled,
+    /// Playwright's internal state relies on network-level navigation events. Because BFCache
+    /// restores unfreeze the DOM without firing these events, using <c>page.goBack()</c>
+    /// or <c>page.goForward()</c> to trigger a BFCache restore will result in timeouts
+    /// and a desynchronized <c>Page</c> state.
+    /// </para>
+    /// </remarks>
     /// <param name="options">Call options</param>
     Task<IResponse?> GoBackAsync(PageGoBackOptions? options = default);
 
@@ -1283,7 +1301,25 @@ public partial interface IPage
     /// <c>null</c>.
     /// </para>
     /// <para>Navigate to the next page in history.</para>
+    /// <para>
+    /// **Testing Back/Forward Cache (BFCache) is not supported.**  By default, Playwright
+    /// disables the Back/Forward Cache across all browsers. Even if explicitly enabled,
+    /// Playwright's internal state relies on network-level navigation events. Because BFCache
+    /// restores unfreeze the DOM without firing these events, using <c>page.goBack()</c>
+    /// or <c>page.goForward()</c> to trigger a BFCache restore will result in timeouts
+    /// and a desynchronized <c>Page</c> state.
+    /// </para>
     /// </summary>
+    /// <remarks>
+    /// <para>
+    /// **Testing Back/Forward Cache (BFCache) is not supported.**  By default, Playwright
+    /// disables the Back/Forward Cache across all browsers. Even if explicitly enabled,
+    /// Playwright's internal state relies on network-level navigation events. Because BFCache
+    /// restores unfreeze the DOM without firing these events, using <c>page.goBack()</c>
+    /// or <c>page.goForward()</c> to trigger a BFCache restore will result in timeouts
+    /// and a desynchronized <c>Page</c> state.
+    /// </para>
+    /// </remarks>
     /// <param name="options">Call options</param>
     Task<IResponse?> GoForwardAsync(PageGoForwardOptions? options = default);
 
