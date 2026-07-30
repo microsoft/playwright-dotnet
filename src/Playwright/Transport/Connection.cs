@@ -128,20 +128,23 @@ internal class Connection : IDisposable
         ChannelOwner? @object,
         string method,
         Dictionary<string, object?>? args = null,
-        bool keepNulls = false)
-        => SendMessageToServerAsync<JsonElement?>(@object, method, args, keepNulls);
+        bool keepNulls = false,
+        float? timeout = null)
+        => SendMessageToServerAsync<JsonElement?>(@object, method, args, keepNulls, timeout);
 
     internal Task<T> SendMessageToServerAsync<T>(
         ChannelOwner? @object,
         string method,
         Dictionary<string, object?>? args = null,
-        bool keepNulls = false) => WrapApiCallAsync(() => InnerSendMessageToServerAsync<T>(@object, method, args, keepNulls), false, null);
+        bool keepNulls = false,
+        float? timeout = null) => WrapApiCallAsync(() => InnerSendMessageToServerAsync<T>(@object, method, args, keepNulls, timeout), false, null);
 
     private async Task<T> InnerSendMessageToServerAsync<T>(
         ChannelOwner? @object,
         string method,
         Dictionary<string, object?>? dictionary = null,
-        bool keepNulls = false)
+        bool keepNulls = false,
+        float? timeout = null)
     {
         // Fire-and-forget: server intentionally never replies to __waitInfo__,
         // so silently drop it after the connection is closed or the object was collected.
@@ -181,10 +184,9 @@ internal class Connection : IDisposable
             ["internal"] = isInternal,
             ["wallTime"] = DateTimeOffset.Now.ToUnixTimeMilliseconds(),
         };
-        if (sanitizedArgs.TryGetValue("timeout", out var timeout))
+        if (timeout.HasValue)
         {
-            sanitizedArgs.Remove("timeout");
-            metadata["timeout"] = timeout;
+            metadata["timeout"] = timeout.Value;
         }
         if (!string.IsNullOrEmpty(title))
         {
