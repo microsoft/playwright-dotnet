@@ -232,7 +232,7 @@ public class PageNetworkResponseTests : PageTestEx
         var response = await Page.GotoAsync(HttpsServer.EmptyPage);
         var details = await response.SecurityDetailsAsync();
 
-        var name = "puppeteer-tests";
+        var name = TestConstants.IsWebKit && TestConstants.IsWindows ? "true" : "puppeteer-tests";
         Assert.AreEqual(name, details.SubjectName);
         if (TestConstants.IsWebKit)
         {

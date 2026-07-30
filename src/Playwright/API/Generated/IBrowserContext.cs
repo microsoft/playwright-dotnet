@@ -1010,7 +1010,7 @@ public partial interface IBrowserContext
     /// <summary>
     /// <para>
     /// Returns storage state for this browser context, contains current cookies, local
-    /// storage snapshot and IndexedDB snapshot.
+    /// storage snapshot, IndexedDB snapshot and virtual WebAuthn credentials.
     /// </para>
     /// </summary>
     /// <param name="options">Call options</param>
@@ -1018,8 +1018,10 @@ public partial interface IBrowserContext
 
     /// <summary>
     /// <para>
-    /// Clears the existing cookies, local storage and IndexedDB entries for all origins
-    /// and sets the new storage state.
+    /// Clears the existing cookies, local storage, IndexedDB entries and virtual WebAuthn
+    /// credentials, and sets the new storage state. When the storage state contains credentials,
+    /// the virtual WebAuthn authenticator is installed (equivalent to <see cref="ICredentials.InstallAsync"/>),
+    /// preventing all real authenticators from working in this context.
     /// </para>
     /// <para>**Usage**</para>
     /// <code>

@@ -93,6 +93,11 @@ public partial interface IBrowserType
     /// via <see cref="IBrowserType.ConnectAsync"/>. If you are experiencing issues or attempting
     /// to use advanced functionality, you probably want to use <see cref="IBrowserType.ConnectAsync"/>.
     /// </para>
+    /// <para>
+    /// Playwright maintains a curated list of arguments for launching the browser. If you
+    /// launch the browser without Playwright and do not pass the exact same arguments,
+    /// some of Playwright functionality may be broken upon connecting to the browser.
+    /// </para>
     /// <para>**Usage**</para>
     /// <code>
     /// var browser = await playwright.Chromium.ConnectOverCDPAsync("http://localhost:9222");<br/>
@@ -110,6 +115,11 @@ public partial interface IBrowserType
     /// via <see cref="IBrowserType.ConnectAsync"/>. If you are experiencing issues or attempting
     /// to use advanced functionality, you probably want to use <see cref="IBrowserType.ConnectAsync"/>.
     ///
+    /// </para>
+    /// <para>
+    /// Playwright maintains a curated list of arguments for launching the browser. If you
+    /// launch the browser without Playwright and do not pass the exact same arguments,
+    /// some of Playwright functionality may be broken upon connecting to the browser.
     /// </para>
     /// </remarks>
     /// <param name="endpointURL">

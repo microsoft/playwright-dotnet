@@ -40,6 +40,7 @@ public class FrameSetCheckedOptions
         Force = clone.Force;
         NoWaitAfter = clone.NoWaitAfter;
         Position = clone.Position;
+        Scroll = clone.Scroll;
         Strict = clone.Strict;
         Timeout = clone.Timeout;
         Trial = clone.Trial;
@@ -70,6 +71,19 @@ public class FrameSetCheckedOptions
     /// </summary>
     [JsonPropertyName("position")]
     public Position? Position { get; set; }
+
+    /// <summary>
+    /// <para>
+    /// Controls whether Playwright scrolls the element into view before performing the
+    /// action. Defaults to <c>"auto"</c>, which scrolls the element into view when necessary,
+    /// including scrolling nested scrollable containers. When set to <c>"none"</c>, Playwright
+    /// does not scroll the element and the action fails if the element is not already in
+    /// the viewport. This is useful to assert that an element is reachable by the user
+    /// without additional scrolling.
+    /// </para>
+    /// </summary>
+    [JsonPropertyName("scroll")]
+    public ScrollMode? Scroll { get; set; }
 
     /// <summary>
     /// <para>

@@ -398,6 +398,18 @@ internal class Locator : ILocator
         });
     }
 
+    public Task WaitForFunctionAsync(string expression, object? arg = default, LocatorWaitForFunctionOptions? options = default)
+    {
+        return _frame.SendMessageToServerAsync("waitForFunction", new Dictionary<string, object?>
+        {
+            ["selector"] = _selector,
+            ["strict"] = true,
+            ["expression"] = expression,
+            ["arg"] = ScriptsHelper.SerializedArgument(arg),
+            ["timeout"] = _frame.Timeout(options?.Timeout),
+        });
+    }
+
     internal Task<FrameExpectResult> ExpectAsync(string expression, FrameExpectOptions options, string? title)
         => this._frame.WrapApiCallAsync(
               () => _frame.ExpectAsync(_selector, expression, options),

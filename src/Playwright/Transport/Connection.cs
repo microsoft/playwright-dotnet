@@ -181,6 +181,11 @@ internal class Connection : IDisposable
             ["internal"] = isInternal,
             ["wallTime"] = DateTimeOffset.Now.ToUnixTimeMilliseconds(),
         };
+        if (sanitizedArgs.TryGetValue("timeout", out var timeout))
+        {
+            sanitizedArgs.Remove("timeout");
+            metadata["timeout"] = timeout;
+        }
         if (!string.IsNullOrEmpty(title))
         {
             metadata["title"] = title;

@@ -34,7 +34,7 @@ namespace Microsoft.Playwright;
 /// / <c>navigator.credentials.get()</c> ceremonies in the page, without a real authenticator
 /// or hardware security key.
 /// </para>
-/// <para>There are two common ways to use it:</para>
+/// <para>There are three common ways to use it:</para>
 /// <para>**Usage: seed a known credential**</para>
 /// <code>
 /// var context = await browser.NewContextAsync();<br/>
@@ -53,7 +53,7 @@ namespace Microsoft.Playwright;
 /// await page.GotoAsync("https://example.com/login");<br/>
 /// // The page's navigator.credentials.get() is answered with the seeded passkey.
 /// </code>
-/// <para>**Usage: capture a passkey, then reuse it**</para>
+/// <para>**Usage: capture a credential, then reuse it**</para>
 /// <code>
 /// // setup test: let the app register a passkey, then save it.<br/>
 /// var context = await browser.NewContextAsync();<br/>
@@ -85,6 +85,11 @@ namespace Microsoft.Playwright;
 /// await page.GotoAsync("https://example.com/login");<br/>
 /// // navigator.credentials.get() resolves the captured passkey — already signed in.
 /// </code>
+/// <para>**Usage: save credentials in the storage state, restore later**</para>
+/// <para>
+/// See <a href="https://playwright.dev/dotnet/docs/auth">authentication guide</a> for
+/// examples of using saving and resotring the storage state.
+/// </para>
 /// <para>**Defaults**</para>
 /// </summary>
 public partial interface ICredentials
