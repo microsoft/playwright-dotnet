@@ -707,26 +707,28 @@ internal class Page : ChannelOwner, IPage
             options.Type = ElementHandle.DetermineScreenshotType(options.Path);
         }
 
-        var result = (await SendMessageToServerAsync("screenshot", new Dictionary<string, object?>
-        {
-            ["fullPage"] = options.FullPage,
-            ["omitBackground"] = options.OmitBackground,
-            ["clip"] = options.Clip,
-            ["path"] = options.Path,
-            ["type"] = options.Type,
-            ["timeout"] = _timeoutSettings.Timeout(options.Timeout),
-            ["animations"] = options.Animations,
-            ["caret"] = options.Caret,
-            ["scale"] = options.Scale,
-            ["quality"] = options.Quality,
-            ["maskColor"] = options.MaskColor,
-            ["style"] = options.Style,
-            ["mask"] = options.Mask?.Select(locator => new Dictionary<string, object>
+        var result = (await SendMessageToServerAsync(
+            "screenshot",
+            new Dictionary<string, object?>
             {
-                ["frame"] = ((Locator)locator)._frame,
-                ["selector"] = ((Locator)locator)._selector,
-            }).ToArray(),
-        }).ConfigureAwait(false))!.Value.GetProperty("binary").GetBytesFromBase64();
+                ["fullPage"] = options.FullPage,
+                ["omitBackground"] = options.OmitBackground,
+                ["clip"] = options.Clip,
+                ["path"] = options.Path,
+                ["type"] = options.Type,
+                ["animations"] = options.Animations,
+                ["caret"] = options.Caret,
+                ["scale"] = options.Scale,
+                ["quality"] = options.Quality,
+                ["maskColor"] = options.MaskColor,
+                ["style"] = options.Style,
+                ["mask"] = options.Mask?.Select(locator => new Dictionary<string, object>
+                {
+                    ["frame"] = ((Locator)locator)._frame,
+                    ["selector"] = ((Locator)locator)._selector,
+                }).ToArray(),
+            },
+            timeout: _timeoutSettings.Timeout(options.Timeout)).ConfigureAwait(false))!.Value.GetProperty("binary").GetBytesFromBase64();
 
         if (!string.IsNullOrEmpty(options.Path))
         {
@@ -818,27 +820,33 @@ internal class Page : ChannelOwner, IPage
 
     [MethodImpl(MethodImplOptions.NoInlining)]
     public async Task<IResponse?> GoBackAsync(PageGoBackOptions? options = default)
-        => await SendMessageToServerAsync<Response>("goBack", new Dictionary<string, object?>
-        {
-            ["timeout"] = _timeoutSettings.NavigationTimeout(options?.Timeout),
-            ["waitUntil"] = options?.WaitUntil,
-        }).ConfigureAwait(false);
+        => await SendMessageToServerAsync<Response>(
+            "goBack",
+            new Dictionary<string, object?>
+            {
+                ["waitUntil"] = options?.WaitUntil,
+            },
+            timeout: _timeoutSettings.NavigationTimeout(options?.Timeout)).ConfigureAwait(false);
 
     [MethodImpl(MethodImplOptions.NoInlining)]
     public async Task<IResponse?> GoForwardAsync(PageGoForwardOptions? options = default)
-        => await SendMessageToServerAsync<Response>("goForward", new Dictionary<string, object?>
-        {
-            ["timeout"] = _timeoutSettings.NavigationTimeout(options?.Timeout),
-            ["waitUntil"] = options?.WaitUntil,
-        }).ConfigureAwait(false);
+        => await SendMessageToServerAsync<Response>(
+            "goForward",
+            new Dictionary<string, object?>
+            {
+                ["waitUntil"] = options?.WaitUntil,
+            },
+            timeout: _timeoutSettings.NavigationTimeout(options?.Timeout)).ConfigureAwait(false);
 
     [MethodImpl(MethodImplOptions.NoInlining)]
     public async Task<IResponse?> ReloadAsync(PageReloadOptions? options = default)
-        => await SendMessageToServerAsync<Response>("reload", new Dictionary<string, object?>
-        {
-            ["timeout"] = _timeoutSettings.NavigationTimeout(options?.Timeout),
-            ["waitUntil"] = options?.WaitUntil,
-        }).ConfigureAwait(false);
+        => await SendMessageToServerAsync<Response>(
+            "reload",
+            new Dictionary<string, object?>
+            {
+                ["waitUntil"] = options?.WaitUntil,
+            },
+            timeout: _timeoutSettings.NavigationTimeout(options?.Timeout)).ConfigureAwait(false);
 
     [MethodImpl(MethodImplOptions.NoInlining)]
     public Task HideHighlightAsync() => SendMessageToServerAsync("hideHighlight");
@@ -1558,12 +1566,14 @@ internal class Page : ChannelOwner, IPage
     [MethodImpl(MethodImplOptions.NoInlining)]
     public async Task<string> AriaSnapshotAsync(PageAriaSnapshotOptions? options = default)
     {
-        var result = await MainFrame.SendMessageToServerAsync("ariaSnapshot", new Dictionary<string, object?>
-        {
-            ["timeout"] = MainFrame.Timeout(options?.Timeout),
-            ["mode"] = options?.Mode,
-            ["depth"] = options?.Depth,
-        }).ConfigureAwait(false);
+        var result = await MainFrame.SendMessageToServerAsync(
+            "ariaSnapshot",
+            new Dictionary<string, object?>
+            {
+                ["mode"] = options?.Mode,
+                ["depth"] = options?.Depth,
+            },
+            timeout: MainFrame.Timeout(options?.Timeout)).ConfigureAwait(false);
         return result!.Value.GetProperty("snapshot").ToString();
     }
 

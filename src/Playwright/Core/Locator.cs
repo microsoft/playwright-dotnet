@@ -278,9 +278,9 @@ internal class Locator : ILocator
             new Dictionary<string, object?>
             {
                 ["selector"] = _selector,
-                ["timeout"] = _frame.Timeout(options?.Timeout),
                 ["strict"] = true,
-            });
+            },
+            timeout: _frame.Timeout(options?.Timeout));
 
     public Task<int> CountAsync()
         => _frame.QueryCountAsync(_selector);
@@ -388,26 +388,30 @@ internal class Locator : ILocator
 
     public Task WaitForAsync(LocatorWaitForOptions? options = null)
     {
-        return _frame.SendMessageToServerAsync("waitForSelector", new Dictionary<string, object?>
-        {
-            ["selector"] = _selector,
-            ["timeout"] = _frame.Timeout(options?.Timeout),
-            ["state"] = options?.State,
-            ["strict"] = true,
-            ["omitReturnValue"] = true,
-        });
+        return _frame.SendMessageToServerAsync(
+            "waitForSelector",
+            new Dictionary<string, object?>
+            {
+                ["selector"] = _selector,
+                ["state"] = options?.State,
+                ["strict"] = true,
+                ["omitReturnValue"] = true,
+            },
+            timeout: _frame.Timeout(options?.Timeout));
     }
 
     public Task WaitForFunctionAsync(string expression, object? arg = default, LocatorWaitForFunctionOptions? options = default)
     {
-        return _frame.SendMessageToServerAsync("waitForFunction", new Dictionary<string, object?>
-        {
-            ["selector"] = _selector,
-            ["strict"] = true,
-            ["expression"] = expression,
-            ["arg"] = ScriptsHelper.SerializedArgument(arg),
-            ["timeout"] = _frame.Timeout(options?.Timeout),
-        });
+        return _frame.SendMessageToServerAsync(
+            "waitForFunction",
+            new Dictionary<string, object?>
+            {
+                ["selector"] = _selector,
+                ["strict"] = true,
+                ["expression"] = expression,
+                ["arg"] = ScriptsHelper.SerializedArgument(arg),
+            },
+            timeout: _frame.Timeout(options?.Timeout));
     }
 
     internal Task<FrameExpectResult> ExpectAsync(string expression, FrameExpectOptions options, string? title)
@@ -448,13 +452,15 @@ internal class Locator : ILocator
         return this._frame.WrapApiCallAsync(
             async () =>
         {
-            var handle = await _frame.SendMessageToServerAsync<ElementHandle>("waitForSelector", new Dictionary<string, object?>
-            {
-                ["selector"] = this._selector,
-                ["state"] = WaitForSelectorState.Attached,
-                ["timeout"] = timeout,
-                ["strict"] = true,
-            }).ConfigureAwait(false);
+            var handle = await _frame.SendMessageToServerAsync<ElementHandle>(
+                "waitForSelector",
+                new Dictionary<string, object?>
+                {
+                    ["selector"] = this._selector,
+                    ["state"] = WaitForSelectorState.Attached,
+                    ["strict"] = true,
+                },
+                timeout: timeout).ConfigureAwait(false);
             if (handle == null)
             {
                 throw new PlaywrightException($"Could not resolve {this._selector} to DOM Element");
@@ -661,13 +667,15 @@ internal class Locator : ILocator
 
     public async Task<string> AriaSnapshotAsync(LocatorAriaSnapshotOptions? options = null)
     {
-        var result = await _frame.SendMessageToServerAsync("ariaSnapshot", new Dictionary<string, object?>
-        {
-            ["selector"] = _selector,
-            ["timeout"] = _frame.Timeout(options?.Timeout),
-            ["mode"] = options?.Mode,
-            ["depth"] = options?.Depth,
-        }).ConfigureAwait(false);
+        var result = await _frame.SendMessageToServerAsync(
+            "ariaSnapshot",
+            new Dictionary<string, object?>
+            {
+                ["selector"] = _selector,
+                ["mode"] = options?.Mode,
+                ["depth"] = options?.Depth,
+            },
+            timeout: _frame.Timeout(options?.Timeout)).ConfigureAwait(false);
         return result!.Value.GetProperty("snapshot").ToString();
     }
 

@@ -93,14 +93,16 @@ internal class LocalUtils : ChannelOwner
         });
 
     internal async Task<JsonPipe> ConnectAsync(string wsEndpoint, IEnumerable<KeyValuePair<string, string>>? headers = default, float? slowMo = default, float? timeout = default, string? exposeNetwork = default)
-         => (await SendMessageToServerAsync("connect", new Dictionary<string, object?>
-            {
-                { "endpoint", wsEndpoint },
-                { "headers", headers },
-                { "slowMo", slowMo },
-                { "timeout", timeout ?? 0 },
-                { "exposeNetwork", exposeNetwork },
-            }).ConfigureAwait(false))!.Value.GetObject<JsonPipe>("pipe", _connection);
+         => (await SendMessageToServerAsync(
+                "connect",
+                new Dictionary<string, object?>
+                {
+                    { "endpoint", wsEndpoint },
+                    { "headers", headers },
+                    { "slowMo", slowMo },
+                    { "exposeNetwork", exposeNetwork },
+                },
+                timeout: timeout ?? 0).ConfigureAwait(false))!.Value.GetObject<JsonPipe>("pipe", _connection);
 
     internal void AddStackToTracingNoReply(List<StackFrame> stack, int id)
          => SendMessageToServerAsync("addStackToTracingNoReply", new Dictionary<string, object?>

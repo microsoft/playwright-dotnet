@@ -74,8 +74,8 @@ internal class BrowserType : ChannelOwner, IBrowserType
                 { "firefoxUserPrefs", options.FirefoxUserPrefs },
                 { "chromiumSandbox", options.ChromiumSandbox },
                 { "slowMo", options.SlowMo },
-                { "timeout", TimeoutSettings.LaunchTimeout(options.Timeout) },
-            }).ConfigureAwait(false);
+            },
+            timeout: TimeoutSettings.LaunchTimeout(options.Timeout)).ConfigureAwait(false);
         browser.ConnectToBrowserType(this, options.TracesDir);
         return browser;
     }
@@ -100,7 +100,6 @@ internal class BrowserType : ChannelOwner, IBrowserType
             ["handleSIGINT"] = options.HandleSIGINT,
             ["handleSIGTERM"] = options.HandleSIGTERM,
             ["handleSIGHUP"] = options.HandleSIGHUP,
-            ["timeout"] = TimeoutSettings.LaunchTimeout(options.Timeout),
             ["env"] = options.Env?.ToProtocol(),
             ["slowMo"] = options.SlowMo,
             ["ignoreHTTPSErrors"] = options.IgnoreHTTPSErrors,
@@ -147,7 +146,7 @@ internal class BrowserType : ChannelOwner, IBrowserType
             channelArgs.Add("viewport", options.ViewportSize);
         }
 
-        JsonElement result = await SendMessageToServerAsync<JsonElement>("launchPersistentContext", channelArgs).ConfigureAwait(false);
+        JsonElement result = await SendMessageToServerAsync<JsonElement>("launchPersistentContext", channelArgs, timeout: TimeoutSettings.LaunchTimeout(options.Timeout)).ConfigureAwait(false);
         var browser = result.GetProperty("browser").ToObject<Browser>(_connection.DefaultJsonSerializerOptions)!;
         browser.ConnectToBrowserType(this, options.TracesDir);
         var context = result.GetProperty("context").ToObject<BrowserContext>(_connection.DefaultJsonSerializerOptions)!;
@@ -263,16 +262,18 @@ internal class BrowserType : ChannelOwner, IBrowserType
             throw new ArgumentException("Connecting over CDP is only supported in Chromium.");
         }
         options ??= new BrowserTypeConnectOverCDPOptions();
-        JsonElement result = await SendMessageToServerAsync<JsonElement>("connectOverCDP", new Dictionary<string, object?>
-            {
-                { "endpointURL", endpointURL },
-                { "headers", options.Headers?.ToProtocol() },
-                { "slowMo", options.SlowMo },
-                { "timeout", TimeoutSettings.LaunchTimeout(options.Timeout) },
-                { "isLocal", options.IsLocal },
-                { "noDefaults", options.NoDefaults },
-                { "artifactsDir", options.ArtifactsDir },
-            }).ConfigureAwait(false);
+        JsonElement result = await SendMessageToServerAsync<JsonElement>(
+                "connectOverCDP",
+                new Dictionary<string, object?>
+                {
+                    { "endpointURL", endpointURL },
+                    { "headers", options.Headers?.ToProtocol() },
+                    { "slowMo", options.SlowMo },
+                    { "isLocal", options.IsLocal },
+                    { "noDefaults", options.NoDefaults },
+                    { "artifactsDir", options.ArtifactsDir },
+                },
+                timeout: TimeoutSettings.LaunchTimeout(options.Timeout)).ConfigureAwait(false);
         Browser browser = result.GetProperty("browser").ToObject<Browser>(_connection.DefaultJsonSerializerOptions);
         browser.ConnectToBrowserType(this, null);
         return browser;

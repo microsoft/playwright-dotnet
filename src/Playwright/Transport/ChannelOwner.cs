@@ -127,11 +127,13 @@ internal class ChannelOwner
     internal Task<JsonElement?> SendMessageToServerAsync(
         string method,
         Dictionary<string, object?>? args = null,
-        bool keepNulls = false)
-        => SendMessageToServerAsync<JsonElement?>(method, args, keepNulls);
+        bool keepNulls = false,
+        float? timeout = null)
+        => SendMessageToServerAsync<JsonElement?>(method, args, keepNulls, timeout);
 
     internal Task<T> SendMessageToServerAsync<T>(
         string method,
         Dictionary<string, object?>? args = null,
-        bool keepNulls = false) => _connection.SendMessageToServerAsync<T>(this, method, args, keepNulls);
+        bool keepNulls = false,
+        float? timeout = null) => _connection.SendMessageToServerAsync<T>(this, method, args, keepNulls, timeout);
 }
