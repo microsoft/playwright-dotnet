@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Project Sdk="Microsoft.NET.Sdk.Web">
     <PropertyGroup>
-        <TargetFrameworks>net8.0</TargetFrameworks>
+        <TargetFrameworks>net8.0;net10.0</TargetFrameworks>
         <LangVersion>12</LangVersion>
         <IsTestProject>true</IsTestProject>
         <ReleaseVersion>0.0.0</ReleaseVersion>
