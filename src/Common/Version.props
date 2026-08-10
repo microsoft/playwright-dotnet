@@ -1,6 +1,6 @@
 <Project>
   <PropertyGroup>
-    <AssemblyVersion>1.61.0</AssemblyVersion>
+    <AssemblyVersion>1.62.0</AssemblyVersion>
     <PackageVersion>$(AssemblyVersion)</PackageVersion>
     <DriverVersion>1.62.0</DriverVersion>
     <!-- The Node.js version bundled with the driver. Set by the roll script to the latest
