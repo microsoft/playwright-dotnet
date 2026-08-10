@@ -25,7 +25,9 @@ jobs:
       - name: Setup .NET Core
         uses: actions/setup-dotnet@v5
         with:
-          dotnet-version: 8.0.x
+          dotnet-version: |
+            8.0.x
+            10.0.x
       - name: Install prerequisites and download drivers
         shell: bash
         run: ./build.sh --download-driver
