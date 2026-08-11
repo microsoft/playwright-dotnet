@@ -61,6 +61,11 @@ extends:
           inputs:
             packageType: sdk
             version: 8.x
+        - task: UseDotNet@2
+          displayName: 'Use .NET 10 SDK'
+          inputs:
+            packageType: sdk
+            version: 10.x
         # We need to download the driver first, so we can build
         - task: DotNetCoreCLI@2
           displayName: Download the driver
