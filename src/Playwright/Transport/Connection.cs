@@ -286,8 +286,18 @@ internal class Connection : IDisposable
             if (message.Error != null && message.Result == null)
             {
                 var exception = ParseException(message.Error.Error, FormatCallLog(message.Log));
-                exception.Data[ErrorDetailsDataKey] = message.ErrorDetails;
-                exception.Data[LogDataKey] = message.Log;
+                // Exception.Data values must be serializable on .NET Framework.
+                // Store ErrorDetails as raw JSON text (not JsonElement) so expect
+                // failures cannot throw here, orphan the callback, and kill the connection.
+                try
+                {
+                    exception.Data[ErrorDetailsDataKey] = message.ErrorDetails?.GetRawText();
+                    exception.Data[LogDataKey] = message.Log;
+                }
+                catch
+                {
+                    // Best-effort enrichment only; completing the callback is mandatory.
+                }
                 callback.TaskCompletionSource.TrySetException(exception);
             }
             else

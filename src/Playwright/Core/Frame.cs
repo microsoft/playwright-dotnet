@@ -1013,21 +1013,27 @@ internal class Frame : ChannelOwner, IFrame
                 Matches = options.IsNot,
                 Log = (e.Data[Connection.LogDataKey] as string[]) ?? Array.Empty<string>(),
             };
-            if (e.Data[Connection.ErrorDetailsDataKey] is JsonElement details && details.ValueKind == JsonValueKind.Object)
+            // ErrorDetails is stored as raw JSON text for .NET Framework Exception.Data compatibility.
+            if (e.Data[Connection.ErrorDetailsDataKey] is string detailsJson && !string.IsNullOrEmpty(detailsJson))
             {
-                if (details.TryGetProperty("customErrorMessage", out var customErrorMessage) && customErrorMessage.ValueKind == JsonValueKind.String)
+                using var detailsDocument = JsonDocument.Parse(detailsJson);
+                var details = detailsDocument.RootElement;
+                if (details.ValueKind == JsonValueKind.Object)
                 {
-                    result.ErrorMessage = "Error: " + customErrorMessage.GetString();
-                }
-                if (details.TryGetProperty("received", out var received) && received.ValueKind == JsonValueKind.Object)
-                {
-                    if (received.TryGetProperty("value", out var receivedValue))
+                    if (details.TryGetProperty("customErrorMessage", out var customErrorMessage) && customErrorMessage.ValueKind == JsonValueKind.String)
                     {
-                        result.Received = ScriptsHelper.ParseEvaluateResult<object>(receivedValue);
+                        result.ErrorMessage = "Error: " + customErrorMessage.GetString();
                     }
-                    if (received.TryGetProperty("ariaSnapshot", out var ariaSnapshot) && ariaSnapshot.ValueKind == JsonValueKind.String)
+                    if (details.TryGetProperty("received", out var received) && received.ValueKind == JsonValueKind.Object)
                     {
-                        result.ReceivedAriaSnapshot = ariaSnapshot.GetString();
+                        if (received.TryGetProperty("value", out var receivedValue))
+                        {
+                            result.Received = ScriptsHelper.ParseEvaluateResult<object>(receivedValue);
+                        }
+                        if (received.TryGetProperty("ariaSnapshot", out var ariaSnapshot) && ariaSnapshot.ValueKind == JsonValueKind.String)
+                        {
+                            result.ReceivedAriaSnapshot = ariaSnapshot.GetString();
+                        }
                     }
                 }
             }
