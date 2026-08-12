@@ -90,35 +90,43 @@ internal class WebSocketRoute : ChannelOwner, IWebSocketRoute
                 }
                 break;
             case "closePage":
-                if (_onPageClose != null)
                 {
-                    _onPageClose(serverParams.GetProperty("code").GetInt32(), serverParams.GetProperty("reason").GetString());
-                }
-                else
-                {
-                    SendMessageToServerAsync("closeServer", new Dictionary<string, object?>
+                    int? code = serverParams.TryGetProperty("code", out var codeElement) && codeElement.ValueKind == JsonValueKind.Number ? codeElement.GetInt32() : null;
+                    string? reason = serverParams.TryGetProperty("reason", out var reasonElement) && reasonElement.ValueKind == JsonValueKind.String ? reasonElement.GetString() : null;
+                    if (_onPageClose != null)
                     {
-                        ["code"] = serverParams.GetProperty("code").GetInt32(),
-                        ["reason"] = serverParams.GetProperty("reason").GetString(),
-                        ["wasClean"] = serverParams.GetProperty("wasClean").GetBoolean(),
-                    }).IgnoreException();
+                        _onPageClose(code, reason);
+                    }
+                    else
+                    {
+                        SendMessageToServerAsync("closeServer", new Dictionary<string, object?>
+                        {
+                            ["code"] = code,
+                            ["reason"] = reason,
+                            ["wasClean"] = serverParams.GetProperty("wasClean").GetBoolean(),
+                        }).IgnoreException();
+                    }
+                    break;
                 }
-                break;
             case "closeServer":
-                if (_onServerClose != null)
                 {
-                    _onServerClose(serverParams.GetProperty("code").GetInt32(), serverParams.GetProperty("reason").GetString());
-                }
-                else
-                {
-                    SendMessageToServerAsync("closePage", new Dictionary<string, object?>
+                    int? code = serverParams.TryGetProperty("code", out var codeElement) && codeElement.ValueKind == JsonValueKind.Number ? codeElement.GetInt32() : null;
+                    string? reason = serverParams.TryGetProperty("reason", out var reasonElement) && reasonElement.ValueKind == JsonValueKind.String ? reasonElement.GetString() : null;
+                    if (_onServerClose != null)
                     {
-                        ["code"] = serverParams.GetProperty("code").GetInt32(),
-                        ["reason"] = serverParams.GetProperty("reason").GetString(),
-                        ["wasClean"] = serverParams.GetProperty("wasClean").GetBoolean(),
-                    }).IgnoreException();
+                        _onServerClose(code, reason);
+                    }
+                    else
+                    {
+                        SendMessageToServerAsync("closePage", new Dictionary<string, object?>
+                        {
+                            ["code"] = code,
+                            ["reason"] = reason,
+                            ["wasClean"] = serverParams.GetProperty("wasClean").GetBoolean(),
+                        }).IgnoreException();
+                    }
+                    break;
                 }
-                break;
         }
     }
 

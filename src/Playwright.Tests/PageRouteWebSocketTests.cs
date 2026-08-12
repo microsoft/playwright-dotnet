@@ -287,6 +287,51 @@ public class PageRouteWebSocketTests : PageTestEx
         ]);
     }
 
+    [PlaywrightTest("route-web-socket.spec.ts", "should emit close upon frame navigation")]
+    public async Task ShouldEmitCloseUponFrameNavigation()
+    {
+        var tcs = new TaskCompletionSource<IWebSocketRoute>();
+        await Page.RouteWebSocketAsync(new Regex(".*"), ws =>
+        {
+            ws.ConnectToServer();
+            tcs.SetResult(ws);
+        });
+
+        await SetupWS(Page, Server.Port, "blob");
+
+        var route = await tcs.Task;
+        route.Send("hello");
+
+        await AssertAreEqualWithRetriesAsync(() => Page.EvaluateAsync<string[]>("() => window.log"), new[]
+        {
+            "open",
+            $"message: data=hello origin=ws://localhost:{Server.Port} lastEventId=",
+        });
+
+        var closedTcs = new TaskCompletionSource();
+        route.OnClose((code, reason) => closedTcs.TrySetResult());
+        await Page.GotoAsync(Server.EmptyPage);
+        await closedTcs.Task;
+    }
+
+    [PlaywrightTest("route-web-socket.spec.ts", "should not throw after page closure")]
+    public async Task ShouldNotThrowAfterPageClosure()
+    {
+        var tcs = new TaskCompletionSource<IWebSocketRoute>();
+        await Page.RouteWebSocketAsync(new Regex(".*"), ws =>
+        {
+            ws.ConnectToServer();
+            tcs.SetResult(ws);
+        });
+
+        await SetupWS(Page, Server.Port, "blob");
+
+        var route = await tcs.Task;
+        var closeTask = Page.CloseAsync();
+        route.Send("hello");
+        await closeTask;
+    }
+
     [PlaywrightTest("page-route-web-socket.spec.ts", "should work with baseURL")]
     public async Task ShouldWorkWithBaseURL()
     {
