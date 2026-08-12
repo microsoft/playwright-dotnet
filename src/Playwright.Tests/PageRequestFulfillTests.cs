@@ -23,6 +23,7 @@
  */
 
 using System.Net;
+using System.Text;
 
 namespace Microsoft.Playwright.Tests;
 
@@ -88,6 +89,31 @@ public class PageRequestFulfillTests : PageTestEx
             }", Server.Prefix);
         var img = await Page.QuerySelectorAsync("img");
         PlaywrightAssert.ToMatchSnapshot("mock-binary-response.png", await img.ScreenshotAsync());
+    }
+
+    [PlaywrightTest("page-request-fulfill.spec.ts", "should set content-length from body bytes")]
+    public async Task ShouldSetContentLengthFromBodyBytes()
+    {
+        byte[] bodyBytes = Encoding.UTF8.GetBytes("1234567890");
+
+        await Page.RouteAsync("**/bytes", async route =>
+        {
+            await route.FulfillAsync(new()
+            {
+                ContentType = "text/plain",
+                BodyBytes = bodyBytes,
+            });
+        });
+
+        int[] lengths = await Page.EvaluateAsync<int[]>(@"async url => {
+            const response = await fetch(url);
+            const contentLengthHeader = Number(response.headers.get('content-length'));
+            const body = await response.arrayBuffer();
+            return [contentLengthHeader, body.byteLength];
+        }", Server.Prefix + "/bytes");
+
+        Assert.AreEqual(bodyBytes.Length, lengths[0]);
+        Assert.AreEqual(bodyBytes.Length, lengths[1]);
     }
 
     [PlaywrightTest("page-request-fulfill.spec.ts", "should allow mocking svg with charset")]
