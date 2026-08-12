@@ -287,7 +287,7 @@ internal class Connection : IDisposable
             if (message.Error != null && message.Result == null)
             {
                 var exception = ParseException(message.Error.Error, FormatCallLog(message.Log));
-                exception.Data[ErrorDetailsDataKey] = message.ErrorDetails;
+                exception.Data[ErrorDetailsDataKey] = message.ErrorDetails?.GetRawText();
                 exception.Data[LogDataKey] = message.Log;
                 callback.TaskCompletionSource.TrySetException(exception);
             }
