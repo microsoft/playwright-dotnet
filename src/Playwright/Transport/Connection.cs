@@ -54,6 +54,7 @@ internal class Connection : IDisposable
     private int _tracingCount;
     private int _lastId;
     private Exception? _closedError;
+    private bool _disposed;
 
     public Connection(LocalUtils? localUtils = null)
     {
@@ -451,15 +452,6 @@ internal class Connection : IDisposable
     internal void DoCloseImpl(Exception closeError)
     {
         _closedError = closeError;
-        foreach (var callback in _callbacks)
-        {
-            callback.Value.TaskCompletionSource.TrySetException(closeError.InnerException ?? closeError);
-            // We need to make sure that the task is handled otherwise it will be reported as unhandled on the caller side.
-            // Its still possible to get the exception from the task.
-            callback.Value.TaskCompletionSource.Task.IgnoreException();
-        }
-        _callbacks.Clear();
-
         Dispose();
     }
 
@@ -484,10 +476,22 @@ internal class Connection : IDisposable
 
     private void Dispose(bool disposing)
     {
-        if (!disposing)
+        if (!disposing || _disposed)
         {
             return;
         }
+
+        _disposed = true;
+        _closedError ??= new TargetClosedException("Connection disposed");
+
+        foreach (var callback in _callbacks)
+        {
+            callback.Value.TaskCompletionSource.TrySetException(_closedError);
+            // We need to make sure that the task is handled otherwise it will be reported as unhandled on the caller side.
+            // Its still possible to get the exception from the task.
+            callback.Value.TaskCompletionSource.Task.IgnoreException();
+        }
+        _callbacks.Clear();
 
         _queue.Dispose();
         Close?.Invoke(this, new TargetClosedException("Connection disposed"));
