@@ -74,6 +74,9 @@ internal static class ScriptsHelper
         return new { value = EvaluateArgumentValueConverter.Serialize(arg, handles, new()), handles };
     }
 
+    internal static object SerializedUndefinedArgument()
+        => new { value = new { v = "undefined" }, handles = new List<EvaluateArgumentGuidElement>() };
+
     internal static string EvaluationScript(string? content, string? path, bool addSourceUrl)
     {
         if (!content.IsNullOrEmpty())

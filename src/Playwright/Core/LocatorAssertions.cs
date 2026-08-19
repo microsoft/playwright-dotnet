@@ -196,7 +196,9 @@ internal class LocatorAssertions : AssertionsBase, ILocatorAssertions
     {
         var commonOptions = ConvertToFrameExpectOptions(options);
         commonOptions.ExpressionArg = name;
-        commonOptions.ExpectedValue = ScriptsHelper.SerializedArgument(value);
+        commonOptions.ExpectedValue = value is JSUndefined
+            ? ScriptsHelper.SerializedUndefinedArgument()
+            : ScriptsHelper.SerializedArgument(value);
         return ExpectImplAsync("to.have.property", null as ExpectedTextValue[], value, $"Locator expected to have JavaScript property '{name}'", "Expect \"ToHaveJSPropertyAsync\"", commonOptions);
     }
 

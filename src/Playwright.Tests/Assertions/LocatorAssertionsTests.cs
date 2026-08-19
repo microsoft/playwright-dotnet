@@ -635,6 +635,25 @@ public class LocatorAssertionsTests : PageTestEx
         await Expect(locator).ToHaveJSPropertyAsync("itsNull", null);
     }
 
+    [PlaywrightTest("playwright-test/playwright.expect.misc.spec.ts", "toHaveJSProperty pass undefined")]
+    public async Task ShouldSupportToHaveJSPropertyUndefined()
+    {
+        await Page.SetContentAsync("<div></div>");
+        var locator = Page.Locator("div");
+        await Expect(locator).ToHaveJSPropertyAsync("foo", JSUndefined.Value);
+
+        await Page.EvalOnSelectorAsync("div", "e => e.foo = null");
+        await Expect(locator).ToHaveJSPropertyAsync("foo", null);
+        var undefinedWhenNull = await PlaywrightAssert.ThrowsAsync<PlaywrightException>(
+            () => Expect(locator).ToHaveJSPropertyAsync("foo", JSUndefined.Value, new() { Timeout = 200 }));
+        StringAssert.Contains("undefined", undefinedWhenNull.Message);
+
+        await Page.EvalOnSelectorAsync("div", "e => { delete e.foo; }");
+        var nullWhenUndefined = await PlaywrightAssert.ThrowsAsync<PlaywrightException>(
+            () => Expect(locator).ToHaveJSPropertyAsync("foo", null, new() { Timeout = 200 }));
+        StringAssert.Contains("unexpected value \"undefined\"", nullWhenUndefined.Message);
+    }
+
     [PlaywrightTest("playwright-test/playwright.expect.misc.spec.ts", "should support toHaveValue")]
     public async Task ShouldSupportToHaveValue()
     {
