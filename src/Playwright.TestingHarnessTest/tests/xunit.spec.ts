@@ -551,7 +551,7 @@ test.describe('TestIdAttribute', () => {
           [Fact]
           public async Task Test()
           {
-              await Page.SetContentAsync("<div data-test-id=\\"Hello\\">Hello world</div>");
+              await Page.SetContentAsync("<div data-my-custom-testid=\\"Hello\\">Hello world</div>");
               await Expect(Page.GetByTestId("Hello")).ToHaveTextAsync("Hello world");
           }
       }`,
@@ -559,7 +559,7 @@ test.describe('TestIdAttribute', () => {
       <?xml version="1.0" encoding="utf-8"?>
       <RunSettings>
         <Playwright>
-          <TestIdAttribute>data-test-id</TestIdAttribute>
+          <TestIdAttribute>data-my-custom-testid</TestIdAttribute>
         </Playwright>
       </RunSettings>
       `,
