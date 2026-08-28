@@ -42,7 +42,7 @@ public class PlaywrightTest : WorkerAwareTest
         Playwright = await _playwrightTask.ConfigureAwait(false);
         BrowserName = PlaywrightSettingsProvider.BrowserName;
         BrowserType = Playwright[BrowserName];
-        Playwright.Selectors.SetTestIdAttribute("data-testid");
+        Playwright.Selectors.SetTestIdAttribute(PlaywrightSettingsProvider.TestIdAttribute);
     }
 
     public static void SetDefaultExpectTimeout(float timeout) => Assertions.SetDefaultExpectTimeout(timeout);

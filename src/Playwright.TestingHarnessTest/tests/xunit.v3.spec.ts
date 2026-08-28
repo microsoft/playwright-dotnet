@@ -529,6 +529,41 @@ test.describe('Expect() timeout', () => {
   });
 });
 
+test.describe('TestIdAttribute', () => {
+  test('should be able to configure TestIdAttribute via runsettings', async ({ runTest }) => {
+    const result = await runTest({
+      'ExampleTests.cs': `
+      using System;
+      using System.Threading.Tasks;
+      using Microsoft.Playwright.Xunit.v3;
+      using Xunit;
+
+      namespace Playwright.TestingHarnessTest.Xunit;
+
+      public class <class-name> : PageTest
+      {
+          [Fact]
+          public async Task Test()
+          {
+              await Page.SetContentAsync("<div data-test-id=\\"Hello\\">Hello world</div>");
+              await Expect(Page.GetByTestId("Hello")).ToHaveTextAsync("Hello world");
+          }
+      }`,
+      '.runsettings': `
+      <?xml version="1.0" encoding="utf-8"?>
+      <RunSettings>
+        <Playwright>
+          <TestIdAttribute>data-test-id</TestIdAttribute>
+        </Playwright>
+      </RunSettings>
+      `,
+    }, 'dotnet test --settings=.runsettings');
+    expect(result.passed).toBe(1);
+    expect(result.failed).toBe(0);
+    expect(result.total).toBe(1);
+  });
+});
+
 test.describe('ConnectOptions', () => {
   const ExampleTestWithConnectOptions = `
     using System;
