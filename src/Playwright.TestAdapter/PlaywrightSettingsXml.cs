@@ -62,6 +62,10 @@ public class PlaywrightSettingsXml
                     reader.Read();
                     ExpectTimeout = float.Parse(reader.Value, CultureInfo.InvariantCulture);
                     break;
+                case "TestIdAttribute":
+                    reader.Read();
+                    TestIdAttribute = reader.Value;
+                    break;
                 default:
                     Console.WriteLine($"Playwright RunSettings Parsing Error: Playwright>{reader.Name} is not implemented");
                     break;
@@ -167,6 +171,7 @@ public class PlaywrightSettingsXml
     public string? BrowserName { get; set; }
     public bool? Headless { get; set; }
     public float? ExpectTimeout { get; set; }
+    public string? TestIdAttribute { get; set; }
     public int? Retries { get; set; }
 }
 

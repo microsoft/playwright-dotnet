@@ -89,6 +89,18 @@ public class PlaywrightSettingsProvider : ISettingsProvider
         }
     }
 
+    public static string TestIdAttribute
+    {
+        get
+        {
+            if (_settings != null && !string.IsNullOrEmpty(_settings.TestIdAttribute))
+            {
+                return _settings.TestIdAttribute!;
+            }
+            return "data-testid";
+        }
+    }
+
     public static BrowserTypeLaunchOptions LaunchOptions
     {
         get
