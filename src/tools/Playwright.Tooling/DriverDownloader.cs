@@ -24,6 +24,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Formats.Tar;
 using System.IO;
 using System.IO.Compression;
@@ -168,7 +169,7 @@ internal class DriverDownloader
 
             var tasks = new List<Task>
             {
-                DownloadPlaywrightPackageAsync(client, driversDirectory.FullName),
+                DownloadPlaywrightPackageAsync(driversDirectory.FullName),
             };
             foreach (var (platformId, nodeSuffix) in _platforms)
             {
@@ -185,12 +186,42 @@ internal class DriverDownloader
         return true;
     }
 
-    private async Task DownloadPlaywrightPackageAsync(HttpClient client, string driversDirectory)
+    private async Task DownloadPlaywrightPackageAsync(string driversDirectory)
     {
-        string url = $"https://registry.npmjs.org/playwright-core/-/playwright-core-{DriverVersion}.tgz";
-        await WithRetriesAsync(url, async () =>
+        // Fetched with `npm pack` rather than a hard-coded registry URL so that the
+        // registry configured for npm (and its credentials) are used, e.g. the
+        // root-level .npmrc the release pipeline writes to point at the internal
+        // Azure Artifacts feed. npm is run from the repository root for that reason.
+        string package = $"playwright-core@{DriverVersion}";
+        string tempDirectory = Directory.CreateTempSubdirectory("playwright-core-").FullName;
+        try
         {
-            using var stream = await GetStreamAsync(client, url).ConfigureAwait(false);
+            Console.WriteLine($"Downloading {package} with npm pack");
+            var startInfo = new ProcessStartInfo(OperatingSystem.IsWindows() ? "npm.cmd" : "npm")
+            {
+                WorkingDirectory = Path.GetFullPath(BasePath),
+                UseShellExecute = false,
+            };
+            startInfo.ArgumentList.Add("pack");
+            startInfo.ArgumentList.Add(package);
+            startInfo.ArgumentList.Add("--pack-destination");
+            startInfo.ArgumentList.Add(tempDirectory);
+            using (var process = Process.Start(startInfo) ?? throw new Exception("Failed to start npm"))
+            {
+                await process.WaitForExitAsync().ConfigureAwait(false);
+                if (process.ExitCode != 0)
+                {
+                    throw new Exception($"npm pack {package} failed with exit code {process.ExitCode}");
+                }
+            }
+
+            string tgz = Path.Combine(tempDirectory, $"playwright-core-{DriverVersion}.tgz");
+            if (!File.Exists(tgz))
+            {
+                throw new Exception($"npm pack did not produce {tgz}");
+            }
+
+            using var stream = File.OpenRead(tgz);
             using var gzip = new GZipStream(stream, CompressionMode.Decompress);
             using var tar = new TarReader(gzip);
             bool extractedAnything = false;
@@ -207,9 +238,13 @@ internal class DriverDownloader
             }
             if (!extractedAnything)
             {
-                throw new Exception($"No files were extracted from {url}");
+                throw new Exception($"No files were extracted from {tgz}");
             }
-        }).ConfigureAwait(false);
+        }
+        finally
+        {
+            Directory.Delete(tempDirectory, true);
+        }
         Console.WriteLine($"Extracted playwright-core {DriverVersion}");
     }
 
