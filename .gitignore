@@ -360,3 +360,7 @@ testCert.cer
 coverage-report/
 src/Playwright.Tests/coverage.*.xml
  
+# Written by the release pipeline: npm credentials (npmAuthenticate@0) and the
+# root copy of .azure-pipelines/nuget.config.
+.npmrc
+/nuget.config
