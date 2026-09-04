@@ -56,12 +56,12 @@ extends:
             displayName: 'Publish Artifact'
             targetPath: '$(Build.ArtifactStagingDirectory)'
         steps:
-        - bash: |
-            if [[ ! "$CURRENT_BRANCH" =~ ^v1\..* ]]; then
-              echo "Can only publish from a release tag (v1.*)."
-              echo "Unexpected ref name: $CURRENT_BRANCH"
+        - powershell: |
+            if ($env:CURRENT_BRANCH -notmatch '^v1\.') {
+              Write-Host "Can only publish from a release tag (v1.*)."
+              Write-Host "Unexpected ref name: $env:CURRENT_BRANCH"
               exit 1
-            fi
+            }
           env:
             CURRENT_BRANCH: ${{ variables['Build.SourceBranchName'] }}
           displayName: 'Check the ref is a release tag'
@@ -82,7 +82,7 @@ extends:
         # project directory and its <clear /> drops the nuget.org source inherited
         # from the user-level config. NuGetAuthenticate@1 installs the credential
         # provider that authenticates to the feed.
-        - bash: cp .azure-pipelines/nuget.config nuget.config
+        - powershell: Copy-Item .azure-pipelines/nuget.config nuget.config
           displayName: 'Use DevDiv_PublicPackages as the only NuGet source'
         - task: NuGetAuthenticate@1
           displayName: 'Authenticate NuGet to DevDiv_PublicPackages feed'
@@ -92,7 +92,9 @@ extends:
           displayName: 'Install Node.js'
           inputs:
             version: '24.x'
-        - bash: echo "registry=https://devdiv.pkgs.visualstudio.com/DevDiv/_packaging/DevDiv_PublicPackages/npm/registry/" >> .npmrc
+        # Explicit ASCII encoding: Windows PowerShell redirection would write UTF-16,
+        # which npm cannot read.
+        - powershell: Add-Content -Path .npmrc -Encoding Ascii -Value "registry=https://devdiv.pkgs.visualstudio.com/DevDiv/_packaging/DevDiv_PublicPackages/npm/registry/"
           displayName: 'Point npm registry at DevDiv_PublicPackages feed'
         - task: npmAuthenticate@0
           displayName: 'Authenticate npm to DevDiv_PublicPackages feed'
