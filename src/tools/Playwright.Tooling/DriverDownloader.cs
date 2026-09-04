@@ -186,6 +186,24 @@ internal class DriverDownloader
         return true;
     }
 
+    private static string ResolveNpmExecutable()
+    {
+        string name = OperatingSystem.IsWindows() ? "npm.cmd" : "npm";
+        // On Windows npm.cmd must be started by its full path: launched by bare name,
+        // the script's %~dp0 expands to the working directory instead of its own
+        // directory and it fails to find node_modules/npm/bin/npm-cli.js.
+        string path = Environment.GetEnvironmentVariable("PATH") ?? string.Empty;
+        foreach (string directory in path.Split(Path.PathSeparator, StringSplitOptions.RemoveEmptyEntries))
+        {
+            string candidate = Path.Combine(directory.Trim('"'), name);
+            if (File.Exists(candidate))
+            {
+                return candidate;
+            }
+        }
+        return name;
+    }
+
     private async Task DownloadPlaywrightPackageAsync(string driversDirectory)
     {
         // Fetched with `npm pack` rather than a hard-coded registry URL so that the
@@ -197,7 +215,7 @@ internal class DriverDownloader
         try
         {
             Console.WriteLine($"Downloading {package} with npm pack");
-            var startInfo = new ProcessStartInfo(OperatingSystem.IsWindows() ? "npm.cmd" : "npm")
+            var startInfo = new ProcessStartInfo(ResolveNpmExecutable())
             {
                 WorkingDirectory = Path.GetFullPath(BasePath),
                 UseShellExecute = false,
