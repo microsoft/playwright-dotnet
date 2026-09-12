@@ -1572,6 +1572,7 @@ internal class Page : ChannelOwner, IPage
             {
                 ["mode"] = options?.Mode,
                 ["depth"] = options?.Depth,
+                ["boxes"] = options?.Boxes,
             },
             timeout: MainFrame.Timeout(options?.Timeout)).ConfigureAwait(false);
         return result!.Value.GetProperty("snapshot").ToString();
