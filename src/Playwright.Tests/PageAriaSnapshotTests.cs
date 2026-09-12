@@ -39,7 +39,7 @@ public class PageAriaSnapshotTests : PageTestEx
 
         var snapshotWithBoxes = await Page.AriaSnapshotAsync(new() { Mode = mode, Boxes = true });
         StringAssert.Contains("[box=20,30,100,40]", snapshotWithBoxes);
-        Assert.AreEqual(snapshot, await Page.AriaSnapshotAsync(new() { Mode = mode, Boxes = false }));
+        Assert.AreEqual(snapshot, await Page.AriaSnapshotAsync(new() { Mode = mode }));
     }
 
     [PlaywrightTest]
@@ -56,7 +56,7 @@ public class PageAriaSnapshotTests : PageTestEx
 
         var snapshotWithBoxes = await locator.AriaSnapshotAsync(new() { Mode = mode, Boxes = true });
         StringAssert.Contains("[box=20,30,100,40]", snapshotWithBoxes);
-        Assert.AreEqual(snapshot, await locator.AriaSnapshotAsync(new() { Mode = mode, Boxes = false }));
+        Assert.AreEqual(snapshot, await locator.AriaSnapshotAsync(new() { Mode = mode }));
     }
 
     private string _unshift(string snapshot)
