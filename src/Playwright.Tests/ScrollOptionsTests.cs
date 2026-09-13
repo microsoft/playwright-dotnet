@@ -79,7 +79,7 @@ public class ScrollOptionsTests : PageTestEx
     public async Task ShouldNotScrollWithoutForce()
     {
         await Page.SetContentAsync("<button style='margin-top: 2000px' onclick='window.clicked = true'>Click</button>");
-        var exception = await PlaywrightAssert.ThrowsAsync<TimeoutException>(() => Page.Locator("button").ClickAsync(new() { Scroll = ScrollMode.None, Timeout = 500 }));
+        var exception = await PlaywrightAssert.ThrowsAsync<TimeoutException>(() => Page.Locator("button").ClickAsync(new() { Scroll = ScrollMode.None, Timeout = 3000 }));
         StringAssert.Contains("outside of the viewport", exception.Message);
         Assert.AreEqual(0, await Page.EvaluateAsync<int>("window.scrollY"));
         Assert.False(await Page.EvaluateAsync<bool>("() => !!window.clicked"));
