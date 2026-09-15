@@ -144,6 +144,24 @@ internal class DriverDownloader
         }
     }
 
+    private static string ResolveNpmExecutable()
+    {
+        string name = OperatingSystem.IsWindows() ? "npm.cmd" : "npm";
+        // On Windows npm.cmd must be started by its full path: launched by bare name,
+        // the script's %~dp0 expands to the working directory instead of its own
+        // directory and it fails to find node_modules/npm/bin/npm-cli.js.
+        string path = Environment.GetEnvironmentVariable("PATH") ?? string.Empty;
+        foreach (string directory in path.Split(Path.PathSeparator, StringSplitOptions.RemoveEmptyEntries))
+        {
+            string candidate = Path.Combine(directory.Trim('"'), name);
+            if (File.Exists(candidate))
+            {
+                return candidate;
+            }
+        }
+        return name;
+    }
+
     private async Task<bool> ExecuteAsync()
     {
         var driversDirectory = new DirectoryInfo(Path.Combine(BasePath, "src", "Playwright", ".drivers"));
@@ -184,24 +202,6 @@ internal class DriverDownloader
         await UpdateBrowserVersionsAsync(BasePath, DriverVersion).ConfigureAwait(false);
 
         return true;
-    }
-
-    private static string ResolveNpmExecutable()
-    {
-        string name = OperatingSystem.IsWindows() ? "npm.cmd" : "npm";
-        // On Windows npm.cmd must be started by its full path: launched by bare name,
-        // the script's %~dp0 expands to the working directory instead of its own
-        // directory and it fails to find node_modules/npm/bin/npm-cli.js.
-        string path = Environment.GetEnvironmentVariable("PATH") ?? string.Empty;
-        foreach (string directory in path.Split(Path.PathSeparator, StringSplitOptions.RemoveEmptyEntries))
-        {
-            string candidate = Path.Combine(directory.Trim('"'), name);
-            if (File.Exists(candidate))
-            {
-                return candidate;
-            }
-        }
-        return name;
     }
 
     private async Task DownloadPlaywrightPackageAsync(string driversDirectory)
