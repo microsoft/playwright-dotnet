@@ -39,6 +39,7 @@ public class BrowserContextStorageStateOptions
 
         Credentials = clone.Credentials;
         IndexedDB = clone.IndexedDB;
+        Opfs = clone.Opfs;
         Path = clone.Path;
     }
 
@@ -65,6 +66,17 @@ public class BrowserContextStorageStateOptions
     /// </summary>
     [JsonPropertyName("indexedDB")]
     public bool? IndexedDB { get; set; }
+
+    /// <summary>
+    /// <para>
+    /// Set to <c>true</c> to include the <a href="https://developer.mozilla.org/en-US/docs/Web/API/File_System_API/Origin_private_file_system">origin
+    /// private file system</a> in the storage state snapshot.
+    /// </para>
+    /// <para>OPFS is currently not supported in ephemeral WebKit contexts.</para>
+    /// </summary>
+    /// <remarks><para>OPFS is currently not supported in ephemeral WebKit contexts.</para></remarks>
+    [JsonPropertyName("opfs")]
+    public bool? Opfs { get; set; }
 
     /// <summary>
     /// <para>

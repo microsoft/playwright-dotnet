@@ -63,6 +63,7 @@ public class BrowserTypeLaunchPersistentContextOptions
         HasTouch = clone.HasTouch;
         Headless = clone.Headless;
         HttpCredentials = clone.HttpCredentials;
+        HttpCredentialsList = clone.HttpCredentialsList;
         IgnoreAllDefaultArgs = clone.IgnoreAllDefaultArgs;
         IgnoreDefaultArgs = clone.IgnoreDefaultArgs;
         IgnoreHTTPSErrors = clone.IgnoreHTTPSErrors;
@@ -337,9 +338,27 @@ public class BrowserTypeLaunchPersistentContextOptions
     /// authentication</a>. If no origin is specified, the username and password are sent
     /// to any servers upon unauthorized responses.
     /// </para>
+    /// <para>
+    /// Pass an array to use different credentials for different origins. The first entry
+    /// that matches the request origin is used, and entries with no origin match any request.
+    /// </para>
     /// </summary>
     [JsonPropertyName("httpCredentials")]
     public HttpCredentials? HttpCredentials { get; set; }
+
+    /// <summary>
+    /// <para>
+    /// Credentials for <a href="https://developer.mozilla.org/en-US/docs/Web/HTTP/Authentication">HTTP
+    /// authentication</a>. If no origin is specified, the username and password are sent
+    /// to any servers upon unauthorized responses.
+    /// </para>
+    /// <para>
+    /// Pass an array to use different credentials for different origins. The first entry
+    /// that matches the request origin is used, and entries with no origin match any request.
+    /// </para>
+    /// </summary>
+    [JsonPropertyName("httpCredentialsList")]
+    public IEnumerable<HttpCredentials>? HttpCredentialsList { get; set; }
 
     /// <summary>
     /// <para>

@@ -24,12 +24,16 @@
  * SOFTWARE.
  */
 
+using System.Globalization;
 using System.Text.RegularExpressions;
 
 namespace Microsoft.Playwright.Core;
 
 internal class FrameLocator : IFrameLocator
 {
+    // Matches in any frame of the subtree, instead of the frame itself. Only allowed as the first token.
+    internal const string AnyFrameSelector = "internal:control=any-frame";
+
     private readonly Frame _frame;
     private readonly string _frameSelector;
 
@@ -39,9 +43,9 @@ internal class FrameLocator : IFrameLocator
         _frameSelector = selector;
     }
 
-    public IFrameLocator First => new FrameLocator(_frame, $"{_frameSelector} >> nth=0");
+    public IFrameLocator First => new FrameLocator(_frame, NthSelector("0"));
 
-    public IFrameLocator Last => new FrameLocator(_frame, $"{_frameSelector} >> nth=-1");
+    public IFrameLocator Last => new FrameLocator(_frame, NthSelector("-1"));
 
     public ILocator Owner => new Locator(_frame, _frameSelector);
 
@@ -84,10 +88,10 @@ internal class FrameLocator : IFrameLocator
     public ILocator GetByTitle(Regex text, FrameLocatorGetByTitleOptions? options = null)
         => Locator(Core.Locator.GetByTitleSelector(text, options?.Exact));
 
-    IFrameLocator IFrameLocator.FrameLocator(string selector) => new FrameLocator(_frame, $"{_frameSelector} >> internal:control=enter-frame  >> {selector}");
+    IFrameLocator IFrameLocator.FrameLocator(string selector) => new FrameLocator(_frame, ChildSelector(selector));
 
     public ILocator Locator(string selector, FrameLocatorLocatorOptions? options = null)
-        => new Locator(_frame, $"{_frameSelector} >> internal:control=enter-frame  >> {selector}", new()
+        => new Locator(_frame, ChildSelector(selector), new()
         {
             Has = options?.Has,
             HasNot = options?.HasNot,
@@ -106,7 +110,7 @@ internal class FrameLocator : IFrameLocator
         {
             throw new PlaywrightException("Locators must belong to the same frame.");
         }
-        return new Locator(_frame, $"{_frameSelector} >> internal:control=enter-frame  >> {locatorImpl._selector}", new()
+        return new Locator(_frame, ChildSelector(locatorImpl._selector), new()
         {
             Has = options?.Has,
             HasNot = options?.HasNot,
@@ -119,5 +123,23 @@ internal class FrameLocator : IFrameLocator
         });
     }
 
-    public IFrameLocator Nth(int index) => new FrameLocator(_frame, $"{_frameSelector} >> nth={index}");
+    public IFrameLocator Nth(int index) => new FrameLocator(_frame, NthSelector(index.ToString(CultureInfo.InvariantCulture)));
+
+    private string ChildSelector(string selector)
+    {
+        if (_frameSelector == AnyFrameSelector)
+        {
+            return $"{_frameSelector} >> {selector}";
+        }
+        return $"{_frameSelector} >> internal:control=enter-frame  >> {selector}";
+    }
+
+    private string NthSelector(string nth)
+    {
+        if (_frameSelector == AnyFrameSelector)
+        {
+            throw new PlaywrightException("Selecting the nth frame is not allowed on frameLocator().");
+        }
+        return $"{_frameSelector} >> nth={nth}";
+    }
 }

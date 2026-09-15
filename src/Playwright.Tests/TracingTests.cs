@@ -47,7 +47,6 @@ public class TracingTests : ContextTestEx
         await page.ClickAsync("\"Click\"");
         await page.Mouse.MoveAsync(20, 20);
         await page.Mouse.DblClickAsync(20, 30);
-        await page.APIRequest.GetAsync(Server.Prefix + "/empty.html");
         await page.Keyboard.InsertTextAsync("abc");
         await page.WaitForTimeoutAsync(2000); // Give it some time to produce screenshots.
         await page.CloseAsync();
@@ -60,12 +59,11 @@ public class TracingTests : ContextTestEx
         {
             await Expect(traceViewer.ActionTitles).ToHaveTextAsync([
                 new Regex(@"Create page"),
-                new Regex(@"Navigate to ""/frames/frame.html"""),
+                new Regex(@"Navigate.*/frames/frame.html"),
                 new Regex(@"Set content"),
                 new Regex(@"Click"),
                 new Regex(@"Mouse move"),
                 new Regex(@"Double click"),
-                new Regex(@"GET ""/empty.html"""),
                 new Regex(@"Insert ""abc"""),
                 new Regex(@"Wait for timeout"),
                 new Regex(@"Close")
@@ -100,7 +98,7 @@ public class TracingTests : ContextTestEx
         await ShowTraceViewerAsync(trace1Path, async traceViewer =>
         {
             await Expect(traceViewer.ActionTitles).ToHaveTextAsync([
-                new Regex(@"Navigate to ""/empty.html"""),
+                new Regex(@"Navigate.*/empty.html"),
                 new Regex(@"Set content"),
                 new Regex(@"Click")
             ]);
@@ -196,7 +194,7 @@ public class TracingTests : ContextTestEx
         {
             await Expect(traceViewer.ActionTitles).ToHaveTextAsync([
                 new Regex(@"Create page"),
-                new Regex(@"Navigate to ""/empty.html"""),
+                new Regex(@"Navigate.*/empty.html"),
                 new Regex(@"Set content"),
                 new Regex(@"Click"),
                 new Regex(@"Close")
@@ -230,6 +228,69 @@ public class TracingTests : ContextTestEx
         await Context.Tracing.StopAsync();
     }
 
+    [PlaywrightTest("tracing.spec.ts", "should recover tracing after a failed stop")]
+    public async Task ShouldRecoverTracingAfterAFailedStop()
+    {
+        using var tmp = new TempDirectory();
+        await Context.Tracing.StartAsync();
+        // Saving fails: a parent of the destination is a file, not a directory.
+        var blocker = Path.Combine(tmp.Path, "blocker");
+        File.WriteAllText(blocker, "");
+        await PlaywrightAssert.ThrowsAsync<PlaywrightException>(() => Context.Tracing.StopAsync(new() { Path = Path.Combine(blocker, "trace1.zip") }));
+
+        // The failed stop must not wedge tracing for the rest of the context lifetime.
+        await Context.Tracing.StartAsync();
+        var page = await Context.NewPageAsync();
+        await page.GotoAsync(Server.Prefix + "/input/button.html");
+        await page.ClickAsync("button");
+        var tracePath = Path.Combine(tmp.Path, "trace2.zip");
+        await Context.Tracing.StopAsync(new() { Path = tracePath });
+
+        await ShowTraceViewerAsync(tracePath, async traceViewer =>
+        {
+            await Expect(traceViewer.ActionTitles).ToHaveTextAsync([
+                new Regex(@"Create page"),
+                new Regex(@"Navigate.*/input/button.html"),
+                new Regex(@"Click"),
+            ]);
+        });
+    }
+
+    [PlaywrightTest("tracing.spec.ts", "should collect trace with aria and screen snapshots")]
+    public async Task ShouldCollectTraceWithAriaAndScreenSnapshots()
+    {
+        await Context.Tracing.StartAsync(new()
+        {
+            Snapshots = true,
+            AriaSnapshots = true,
+            ScreenSnapshots = true,
+        });
+
+        var page = await Context.NewPageAsync();
+        await page.GotoAsync(Server.EmptyPage);
+        await page.SetContentAsync("<button>Click</button>");
+        await page.ClickAsync("\"Click\"");
+        await page.CloseAsync();
+
+        using var tmp = new TempDirectory();
+        var tracePath = Path.Combine(tmp.Path, "trace.zip");
+        await Context.Tracing.StopAsync(new() { Path = tracePath });
+
+        await ShowTraceViewerAsync(tracePath, async traceViewer =>
+        {
+            await Expect(traceViewer.ActionTitles).ToHaveTextAsync([
+                new Regex(@"Create page"),
+                new Regex(@"Navigate.*/empty.html"),
+                new Regex(@"Set content"),
+                new Regex(@"Click"),
+                new Regex(@"Close")
+            ]);
+            await traceViewer.SelectActionAsync("Set content");
+            var frame = await traceViewer.SnapshotFrame("Set content", 0, false);
+            await Expect(frame.Locator("button")).ToHaveTextAsync("Click");
+        });
+    }
+
     [PlaywrightTest()]
     public async Task ShouldSendDotNetTitles()
     {
@@ -258,14 +319,14 @@ public class TracingTests : ContextTestEx
         {
             await Expect(traceViewer.ActionTitles).ToHaveTextAsync([
                 new Regex(@"Create page"),
-                new Regex(@"Navigate to ""/empty.html"""),
+                new Regex(@"Navigate.*/empty.html"),
                 new Regex(@"Set content"),
                 // TODO: Should be: Wait for event "Page"
                 new Regex(@"Wait for event ""context\.WaitForEventAsync\(""Page""\)"""),
                 new Regex(@"Click"),
                 new Regex(@"Evaluate"),
-                new Regex(@"Navigate to ""/empty.html"""),
-                new Regex(@"Navigate to ""/one-style.html"""),
+                new Regex(@"Navigate.*/empty.html"),
+                new Regex(@"Navigate.*/one-style.html"),
             ]);
         });
     }
@@ -287,7 +348,7 @@ public class TracingTests : ContextTestEx
         await ShowTraceViewerAsync(tracePath, async traceViewer =>
         {
             await Expect(traceViewer.ActionTitles).ToHaveTextAsync([
-                new Regex(@"Navigate to ""/empty.html"""),
+                new Regex(@"Navigate.*/empty.html"),
                 new Regex(@"Wait for event ""frame.WaitForLoadStateAsync"""),
                 new Regex(@"Wait for event ""frame.WaitForLoadStateAsync"""),
             ]);
@@ -320,7 +381,7 @@ public class TracingTests : ContextTestEx
         await ShowTraceViewerAsync(Path.Combine(tracesDir.Path, "trace1.zip"), async traceViewer =>
         {
             await Expect(traceViewer.ActionTitles).ToHaveTextAsync([
-                new Regex(@"Navigate to ""/one-style.html"""),
+                new Regex(@"Navigate.*/one-style.html"),
             ]);
             var frame = await traceViewer.SnapshotFrame("Navigate", 0, false);
             await Expect(frame.Locator("body")).ToHaveCSSAsync("background-color", "rgb(255, 192, 203)");
@@ -330,7 +391,7 @@ public class TracingTests : ContextTestEx
         await ShowTraceViewerAsync(Path.Combine(tracesDir.Path, "trace2.zip"), async traceViewer =>
         {
             await Expect(traceViewer.ActionTitles).ToHaveTextAsync([
-                new Regex(@"Navigate to ""/har.html"""),
+                new Regex(@"Navigate.*/har.html"),
             ]);
             var frame = await traceViewer.SnapshotFrame("Navigate", 0, false);
             await Expect(frame.Locator("body")).ToHaveCSSAsync("background-color", "rgb(255, 192, 203)");
@@ -364,7 +425,7 @@ public class TracingTests : ContextTestEx
             await Expect(traceViewer.ActionTitles).ToHaveTextAsync([
                 new Regex(@"Create page"),
                 new Regex("outer group"),
-                new Regex(@"Navigate to ""data"),
+                new Regex(@"Navigate.*data:"),
                 new Regex("inner group 1"),
                 new Regex(@"Click"),
                 new Regex("inner group 2"),

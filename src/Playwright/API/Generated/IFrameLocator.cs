@@ -49,6 +49,29 @@ namespace Microsoft.Playwright;
 /// // Works because we explicitly tell locator to pick the first frame:<br/>
 /// await page.Locator(".result-frame").First.ContentFrame.getByRole(AriaRole.Button).ClickAsync();
 /// </code>
+/// <para>**Any frame**</para>
+/// <para>
+/// Calling <see cref="IPage.FrameLocator"/> or <see cref="IFrame.FrameLocator"/> without
+/// a selector creates a frame locator that starts the search in any frame of the subtree
+/// - so that you don't need to locate the iframe first.
+/// </para>
+/// <code>
+/// // Finds the button in any frame on the page:<br/>
+/// await page.FrameLocator().GetByRole(AriaRole.Button).ClickAsync();<br/>
+/// <br/>
+/// // Finds the iframe with id "my-frame" anywhere on the page, and clicks the button inside it:<br/>
+/// await page.FrameLocator().Locator("#my-frame").ContentFrame.GetByRole(AriaRole.Button).ClickAsync();
+/// </code>
+/// <para>
+/// Only the start of the search is affected - the rest of the locator is resolved inside
+/// a single frame, just like any other locator. Following the strictness rules above,
+/// an error is thrown when elements are matched in multiple frames.
+/// </para>
+/// <para>
+/// Such a frame locator does not point to a particular <c>iframe</c>, so <see cref="IFrameLocator.Owner"/>,
+/// <see cref="IFrameLocator.First"/>, <see cref="IFrameLocator.Last"/> and <see cref="IFrameLocator.Nth"/>
+/// are not supported on it.
+/// </para>
 /// <para>**Converting Locator to FrameLocator**</para>
 /// <para>
 /// If you have a <see cref="ILocator"/> object pointing to an <c>iframe</c> it can

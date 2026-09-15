@@ -28,6 +28,7 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Runtime.CompilerServices;
+using System.Runtime.ExceptionServices;
 using System.Text.Json;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
@@ -84,6 +85,8 @@ internal class BrowserContext : ChannelOwner, IBrowserContext
 
     private event EventHandler<IDialog>? _dialogImpl;
 
+    private event EventHandler<IDialog>? _dialogClosedImpl;
+
     public event EventHandler<IBrowserContext>? Close;
 
     public event EventHandler<IConsoleMessage>? Console
@@ -96,6 +99,12 @@ internal class BrowserContext : ChannelOwner, IBrowserContext
     {
         add => this._dialogImpl = UpdateEventHandler("dialog", this._dialogImpl, value, true);
         remove => this._dialogImpl = UpdateEventHandler("dialog", this._dialogImpl, value, false);
+    }
+
+    public event EventHandler<IDialog> DialogClosed
+    {
+        add => this._dialogClosedImpl = UpdateEventHandler("dialogClosed", this._dialogClosedImpl, value, true);
+        remove => this._dialogClosedImpl = UpdateEventHandler("dialogClosed", this._dialogClosedImpl, value, false);
     }
 
     public event EventHandler<IPage>? Page;
@@ -182,6 +191,13 @@ internal class BrowserContext : ChannelOwner, IBrowserContext
             case "dialog":
                 OnDialog(serverParams.GetProperty("dialog").ToObject<Dialog>(_connection.DefaultJsonSerializerOptions)!);
                 break;
+            case "dialogClosed":
+                {
+                    var dialog = serverParams.GetProperty("dialog").ToObject<Dialog>(_connection.DefaultJsonSerializerOptions)!;
+                    _dialogClosedImpl?.Invoke(this, dialog);
+                    (dialog.Page as Page)?.FireDialogClosed(dialog);
+                    break;
+                }
             case "console":
                 {
                     Worker? workerObject = null;
@@ -381,14 +397,26 @@ internal class BrowserContext : ChannelOwner, IBrowserContext
         _closeReason = options?.Reason;
         ClosingOrClosed = true;
         await _request.DisposeAsync(options?.Reason).ConfigureAwait(false);
-        await WrapApiCallAsync(
-            async () => await _tracing.ExportAllHarsAsync().ConfigureAwait(false),
-            true).ConfigureAwait(false);
+        Exception? harError = null;
+        try
+        {
+            await WrapApiCallAsync(
+                async () => await _tracing.ExportAllHarsAsync().ConfigureAwait(false),
+                true).ConfigureAwait(false);
+        }
+        catch (Exception e)
+        {
+            harError = e;
+        }
         await SendMessageToServerAsync("close", new Dictionary<string, object?>
         {
             ["reason"] = options?.Reason,
         }).ConfigureAwait(false);
         await _closeTcs.Task.ConfigureAwait(false);
+        if (harError != null)
+        {
+            ExceptionDispatchInfo.Capture(harError).Throw();
+        }
     }
 
     [MethodImpl(MethodImplOptions.NoInlining)]
@@ -560,6 +588,8 @@ internal class BrowserContext : ChannelOwner, IBrowserContext
                 new Dictionary<string, object?>
                 {
                     ["indexedDB"] = options?.IndexedDB,
+                    ["opfs"] = options?.Opfs,
+                    ["credentials"] = options?.Credentials,
                 }).ConfigureAwait(false),
             JsonExtensions.DefaultJsonSerializerOptions);
 
@@ -823,6 +853,7 @@ internal class BrowserContext : ChannelOwner, IBrowserContext
 
         DisposeHarRouters();
         _tracing.ResetStackCounter();
+        _request._tracing.ResetStackCounter();
         Close?.Invoke(this, this);
         _closeTcs.TrySetResult(true);
     }

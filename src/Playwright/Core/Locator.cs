@@ -110,6 +110,8 @@ internal class Locator : ILocator
 
     public ILocator Last => new Locator(_frame, $"{_selector} >> nth=-1");
 
+    public ILocator Visible => new Locator(_frame, _selector, null, true);
+
     public IPage Page => _frame.Page;
 
     public IFrameLocator ContentFrame => new FrameLocator(_frame, _selector);

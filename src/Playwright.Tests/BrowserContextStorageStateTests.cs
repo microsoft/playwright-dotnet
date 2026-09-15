@@ -22,6 +22,8 @@
  * SOFTWARE.
  */
 
+using System.Text.Json;
+
 namespace Microsoft.Playwright.Tests;
 
 public sealed class BrowserContextStorageStateTests : PageTestEx
@@ -134,6 +136,85 @@ public sealed class BrowserContextStorageStateTests : PageTestEx
               });
             }");
         Assert.AreEqual("foo", idbValue);
+    }
+
+    [PlaywrightTest("browsercontext-storage-state.spec.ts", "should round-trip OPFS")]
+    [Skip(SkipAttribute.Targets.Webkit)] // OPFS is unavailable in non-persistent WebKit contexts
+    public async Task ShouldRoundTripOPFS()
+    {
+        await Page.GotoAsync(Server.EmptyPage);
+        await Page.EvaluateAsync(@"async () => {
+            const root = await navigator.storage.getDirectory();
+            const nested = await root.getDirectoryHandle('nested', { create: true });
+            await nested.getDirectoryHandle('empty', { create: true });
+
+            const binary = await nested.getFileHandle('data.bin', { create: true });
+            const binaryWritable = await binary.createWritable();
+            await binaryWritable.write(new Uint8Array([0, 1, 2, 255]));
+            await binaryWritable.close();
+
+            const text = await root.getFileHandle('hello.txt', { create: true });
+            const textWritable = await text.createWritable();
+            await textWritable.write('Hello, world!');
+            await textWritable.close();
+        }");
+
+        Assert.AreEqual("{\"cookies\":[],\"origins\":[]}", await Context.StorageStateAsync());
+
+        using var tempDir = new TempDirectory();
+        string path = Path.Combine(tempDir.Path, "storage-state.json");
+        string storageState = await Context.StorageStateAsync(new() { Opfs = true, Path = path });
+        var origins = JsonDocument.Parse(storageState).RootElement.GetProperty("origins");
+        Assert.AreEqual(1, origins.GetArrayLength());
+        Assert.AreEqual(Server.Prefix, origins[0].GetProperty("origin").GetString());
+        var opfs = origins[0].GetProperty("opfs").EnumerateArray().Select(entry => (entry.GetProperty("path").GetString(), entry.GetProperty("type").GetString(), entry.TryGetProperty("base64", out var base64) ? base64.GetString() : null)).ToArray();
+        CollectionAssert.AreEqual(new[]
+        {
+            ("hello.txt", "file", "SGVsbG8sIHdvcmxkIQ=="),
+            ("nested", "directory", null),
+            ("nested/data.bin", "file", "AAEC/w=="),
+            ("nested/empty", "directory", null),
+        }, opfs);
+        Assert.AreEqual(storageState, File.ReadAllText(path));
+        Assert.AreEqual(storageState, await Context.APIRequest.StorageStateAsync(new() { Opfs = true }));
+
+        async Task CheckContext(IBrowserContext context)
+        {
+            Assert.AreEqual(storageState, await context.StorageStateAsync(new() { Opfs = true }));
+            var checkPage = await context.NewPageAsync();
+            await checkPage.GotoAsync(Server.EmptyPage);
+            var result = await checkPage.EvaluateAsync<JsonElement>(@"async () => {
+                const root = await navigator.storage.getDirectory();
+                const hello = await (await root.getFileHandle('hello.txt')).getFile();
+                const nested = await root.getDirectoryHandle('nested');
+                const data = await (await nested.getFileHandle('data.bin')).getFile();
+                const empty = await nested.getDirectoryHandle('empty');
+                const emptyEntries = [];
+                for await (const name of empty.keys())
+                    emptyEntries.push(name);
+                return {
+                    text: await hello.text(),
+                    bytes: [...new Uint8Array(await data.arrayBuffer())],
+                    empty: emptyEntries,
+                };
+            }");
+            Assert.AreEqual("Hello, world!", result.GetProperty("text").GetString());
+            CollectionAssert.AreEqual(new[] { 0, 1, 2, 255 }, result.GetProperty("bytes").EnumerateArray().Select(e => e.GetInt32()).ToArray());
+            Assert.AreEqual(0, result.GetProperty("empty").GetArrayLength());
+        }
+
+        await using var context2 = await Browser.NewContextAsync(new() { StorageStatePath = path });
+        await CheckContext(context2);
+
+        await using var context3 = await Browser.NewContextAsync();
+        var page3 = await context3.NewPageAsync();
+        await page3.GotoAsync(Server.EmptyPage);
+        await page3.EvaluateAsync(@"async () => {
+            const root = await navigator.storage.getDirectory();
+            await root.getFileHandle('stale.txt', { create: true });
+        }");
+        await context3.SetStorageStateAsync(path);
+        await CheckContext(context3);
     }
 
     [PlaywrightTest("browsercontext-storage-state.spec.ts", "should capture cookies")]

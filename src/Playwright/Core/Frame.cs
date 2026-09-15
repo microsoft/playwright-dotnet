@@ -158,8 +158,8 @@ internal class Frame : ChannelOwner, IFrame
         => await SendMessageToServerAsync<ElementHandle>("frameElement").ConfigureAwait(false);
 
     [MethodImpl(MethodImplOptions.NoInlining)]
-    public IFrameLocator FrameLocator(string selector)
-        => new FrameLocator(this, selector);
+    public IFrameLocator FrameLocator(string? selector = null)
+        => new FrameLocator(this, selector ?? Core.FrameLocator.AnyFrameSelector);
 
     [MethodImpl(MethodImplOptions.NoInlining)]
     public async Task<string> TitleAsync() => (await SendMessageToServerAsync("title").ConfigureAwait(false))!.Value.GetProperty("value").ToString();

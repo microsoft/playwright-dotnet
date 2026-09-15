@@ -216,6 +216,57 @@ public class GlobalFetchTests : PlaywrightTestEx
     }
 
 
+    [PlaywrightTest("global-fetch.spec.ts", "should support multiple httpCredentials")]
+    public async Task ShouldSupportMultipleHttpCredentials()
+    {
+        Server.SetAuth("/empty.html", "user1", "pass1");
+        var request = await Playwright.APIRequest.NewContextAsync(new()
+        {
+            HttpCredentialsList = new[]
+            {
+                new HttpCredentials { Username = "user1", Password = "pass1", Origin = Server.Prefix },
+                new HttpCredentials { Username = "user2", Password = "pass2", Origin = Server.CrossProcessPrefix },
+            },
+        });
+        var response1 = await request.GetAsync(Server.EmptyPage);
+        Assert.AreEqual(200, response1.Status);
+        // Wrong credentials are picked for the other origin.
+        var response2 = await request.GetAsync(Server.CrossProcessPrefix + "/empty.html");
+        Assert.AreEqual(401, response2.Status);
+        await request.DisposeAsync();
+    }
+
+    [PlaywrightTest("global-fetch.spec.ts", "should support HTTPCredentials.send with multiple httpCredentials")]
+    public async Task ShouldSupportHTTPCredentialsSendWithMultipleHttpCredentials()
+    {
+        var request = await Playwright.APIRequest.NewContextAsync(new()
+        {
+            HttpCredentialsList = new[]
+            {
+                new HttpCredentials { Username = "user1", Password = "pass1", Origin = Server.Prefix, Send = HttpCredentialsSend.Always },
+                new HttpCredentials { Username = "user2", Password = "pass2", Origin = Server.CrossProcessPrefix, Send = HttpCredentialsSend.Unauthorized },
+            },
+        });
+        {
+            var (requestHeaders, response) = await TaskUtils.WhenAll(
+                Server.WaitForRequest("/empty.html", request => request.Headers.ToDictionary(header => header.Key, header => header.Value)),
+                request.GetAsync(Server.EmptyPage)
+            );
+            Assert.AreEqual(requestHeaders["Authorization"], "Basic " + Convert.ToBase64String(System.Text.Encoding.UTF8.GetBytes("user1:pass1")));
+            Assert.AreEqual(200, response.Status);
+        }
+        {
+            var (requestHeaders, response) = await TaskUtils.WhenAll(
+                Server.WaitForRequest("/empty.html", request => request.Headers.ToDictionary(header => header.Key, header => header.Value)),
+                request.GetAsync(Server.CrossProcessPrefix + "/empty.html")
+            );
+            // This origin has send: 'unauthorized', so credentials are not sent proactively.
+            Assert.AreEqual(false, requestHeaders.ContainsKey("Authorization"));
+            Assert.AreEqual(200, response.Status);
+        }
+        await request.DisposeAsync();
+    }
+
     [PlaywrightTest("global-fetch.spec.ts", "should support global ignoreHTTPSErrors option")]
     public async Task ShouldSupportGlobalIgnoreHTTPSErrorsOption()
     {

@@ -96,6 +96,8 @@ internal class Page : ChannelOwner, IPage
 
     private event EventHandler<IDialog>? _dialogImpl;
 
+    private event EventHandler<IDialog>? _dialogClosedImpl;
+
     public event EventHandler<IConsoleMessage>? Console
     {
         add => this._consoleImpl = UpdateEventHandler("console", this._consoleImpl, value, true);
@@ -134,6 +136,12 @@ internal class Page : ChannelOwner, IPage
     {
         add => this._dialogImpl = UpdateEventHandler("dialog", this._dialogImpl, value, true);
         remove => this._dialogImpl = UpdateEventHandler("dialog", this._dialogImpl, value, false);
+    }
+
+    public event EventHandler<IDialog>? DialogClosed
+    {
+        add => this._dialogClosedImpl = UpdateEventHandler("dialogClosed", this._dialogClosedImpl, value, true);
+        remove => this._dialogClosedImpl = UpdateEventHandler("dialogClosed", this._dialogClosedImpl, value, false);
     }
 
     public event EventHandler<IFrame>? FrameAttached;
@@ -297,7 +305,7 @@ internal class Page : ChannelOwner, IPage
     [MethodImpl(MethodImplOptions.NoInlining)]
     public IFrame FrameByUrl(Func<string, bool> urlFunc) => Frames.FirstOrDefault(f => urlFunc(f.Url));
 
-    IFrameLocator IPage.FrameLocator(string selector) => MainFrame.FrameLocator(selector);
+    IFrameLocator IPage.FrameLocator(string? selector) => MainFrame.FrameLocator(selector);
 
     [MethodImpl(MethodImplOptions.NoInlining)]
     public Task<string> TitleAsync() => MainFrame.TitleAsync();
@@ -1233,6 +1241,8 @@ internal class Page : ChannelOwner, IPage
     internal void FireDialog(IDialog dialog) => _dialogImpl?.Invoke(this, dialog);
 
     internal bool HasDialogListenersAttached() => _dialogImpl?.GetInvocationList().Length > 0;
+
+    internal void FireDialogClosed(IDialog dialog) => _dialogClosedImpl?.Invoke(this, dialog);
 
     internal void FireRequest(IRequest request) => _requestImpl?.Invoke(this, request);
 
