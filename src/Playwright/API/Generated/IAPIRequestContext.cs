@@ -264,5 +264,6 @@ public partial interface IAPIRequestContext
     /// <param name="options">Call options</param>
     Task<string> StorageStateAsync(APIRequestContextStorageStateOptions? options = default);
 
+    /// <summary><para>Tracing recorder for requests made through this API request context.</para></summary>
     public ITracing Tracing { get; }
 }

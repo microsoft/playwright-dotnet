@@ -97,6 +97,83 @@ public class BrowserContextCredentialsTests : BrowserTestEx
         StringAssert.Contains("Playground", await response.TextAsync());
     }
 
+    [PlaywrightTest("browsercontext-credentials.spec.ts", "should work with a single credential in an array")]
+    public async Task ShouldWorkWithASingleCredentialInAnArray()
+    {
+        Server.SetAuth("/empty.html", "user", "pass");
+        await using var context = await Browser.NewContextAsync(new()
+        {
+            HttpCredentialsList = new[]
+            {
+                new HttpCredentials { Username = "user", Password = "pass" },
+            },
+        });
+
+        var page = await context.NewPageAsync();
+        var response = await page.GotoAsync(Server.EmptyPage);
+        Assert.AreEqual((int)HttpStatusCode.OK, response.Status);
+    }
+
+    [PlaywrightTest("browsercontext-credentials.spec.ts", "should work with multiple credentials for different origins")]
+    public async Task ShouldWorkWithMultipleCredentialsForDifferentOrigins()
+    {
+        Server.SetAuth("/empty.html", "user1", "pass1");
+        await using var context = await Browser.NewContextAsync(new()
+        {
+            HttpCredentialsList = new[]
+            {
+                new HttpCredentials { Username = "user1", Password = "pass1", Origin = Server.Prefix },
+                new HttpCredentials { Username = "user2", Password = "pass2", Origin = Server.CrossProcessPrefix },
+            },
+        });
+
+        var page = await context.NewPageAsync();
+        var response1 = await page.GotoAsync(Server.EmptyPage);
+        Assert.AreEqual((int)HttpStatusCode.OK, response1.Status);
+        // Wrong credentials are picked for the other origin.
+        var response2 = await page.GotoAsync(Server.CrossProcessPrefix + "/empty.html");
+        Assert.AreEqual((int)HttpStatusCode.Unauthorized, response2.Status);
+    }
+
+    [PlaywrightTest("browsercontext-credentials.spec.ts", "should fall back to credentials without origin")]
+    public async Task ShouldFallBackToCredentialsWithoutOrigin()
+    {
+        Server.SetAuth("/empty.html", "user", "pass");
+        await using var context = await Browser.NewContextAsync(new()
+        {
+            HttpCredentialsList = new[]
+            {
+                new HttpCredentials { Username = "user2", Password = "pass2", Origin = Server.CrossProcessPrefix },
+                new HttpCredentials { Username = "user", Password = "pass" },
+            },
+        });
+
+        var page = await context.NewPageAsync();
+        var response1 = await page.GotoAsync(Server.EmptyPage);
+        Assert.AreEqual((int)HttpStatusCode.OK, response1.Status);
+        // First matching entry has wrong credentials for this origin.
+        var response2 = await page.GotoAsync(Server.CrossProcessPrefix + "/empty.html");
+        Assert.AreEqual((int)HttpStatusCode.Unauthorized, response2.Status);
+    }
+
+    [PlaywrightTest("browsercontext-credentials.spec.ts", "should use the first matching credential")]
+    public async Task ShouldUseTheFirstMatchingCredential()
+    {
+        Server.SetAuth("/empty.html", "user", "pass");
+        await using var context = await Browser.NewContextAsync(new()
+        {
+            HttpCredentialsList = new[]
+            {
+                new HttpCredentials { Username = "wrong", Password = "wrong" },
+                new HttpCredentials { Username = "user", Password = "pass", Origin = Server.Prefix },
+            },
+        });
+
+        var page = await context.NewPageAsync();
+        var response = await page.GotoAsync(Server.EmptyPage);
+        Assert.AreEqual((int)HttpStatusCode.Unauthorized, response.Status);
+    }
+
     [PlaywrightTest("browsercontext-credentials.spec.ts", "should work with correct credentials and matching origin")]
     public async Task ShouldWorkWithCorrectCredentialsAndMatchingOrigin()
     {

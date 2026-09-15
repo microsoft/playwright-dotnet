@@ -504,6 +504,13 @@ public partial interface IFrame
     /// When working with iframes, you can create a frame locator that will enter the iframe
     /// and allow selecting elements in that iframe.
     /// </para>
+    /// <para>
+    /// When called without <see cref="IFrame.FrameLocator"/>, the search starts in this
+    /// frame or in any of the iframes inside it, so that you don't need to locate each
+    /// iframe first. Note that the rest of the locator is resolved inside a single frame,
+    /// just like any other locator. If it matches elements inside multiple frames, an error
+    /// is thrown.
+    /// </para>
     /// <para>**Usage**</para>
     /// <para>
     /// Following snippet locates element with text "Submit" in the iframe with id <c>my-frame</c>,
@@ -513,9 +520,20 @@ public partial interface IFrame
     /// var locator = frame.FrameLocator("#my-iframe").GetByText("Submit");<br/>
     /// await locator.ClickAsync();
     /// </code>
+    /// <para>
+    /// Following snippet locates a button, either in the frame or in one of the iframes
+    /// inside it:
+    /// </para>
+    /// <code>
+    /// var locator = frame.FrameLocator().GetByRole(AriaRole.Button);<br/>
+    /// await locator.ClickAsync();
+    /// </code>
     /// </summary>
-    /// <param name="selector">A selector to use when resolving DOM element.</param>
-    IFrameLocator FrameLocator(string selector);
+    /// <param name="selector">
+    /// A selector that matches the frame element. When not specified, locator is matched
+    /// in this frame or in any of the iframes inside it.
+    /// </param>
+    IFrameLocator FrameLocator(string? selector = default);
 
     /// <summary>
     /// <para>

@@ -62,6 +62,22 @@ public class HARTests : BrowserTestEx
         Assert.AreEqual("Hello", pageEntry.GetProperty("title").ToString());
     }
 
+    [PlaywrightTest("har.spec.ts", "should close the context when saving the har fails")]
+    public async Task ShouldCloseTheContextWhenSavingTheHarFails()
+    {
+        using var tmp = new TempDirectory();
+        var filePath = Path.Combine(tmp.Path, "not-a-directory");
+        File.WriteAllText(filePath, "data");
+        var context = await Browser.NewContextAsync(new() { RecordHarPath = Path.Combine(filePath, "test.har") });
+        var page = await context.NewPageAsync();
+        await page.GotoAsync(Server.EmptyPage);
+        var closedTcs = new TaskCompletionSource<bool>();
+        context.Close += (_, _) => closedTcs.TrySetResult(true);
+        await PlaywrightAssert.ThrowsAsync<PlaywrightException>(() => context.CloseAsync());
+        await closedTcs.Task;
+        await context.CloseAsync();
+    }
+
     private async Task<(IPage, IBrowserContext, System.Func<Task<dynamic>>)> PageWithHAR()
     {
 

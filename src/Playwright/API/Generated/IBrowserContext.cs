@@ -142,6 +142,15 @@ public partial interface IBrowserContext
 
     /// <summary>
     /// <para>
+    /// Emitted when a JavaScript dialog in any page belonging to this context has been
+    /// closed, either by <see cref="IDialog.AcceptAsync"/>, by <see cref="IDialog.DismissAsync"/>,
+    /// or manually by the user in the headed browser.
+    /// </para>
+    /// </summary>
+    event EventHandler<IDialog> DialogClosed;
+
+    /// <summary>
+    /// <para>
     /// Emitted when attachment download started in any page belonging to this context.
     /// User can access basic file operations on downloaded content via the passed <see
     /// cref="IDownload"/> instance. See also <see cref="IPage.Download"/> to receive events
@@ -1010,7 +1019,8 @@ public partial interface IBrowserContext
     /// <summary>
     /// <para>
     /// Returns storage state for this browser context, contains current cookies, local
-    /// storage snapshot, IndexedDB snapshot and virtual WebAuthn credentials.
+    /// storage snapshot, IndexedDB snapshot, origin private file system snapshot and virtual
+    /// WebAuthn credentials.
     /// </para>
     /// </summary>
     /// <param name="options">Call options</param>
@@ -1018,10 +1028,11 @@ public partial interface IBrowserContext
 
     /// <summary>
     /// <para>
-    /// Clears the existing cookies, local storage, IndexedDB entries and virtual WebAuthn
-    /// credentials, and sets the new storage state. When the storage state contains credentials,
-    /// the virtual WebAuthn authenticator is installed (equivalent to <see cref="ICredentials.InstallAsync"/>),
-    /// preventing all real authenticators from working in this context.
+    /// Clears the existing cookies, local storage, IndexedDB entries, origin private file
+    /// system entries and virtual WebAuthn credentials, and sets the new storage state.
+    /// When the storage state contains credentials, the virtual WebAuthn authenticator
+    /// is installed (equivalent to <see cref="ICredentials.InstallAsync"/>), preventing
+    /// all real authenticators from working in this context.
     /// </para>
     /// <para>**Usage**</para>
     /// <code>

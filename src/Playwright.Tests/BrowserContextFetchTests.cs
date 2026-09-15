@@ -324,6 +324,25 @@ public class BrowserContextFetchTests : PageTestEx
         Assert.AreEqual("/empty.html", requestURL);
     }
 
+    [PlaywrightTest("browsercontext-fetch.spec.ts", "should support multiple httpCredentials")]
+    public async Task ShouldSupportMultipleHttpCredentials()
+    {
+        Server.SetAuth("/empty.html", "user1", "pass1");
+        await using var context = await Browser.NewContextAsync(new()
+        {
+            HttpCredentialsList = new[]
+            {
+                new HttpCredentials { Username = "user1", Password = "pass1", Origin = Server.Prefix },
+                new HttpCredentials { Username = "user2", Password = "pass2", Origin = Server.CrossProcessPrefix },
+            },
+        });
+        var response1 = await context.APIRequest.GetAsync(Server.EmptyPage);
+        Assert.AreEqual(200, response1.Status);
+        // Wrong credentials are picked for the other origin.
+        var response2 = await context.APIRequest.GetAsync(Server.CrossProcessPrefix + "/empty.html");
+        Assert.AreEqual(401, response2.Status);
+    }
+
     [PlaywrightTest("browsercontext-fetch.spec.ts", "should support HTTPCredentials.send")]
     public async Task ShouldSupportHttpCredentialsSend()
     {

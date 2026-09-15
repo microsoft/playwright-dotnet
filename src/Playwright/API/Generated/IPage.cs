@@ -149,6 +149,14 @@ public partial interface IPage
 
     /// <summary>
     /// <para>
+    /// Emitted when a JavaScript dialog has been closed, either by <see cref="IDialog.AcceptAsync"/>,
+    /// by <see cref="IDialog.DismissAsync"/>, or manually by the user in the headed browser.
+    /// </para>
+    /// </summary>
+    event EventHandler<IDialog> DialogClosed;
+
+    /// <summary>
+    /// <para>
     /// Emitted when the JavaScript <a href="https://developer.mozilla.org/en-US/docs/Web/Events/DOMContentLoaded"><c>DOMContentLoaded</c></a>
     /// event is dispatched.
     /// </para>
@@ -971,6 +979,13 @@ public partial interface IPage
     /// When working with iframes, you can create a frame locator that will enter the iframe
     /// and allow selecting elements in that iframe.
     /// </para>
+    /// <para>
+    /// When called without <see cref="IPage.FrameLocator"/>, the search starts in any frame
+    /// on the page - the main frame or any of the iframes - so that you don't need to locate
+    /// each iframe first. Note that the rest of the locator is resolved inside a single
+    /// frame, just like any other locator. If it matches elements inside multiple frames,
+    /// an error is thrown.
+    /// </para>
     /// <para>**Usage**</para>
     /// <para>
     /// Following snippet locates element with text "Submit" in the iframe with id <c>my-frame</c>,
@@ -980,9 +995,17 @@ public partial interface IPage
     /// var locator = page.FrameLocator("#my-iframe").GetByText("Submit");<br/>
     /// await locator.ClickAsync();
     /// </code>
+    /// <para>Following snippet locates a button, either in the main frame or in one of the iframes:</para>
+    /// <code>
+    /// var locator = page.FrameLocator().GetByRole(AriaRole.Button);<br/>
+    /// await locator.ClickAsync();
+    /// </code>
     /// </summary>
-    /// <param name="selector">A selector to use when resolving DOM element.</param>
-    IFrameLocator FrameLocator(string selector);
+    /// <param name="selector">
+    /// A selector that matches the frame element. When not specified, locator is matched
+    /// in any frame on the page.
+    /// </param>
+    IFrameLocator FrameLocator(string? selector = default);
 
     /// <summary><para>An array of all frames attached to the page.</para></summary>
     IReadOnlyList<IFrame> Frames { get; }
@@ -1273,7 +1296,7 @@ public partial interface IPage
     /// </para>
     /// <para>Navigate to the previous page in history.</para>
     /// <para>
-    /// **Testing Back/Forward Cache (BFCache) is not supported.**  By default, Playwright
+    /// **Testing Back/Forward Cache (BFCache) is not supported.** By default, Playwright
     /// disables the Back/Forward Cache across all browsers. Even if explicitly enabled,
     /// Playwright's internal state relies on network-level navigation events. Because BFCache
     /// restores unfreeze the DOM without firing these events, using <c>page.goBack()</c>
@@ -1283,7 +1306,7 @@ public partial interface IPage
     /// </summary>
     /// <remarks>
     /// <para>
-    /// **Testing Back/Forward Cache (BFCache) is not supported.**  By default, Playwright
+    /// **Testing Back/Forward Cache (BFCache) is not supported.** By default, Playwright
     /// disables the Back/Forward Cache across all browsers. Even if explicitly enabled,
     /// Playwright's internal state relies on network-level navigation events. Because BFCache
     /// restores unfreeze the DOM without firing these events, using <c>page.goBack()</c>
@@ -1302,7 +1325,7 @@ public partial interface IPage
     /// </para>
     /// <para>Navigate to the next page in history.</para>
     /// <para>
-    /// **Testing Back/Forward Cache (BFCache) is not supported.**  By default, Playwright
+    /// **Testing Back/Forward Cache (BFCache) is not supported.** By default, Playwright
     /// disables the Back/Forward Cache across all browsers. Even if explicitly enabled,
     /// Playwright's internal state relies on network-level navigation events. Because BFCache
     /// restores unfreeze the DOM without firing these events, using <c>page.goBack()</c>
@@ -1312,7 +1335,7 @@ public partial interface IPage
     /// </summary>
     /// <remarks>
     /// <para>
-    /// **Testing Back/Forward Cache (BFCache) is not supported.**  By default, Playwright
+    /// **Testing Back/Forward Cache (BFCache) is not supported.** By default, Playwright
     /// disables the Back/Forward Cache across all browsers. Even if explicitly enabled,
     /// Playwright's internal state relies on network-level navigation events. Because BFCache
     /// restores unfreeze the DOM without firing these events, using <c>page.goBack()</c>

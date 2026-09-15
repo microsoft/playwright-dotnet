@@ -117,7 +117,7 @@ internal class Browser : ChannelOwner, IBrowser
             ["serviceWorkers"] = options.ServiceWorkers,
             ["geolocation"] = options.Geolocation,
             ["hasTouch"] = options.HasTouch,
-            ["httpCredentials"] = options.HttpCredentials,
+            ["httpCredentials"] = ToHttpCredentialsProtocol(options.HttpCredentials, options.HttpCredentialsList),
             ["ignoreHTTPSErrors"] = options.IgnoreHTTPSErrors,
             ["isMobile"] = options.IsMobile,
             ["javaScriptEnabled"] = options.JavaScriptEnabled,
@@ -200,6 +200,7 @@ internal class Browser : ChannelOwner, IBrowser
             ExtraHTTPHeaders = options.ExtraHTTPHeaders,
             Offline = options.Offline,
             HttpCredentials = options.HttpCredentials,
+            HttpCredentialsList = options.HttpCredentialsList,
             ColorScheme = options.ColorScheme,
             ReducedMotion = options.ReducedMotion,
             ForcedColors = options.ForcedColors,
@@ -272,6 +273,7 @@ internal class Browser : ChannelOwner, IBrowser
         foreach (var context in _contexts)
         {
             context._tracing._tracesDir = this._tracesDir;
+            context._request._tracing._tracesDir = this._tracesDir;
             browserType.Playwright._selectors._contextsForSelectors.Add(context);
         }
     }
@@ -285,6 +287,7 @@ internal class Browser : ChannelOwner, IBrowser
         if (_browserType != null)
         {
             context._tracing._tracesDir = _tracesDir;
+            context._request._tracing._tracesDir = _tracesDir;
             _browserType.Playwright._selectors._contextsForSelectors.Add(context);
         }
         Context?.Invoke(this, context);
@@ -342,6 +345,12 @@ internal class Browser : ChannelOwner, IBrowser
                 .Where(kv => kv.Value != null)
                 .ToDictionary(kv => kv.Key, kv => kv.Value))
             .ToArray();
+    }
+
+    internal static HttpCredentials[]? ToHttpCredentialsProtocol(HttpCredentials? httpCredentials, IEnumerable<HttpCredentials>? httpCredentialsList)
+    {
+        var list = httpCredentialsList?.ToArray() ?? (httpCredentials != null ? new[] { httpCredentials } : null);
+        return list?.Length > 0 ? list : null;
     }
 
     private static string? ReadClientCertificateFile(string? path, byte[]? value)

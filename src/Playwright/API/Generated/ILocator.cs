@@ -1190,7 +1190,7 @@ public partial interface ILocator
     /// <summary>
     /// <para>Returns locator to the last matching element.</para>
     /// <para>**Usage**</para>
-    /// <code>var banana = await page.GetByRole(AriaRole.Listitem).Last(1);</code>
+    /// <code>var banana = page.GetByRole(AriaRole.Listitem).Last;</code>
     /// </summary>
     ILocator Last { get; }
 
@@ -1964,6 +1964,27 @@ public partial interface ILocator
     /// </summary>
     /// <param name="options">Call options</param>
     Task UncheckAsync(LocatorUncheckOptions? options = default);
+
+    /// <summary>
+    /// <para>
+    /// Returns a locator that matches only <a href="https://playwright.dev/dotnet/docs/actionability#visible">visible</a>
+    /// elements, ignoring the invisible ones. This is the recommended way to distinguish
+    /// elements by visibility, as opposed to the <c>:visible</c> CSS pseudo-class.
+    /// </para>
+    /// <para>
+    /// Note that visibility is checked every time the locator is used, and not at the moment
+    /// of the <see cref="ILocator.Visible"/> call.
+    /// </para>
+    /// <para>**Usage**</para>
+    /// <para>Consider a page with two buttons, the first invisible and the second visible.</para>
+    /// <para>This will only find the second button, because it is visible, and then click it.</para>
+    /// <code>await page.Locator("button").Visible.ClickAsync();</code>
+    /// <para>
+    /// To match invisible elements instead, use <see cref="ILocator.Filter"/> with the
+    /// <see cref="ILocator.Filter"/> option set to <c>false</c>.
+    /// </para>
+    /// </summary>
+    ILocator Visible { get; }
 
     /// <summary>
     /// <para>

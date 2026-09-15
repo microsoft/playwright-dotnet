@@ -118,7 +118,7 @@ internal class BrowserType : ChannelOwner, IBrowserType
             ["permissions"] = options.Permissions,
             ["extraHTTPHeaders"] = options.ExtraHTTPHeaders?.ToProtocol(),
             ["offline"] = options.Offline,
-            ["httpCredentials"] = options.HttpCredentials,
+            ["httpCredentials"] = Browser.ToHttpCredentialsProtocol(options.HttpCredentials, options.HttpCredentialsList),
             ["colorScheme"] = options.ColorScheme == ColorScheme.Null ? "no-override" : options.ColorScheme,
             ["reducedMotion"] = options.ReducedMotion == ReducedMotion.Null ? "no-override" : options.ReducedMotion,
             ["forcedColors"] = options.ForcedColors == ForcedColors.Null ? "no-override" : options.ForcedColors,

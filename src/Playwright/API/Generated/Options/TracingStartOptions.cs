@@ -37,13 +37,19 @@ public class TracingStartOptions
             return;
         }
 
+        AriaSnapshots = clone.AriaSnapshots;
         Live = clone.Live;
         Name = clone.Name;
         Screenshots = clone.Screenshots;
+        ScreenSnapshots = clone.ScreenSnapshots;
         Snapshots = clone.Snapshots;
         Sources = clone.Sources;
         Title = clone.Title;
     }
+
+    /// <summary><para>Whether to capture aria snapshot of the page on every action.</para></summary>
+    [JsonPropertyName("ariaSnapshots")]
+    public bool? AriaSnapshots { get; set; }
 
     /// <summary>
     /// <para>
@@ -76,13 +82,11 @@ public class TracingStartOptions
     [JsonPropertyName("screenshots")]
     public bool? Screenshots { get; set; }
 
-    /// <summary>
-    /// <para>If this option is true tracing will</para>
-    /// <list type="bullet">
-    /// <item><description>capture DOM snapshot on every action</description></item>
-    /// <item><description>record network activity</description></item>
-    /// </list>
-    /// </summary>
+    /// <summary><para>Whether to capture a screenshot of the page on every action.</para></summary>
+    [JsonPropertyName("screenSnapshots")]
+    public bool? ScreenSnapshots { get; set; }
+
+    /// <summary><para>Whether to capture DOM snapshot and record network activity on every action.</para></summary>
     [JsonPropertyName("snapshots")]
     public bool? Snapshots { get; set; }
 

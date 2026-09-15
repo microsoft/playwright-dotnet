@@ -166,7 +166,7 @@ public partial interface ITracing
     /// file is written to disk when <see cref="ITracing.StopHarAsync"/> is called, or when
     /// the returned <see cref="Disposable"/> is disposed.
     /// </para>
-    /// <para>Only one HAR recording can be active at a time per <see cref="IBrowserContext"/>.</para>
+    /// <para>Only one HAR recording can be active at a time per <see cref="ITracing"/> instance.</para>
     /// <para>**Usage**</para>
     /// <code>
     /// await context.Tracing.StartHarAsync("trace.har");<br/>

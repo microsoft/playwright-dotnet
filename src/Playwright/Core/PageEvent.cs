@@ -50,6 +50,8 @@ internal static class PageEvent
 
     public static PlaywrightEvent<IDialog> Dialog { get; } = new("Dialog");
 
+    public static PlaywrightEvent<IDialog> DialogClosed { get; } = new("DialogClosed");
+
     public static PlaywrightEvent<IFileChooser> FileChooser { get; } = new("FileChooser");
 
     public static PlaywrightEvent<string> PageError { get; } = new("PageError");
