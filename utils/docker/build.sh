@@ -38,4 +38,28 @@ fi
 
 dotnet publish ../../src/Playwright -o dist/ --arch $DOTNET_ARCH
 
-docker build --progress=plain --platform "${DOCKER_PLATFORM}" -t "$3" -f "Dockerfile.$2" .
+# Keep each arch image a plain single-platform manifest without the unknown/unknown platform entry.
+export BUILDX_NO_DEFAULT_ATTESTATIONS=1
+
+# arm64 images are cross-built under QEMU user-mode emulation, where ldconfig
+# segfaults intermittently at startup (tonistiigi/binfmt#298, every binfmt build
+# since QEMU 8.1.4). apt's libc-bin trigger runs ldconfig, so a crash fails the
+# whole `docker build`. Retry: BuildKit keeps the layers that already succeeded, so a
+# retry re-runs only the failed RUN step.
+MAX_ATTEMPTS=1
+if [[ "${DOCKER_PLATFORM}" == "linux/arm64" ]]; then
+  MAX_ATTEMPTS=3
+fi
+
+for ((attempt = 1; attempt <= MAX_ATTEMPTS; attempt++)); do
+  if docker build --progress=plain --platform "${DOCKER_PLATFORM}" \
+      --build-arg UBUNTU_MIRROR_PREFIX="${UBUNTU_MIRROR_PREFIX}" \
+      -t "$3" -f "Dockerfile.$2" .; then
+    exit 0
+  fi
+  if (( attempt < MAX_ATTEMPTS )); then
+    echo "docker build failed (attempt ${attempt}/${MAX_ATTEMPTS}), retrying..." >&2
+  fi
+done
+echo "ERROR: docker build failed after ${MAX_ATTEMPTS} attempt(s)" >&2
+exit 1

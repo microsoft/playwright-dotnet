@@ -7,31 +7,49 @@ trap "cd $(pwd -P)" EXIT
 cd "$(dirname "$0")"
 
 MCR_IMAGE_NAME="playwright/dotnet"
-PW_VERSION=$(node -e "console.log(/\<AssemblyVersion\>(.*?)<\/AssemblyVersion\>/.exec(fs.readFileSync('../../src/Common/Version.props').toString())[1])")
 
 RELEASE_CHANNEL="$1"
-if [[ "${RELEASE_CHANNEL}" == "stable" ]]; then
-  if [[ "${PW_VERSION}" == *next* ]]; then
-    echo "ERROR: cannot publish stable docker with Playwright version '${PW_VERSION}'"
-    exit 1
-  fi
-else
-  echo "ERROR: unknown release channel - ${RELEASE_CHANNEL}"
+if [[ "${RELEASE_CHANNEL}" != "stable" && "${RELEASE_CHANNEL}" != "canary" ]]; then
+  echo "ERROR: unknown release channel - '${RELEASE_CHANNEL}'"
   echo "Must be either 'stable' or 'canary'"
   exit 1
 fi
 
+PW_VERSION=$(node -e "console.log(/\<AssemblyVersion\>(.*?)<\/AssemblyVersion\>/.exec(fs.readFileSync('../../src/Common/Version.props').toString())[1])")
+if [[ "${RELEASE_CHANNEL}" == "stable" && ! "${PW_VERSION}" =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
+  echo "ERROR: cannot publish stable docker with Playwright version '${PW_VERSION}'"
+  exit 1
+fi
+VERSION_TAG="v${PW_VERSION}"
+if [[ "${RELEASE_CHANNEL}" == "canary" ]]; then
+  VERSION_TAG="v${PW_VERSION}-canary-$(date -u +'%Y%m%d%H%M%S')"
+  echo "== CANARY build: publishing to ${VERSION_TAG}-* tags =="
+fi
 
 # Ubuntu 24.04
 NOBLE_TAGS=(
-  "v${PW_VERSION}"
-  "v${PW_VERSION}-noble"
+  "${VERSION_TAG}-noble"
 )
+if [[ "${RELEASE_CHANNEL}" == "stable" ]]; then
+  NOBLE_TAGS+=("${VERSION_TAG}")
+fi
 
 # Ubuntu 26.04
 RESOLUTE_TAGS=(
-  "v${PW_VERSION}-resolute"
+  "${VERSION_TAG}-resolute"
 )
+
+tags_for_flavor() {
+  local FLAVOR="$1"
+  if [[ "$FLAVOR" == "noble" ]]; then
+    echo "${NOBLE_TAGS[@]}"
+  elif [[ "$FLAVOR" == "resolute" ]]; then
+    echo "${RESOLUTE_TAGS[@]}"
+  else
+    echo "ERROR: unknown flavor - $FLAVOR. Must be 'noble' or 'resolute'" >&2
+    exit 1
+  fi
+}
 
 tag_and_push() {
   local source="$1"
@@ -56,23 +74,19 @@ install_oras_if_needed() {
     return
   fi
   local version="1.1.0"
-  curl -sLO "https://github.com/oras-project/oras/releases/download/v${version}/oras_${version}_linux_amd64.tar.gz"
+  local arch="amd64"
+  if [[ "$(uname -m)" == "aarch64" || "$(uname -m)" == "arm64" ]]; then
+    arch="arm64"
+  fi
+  curl -sLO "https://github.com/oras-project/oras/releases/download/v${version}/oras_${version}_linux_${arch}.tar.gz"
   mkdir -p oras
-  tar -zxf oras_${version}_linux_amd64.tar.gz -C oras
-  rm oras_${version}_linux_amd64.tar.gz
+  tar -zxf oras_${version}_linux_${arch}.tar.gz -C oras
+  rm oras_${version}_linux_${arch}.tar.gz
 }
 
 publish_docker_images_with_arch_suffix() {
   local FLAVOR="$1"
-  local TAGS=()
-  if [[ "$FLAVOR" == "noble" ]]; then
-    TAGS=("${NOBLE_TAGS[@]}")
-  elif [[ "$FLAVOR" == "resolute" ]]; then
-    TAGS=("${RESOLUTE_TAGS[@]}")
-  else
-    echo "ERROR: unknown flavor - $FLAVOR. Must be 'noble' or 'resolute'"
-    exit 1
-  fi
+  local TAGS=($(tags_for_flavor "$FLAVOR"))
   local ARCH="$2"
   if [[ "$ARCH" != "amd64" && "$ARCH" != "arm64" ]]; then
     echo "ERROR: unknown arch - $ARCH. Must be either 'amd64' or 'arm64'"
@@ -90,15 +104,7 @@ publish_docker_images_with_arch_suffix() {
 
 publish_docker_manifest () {
   local FLAVOR="$1"
-  local TAGS=()
-  if [[ "$FLAVOR" == "noble" ]]; then
-    TAGS=("${NOBLE_TAGS[@]}")
-  elif [[ "$FLAVOR" == "resolute" ]]; then
-    TAGS=("${RESOLUTE_TAGS[@]}")
-  else
-    echo "ERROR: unknown flavor - $FLAVOR. Must be 'noble' or 'resolute'"
-    exit 1
-  fi
+  local TAGS=($(tags_for_flavor "$FLAVOR"))
 
   for ((i = 0; i < ${#TAGS[@]}; i++)) do
     local TAG="${TAGS[$i]}"
@@ -115,10 +121,21 @@ publish_docker_manifest () {
   done
 }
 
-publish_docker_images_with_arch_suffix noble amd64
-publish_docker_images_with_arch_suffix noble arm64
-publish_docker_manifest noble amd64 arm64
+build_and_push_arch() {
+  local ARCH="$1"
+  publish_docker_images_with_arch_suffix noble "${ARCH}"     # Ubuntu 24.04
+  publish_docker_images_with_arch_suffix resolute "${ARCH}"  # Ubuntu 26.04
+}
 
-publish_docker_images_with_arch_suffix resolute amd64
-publish_docker_images_with_arch_suffix resolute arm64
-publish_docker_manifest resolute amd64 arm64
+publish_manifests() {
+  publish_docker_manifest noble amd64 arm64     # Ubuntu 24.04
+  publish_docker_manifest resolute amd64 arm64  # Ubuntu 26.04
+}
+
+# arm64 first: its QEMU-emulated builds must run while the host is fresh. Running
+# them after the native amd64 builds have churned the host triggers a qemu
+# segfault in aarch64 ldconfig during libc-bin setup. amd64 is a native build and
+# is unaffected by preceding work, so it goes second.
+build_and_push_arch arm64
+build_and_push_arch amd64
+publish_manifests
