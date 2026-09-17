@@ -154,6 +154,7 @@ internal class ElementHandle : JSHandle, IElementHandle
             new Dictionary<string, object?>
             {
                 ["force"] = options?.Force,
+                ["scroll"] = options?.Scroll,
                 ["position"] = options?.Position,
                 ["trial"] = options?.Trial,
                 ["modifiers"] = options?.Modifiers?.Select(m => m.ToValueString()),
@@ -189,6 +190,7 @@ internal class ElementHandle : JSHandle, IElementHandle
                 ["button"] = options?.Button,
                 ["clickCount"] = options?.ClickCount,
                 ["force"] = options?.Force,
+                ["scroll"] = options?.Scroll,
 #pragma warning disable CS0612 // Type or member is obsolete
                 ["noWaitAfter"] = options?.NoWaitAfter,
 #pragma warning restore CS0612 // Type or member is obsolete
@@ -207,6 +209,7 @@ internal class ElementHandle : JSHandle, IElementHandle
                 ["delay"] = options?.Delay,
                 ["button"] = options?.Button,
                 ["force"] = options?.Force,
+                ["scroll"] = options?.Scroll,
                 ["steps"] = options?.Steps,
                 ["trial"] = options?.Trial,
                 ["position"] = options?.Position,
@@ -397,6 +400,7 @@ internal class ElementHandle : JSHandle, IElementHandle
             new Dictionary<string, object?>
             {
                 ["force"] = options?.Force,
+                ["scroll"] = options?.Scroll,
                 ["position"] = options?.Position,
                 ["trial"] = options?.Trial,
             },
@@ -408,6 +412,7 @@ internal class ElementHandle : JSHandle, IElementHandle
             new Dictionary<string, object?>
             {
                 ["force"] = options?.Force,
+                ["scroll"] = options?.Scroll,
                 ["position"] = options?.Position,
                 ["trial"] = options?.Trial,
             },
@@ -419,6 +424,7 @@ internal class ElementHandle : JSHandle, IElementHandle
             new Dictionary<string, object?>
             {
                 ["force"] = options?.Force,
+                ["scroll"] = options?.Scroll,
                 ["position"] = options?.Position,
                 ["modifiers"] = options?.Modifiers?.Select(m => m.ToValueString()),
                 ["trial"] = options?.Trial,
@@ -446,6 +452,7 @@ internal class ElementHandle : JSHandle, IElementHandle
             new Dictionary<string, object?>
             {
                 ["force"] = options?.Force,
+                ["scroll"] = options?.Scroll,
                 ["position"] = options?.Position,
                 ["trial"] = options?.Trial,
             },
