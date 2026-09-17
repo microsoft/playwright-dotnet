@@ -70,6 +70,12 @@ public class WorkerAwareTest
         {
             AssertionsBase.SetDefaultTimeout(PlaywrightSettingsProvider.ExpectTimeout.Value);
         }
+
+        var result = new Program().RunWithResult(["install", "--with-deps", PlaywrightSettingsProvider.BrowserName]);
+        if (result.ExitCode != 0)
+        {
+            throw new PlaywrightException($"Running \"playwright install --with-deps {PlaywrightSettingsProvider.BrowserName}\" failed ({result.ExitCode})\n{result.StandardOutput}\n{result.StandardError}");
+        }
     }
 
     [TearDown]
