@@ -676,6 +676,7 @@ internal class Locator : ILocator
                 ["selector"] = _selector,
                 ["mode"] = options?.Mode,
                 ["depth"] = options?.Depth,
+                ["boxes"] = options?.Boxes,
             },
             timeout: _frame.Timeout(options?.Timeout)).ConfigureAwait(false);
         return result!.Value.GetProperty("snapshot").ToString();
