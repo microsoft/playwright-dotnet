@@ -39,6 +39,12 @@ extends:
     sdl:
       suppression:
         suppressionFile: $(Build.SourcesDirectory)\.azure-pipelines\guardian\SDL\.gdnsuppress
+    # 1ES Network Isolation (SFI-ES4.2.4) defaults to blocking public feed endpoints
+    # (e.g. api.nuget.org), which breaks the 1ES.PublishNuget@1 push to NuGet.org below.
+    # Permissive allows this pipeline to reach public feeds; the stage is still gated
+    # by the tag-only trigger and the doRelease/doReleaseCLI parameters.
+    settings:
+      networkIsolationPolicy: Permissive
     stages:
     - stage: BuildPackageSignPublish
       displayName: Build, Package, Sign, Publish
