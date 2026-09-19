@@ -23,6 +23,7 @@
  */
 
 using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
 
 namespace Microsoft.Playwright;
@@ -57,7 +58,7 @@ public partial interface IScreencast
     /// </summary>
     /// <param name="html">HTML content for the overlay.</param>
     /// <param name="options">Call options</param>
-    Task<IAsyncDisposable> ShowOverlayAsync(string html, ScreencastShowOverlayOptions? options = default);
+    Task<IAsyncDisposable> ShowOverlayAsync([StringSyntax("html")] string html, ScreencastShowOverlayOptions? options = default);
 
     /// <summary>
     /// <para>

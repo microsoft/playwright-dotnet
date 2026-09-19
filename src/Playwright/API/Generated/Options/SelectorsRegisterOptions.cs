@@ -22,6 +22,7 @@
  * SOFTWARE.
  */
 
+using System.Diagnostics.CodeAnalysis;
 using System.Text.Json.Serialization;
 
 namespace Microsoft.Playwright;
@@ -69,5 +70,6 @@ public class SelectorsRegisterOptions
     /// </para>
     /// </summary>
     [JsonPropertyName("script")]
+    [StringSyntax("javascript")]
     public string? Script { get; set; }
 }

@@ -31,7 +31,14 @@ internal static class Program
 {
     internal static async Task Main(string[] args)
     {
-        ParserResult<DownloadDriversOptions> result = Parser.Default.ParseArguments<DownloadDriversOptions>(args);
-        await result.WithParsedAsync(DriverDownloader.RunAsync).ConfigureAwait(false);
+        var result = Parser.Default.ParseArguments<DownloadDriversOptions, PatchStringSyntaxOptions>(args);
+        await result.MapResult(
+            (DownloadDriversOptions options) => DriverDownloader.RunAsync(options),
+            (PatchStringSyntaxOptions options) =>
+            {
+                StringSyntaxPatcher.Run(options);
+                return Task.CompletedTask;
+            },
+            _ => Task.CompletedTask).ConfigureAwait(false);
     }
 }

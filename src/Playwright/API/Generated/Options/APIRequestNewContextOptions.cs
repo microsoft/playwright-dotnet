@@ -23,6 +23,7 @@
  */
 
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Text.Json.Serialization;
 
 namespace Microsoft.Playwright;
@@ -75,6 +76,7 @@ public class APIRequestNewContextOptions
     /// </list>
     /// </summary>
     [JsonPropertyName("baseURL")]
+    [StringSyntax("Uri")]
     public string? BaseURL { get; set; }
 
     /// <summary>

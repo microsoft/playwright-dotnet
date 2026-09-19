@@ -24,6 +24,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
@@ -334,7 +335,7 @@ public partial interface IFrame
     /// </param>
     /// <param name="arg">Optional argument to pass to <see cref="IFrame.EvalOnSelectorAsync"/>.</param>
     /// <param name="options">Call options</param>
-    Task<T> EvalOnSelectorAsync<T>(string selector, string expression, object? arg = default, FrameEvalOnSelectorOptions? options = default);
+    Task<T> EvalOnSelectorAsync<T>(string selector, [StringSyntax("javascript")] string expression, object? arg = default, FrameEvalOnSelectorOptions? options = default);
 
     /// <summary>
     /// <para>
@@ -360,7 +361,7 @@ public partial interface IFrame
     /// evaluates to a function, the function is automatically invoked.
     /// </param>
     /// <param name="arg">Optional argument to pass to <see cref="IFrame.EvalOnSelectorAllAsync"/>.</param>
-    Task<T> EvalOnSelectorAllAsync<T>(string selector, string expression, object? arg = default);
+    Task<T> EvalOnSelectorAllAsync<T>(string selector, [StringSyntax("javascript")] string expression, object? arg = default);
 
     /// <summary>
     /// <para>Returns the return value of <see cref="IFrame.EvaluateAsync"/>.</para>
@@ -397,7 +398,7 @@ public partial interface IFrame
     /// evaluates to a function, the function is automatically invoked.
     /// </param>
     /// <param name="arg">Optional argument to pass to <see cref="IFrame.EvaluateAsync"/>.</param>
-    Task<T> EvaluateAsync<T>(string expression, object? arg = default);
+    Task<T> EvaluateAsync<T>([StringSyntax("javascript")] string expression, object? arg = default);
 
     /// <summary>
     /// <para>Returns the return value of <see cref="IFrame.EvaluateHandleAsync"/> as a <see cref="IJSHandle"/>.</para>
@@ -430,7 +431,7 @@ public partial interface IFrame
     /// evaluates to a function, the function is automatically invoked.
     /// </param>
     /// <param name="arg">Optional argument to pass to <see cref="IFrame.EvaluateHandleAsync"/>.</param>
-    Task<IJSHandle> EvaluateHandleAsync(string expression, object? arg = default);
+    Task<IJSHandle> EvaluateHandleAsync([StringSyntax("javascript")] string expression, object? arg = default);
 
     /// <summary>
     /// <para>Use locator-based <see cref="ILocator.FillAsync"/> instead. Read more about <a href="https://playwright.dev/dotnet/docs/locators">locators</a>.</para>
@@ -1465,7 +1466,7 @@ public partial interface IFrame
     /// </summary>
     /// <param name="html">HTML markup to assign to the page.</param>
     /// <param name="options">Call options</param>
-    Task SetContentAsync(string html, FrameSetContentOptions? options = default);
+    Task SetContentAsync([StringSyntax("html")] string html, FrameSetContentOptions? options = default);
 
     /// <summary>
     /// <para>
@@ -1737,7 +1738,7 @@ public partial interface IFrame
     /// </param>
     /// <param name="arg">Optional argument to pass to <see cref="IFrame.WaitForFunctionAsync"/>.</param>
     /// <param name="options">Call options</param>
-    Task<IJSHandle> WaitForFunctionAsync(string expression, object? arg = default, FrameWaitForFunctionOptions? options = default);
+    Task<IJSHandle> WaitForFunctionAsync([StringSyntax("javascript")] string expression, object? arg = default, FrameWaitForFunctionOptions? options = default);
 
     /// <summary>
     /// <para>Waits for the required load state to be reached.</para>

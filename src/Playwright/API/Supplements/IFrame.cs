@@ -22,6 +22,7 @@
  * SOFTWARE.
  */
 
+using System.Diagnostics.CodeAnalysis;
 using System.Text.Json;
 using System.Threading.Tasks;
 
@@ -29,9 +30,9 @@ namespace Microsoft.Playwright;
 
 public partial interface IFrame
 {
-    Task<JsonElement?> EvaluateAsync(string expression, object? arg = default);
+    Task<JsonElement?> EvaluateAsync([StringSyntax("javascript")] string expression, object? arg = default);
 
-    Task<JsonElement?> EvalOnSelectorAsync(string selector, string expression, object? arg = default);
+    Task<JsonElement?> EvalOnSelectorAsync(string selector, [StringSyntax("javascript")] string expression, object? arg = default);
 
-    Task<JsonElement?> EvalOnSelectorAllAsync(string selector, string expression, object? arg = default);
+    Task<JsonElement?> EvalOnSelectorAllAsync(string selector, [StringSyntax("javascript")] string expression, object? arg = default);
 }
