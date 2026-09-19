@@ -24,6 +24,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
@@ -337,7 +338,7 @@ public partial interface IBrowserContext
     /// </remarks>
     /// <param name="script">Script to be evaluated in all pages in the browser context.</param>
     /// <param name="scriptPath">Instead of specifying <paramref name="script"/>, gives the file name to load from.</param>
-    Task<IAsyncDisposable> AddInitScriptAsync(string? script = default, string? scriptPath = default);
+    Task<IAsyncDisposable> AddInitScriptAsync([StringSyntax("javascript")] string? script = default, string? scriptPath = default);
 
     /// <summary><para>Returns an empty list.</para></summary>
     [System.Obsolete]

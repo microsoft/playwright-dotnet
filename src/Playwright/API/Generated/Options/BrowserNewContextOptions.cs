@@ -23,6 +23,7 @@
  */
 
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Text.Json.Serialization;
 using System.Text.RegularExpressions;
 
@@ -111,6 +112,7 @@ public class BrowserNewContextOptions
     /// </list>
     /// </summary>
     [JsonPropertyName("baseURL")]
+    [StringSyntax("Uri")]
     public string? BaseURL { get; set; }
 
     /// <summary><para>Toggles bypassing page's Content-Security-Policy. Defaults to <c>false</c>.</para></summary>

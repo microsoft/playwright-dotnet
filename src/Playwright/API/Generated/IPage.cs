@@ -24,6 +24,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
@@ -337,7 +338,7 @@ public partial interface IPage
     /// </remarks>
     /// <param name="script">Script to be evaluated in all pages in the browser context.</param>
     /// <param name="scriptPath">Instead of specifying <paramref name="script"/>, gives the file name to load from.</param>
-    Task<IAsyncDisposable> AddInitScriptAsync(string? script = default, string? scriptPath = default);
+    Task<IAsyncDisposable> AddInitScriptAsync([StringSyntax("javascript")] string? script = default, string? scriptPath = default);
 
     /// <summary>
     /// <para>
@@ -676,7 +677,7 @@ public partial interface IPage
     /// </param>
     /// <param name="arg">Optional argument to pass to <see cref="IPage.EvalOnSelectorAsync"/>.</param>
     /// <param name="options">Call options</param>
-    Task<T> EvalOnSelectorAsync<T>(string selector, string expression, object? arg = default, PageEvalOnSelectorOptions? options = default);
+    Task<T> EvalOnSelectorAsync<T>(string selector, [StringSyntax("javascript")] string expression, object? arg = default, PageEvalOnSelectorOptions? options = default);
 
     /// <summary>
     /// <para>
@@ -702,7 +703,7 @@ public partial interface IPage
     /// evaluates to a function, the function is automatically invoked.
     /// </param>
     /// <param name="arg">Optional argument to pass to <see cref="IPage.EvalOnSelectorAllAsync"/>.</param>
-    Task<T> EvalOnSelectorAllAsync<T>(string selector, string expression, object? arg = default);
+    Task<T> EvalOnSelectorAllAsync<T>(string selector, [StringSyntax("javascript")] string expression, object? arg = default);
 
     /// <summary>
     /// <para>Returns the value of the <see cref="IPage.EvaluateAsync"/> invocation.</para>
@@ -740,7 +741,7 @@ public partial interface IPage
     /// evaluates to a function, the function is automatically invoked.
     /// </param>
     /// <param name="arg">Optional argument to pass to <see cref="IPage.EvaluateAsync"/>.</param>
-    Task<T> EvaluateAsync<T>(string expression, object? arg = default);
+    Task<T> EvaluateAsync<T>([StringSyntax("javascript")] string expression, object? arg = default);
 
     /// <summary>
     /// <para>
@@ -776,7 +777,7 @@ public partial interface IPage
     /// evaluates to a function, the function is automatically invoked.
     /// </param>
     /// <param name="arg">Optional argument to pass to <see cref="IPage.EvaluateHandleAsync"/>.</param>
-    Task<IJSHandle> EvaluateHandleAsync(string expression, object? arg = default);
+    Task<IJSHandle> EvaluateHandleAsync([StringSyntax("javascript")] string expression, object? arg = default);
 
     /// <summary>
     /// <para>
@@ -2739,7 +2740,7 @@ public partial interface IPage
     /// </summary>
     /// <param name="html">HTML markup to assign to the page.</param>
     /// <param name="options">Call options</param>
-    Task SetContentAsync(string html, PageSetContentOptions? options = default);
+    Task SetContentAsync([StringSyntax("html")] string html, PageSetContentOptions? options = default);
 
     /// <summary>
     /// <para>
@@ -3240,7 +3241,7 @@ public partial interface IPage
     /// </param>
     /// <param name="arg">Optional argument to pass to <see cref="IPage.WaitForFunctionAsync"/>.</param>
     /// <param name="options">Call options</param>
-    Task<IJSHandle> WaitForFunctionAsync(string expression, object? arg = default, PageWaitForFunctionOptions? options = default);
+    Task<IJSHandle> WaitForFunctionAsync([StringSyntax("javascript")] string expression, object? arg = default, PageWaitForFunctionOptions? options = default);
 
     /// <summary>
     /// <para>Returns when the required load state has been reached.</para>

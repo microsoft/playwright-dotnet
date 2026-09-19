@@ -22,6 +22,7 @@
  * SOFTWARE.
  */
 
+using System.Diagnostics.CodeAnalysis;
 using System.Text.Json.Serialization;
 
 namespace Microsoft.Playwright;
@@ -44,6 +45,7 @@ public class FrameAddStyleTagOptions
 
     /// <summary><para>Raw CSS content to be injected into frame.</para></summary>
     [JsonPropertyName("content")]
+    [StringSyntax("css")]
     public string? Content { get; set; }
 
     /// <summary>
@@ -57,5 +59,6 @@ public class FrameAddStyleTagOptions
 
     /// <summary><para>URL of the <c>&lt;link&gt;</c> tag.</para></summary>
     [JsonPropertyName("url")]
+    [StringSyntax("Uri")]
     public string? Url { get; set; }
 }

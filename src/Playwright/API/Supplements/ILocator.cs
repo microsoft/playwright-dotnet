@@ -22,6 +22,7 @@
  * SOFTWARE.
  */
 
+using System.Diagnostics.CodeAnalysis;
 using System.Text.Json;
 using System.Threading.Tasks;
 
@@ -29,5 +30,5 @@ namespace Microsoft.Playwright;
 
 public partial interface ILocator
 {
-    Task<JsonElement?> EvaluateAsync(string expression, object? arg = null, LocatorEvaluateOptions? options = null);
+    Task<JsonElement?> EvaluateAsync([StringSyntax("javascript")] string expression, object? arg = null, LocatorEvaluateOptions? options = null);
 }
