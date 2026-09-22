@@ -41,10 +41,15 @@ extends:
         suppressionFile: $(Build.SourcesDirectory)\.azure-pipelines\guardian\SDL\.gdnsuppress
     # 1ES Network Isolation (SFI-ES4.2.4) defaults to blocking public feed endpoints
     # (e.g. api.nuget.org), which breaks the 1ES.PublishNuget@1 push to NuGet.org below.
-    # Permissive allows this pipeline to reach public feeds; the stage is still gated
-    # by the tag-only trigger and the doRelease/doReleaseCLI parameters.
+    # Permissive alone still leaves api.nuget.org DNS-sinkholed. CFSClean (no suffix)
+    # also blocks all NuGet endpoints, so it is intentionally omitted; CFSClean2 does
+    # not block NuGet and is added to keep other endpoints (Docker, PowerShell Gallery,
+    # etc.) restricted. This matches microsoft/aspire's release-publish-nuget.yml and
+    # microsoft/winappCli's release.yml, which push to NuGet.org the same way.
+    # The stage is still gated by the tag-only trigger and the doRelease/doReleaseCLI
+    # parameters.
     settings:
-      networkIsolationPolicy: Permissive
+      networkIsolationPolicy: Permissive,CFSClean2
     stages:
     - stage: BuildPackageSignPublish
       displayName: Build, Package, Sign, Publish
