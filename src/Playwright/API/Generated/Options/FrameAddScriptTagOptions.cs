@@ -22,6 +22,7 @@
  * SOFTWARE.
  */
 
+using System.Diagnostics.CodeAnalysis;
 using System.Text.Json.Serialization;
 
 namespace Microsoft.Playwright;
@@ -45,6 +46,7 @@ public class FrameAddScriptTagOptions
 
     /// <summary><para>Raw JavaScript content to be injected into frame.</para></summary>
     [JsonPropertyName("content")]
+    [StringSyntax("javascript")]
     public string? Content { get; set; }
 
     /// <summary>
@@ -67,5 +69,6 @@ public class FrameAddScriptTagOptions
 
     /// <summary><para>URL of a script to be added.</para></summary>
     [JsonPropertyName("url")]
+    [StringSyntax("Uri")]
     public string? Url { get; set; }
 }

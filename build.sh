@@ -56,6 +56,8 @@ function roll_driver() {
   echo "Generating transport channels..."
   rm -rf "src/Playwright/Transport/Protocol/Generated/"
   node "$upstream_repo_path/utils/generate_dotnet_channels.js" "src/Playwright"
+  echo "Annotating the generated API with [StringSyntax]..."
+  dotnet run --project ./src/tools/Playwright.Tooling/Playwright.Tooling.csproj -- patch-string-syntax --basepath .
   echo "Formatting source code..."
   dotnet format src/Playwright
 
