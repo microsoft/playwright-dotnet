@@ -270,7 +270,6 @@ internal static class EvaluateArgumentValueConverter
             }
             visited.Add(parsed, objResult);
 
-            // Dictionary<,> can be constructed, but its properties are Count/Keys/Values, not the object keys.
             if (objResult is IDictionary dictionary && TryGetGenericDictionaryTypes(t, out var keyType, out var valueType))
             {
                 foreach (var kv in parsedExpando)
