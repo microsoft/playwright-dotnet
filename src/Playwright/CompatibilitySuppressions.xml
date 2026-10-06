@@ -227,6 +227,13 @@
   </Suppression>
   <Suppression>
     <DiagnosticId>CP0002</DiagnosticId>
+    <Target>M:Microsoft.Playwright.IFrame.ContentAsync</Target>
+    <Left>lib/netstandard2.0/Microsoft.Playwright.dll</Left>
+    <Right>lib/netstandard2.0/Microsoft.Playwright.dll</Right>
+    <IsBaselineSuppression>true</IsBaselineSuppression>
+  </Suppression>
+  <Suppression>
+    <DiagnosticId>CP0002</DiagnosticId>
     <Target>M:Microsoft.Playwright.ILocator.HighlightAsync</Target>
     <Left>lib/netstandard2.0/Microsoft.Playwright.dll</Left>
     <Right>lib/netstandard2.0/Microsoft.Playwright.dll</Right>
@@ -235,6 +242,13 @@
   <Suppression>
     <DiagnosticId>CP0002</DiagnosticId>
     <Target>M:Microsoft.Playwright.IPage.AddInitScriptAsync(System.String,System.String)</Target>
+    <Left>lib/netstandard2.0/Microsoft.Playwright.dll</Left>
+    <Right>lib/netstandard2.0/Microsoft.Playwright.dll</Right>
+    <IsBaselineSuppression>true</IsBaselineSuppression>
+  </Suppression>
+  <Suppression>
+    <DiagnosticId>CP0002</DiagnosticId>
+    <Target>M:Microsoft.Playwright.IPage.ContentAsync</Target>
     <Left>lib/netstandard2.0/Microsoft.Playwright.dll</Left>
     <Right>lib/netstandard2.0/Microsoft.Playwright.dll</Right>
     <IsBaselineSuppression>true</IsBaselineSuppression>
@@ -403,6 +417,20 @@
   <Suppression>
     <DiagnosticId>CP0002</DiagnosticId>
     <Target>M:Microsoft.Playwright.ITracing.GroupAsync(System.String,Microsoft.Playwright.TracingGroupOptions)</Target>
+    <Left>lib/netstandard2.0/Microsoft.Playwright.dll</Left>
+    <Right>lib/netstandard2.0/Microsoft.Playwright.dll</Right>
+    <IsBaselineSuppression>true</IsBaselineSuppression>
+  </Suppression>
+  <Suppression>
+    <DiagnosticId>CP0002</DiagnosticId>
+    <Target>M:Microsoft.Playwright.ITracing.StartAsync(Microsoft.Playwright.TracingStartOptions)</Target>
+    <Left>lib/netstandard2.0/Microsoft.Playwright.dll</Left>
+    <Right>lib/netstandard2.0/Microsoft.Playwright.dll</Right>
+    <IsBaselineSuppression>true</IsBaselineSuppression>
+  </Suppression>
+  <Suppression>
+    <DiagnosticId>CP0002</DiagnosticId>
+    <Target>M:Microsoft.Playwright.ITracing.StartChunkAsync(Microsoft.Playwright.TracingStartChunkOptions)</Target>
     <Left>lib/netstandard2.0/Microsoft.Playwright.dll</Left>
     <Right>lib/netstandard2.0/Microsoft.Playwright.dll</Right>
     <IsBaselineSuppression>true</IsBaselineSuppression>
