@@ -22,40 +22,37 @@
  * SOFTWARE.
  */
 
-using System.ComponentModel.DataAnnotations;
 using System.Text.Json.Serialization;
 
 namespace Microsoft.Playwright;
 
-public partial class VirtualCredential
+public partial class ScreencastActionStyle
 {
-    /// <summary><para>Base64url-encoded credential id.</para></summary>
-    [Required]
-    [JsonPropertyName("id")]
-    public string Id { get; set; } = default!;
+    /// <summary>
+    /// <para>
+    /// CSS declarations for the marker at the action point. The marker is positioned at
+    /// the action point, has zero size and is centered on the point, so its size and look
+    /// come from this style. Not shown when omitted.
+    /// </para>
+    /// </summary>
+    [JsonPropertyName("point")]
+    public string? Point { get; set; }
 
-    /// <summary><para>Relying party id.</para></summary>
-    [Required]
-    [JsonPropertyName("rpId")]
-    public string RpId { get; set; } = default!;
+    /// <summary>
+    /// <para>
+    /// CSS declarations for the box that covers the target element. The box is positioned
+    /// and sized to the element bounds. Not shown when omitted.
+    /// </para>
+    /// </summary>
+    [JsonPropertyName("highlight")]
+    public string? Highlight { get; set; }
 
-    /// <summary><para>Base64url-encoded user handle.</para></summary>
-    [Required]
-    [JsonPropertyName("userHandle")]
-    public string UserHandle { get; set; } = default!;
-
-    /// <summary><para>Base64url-encoded PKCS#8 (DER) private key.</para></summary>
-    [Required]
-    [JsonPropertyName("privateKey")]
-    public string PrivateKey { get; set; } = default!;
-
-    /// <summary><para>Base64url-encoded SPKI (DER) public key.</para></summary>
-    [Required]
-    [JsonPropertyName("publicKey")]
-    public string PublicKey { get; set; } = default!;
-
-    /// <summary><para>Signature counter, the value reported to the relying party in the most recent assertion.</para></summary>
-    [Required]
-    [JsonPropertyName("signCount")]
-    public int SignCount { get; set; } = default!;
+    /// <summary>
+    /// <para>
+    /// CSS declarations for the action title, for example <c>'font-size: 32px; background:
+    /// #333'</c>. The title is placed according to <see cref="IScreencast.ShowActionsAsync"/>.
+    /// </para>
+    /// </summary>
+    [JsonPropertyName("title")]
+    public string? Title { get; set; }
 }

@@ -42,4 +42,7 @@ internal class VirtualCredential
 
     [JsonPropertyName("publicKey")]
     public string PublicKey { get; set; } = null!;
+
+    [JsonPropertyName("signCount")]
+    public int SignCount { get; set; }
 }

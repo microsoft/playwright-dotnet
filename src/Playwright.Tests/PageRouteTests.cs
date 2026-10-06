@@ -241,7 +241,8 @@ public class PageRouteTests : PageTestEx
         await Page.SetExtraHTTPHeadersAsync(new Dictionary<string, string> { ["referer"] = Server.EmptyPage });
         await Page.RouteAsync("**/*", (route) =>
         {
-            if (TestConstants.IsChromium)
+            // See https://github.com/microsoft/playwright/issues/8999
+            if (TestConstants.IsChromium && BrowserMajorVersion < 154)
             {
                 Assert.AreEqual(Server.EmptyPage + ", " + Server.EmptyPage, route.Request.Headers["referer"]);
             }

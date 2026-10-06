@@ -218,6 +218,31 @@ public class TracingTests : ContextTestEx
         await Context.Tracing.StopAsync();
     }
 
+    [PlaywrightTest("tracing.spec.ts", "start should return a disposable that discards the trace")]
+    public async Task StartShouldReturnADisposableThatDiscardsTheTrace()
+    {
+        using var tmp = new TempDirectory();
+        var disposable = await Context.Tracing.StartAsync();
+        var page = await Context.NewPageAsync();
+        await page.GotoAsync(Server.EmptyPage);
+        await disposable.DisposeAsync();
+        var exception = await PlaywrightAssert.ThrowsAsync<PlaywrightException>(() => Context.Tracing.StopAsync(new() { Path = Path.Combine(tmp.Path, "trace.zip") }));
+        StringAssert.Contains("Must start tracing before stopping", exception.Message);
+    }
+
+    [PlaywrightTest("tracing.spec.ts", "startChunk should return a disposable that discards the chunk")]
+    public async Task StartChunkShouldReturnADisposableThatDiscardsTheChunk()
+    {
+        using var tmp = new TempDirectory();
+        await Context.Tracing.StartAsync();
+        var disposable = await Context.Tracing.StartChunkAsync();
+        var page = await Context.NewPageAsync();
+        await page.GotoAsync(Server.EmptyPage);
+        await disposable.DisposeAsync();
+        var exception = await PlaywrightAssert.ThrowsAsync<PlaywrightException>(() => Context.Tracing.StopChunkAsync(new() { Path = Path.Combine(tmp.Path, "trace.zip") }));
+        StringAssert.Contains("Must start tracing before stopping", exception.Message);
+    }
+
     [PlaywrightTest("tracing.spec.ts", "should not throw when stopping without passing a trace file")]
     public async Task ShouldNotThrowWhenStoppingWithoutPath()
     {

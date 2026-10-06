@@ -36,4 +36,7 @@ internal class SerializedErrorError
 
     [JsonPropertyName("stack")]
     public string Stack { get; set; } = null!;
+
+    [JsonPropertyName("code")]
+    public string Code { get; set; } = null!;
 }

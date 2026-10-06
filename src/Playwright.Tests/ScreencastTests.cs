@@ -39,6 +39,17 @@ public class ScreencastTests : BrowserTestEx
     }
 
     [PlaywrightTest()]
+    public async Task VideoFpsShouldRequireVideosPath()
+    {
+        var exception = await PlaywrightAssert.ThrowsAsync<PlaywrightException>(() => Browser.NewContextAsync(new()
+        {
+            RecordVideoFps = 60
+        }));
+
+        StringAssert.Contains("\"RecordVideoFps\" option requires \"RecordVideoDir\" to be specified", exception.Message);
+    }
+
+    [PlaywrightTest()]
     public async Task ShouldWorkWithoutASize()
     {
         using var tempDirectory = new TempDirectory();
@@ -79,7 +90,8 @@ public class ScreencastTests : BrowserTestEx
         var context = await Browser.NewContextAsync(new()
         {
             RecordVideoDir = tempDirectory.Path,
-            RecordVideoSize = new() { Height = 100, Width = 100 }
+            RecordVideoSize = new() { Height = 100, Width = 100 },
+            RecordVideoFps = 60,
         });
 
         var page = await context.NewPageAsync();
@@ -137,6 +149,7 @@ public class ScreencastTests : BrowserTestEx
         {
             RecordVideoDir = tempDirectory.Path,
             RecordVideoSize = new() { Height = 100, Width = 100 },
+            RecordVideoFps = 60,
         });
 
         var page = await context.NewPageAsync();
@@ -244,7 +257,7 @@ public class ScreencastTests : BrowserTestEx
         var page = await context.NewPageAsync();
 
         var videoPath = Path.Combine(tempDirectory.Path, "video.webm");
-        await page.Screencast.StartAsync(new() { Path = videoPath });
+        await page.Screencast.StartAsync(new() { Path = videoPath, Fps = 60 });
         await page.EvaluateAsync("() => document.body.style.backgroundColor = 'red'");
         await Task.Delay(1000);
         await page.Screencast.StopAsync();
@@ -349,6 +362,31 @@ public class ScreencastTests : BrowserTestEx
 
         await page.Screencast.HideOverlaysAsync();
         await page.Screencast.ShowOverlaysAsync();
+
+        await context.CloseAsync();
+    }
+
+    [PlaywrightTest()]
+    public async Task ShowActionsAsync_AcceptsStyle()
+    {
+        var context = await Browser.NewContextAsync();
+        var page = await context.NewPageAsync();
+        await page.GotoAsync(Server.Prefix + "/input/button.html");
+
+        await using (await page.Screencast.ShowActionsAsync(new()
+        {
+            Duration = 100,
+            Style = new()
+            {
+                Point = "width: 20px; height: 20px; border-radius: 50%; background: red",
+                Highlight = "outline: 2px solid #333",
+                Title = "top: 100px; background-color: rgb(1, 2, 3)",
+            },
+        }))
+        {
+            await page.ClickAsync("button");
+            Assert.AreEqual("Clicked", await page.EvaluateAsync<string>("() => window.result"));
+        }
 
         await context.CloseAsync();
     }

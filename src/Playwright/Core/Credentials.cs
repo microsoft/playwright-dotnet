@@ -49,6 +49,7 @@ internal class Credentials : ICredentials
             ["userHandle"] = options?.UserHandle,
             ["privateKey"] = options?.PrivateKey,
             ["publicKey"] = options?.PublicKey,
+            ["signCount"] = options?.SignCount,
         }).ConfigureAwait(false);
         return result!.Value.GetProperty("credential").ToObject<VirtualCredential>(_browserContext._connection.DefaultJsonSerializerOptions);
     }

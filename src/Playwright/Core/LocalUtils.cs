@@ -104,7 +104,7 @@ internal class LocalUtils : ChannelOwner
                 },
                 timeout: timeout ?? 0).ConfigureAwait(false))!.Value.GetObject<JsonPipe>("pipe", _connection);
 
-    internal void AddStackToTracingNoReply(List<StackFrame> stack, int id)
+    internal void AddStackToTracingNoReply(List<StackFrame> stack, string id)
          => SendMessageToServerAsync("addStackToTracingNoReply", new Dictionary<string, object?>
         {
             {

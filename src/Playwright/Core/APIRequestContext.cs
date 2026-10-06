@@ -73,6 +73,42 @@ internal class APIRequestContext : ChannelOwner, IAPIRequestContext
     }
 
     [MethodImpl(MethodImplOptions.NoInlining)]
+    public Task<IReadOnlyList<BrowserContextCookiesResult>> CookiesAsync() => CookiesAsync(Array.Empty<string>());
+
+    [MethodImpl(MethodImplOptions.NoInlining)]
+    public Task<IReadOnlyList<BrowserContextCookiesResult>> CookiesAsync(string url) => CookiesAsync(string.IsNullOrEmpty(url) ? null : [url]);
+
+    [MethodImpl(MethodImplOptions.NoInlining)]
+    public async Task<IReadOnlyList<BrowserContextCookiesResult>> CookiesAsync(IEnumerable<string>? urls) => (await SendMessageToServerAsync(
+            "cookies",
+            new Dictionary<string, object?>
+            {
+                ["urls"] = urls ?? [],
+            }).ConfigureAwait(false))?.GetProperty("cookies").ToObject<IReadOnlyList<BrowserContextCookiesResult>>()!;
+
+    [MethodImpl(MethodImplOptions.NoInlining)]
+    public Task AddCookiesAsync(IEnumerable<Cookie> cookies) => SendMessageToServerAsync(
+            "addCookies",
+            new Dictionary<string, object?>
+            {
+                ["cookies"] = cookies,
+            });
+
+    [MethodImpl(MethodImplOptions.NoInlining)]
+    public async Task ClearCookiesAsync(APIRequestContextClearCookiesOptions? options = default)
+    {
+        var @params = BrowserContext.ToClearCookiesParams(
+            options?.Name ?? options?.NameString,
+            options?.NameRegex,
+            options?.Domain ?? options?.DomainString,
+            options?.DomainRegex,
+            options?.Path ?? options?.PathString,
+            options?.PathRegex);
+
+        await SendMessageToServerAsync("clearCookies", @params).ConfigureAwait(false);
+    }
+
+    [MethodImpl(MethodImplOptions.NoInlining)]
     public Task<IAPIResponse> FetchAsync(IRequest request, APIRequestContextOptions? options = null)
         => InnerFetchAsync(request, null, options);
 

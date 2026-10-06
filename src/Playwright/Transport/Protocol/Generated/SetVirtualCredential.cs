@@ -22,16 +22,27 @@
  * SOFTWARE.
  */
 
-using System.Collections.Generic;
 using System.Text.Json.Serialization;
 
 namespace Microsoft.Playwright.Transport.Protocol;
 
-internal class ClientSideCallMetadata
+internal class SetVirtualCredential
 {
     [JsonPropertyName("id")]
     public string Id { get; set; } = null!;
 
-    [JsonPropertyName("stack")]
-    public List<StackFrame> Stack { get; set; } = null!;
+    [JsonPropertyName("rpId")]
+    public string RpId { get; set; } = null!;
+
+    [JsonPropertyName("userHandle")]
+    public string UserHandle { get; set; } = null!;
+
+    [JsonPropertyName("privateKey")]
+    public string PrivateKey { get; set; } = null!;
+
+    [JsonPropertyName("publicKey")]
+    public string PublicKey { get; set; } = null!;
+
+    [JsonPropertyName("signCount")]
+    public int? SignCount { get; set; }
 }
