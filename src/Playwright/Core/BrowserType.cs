@@ -123,7 +123,7 @@ internal class BrowserType : ChannelOwner, IBrowserType
             ["reducedMotion"] = options.ReducedMotion == ReducedMotion.Null ? "no-override" : options.ReducedMotion,
             ["forcedColors"] = options.ForcedColors == ForcedColors.Null ? "no-override" : options.ForcedColors,
             ["contrast"] = options.Contrast == Contrast.Null ? "no-override" : options.Contrast,
-            ["recordVideo"] = Browser.GetVideoArgs(options.RecordVideoDir, options.RecordVideoSize),
+            ["recordVideo"] = Browser.GetVideoArgs(options.RecordVideoDir, options.RecordVideoSize, options.RecordVideoFps),
             ["ignoreDefaultArgs"] = options.IgnoreDefaultArgs,
             ["ignoreAllDefaultArgs"] = options.IgnoreAllDefaultArgs,
             ["baseURL"] = options.BaseURL,

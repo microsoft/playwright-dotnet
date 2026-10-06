@@ -477,7 +477,8 @@ public partial interface IPage
     Task CloseAsync(PageCloseOptions? options = default);
 
     /// <summary><para>Gets the full HTML contents of the page, including the doctype.</para></summary>
-    Task<string> ContentAsync();
+    /// <param name="options">Call options</param>
+    Task<string> ContentAsync(PageContentOptions? options = default);
 
     /// <summary><para>Get the browser context that the page belongs to.</para></summary>
     IBrowserContext Context { get; }
@@ -1112,6 +1113,20 @@ public partial interface IPage
     /// <param name="text">Text to locate the element for.</param>
     /// <param name="options">Call options</param>
     ILocator GetByPlaceholder(Regex text, PageGetByPlaceholderOptions? options = default);
+
+    /// <summary>
+    /// <para>
+    /// Locate element by its aria ref. Refs like <c>[ref=e2]</c> are reported by <see cref="IPage.AriaSnapshotAsync"/>
+    /// when called with the <c>"ai"</c> mode, and resolve against the latest snapshot taken
+    /// in the element's frame.
+    /// </para>
+    /// <para>**Usage**</para>
+    /// <para>Consider the following aria snapshot.</para>
+    /// <para>You can locate the button by its ref:</para>
+    /// <code>await page.GetByRef("e2").ClickAsync();</code>
+    /// </summary>
+    /// <param name="ref">Aria ref of the element, for example <c>e2</c> or <c>f1e3</c>.</param>
+    ILocator GetByRef(string @ref);
 
     /// <summary>
     /// <para>

@@ -2032,4 +2032,23 @@ public partial interface ILocator
     /// <param name="arg">Optional argument to pass to <see cref="ILocator.WaitForFunctionAsync"/>.</param>
     /// <param name="options">Call options</param>
     Task WaitForFunctionAsync(string expression, object? arg = default, LocatorWaitForFunctionOptions? options = default);
+
+    /// <summary>
+    /// <para>
+    /// Returns a locator that matches this locator's elements inside each element matched
+    /// by <see cref="ILocator.Within"/>.
+    /// </para>
+    /// <para>
+    /// Note that relative locators, such as <see cref="ILocator.Nth"/> or <see cref="ILocator.First"/>,
+    /// are resolved separately inside each matched parent. In the example below, <c>page.getByRole('cell').nth(2)</c>
+    /// picks the third cell of every row, not the third cell in the whole table.
+    /// </para>
+    /// <para>**Usage**</para>
+    /// <code>
+    /// var thirdColumn = page.GetByRole(AriaRole.Cell).Nth(2).Within(page.GetByRole(AriaRole.Row));<br/>
+    /// await Expect(thirdColumn).ToHaveTextAsync(new[] { "Apple", "Banana", "Cherry" });
+    /// </code>
+    /// </summary>
+    /// <param name="locator">Locator matching the parent elements to search within.</param>
+    ILocator Within(ILocator locator);
 }

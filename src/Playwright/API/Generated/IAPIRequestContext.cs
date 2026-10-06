@@ -22,6 +22,7 @@
  * SOFTWARE.
  */
 
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace Microsoft.Playwright;
@@ -54,6 +55,70 @@ namespace Microsoft.Playwright;
 /// </summary>
 public partial interface IAPIRequestContext
 {
+    /// <summary>
+    /// <para>
+    /// Adds cookies into this request context. They will be sent with matching subsequent
+    /// requests. For <see cref="IBrowserContext.APIRequest"/> and <see cref="IPage.APIRequest"/>,
+    /// this is equivalent to calling <see cref="IBrowserContext.AddCookiesAsync"/> on the
+    /// corresponding browser context.
+    /// </para>
+    /// <para>**Usage**</para>
+    /// <code>await request.AddCookiesAsync(new[] { cookie1, cookie2 });</code>
+    /// </summary>
+    /// <param name="cookies">
+    /// </param>
+    Task AddCookiesAsync(IEnumerable<Cookie> cookies);
+
+    /// <summary>
+    /// <para>
+    /// Removes cookies from this request context. Accepts optional filter. For <see cref="IBrowserContext.APIRequest"/>
+    /// and <see cref="IPage.APIRequest"/>, this is equivalent to calling <see cref="IBrowserContext.ClearCookiesAsync"/>
+    /// on the corresponding browser context.
+    /// </para>
+    /// <para>**Usage**</para>
+    /// <code>
+    /// await request.ClearCookiesAsync();<br/>
+    /// await request.ClearCookiesAsync(new() { Name = "session-id" });<br/>
+    /// await request.ClearCookiesAsync(new() { Domain = "my-origin.com" });<br/>
+    /// await request.ClearCookiesAsync(new() { Path = "/api/v1" });<br/>
+    /// await request.ClearCookiesAsync(new() { Name = "session-id", Domain = "my-origin.com" });
+    /// </code>
+    /// </summary>
+    /// <param name="options">Call options</param>
+    Task ClearCookiesAsync(APIRequestContextClearCookiesOptions? options = default);
+
+    /// <summary>
+    /// <para>
+    /// If no URLs are specified, this method returns all cookies. If URLs are specified,
+    /// only cookies that affect those URLs are returned. For <see cref="IBrowserContext.APIRequest"/>
+    /// and <see cref="IPage.APIRequest"/>, this is equivalent to calling <see cref="IBrowserContext.CookiesAsync"/>
+    /// on the corresponding browser context.
+    /// </para>
+    /// </summary>
+    /// <param name="urls">Optional list of URLs.</param>
+    Task<IReadOnlyList<BrowserContextCookiesResult>> CookiesAsync(string urls);
+
+    /// <summary>
+    /// <para>
+    /// If no URLs are specified, this method returns all cookies. If URLs are specified,
+    /// only cookies that affect those URLs are returned. For <see cref="IBrowserContext.APIRequest"/>
+    /// and <see cref="IPage.APIRequest"/>, this is equivalent to calling <see cref="IBrowserContext.CookiesAsync"/>
+    /// on the corresponding browser context.
+    /// </para>
+    /// </summary>
+    /// <param name="urls">Optional list of URLs.</param>
+    Task<IReadOnlyList<BrowserContextCookiesResult>> CookiesAsync(IEnumerable<string> urls);
+
+    /// <summary>
+    /// <para>
+    /// If no URLs are specified, this method returns all cookies. If URLs are specified,
+    /// only cookies that affect those URLs are returned. For <see cref="IBrowserContext.APIRequest"/>
+    /// and <see cref="IPage.APIRequest"/>, this is equivalent to calling <see cref="IBrowserContext.CookiesAsync"/>
+    /// on the corresponding browser context.
+    /// </para>
+    /// </summary>
+    Task<IReadOnlyList<BrowserContextCookiesResult>> CookiesAsync();
+
     /// <summary>
     /// <para>
     /// Creates a new <see cref="IFormData"/> instance which is used for providing form

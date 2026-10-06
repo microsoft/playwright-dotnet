@@ -374,8 +374,13 @@ internal class Frame : ChannelOwner, IFrame
     }
 
     [MethodImpl(MethodImplOptions.NoInlining)]
-    public async Task<string> ContentAsync()
-        => (await SendMessageToServerAsync("content").ConfigureAwait(false))!.Value.GetProperty("value").ToString();
+    public async Task<string> ContentAsync(FrameContentOptions? options = default)
+        => (await SendMessageToServerAsync(
+            "content",
+            new Dictionary<string, object?>
+            {
+                ["includeShadow"] = options?.IncludeShadow,
+            }).ConfigureAwait(false))!.Value.GetProperty("value").ToString();
 
     [MethodImpl(MethodImplOptions.NoInlining)]
     public Task FocusAsync(string selector, FrameFocusOptions? options = default)

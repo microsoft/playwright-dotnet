@@ -223,6 +223,8 @@ internal class Locator : ILocator
         return new Locator(_frame, $"{_selector} >> internal:chain={JsonSerializer.Serialize(locatorImpl._selector, _locatorSerializerOptions)}", options);
     }
 
+    public ILocator Within(ILocator locator) => locator.Locator(this);
+
     IFrameLocator ILocator.FrameLocator(string selector) =>
         new FrameLocator(_frame, $"{_selector} >> {selector}");
 

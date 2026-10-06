@@ -365,23 +365,34 @@ internal class BrowserContext : ChannelOwner, IBrowserContext
     [MethodImpl(MethodImplOptions.NoInlining)]
     public async Task ClearCookiesAsync(BrowserContextClearCookiesOptions? options = default)
     {
-        var nameRegex = options?.NameRegex?.GetSourceAndFlags();
-        var domainRegex = options?.DomainRegex?.GetSourceAndFlags();
-        var pathRegex = options?.PathRegex?.GetSourceAndFlags();
-        var @params = new Dictionary<string, object?>
-        {
-            ["name"] = options?.Name ?? options?.NameString,
-            ["nameRegexSource"] = nameRegex?.Source,
-            ["nameRegexFlags"] = nameRegex?.Flags,
-            ["domain"] = options?.Domain ?? options?.DomainString,
-            ["domainRegexSource"] = domainRegex?.Source,
-            ["domainRegexFlags"] = domainRegex?.Flags,
-            ["path"] = options?.Path ?? options?.PathString,
-            ["pathRegexSource"] = pathRegex?.Source,
-            ["pathRegexFlags"] = pathRegex?.Flags,
-        };
+        var @params = ToClearCookiesParams(
+            options?.Name ?? options?.NameString,
+            options?.NameRegex,
+            options?.Domain ?? options?.DomainString,
+            options?.DomainRegex,
+            options?.Path ?? options?.PathString,
+            options?.PathRegex);
 
         await SendMessageToServerAsync("clearCookies", @params).ConfigureAwait(false);
+    }
+
+    internal static Dictionary<string, object?> ToClearCookiesParams(string? name, Regex? nameRegex, string? domain, Regex? domainRegex, string? path, Regex? pathRegex)
+    {
+        var nameSourceAndFlags = nameRegex?.GetSourceAndFlags();
+        var domainSourceAndFlags = domainRegex?.GetSourceAndFlags();
+        var pathSourceAndFlags = pathRegex?.GetSourceAndFlags();
+        return new Dictionary<string, object?>
+        {
+            ["name"] = name,
+            ["nameRegexSource"] = nameSourceAndFlags?.Source,
+            ["nameRegexFlags"] = nameSourceAndFlags?.Flags,
+            ["domain"] = domain,
+            ["domainRegexSource"] = domainSourceAndFlags?.Source,
+            ["domainRegexFlags"] = domainSourceAndFlags?.Flags,
+            ["path"] = path,
+            ["pathRegexSource"] = pathSourceAndFlags?.Source,
+            ["pathRegexFlags"] = pathSourceAndFlags?.Flags,
+        };
     }
 
     [MethodImpl(MethodImplOptions.NoInlining)]

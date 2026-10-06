@@ -6,7 +6,7 @@
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
- * to use, copy, modify, merge, publish, distribute, sublicense, and / or sell
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
  * copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions:
  *
@@ -22,16 +22,32 @@
  * SOFTWARE.
  */
 
-using System.Collections.Generic;
 using System.Text.Json.Serialization;
 
-namespace Microsoft.Playwright.Transport.Protocol;
+namespace Microsoft.Playwright;
 
-internal class ClientSideCallMetadata
+public class FrameContentOptions
 {
-    [JsonPropertyName("id")]
-    public string Id { get; set; } = null!;
+    public FrameContentOptions() { }
 
-    [JsonPropertyName("stack")]
-    public List<StackFrame> Stack { get; set; } = null!;
+    public FrameContentOptions(FrameContentOptions clone)
+    {
+        if (clone == null)
+        {
+            return;
+        }
+
+        IncludeShadow = clone.IncludeShadow;
+    }
+
+    /// <summary>
+    /// <para>
+    /// When true, contents of open shadow roots are included as <a href="https://developer.mozilla.org/en-US/docs/Web/API/Web_components/Using_shadow_DOM#declaratively_with_html">declarative
+    /// shadow DOM</a>, i.e. <c>&lt;template shadowrootmode="open"&gt;</c> elements nested
+    /// inside their host elements. Closed shadow roots are never included. Defaults to
+    /// <c>false</c>.
+    /// </para>
+    /// </summary>
+    [JsonPropertyName("includeShadow")]
+    public bool? IncludeShadow { get; set; }
 }

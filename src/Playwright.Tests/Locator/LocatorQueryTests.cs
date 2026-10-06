@@ -285,6 +285,26 @@ public class LocatorQueryTests : PageTestEx
         await Expect(Page.Locator("button").And(Page.GetByRole(AriaRole.Button))).ToHaveTextAsync(new[] { "three", "five" });
     }
 
+    [PlaywrightTest("locator-query.spec.ts", "should support locator.within")]
+    public async Task ShouldSupportLocatorWithin()
+    {
+        await Page.SetContentAsync(@"
+            <table>
+                <tr><td>a1</td><td>a2</td><td>a3</td></tr>
+                <tr><td>b1</td><td>b2</td><td>b3</td></tr>
+                <tr><td>c1</td><td>c2</td><td>c3</td></tr>
+            </table>
+            <span>outside</span>
+        ");
+
+        await Expect(Page.GetByRole(AriaRole.Cell).Within(Page.GetByRole(AriaRole.Row))).ToHaveTextAsync(new[] { "a1", "a2", "a3", "b1", "b2", "b3", "c1", "c2", "c3" });
+        await Expect(Page.GetByRole(AriaRole.Cell).Nth(1).Within(Page.GetByRole(AriaRole.Row))).ToHaveTextAsync(new[] { "a2", "b2", "c2" });
+        await Expect(Page.GetByRole(AriaRole.Cell).Last.Within(Page.GetByRole(AriaRole.Row))).ToHaveTextAsync(new[] { "a3", "b3", "c3" });
+        await Expect(Page.GetByRole(AriaRole.Cell).Nth(1).Within(Page.GetByRole(AriaRole.Row).Nth(2))).ToHaveTextAsync(new[] { "c2" });
+        await Expect(Page.Locator("span").Within(Page.GetByRole(AriaRole.Row))).ToHaveCountAsync(0);
+        await Expect(Page.GetByRole(AriaRole.Cell).Nth(1).Within(Page.GetByRole(AriaRole.Row)).Nth(1)).ToHaveTextAsync("b2");
+    }
+
     [PlaywrightTest("locator-query.spec.ts", "should enforce same frame for has:locator'")]
     public async Task ShouldEnforceSameFrameForHasLocator()
     {

@@ -131,7 +131,7 @@ internal class Browser : ChannelOwner, IBrowser
             ["forcedColors"] = options.ForcedColors == ForcedColors.Null ? "no-override" : options.ForcedColors,
             ["contrast"] = options.Contrast == Contrast.Null ? "no-override" : options.Contrast,
             ["extraHTTPHeaders"] = options.ExtraHTTPHeaders?.Select(kv => new HeaderEntry { Name = kv.Key, Value = kv.Value }).ToArray(),
-            ["recordVideo"] = GetVideoArgs(options.RecordVideoDir, options.RecordVideoSize),
+            ["recordVideo"] = GetVideoArgs(options.RecordVideoDir, options.RecordVideoSize, options.RecordVideoFps),
             ["timezoneId"] = options.TimezoneId,
             ["userAgent"] = options.UserAgent,
             ["baseURL"] = options.BaseURL,
@@ -213,6 +213,7 @@ internal class Browser : ChannelOwner, IBrowser
             RecordHarUrlFilterString = options.RecordHarUrlFilterString,
             RecordHarUrlFilterRegex = options.RecordHarUrlFilterRegex,
             RecordVideoDir = options.RecordVideoDir,
+            RecordVideoFps = options.RecordVideoFps,
             RecordVideoSize = options.RecordVideoSize,
             Proxy = options.Proxy,
             StorageState = options.StorageState,
@@ -239,13 +240,18 @@ internal class Browser : ChannelOwner, IBrowser
     [MethodImpl(MethodImplOptions.NoInlining)]
     public ValueTask DisposeAsync() => new ValueTask(CloseAsync());
 
-    internal static Dictionary<string, object>? GetVideoArgs(string? recordVideoDir, RecordVideoSize? recordVideoSize)
+    internal static Dictionary<string, object>? GetVideoArgs(string? recordVideoDir, RecordVideoSize? recordVideoSize, int? recordVideoFps)
     {
         Dictionary<string, object>? recordVideoArgs = null;
 
         if (recordVideoSize != null && string.IsNullOrEmpty(recordVideoDir))
         {
             throw new PlaywrightException("\"RecordVideoSize\" option requires \"RecordVideoDir\" to be specified");
+        }
+
+        if (recordVideoFps != null && string.IsNullOrEmpty(recordVideoDir))
+        {
+            throw new PlaywrightException("\"RecordVideoFps\" option requires \"RecordVideoDir\" to be specified");
         }
 
         if (!string.IsNullOrEmpty(recordVideoDir))
@@ -258,6 +264,11 @@ internal class Browser : ChannelOwner, IBrowser
             if (recordVideoSize != null)
             {
                 recordVideoArgs["size"] = recordVideoSize;
+            }
+
+            if (recordVideoFps != null)
+            {
+                recordVideoArgs["fps"] = recordVideoFps;
             }
         }
 

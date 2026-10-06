@@ -50,7 +50,7 @@ internal class Tracing : ChannelOwner, ITracing
     }
 
     [MethodImpl(MethodImplOptions.NoInlining)]
-    public async Task StartAsync(TracingStartOptions? options = default)
+    public async Task<IAsyncDisposable> StartAsync(TracingStartOptions? options = default)
     {
         _includeSources = options?.Sources == true;
         await SendMessageToServerAsync(
@@ -70,10 +70,11 @@ internal class Tracing : ChannelOwner, ITracing
             ["name"] = options?.Name,
         }).ConfigureAwait(false))!.Value.GetProperty("traceName").ToString();
         await StartCollectingStacksAsync(traceName).ConfigureAwait(false);
+        return new DisposableStub(() => StopAsync());
     }
 
     [MethodImpl(MethodImplOptions.NoInlining)]
-    public async Task StartChunkAsync(TracingStartChunkOptions? options = default)
+    public async Task<IAsyncDisposable> StartChunkAsync(TracingStartChunkOptions? options = default)
     {
         var traceName = (await SendMessageToServerAsync("tracingStartChunk", new Dictionary<string, object?>
         {
@@ -81,6 +82,7 @@ internal class Tracing : ChannelOwner, ITracing
             ["name"] = options?.Name,
         }).ConfigureAwait(false))!.Value.GetProperty("traceName").ToString();
         await StartCollectingStacksAsync(traceName).ConfigureAwait(false);
+        return new DisposableStub(() => StopChunkAsync());
     }
 
     private async Task StartCollectingStacksAsync(string traceName)

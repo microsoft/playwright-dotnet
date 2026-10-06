@@ -63,6 +63,17 @@ public class PageSetContentTests : PageTestEx
         Assert.AreEqual($"{doctype}{_expectedOutput}", result);
     }
 
+    [PlaywrightTest("page-set-content.spec.ts", "should include shadow roots")]
+    public async Task ShouldIncludeShadowRoots()
+    {
+        string html = "<!DOCTYPE html><html lang=\"en\"><head></head><body><div id=\"host\"><template shadowrootmode=\"open\"><div id=\"nested\"><template shadowrootmode=\"open\"><span>nested</span></template><slot></slot></div></template><span>light</span></div><div id=\"closed\"></div></body></html>";
+        // Closed shadow roots are not accessible from script and are never serialized.
+        await Page.SetContentAsync(html.Replace("<div id=\"closed\">", "<div id=\"closed\"><template shadowrootmode=\"closed\"><span>closed</span></template>"));
+        Assert.AreEqual("<!DOCTYPE html><html lang=\"en\"><head></head><body><div id=\"host\"><span>light</span></div><div id=\"closed\"></div></body></html>", await Page.ContentAsync());
+        Assert.AreEqual(html, await Page.ContentAsync(new() { IncludeShadow = true }));
+        Assert.AreEqual(html, await Page.MainFrame.ContentAsync(new() { IncludeShadow = true }));
+    }
+
     [PlaywrightTest("page-set-content.spec.ts", "should respect timeout")]
     public Task ShouldRespectTimeout()
     {

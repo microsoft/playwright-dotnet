@@ -48,9 +48,10 @@ internal class Connection : IDisposable
     internal const string ErrorDetailsDataKey = "playwright.errorDetails";
     internal const string LogDataKey = "playwright.log";
 
-    private readonly ConcurrentDictionary<int, ConnectionCallback> _callbacks = new();
+    private readonly ConcurrentDictionary<string, ConnectionCallback> _callbacks = new();
     private readonly Root _rootObject;
     private readonly TaskQueue _queue = new();
+    private readonly string _callIdPrefix = CreateCallIdPrefix();
     private int _tracingCount;
     private int _lastId;
     private Exception? _closedError;
@@ -163,7 +164,7 @@ internal class Connection : IDisposable
             throw new PlaywrightException("The object has been collected to prevent unbounded heap growth.");
         }
 
-        int id = Interlocked.Increment(ref _lastId);
+        string id = $"{_callIdPrefix}@{Interlocked.Increment(ref _lastId)}";
         var tcs = new TaskCompletionSource<JsonElement?>(TaskCreationOptions.RunContinuationsAsynchronously);
         var callback = new ConnectionCallback(tcs);
 
@@ -276,9 +277,9 @@ internal class Connection : IDisposable
         {
             return;
         }
-        if (message.Id.HasValue)
+        if (message.Id != null)
         {
-            _callbacks.TryRemove(message.Id.Value, out var callback);
+            _callbacks.TryRemove(message.Id, out var callback);
             if (callback == null)
             {
                 throw new PlaywrightException($"Cannot find command to respond: '{message.Id}'");
@@ -453,6 +454,19 @@ internal class Connection : IDisposable
     {
         _closedError = closeError;
         Dispose();
+    }
+
+    // Use a unique prefix for each client to avoid id clashes in a trace.
+    private static string CreateCallIdPrefix()
+    {
+        const string Alphabet = "abcdefghijklmnopqrstuvwxyz";
+        var bytes = Guid.NewGuid().ToByteArray();
+        var prefix = new char[4];
+        for (int i = 0; i < prefix.Length; i++)
+        {
+            prefix[i] = Alphabet[bytes[i] % Alphabet.Length];
+        }
+        return new string(prefix);
     }
 
     private Exception ParseException(PlaywrightServerError error, string messageSuffix)

@@ -189,7 +189,8 @@ public partial interface IFrame
     Task ClickAsync(string selector, FrameClickOptions? options = default);
 
     /// <summary><para>Gets the full HTML contents of the frame, including the doctype.</para></summary>
-    Task<string> ContentAsync();
+    /// <param name="options">Call options</param>
+    Task<string> ContentAsync(FrameContentOptions? options = default);
 
     /// <summary>
     /// <para>

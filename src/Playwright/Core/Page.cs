@@ -752,7 +752,8 @@ internal class Page : ChannelOwner, IPage
         => MainFrame.SetContentAsync(html, new() { WaitUntil = options?.WaitUntil, Timeout = options?.Timeout });
 
     [MethodImpl(MethodImplOptions.NoInlining)]
-    public Task<string> ContentAsync() => MainFrame.ContentAsync();
+    public Task<string> ContentAsync(PageContentOptions? options = default)
+        => MainFrame.ContentAsync(new() { IncludeShadow = options?.IncludeShadow });
 
     [MethodImpl(MethodImplOptions.NoInlining)]
     public Task SetExtraHTTPHeadersAsync(IEnumerable<KeyValuePair<string, string>> headers)
@@ -1512,6 +1513,9 @@ internal class Page : ChannelOwner, IPage
     [MethodImpl(MethodImplOptions.NoInlining)]
     public ILocator GetByPlaceholder(Regex text, PageGetByPlaceholderOptions? options = null)
         => MainFrame.GetByPlaceholder(text, new() { Exact = options?.Exact });
+
+    [MethodImpl(MethodImplOptions.NoInlining)]
+    public ILocator GetByRef(string @ref) => Locator($"aria-ref={@ref}");
 
     [MethodImpl(MethodImplOptions.NoInlining)]
     public ILocator GetByRole(AriaRole role, PageGetByRoleOptions? options = null)

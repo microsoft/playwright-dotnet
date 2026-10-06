@@ -1013,7 +1013,15 @@ public partial interface IBrowserContext
     /// </param>
     Task SetGeolocationAsync(Geolocation? geolocation);
 
-    /// <param name="offline">Whether to emulate network being offline for the browser context.</param>
+    /// <param name="offline">
+    /// Whether to emulate network being offline for the browser context.
+    /// Offline emulation only affects requests that go through the browser's regular network
+    /// stack, such as page navigations, <c>fetch()</c>, <c>XMLHttpRequest</c> and WebSockets.
+    /// It does not affect WebRTC traffic: established <c>RTCPeerConnection</c>s keep sending
+    /// and receiving media over UDP. To test WebRTC connection loss, interrupt the connection
+    /// outside the browser, for example by stopping the TURN server or using an OS-level
+    /// firewall.
+    /// </param>
     Task SetOfflineAsync(bool offline);
 
     /// <summary>
