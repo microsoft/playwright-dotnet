@@ -82,6 +82,7 @@ public partial interface IClock
     /// <para>Install fake implementations for the following time-related functions:</para>
     /// <list type="bullet">
     /// <item><description><c>Date</c></description></item>
+    /// <item><description><c>Temporal.Now</c></description></item>
     /// <item><description><c>setTimeout</c></description></item>
     /// <item><description><c>clearTimeout</c></description></item>
     /// <item><description><c>setInterval</c></description></item>

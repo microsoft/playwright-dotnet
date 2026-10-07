@@ -46,7 +46,7 @@ internal class APIRequest : IAPIRequest
             ["userAgent"] = options?.UserAgent,
             ["ignoreHTTPSErrors"] = options?.IgnoreHTTPSErrors,
             ["extraHTTPHeaders"] = options?.ExtraHTTPHeaders?.ToProtocol(),
-            ["httpCredentials"] = options?.HttpCredentials,
+            ["httpCredentials"] = Browser.ToHttpCredentialsProtocol(options?.HttpCredentials, options?.HttpCredentialsList),
             ["maxRedirects"] = options?.MaxRedirects,
             ["proxy"] = options?.Proxy,
             ["clientCertificates"] = Browser.ToClientCertificatesProtocol(options?.ClientCertificates),

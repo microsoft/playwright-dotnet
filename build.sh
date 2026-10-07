@@ -36,7 +36,12 @@ function download_driver() {
 function roll_driver() {
   new_driver_version="$1"
   upstream_package_version=$(node -e "console.log(require('${upstream_repo_path}/package.json').version)")
-  new_node_version=$(sed -n 's/^NODE_VERSION="\([^"]*\)".*/\1/p' "${upstream_repo_path}/utils/build/build-playwright-driver.sh")
+  new_node_version=$(curl -fsSL "https://nodejs.org/dist/index.json" \
+    | node -e "let s='';process.stdin.on('data',d=>s+=d).on('end',()=>console.log(JSON.parse(s).find(r=>r.lts).version.slice(1)))")
+  if [[ -z "${new_node_version}" ]]; then
+    echo "Failed to determine the Node.js version for driver ${new_driver_version}"
+    exit 1
+  fi
   echo "Rolling .NET driver to driver ${new_driver_version} (Node.js ${new_node_version}) and upstream version ${upstream_package_version}..."
 
   xml_file_path="./src/Common/Version.props"

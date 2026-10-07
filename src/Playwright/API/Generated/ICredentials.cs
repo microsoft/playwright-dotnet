@@ -34,7 +34,7 @@ namespace Microsoft.Playwright;
 /// / <c>navigator.credentials.get()</c> ceremonies in the page, without a real authenticator
 /// or hardware security key.
 /// </para>
-/// <para>There are two common ways to use it:</para>
+/// <para>There are three common ways to use it:</para>
 /// <para>**Usage: seed a known credential**</para>
 /// <code>
 /// var context = await browser.NewContextAsync();<br/>
@@ -53,7 +53,7 @@ namespace Microsoft.Playwright;
 /// await page.GotoAsync("https://example.com/login");<br/>
 /// // The page's navigator.credentials.get() is answered with the seeded passkey.
 /// </code>
-/// <para>**Usage: capture a passkey, then reuse it**</para>
+/// <para>**Usage: capture a credential, then reuse it**</para>
 /// <code>
 /// // setup test: let the app register a passkey, then save it.<br/>
 /// var context = await browser.NewContextAsync();<br/>
@@ -78,6 +78,7 @@ namespace Microsoft.Playwright;
 ///     UserHandle = credential.UserHandle,<br/>
 ///     PrivateKey = credential.PrivateKey,<br/>
 ///     PublicKey = credential.PublicKey,<br/>
+///     SignCount = credential.SignCount,<br/>
 /// });<br/>
 /// await context.Credentials.InstallAsync();<br/>
 /// <br/>
@@ -85,6 +86,11 @@ namespace Microsoft.Playwright;
 /// await page.GotoAsync("https://example.com/login");<br/>
 /// // navigator.credentials.get() resolves the captured passkey — already signed in.
 /// </code>
+/// <para>**Usage: save credentials in the storage state, restore later**</para>
+/// <para>
+/// See <a href="https://playwright.dev/dotnet/docs/auth">authentication guide</a> for
+/// examples of using saving and restoring the storage state.
+/// </para>
 /// <para>**Defaults**</para>
 /// </summary>
 public partial interface ICredentials
@@ -116,7 +122,8 @@ public partial interface ICredentials
     /// <para>
     /// To **import a known credential**, supply all four of <see cref="ICredentials.CreateAsync"/>,
     /// <see cref="ICredentials.CreateAsync"/>, <see cref="ICredentials.CreateAsync"/> and
-    /// <see cref="ICredentials.CreateAsync"/> together.
+    /// <see cref="ICredentials.CreateAsync"/> together. Pass <see cref="ICredentials.CreateAsync"/>
+    /// as well to continue from the signature counter the relying party has already seen.
     /// </para>
     /// <para>
     /// Call <see cref="ICredentials.InstallAsync"/> before navigating to a page that uses
@@ -145,9 +152,10 @@ public partial interface ICredentials
     /// credentials the page registered itself by calling <c>navigator.credentials.create()</c>.
     /// </para>
     /// <para>
-    /// Each returned credential includes its private and public keys, so a passkey the
-    /// app just registered can be saved and re-seeded into a later test with <see cref="ICredentials.CreateAsync"/>
-    /// — see the second example in the class overview.
+    /// Each returned credential includes its private and public keys and the current signature
+    /// counter, so a passkey the app just registered can be saved and re-seeded into a
+    /// later test with <see cref="ICredentials.CreateAsync"/> — see the second example
+    /// in the class overview.
     /// </para>
     /// </summary>
     /// <param name="options">Call options</param>

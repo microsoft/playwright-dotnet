@@ -1190,7 +1190,7 @@ public partial interface ILocator
     /// <summary>
     /// <para>Returns locator to the last matching element.</para>
     /// <para>**Usage**</para>
-    /// <code>var banana = await page.GetByRole(AriaRole.Listitem).Last(1);</code>
+    /// <code>var banana = page.GetByRole(AriaRole.Listitem).Last;</code>
     /// </summary>
     ILocator Last { get; }
 
@@ -1967,6 +1967,27 @@ public partial interface ILocator
 
     /// <summary>
     /// <para>
+    /// Returns a locator that matches only <a href="https://playwright.dev/dotnet/docs/actionability#visible">visible</a>
+    /// elements, ignoring the invisible ones. This is the recommended way to distinguish
+    /// elements by visibility, as opposed to the <c>:visible</c> CSS pseudo-class.
+    /// </para>
+    /// <para>
+    /// Note that visibility is checked every time the locator is used, and not at the moment
+    /// of the <see cref="ILocator.Visible"/> call.
+    /// </para>
+    /// <para>**Usage**</para>
+    /// <para>Consider a page with two buttons, the first invisible and the second visible.</para>
+    /// <para>This will only find the second button, because it is visible, and then click it.</para>
+    /// <code>await page.Locator("button").Visible.ClickAsync();</code>
+    /// <para>
+    /// To match invisible elements instead, use <see cref="ILocator.Filter"/> with the
+    /// <see cref="ILocator.Filter"/> option set to <c>false</c>.
+    /// </para>
+    /// </summary>
+    ILocator Visible { get; }
+
+    /// <summary>
+    /// <para>
     /// Returns when element specified by locator satisfies the <see cref="ILocator.WaitForAsync"/>
     /// option.
     /// </para>
@@ -1983,4 +2004,51 @@ public partial interface ILocator
     /// </summary>
     /// <param name="options">Call options</param>
     Task WaitForAsync(LocatorWaitForOptions? options = default);
+
+    /// <summary>
+    /// <para>
+    /// Returns when <see cref="ILocator.WaitForFunctionAsync"/> returns a truthy value,
+    /// called with the matching element as a first argument, and <see cref="ILocator.WaitForFunctionAsync"/>
+    /// as a second argument.
+    /// </para>
+    /// <para>
+    /// This is a generic way to wait for an element to reach a custom condition without
+    /// asserting it. The locator is re-resolved on each retry, so it tolerates the element
+    /// being re-rendered while waiting.
+    /// </para>
+    /// <para>
+    /// If <see cref="ILocator.WaitForFunctionAsync"/> returns a <see cref="Task"/>, this
+    /// method will wait for the promise to resolve before checking its value.
+    /// </para>
+    /// <para>If <see cref="ILocator.WaitForFunctionAsync"/> throws or rejects, this method throws.</para>
+    /// <para>**Usage**</para>
+    /// <para>Wait for an attribute to appear:</para>
+    /// <para>Passing argument to <see cref="ILocator.WaitForFunctionAsync"/>:</para>
+    /// </summary>
+    /// <param name="expression">
+    /// JavaScript expression to be evaluated in the browser context. If the expression
+    /// evaluates to a function, the function is automatically invoked.
+    /// </param>
+    /// <param name="arg">Optional argument to pass to <see cref="ILocator.WaitForFunctionAsync"/>.</param>
+    /// <param name="options">Call options</param>
+    Task WaitForFunctionAsync(string expression, object? arg = default, LocatorWaitForFunctionOptions? options = default);
+
+    /// <summary>
+    /// <para>
+    /// Returns a locator that matches this locator's elements inside each element matched
+    /// by <see cref="ILocator.Within"/>.
+    /// </para>
+    /// <para>
+    /// Note that relative locators, such as <see cref="ILocator.Nth"/> or <see cref="ILocator.First"/>,
+    /// are resolved separately inside each matched parent. In the example below, <c>page.getByRole('cell').nth(2)</c>
+    /// picks the third cell of every row, not the third cell in the whole table.
+    /// </para>
+    /// <para>**Usage**</para>
+    /// <code>
+    /// var thirdColumn = page.GetByRole(AriaRole.Cell).Nth(2).Within(page.GetByRole(AriaRole.Row));<br/>
+    /// await Expect(thirdColumn).ToHaveTextAsync(new[] { "Apple", "Banana", "Cherry" });
+    /// </code>
+    /// </summary>
+    /// <param name="locator">Locator matching the parent elements to search within.</param>
+    ILocator Within(ILocator locator);
 }

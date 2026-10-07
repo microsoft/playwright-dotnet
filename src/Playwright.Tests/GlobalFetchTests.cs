@@ -25,6 +25,7 @@
 using System.Globalization;
 using System.Text;
 using System.Text.Json;
+using System.Text.RegularExpressions;
 
 namespace Microsoft.Playwright.Tests;
 
@@ -215,6 +216,57 @@ public class GlobalFetchTests : PlaywrightTestEx
         await request.DisposeAsync();
     }
 
+
+    [PlaywrightTest("global-fetch.spec.ts", "should support multiple httpCredentials")]
+    public async Task ShouldSupportMultipleHttpCredentials()
+    {
+        Server.SetAuth("/empty.html", "user1", "pass1");
+        var request = await Playwright.APIRequest.NewContextAsync(new()
+        {
+            HttpCredentialsList = new[]
+            {
+                new HttpCredentials { Username = "user1", Password = "pass1", Origin = Server.Prefix },
+                new HttpCredentials { Username = "user2", Password = "pass2", Origin = Server.CrossProcessPrefix },
+            },
+        });
+        var response1 = await request.GetAsync(Server.EmptyPage);
+        Assert.AreEqual(200, response1.Status);
+        // Wrong credentials are picked for the other origin.
+        var response2 = await request.GetAsync(Server.CrossProcessPrefix + "/empty.html");
+        Assert.AreEqual(401, response2.Status);
+        await request.DisposeAsync();
+    }
+
+    [PlaywrightTest("global-fetch.spec.ts", "should support HTTPCredentials.send with multiple httpCredentials")]
+    public async Task ShouldSupportHTTPCredentialsSendWithMultipleHttpCredentials()
+    {
+        var request = await Playwright.APIRequest.NewContextAsync(new()
+        {
+            HttpCredentialsList = new[]
+            {
+                new HttpCredentials { Username = "user1", Password = "pass1", Origin = Server.Prefix, Send = HttpCredentialsSend.Always },
+                new HttpCredentials { Username = "user2", Password = "pass2", Origin = Server.CrossProcessPrefix, Send = HttpCredentialsSend.Unauthorized },
+            },
+        });
+        {
+            var (requestHeaders, response) = await TaskUtils.WhenAll(
+                Server.WaitForRequest("/empty.html", request => request.Headers.ToDictionary(header => header.Key, header => header.Value)),
+                request.GetAsync(Server.EmptyPage)
+            );
+            Assert.AreEqual(requestHeaders["Authorization"], "Basic " + Convert.ToBase64String(System.Text.Encoding.UTF8.GetBytes("user1:pass1")));
+            Assert.AreEqual(200, response.Status);
+        }
+        {
+            var (requestHeaders, response) = await TaskUtils.WhenAll(
+                Server.WaitForRequest("/empty.html", request => request.Headers.ToDictionary(header => header.Key, header => header.Value)),
+                request.GetAsync(Server.CrossProcessPrefix + "/empty.html")
+            );
+            // This origin has send: 'unauthorized', so credentials are not sent proactively.
+            Assert.AreEqual(false, requestHeaders.ContainsKey("Authorization"));
+            Assert.AreEqual(200, response.Status);
+        }
+        await request.DisposeAsync();
+    }
 
     [PlaywrightTest("global-fetch.spec.ts", "should support global ignoreHTTPSErrors option")]
     public async Task ShouldSupportGlobalIgnoreHTTPSErrorsOption()
@@ -559,6 +611,105 @@ public class GlobalFetchTests : PlaywrightTestEx
         Assert.AreEqual(200, response.Status);
         Assert.AreEqual("Hello!", await response.TextAsync());
         Assert.AreEqual(4, requestCount);
+        await request.DisposeAsync();
+    }
+
+    [PlaywrightTest("global-fetch-cookie.spec.ts", "addCookies should add cookies to the cookie jar")]
+    public async Task AddCookiesShouldAddCookiesToTheCookieJar()
+    {
+        var request = await Playwright.APIRequest.NewContextAsync();
+        await request.AddCookiesAsync(new[]
+        {
+            new Cookie { Name = "a", Value = "b", Url = Server.EmptyPage },
+            new Cookie { Name = "c", Value = "d", Domain = "localhost", Path = "/input", HttpOnly = true, SameSite = SameSiteAttribute.Strict },
+            new Cookie { Name = "e", Value = "f", Domain = "other.com", Path = "/" },
+        });
+        var (cookieHeader, _) = await TaskUtils.WhenAll(
+            Server.WaitForRequest("/input/button.html", serverRequest => serverRequest.Headers["Cookie"].ToString()),
+            request.GetAsync(Server.Prefix + "/input/button.html")
+        );
+        Assert.AreEqual("a=b; c=d", cookieHeader);
+        var cookies = await request.CookiesAsync();
+        CollectionAssert.AreEqual(
+            new[]
+            {
+                "a=b; domain=localhost; path=/; httpOnly=False; secure=False; sameSite=Lax",
+                "c=d; domain=localhost; path=/input; httpOnly=True; secure=False; sameSite=Strict",
+                "e=f; domain=other.com; path=/; httpOnly=False; secure=False; sameSite=Lax",
+            },
+            cookies.Select(c => $"{c.Name}={c.Value}; domain={c.Domain}; path={c.Path}; httpOnly={c.HttpOnly}; secure={c.Secure}; sameSite={c.SameSite}").ToArray());
+        await request.DisposeAsync();
+    }
+
+    [PlaywrightTest("global-fetch-cookie.spec.ts", "addCookies should validate cookies")]
+    public async Task AddCookiesShouldValidateCookies()
+    {
+        var request = await Playwright.APIRequest.NewContextAsync();
+        var exception = await PlaywrightAssert.ThrowsAsync<PlaywrightException>(() => request.AddCookiesAsync(new[] { new Cookie { Name = "a", Value = "b" } }));
+        StringAssert.Contains("Cookie should have a url or a domain/path pair", exception.Message);
+        await request.DisposeAsync();
+    }
+
+    [PlaywrightTest("global-fetch-cookie.spec.ts", "cookies should return cookies filtered by urls")]
+    public async Task CookiesShouldReturnCookiesFilteredByUrls()
+    {
+        var request = await Playwright.APIRequest.NewContextAsync();
+        await request.AddCookiesAsync(new[]
+        {
+            new Cookie { Name = "a", Value = "b", Domain = "localhost", Path = "/" },
+            new Cookie { Name = "c", Value = "d", Domain = "localhost", Path = "/input" },
+            new Cookie { Name = "e", Value = "f", Domain = "one.com", Path = "/" },
+            new Cookie { Name = "g", Value = "h", Domain = "two.com", Path = "/", Secure = true },
+        });
+        CollectionAssert.AreEqual(new[] { "a", "c", "e", "g" }, (await request.CookiesAsync()).Select(c => c.Name).ToArray());
+        CollectionAssert.AreEqual(new[] { "a" }, (await request.CookiesAsync(Server.EmptyPage)).Select(c => c.Name).ToArray());
+        CollectionAssert.AreEqual(new[] { "a", "c" }, (await request.CookiesAsync(Server.Prefix + "/input/button.html")).Select(c => c.Name).ToArray());
+        CollectionAssert.AreEqual(new[] { "e" }, (await request.CookiesAsync(new[] { "http://sub.one.com/", "http://two.com/" })).Select(c => c.Name).ToArray());
+        CollectionAssert.AreEqual(new[] { "e", "g" }, (await request.CookiesAsync(new[] { "http://sub.one.com/", "https://two.com/" })).Select(c => c.Name).ToArray());
+        Assert.IsEmpty(await request.CookiesAsync("http://other.com/"));
+        await request.DisposeAsync();
+    }
+
+    [PlaywrightTest("global-fetch-cookie.spec.ts", "clearCookies should remove all cookies")]
+    public async Task ClearCookiesShouldRemoveAllCookies()
+    {
+        var request = await Playwright.APIRequest.NewContextAsync();
+        await request.AddCookiesAsync(new[]
+        {
+            new Cookie { Name = "a", Value = "b", Url = Server.EmptyPage },
+            new Cookie { Name = "c", Value = "d", Domain = "one.com", Path = "/" },
+        });
+        await request.ClearCookiesAsync();
+        Assert.IsEmpty(await request.CookiesAsync());
+        var (cookieHeader, _) = await TaskUtils.WhenAll(
+            Server.WaitForRequest("/empty.html", serverRequest => serverRequest.Headers["Cookie"].ToString()),
+            request.GetAsync(Server.EmptyPage)
+        );
+        Assert.AreEqual(string.Empty, cookieHeader);
+        await request.DisposeAsync();
+    }
+
+    [PlaywrightTest("global-fetch-cookie.spec.ts", "clearCookies should filter by name, domain and path")]
+    public async Task ClearCookiesShouldFilterByNameDomainAndPath()
+    {
+        var request = await Playwright.APIRequest.NewContextAsync();
+        await request.AddCookiesAsync(new[]
+        {
+            new Cookie { Name = "session", Value = "1", Domain = "one.com", Path = "/" },
+            new Cookie { Name = "session", Value = "2", Domain = "two.com", Path = "/" },
+            new Cookie { Name = "session", Value = "3", Domain = "two.com", Path = "/api" },
+            new Cookie { Name = "other", Value = "4", Domain = "one.com", Path = "/" },
+        });
+        async Task<string[]> ValuesAsync() => (await request.CookiesAsync()).Select(c => c.Value).OrderBy(v => v).ToArray();
+
+        await request.ClearCookiesAsync(new() { Name = "session", Domain = "two.com", Path = "/api" });
+        CollectionAssert.AreEqual(new[] { "1", "2", "4" }, await ValuesAsync());
+
+        await request.ClearCookiesAsync(new() { DomainRegex = new Regex(@"one\.com$") });
+        CollectionAssert.AreEqual(new[] { "2" }, await ValuesAsync());
+
+        await request.ClearCookiesAsync(new() { NameRegex = new Regex("^sess") });
+        Assert.IsEmpty(await ValuesAsync());
         await request.DisposeAsync();
     }
 }

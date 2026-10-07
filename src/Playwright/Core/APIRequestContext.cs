@@ -73,6 +73,42 @@ internal class APIRequestContext : ChannelOwner, IAPIRequestContext
     }
 
     [MethodImpl(MethodImplOptions.NoInlining)]
+    public Task<IReadOnlyList<BrowserContextCookiesResult>> CookiesAsync() => CookiesAsync(Array.Empty<string>());
+
+    [MethodImpl(MethodImplOptions.NoInlining)]
+    public Task<IReadOnlyList<BrowserContextCookiesResult>> CookiesAsync(string url) => CookiesAsync(string.IsNullOrEmpty(url) ? null : [url]);
+
+    [MethodImpl(MethodImplOptions.NoInlining)]
+    public async Task<IReadOnlyList<BrowserContextCookiesResult>> CookiesAsync(IEnumerable<string>? urls) => (await SendMessageToServerAsync(
+            "cookies",
+            new Dictionary<string, object?>
+            {
+                ["urls"] = urls ?? [],
+            }).ConfigureAwait(false))?.GetProperty("cookies").ToObject<IReadOnlyList<BrowserContextCookiesResult>>()!;
+
+    [MethodImpl(MethodImplOptions.NoInlining)]
+    public Task AddCookiesAsync(IEnumerable<Cookie> cookies) => SendMessageToServerAsync(
+            "addCookies",
+            new Dictionary<string, object?>
+            {
+                ["cookies"] = cookies,
+            });
+
+    [MethodImpl(MethodImplOptions.NoInlining)]
+    public async Task ClearCookiesAsync(APIRequestContextClearCookiesOptions? options = default)
+    {
+        var @params = BrowserContext.ToClearCookiesParams(
+            options?.Name ?? options?.NameString,
+            options?.NameRegex,
+            options?.Domain ?? options?.DomainString,
+            options?.DomainRegex,
+            options?.Path ?? options?.PathString,
+            options?.PathRegex);
+
+        await SendMessageToServerAsync("clearCookies", @params).ConfigureAwait(false);
+    }
+
+    [MethodImpl(MethodImplOptions.NoInlining)]
     public Task<IAPIResponse> FetchAsync(IRequest request, APIRequestContextOptions? options = null)
         => InnerFetchAsync(request, null, options);
 
@@ -147,7 +183,6 @@ internal class APIRequestContext : ChannelOwner, IAPIRequestContext
             ["ignoreHTTPSErrors"] = options?.IgnoreHTTPSErrors,
             ["maxRedirects"] = options?.MaxRedirects,
             ["maxRetries"] = options?.MaxRetries,
-            ["timeout"] = _timeoutSettings.Timeout(options?.Timeout),
             ["params"] = options?.Params?.ToDictionary(x => x.Key, x => x.Value.ToString()).ToProtocol(),
             ["encodedParams"] = options?.ParamsString,
             ["headers"] = options?.Headers?.ToProtocol(),
@@ -157,7 +192,7 @@ internal class APIRequestContext : ChannelOwner, IAPIRequestContext
             ["multipartData"] = (options?.Multipart as FormData)?.ToProtocol(),
         };
 
-        var response = await SendMessageToServerAsync("fetch", message).ConfigureAwait(false);
+        var response = await SendMessageToServerAsync("fetch", message, timeout: _timeoutSettings.Timeout(options?.Timeout)).ConfigureAwait(false);
         return new APIResponse(this, response?.GetProperty("response").ToObject<Transport.Protocol.APIResponse>()!);
     }
 
@@ -217,7 +252,13 @@ internal class APIRequestContext : ChannelOwner, IAPIRequestContext
     public async Task<string> StorageStateAsync(APIRequestContextStorageStateOptions? options = null)
     {
         string state = JsonSerializer.Serialize(
-            await SendMessageToServerAsync<object>("storageState").ConfigureAwait(false),
+            await SendMessageToServerAsync<object>(
+                "storageState",
+                new Dictionary<string, object?>
+                {
+                    ["indexedDB"] = options?.IndexedDB,
+                    ["opfs"] = options?.Opfs,
+                }).ConfigureAwait(false),
             JsonExtensions.DefaultJsonSerializerOptions);
 
         if (!string.IsNullOrEmpty(options?.Path))

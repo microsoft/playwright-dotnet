@@ -51,6 +51,7 @@ public class BrowserNewPageOptions
         Geolocation = clone.Geolocation;
         HasTouch = clone.HasTouch;
         HttpCredentials = clone.HttpCredentials;
+        HttpCredentialsList = clone.HttpCredentialsList;
         IgnoreHTTPSErrors = clone.IgnoreHTTPSErrors;
         IsMobile = clone.IsMobile;
         JavaScriptEnabled = clone.JavaScriptEnabled;
@@ -66,6 +67,7 @@ public class BrowserNewPageOptions
         RecordHarUrlFilterRegex = clone.RecordHarUrlFilterRegex;
         RecordHarUrlFilterString = clone.RecordHarUrlFilterString;
         RecordVideoDir = clone.RecordVideoDir;
+        RecordVideoFps = clone.RecordVideoFps;
         RecordVideoSize = clone.RecordVideoSize;
         ReducedMotion = clone.ReducedMotion;
         ScreenSize = clone.ScreenSize;
@@ -219,9 +221,27 @@ public class BrowserNewPageOptions
     /// authentication</a>. If no origin is specified, the username and password are sent
     /// to any servers upon unauthorized responses.
     /// </para>
+    /// <para>
+    /// Pass an array to use different credentials for different origins. The first entry
+    /// that matches the request origin is used, and entries with no origin match any request.
+    /// </para>
     /// </summary>
     [JsonPropertyName("httpCredentials")]
     public HttpCredentials? HttpCredentials { get; set; }
+
+    /// <summary>
+    /// <para>
+    /// Credentials for <a href="https://developer.mozilla.org/en-US/docs/Web/HTTP/Authentication">HTTP
+    /// authentication</a>. If no origin is specified, the username and password are sent
+    /// to any servers upon unauthorized responses.
+    /// </para>
+    /// <para>
+    /// Pass an array to use different credentials for different origins. The first entry
+    /// that matches the request origin is used, and entries with no origin match any request.
+    /// </para>
+    /// </summary>
+    [JsonPropertyName("httpCredentialsList")]
+    public IEnumerable<HttpCredentials>? HttpCredentialsList { get; set; }
 
     /// <summary><para>Whether to ignore HTTPS errors when sending network requests. Defaults to <c>false</c>.</para></summary>
     [JsonPropertyName("ignoreHTTPSErrors")]
@@ -231,7 +251,7 @@ public class BrowserNewPageOptions
     /// <para>
     /// Whether the <c>meta viewport</c> tag is taken into account and touch events are
     /// enabled. isMobile is a part of device, so you don't actually need to set it manually.
-    /// Defaults to <c>false</c> and is not supported in Firefox. Learn more about <a href="https://playwright.dev/dotnet/docs/emulation#ismobile">mobile
+    /// Defaults to <c>false</c>. Learn more about <a href="https://playwright.dev/dotnet/docs/emulation#ismobile">mobile
     /// emulation</a>.
     /// </para>
     /// </summary>
@@ -341,6 +361,15 @@ public class BrowserNewPageOptions
     /// </summary>
     [JsonPropertyName("recordVideoDir")]
     public string? RecordVideoDir { get; set; }
+
+    /// <summary>
+    /// <para>
+    /// Frame rate of the recorded videos in frames per second. Defaults to <c>25</c>. Firefox
+    /// and WebKit currently capture up to 25 frames per second.
+    /// </para>
+    /// </summary>
+    [JsonPropertyName("recordVideoFps")]
+    public int? RecordVideoFps { get; set; }
 
     /// <summary>
     /// <para>

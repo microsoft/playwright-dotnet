@@ -37,9 +37,25 @@ public class BrowserContextStorageStateOptions
             return;
         }
 
+        Credentials = clone.Credentials;
         IndexedDB = clone.IndexedDB;
+        Opfs = clone.Opfs;
         Path = clone.Path;
     }
+
+    /// <summary>
+    /// <para>
+    /// Set to <c>true</c> to include the context's virtual WebAuthn <see cref="IBrowserContext.Credentials"/>
+    /// (passkeys) in the storage state snapshot. The captured credentials carry their private
+    /// keys and signature counters, so they can be re-seeded into a later context via the
+    /// <see cref="IBrowser.NewContextAsync"/> option or <see cref="IBrowserContext.SetStorageStateAsync"/>.
+    /// Note that restoring the storage state that contains credentials will automatically
+    /// install the virtual WebAuthn authenticator (see <see cref="ICredentials.InstallAsync"/>),
+    /// and prevent all real authenticators from working in this context.
+    /// </para>
+    /// </summary>
+    [JsonPropertyName("credentials")]
+    public bool? Credentials { get; set; }
 
     /// <summary>
     /// <para>
@@ -50,6 +66,17 @@ public class BrowserContextStorageStateOptions
     /// </summary>
     [JsonPropertyName("indexedDB")]
     public bool? IndexedDB { get; set; }
+
+    /// <summary>
+    /// <para>
+    /// Set to <c>true</c> to include the <a href="https://developer.mozilla.org/en-US/docs/Web/API/File_System_API/Origin_private_file_system">origin
+    /// private file system</a> in the storage state snapshot.
+    /// </para>
+    /// <para>OPFS is currently not supported in ephemeral WebKit contexts.</para>
+    /// </summary>
+    /// <remarks><para>OPFS is currently not supported in ephemeral WebKit contexts.</para></remarks>
+    [JsonPropertyName("opfs")]
+    public bool? Opfs { get; set; }
 
     /// <summary>
     /// <para>

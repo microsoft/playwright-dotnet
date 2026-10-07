@@ -197,7 +197,7 @@ public class BrowserTypeLaunchOptions
     /// <summary>
     /// <para>
     /// Maximum time in milliseconds to wait for the browser instance to start. Defaults
-    /// to <c>30000</c> (30 seconds). Pass <c>0</c> to disable timeout.
+    /// to <c>180000</c> (3 minutes). Pass <c>0</c> to disable timeout.
     /// </para>
     /// </summary>
     [JsonPropertyName("timeout")]

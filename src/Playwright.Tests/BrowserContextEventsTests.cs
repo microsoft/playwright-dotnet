@@ -105,6 +105,21 @@ public class BrowserContextEventsTests : PageTestEx
         Assert.AreEqual("hello", await task);
     }
 
+    [PlaywrightTest("browsercontext-events.spec.ts", "dialogclosed event should work")]
+    public async Task DialogClosedEventShouldWork()
+    {
+        var task = Page.EvaluateAsync<string>("() => prompt('hey?')");
+        var dialog = await WaitForContextDialog(Page.Context);
+        var contextClosedTcs = new TaskCompletionSource<IDialog>();
+        Page.Context.DialogClosed += (_, e) => contextClosedTcs.TrySetResult(e);
+        var pageClosedTcs = new TaskCompletionSource<IDialog>();
+        Page.DialogClosed += (_, e) => pageClosedTcs.TrySetResult(e);
+        await dialog.AcceptAsync("hello");
+        Assert.AreEqual(dialog, await contextClosedTcs.Task);
+        Assert.AreEqual(dialog, await pageClosedTcs.Task);
+        Assert.AreEqual("hello", await task);
+    }
+
     [PlaywrightTest("browsercontext-events.spec.ts", "dialog event should work in popup")]
     public async Task DialogEventShouldWorkInPopup()
     {

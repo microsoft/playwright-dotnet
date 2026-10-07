@@ -59,36 +59,42 @@ internal class ElementHandle : JSHandle, IElementHandle
             new Dictionary<string, object?>
             {
                 ["selector"] = selector,
-                ["timeout"] = _frame.Timeout(options?.Timeout),
                 ["state"] = options?.State,
                 ["strict"] = options?.Strict,
-            }).ConfigureAwait(false);
+            },
+            timeout: _frame.Timeout(options?.Timeout)).ConfigureAwait(false);
 
     public Task WaitForElementStateAsync(ElementState state, ElementHandleWaitForElementStateOptions? options = default)
-        => SendMessageToServerAsync("waitForElementState", new Dictionary<string, object?>
-        {
-            ["state"] = state,
-            ["timeout"] = _frame.Timeout(options?.Timeout),
-        });
+        => SendMessageToServerAsync(
+            "waitForElementState",
+            new Dictionary<string, object?>
+            {
+                ["state"] = state,
+            },
+            timeout: _frame.Timeout(options?.Timeout));
 
     public Task PressAsync(string key, ElementHandlePressOptions? options = default)
-        => SendMessageToServerAsync("press", new Dictionary<string, object?>
-        {
-            ["key"] = key,
-            ["delay"] = options?.Delay,
-            ["timeout"] = _frame.Timeout(options?.Timeout),
+        => SendMessageToServerAsync(
+            "press",
+            new Dictionary<string, object?>
+            {
+                ["key"] = key,
+                ["delay"] = options?.Delay,
 #pragma warning disable CS0612 // Type or member is obsolete
-            ["noWaitAfter"] = options?.NoWaitAfter,
+                ["noWaitAfter"] = options?.NoWaitAfter,
 #pragma warning restore CS0612 // Type or member is obsolete
-        });
+            },
+            timeout: _frame.Timeout(options?.Timeout));
 
     public Task TypeAsync(string text, ElementHandleTypeOptions? options = default)
-        => SendMessageToServerAsync("type", new Dictionary<string, object?>
-        {
-            ["text"] = text,
-            ["delay"] = options?.Delay,
-            ["timeout"] = _frame.Timeout(options?.Timeout),
-        });
+        => SendMessageToServerAsync(
+            "type",
+            new Dictionary<string, object?>
+            {
+                ["text"] = text,
+                ["delay"] = options?.Delay,
+            },
+            timeout: _frame.Timeout(options?.Timeout));
 
     public async Task<byte[]> ScreenshotAsync(ElementHandleScreenshotOptions? options = default)
     {
@@ -103,7 +109,6 @@ internal class ElementHandle : JSHandle, IElementHandle
             ["type"] = options.Type,
             ["omitBackground"] = options.OmitBackground,
             ["path"] = options.Path,
-            ["timeout"] = _frame.Timeout(options.Timeout),
             ["animations"] = options.Animations,
             ["caret"] = options.Caret,
             ["scale"] = options.Scale,
@@ -120,7 +125,7 @@ internal class ElementHandle : JSHandle, IElementHandle
             }).ToArray();
         }
 
-        var result = (await SendMessageToServerAsync("screenshot", args).ConfigureAwait(false))!.Value.GetProperty("binary").GetBytesFromBase64();
+        var result = (await SendMessageToServerAsync("screenshot", args, timeout: _frame.Timeout(options.Timeout)).ConfigureAwait(false))!.Value.GetProperty("binary").GetBytesFromBase64();
 
         if (!string.IsNullOrEmpty(options.Path))
         {
@@ -132,30 +137,36 @@ internal class ElementHandle : JSHandle, IElementHandle
     }
 
     public Task FillAsync(string value, ElementHandleFillOptions? options = default)
-        => SendMessageToServerAsync("fill", new Dictionary<string, object?>
-        {
-            ["value"] = value,
-            ["timeout"] = _frame.Timeout(options?.Timeout),
-            ["force"] = options?.Force,
-        });
+        => SendMessageToServerAsync(
+            "fill",
+            new Dictionary<string, object?>
+            {
+                ["value"] = value,
+                ["force"] = options?.Force,
+            },
+            timeout: _frame.Timeout(options?.Timeout));
 
     public async Task<IFrame?> ContentFrameAsync() => await SendMessageToServerAsync<Frame>("contentFrame").ConfigureAwait(false);
 
     public Task HoverAsync(ElementHandleHoverOptions? options = default)
-        => SendMessageToServerAsync<JsonElement?>("hover", new Dictionary<string, object?>
-        {
-            ["force"] = options?.Force,
-            ["position"] = options?.Position,
-            ["timeout"] = _frame.Timeout(options?.Timeout),
-            ["trial"] = options?.Trial,
-            ["modifiers"] = options?.Modifiers?.Select(m => m.ToValueString()),
-        });
+        => SendMessageToServerAsync<JsonElement?>(
+            "hover",
+            new Dictionary<string, object?>
+            {
+                ["force"] = options?.Force,
+                ["position"] = options?.Position,
+                ["trial"] = options?.Trial,
+                ["modifiers"] = options?.Modifiers?.Select(m => m.ToValueString()),
+            },
+            timeout: _frame.Timeout(options?.Timeout));
 
     public Task ScrollIntoViewIfNeededAsync(ElementHandleScrollIntoViewIfNeededOptions? options = default)
-        => SendMessageToServerAsync("scrollIntoViewIfNeeded", new Dictionary<string, object?>
-        {
-            ["timeout"] = _frame.Timeout(options?.Timeout),
-        });
+        => SendMessageToServerAsync(
+            "scrollIntoViewIfNeeded",
+            new Dictionary<string, object?>
+            {
+            },
+            timeout: _frame.Timeout(options?.Timeout));
 
     public async Task<IFrame?> OwnerFrameAsync() => await SendMessageToServerAsync<Frame>("ownerFrame").ConfigureAwait(false);
 
@@ -170,34 +181,38 @@ internal class ElementHandle : JSHandle, IElementHandle
     }
 
     public Task ClickAsync(ElementHandleClickOptions? options = default)
-        => SendMessageToServerAsync("click", new Dictionary<string, object?>
-        {
-            ["delay"] = options?.Delay,
-            ["button"] = options?.Button,
-            ["clickCount"] = options?.ClickCount,
-            ["force"] = options?.Force,
+        => SendMessageToServerAsync(
+            "click",
+            new Dictionary<string, object?>
+            {
+                ["delay"] = options?.Delay,
+                ["button"] = options?.Button,
+                ["clickCount"] = options?.ClickCount,
+                ["force"] = options?.Force,
 #pragma warning disable CS0612 // Type or member is obsolete
-            ["noWaitAfter"] = options?.NoWaitAfter,
+                ["noWaitAfter"] = options?.NoWaitAfter,
 #pragma warning restore CS0612 // Type or member is obsolete
-            ["steps"] = options?.Steps,
-            ["timeout"] = _frame.Timeout(options?.Timeout),
-            ["trial"] = options?.Trial,
-            ["position"] = options?.Position,
-            ["modifiers"] = options?.Modifiers?.Select(m => m.ToValueString()),
-        });
+                ["steps"] = options?.Steps,
+                ["trial"] = options?.Trial,
+                ["position"] = options?.Position,
+                ["modifiers"] = options?.Modifiers?.Select(m => m.ToValueString()),
+            },
+            timeout: _frame.Timeout(options?.Timeout));
 
     public Task DblClickAsync(ElementHandleDblClickOptions? options = default)
-        => SendMessageToServerAsync("dblclick", new Dictionary<string, object?>
-        {
-            ["delay"] = options?.Delay,
-            ["button"] = options?.Button,
-            ["force"] = options?.Force,
-            ["steps"] = options?.Steps,
-            ["timeout"] = _frame.Timeout(options?.Timeout),
-            ["trial"] = options?.Trial,
-            ["position"] = options?.Position,
-            ["modifiers"] = options?.Modifiers?.Select(m => m.ToValueString()),
-        });
+        => SendMessageToServerAsync(
+            "dblclick",
+            new Dictionary<string, object?>
+            {
+                ["delay"] = options?.Delay,
+                ["button"] = options?.Button,
+                ["force"] = options?.Force,
+                ["steps"] = options?.Steps,
+                ["trial"] = options?.Trial,
+                ["position"] = options?.Position,
+                ["modifiers"] = options?.Modifiers?.Select(m => m.ToValueString()),
+            },
+            timeout: _frame.Timeout(options?.Timeout));
 
     public Task SetInputFilesAsync(string files, ElementHandleSetInputFilesOptions? options = default)
         => SetInputFilesAsync(new[] { files }, options);
@@ -210,15 +225,17 @@ internal class ElementHandle : JSHandle, IElementHandle
             throw new PlaywrightException("Cannot set input files to detached element.");
         }
         var converted = await SetInputFilesHelpers.ConvertInputFilesAsync(files, (BrowserContext)frame.Page.Context).ConfigureAwait(false);
-        await SendMessageToServerAsync("setInputFiles", new Dictionary<string, object?>
-        {
-            ["payloads"] = converted.Payloads,
-            ["localPaths"] = converted.LocalPaths,
-            ["localDirectory"] = converted.LocalDirectory,
-            ["streams"] = converted.Streams,
-            ["directoryStream"] = converted.DirectoryStream,
-            ["timeout"] = _frame.Timeout(options?.Timeout),
-        }).ConfigureAwait(false);
+        await SendMessageToServerAsync(
+            "setInputFiles",
+            new Dictionary<string, object?>
+            {
+                ["payloads"] = converted.Payloads,
+                ["localPaths"] = converted.LocalPaths,
+                ["localDirectory"] = converted.LocalDirectory,
+                ["streams"] = converted.Streams,
+                ["directoryStream"] = converted.DirectoryStream,
+            },
+            timeout: _frame.Timeout(options?.Timeout)).ConfigureAwait(false);
     }
 
     public Task SetInputFilesAsync(FilePayload files, ElementHandleSetInputFilesOptions? options = default)
@@ -227,13 +244,15 @@ internal class ElementHandle : JSHandle, IElementHandle
     public async Task SetInputFilesAsync(IEnumerable<FilePayload> files, ElementHandleSetInputFilesOptions? options = default)
     {
         var converted = SetInputFilesHelpers.ConvertInputFiles(files);
-        await SendMessageToServerAsync("setInputFiles", new Dictionary<string, object?>
-        {
-            ["payloads"] = converted.Payloads,
-            ["localPaths"] = converted.LocalPaths,
-            ["streams"] = converted.Streams,
-            ["timeout"] = _frame.Timeout(options?.Timeout),
-        }).ConfigureAwait(false);
+        await SendMessageToServerAsync(
+            "setInputFiles",
+            new Dictionary<string, object?>
+            {
+                ["payloads"] = converted.Payloads,
+                ["localPaths"] = converted.LocalPaths,
+                ["streams"] = converted.Streams,
+            },
+            timeout: _frame.Timeout(options?.Timeout)).ConfigureAwait(false);
     }
 
     public async Task<IElementHandle?> QuerySelectorAsync(string selector)
@@ -310,11 +329,13 @@ internal class ElementHandle : JSHandle, IElementHandle
     public async Task<string?> TextContentAsync() => (await SendMessageToServerAsync("textContent").ConfigureAwait(false))?.GetProperty("value").ToString();
 
     public Task SelectTextAsync(ElementHandleSelectTextOptions? options = default)
-        => SendMessageToServerAsync("selectText", new Dictionary<string, object?>
-        {
-            ["force"] = options?.Force,
-            ["timeout"] = _frame.Timeout(options?.Timeout),
-        });
+        => SendMessageToServerAsync(
+            "selectText",
+            new Dictionary<string, object?>
+            {
+                ["force"] = options?.Force,
+            },
+            timeout: _frame.Timeout(options?.Timeout));
 
     public Task<IReadOnlyList<string>> SelectOptionAsync(string value, ElementHandleSelectOptionOptions? options = default)
 #pragma warning disable CS0612 // Type or member is obsolete
@@ -348,51 +369,61 @@ internal class ElementHandle : JSHandle, IElementHandle
 
     private async Task<IReadOnlyList<string>> _selectOptionAsync(IEnumerable<SelectOptionValueProtocol> values, bool? noWaitAfter, bool? force, float? timeout)
     {
-        return (await SendMessageToServerAsync("selectOption", new Dictionary<string, object?>
-        {
-            ["options"] = values,
-            ["force"] = force,
-            ["timeout"] = _frame.Timeout(timeout),
-        }).ConfigureAwait(false))!.Value.GetProperty("values").ToObject<string[]>();
+        return (await SendMessageToServerAsync(
+            "selectOption",
+            new Dictionary<string, object?>
+            {
+                ["options"] = values,
+                ["force"] = force,
+            },
+            timeout: _frame.Timeout(timeout)).ConfigureAwait(false))!.Value.GetProperty("values").ToObject<string[]>();
     }
 
     private async Task<IReadOnlyList<string>> _selectOptionAsync(IEnumerable<IElementHandle> values, bool? noWaitAfter, bool? force, float? timeout)
     {
-        return (await SendMessageToServerAsync("selectOption", new Dictionary<string, object?>
-        {
-            ["elements"] = values,
-            ["force"] = force,
-            ["timeout"] = _frame.Timeout(timeout),
-        }).ConfigureAwait(false))!.Value.GetProperty("values").ToObject<string[]>();
+        return (await SendMessageToServerAsync(
+            "selectOption",
+            new Dictionary<string, object?>
+            {
+                ["elements"] = values,
+                ["force"] = force,
+            },
+            timeout: _frame.Timeout(timeout)).ConfigureAwait(false))!.Value.GetProperty("values").ToObject<string[]>();
     }
 
     public Task CheckAsync(ElementHandleCheckOptions? options = default)
-        => SendMessageToServerAsync("check", new Dictionary<string, object?>
-        {
-            ["force"] = options?.Force,
-            ["position"] = options?.Position,
-            ["trial"] = options?.Trial,
-            ["timeout"] = _frame.Timeout(options?.Timeout),
-        });
+        => SendMessageToServerAsync(
+            "check",
+            new Dictionary<string, object?>
+            {
+                ["force"] = options?.Force,
+                ["position"] = options?.Position,
+                ["trial"] = options?.Trial,
+            },
+            timeout: _frame.Timeout(options?.Timeout));
 
     public Task UncheckAsync(ElementHandleUncheckOptions? options = default)
-        => SendMessageToServerAsync("uncheck", new Dictionary<string, object?>
-        {
-            ["force"] = options?.Force,
-            ["position"] = options?.Position,
-            ["trial"] = options?.Trial,
-            ["timeout"] = _frame.Timeout(options?.Timeout),
-        });
+        => SendMessageToServerAsync(
+            "uncheck",
+            new Dictionary<string, object?>
+            {
+                ["force"] = options?.Force,
+                ["position"] = options?.Position,
+                ["trial"] = options?.Trial,
+            },
+            timeout: _frame.Timeout(options?.Timeout));
 
     public Task TapAsync(ElementHandleTapOptions? options = default)
-        => SendMessageToServerAsync("tap", new Dictionary<string, object?>
-        {
-            ["force"] = options?.Force,
-            ["position"] = options?.Position,
-            ["modifiers"] = options?.Modifiers?.Select(m => m.ToValueString()),
-            ["trial"] = options?.Trial,
-            ["timeout"] = _frame.Timeout(options?.Timeout),
-        });
+        => SendMessageToServerAsync(
+            "tap",
+            new Dictionary<string, object?>
+            {
+                ["force"] = options?.Force,
+                ["position"] = options?.Position,
+                ["modifiers"] = options?.Modifiers?.Select(m => m.ToValueString()),
+                ["trial"] = options?.Trial,
+            },
+            timeout: _frame.Timeout(options?.Timeout));
 
     public async Task<bool> IsCheckedAsync() => (await SendMessageToServerAsync("isChecked").ConfigureAwait(false))?.GetProperty("value").GetBoolean() ?? default;
 
@@ -410,13 +441,15 @@ internal class ElementHandle : JSHandle, IElementHandle
         => (await SendMessageToServerAsync("inputValue").ConfigureAwait(false))!.Value.GetProperty("value").ToString();
 
     public Task SetCheckedAsync(bool checkedState, ElementHandleSetCheckedOptions? options = null)
-        => SendMessageToServerAsync(checkedState ? "check" : "uncheck", new Dictionary<string, object?>
-        {
-            ["force"] = options?.Force,
-            ["position"] = options?.Position,
-            ["trial"] = options?.Trial,
-            ["timeout"] = _frame.Timeout(options?.Timeout),
-        });
+        => SendMessageToServerAsync(
+            checkedState ? "check" : "uncheck",
+            new Dictionary<string, object?>
+            {
+                ["force"] = options?.Force,
+                ["position"] = options?.Position,
+                ["trial"] = options?.Trial,
+            },
+            timeout: _frame.Timeout(options?.Timeout));
 
     internal static ScreenshotType DetermineScreenshotType(string path)
     {

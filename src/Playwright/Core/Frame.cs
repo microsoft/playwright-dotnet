@@ -158,8 +158,8 @@ internal class Frame : ChannelOwner, IFrame
         => await SendMessageToServerAsync<ElementHandle>("frameElement").ConfigureAwait(false);
 
     [MethodImpl(MethodImplOptions.NoInlining)]
-    public IFrameLocator FrameLocator(string selector)
-        => new FrameLocator(this, selector);
+    public IFrameLocator FrameLocator(string? selector = null)
+        => new FrameLocator(this, selector ?? Core.FrameLocator.AnyFrameSelector);
 
     [MethodImpl(MethodImplOptions.NoInlining)]
     public async Task<string> TitleAsync() => (await SendMessageToServerAsync("title").ConfigureAwait(false))!.Value.GetProperty("value").ToString();
@@ -187,14 +187,16 @@ internal class Frame : ChannelOwner, IFrame
 
     [MethodImpl(MethodImplOptions.NoInlining)]
     public async Task<IReadOnlyList<string>> SelectOptionAsync(string selector, IEnumerable<IElementHandle> values, FrameSelectOptionOptions? options = default)
-        => (await SendMessageToServerAsync("selectOption", new Dictionary<string, object?>
-        {
-            ["selector"] = selector,
-            ["elements"] = values.Select(x => x as ElementHandle),
-            ["strict"] = options?.Strict,
-            ["force"] = options?.Force,
-            ["timeout"] = Timeout(options?.Timeout),
-        }).ConfigureAwait(false))!.Value.GetProperty("values").ToObject<string[]>().ToList().AsReadOnly();
+        => (await SendMessageToServerAsync(
+            "selectOption",
+            new Dictionary<string, object?>
+            {
+                ["selector"] = selector,
+                ["elements"] = values.Select(x => x as ElementHandle),
+                ["strict"] = options?.Strict,
+                ["force"] = options?.Force,
+            },
+            timeout: Timeout(options?.Timeout)).ConfigureAwait(false))!.Value.GetProperty("values").ToObject<string[]>().ToList().AsReadOnly();
 
     [MethodImpl(MethodImplOptions.NoInlining)]
     public Task<IReadOnlyList<string>> SelectOptionAsync(string selector, SelectOptionValue values, FrameSelectOptionOptions? options = default)
@@ -205,17 +207,19 @@ internal class Frame : ChannelOwner, IFrame
         => SelectOptionAsync(selector, values.Select(value => SelectOptionValueProtocol.From(value)), options);
 
     internal async Task<IReadOnlyList<string>> SelectOptionAsync(string selector, IEnumerable<SelectOptionValueProtocol> values, FrameSelectOptionOptions? options = default)
-        => (await SendMessageToServerAsync("selectOption", new Dictionary<string, object?>
-        {
-            ["selector"] = selector,
-            ["options"] = values,
+        => (await SendMessageToServerAsync(
+            "selectOption",
+            new Dictionary<string, object?>
+            {
+                ["selector"] = selector,
+                ["options"] = values,
 #pragma warning disable CS0612 // Type or member is obsolete
-            ["noWaitAfter"] = options?.NoWaitAfter,
+                ["noWaitAfter"] = options?.NoWaitAfter,
 #pragma warning restore CS0612 // Type or member is obsolete
-            ["strict"] = options?.Strict,
-            ["force"] = options?.Force,
-            ["timeout"] = Timeout(options?.Timeout),
-        }).ConfigureAwait(false))!.Value.GetProperty("values").ToObject<string[]>().ToList().AsReadOnly();
+                ["strict"] = options?.Strict,
+                ["force"] = options?.Force,
+            },
+            timeout: Timeout(options?.Timeout)).ConfigureAwait(false))!.Value.GetProperty("values").ToObject<string[]>().ToList().AsReadOnly();
 
     [MethodImpl(MethodImplOptions.NoInlining)]
     public async Task WaitForLoadStateAsync(LoadState? state = default, FrameWaitForLoadStateOptions? options = default)
@@ -347,16 +351,18 @@ internal class Frame : ChannelOwner, IFrame
 
     [MethodImpl(MethodImplOptions.NoInlining)]
     public Task TapAsync(string selector, FrameTapOptions? options = default)
-        => SendMessageToServerAsync("tap", new Dictionary<string, object?>
-        {
-            ["selector"] = selector,
-            ["force"] = options?.Force,
-            ["modifiers"] = options?.Modifiers?.Select(m => m.ToValueString()),
-            ["trial"] = options?.Trial,
-            ["timeout"] = Timeout(options?.Timeout),
-            ["position"] = options?.Position,
-            ["strict"] = options?.Strict,
-        });
+        => SendMessageToServerAsync(
+            "tap",
+            new Dictionary<string, object?>
+            {
+                ["selector"] = selector,
+                ["force"] = options?.Force,
+                ["modifiers"] = options?.Modifiers?.Select(m => m.ToValueString()),
+                ["trial"] = options?.Trial,
+                ["position"] = options?.Position,
+                ["strict"] = options?.Strict,
+            },
+            timeout: Timeout(options?.Timeout));
 
     internal async Task<int> QueryCountAsync(string selector)
     {
@@ -368,39 +374,50 @@ internal class Frame : ChannelOwner, IFrame
     }
 
     [MethodImpl(MethodImplOptions.NoInlining)]
-    public async Task<string> ContentAsync()
-        => (await SendMessageToServerAsync("content").ConfigureAwait(false))!.Value.GetProperty("value").ToString();
+    public async Task<string> ContentAsync(FrameContentOptions? options = default)
+        => (await SendMessageToServerAsync(
+            "content",
+            new Dictionary<string, object?>
+            {
+                ["includeShadow"] = options?.IncludeShadow,
+            }).ConfigureAwait(false))!.Value.GetProperty("value").ToString();
 
     [MethodImpl(MethodImplOptions.NoInlining)]
     public Task FocusAsync(string selector, FrameFocusOptions? options = default)
-        => SendMessageToServerAsync("focus", new Dictionary<string, object?>
-        {
-            ["selector"] = selector,
-            ["timeout"] = Timeout(options?.Timeout),
-            ["strict"] = options?.Strict,
-        });
+        => SendMessageToServerAsync(
+            "focus",
+            new Dictionary<string, object?>
+            {
+                ["selector"] = selector,
+                ["strict"] = options?.Strict,
+            },
+            timeout: Timeout(options?.Timeout));
 
     [MethodImpl(MethodImplOptions.NoInlining)]
     public Task TypeAsync(string selector, string text, FrameTypeOptions? options = default)
-        => SendMessageToServerAsync("type", new Dictionary<string, object?>
-        {
-            ["selector"] = selector,
-            ["text"] = text,
-            ["delay"] = options?.Delay,
-            ["timeout"] = Timeout(options?.Timeout),
-            ["strict"] = options?.Strict,
-        });
+        => SendMessageToServerAsync(
+            "type",
+            new Dictionary<string, object?>
+            {
+                ["selector"] = selector,
+                ["text"] = text,
+                ["delay"] = options?.Delay,
+                ["strict"] = options?.Strict,
+            },
+            timeout: Timeout(options?.Timeout));
 
     [MethodImpl(MethodImplOptions.NoInlining)]
     public async Task<string?> GetAttributeAsync(string selector, string name, FrameGetAttributeOptions? options = default)
     {
-        if ((await SendMessageToServerAsync("getAttribute", new Dictionary<string, object?>
-        {
-            ["selector"] = selector,
-            ["name"] = name,
-            ["timeout"] = Timeout(options?.Timeout),
-            ["strict"] = options?.Strict,
-        }).ConfigureAwait(false))?.TryGetProperty("value", out JsonElement retValue) ?? false)
+        if ((await SendMessageToServerAsync(
+            "getAttribute",
+            new Dictionary<string, object?>
+            {
+                ["selector"] = selector,
+                ["name"] = name,
+                ["strict"] = options?.Strict,
+            },
+            timeout: Timeout(options?.Timeout)).ConfigureAwait(false))?.TryGetProperty("value", out JsonElement retValue) ?? false)
         {
             return retValue.ToString();
         }
@@ -409,79 +426,93 @@ internal class Frame : ChannelOwner, IFrame
 
     [MethodImpl(MethodImplOptions.NoInlining)]
     public async Task<string> InnerHTMLAsync(string selector, FrameInnerHTMLOptions? options = default)
-        => (await SendMessageToServerAsync("innerHTML", new Dictionary<string, object?>
-        {
-            ["selector"] = selector,
-            ["timeout"] = Timeout(options?.Timeout),
-            ["strict"] = options?.Strict,
-        }).ConfigureAwait(false))!.Value.GetProperty("value").ToString();
+        => (await SendMessageToServerAsync(
+            "innerHTML",
+            new Dictionary<string, object?>
+            {
+                ["selector"] = selector,
+                ["strict"] = options?.Strict,
+            },
+            timeout: Timeout(options?.Timeout)).ConfigureAwait(false))!.Value.GetProperty("value").ToString();
 
     [MethodImpl(MethodImplOptions.NoInlining)]
     public async Task<string> InnerTextAsync(string selector, FrameInnerTextOptions? options = default)
-        => (await SendMessageToServerAsync("innerText", new Dictionary<string, object?>
-        {
-            ["selector"] = selector,
-            ["timeout"] = Timeout(options?.Timeout),
-            ["strict"] = options?.Strict,
-        }).ConfigureAwait(false))!.Value.GetProperty("value").ToString();
+        => (await SendMessageToServerAsync(
+            "innerText",
+            new Dictionary<string, object?>
+            {
+                ["selector"] = selector,
+                ["strict"] = options?.Strict,
+            },
+            timeout: Timeout(options?.Timeout)).ConfigureAwait(false))!.Value.GetProperty("value").ToString();
 
     [MethodImpl(MethodImplOptions.NoInlining)]
     public async Task<string?> TextContentAsync(string selector, FrameTextContentOptions? options = default)
-        => (await SendMessageToServerAsync("textContent", new Dictionary<string, object?>
-        {
-            ["selector"] = selector,
-            ["timeout"] = Timeout(options?.Timeout),
-            ["strict"] = options?.Strict,
-        }).ConfigureAwait(false))?.GetProperty("value").ToString();
+        => (await SendMessageToServerAsync(
+            "textContent",
+            new Dictionary<string, object?>
+            {
+                ["selector"] = selector,
+                ["strict"] = options?.Strict,
+            },
+            timeout: Timeout(options?.Timeout)).ConfigureAwait(false))?.GetProperty("value").ToString();
 
     [MethodImpl(MethodImplOptions.NoInlining)]
     public Task HoverAsync(string selector, FrameHoverOptions? options = default)
-        => SendMessageToServerAsync("hover", new Dictionary<string, object?>
-        {
-            ["selector"] = selector,
-            ["force"] = options?.Force,
-            ["modifiers"] = options?.Modifiers?.Select(m => m.ToValueString()),
-            ["position"] = options?.Position,
-            ["trial"] = options?.Trial,
-            ["timeout"] = Timeout(options?.Timeout),
-            ["strict"] = options?.Strict,
-        });
+        => SendMessageToServerAsync(
+            "hover",
+            new Dictionary<string, object?>
+            {
+                ["selector"] = selector,
+                ["force"] = options?.Force,
+                ["modifiers"] = options?.Modifiers?.Select(m => m.ToValueString()),
+                ["position"] = options?.Position,
+                ["trial"] = options?.Trial,
+                ["strict"] = options?.Strict,
+            },
+            timeout: Timeout(options?.Timeout));
 
     [MethodImpl(MethodImplOptions.NoInlining)]
     public Task PressAsync(string selector, string key, FramePressOptions? options = default)
-        => SendMessageToServerAsync("press", new Dictionary<string, object?>
-        {
-            ["selector"] = selector,
-            ["key"] = key,
-            ["delay"] = options?.Delay,
-            ["timeout"] = Timeout(options?.Timeout),
+        => SendMessageToServerAsync(
+            "press",
+            new Dictionary<string, object?>
+            {
+                ["selector"] = selector,
+                ["key"] = key,
+                ["delay"] = options?.Delay,
 #pragma warning disable CS0612 // Type or member is obsolete
-            ["noWaitAfter"] = options?.NoWaitAfter,
+                ["noWaitAfter"] = options?.NoWaitAfter,
 #pragma warning restore CS0612 // Type or member is obsolete
-            ["strict"] = options?.Strict,
-        });
+                ["strict"] = options?.Strict,
+            },
+            timeout: Timeout(options?.Timeout));
 
     [MethodImpl(MethodImplOptions.NoInlining)]
     public Task DispatchEventAsync(string selector, string type, object? eventInit = default, FrameDispatchEventOptions? options = default)
-        => SendMessageToServerAsync("dispatchEvent", new Dictionary<string, object?>
-        {
-            ["selector"] = selector,
-            ["type"] = type,
-            ["eventInit"] = ScriptsHelper.SerializedArgument(eventInit),
-            ["timeout"] = Timeout(options?.Timeout),
-            ["strict"] = options?.Strict,
-        });
+        => SendMessageToServerAsync(
+            "dispatchEvent",
+            new Dictionary<string, object?>
+            {
+                ["selector"] = selector,
+                ["type"] = type,
+                ["eventInit"] = ScriptsHelper.SerializedArgument(eventInit),
+                ["strict"] = options?.Strict,
+            },
+            timeout: Timeout(options?.Timeout));
 
     [MethodImpl(MethodImplOptions.NoInlining)]
     public Task FillAsync(string selector, string value, FrameFillOptions? options = default)
-        => SendMessageToServerAsync("fill", new Dictionary<string, object?>
-        {
-            ["selector"] = selector,
-            ["value"] = value,
-            ["force"] = options?.Force,
-            ["timeout"] = Timeout(options?.Timeout),
-            ["strict"] = options?.Strict,
-        });
+        => SendMessageToServerAsync(
+            "fill",
+            new Dictionary<string, object?>
+            {
+                ["selector"] = selector,
+                ["value"] = value,
+                ["force"] = options?.Force,
+                ["strict"] = options?.Strict,
+            },
+            timeout: Timeout(options?.Timeout));
 
     [MethodImpl(MethodImplOptions.NoInlining)]
     public async Task<IElementHandle> AddScriptTagAsync(FrameAddScriptTagOptions? options = default)
@@ -547,17 +578,19 @@ internal class Frame : ChannelOwner, IFrame
 
     private async Task _setInputFilesAsync(string selector, SetInputFilesFiles files, bool? noWaitAfter, float? timeout, bool? strict)
     {
-        await SendMessageToServerAsync("setInputFiles", new Dictionary<string, object?>
-        {
-            ["selector"] = selector,
-            ["payloads"] = files.Payloads,
-            ["localPaths"] = files.LocalPaths,
-            ["localDirectory"] = files.LocalDirectory,
-            ["streams"] = files.Streams,
-            ["directoryStream"] = files.DirectoryStream,
-            ["timeout"] = Timeout(timeout),
-            ["strict"] = strict,
-        }).ConfigureAwait(false);
+        await SendMessageToServerAsync(
+            "setInputFiles",
+            new Dictionary<string, object?>
+            {
+                ["selector"] = selector,
+                ["payloads"] = files.Payloads,
+                ["localPaths"] = files.LocalPaths,
+                ["localDirectory"] = files.LocalDirectory,
+                ["streams"] = files.Streams,
+                ["directoryStream"] = files.DirectoryStream,
+                ["strict"] = strict,
+            },
+            timeout: Timeout(timeout)).ConfigureAwait(false);
     }
 
     [MethodImpl(MethodImplOptions.NoInlining)]
@@ -565,96 +598,110 @@ internal class Frame : ChannelOwner, IFrame
         => ClickInternalAsync(selector, options, null);
 
     internal Task ClickInternalAsync(string selector, FrameClickOptions? options, int? steps)
-        => SendMessageToServerAsync("click", new Dictionary<string, object?>
-        {
-            ["selector"] = selector,
-            ["button"] = options?.Button,
-            ["force"] = options?.Force,
-            ["delay"] = options?.Delay,
-            ["clickCount"] = options?.ClickCount,
-            ["modifiers"] = options?.Modifiers?.Select(m => m.ToValueString()),
-            ["position"] = options?.Position,
+        => SendMessageToServerAsync(
+            "click",
+            new Dictionary<string, object?>
+            {
+                ["selector"] = selector,
+                ["button"] = options?.Button,
+                ["force"] = options?.Force,
+                ["delay"] = options?.Delay,
+                ["clickCount"] = options?.ClickCount,
+                ["modifiers"] = options?.Modifiers?.Select(m => m.ToValueString()),
+                ["position"] = options?.Position,
 #pragma warning disable CS0612 // Type or member is obsolete
-            ["noWaitAfter"] = options?.NoWaitAfter,
+                ["noWaitAfter"] = options?.NoWaitAfter,
 #pragma warning restore CS0612 // Type or member is obsolete
-            ["steps"] = steps,
-            ["trial"] = options?.Trial,
-            ["timeout"] = Timeout(options?.Timeout),
-            ["strict"] = options?.Strict,
-        });
+                ["steps"] = steps,
+                ["trial"] = options?.Trial,
+                ["strict"] = options?.Strict,
+            },
+            timeout: Timeout(options?.Timeout));
 
     [MethodImpl(MethodImplOptions.NoInlining)]
     public Task DblClickAsync(string selector, FrameDblClickOptions? options = default)
         => DblClickInternalAsync(selector, options, null);
 
     internal Task DblClickInternalAsync(string selector, FrameDblClickOptions? options, int? steps)
-        => SendMessageToServerAsync("dblclick", new Dictionary<string, object?>
-        {
-            ["selector"] = selector,
-            ["button"] = options?.Button,
-            ["delay"] = options?.Delay,
-            ["force"] = options?.Force,
-            ["modifiers"] = options?.Modifiers?.Select(m => m.ToValueString()),
-            ["position"] = options?.Position,
-            ["steps"] = steps,
-            ["trial"] = options?.Trial,
-            ["timeout"] = Timeout(options?.Timeout),
-            ["strict"] = options?.Strict,
-        });
+        => SendMessageToServerAsync(
+            "dblclick",
+            new Dictionary<string, object?>
+            {
+                ["selector"] = selector,
+                ["button"] = options?.Button,
+                ["delay"] = options?.Delay,
+                ["force"] = options?.Force,
+                ["modifiers"] = options?.Modifiers?.Select(m => m.ToValueString()),
+                ["position"] = options?.Position,
+                ["steps"] = steps,
+                ["trial"] = options?.Trial,
+                ["strict"] = options?.Strict,
+            },
+            timeout: Timeout(options?.Timeout));
 
     [MethodImpl(MethodImplOptions.NoInlining)]
     public Task CheckAsync(string selector, FrameCheckOptions? options = default)
-        => SendMessageToServerAsync("check", new Dictionary<string, object?>
-        {
-            ["selector"] = selector,
-            ["force"] = options?.Force,
-            ["position"] = options?.Position,
-            ["trial"] = options?.Trial,
-            ["timeout"] = Timeout(options?.Timeout),
-            ["strict"] = options?.Strict,
-        });
+        => SendMessageToServerAsync(
+            "check",
+            new Dictionary<string, object?>
+            {
+                ["selector"] = selector,
+                ["force"] = options?.Force,
+                ["position"] = options?.Position,
+                ["trial"] = options?.Trial,
+                ["strict"] = options?.Strict,
+            },
+            timeout: Timeout(options?.Timeout));
 
     [MethodImpl(MethodImplOptions.NoInlining)]
     public Task UncheckAsync(string selector, FrameUncheckOptions? options = default)
-        => SendMessageToServerAsync("uncheck", new Dictionary<string, object?>
-        {
-            ["selector"] = selector,
-            ["force"] = options?.Force,
-            ["position"] = options?.Position,
-            ["trial"] = options?.Trial,
-            ["timeout"] = Timeout(options?.Timeout),
-            ["strict"] = options?.Strict,
-        });
+        => SendMessageToServerAsync(
+            "uncheck",
+            new Dictionary<string, object?>
+            {
+                ["selector"] = selector,
+                ["force"] = options?.Force,
+                ["position"] = options?.Position,
+                ["trial"] = options?.Trial,
+                ["strict"] = options?.Strict,
+            },
+            timeout: Timeout(options?.Timeout));
 
     [MethodImpl(MethodImplOptions.NoInlining)]
     public Task SetCheckedAsync(string selector, bool checkedState, FrameSetCheckedOptions? options = null)
-        => SendMessageToServerAsync(checkedState ? "check" : "uncheck", new Dictionary<string, object?>
-        {
-            ["selector"] = selector,
-            ["force"] = options?.Force,
-            ["position"] = options?.Position,
-            ["trial"] = options?.Trial,
-            ["timeout"] = Timeout(options?.Timeout),
-            ["strict"] = options?.Strict,
-        });
+        => SendMessageToServerAsync(
+            checkedState ? "check" : "uncheck",
+            new Dictionary<string, object?>
+            {
+                ["selector"] = selector,
+                ["force"] = options?.Force,
+                ["position"] = options?.Position,
+                ["trial"] = options?.Trial,
+                ["strict"] = options?.Strict,
+            },
+            timeout: Timeout(options?.Timeout));
 
     [MethodImpl(MethodImplOptions.NoInlining)]
     public Task SetContentAsync(string html, FrameSetContentOptions? options = default)
-        => SendMessageToServerAsync("setContent", new Dictionary<string, object?>
-        {
-            ["html"] = html,
-            ["waitUntil"] = options?.WaitUntil,
-            ["timeout"] = Timeout(options?.Timeout),
-        });
+        => SendMessageToServerAsync(
+            "setContent",
+            new Dictionary<string, object?>
+            {
+                ["html"] = html,
+                ["waitUntil"] = options?.WaitUntil,
+            },
+            timeout: Timeout(options?.Timeout));
 
     [MethodImpl(MethodImplOptions.NoInlining)]
     public async Task<string> InputValueAsync(string selector, FrameInputValueOptions? options = null)
-        => (await SendMessageToServerAsync("inputValue", new Dictionary<string, object?>
-        {
-            ["selector"] = selector,
-            ["timeout"] = Timeout(options?.Timeout),
-            ["strict"] = options?.Strict,
-        }).ConfigureAwait(false))!.Value.GetProperty("value").ToString();
+        => (await SendMessageToServerAsync(
+            "inputValue",
+            new Dictionary<string, object?>
+            {
+                ["selector"] = selector,
+                ["strict"] = options?.Strict,
+            },
+            timeout: Timeout(options?.Timeout)).ConfigureAwait(false))!.Value.GetProperty("value").ToString();
 
     [MethodImpl(MethodImplOptions.NoInlining)]
     public async Task<IElementHandle> QuerySelectorAsync(string selector)
@@ -680,9 +727,9 @@ internal class Frame : ChannelOwner, IFrame
             {
                 ["expression"] = expression,
                 ["arg"] = ScriptsHelper.SerializedArgument(arg),
-                ["timeout"] = Timeout(options?.Timeout),
                 ["pollingInterval"] = options?.PollingInterval,
-            }).ConfigureAwait(false);
+            },
+            timeout: Timeout(options?.Timeout)).ConfigureAwait(false);
 
     [MethodImpl(MethodImplOptions.NoInlining)]
     public async Task<IElementHandle?> WaitForSelectorAsync(string selector, FrameWaitForSelectorOptions? options = default)
@@ -691,11 +738,11 @@ internal class Frame : ChannelOwner, IFrame
             new Dictionary<string, object?>
             {
                 ["selector"] = selector,
-                ["timeout"] = Timeout(options?.Timeout),
                 ["state"] = options?.State,
                 ["strict"] = options?.Strict,
                 ["omitReturnValue"] = false,
-            }).ConfigureAwait(false);
+            },
+            timeout: Timeout(options?.Timeout)).ConfigureAwait(false);
 
     [MethodImpl(MethodImplOptions.NoInlining)]
     public async Task<IJSHandle> EvaluateHandleAsync(string script, object? args = null)
@@ -812,49 +859,59 @@ internal class Frame : ChannelOwner, IFrame
 
     [MethodImpl(MethodImplOptions.NoInlining)]
     public async Task<IResponse?> GotoAsync(string url, FrameGotoOptions? options = default)
-        => await SendMessageToServerAsync<Response>("goto", new Dictionary<string, object?>
-        {
-            ["url"] = url,
-            ["timeout"] = NavigationTimeout(options?.Timeout),
-            ["waitUntil"] = options?.WaitUntil,
-            ["referer"] = options?.Referer,
-        }).ConfigureAwait(false);
+        => await SendMessageToServerAsync<Response>(
+            "goto",
+            new Dictionary<string, object?>
+            {
+                ["url"] = url,
+                ["waitUntil"] = options?.WaitUntil,
+                ["referer"] = options?.Referer,
+            },
+            timeout: NavigationTimeout(options?.Timeout)).ConfigureAwait(false);
 
     [MethodImpl(MethodImplOptions.NoInlining)]
     public async Task<bool> IsCheckedAsync(string selector, FrameIsCheckedOptions? options = default)
-        => (await SendMessageToServerAsync("isChecked", new Dictionary<string, object?>
-        {
-            ["selector"] = selector,
-            ["timeout"] = Timeout(options?.Timeout),
-            ["strict"] = options?.Strict,
-        }).ConfigureAwait(false))?.GetProperty("value").GetBoolean() ?? default;
+        => (await SendMessageToServerAsync(
+            "isChecked",
+            new Dictionary<string, object?>
+            {
+                ["selector"] = selector,
+                ["strict"] = options?.Strict,
+            },
+            timeout: Timeout(options?.Timeout)).ConfigureAwait(false))?.GetProperty("value").GetBoolean() ?? default;
 
     [MethodImpl(MethodImplOptions.NoInlining)]
     public async Task<bool> IsDisabledAsync(string selector, FrameIsDisabledOptions? options = default)
-        => (await SendMessageToServerAsync("isDisabled", new Dictionary<string, object?>
-        {
-            ["selector"] = selector,
-            ["timeout"] = Timeout(options?.Timeout),
-            ["strict"] = options?.Strict,
-        }).ConfigureAwait(false))?.GetProperty("value").GetBoolean() ?? default;
+        => (await SendMessageToServerAsync(
+            "isDisabled",
+            new Dictionary<string, object?>
+            {
+                ["selector"] = selector,
+                ["strict"] = options?.Strict,
+            },
+            timeout: Timeout(options?.Timeout)).ConfigureAwait(false))?.GetProperty("value").GetBoolean() ?? default;
 
     [MethodImpl(MethodImplOptions.NoInlining)]
     public async Task<bool> IsEditableAsync(string selector, FrameIsEditableOptions? options = default)
-        => (await SendMessageToServerAsync("isEditable", new Dictionary<string, object?>
-        {
-            ["selector"] = selector,
-            ["timeout"] = Timeout(options?.Timeout),
-            ["strict"] = options?.Strict,
-        }).ConfigureAwait(false))?.GetProperty("value").GetBoolean() ?? default;
+        => (await SendMessageToServerAsync(
+            "isEditable",
+            new Dictionary<string, object?>
+            {
+                ["selector"] = selector,
+                ["strict"] = options?.Strict,
+            },
+            timeout: Timeout(options?.Timeout)).ConfigureAwait(false))?.GetProperty("value").GetBoolean() ?? default;
 
     [MethodImpl(MethodImplOptions.NoInlining)]
     public async Task<bool> IsEnabledAsync(string selector, FrameIsEnabledOptions? options = default)
-        => (await SendMessageToServerAsync("isEnabled", new Dictionary<string, object?>
-        {
-            ["selector"] = selector,
-            ["timeout"] = Timeout(options?.Timeout),
-            ["strict"] = options?.Strict,
-        }).ConfigureAwait(false))?.GetProperty("value").GetBoolean() ?? default;
+        => (await SendMessageToServerAsync(
+            "isEnabled",
+            new Dictionary<string, object?>
+            {
+                ["selector"] = selector,
+                ["strict"] = options?.Strict,
+            },
+            timeout: Timeout(options?.Timeout)).ConfigureAwait(false))?.GetProperty("value").GetBoolean() ?? default;
 
     [MethodImpl(MethodImplOptions.NoInlining)]
     public async Task<bool> IsHiddenAsync(string selector, FrameIsHiddenOptions? options = default)
@@ -886,18 +943,20 @@ internal class Frame : ChannelOwner, IFrame
 
     [MethodImpl(MethodImplOptions.NoInlining)]
     public Task DragAndDropAsync(string source, string target, FrameDragAndDropOptions? options = null)
-        => SendMessageToServerAsync("dragAndDrop", new Dictionary<string, object?>
-        {
-            ["source"] = source,
-            ["target"] = target,
-            ["force"] = options?.Force,
-            ["steps"] = options?.Steps,
-            ["timeout"] = Timeout(options?.Timeout),
-            ["trial"] = options?.Trial,
-            ["strict"] = options?.Strict,
-            ["sourcePosition"] = options?.SourcePosition,
-            ["targetPosition"] = options?.TargetPosition,
-        });
+        => SendMessageToServerAsync(
+            "dragAndDrop",
+            new Dictionary<string, object?>
+            {
+                ["source"] = source,
+                ["target"] = target,
+                ["force"] = options?.Force,
+                ["steps"] = options?.Steps,
+                ["trial"] = options?.Trial,
+                ["strict"] = options?.Strict,
+                ["sourcePosition"] = options?.SourcePosition,
+                ["targetPosition"] = options?.TargetPosition,
+            },
+            timeout: Timeout(options?.Timeout));
 
     internal async Task DropAsync(string selector, DropPayload payload, Position? position, float? timeout, bool strict)
     {
@@ -917,35 +976,39 @@ internal class Frame : ChannelOwner, IFrame
             ["value"] = kv.Value,
         }).ToArray();
 
-        await SendMessageToServerAsync("drop", new Dictionary<string, object?>
-        {
-            ["selector"] = selector,
-            ["strict"] = strict,
-            ["position"] = position,
-            ["payloads"] = fileParams?.Payloads,
-            ["localPaths"] = fileParams?.LocalPaths,
-            ["streams"] = fileParams?.Streams,
-            ["data"] = data,
-            ["timeout"] = Timeout(timeout),
-        }).ConfigureAwait(false);
+        await SendMessageToServerAsync(
+            "drop",
+            new Dictionary<string, object?>
+            {
+                ["selector"] = selector,
+                ["strict"] = strict,
+                ["position"] = position,
+                ["payloads"] = fileParams?.Payloads,
+                ["localPaths"] = fileParams?.LocalPaths,
+                ["streams"] = fileParams?.Streams,
+                ["data"] = data,
+            },
+            timeout: Timeout(timeout)).ConfigureAwait(false);
     }
 
     internal async Task<FrameExpectResult> ExpectAsync(string? selector, string expression, FrameExpectOptions options)
     {
         try
         {
-            await SendMessageToServerAsync("expect", new Dictionary<string, object?>
-            {
-                ["selector"] = selector,
-                ["expression"] = expression,
-                ["expressionArg"] = options.ExpressionArg,
-                ["expectedText"] = options.ExpectedText,
-                ["expectedNumber"] = options.ExpectedNumber,
-                ["expectedValue"] = options.ExpectedValue,
-                ["useInnerText"] = options.UseInnerText,
-                ["isNot"] = options.IsNot,
-                ["timeout"] = options.Timeout,
-            }).ConfigureAwait(false);
+            await SendMessageToServerAsync(
+                "expect",
+                new Dictionary<string, object?>
+                {
+                    ["selector"] = selector,
+                    ["expression"] = expression,
+                    ["expressionArg"] = options.ExpressionArg,
+                    ["expectedText"] = options.ExpectedText,
+                    ["expectedNumber"] = options.ExpectedNumber,
+                    ["expectedValue"] = options.ExpectedValue,
+                    ["useInnerText"] = options.UseInnerText,
+                    ["isNot"] = options.IsNot,
+                },
+                timeout: options.Timeout).ConfigureAwait(false);
             return new FrameExpectResult { Matches = !options.IsNot };
         }
         catch (Exception e) when (e.Data.Contains(Connection.ErrorDetailsDataKey))
@@ -955,21 +1018,27 @@ internal class Frame : ChannelOwner, IFrame
                 Matches = options.IsNot,
                 Log = (e.Data[Connection.LogDataKey] as string[]) ?? Array.Empty<string>(),
             };
-            if (e.Data[Connection.ErrorDetailsDataKey] is JsonElement details && details.ValueKind == JsonValueKind.Object)
+            // ErrorDetails is stored as raw JSON text for .NET Framework Exception.Data compatibility.
+            if (e.Data[Connection.ErrorDetailsDataKey] is string detailsJson && !string.IsNullOrEmpty(detailsJson))
             {
-                if (details.TryGetProperty("customErrorMessage", out var customErrorMessage) && customErrorMessage.ValueKind == JsonValueKind.String)
+                using var detailsDocument = JsonDocument.Parse(detailsJson);
+                var details = detailsDocument.RootElement;
+                if (details.ValueKind == JsonValueKind.Object)
                 {
-                    result.ErrorMessage = "Error: " + customErrorMessage.GetString();
-                }
-                if (details.TryGetProperty("received", out var received) && received.ValueKind == JsonValueKind.Object)
-                {
-                    if (received.TryGetProperty("value", out var receivedValue))
+                    if (details.TryGetProperty("customErrorMessage", out var customErrorMessage) && customErrorMessage.ValueKind == JsonValueKind.String)
                     {
-                        result.Received = ScriptsHelper.ParseEvaluateResult<object>(receivedValue);
+                        result.ErrorMessage = "Error: " + customErrorMessage.GetString();
                     }
-                    if (received.TryGetProperty("ariaSnapshot", out var ariaSnapshot) && ariaSnapshot.ValueKind == JsonValueKind.String)
+                    if (details.TryGetProperty("received", out var received) && received.ValueKind == JsonValueKind.Object)
                     {
-                        result.ReceivedAriaSnapshot = ariaSnapshot.GetString();
+                        if (received.TryGetProperty("value", out var receivedValue))
+                        {
+                            result.Received = ScriptsHelper.ParseEvaluateResult<object>(receivedValue);
+                        }
+                        if (received.TryGetProperty("ariaSnapshot", out var ariaSnapshot) && ariaSnapshot.ValueKind == JsonValueKind.String)
+                        {
+                            result.ReceivedAriaSnapshot = ariaSnapshot.GetString();
+                        }
                     }
                 }
             }

@@ -32,4 +32,6 @@ public enum ScreenshotType
     Png,
     [EnumMember(Value = "jpeg")]
     Jpeg,
+    [EnumMember(Value = "webp")]
+    Webp,
 }

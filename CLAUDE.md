@@ -3,7 +3,7 @@
 ## Building
 
 ```bash
-./build.sh --download-driver   # download the Playwright driver
+./build.sh --download-driver   # download the Playwright driver (needs Node.js/npm on PATH)
 dotnet build ./src              # build the entire solution
 ```
 

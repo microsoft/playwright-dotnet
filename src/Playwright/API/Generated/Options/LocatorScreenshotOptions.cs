@@ -121,7 +121,13 @@ public class LocatorScreenshotOptions
     [JsonPropertyName("path")]
     public string? Path { get; set; }
 
-    /// <summary><para>The quality of the image, between 0-100. Not applicable to <c>png</c> images.</para></summary>
+    /// <summary>
+    /// <para>
+    /// The quality of the image, between 0-100. Not applicable to <c>png</c> images. For
+    /// <c>jpeg</c> the default is <c>80</c>. For <c>webp</c>, a quality of <c>100</c> (the
+    /// default) produces a lossless image, while lower values use lossy compression.
+    /// </para>
+    /// </summary>
     [JsonPropertyName("quality")]
     public int? Quality { get; set; }
 

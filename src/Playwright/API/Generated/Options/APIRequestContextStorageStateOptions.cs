@@ -38,12 +38,22 @@ public class APIRequestContextStorageStateOptions
         }
 
         IndexedDB = clone.IndexedDB;
+        Opfs = clone.Opfs;
         Path = clone.Path;
     }
 
     /// <summary><para>Set to <c>true</c> to include IndexedDB in the storage state snapshot.</para></summary>
     [JsonPropertyName("indexedDB")]
     public bool? IndexedDB { get; set; }
+
+    /// <summary>
+    /// <para>
+    /// Set to <c>true</c> to include the origin private file system in the storage state
+    /// snapshot.
+    /// </para>
+    /// </summary>
+    [JsonPropertyName("opfs")]
+    public bool? Opfs { get; set; }
 
     /// <summary>
     /// <para>

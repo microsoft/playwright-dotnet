@@ -144,7 +144,12 @@ public class LocatorFilterOptions
     [JsonPropertyName("hasTextString")]
     public string? HasTextString { get; set; }
 
-    /// <summary><para>Only matches visible or invisible elements.</para></summary>
+    /// <summary>
+    /// <para>
+    /// Only matches visible or invisible elements. Prefer the <see cref="ILocator.Visible"/>
+    /// shortcut when matching only visible elements.
+    /// </para>
+    /// </summary>
     [JsonPropertyName("visible")]
     public bool? Visible { get; set; }
 }

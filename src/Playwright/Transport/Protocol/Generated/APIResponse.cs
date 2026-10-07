@@ -49,4 +49,10 @@ internal class APIResponse
 
     [JsonPropertyName("serverAddr")]
     public RemoteAddr ServerAddr { get; set; } = null!;
+
+    [JsonPropertyName("timing")]
+    public RequestTimingResult Timing { get; set; } = null!;
+
+    [JsonPropertyName("responseEndTiming")]
+    public float ResponseEndTiming { get; set; }
 }

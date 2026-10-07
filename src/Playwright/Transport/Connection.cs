@@ -48,12 +48,14 @@ internal class Connection : IDisposable
     internal const string ErrorDetailsDataKey = "playwright.errorDetails";
     internal const string LogDataKey = "playwright.log";
 
-    private readonly ConcurrentDictionary<int, ConnectionCallback> _callbacks = new();
+    private readonly ConcurrentDictionary<string, ConnectionCallback> _callbacks = new();
     private readonly Root _rootObject;
     private readonly TaskQueue _queue = new();
+    private readonly string _callIdPrefix = CreateCallIdPrefix();
     private int _tracingCount;
     private int _lastId;
     private Exception? _closedError;
+    private bool _disposed;
 
     public Connection(LocalUtils? localUtils = null)
     {
@@ -128,20 +130,23 @@ internal class Connection : IDisposable
         ChannelOwner? @object,
         string method,
         Dictionary<string, object?>? args = null,
-        bool keepNulls = false)
-        => SendMessageToServerAsync<JsonElement?>(@object, method, args, keepNulls);
+        bool keepNulls = false,
+        float? timeout = null)
+        => SendMessageToServerAsync<JsonElement?>(@object, method, args, keepNulls, timeout);
 
     internal Task<T> SendMessageToServerAsync<T>(
         ChannelOwner? @object,
         string method,
         Dictionary<string, object?>? args = null,
-        bool keepNulls = false) => WrapApiCallAsync(() => InnerSendMessageToServerAsync<T>(@object, method, args, keepNulls), false, null);
+        bool keepNulls = false,
+        float? timeout = null) => WrapApiCallAsync(() => InnerSendMessageToServerAsync<T>(@object, method, args, keepNulls, timeout), false, null);
 
     private async Task<T> InnerSendMessageToServerAsync<T>(
         ChannelOwner? @object,
         string method,
         Dictionary<string, object?>? dictionary = null,
-        bool keepNulls = false)
+        bool keepNulls = false,
+        float? timeout = null)
     {
         // Fire-and-forget: server intentionally never replies to __waitInfo__,
         // so silently drop it after the connection is closed or the object was collected.
@@ -159,7 +164,7 @@ internal class Connection : IDisposable
             throw new PlaywrightException("The object has been collected to prevent unbounded heap growth.");
         }
 
-        int id = Interlocked.Increment(ref _lastId);
+        string id = $"{_callIdPrefix}@{Interlocked.Increment(ref _lastId)}";
         var tcs = new TaskCompletionSource<JsonElement?>(TaskCreationOptions.RunContinuationsAsynchronously);
         var callback = new ConnectionCallback(tcs);
 
@@ -181,6 +186,10 @@ internal class Connection : IDisposable
             ["internal"] = isInternal,
             ["wallTime"] = DateTimeOffset.Now.ToUnixTimeMilliseconds(),
         };
+        if (timeout.HasValue)
+        {
+            metadata["timeout"] = timeout.Value;
+        }
         if (!string.IsNullOrEmpty(title))
         {
             metadata["title"] = title;
@@ -268,9 +277,9 @@ internal class Connection : IDisposable
         {
             return;
         }
-        if (message.Id.HasValue)
+        if (message.Id != null)
         {
-            _callbacks.TryRemove(message.Id.Value, out var callback);
+            _callbacks.TryRemove(message.Id, out var callback);
             if (callback == null)
             {
                 throw new PlaywrightException($"Cannot find command to respond: '{message.Id}'");
@@ -279,7 +288,7 @@ internal class Connection : IDisposable
             if (message.Error != null && message.Result == null)
             {
                 var exception = ParseException(message.Error.Error, FormatCallLog(message.Log));
-                exception.Data[ErrorDetailsDataKey] = message.ErrorDetails;
+                exception.Data[ErrorDetailsDataKey] = message.ErrorDetails?.GetRawText();
                 exception.Data[LogDataKey] = message.Log;
                 callback.TaskCompletionSource.TrySetException(exception);
             }
@@ -444,16 +453,20 @@ internal class Connection : IDisposable
     internal void DoCloseImpl(Exception closeError)
     {
         _closedError = closeError;
-        foreach (var callback in _callbacks)
-        {
-            callback.Value.TaskCompletionSource.TrySetException(closeError.InnerException ?? closeError);
-            // We need to make sure that the task is handled otherwise it will be reported as unhandled on the caller side.
-            // Its still possible to get the exception from the task.
-            callback.Value.TaskCompletionSource.Task.IgnoreException();
-        }
-        _callbacks.Clear();
-
         Dispose();
+    }
+
+    // Use a unique prefix for each client to avoid id clashes in a trace.
+    private static string CreateCallIdPrefix()
+    {
+        const string Alphabet = "abcdefghijklmnopqrstuvwxyz";
+        var bytes = Guid.NewGuid().ToByteArray();
+        var prefix = new char[4];
+        for (int i = 0; i < prefix.Length; i++)
+        {
+            prefix[i] = Alphabet[bytes[i] % Alphabet.Length];
+        }
+        return new string(prefix);
     }
 
     private Exception ParseException(PlaywrightServerError error, string messageSuffix)
@@ -477,10 +490,22 @@ internal class Connection : IDisposable
 
     private void Dispose(bool disposing)
     {
-        if (!disposing)
+        if (!disposing || _disposed)
         {
             return;
         }
+
+        _disposed = true;
+        _closedError ??= new TargetClosedException("Connection disposed");
+
+        foreach (var callback in _callbacks)
+        {
+            callback.Value.TaskCompletionSource.TrySetException(_closedError);
+            // We need to make sure that the task is handled otherwise it will be reported as unhandled on the caller side.
+            // Its still possible to get the exception from the task.
+            callback.Value.TaskCompletionSource.Task.IgnoreException();
+        }
+        _callbacks.Clear();
 
         _queue.Dispose();
         Close?.Invoke(this, new TargetClosedException("Connection disposed"));

@@ -39,6 +39,17 @@ extends:
     sdl:
       suppression:
         suppressionFile: $(Build.SourcesDirectory)\.azure-pipelines\guardian\SDL\.gdnsuppress
+    # 1ES Network Isolation (SFI-ES4.2.4) defaults to blocking public feed endpoints
+    # (e.g. api.nuget.org), which breaks the 1ES.PublishNuget@1 push to NuGet.org below.
+    # Permissive alone still leaves api.nuget.org DNS-sinkholed. CFSClean (no suffix)
+    # also blocks all NuGet endpoints, so it is intentionally omitted; CFSClean2 does
+    # not block NuGet and is added to keep other endpoints (Docker, PowerShell Gallery,
+    # etc.) restricted. This matches microsoft/aspire's release-publish-nuget.yml and
+    # microsoft/winappCli's release.yml, which push to NuGet.org the same way.
+    # The stage is still gated by the tag-only trigger and the doRelease/doReleaseCLI
+    # parameters.
+    settings:
+      networkIsolationPolicy: Permissive,CFSClean2
     stages:
     - stage: BuildPackageSignPublish
       displayName: Build, Package, Sign, Publish
@@ -56,11 +67,50 @@ extends:
             displayName: 'Publish Artifact'
             targetPath: '$(Build.ArtifactStagingDirectory)'
         steps:
+        - powershell: |
+            if ($env:CURRENT_BRANCH -notmatch '^v1\.') {
+              Write-Host "Can only publish from a release tag (v1.*)."
+              Write-Host "Unexpected ref name: $env:CURRENT_BRANCH"
+              exit 1
+            }
+          env:
+            CURRENT_BRANCH: ${{ variables['Build.SourceBranchName'] }}
+          displayName: 'Check the ref is a release tag'
+          # Allow manual runs on any branch to exercise the build without publishing.
+          condition: ne(variables['Build.Reason'], 'Manual')
         - task: UseDotNet@2
           displayName: 'Use .NET 8 SDK'
           inputs:
             packageType: sdk
             version: 8.x
+        - task: UseDotNet@2
+          displayName: 'Use .NET 10 SDK'
+          inputs:
+            packageType: sdk
+            version: 10.x
+        # All NuGet restores go through the DevDiv_PublicPackages feed instead of
+        # nuget.org (SFI-ES4.2.4): the copied nuget.config is discovered from every
+        # project directory and its <clear /> drops the nuget.org source inherited
+        # from the user-level config. NuGetAuthenticate@1 installs the credential
+        # provider that authenticates to the feed.
+        - powershell: Copy-Item .azure-pipelines/nuget.config nuget.config
+          displayName: 'Use DevDiv_PublicPackages as the only NuGet source'
+        - task: NuGetAuthenticate@1
+          displayName: 'Authenticate NuGet to DevDiv_PublicPackages feed'
+        # Playwright.Tooling fetches playwright-core with `npm pack`, which picks up
+        # the registry and credentials from this .npmrc.
+        - task: UseNode@1
+          displayName: 'Install Node.js'
+          inputs:
+            version: '24.x'
+        # Explicit ASCII encoding: Windows PowerShell redirection would write UTF-16,
+        # which npm cannot read.
+        - powershell: Add-Content -Path .npmrc -Encoding Ascii -Value "registry=https://devdiv.pkgs.visualstudio.com/DevDiv/_packaging/DevDiv_PublicPackages/npm/registry/"
+          displayName: 'Point npm registry at DevDiv_PublicPackages feed'
+        - task: npmAuthenticate@0
+          displayName: 'Authenticate npm to DevDiv_PublicPackages feed'
+          inputs:
+            workingFile: .npmrc
         # We need to download the driver first, so we can build
         - task: DotNetCoreCLI@2
           displayName: Download the driver
@@ -93,7 +143,7 @@ extends:
           displayName: Publish Microsoft.Playwright{NUnit,MSTest,Xunit,TestAdapter}
           condition: or(
               eq('${{ parameters.doRelease }}', true),
-              startsWith(variables['Build.SourceBranch'], 'refs/tags/')
+              startsWith(variables['Build.SourceBranch'], 'refs/tags/v1.')
             )
           inputs:
             useDotNetTask: false

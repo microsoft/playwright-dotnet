@@ -142,6 +142,15 @@ public partial interface IBrowserContext
 
     /// <summary>
     /// <para>
+    /// Emitted when a JavaScript dialog in any page belonging to this context has been
+    /// closed, either by <see cref="IDialog.AcceptAsync"/>, by <see cref="IDialog.DismissAsync"/>,
+    /// or manually by the user in the headed browser.
+    /// </para>
+    /// </summary>
+    event EventHandler<IDialog> DialogClosed;
+
+    /// <summary>
+    /// <para>
     /// Emitted when attachment download started in any page belonging to this context.
     /// User can access basic file operations on downloaded content via the passed <see
     /// cref="IDownload"/> instance. See also <see cref="IPage.Download"/> to receive events
@@ -1004,13 +1013,22 @@ public partial interface IBrowserContext
     /// </param>
     Task SetGeolocationAsync(Geolocation? geolocation);
 
-    /// <param name="offline">Whether to emulate network being offline for the browser context.</param>
+    /// <param name="offline">
+    /// Whether to emulate network being offline for the browser context.
+    /// Offline emulation only affects requests that go through the browser's regular network
+    /// stack, such as page navigations, <c>fetch()</c>, <c>XMLHttpRequest</c> and WebSockets.
+    /// It does not affect WebRTC traffic: established <c>RTCPeerConnection</c>s keep sending
+    /// and receiving media over UDP. To test WebRTC connection loss, interrupt the connection
+    /// outside the browser, for example by stopping the TURN server or using an OS-level
+    /// firewall.
+    /// </param>
     Task SetOfflineAsync(bool offline);
 
     /// <summary>
     /// <para>
     /// Returns storage state for this browser context, contains current cookies, local
-    /// storage snapshot and IndexedDB snapshot.
+    /// storage snapshot, IndexedDB snapshot, origin private file system snapshot and virtual
+    /// WebAuthn credentials.
     /// </para>
     /// </summary>
     /// <param name="options">Call options</param>
@@ -1018,8 +1036,11 @@ public partial interface IBrowserContext
 
     /// <summary>
     /// <para>
-    /// Clears the existing cookies, local storage and IndexedDB entries for all origins
-    /// and sets the new storage state.
+    /// Clears the existing cookies, local storage, IndexedDB entries, origin private file
+    /// system entries and virtual WebAuthn credentials, and sets the new storage state.
+    /// When the storage state contains credentials, the virtual WebAuthn authenticator
+    /// is installed (equivalent to <see cref="ICredentials.InstallAsync"/>), preventing
+    /// all real authenticators from working in this context.
     /// </para>
     /// <para>**Usage**</para>
     /// <code>

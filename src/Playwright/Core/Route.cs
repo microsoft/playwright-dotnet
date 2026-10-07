@@ -28,6 +28,7 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Runtime.CompilerServices;
+using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
 using Microsoft.Playwright.Helpers;
@@ -195,19 +196,19 @@ internal class Route : ChannelOwner, IRoute
             byte[] content = File.ReadAllBytes(path);
             resultBody = Convert.ToBase64String(content);
             isBase64 = true;
-            length = resultBody.Length;
+            length = content.Length;
         }
         else if (!body.IsNullOrEmpty())
         {
             resultBody = body;
             isBase64 = false;
-            length = resultBody.Length;
+            length = Encoding.UTF8.GetByteCount(resultBody);
         }
         else if (bodyContent != null)
         {
             resultBody = Convert.ToBase64String(bodyContent);
             isBase64 = true;
-            length = resultBody.Length;
+            length = bodyContent.Length;
         }
 
         var resultHeaders = new Dictionary<string, string>();

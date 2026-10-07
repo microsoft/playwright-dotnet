@@ -41,6 +41,7 @@ public class ScreencastShowActionsOptions
         Duration = clone.Duration;
         FontSize = clone.FontSize;
         Position = clone.Position;
+        Style = clone.Style;
     }
 
     /// <summary>
@@ -57,11 +58,25 @@ public class ScreencastShowActionsOptions
     [JsonPropertyName("duration")]
     public float? Duration { get; set; }
 
-    /// <summary><para>Font size of the action title in pixels. Defaults to <c>24</c>.</para></summary>
+    /// <summary>
+    /// <para>
+    /// **DEPRECATED** Use <c>title</c> in <see cref="IScreencast.ShowActionsAsync"/> instead,
+    /// for example <c>style: { title: 'font-size: 32px' }</c>.
+    /// </para>
+    /// <para>Font size of the action title in pixels. Defaults to <c>24</c>.</para>
+    /// </summary>
     [JsonPropertyName("fontSize")]
+    [System.Obsolete]
     public int? FontSize { get; set; }
 
     /// <summary><para>Position of the action title overlay. Defaults to <c>"top-right"</c>.</para></summary>
     [JsonPropertyName("position")]
     public AnnotatePosition? Position { get; set; }
+
+    /// <summary>
+    /// <para>Styles of the action decorations. All decorations fade out over <see cref="IScreencast.ShowActionsAsync"/>.</para>
+    /// <para>**Usage**</para>
+    /// </summary>
+    [JsonPropertyName("style")]
+    public ScreencastActionStyle? Style { get; set; }
 }

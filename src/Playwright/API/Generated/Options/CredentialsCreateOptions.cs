@@ -40,6 +40,7 @@ public class CredentialsCreateOptions
         Id = clone.Id;
         PrivateKey = clone.PrivateKey;
         PublicKey = clone.PublicKey;
+        SignCount = clone.SignCount;
         UserHandle = clone.UserHandle;
     }
 
@@ -54,6 +55,16 @@ public class CredentialsCreateOptions
     /// <summary><para>Base64url-encoded SPKI (DER) public key. Auto-generated if omitted.</para></summary>
     [JsonPropertyName("publicKey")]
     public string? PublicKey { get; set; }
+
+    /// <summary>
+    /// <para>
+    /// Initial value of the <a href="https://www.w3.org/TR/webauthn-2/#signature-counter">signature
+    /// counter</a>. The counter is incremented by one on every successful <c>navigator.credentials.get()</c>
+    /// assertion, so the first assertion reports <c>signCount + 1</c>. Defaults to <c>0</c>.
+    /// </para>
+    /// </summary>
+    [JsonPropertyName("signCount")]
+    public int? SignCount { get; set; }
 
     /// <summary><para>Base64url-encoded user handle. Auto-generated if omitted.</para></summary>
     [JsonPropertyName("userHandle")]

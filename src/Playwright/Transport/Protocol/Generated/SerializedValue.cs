@@ -68,6 +68,9 @@ internal class SerializedValue
     [JsonPropertyName("h")]
     public int? H { get; set; }
 
+    [JsonPropertyName("fn")]
+    public string Fn { get; set; } = null!;
+
     [JsonPropertyName("id")]
     public int? Id { get; set; }
 

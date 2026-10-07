@@ -128,7 +128,7 @@ public class PageAriaSnapshotTests : PageTestEx
                     - listitem: ""Three""
             ", new() { Timeout = 300 });
         });
-        StringAssert.Contains("Expect \"ToMatchAriaSnapshotAsync\" with timeout 300ms", exception.Message);
+        StringAssert.Contains("Expect \"ToMatchAriaSnapshotAsync\" Locator(\"body\") with timeout 300ms", exception.Message);
         StringAssert.Contains("- unexpected value", exception.Message);
     }
 
@@ -198,5 +198,36 @@ public class PageAriaSnapshotTests : PageTestEx
         await Expect(Page.Locator("body")).ToMatchAriaSnapshotAsync(@"
             - textbox ""Zip"" [invalid]
         ");
+    }
+
+    [PlaywrightTest("page-aria-snapshot-ai.spec.ts", "should generate refs")]
+    public async Task ShouldGenerateRefs()
+    {
+        await Page.SetContentAsync(@"
+            <button>One</button>
+            <button>Two</button>
+            <button>Three</button>
+        ");
+
+        var snapshot1 = await Page.AriaSnapshotAsync(new() { Mode = AriaSnapshotMode.Ai });
+        StringAssert.Contains(_unshift(@"
+            - generic [active] [ref=e1]:
+              - button ""One"" [ref=e2]
+              - button ""Two"" [ref=e3]
+              - button ""Three"" [ref=e4]
+        "), snapshot1);
+        await Expect(Page.GetByRef("e2")).ToHaveTextAsync("One");
+        await Expect(Page.GetByRef("e3")).ToHaveTextAsync("Two");
+        await Expect(Page.GetByRef("e4")).ToHaveTextAsync("Three");
+
+        await Page.GetByRef("e3").EvaluateAsync("e => e.textContent = 'Not Two'");
+
+        var snapshot2 = await Page.AriaSnapshotAsync(new() { Mode = AriaSnapshotMode.Ai });
+        StringAssert.Contains(_unshift(@"
+            - generic [active] [ref=e1]:
+              - button ""One"" [ref=e2]
+              - button ""Not Two"" [ref=e5]
+              - button ""Three"" [ref=e4]
+        "), snapshot2);
     }
 }

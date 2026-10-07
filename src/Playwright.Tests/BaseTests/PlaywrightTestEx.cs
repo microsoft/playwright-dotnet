@@ -22,6 +22,7 @@
  * SOFTWARE.
  */
 
+using Microsoft.Playwright.TestAdapter;
 using Microsoft.Playwright.Tests.TestServer;
 
 namespace Microsoft.Playwright.Tests;
@@ -53,6 +54,6 @@ public class PlaywrightTestEx : PlaywrightTest
         Server = http.Server;
         HttpsServer = http.HttpsServer;
         TestConstants.BrowserName = BrowserName;
-        Playwright.Selectors.SetTestIdAttribute("data-testid");
+        Playwright.Selectors.SetTestIdAttribute(PlaywrightSettingsProvider.TestIdAttribute);
     }
 }
