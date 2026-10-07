@@ -26,6 +26,39 @@ namespace Microsoft.Playwright.Tests;
 
 public class PageAriaSnapshotTests : PageTestEx
 {
+    [PlaywrightTest]
+    [TestCase(AriaSnapshotMode.Default)]
+    [TestCase(AriaSnapshotMode.Ai)]
+    public async Task ShouldIncludeBoundingBoxesInPageSnapshot(AriaSnapshotMode mode)
+    {
+        await Page.SetContentAsync("<button style='position: absolute; left: 20px; top: 30px; width: 100px; height: 40px'>Submit</button>");
+
+        var snapshot = await Page.AriaSnapshotAsync(new() { Mode = mode });
+        StringAssert.DoesNotContain("[box=", snapshot);
+        Assert.AreEqual(snapshot, await Page.AriaSnapshotAsync(new() { Mode = mode, Boxes = false }));
+
+        var snapshotWithBoxes = await Page.AriaSnapshotAsync(new() { Mode = mode, Boxes = true });
+        StringAssert.Contains("[box=20,30,100,40]", snapshotWithBoxes);
+        Assert.AreEqual(snapshot, await Page.AriaSnapshotAsync(new() { Mode = mode }));
+    }
+
+    [PlaywrightTest]
+    [TestCase(AriaSnapshotMode.Default)]
+    [TestCase(AriaSnapshotMode.Ai)]
+    public async Task ShouldIncludeBoundingBoxesInLocatorSnapshot(AriaSnapshotMode mode)
+    {
+        await Page.SetContentAsync("<button style='position: absolute; left: 20px; top: 30px; width: 100px; height: 40px'>Submit</button>");
+        var locator = Page.GetByRole(AriaRole.Button);
+
+        var snapshot = await locator.AriaSnapshotAsync(new() { Mode = mode });
+        StringAssert.DoesNotContain("[box=", snapshot);
+        Assert.AreEqual(snapshot, await locator.AriaSnapshotAsync(new() { Mode = mode, Boxes = false }));
+
+        var snapshotWithBoxes = await locator.AriaSnapshotAsync(new() { Mode = mode, Boxes = true });
+        StringAssert.Contains("[box=20,30,100,40]", snapshotWithBoxes);
+        Assert.AreEqual(snapshot, await locator.AriaSnapshotAsync(new() { Mode = mode }));
+    }
+
     private string _unshift(string snapshot)
     {
         var lines = snapshot.Split('\n');
