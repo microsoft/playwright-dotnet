@@ -357,6 +357,7 @@ internal class Frame : ChannelOwner, IFrame
             {
                 ["selector"] = selector,
                 ["force"] = options?.Force,
+                ["scroll"] = options?.Scroll,
                 ["modifiers"] = options?.Modifiers?.Select(m => m.ToValueString()),
                 ["trial"] = options?.Trial,
                 ["position"] = options?.Position,
@@ -465,6 +466,7 @@ internal class Frame : ChannelOwner, IFrame
             {
                 ["selector"] = selector,
                 ["force"] = options?.Force,
+                ["scroll"] = options?.Scroll,
                 ["modifiers"] = options?.Modifiers?.Select(m => m.ToValueString()),
                 ["position"] = options?.Position,
                 ["trial"] = options?.Trial,
@@ -605,6 +607,7 @@ internal class Frame : ChannelOwner, IFrame
                 ["selector"] = selector,
                 ["button"] = options?.Button,
                 ["force"] = options?.Force,
+                ["scroll"] = options?.Scroll,
                 ["delay"] = options?.Delay,
                 ["clickCount"] = options?.ClickCount,
                 ["modifiers"] = options?.Modifiers?.Select(m => m.ToValueString()),
@@ -631,6 +634,7 @@ internal class Frame : ChannelOwner, IFrame
                 ["button"] = options?.Button,
                 ["delay"] = options?.Delay,
                 ["force"] = options?.Force,
+                ["scroll"] = options?.Scroll,
                 ["modifiers"] = options?.Modifiers?.Select(m => m.ToValueString()),
                 ["position"] = options?.Position,
                 ["steps"] = steps,
@@ -647,6 +651,7 @@ internal class Frame : ChannelOwner, IFrame
             {
                 ["selector"] = selector,
                 ["force"] = options?.Force,
+                ["scroll"] = options?.Scroll,
                 ["position"] = options?.Position,
                 ["trial"] = options?.Trial,
                 ["strict"] = options?.Strict,
@@ -661,6 +666,7 @@ internal class Frame : ChannelOwner, IFrame
             {
                 ["selector"] = selector,
                 ["force"] = options?.Force,
+                ["scroll"] = options?.Scroll,
                 ["position"] = options?.Position,
                 ["trial"] = options?.Trial,
                 ["strict"] = options?.Strict,
@@ -675,6 +681,7 @@ internal class Frame : ChannelOwner, IFrame
             {
                 ["selector"] = selector,
                 ["force"] = options?.Force,
+                ["scroll"] = options?.Scroll,
                 ["position"] = options?.Position,
                 ["trial"] = options?.Trial,
                 ["strict"] = options?.Strict,
@@ -950,6 +957,7 @@ internal class Frame : ChannelOwner, IFrame
                 ["source"] = source,
                 ["target"] = target,
                 ["force"] = options?.Force,
+                ["scroll"] = options?.Scroll,
                 ["steps"] = options?.Steps,
                 ["trial"] = options?.Trial,
                 ["strict"] = options?.Strict,
