@@ -172,6 +172,7 @@ public class PlaywrightSettingsXml
     public bool? Headless { get; set; }
     public float? ExpectTimeout { get; set; }
     public string? TestIdAttribute { get; set; }
+
+    [Obsolete("Use MSTest RetryAttribute or Microsoft.Testing.Extensions.Retry instead.")]
     public int? Retries { get; set; }
 }
-
