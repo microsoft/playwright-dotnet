@@ -178,6 +178,8 @@ internal class Page : ChannelOwner, IPage
 
     public Frame MainFrame { get; }
 
+    public IWebMCP Webmcp => MainFrame.Webmcp;
+
     IBrowserContext IPage.Context => Context;
 
     public BrowserContext Context { get; set; }

@@ -51,6 +51,7 @@ internal class Frame : ChannelOwner, IFrame
         Name = initializer.Name;
         ParentFrame = initializer.ParentFrame;
         _loadStates = initializer.LoadStates;
+        Webmcp = new WebMCP(this);
     }
 
     /// <summary>
@@ -76,6 +77,8 @@ internal class Frame : ChannelOwner, IFrame
     public IPage Page { get; internal set; } = null!;
 
     public bool IsDetached { get; internal set; }
+
+    public IWebMCP Webmcp { get; }
 
     internal override void OnMessage(string method, JsonElement serverParams)
     {

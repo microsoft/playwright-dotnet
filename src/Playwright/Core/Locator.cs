@@ -48,6 +48,8 @@ internal class Locator : ILocator
 
     private static string _testIdAttributeName = "data-testid";
 
+    private string? _stringRepresentation;
+
     public Locator(Frame parent, string selector, LocatorLocatorOptions? options = null, bool? visible = null)
     {
         _frame = parent;
@@ -424,7 +426,24 @@ internal class Locator : ILocator
               false,
               title);
 
-    public override string ToString() => "Locator@" + _selector;
+    public override string ToString()
+    {
+        if (_stringRepresentation == null)
+        {
+            try
+            {
+                // ToString() must be synchronous, so block on the driver call. The result is cached.
+#pragma warning disable VSTHRD002
+                _stringRepresentation = _frame.WrapApiCallAsync(() => _frame._connection.LocalUtils!.AsLocatorDescriptionAsync(_selector), true).GetAwaiter().GetResult();
+#pragma warning restore VSTHRD002
+            }
+            catch
+            {
+                return "Locator@" + _selector;
+            }
+        }
+        return _stringRepresentation;
+    }
 
     private T ConvertOptions<T>(object? source, T? inheritFrom = default)
         where T : class, new()
@@ -688,9 +707,15 @@ internal class Locator : ILocator
         var result = await _frame.SendMessageToServerAsync("resolveSelector", new Dictionary<string, object?>
         {
             ["selector"] = _selector,
+            ["sdkLanguage"] = "csharp",
         }).ConfigureAwait(false);
         var resolvedSelector = result!.Value.GetProperty("resolvedSelector").ToString();
-        return new Locator(_frame, resolvedSelector);
+        var locator = new Locator(_frame, resolvedSelector);
+        if (result.Value.TryGetProperty("locatorCode", out var locatorCode))
+        {
+            locator._stringRepresentation = locatorCode.GetString();
+        }
+        return locator;
     }
 }
 

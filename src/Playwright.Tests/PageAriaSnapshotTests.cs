@@ -230,4 +230,61 @@ public class PageAriaSnapshotTests : PageTestEx
               - button ""Three"" [ref=e4]
         "), snapshot2);
     }
+
+    [PlaywrightTest("page-aria-snapshot-ai.spec.ts", "should stitch all frame snapshots")]
+    public async Task ShouldStitchAllFrameSnapshots()
+    {
+        await Page.GotoAsync(Server.Prefix + "/frames/nested-frames.html");
+        var snapshot = await Page.AriaSnapshotAsync(new() { Mode = AriaSnapshotMode.Ai });
+        StringAssert.Contains(_unshift(@"
+            - generic [active] [ref=e1]:
+              - iframe [ref=e2]:
+                - generic [ref=f1e1]:
+                  - iframe [ref=f1e2]:
+                    - generic [ref=f3e1]: Hi, I'm frame
+                  - iframe [ref=f1e3]:
+                    - generic [ref=f4e1]: Hi, I'm frame
+              - iframe [ref=e3]:
+                - generic [ref=f2e1]: Hi, I'm frame
+        "), snapshot);
+
+        var href = await Page.GetByRef("e1").EvaluateAsync<string>("e => e.ownerDocument.defaultView.location.href");
+        Assert.AreEqual(Server.Prefix + "/frames/nested-frames.html", href);
+
+        var href2 = await Page.GetByRef("f1e2").EvaluateAsync<string>("e => e.ownerDocument.defaultView.location.href");
+        Assert.AreEqual(Server.Prefix + "/frames/two-frames.html", href2);
+
+        var href3 = await Page.GetByRef("f4e2").EvaluateAsync<string>("e => e.ownerDocument.defaultView.location.href");
+        Assert.AreEqual(Server.Prefix + "/frames/frame.html", href3);
+
+        {
+            var resolved = await Page.GetByRef("e1").NormalizeAsync();
+            Assert.AreEqual("""Locator("body")""", resolved.ToString());
+        }
+        {
+            var resolved = await Page.GetByRef("f4e2").NormalizeAsync();
+            Assert.AreEqual("""Locator("iframe[name=\"2frames\"]").ContentFrame.Locator("iframe[name=\"dos\"]").ContentFrame.GetByText("Hi, I'm frame")""", resolved.ToString());
+        }
+        {
+            // Should tolerate .Describe().
+            var resolved = await Page.GetByRef("f3e2").Describe("foo bar").NormalizeAsync();
+            Assert.AreEqual("""Locator("iframe[name=\"2frames\"]").ContentFrame.Locator("iframe[name=\"uno\"]").ContentFrame.GetByText("Hi, I'm frame")""", resolved.ToString());
+        }
+        {
+            var exception = await PlaywrightAssert.ThrowsAsync<PlaywrightException>(() => Page.GetByRef("e1000").NormalizeAsync());
+            StringAssert.Contains("No element matching aria-ref=e1000", exception.Message);
+        }
+    }
+
+    [PlaywrightTest("page-aria-snapshot-ai.spec.ts", "should normalize ref locator to locator code")]
+    public async Task ShouldNormalizeRefLocatorToLocatorCode()
+    {
+        await Page.SetContentAsync("<button>Submit</button>");
+        var snapshot = await Page.AriaSnapshotAsync(new() { Mode = AriaSnapshotMode.Ai });
+        StringAssert.Contains("""- button "Submit" [ref=e2]""", snapshot);
+
+        var normalized = await Page.GetByRef("e2").NormalizeAsync();
+        Assert.AreEqual("""GetByRole(AriaRole.Button, new() { Name = "Submit" })""", normalized.ToString());
+        Assert.AreEqual(Page.GetByRole(AriaRole.Button, new() { Name = "Submit" }).ToString(), normalized.ToString());
+    }
 }

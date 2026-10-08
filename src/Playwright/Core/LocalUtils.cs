@@ -122,6 +122,16 @@ internal class LocalUtils : ChannelOwner
             { "stacksId", stacksId },
         });
 
+    internal async Task<string> AsLocatorDescriptionAsync(string selector)
+    {
+        var response = await SendMessageToServerAsync("asLocatorDescription", new Dictionary<string, object?>
+        {
+            { "selector", selector },
+            { "sdkLanguage", "csharp" },
+        }).ConfigureAwait(false);
+        return response!.Value.GetProperty("description").ToString();
+    }
+
     internal async Task<string> TracingStartedAsync(string? tracesDir, string traceName)
     {
         var response = await SendMessageToServerAsync("tracingStarted", new Dictionary<string, object?>

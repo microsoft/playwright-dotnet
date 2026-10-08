@@ -123,7 +123,7 @@ public partial interface IKeyboard
     /// or <c>keypress</c> events.
     /// </para>
     /// <para>**Usage**</para>
-    /// <code>await page.Keyboard.PressAsync("嗨");</code>
+    /// <code>await page.Keyboard.InsertTextAsync("嗨");</code>
     /// <para>
     /// Modifier keys DO NOT effect <c>keyboard.insertText</c>. Holding down <c>Shift</c>
     /// will not type the text in upper case.
