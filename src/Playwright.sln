@@ -39,6 +39,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Playwright.Xunit.v3", "Play
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Playwright.MSTest.v4", "Playwright.MSTest.v4\Playwright.MSTest.v4.csproj", "{391F8C08-8C76-4D26-BBCF-8A3E00252075}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Playwright.Testing.Platform", "Playwright.Testing.Platform\Playwright.Testing.Platform.csproj", "{C70DD201-4711-426C-A50B-E8668987FD34}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -93,6 +95,10 @@ Global
 		{391F8C08-8C76-4D26-BBCF-8A3E00252075}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{391F8C08-8C76-4D26-BBCF-8A3E00252075}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{391F8C08-8C76-4D26-BBCF-8A3E00252075}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C70DD201-4711-426C-A50B-E8668987FD34}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C70DD201-4711-426C-A50B-E8668987FD34}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C70DD201-4711-426C-A50B-E8668987FD34}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C70DD201-4711-426C-A50B-E8668987FD34}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

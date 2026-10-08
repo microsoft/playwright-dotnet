@@ -23,6 +23,7 @@
  */
 
 using System.Threading.Tasks;
+using Microsoft.Playwright.TestAdapter;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Microsoft.Playwright.MSTest;
@@ -40,10 +41,6 @@ public class ContextTest : BrowserTest
 
     public virtual BrowserNewContextOptions ContextOptions()
     {
-        return new()
-        {
-            Locale = "en-US",
-            ColorScheme = ColorScheme.Light,
-        };
+        return PlaywrightSettingsProvider.ContextOptions;
     }
 }
