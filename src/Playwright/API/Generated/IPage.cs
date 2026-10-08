@@ -3971,6 +3971,16 @@ public partial interface IPage
 
     /// <summary>
     /// <para>
+    /// Tools that the main frame registers through the experimental <see cref="IWebMCP"/>
+    /// browser API. Shortcut for <see cref="IFrame.Webmcp"/> of <see cref="IPage.MainFrame"/>,
+    /// see <see cref="IWebMCP"/> for details.
+    /// </para>
+    /// <para>**Usage**</para>
+    /// </summary>
+    public IWebMCP Webmcp { get; }
+
+    /// <summary>
+    /// <para>
     /// This method returns all of the dedicated <a href="https://developer.mozilla.org/en-US/docs/Web/API/Web_Workers_API">WebWorkers</a>
     /// associated with the page.
     /// </para>

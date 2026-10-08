@@ -1223,6 +1223,20 @@ public partial interface ILocator
     /// This is useful for converting implementation-detail selectors into more resilient,
     /// human-readable locators.
     /// </para>
+    /// <para>**Usage**</para>
+    /// <para>
+    /// An agent can pick an element by its ref from an <see cref="IPage.AriaSnapshotAsync"/>
+    /// taken in the <c>"ai"</c> mode. Refs only work for the latest snapshot. Normalize
+    /// the ref locator and convert it to a string to get resilient locator code in your
+    /// language, the same way <c>codegen</c> does.
+    /// </para>
+    /// <para>Consider the following aria snapshot.</para>
+    /// <para>You can turn the ref into locator code:</para>
+    /// <code>
+    /// var normalized = await page.GetByRef("e2").NormalizeAsync();<br/>
+    /// Console.WriteLine(normalized.ToString());<br/>
+    /// // GetByRole(AriaRole.Button, new() { Name = "Submit" })
+    /// </code>
     /// </summary>
     Task<ILocator> NormalizeAsync();
 

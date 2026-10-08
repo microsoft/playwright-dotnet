@@ -1983,4 +1983,12 @@ public partial interface IFrame
     /// </param>
     /// <param name="options">Call options</param>
     Task WaitForURLAsync(Func<string, bool> url, FrameWaitForURLOptions? options = default);
+
+    /// <summary>
+    /// <para>
+    /// Tools that the frame registers through the experimental <see cref="IWebMCP"/> browser
+    /// API. See <see cref="IWebMCP"/> for details.
+    /// </para>
+    /// </summary>
+    public IWebMCP Webmcp { get; }
 }
