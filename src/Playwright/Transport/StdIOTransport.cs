@@ -24,6 +24,8 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.IO;
+using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -140,41 +142,36 @@ internal class StdIOTransport : IDisposable
         var originalInputEncoding = Console.InputEncoding;
         var originalOutputEncoding = Console.OutputEncoding;
 
-        var hasConsole = true;
         try
         {
-            var height = Console.WindowHeight;
-        }
-        catch
-        {
-            hasConsole = false;
-        }
+            try
+            {
+                Console.InputEncoding = encoding;
+                Console.OutputEncoding = encoding;
+            }
+            catch (IOException ex)
+            {
+                if (RuntimeInformation.FrameworkDescription.StartsWith(".NET Framework", StringComparison.Ordinal) &&
+                    Console.InputEncoding.GetPreamble().Length > 0)
+                {
+                    throw new IOException("Cannot start the Playwright driver with a byte order mark in its input. Set Console.InputEncoding to new UTF8Encoding(false) before detaching the console.", ex);
+                }
+            }
 
-        if (hasConsole)
-        {
-            Console.InputEncoding = encoding;
-            Console.OutputEncoding = encoding;
-        }
-
-        try
-        {
             process.Start();
         }
         finally
         {
-            if (hasConsole)
+            try
             {
-                try
-                {
-                    // Restore the original encodings
-                    Console.InputEncoding = originalInputEncoding;
-                    Console.OutputEncoding = originalOutputEncoding;
-                }
-                catch (System.IO.IOException)
-                {
-                    // It can fail under some conditions:
-                    // https://github.com/microsoft/playwright-dotnet/issues/2888
-                }
+                // Restore the original encodings
+                Console.InputEncoding = originalInputEncoding;
+                Console.OutputEncoding = originalOutputEncoding;
+            }
+            catch (IOException)
+            {
+                // It can fail under some conditions:
+                // https://github.com/microsoft/playwright-dotnet/issues/2888
             }
         }
     }
