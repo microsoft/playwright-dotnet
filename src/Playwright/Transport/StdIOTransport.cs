@@ -24,6 +24,7 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.IO;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -73,10 +74,13 @@ internal class StdIOTransport : IDisposable
         if (!IsClosed)
         {
             IsClosed = true;
-            TransportClosed?.Invoke(this, closeReason);
             _readerCancellationSource?.Cancel();
             _process.StandardInput.Close();
+            // Close can run inside a message callback on the stdout reader. Drain
+            // here so the driver can flush its final output before it exits.
+            _process.StandardOutput.BaseStream.CopyTo(Stream.Null);
             _process.WaitForExit();
+            TransportClosed?.Invoke(this, closeReason);
         }
     }
 
@@ -84,7 +88,7 @@ internal class StdIOTransport : IDisposable
     {
         try
         {
-            if (!_readerCancellationSource.IsCancellationRequested)
+            if (!IsClosed && !_readerCancellationSource.IsCancellationRequested)
             {
                 int len = message.Length;
                 byte[] ll = new byte[4];
@@ -220,7 +224,12 @@ internal class StdIOTransport : IDisposable
             while (!token.IsCancellationRequested && !_process.HasExited)
             {
                 int read = await stream.BaseStream.ReadAsync(buffer, 0, DefaultBufferSize, token).ConfigureAwait(false);
-                if (!token.IsCancellationRequested)
+                if (read == 0)
+                {
+                    Close(new TargetClosedException("Driver output closed"));
+                    break;
+                }
+                if (!IsClosed && !token.IsCancellationRequested)
                 {
                     _data.AddRange(new ArraySegment<byte>(buffer, 0, read));
 
@@ -243,7 +252,7 @@ internal class StdIOTransport : IDisposable
         var offset = 0;
         try
         {
-            while (!token.IsCancellationRequested)
+            while (!IsClosed && !token.IsCancellationRequested)
             {
                 if (_currentMessageSize == null)
                 {
