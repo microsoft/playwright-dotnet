@@ -2,6 +2,7 @@ import fs from 'fs';
 import http from 'http';
 import path from 'path';
 import childProcess from 'child_process';
+import crypto from 'crypto';
 import { test as base, BrowserServer } from '@playwright/test';
 import { XMLParser } from 'fast-xml-parser';
 import { AddressInfo } from 'net';
@@ -19,7 +20,7 @@ type RunResult = {
 
 export const test = base.extend<{
   proxyServer: ProxyServer;
-  testMode: 'nunit' | 'mstest' | 'mstest.v4' | 'xunit' | 'xunit.v3';
+  testMode: 'nunit' | 'mstest' | 'mstest.v4' | 'mstest.mtp' | 'xunit' | 'xunit.v3';
   runTest: (files: Record<string, string>, command: string, env?: NodeJS.ProcessEnv) => Promise<RunResult>;
   launchServer: (options: { port: number }) => Promise<void>;
   server: SimpleServer;
@@ -48,13 +49,22 @@ export const test = base.extend<{
   runTest: async ({ testMode }, use, testInfo) => {
     const testResults: RunResult[] = [];
     await use(async (files, command, env) => {
-      const testDir = testInfo.outputPath();
+      const testDir = testMode === 'mstest.mtp'
+        ? path.join(testInfo.project.outputDir, 'mtp-' + crypto.createHash('sha1').update(testInfo.testId).digest('hex').slice(0, 8))
+        : testInfo.outputPath();
+      await fs.promises.mkdir(testDir, { recursive: true });
       const testClassName = testInfo.titlePath.join(' ').replace(/[^\w]/g, '');
       for (const [fileName, fileContent] of Object.entries(files)) {
         await fs.promises.writeFile(path.join(testDir, fileName), unintentFile(fileContent).replaceAll('<class-name>', testClassName));
       }
       const trxFile = path.join(testDir, 'result.trx');
-      command += ` --logger "trx;logfilename=${trxFile}" --logger "console;verbosity=detailed" --filter "${testClassName}" ${path.join('..', '..')}`;
+      if (testMode === 'mstest.mtp') {
+        const [runnerCommand, mtpArguments = ''] = command.split(' -- ');
+        const reportArguments = /(^|\s)--list-tests(\s|$)/.test(mtpArguments) ? '' : '--report-trx --report-trx-filename result.trx';
+        command = `${runnerCommand} --project "${path.join('..', '..', 'Playwright.TestingHarnessTest.csproj')}" -- ${reportArguments} --results-directory "${testDir}" --output Detailed ${mtpArguments}`;
+      } else {
+        command += ` --logger "trx;logfilename=${trxFile}" --logger "console;verbosity=detailed" --filter "${testClassName}" ${path.join('..', '..')}`;
+      }
       const cp = childProcess.spawn(command, {
         cwd: testDir,
         shell: true,
@@ -83,8 +93,8 @@ export const test = base.extend<{
       const testResult: RunResult = {
         command,
         rawStdout,
-        stdout: extractVstestMessages(rawStdout, 'Standard Output Messages:'),
-        stderr: extractVstestMessages(rawStdout, 'Standard Error Messages:'),
+        stdout: testMode === 'mstest.mtp' ? rawStdout : extractVstestMessages(rawStdout, 'Standard Output Messages:'),
+        stderr: testMode === 'mstest.mtp' ? rawStderr : extractVstestMessages(rawStdout, 'Standard Error Messages:'),
         passed,
         failed,
         total,
@@ -101,6 +111,10 @@ export const test = base.extend<{
         if (testResult.rawStdout) {
           console.log(`Stdout:`);
           console.log(testResult.rawStdout);
+        }
+        if (testResult.stderr) {
+          console.log(`Stderr:`);
+          console.log(testResult.stderr);
         }
         console.log('=========================================');
       }
@@ -134,7 +148,7 @@ function unintentFile(content: string): string {
     const match = /^ +/.exec(line);
     return match ? match[0].length : 0;
   }).filter(line => line > 0));
-  if (minIntention > 0) {
+  if (Number.isFinite(minIntention) && minIntention > 0) {
     lines.forEach((line, index) => {
       lines[index] = line.slice(minIntention);
     });

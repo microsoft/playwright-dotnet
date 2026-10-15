@@ -62,6 +62,10 @@ jobs:
         run: |
           dotnet build ./src/Playwright.TestAdapter/
           dotnet pack ./src/Playwright.TestAdapter/ -o ./src/Playwright.LocalNugetTest/nupkg
+      - name: Pack Playwright MTP integration
+        run: |
+          dotnet pack ./src/Playwright.MSTest.v4/ -o ./src/Playwright.LocalNugetTest/nupkg
+          dotnet pack ./src/Playwright.Testing.Platform/ -o ./src/Playwright.LocalNugetTest/nupkg
       - name: Build Playwright.LocalNugetTest 
         run: dotnet build
         working-directory: ./src/Playwright.LocalNugetTest/
@@ -71,3 +75,5 @@ jobs:
       - name: Run Tests
         run: dotnet test
         working-directory: ./src/Playwright.LocalNugetTest/
+      - name: Run MTP NuGet tests
+        run: dotnet run --project ./src/Playwright.LocalNugetTest.MTP/ -- --report-trx
