@@ -633,6 +633,7 @@ internal class Page : ChannelOwner, IPage
                 Position = options?.Position,
                 Modifiers = options?.Modifiers,
                 Force = options?.Force,
+                Scroll = options?.Scroll,
                 Timeout = options?.Timeout,
                 Trial = options?.Trial,
                 Strict = options?.Strict,
@@ -807,6 +808,7 @@ internal class Page : ChannelOwner, IPage
                 Position = options?.Position,
                 Modifiers = options?.Modifiers,
                 Force = options?.Force,
+                Scroll = options?.Scroll,
 #pragma warning disable CS0612 // Type or member is obsolete
                 NoWaitAfter = options?.NoWaitAfter,
 #pragma warning restore CS0612 // Type or member is obsolete
@@ -825,6 +827,7 @@ internal class Page : ChannelOwner, IPage
             Modifiers = options?.Modifiers,
             Timeout = options?.Timeout,
             Force = options?.Force,
+            Scroll = options?.Scroll,
             Trial = options?.Trial,
             Strict = options?.Strict,
         });
@@ -1043,6 +1046,7 @@ internal class Page : ChannelOwner, IPage
         {
             Position = options?.Position,
             Force = options?.Force,
+            Scroll = options?.Scroll,
             Strict = options?.Strict,
             Timeout = options?.Timeout,
             Trial = options?.Trial,
@@ -1051,6 +1055,7 @@ internal class Page : ChannelOwner, IPage
         {
             Position = options?.Position,
             Force = options?.Force,
+            Scroll = options?.Scroll,
             Timeout = options?.Timeout,
             Trial = options?.Trial,
             Strict = options?.Strict,
@@ -1062,6 +1067,7 @@ internal class Page : ChannelOwner, IPage
         {
             Position = options?.Position,
             Force = options?.Force,
+            Scroll = options?.Scroll,
             Strict = options?.Strict,
             Timeout = options?.Timeout,
             Trial = options?.Trial,
@@ -1073,6 +1079,7 @@ internal class Page : ChannelOwner, IPage
         {
             Position = options?.Position,
             Force = options?.Force,
+            Scroll = options?.Scroll,
             Timeout = options?.Timeout,
             Trial = options?.Trial,
             Strict = options?.Strict,
@@ -1123,6 +1130,7 @@ internal class Page : ChannelOwner, IPage
                 Modifiers = options?.Modifiers,
                 Position = options?.Position,
                 Force = options?.Force,
+                Scroll = options?.Scroll,
                 Timeout = options?.Timeout,
                 Trial = options?.Trial,
                 Strict = options?.Strict,
@@ -1223,6 +1231,7 @@ internal class Page : ChannelOwner, IPage
         => MainFrame.DragAndDropAsync(source, target, new()
         {
             Force = options?.Force,
+            Scroll = options?.Scroll,
             Steps = options?.Steps,
             Timeout = options?.Timeout,
             Trial = options?.Trial,
