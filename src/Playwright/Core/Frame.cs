@@ -1059,6 +1059,11 @@ internal class Frame : ChannelOwner, IFrame
             baseURL = (Page as Page)?.Context.BaseURL,
         }.Match(Url))
         {
+            if (options?.WaitUntil == WaitUntilState.Commit)
+            {
+                return Task.CompletedTask;
+            }
+
             return WaitForLoadStateAsync(ToLoadState(options?.WaitUntil), new() { Timeout = options?.Timeout });
         }
 

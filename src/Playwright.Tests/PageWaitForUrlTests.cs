@@ -45,6 +45,71 @@ public class PageWaitForUrlTests : PageTestEx
         StringAssert.Contains("Timeout 2500ms exceeded.", exception.Message);
     }
 
+    [PlaywrightTest]
+    public async Task ShouldRespectCommitWhenUrlAlreadyMatches()
+    {
+        var responseTask = new TaskCompletionSource<bool>();
+        Server.SetRoute("/one-style.css", async ctx =>
+        {
+            await responseTask.Task;
+            await ctx.Response.WriteAsync("body { color: red; }");
+        });
+
+        try
+        {
+            var requestTask = Server.WaitForRequest("/one-style.css");
+            var url = Server.Prefix + "/one-style.html";
+            await Page.GotoAsync(url, new() { WaitUntil = WaitUntilState.Commit });
+            await requestTask;
+            Assert.AreEqual(url, Page.Url);
+
+            await Task.WhenAll(
+                Page.WaitForURLAsync("**/one-style.html", new() { WaitUntil = WaitUntilState.Commit, Timeout = 3000 }),
+                Page.WaitForURLAsync(new Regex("one-style\\.html$"), new() { WaitUntil = WaitUntilState.Commit, Timeout = 3000 }),
+                Page.WaitForURLAsync(value => value == url, new() { WaitUntil = WaitUntilState.Commit, Timeout = 3000 }),
+                Page.MainFrame.WaitForURLAsync("**/one-style.html", new() { WaitUntil = WaitUntilState.Commit, Timeout = 3000 }),
+                Page.MainFrame.WaitForURLAsync(new Regex("one-style\\.html$"), new() { WaitUntil = WaitUntilState.Commit, Timeout = 3000 }),
+                Page.MainFrame.WaitForURLAsync(value => value == url, new() { WaitUntil = WaitUntilState.Commit, Timeout = 3000 }));
+
+            var defaultTask = Page.WaitForURLAsync("**/one-style.html");
+            var loadTask = Page.WaitForURLAsync("**/one-style.html", new() { WaitUntil = WaitUntilState.Load });
+            await Page.EvaluateAsync("1");
+            Assert.False(defaultTask.IsCompleted);
+            Assert.False(loadTask.IsCompleted);
+            responseTask.TrySetResult(true);
+            await Task.WhenAll(defaultTask, loadTask);
+        }
+        finally
+        {
+            responseTask.TrySetResult(true);
+        }
+    }
+
+    [PlaywrightTest]
+    public async Task ShouldRespectCommitBeforeNavigation()
+    {
+        var responseTask = new TaskCompletionSource<bool>();
+        Server.SetRoute("/one-style.css", async ctx =>
+        {
+            await responseTask.Task;
+            await ctx.Response.WriteAsync("body { color: red; }");
+        });
+
+        try
+        {
+            var waitTask = Page.WaitForURLAsync("**/one-style.html", new() { WaitUntil = WaitUntilState.Commit });
+            Assert.False(waitTask.IsCompleted);
+            await Page.GotoAsync(Server.Prefix + "/one-style.html", new() { WaitUntil = WaitUntilState.Commit });
+            await waitTask;
+            Assert.AreEqual(Server.Prefix + "/one-style.html", Page.Url);
+        }
+        finally
+        {
+            responseTask.TrySetResult(true);
+        }
+        await Page.WaitForLoadStateAsync();
+    }
+
     [PlaywrightTest("page-wait-for-url.spec.ts", "should work with both domcontentloaded and load")]
     public async Task UrlShouldWorkWithBothDomcontentloadedAndLoad()
     {
