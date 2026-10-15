@@ -29,6 +29,7 @@ using System.Dynamic;
 using System.Globalization;
 using System.Linq;
 using System.Numerics;
+using System.Reflection;
 using System.Runtime.Serialization;
 using System.Text.Json;
 using System.Text.RegularExpressions;
@@ -239,6 +240,12 @@ internal static class EvaluateArgumentValueConverter
             return value;
         }
 
+        // object has no shape to copy onto. Keep the parsed value, including nested objects.
+        if (t == typeof(object))
+        {
+            return parsed;
+        }
+
         if (parsed is Array parsedArray)
         {
             var result = (IList)Activator.CreateInstance(t, parsedArray.Length);
@@ -263,16 +270,57 @@ internal static class EvaluateArgumentValueConverter
             }
             visited.Add(parsed, objResult);
 
+            if (objResult is IDictionary dictionary && TryGetGenericDictionaryTypes(t, out var keyType, out var valueType))
+            {
+                foreach (var kv in parsedExpando)
+                {
+                    dictionary[ToExpectedType(kv.Key, keyType, visited)] = ToExpectedType(kv.Value, valueType, visited);
+                }
+
+                return objResult;
+            }
+
             foreach (var kv in parsedExpando)
             {
                 var property = Array.Find(t.GetProperties(), prop => string.Equals(prop.Name, kv.Key, StringComparison.OrdinalIgnoreCase));
-                property?.SetValue(objResult, ToExpectedType(kv.Value, property.PropertyType, visited));
+                if (property != null)
+                {
+                    property.SetValue(objResult, ToExpectedType(kv.Value, property.PropertyType, visited));
+                    continue;
+                }
+
+                var field = Array.Find(t.GetFields(BindingFlags.Public | BindingFlags.Instance), candidate => string.Equals(candidate.Name, kv.Key, StringComparison.OrdinalIgnoreCase));
+                if (field != null)
+                {
+                    field.SetValue(objResult, ToExpectedType(kv.Value, field.FieldType, visited));
+                }
             }
 
             return objResult;
         }
 
         return ChangeType(parsed, t);
+    }
+
+    private static bool TryGetGenericDictionaryTypes(Type type, out Type keyType, out Type valueType)
+    {
+        var dictionaryInterface = type.GetInterfaces().FirstOrDefault(candidate => candidate.IsGenericType && candidate.GetGenericTypeDefinition() == typeof(IDictionary<,>));
+        if (dictionaryInterface == null && type.IsGenericType && type.GetGenericTypeDefinition() == typeof(IDictionary<,>))
+        {
+            dictionaryInterface = type;
+        }
+
+        if (dictionaryInterface == null)
+        {
+            keyType = typeof(object);
+            valueType = typeof(object);
+            return false;
+        }
+
+        var arguments = dictionaryInterface.GetGenericArguments();
+        keyType = arguments[0];
+        valueType = arguments[1];
+        return true;
     }
 
     private static object? ChangeType(object value, Type conversion)

@@ -793,4 +793,58 @@ public class PageEvaluateTests : PageTestEx
         var exception = await PlaywrightAssert.ThrowsAsync<PlaywrightException>(() => Page.EvaluateAsync<ShapeRecord>("() => ({ width: 600, height: 400 })"));
         Assert.IsInstanceOf<MissingMethodException>(exception.InnerException);
     }
+
+    [PlaywrightTest()]
+    public async Task ShouldParseDictionary()
+    {
+        var strings = await Page.EvaluateAsync<Dictionary<string, string>>("() => ({ a: '1', b: '2' })");
+        Assert.AreEqual(2, strings.Count);
+        Assert.AreEqual("1", strings["a"]);
+        Assert.AreEqual("2", strings["b"]);
+
+        var objects = await Page.EvaluateAsync<Dictionary<string, object>>("() => ({ a: '1', b: { c: '3' } })");
+        Assert.AreEqual(2, objects.Count);
+        Assert.AreEqual("1", objects["a"]);
+        dynamic nestedObject = objects["b"];
+        Assert.AreEqual("3", nestedObject.c);
+
+        var nested = await Page.EvaluateAsync<Dictionary<string, Dictionary<string, string>>>("() => ({ outer: { inner: '1' } })");
+        Assert.AreEqual("1", nested["outer"]["inner"]);
+
+        var numbers = await Page.EvaluateAsync<Dictionary<string, int>>("() => ({ a: 1, b: 2 })");
+        Assert.AreEqual(1, numbers["a"]);
+        Assert.AreEqual(2, numbers["b"]);
+
+        var intKeys = await Page.EvaluateAsync<Dictionary<int, string>>("() => ({ 7: 'seven' })");
+        Assert.AreEqual("seven", intKeys[7]);
+
+        var cases = await Page.EvaluateAsync<Dictionary<string, string>>("() => ({ A: 'upper', a: 'lower' })");
+        Assert.AreEqual(2, cases.Count);
+        Assert.AreEqual("upper", cases["A"]);
+        Assert.AreEqual("lower", cases["a"]);
+    }
+
+    [PlaywrightTest()]
+    public async Task ShouldThrowWhenEvaluatingDictionaryInterface()
+    {
+        var exception = await PlaywrightAssert.ThrowsAsync<PlaywrightException>(() => Page.EvaluateAsync<IDictionary<string, string>>("() => ({ a: '1' })"));
+        StringAssert.Contains("Return type mismatch", exception.Message);
+    }
+
+    private class ShapeWithFields
+    {
+        public static int Count;
+        public int Width = 0;
+        public int Height = 0;
+    }
+
+    [PlaywrightTest()]
+    public async Task ShouldParsePublicFields()
+    {
+        ShapeWithFields.Count = 0;
+        var result = await Page.EvaluateAsync<ShapeWithFields>("() => ({ width: 600, height: 400, count: 5, depth: 1 })");
+        Assert.AreEqual(600, result.Width);
+        Assert.AreEqual(400, result.Height);
+        Assert.AreEqual(0, ShapeWithFields.Count);
+    }
 }
