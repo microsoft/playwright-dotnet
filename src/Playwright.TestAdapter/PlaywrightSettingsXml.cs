@@ -58,6 +58,9 @@ public class PlaywrightSettingsXml
                 case "LaunchOptions":
                     LaunchOptions = (BrowserTypeLaunchOptions)ParseXmlIntoClass(typeof(BrowserTypeLaunchOptions), reader);
                     break;
+                case "ContextOptions":
+                    ContextOptions = (BrowserNewContextOptions)ParseXmlIntoClass(typeof(BrowserNewContextOptions), reader);
+                    break;
                 case "ExpectTimeout":
                     reader.Read();
                     ExpectTimeout = float.Parse(reader.Value, CultureInfo.InvariantCulture);
@@ -94,7 +97,7 @@ public class PlaywrightSettingsXml
                 }
                 var type = Nullable.GetUnderlyingType(property.PropertyType) ?? property.PropertyType;
                 var isArrayLike = type.IsArray || (type.IsGenericType && type.GetGenericTypeDefinition() == typeof(IEnumerable<>));
-                if (type.IsPrimitive || type == typeof(string) || isArrayLike)
+                if (type.IsPrimitive || type.IsEnum || type == typeof(string) || isArrayLike)
                 {
                     reader.Read();
                     if (reader.NodeType != XmlNodeType.Text)
@@ -168,6 +171,7 @@ public class PlaywrightSettingsXml
     }
 
     public BrowserTypeLaunchOptions? LaunchOptions { get; set; }
+    public BrowserNewContextOptions? ContextOptions { get; set; }
     public string? BrowserName { get; set; }
     public bool? Headless { get; set; }
     public float? ExpectTimeout { get; set; }

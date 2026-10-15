@@ -118,6 +118,19 @@ public class PlaywrightSettingsProvider : ISettingsProvider
         }
     }
 
+    public static BrowserNewContextOptions ContextOptions
+    {
+        get
+        {
+            // A fresh copy every time, so that a test class mutating the options it got
+            // from ContextOptions() doesn't affect the next one.
+            var contextOptions = new BrowserNewContextOptions(_settings?.ContextOptions ?? new());
+            contextOptions.Locale ??= "en-US";
+            contextOptions.ColorScheme ??= ColorScheme.Light;
+            return contextOptions;
+        }
+    }
+
     private static void ValidateBrowserName(string browserName, string fromText, string suffix)
     {
         if (browserName != BrowserType.Chromium &&
