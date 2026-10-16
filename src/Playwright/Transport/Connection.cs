@@ -125,11 +125,11 @@ internal class Connection : IDisposable
     {
         if (isTracing)
         {
-            _tracingCount++;
+            Interlocked.Increment(ref _tracingCount);
         }
         else
         {
-            _tracingCount--;
+            Interlocked.Decrement(ref _tracingCount);
         }
     }
 
@@ -211,7 +211,7 @@ internal class Connection : IDisposable
             };
         }
 
-        if (_tracingCount > 0 && frames.Count > 0 && @object?.Guid != "localUtils")
+        if (Volatile.Read(ref _tracingCount) > 0 && frames.Count > 0 && @object?.Guid != "localUtils")
         {
             LocalUtils?.AddStackToTracingNoReply(frames, id);
         }
