@@ -159,7 +159,7 @@ internal class BrowserContext : ChannelOwner, IBrowserContext
 
     public IBrowser? Browser => _browser;
 
-    public IReadOnlyList<IPage> Pages => _pages;
+    public IReadOnlyList<IPage> Pages => Snapshot(_pages);
 
     internal Page? OwnerPage { get; set; }
 
@@ -173,7 +173,7 @@ internal class BrowserContext : ChannelOwner, IBrowserContext
 
     public IAPIRequestContext APIRequest => _request;
 
-    public IReadOnlyList<IWorker> ServiceWorkers => _serviceWorkers;
+    public IReadOnlyList<IWorker> ServiceWorkers => Snapshot(_serviceWorkers);
 
     public IReadOnlyList<IPage> BackgroundPages => new List<IPage>();
 
@@ -245,7 +245,10 @@ internal class BrowserContext : ChannelOwner, IBrowserContext
                 {
                     var serviceWorker = serverParams.GetProperty("worker").ToObject<Worker>(_connection.DefaultJsonSerializerOptions)!;
                     ((Worker)serviceWorker).Context = this;
-                    _serviceWorkers.Add(serviceWorker);
+                    lock (_connection.DispatchLock)
+                    {
+                        _serviceWorkers.Add(serviceWorker);
+                    }
                     ServiceWorker?.Invoke(this, serviceWorker);
                     break;
                 }
@@ -858,7 +861,10 @@ internal class BrowserContext : ChannelOwner, IBrowserContext
         ClosingOrClosed = true;
         if (Browser != null)
         {
-            ((Browser)Browser)._contexts.Remove(this);
+            lock (_connection.DispatchLock)
+            {
+                ((Browser)Browser)._contexts.Remove(this);
+            }
             ((Browser)Browser)._browserType.Playwright._selectors._contextsForSelectors.Remove(this);
         }
 
@@ -884,7 +890,10 @@ internal class BrowserContext : ChannelOwner, IBrowserContext
     private void Channel_OnPage(object sender, Page page)
     {
         page.Context = this;
-        _pages.Add(page);
+        lock (_connection.DispatchLock)
+        {
+            _pages.Add(page);
+        }
         Page?.Invoke(this, page);
 
         if (page.Opener?.IsClosed == false)
@@ -905,7 +914,7 @@ internal class BrowserContext : ChannelOwner, IBrowserContext
 
     private async Task<IAsyncDisposable> ExposeBindingAsync(string name, Delegate callback)
     {
-        foreach (var page in _pages)
+        foreach (var page in Snapshot(_pages))
         {
             if (page.Bindings.ContainsKey(name))
             {

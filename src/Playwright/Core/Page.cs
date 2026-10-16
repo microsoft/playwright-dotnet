@@ -195,7 +195,7 @@ internal class Page : ChannelOwner, IPage
 
     public string Url => MainFrame.Url;
 
-    public IReadOnlyList<IFrame> Frames => _frames.ToList().AsReadOnly();
+    public IReadOnlyList<IFrame> Frames => Snapshot(_frames);
 
     public IKeyboard Keyboard { get; }
 
@@ -207,7 +207,7 @@ internal class Page : ChannelOwner, IPage
 
     public IWebStorage SessionStorage { get; }
 
-    public IReadOnlyList<IWorker> Workers => _workers;
+    public IReadOnlyList<IWorker> Workers => Snapshot(_workers);
 
     public IVideo? Video
     {
@@ -287,7 +287,10 @@ internal class Page : ChannelOwner, IPage
                 break;
             case "worker":
                 var worker = serverParams.GetProperty("worker").ToObject<Worker>(_connection.DefaultJsonSerializerOptions);
-                _workers.Add(worker);
+                lock (_connection.DispatchLock)
+                {
+                    _workers.Add(worker);
+                }
                 worker.Page = this;
                 Worker?.Invoke(this, worker);
                 break;
@@ -1338,7 +1341,10 @@ internal class Page : ChannelOwner, IPage
     internal void OnClose()
     {
         IsClosed = true;
-        Context._pages.Remove(this);
+        lock (_connection.DispatchLock)
+        {
+            Context._pages.Remove(this);
+        }
         DisposeHarRouters();
         Close?.Invoke(this, this);
         Context?.FirePageClose(this);
@@ -1411,9 +1417,12 @@ internal class Page : ChannelOwner, IPage
     private void Channel_FrameDetached(object sender, IFrame args)
     {
         var frame = (Frame)args;
-        _frames.Remove(frame);
-        frame.IsDetached = true;
-        frame.ParentFrame?._childFrames?.Remove(frame);
+        lock (_connection.DispatchLock)
+        {
+            _frames.Remove(frame);
+            frame.IsDetached = true;
+            frame.ParentFrame?._childFrames?.Remove(frame);
+        }
         FrameDetached?.Invoke(this, args);
         Context?.FireFrameDetached(args);
     }
@@ -1422,8 +1431,11 @@ internal class Page : ChannelOwner, IPage
     {
         var frame = (Frame)args;
         frame.Page = this;
-        _frames.Add(frame);
-        frame.ParentFrame?._childFrames?.Add(frame);
+        lock (_connection.DispatchLock)
+        {
+            _frames.Add(frame);
+            frame.ParentFrame?._childFrames?.Add(frame);
+        }
         FrameAttached?.Invoke(this, args);
         Context?.FireFrameAttached(args);
     }
