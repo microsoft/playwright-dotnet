@@ -312,4 +312,18 @@ public class BrowserContextBasicTests : BrowserTestEx
         await context.SetOfflineAsync(false);
         Assert.True(await page.EvaluateAsync<bool>("() => window.navigator.onLine"));
     }
+
+    [PlaywrightTest]
+    public async Task ShouldAllowOpeningPagesWhileEnumeratingPages()
+    {
+        // Pages used to hand out the live list, so a page opened from inside the loop made the
+        // next MoveNext throw "Collection was modified".
+        await using var context = await Browser.NewContextAsync();
+        await context.NewPageAsync();
+        foreach (var page in context.Pages)
+        {
+            await context.NewPageAsync();
+        }
+        Assert.AreEqual(2, context.Pages.Count);
+    }
 }
