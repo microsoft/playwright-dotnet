@@ -52,6 +52,13 @@ internal class Connection : IDisposable
     private readonly Root _rootObject;
     private readonly TaskQueue _queue = new();
     private readonly string _callIdPrefix = CreateCallIdPrefix();
+
+    // Taken by the message pump around every write to client-side state that user code reads
+    // (the lists of pages, frames, workers and contexts; the route, binding and handler
+    // registries) and by every reader of that state. Critical sections are synchronous and
+    // never run user code, so the lock is never held across an await.
+    internal readonly object DispatchLock = new();
+
     private int _tracingCount;
     private int _lastId;
     private Exception? _closedError;
