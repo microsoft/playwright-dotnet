@@ -42,6 +42,8 @@ internal class RouteHandler
 
     public int? Times { get; internal set; }
 
+    // Incremented by the owning page or context under the dispatch lock, together with the
+    // WillExpire() check, so that matching requests handled concurrently see each other.
     public int HandledCount { get; set; }
 
     public static List<Dictionary<string, object>> PrepareInterceptionPatterns(List<RouteHandler> handlers)
@@ -138,7 +140,6 @@ internal class RouteHandler
 
     private async Task<bool> HandleInternalAsync(Route route)
     {
-        ++HandledCount;
         var handledTask = route.StartHandlingAsync();
         var maybeTask = Handler.DynamicInvoke(new object[] { route });
         if (maybeTask is Task task)

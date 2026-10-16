@@ -159,7 +159,7 @@ internal class BrowserContext : ChannelOwner, IBrowserContext
 
     public IBrowser? Browser => _browser;
 
-    public IReadOnlyList<IPage> Pages => _pages;
+    public IReadOnlyList<IPage> Pages => Snapshot(_pages);
 
     internal Page? OwnerPage { get; set; }
 
@@ -173,7 +173,7 @@ internal class BrowserContext : ChannelOwner, IBrowserContext
 
     public IAPIRequestContext APIRequest => _request;
 
-    public IReadOnlyList<IWorker> ServiceWorkers => _serviceWorkers;
+    public IReadOnlyList<IWorker> ServiceWorkers => Snapshot(_serviceWorkers);
 
     public IReadOnlyList<IPage> BackgroundPages => new List<IPage>();
 
@@ -245,7 +245,10 @@ internal class BrowserContext : ChannelOwner, IBrowserContext
                 {
                     var serviceWorker = serverParams.GetProperty("worker").ToObject<Worker>(_connection.DefaultJsonSerializerOptions)!;
                     ((Worker)serviceWorker).Context = this;
-                    _serviceWorkers.Add(serviceWorker);
+                    lock (_connection.DispatchLock)
+                    {
+                        _serviceWorkers.Add(serviceWorker);
+                    }
                     ServiceWorker?.Invoke(this, serviceWorker);
                     break;
                 }
@@ -729,7 +732,7 @@ internal class BrowserContext : ChannelOwner, IBrowserContext
     {
         route._context = this;
         var page = route._request.SafePage;
-        var routeHandlers = _routes.ToArray();
+        var routeHandlers = Snapshot(_routes);
         foreach (var routeHandler in routeHandlers)
         {
             // If the page or the context was closed we stall all requests right away.
@@ -741,16 +744,24 @@ internal class BrowserContext : ChannelOwner, IBrowserContext
             {
                 continue;
             }
-            if (!_routes.Contains(routeHandler))
+            bool noRoutesLeft;
+            lock (_connection.DispatchLock)
             {
-                continue;
-            }
-            if (routeHandler.WillExpire())
-            {
-                _routes.Remove(routeHandler);
+                if (!_routes.Contains(routeHandler))
+                {
+                    continue;
+                }
+                if (routeHandler.WillExpire())
+                {
+                    _routes.Remove(routeHandler);
+                }
+                // Counted here, under the lock, rather than in HandleAsync: two matching requests
+                // handled concurrently must not both see the count before the other's increment.
+                routeHandler.HandledCount++;
+                noRoutesLeft = _routes.Count == 0;
             }
             var handled = await routeHandler.HandleAsync(route).ConfigureAwait(false);
-            if (_routes.Count == 0)
+            if (noRoutesLeft)
             {
                 UpdateInterceptionAsync().IgnoreException();
             }
@@ -773,7 +784,7 @@ internal class BrowserContext : ChannelOwner, IBrowserContext
 
     internal async Task OnWebSocketRouteAsync(WebSocketRoute webSocketRoute)
     {
-        var routeHandler = _webSocketRoutes.Find(route => route.Matches(webSocketRoute.Url));
+        var routeHandler = Array.Find(Snapshot(_webSocketRoutes), route => route.Matches(webSocketRoute.Url));
         if (routeHandler != null)
         {
             await routeHandler.HandleAsync(webSocketRoute).ConfigureAwait(false);
@@ -805,7 +816,10 @@ internal class BrowserContext : ChannelOwner, IBrowserContext
             Handler = handler,
             Times = options?.Times,
         };
-        _routes.Insert(0, setting);
+        lock (_connection.DispatchLock)
+        {
+            _routes.Insert(0, setting);
+        }
         await UpdateInterceptionAsync().ConfigureAwait(false);
         return new DisposableStub(async () =>
         {
@@ -817,15 +831,18 @@ internal class BrowserContext : ChannelOwner, IBrowserContext
     {
         var removed = new List<RouteHandler>();
         var remaining = new List<RouteHandler>();
-        foreach (var routeHandler in _routes)
+        lock (_connection.DispatchLock)
         {
-            if (routeHandler.urlMatcher.Equals(globMatch, reMatch, funcMatch, BaseURL, false) && (handler == null || routeHandler.Handler == handler))
+            foreach (var routeHandler in _routes)
             {
-                removed.Add(routeHandler);
-            }
-            else
-            {
-                remaining.Add(routeHandler);
+                if (routeHandler.urlMatcher.Equals(globMatch, reMatch, funcMatch, BaseURL, false) && (handler == null || routeHandler.Handler == handler))
+                {
+                    removed.Add(routeHandler);
+                }
+                else
+                {
+                    remaining.Add(routeHandler);
+                }
             }
         }
         await UnrouteInternalAsync(removed, remaining, UnrouteBehavior.Default).ConfigureAwait(false);
@@ -833,7 +850,10 @@ internal class BrowserContext : ChannelOwner, IBrowserContext
 
     private async Task UnrouteInternalAsync(List<RouteHandler> removed, List<RouteHandler> remaining, UnrouteBehavior? behavior)
     {
-        _routes = remaining;
+        lock (_connection.DispatchLock)
+        {
+            _routes = remaining;
+        }
         if (behavior != null && behavior != UnrouteBehavior.Default)
         {
             var tasks = removed.Select(routeHandler => routeHandler.StopAsync(behavior.Value));
@@ -844,7 +864,11 @@ internal class BrowserContext : ChannelOwner, IBrowserContext
 
     private async Task UpdateInterceptionAsync()
     {
-        var patterns = RouteHandler.PrepareInterceptionPatterns(_routes);
+        List<Dictionary<string, object>> patterns;
+        lock (_connection.DispatchLock)
+        {
+            patterns = RouteHandler.PrepareInterceptionPatterns(_routes);
+        }
         await SendMessageToServerAsync(
             "setNetworkInterceptionPatterns",
             new Dictionary<string, object?>
@@ -858,7 +882,10 @@ internal class BrowserContext : ChannelOwner, IBrowserContext
         ClosingOrClosed = true;
         if (Browser != null)
         {
-            ((Browser)Browser)._contexts.Remove(this);
+            lock (_connection.DispatchLock)
+            {
+                ((Browser)Browser)._contexts.Remove(this);
+            }
             ((Browser)Browser)._browserType.Playwright._selectors._contextsForSelectors.Remove(this);
         }
 
@@ -884,7 +911,10 @@ internal class BrowserContext : ChannelOwner, IBrowserContext
     private void Channel_OnPage(object sender, Page page)
     {
         page.Context = this;
-        _pages.Add(page);
+        lock (_connection.DispatchLock)
+        {
+            _pages.Add(page);
+        }
         Page?.Invoke(this, page);
 
         if (page.Opener?.IsClosed == false)
@@ -895,7 +925,12 @@ internal class BrowserContext : ChannelOwner, IBrowserContext
 
     private void Channel_BindingCall(BindingCall bindingCall)
     {
-        if (_bindings.TryGetValue(bindingCall.Name, out var binding))
+        Delegate? binding;
+        lock (_connection.DispatchLock)
+        {
+            _bindings.TryGetValue(bindingCall.Name, out binding);
+        }
+        if (binding != null)
         {
             _ = bindingCall.CallAsync(binding);
         }
@@ -905,20 +940,23 @@ internal class BrowserContext : ChannelOwner, IBrowserContext
 
     private async Task<IAsyncDisposable> ExposeBindingAsync(string name, Delegate callback)
     {
-        foreach (var page in _pages)
+        lock (_connection.DispatchLock)
         {
-            if (page.Bindings.ContainsKey(name))
+            foreach (var page in _pages)
             {
-                throw new PlaywrightException($"Function \"{name}\" has been already registered in one of the pages");
+                if (page.Bindings.ContainsKey(name))
+                {
+                    throw new PlaywrightException($"Function \"{name}\" has been already registered in one of the pages");
+                }
             }
-        }
 
-        if (_bindings.ContainsKey(name))
-        {
-            throw new PlaywrightException($"Function \"{name}\" has been already registered");
-        }
+            if (_bindings.ContainsKey(name))
+            {
+                throw new PlaywrightException($"Function \"{name}\" has been already registered");
+            }
 
-        _bindings.Add(name, callback);
+            _bindings.Add(name, callback);
+        }
 
         var result = await SendMessageToServerAsync(
             "exposeBinding",
@@ -959,17 +997,25 @@ internal class BrowserContext : ChannelOwner, IBrowserContext
             UrlRegex = options?.UrlRegex,
             UrlString = options?.UrlString,
         }).ConfigureAwait(false);
-        _harRouters.Add(harRouter);
+        lock (_connection.DispatchLock)
+        {
+            _harRouters.Add(harRouter);
+        }
         await harRouter.AddContextRouteAsync(this).ConfigureAwait(false);
     }
 
     private void DisposeHarRouters()
     {
-        foreach (var router in _harRouters)
+        HarRouter[] routers;
+        lock (_connection.DispatchLock)
+        {
+            routers = _harRouters.ToArray();
+            _harRouters.Clear();
+        }
+        foreach (var router in routers)
         {
             router.Dispose();
         }
-        _harRouters.Clear();
     }
 
     [MethodImpl(MethodImplOptions.NoInlining)]
@@ -986,7 +1032,7 @@ internal class BrowserContext : ChannelOwner, IBrowserContext
 
     private Task RouteWebSocketAsync(string? globMatch, Regex? reMatch, Func<string, bool>? funcMatch, Delegate handler)
     {
-        _webSocketRoutes.Insert(0, new WebSocketRouteHandler()
+        var routeHandler = new WebSocketRouteHandler()
         {
             urlMatcher = new URLMatch()
             {
@@ -997,13 +1043,21 @@ internal class BrowserContext : ChannelOwner, IBrowserContext
                 isWebSocketUrl = true,
             },
             Handler = handler,
-        });
+        };
+        lock (_connection.DispatchLock)
+        {
+            _webSocketRoutes.Insert(0, routeHandler);
+        }
         return UpdateWebSocketInterceptionAsync();
     }
 
     private async Task UpdateWebSocketInterceptionAsync()
     {
-        var patterns = WebSocketRouteHandler.PrepareInterceptionPatterns(_webSocketRoutes);
+        List<Dictionary<string, object>> patterns;
+        lock (_connection.DispatchLock)
+        {
+            patterns = WebSocketRouteHandler.PrepareInterceptionPatterns(_webSocketRoutes);
+        }
         await SendMessageToServerAsync("setWebSocketInterceptionPatterns", new Dictionary<string, object?>
         {
             ["patterns"] = patterns,
