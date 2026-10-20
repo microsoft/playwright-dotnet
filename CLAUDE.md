@@ -83,3 +83,6 @@ Branch naming for issue fixes: `fix-<issue-number>`
 
 ## Rolling to a new Playwright version
 See [.claude/skills/playwright-roll/SKILL.md](.claude/skills/playwright-roll/SKILL.md).
+
+## Releasing
+See [.claude/skills/playwright-dotnet-release/SKILL.md](.claude/skills/playwright-dotnet-release/SKILL.md).
