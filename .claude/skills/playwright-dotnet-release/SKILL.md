@@ -57,7 +57,7 @@ The .NET notes in `docs/src/release-notes-csharp.md` are written upstream togeth
 git log --oneline --no-merges $(git merge-base upstream/release-1.<X-1> upstream/main)..upstream/main | grep -E '^\w+ (feat|fix)'
 ```
 
-Ask the user before adding anything. Send additions upstream as `docs: release notes for v1.X .NET`, and cherry-pick them to `release-1.X`.
+Ask the user before adding anything. Send the update upstream as `docs: release notes for v1.X .NET`, covering both upstream and .NET-specific changes, and cherry-pick it to `release-1.X`.
 
 Write the GitHub release body from the section as step 3 of the upstream skill describes, and save it as `/tmp/v1.X.0-release-notes.md`. Create the draft directly against `release-1.X`. Drafting against `main` and retargeting later is fragile, because every `gh release edit` rotates the `untagged-<hash>` ID:
 
