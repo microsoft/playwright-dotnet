@@ -45,6 +45,7 @@ public class PageWaitForUrlTests : PageTestEx
         StringAssert.Contains("Timeout 2500ms exceeded.", exception.Message);
     }
 
+    // See https://github.com/microsoft/playwright-dotnet/issues/3365
     [PlaywrightTest("page-wait-for-url.spec.ts", "should work with both domcontentloaded and load")]
     public async Task UrlShouldWorkWithBothDomcontentloadedAndLoad()
     {
@@ -66,10 +67,17 @@ public class PageWaitForUrlTests : PageTestEx
 
         await waitForRequestTask;
         await domContentLoadedTask;
-        Assert.False(bothFiredTask.IsCompleted);
-        responseTask.TrySetResult(true);
-        await bothFiredTask;
-        await navigationTask;
+        try
+        {
+            await Page.WaitForURLAsync("**/one-style.html", new() { WaitUntil = WaitUntilState.Commit, Timeout = 1000 });
+            Assert.False(bothFiredTask.IsCompleted);
+        }
+        finally
+        {
+            responseTask.TrySetResult(true);
+            await bothFiredTask;
+            await navigationTask;
+        }
     }
 
     [PlaywrightTest("page-wait-for-url.spec.ts", "should work with clicking on anchor links")]
