@@ -153,4 +153,43 @@ public class PageWaitForUrlTests : PageTestEx
             frame.EvaluateAsync("url => window.location.href = url", Server.Prefix + "/grid.html"));
         ;
     }
+
+    [PlaywrightTest]
+    public async Task ShouldNotMissNavigationCommittedRightAfterTheCall()
+    {
+        // https://github.com/microsoft/playwright-dotnet/issues/3364
+        // Page A navigates to B a few milliseconds after it loads. The wait must see that
+        // navigation even when it commits right after WaitForURLAsync was called.
+        Server.SetRoute("/a.html", context =>
+        {
+            context.Response.ContentType = "text/html";
+            return context.Response.WriteAsync("<script>addEventListener('load', () => setTimeout(() => location.href = '/b.html', 5))</script>");
+        });
+        Server.SetRoute("/b.html", context =>
+        {
+            context.Response.ContentType = "text/html";
+            return context.Response.WriteAsync("<h1>b</h1>");
+        });
+        for (int i = 0; i < 10; i++)
+        {
+            await Page.GotoAsync(Server.Prefix + "/a.html");
+            await Page.WaitForURLAsync("**/b.html", new() { Timeout = 5000 });
+        }
+    }
+
+    [PlaywrightTest]
+    public async Task ShouldNotHoldTheDispatchLockWhileMatchingTheUrl()
+    {
+        // The predicate is user code, so it must run with no client lock held. This one blocks
+        // on a call whose reply follows a frameAttached message, which the message pump
+        // handles under the dispatch lock.
+        await Page.GotoAsync(Server.EmptyPage);
+        var completed = false;
+        await Page.WaitForURLAsync(url =>
+        {
+            completed = Page.EvaluateAsync("() => { document.body.appendChild(document.createElement('iframe')); }").Wait(5000);
+            return true;
+        });
+        Assert.True(completed);
+    }
 }

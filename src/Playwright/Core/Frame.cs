@@ -33,6 +33,7 @@ using System.Runtime.CompilerServices;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using System.Text.RegularExpressions;
+using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Playwright.Helpers;
 using Microsoft.Playwright.Transport;
@@ -42,7 +43,14 @@ namespace Microsoft.Playwright.Core;
 
 internal class Frame : ChannelOwner, IFrame
 {
-    private readonly List<WaitUntilState> _loadStates = new();
+    // One slot per WaitUntilState. A completed task means the state is present, a pending one
+    // that it is not, and waiters await the current slot, so there is no check to interleave
+    // with a subscription. Only a completed slot is replaced on remove, so a waiter started
+    // before a navigation resolves when the new document reaches the state.
+    private readonly TaskCompletionSource<bool>[] _loadStateSlots = new TaskCompletionSource<bool>[Enum.GetValues(typeof(WaitUntilState)).Length];
+    // Incremented with every Url update, under the dispatch lock. WaitForURLAsync uses it to
+    // tell whether Url changed while it ran the matcher outside the lock.
+    private int _navigationCount;
     internal readonly List<Frame> _childFrames = new();
 
     internal Frame(ChannelOwner parent, string guid, FrameInitializer initializer) : base(parent, guid)
@@ -50,7 +58,14 @@ internal class Frame : ChannelOwner, IFrame
         Url = initializer.Url;
         Name = initializer.Name;
         ParentFrame = initializer.ParentFrame;
-        _loadStates = initializer.LoadStates;
+        for (var i = 0; i < _loadStateSlots.Length; i++)
+        {
+            _loadStateSlots[i] = NewLoadStateSlot();
+        }
+        foreach (var state in initializer.LoadStates)
+        {
+            _loadStateSlots[(int)state].TrySetResult(true);
+        }
         Webmcp = new WebMCP(this);
     }
 
@@ -114,13 +129,13 @@ internal class Frame : ChannelOwner, IFrame
     {
         if (add.HasValue)
         {
-            _loadStates.Add(add.Value);
+            _loadStateSlots[(int)add.Value].TrySetResult(true);
             LoadState?.Invoke(this, add.Value);
         }
 
-        if (remove.HasValue)
+        if (remove.HasValue && _loadStateSlots[(int)remove.Value].Task.IsCompleted)
         {
-            _loadStates.Remove(remove.Value);
+            Volatile.Write(ref _loadStateSlots[(int)remove.Value], NewLoadStateSlot());
         }
         if (this.ParentFrame == null && add == WaitUntilState.Load && this.Page != null)
         {
@@ -132,11 +147,25 @@ internal class Frame : ChannelOwner, IFrame
         }
     }
 
+    private static TaskCompletionSource<bool> NewLoadStateSlot()
+        => new(TaskCreationOptions.RunContinuationsAsynchronously);
+
+    private TaskCompletionSource<bool> LoadStateSlot(WaitUntilState state)
+        => Volatile.Read(ref _loadStateSlots[(int)state]);
+
     internal void OnNavigated(FrameNavigatedEventArgs e)
     {
-        Url = e.Url;
-        Name = e.Name;
-        Navigated?.Invoke(this, e);
+        EventHandler<FrameNavigatedEventArgs>? navigated;
+        lock (_connection.DispatchLock)
+        {
+            // WaitForURLAsync subscribes to Navigated under the same lock, after checking that
+            // the count has not moved, so a waiter either matched this Url or is in the snapshot.
+            Url = e.Url;
+            Name = e.Name;
+            _navigationCount++;
+            navigated = Navigated;
+        }
+        navigated?.Invoke(this, e);
 
         if (string.IsNullOrEmpty(e.Error))
         {
@@ -245,17 +274,15 @@ internal class Frame : ChannelOwner, IFrame
         {
             waiter = SetupNavigationWaiter("frame.WaitForLoadStateAsync", options?.Timeout);
 
-            if (_loadStates.Contains(loadState))
+            var loadStateTask = LoadStateSlot(loadState).Task;
+            if (loadStateTask.IsCompleted)
             {
                 waiter.Log($"  not waiting, \"{state}\" event already fired");
             }
             else
             {
-                await waiter.WaitForEventAsync<WaitUntilState>(this, "LoadState", s =>
-                {
-                    waiter.Log($"  \"{s}\" event fired");
-                    return s == loadState;
-                }).ConfigureAwait(false);
+                await waiter.WaitForPromiseAsync(loadStateTask).ConfigureAwait(false);
+                waiter.Log($"  \"{state}\" event fired");
             }
         }
         finally
@@ -333,16 +360,11 @@ internal class Frame : ChannelOwner, IFrame
             await waiter.WaitForPromiseAsync(Task.FromException<object>(ex)).ConfigureAwait(false);
         }
 
-        if (!_loadStates.Select(s => s.ToValueString()).Contains(waitUntil.Value.ToValueString()))
+        var loadStateTask = LoadStateSlot(waitUntil.Value).Task;
+        if (!loadStateTask.IsCompleted)
         {
-            await waiter.WaitForEventAsync<WaitUntilState>(
-                this,
-                "LoadState",
-                e =>
-                {
-                    waiter.Log($"  \"{e}\" event fired");
-                    return e.ToValueString() == waitUntil.Value.ToValueString();
-                }).ConfigureAwait(false);
+            await waiter.WaitForPromiseAsync(loadStateTask).ConfigureAwait(false);
+            waiter.Log($"  \"{waitUntil}\" event fired");
         }
 
         var request = navigatedEvent.NewDocument?.Request;
@@ -1059,26 +1081,50 @@ internal class Frame : ChannelOwner, IFrame
 
     private Task WaitForURLAsync(string? urlString, Regex? urlRegex, Func<string, bool>? urlFunc, FrameWaitForURLOptions? options = default)
     {
-        if (new URLMatch()
+        // The same two steps as the JS client. Unlike there, the pump can navigate the frame
+        // between matching Url and subscribing to Navigated, and the navigation that just
+        // happened would then be waited for again (#3364). The matcher can run user code, so it
+        // runs outside the dispatch lock; the subscription happens under it, only if no
+        // navigation landed since Url was read, and otherwise the match is retried.
+        var matcher = new URLMatch()
         {
             glob = urlString,
             re = urlRegex,
             func = urlFunc,
             baseURL = (Page as Page)?.Context.BaseURL,
-        }.Match(Url))
+        };
+        while (true)
         {
-            return WaitForLoadStateAsync(ToLoadState(options?.WaitUntil), new() { Timeout = options?.Timeout });
-        }
-
-        return WaitForNavigationAsync(
-            new()
+            string url;
+            int navigationCount;
+            lock (_connection.DispatchLock)
             {
-                UrlString = urlString,
-                UrlRegex = urlRegex,
-                UrlFunc = urlFunc,
-                Timeout = options?.Timeout,
-                WaitUntil = options?.WaitUntil,
-            });
+                url = Url;
+                navigationCount = _navigationCount;
+            }
+
+            if (matcher.Match(url))
+            {
+                return WaitForLoadStateAsync(ToLoadState(options?.WaitUntil), new() { Timeout = options?.Timeout });
+            }
+
+            lock (_connection.DispatchLock)
+            {
+                if (navigationCount == _navigationCount)
+                {
+                    // Subscribes to Navigated before its first await.
+                    return WaitForNavigationAsync(
+                        new()
+                        {
+                            UrlString = urlString,
+                            UrlRegex = urlRegex,
+                            UrlFunc = urlFunc,
+                            Timeout = options?.Timeout,
+                            WaitUntil = options?.WaitUntil,
+                        });
+                }
+            }
+        }
     }
 
     private LoadState? ToLoadState(WaitUntilState? waitUntilState)
