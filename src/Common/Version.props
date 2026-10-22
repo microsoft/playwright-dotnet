@@ -5,7 +5,7 @@
     <DriverVersion>1.64.1</DriverVersion>
     <!-- The Node.js version bundled with the driver. Set by the roll script to the latest
          Node.js LTS, matching upstream's utils/build/update-playwright-node.mjs. -->
-    <DriverNodeVersion>24.21.0</DriverNodeVersion>
+    <DriverNodeVersion>24.22.1</DriverNodeVersion>
     <ReleaseVersion>$(AssemblyVersion)</ReleaseVersion>
     <FileVersion>$(AssemblyVersion)</FileVersion>
     <NoDefaultExcludes>true</NoDefaultExcludes>
