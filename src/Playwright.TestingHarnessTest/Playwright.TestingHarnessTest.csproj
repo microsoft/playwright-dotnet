@@ -20,8 +20,8 @@
     
     <!-- MSTest v4 -->
     <ProjectReference Include="..\Playwright.MSTest.v4\Playwright.MSTest.v4.csproj" Condition="'$(TEST_MODE)' == 'mstest.v4'" />
-    <PackageReference Include="MSTest.TestAdapter" Version="4.0.0-preview.25372.6" Condition="'$(TEST_MODE)' == 'mstest.v4'" />
-    <PackageReference Include="MSTest.TestFramework" Version="4.0.0-preview.25372.6" Condition="'$(TEST_MODE)' == 'mstest.v4'" />
+    <PackageReference Include="MSTest.TestAdapter" Version="4.2.3" Condition="'$(TEST_MODE)' == 'mstest.v4'" />
+    <PackageReference Include="MSTest.TestFramework" Version="4.2.3" Condition="'$(TEST_MODE)' == 'mstest.v4'" />
     
     <!-- NUnit -->
     <ProjectReference Include="..\Playwright.NUnit\Playwright.NUnit.csproj" Condition="'$(TEST_MODE)' == 'nunit'" />

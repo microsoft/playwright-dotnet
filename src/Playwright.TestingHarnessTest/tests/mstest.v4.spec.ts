@@ -22,9 +22,75 @@
  * SOFTWARE.
  */
 
+import fs from 'fs';
+import path from 'path';
 import { test, expect } from './baseTest';
 
 test.use({ testMode: 'mstest.v4' });
+
+test('should retry tests using MSTest RetryAttribute', async ({ runTest }) => {
+  const result = await runTest({
+    'ExampleTests.cs': `
+      using Microsoft.VisualStudio.TestTools.UnitTesting;
+
+      namespace Playwright.TestingHarnessTest.MSTest;
+
+      [TestClass]
+      public class <class-name>
+      {
+          private static int _attempts;
+
+          [TestMethod]
+          [Retry(2)]
+          public void Test()
+          {
+              Assert.AreEqual(2, ++_attempts);
+          }
+      }`,
+  }, 'dotnet test');
+  expect(result.passed).toBe(1);
+  expect(result.failed).toBe(0);
+  expect(result.total).toBe(1);
+});
+
+test('should attach traces for every failed retry', async ({ runTest }, testInfo) => {
+  const result = await runTest({
+    'ExampleTests.cs': `
+      using System.Threading.Tasks;
+      using Microsoft.Playwright;
+      using Microsoft.Playwright.MSTest;
+      using Microsoft.VisualStudio.TestTools.UnitTesting;
+
+      namespace Playwright.TestingHarnessTest.MSTest;
+
+      [TestClass]
+      public class <class-name> : PageTest
+      {
+          [TestMethod]
+          [Retry(2)]
+          public async Task Test()
+          {
+              await Page.GotoAsync("about:blank");
+              Assert.Fail("Expected failure");
+          }
+
+          public override TracingStartOptions TracingOptions() => new()
+          {
+              Screenshots = true,
+              Snapshots = true,
+              Sources = true,
+          };
+      }`,
+  }, 'dotnet test --results-directory=.');
+  expect(result.passed).toBe(0);
+  expect(result.failed).toBe(1);
+  expect(result.total).toBe(1);
+
+  const trx = await fs.promises.readFile(path.join(testInfo.outputPath(), 'result.trx'), 'utf8');
+  expect(trx).toContain('-run-1-');
+  expect(trx).toContain('-run-2-');
+  expect(trx).toContain('-run-3-');
+});
 
 test('should be able to forward DEBUG=pw:api env var', async ({ runTest }) => {
   const result = await runTest({
