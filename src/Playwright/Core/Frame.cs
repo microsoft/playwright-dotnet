@@ -48,6 +48,9 @@ internal class Frame : ChannelOwner, IFrame
     // with a subscription. Only a completed slot is replaced on remove, so a waiter started
     // before a navigation resolves when the new document reaches the state.
     private readonly TaskCompletionSource<bool>[] _loadStateSlots = new TaskCompletionSource<bool>[Enum.GetValues(typeof(WaitUntilState)).Length];
+    // Incremented with every Url update, under the dispatch lock. WaitForURLAsync uses it to
+    // tell whether Url changed while it ran the matcher outside the lock.
+    private int _navigationCount;
     internal readonly List<Frame> _childFrames = new();
 
     internal Frame(ChannelOwner parent, string guid, FrameInitializer initializer) : base(parent, guid)
@@ -155,10 +158,11 @@ internal class Frame : ChannelOwner, IFrame
         EventHandler<FrameNavigatedEventArgs>? navigated;
         lock (_connection.DispatchLock)
         {
-            // WaitForURLAsync matches Url and subscribes to Navigated under the same lock, so a
-            // waiter either sees the new Url or is in the snapshot taken here.
+            // WaitForURLAsync subscribes to Navigated under the same lock, after checking that
+            // the count has not moved, so a waiter either matched this Url or is in the snapshot.
             Url = e.Url;
             Name = e.Name;
+            _navigationCount++;
             navigated = Navigated;
         }
         navigated?.Invoke(this, e);
@@ -1077,33 +1081,49 @@ internal class Frame : ChannelOwner, IFrame
 
     private Task WaitForURLAsync(string? urlString, Regex? urlRegex, Func<string, bool>? urlFunc, FrameWaitForURLOptions? options = default)
     {
-        // The same two steps as the JS client, under the dispatch lock: unlike there, the pump
-        // can navigate the frame between matching Url and subscribing to Navigated, and the
-        // navigation that just happened would then be waited for again (#3364). OnNavigated
-        // updates Url and snapshots the Navigated handlers under the same lock, and both calls
-        // below subscribe before their first await.
-        lock (_connection.DispatchLock)
+        // The same two steps as the JS client. Unlike there, the pump can navigate the frame
+        // between matching Url and subscribing to Navigated, and the navigation that just
+        // happened would then be waited for again (#3364). The matcher can run user code, so it
+        // runs outside the dispatch lock; the subscription happens under it, only if no
+        // navigation landed since Url was read, and otherwise the match is retried.
+        var matcher = new URLMatch()
         {
-            if (new URLMatch()
+            glob = urlString,
+            re = urlRegex,
+            func = urlFunc,
+            baseURL = (Page as Page)?.Context.BaseURL,
+        };
+        while (true)
+        {
+            string url;
+            int navigationCount;
+            lock (_connection.DispatchLock)
             {
-                glob = urlString,
-                re = urlRegex,
-                func = urlFunc,
-                baseURL = (Page as Page)?.Context.BaseURL,
-            }.Match(Url))
+                url = Url;
+                navigationCount = _navigationCount;
+            }
+
+            if (matcher.Match(url))
             {
                 return WaitForLoadStateAsync(ToLoadState(options?.WaitUntil), new() { Timeout = options?.Timeout });
             }
 
-            return WaitForNavigationAsync(
-                new()
+            lock (_connection.DispatchLock)
+            {
+                if (navigationCount == _navigationCount)
                 {
-                    UrlString = urlString,
-                    UrlRegex = urlRegex,
-                    UrlFunc = urlFunc,
-                    Timeout = options?.Timeout,
-                    WaitUntil = options?.WaitUntil,
-                });
+                    // Subscribes to Navigated before its first await.
+                    return WaitForNavigationAsync(
+                        new()
+                        {
+                            UrlString = urlString,
+                            UrlRegex = urlRegex,
+                            UrlFunc = urlFunc,
+                            Timeout = options?.Timeout,
+                            WaitUntil = options?.WaitUntil,
+                        });
+                }
+            }
         }
     }
 

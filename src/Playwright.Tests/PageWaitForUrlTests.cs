@@ -176,4 +176,20 @@ public class PageWaitForUrlTests : PageTestEx
             await Page.WaitForURLAsync("**/b.html", new() { Timeout = 5000 });
         }
     }
+
+    [PlaywrightTest]
+    public async Task ShouldNotHoldTheDispatchLockWhileMatchingTheUrl()
+    {
+        // The predicate is user code, so it must run with no client lock held. This one blocks
+        // on a call whose reply follows a frameAttached message, which the message pump
+        // handles under the dispatch lock.
+        await Page.GotoAsync(Server.EmptyPage);
+        var completed = false;
+        await Page.WaitForURLAsync(url =>
+        {
+            completed = Page.EvaluateAsync("() => { document.body.appendChild(document.createElement('iframe')); }").Wait(5000);
+            return true;
+        });
+        Assert.True(completed);
+    }
 }
