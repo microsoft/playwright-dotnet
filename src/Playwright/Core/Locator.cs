@@ -646,6 +646,18 @@ internal class Locator : ILocator
         {
             props.Add(new List<string> { "name", EscapeForAttributeSelector(options.NameRegex, options?.Exact ?? false) });
         }
+        if (options?.Description != null)
+        {
+            props.Add(new List<string> { "description", EscapeForAttributeSelector(options.Description, options.Exact ?? false) });
+        }
+        else if (options?.DescriptionString != null)
+        {
+            props.Add(new List<string> { "description", EscapeForAttributeSelector(options.DescriptionString, options.Exact ?? false) });
+        }
+        else if (options?.DescriptionRegex != null)
+        {
+            props.Add(new List<string> { "description", EscapeForAttributeSelector(options.DescriptionRegex, options.Exact ?? false) });
+        }
         if (options?.Pressed != null)
         {
             props.Add(new List<string> { "pressed", options.Pressed.ToJson() });
@@ -736,6 +748,9 @@ internal class ByRoleOptions
         Name = clone.Name;
         NameString = clone.NameString;
         NameRegex = clone.NameRegex;
+        Description = clone.Description;
+        DescriptionString = clone.DescriptionString;
+        DescriptionRegex = clone.DescriptionRegex;
         Pressed = clone.Pressed;
         Selected = clone.Selected;
         Exact = clone.Exact;
@@ -755,6 +770,9 @@ internal class ByRoleOptions
         Name = clone.Name;
         NameString = clone.NameString;
         NameRegex = clone.NameRegex;
+        Description = clone.Description;
+        DescriptionString = clone.DescriptionString;
+        DescriptionRegex = clone.DescriptionRegex;
         Pressed = clone.Pressed;
         Selected = clone.Selected;
         Exact = clone.Exact;
@@ -774,6 +792,9 @@ internal class ByRoleOptions
         Name = clone.Name;
         NameString = clone.NameString;
         NameRegex = clone.NameRegex;
+        Description = clone.Description;
+        DescriptionString = clone.DescriptionString;
+        DescriptionRegex = clone.DescriptionRegex;
         Pressed = clone.Pressed;
         Selected = clone.Selected;
         Exact = clone.Exact;
@@ -793,6 +814,9 @@ internal class ByRoleOptions
         Name = clone.Name;
         NameString = clone.NameString;
         NameRegex = clone.NameRegex;
+        Description = clone.Description;
+        DescriptionString = clone.DescriptionString;
+        DescriptionRegex = clone.DescriptionRegex;
         Pressed = clone.Pressed;
         Selected = clone.Selected;
         Exact = clone.Exact;
@@ -813,6 +837,12 @@ internal class ByRoleOptions
     public string? NameString { get; set; }
 
     public Regex? NameRegex { get; set; }
+
+    public string? Description { get; set; }
+
+    public string? DescriptionString { get; set; }
+
+    public Regex? DescriptionRegex { get; set; }
 
     public bool? Pressed { get; set; }
 
