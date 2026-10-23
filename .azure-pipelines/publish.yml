@@ -39,17 +39,6 @@ extends:
     sdl:
       suppression:
         suppressionFile: $(Build.SourcesDirectory)\.azure-pipelines\guardian\SDL\.gdnsuppress
-    # 1ES Network Isolation (SFI-ES4.2.4) defaults to blocking public feed endpoints
-    # (e.g. api.nuget.org), which breaks the 1ES.PublishNuget@1 push to NuGet.org below.
-    # Permissive alone still leaves api.nuget.org DNS-sinkholed. CFSClean (no suffix)
-    # also blocks all NuGet endpoints, so it is intentionally omitted; CFSClean2 does
-    # not block NuGet and is added to keep other endpoints (Docker, PowerShell Gallery,
-    # etc.) restricted. This matches microsoft/aspire's release-publish-nuget.yml and
-    # microsoft/winappCli's release.yml, which push to NuGet.org the same way.
-    # The stage is still gated by the tag-only trigger and the doRelease/doReleaseCLI
-    # parameters.
-    settings:
-      networkIsolationPolicy: Permissive,CFSClean2
     stages:
     - stage: BuildPackageSignPublish
       displayName: Build, Package, Sign, Publish
@@ -65,7 +54,8 @@ extends:
           outputs:
           - output: pipelineArtifact
             displayName: 'Publish Artifact'
-            targetPath: '$(Build.ArtifactStagingDirectory)'
+            targetPath: '$(Build.ArtifactStagingDirectory)/esrp-build'
+            artifact: esrp-build
         steps:
         - powershell: |
             if ($env:CURRENT_BRANCH -notmatch '^v1\.') {
@@ -139,27 +129,61 @@ extends:
               src/Playwright.TestAdapter/Playwright.TestAdapter.csproj;
             packDirectory: '$(Build.ArtifactStagingDirectory)/nuget'
             versioningScheme: 'off'
-        - task: 1ES.PublishNuget@1
-          displayName: Publish Microsoft.Playwright{NUnit,MSTest,Xunit,TestAdapter}
-          condition: or(
+        # Stage the packages to release. Microsoft.Playwright.CLI is only released
+        # when doReleaseCLI is set. The 1.* after the package name keeps e.g.
+        # Microsoft.Playwright.1.*.nupkg from matching Microsoft.Playwright.CLI.
+        - powershell: |
+            $nuget = "$(Build.ArtifactStagingDirectory)/nuget"
+            $out = "$(Build.ArtifactStagingDirectory)/esrp-build"
+            New-Item -ItemType Directory -Force -Path $out | Out-Null
+            $names = @('Microsoft.Playwright', 'Microsoft.Playwright.NUnit', 'Microsoft.Playwright.MSTest', 'Microsoft.Playwright.MSTest.v4', 'Microsoft.Playwright.Xunit', 'Microsoft.Playwright.Xunit.v3', 'Microsoft.Playwright.TestAdapter')
+            if ('${{ parameters.doReleaseCLI }}' -eq 'True') {
+              $names += 'Microsoft.Playwright.CLI'
+            }
+            foreach ($name in $names) {
+              Copy-Item "$nuget/$name.1.*.nupkg" $out
+            }
+            Get-ChildItem $out
+          displayName: 'Stage packages for ESRP release'
+
+      - job: Publish
+        displayName: Publish
+        dependsOn: Build
+        # Only publish from release tags or when doRelease is set; other manual runs stop after Build.
+        condition: and(
+            succeeded(),
+            or(
               eq('${{ parameters.doRelease }}', true),
               startsWith(variables['Build.SourceBranch'], 'refs/tags/v1.')
             )
+          )
+        templateContext:
+          type: releaseJob
+          isProduction: true
           inputs:
-            useDotNetTask: false
-            # The reason for the 1.* after the package name is that we know the end of the package name in order to not
-            # match with e.g. Microsoft.Playwright.CLI when we only want to match Microsoft.Playwright.
-            # Semicolon separated as per https://portal.microsofticm.com/imp/v5/incidents/details/467483180/summary
-            packagesToPush: $(Build.ArtifactStagingDirectory)/nuget/Microsoft.Playwright.1.*.nupkg;$(Build.ArtifactStagingDirectory)/nuget/Microsoft.Playwright.MSTest.1.*.nupkg;$(Build.ArtifactStagingDirectory)/nuget/Microsoft.Playwright.MSTest.v4.1.*.nupkg;$(Build.ArtifactStagingDirectory)/nuget/Microsoft.Playwright.Xunit.1.*.nupkg;$(Build.ArtifactStagingDirectory)/nuget/Microsoft.Playwright.Xunit.v3.1.*.nupkg;$(Build.ArtifactStagingDirectory)/nuget/Microsoft.Playwright.NUnit.1.*.nupkg;$(Build.ArtifactStagingDirectory)/nuget/Microsoft.Playwright.TestAdapter.1.*.nupkg
-            packageParentPath: '$(Build.ArtifactStagingDirectory)'
-            nuGetFeedType: external
-            publishFeedCredentials: 'NuGet-Playwright'
-        - task: 1ES.PublishNuget@1
-          displayName: Publish Microsoft.Playwright.CLI
-          condition: eq('${{ parameters.doReleaseCLI }}', true)
+          - input: pipelineArtifact
+            artifactName: esrp-build
+            targetPath: $(Build.ArtifactStagingDirectory)/esrp-build
+        steps:
+        - checkout: none
+        - task: EsrpRelease@14
+          displayName: 'ESRP Release to NuGet.org'
           inputs:
-            useDotNetTask: false
-            packagesToPush: '$(Build.ArtifactStagingDirectory)/nuget/Microsoft.Playwright.CLI.1.*.nupkg'
-            packageParentPath: '$(Build.ArtifactStagingDirectory)'
-            nuGetFeedType: external
-            publishFeedCredentials: 'NuGet-Playwright'
+            connectedservicename: 'Playwright-ESRP-PME'
+            usemanagedidentity: true
+            keyvaultname: 'playwright-esrp-pme'
+            signcertname: 'ESRP-Release-Sign'
+            clientid: '13434a40-7de4-4c23-81a3-d843dc81c2c5'
+            intent: 'PackageDistribution'
+            contenttype: 'NuGet'
+            organizationname: 'playwright'
+            # Keeping it commented out as a workaround for:
+            # https://portal.microsofticm.com/imp/v3/incidents/incident/499972482/summary
+            # contentsource: 'folder'
+            folderlocation: '$(Build.ArtifactStagingDirectory)/esrp-build'
+            waitforreleasecompletion: true
+            owners: 'yurys@microsoft.com'
+            approvers: 'yurys@microsoft.com'
+            serviceendpointurl: 'https://api.esrp.microsoft.com'
+            mainpublisher: 'Playwright'
+            domaintenantid: '975f013f-7f24-47e8-a7d3-abc4752bf346'
