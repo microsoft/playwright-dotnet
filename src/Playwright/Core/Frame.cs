@@ -1013,6 +1013,7 @@ internal class Frame : ChannelOwner, IFrame
                     ["selector"] = selector,
                     ["expression"] = expression,
                     ["expressionArg"] = options.ExpressionArg,
+                    ["pseudo"] = options.Pseudo,
                     ["expectedText"] = options.ExpectedText,
                     ["expectedNumber"] = options.ExpectedNumber,
                     ["expectedValue"] = options.ExpectedValue,
