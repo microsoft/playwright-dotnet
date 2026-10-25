@@ -64,6 +64,16 @@ internal class ChannelOwner
     {
     }
 
+    // Copies a list that the message pump mutates under the dispatch lock. Getters return the
+    // copy, and code that iterates outside the lock iterates the copy.
+    internal T[] Snapshot<T>(List<T> list)
+    {
+        lock (_connection.DispatchLock)
+        {
+            return list.ToArray();
+        }
+    }
+
     internal void Adopt(ChannelOwner child)
     {
         child.Parent!.Objects.TryRemove(child.Guid, out _);
