@@ -20,8 +20,12 @@ jobs:
       matrix:
         browser: [chromium, firefox, webkit]
         os: [windows-latest, ubuntu-latest, macos-latest-xlarge]
+    defaults:
+      run:
+        shell: bash
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: microsoft/playwright/.github/actions/ci-env@main
       - name: Setup .NET Core
         uses: actions/setup-dotnet@a98b56852c35b8e3190ac28c8c2271da59106c68 # v6.0.0
         with:
@@ -36,12 +40,6 @@ jobs:
       - name: Installing Browsers and dependencies
         run: pwsh src/Playwright/bin/Debug/netstandard2.0/playwright.ps1 install --with-deps ${{ matrix.browser }}
       - name: Running tests
-        if: matrix.os != 'ubuntu-latest'
         env:
           BROWSER: ${{ matrix.browser }}
-        run: dotnet test ./src/Playwright.Tests/Playwright.Tests.csproj -c Debug -f net8.0 --logger:"console;verbosity=detailed"
-      - name: Running tests (Linux)
-        if: matrix.os == 'ubuntu-latest'
-        env:
-          BROWSER: ${{ matrix.browser }}
-        run: xvfb-run dotnet test ./src/Playwright.Tests/Playwright.Tests.csproj -c Debug -f net8.0 --logger:"console;verbosity=detailed"
+        run: $CI_ENV_EXEC dotnet test ./src/Playwright.Tests/Playwright.Tests.csproj -c Debug -f net8.0 --logger:"console;verbosity=detailed"
