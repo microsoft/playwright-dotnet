@@ -306,4 +306,24 @@ public class SelectorsGetByTests : PageTestEx
             new[] { "Alert 1", "Alert 2" },
             await Page.GetByRole(AriaRole.Alert, new() { DescriptionRegex = new Regex("uploaded successfully$") }).EvaluateAllAsync<string[]>("els => els.map(e => e.textContent)"));
     }
+
+    [PlaywrightTest("selector-get-by.spec.ts", "getByRole with description")]
+    public async Task GetByRoleWithDescriptionFromEveryEntryPoint()
+    {
+        var alerts = @"
+            <div role=""alert"" aria-description=""File doc-2025.pdf was uploaded successfully"">Alert 1</div>
+            <div role=""alert"" aria-description=""File report-2026.pdf was uploaded successfully"">Alert 2</div>";
+        await Page.SetContentAsync($"<section>{alerts}</section><iframe srcdoc='{alerts}'></iframe>");
+
+        await Expect(Page.GetByRole(AriaRole.Alert, new() { Description = "doc-2025" })).ToHaveTextAsync("Alert 1");
+        await Expect(Page.MainFrame.GetByRole(AriaRole.Alert, new() { Description = "doc-2025" })).ToHaveTextAsync("Alert 1");
+        await Expect(Page.MainFrame.GetByRole(AriaRole.Alert, new() { DescriptionString = "report-2026" })).ToHaveTextAsync("Alert 2");
+        await Expect(Page.MainFrame.GetByRole(AriaRole.Alert, new() { DescriptionRegex = new Regex(@"doc-\d+") })).ToHaveTextAsync("Alert 1");
+        await Expect(Page.Locator("section").GetByRole(AriaRole.Alert, new() { Description = "doc-2025" })).ToHaveTextAsync("Alert 1");
+        await Expect(Page.Locator("section").GetByRole(AriaRole.Alert, new() { DescriptionString = "report-2026" })).ToHaveTextAsync("Alert 2");
+        await Expect(Page.Locator("section").GetByRole(AriaRole.Alert, new() { DescriptionRegex = new Regex(@"doc-\d+") })).ToHaveTextAsync("Alert 1");
+        await Expect(Page.FrameLocator("iframe").GetByRole(AriaRole.Alert, new() { Description = "doc-2025" })).ToHaveTextAsync("Alert 1");
+        await Expect(Page.FrameLocator("iframe").GetByRole(AriaRole.Alert, new() { DescriptionString = "report-2026" })).ToHaveTextAsync("Alert 2");
+        await Expect(Page.FrameLocator("iframe").GetByRole(AriaRole.Alert, new() { DescriptionRegex = new Regex(@"doc-\d+") })).ToHaveTextAsync("Alert 1");
+    }
 }
