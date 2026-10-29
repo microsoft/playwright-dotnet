@@ -28,6 +28,20 @@ grep "^  Failed" /tmp/test-results.txt        # list failures
 tail -5 /tmp/test-results.txt                  # summary
 ```
 
+- `--filter Playwright.Tests.PageRouteTests` runs one class, and `--filter "FullyQualifiedName=Microsoft.Playwright.Tests.PageRouteTests.ShouldIntercept"` runs one test. `BROWSER` is `chromium`, `firefox` or `webkit`; `HEADED=1` runs headed.
+- Each test has a timeout of 30 seconds; `[PlaywrightTest(TestConstants.SlowTestTimeout)]` gives 150. When `CI` is set, a failed test runs up to 3 times; use `env -u CI` to see one run.
+- `dotnet test` rebuilds what it needs. Run `dotnet build ./src` before you commit: it builds every project, also the ones that the tests do not reference, and `src/Playwright` treats analyzer warnings as errors.
+- The NUnit, MSTest and xUnit packages next to `src/Playwright.NUnit/` are tested from `src/Playwright.TestingHarnessTest/`, a Node suite that writes a small .NET test project per test: `npm ci` there once, then `npx playwright test tests/nunit.spec.ts`.
+
+## Tests
+
+The tests are NUnit tests in `src/Playwright.Tests/`, one class per upstream spec file: `PageRouteTests.cs` ports `tests/page/page-route.spec.ts`. Locator and assertion classes are in `Locator/` and `Assertions/`. A regression test is one added case in the class that owns the feature, also when only the port has the bug.
+
+- `[PlaywrightTest("page-route.spec.ts", "should intercept")]` names the upstream spec file and test title that the test ports. Upstream titles carry an ID prefix, so grep for the title. `[PlaywrightTest]` without arguments marks a test that only the port has.
+- Tag a regression test with `// See <issue url>` on the line above the attribute.
+- The base classes are in `BaseTests/`. `PageTestEx` gives `Page`, `Context`, `Browser` and `BrowserName`; `ContextTestEx` and `BrowserTestEx` stop at `Context` and `Browser` and add `NewContext(options)`. All give `Server`, a `SimpleServer` (`TestServer/SimpleServer.cs`) that serves `assets/`, with `Server.Prefix`, `Server.EmptyPage`, `Server.SetRoute(path, context => ...)` on an ASP.NET Core `HttpContext`, `Server.SetRedirect(from, to)` and `Server.WaitForRequest(path)`. Drive the page with `Page.SetContentAsync(...)` or `Page.GotoAsync(Server.Prefix + "/...")`. Do not start a server or a browser of your own. Override `ContextOptions()` when the class needs other context options, as `TapTests.cs` does.
+- Good models: `UrlShouldWorkWithBothDomcontentloadedAndLoad` in `PageWaitForUrlTests.cs`, a ported test with a route that holds its response and the issue comment, and `ShouldNotReturnDisposedJsonElement` in `PageEvaluateTests.cs`, a .NET-only test.
+
 ## Architecture
 
 ### Generated vs hand-written code

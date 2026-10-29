@@ -1,0 +1,36 @@
+name: 'Set up the triage runner'
+description: >
+  Prepares the environment that the triage and revision agents work in: the checkout built as CI
+  builds it, with the browsers and the Copilot CLI installed, and a checkout of microsoft/playwright
+  to read the client that this repo ports. Exports PLAYWRIGHT_DIR, the path of that checkout, and
+  CI_ENV_EXEC, the wrapper from microsoft/playwright that runs a command under xvfb on Linux and at
+  normal I/O priority on Windows.
+runs:
+  using: composite
+  steps:
+  - uses: microsoft/playwright/.github/actions/ci-env@main
+  - uses: actions/setup-dotnet@a98b56852c35b8e3190ac28c8c2271da59106c68 # v6.0.0
+    with:
+      dotnet-version: |
+        8.0.x
+        10.0.x
+  - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+    with:
+      node-version: '24'
+  - name: Download the driver and build
+    shell: bash
+    run: |
+      ./build.sh --download-driver
+      dotnet build ./src
+  - name: Install the browsers
+    shell: bash
+    run: pwsh src/Playwright/bin/Debug/netstandard2.0/playwright.ps1 install --with-deps
+  - name: Check out microsoft/playwright
+    shell: bash
+    run: |
+      dir="${RUNNER_TEMP//\\//}/playwright"
+      git clone --quiet --depth 1 https://github.com/microsoft/playwright "$dir"
+      echo "PLAYWRIGHT_DIR=$dir" >> "$GITHUB_ENV"
+  - name: Install the Copilot CLI
+    shell: bash
+    run: npm install -g @github/copilot
