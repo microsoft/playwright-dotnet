@@ -1,0 +1,12 @@
+<Project Sdk="MSTest.Sdk/4.4.1">
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <IsPackable>false</IsPackable>
+    <PlaywrightPackageVersion Condition="'$(PlaywrightPackageVersion)' == ''">1.*</PlaywrightPackageVersion>
+    <RestoreAdditionalProjectSources>$(MSBuildThisFileDirectory)..\Playwright.LocalNugetTest\nupkg;$(RestoreAdditionalProjectSources)</RestoreAdditionalProjectSources>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Playwright.MSTest.v4" Version="$(PlaywrightPackageVersion)" />
+    <PackageReference Include="Microsoft.Playwright.Testing.Platform" Version="$(PlaywrightPackageVersion)" />
+  </ItemGroup>
+</Project>
