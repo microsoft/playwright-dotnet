@@ -65,16 +65,31 @@ hand. A missing method, option or type is an upstream change, in `docs/src/api/`
 annotations decide what .NET gets) or in the generator. .NET-only overloads are hand-written in
 `src/Playwright/API/Supplements/`, and the implementations are in `src/Playwright/Core/`.
 
-For an upstream root cause, create `$OUTPUT_DIR/upstream/` with:
+For an upstream root cause, write a report for a maintainer to file in `microsoft/playwright`, for
+an engineer who did not read this issue: what fails, expected versus actual, the driver version and
+the browsers, and the condensed Node test from `$PLAYWRIGHT_DIR` as the repro. Say that .NET shows
+the same. The title has at most 256 characters.
 
-- `report.md`: the report for a maintainer to file in `microsoft/playwright`, for an engineer who
-  did not read this issue: what fails, expected versus actual, the driver version and the browsers,
-  and the condensed Node test from `$PLAYWRIGHT_DIR` as the repro. Say that .NET shows the same.
-- `report.json`: `{"title": "..."}`, at most 256 characters.
+The bot never files it: this run allows no `issue` call (the calls are in
+`$AGENT_GUIDES_DIR/calls.d.ts`). Put the report at the end of your comment, for a maintainer to
+file, in this form:
 
-The comment job appends the report to your comment, for a maintainer to file. The bot never files
-it. Still write the comment as the note, without the report in it. Write `report.json` last, when
-`report.md` and the comment are done. Like `proposal.json`, it marks the report as ready.
+`````markdown
+Upstream bug report, for a maintainer to file in microsoft/playwright:
+
+**Title:** <title>
+
+<details>
+<summary>Body</summary>
+
+````markdown
+<the report>
+````
+
+</details>
+`````
+
+Write the rest of the comment as the note: the verdict, the evidence, and that the bug is upstream.
 
 ## PRs from third parties
 
