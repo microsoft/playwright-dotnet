@@ -3,6 +3,5 @@
 # credentials and local environment files out of the build context.
 **/.git
 **/.npmrc
-**/.netrc
 **/.env*
 **/[Nn]u[Gg]et.[Cc]onfig
