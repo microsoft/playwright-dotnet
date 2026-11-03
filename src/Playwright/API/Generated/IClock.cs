@@ -53,7 +53,7 @@ public partial interface IClock
     /// </code>
     /// </summary>
     /// <param name="ticks">
-    /// Time may be the number of milliseconds to advance the clock by or a human-readable
+    /// Time may be a finite number of milliseconds to advance the clock by or a human-readable
     /// string. Valid string formats are "08" for eight seconds, "01:00" for one minute
     /// and "02:34:10" for two hours, 34 minutes and ten seconds.
     /// </param>
@@ -72,7 +72,7 @@ public partial interface IClock
     /// </code>
     /// </summary>
     /// <param name="ticks">
-    /// Time may be the number of milliseconds to advance the clock by or a human-readable
+    /// Time may be a finite number of milliseconds to advance the clock by or a human-readable
     /// string. Valid string formats are "08" for eight seconds, "01:00" for one minute
     /// and "02:34:10" for two hours, 34 minutes and ten seconds.
     /// </param>
@@ -112,7 +112,7 @@ public partial interface IClock
     /// </code>
     /// </summary>
     /// <param name="ticks">
-    /// Time may be the number of milliseconds to advance the clock by or a human-readable
+    /// Time may be a finite number of milliseconds to advance the clock by or a human-readable
     /// string. Valid string formats are "08" for eight seconds, "01:00" for one minute
     /// and "02:34:10" for two hours, 34 minutes and ten seconds.
     /// </param>
@@ -127,7 +127,7 @@ public partial interface IClock
     /// </code>
     /// </summary>
     /// <param name="ticks">
-    /// Time may be the number of milliseconds to advance the clock by or a human-readable
+    /// Time may be a finite number of milliseconds to advance the clock by or a human-readable
     /// string. Valid string formats are "08" for eight seconds, "01:00" for one minute
     /// and "02:34:10" for two hours, 34 minutes and ten seconds.
     /// </param>

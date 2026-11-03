@@ -2,10 +2,10 @@
   <PropertyGroup>
     <AssemblyVersion>1.65.0</AssemblyVersion>
     <PackageVersion>$(AssemblyVersion)-beta1</PackageVersion>
-    <DriverVersion>1.64.1</DriverVersion>
+    <DriverVersion>1.65.0-alpha-1793732293000</DriverVersion>
     <!-- The Node.js version bundled with the driver. Set by the roll script to the latest
          Node.js LTS, matching upstream's utils/build/update-playwright-node.mjs. -->
-    <DriverNodeVersion>24.22.1</DriverNodeVersion>
+    <DriverNodeVersion>26.13.0</DriverNodeVersion>
     <ReleaseVersion>$(AssemblyVersion)</ReleaseVersion>
     <FileVersion>$(AssemblyVersion)</FileVersion>
     <NoDefaultExcludes>true</NoDefaultExcludes>

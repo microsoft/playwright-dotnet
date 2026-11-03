@@ -207,7 +207,7 @@ internal class APIRequestContext : ChannelOwner, IAPIRequestContext
         {
             return false;
         }
-        return contentType.Value.Contains("application/json");
+        return contentType.Value.Split(';')[0].Trim().Equals("application/json", StringComparison.OrdinalIgnoreCase);
     }
 
     private bool IsJsonParsable(string dataString)

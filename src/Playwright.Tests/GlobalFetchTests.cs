@@ -377,15 +377,18 @@ public class GlobalFetchTests : PlaywrightTestEx
             Assert.AreEqual(expected, await response.TextAsync());
 
             var stringifiedValue = JsonSerializer.Serialize(string.IsNullOrEmpty(valueString) ? valueString : valueObject);
-            var (serverRequestBody, _) = await TaskUtils.WhenAll(
-                Server.WaitForRequest("/in-is-out", request =>
-                {
-                    using StreamReader reader = new(request.Body, Encoding.UTF8);
-                    return reader.ReadToEndAsync().GetAwaiter().GetResult();
-                }),
-                request.PostAsync(Server.Prefix + "/in-is-out", new() { DataString = stringifiedValue, Headers = new Dictionary<string, string>() { ["Content-Type"] = "application/json" } })
-            );
-            Assert.AreEqual(stringifiedValue, serverRequestBody);
+            foreach (var contentType in new[] { "application/json", "Application/JSON; charset=utf-8" })
+            {
+                var (serverRequestBody, _) = await TaskUtils.WhenAll(
+                    Server.WaitForRequest("/in-is-out", request =>
+                    {
+                        using StreamReader reader = new(request.Body, Encoding.UTF8);
+                        return reader.ReadToEndAsync().GetAwaiter().GetResult();
+                    }),
+                    request.PostAsync(Server.Prefix + "/in-is-out", new() { DataString = stringifiedValue, Headers = new Dictionary<string, string>() { ["Content-Type"] = contentType } })
+                );
+                Assert.AreEqual(stringifiedValue, serverRequestBody);
+            }
 
             await request.DisposeAsync();
         }
@@ -658,7 +661,7 @@ public class GlobalFetchTests : PlaywrightTestEx
         {
             new Cookie { Name = "a", Value = "b", Domain = "localhost", Path = "/" },
             new Cookie { Name = "c", Value = "d", Domain = "localhost", Path = "/input" },
-            new Cookie { Name = "e", Value = "f", Domain = "one.com", Path = "/" },
+            new Cookie { Name = "e", Value = "f", Domain = ".one.com", Path = "/" },
             new Cookie { Name = "g", Value = "h", Domain = "two.com", Path = "/", Secure = true },
         });
         CollectionAssert.AreEqual(new[] { "a", "c", "e", "g" }, (await request.CookiesAsync()).Select(c => c.Name).ToArray());
@@ -667,6 +670,28 @@ public class GlobalFetchTests : PlaywrightTestEx
         CollectionAssert.AreEqual(new[] { "e" }, (await request.CookiesAsync(new[] { "http://sub.one.com/", "http://two.com/" })).Select(c => c.Name).ToArray());
         CollectionAssert.AreEqual(new[] { "e", "g" }, (await request.CookiesAsync(new[] { "http://sub.one.com/", "https://two.com/" })).Select(c => c.Name).ToArray());
         Assert.IsEmpty(await request.CookiesAsync("http://other.com/"));
+        await request.DisposeAsync();
+    }
+
+    [PlaywrightTest("global-fetch-cookie.spec.ts", "cookies should only return cookies that apply to the url")]
+    public async Task CookiesShouldOnlyReturnCookiesThatApplyToTheUrl()
+    {
+        var request = await Playwright.APIRequest.NewContextAsync();
+        await request.AddCookiesAsync(new[]
+        {
+            new Cookie { Name = "hostonly", Value = "v", Domain = "one.com", Path = "/api" },
+            new Cookie { Name = "subdomains", Value = "v", Domain = ".one.com", Path = "/api" },
+            new Cookie { Name = "slash", Value = "v", Domain = "one.com", Path = "/foo/" },
+        });
+        async Task<string[]> Names(string url) => (await request.CookiesAsync(url)).Select(c => c.Name).ToArray();
+        CollectionAssert.AreEqual(new[] { "hostonly", "subdomains" }, await Names("http://one.com/api"));
+        CollectionAssert.AreEqual(new[] { "hostonly", "subdomains" }, await Names("http://one.com/api/x"));
+        Assert.IsEmpty(await Names("http://one.com/apiv2"));
+        CollectionAssert.AreEqual(new[] { "subdomains" }, await Names("http://sub.one.com/api"));
+        Assert.IsEmpty(await Names("http://notone.com/api"));
+        Assert.IsEmpty(await Names("http://one.com/foo"));
+        CollectionAssert.AreEqual(new[] { "slash" }, await Names("http://one.com/foo/"));
+        CollectionAssert.AreEqual(new[] { "slash" }, await Names("http://one.com/foo/bar"));
         await request.DisposeAsync();
     }
 

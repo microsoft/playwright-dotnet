@@ -24,6 +24,7 @@
 
 using System.IO.Compression;
 using System.Text;
+using System.Text.Json;
 using System.Text.RegularExpressions;
 
 namespace Microsoft.Playwright.Tests;
@@ -285,11 +286,17 @@ public class BrowserContextHarTests : ContextTestEx
     public async Task ShouldRoundTripHarZip()
     {
         using var tmpDir = new TempDirectory();
-        var harPath = Path.Join(tmpDir.Path, "har.zip");
+        var harPath = Path.Join(tmpDir.Path, "har.ZIP");
         var context1 = await Browser.NewContextAsync(new() { RecordHarMode = HarMode.Minimal, RecordHarPath = harPath });
         var page1 = await context1.NewPageAsync();
         await page1.GotoAsync(Server.Prefix + "/one-style.html");
         await context1.CloseAsync();
+
+        var harDir = Path.Join(tmpDir.Path, "har");
+        ZipFile.ExtractToDirectory(harPath, harDir);
+        using var har = JsonDocument.Parse(File.ReadAllText(Path.Join(harDir, "har.har")));
+        var content = har.RootElement.GetProperty("log").GetProperty("entries")[0].GetProperty("response").GetProperty("content");
+        Assert.AreEqual(JsonValueKind.String, content.GetProperty("_file").ValueKind);
 
         var context2 = await Browser.NewContextAsync();
         await context2.RouteFromHARAsync(harPath, new() { NotFound = HarNotFound.Abort });
