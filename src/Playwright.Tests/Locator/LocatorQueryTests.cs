@@ -239,6 +239,21 @@ public class LocatorQueryTests : PageTestEx
         await Expect(Page.Locator("div").Filter(new() { HasNotTextString = "foo" })).ToHaveCountAsync(2);
     }
 
+    // See https://github.com/microsoft/playwright-dotnet/issues/3408
+    [PlaywrightTest]
+    public async Task PageLocatorShouldSupportHasNotAndHasNotText()
+    {
+        await Page.SetContentAsync("<section><div><span>hello</span></div><div><span>world</span></div></section>");
+        await Expect(Page.Locator("div", new() { HasNot = Page.Locator("span", new() { HasText = "world" }) })).ToHaveCountAsync(1);
+        await Expect(Page.Locator("div", new() { HasNot = Page.Locator("section") })).ToHaveCountAsync(2);
+        await Expect(Page.Locator("div", new() { HasNot = Page.Locator("span") })).ToHaveCountAsync(0);
+
+        await Expect(Page.Locator("div", new() { HasNotText = "hello" })).ToHaveCountAsync(1);
+        await Expect(Page.Locator("div", new() { HasNotTextString = "hello" })).ToHaveCountAsync(1);
+        await Expect(Page.Locator("div", new() { HasNotTextRegex = new Regex("HELLO", RegexOptions.IgnoreCase) })).ToHaveCountAsync(1);
+        await Expect(Page.Locator("div", new() { HasNotTextString = "foo" })).ToHaveCountAsync(2);
+    }
+
     [PlaywrightTest("locator-query.spec.ts", "should support locator.and")]
     public async Task ShouldSupportLocatorAnd()
     {

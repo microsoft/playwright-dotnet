@@ -567,9 +567,13 @@ internal class Page : ChannelOwner, IPage
         => MainFrame.Locator(selector, new()
         {
             Has = options?.Has,
+            HasNot = options?.HasNot,
             HasText = options?.HasText,
             HasTextString = options?.HasTextString,
             HasTextRegex = options?.HasTextRegex,
+            HasNotText = options?.HasNotText,
+            HasNotTextString = options?.HasNotTextString,
+            HasNotTextRegex = options?.HasNotTextRegex,
         });
 
     [MethodImpl(MethodImplOptions.NoInlining)]
