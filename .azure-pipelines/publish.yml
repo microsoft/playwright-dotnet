@@ -57,6 +57,10 @@ extends:
             targetPath: '$(Build.ArtifactStagingDirectory)/esrp-build'
             artifact: esrp-build
         steps:
+        - checkout: self
+          persistCredentials: false
+          displayName: "Checkout code"
+
         - powershell: |
             if ($env:CURRENT_BRANCH -notmatch '^v1\.') {
               Write-Host "Can only publish from a release tag (v1.*)."
