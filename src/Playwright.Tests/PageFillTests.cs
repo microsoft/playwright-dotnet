@@ -91,9 +91,10 @@ public class PageFillTests : PageTestEx
         await Page.ClickAsync("input");
         await Page.FillAsync("input", "2020-03-02T05:15");
         Assert.AreEqual("2020-03-02T05:15", await Page.EvalOnSelectorAsync<string>("input", "input => input.value"));
-        // The browser omits zero seconds.
+        // The browser omits zero seconds. WebKit on Windows does not implement datetime-local inputs and keeps the value as is.
         await Page.FillAsync("input", "2020-03-02T06:20:00");
-        Assert.AreEqual("2020-03-02T06:20", await Page.EvalOnSelectorAsync<string>("input", "input => input.value"));
+        var expected = TestConstants.IsWebKit && TestConstants.IsWindows ? "2020-03-02T06:20:00" : "2020-03-02T06:20";
+        Assert.AreEqual(expected, await Page.EvalOnSelectorAsync<string>("input", "input => input.value"));
     }
 
     [PlaywrightTest("page-fill.spec.ts", "should fill contenteditable")]

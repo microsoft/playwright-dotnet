@@ -227,6 +227,13 @@
   </Suppression>
   <Suppression>
     <DiagnosticId>CP0002</DiagnosticId>
+    <Target>M:Microsoft.Playwright.ICDPSession.SendAsync(System.String,System.Collections.Generic.Dictionary{System.String,System.Object})</Target>
+    <Left>lib/netstandard2.0/Microsoft.Playwright.dll</Left>
+    <Right>lib/netstandard2.0/Microsoft.Playwright.dll</Right>
+    <IsBaselineSuppression>true</IsBaselineSuppression>
+  </Suppression>
+  <Suppression>
+    <DiagnosticId>CP0002</DiagnosticId>
     <Target>M:Microsoft.Playwright.IFrame.ContentAsync</Target>
     <Left>lib/netstandard2.0/Microsoft.Playwright.dll</Left>
     <Right>lib/netstandard2.0/Microsoft.Playwright.dll</Right>
