@@ -316,7 +316,7 @@ internal class BrowserContext : ChannelOwner, IBrowserContext
         {
             return;
         }
-        var defaultPolicy = options.RecordHarPath.EndsWith(".zip") ? HarContentPolicy.Attach : HarContentPolicy.Embed;
+        var defaultPolicy = options.RecordHarPath.EndsWith(".zip", StringComparison.OrdinalIgnoreCase) ? HarContentPolicy.Attach : HarContentPolicy.Embed;
         var contentPolicy = options.RecordHarContent ?? (options.RecordHarOmitContent == true ? HarContentPolicy.Omit : defaultPolicy);
         var routeFromHAROptions = new BrowserContextRouteFromHAROptions()
         {

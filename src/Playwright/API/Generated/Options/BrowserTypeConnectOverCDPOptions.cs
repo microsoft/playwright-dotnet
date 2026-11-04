@@ -72,9 +72,9 @@ public class BrowserTypeConnectOverCDPOptions
     /// <summary>
     /// <para>
     /// When true, Playwright will not apply its default overrides to the existing default
-    /// browser context. Specifically, <see cref="IBrowser.NewContextAsync"/> is left at
-    /// the browser's setting, focus emulation is not enabled, and media emulation options
-    /// (such as <see cref="IBrowser.NewContextAsync"/>, <see cref="IBrowser.NewContextAsync"/>,
+    /// browser context. Specifically, <see cref="IBrowser.NewContextAsync"/> and font families
+    /// are left at the browser's settings, focus emulation is not enabled, and media emulation
+    /// options (such as <see cref="IBrowser.NewContextAsync"/>, <see cref="IBrowser.NewContextAsync"/>,
     /// <see cref="IBrowser.NewContextAsync"/>, and <see cref="IBrowser.NewContextAsync"/>)
     /// are not applied. Useful when attaching to a user's daily-driver browser where these
     /// overrides would interfere with existing browser state. New contexts created via

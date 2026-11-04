@@ -156,7 +156,9 @@ public partial interface ILocator
     /// <item><description>
     /// Includes element references <c>[ref=e2]</c>. 2. Does not wait for an element matching
     /// the locator, and throws when no elements match. 3. Includes snapshots of <c>&lt;iframe&gt;</c>s
-    /// inside the target.
+    /// inside the target. 4. Can omit names that repeat printed descendants, such as a
+    /// heading containing a link. Names that identify dialogs, landmarks, groups, tables
+    /// and table headers are retained.
     /// </description></item>
     /// </list>
     /// </summary>

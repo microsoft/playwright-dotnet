@@ -60,14 +60,14 @@ internal class CDPSession : ChannelOwner, ICDPSession
     public Task DetachAsync() => SendMessageToServerAsync("detach");
 
     [MethodImpl(MethodImplOptions.NoInlining)]
-    public async Task<JsonElement?> SendAsync(string method, Dictionary<string, object>? args = null)
+    public async Task<JsonElement?> SendAsync(string method, Dictionary<string, object>? args = null, CDPSessionSendOptions? options = null)
     {
         var newArgs = new Dictionary<string, object?>() { { "method", method } };
         if (args != null)
         {
             newArgs["params"] = args;
         }
-        var result = await SendMessageToServerAsync("send", newArgs).ConfigureAwait(false);
+        var result = await SendMessageToServerAsync("send", newArgs, timeout: options?.Timeout ?? 0).ConfigureAwait(false);
         return result?.GetProperty("result");
     }
 

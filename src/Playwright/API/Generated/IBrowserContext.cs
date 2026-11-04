@@ -831,13 +831,13 @@ public partial interface IBrowserContext
     /// <see cref="IWebSocketRoute"/> for more details and examples.
     /// </para>
     /// <code>
-    /// await context.RouteWebSocketAsync("/ws", async ws =&gt; {<br/>
-    ///   ws.RouteSend(message =&gt; {<br/>
-    ///     if (message == "to-be-blocked")<br/>
+    /// await context.RouteWebSocketAsync("/ws", ws =&gt; {<br/>
+    ///   var server = ws.ConnectToServer();<br/>
+    ///   ws.OnMessage(frame =&gt; {<br/>
+    ///     if (frame.Text == "to-be-blocked")<br/>
     ///       return;<br/>
-    ///     ws.Send(message);<br/>
+    ///     server.Send(frame.Text);<br/>
     ///   });<br/>
-    ///   await ws.ConnectAsync();<br/>
     /// });
     /// </code>
     /// </summary>
@@ -863,13 +863,13 @@ public partial interface IBrowserContext
     /// <see cref="IWebSocketRoute"/> for more details and examples.
     /// </para>
     /// <code>
-    /// await context.RouteWebSocketAsync("/ws", async ws =&gt; {<br/>
-    ///   ws.RouteSend(message =&gt; {<br/>
-    ///     if (message == "to-be-blocked")<br/>
+    /// await context.RouteWebSocketAsync("/ws", ws =&gt; {<br/>
+    ///   var server = ws.ConnectToServer();<br/>
+    ///   ws.OnMessage(frame =&gt; {<br/>
+    ///     if (frame.Text == "to-be-blocked")<br/>
     ///       return;<br/>
-    ///     ws.Send(message);<br/>
+    ///     server.Send(frame.Text);<br/>
     ///   });<br/>
-    ///   await ws.ConnectAsync();<br/>
     /// });
     /// </code>
     /// </summary>
@@ -895,13 +895,13 @@ public partial interface IBrowserContext
     /// <see cref="IWebSocketRoute"/> for more details and examples.
     /// </para>
     /// <code>
-    /// await context.RouteWebSocketAsync("/ws", async ws =&gt; {<br/>
-    ///   ws.RouteSend(message =&gt; {<br/>
-    ///     if (message == "to-be-blocked")<br/>
+    /// await context.RouteWebSocketAsync("/ws", ws =&gt; {<br/>
+    ///   var server = ws.ConnectToServer();<br/>
+    ///   ws.OnMessage(frame =&gt; {<br/>
+    ///     if (frame.Text == "to-be-blocked")<br/>
     ///       return;<br/>
-    ///     ws.Send(message);<br/>
+    ///     server.Send(frame.Text);<br/>
     ///   });<br/>
-    ///   await ws.ConnectAsync();<br/>
     /// });
     /// </code>
     /// </summary>

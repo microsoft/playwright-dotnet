@@ -155,7 +155,14 @@ public class WebMCPTests : PlaywrightTestEx
 
         var exception = await PlaywrightAssert.ThrowsAsync<PlaywrightException>(() => Page.Webmcp.CallToolAsync<JsonElement>("throwing"));
         // Chromium does not report the error that the tool threw.
-        StringAssert.Contains(TestConstants.IsChromium ? "the invocation failed" : "boom", exception.Message);
+        if (TestConstants.IsChromium)
+        {
+            Assert.That(exception.Message, Does.Match("the invocation failed|Tool execution failed"));
+        }
+        else
+        {
+            StringAssert.Contains("boom", exception.Message);
+        }
     }
 
     [PlaywrightTest("webmcp.spec.ts", "should time out when the tool does not settle")]
