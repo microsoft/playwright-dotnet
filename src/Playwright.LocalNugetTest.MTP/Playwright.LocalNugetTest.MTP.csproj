@@ -7,6 +7,6 @@
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="Microsoft.Playwright.MSTest.v4" Version="$(PlaywrightPackageVersion)" />
-    <PackageReference Include="Microsoft.Playwright.Testing.Platform" Version="$(PlaywrightPackageVersion)" />
+    <PackageReference Include="Microsoft.Testing.Extensions.Playwright" Version="$(PlaywrightPackageVersion)" />
   </ItemGroup>
 </Project>

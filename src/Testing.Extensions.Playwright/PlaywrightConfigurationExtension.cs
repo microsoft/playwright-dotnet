@@ -4,13 +4,14 @@ using System.Text.Json;
 using System.Text.Json.Serialization;
 using System.Text.Json.Serialization.Metadata;
 using System.Threading.Tasks;
+using Microsoft.Playwright;
 using Microsoft.Playwright.Helpers;
 using Microsoft.Playwright.TestAdapter;
 using Microsoft.Testing.Platform.Configurations;
 using Microsoft.Testing.Platform.Extensions.TestHost;
 using Microsoft.Testing.Platform.Services;
 
-namespace Microsoft.Playwright.Testing.Platform;
+namespace Microsoft.Testing.Extensions.Playwright;
 
 internal sealed class PlaywrightConfigurationExtension(IConfiguration configuration) : ITestSessionLifetimeHandler
 {
@@ -18,7 +19,7 @@ internal sealed class PlaywrightConfigurationExtension(IConfiguration configurat
     private string? _originalPwDebug;
     private bool _changedPwDebug;
 
-    public string Uid => "Microsoft.Playwright.Testing.Platform";
+    public string Uid => "Microsoft.Testing.Extensions.Playwright";
     public string Version => typeof(PlaywrightConfigurationExtension).Assembly.GetName().Version!.ToString();
     public string DisplayName => "Playwright configuration";
     public string Description => "Configures Playwright test fixtures using the playwright section of testconfig.json.";

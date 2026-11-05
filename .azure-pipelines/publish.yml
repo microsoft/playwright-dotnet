@@ -137,10 +137,11 @@ extends:
               src/Playwright.Xunit/Playwright.Xunit.csproj;
               src/Playwright.Xunit.v3/Playwright.Xunit.v3.csproj;
               src/Playwright.TestAdapter/Playwright.TestAdapter.csproj;
+              src/Testing.Extensions.Playwright/Testing.Extensions.Playwright.csproj;
             packDirectory: '$(Build.ArtifactStagingDirectory)/nuget'
             versioningScheme: 'off'
         - task: 1ES.PublishNuget@1
-          displayName: Publish Microsoft.Playwright{NUnit,MSTest,Xunit,TestAdapter}
+          displayName: Publish Playwright packages and MTP extension
           condition: or(
               eq('${{ parameters.doRelease }}', true),
               startsWith(variables['Build.SourceBranch'], 'refs/tags/v1.')
@@ -150,7 +151,7 @@ extends:
             # The reason for the 1.* after the package name is that we know the end of the package name in order to not
             # match with e.g. Microsoft.Playwright.CLI when we only want to match Microsoft.Playwright.
             # Semicolon separated as per https://portal.microsofticm.com/imp/v5/incidents/details/467483180/summary
-            packagesToPush: $(Build.ArtifactStagingDirectory)/nuget/Microsoft.Playwright.1.*.nupkg;$(Build.ArtifactStagingDirectory)/nuget/Microsoft.Playwright.MSTest.1.*.nupkg;$(Build.ArtifactStagingDirectory)/nuget/Microsoft.Playwright.MSTest.v4.1.*.nupkg;$(Build.ArtifactStagingDirectory)/nuget/Microsoft.Playwright.Xunit.1.*.nupkg;$(Build.ArtifactStagingDirectory)/nuget/Microsoft.Playwright.Xunit.v3.1.*.nupkg;$(Build.ArtifactStagingDirectory)/nuget/Microsoft.Playwright.NUnit.1.*.nupkg;$(Build.ArtifactStagingDirectory)/nuget/Microsoft.Playwright.TestAdapter.1.*.nupkg
+            packagesToPush: $(Build.ArtifactStagingDirectory)/nuget/Microsoft.Playwright.1.*.nupkg;$(Build.ArtifactStagingDirectory)/nuget/Microsoft.Playwright.MSTest.1.*.nupkg;$(Build.ArtifactStagingDirectory)/nuget/Microsoft.Playwright.MSTest.v4.1.*.nupkg;$(Build.ArtifactStagingDirectory)/nuget/Microsoft.Playwright.Xunit.1.*.nupkg;$(Build.ArtifactStagingDirectory)/nuget/Microsoft.Playwright.Xunit.v3.1.*.nupkg;$(Build.ArtifactStagingDirectory)/nuget/Microsoft.Playwright.NUnit.1.*.nupkg;$(Build.ArtifactStagingDirectory)/nuget/Microsoft.Playwright.TestAdapter.1.*.nupkg;$(Build.ArtifactStagingDirectory)/nuget/Microsoft.Testing.Extensions.Playwright.1.*.nupkg
             packageParentPath: '$(Build.ArtifactStagingDirectory)'
             nuGetFeedType: external
             publishFeedCredentials: 'NuGet-Playwright'

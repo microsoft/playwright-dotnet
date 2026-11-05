@@ -39,7 +39,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Playwright.Xunit.v3", "Play
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Playwright.MSTest.v4", "Playwright.MSTest.v4\Playwright.MSTest.v4.csproj", "{391F8C08-8C76-4D26-BBCF-8A3E00252075}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Playwright.Testing.Platform", "Playwright.Testing.Platform\Playwright.Testing.Platform.csproj", "{C70DD201-4711-426C-A50B-E8668987FD34}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Testing.Extensions.Playwright", "Testing.Extensions.Playwright\Testing.Extensions.Playwright.csproj", "{C70DD201-4711-426C-A50B-E8668987FD34}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

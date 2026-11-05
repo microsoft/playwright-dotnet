@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 
-namespace Microsoft.Playwright.Testing.Platform;
+namespace Microsoft.Testing.Extensions.Playwright;
 
 internal sealed class DictionaryConverter : JsonConverterFactory
 {

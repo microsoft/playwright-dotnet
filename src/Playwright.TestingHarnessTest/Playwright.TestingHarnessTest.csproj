@@ -31,7 +31,7 @@
 
     <!-- MSTest on Microsoft.Testing.Platform -->
     <ProjectReference Include="..\Playwright.MSTest.v4\Playwright.MSTest.v4.csproj" Condition="'$(TEST_MODE)' == 'mstest.mtp'" />
-    <ProjectReference Include="..\Playwright.Testing.Platform\Playwright.Testing.Platform.csproj" Condition="'$(TEST_MODE)' == 'mstest.mtp'" />
+    <ProjectReference Include="..\Testing.Extensions.Playwright\Testing.Extensions.Playwright.csproj" Condition="'$(TEST_MODE)' == 'mstest.mtp'" />
     <PackageReference Include="MSTest" Version="4.4.1" Condition="'$(TEST_MODE)' == 'mstest.mtp'" />
     
     <!-- NUnit -->
@@ -56,5 +56,5 @@
   <ItemGroup Condition="'$(TEST_MODE)' == 'mstest.mtp' and Exists('$(PWTEST_TEST_DIR)\testconfig.json')">
     <None Include="$(PWTEST_TEST_DIR)\testconfig.json" Link="testconfig.json" CopyToOutputDirectory="PreserveNewest" TargetPath="$(AssemblyName).testconfig.json" />
   </ItemGroup>
-  <Import Project="..\Playwright.Testing.Platform\build\Microsoft.Playwright.Testing.Platform.props" Condition="'$(TEST_MODE)' == 'mstest.mtp'" />
+  <Import Project="..\Testing.Extensions.Playwright\build\Microsoft.Testing.Extensions.Playwright.props" Condition="'$(TEST_MODE)' == 'mstest.mtp'" />
 </Project>

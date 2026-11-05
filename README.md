@@ -31,11 +31,11 @@ await page.ScreenshotAsync(new() { Path = "screenshot.png" });
 ## Microsoft.Testing.Platform configuration
 
 For tests running on Microsoft.Testing.Platform (MTP) 2.4.1 or later, reference
-`Microsoft.Playwright.Testing.Platform` alongside your Playwright test integration
+`Microsoft.Testing.Extensions.Playwright` alongside your Playwright test integration
 (for example, `Microsoft.Playwright.MSTest.v4`). The configuration extension is
 registered automatically by MTP's generated entry point. Applications with a custom
 entry point can call
-`Microsoft.Playwright.Testing.Platform.TestingPlatformBuilderHook.AddExtensions(builder, args)`
+`Microsoft.Testing.Extensions.Playwright.TestingPlatformBuilderHook.AddExtensions(builder, args)`
 before building their test application.
 
 Use a test framework runner compatible with MTP 2.x, such as `MSTest.Sdk` 4.4.1.

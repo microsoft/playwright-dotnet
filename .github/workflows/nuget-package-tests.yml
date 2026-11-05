@@ -65,7 +65,7 @@ jobs:
       - name: Pack Playwright MTP integration
         run: |
           dotnet pack ./src/Playwright.MSTest.v4/ -o ./src/Playwright.LocalNugetTest/nupkg
-          dotnet pack ./src/Playwright.Testing.Platform/ -o ./src/Playwright.LocalNugetTest/nupkg
+          dotnet pack ./src/Testing.Extensions.Playwright/ -o ./src/Playwright.LocalNugetTest/nupkg
       - name: Build Playwright.LocalNugetTest 
         run: dotnet build
         working-directory: ./src/Playwright.LocalNugetTest/

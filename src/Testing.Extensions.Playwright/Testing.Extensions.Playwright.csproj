@@ -1,11 +1,11 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <Title>Microsoft.Playwright.Testing.Platform</Title>
-    <PackageId>Microsoft.Playwright.Testing.Platform</PackageId>
+    <Title>Microsoft.Testing.Extensions.Playwright</Title>
+    <PackageId>Microsoft.Testing.Extensions.Playwright</PackageId>
     <Description>Microsoft.Testing.Platform configuration support for the Playwright test integrations.</Description>
     <TargetFramework>netstandard2.0</TargetFramework>
-    <RootNamespace>Microsoft.Playwright.Testing.Platform</RootNamespace>
-    <AssemblyName>Microsoft.Playwright.Testing.Platform</AssemblyName>
+    <RootNamespace>Microsoft.Testing.Extensions.Playwright</RootNamespace>
+    <AssemblyName>Microsoft.Testing.Extensions.Playwright</AssemblyName>
     <IsPackable>true</IsPackable>
     <Nullable>enable</Nullable>
     <PackageIcon>icon.png</PackageIcon>

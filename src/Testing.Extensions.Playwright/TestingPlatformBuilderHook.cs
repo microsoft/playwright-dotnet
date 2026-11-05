@@ -1,7 +1,7 @@
 using Microsoft.Testing.Platform.Builder;
 using Microsoft.Testing.Platform.Services;
 
-namespace Microsoft.Playwright.Testing.Platform;
+namespace Microsoft.Testing.Extensions.Playwright;
 
 public static class TestingPlatformBuilderHook
 {
