@@ -15,6 +15,36 @@ public class WorkerAwareTest
     private static readonly ConcurrentStack<Worker> _allWorkers = new();
     private Worker _currentWorker = null!;
 
+    static WorkerAwareTest()
+    {
+        // Workers are pooled until the end of the test run, so their services are disposed when the process exits.
+        // This closes the browsers. A remote browser is disconnected abruptly otherwise.
+        AppDomain.CurrentDomain.ProcessExit += (_, _) => DisposeAllWorkers();
+    }
+
+    private static void DisposeAllWorkers()
+    {
+        var tasks = new List<Task>();
+        while (_allWorkers.TryPop(out var worker))
+        {
+            foreach (var kv in worker.Services)
+            {
+                tasks.Add(Task.Run(() => kv.Value.DisposeAsync()));
+            }
+        }
+        try
+        {
+            // Do not hold the process for long. VSTest kills the test host shortly after the run anyway.
+#pragma warning disable VSTHRD002
+            Task.WhenAll(tasks).Wait(TimeSpan.FromSeconds(5));
+#pragma warning restore VSTHRD002
+        }
+        catch
+        {
+            // Best effort, the process is exiting.
+        }
+    }
+
     private class Worker
     {
         private static int _lastWorkedIndex = 0;
