@@ -1,0 +1,8 @@
+<Project>
+  <ItemGroup>
+    <TestingPlatformBuilderHook Include="D4E035AC-3BAC-4190-A05C-B7BFC3E1B056">
+      <DisplayName>Microsoft.Playwright.Testing.Platform</DisplayName>
+      <TypeFullName>Microsoft.Playwright.Testing.Platform.TestingPlatformBuilderHook</TypeFullName>
+    </TestingPlatformBuilderHook>
+  </ItemGroup>
+</Project>

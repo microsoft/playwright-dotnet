@@ -6,12 +6,18 @@
     <ReleaseVersion>0.0.0</ReleaseVersion>
     <LangVersion>12</LangVersion>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(TEST_MODE)' == 'mstest.mtp'">
+    <OutputType>Exe</OutputType>
+    <EnableMSTestRunner>true</EnableMSTestRunner>
+    <UseAppHost>false</UseAppHost>
+    <OutputPath>$(PWTEST_TEST_DIR)\bin\</OutputPath>
+  </PropertyGroup>
   <Import Project="../Common/SignAssembly.props" />
 
   <ItemGroup>
     <ProjectReference Include="..\Playwright\Playwright.csproj" />
 
-    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.13.0" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.13.0" Condition="'$(TEST_MODE)' != 'mstest.mtp'" />
     
     <!-- MSTest -->
     <ProjectReference Include="..\Playwright.MSTest\Playwright.MSTest.csproj" Condition="'$(TEST_MODE)' == 'mstest'" />
@@ -22,6 +28,11 @@
     <ProjectReference Include="..\Playwright.MSTest.v4\Playwright.MSTest.v4.csproj" Condition="'$(TEST_MODE)' == 'mstest.v4'" />
     <PackageReference Include="MSTest.TestAdapter" Version="4.0.0-preview.25372.6" Condition="'$(TEST_MODE)' == 'mstest.v4'" />
     <PackageReference Include="MSTest.TestFramework" Version="4.0.0-preview.25372.6" Condition="'$(TEST_MODE)' == 'mstest.v4'" />
+
+    <!-- MSTest on Microsoft.Testing.Platform -->
+    <ProjectReference Include="..\Playwright.MSTest.v4\Playwright.MSTest.v4.csproj" Condition="'$(TEST_MODE)' == 'mstest.mtp'" />
+    <ProjectReference Include="..\Playwright.Testing.Platform\Playwright.Testing.Platform.csproj" Condition="'$(TEST_MODE)' == 'mstest.mtp'" />
+    <PackageReference Include="MSTest" Version="4.4.1" Condition="'$(TEST_MODE)' == 'mstest.mtp'" />
     
     <!-- NUnit -->
     <ProjectReference Include="..\Playwright.NUnit\Playwright.NUnit.csproj" Condition="'$(TEST_MODE)' == 'nunit'" />
@@ -40,6 +51,10 @@
 
   <ItemGroup>
     <Compile Remove="**/*.cs" />
-    <Compile Include="$(PWTEST_TEST_DIR)/*.cs" />
+    <Compile Include="$(PWTEST_TEST_DIR)/*.cs" Condition="'$(PWTEST_TEST_DIR)' != ''" />
   </ItemGroup>
+  <ItemGroup Condition="'$(TEST_MODE)' == 'mstest.mtp' and Exists('$(PWTEST_TEST_DIR)\testconfig.json')">
+    <None Include="$(PWTEST_TEST_DIR)\testconfig.json" Link="testconfig.json" CopyToOutputDirectory="PreserveNewest" TargetPath="$(AssemblyName).testconfig.json" />
+  </ItemGroup>
+  <Import Project="..\Playwright.Testing.Platform\build\Microsoft.Playwright.Testing.Platform.props" Condition="'$(TEST_MODE)' == 'mstest.mtp'" />
 </Project>
