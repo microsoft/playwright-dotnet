@@ -7,6 +7,18 @@ Use this skill once the roll PR has merged into `main` and the upstream JS `v1.X
 
 Throughout this doc, replace `X` with the minor version (e.g. `64` for `1.64.0`) and `<user>` with the fork owner (`gh api user --jq .login`).
 
+Check that the driver is rolled. `DriverVersion` in `src/Common/Version.props` on `main` must be a commit of the upstream `release-1.X` branch: the tag `v1.X.0`, or the tip of the branch, as the user says. The driver reports the version of `playwright-core` at that commit, so it must be `1.X.0`:
+
+```bash
+./build.sh --build-driver
+pin=$(git -C .upstream rev-parse HEAD)
+git -C .upstream fetch origin release-1.X
+git -C .upstream merge-base --is-ancestor "$pin" FETCH_HEAD && echo "on release-1.X"
+git -C .upstream show "$pin":packages/playwright-core/package.json | grep '"version"'
+```
+
+If it is not, roll first (`./build.sh --roll v1.X.0`, or `--roll release-1.X`).
+
 The full release checklist lives in the private `microsoft/playwright-internal` repo as the `v1.X release checklist` issue. Find its number once:
 
 ```bash
@@ -51,7 +63,7 @@ git show upstream/release-1.X:src/Common/Version.props | grep AssemblyVersion
 
 ## 3. Release notes
 
-The .NET notes in `docs/src/release-notes-csharp.md` are written upstream together with the Node.js notes, following the `playwright-release-notes` skill (`../playwright/.claude/skills/playwright-release-notes/SKILL.md`). Assume the `## Version 1.X` section is already on `release-1.X`, and only add what's missing: significant changes that only the .NET port has, such as a new NUnit, MSTest or xUnit integration feature or a .NET-only API. Leave out minor bug fixes. To find candidates, list this repo's changes since the previous release branch was cut:
+The .NET notes in `docs/src/release-notes-csharp.md` are written upstream together with the Node.js notes, following the `playwright-release-notes` skill (`.claude/skills/playwright-release-notes/SKILL.md` on `main` of `microsoft/playwright`). Assume the `## Version 1.X` section is already on `release-1.X`, and only add what's missing: significant changes that only the .NET port has, such as a new NUnit, MSTest or xUnit integration feature or a .NET-only API. Leave out minor bug fixes. To find candidates, list this repo's changes since the previous release branch was cut:
 
 ```bash
 git log --oneline --no-merges $(git merge-base upstream/release-1.<X-1> upstream/main)..upstream/main | grep -E '^\w+ (feat|fix)'

@@ -16,7 +16,7 @@ outcome that this repo adds, an upstream bug report.
 ## The checkouts
 
 `$REPO_DIR` is the checkout of `microsoft/playwright-dotnet` that the guide describes. The driver is
-downloaded (`./build.sh --download-driver`), the solution is built (`dotnet build ./src`), and
+built (`./build.sh --build-driver`), the solution is built (`dotnet build ./src`), and
 Chromium, Firefox and WebKit are installed
 (`pwsh src/Playwright/bin/Debug/netstandard2.0/playwright.ps1 install --with-deps`). It is the
 working directory, and the checkout that the guides refer to. The clone is shallow: run
@@ -26,11 +26,15 @@ working directory, and the checkout that the guides refer to. The clone is shall
 `$PLAYWRIGHT_DIR` is a shallow clone of `microsoft/playwright` at `main`. The .NET client is a port
 of the JavaScript client in `packages/playwright-core/src/client/`. The API docs are in
 `docs/src/api/`, the API generator is `utils/doclint/generateDotnetApi.js`, and the upstream tests
-are in `tests/page/` and `tests/library/`. The clone is not at the commit of the driver:
-`<DriverVersion>` in `src/Common/Version.props` names that version, `main` is close to it, and a
-release has the tag `v<DriverVersion>`. The clone is not built. Before you run an upstream test in
-it, run `npm ci`, `npm run build` and `npx playwright install` there. Then `npm run ctest <spec>`,
+are in `tests/page/` and `tests/library/`. The clone is not at the commit of the driver, but `main`
+is close to it. The clone is not built. Before you run an upstream test in it, run `npm ci`,
+`npm run build` and `npx playwright install` there. Then `npm run ctest <spec>`,
 `npm run ftest <spec>` and `npm run wtest <spec>` run one spec file on Chromium, Firefox and WebKit.
+
+`$REPO_DIR/.upstream` is a full clone of `microsoft/playwright` at the commit of the driver, which
+`<DriverVersion>` in `src/Common/Version.props` names. The driver is built from it, and the API is
+generated from it. Read the code of the driver there, and use its history and tags. Do not commit,
+branch or edit in it: write and run upstream tests in `$PLAYWRIGHT_DIR`.
 
 ## Published versions
 
@@ -46,7 +50,7 @@ dotnet run
 Put the repro in `Program.cs` as top-level statements, as `src/Playwright.Examples/Program.cs`
 does. `playwright.ps1 install` fetches the browsers of that version. Match the change to commits in
 `$REPO_DIR` with `git log v<good>..v<bad> -- src/Playwright/`, and to the JavaScript client in
-`$PLAYWRIGHT_DIR` with the same tags.
+`$REPO_DIR/.upstream` with the same tags.
 
 ## Upstream bugs
 
@@ -94,7 +98,7 @@ Write the rest of the comment as the note: the verdict, the evidence, and that t
 ## PRs from third parties
 
 Do not run a PR that changes a `.csproj`, `.props` or `.sln` file, `nuget.config`, `build.sh`,
-`src/tools/Playwright.Tooling/` (the driver download), `src/Playwright/build/` (MSBuild targets that
+`src/tools/Playwright.Tooling/` (the driver build), `src/Playwright/build/` (MSBuild targets that
 run on every build), `.github/`, `.azure-pipelines/`, `utils/`, `package.json`, `package-lock.json`,
 or the generated files under `src/Playwright/API/Generated/` and
 `src/Playwright/Transport/Protocol/Generated/`.

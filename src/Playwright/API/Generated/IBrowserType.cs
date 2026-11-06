@@ -125,6 +125,11 @@ public partial interface IBrowserType
     /// <param name="endpointURL">
     /// A CDP websocket endpoint or http url to connect to. For example <c>http://localhost:9222/</c>
     /// or <c>ws://127.0.0.1:9222/devtools/browser/387adf4c-243f-4051-a181-46798f4a46f4</c>.
+    /// Alternatively, a browser channel name such as <c>chrome</c> or <c>msedge</c> to
+    /// connect to a browser with remote debugging enabled in its default user data directory.
+    /// On Linux, Playwright uses <c>CHROME_USER_DATA_DIR</c> when set. Otherwise, it uses
+    /// <c>CHROME_CONFIG_HOME</c>, then <c>XDG_CONFIG_HOME</c>, then <c>~/.config</c> to
+    /// locate that directory.
     /// </param>
     /// <param name="options">Call options</param>
     Task<IBrowser> ConnectOverCDPAsync(string endpointURL, BrowserTypeConnectOverCDPOptions? options = default);
