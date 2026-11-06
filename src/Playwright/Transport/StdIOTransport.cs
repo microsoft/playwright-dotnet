@@ -24,6 +24,7 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.IO;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -73,10 +74,25 @@ internal class StdIOTransport : IDisposable
         if (!IsClosed)
         {
             IsClosed = true;
-            TransportClosed?.Invoke(this, closeReason);
-            _readerCancellationSource?.Cancel();
-            _process.StandardInput.Close();
-            _process.WaitForExit();
+            try
+            {
+                _readerCancellationSource.Cancel();
+                _process.StandardInput.Close();
+
+                // The driver exits when it sees its stdin closed, but it never gets there while it is
+                // blocked writing to a full stdout pipe: Node.js writes to a pipe synchronously on Windows.
+                // So discard the output until the driver closes it.
+                // The reader loop may still be inside a read that could not be cancelled, and then
+                // two reads run at once. That is harmless: each read gets its own part of the output,
+                // and all of it is dropped after the cancellation. So there is no lock around the reads.
+                _process.StandardOutput.BaseStream.CopyTo(Stream.Null);
+                _process.WaitForExit();
+            }
+            finally
+            {
+                // Notify last, because the listener disposes the transport.
+                TransportClosed?.Invoke(this, closeReason);
+            }
         }
     }
 
