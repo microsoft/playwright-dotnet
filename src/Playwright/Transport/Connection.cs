@@ -52,6 +52,13 @@ internal class Connection : IDisposable
     private readonly Root _rootObject;
     private readonly TaskQueue _queue = new();
     private readonly string _callIdPrefix = CreateCallIdPrefix();
+
+    // Taken by the message pump around every write to client-side state that user code reads
+    // (the lists of pages, frames, workers and contexts; the route, binding and handler
+    // registries) and by every reader of that state. Critical sections are synchronous and
+    // never run user code, so the lock is never held across an await.
+    internal readonly object DispatchLock = new();
+
     private int _tracingCount;
     private int _lastId;
     private Exception? _closedError;
@@ -118,11 +125,11 @@ internal class Connection : IDisposable
     {
         if (isTracing)
         {
-            _tracingCount++;
+            Interlocked.Increment(ref _tracingCount);
         }
         else
         {
-            _tracingCount--;
+            Interlocked.Decrement(ref _tracingCount);
         }
     }
 
@@ -204,7 +211,7 @@ internal class Connection : IDisposable
             };
         }
 
-        if (_tracingCount > 0 && frames.Count > 0 && @object?.Guid != "localUtils")
+        if (Volatile.Read(ref _tracingCount) > 0 && frames.Count > 0 && @object?.Guid != "localUtils")
         {
             LocalUtils?.AddStackToTracingNoReply(frames, id);
         }

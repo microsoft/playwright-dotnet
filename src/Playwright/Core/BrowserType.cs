@@ -187,9 +187,9 @@ internal class BrowserType : ChannelOwner, IBrowserType
         void OnPipeClosed(string? reason = null)
         {
             // Emulate all pages, contexts and the browser closing upon disconnect.
-            foreach (BrowserContext context in browser?._contexts.ToArray() ?? Array.Empty<BrowserContext>())
+            foreach (BrowserContext context in browser?.Snapshot(browser._contexts) ?? Array.Empty<BrowserContext>())
             {
-                foreach (Page page in context._pages.ToArray())
+                foreach (Page page in context.Snapshot(context._pages))
                 {
                     page.OnClose();
                 }

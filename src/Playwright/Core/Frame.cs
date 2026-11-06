@@ -64,7 +64,7 @@ internal class Frame : ChannelOwner, IFrame
     /// </summary>
     public event EventHandler<WaitUntilState>? LoadState;
 
-    public IReadOnlyList<IFrame> ChildFrames => _childFrames;
+    public IReadOnlyList<IFrame> ChildFrames => Snapshot(_childFrames);
 
     public string Name { get; internal set; }
 

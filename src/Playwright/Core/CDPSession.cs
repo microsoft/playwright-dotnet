@@ -73,23 +73,24 @@ internal class CDPSession : ChannelOwner, ICDPSession
 
     private void OnCDPEvent(string name, JsonElement? @params)
     {
-        if (_cdpSessionEvents.TryGetValue(name, out var cdpNamedEvent))
+        CDPSessionEvent? cdpNamedEvent;
+        lock (_connection.DispatchLock)
         {
-            cdpNamedEvent.RaiseEvent(@params);
+            _cdpSessionEvents.TryGetValue(name, out cdpNamedEvent);
         }
+        cdpNamedEvent?.RaiseEvent(@params);
     }
 
     [MethodImpl(MethodImplOptions.NoInlining)]
     public ICDPSessionEvent Event(string eventName)
     {
-        if (_cdpSessionEvents.TryGetValue(eventName, out var cdpNamedEvent))
+        lock (_connection.DispatchLock)
         {
-            return cdpNamedEvent;
-        }
-        else
-        {
-            cdpNamedEvent = new(eventName);
-            _cdpSessionEvents.Add(eventName, cdpNamedEvent);
+            if (!_cdpSessionEvents.TryGetValue(eventName, out var cdpNamedEvent))
+            {
+                cdpNamedEvent = new(eventName);
+                _cdpSessionEvents.Add(eventName, cdpNamedEvent);
+            }
             return cdpNamedEvent;
         }
     }

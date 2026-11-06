@@ -195,7 +195,7 @@ internal class Page : ChannelOwner, IPage
 
     public string Url => MainFrame.Url;
 
-    public IReadOnlyList<IFrame> Frames => _frames.ToList().AsReadOnly();
+    public IReadOnlyList<IFrame> Frames => Snapshot(_frames);
 
     public IKeyboard Keyboard { get; }
 
@@ -207,7 +207,7 @@ internal class Page : ChannelOwner, IPage
 
     public IWebStorage SessionStorage { get; }
 
-    public IReadOnlyList<IWorker> Workers => _workers;
+    public IReadOnlyList<IWorker> Workers => Snapshot(_workers);
 
     public IVideo? Video
     {
@@ -287,7 +287,10 @@ internal class Page : ChannelOwner, IPage
                 break;
             case "worker":
                 var worker = serverParams.GetProperty("worker").ToObject<Worker>(_connection.DefaultJsonSerializerOptions);
-                _workers.Add(worker);
+                lock (_connection.DispatchLock)
+                {
+                    _workers.Add(worker);
+                }
                 worker.Page = this;
                 Worker?.Invoke(this, worker);
                 break;
@@ -1292,7 +1295,10 @@ internal class Page : ChannelOwner, IPage
             Handler = handler,
             Times = options?.Times,
         };
-        _routes.Insert(0, setting);
+        lock (_connection.DispatchLock)
+        {
+            _routes.Insert(0, setting);
+        }
         await UpdateInterceptionAsync().ConfigureAwait(false);
         return new DisposableStub(async () =>
         {
@@ -1304,15 +1310,18 @@ internal class Page : ChannelOwner, IPage
     {
         var removed = new List<RouteHandler>();
         var remaining = new List<RouteHandler>();
-        foreach (var routeHandler in _routes)
+        lock (_connection.DispatchLock)
         {
-            if (routeHandler.urlMatcher.Equals(globMatch, reMatch, funcMatch, Context.BaseURL, false) && (handler == null || routeHandler.Handler == handler))
+            foreach (var routeHandler in _routes)
             {
-                removed.Add(routeHandler);
-            }
-            else
-            {
-                remaining.Add(routeHandler);
+                if (routeHandler.urlMatcher.Equals(globMatch, reMatch, funcMatch, Context.BaseURL, false) && (handler == null || routeHandler.Handler == handler))
+                {
+                    removed.Add(routeHandler);
+                }
+                else
+                {
+                    remaining.Add(routeHandler);
+                }
             }
         }
         await UnrouteInternalAsync(removed, remaining, UnrouteBehavior.Default).ConfigureAwait(false);
@@ -1320,7 +1329,10 @@ internal class Page : ChannelOwner, IPage
 
     private async Task UnrouteInternalAsync(List<RouteHandler> removed, List<RouteHandler> remaining, UnrouteBehavior? behavior)
     {
-        _routes = remaining;
+        lock (_connection.DispatchLock)
+        {
+            _routes = remaining;
+        }
         if (behavior != null && behavior != UnrouteBehavior.Default)
         {
             var tasks = removed.Select(routeHandler => routeHandler.StopAsync(behavior.Value));
@@ -1332,7 +1344,11 @@ internal class Page : ChannelOwner, IPage
 
     private async Task UpdateInterceptionAsync()
     {
-        var patterns = RouteHandler.PrepareInterceptionPatterns(_routes);
+        List<Dictionary<string, object>> patterns;
+        lock (_connection.DispatchLock)
+        {
+            patterns = RouteHandler.PrepareInterceptionPatterns(_routes);
+        }
         await SendMessageToServerAsync("setNetworkInterceptionPatterns", new Dictionary<string, object?>
         {
             ["patterns"] = patterns,
@@ -1342,7 +1358,10 @@ internal class Page : ChannelOwner, IPage
     internal void OnClose()
     {
         IsClosed = true;
-        Context._pages.Remove(this);
+        lock (_connection.DispatchLock)
+        {
+            Context._pages.Remove(this);
+        }
         DisposeHarRouters();
         Close?.Invoke(this, this);
         Context?.FirePageClose(this);
@@ -1355,7 +1374,12 @@ internal class Page : ChannelOwner, IPage
 
     private void Channel_BindingCall(object sender, BindingCall bindingCall)
     {
-        if (Bindings.TryGetValue(bindingCall.Name, out var binding))
+        Delegate? binding;
+        lock (_connection.DispatchLock)
+        {
+            Bindings.TryGetValue(bindingCall.Name, out binding);
+        }
+        if (binding != null)
         {
             _ = bindingCall.CallAsync(binding);
         }
@@ -1366,7 +1390,7 @@ internal class Page : ChannelOwner, IPage
     private async Task OnRouteAsync(Route route)
     {
         route._context = Context;
-        foreach (var routeHandler in _routes.ToArray())
+        foreach (var routeHandler in Snapshot(_routes))
         {
             // If the page was closed we stall all requests right away.
             if (CloseWasCalled || Context.ClosingOrClosed)
@@ -1377,16 +1401,24 @@ internal class Page : ChannelOwner, IPage
             {
                 continue;
             }
-            if (!_routes.Contains(routeHandler))
+            bool noRoutesLeft;
+            lock (_connection.DispatchLock)
             {
-                continue;
-            }
-            if (routeHandler.WillExpire())
-            {
-                _routes.Remove(routeHandler);
+                if (!_routes.Contains(routeHandler))
+                {
+                    continue;
+                }
+                if (routeHandler.WillExpire())
+                {
+                    _routes.Remove(routeHandler);
+                }
+                // Counted here, under the lock, rather than in HandleAsync: two matching requests
+                // handled concurrently must not both see the count before the other's increment.
+                routeHandler.HandledCount++;
+                noRoutesLeft = _routes.Count == 0;
             }
             var handled = await routeHandler.HandleAsync(route).ConfigureAwait(false);
-            if (_routes.Count == 0)
+            if (noRoutesLeft)
             {
                 UpdateInterceptionAsync().IgnoreException();
             }
@@ -1401,7 +1433,7 @@ internal class Page : ChannelOwner, IPage
 
     private async Task OnWebSocketRouteAsync(WebSocketRoute webSocketRoute)
     {
-        var routeHandler = _webSocketRoutes.Find(route => route.Matches(webSocketRoute.Url));
+        var routeHandler = Array.Find(Snapshot(_webSocketRoutes), route => route.Matches(webSocketRoute.Url));
         if (routeHandler != null)
         {
             await routeHandler.HandleAsync(webSocketRoute).ConfigureAwait(false);
@@ -1415,9 +1447,12 @@ internal class Page : ChannelOwner, IPage
     private void Channel_FrameDetached(object sender, IFrame args)
     {
         var frame = (Frame)args;
-        _frames.Remove(frame);
-        frame.IsDetached = true;
-        frame.ParentFrame?._childFrames?.Remove(frame);
+        lock (_connection.DispatchLock)
+        {
+            _frames.Remove(frame);
+            frame.IsDetached = true;
+            frame.ParentFrame?._childFrames?.Remove(frame);
+        }
         FrameDetached?.Invoke(this, args);
         Context?.FireFrameDetached(args);
     }
@@ -1426,20 +1461,26 @@ internal class Page : ChannelOwner, IPage
     {
         var frame = (Frame)args;
         frame.Page = this;
-        _frames.Add(frame);
-        frame.ParentFrame?._childFrames?.Add(frame);
+        lock (_connection.DispatchLock)
+        {
+            _frames.Add(frame);
+            frame.ParentFrame?._childFrames?.Add(frame);
+        }
         FrameAttached?.Invoke(this, args);
         Context?.FireFrameAttached(args);
     }
 
     private async Task<IAsyncDisposable> InnerExposeBindingAsync(string name, Delegate callback)
     {
-        if (Bindings.ContainsKey(name))
+        lock (_connection.DispatchLock)
         {
-            throw new PlaywrightException($"Function \"{name}\" has been already registered");
-        }
+            if (Bindings.ContainsKey(name))
+            {
+                throw new PlaywrightException($"Function \"{name}\" has been already registered");
+            }
 
-        Bindings.Add(name, callback);
+            Bindings.Add(name, callback);
+        }
 
         var result = await SendMessageToServerAsync(
             "exposeBinding",
@@ -1492,17 +1533,25 @@ internal class Page : ChannelOwner, IPage
             Url = options?.Url,
             UrlString = options?.UrlString,
         }).ConfigureAwait(false);
-        _harRouters.Add(harRouter);
+        lock (_connection.DispatchLock)
+        {
+            _harRouters.Add(harRouter);
+        }
         await harRouter.AddPageRouteAsync(this).ConfigureAwait(false);
     }
 
     private void DisposeHarRouters()
     {
-        foreach (var router in _harRouters)
+        HarRouter[] routers;
+        lock (_connection.DispatchLock)
+        {
+            routers = _harRouters.ToArray();
+            _harRouters.Clear();
+        }
+        foreach (var router in routers)
         {
             router.Dispose();
         }
-        _harRouters.Clear();
     }
 
     [MethodImpl(MethodImplOptions.NoInlining)]
@@ -1641,7 +1690,10 @@ internal class Page : ChannelOwner, IPage
             ["noWaitAfter"] = options?.NoWaitAfter,
         }).ConfigureAwait(false);
 
-        _locatorHandlers.Add(response!.Value.GetProperty("uid").GetInt32(), new LocatorHandler((Locator)locator, handler, options?.Times));
+        lock (_connection.DispatchLock)
+        {
+            _locatorHandlers.Add(response!.Value.GetProperty("uid").GetInt32(), new LocatorHandler((Locator)locator, handler, options?.Times));
+        }
     }
 
     private async Task Channel_LocatorHandlerTriggeredAsync(int uid)
@@ -1649,24 +1701,33 @@ internal class Page : ChannelOwner, IPage
         var remove = false;
         try
         {
-            if (_locatorHandlers.TryGetValue(uid, out var handler))
+            LocatorHandler? handler;
+            var shouldHandle = false;
+            lock (_connection.DispatchLock)
             {
-                if (handler.Times != 0)
+                if (_locatorHandlers.TryGetValue(uid, out handler) && handler.Times != 0)
                 {
                     if (handler.Times != null)
                     {
                         handler.Times--;
                     }
-                    await handler.HandleAsync().ConfigureAwait(false);
+                    shouldHandle = true;
                 }
-                remove = handler.Times == 0;
             }
+            if (shouldHandle)
+            {
+                await handler!.HandleAsync().ConfigureAwait(false);
+            }
+            remove = handler?.Times == 0;
         }
         finally
         {
             if (remove)
             {
-                _locatorHandlers.Remove(uid);
+                lock (_connection.DispatchLock)
+                {
+                    _locatorHandlers.Remove(uid);
+                }
             }
             SendMessageToServerAsync("resolveLocatorHandlerNoReply", new Dictionary<string, object?>
             {
@@ -1678,12 +1739,20 @@ internal class Page : ChannelOwner, IPage
 
     public async Task RemoveLocatorHandlerAsync(ILocator locator)
     {
-        foreach (KeyValuePair<int, LocatorHandler> entry in _locatorHandlers)
+        KeyValuePair<int, LocatorHandler>[] entries;
+        lock (_connection.DispatchLock)
+        {
+            entries = _locatorHandlers.ToArray();
+        }
+        foreach (var entry in entries)
         {
             var (uid, data) = (entry.Key, entry.Value);
             if (data.Locator.EqualLocator((Locator)locator))
             {
-                _locatorHandlers.Remove(uid);
+                lock (_connection.DispatchLock)
+                {
+                    _locatorHandlers.Remove(uid);
+                }
                 try
                 {
                     await SendMessageToServerAsync("unregisterLocatorHandler", new Dictionary<string, object?>
@@ -1713,7 +1782,7 @@ internal class Page : ChannelOwner, IPage
 
     private Task RouteWebSocketAsync(string? globMatch, Regex? urlRegex, Func<string, bool>? urlFunc, Delegate handler)
     {
-        _webSocketRoutes.Insert(0, new WebSocketRouteHandler()
+        var routeHandler = new WebSocketRouteHandler()
         {
             urlMatcher = new URLMatch()
             {
@@ -1724,13 +1793,21 @@ internal class Page : ChannelOwner, IPage
                 isWebSocketUrl = true,
             },
             Handler = handler,
-        });
+        };
+        lock (_connection.DispatchLock)
+        {
+            _webSocketRoutes.Insert(0, routeHandler);
+        }
         return UpdateWebSocketInterceptionAsync();
     }
 
     private async Task UpdateWebSocketInterceptionAsync()
     {
-        var patterns = WebSocketRouteHandler.PrepareInterceptionPatterns(_webSocketRoutes);
+        List<Dictionary<string, object>> patterns;
+        lock (_connection.DispatchLock)
+        {
+            patterns = WebSocketRouteHandler.PrepareInterceptionPatterns(_webSocketRoutes);
+        }
         await SendMessageToServerAsync("setWebSocketInterceptionPatterns", new Dictionary<string, object?>
         {
             ["patterns"] = patterns,

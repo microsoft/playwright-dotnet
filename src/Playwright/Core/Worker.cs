@@ -75,14 +75,10 @@ internal class Worker : ChannelOwner, IWorker
 
     internal void OnClose()
     {
-        if (Page != null)
+        lock (_connection.DispatchLock)
         {
-            Page._workers.Remove(this);
-        }
-
-        if (Context != null)
-        {
-            Context._serviceWorkers.Remove(this);
+            Page?._workers.Remove(this);
+            Context?._serviceWorkers.Remove(this);
         }
 
         Close?.Invoke(this, this);

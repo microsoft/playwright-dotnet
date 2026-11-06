@@ -57,7 +57,7 @@ internal class Browser : ChannelOwner, IBrowser
 
     public event EventHandler<IBrowserContext>? Context;
 
-    public IReadOnlyList<IBrowserContext> Contexts => _contexts.ToArray();
+    public IReadOnlyList<IBrowserContext> Contexts => Snapshot(_contexts);
 
     public bool IsConnected { get; private set; }
 
@@ -281,7 +281,7 @@ internal class Browser : ChannelOwner, IBrowser
         // This is why browser type is not wired up in the constructor, and instead this separate method is called later on.
         _browserType = browserType;
         _tracesDir = tracesDir;
-        foreach (var context in _contexts)
+        foreach (var context in Snapshot(_contexts))
         {
             context._tracing._tracesDir = this._tracesDir;
             context._request._tracing._tracesDir = this._tracesDir;
@@ -292,7 +292,10 @@ internal class Browser : ChannelOwner, IBrowser
     private void DidCreateContext(BrowserContext context)
     {
         context._browser = this;
-        _contexts.Add(context);
+        lock (_connection.DispatchLock)
+        {
+            _contexts.Add(context);
+        }
         // Note: when connecting to a browser, initial contexts arrive before `_browserType` is set,
         // and will be configured later in `ConnectToBrowserType`.
         if (_browserType != null)
