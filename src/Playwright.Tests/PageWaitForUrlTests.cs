@@ -80,6 +80,30 @@ public class PageWaitForUrlTests : PageTestEx
         }
     }
 
+    // See https://github.com/microsoft/playwright-dotnet/issues/3364
+    [PlaywrightTest]
+    public async Task ShouldNotMissANavigationThatCommitsWhileTheUrlIsChecked()
+    {
+        await Page.GotoAsync(Server.EmptyPage);
+        var target = Server.Prefix + "/grid.html";
+        Task navigation = null;
+        await Page.WaitForURLAsync(
+            _ =>
+            {
+                // The first check is of the page as it is: navigate away, and answer only once the navigation has
+                // committed, so that it lands after the URL was read and before a wait for the next one could start.
+                if (navigation == null)
+                {
+                    navigation = Page.EvaluateAsync("url => window.location.href = url", target);
+                    SpinWait.SpinUntil(() => Page.Url == target, 10_000);
+                }
+
+                return _ == target;
+            },
+            new() { Timeout = 5_000 });
+        await navigation;
+    }
+
     [PlaywrightTest("page-wait-for-url.spec.ts", "should work with clicking on anchor links")]
     public async Task ShouldWorkWithClickingOnAnchorLinks()
     {
