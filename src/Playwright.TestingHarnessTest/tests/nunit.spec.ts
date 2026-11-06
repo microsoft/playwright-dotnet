@@ -489,6 +489,108 @@ test.describe('Expect() timeout', () => {
   });
 });
 
+test.describe('ActionTimeout and NavigationTimeout', () => {
+  // See https://github.com/microsoft/playwright-dotnet/issues/2444
+  test('should be able to set them via runsettings', async ({ runTest }) => {
+    const result = await runTest({
+      'ExampleTests.cs': `
+      using System;
+      using System.Collections.Generic;
+      using System.Threading.Tasks;
+      using Microsoft.Playwright;
+      using Microsoft.Playwright.NUnit;
+      using NUnit.Framework;
+
+      namespace Playwright.TestingHarnessTest.NUnit;
+
+      public class <class-name> : PageTest
+      {
+          [Test]
+          public async Task Test()
+          {
+              await Page.SetContentAsync("<div>No button here</div>");
+              try
+              {
+                  await Page.ClickAsync("button");
+                  throw new Exception("Click did not time out");
+              }
+              catch (TimeoutException e) when (e.Message.Contains("Timeout 123ms exceeded"))
+              {
+              }
+              await Page.RouteAsync("**/hang", route => { });
+              try
+              {
+                  await Page.GotoAsync("http://localhost/hang");
+                  throw new Exception("Navigation did not time out");
+              }
+              catch (TimeoutException e) when (e.Message.Contains("Timeout 456ms exceeded"))
+              {
+              }
+          }
+      }`,
+      '.runsettings': `
+      <?xml version="1.0" encoding="utf-8"?>
+      <RunSettings>
+        <Playwright>
+          <ActionTimeout>123</ActionTimeout>
+          <NavigationTimeout>456</NavigationTimeout>
+        </Playwright>
+      </RunSettings>
+      `,
+    }, 'dotnet test --settings=.runsettings');
+    expect(result.passed).toBe(1);
+    expect(result.failed).toBe(0);
+    expect(result.total).toBe(1);
+  });
+
+  test('should not apply ActionTimeout to navigations', async ({ runTest }) => {
+    const result = await runTest({
+      'ExampleTests.cs': `
+      using System;
+      using System.Collections.Generic;
+      using System.Threading.Tasks;
+      using Microsoft.Playwright;
+      using Microsoft.Playwright.NUnit;
+      using NUnit.Framework;
+
+      namespace Playwright.TestingHarnessTest.NUnit;
+
+      public class <class-name> : PageTest
+      {
+          [Test]
+          public async Task Test()
+          {
+              await Page.RouteAsync("**/slow", async route =>
+              {
+                  await Task.Delay(1500);
+                  await route.FulfillAsync(new() { ContentType = "text/html", Body = "<div>Slow page</div>" });
+              });
+              await Page.GotoAsync("http://localhost/slow");
+              try
+              {
+                  await Page.ClickAsync("button");
+                  throw new Exception("Click did not time out");
+              }
+              catch (TimeoutException e) when (e.Message.Contains("Timeout 500ms exceeded"))
+              {
+              }
+          }
+      }`,
+      '.runsettings': `
+      <?xml version="1.0" encoding="utf-8"?>
+      <RunSettings>
+        <Playwright>
+          <ActionTimeout>500</ActionTimeout>
+        </Playwright>
+      </RunSettings>
+      `,
+    }, 'dotnet test --settings=.runsettings');
+    expect(result.passed).toBe(1);
+    expect(result.failed).toBe(0);
+    expect(result.total).toBe(1);
+  });
+});
+
 test.describe('TestIdAttribute', () => {
   test('should be able to configure TestIdAttribute via runsettings', async ({ runTest }) => {
     const result = await runTest({
