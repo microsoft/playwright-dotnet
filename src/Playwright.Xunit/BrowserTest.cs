@@ -24,6 +24,7 @@
 
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Microsoft.Playwright.TestAdapter;
 
 namespace Microsoft.Playwright.Xunit;
 
@@ -35,6 +36,17 @@ public class BrowserTest : PlaywrightTest
     public async Task<IBrowserContext> NewContext(BrowserNewContextOptions? options = null)
     {
         var context = await Browser.NewContextAsync(options).ConfigureAwait(false);
+        var navigationTimeout = PlaywrightSettingsProvider.NavigationTimeout;
+        if (PlaywrightSettingsProvider.ActionTimeout.HasValue)
+        {
+            context.SetDefaultTimeout(PlaywrightSettingsProvider.ActionTimeout.Value);
+            // The default timeout applies to navigations too, so keep them at the default 30 seconds.
+            navigationTimeout ??= 30_000;
+        }
+        if (navigationTimeout.HasValue)
+        {
+            context.SetDefaultNavigationTimeout(navigationTimeout.Value);
+        }
         _contexts.Add(context);
         return context;
     }

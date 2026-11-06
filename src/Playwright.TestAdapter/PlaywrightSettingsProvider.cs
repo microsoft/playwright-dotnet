@@ -89,6 +89,17 @@ public class PlaywrightSettingsProvider : ISettingsProvider
         }
     }
 
+    /// <summary>
+    /// The default timeout of the contexts that the base classes create, in milliseconds.
+    /// Does not apply to navigations, see <see cref="NavigationTimeout"/>.
+    /// </summary>
+    public static float? ActionTimeout => _settings?.ActionTimeout;
+
+    /// <summary>
+    /// The default navigation timeout of the contexts that the base classes create, in milliseconds.
+    /// </summary>
+    public static float? NavigationTimeout => _settings?.NavigationTimeout;
+
     public static string TestIdAttribute
     {
         get
