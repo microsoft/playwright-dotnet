@@ -19,9 +19,16 @@ jobs:
         dotnet-version: |
           8.0.x
           10.0.x
+    - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+      with:
+        node-version: '24'
     - name: Check formatting
       run: dotnet format ./src/ --verify-no-changes -v:diag
-    - name: Download driver
-      run: ./build.sh --download-driver
+    - name: Build the driver
+      run: ./build.sh --build-driver
+    - name: Check that the generated files are up to date
+      run: |
+        ./build.sh --generate
+        git diff --exit-code
     - name: Build projects (runs .NET analyzers)
       run: dotnet build ./src

@@ -68,8 +68,8 @@ extends:
         - task: NuGetAuthenticate@1
           displayName: "Authenticate NuGet to DevDiv_PublicPackages feed"
 
-        # Playwright.Tooling fetches playwright-core with `npm pack`, which picks up
-        # the registry and credentials from this .npmrc.
+        # Playwright.Tooling builds the driver from .upstream/ with `npm ci`, which
+        # picks up the registry and credentials from this .npmrc.
         - task: UseNode@1
           displayName: "Install Node.js"
           inputs:
@@ -97,8 +97,8 @@ extends:
               echo '{ "data-root": "/mnt/docker" }' | sudo tee /etc/docker/daemon.json
               sudo service docker start
 
-        - bash: ./build.sh --download-driver
-          displayName: "Download the driver"
+        - bash: ./build.sh --build-driver
+          displayName: "Build the driver"
 
         - task: AzureCLI@2
           displayName: "Login to ACR via OIDC"

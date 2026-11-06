@@ -77,15 +77,17 @@ There are lots of thoughts and [approaches](https://github.com/antlr/antlr4-cpp/
 
 ### Prerequisites
 
-Before building the solution for the first time, you will need to download the drivers. You can do this by either running commands manually, or by using the provided script.
+You need the .NET SDK, git, and Node.js 20 or newer with npm.
 
 #### Initialize
 
-When you get the repo, you need to download the drivers, dotnet format tool, etc. To do this, you can call:
+Before building the solution, build the driver:
 
 ```bash
-./build.sh --download-driver
+./build.sh --build-driver
 ```
+
+The driver comes from [microsoft/playwright](https://github.com/microsoft/playwright), at the commit in `DriverVersion` of `src/Common/Version.props`. The script clones that repository into `.upstream/` (gitignored), checks out the commit and builds the driver from it into `src/Playwright/.drivers`. Run it again when `DriverVersion` changes, for example after a pull. Do not commit, branch or edit in `.upstream/`.
 
 #### Dotnet Format
 
@@ -122,15 +124,19 @@ Additionally, you can use the Test Explorer if you're using Visual Studio.
 
 ### Generating the APIs & rolling the driver (upstream)
 
-We use [this](https://github.com/microsoft/playwright/blob/master/utils/doclint/generateDotnetApi.js) generator for the API and [that](https://github.com/microsoft/playwright/blob/master/utils/generate_dotnet_channels.js) for generating the transport channels. Both are located upstream.
-
-To generate the API, identify the upstream driver version from the GitHub Actions logs of the point in time you wish to roll to, and run:
+We use [this](https://github.com/microsoft/playwright/blob/main/utils/doclint/generateDotnetApi.js) generator for the API and [that](https://github.com/microsoft/playwright/blob/main/utils/generate_dotnet_channels.js) for generating the transport channels. Both are located upstream, and run from `.upstream/`. The generated files are committed, and CI fails when they differ from what `.upstream/` generates:
 
 ```bash
-./build.sh --roll <driver-version>
+./build.sh --generate
 ```
 
-This will re-generate the necessary files for the new driver version.
+To move to a new upstream commit, pass a `microsoft/playwright` branch, tag or commit:
+
+```bash
+./build.sh --roll <ref>
+```
+
+This will set `DriverVersion`, build the driver and re-generate the necessary files. See [ROLLING.md](./ROLLING.md).
 
 ### Collecting coverage when running tests
 

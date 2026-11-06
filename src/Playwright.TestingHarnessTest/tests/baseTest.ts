@@ -37,10 +37,14 @@ export const test = base.extend<{
     await server.stop();
   },
   testMode: null,
-  launchServer: async ({ playwright }, use) => {
+  launchServer: async ({}, use) => {
+    // The server is the driver that the .NET client is built with, so that the two
+    // have the same protocol and the same browsers. @playwright/test only runs
+    // these tests: its version does not follow the driver.
+    const driver: typeof import('@playwright/test') = require(path.join(__dirname, '..', '..', 'Playwright', '.drivers', 'package'));
     const servers: BrowserServer[] = [];
     await use(async ({port}: {port: number}) => {
-      servers.push(await playwright.chromium.launchServer({ host: '127.0.0.1', port }));
+      servers.push(await driver.chromium.launchServer({ host: '127.0.0.1', port }));
     });
     for (const server of servers)
       await server.close();

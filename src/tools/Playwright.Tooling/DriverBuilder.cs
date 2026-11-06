@@ -28,6 +28,7 @@ using System.Diagnostics;
 using System.Formats.Tar;
 using System.IO;
 using System.IO.Compression;
+using System.Linq;
 using System.Net.Http;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
@@ -37,17 +38,30 @@ using CommandLine;
 namespace Playwright.Tooling;
 
 /// <summary>
-/// Assembles the Playwright driver into src/Playwright/.drivers from the
-/// playwright-core npm package and the official Node.js builds, mirroring what
-/// upstream's utils/build/build-playwright-driver.sh bundles into the prebuilt
-/// driver archives. The resulting directory layout matches the .playwright
-/// folder shipped in the NuGet package:
+/// Builds the Playwright driver into src/Playwright/.drivers. The driver is the
+/// playwright-core package of microsoft/playwright at the commit in DriverVersion
+/// (src/Common/Version.props), plus the official Node.js binaries of
+/// DriverNodeVersion. This:
+///   1. clones microsoft/playwright into .upstream/ (gitignored) the first time,
+///      and checks out the commit;
+///   2. builds it with `npm ci` and `npm run build` (once per commit);
+///   3. packs packages/playwright-core with `npm pack`, and adds the Node.js
+///      binary of each platform.
+/// The resulting directory layout matches the .playwright folder shipped in the
+/// NuGet package:
 ///   .drivers/package/**                  - playwright-core npm package contents
 ///   .drivers/node/LICENSE                - Node.js license
 ///   .drivers/node/&lt;platform&gt;/node[.exe]  - per-platform Node.js binary.
+/// A driver that is built is not built again until DriverVersion or
+/// DriverNodeVersion changes. Do not commit, branch or edit in .upstream/: the
+/// driver is built only from a checkout with no local changes.
 /// </summary>
-internal class DriverDownloader
+internal class DriverBuilder
 {
+    private const string UpstreamUrl = "https://github.com/microsoft/playwright.git";
+
+    private static readonly Regex _commitRegex = new("^[0-9a-f]{40}$", RegexOptions.Compiled);
+
     // Directory names under .drivers/node/ are the platform ids that Driver.cs
     // resolves at runtime; the suffixes name the Node.js download for that platform.
     private static readonly (string PlatformId, string NodeSuffix)[] _platforms = new[]
@@ -61,20 +75,28 @@ internal class DriverDownloader
 
     public string BasePath { get; set; }
 
+    /// <summary>The microsoft/playwright commit that the driver is built from.</summary>
     public string DriverVersion { get; set; }
 
     public string NodeVersion { get; set; }
 
-    internal static Task RunAsync(DownloadDriversOptions o)
-    {
-        var props = new XmlDocument();
-        props.Load(Path.Combine(o.BasePath, "src", "Common", "Version.props"));
-        string driverVersion = props.DocumentElement.SelectSingleNode("/Project/PropertyGroup/DriverVersion").FirstChild.Value;
-        string nodeVersion = props.DocumentElement.SelectSingleNode("/Project/PropertyGroup/DriverNodeVersion").FirstChild.Value;
+    private string UpstreamPath => Path.Combine(BasePath, ".upstream");
 
-        return new DriverDownloader()
+    internal static Task RunAsync(BuildDriverOptions o)
+    {
+        string propsPath = Path.Combine(o.BasePath, "src", "Common", "Version.props");
+        var props = new XmlDocument();
+        props.Load(propsPath);
+        string driverVersion = props.DocumentElement.SelectSingleNode("/Project/PropertyGroup/DriverVersion").FirstChild.Value.Trim();
+        string nodeVersion = props.DocumentElement.SelectSingleNode("/Project/PropertyGroup/DriverNodeVersion").FirstChild.Value.Trim();
+        if (!_commitRegex.IsMatch(driverVersion))
         {
-            BasePath = o.BasePath,
+            throw new Exception($"DriverVersion in {propsPath} must be a microsoft/playwright commit (40 hex digits), got \"{driverVersion}\"");
+        }
+
+        return new DriverBuilder()
+        {
+            BasePath = Path.GetFullPath(o.BasePath),
             DriverVersion = driverVersion,
             NodeVersion = nodeVersion,
         }.ExecuteAsync();
@@ -162,15 +184,88 @@ internal class DriverDownloader
         return name;
     }
 
+    private static async Task<(int ExitCode, string Output)> RunProcessAsync(string fileName, string workingDirectory, IEnumerable<string> arguments, bool captureOutput = false, IDictionary<string, string> environment = null)
+    {
+        var startInfo = new ProcessStartInfo(fileName)
+        {
+            WorkingDirectory = workingDirectory,
+            UseShellExecute = false,
+            RedirectStandardOutput = captureOutput,
+        };
+        foreach (string argument in arguments)
+        {
+            startInfo.ArgumentList.Add(argument);
+        }
+        foreach (var (name, value) in environment ?? new Dictionary<string, string>())
+        {
+            startInfo.Environment[name] = value;
+        }
+        Process process;
+        try
+        {
+            process = Process.Start(startInfo) ?? throw new Exception($"Failed to start {fileName}");
+        }
+        catch (System.ComponentModel.Win32Exception e)
+        {
+            throw new Exception($"{fileName} was not found on PATH; git, Node.js and npm are required to build the driver.", e);
+        }
+        using (process)
+        {
+            string output = captureOutput ? await process.StandardOutput.ReadToEndAsync().ConfigureAwait(false) : string.Empty;
+            await process.WaitForExitAsync().ConfigureAwait(false);
+            return (process.ExitCode, output.Trim());
+        }
+    }
+
+    private async Task<string> GitAsync(params string[] arguments)
+    {
+        var (exitCode, output) = await RunProcessAsync("git", UpstreamPath, arguments, captureOutput: true).ConfigureAwait(false);
+        if (exitCode != 0)
+        {
+            throw new Exception($"git {string.Join(' ', arguments)} failed with exit code {exitCode}");
+        }
+        return output;
+    }
+
+    private async Task<bool> HasCommitAsync(string commit)
+    {
+        var (exitCode, _) = await RunProcessAsync("git", UpstreamPath, new[] { "rev-parse", "--verify", "--quiet", commit + "^{commit}" }, captureOutput: true).ConfigureAwait(false);
+        return exitCode == 0;
+    }
+
+    private async Task<bool> HasLocalChangesAsync()
+        => (await GitAsync("status", "--porcelain").ConfigureAwait(false)).Length > 0;
+
+    private async Task RunNpmAsync(string workingDirectory, params string[] arguments)
+    {
+        var environment = new Dictionary<string, string>();
+        string npmrc = Path.Combine(BasePath, ".npmrc");
+        if (File.Exists(npmrc))
+        {
+            // npm does not run in the repository root, so name the root-level .npmrc:
+            // the release pipeline writes the registry and its credentials there, to
+            // point npm at the internal Azure Artifacts feed.
+            environment["npm_config_userconfig"] = npmrc;
+        }
+        Console.WriteLine($"Running npm {string.Join(' ', arguments)} in {workingDirectory}");
+        var (exitCode, _) = await RunProcessAsync(ResolveNpmExecutable(), workingDirectory, arguments, environment: environment).ConfigureAwait(false);
+        if (exitCode != 0)
+        {
+            throw new Exception($"npm {string.Join(' ', arguments)} failed with exit code {exitCode}");
+        }
+    }
+
     private async Task<bool> ExecuteAsync()
     {
+        await CheckoutUpstreamAsync().ConfigureAwait(false);
+
         var driversDirectory = new DirectoryInfo(Path.Combine(BasePath, "src", "Playwright", ".drivers"));
         string stamp = $"driver {DriverVersion} node {NodeVersion}";
         string stampFile = Path.Combine(driversDirectory.FullName, ".stamp");
 
         if (File.Exists(stampFile) && File.ReadAllText(stampFile) == stamp)
         {
-            Console.WriteLine("Drivers are up-to-date");
+            Console.WriteLine("The driver is up-to-date");
         }
         else
         {
@@ -187,7 +282,7 @@ internal class DriverDownloader
 
             var tasks = new List<Task>
             {
-                DownloadPlaywrightPackageAsync(driversDirectory.FullName),
+                BuildPlaywrightPackageAsync(driversDirectory.FullName),
             };
             foreach (var (platformId, nodeSuffix) in _platforms)
             {
@@ -199,45 +294,80 @@ internal class DriverDownloader
         }
 
         // update readme
-        await UpdateBrowserVersionsAsync(BasePath, DriverVersion).ConfigureAwait(false);
+        await UpdateBrowserVersionsAsync().ConfigureAwait(false);
 
         return true;
     }
 
-    private async Task DownloadPlaywrightPackageAsync(string driversDirectory)
+    /// <summary>
+    /// Checks out DriverVersion in .upstream/, after cloning microsoft/playwright there the first time.
+    /// </summary>
+    private async Task CheckoutUpstreamAsync()
     {
-        // Fetched with `npm pack` rather than a hard-coded registry URL so that the
-        // registry configured for npm (and its credentials) are used, e.g. the
-        // root-level .npmrc the release pipeline writes to point at the internal
-        // Azure Artifacts feed. npm is run from the repository root for that reason.
-        string package = $"playwright-core@{DriverVersion}";
+        bool cloned = false;
+        if (!Directory.Exists(Path.Combine(UpstreamPath, ".git")))
+        {
+            Console.WriteLine($"Cloning {UpstreamUrl} into {UpstreamPath}");
+            var (exitCode, _) = await RunProcessAsync("git", BasePath, new[] { "clone", "--no-checkout", UpstreamUrl, UpstreamPath }).ConfigureAwait(false);
+            if (exitCode != 0)
+            {
+                throw new Exception($"git clone {UpstreamUrl} failed with exit code {exitCode}");
+            }
+            cloned = true;
+        }
+        if (cloned || await GitAsync("rev-parse", "HEAD").ConfigureAwait(false) != DriverVersion)
+        {
+            if (!cloned && await HasLocalChangesAsync().ConfigureAwait(false))
+            {
+                throw new Exception($"{UpstreamPath} has local changes. Discard them before checking out {DriverVersion}.");
+            }
+            if (!await HasCommitAsync(DriverVersion).ConfigureAwait(false))
+            {
+                await GitAsync("fetch", "--quiet", "--tags", "origin").ConfigureAwait(false);
+            }
+            if (!await HasCommitAsync(DriverVersion).ConfigureAwait(false))
+            {
+                // A commit that no branch or tag reaches any more, for example on a deleted branch.
+                await GitAsync("fetch", "--quiet", "origin", DriverVersion).ConfigureAwait(false);
+            }
+            await GitAsync("checkout", "--quiet", "--detach", DriverVersion).ConfigureAwait(false);
+        }
+        Console.WriteLine($"{UpstreamPath} is at {DriverVersion}");
+    }
+
+    /// <summary>
+    /// Builds .upstream/ and extracts its playwright-core package into .drivers/package.
+    /// </summary>
+    private async Task BuildPlaywrightPackageAsync(string driversDirectory)
+    {
+        if (await HasLocalChangesAsync().ConfigureAwait(false))
+        {
+            throw new Exception($"{UpstreamPath} has local changes. The driver is stamped with the commit, so build it from a clean checkout.");
+        }
+
+        string coreDirectory = Path.Combine(UpstreamPath, "packages", "playwright-core");
+        // npm ci removes node_modules, and the stamp with it.
+        string buildStamp = Path.Combine(UpstreamPath, "node_modules", ".playwright-dotnet-build");
+        bool built = File.Exists(buildStamp)
+            && File.ReadAllText(buildStamp).Trim() == DriverVersion
+            && Directory.Exists(Path.Combine(coreDirectory, "lib"));
+        if (!built)
+        {
+            await RunNpmAsync(UpstreamPath, "ci", "--no-audit", "--no-fund").ConfigureAwait(false);
+            await RunNpmAsync(UpstreamPath, "run", "build").ConfigureAwait(false);
+            File.WriteAllText(buildStamp, DriverVersion + "\n");
+        }
+
         string tempDirectory = Directory.CreateTempSubdirectory("playwright-core-").FullName;
         try
         {
-            Console.WriteLine($"Downloading {package} with npm pack");
-            var startInfo = new ProcessStartInfo(ResolveNpmExecutable())
+            await RunNpmAsync(coreDirectory, "pack", "--pack-destination", tempDirectory).ConfigureAwait(false);
+            string[] tgzs = Directory.GetFiles(tempDirectory, "playwright-core-*.tgz");
+            if (tgzs.Length != 1)
             {
-                WorkingDirectory = Path.GetFullPath(BasePath),
-                UseShellExecute = false,
-            };
-            startInfo.ArgumentList.Add("pack");
-            startInfo.ArgumentList.Add(package);
-            startInfo.ArgumentList.Add("--pack-destination");
-            startInfo.ArgumentList.Add(tempDirectory);
-            using (var process = Process.Start(startInfo) ?? throw new Exception("Failed to start npm"))
-            {
-                await process.WaitForExitAsync().ConfigureAwait(false);
-                if (process.ExitCode != 0)
-                {
-                    throw new Exception($"npm pack {package} failed with exit code {process.ExitCode}");
-                }
+                throw new Exception($"npm pack did not produce one playwright-core-*.tgz in {tempDirectory}");
             }
-
-            string tgz = Path.Combine(tempDirectory, $"playwright-core-{DriverVersion}.tgz");
-            if (!File.Exists(tgz))
-            {
-                throw new Exception($"npm pack did not produce {tgz}");
-            }
+            string tgz = tgzs.Single();
 
             using var stream = File.OpenRead(tgz);
             using var gzip = new GZipStream(stream, CompressionMode.Decompress);
@@ -263,7 +393,14 @@ internal class DriverDownloader
         {
             Directory.Delete(tempDirectory, true);
         }
-        Console.WriteLine($"Extracted playwright-core {DriverVersion}");
+
+        // Upstream copies these into the package before it publishes it
+        // (LICENCE_FILES in utils/workspace.js).
+        foreach (string name in new[] { "NOTICE", "LICENSE" })
+        {
+            File.Copy(Path.Combine(UpstreamPath, name), Path.Combine(driversDirectory, "package", name), overwrite: true);
+        }
+        Console.WriteLine($"Built playwright-core at {DriverVersion}");
     }
 
     private async Task DownloadNodeAsync(HttpClient client, string driversDirectory, string platformId, string nodeSuffix)
@@ -332,17 +469,15 @@ internal class DriverDownloader
         Console.WriteLine($"Extracted Node.js {NodeVersion} for {platformId}");
     }
 
-    private async Task UpdateBrowserVersionsAsync(string basePath, string driverVersion)
+    private async Task UpdateBrowserVersionsAsync()
     {
         try
         {
-            string readmePath = Path.Combine(basePath, "README.md");
-            string playwrightVersion = driverVersion.Contains("-") ? driverVersion.Substring(0, driverVersion.IndexOf("-")) : driverVersion;
+            string readmePath = Path.Combine(BasePath, "README.md");
 
             var regex = new Regex("<!-- GEN:(.*?) -->(.*?)<!-- GEN:stop -->", RegexOptions.Compiled);
 
-            var basePlaywrightDir = Environment.GetEnvironmentVariable("PW_SRC_DIR") ?? Path.Combine(Environment.CurrentDirectory, "..", "playwright");
-            var readme = File.ReadAllText(Path.Combine(basePlaywrightDir, "README.md"));
+            var readme = File.ReadAllText(Path.Combine(UpstreamPath, "README.md"));
             static string ReplaceBrowserVersion(string content, MatchCollection browserMatches)
             {
                 foreach (Match match in browserMatches)
@@ -356,20 +491,24 @@ internal class DriverDownloader
 
             var browserMatches = regex.Matches(readme);
             string readmeText = await File.ReadAllTextAsync(readmePath).ConfigureAwait(false);
-            await File.WriteAllTextAsync(readmePath, ReplaceBrowserVersion(readmeText, browserMatches)).ConfigureAwait(false);
+            string newReadmeText = ReplaceBrowserVersion(readmeText, browserMatches);
+            if (newReadmeText != readmeText)
+            {
+                await File.WriteAllTextAsync(readmePath, newReadmeText).ConfigureAwait(false);
+            }
         }
         catch (Exception e)
         {
             Console.ForegroundColor = ConsoleColor.Yellow;
             Console.WriteLine("WARNING: Could not update the browser versions in the README file.");
-            Console.WriteLine($"This is usually due to the readme file not yet existing for {driverVersion}.");
             Console.WriteLine(e.Message);
+            Console.ResetColor();
         }
     }
 }
 
-[Verb("download-drivers")]
-internal class DownloadDriversOptions
+[Verb("build-driver")]
+internal class BuildDriverOptions
 {
     [Option(Required = true, HelpText = "Solution path.")]
     public string BasePath { get; set; }
