@@ -43,6 +43,9 @@ namespace Microsoft.Playwright.Core;
 internal class Frame : ChannelOwner, IFrame
 {
     private readonly List<WaitUntilState> _loadStates = new();
+    // Guards `_loadStates`, which is mutated on the protocol dispatch thread by
+    // `OnLoadState` and read on the caller's thread by the waiters below.
+    private readonly object _loadStatesLock = new();
     internal readonly List<Frame> _childFrames = new();
 
     internal Frame(ChannelOwner parent, string guid, FrameInitializer initializer) : base(parent, guid)
@@ -114,13 +117,20 @@ internal class Frame : ChannelOwner, IFrame
     {
         if (add.HasValue)
         {
-            _loadStates.Add(add.Value);
+            lock (_loadStatesLock)
+            {
+                _loadStates.Add(add.Value);
+            }
+
             LoadState?.Invoke(this, add.Value);
         }
 
         if (remove.HasValue)
         {
-            _loadStates.Remove(remove.Value);
+            lock (_loadStatesLock)
+            {
+                _loadStates.Remove(remove.Value);
+            }
         }
         if (this.ParentFrame == null && add == WaitUntilState.Load && this.Page != null)
         {
@@ -244,24 +254,49 @@ internal class Frame : ChannelOwner, IFrame
         try
         {
             waiter = SetupNavigationWaiter("frame.WaitForLoadStateAsync", options?.Timeout);
-
-            if (_loadStates.Contains(loadState))
-            {
-                waiter.Log($"  not waiting, \"{state}\" event already fired");
-            }
-            else
-            {
-                await waiter.WaitForEventAsync<WaitUntilState>(this, "LoadState", s =>
-                {
-                    waiter.Log($"  \"{s}\" event fired");
-                    return s == loadState;
-                }).ConfigureAwait(false);
-            }
+            await WaitForLoadStateEventAsync(waiter, loadState).ConfigureAwait(false);
         }
         finally
         {
             waiter?.Dispose();
         }
+    }
+
+    /// <summary>
+    /// Waits until <paramref name="loadState"/> has been reached.
+    /// </summary>
+    /// <remarks>
+    /// The subscription must be set up <em>before</em> the already-recorded state is
+    /// inspected: <see cref="OnLoadState"/> runs on the protocol dispatch thread, so a
+    /// state recorded in between the check and the subscription would be visible in
+    /// <see cref="_loadStates"/> but its event would never reach the waiter, and the
+    /// wait would only end with a timeout.
+    /// </remarks>
+    private async Task WaitForLoadStateEventAsync(Waiter waiter, WaitUntilState loadState)
+    {
+        var (task, dispose) = waiter.GetWaitForEventTask<WaitUntilState>(
+            this,
+            "LoadState",
+            e =>
+            {
+                waiter.Log($"  \"{e.ToValueString()}\" event fired");
+                return e == loadState;
+            });
+
+        bool alreadyFired;
+        lock (_loadStatesLock)
+        {
+            alreadyFired = _loadStates.Contains(loadState);
+        }
+
+        if (alreadyFired)
+        {
+            waiter.Log($"  not waiting, \"{loadState.ToValueString()}\" event already fired");
+            dispose();
+            return;
+        }
+
+        await waiter.WaitForPromiseAsync(task, dispose).ConfigureAwait(false);
     }
 
     [MethodImpl(MethodImplOptions.NoInlining)]
@@ -333,17 +368,7 @@ internal class Frame : ChannelOwner, IFrame
             await waiter.WaitForPromiseAsync(Task.FromException<object>(ex)).ConfigureAwait(false);
         }
 
-        if (!_loadStates.Select(s => s.ToValueString()).Contains(waitUntil.Value.ToValueString()))
-        {
-            await waiter.WaitForEventAsync<WaitUntilState>(
-                this,
-                "LoadState",
-                e =>
-                {
-                    waiter.Log($"  \"{e}\" event fired");
-                    return e.ToValueString() == waitUntil.Value.ToValueString();
-                }).ConfigureAwait(false);
-        }
+        await WaitForLoadStateEventAsync(waiter, waitUntil.Value).ConfigureAwait(false);
 
         var request = navigatedEvent.NewDocument?.Request;
 

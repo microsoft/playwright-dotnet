@@ -138,4 +138,61 @@ public class PageWaitForLoadStateTests : PageTestEx
         requestTask.TrySetResult(true);
         await loadTask;
     }
+
+    // .NET specific: there is no upstream counterpart, see
+    // https://github.com/microsoft/playwright-dotnet/issues/3399.
+    [Test]
+    public async Task ShouldObserveLoadStateFiredWhileWaitIsBeingSetUp()
+    {
+        var frame = (Core.Frame)Page.MainFrame;
+        await Page.GotoAsync(Server.EmptyPage);
+
+        // `OnLoadState` is dispatched on the protocol thread, so the state can be recorded
+        // in between the "did it already fire?" check and the subscription to the
+        // `LoadState` event. Such an event used to be dropped by the waiter, which then
+        // only ended with a timeout. Racing the two operations is the only way to hit that
+        // interleaving, so this test repeats it with a randomized delay and fails if a
+        // single wait does not complete.
+        using var fire = new SemaphoreSlim(0);
+        using var fired = new SemaphoreSlim(0);
+        var spin = 0;
+        var stopping = false;
+
+        var racer = new Thread(() =>
+        {
+            while (true)
+            {
+                fire.Wait();
+                if (Volatile.Read(ref stopping))
+                {
+                    return;
+                }
+                Thread.SpinWait(Volatile.Read(ref spin));
+                frame.OnLoadState(WaitUntilState.Load, null);
+                fired.Release();
+            }
+        })
+        { IsBackground = true };
+        racer.Start();
+
+        var random = new Random(3399);
+        try
+        {
+            for (int i = 0; i < 200; i++)
+            {
+                // Forget the recorded state, so that the wait has to observe the event.
+                frame.OnLoadState(null, WaitUntilState.Load);
+                Volatile.Write(ref spin, random.Next(0, 20000));
+                fire.Release();
+                await frame.WaitForLoadStateAsync(LoadState.Load, new() { Timeout = 5000 });
+                Assert.IsTrue(await fired.WaitAsync(TimeSpan.FromSeconds(10)), "the load state never fired");
+            }
+        }
+        finally
+        {
+            Volatile.Write(ref stopping, true);
+            fire.Release();
+            racer.Join(TimeSpan.FromSeconds(10));
+        }
+    }
 }
