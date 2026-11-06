@@ -62,6 +62,28 @@ public class HARTests : BrowserTestEx
         Assert.AreEqual("Hello", pageEntry.GetProperty("title").ToString());
     }
 
+    // See https://github.com/microsoft/playwright-dotnet/issues/3410
+    [PlaywrightTest("har.spec.ts", "should filter by glob")]
+    public async Task ShouldFilterByGlob()
+    {
+        using var harFolder = new TempDirectory();
+        var harPath = Path.Combine(harFolder.Path, "test.har");
+        var context = await Browser.NewContextAsync(new()
+        {
+            BaseURL = Server.Prefix,
+            RecordHarPath = harPath,
+            RecordHarUrlFilterString = "/*.css",
+        });
+        var page = await context.NewPageAsync();
+        await page.GotoAsync("/har.html");
+        await context.CloseAsync();
+
+        var log = JsonSerializer.Deserialize<JsonElement>(await File.ReadAllTextAsync(harPath)).GetProperty("log");
+        var entries = log.GetProperty("entries");
+        Assert.AreEqual(1, entries.GetArrayLength());
+        Assert.True(entries[0].GetProperty("request").GetProperty("url").ToString().EndsWith("one-style.css"));
+    }
+
     [PlaywrightTest("har.spec.ts", "should close the context when saving the har fails")]
     public async Task ShouldCloseTheContextWhenSavingTheHarFails()
     {

@@ -321,7 +321,7 @@ internal class BrowserContext : ChannelOwner, IBrowserContext
         var routeFromHAROptions = new BrowserContextRouteFromHAROptions()
         {
             Url = options.RecordHarUrlFilter,
-            UrlString = options.RecordHarUrlFilter,
+            UrlString = options.RecordHarUrlFilterString,
             UrlRegex = options.RecordHarUrlFilterRegex,
             UpdateMode = options.RecordHarMode ?? HarMode.Full,
         };
