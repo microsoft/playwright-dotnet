@@ -44,7 +44,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Remove=".drivers\**" />
-    <!-- The .drivers directory (assembled by Playwright.Tooling) mirrors the .playwright
+    <!-- The .drivers directory (built by Playwright.Tooling) mirrors the .playwright
          layout shipped in the package: package/** plus node/<platform>/node binaries. -->
     <None Include=".drivers\**" Exclude=".drivers\.stamp" Link=".playwright\%(RecursiveDir)%(Filename)%(Extension)" CopyToOutputDirectory="PreserveNewest" Pack="true" PackagePath=".playwright" />
     <None Include="build\playwright.ps1" Link="playwright.ps1" CopyToOutputDirectory="PreserveNewest" />
@@ -54,6 +54,6 @@
     <None Include="..\..\README.md" Pack="true" PackagePath="README.md" />
   </ItemGroup>
   <Target Name="EnsurePrerequisitsRan" BeforeTargets="GetCopyToOutputDirectoryItems">
-    <Error Text="Playwright prerequisites are missing. Ensure you've ran `dotnet run --project ./src/tools/Playwright.Tooling/Playwright.Tooling.csproj -- download-drivers --basepath .`" Condition="!Exists('$(MSBuildProjectDirectory)\.drivers')" />
+    <Error Text="Playwright prerequisites are missing. Ensure you've ran `dotnet run --project ./src/tools/Playwright.Tooling/Playwright.Tooling.csproj -- build-driver --basepath .`" Condition="!Exists('$(MSBuildProjectDirectory)\.drivers')" />
   </Target>
 </Project>

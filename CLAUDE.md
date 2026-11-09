@@ -3,9 +3,11 @@
 ## Building
 
 ```bash
-./build.sh --download-driver   # download the Playwright driver (needs Node.js/npm on PATH)
+./build.sh --build-driver      # build the Playwright driver from .upstream/ (needs git and Node.js/npm on PATH)
 dotnet build ./src              # build the entire solution
 ```
+
+`DriverVersion` in `src/Common/Version.props` is the `microsoft/playwright` commit that the driver, the generated API and the port come from. `.upstream/` (gitignored) is a clone of `microsoft/playwright` at that commit: `./build.sh --build-driver` clones it, checks out the commit and builds the driver from it. Run it again when `DriverVersion` changes, for example after a pull. Read upstream code in `.upstream/`; do not commit, branch or edit in it.
 
 ## Running tests
 
@@ -45,7 +47,8 @@ The tests are NUnit tests in `src/Playwright.Tests/`, one class per upstream spe
 ## Architecture
 
 ### Generated vs hand-written code
-- Public API interfaces (e.g. `src/Playwright/API/Generated/IPage.cs`) are **generated** by `../playwright/utils/doclint/generateDotnetApi.js` from the upstream API docs. Do not hand-edit these — update the generator instead.
+- Public API interfaces (e.g. `src/Playwright/API/Generated/IPage.cs`) are **generated** by `.upstream/utils/doclint/generateDotnetApi.js` from the upstream API docs. Do not hand-edit these — update the generator instead.
+- `./build.sh --generate` generates them again from `.upstream/`, and CI fails when the committed files differ. The generator change lands upstream first, and a roll brings it here. To try it before that, `PW_SRC_DIR=../playwright ./build.sh --generate` runs the generators of another checkout.
 - The generator uses `classNameMap` for type mappings (e.g. `Disposable` → `IAsyncDisposable`, `boolean` → `bool`). Add entries there when a Playwright type should map to a different .NET type.
 - The generator skips generating interface files for types like `TimeoutException` and `IAsyncDisposable` that map to built-in .NET types.
 - Supplement interfaces (`src/Playwright/API/Supplements/`) are hand-written and extend the generated interfaces with .NET-specific overloads.

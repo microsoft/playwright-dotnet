@@ -352,6 +352,9 @@ MigrationBackup/
 .ionide/
 .idea
 src/Playwright.sln.DotSettings
+# The microsoft/playwright checkout at DriverVersion of src/Common/Version.props
+# (./build.sh --build-driver).
+/.upstream/
 src/Playwright/.drivers
 src/Playwright/Microsoft.Playwright.xml
 
