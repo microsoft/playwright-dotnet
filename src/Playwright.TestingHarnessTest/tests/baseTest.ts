@@ -1,3 +1,27 @@
+/*
+ * MIT License
+ *
+ * Copyright (c) Microsoft Corporation.
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
+ */
+
 import fs from 'fs';
 import http from 'http';
 import path from 'path';
@@ -20,7 +44,7 @@ type RunResult = {
 
 export const test = base.extend<{
   proxyServer: ProxyServer;
-  testMode: 'nunit' | 'mstest' | 'mstest.v4' | 'mstest.mtp' | 'xunit' | 'xunit.v3';
+  testMode: 'nunit' | 'nunit.mtp' | 'mstest' | 'mstest.v4' | 'mstest.mtp' | 'xunit' | 'xunit.v3' | 'xunit.v3.mtp';
   runTest: (files: Record<string, string>, command: string, env?: NodeJS.ProcessEnv) => Promise<RunResult>;
   launchServer: (options: { port: number }) => Promise<void>;
   server: SimpleServer;
@@ -48,8 +72,9 @@ export const test = base.extend<{
   },
   runTest: async ({ testMode }, use, testInfo) => {
     const testResults: RunResult[] = [];
+    const isMtp = testMode?.endsWith('.mtp');
     await use(async (files, command, env) => {
-      const testDir = testMode === 'mstest.mtp'
+      const testDir = isMtp
         ? path.join(testInfo.project.outputDir, 'mtp-' + crypto.createHash('sha1').update(testInfo.testId).digest('hex').slice(0, 8))
         : testInfo.outputPath();
       await fs.promises.mkdir(testDir, { recursive: true });
@@ -58,7 +83,7 @@ export const test = base.extend<{
         await fs.promises.writeFile(path.join(testDir, fileName), unintentFile(fileContent).replaceAll('<class-name>', testClassName));
       }
       const trxFile = path.join(testDir, 'result.trx');
-      if (testMode === 'mstest.mtp') {
+      if (isMtp) {
         const [runnerCommand, mtpArguments = ''] = command.split(' -- ');
         const reportArguments = /(^|\s)--list-tests(\s|$)/.test(mtpArguments) ? '' : '--report-trx --report-trx-filename result.trx';
         command = `${runnerCommand} --project "${path.join('..', '..', 'Playwright.TestingHarnessTest.csproj')}" -- ${reportArguments} --results-directory "${testDir}" --output Detailed ${mtpArguments}`;
@@ -93,8 +118,8 @@ export const test = base.extend<{
       const testResult: RunResult = {
         command,
         rawStdout,
-        stdout: testMode === 'mstest.mtp' ? rawStdout : extractVstestMessages(rawStdout, 'Standard Output Messages:'),
-        stderr: testMode === 'mstest.mtp' ? rawStderr : extractVstestMessages(rawStdout, 'Standard Error Messages:'),
+        stdout: isMtp ? rawStdout : extractVstestMessages(rawStdout, 'Standard Output Messages:'),
+        stderr: isMtp ? rawStderr : extractVstestMessages(rawStdout, 'Standard Error Messages:'),
         passed,
         failed,
         total,

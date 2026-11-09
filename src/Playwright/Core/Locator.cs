@@ -48,6 +48,8 @@ internal class Locator : ILocator
 
     private static string _testIdAttributeName = "data-testid";
 
+    private string? _stringRepresentation;
+
     public Locator(Frame parent, string selector, LocatorLocatorOptions? options = null, bool? visible = null)
     {
         _frame = parent;
@@ -222,6 +224,8 @@ internal class Locator : ILocator
         }
         return new Locator(_frame, $"{_selector} >> internal:chain={JsonSerializer.Serialize(locatorImpl._selector, _locatorSerializerOptions)}", options);
     }
+
+    public ILocator Within(ILocator locator) => locator.Locator(this);
 
     IFrameLocator ILocator.FrameLocator(string selector) =>
         new FrameLocator(_frame, $"{_selector} >> {selector}");
@@ -422,7 +426,24 @@ internal class Locator : ILocator
               false,
               title);
 
-    public override string ToString() => "Locator@" + _selector;
+    public override string ToString()
+    {
+        if (_stringRepresentation == null)
+        {
+            try
+            {
+                // ToString() must be synchronous, so block on the driver call. The result is cached.
+#pragma warning disable VSTHRD002
+                _stringRepresentation = _frame.WrapApiCallAsync(() => _frame._connection.LocalUtils!.AsLocatorDescriptionAsync(_selector), true).GetAwaiter().GetResult();
+#pragma warning restore VSTHRD002
+            }
+            catch
+            {
+                return "Locator@" + _selector;
+            }
+        }
+        return _stringRepresentation;
+    }
 
     private T ConvertOptions<T>(object? source, T? inheritFrom = default)
         where T : class, new()
@@ -625,6 +646,18 @@ internal class Locator : ILocator
         {
             props.Add(new List<string> { "name", EscapeForAttributeSelector(options.NameRegex, options?.Exact ?? false) });
         }
+        if (options?.Description != null)
+        {
+            props.Add(new List<string> { "description", EscapeForAttributeSelector(options.Description, options.Exact ?? false) });
+        }
+        else if (options?.DescriptionString != null)
+        {
+            props.Add(new List<string> { "description", EscapeForAttributeSelector(options.DescriptionString, options.Exact ?? false) });
+        }
+        else if (options?.DescriptionRegex != null)
+        {
+            props.Add(new List<string> { "description", EscapeForAttributeSelector(options.DescriptionRegex, options.Exact ?? false) });
+        }
         if (options?.Pressed != null)
         {
             props.Add(new List<string> { "pressed", options.Pressed.ToJson() });
@@ -676,6 +709,7 @@ internal class Locator : ILocator
                 ["selector"] = _selector,
                 ["mode"] = options?.Mode,
                 ["depth"] = options?.Depth,
+                ["boxes"] = options?.Boxes,
             },
             timeout: _frame.Timeout(options?.Timeout)).ConfigureAwait(false);
         return result!.Value.GetProperty("snapshot").ToString();
@@ -686,9 +720,15 @@ internal class Locator : ILocator
         var result = await _frame.SendMessageToServerAsync("resolveSelector", new Dictionary<string, object?>
         {
             ["selector"] = _selector,
+            ["sdkLanguage"] = "csharp",
         }).ConfigureAwait(false);
         var resolvedSelector = result!.Value.GetProperty("resolvedSelector").ToString();
-        return new Locator(_frame, resolvedSelector);
+        var locator = new Locator(_frame, resolvedSelector);
+        if (result.Value.TryGetProperty("locatorCode", out var locatorCode))
+        {
+            locator._stringRepresentation = locatorCode.GetString();
+        }
+        return locator;
     }
 }
 
@@ -708,6 +748,9 @@ internal class ByRoleOptions
         Name = clone.Name;
         NameString = clone.NameString;
         NameRegex = clone.NameRegex;
+        Description = clone.Description;
+        DescriptionString = clone.DescriptionString;
+        DescriptionRegex = clone.DescriptionRegex;
         Pressed = clone.Pressed;
         Selected = clone.Selected;
         Exact = clone.Exact;
@@ -727,6 +770,9 @@ internal class ByRoleOptions
         Name = clone.Name;
         NameString = clone.NameString;
         NameRegex = clone.NameRegex;
+        Description = clone.Description;
+        DescriptionString = clone.DescriptionString;
+        DescriptionRegex = clone.DescriptionRegex;
         Pressed = clone.Pressed;
         Selected = clone.Selected;
         Exact = clone.Exact;
@@ -746,6 +792,9 @@ internal class ByRoleOptions
         Name = clone.Name;
         NameString = clone.NameString;
         NameRegex = clone.NameRegex;
+        Description = clone.Description;
+        DescriptionString = clone.DescriptionString;
+        DescriptionRegex = clone.DescriptionRegex;
         Pressed = clone.Pressed;
         Selected = clone.Selected;
         Exact = clone.Exact;
@@ -765,6 +814,9 @@ internal class ByRoleOptions
         Name = clone.Name;
         NameString = clone.NameString;
         NameRegex = clone.NameRegex;
+        Description = clone.Description;
+        DescriptionString = clone.DescriptionString;
+        DescriptionRegex = clone.DescriptionRegex;
         Pressed = clone.Pressed;
         Selected = clone.Selected;
         Exact = clone.Exact;
@@ -785,6 +837,12 @@ internal class ByRoleOptions
     public string? NameString { get; set; }
 
     public Regex? NameRegex { get; set; }
+
+    public string? Description { get; set; }
+
+    public string? DescriptionString { get; set; }
+
+    public Regex? DescriptionRegex { get; set; }
 
     public bool? Pressed { get; set; }
 

@@ -53,7 +53,7 @@ public partial interface IClock
     /// </code>
     /// </summary>
     /// <param name="ticks">
-    /// Time may be the number of milliseconds to advance the clock by or a human-readable
+    /// Time may be a finite number of milliseconds to advance the clock by or a human-readable
     /// string. Valid string formats are "08" for eight seconds, "01:00" for one minute
     /// and "02:34:10" for two hours, 34 minutes and ten seconds.
     /// </param>
@@ -72,7 +72,7 @@ public partial interface IClock
     /// </code>
     /// </summary>
     /// <param name="ticks">
-    /// Time may be the number of milliseconds to advance the clock by or a human-readable
+    /// Time may be a finite number of milliseconds to advance the clock by or a human-readable
     /// string. Valid string formats are "08" for eight seconds, "01:00" for one minute
     /// and "02:34:10" for two hours, 34 minutes and ten seconds.
     /// </param>
@@ -82,6 +82,7 @@ public partial interface IClock
     /// <para>Install fake implementations for the following time-related functions:</para>
     /// <list type="bullet">
     /// <item><description><c>Date</c></description></item>
+    /// <item><description><c>Temporal.Now</c></description></item>
     /// <item><description><c>setTimeout</c></description></item>
     /// <item><description><c>clearTimeout</c></description></item>
     /// <item><description><c>setInterval</c></description></item>
@@ -111,7 +112,7 @@ public partial interface IClock
     /// </code>
     /// </summary>
     /// <param name="ticks">
-    /// Time may be the number of milliseconds to advance the clock by or a human-readable
+    /// Time may be a finite number of milliseconds to advance the clock by or a human-readable
     /// string. Valid string formats are "08" for eight seconds, "01:00" for one minute
     /// and "02:34:10" for two hours, 34 minutes and ten seconds.
     /// </param>
@@ -126,7 +127,7 @@ public partial interface IClock
     /// </code>
     /// </summary>
     /// <param name="ticks">
-    /// Time may be the number of milliseconds to advance the clock by or a human-readable
+    /// Time may be a finite number of milliseconds to advance the clock by or a human-readable
     /// string. Valid string formats are "08" for eight seconds, "01:00" for one minute
     /// and "02:34:10" for two hours, 34 minutes and ten seconds.
     /// </param>

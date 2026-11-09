@@ -67,6 +67,7 @@ internal class Screencast : IScreencast
         {
             ["size"] = options.Size,
             ["quality"] = options.Quality,
+            ["fps"] = options.Fps,
             ["sendFrames"] = options.OnFrame != null,
             ["record"] = options.Path != null,
         }).ConfigureAwait(false);
@@ -120,8 +121,11 @@ internal class Screencast : IScreencast
         {
             ["duration"] = options?.Duration,
             ["position"] = options?.Position,
+#pragma warning disable CS0612 // Type or member is obsolete
             ["fontSize"] = options?.FontSize,
+#pragma warning restore CS0612 // Type or member is obsolete
             ["cursor"] = options?.Cursor,
+            ["style"] = options?.Style,
         }).ConfigureAwait(false);
         return new DisposableStub(() => _page.SendMessageToServerAsync("screencastHideActions"));
     }

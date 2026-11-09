@@ -239,6 +239,21 @@ public class LocatorQueryTests : PageTestEx
         await Expect(Page.Locator("div").Filter(new() { HasNotTextString = "foo" })).ToHaveCountAsync(2);
     }
 
+    // See https://github.com/microsoft/playwright-dotnet/issues/3408
+    [PlaywrightTest]
+    public async Task PageLocatorShouldSupportHasNotAndHasNotText()
+    {
+        await Page.SetContentAsync("<section><div><span>hello</span></div><div><span>world</span></div></section>");
+        await Expect(Page.Locator("div", new() { HasNot = Page.Locator("span", new() { HasText = "world" }) })).ToHaveCountAsync(1);
+        await Expect(Page.Locator("div", new() { HasNot = Page.Locator("section") })).ToHaveCountAsync(2);
+        await Expect(Page.Locator("div", new() { HasNot = Page.Locator("span") })).ToHaveCountAsync(0);
+
+        await Expect(Page.Locator("div", new() { HasNotText = "hello" })).ToHaveCountAsync(1);
+        await Expect(Page.Locator("div", new() { HasNotTextString = "hello" })).ToHaveCountAsync(1);
+        await Expect(Page.Locator("div", new() { HasNotTextRegex = new Regex("HELLO", RegexOptions.IgnoreCase) })).ToHaveCountAsync(1);
+        await Expect(Page.Locator("div", new() { HasNotTextString = "foo" })).ToHaveCountAsync(2);
+    }
+
     [PlaywrightTest("locator-query.spec.ts", "should support locator.and")]
     public async Task ShouldSupportLocatorAnd()
     {
@@ -283,6 +298,26 @@ public class LocatorQueryTests : PageTestEx
 
         await Expect(Page.Locator("div").Locator(Page.Locator("button").And(Page.GetByRole(AriaRole.Button)))).ToHaveTextAsync(new[] { "three" });
         await Expect(Page.Locator("button").And(Page.GetByRole(AriaRole.Button))).ToHaveTextAsync(new[] { "three", "five" });
+    }
+
+    [PlaywrightTest("locator-query.spec.ts", "should support locator.within")]
+    public async Task ShouldSupportLocatorWithin()
+    {
+        await Page.SetContentAsync(@"
+            <table>
+                <tr><td>a1</td><td>a2</td><td>a3</td></tr>
+                <tr><td>b1</td><td>b2</td><td>b3</td></tr>
+                <tr><td>c1</td><td>c2</td><td>c3</td></tr>
+            </table>
+            <span>outside</span>
+        ");
+
+        await Expect(Page.GetByRole(AriaRole.Cell).Within(Page.GetByRole(AriaRole.Row))).ToHaveTextAsync(new[] { "a1", "a2", "a3", "b1", "b2", "b3", "c1", "c2", "c3" });
+        await Expect(Page.GetByRole(AriaRole.Cell).Nth(1).Within(Page.GetByRole(AriaRole.Row))).ToHaveTextAsync(new[] { "a2", "b2", "c2" });
+        await Expect(Page.GetByRole(AriaRole.Cell).Last.Within(Page.GetByRole(AriaRole.Row))).ToHaveTextAsync(new[] { "a3", "b3", "c3" });
+        await Expect(Page.GetByRole(AriaRole.Cell).Nth(1).Within(Page.GetByRole(AriaRole.Row).Nth(2))).ToHaveTextAsync(new[] { "c2" });
+        await Expect(Page.Locator("span").Within(Page.GetByRole(AriaRole.Row))).ToHaveCountAsync(0);
+        await Expect(Page.GetByRole(AriaRole.Cell).Nth(1).Within(Page.GetByRole(AriaRole.Row)).Nth(1)).ToHaveTextAsync("b2");
     }
 
     [PlaywrightTest("locator-query.spec.ts", "should enforce same frame for has:locator'")]

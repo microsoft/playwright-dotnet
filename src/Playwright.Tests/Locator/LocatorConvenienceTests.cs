@@ -37,10 +37,10 @@ public class LocatorConvenienceTests : PageTestEx
         var text = await inner.EvaluateHandleAsync("e => e.firstChild");
         await Page.EvaluateAsync("() => 1");
 
-        Assert.AreEqual("Locator@#outer", outer.ToString());
-        Assert.AreEqual("Locator@#outer >> #inner", inner.ToString());
+        Assert.AreEqual("""Locator("#outer")""", outer.ToString());
+        Assert.AreEqual("""Locator("#outer").Locator("#inner")""", inner.ToString());
         Assert.AreEqual("JSHandle@#text=Text,↵more text", text.ToString());
-        Assert.AreEqual("Locator@#check", check.ToString());
+        Assert.AreEqual("""Locator("#check")""", check.ToString());
     }
 
     [PlaywrightTest("locator-convenience.spec.ts", "getAttribute should work")]

@@ -218,6 +218,31 @@ public class TracingTests : ContextTestEx
         await Context.Tracing.StopAsync();
     }
 
+    [PlaywrightTest("tracing.spec.ts", "start should return a disposable that discards the trace")]
+    public async Task StartShouldReturnADisposableThatDiscardsTheTrace()
+    {
+        using var tmp = new TempDirectory();
+        var disposable = await Context.Tracing.StartAsync();
+        var page = await Context.NewPageAsync();
+        await page.GotoAsync(Server.EmptyPage);
+        await disposable.DisposeAsync();
+        var exception = await PlaywrightAssert.ThrowsAsync<PlaywrightException>(() => Context.Tracing.StopAsync(new() { Path = Path.Combine(tmp.Path, "trace.zip") }));
+        StringAssert.Contains("Must start tracing before stopping", exception.Message);
+    }
+
+    [PlaywrightTest("tracing.spec.ts", "startChunk should return a disposable that discards the chunk")]
+    public async Task StartChunkShouldReturnADisposableThatDiscardsTheChunk()
+    {
+        using var tmp = new TempDirectory();
+        await Context.Tracing.StartAsync();
+        var disposable = await Context.Tracing.StartChunkAsync();
+        var page = await Context.NewPageAsync();
+        await page.GotoAsync(Server.EmptyPage);
+        await disposable.DisposeAsync();
+        var exception = await PlaywrightAssert.ThrowsAsync<PlaywrightException>(() => Context.Tracing.StopChunkAsync(new() { Path = Path.Combine(tmp.Path, "trace.zip") }));
+        StringAssert.Contains("Must start tracing before stopping", exception.Message);
+    }
+
     [PlaywrightTest("tracing.spec.ts", "should not throw when stopping without passing a trace file")]
     public async Task ShouldNotThrowWhenStoppingWithoutPath()
     {
@@ -463,9 +488,9 @@ public class TracingTests : ContextTestEx
 
     private async Task ShowTraceViewerAsync(string path, Func<TraceViewerPage, Task> callback)
     {
-        var (executablePath, _) = Driver.GetExecutablePath();
-        var traceViewerPath = Path.GetFullPath(Path.Join(Path.GetDirectoryName(executablePath), "..", "..", "package", "lib", "vite", "traceViewer"));
-        var server = SimpleServer.Create(8907 + WorkerIndex * 4 + 2, traceViewerPath);
+        // The server lives for the whole worker. Restarting it on the same port between two trace viewer
+        // loads breaks WebKit on Windows, which reuses its keep-alive connection to the stopped server.
+        var server = (await TraceViewerService.Register(this)).Server;
         server.SetRoute("/trace.zip", context =>
         {
             context.Response.ContentType = "application/zip";
@@ -474,16 +499,40 @@ public class TracingTests : ContextTestEx
         var page = await Browser.NewPageAsync();
         try
         {
-            await server.StartAsync(TestContext.CurrentContext.CancellationToken);
             await page.GotoAsync(server.Prefix + $"/index.html?trace={server.Prefix}/trace.zip");
             await callback(new(page));
         }
         finally
         {
-            await server.StopAsync();
             await page.CloseAsync();
         }
     }
+}
+
+class TraceViewerService : IWorkerService
+{
+    public SimpleServer Server { get; private init; }
+
+    public static Task<TraceViewerService> Register(WorkerAwareTest test)
+    {
+        var workerIndex = test.WorkerIndex;
+        return test.RegisterService("TraceViewer", async () =>
+        {
+            var (executablePath, _) = Driver.GetExecutablePath();
+            var traceViewerPath = Path.GetFullPath(Path.Join(Path.GetDirectoryName(executablePath), "..", "..", "package", "lib", "vite", "traceViewer"));
+            var service = new TraceViewerService { Server = SimpleServer.Create(8907 + workerIndex * 4 + 2, traceViewerPath) };
+            await service.Server.StartAsync(TestContext.CurrentContext.CancellationToken);
+            return service;
+        });
+    }
+
+    public Task ResetAsync()
+    {
+        Server.Reset();
+        return Task.CompletedTask;
+    }
+
+    public Task DisposeAsync() => Server.StopAsync();
 }
 
 class TraceViewerPage(IPage page)

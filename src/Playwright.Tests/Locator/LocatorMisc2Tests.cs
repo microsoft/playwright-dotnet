@@ -281,4 +281,20 @@ public class LocatorMisc2Tests : PageTestEx
         var locator3 = locator2.Locator("button");
         Assert.IsNull(locator3.Description);
     }
+
+    [PlaywrightTest("locator-convenience.spec.ts", "toString() returns formatted locator")]
+    public void ToStringShouldReturnFormattedLocator()
+    {
+        var locator = Page.GetByRole(AriaRole.Button, new() { Name = "Submit" });
+        Assert.AreEqual("""GetByRole(AriaRole.Button, new() { Name = "Submit" })""", locator.ToString());
+        Assert.IsNull(locator.Description);
+    }
+
+    [PlaywrightTest("locator-convenience.spec.ts", "toString() prefers description")]
+    public void ToStringShouldPreferDescription()
+    {
+        var locator = Page.GetByRole(AriaRole.Button, new() { Name = "Submit" }).Describe("Submit button");
+        Assert.AreEqual("Submit button", locator.ToString());
+        Assert.AreEqual(locator.Description, locator.ToString());
+    }
 }

@@ -47,6 +47,7 @@ extends:
         timeoutInMinutes: 360
         steps:
         - checkout: self
+          persistCredentials: false
           displayName: "Checkout code"
 
         - task: UseDotNet@2

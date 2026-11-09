@@ -156,7 +156,9 @@ public partial interface ILocator
     /// <item><description>
     /// Includes element references <c>[ref=e2]</c>. 2. Does not wait for an element matching
     /// the locator, and throws when no elements match. 3. Includes snapshots of <c>&lt;iframe&gt;</c>s
-    /// inside the target.
+    /// inside the target. 4. Can omit names that repeat printed descendants, such as a
+    /// heading containing a link. Names that identify dialogs, landmarks, groups, tables
+    /// and table headers are retained.
     /// </description></item>
     /// </list>
     /// </summary>
@@ -1223,6 +1225,20 @@ public partial interface ILocator
     /// This is useful for converting implementation-detail selectors into more resilient,
     /// human-readable locators.
     /// </para>
+    /// <para>**Usage**</para>
+    /// <para>
+    /// An agent can pick an element by its ref from an <see cref="IPage.AriaSnapshotAsync"/>
+    /// taken in the <c>"ai"</c> mode. Refs only work for the latest snapshot. Normalize
+    /// the ref locator and convert it to a string to get resilient locator code in your
+    /// language, the same way <c>codegen</c> does.
+    /// </para>
+    /// <para>Consider the following aria snapshot.</para>
+    /// <para>You can turn the ref into locator code:</para>
+    /// <code>
+    /// var normalized = await page.GetByRef("e2").NormalizeAsync();<br/>
+    /// Console.WriteLine(normalized.ToString());<br/>
+    /// // GetByRole(AriaRole.Button, new() { Name = "Submit" })
+    /// </code>
     /// </summary>
     Task<ILocator> NormalizeAsync();
 
@@ -2032,4 +2048,23 @@ public partial interface ILocator
     /// <param name="arg">Optional argument to pass to <see cref="ILocator.WaitForFunctionAsync"/>.</param>
     /// <param name="options">Call options</param>
     Task WaitForFunctionAsync(string expression, object? arg = default, LocatorWaitForFunctionOptions? options = default);
+
+    /// <summary>
+    /// <para>
+    /// Returns a locator that matches this locator's elements inside each element matched
+    /// by <see cref="ILocator.Within"/>.
+    /// </para>
+    /// <para>
+    /// Note that relative locators, such as <see cref="ILocator.Nth"/> or <see cref="ILocator.First"/>,
+    /// are resolved separately inside each matched parent. In the example below, <c>page.getByRole('cell').nth(2)</c>
+    /// picks the third cell of every row, not the third cell in the whole table.
+    /// </para>
+    /// <para>**Usage**</para>
+    /// <code>
+    /// var thirdColumn = page.GetByRole(AriaRole.Cell).Nth(2).Within(page.GetByRole(AriaRole.Row));<br/>
+    /// await Expect(thirdColumn).ToHaveTextAsync(new[] { "Apple", "Banana", "Cherry" });
+    /// </code>
+    /// </summary>
+    /// <param name="locator">Locator matching the parent elements to search within.</param>
+    ILocator Within(ILocator locator);
 }

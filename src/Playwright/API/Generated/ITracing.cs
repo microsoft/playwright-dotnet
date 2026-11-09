@@ -78,7 +78,11 @@ namespace Microsoft.Playwright;
 public partial interface ITracing
 {
     /// <summary>
-    /// <para>Start tracing.</para>
+    /// <para>
+    /// Start tracing. Disposing the returned <see cref="Disposable"/> stops tracing without
+    /// saving the trace, similarly to calling <see cref="ITracing.StopAsync"/> without
+    /// a path.
+    /// </para>
     /// <para>
     /// You probably want to <a href="https://playwright.dev/docs/api/class-testoptions#test-options-trace">enable
     /// tracing in your config file</a> instead of using <c>Tracing.start</c>.
@@ -119,13 +123,15 @@ public partial interface ITracing
     /// </para>
     /// </remarks>
     /// <param name="options">Call options</param>
-    Task StartAsync(TracingStartOptions? options = default);
+    Task<IAsyncDisposable> StartAsync(TracingStartOptions? options = default);
 
     /// <summary>
     /// <para>
-    /// Start a new trace chunk. If you'd like to record multiple traces on the same <see
-    /// cref="IBrowserContext"/>, use <see cref="ITracing.StartAsync"/> once, and then create
-    /// multiple trace chunks with <see cref="ITracing.StartChunkAsync"/> and <see cref="ITracing.StopChunkAsync"/>.
+    /// Start a new trace chunk. Disposing the returned <see cref="Disposable"/> stops the
+    /// chunk without saving it, similarly to calling <see cref="ITracing.StopChunkAsync"/>
+    /// without a path. If you'd like to record multiple traces on the same <see cref="IBrowserContext"/>,
+    /// use <see cref="ITracing.StartAsync"/> once, and then create multiple trace chunks
+    /// with <see cref="ITracing.StartChunkAsync"/> and <see cref="ITracing.StopChunkAsync"/>.
     /// </para>
     /// <para>**Usage**</para>
     /// <code>
@@ -158,7 +164,7 @@ public partial interface ITracing
     /// </code>
     /// </summary>
     /// <param name="options">Call options</param>
-    Task StartChunkAsync(TracingStartChunkOptions? options = default);
+    Task<IAsyncDisposable> StartChunkAsync(TracingStartChunkOptions? options = default);
 
     /// <summary>
     /// <para>

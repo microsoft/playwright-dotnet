@@ -189,7 +189,8 @@ public partial interface IFrame
     Task ClickAsync(string selector, FrameClickOptions? options = default);
 
     /// <summary><para>Gets the full HTML contents of the frame, including the doctype.</para></summary>
-    Task<string> ContentAsync();
+    /// <param name="options">Call options</param>
+    Task<string> ContentAsync(FrameContentOptions? options = default);
 
     /// <summary>
     /// <para>
@@ -1790,20 +1791,6 @@ public partial interface IFrame
     /// In case of navigation to a different anchor or navigation due to History API usage,
     /// the navigation will resolve with <c>null</c>.
     /// </para>
-    /// <para>**Usage**</para>
-    /// <para>
-    /// This method waits for the frame to navigate to a new URL. It is useful for when
-    /// you run code which will indirectly cause the frame to navigate. Consider this example:
-    /// </para>
-    /// <code>
-    /// await frame.RunAndWaitForNavigationAsync(async () =&gt;<br/>
-    /// {<br/>
-    ///     // Clicking the link will indirectly cause a navigation.<br/>
-    ///     await frame.ClickAsync("a.delayed-navigation");<br/>
-    /// });<br/>
-    /// <br/>
-    /// // Resolves after navigation has finished
-    /// </code>
     /// <para>
     /// Usage of the <a href="https://developer.mozilla.org/en-US/docs/Web/API/History_API">History
     /// API</a> to change the URL is considered a navigation.
@@ -1982,4 +1969,12 @@ public partial interface IFrame
     /// </param>
     /// <param name="options">Call options</param>
     Task WaitForURLAsync(Func<string, bool> url, FrameWaitForURLOptions? options = default);
+
+    /// <summary>
+    /// <para>
+    /// Tools that the frame registers through the experimental <see cref="IWebMCP"/> browser
+    /// API. See <see cref="IWebMCP"/> for details.
+    /// </para>
+    /// </summary>
+    public IWebMCP Webmcp { get; }
 }

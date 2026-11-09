@@ -63,9 +63,11 @@ public partial interface IResponse
 
     /// <summary>
     /// <para>
-    /// An array with all the request HTTP headers associated with this response. Unlike
+    /// An array with all the response HTTP headers associated with this response. Unlike
     /// <see cref="IResponse.AllHeadersAsync"/>, header names are NOT lower-cased. Headers
     /// with multiple entries, such as <c>Set-Cookie</c>, appear in the array multiple times.
+    /// Some browser network stacks combine multiple field values before reporting them,
+    /// so separate entries are not always available.
     /// </para>
     /// </summary>
     Task<IReadOnlyList<Header>> HeadersArrayAsync();

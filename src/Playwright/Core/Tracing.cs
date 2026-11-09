@@ -50,7 +50,7 @@ internal class Tracing : ChannelOwner, ITracing
     }
 
     [MethodImpl(MethodImplOptions.NoInlining)]
-    public async Task StartAsync(TracingStartOptions? options = default)
+    public async Task<IAsyncDisposable> StartAsync(TracingStartOptions? options = default)
     {
         _includeSources = options?.Sources == true;
         await SendMessageToServerAsync(
@@ -70,10 +70,11 @@ internal class Tracing : ChannelOwner, ITracing
             ["name"] = options?.Name,
         }).ConfigureAwait(false))!.Value.GetProperty("traceName").ToString();
         await StartCollectingStacksAsync(traceName).ConfigureAwait(false);
+        return new DisposableStub(() => StopAsync());
     }
 
     [MethodImpl(MethodImplOptions.NoInlining)]
-    public async Task StartChunkAsync(TracingStartChunkOptions? options = default)
+    public async Task<IAsyncDisposable> StartChunkAsync(TracingStartChunkOptions? options = default)
     {
         var traceName = (await SendMessageToServerAsync("tracingStartChunk", new Dictionary<string, object?>
         {
@@ -81,6 +82,7 @@ internal class Tracing : ChannelOwner, ITracing
             ["name"] = options?.Name,
         }).ConfigureAwait(false))!.Value.GetProperty("traceName").ToString();
         await StartCollectingStacksAsync(traceName).ConfigureAwait(false);
+        return new DisposableStub(() => StopChunkAsync());
     }
 
     private async Task StartCollectingStacksAsync(string traceName)
@@ -265,7 +267,7 @@ internal class Tracing : ChannelOwner, ITracing
         {
             throw new PlaywrightException("HAR recording has already been started");
         }
-        var defaultContent = path.EndsWith(".zip", StringComparison.Ordinal) ? HarContentPolicy.Attach : HarContentPolicy.Embed;
+        var defaultContent = path.EndsWith(".zip", StringComparison.OrdinalIgnoreCase) ? HarContentPolicy.Attach : HarContentPolicy.Embed;
         _harId = await RecordIntoHarAsync(
             path,
             null,
@@ -291,7 +293,7 @@ internal class Tracing : ChannelOwner, ITracing
 
     internal async Task<string> RecordIntoHarAsync(string har, Page? page, HarContentPolicy? content, string? urlGlob, Regex? urlRegex, HarMode? mode, string? resourcesDir)
     {
-        var isZip = har.EndsWith(".zip", StringComparison.Ordinal);
+        var isZip = har.EndsWith(".zip", StringComparison.OrdinalIgnoreCase);
         var recordHarArgs = new Dictionary<string, object?>();
         var contentPolicy = content ?? HarContentPolicy.Attach;
         recordHarArgs["content"] = contentPolicy;
@@ -339,7 +341,7 @@ internal class Tracing : ChannelOwner, ITracing
             return;
         }
         _harRecorders.Remove(harId);
-        var isZip = recorder.Path.EndsWith(".zip", StringComparison.Ordinal);
+        var isZip = recorder.Path.EndsWith(".zip", StringComparison.OrdinalIgnoreCase);
         var isLocal = !_connection.IsRemote;
 
         if (isLocal)

@@ -1,3 +1,27 @@
+/*
+ * MIT License
+ *
+ * Copyright (c) Microsoft Corporation.
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
+ */
+
 import { test, expect } from './baseTest';
 
 test.use({ testMode: 'mstest.mtp' });
@@ -75,6 +99,24 @@ test('should support launch arrays and dictionary options', async ({ runTest, se
   }, 'dotnet run', cleanEnvironment);
   expect(result.exitCode).toBe(0);
   expect(result.passed).toBe(1);
+});
+
+test('should deserialize nullable enum member values', async ({ runTest }) => {
+  const result = await runTest({
+    'Tests.cs': pageTest(`
+      Assert.AreEqual(ColorScheme.NoPreference, ContextOptions().ColorScheme);
+      Assert.AreEqual(ReducedMotion.NoPreference, ContextOptions().ReducedMotion);
+      await Page.GotoAsync("about:blank");
+    `),
+    'testconfig.json': JSON.stringify({
+      playwright: {
+        contextOptions: { colorScheme: 'no-preference', reducedMotion: 'no-preference' },
+      },
+    }),
+  }, 'dotnet run', cleanEnvironment);
+  expect(result.exitCode).toBe(0);
+  expect(result.passed).toBe(1);
+  expect(result.total).toBe(1);
 });
 
 test('should support nested launch proxy options', async ({ runTest, server, proxyServer }) => {
@@ -170,30 +212,71 @@ test('should preserve code overrides and allow customizing configured defaults',
   expect(result.passed).toBe(1);
 });
 
-for (const [pwDebug, environment, expected] of [
-  ['0', undefined, '0'],
-  ['1', undefined, '1'],
-  ['console', undefined, 'console'],
-  ['1', '0', '0'],
-] as const) {
-  test(`should initialize PWDEBUG=${pwDebug} before fixtures, with environment ${environment}`, async ({ runTest }) => {
-    const result = await runTest({
-      'Tests.cs': `
-        using System;
-        using Microsoft.VisualStudio.TestTools.UnitTesting;
-        [TestClass]
-        public class <class-name>
-        {
-            private static readonly string DebugAtInitialization = Environment.GetEnvironmentVariable("PWDEBUG");
-            [TestMethod]
-            public void Test() => Assert.AreEqual("${expected}", DebugAtInitialization);
-        }`,
-      'testconfig.json': JSON.stringify({ playwright: { pwDebug } }),
-    }, 'dotnet run', { ...cleanEnvironment, PWDEBUG: environment });
-    expect(result.exitCode).toBe(0);
-    expect(result.passed).toBe(1);
+test('should leave manually configured PWDEBUG unchanged', async ({ runTest }) => {
+  const result = await runTest({
+    'Tests.cs': `
+      using System;
+      using Microsoft.VisualStudio.TestTools.UnitTesting;
+      [TestClass]
+      public class <class-name>
+      {
+          private static readonly string DebugAtInitialization = Environment.GetEnvironmentVariable("PWDEBUG");
+          [TestMethod]
+          public void Test() => Assert.AreEqual("console", DebugAtInitialization);
+      }`,
+    'testconfig.json': JSON.stringify({ playwright: { browserName: 'firefox' } }),
+  }, 'dotnet run', { ...cleanEnvironment, PWDEBUG: 'console' });
+  expect(result.exitCode).toBe(0);
+  expect(result.passed).toBe(1);
+});
+
+test('should restore forwarded settings when the test session finishes', async ({ runTest }) => {
+  const result = await runTest({
+    'Tests.cs': `
+      using System;
+      using System.Threading.Tasks;
+      using Microsoft.Playwright.MSTest;
+      using Microsoft.Playwright.TestAdapter;
+      using Microsoft.Testing.Platform.Builder;
+      using Microsoft.VisualStudio.TestTools.UnitTesting;
+
+      internal static class Program
+      {
+          public static async Task<int> Main(string[] args)
+          {
+              var original = Environment.GetEnvironmentVariable("PW_INTERNAL_ADAPTER_SETTINGS");
+              var builder = await TestApplication.CreateBuilderAsync(args);
+              global::Playwright.TestingHarnessTest.SelfRegisteredExtensions.AddSelfRegisteredExtensions(builder, args);
+              using var app = await builder.BuildAsync();
+              var exitCode = await app.RunAsync();
+              if (Environment.GetEnvironmentVariable("PW_INTERNAL_ADAPTER_SETTINGS") != original)
+              {
+                  Console.Error.WriteLine("Forwarded Playwright settings were not restored.");
+                  return 1;
+              }
+              return exitCode;
+          }
+      }
+
+      [TestClass]
+      public class <class-name> : WorkerAwareTest
+      {
+          [TestMethod]
+          public void Test()
+          {
+              Assert.AreEqual("firefox", PlaywrightSettingsProvider.BrowserName);
+              Assert.AreEqual("fr-FR", PlaywrightSettingsProvider.ContextOptions.Locale);
+          }
+      }`,
+    'testconfig.json': JSON.stringify({ playwright: { browserName: 'firefox', contextOptions: { locale: 'fr-FR' } } }),
+  }, 'dotnet run -p:GenerateTestingPlatformEntryPoint=false', {
+    ...cleanEnvironment,
+    PW_INTERNAL_ADAPTER_SETTINGS: '{"BrowserName":"webkit"}',
   });
-}
+  expect(result.exitCode).toBe(0);
+  expect(result.passed).toBe(1);
+  expect(result.total).toBe(1);
+});
 
 for (const [name, config, diagnostic] of [
   ['invalid browser', { browserName: 'unknown' }, 'Invalid browser name'],
@@ -203,7 +286,6 @@ for (const [name, config, diagnostic] of [
   ['invalid timeout type', { expectTimeout: 'wrong' }, 'expectTimeout'],
   ['negative timeout', { expectTimeout: -1 }, 'non-negative'],
   ['invalid enum', { contextOptions: { colorScheme: 'unknown' } }, 'unknown'],
-  ['invalid debug mode', { pwDebug: 'wrong' }, 'pwDebug'],
   ['invalid root shape', ['firefox'], 'PlaywrightConfiguration'],
 ] as const) {
   test(`should fail explicitly for ${name}`, async ({ runTest }) => {

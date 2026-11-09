@@ -104,7 +104,7 @@ internal class LocalUtils : ChannelOwner
                 },
                 timeout: timeout ?? 0).ConfigureAwait(false))!.Value.GetObject<JsonPipe>("pipe", _connection);
 
-    internal void AddStackToTracingNoReply(List<StackFrame> stack, int id)
+    internal void AddStackToTracingNoReply(List<StackFrame> stack, string id)
          => SendMessageToServerAsync("addStackToTracingNoReply", new Dictionary<string, object?>
         {
             {
@@ -121,6 +121,16 @@ internal class LocalUtils : ChannelOwner
         {
             { "stacksId", stacksId },
         });
+
+    internal async Task<string> AsLocatorDescriptionAsync(string selector)
+    {
+        var response = await SendMessageToServerAsync("asLocatorDescription", new Dictionary<string, object?>
+        {
+            { "selector", selector },
+            { "sdkLanguage", "csharp" },
+        }).ConfigureAwait(false);
+        return response!.Value.GetProperty("description").ToString();
+    }
 
     internal async Task<string> TracingStartedAsync(string? tracesDir, string traceName)
     {

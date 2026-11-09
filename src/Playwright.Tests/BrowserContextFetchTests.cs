@@ -220,6 +220,61 @@ public class BrowserContextFetchTests : PageTestEx
         Assert.AreEqual("", cookies[0].Value);
     }
 
+    [PlaywrightTest("browsercontext-fetch.spec.ts", "page.request.addCookies should add cookies to the browser context")]
+    public async Task PageRequestAddCookiesShouldAddCookiesToTheBrowserContext()
+    {
+        await Page.APIRequest.AddCookiesAsync(new[]
+        {
+            new Cookie { Name = "a", Value = "b", Url = Server.EmptyPage },
+            new Cookie { Name = "c", Value = "d", Domain = "localhost", Path = "/", Expires = DateTimeOffset.UtcNow.ToUnixTimeSeconds() + 3600 },
+        });
+        var cookies = await Context.CookiesAsync();
+        CollectionAssert.AreEqual(new[] { "a=b", "c=d" }, cookies.Select(c => $"{c.Name}={c.Value}").OrderBy(c => c).ToArray());
+        var (cookieHeader, _) = await TaskUtils.WhenAll(
+            Server.WaitForRequest("/empty.html", request => request.Headers["Cookie"].ToString()),
+            Context.APIRequest.GetAsync(Server.EmptyPage)
+        );
+        CollectionAssert.AreEqual(new[] { "a=b", "c=d" }, cookieHeader.Split(';').Select(s => s.Trim()).OrderBy(c => c).ToArray());
+        await Page.GotoAsync(Server.EmptyPage);
+        var documentCookie = await Page.EvaluateAsync<string>("() => document.cookie");
+        CollectionAssert.AreEqual(new[] { "a=b", "c=d" }, documentCookie.Split(';').Select(s => s.Trim()).OrderBy(c => c).ToArray());
+    }
+
+    [PlaywrightTest("browsercontext-fetch.spec.ts", "page.request.cookies should return browser context cookies")]
+    public async Task PageRequestCookiesShouldReturnBrowserContextCookies()
+    {
+        await Context.AddCookiesAsync(new[]
+        {
+            new Cookie { Name = "a", Value = "b", Url = Server.EmptyPage },
+            new Cookie { Name = "c", Value = "d", Domain = "example.com", Path = "/" },
+        });
+        CollectionAssert.AreEqual(new[] { "a", "c" }, (await Page.APIRequest.CookiesAsync()).Select(c => c.Name).OrderBy(c => c).ToArray());
+        CollectionAssert.AreEqual(new[] { "a" }, (await Page.APIRequest.CookiesAsync(Server.EmptyPage)).Select(c => c.Name).ToArray());
+        CollectionAssert.AreEqual(new[] { "a" }, (await Page.APIRequest.CookiesAsync(new[] { Server.EmptyPage })).Select(c => c.Name).ToArray());
+        Assert.AreEqual(
+            JsonSerializer.Serialize(await Context.CookiesAsync(Server.EmptyPage)),
+            JsonSerializer.Serialize(await Page.APIRequest.CookiesAsync(Server.EmptyPage)));
+    }
+
+    [PlaywrightTest("browsercontext-fetch.spec.ts", "page.request.clearCookies should clear browser context cookies")]
+    public async Task PageRequestClearCookiesShouldClearBrowserContextCookies()
+    {
+        await Context.AddCookiesAsync(new[]
+        {
+            new Cookie { Name = "a", Value = "b", Url = Server.EmptyPage },
+            new Cookie { Name = "c", Value = "d", Url = Server.EmptyPage },
+        });
+        await Page.APIRequest.ClearCookiesAsync(new() { Name = "a" });
+        CollectionAssert.AreEqual(new[] { "c" }, (await Context.CookiesAsync()).Select(c => c.Name).ToArray());
+        await Page.APIRequest.ClearCookiesAsync();
+        Assert.IsEmpty(await Context.CookiesAsync());
+        var (cookieHeader, _) = await TaskUtils.WhenAll(
+            Server.WaitForRequest("/empty.html", request => request.Headers["Cookie"].ToString()),
+            Page.APIRequest.GetAsync(Server.EmptyPage)
+        );
+        Assert.AreEqual(string.Empty, cookieHeader);
+    }
+
     [PlaywrightTest("browsercontext-fetch.spec.ts", "should not lose body while handling Set-Cookie header")]
     public async Task ShouldNotLooseBodyWhileHandlingSetCookieHeader()
     {

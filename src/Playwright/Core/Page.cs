@@ -178,6 +178,8 @@ internal class Page : ChannelOwner, IPage
 
     public Frame MainFrame { get; }
 
+    public IWebMCP Webmcp => MainFrame.Webmcp;
+
     IBrowserContext IPage.Context => Context;
 
     public BrowserContext Context { get; set; }
@@ -565,9 +567,13 @@ internal class Page : ChannelOwner, IPage
         => MainFrame.Locator(selector, new()
         {
             Has = options?.Has,
+            HasNot = options?.HasNot,
             HasText = options?.HasText,
             HasTextString = options?.HasTextString,
             HasTextRegex = options?.HasTextRegex,
+            HasNotText = options?.HasNotText,
+            HasNotTextString = options?.HasNotTextString,
+            HasNotTextRegex = options?.HasNotTextRegex,
         });
 
     [MethodImpl(MethodImplOptions.NoInlining)]
@@ -631,6 +637,7 @@ internal class Page : ChannelOwner, IPage
                 Position = options?.Position,
                 Modifiers = options?.Modifiers,
                 Force = options?.Force,
+                Scroll = options?.Scroll,
                 Timeout = options?.Timeout,
                 Trial = options?.Trial,
                 Strict = options?.Strict,
@@ -752,7 +759,8 @@ internal class Page : ChannelOwner, IPage
         => MainFrame.SetContentAsync(html, new() { WaitUntil = options?.WaitUntil, Timeout = options?.Timeout });
 
     [MethodImpl(MethodImplOptions.NoInlining)]
-    public Task<string> ContentAsync() => MainFrame.ContentAsync();
+    public Task<string> ContentAsync(PageContentOptions? options = default)
+        => MainFrame.ContentAsync(new() { IncludeShadow = options?.IncludeShadow });
 
     [MethodImpl(MethodImplOptions.NoInlining)]
     public Task SetExtraHTTPHeadersAsync(IEnumerable<KeyValuePair<string, string>> headers)
@@ -804,6 +812,7 @@ internal class Page : ChannelOwner, IPage
                 Position = options?.Position,
                 Modifiers = options?.Modifiers,
                 Force = options?.Force,
+                Scroll = options?.Scroll,
 #pragma warning disable CS0612 // Type or member is obsolete
                 NoWaitAfter = options?.NoWaitAfter,
 #pragma warning restore CS0612 // Type or member is obsolete
@@ -822,6 +831,7 @@ internal class Page : ChannelOwner, IPage
             Modifiers = options?.Modifiers,
             Timeout = options?.Timeout,
             Force = options?.Force,
+            Scroll = options?.Scroll,
             Trial = options?.Trial,
             Strict = options?.Strict,
         });
@@ -1040,6 +1050,7 @@ internal class Page : ChannelOwner, IPage
         {
             Position = options?.Position,
             Force = options?.Force,
+            Scroll = options?.Scroll,
             Strict = options?.Strict,
             Timeout = options?.Timeout,
             Trial = options?.Trial,
@@ -1048,6 +1059,7 @@ internal class Page : ChannelOwner, IPage
         {
             Position = options?.Position,
             Force = options?.Force,
+            Scroll = options?.Scroll,
             Timeout = options?.Timeout,
             Trial = options?.Trial,
             Strict = options?.Strict,
@@ -1059,6 +1071,7 @@ internal class Page : ChannelOwner, IPage
         {
             Position = options?.Position,
             Force = options?.Force,
+            Scroll = options?.Scroll,
             Strict = options?.Strict,
             Timeout = options?.Timeout,
             Trial = options?.Trial,
@@ -1070,6 +1083,7 @@ internal class Page : ChannelOwner, IPage
         {
             Position = options?.Position,
             Force = options?.Force,
+            Scroll = options?.Scroll,
             Timeout = options?.Timeout,
             Trial = options?.Trial,
             Strict = options?.Strict,
@@ -1120,6 +1134,7 @@ internal class Page : ChannelOwner, IPage
                 Modifiers = options?.Modifiers,
                 Position = options?.Position,
                 Force = options?.Force,
+                Scroll = options?.Scroll,
                 Timeout = options?.Timeout,
                 Trial = options?.Trial,
                 Strict = options?.Strict,
@@ -1220,6 +1235,7 @@ internal class Page : ChannelOwner, IPage
         => MainFrame.DragAndDropAsync(source, target, new()
         {
             Force = options?.Force,
+            Scroll = options?.Scroll,
             Steps = options?.Steps,
             Timeout = options?.Timeout,
             Trial = options?.Trial,
@@ -1514,6 +1530,9 @@ internal class Page : ChannelOwner, IPage
         => MainFrame.GetByPlaceholder(text, new() { Exact = options?.Exact });
 
     [MethodImpl(MethodImplOptions.NoInlining)]
+    public ILocator GetByRef(string @ref) => Locator($"aria-ref={@ref}");
+
+    [MethodImpl(MethodImplOptions.NoInlining)]
     public ILocator GetByRole(AriaRole role, PageGetByRoleOptions? options = null)
         => Locator(Core.Locator.GetByRoleSelector(role, new(options)));
 
@@ -1582,6 +1601,7 @@ internal class Page : ChannelOwner, IPage
             {
                 ["mode"] = options?.Mode,
                 ["depth"] = options?.Depth,
+                ["boxes"] = options?.Boxes,
             },
             timeout: MainFrame.Timeout(options?.Timeout)).ConfigureAwait(false);
         return result!.Value.GetProperty("snapshot").ToString();

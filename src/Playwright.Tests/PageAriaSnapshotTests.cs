@@ -26,6 +26,39 @@ namespace Microsoft.Playwright.Tests;
 
 public class PageAriaSnapshotTests : PageTestEx
 {
+    [PlaywrightTest]
+    [TestCase(AriaSnapshotMode.Default)]
+    [TestCase(AriaSnapshotMode.Ai)]
+    public async Task ShouldIncludeBoundingBoxesInPageSnapshot(AriaSnapshotMode mode)
+    {
+        await Page.SetContentAsync("<button style='position: absolute; left: 20px; top: 30px; width: 100px; height: 40px'>Submit</button>");
+
+        var snapshot = await Page.AriaSnapshotAsync(new() { Mode = mode });
+        StringAssert.DoesNotContain("[box=", snapshot);
+        Assert.AreEqual(snapshot, await Page.AriaSnapshotAsync(new() { Mode = mode, Boxes = false }));
+
+        var snapshotWithBoxes = await Page.AriaSnapshotAsync(new() { Mode = mode, Boxes = true });
+        StringAssert.Contains("[box=20,30,100,40]", snapshotWithBoxes);
+        Assert.AreEqual(snapshot, await Page.AriaSnapshotAsync(new() { Mode = mode }));
+    }
+
+    [PlaywrightTest]
+    [TestCase(AriaSnapshotMode.Default)]
+    [TestCase(AriaSnapshotMode.Ai)]
+    public async Task ShouldIncludeBoundingBoxesInLocatorSnapshot(AriaSnapshotMode mode)
+    {
+        await Page.SetContentAsync("<button style='position: absolute; left: 20px; top: 30px; width: 100px; height: 40px'>Submit</button>");
+        var locator = Page.GetByRole(AriaRole.Button);
+
+        var snapshot = await locator.AriaSnapshotAsync(new() { Mode = mode });
+        StringAssert.DoesNotContain("[box=", snapshot);
+        Assert.AreEqual(snapshot, await locator.AriaSnapshotAsync(new() { Mode = mode, Boxes = false }));
+
+        var snapshotWithBoxes = await locator.AriaSnapshotAsync(new() { Mode = mode, Boxes = true });
+        StringAssert.Contains("[box=20,30,100,40]", snapshotWithBoxes);
+        Assert.AreEqual(snapshot, await locator.AriaSnapshotAsync(new() { Mode = mode }));
+    }
+
     private string _unshift(string snapshot)
     {
         var lines = snapshot.Split('\n');
@@ -198,5 +231,93 @@ public class PageAriaSnapshotTests : PageTestEx
         await Expect(Page.Locator("body")).ToMatchAriaSnapshotAsync(@"
             - textbox ""Zip"" [invalid]
         ");
+    }
+
+    [PlaywrightTest("page-aria-snapshot-ai.spec.ts", "should generate refs")]
+    public async Task ShouldGenerateRefs()
+    {
+        await Page.SetContentAsync(@"
+            <button>One</button>
+            <button>Two</button>
+            <button>Three</button>
+        ");
+
+        var snapshot1 = await Page.AriaSnapshotAsync(new() { Mode = AriaSnapshotMode.Ai });
+        StringAssert.Contains(_unshift(@"
+            - generic [active] [ref=e1]:
+              - button ""One"" [ref=e2]
+              - button ""Two"" [ref=e3]
+              - button ""Three"" [ref=e4]
+        "), snapshot1);
+        await Expect(Page.GetByRef("e2")).ToHaveTextAsync("One");
+        await Expect(Page.GetByRef("e3")).ToHaveTextAsync("Two");
+        await Expect(Page.GetByRef("e4")).ToHaveTextAsync("Three");
+
+        await Page.GetByRef("e3").EvaluateAsync("e => e.textContent = 'Not Two'");
+
+        var snapshot2 = await Page.AriaSnapshotAsync(new() { Mode = AriaSnapshotMode.Ai });
+        StringAssert.Contains(_unshift(@"
+            - generic [active] [ref=e1]:
+              - button ""One"" [ref=e2]
+              - button ""Not Two"" [ref=e5]
+              - button ""Three"" [ref=e4]
+        "), snapshot2);
+    }
+
+    [PlaywrightTest("page-aria-snapshot-ai.spec.ts", "should stitch all frame snapshots")]
+    public async Task ShouldStitchAllFrameSnapshots()
+    {
+        await Page.GotoAsync(Server.Prefix + "/frames/nested-frames.html");
+        var snapshot = await Page.AriaSnapshotAsync(new() { Mode = AriaSnapshotMode.Ai });
+        StringAssert.Contains(_unshift(@"
+            - generic [active] [ref=e1]:
+              - iframe [ref=e2]:
+                - generic [ref=f1e1]:
+                  - iframe [ref=f1e2]:
+                    - generic [ref=f3e1]: Hi, I'm frame
+                  - iframe [ref=f1e3]:
+                    - generic [ref=f4e1]: Hi, I'm frame
+              - iframe [ref=e3]:
+                - generic [ref=f2e1]: Hi, I'm frame
+        "), snapshot);
+
+        var href = await Page.GetByRef("e1").EvaluateAsync<string>("e => e.ownerDocument.defaultView.location.href");
+        Assert.AreEqual(Server.Prefix + "/frames/nested-frames.html", href);
+
+        var href2 = await Page.GetByRef("f1e2").EvaluateAsync<string>("e => e.ownerDocument.defaultView.location.href");
+        Assert.AreEqual(Server.Prefix + "/frames/two-frames.html", href2);
+
+        var href3 = await Page.GetByRef("f4e2").EvaluateAsync<string>("e => e.ownerDocument.defaultView.location.href");
+        Assert.AreEqual(Server.Prefix + "/frames/frame.html", href3);
+
+        {
+            var resolved = await Page.GetByRef("e1").NormalizeAsync();
+            Assert.AreEqual("""Locator("body")""", resolved.ToString());
+        }
+        {
+            var resolved = await Page.GetByRef("f4e2").NormalizeAsync();
+            Assert.AreEqual("""Locator("iframe[name=\"2frames\"]").ContentFrame.Locator("iframe[name=\"dos\"]").ContentFrame.GetByText("Hi, I'm frame")""", resolved.ToString());
+        }
+        {
+            // Should tolerate .Describe().
+            var resolved = await Page.GetByRef("f3e2").Describe("foo bar").NormalizeAsync();
+            Assert.AreEqual("""Locator("iframe[name=\"2frames\"]").ContentFrame.Locator("iframe[name=\"uno\"]").ContentFrame.GetByText("Hi, I'm frame")""", resolved.ToString());
+        }
+        {
+            var exception = await PlaywrightAssert.ThrowsAsync<PlaywrightException>(() => Page.GetByRef("e1000").NormalizeAsync());
+            StringAssert.Contains("No element matching aria-ref=e1000", exception.Message);
+        }
+    }
+
+    [PlaywrightTest("page-aria-snapshot-ai.spec.ts", "should normalize ref locator to locator code")]
+    public async Task ShouldNormalizeRefLocatorToLocatorCode()
+    {
+        await Page.SetContentAsync("<button>Submit</button>");
+        var snapshot = await Page.AriaSnapshotAsync(new() { Mode = AriaSnapshotMode.Ai });
+        StringAssert.Contains("""- button "Submit" [ref=e2]""", snapshot);
+
+        var normalized = await Page.GetByRef("e2").NormalizeAsync();
+        Assert.AreEqual("""GetByRole(AriaRole.Button, new() { Name = "Submit" })""", normalized.ToString());
+        Assert.AreEqual(Page.GetByRole(AriaRole.Button, new() { Name = "Submit" }).ToString(), normalized.ToString());
     }
 }

@@ -550,6 +550,22 @@ public class LocatorAssertionsTests : PageTestEx
         await Expect(locator).ToHaveCSSAsync("color", new Regex("rgb\\(\\d+, 0, 0\\)"));
     }
 
+    [PlaywrightTest("page/expect-misc.spec.ts", "should support pseudo element")]
+    public async Task ShouldSupportToHaveCSSWithPseudoElement()
+    {
+        await Page.SetContentAsync(@"
+            <style>
+                #node::before {
+                    color: rgb(255, 0, 0);
+                    content: ""Text content"";
+                }
+            </style>
+            <div id=node></div>");
+        var locator = Page.Locator("#node");
+        await Expect(locator).ToHaveCSSAsync("color", "rgb(255, 0, 0)", new() { Pseudo = PseudoElement.Before });
+        await Expect(locator).Not.ToHaveCSSAsync("color", "rgb(255, 0, 0)");
+    }
+
     [PlaywrightTest("playwright-test/playwright.expect.spec.ts", "should support toHaveClass")]
     public async Task ShouldSupportToHaveClass()
     {

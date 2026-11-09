@@ -31,7 +31,9 @@ public class ResourceTimingTests : ContextTestEx
     {
         static void verifyTimingValue(float value, float previous)
         {
-            Assert.IsTrue(value == -1 || value > 0 && value >= previous);
+            // WebKit on macOS can report a phase that ends right at the request start, which the driver
+            // truncates to 0 instead of mapping to -1 like the values before the request start.
+            Assert.IsTrue(value == -1 || value >= 0 && value >= previous);
         }
 
         verifyTimingValue(timing.DomainLookupStart, -1);

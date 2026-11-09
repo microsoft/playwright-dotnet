@@ -268,4 +268,62 @@ public class SelectorsGetByTests : PageTestEx
             new string[0],
             await Page.GetByRole(AriaRole.Button, new() { NameString = "Click \\\\me", Exact = true }).EvaluateAllAsync<string[]>("els => els.map(e => e.outerHTML)"));
     }
+
+    [PlaywrightTest("selector-get-by.spec.ts", "getByRole with description")]
+    public async Task GetByRoleWithDescription()
+    {
+        await Page.SetContentAsync(@"
+            <div role=""alert"" aria-label=""Upload successful"" aria-description=""File doc-2025.pdf was uploaded successfully"">Alert 1</div>
+            <div role=""alert"" aria-label=""Upload successful"" aria-description=""File report-2026.pdf was uploaded successfully"">Alert 2</div>
+            <div role=""alert"" aria-label=""Invalid file"" aria-description=""File demo.doc has an invalid file format"">Alert 3</div>
+        ");
+
+        Assert.AreEqual(
+            new[] { "Alert 1" },
+            await Page.GetByRole(AriaRole.Alert, new() { DescriptionString = "doc-2025" }).EvaluateAllAsync<string[]>("els => els.map(e => e.textContent)"));
+        Assert.AreEqual(
+            new[] { "Alert 2" },
+            await Page.GetByRole(AriaRole.Alert, new() { DescriptionString = "report-2026" }).EvaluateAllAsync<string[]>("els => els.map(e => e.textContent)"));
+
+        Assert.AreEqual(
+            new[] { "Alert 1" },
+            await Page.GetByRole(AriaRole.Alert, new() { NameString = "Upload successful", DescriptionString = "doc-2025" }).EvaluateAllAsync<string[]>("els => els.map(e => e.textContent)"));
+        Assert.AreEqual(
+            new string[0],
+            await Page.GetByRole(AriaRole.Alert, new() { NameString = "Invalid file", DescriptionString = "doc-2025" }).EvaluateAllAsync<string[]>("els => els.map(e => e.textContent)"));
+
+        Assert.AreEqual(
+            new string[0],
+            await Page.GetByRole(AriaRole.Alert, new() { DescriptionString = "doc-2025", Exact = true }).EvaluateAllAsync<string[]>("els => els.map(e => e.textContent)"));
+        Assert.AreEqual(
+            new[] { "Alert 1" },
+            await Page.GetByRole(AriaRole.Alert, new() { DescriptionString = "File doc-2025.pdf was uploaded successfully", Exact = true }).EvaluateAllAsync<string[]>("els => els.map(e => e.textContent)"));
+
+        Assert.AreEqual(
+            new[] { "Alert 2" },
+            await Page.GetByRole(AriaRole.Alert, new() { DescriptionRegex = new Regex(@"report-\d+") }).EvaluateAllAsync<string[]>("els => els.map(e => e.textContent)"));
+        Assert.AreEqual(
+            new[] { "Alert 1", "Alert 2" },
+            await Page.GetByRole(AriaRole.Alert, new() { DescriptionRegex = new Regex("uploaded successfully$") }).EvaluateAllAsync<string[]>("els => els.map(e => e.textContent)"));
+    }
+
+    [PlaywrightTest("selector-get-by.spec.ts", "getByRole with description")]
+    public async Task GetByRoleWithDescriptionFromEveryEntryPoint()
+    {
+        var alerts = @"
+            <div role=""alert"" aria-description=""File doc-2025.pdf was uploaded successfully"">Alert 1</div>
+            <div role=""alert"" aria-description=""File report-2026.pdf was uploaded successfully"">Alert 2</div>";
+        await Page.SetContentAsync($"<section>{alerts}</section><iframe srcdoc='{alerts}'></iframe>");
+
+        await Expect(Page.GetByRole(AriaRole.Alert, new() { Description = "doc-2025" })).ToHaveTextAsync("Alert 1");
+        await Expect(Page.MainFrame.GetByRole(AriaRole.Alert, new() { Description = "doc-2025" })).ToHaveTextAsync("Alert 1");
+        await Expect(Page.MainFrame.GetByRole(AriaRole.Alert, new() { DescriptionString = "report-2026" })).ToHaveTextAsync("Alert 2");
+        await Expect(Page.MainFrame.GetByRole(AriaRole.Alert, new() { DescriptionRegex = new Regex(@"doc-\d+") })).ToHaveTextAsync("Alert 1");
+        await Expect(Page.Locator("section").GetByRole(AriaRole.Alert, new() { Description = "doc-2025" })).ToHaveTextAsync("Alert 1");
+        await Expect(Page.Locator("section").GetByRole(AriaRole.Alert, new() { DescriptionString = "report-2026" })).ToHaveTextAsync("Alert 2");
+        await Expect(Page.Locator("section").GetByRole(AriaRole.Alert, new() { DescriptionRegex = new Regex(@"doc-\d+") })).ToHaveTextAsync("Alert 1");
+        await Expect(Page.FrameLocator("iframe").GetByRole(AriaRole.Alert, new() { Description = "doc-2025" })).ToHaveTextAsync("Alert 1");
+        await Expect(Page.FrameLocator("iframe").GetByRole(AriaRole.Alert, new() { DescriptionString = "report-2026" })).ToHaveTextAsync("Alert 2");
+        await Expect(Page.FrameLocator("iframe").GetByRole(AriaRole.Alert, new() { DescriptionRegex = new Regex(@"doc-\d+") })).ToHaveTextAsync("Alert 1");
+    }
 }

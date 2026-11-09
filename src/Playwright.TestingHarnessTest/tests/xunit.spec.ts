@@ -22,6 +22,7 @@
  * SOFTWARE.
  */
 
+import fs from 'fs';
 import { test, expect } from './baseTest';
 
 test.use({ testMode: 'xunit' });
@@ -611,5 +612,88 @@ test.describe('ConnectOptions', () => {
     expect(result.passed).toBe(1);
     expect(result.failed).toBe(0);
     expect(result.total).toBe(1);
+  });
+
+  // See https://github.com/microsoft/playwright-dotnet/issues/2475
+  test('should close the browser when the test run ends', async ({ runTest, launchServer }, testInfo) => {
+    await launchServer({ port: 1234 });
+    const result = await runTest({
+      'ExampleTests.cs': `
+      using System;
+      using System.IO;
+      using System.Threading.Tasks;
+      using Microsoft.Playwright;
+      using Microsoft.Playwright.Xunit;
+      using Xunit;
+
+      namespace Playwright.TestingHarnessTest.Xunit;
+
+      public class <class-name> : PageTest
+      {
+          [Fact]
+          public async Task Test()
+          {
+              var marker = Path.Combine(Environment.GetEnvironmentVariable("PWTEST_TEST_DIR"), "browser-closed.txt");
+              Browser.Disconnected += (_, _) => File.WriteAllText(marker, "closed");
+              await Page.GotoAsync("about:blank");
+          }
+          public override async Task<(string, BrowserTypeConnectOptions)?> ConnectOptionsAsync()
+          {
+              return ("http://127.0.0.1:1234", null);
+          }
+      }`,
+    }, 'dotnet test', {
+      // VSTest kills the test host 100ms after the run, which is not always enough on a slow machine.
+      VSTEST_TESTHOST_SHUTDOWN_TIMEOUT: '10000',
+    });
+    expect(result.passed).toBe(1);
+    expect(result.failed).toBe(0);
+    expect(result.total).toBe(1);
+    expect(fs.existsSync(testInfo.outputPath('browser-closed.txt'))).toBe(true);
+  });
+});
+
+test.describe('LaunchOptions', () => {
+  test('should be able to override launch options via LaunchOptionsAsync', async ({ runTest }) => {
+    const result = await runTest({
+      'ExampleTests.cs': `
+        using System;
+        using System.Threading.Tasks;
+        using Microsoft.Playwright;
+        using Microsoft.Playwright.Xunit;
+        using Xunit;
+        using Xunit.Abstractions;
+
+        namespace Playwright.TestingHarnessTest.Xunit;
+
+        public class <class-name> : PageTest
+        {
+            private readonly ITestOutputHelper output;
+
+            public <class-name>(ITestOutputHelper output)
+            {
+                this.output = output;
+            }
+
+            [Fact]
+            public async Task Test()
+            {
+                await Page.GotoAsync("about:blank");
+                output.WriteLine("User-Agent: " + await Page.EvaluateAsync<string>("() => navigator.userAgent"));
+            }
+
+            public override Task<BrowserTypeLaunchOptions?> LaunchOptionsAsync()
+            {
+                return Task.FromResult<BrowserTypeLaunchOptions?>(new BrowserTypeLaunchOptions
+                {
+                    Args = new[] { "--user-agent=hello" },
+                });
+            }
+        }`,
+    }, 'dotnet test');
+    expect(result.passed).toBe(1);
+    expect(result.failed).toBe(0);
+    expect(result.total).toBe(1);
+    expect(result.stdout).toContain("User-Agent: hello");
   });
 });

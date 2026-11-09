@@ -39,11 +39,27 @@ public class ScreencastStartOptions
             return;
         }
 
+        Fps = clone.Fps;
         OnFrame = clone.OnFrame;
         Path = clone.Path;
         Quality = clone.Quality;
         Size = clone.Size;
     }
+
+    /// <summary>
+    /// <para>
+    /// Frame rate of the video recording in frames per second. Only used together with
+    /// <see cref="IScreencast.StartAsync"/>. Defaults to <c>25</c>.
+    /// </para>
+    /// <para>
+    /// Higher frame rates make animations and scrolling smoother at the cost of more CPU
+    /// spent on encoding. Combine with <see cref="IScreencast.StartAsync"/> to record high
+    /// resolution videos. The video can only contain as many distinct frames as the browser
+    /// produces; Firefox and WebKit currently capture up to 25 frames per second.
+    /// </para>
+    /// </summary>
+    [JsonPropertyName("fps")]
+    public int? Fps { get; set; }
 
     /// <summary>
     /// <para>

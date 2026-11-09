@@ -38,7 +38,7 @@ public class PageClockTests : PageTestEx
         {
             _calls.Add([]);
         });
-        await Page.ExposeFunctionAsync("stubWithNumberValue", (int value) =>
+        await Page.ExposeFunctionAsync("stubWithNumberValue", (long value) =>
         {
             _calls.Add([value]);
         });
@@ -187,10 +187,15 @@ public class PageClockTests : PageTestEx
         [PlaywrightTest("page-clock.spec.ts", "pushes back execution time for skipped timers")]
         public async Task PushesBackExecutionTimeForSkippedTimers()
         {
+            await Page.GotoAsync(Server.EmptyPage);
             await Page.EvaluateAsync("() => { setTimeout(() => { window.stubWithNumberValue(Date.now()); }, 1000); }");
-            await Page.Clock.FastForwardAsync(2000);
+            var fiftyDays = 50L * 24 * 60 * 60 * 1000;
+            await Page.Clock.FastForwardAsync(fiftyDays);
             Assert.AreEqual(1, _calls.Count);
-            Assert.AreEqual(1000 + 2000, _calls[0][0]);
+            Assert.AreEqual(1000 + fiftyDays, _calls[0][0]);
+            Assert.AreEqual(1000 + fiftyDays, await Page.EvaluateAsync<long>("Date.now()"));
+            await Page.ReloadAsync();
+            Assert.AreEqual(1000 + fiftyDays, await Page.EvaluateAsync<long>("Date.now()"));
         }
 
         [PlaywrightTest("page-clock.spec.ts", "supports string time arguments")]

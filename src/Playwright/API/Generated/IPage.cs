@@ -477,7 +477,8 @@ public partial interface IPage
     Task CloseAsync(PageCloseOptions? options = default);
 
     /// <summary><para>Gets the full HTML contents of the page, including the doctype.</para></summary>
-    Task<string> ContentAsync();
+    /// <param name="options">Call options</param>
+    Task<string> ContentAsync(PageContentOptions? options = default);
 
     /// <summary><para>Get the browser context that the page belongs to.</para></summary>
     IBrowserContext Context { get; }
@@ -1112,6 +1113,20 @@ public partial interface IPage
     /// <param name="text">Text to locate the element for.</param>
     /// <param name="options">Call options</param>
     ILocator GetByPlaceholder(Regex text, PageGetByPlaceholderOptions? options = default);
+
+    /// <summary>
+    /// <para>
+    /// Locate element by its aria ref. Refs like <c>[ref=e2]</c> are reported by <see cref="IPage.AriaSnapshotAsync"/>
+    /// when called with the <c>"ai"</c> mode, and resolve against the latest snapshot taken
+    /// in the element's frame.
+    /// </para>
+    /// <para>**Usage**</para>
+    /// <para>Consider the following aria snapshot.</para>
+    /// <para>You can locate the button by its ref:</para>
+    /// <code>await page.GetByRef("e2").ClickAsync();</code>
+    /// </summary>
+    /// <param name="ref">Aria ref of the element, for example <c>e2</c> or <c>f1e3</c>.</param>
+    ILocator GetByRef(string @ref);
 
     /// <summary>
     /// <para>
@@ -3302,22 +3317,6 @@ public partial interface IPage
     /// redirect. In case of navigation to a different anchor or navigation due to History
     /// API usage, the navigation will resolve with <c>null</c>.
     /// </para>
-    /// <para>**Usage**</para>
-    /// <para>
-    /// This resolves when the page navigates to a new URL or reloads. It is useful for
-    /// when you run code which will indirectly cause the page to navigate. e.g. The click
-    /// target has an <c>onclick</c> handler that triggers navigation from a <c>setTimeout</c>.
-    /// Consider this example:
-    /// </para>
-    /// <code>
-    /// await page.RunAndWaitForNavigationAsync(async () =&gt;<br/>
-    /// {<br/>
-    ///     // This action triggers the navigation after a timeout.<br/>
-    ///     await page.GetByText("Navigate after timeout").ClickAsync();<br/>
-    /// });<br/>
-    /// <br/>
-    /// // The method continues after navigation has finished
-    /// </code>
     /// <para>
     /// Usage of the <a href="https://developer.mozilla.org/en-US/docs/Web/API/History_API">History
     /// API</a> to change the URL is considered a navigation.
@@ -3404,20 +3403,6 @@ public partial interface IPage
     /// Waits for the matching request and returns it. See <a href="https://playwright.dev/dotnet/docs/events#waiting-for-event">waiting
     /// for event</a> for more details about events.
     /// </para>
-    /// <para>**Usage**</para>
-    /// <code>
-    /// // Waits for the next request with the specified url.<br/>
-    /// await page.RunAndWaitForRequestAsync(async () =&gt;<br/>
-    /// {<br/>
-    ///     await page.GetByText("trigger request").ClickAsync();<br/>
-    /// }, "http://example.com/resource");<br/>
-    /// <br/>
-    /// // Alternative way with a predicate.<br/>
-    /// await page.RunAndWaitForRequestAsync(async () =&gt;<br/>
-    /// {<br/>
-    ///     await page.GetByText("trigger request").ClickAsync();<br/>
-    /// }, request =&gt; request.Url == "https://example.com" &amp;&amp; request.Method == "GET");
-    /// </code>
     /// </summary>
     /// <param name="urlOrPredicate">
     /// Request URL string, regex or predicate receiving <see cref="IRequest"/> object.
@@ -3433,20 +3418,6 @@ public partial interface IPage
     /// Waits for the matching request and returns it. See <a href="https://playwright.dev/dotnet/docs/events#waiting-for-event">waiting
     /// for event</a> for more details about events.
     /// </para>
-    /// <para>**Usage**</para>
-    /// <code>
-    /// // Waits for the next request with the specified url.<br/>
-    /// await page.RunAndWaitForRequestAsync(async () =&gt;<br/>
-    /// {<br/>
-    ///     await page.GetByText("trigger request").ClickAsync();<br/>
-    /// }, "http://example.com/resource");<br/>
-    /// <br/>
-    /// // Alternative way with a predicate.<br/>
-    /// await page.RunAndWaitForRequestAsync(async () =&gt;<br/>
-    /// {<br/>
-    ///     await page.GetByText("trigger request").ClickAsync();<br/>
-    /// }, request =&gt; request.Url == "https://example.com" &amp;&amp; request.Method == "GET");
-    /// </code>
     /// </summary>
     /// <param name="urlOrPredicate">
     /// Request URL string, regex or predicate receiving <see cref="IRequest"/> object.
@@ -3462,20 +3433,6 @@ public partial interface IPage
     /// Waits for the matching request and returns it. See <a href="https://playwright.dev/dotnet/docs/events#waiting-for-event">waiting
     /// for event</a> for more details about events.
     /// </para>
-    /// <para>**Usage**</para>
-    /// <code>
-    /// // Waits for the next request with the specified url.<br/>
-    /// await page.RunAndWaitForRequestAsync(async () =&gt;<br/>
-    /// {<br/>
-    ///     await page.GetByText("trigger request").ClickAsync();<br/>
-    /// }, "http://example.com/resource");<br/>
-    /// <br/>
-    /// // Alternative way with a predicate.<br/>
-    /// await page.RunAndWaitForRequestAsync(async () =&gt;<br/>
-    /// {<br/>
-    ///     await page.GetByText("trigger request").ClickAsync();<br/>
-    /// }, request =&gt; request.Url == "https://example.com" &amp;&amp; request.Method == "GET");
-    /// </code>
     /// </summary>
     /// <param name="urlOrPredicate">
     /// Request URL string, regex or predicate receiving <see cref="IRequest"/> object.
@@ -3606,20 +3563,6 @@ public partial interface IPage
     /// Returns the matched response. See <a href="https://playwright.dev/dotnet/docs/events#waiting-for-event">waiting
     /// for event</a> for more details about events.
     /// </para>
-    /// <para>**Usage**</para>
-    /// <code>
-    /// // Waits for the next response with the specified url.<br/>
-    /// await page.RunAndWaitForResponseAsync(async () =&gt;<br/>
-    /// {<br/>
-    ///     await page.GetByText("trigger response").ClickAsync();<br/>
-    /// }, "http://example.com/resource");<br/>
-    /// <br/>
-    /// // Alternative way with a predicate.<br/>
-    /// await page.RunAndWaitForResponseAsync(async () =&gt;<br/>
-    /// {<br/>
-    ///     await page.GetByText("trigger response").ClickAsync();<br/>
-    /// }, response =&gt; response.Url == "https://example.com" &amp;&amp; response.Status == 200 &amp;&amp; response.Request.Method == "GET");
-    /// </code>
     /// </summary>
     /// <param name="urlOrPredicate">
     /// Request URL string, regex or predicate receiving <see cref="IResponse"/> object.
@@ -3635,20 +3578,6 @@ public partial interface IPage
     /// Returns the matched response. See <a href="https://playwright.dev/dotnet/docs/events#waiting-for-event">waiting
     /// for event</a> for more details about events.
     /// </para>
-    /// <para>**Usage**</para>
-    /// <code>
-    /// // Waits for the next response with the specified url.<br/>
-    /// await page.RunAndWaitForResponseAsync(async () =&gt;<br/>
-    /// {<br/>
-    ///     await page.GetByText("trigger response").ClickAsync();<br/>
-    /// }, "http://example.com/resource");<br/>
-    /// <br/>
-    /// // Alternative way with a predicate.<br/>
-    /// await page.RunAndWaitForResponseAsync(async () =&gt;<br/>
-    /// {<br/>
-    ///     await page.GetByText("trigger response").ClickAsync();<br/>
-    /// }, response =&gt; response.Url == "https://example.com" &amp;&amp; response.Status == 200 &amp;&amp; response.Request.Method == "GET");
-    /// </code>
     /// </summary>
     /// <param name="urlOrPredicate">
     /// Request URL string, regex or predicate receiving <see cref="IResponse"/> object.
@@ -3664,20 +3593,6 @@ public partial interface IPage
     /// Returns the matched response. See <a href="https://playwright.dev/dotnet/docs/events#waiting-for-event">waiting
     /// for event</a> for more details about events.
     /// </para>
-    /// <para>**Usage**</para>
-    /// <code>
-    /// // Waits for the next response with the specified url.<br/>
-    /// await page.RunAndWaitForResponseAsync(async () =&gt;<br/>
-    /// {<br/>
-    ///     await page.GetByText("trigger response").ClickAsync();<br/>
-    /// }, "http://example.com/resource");<br/>
-    /// <br/>
-    /// // Alternative way with a predicate.<br/>
-    /// await page.RunAndWaitForResponseAsync(async () =&gt;<br/>
-    /// {<br/>
-    ///     await page.GetByText("trigger response").ClickAsync();<br/>
-    /// }, response =&gt; response.Url == "https://example.com" &amp;&amp; response.Status == 200 &amp;&amp; response.Request.Method == "GET");
-    /// </code>
     /// </summary>
     /// <param name="urlOrPredicate">
     /// Request URL string, regex or predicate receiving <see cref="IResponse"/> object.
@@ -3953,6 +3868,16 @@ public partial interface IPage
     /// <param name="action">Action that triggers the event.</param>
     /// <param name="options">Call options</param>
     Task<IWorker> RunAndWaitForWorkerAsync(Func<Task> action, PageRunAndWaitForWorkerOptions? options = default);
+
+    /// <summary>
+    /// <para>
+    /// Tools that the main frame registers through the experimental <see cref="IWebMCP"/>
+    /// browser API. Shortcut for <see cref="IFrame.Webmcp"/> of <see cref="IPage.MainFrame"/>,
+    /// see <see cref="IWebMCP"/> for details.
+    /// </para>
+    /// <para>**Usage**</para>
+    /// </summary>
+    public IWebMCP Webmcp { get; }
 
     /// <summary>
     /// <para>

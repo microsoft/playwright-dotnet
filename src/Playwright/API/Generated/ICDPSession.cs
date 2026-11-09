@@ -73,7 +73,8 @@ public partial interface ICDPSession
 
     /// <param name="method">Protocol method name.</param>
     /// <param name="args">Optional method parameters.</param>
-    Task<JsonElement?> SendAsync(string method, Dictionary<string, object>? args = default);
+    /// <param name="options">Call options</param>
+    Task<JsonElement?> SendAsync(string method, Dictionary<string, object>? args = default, CDPSessionSendOptions? options = default);
 
     /// <summary><para>Returns an event emitter for the given CDP event name.</para></summary>
     /// <param name="eventName">CDP event name.</param>

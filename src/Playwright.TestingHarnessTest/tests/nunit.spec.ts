@@ -22,6 +22,7 @@
  * SOFTWARE.
  */
 
+import fs from 'fs';
 import { test, expect } from './baseTest';
 
 test.use({ testMode: 'nunit' });
@@ -566,6 +567,45 @@ test.describe('ConnectOptions', () => {
     expect(result.failed).toBe(0);
     expect(result.total).toBe(1);
   });
+
+  // See https://github.com/microsoft/playwright-dotnet/issues/2475
+  test('should close the browser when the test run ends', async ({ runTest, launchServer }, testInfo) => {
+    await launchServer({ port: 1234 });
+    const result = await runTest({
+      'ExampleTests.cs': `
+      using System;
+      using System.IO;
+      using System.Threading.Tasks;
+      using Microsoft.Playwright;
+      using Microsoft.Playwright.NUnit;
+      using NUnit.Framework;
+
+      namespace Playwright.TestingHarnessTest.NUnit;
+
+      public class <class-name> : PageTest
+      {
+          [Test]
+          public async Task Test()
+          {
+              var marker = Path.Combine(Environment.GetEnvironmentVariable("PWTEST_TEST_DIR"), "browser-closed.txt");
+              Browser.Disconnected += (_, _) => File.WriteAllText(marker, "closed");
+              await Page.GotoAsync("about:blank");
+          }
+
+          public override async Task<(string, BrowserTypeConnectOptions)?> ConnectOptionsAsync()
+          {
+              return ("http://127.0.0.1:1234", null);
+          }
+      }`,
+    }, 'dotnet test', {
+      // VSTest kills the test host 100ms after the run, which is not always enough on a slow machine.
+      VSTEST_TESTHOST_SHUTDOWN_TIMEOUT: '10000',
+    });
+    expect(result.passed).toBe(1);
+    expect(result.failed).toBe(0);
+    expect(result.total).toBe(1);
+    expect(fs.existsSync(testInfo.outputPath('browser-closed.txt'))).toBe(true);
+  });
 });
 
 test.describe('LaunchOptions', () => {
@@ -603,4 +643,55 @@ test.describe('LaunchOptions', () => {
     expect(result.total).toBe(1);
     expect(result.stdout).toContain("User-Agent: hello");
   });
+});
+
+test('should be able to parse ContextOptions from runsettings', async ({ runTest, server }) => {
+  const result = await runTest({
+    'ExampleTests.cs': `
+      using System;
+      using System.Threading.Tasks;
+      using Microsoft.Playwright.NUnit;
+      using NUnit.Framework;
+
+      namespace Playwright.TestingHarnessTest.NUnit;
+
+      public class <class-name> : PageTest
+      {
+          [Test]
+          public async Task Test()
+          {
+              // BaseURL from the runsettings makes the relative path work.
+              var response = await Page.GotoAsync("/empty.html");
+              Assert.AreEqual("${server.EMPTY_PAGE}", Page.Url);
+              Assert.AreEqual("KekStarValue", await response.Request.HeaderValueAsync("Kekstar"));
+
+              Assert.True(await Page.EvaluateAsync<bool>("() => matchMedia('(prefers-color-scheme: dark)').matches"));
+              Assert.AreEqual("de-DE", await Page.EvaluateAsync<string>("() => navigator.language"));
+              Assert.AreEqual("Foobar", await Page.EvaluateAsync<string>("() => navigator.userAgent"));
+              Assert.AreEqual(1920, await Page.EvaluateAsync<int>("() => window.innerWidth"));
+              Assert.AreEqual(1080, await Page.EvaluateAsync<int>("() => window.innerHeight"));
+          }
+      }`,
+      '.runsettings': `
+        <?xml version="1.0" encoding="utf-8"?>
+        <RunSettings>
+          <Playwright>
+            <ContextOptions>
+              <BaseURL>${server.EMPTY_PAGE.replace("/empty.html", "")}</BaseURL>
+              <ColorScheme>dark</ColorScheme>
+              <Locale>de-DE</Locale>
+              <UserAgent>Foobar</UserAgent>
+              <ViewportSize>
+                <Width>1920</Width>
+                <Height>1080</Height>
+              </ViewportSize>
+              <ExtraHTTPHeaders>{'Kekstar': 'KekStarValue'}</ExtraHTTPHeaders>
+            </ContextOptions>
+          </Playwright>
+        </RunSettings>
+      `,
+  }, 'dotnet test --settings=.runsettings');
+  expect(result.passed).toBe(1);
+  expect(result.failed).toBe(0);
+  expect(result.total).toBe(1);
 });

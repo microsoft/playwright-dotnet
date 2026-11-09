@@ -198,7 +198,8 @@ public partial interface IRequest
     /// Contains the request's resource type as it was perceived by the rendering engine.
     /// ResourceType will be one of the following: <c>document</c>, <c>stylesheet</c>, <c>image</c>,
     /// <c>media</c>, <c>font</c>, <c>script</c>, <c>texttrack</c>, <c>xhr</c>, <c>fetch</c>,
-    /// <c>eventsource</c>, <c>websocket</c>, <c>manifest</c>, <c>other</c>.
+    /// <c>eventsource</c>, <c>websocket</c>, <c>manifest</c>, <c>beacon</c>, <c>ping</c>,
+    /// <c>cspreport</c>, <c>other</c>.
     /// </para>
     /// </summary>
     string ResourceType { get; }

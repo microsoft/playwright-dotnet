@@ -75,16 +75,6 @@ public class PageFillTests : PageTestEx
         Assert.AreEqual("2020-03-02", await Page.EvalOnSelectorAsync<string>("input", "input => input.value"));
     }
 
-    [PlaywrightTest("page-fill.spec.ts", "should throw on incorrect date")]
-    [Skip(SkipAttribute.Targets.Webkit)]
-    public async Task ShouldThrowOnIncorrectDate()
-    {
-        await Page.SetContentAsync("<input type=date>");
-        await Page.ClickAsync("input");
-        var exception = await PlaywrightAssert.ThrowsAsync<PlaywrightException>(() => Page.FillAsync("input", "2020-13-02"));
-        StringAssert.Contains("Malformed value", exception.Message);
-    }
-
     [PlaywrightTest("page-fill.spec.ts", "should fill time input after clicking")]
     public async Task ShouldFillTimeInputAfterClicking()
     {
@@ -94,16 +84,6 @@ public class PageFillTests : PageTestEx
         Assert.AreEqual("13:15", await Page.EvalOnSelectorAsync<string>("input", "input => input.value"));
     }
 
-    [PlaywrightTest("page-fill.spec.ts", "should throw on incorrect time")]
-    [Skip(SkipAttribute.Targets.Webkit)]
-    public async Task ShouldThrowOnIncorrectTime()
-    {
-        await Page.SetContentAsync("<input type=time>");
-        await Page.ClickAsync("input");
-        var exception = await PlaywrightAssert.ThrowsAsync<PlaywrightException>(() => Page.FillAsync("input", "25:05"));
-        StringAssert.Contains("Malformed value", exception.Message);
-    }
-
     [PlaywrightTest("page-fill.spec.ts", "should fill datetime-local input")]
     public async Task ShouldFillDatetimeLocalInput()
     {
@@ -111,16 +91,10 @@ public class PageFillTests : PageTestEx
         await Page.ClickAsync("input");
         await Page.FillAsync("input", "2020-03-02T05:15");
         Assert.AreEqual("2020-03-02T05:15", await Page.EvalOnSelectorAsync<string>("input", "input => input.value"));
-    }
-
-    [PlaywrightTest("page-fill.spec.ts", "should throw on incorrect datetime-local")]
-    [Skip(SkipAttribute.Targets.Firefox, SkipAttribute.Targets.Webkit)]
-    public async Task ShouldThrowOnIncorrectDateTimeLocal()
-    {
-        await Page.SetContentAsync("<input type=datetime-local>");
-        await Page.ClickAsync("input");
-        var exception = await PlaywrightAssert.ThrowsAsync<PlaywrightException>(() => Page.FillAsync("input", "abc"));
-        StringAssert.Contains("Malformed value", exception.Message);
+        // The browser omits zero seconds. WebKit on Windows does not implement datetime-local inputs and keeps the value as is.
+        await Page.FillAsync("input", "2020-03-02T06:20:00");
+        var expected = TestConstants.IsWebKit && TestConstants.IsWindows ? "2020-03-02T06:20:00" : "2020-03-02T06:20";
+        Assert.AreEqual(expected, await Page.EvalOnSelectorAsync<string>("input", "input => input.value"));
     }
 
     [PlaywrightTest("page-fill.spec.ts", "should fill contenteditable")]

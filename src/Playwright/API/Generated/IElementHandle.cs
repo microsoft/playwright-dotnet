@@ -1182,7 +1182,7 @@ public partial interface IElementHandle : IJSHandle
     /// await page.SetContentAsync("&lt;div&gt;&lt;span&gt;&lt;/span&gt;&lt;/div&gt;");<br/>
     /// var div = await page.QuerySelectorAsync("div");<br/>
     /// // Waiting for the "span" selector relative to the div.<br/>
-    /// var span = await page.WaitForSelectorAsync("span", WaitForSelectorState.Attached);
+    /// var span = await div.WaitForSelectorAsync("span", new() { State = WaitForSelectorState.Attached });
     /// </code>
     /// <para>
     /// This method does not work across navigations, use <see cref="IPage.WaitForSelectorAsync"/>

@@ -53,4 +53,9 @@ public partial class VirtualCredential
     [Required]
     [JsonPropertyName("publicKey")]
     public string PublicKey { get; set; } = default!;
+
+    /// <summary><para>Signature counter, the value reported to the relying party in the most recent assertion.</para></summary>
+    [Required]
+    [JsonPropertyName("signCount")]
+    public int SignCount { get; set; } = default!;
 }

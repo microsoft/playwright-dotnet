@@ -5,11 +5,15 @@
     <IsPackable>false</IsPackable>
     <ReleaseVersion>0.0.0</ReleaseVersion>
     <LangVersion>12</LangVersion>
+    <IsMtpTest>$([System.String]::Copy('$(TEST_MODE)').EndsWith('.mtp'))</IsMtpTest>
   </PropertyGroup>
-  <PropertyGroup Condition="'$(TEST_MODE)' == 'mstest.mtp'">
+  <PropertyGroup Condition="'$(IsMtpTest)' == 'true'">
     <OutputType>Exe</OutputType>
-    <EnableMSTestRunner>true</EnableMSTestRunner>
+    <EnableMSTestRunner Condition="'$(TEST_MODE)' == 'mstest.mtp'">true</EnableMSTestRunner>
+    <EnableNUnitRunner Condition="'$(TEST_MODE)' == 'nunit.mtp'">true</EnableNUnitRunner>
+    <UseMicrosoftTestingPlatformRunner Condition="'$(TEST_MODE)' == 'xunit.v3.mtp'">true</UseMicrosoftTestingPlatformRunner>
     <UseAppHost>false</UseAppHost>
+    <UseAppHost Condition="'$(TEST_MODE)' == 'xunit.v3.mtp'">true</UseAppHost>
     <OutputPath>$(PWTEST_TEST_DIR)\bin\</OutputPath>
   </PropertyGroup>
   <Import Project="../Common/SignAssembly.props" />
@@ -17,7 +21,9 @@
   <ItemGroup>
     <ProjectReference Include="..\Playwright\Playwright.csproj" />
 
-    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.13.0" Condition="'$(TEST_MODE)' != 'mstest.mtp'" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.13.0" Condition="'$(IsMtpTest)' != 'true'" />
+    <ProjectReference Include="..\Playwright.Testing.Platform\Playwright.Testing.Platform.csproj" Condition="'$(IsMtpTest)' == 'true'" />
+    <PackageReference Include="Microsoft.Testing.Extensions.TrxReport" Version="2.0.0" Condition="'$(TEST_MODE)' == 'nunit.mtp' or '$(TEST_MODE)' == 'xunit.v3.mtp'" />
     
     <!-- MSTest -->
     <ProjectReference Include="..\Playwright.MSTest\Playwright.MSTest.csproj" Condition="'$(TEST_MODE)' == 'mstest'" />
@@ -31,12 +37,12 @@
 
     <!-- MSTest on Microsoft.Testing.Platform -->
     <ProjectReference Include="..\Playwright.MSTest.v4\Playwright.MSTest.v4.csproj" Condition="'$(TEST_MODE)' == 'mstest.mtp'" />
-    <ProjectReference Include="..\Testing.Extensions.Playwright\Testing.Extensions.Playwright.csproj" Condition="'$(TEST_MODE)' == 'mstest.mtp'" />
     <PackageReference Include="MSTest" Version="4.4.1" Condition="'$(TEST_MODE)' == 'mstest.mtp'" />
     
     <!-- NUnit -->
-    <ProjectReference Include="..\Playwright.NUnit\Playwright.NUnit.csproj" Condition="'$(TEST_MODE)' == 'nunit'" />
+    <ProjectReference Include="..\Playwright.NUnit\Playwright.NUnit.csproj" Condition="'$(TEST_MODE)' == 'nunit' or '$(TEST_MODE)' == 'nunit.mtp'" />
     <PackageReference Include="NUnit3TestAdapter" Version="4.5.0" Condition="'$(TEST_MODE)' == 'nunit'" />
+    <PackageReference Include="NUnit3TestAdapter" Version="6.0.0" Condition="'$(TEST_MODE)' == 'nunit.mtp'" />
     
     <!-- xUnit -->
     <ProjectReference Include="..\Playwright.Xunit\Playwright.Xunit.csproj" Condition="'$(TEST_MODE)' == 'xunit'" />
@@ -44,8 +50,9 @@
     <PackageReference Include="xunit.runner.visualstudio" Version="2.8.2" Condition="'$(TEST_MODE)' == 'xunit'" />
 
     <!-- xUnit.v3 -->
-    <ProjectReference Include="..\Playwright.Xunit.v3\Playwright.Xunit.v3.csproj" Condition="'$(TEST_MODE)' == 'xunit.v3'" />
+    <ProjectReference Include="..\Playwright.Xunit.v3\Playwright.Xunit.v3.csproj" Condition="'$(TEST_MODE)' == 'xunit.v3' or '$(TEST_MODE)' == 'xunit.v3.mtp'" />
     <PackageReference Include="xunit.v3" Version="3.0.0" Condition="'$(TEST_MODE)' == 'xunit.v3'" />
+    <PackageReference Include="xunit.v3.mtp-v2" Version="3.2.0" Condition="'$(TEST_MODE)' == 'xunit.v3.mtp'" />
     <PackageReference Include="xunit.runner.visualstudio" Version="3.0.2" Condition="'$(TEST_MODE)' == 'xunit.v3'" />
   </ItemGroup>
 
@@ -53,8 +60,8 @@
     <Compile Remove="**/*.cs" />
     <Compile Include="$(PWTEST_TEST_DIR)/*.cs" Condition="'$(PWTEST_TEST_DIR)' != ''" />
   </ItemGroup>
-  <ItemGroup Condition="'$(TEST_MODE)' == 'mstest.mtp' and Exists('$(PWTEST_TEST_DIR)\testconfig.json')">
+  <ItemGroup Condition="'$(IsMtpTest)' == 'true' and Exists('$(PWTEST_TEST_DIR)\testconfig.json')">
     <None Include="$(PWTEST_TEST_DIR)\testconfig.json" Link="testconfig.json" CopyToOutputDirectory="PreserveNewest" TargetPath="$(AssemblyName).testconfig.json" />
   </ItemGroup>
-  <Import Project="..\Testing.Extensions.Playwright\build\Microsoft.Testing.Extensions.Playwright.props" Condition="'$(TEST_MODE)' == 'mstest.mtp'" />
+  <Import Project="..\Playwright.Testing.Platform\build\Microsoft.Playwright.Testing.Platform.props" Condition="'$(IsMtpTest)' == 'true'" />
 </Project>

@@ -426,7 +426,7 @@ public class PageScreenshotTests : PageTestEx
         PlaywrightAssert.ToMatchSnapshot("screenshot-sanity.png", outputPath);
     }
 
-    [PlaywrightTest("page-screenshot.spec.ts", "path option should detect joeg")]
+    [PlaywrightTest("page-screenshot.spec.ts", "path option should detect jpeg")]
     public async Task PathOptionShouldDetectJpeg()
     {
         await Page.SetViewportSizeAsync(100, 100);
@@ -434,8 +434,11 @@ public class PageScreenshotTests : PageTestEx
         using var tmpDir = new TempDirectory();
         string outputPath = Path.Combine(tmpDir.Path, "screenshot.jpg");
         await Page.ScreenshotAsync(new() { Path = outputPath, OmitBackground = true });
-
         PlaywrightAssert.ToMatchSnapshot("white.jpg", outputPath);
+
+        string upperCasePath = Path.Combine(tmpDir.Path, "screenshot.JPG");
+        await Page.ScreenshotAsync(new() { Path = upperCasePath, OmitBackground = true });
+        PlaywrightAssert.ToMatchSnapshot("white.jpg", upperCasePath);
     }
 
     [PlaywrightTest("page-screenshot.spec.ts", "path option should throw for unsupported mime type")]

@@ -51,6 +51,7 @@ internal class Frame : ChannelOwner, IFrame
         Name = initializer.Name;
         ParentFrame = initializer.ParentFrame;
         _loadStates = initializer.LoadStates;
+        Webmcp = new WebMCP(this);
     }
 
     /// <summary>
@@ -76,6 +77,8 @@ internal class Frame : ChannelOwner, IFrame
     public IPage Page { get; internal set; } = null!;
 
     public bool IsDetached { get; internal set; }
+
+    public IWebMCP Webmcp { get; }
 
     internal override void OnMessage(string method, JsonElement serverParams)
     {
@@ -357,6 +360,7 @@ internal class Frame : ChannelOwner, IFrame
             {
                 ["selector"] = selector,
                 ["force"] = options?.Force,
+                ["scroll"] = options?.Scroll,
                 ["modifiers"] = options?.Modifiers?.Select(m => m.ToValueString()),
                 ["trial"] = options?.Trial,
                 ["position"] = options?.Position,
@@ -374,8 +378,13 @@ internal class Frame : ChannelOwner, IFrame
     }
 
     [MethodImpl(MethodImplOptions.NoInlining)]
-    public async Task<string> ContentAsync()
-        => (await SendMessageToServerAsync("content").ConfigureAwait(false))!.Value.GetProperty("value").ToString();
+    public async Task<string> ContentAsync(FrameContentOptions? options = default)
+        => (await SendMessageToServerAsync(
+            "content",
+            new Dictionary<string, object?>
+            {
+                ["includeShadow"] = options?.IncludeShadow,
+            }).ConfigureAwait(false))!.Value.GetProperty("value").ToString();
 
     [MethodImpl(MethodImplOptions.NoInlining)]
     public Task FocusAsync(string selector, FrameFocusOptions? options = default)
@@ -460,6 +469,7 @@ internal class Frame : ChannelOwner, IFrame
             {
                 ["selector"] = selector,
                 ["force"] = options?.Force,
+                ["scroll"] = options?.Scroll,
                 ["modifiers"] = options?.Modifiers?.Select(m => m.ToValueString()),
                 ["position"] = options?.Position,
                 ["trial"] = options?.Trial,
@@ -600,6 +610,7 @@ internal class Frame : ChannelOwner, IFrame
                 ["selector"] = selector,
                 ["button"] = options?.Button,
                 ["force"] = options?.Force,
+                ["scroll"] = options?.Scroll,
                 ["delay"] = options?.Delay,
                 ["clickCount"] = options?.ClickCount,
                 ["modifiers"] = options?.Modifiers?.Select(m => m.ToValueString()),
@@ -626,6 +637,7 @@ internal class Frame : ChannelOwner, IFrame
                 ["button"] = options?.Button,
                 ["delay"] = options?.Delay,
                 ["force"] = options?.Force,
+                ["scroll"] = options?.Scroll,
                 ["modifiers"] = options?.Modifiers?.Select(m => m.ToValueString()),
                 ["position"] = options?.Position,
                 ["steps"] = steps,
@@ -642,6 +654,7 @@ internal class Frame : ChannelOwner, IFrame
             {
                 ["selector"] = selector,
                 ["force"] = options?.Force,
+                ["scroll"] = options?.Scroll,
                 ["position"] = options?.Position,
                 ["trial"] = options?.Trial,
                 ["strict"] = options?.Strict,
@@ -656,6 +669,7 @@ internal class Frame : ChannelOwner, IFrame
             {
                 ["selector"] = selector,
                 ["force"] = options?.Force,
+                ["scroll"] = options?.Scroll,
                 ["position"] = options?.Position,
                 ["trial"] = options?.Trial,
                 ["strict"] = options?.Strict,
@@ -670,6 +684,7 @@ internal class Frame : ChannelOwner, IFrame
             {
                 ["selector"] = selector,
                 ["force"] = options?.Force,
+                ["scroll"] = options?.Scroll,
                 ["position"] = options?.Position,
                 ["trial"] = options?.Trial,
                 ["strict"] = options?.Strict,
@@ -945,6 +960,7 @@ internal class Frame : ChannelOwner, IFrame
                 ["source"] = source,
                 ["target"] = target,
                 ["force"] = options?.Force,
+                ["scroll"] = options?.Scroll,
                 ["steps"] = options?.Steps,
                 ["trial"] = options?.Trial,
                 ["strict"] = options?.Strict,
@@ -997,6 +1013,7 @@ internal class Frame : ChannelOwner, IFrame
                     ["selector"] = selector,
                     ["expression"] = expression,
                     ["expressionArg"] = options.ExpressionArg,
+                    ["pseudo"] = options.Pseudo,
                     ["expectedText"] = options.ExpectedText,
                     ["expectedNumber"] = options.ExpectedNumber,
                     ["expectedValue"] = options.ExpectedValue,
@@ -1051,6 +1068,11 @@ internal class Frame : ChannelOwner, IFrame
             baseURL = (Page as Page)?.Context.BaseURL,
         }.Match(Url))
         {
+            if (options?.WaitUntil == WaitUntilState.Commit)
+            {
+                return Task.CompletedTask;
+            }
+
             return WaitForLoadStateAsync(ToLoadState(options?.WaitUntil), new() { Timeout = options?.Timeout });
         }
 

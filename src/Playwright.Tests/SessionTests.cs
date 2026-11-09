@@ -42,6 +42,19 @@ public class SessionTests : PageTestEx
         Assert.AreEqual("bar", foo);
     }
 
+    [PlaywrightTest("chromium/session.spec.ts", "should respect timeout and signal options")]
+    [Skip(SkipAttribute.Targets.Firefox, SkipAttribute.Targets.Webkit)]
+    public async Task ShouldRespectTimeoutOption()
+    {
+        var client = await Page.Context.NewCDPSessionAsync(Page);
+        var evalResponse = await client.SendAsync("Runtime.evaluate", new Dictionary<string, object> { { "expression", "1 + 2" }, { "returnByValue", true } }, new() { Timeout = 5000 });
+        Assert.AreEqual(3, (int)evalResponse.Value.Deserialize<JsonNode>()["result"]["value"]);
+
+        var exception = await PlaywrightAssert.ThrowsAsync<TimeoutException>(
+            () => client.SendAsync("Runtime.evaluate", new Dictionary<string, object> { { "expression", "new Promise(() => {})" }, { "awaitPromise", true } }, new() { Timeout = 500 }));
+        StringAssert.Contains("Timeout 500ms exceeded", exception.Message);
+    }
+
     [PlaywrightTest("chromium/session.spec.ts", "should send events")]
     [Skip(SkipAttribute.Targets.Firefox, SkipAttribute.Targets.Webkit)]
     public async Task ShouldSendEvents()

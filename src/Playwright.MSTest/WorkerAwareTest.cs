@@ -1,3 +1,27 @@
+/*
+ * MIT License
+ *
+ * Copyright (c) Microsoft Corporation.
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and / or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
+ */
+
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
@@ -14,6 +38,36 @@ public class WorkerAwareTest
 
     private static readonly ConcurrentStack<Worker> _allWorkers = new();
     private Worker _currentWorker = null!;
+
+    static WorkerAwareTest()
+    {
+        // Workers are pooled until the end of the test run, so their services are disposed when the process exits.
+        // This closes the browsers. A remote browser is disconnected abruptly otherwise.
+        AppDomain.CurrentDomain.ProcessExit += (_, _) => DisposeAllWorkers();
+    }
+
+    private static void DisposeAllWorkers()
+    {
+        var tasks = new List<Task>();
+        while (_allWorkers.TryPop(out var worker))
+        {
+            foreach (var kv in worker.Services)
+            {
+                tasks.Add(Task.Run(() => kv.Value.DisposeAsync()));
+            }
+        }
+        try
+        {
+            // Do not hold the process for long. VSTest kills the test host shortly after the run anyway.
+#pragma warning disable VSTHRD002
+            Task.WhenAll(tasks).Wait(TimeSpan.FromSeconds(5));
+#pragma warning restore VSTHRD002
+        }
+        catch
+        {
+            // Best effort, the process is exiting.
+        }
+    }
 
     private class Worker
     {
@@ -37,6 +91,7 @@ public class WorkerAwareTest
     [TestInitialize]
     public void WorkerSetup()
     {
+        PlaywrightSettingsProvider.LoadViaEnvIfNeeded();
         if (PlaywrightSettingsProvider.ExpectTimeout.HasValue)
         {
             AssertionsBase.SetDefaultTimeout(PlaywrightSettingsProvider.ExpectTimeout.Value);

@@ -30,7 +30,7 @@ namespace Microsoft.Playwright.Transport.Protocol;
 internal class ClientSideCallMetadata
 {
     [JsonPropertyName("id")]
-    public int Id { get; set; }
+    public string Id { get; set; } = null!;
 
     [JsonPropertyName("stack")]
     public List<StackFrame> Stack { get; set; } = null!;

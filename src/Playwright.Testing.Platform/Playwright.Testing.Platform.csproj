@@ -1,11 +1,11 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <Title>Microsoft.Testing.Extensions.Playwright</Title>
-    <PackageId>Microsoft.Testing.Extensions.Playwright</PackageId>
+    <Title>Microsoft.Playwright.Testing.Platform</Title>
+    <PackageId>Microsoft.Playwright.Testing.Platform</PackageId>
     <Description>Microsoft.Testing.Platform configuration support for the Playwright test integrations.</Description>
     <TargetFramework>netstandard2.0</TargetFramework>
-    <RootNamespace>Microsoft.Testing.Extensions.Playwright</RootNamespace>
-    <AssemblyName>Microsoft.Testing.Extensions.Playwright</AssemblyName>
+    <RootNamespace>Microsoft.Playwright.Testing.Platform</RootNamespace>
+    <AssemblyName>Microsoft.Playwright.Testing.Platform</AssemblyName>
     <IsPackable>true</IsPackable>
     <Nullable>enable</Nullable>
     <PackageIcon>icon.png</PackageIcon>
@@ -19,7 +19,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Playwright.TestAdapter\Playwright.TestAdapter.csproj" />
-    <PackageReference Include="Microsoft.Testing.Platform" Version="2.4.1" />
+    <PackageReference Include="Microsoft.Testing.Platform" Version="2.0.0" />
     <PackageReference Include="System.Text.Json" Version="8.0.6" />
     <PackageReference Include="Microsoft.SourceLink.GitHub" Version="8.0.0" PrivateAssets="all" />
     <PackageReference Include="Microsoft.VisualStudioEng.MicroBuild.Core" Version="1.0.0">

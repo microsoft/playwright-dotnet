@@ -190,4 +190,71 @@ public class BrowserContextWebAuthnTests : BrowserTestEx
 
         Assert.AreEqual(createdId, gotId);
     }
+
+    // Runs an assertion ceremony with a discoverable credential, returns the signature counter from the authenticator data.
+    private static Task<int> AssertAndGetSignCountAsync(IPage page)
+        => page.EvaluateAsync<int>(@"async ({ rpId }) => {
+            const challenge = crypto.getRandomValues(new Uint8Array(32));
+            const cred = await navigator.credentials.get({
+                publicKey: { challenge, rpId, userVerification: 'preferred' },
+            });
+            return new DataView(cred.response.authenticatorData).getUint32(33);
+        }", new { rpId = RpId });
+
+    [PlaywrightTest("browsercontext-webauthn.spec.ts", "should seed and report signCount")]
+    public async Task ShouldSeedAndReportSignCount()
+    {
+        await using var context = await Browser.NewContextAsync();
+        var fresh = await context.Credentials.CreateAsync("fresh.example.com");
+        Assert.AreEqual(0, fresh.SignCount);
+
+        var seeded = await context.Credentials.CreateAsync(RpId, new() { SignCount = 41 });
+        Assert.AreEqual(41, seeded.SignCount);
+        await context.Credentials.InstallAsync();
+        var page = await context.NewPageAsync();
+        await page.GotoAsync(Server.EmptyPage);
+
+        // Each assertion increments the counter and reports the new value to the page.
+        Assert.AreEqual(42, await AssertAndGetSignCountAsync(page));
+        Assert.AreEqual(43, await AssertAndGetSignCountAsync(page));
+        var captured = (await context.Credentials.GetAsync(new() { Id = seeded.Id })).Single();
+        Assert.AreEqual(43, captured.SignCount);
+        Assert.AreEqual(0, (await context.Credentials.GetAsync(new() { Id = fresh.Id })).Single().SignCount);
+
+        // A captured credential continues from the same counter in another context.
+        await using var context2 = await Browser.NewContextAsync();
+        await context2.Credentials.CreateAsync(captured.RpId, new()
+        {
+            Id = captured.Id,
+            UserHandle = captured.UserHandle,
+            PrivateKey = captured.PrivateKey,
+            PublicKey = captured.PublicKey,
+            SignCount = captured.SignCount,
+        });
+        await context2.Credentials.InstallAsync();
+        var page2 = await context2.NewPageAsync();
+        await page2.GotoAsync(Server.EmptyPage);
+        Assert.AreEqual(44, await AssertAndGetSignCountAsync(page2));
+    }
+
+    [PlaywrightTest("browsercontext-webauthn.spec.ts", "should preserve signCount via the storageState option")]
+    public async Task ShouldPreserveSignCountViaTheStorageStateOption()
+    {
+        await using var setupContext = await Browser.NewContextAsync();
+        await setupContext.Credentials.CreateAsync(RpId);
+        await setupContext.Credentials.InstallAsync();
+        var setupPage = await setupContext.NewPageAsync();
+        await setupPage.GotoAsync(Server.EmptyPage);
+        Assert.AreEqual(1, await AssertAndGetSignCountAsync(setupPage));
+
+        var storageState = await setupContext.StorageStateAsync(new() { Credentials = true });
+        var captured = (await setupContext.Credentials.GetAsync()).Single();
+        Assert.AreEqual(1, captured.SignCount);
+        Assert.AreEqual(1, JsonDocument.Parse(storageState).RootElement.GetProperty("credentials")[0].GetProperty("signCount").GetInt32());
+
+        await using var context = await Browser.NewContextAsync(new() { StorageState = storageState });
+        var page = await context.NewPageAsync();
+        await page.GotoAsync(Server.EmptyPage);
+        Assert.AreEqual(2, await AssertAndGetSignCountAsync(page));
+    }
 }
