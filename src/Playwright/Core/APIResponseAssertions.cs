@@ -55,7 +55,7 @@ internal class APIResponseAssertions : IAPIResponseAssertions
             return;
         }
         var message = $"Response status expected to be within [200..299] range, was {_actual.Status}";
-        if (!_isNot)
+        if (_isNot)
         {
             message = message.Replace("expected to", "expected not to");
         }
@@ -75,7 +75,7 @@ internal class APIResponseAssertions : IAPIResponseAssertions
             }
         }
         var prefix = _customMessage != null ? _customMessage + "\n\n" : string.Empty;
-        throw new PlaywrightException(prefix + message + responseText);
+        throw new PlaywrightAssertionException(prefix + message + responseText);
     }
 
     private static bool IsTextualMimeType(string contentType)
