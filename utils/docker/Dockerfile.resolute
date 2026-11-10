@@ -15,6 +15,8 @@ RUN find /etc/apt -type f \( -name '*.list' -o -name '*.sources' \) \
     apt-get update && \
     # Feature-parity with node.js base images.
     apt-get install -y --no-install-recommends git openssh-client curl gpg && \
+    # The Node.js binary of the driver links against libatomic (since Node.js 25).
+    apt-get install -y --no-install-recommends libatomic1 && \
     # clean apt cache
     rm -rf /var/lib/apt/lists/* && \
     # Create the pwuser
