@@ -37,6 +37,7 @@ using Microsoft.Playwright.Transport.Protocol;
 
 namespace Microsoft.Playwright.Core;
 
+[DebuggerDisplay("Locator@{_selector,nq}")]
 internal class Locator : ILocator
 {
     internal readonly Frame _frame;
