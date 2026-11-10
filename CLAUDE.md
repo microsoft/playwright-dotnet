@@ -9,6 +9,8 @@ dotnet build ./src              # build the entire solution
 
 `DriverVersion` in `src/Common/Version.props` is the `microsoft/playwright` commit that the driver, the generated API and the port come from. `.upstream/` (gitignored) is a clone of `microsoft/playwright` at that commit: `./build.sh --build-driver` clones it, checks out the commit and builds the driver from it. Run it again when `DriverVersion` changes, for example after a pull. Read upstream code in `.upstream/`; do not commit, branch or edit in it.
 
+The .NET client talks to the Node.js driver that is built from that commit. When the same calls fail in a Node.js test upstream too, the cause is in the driver or a browser, and the fix lands in `microsoft/playwright`. When Node.js passes, the bug is in the port: compare the method in `src/Playwright/Core/` with the same method in the JavaScript client, `packages/playwright-core/src/client/`, and fix it here. Write and run upstream tests in a separate checkout of `microsoft/playwright` at `main`, `~/code/playwright`. Paths such as `~/code/playwright` in this file assume that you check the repos out in `~/code`.
+
 ## Running tests
 
 Follow `.github/workflows/tests.yml` for the canonical sequence.
@@ -48,7 +50,7 @@ The tests are NUnit tests in `src/Playwright.Tests/`, one class per upstream spe
 
 ### Generated vs hand-written code
 - Public API interfaces (e.g. `src/Playwright/API/Generated/IPage.cs`) are **generated** by `.upstream/utils/doclint/generateDotnetApi.js` from the upstream API docs. Do not hand-edit these — update the generator instead.
-- `./build.sh --generate` generates them again from `.upstream/`, and CI fails when the committed files differ. The generator change lands upstream first, and a roll brings it here. To try it before that, `PW_SRC_DIR=../playwright ./build.sh --generate` runs the generators of another checkout.
+- `./build.sh --generate` generates them again from `.upstream/`, and CI fails when the committed files differ. The generator change lands upstream first, and a roll brings it here. To try it before that, `PW_SRC_DIR=~/code/playwright ./build.sh --generate` runs the generators of another checkout.
 - The generator uses `classNameMap` for type mappings (e.g. `Disposable` → `IAsyncDisposable`, `boolean` → `bool`). Add entries there when a Playwright type should map to a different .NET type.
 - The generator skips generating interface files for types like `TimeoutException` and `IAsyncDisposable` that map to built-in .NET types.
 - Supplement interfaces (`src/Playwright/API/Supplements/`) are hand-written and extend the generated interfaces with .NET-specific overloads.
