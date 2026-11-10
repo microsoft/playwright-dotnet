@@ -11,103 +11,290 @@
     }
   },
   "results": {
-    "b2c126d95a9b96964d18d3a60b8100823a08da6340de51db534197aea137861b": {
-      "signature": "b2c126d95a9b96964d18d3a60b8100823a08da6340de51db534197aea137861b",
-      "alternativeSignatures": [],
-      "target": "src/Playwright.Tests/TestServer/key.pfx",
-      "line": 1,
+    "e9a5f7c6d34227e7ab003412ff8879cb8774b10775cbacfb2ae857a90b0060c9": {
+      "signature": "e9a5f7c6d34227e7ab003412ff8879cb8774b10775cbacfb2ae857a90b0060c9",
+      "alternativeSignatures": [
+        "e61e067d43d9e520aefb3becbf91978bbb20faa35e6b2d1b91ad69050e94bb20",
+        "662809950d324706d2ae45b4f0967e8da2f0eda1c83e5d7e2fab4be4b73ac667",
+        "9796f282bfde4a44a2952cce87560530be4fd6162b48d3bcad41f60a9d2c66ff"
+      ],
+      "target": "src/Playwright.Tests/BrowserTypeConnectTests.cs",
+      "line": 642,
+      "uriBaseId": "file:///D:/a/_work/1/s/",
       "memberOf": [
         "default"
       ],
-      "tool": "credscan",
-      "ruleId": "CSCAN-GENERAL0020",
-      "createdDate": "2025-08-12 12:02:09Z",
-      "expirationDate": "2026-01-29 12:52:02Z",
-      "justification": "This error is baselined with an expiration date of 180 days from 2025-08-12 12:52:02Z"
+      "tool": "roslynanalyzers",
+      "ruleId": "CA1310",
+      "createdDate": "2026-11-02 17:12:34Z",
+      "expirationDate": "2027-04-21 17:13:52Z",
+      "justification": "This error is baselined with an expiration date of 180 days from 2026-11-02 17:13:52Z"
     },
-    "109e68661121356b830572b5e4140939c7da48a90a6824db38785bd42f904d03": {
-      "signature": "109e68661121356b830572b5e4140939c7da48a90a6824db38785bd42f904d03",
-      "alternativeSignatures": [],
-      "target": "src/Playwright.Tests/assets/client-certificates/server/server_key.pem",
-      "line": 1,
+    "dd8ecae58ea0fdc9332d282f6e4a4d2a69d0d9ee456ad4e6accd100a6f6ec7d3": {
+      "signature": "dd8ecae58ea0fdc9332d282f6e4a4d2a69d0d9ee456ad4e6accd100a6f6ec7d3",
+      "alternativeSignatures": [
+        "e734906b32ab4c34c2721c9dc9dc293c0b2815087922b17bb6511277721d7ce1",
+        "593b2466df886c3990b6aeb52100c0419a14b6602d9a98697e8fcd4f5101834e",
+        "3100e1999ea2016d0678793644e88c3a3b80837d5a8942f75b9a3000a6ce6bfb"
+      ],
+      "target": "src/Playwright.Tests/InterceptionTests.cs",
+      "line": 195,
+      "uriBaseId": "file:///D:/a/_work/1/s/",
       "memberOf": [
         "default"
       ],
-      "tool": "credscan",
-      "ruleId": "CSCAN-GENERAL0020",
-      "createdDate": "2025-08-12 12:02:09Z",
-      "expirationDate": "2026-01-29 12:52:02Z",
-      "justification": "This error is baselined with an expiration date of 180 days from 2025-08-12 12:52:02Z"
+      "tool": "roslynanalyzers",
+      "ruleId": "CA1310",
+      "createdDate": "2026-11-02 17:12:34Z",
+      "expirationDate": "2027-04-21 17:13:52Z",
+      "justification": "This error is baselined with an expiration date of 180 days from 2026-11-02 17:13:52Z"
     },
-    "a7f17efaa8efc6de4a0288d154928d8ae13dcd23350dc10bcb2ae54dcaf90878": {
-      "signature": "a7f17efaa8efc6de4a0288d154928d8ae13dcd23350dc10bcb2ae54dcaf90878",
-      "alternativeSignatures": [],
-      "target": "src/Playwright.Tests/assets/client-certificates/client/localhost/localhost.key",
-      "line": 1,
+    "22c36d3d10d5929c31ddb6c8eaa348ac3fb23c1d3c0f8f3a730106b06ff7c806": {
+      "signature": "22c36d3d10d5929c31ddb6c8eaa348ac3fb23c1d3c0f8f3a730106b06ff7c806",
+      "alternativeSignatures": [
+        "24c20c9792750a4b88d821d8819739707249c2f2ae0833b44303badd1aa37cda",
+        "becd8401212cdb2b52a74b1f770106145721f1a2092ebfbc1689cec6c1fbb9d0",
+        "41680165fadf5100149625dae00e9ab6fa7e8102d246863ab5380570c743922a"
+      ],
+      "target": "src/Playwright.Tests/PageEventPageErrorTests.cs",
+      "line": 153,
+      "uriBaseId": "file:///D:/a/_work/1/s/",
       "memberOf": [
         "default"
       ],
-      "tool": "credscan",
-      "ruleId": "CSCAN-GENERAL0020",
-      "createdDate": "2025-08-12 12:02:09Z",
-      "expirationDate": "2026-01-29 12:52:02Z",
-      "justification": "This error is baselined with an expiration date of 180 days from 2025-08-12 12:52:02Z"
+      "tool": "roslynanalyzers",
+      "ruleId": "CA1310",
+      "createdDate": "2026-11-02 17:12:34Z",
+      "expirationDate": "2027-04-21 17:13:52Z",
+      "justification": "This error is baselined with an expiration date of 180 days from 2026-11-02 17:13:52Z"
     },
-    "fd3fe59c06490e9b3f4cc72ed4cc7e4110ee3676bbfc2efe9c617566701923bf": {
-      "signature": "fd3fe59c06490e9b3f4cc72ed4cc7e4110ee3676bbfc2efe9c617566701923bf",
-      "alternativeSignatures": [],
-      "target": "src/Playwright.Tests/assets/client-certificates/client/self-signed/key.pem",
-      "line": 1,
+    "ec7e99e190e6b07fc34fe2e66acf67b67e9aea2a8f1af9666e53177368a6c521": {
+      "signature": "ec7e99e190e6b07fc34fe2e66acf67b67e9aea2a8f1af9666e53177368a6c521",
+      "alternativeSignatures": [
+        "2889c4ae0a8f03cfdd16618e10021cef0187f4094333be78e69f8b77f3039a23",
+        "2f4ad77c8bce4fff8d8f9475cb3d73dcee907d1769f1f5a2aa0571963b26e641",
+        "864e02529545363dc4668e14c68ea4b2d29f2e5a00ef222804e519ce3acbde05"
+      ],
+      "target": "src/Playwright.Tests/PageNetworkRequestTest.cs",
+      "line": 375,
+      "uriBaseId": "file:///D:/a/_work/1/s/",
       "memberOf": [
         "default"
       ],
-      "tool": "credscan",
-      "ruleId": "CSCAN-GENERAL0020",
-      "createdDate": "2025-08-12 12:02:09Z",
-      "expirationDate": "2026-01-29 12:52:02Z",
-      "justification": "This error is baselined with an expiration date of 180 days from 2025-08-12 12:52:02Z"
+      "tool": "roslynanalyzers",
+      "ruleId": "CA1310",
+      "createdDate": "2026-11-02 17:12:34Z",
+      "expirationDate": "2027-04-21 17:13:52Z",
+      "justification": "This error is baselined with an expiration date of 180 days from 2026-11-02 17:13:52Z"
     },
-    "9409e383d7ec985e0e5793d49c243881276800040b9e6686b1b464e6c92bd197": {
-      "signature": "9409e383d7ec985e0e5793d49c243881276800040b9e6686b1b464e6c92bd197",
-      "alternativeSignatures": [],
-      "target": "src/Playwright.Tests/assets/client-certificates/client/trusted/cert-legacy.pfx",
-      "line": 1,
+    "94c994e319aecc89e60d263dca2cbccd9a335c1d55799ff2a1f3ad0e2081f280": {
+      "signature": "94c994e319aecc89e60d263dca2cbccd9a335c1d55799ff2a1f3ad0e2081f280",
+      "alternativeSignatures": [
+        "f15d1877889b759fe19dbbd30c87071c9542ff47dfd954f609921b3ffa5d2a24",
+        "e6af84635eee9b680c416df6b83fd2e16bbd58f398d4ff7ad48727fa415f3e8d",
+        "a46df2a8f4752e3c86e6183b1e85598bb9e5b84ecfcbcf9aca718325b404a163"
+      ],
+      "target": "src/Playwright.Tests/PageNetworkRequestTest.cs",
+      "line": 376,
+      "uriBaseId": "file:///D:/a/_work/1/s/",
       "memberOf": [
         "default"
       ],
-      "tool": "credscan",
-      "ruleId": "CSCAN-GENERAL0020",
-      "createdDate": "2025-08-12 12:02:09Z",
-      "expirationDate": "2026-01-29 12:52:02Z",
-      "justification": "This error is baselined with an expiration date of 180 days from 2025-08-12 12:52:02Z"
+      "tool": "roslynanalyzers",
+      "ruleId": "CA1310",
+      "createdDate": "2026-11-02 17:12:34Z",
+      "expirationDate": "2027-04-21 17:13:52Z",
+      "justification": "This error is baselined with an expiration date of 180 days from 2026-11-02 17:13:52Z"
     },
-    "a9f444c2c883c71914cfa934ab765cf6cef61b629195695750493f8198e01b8e": {
-      "signature": "a9f444c2c883c71914cfa934ab765cf6cef61b629195695750493f8198e01b8e",
-      "alternativeSignatures": [],
-      "target": "src/Playwright.Tests/assets/client-certificates/client/trusted/cert.pfx",
-      "line": 1,
+    "8fe416bdbdfeb6ad66dfdf3607ae06fa46480161a1f38ede243c20ebe8891f10": {
+      "signature": "8fe416bdbdfeb6ad66dfdf3607ae06fa46480161a1f38ede243c20ebe8891f10",
+      "alternativeSignatures": [
+        "8685bf87f7cd123267f26dd1624ffe0b2e16facc17d0a46932bf373ee2e72e3e",
+        "03716636a5f2092a60bd44bb7496a7d2d0192a61a20c48caeb3b11ec2506d059",
+        "12c2dd7f7bd6751896b484b3f23bcd3be0e2aed2bbdc7c7026f9eb7b9bd1f897"
+      ],
+      "target": "src/Playwright.Tests/PageRequestInterceptTests.cs",
+      "line": 162,
+      "uriBaseId": "file:///D:/a/_work/1/s/",
       "memberOf": [
         "default"
       ],
-      "tool": "credscan",
-      "ruleId": "CSCAN-GENERAL0020",
-      "createdDate": "2025-08-12 12:02:09Z",
-      "expirationDate": "2026-01-29 12:52:02Z",
-      "justification": "This error is baselined with an expiration date of 180 days from 2025-08-12 12:52:02Z"
+      "tool": "roslynanalyzers",
+      "ruleId": "CA1310",
+      "createdDate": "2026-11-02 17:12:34Z",
+      "expirationDate": "2027-04-21 17:13:52Z",
+      "justification": "This error is baselined with an expiration date of 180 days from 2026-11-02 17:13:52Z"
     },
-    "f65b0b3a90f82519d4a24aaa87ae2ec94a812c6fb10562045839de0e9ab1ea66": {
-      "signature": "f65b0b3a90f82519d4a24aaa87ae2ec94a812c6fb10562045839de0e9ab1ea66",
-      "alternativeSignatures": [],
-      "target": "src/Playwright.Tests/assets/client-certificates/client/trusted/key.pem",
-      "line": 1,
+    "322f7f56ede90b7e6327ad0c22bb4154a7f10ac3cd338cb41d595799df5fc309": {
+      "signature": "322f7f56ede90b7e6327ad0c22bb4154a7f10ac3cd338cb41d595799df5fc309",
+      "alternativeSignatures": [
+        "7219b406a8bfb253f0d712f8c4524f24be83e33987599ef52a354ece3dafaa3c",
+        "65e9b6436b36ceae96974b113788bc15cef87f494ca7f7a0086e719b30f7b7c6",
+        "d5eb5fb2aeaa76089d6935046af734145ea7db49ed70492235ab47ff1a89716c"
+      ],
+      "target": "src/Playwright.Tests/PageRouteTests.cs",
+      "line": 606,
+      "uriBaseId": "file:///D:/a/_work/1/s/",
       "memberOf": [
         "default"
       ],
-      "tool": "credscan",
-      "ruleId": "CSCAN-GENERAL0020",
-      "createdDate": "2025-08-12 12:02:09Z",
-      "expirationDate": "2026-01-29 12:52:02Z",
-      "justification": "This error is baselined with an expiration date of 180 days from 2025-08-12 12:52:02Z"
+      "tool": "roslynanalyzers",
+      "ruleId": "CA1310",
+      "createdDate": "2026-11-02 17:12:34Z",
+      "expirationDate": "2027-04-21 17:13:52Z",
+      "justification": "This error is baselined with an expiration date of 180 days from 2026-11-02 17:13:52Z"
+    },
+    "a4511de6561bb4eff29785064af0d63375cb57cc82438523599d1a6b5ebee35d": {
+      "signature": "a4511de6561bb4eff29785064af0d63375cb57cc82438523599d1a6b5ebee35d",
+      "alternativeSignatures": [
+        "662fab65897461d3b67cc1ea8d330bdd838758c6424721fd0e555d0956a9d82f",
+        "d663dc2ba48ef9dd0a6a8d742dc9b6168f31a15a83f7cc33d7279627755215a1",
+        "36f62750910cdd54a07de8b4401ecf432bfa452747ab4e6e166aa5e3c8f4d53e"
+      ],
+      "target": "src/Playwright/Core/BrowserContext.cs",
+      "line": 319,
+      "uriBaseId": "file:///D:/a/_work/1/s/",
+      "memberOf": [
+        "default"
+      ],
+      "tool": "roslynanalyzers",
+      "ruleId": "CA1310",
+      "createdDate": "2026-11-02 17:12:34Z",
+      "expirationDate": "2027-04-21 17:13:52Z",
+      "justification": "This error is baselined with an expiration date of 180 days from 2026-11-02 17:13:52Z"
+    },
+    "f5f86d5881e6008031d430014447259a7168895e5665d6f5eb859a9bbe840f47": {
+      "signature": "f5f86d5881e6008031d430014447259a7168895e5665d6f5eb859a9bbe840f47",
+      "alternativeSignatures": [
+        "273208a594b16665005bc2ffba251093057d8d66d5e1c43761162e4c83346439",
+        "28c780ba3aa618fa457d06d046ca6634e91f95ab83c77dce431a7d18b1fef0f5",
+        "405cd8a3cde41be92b1cea693410cb8ff015cddd527200909a1755290976fad7"
+      ],
+      "target": "src/Playwright/Helpers/URLMatch.cs",
+      "line": 192,
+      "uriBaseId": "file:///D:/a/_work/1/s/",
+      "memberOf": [
+        "default"
+      ],
+      "tool": "roslynanalyzers",
+      "ruleId": "CA1310",
+      "createdDate": "2026-11-02 17:12:34Z",
+      "expirationDate": "2027-04-21 17:13:52Z",
+      "justification": "This error is baselined with an expiration date of 180 days from 2026-11-02 17:13:52Z"
+    },
+    "7432dc33239da5a9c5b8ed6c582372fb36d9e01f234d652185ee8a7695c39657": {
+      "signature": "7432dc33239da5a9c5b8ed6c582372fb36d9e01f234d652185ee8a7695c39657",
+      "alternativeSignatures": [
+        "d103c7f7004e211e5d805ba9343c28883b8f8fb7c2fe9d8a69fd668b7a495279",
+        "0c617c70fa37098fba633b14d8af97095855dcb767b88f8734457c7dabde814f",
+        "41e757df03c2c63ae7979b3b65341489bb79f367b157223f5d77541a71c3e30c"
+      ],
+      "target": "src/Playwright/Helpers/URLMatch.cs",
+      "line": 196,
+      "uriBaseId": "file:///D:/a/_work/1/s/",
+      "memberOf": [
+        "default"
+      ],
+      "tool": "roslynanalyzers",
+      "ruleId": "CA1310",
+      "createdDate": "2026-11-02 17:12:34Z",
+      "expirationDate": "2027-04-21 17:13:52Z",
+      "justification": "This error is baselined with an expiration date of 180 days from 2026-11-02 17:13:52Z"
+    },
+    "dfc15d138bffa7c1ad42f927712b762fd58e0da8e03d4bc6db2b37d3872cdfea": {
+      "signature": "dfc15d138bffa7c1ad42f927712b762fd58e0da8e03d4bc6db2b37d3872cdfea",
+      "alternativeSignatures": [
+        "f8b010839e21856c32d28ad54c0f99d58444da6e2a250a5731a5022c14cea007",
+        "16235666e4ab467fe8a9732a891e6c0efc839691eca9f987853c377d7948ae0e",
+        "1f7005ebfae7d9f98019618fdec0db23cc2c2cf3d9adae609811fd15ffdc0eec"
+      ],
+      "target": "src/Playwright/Helpers/URLMatch.cs",
+      "line": 217,
+      "uriBaseId": "file:///D:/a/_work/1/s/",
+      "memberOf": [
+        "default"
+      ],
+      "tool": "roslynanalyzers",
+      "ruleId": "CA1310",
+      "createdDate": "2026-11-02 17:12:34Z",
+      "expirationDate": "2027-04-21 17:13:52Z",
+      "justification": "This error is baselined with an expiration date of 180 days from 2026-11-02 17:13:52Z"
+    },
+    "e462eb50ea16c5196398a2f2b4fc61191e083f51fe81ec26eff1d02660169a8e": {
+      "signature": "e462eb50ea16c5196398a2f2b4fc61191e083f51fe81ec26eff1d02660169a8e",
+      "alternativeSignatures": [
+        "499d395fac9df346b8808a706a35c0e0d4243395657caf37536e7a3d68ff2166",
+        "55cb1a258a8c416a06395ea1e86c7dfb2fec45f842723a293c9a50da732657d5",
+        "7051b33f7d7e1993f9af18f1a31cb10d889b32f4555e980444cacdf785aead9c"
+      ],
+      "target": "src/Playwright/Helpers/URLMatch.cs",
+      "line": 234,
+      "uriBaseId": "file:///D:/a/_work/1/s/",
+      "memberOf": [
+        "default"
+      ],
+      "tool": "roslynanalyzers",
+      "ruleId": "CA1310",
+      "createdDate": "2026-11-02 17:12:34Z",
+      "expirationDate": "2027-04-21 17:13:52Z",
+      "justification": "This error is baselined with an expiration date of 180 days from 2026-11-02 17:13:52Z"
+    },
+    "90f1abe91804d5287df67576a4f1e598b49df57df32248b2eda17a14872cffc4": {
+      "signature": "90f1abe91804d5287df67576a4f1e598b49df57df32248b2eda17a14872cffc4",
+      "alternativeSignatures": [
+        "00d417e16fab577a9f17d023719de49fcdf681f45e7d412dafce570d010b8393",
+        "4d9b7e1849f0b0056a3f0646c7911e0e9aeeaa43895bf487775a5f272e5e7aac",
+        "dcaef3bf3bde7e18b1072cecb757672eab8e5dfcf5908f086f44584e78160503"
+      ],
+      "target": "src/Playwright/Helpers/URLMatch.cs",
+      "line": 235,
+      "uriBaseId": "file:///D:/a/_work/1/s/",
+      "memberOf": [
+        "default"
+      ],
+      "tool": "roslynanalyzers",
+      "ruleId": "CA1310",
+      "createdDate": "2026-11-02 17:12:34Z",
+      "expirationDate": "2027-04-21 17:13:52Z",
+      "justification": "This error is baselined with an expiration date of 180 days from 2026-11-02 17:13:52Z"
+    },
+    "9f1b78dbf664b9b1dbafb28864d74ff9cf48de408f060176f526c09795c2bb98": {
+      "signature": "9f1b78dbf664b9b1dbafb28864d74ff9cf48de408f060176f526c09795c2bb98",
+      "alternativeSignatures": [
+        "b4f4508a5e4aa3270cadd9c48417afefe9569cc8b13464fa593d747eef7eb520",
+        "15970ea43efa5a44c6fc83334fb3aa5f8011591da02eaa5d341f0e3ea2b543ad",
+        "09ec3374327af573fad48812942832e6df2d562cc3434013d4b541013b1cfee9"
+      ],
+      "target": "src/Playwright/Helpers/URLMatch.cs",
+      "line": 249,
+      "uriBaseId": "file:///D:/a/_work/1/s/",
+      "memberOf": [
+        "default"
+      ],
+      "tool": "roslynanalyzers",
+      "ruleId": "CA1310",
+      "createdDate": "2026-11-02 17:12:34Z",
+      "expirationDate": "2027-04-21 17:13:52Z",
+      "justification": "This error is baselined with an expiration date of 180 days from 2026-11-02 17:13:52Z"
+    },
+    "714838eaa547e841e9deb1b0b75845750a65d63094698b2be6fb06c1feeee3b4": {
+      "signature": "714838eaa547e841e9deb1b0b75845750a65d63094698b2be6fb06c1feeee3b4",
+      "alternativeSignatures": [
+        "0ff2e4246487184d0fe7123abe0d9e9b055db918c92ae508268b503d65f8024a",
+        "ef84b916128dd84d239f75a3d551c0349f90829760b68ada42d6e0bba352ca68",
+        "318ef652811a11d0eb170d703629fb8494fa0630715d366350c1cca5acd5ec75"
+      ],
+      "target": "src/tools/Playwright.Tooling/DriverDownloader.cs",
+      "line": 340,
+      "uriBaseId": "file:///D:/a/_work/1/s/",
+      "memberOf": [
+        "default"
+      ],
+      "tool": "roslynanalyzers",
+      "ruleId": "CA1310",
+      "createdDate": "2026-11-02 17:12:34Z",
+      "expirationDate": "2027-04-21 17:13:52Z",
+      "justification": "This error is baselined with an expiration date of 180 days from 2026-11-02 17:13:52Z"
     }
   }
 }
