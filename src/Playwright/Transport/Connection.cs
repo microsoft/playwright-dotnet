@@ -29,6 +29,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Runtime.CompilerServices;
+using System.Runtime.ExceptionServices;
 using System.Text;
 using System.Text.Json;
 using System.Threading;
@@ -55,15 +56,24 @@ internal class Connection : IDisposable
     private readonly Root _rootObject;
     private readonly TaskQueue _queue = new();
     private readonly string _callIdPrefix = CreateCallIdPrefix();
+    private readonly bool _ownsDispatcher;
     private int _tracingCount;
     private int _lastId;
-    private Exception? _closedError;
+    private volatile Exception? _closedError;
     private bool _disposed;
 
-    public Connection(LocalUtils? localUtils = null)
+    public Connection(LocalUtils? localUtils = null, Dispatcher? dispatcher = null)
     {
         // Read here and not for every message. The driver also reads DEBUG once, when it starts.
         _debugLogLevels = Environment.GetEnvironmentVariable("DEBUG");
+        // A connection over a pipe (BrowserType.ConnectAsync) shares the dispatcher of the
+        // connection that owns the pipe, so that its messages need no extra thread hop.
+        _ownsDispatcher = dispatcher == null;
+        Dispatcher = dispatcher ?? new Dispatcher();
+        if (_ownsDispatcher)
+        {
+            Dispatcher.UnhandledException += (_, ex) => DoClose(ex);
+        }
         _rootObject = new(null, this, string.Empty);
         LocalUtils = localUtils;
 
@@ -88,9 +98,22 @@ internal class Connection : IDisposable
 
     public ConcurrentDictionary<string, ChannelOwner> Objects { get; } = new();
 
-    internal AsyncLocal<List<ApiZone?>> ApiZone { get; } = new();
+    /// <summary>
+    /// The thread that handles messages and runs library code for this connection; see <see cref="Transport.Dispatcher"/>.
+    /// </summary>
+    internal Dispatcher Dispatcher { get; }
+
+    /// <summary>
+    /// The outermost API call in the current async flow, set by <see cref="WrapApiCallAsync{T}"/>.
+    /// Nested calls inherit it, so that their messages carry the user's location and title.
+    /// Connections that share a dispatcher share it: a call that crosses from one to the other
+    /// (BrowserType.ConnectAsync, Selectors.RegisterAsync) is still one call.
+    /// </summary>
+    internal AsyncLocal<ApiZone?> ApiZone => Dispatcher.ApiZone;
 
     internal bool IsRemote { get; set; }
+
+    internal bool IsClosed => _closedError != null;
 
     internal LocalUtils? LocalUtils { get; private set; }
 
@@ -169,8 +192,11 @@ internal class Connection : IDisposable
             throw new PlaywrightException("The object has been collected to prevent unbounded heap growth.");
         }
 
+        // Only the dispatcher completes this source, after the message that carries the reply has
+        // been handled in full, and the continuation runs inline on the dispatcher thread.
+        Dispatcher.AssertCurrent();
         string id = $"{_callIdPrefix}@{Interlocked.Increment(ref _lastId)}";
-        var tcs = new TaskCompletionSource<JsonElement?>(TaskCreationOptions.RunContinuationsAsynchronously);
+        var tcs = new TaskCompletionSource<JsonElement?>();
         var callback = new ConnectionCallback(tcs);
 
         if (!isWaitInfo)
@@ -185,7 +211,8 @@ internal class Connection : IDisposable
                 .Where(f => f.Value != null)
                 .ToDictionary(f => f.Key, f => f.Value) as Dictionary<string, object>;
         }
-        var (title, isInternal, frames) = (ApiZone.Value[0]!.Title, ApiZone.Value[0]!.Internal, ApiZone.Value[0]!.Frames);
+        var zone = ApiZone.Value ?? throw new InvalidOperationException("SendMessageToServerAsync must run inside WrapApiCallAsync.");
+        var (title, isInternal, frames) = (zone.Title, zone.Internal, zone.Frames);
         var metadata = new Dictionary<string, object?>
         {
             ["internal"] = isInternal,
@@ -214,24 +241,36 @@ internal class Connection : IDisposable
             LocalUtils?.AddStackToTracingNoReply(frames, id);
         }
 
-        await _queue.EnqueueAsync(() =>
+        var message = new Dictionary<string, object?>
         {
-            var message = new Dictionary<string, object?>
-            {
-                ["id"] = id,
-                ["guid"] = @object?.Guid ?? string.Empty,
-                ["method"] = method,
-                ["params"] = sanitizedArgs,
-                ["metadata"] = metadata,
-            };
-            return OnMessage(message, keepNulls);
-        }).ConfigureAwait(false);
+            ["id"] = id,
+            ["guid"] = @object?.Guid ?? string.Empty,
+            ["method"] = method,
+            ["params"] = sanitizedArgs,
+            ["metadata"] = metadata,
+        };
+        // The write is not awaited: that would resume on a thread pool thread. Writes are
+        // serialized by the queue, and a write that fails - fails this call instead.
+        var sendTask = _queue.EnqueueAsync(() => OnMessage(message, keepNulls));
 
         // Fire-and-forget: server intentionally never replies to __waitInfo__.
         if (isWaitInfo)
         {
+            sendTask.IgnoreException();
             return default!;
         }
+
+        _ = sendTask.ContinueWith(
+            t =>
+            {
+                if (_callbacks.TryRemove(id, out _))
+                {
+                    Dispatcher.Fail(tcs, t.Exception!.InnerException ?? t.Exception);
+                }
+            },
+            CancellationToken.None,
+            TaskContinuationOptions.OnlyOnFaulted | TaskContinuationOptions.ExecuteSynchronously,
+            TaskScheduler.Default);
 
         var result = await tcs.Task.ConfigureAwait(false);
 
@@ -276,36 +315,47 @@ internal class Connection : IDisposable
         return jsonElement.GetObject<PlaywrightImpl>("playwright", this)!;
     }
 
+    /// <summary>
+    /// Queues a message from the driver. Messages are handled on the dispatcher thread, one at a
+    /// time and in order; see <see cref="Transport.Dispatcher"/>.
+    /// </summary>
     internal void Dispatch(PlaywrightServerMessage message)
+        => Dispatcher.Post(() => DispatchOnDispatcherThread(message));
+
+    private void DispatchOnDispatcherThread(PlaywrightServerMessage message)
     {
+        Dispatcher.AssertCurrent();
         if (_closedError != null)
         {
-            return;
-        }
-        if (message.Id != null)
-        {
-            _callbacks.TryRemove(message.Id, out var callback);
-            if (callback == null)
-            {
-                throw new PlaywrightException($"Cannot find command to respond: '{message.Id}'");
-            }
-
-            if (message.Error != null && message.Result == null)
-            {
-                var exception = ParseException(message.Error.Error, FormatCallLog(message.Log));
-                exception.Data[ErrorDetailsDataKey] = message.ErrorDetails?.GetRawText();
-                exception.Data[LogDataKey] = message.Log;
-                callback.TaskCompletionSource.TrySetException(exception);
-            }
-            else
-            {
-                callback.TaskCompletionSource.TrySetResult(message.Result);
-            }
             return;
         }
 
         try
         {
+            if (message.Id != null)
+            {
+                _callbacks.TryRemove(message.Id, out var callback);
+                if (callback == null)
+                {
+                    throw new PlaywrightException($"Cannot find command to respond: '{message.Id}'");
+                }
+
+                // Completed after this message, so that the caller resumes once every event that
+                // preceded the reply has been handled, and never in the middle of one.
+                if (message.Error != null && message.Result == null)
+                {
+                    var exception = ParseException(message.Error.Error, FormatCallLog(message.Log));
+                    exception.Data[ErrorDetailsDataKey] = message.ErrorDetails?.GetRawText();
+                    exception.Data[LogDataKey] = message.Log;
+                    Dispatcher.Fail(callback.TaskCompletionSource, exception);
+                }
+                else
+                {
+                    Dispatcher.Complete(callback.TaskCompletionSource, message.Result);
+                }
+                return;
+            }
+
             if (message.Method == "__create__")
             {
                 CreateRemoteObject(message.Guid, message.Params.GetProperty("type").ToObject<ChannelOwnerType>(), message.Params.GetProperty("guid").ToString(), message.Params.GetProperty("initializer"));
@@ -449,8 +499,13 @@ internal class Connection : IDisposable
         return result;
     }
 
+    /// <summary>
+    /// Closes the connection after a failure. The transport reports its closing on the reader
+    /// thread or on the thread that noticed the driver exit, and closing fails pending calls and
+    /// raises Disconnected: dispatcher work. So this hops, and is immediate on the dispatcher thread.
+    /// </summary>
     internal void DoClose(Exception? cause = null)
-        => DoCloseImpl(cause != null ? new TargetClosedException(cause.Message, cause) : new TargetClosedException());
+        => Dispatcher.RunOrPost(() => DoCloseImpl(cause != null ? new TargetClosedException(cause.Message, cause) : new TargetClosedException()));
 
     internal void DoClose(string? cause = null)
         => DoCloseImpl(!string.IsNullOrEmpty(cause) && cause != null ? new TargetClosedException(cause) : new TargetClosedException());
@@ -505,15 +560,20 @@ internal class Connection : IDisposable
 
         foreach (var callback in _callbacks)
         {
-            callback.Value.TaskCompletionSource.TrySetException(_closedError);
             // We need to make sure that the task is handled otherwise it will be reported as unhandled on the caller side.
             // Its still possible to get the exception from the task.
             callback.Value.TaskCompletionSource.Task.IgnoreException();
+            // Dispose can run on any thread; the callers still resume on the dispatcher.
+            Dispatcher.Fail(callback.Value.TaskCompletionSource, _closedError);
         }
         _callbacks.Clear();
 
         _queue.Dispose();
         Close?.Invoke(this, new TargetClosedException("Connection disposed"));
+        if (_ownsDispatcher)
+        {
+            Dispatcher.Dispose();
+        }
     }
 
     internal static void TraceMessage(string logLevel, byte[] rawMessage)
@@ -533,34 +593,78 @@ internal class Connection : IDisposable
         Console.Error.WriteLine(line);
     }
 
+    /// <summary>
+    /// Runs an API call. Every public async method of the library, and every message it sends,
+    /// goes through here, which gives the call three things:
+    /// <list type="bullet">
+    /// <item>An <see cref="ApiZone"/>: the user's stack frames and the title that the messages of
+    /// this call report to the driver. A call nested in another call inherits the outer zone.</item>
+    /// <item>The hop onto the dispatcher thread before <paramref name="action"/> runs, so that the
+    /// call reads and writes client state in between messages, never concurrently with one.</item>
+    /// <item>The hop off the dispatcher thread before the result is returned, so that the caller's
+    /// continuation never runs on it. This holds for a call made from an event handler too: only
+    /// the handler's synchronous part runs on the dispatcher thread.</item>
+    /// </list>
+    /// A call nested in another call, on the dispatcher thread, is library code calling itself:
+    /// it runs inline and returns inline.
+    /// <para>
+    /// A flow that a message starts (a route, a binding call) is not inside a call, so each call
+    /// that it makes returns on the thread pool as well: switch back before touching state.
+    /// </para>
+    /// </summary>
     [MethodImpl(MethodImplOptions.NoInlining)]
     internal async Task<T> WrapApiCallAsync<T>(Func<Task<T>> action, bool isInternal = false, string? title = null)
     {
-        EnsureApiZoneExists();
-        if (ApiZone.Value[0] != null)
+        var outer = ApiZone.Value;
+        if (outer == null)
+        {
+            // Captured before the hop: the frames of interest are the caller's.
+            ApiZone.Value = new() { Internal = isInternal, Title = title, Frames = CaptureUserStack() };
+        }
+        else if ((isInternal && outer.Internal != true) || (title != null && outer.Title == null))
+        {
+            // An outer call may have set its own title; fall back to ours only when it has none.
+            // Internal calls stay internal when nested in a user call.
+            ApiZone.Value = new() { Internal = isInternal || outer.Internal == true, Title = outer.Title ?? title, Frames = outer.Frames };
+        }
+
+        if (outer != null && Dispatcher.IsCurrent)
         {
             return await action().ConfigureAwait(false);
         }
+
+        // No-op on the dispatcher thread: an outermost call from an event handler starts inline,
+        // so that what it sends stays ordered with the handler's synchronous code.
+        await Dispatcher.SwitchTo();
+        T result = default!;
+        ExceptionDispatchInfo? error = null;
+        try
+        {
+            result = await action().ConfigureAwait(false);
+        }
+        catch (Exception ex)
+        {
+            error = ExceptionDispatchInfo.Capture(ex);
+        }
+        await Dispatcher.ExitToThreadPool();
+        error?.Throw();
+        return result;
+    }
+
+    private static List<Protocol.StackFrame> CaptureUserStack()
+    {
         var st = new StackTrace(true);
         var stack = new List<Protocol.StackFrame>();
         for (int i = 0; i < st.FrameCount; ++i)
         {
             var sf = st.GetFrame(i);
             string fileName = sf.GetFileName();
-            if (!IsPlaywrightInternalNamespace(sf.GetMethod().ReflectedType?.Namespace) && !string.IsNullOrEmpty(fileName))
+            if (!IsPlaywrightInternalNamespace(sf.GetMethod()?.ReflectedType?.Namespace) && !string.IsNullOrEmpty(fileName))
             {
                 stack.Add(new() { File = fileName, Line = sf.GetFileLineNumber(), Column = sf.GetFileColumnNumber() });
             }
         }
-        try
-        {
-            ApiZone.Value[0] = new() { Internal = isInternal, Title = title, Frames = stack };
-            return await action().ConfigureAwait(false);
-        }
-        finally
-        {
-            ApiZone.Value[0] = null;
-        }
+        return stack;
     }
 
     internal Task WrapApiCallAsync(Func<Task> action, bool isInternal = false, string? title = null)
@@ -580,14 +684,6 @@ internal class Connection : IDisposable
             namespaceName.StartsWith("Microsoft.Playwright.Core", StringComparison.InvariantCultureIgnoreCase) ||
             namespaceName.StartsWith("Microsoft.Playwright.Transport", StringComparison.InvariantCultureIgnoreCase) ||
             namespaceName.StartsWith("Microsoft.Playwright.Helpers", StringComparison.InvariantCultureIgnoreCase));
-    }
-
-    private void EnsureApiZoneExists()
-    {
-        if (ApiZone.Value == null)
-        {
-            ApiZone.Value = new() { null };
-        }
     }
 }
 

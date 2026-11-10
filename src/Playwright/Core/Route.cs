@@ -59,7 +59,7 @@ internal class Route : ChannelOwner, IRoute
     internal Request _request { get; }
 
     [MethodImpl(MethodImplOptions.NoInlining)]
-    public async Task FulfillAsync(RouteFulfillOptions? options = default)
+    public Task FulfillAsync(RouteFulfillOptions? options = default) => WrapApiCallAsync(async () =>
     {
         await HandleRouteAsync(async () =>
         {
@@ -75,10 +75,10 @@ internal class Route : ChannelOwner, IRoute
                 options.Response).ConfigureAwait(false);
             await RaceWithTargetCloseAsync(SendMessageToServerAsync("fulfill", normalized)).ConfigureAwait(false);
         }).ConfigureAwait(false);
-    }
+    });
 
     [MethodImpl(MethodImplOptions.NoInlining)]
-    public async Task AbortAsync(string? errorCode = null)
+    public Task AbortAsync(string? errorCode = null) => WrapApiCallAsync(async () =>
     {
         await HandleRouteAsync(async () =>
         {
@@ -89,17 +89,17 @@ internal class Route : ChannelOwner, IRoute
                     ["errorCode"] = string.IsNullOrEmpty(errorCode) ? RequestAbortErrorCode.Failed : errorCode,
                 })).ConfigureAwait(false);
         }).ConfigureAwait(false);
-    }
+    });
 
     [MethodImpl(MethodImplOptions.NoInlining)]
-    public async Task ContinueAsync(RouteContinueOptions? options = default)
+    public Task ContinueAsync(RouteContinueOptions? options = default) => WrapApiCallAsync(async () =>
     {
         await HandleRouteAsync(async () =>
         {
             _request.ApplyFallbackOverrides(new RouteFallbackOptions().FromRouteContinueOptions(options));
             await InnerContinueAsync(false /* isFallback */).ConfigureAwait(false);
         }).ConfigureAwait(false);
-    }
+    });
 
     internal async Task InnerContinueAsync(bool isFallback = false)
     {
@@ -250,15 +250,15 @@ internal class Route : ChannelOwner, IRoute
     }
 
     [MethodImpl(MethodImplOptions.NoInlining)]
-    public Task FallbackAsync(RouteFallbackOptions? options = null)
+    public Task FallbackAsync(RouteFallbackOptions? options = null) => WrapApiCallAsync(() =>
     {
         CheckNotHandled();
         _request.ApplyFallbackOverrides(options);
         ReportHandled(false);
         return Task.CompletedTask;
-    }
+    });
 
-    internal async Task RedirectNavigationRequestAsync(string url)
+    internal Task RedirectNavigationRequestAsync(string url) => WrapApiCallAsync(async () =>
     {
         CheckNotHandled();
         await RaceWithTargetCloseAsync(SendMessageToServerAsync(
@@ -268,7 +268,7 @@ internal class Route : ChannelOwner, IRoute
                 ["url"] = url,
             })).ConfigureAwait(false);
         ReportHandled(true);
-    }
+    });
 
     internal Task<bool> StartHandlingAsync()
     {
@@ -288,7 +288,7 @@ internal class Route : ChannelOwner, IRoute
     {
         var chain = _handlingTask!;
         _handlingTask = null;
-        chain.SetResult(handled);
+        _connection.Dispatcher.Complete(chain, handled);
     }
 
     [MethodImpl(MethodImplOptions.NoInlining)]

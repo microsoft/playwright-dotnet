@@ -36,13 +36,13 @@ internal class WebMCP : IWebMCP
         _frame = frame;
     }
 
-    public async Task<IReadOnlyList<WebMCPTool>> ToolsAsync(WebMCPToolsOptions? options = null)
+    public Task<IReadOnlyList<WebMCPTool>> ToolsAsync(WebMCPToolsOptions? options = null) => _frame.WrapApiCallAsync<IReadOnlyList<WebMCPTool>>(async () =>
     {
         var result = await _frame.SendMessageToServerAsync("webmcpTools", timeout: _frame.Timeout(options?.Timeout)).ConfigureAwait(false);
         return result!.Value.GetProperty("tools").ToObject<List<WebMCPTool>>(_frame._connection.DefaultJsonSerializerOptions).AsReadOnly();
-    }
+    });
 
-    public async Task<T> CallToolAsync<T>(string name, object? input = null, WebMCPCallToolOptions? options = null)
+    public Task<T> CallToolAsync<T>(string name, object? input = null, WebMCPCallToolOptions? options = null) => _frame.WrapApiCallAsync<T>(async () =>
     {
         var result = await _frame.SendMessageToServerAsync(
             "webmcpCallTool",
@@ -53,5 +53,5 @@ internal class WebMCP : IWebMCP
             },
             timeout: _frame.Timeout(options?.Timeout)).ConfigureAwait(false);
         return ScriptsHelper.ParseEvaluateResult<T>(result!.Value.GetProperty("result"));
-    }
+    });
 }

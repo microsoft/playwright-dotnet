@@ -79,7 +79,7 @@ internal class Response : ChannelOwner, IResponse
     public async Task<byte[]> BodyAsync() => (await SendMessageToServerAsync("body").ConfigureAwait(false))!.Value.GetProperty("binary").GetBytesFromBase64();
 
     [MethodImpl(MethodImplOptions.NoInlining)]
-    public async Task<string?> FinishedAsync()
+    public Task<string?> FinishedAsync() => WrapApiCallAsync<string?>(async () =>
     {
         var targetClosedTask = _initializer.Request.TargetClosedAsync();
         if (targetClosedTask == await Task.WhenAny(_finishedTask.Task, targetClosedTask).ConfigureAwait(false))
@@ -87,7 +87,7 @@ internal class Response : ChannelOwner, IResponse
             throw new PlaywrightException("Target page, context or browser has been closed");
         }
         return await _finishedTask.Task.ConfigureAwait(false);
-    }
+    });
 
     [MethodImpl(MethodImplOptions.NoInlining)]
     public async Task<IReadOnlyList<Header>> HeadersArrayAsync()
@@ -102,11 +102,11 @@ internal class Response : ChannelOwner, IResponse
         => (await GetRawHeadersAsync().ConfigureAwait(false)).GetAll(name);
 
     [MethodImpl(MethodImplOptions.NoInlining)]
-    public async Task<JsonElement?> JsonAsync()
+    public Task<JsonElement?> JsonAsync() => WrapApiCallAsync<JsonElement?>(async () =>
     {
         byte[] content = await BodyAsync().ConfigureAwait(false);
         return JsonDocument.Parse(content).RootElement;
-    }
+    });
 
     [MethodImpl(MethodImplOptions.NoInlining)]
     public async Task<T> JsonAsync<T>()
@@ -121,15 +121,15 @@ internal class Response : ChannelOwner, IResponse
             ?.GetProperty("value").ToObject<ResponseServerAddrResult>(_connection.DefaultJsonSerializerOptions);
 
     [MethodImpl(MethodImplOptions.NoInlining)]
-    public async Task<string> TextAsync()
+    public Task<string> TextAsync() => WrapApiCallAsync<string>(async () =>
     {
         byte[] content = await BodyAsync().ConfigureAwait(false);
         return Encoding.UTF8.GetString(content);
-    }
+    });
 
     internal void ReportFinished(string? errorMessage = null)
     {
-        _finishedTask.SetResult(errorMessage);
+        _connection.Dispatcher.Complete(_finishedTask, errorMessage);
     }
 
     private Task<RawHeaders> GetRawHeadersAsync()

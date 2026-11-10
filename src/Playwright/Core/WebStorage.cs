@@ -40,16 +40,16 @@ internal class WebStorage : IWebStorage
         _kind = kind;
     }
 
-    public async Task<IReadOnlyList<WebStorageItem>> ItemsAsync()
+    public Task<IReadOnlyList<WebStorageItem>> ItemsAsync() => _page.WrapApiCallAsync<IReadOnlyList<WebStorageItem>>(async () =>
     {
         var result = await _page.SendMessageToServerAsync("webStorageItems", new Dictionary<string, object?>
         {
             ["kind"] = _kind,
         }).ConfigureAwait(false);
         return result!.Value.GetProperty("items").ToObject<List<WebStorageItem>>(_page._connection.DefaultJsonSerializerOptions);
-    }
+    });
 
-    public async Task<string?> GetItemAsync(string name)
+    public Task<string?> GetItemAsync(string name) => _page.WrapApiCallAsync<string?>(async () =>
     {
         var result = await _page.SendMessageToServerAsync("webStorageGetItem", new Dictionary<string, object?>
         {
@@ -61,7 +61,7 @@ internal class WebStorage : IWebStorage
             return value.GetString();
         }
         return null;
-    }
+    });
 
     public Task SetItemAsync(string name, string value)
         => _page.SendMessageToServerAsync("webStorageSetItem", new Dictionary<string, object?>

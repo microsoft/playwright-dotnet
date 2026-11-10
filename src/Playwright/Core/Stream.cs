@@ -41,7 +41,7 @@ internal class Stream : ChannelOwner, IAsyncDisposable
     public StreamImpl StreamImpl => new(this);
 
     [MethodImpl(MethodImplOptions.NoInlining)]
-    public async Task<byte[]> ReadAsync(int size)
+    public Task<byte[]> ReadAsync(int size) => WrapApiCallAsync<byte[]>(async () =>
     {
         var response = await SendMessageToServerAsync(
             "read",
@@ -50,7 +50,7 @@ internal class Stream : ChannelOwner, IAsyncDisposable
                 ["size"] = size,
             }).ConfigureAwait(false);
         return response!.Value.GetProperty("binary").GetBytesFromBase64();
-    }
+    });
 
     [MethodImpl(MethodImplOptions.NoInlining)]
     public ValueTask DisposeAsync() => new ValueTask(CloseAsync());

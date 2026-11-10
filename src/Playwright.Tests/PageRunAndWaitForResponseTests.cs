@@ -109,4 +109,18 @@ public class PageRunAndWaitForResponseTests : PageTestEx
 
         Assert.AreEqual(Server.Prefix + "/digits/1.png", response.Url);
     }
+
+    // See https://github.com/microsoft/playwright-dotnet/pull/3256
+    [PlaywrightTest]
+    public async Task ShouldNotDeadlockWhenBlockingAfterTheWait()
+    {
+        // The code after the wait used to run inside the handler of the `response` event, on the
+        // thread that delivers messages, so a synchronous wait there never got its reply.
+        await Page.GotoAsync(Server.EmptyPage);
+        var response = await Page.RunAndWaitForResponseAsync(() => Page.EvaluateAsync<string>(@"() => {
+                    fetch('/digits/1.png');
+                }"), Server.Prefix + "/digits/1.png");
+        Assert.AreEqual(Server.Prefix + "/digits/1.png", response.Url);
+        Assert.True(Task.Run(() => Page.GotoAsync(Server.EmptyPage)).Wait(10_000));
+    }
 }

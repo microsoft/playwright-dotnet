@@ -43,7 +43,7 @@ internal class Artifact : ChannelOwner
     internal string AbsolutePath { get; }
 
     [MethodImpl(MethodImplOptions.NoInlining)]
-    public async Task<string> PathAfterFinishedAsync()
+    public Task<string> PathAfterFinishedAsync() => WrapApiCallAsync<string>(async () =>
     {
         if (_connection.IsRemote)
         {
@@ -51,10 +51,10 @@ internal class Artifact : ChannelOwner
         }
         return (await SendMessageToServerAsync<JsonElement>("pathAfterFinished")
             .ConfigureAwait(false)).GetProperty("value").ToString();
-    }
+    });
 
     [MethodImpl(MethodImplOptions.NoInlining)]
-    public async Task SaveAsAsync(string path)
+    public Task SaveAsAsync(string path) => WrapApiCallAsync(async () =>
     {
         if (!_connection.IsRemote)
         {
@@ -76,15 +76,15 @@ internal class Artifact : ChannelOwner
                 await stream.StreamImpl.CopyToAsync(fileStream, bufferSize: 1024 * 1024).ConfigureAwait(false);
             }
         }
-    }
+    });
 
     [MethodImpl(MethodImplOptions.NoInlining)]
-    public async Task<System.IO.Stream> CreateReadStreamAsync()
+    public Task<System.IO.Stream> CreateReadStreamAsync() => WrapApiCallAsync<System.IO.Stream>(async () =>
     {
         var stream = (await SendMessageToServerAsync<JsonElement>("stream")
             .ConfigureAwait(false)).GetObject<Stream>("stream", _connection);
         return stream.StreamImpl;
-    }
+    });
 
     internal Task CancelAsync() => SendMessageToServerAsync("cancel");
 

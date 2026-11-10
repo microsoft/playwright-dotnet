@@ -96,7 +96,7 @@ internal class ElementHandle : JSHandle, IElementHandle
             },
             timeout: _frame.Timeout(options?.Timeout));
 
-    public async Task<byte[]> ScreenshotAsync(ElementHandleScreenshotOptions? options = default)
+    public Task<byte[]> ScreenshotAsync(ElementHandleScreenshotOptions? options = default) => WrapApiCallAsync<byte[]>(async () =>
     {
         options ??= new();
         if (options.Type == null && !string.IsNullOrEmpty(options.Path) && options.Path != null)
@@ -134,7 +134,7 @@ internal class ElementHandle : JSHandle, IElementHandle
         }
 
         return result;
-    }
+    });
 
     public Task FillAsync(string value, ElementHandleFillOptions? options = default)
         => SendMessageToServerAsync(
@@ -171,7 +171,7 @@ internal class ElementHandle : JSHandle, IElementHandle
 
     public async Task<IFrame?> OwnerFrameAsync() => await SendMessageToServerAsync<Frame>("ownerFrame").ConfigureAwait(false);
 
-    public async Task<ElementHandleBoundingBoxResult?> BoundingBoxAsync()
+    public Task<ElementHandleBoundingBoxResult?> BoundingBoxAsync() => WrapApiCallAsync<ElementHandleBoundingBoxResult?>(async () =>
     {
         var result = (await SendMessageToServerAsync("boundingBox").ConfigureAwait(false))!.Value;
         if (result.TryGetProperty("value", out var value))
@@ -179,7 +179,7 @@ internal class ElementHandle : JSHandle, IElementHandle
             return value.ToObject<ElementHandleBoundingBoxResult>();
         }
         return null;
-    }
+    });
 
     public Task ClickAsync(ElementHandleClickOptions? options = default)
         => SendMessageToServerAsync(
@@ -220,7 +220,7 @@ internal class ElementHandle : JSHandle, IElementHandle
     public Task SetInputFilesAsync(string files, ElementHandleSetInputFilesOptions? options = default)
         => SetInputFilesAsync(new[] { files }, options);
 
-    public async Task SetInputFilesAsync(IEnumerable<string> files, ElementHandleSetInputFilesOptions? options = default)
+    public Task SetInputFilesAsync(IEnumerable<string> files, ElementHandleSetInputFilesOptions? options = default) => WrapApiCallAsync(async () =>
     {
         var frame = await OwnerFrameAsync().ConfigureAwait(false);
         if (frame == null)
@@ -239,12 +239,12 @@ internal class ElementHandle : JSHandle, IElementHandle
                 ["directoryStream"] = converted.DirectoryStream,
             },
             timeout: _frame.Timeout(options?.Timeout)).ConfigureAwait(false);
-    }
+    });
 
     public Task SetInputFilesAsync(FilePayload files, ElementHandleSetInputFilesOptions? options = default)
         => SetInputFilesAsync(new[] { files }, options);
 
-    public async Task SetInputFilesAsync(IEnumerable<FilePayload> files, ElementHandleSetInputFilesOptions? options = default)
+    public Task SetInputFilesAsync(IEnumerable<FilePayload> files, ElementHandleSetInputFilesOptions? options = default) => WrapApiCallAsync(async () =>
     {
         var converted = SetInputFilesHelpers.ConvertInputFiles(files);
         await SendMessageToServerAsync(
@@ -256,7 +256,7 @@ internal class ElementHandle : JSHandle, IElementHandle
                 ["streams"] = converted.Streams,
             },
             timeout: _frame.Timeout(options?.Timeout)).ConfigureAwait(false);
-    }
+    });
 
     public async Task<IElementHandle?> QuerySelectorAsync(string selector)
         => await SendMessageToServerAsync<ElementHandle>(
@@ -313,7 +313,7 @@ internal class ElementHandle : JSHandle, IElementHandle
             ["eventInit"] = ScriptsHelper.SerializedArgument(eventInit),
         });
 
-    public async Task<string?> GetAttributeAsync(string name)
+    public Task<string?> GetAttributeAsync(string name) => WrapApiCallAsync<string?>(async () =>
     {
         if ((await SendMessageToServerAsync("getAttribute", new Dictionary<string, object?>
         {
@@ -323,7 +323,7 @@ internal class ElementHandle : JSHandle, IElementHandle
             return value.ToString();
         }
         return null;
-    }
+    });
 
     public async Task<string> InnerHTMLAsync() => (await SendMessageToServerAsync("innerHTML").ConfigureAwait(false))!.Value.GetProperty("value").ToString();
 

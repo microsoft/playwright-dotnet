@@ -205,11 +205,11 @@ internal class Locator : ILocator
     public Task ClearAsync(LocatorClearOptions? options = null)
         => this._frame.WrapApiCallAsync(() => _frame.FillAsync(_selector, string.Empty, ConvertOptions<FrameFillOptions>(options)), false, "Clear");
 
-    public async Task<IAsyncDisposable> HighlightAsync(LocatorHighlightOptions? options = default)
+    public Task<IAsyncDisposable> HighlightAsync(LocatorHighlightOptions? options = default) => _frame.WrapApiCallAsync<IAsyncDisposable>(async () =>
     {
         await _frame.HighlightAsync(_selector, options?.Style).ConfigureAwait(false);
         return new DisposableStub(() => HideHighlightAsync());
-    }
+    });
 
     public Task HideHighlightAsync() => _frame.HideHighlightAsync(_selector);
 
@@ -431,6 +431,12 @@ internal class Locator : ILocator
     {
         if (_stringRepresentation == null)
         {
+            if (_frame._connection.Dispatcher.IsCurrent)
+            {
+                // Called from an event handler: blocking here would wait for a reply that only
+                // this thread can deliver.
+                return "Locator@" + _selector;
+            }
             try
             {
                 // ToString() must be synchronous, so block on the driver call. The result is cached.
@@ -701,7 +707,7 @@ internal class Locator : ILocator
     async Task<IReadOnlyList<ILocator>> ILocator.AllAsync()
         => Enumerable.Range(0, await CountAsync().ConfigureAwait(false)).Select(Nth).ToArray();
 
-    public async Task<string> AriaSnapshotAsync(LocatorAriaSnapshotOptions? options = null)
+    public Task<string> AriaSnapshotAsync(LocatorAriaSnapshotOptions? options = null) => _frame.WrapApiCallAsync<string>(async () =>
     {
         var result = await _frame.SendMessageToServerAsync(
             "ariaSnapshot",
@@ -714,9 +720,9 @@ internal class Locator : ILocator
             },
             timeout: _frame.Timeout(options?.Timeout)).ConfigureAwait(false);
         return result!.Value.GetProperty("snapshot").ToString();
-    }
+    });
 
-    public async Task<ILocator> NormalizeAsync()
+    public Task<ILocator> NormalizeAsync() => _frame.WrapApiCallAsync<ILocator>(async () =>
     {
         var result = await _frame.SendMessageToServerAsync("resolveSelector", new Dictionary<string, object?>
         {
@@ -730,7 +736,7 @@ internal class Locator : ILocator
             locator._stringRepresentation = locatorCode.GetString();
         }
         return locator;
-    }
+    });
 }
 
 internal class ByRoleOptions

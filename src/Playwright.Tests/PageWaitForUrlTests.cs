@@ -22,6 +22,7 @@
  * SOFTWARE.
  */
 
+using System.Text.Json;
 using System.Text.RegularExpressions;
 
 namespace Microsoft.Playwright.Tests;
@@ -160,5 +161,79 @@ public class PageWaitForUrlTests : PageTestEx
             frame.WaitForURLAsync("**/grid.html"),
             frame.EvaluateAsync("url => window.location.href = url", Server.Prefix + "/grid.html"));
         ;
+    }
+
+    // See https://github.com/microsoft/playwright-dotnet/issues/3364
+    [PlaywrightTest]
+    public async Task ShouldNotMissNavigationCommittedRightAfterTheCall()
+    {
+        // Page A navigates to B a few milliseconds after it loads. The wait must see that
+        // navigation even when it commits right after WaitForURLAsync was called: the check of
+        // the current URL and the subscription to the next navigation are one step.
+        Server.SetRoute("/a.html", context =>
+        {
+            context.Response.ContentType = "text/html";
+            return context.Response.WriteAsync("<script>addEventListener('load', () => setTimeout(() => location.href = '/b.html', 5))</script>");
+        });
+        Server.SetRoute("/b.html", context =>
+        {
+            context.Response.ContentType = "text/html";
+            return context.Response.WriteAsync("<h1>b</h1>");
+        });
+        for (int i = 0; i < 10; i++)
+        {
+            await Page.GotoAsync(Server.Prefix + "/a.html");
+            await Page.WaitForURLAsync("**/b.html", new() { Timeout = 5000 });
+        }
+    }
+
+    // See https://github.com/microsoft/playwright-dotnet/issues/3399
+    [PlaywrightTest]
+    public async Task ShouldNotMissLoadThatFiresRightAfterTheCall()
+    {
+        // Each page links to the next one and loads a script. The response arrives first, and
+        // `load` follows a few milliseconds later: right when WaitForURLAsync checks the load
+        // state of a URL that already matches and subscribes to the next one.
+        Server.SetRoute("/slow-script.js", async context =>
+        {
+            context.Response.ContentType = "application/javascript";
+            await Task.Delay(5);
+            await context.Response.WriteAsync("window.resourceLoaded = true;");
+        });
+        for (int i = 0; i < 20; i++)
+        {
+            int next = i + 1;
+            Server.SetRoute($"/p/{i}", context =>
+            {
+                context.Response.ContentType = "text/html";
+                return context.Response.WriteAsync($"<a href='/p/{next}'>next</a><script src='/slow-script.js'></script>");
+            });
+        }
+        await Page.GotoAsync(Server.Prefix + "/p/0");
+        for (int i = 1; i < 20; i++)
+        {
+            var response = await Page.RunAndWaitForResponseAsync(
+                () => Page.Locator("a").ClickAsync(),
+                r => r.Request.IsNavigationRequest && r.Status == 200);
+            await Page.WaitForURLAsync(response.Url, new() { WaitUntil = WaitUntilState.Load, Timeout = 5000 });
+            Assert.True(await Page.EvaluateAsync<bool>("window.resourceLoaded === true"));
+        }
+    }
+
+    [PlaywrightTest]
+    public async Task ShouldNotBlockTheDispatcherWhileMatchingTheUrl()
+    {
+        // The predicate is user code and runs on the dispatcher thread, like an event handler.
+        // Awaiting a call from there is fine; this test pins that the wait does not hold anything
+        // that the reply to that call would need.
+        await Page.GotoAsync(Server.EmptyPage);
+        Task<JsonElement?> evaluate = null;
+        await Page.WaitForURLAsync(url =>
+        {
+            evaluate ??= Page.EvaluateAsync("() => { document.body.appendChild(document.createElement('iframe')); }");
+            return true;
+        });
+        await evaluate!;
+        Assert.AreEqual(2, Page.Frames.Count);
     }
 }

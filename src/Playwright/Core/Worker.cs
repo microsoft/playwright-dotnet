@@ -47,8 +47,8 @@ internal class Worker : ChannelOwner, IWorker
 
     public event EventHandler<IConsoleMessage>? Console
     {
-        add => this._consoleImpl = UpdateEventHandler("console", this._consoleImpl, value, true);
-        remove => this._consoleImpl = UpdateEventHandler("console", this._consoleImpl, value, false);
+        add => UpdateEventHandler("console", ref _consoleImpl, value, true, () => _consoleImpl != null);
+        remove => UpdateEventHandler("console", ref _consoleImpl, value, false, () => _consoleImpl != null);
     }
 
     public event EventHandler<IWorker>? Close;
@@ -75,18 +75,19 @@ internal class Worker : ChannelOwner, IWorker
 
     internal void OnClose()
     {
+        _connection.Dispatcher.AssertCurrent();
         if (Page != null)
         {
-            Page._workers.Remove(this);
+            CopyOnWrite.Remove(ref Page._workers, this);
         }
 
         if (Context != null)
         {
-            Context._serviceWorkers.Remove(this);
+            CopyOnWrite.Remove(ref Context._serviceWorkers, this);
         }
 
         Close?.Invoke(this, this);
-        ClosedTcs.SetResult(true);
+        _connection.Dispatcher.Complete(ClosedTcs, true);
     }
 
     [MethodImpl(MethodImplOptions.NoInlining)]
@@ -111,7 +112,7 @@ internal class Worker : ChannelOwner, IWorker
             .ConfigureAwait(false)).GetObject<JSHandle>("handle", _connection);
 
     [MethodImpl(MethodImplOptions.NoInlining)]
-    public async Task<IWorker> WaitForCloseAsync(Func<Task>? action = default, float? timeout = default)
+    public Task<IWorker> WaitForCloseAsync(Func<Task>? action = default, float? timeout = default) => WrapApiCallAsync<IWorker>(async () =>
     {
         using var waiter = new Waiter(this, "worker.WaitForCloseAsync");
         var waiterResult = waiter.GetWaitForEventTask<IWorker>(this, nameof(Close), null);
@@ -122,9 +123,17 @@ internal class Worker : ChannelOwner, IWorker
         }
         else
         {
-            await result.ConfigureAwait(false);
+            try
+            {
+                await result.ConfigureAwait(false);
+            }
+            finally
+            {
+                // The timeout fires on another thread.
+                await _connection.Dispatcher.SwitchTo();
+            }
         }
 
         return this;
-    }
+    });
 }

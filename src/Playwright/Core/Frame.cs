@@ -43,7 +43,7 @@ namespace Microsoft.Playwright.Core;
 internal class Frame : ChannelOwner, IFrame
 {
     private readonly List<WaitUntilState> _loadStates = new();
-    internal readonly List<Frame> _childFrames = new();
+    internal List<Frame> _childFrames = new();
 
     internal Frame(ChannelOwner parent, string guid, FrameInitializer initializer) : base(parent, guid)
     {
@@ -112,6 +112,7 @@ internal class Frame : ChannelOwner, IFrame
 
     internal void OnLoadState(WaitUntilState? add, WaitUntilState? remove)
     {
+        _connection.Dispatcher.AssertCurrent();
         if (add.HasValue)
         {
             _loadStates.Add(add.Value);
@@ -225,7 +226,7 @@ internal class Frame : ChannelOwner, IFrame
             timeout: Timeout(options?.Timeout)).ConfigureAwait(false))!.Value.GetProperty("values").ToObject<string[]>().ToList().AsReadOnly();
 
     [MethodImpl(MethodImplOptions.NoInlining)]
-    public async Task WaitForLoadStateAsync(LoadState? state = default, FrameWaitForLoadStateOptions? options = default)
+    public Task WaitForLoadStateAsync(LoadState? state = default, FrameWaitForLoadStateOptions? options = default) => WrapApiCallAsync(async () =>
     {
         Waiter? waiter = null;
         WaitUntilState loadState = Microsoft.Playwright.WaitUntilState.Load;
@@ -245,6 +246,7 @@ internal class Frame : ChannelOwner, IFrame
         {
             waiter = SetupNavigationWaiter("frame.WaitForLoadStateAsync", options?.Timeout);
 
+            _connection.Dispatcher.AssertCurrent();
             if (_loadStates.Contains(loadState))
             {
                 waiter.Log($"  not waiting, \"{state}\" event already fired");
@@ -262,7 +264,7 @@ internal class Frame : ChannelOwner, IFrame
         {
             waiter?.Dispose();
         }
-    }
+    });
 
     [MethodImpl(MethodImplOptions.NoInlining)]
     public Task<IResponse?> WaitForNavigationAsync(FrameWaitForNavigationOptions? options = default)
@@ -279,7 +281,7 @@ internal class Frame : ChannelOwner, IFrame
     }
 
     [MethodImpl(MethodImplOptions.NoInlining)]
-    public async Task<IResponse?> RunAndWaitForNavigationAsync(Func<Task>? action, FrameRunAndWaitForNavigationOptions? options = default)
+    public Task<IResponse?> RunAndWaitForNavigationAsync(Func<Task>? action, FrameRunAndWaitForNavigationOptions? options = default) => WrapApiCallAsync<IResponse?>(async () =>
     {
         using var waiter = SetupNavigationWaiter("frame.WaitForNavigationAsync", options?.Timeout);
         var result = WaitForNavigationInternalAsync(waiter, options?.Url ?? options?.UrlString, options?.UrlFunc, options?.UrlRegex, options?.WaitUntil);
@@ -290,7 +292,7 @@ internal class Frame : ChannelOwner, IFrame
         }
 
         return await result.ConfigureAwait(false);
-    }
+    });
 
     private async Task<IResponse?> WaitForNavigationInternalAsync(
         Waiter waiter,
@@ -333,6 +335,7 @@ internal class Frame : ChannelOwner, IFrame
             await waiter.WaitForPromiseAsync(Task.FromException<object>(ex)).ConfigureAwait(false);
         }
 
+        _connection.Dispatcher.AssertCurrent();
         if (!_loadStates.Select(s => s.ToValueString()).Contains(waitUntil.Value.ToValueString()))
         {
             await waiter.WaitForEventAsync<WaitUntilState>(
@@ -411,7 +414,7 @@ internal class Frame : ChannelOwner, IFrame
             timeout: Timeout(options?.Timeout));
 
     [MethodImpl(MethodImplOptions.NoInlining)]
-    public async Task<string?> GetAttributeAsync(string selector, string name, FrameGetAttributeOptions? options = default)
+    public Task<string?> GetAttributeAsync(string selector, string name, FrameGetAttributeOptions? options = default) => WrapApiCallAsync<string?>(async () =>
     {
         if ((await SendMessageToServerAsync(
             "getAttribute",
@@ -426,7 +429,7 @@ internal class Frame : ChannelOwner, IFrame
             return retValue.ToString();
         }
         return null;
-    }
+    });
 
     [MethodImpl(MethodImplOptions.NoInlining)]
     public async Task<string> InnerHTMLAsync(string selector, FrameInnerHTMLOptions? options = default)
@@ -520,7 +523,7 @@ internal class Frame : ChannelOwner, IFrame
             timeout: Timeout(options?.Timeout));
 
     [MethodImpl(MethodImplOptions.NoInlining)]
-    public async Task<IElementHandle> AddScriptTagAsync(FrameAddScriptTagOptions? options = default)
+    public Task<IElementHandle> AddScriptTagAsync(FrameAddScriptTagOptions? options = default) => WrapApiCallAsync<IElementHandle>(async () =>
     {
         var content = options?.Content;
         if (!string.IsNullOrEmpty(options?.Path) && options?.Path != null)
@@ -535,10 +538,10 @@ internal class Frame : ChannelOwner, IFrame
             ["content"] = content,
             ["type"] = options?.Type,
         }).ConfigureAwait(false);
-    }
+    });
 
     [MethodImpl(MethodImplOptions.NoInlining)]
-    public async Task<IElementHandle> AddStyleTagAsync(FrameAddStyleTagOptions? options = default)
+    public Task<IElementHandle> AddStyleTagAsync(FrameAddStyleTagOptions? options = default) => WrapApiCallAsync<IElementHandle>(async () =>
     {
         var content = options?.Content;
         if (!string.IsNullOrEmpty(options?.Path) && options?.Path != null)
@@ -553,33 +556,33 @@ internal class Frame : ChannelOwner, IFrame
             ["path"] = options?.Path,
             ["content"] = content,
         }).ConfigureAwait(false);
-    }
+    });
 
     [MethodImpl(MethodImplOptions.NoInlining)]
     public Task SetInputFilesAsync(string selector, string files, FrameSetInputFilesOptions? options = default)
         => SetInputFilesAsync(selector, new[] { files }, options);
 
     [MethodImpl(MethodImplOptions.NoInlining)]
-    public async Task SetInputFilesAsync(string selector, IEnumerable<string> files, FrameSetInputFilesOptions? options = default)
+    public Task SetInputFilesAsync(string selector, IEnumerable<string> files, FrameSetInputFilesOptions? options = default) => WrapApiCallAsync(async () =>
     {
         var converted = await SetInputFilesHelpers.ConvertInputFilesAsync(files, (BrowserContext)Page.Context).ConfigureAwait(false);
 #pragma warning disable CS0612 // Type or member is obsolete
         await _setInputFilesAsync(selector, converted, options?.NoWaitAfter, options?.Timeout, options?.Strict).ConfigureAwait(false);
 #pragma warning restore CS0612 // Type or member is obsolete
-    }
+    });
 
     [MethodImpl(MethodImplOptions.NoInlining)]
     public Task SetInputFilesAsync(string selector, FilePayload files, FrameSetInputFilesOptions? options = default)
         => SetInputFilesAsync(selector, new[] { files }, options);
 
     [MethodImpl(MethodImplOptions.NoInlining)]
-    public async Task SetInputFilesAsync(string selector, IEnumerable<FilePayload> files, FrameSetInputFilesOptions? options = default)
+    public Task SetInputFilesAsync(string selector, IEnumerable<FilePayload> files, FrameSetInputFilesOptions? options = default) => WrapApiCallAsync(async () =>
     {
         var converted = SetInputFilesHelpers.ConvertInputFiles(files);
 #pragma warning disable CS0612 // Type or member is obsolete
         await _setInputFilesAsync(selector, converted, noWaitAfter: options?.NoWaitAfter, timeout: options?.Timeout, options?.Strict).ConfigureAwait(false);
 #pragma warning restore CS0612 // Type or member is obsolete
-    }
+    });
 
     private async Task _setInputFilesAsync(string selector, SetInputFilesFiles files, bool? noWaitAfter, float? timeout, bool? strict)
     {
@@ -1058,7 +1061,7 @@ internal class Frame : ChannelOwner, IFrame
         }
     }
 
-    private Task WaitForURLAsync(string? urlString, Regex? urlRegex, Func<string, bool>? urlFunc, FrameWaitForURLOptions? options = default)
+    private Task WaitForURLAsync(string? urlString, Regex? urlRegex, Func<string, bool>? urlFunc, FrameWaitForURLOptions? options = default) => WrapApiCallAsync(() =>
     {
         if (new URLMatch()
         {
@@ -1085,7 +1088,7 @@ internal class Frame : ChannelOwner, IFrame
                 Timeout = options?.Timeout,
                 WaitUntil = options?.WaitUntil,
             });
-    }
+    });
 
     private LoadState? ToLoadState(WaitUntilState? waitUntilState)
     {

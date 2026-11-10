@@ -183,7 +183,7 @@ internal class Request : ChannelOwner, IRequest
     }
 
     [MethodImpl(MethodImplOptions.NoInlining)]
-    public async Task<RequestSizesResult> SizesAsync()
+    public Task<RequestSizesResult> SizesAsync() => WrapApiCallAsync<RequestSizesResult>(async () =>
     {
         if (await ResponseAsync().ConfigureAwait(false) is not Response res)
         {
@@ -191,7 +191,7 @@ internal class Request : ChannelOwner, IRequest
         }
 
         return (await res.SendMessageToServerAsync("sizes").ConfigureAwait(false))!.Value.GetProperty("sizes").ToObject<RequestSizesResult>();
-    }
+    });
 
     [MethodImpl(MethodImplOptions.NoInlining)]
     public async Task<Dictionary<string, string>> AllHeadersAsync()

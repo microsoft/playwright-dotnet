@@ -130,7 +130,7 @@ internal class WebSocketRoute : ChannelOwner, IWebSocketRoute
         }
     }
 
-    public async Task CloseAsync(WebSocketRouteCloseOptions? options = null)
+    public Task CloseAsync(WebSocketRouteCloseOptions? options = null) => WrapApiCallAsync(async () =>
     {
         try
         {
@@ -145,7 +145,7 @@ internal class WebSocketRoute : ChannelOwner, IWebSocketRoute
         {
             // Ignore the exception
         }
-    }
+    });
 
     public void Send(byte[] message)
     {
@@ -210,7 +210,7 @@ internal class ServerWebSocketRoute : IWebSocketRoute
 
     public IReadOnlyList<string> Protocols => _webSocketRoute.Protocols;
 
-    public async Task CloseAsync(WebSocketRouteCloseOptions? options = null)
+    public Task CloseAsync(WebSocketRouteCloseOptions? options = null) => _webSocketRoute.WrapApiCallAsync(async () =>
     {
         try
         {
@@ -225,7 +225,7 @@ internal class ServerWebSocketRoute : IWebSocketRoute
         {
             // Ignore the exception
         }
-    }
+    });
 
     public IWebSocketRoute ConnectToServer() => throw new PlaywrightException("ConnectToServer() must be called on the page-side WebSocketRoute");
 

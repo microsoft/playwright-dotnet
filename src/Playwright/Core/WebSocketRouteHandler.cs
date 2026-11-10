@@ -74,10 +74,18 @@ internal class WebSocketRouteHandler
 
     public async Task HandleAsync(WebSocketRoute route)
     {
-        var maybeTask = Handler.DynamicInvoke(new object[] { route });
-        if (maybeTask is Task task)
+        try
         {
-            await task.ConfigureAwait(false);
+            var maybeTask = Handler.DynamicInvoke(new object[] { route });
+            if (maybeTask is Task task)
+            {
+                await task.ConfigureAwait(false);
+            }
+        }
+        finally
+        {
+            // The handler is user code and may have resumed on any thread.
+            await route._connection.Dispatcher.SwitchTo();
         }
         await route.AfterHandleAsync().ConfigureAwait(false);
     }

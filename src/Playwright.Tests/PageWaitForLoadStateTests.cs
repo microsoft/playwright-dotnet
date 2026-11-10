@@ -138,4 +138,32 @@ public class PageWaitForLoadStateTests : PageTestEx
         requestTask.TrySetResult(true);
         await loadTask;
     }
+
+    // See https://github.com/microsoft/playwright-dotnet/issues/3399
+    [PlaywrightTest]
+    public async Task ShouldObserveLoadStateFiredWhileTheWaitIsBeingSetUp()
+    {
+        // The `load` state arrives while another thread is calling WaitForLoadStateAsync, a
+        // random moment later each time. The wait checks the recorded states and subscribes to
+        // the next one in one step, so the state lands either before the check or after the
+        // subscription, never in between, where it used to be lost until the timeout.
+        var frame = (Core.Frame)Page.MainFrame;
+        var dispatcher = frame._connection.Dispatcher;
+        await Page.GotoAsync(Server.EmptyPage);
+
+        var random = new Random(3399);
+        for (int i = 0; i < 200; i++)
+        {
+            // Forget the recorded state, so that the wait has to observe the event.
+            dispatcher.Post(() => frame.OnLoadState(null, WaitUntilState.Load));
+            int spin = random.Next(0, 20000);
+            var fire = Task.Run(() =>
+            {
+                Thread.SpinWait(spin);
+                dispatcher.Post(() => frame.OnLoadState(WaitUntilState.Load, null));
+            });
+            await frame.WaitForLoadStateAsync(LoadState.Load, new() { Timeout = 5000 });
+            await fire;
+        }
+    }
 }
