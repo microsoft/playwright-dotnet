@@ -116,7 +116,7 @@ public class PlaywrightSettingsProvider : ISettingsProvider
     {
         get
         {
-            var launchOptions = _settings?.LaunchOptions ?? new BrowserTypeLaunchOptions();
+            var launchOptions = new BrowserTypeLaunchOptions(_settings?.LaunchOptions ?? new());
             if (Environment.GetEnvironmentVariable("HEADED") == "1")
             {
                 launchOptions.Headless = false;

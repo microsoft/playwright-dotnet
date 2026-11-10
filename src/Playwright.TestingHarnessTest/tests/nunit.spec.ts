@@ -304,6 +304,49 @@ test('should be able to parse LaunchOptions.Args from runsettings', async ({ run
   expect(result.stdout).toContain("User-Agent: hello")
 });
 
+// See https://github.com/microsoft/playwright-dotnet/issues/3425
+test('should hand out a copy of the launch options from runsettings', async ({ runTest }) => {
+  const result = await runTest({
+    'ExampleTests.cs': `
+      using System;
+      using System.Linq;
+      using NUnit.Framework;
+      using Microsoft.Playwright.NUnit;
+      using Microsoft.Playwright.TestAdapter;
+
+      namespace Playwright.TestingHarnessTest.NUnit;
+
+      public class <class-name> : PageTest
+      {
+          [Test]
+          public void Test()
+          {
+              var first = PlaywrightSettingsProvider.LaunchOptions;
+              first.Args = first.Args.Append("--added-by-a-test");
+              first.Channel = "changed-by-a-test";
+              var second = PlaywrightSettingsProvider.LaunchOptions;
+              Console.WriteLine("Args: " + string.Join(" ", second.Args) + ";");
+              Console.WriteLine("Channel: " + (second.Channel ?? "not set") + ";");
+          }
+      }`,
+      '.runsettings': `
+        <?xml version="1.0" encoding="utf-8"?>
+        <RunSettings>
+            <Playwright>
+              <LaunchOptions>
+                <Args>['--user-agent=hello']</Args>
+              </LaunchOptions>
+            </Playwright>
+        </RunSettings>
+      `,
+  }, 'dotnet test --settings=.runsettings');
+  expect(result.passed).toBe(1);
+  expect(result.failed).toBe(0);
+  expect(result.total).toBe(1);
+  expect(result.stdout).toContain("Args: --user-agent=hello;")
+  expect(result.stdout).toContain("Channel: not set;")
+});
+
 test('should be able to override context options', async ({ runTest, server }) => {
   const result = await runTest({
     'ExampleTests.cs': `
