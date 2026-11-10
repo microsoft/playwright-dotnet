@@ -847,4 +847,18 @@ public class PageEvaluateTests : PageTestEx
         Assert.AreEqual(400, result.Height);
         Assert.AreEqual(0, ShapeWithFields.Count);
     }
+
+    // See https://github.com/microsoft/playwright-dotnet/issues/3437
+    [PlaywrightTest]
+    public async Task ShouldTransferMessagesLargerThanTheReadBuffer()
+    {
+        // 3 MB of text that differs at every position, so that a chunk lost, repeated or put
+        // out of order while the message is read from the driver would show. Its size is not
+        // a multiple of the read buffer, and it goes both ways.
+        var expected = string.Join("|", Enumerable.Range(0, 300_001).Select(i => i.ToString("D9", System.Globalization.CultureInfo.InvariantCulture)));
+        var fromPage = await Page.EvaluateAsync<string>("() => Array.from({ length: 300001 }, (_, i) => String(i).padStart(9, '0')).join('|')");
+        Assert.AreEqual(expected, fromPage);
+        var echoed = await Page.EvaluateAsync<string>("s => s", expected);
+        Assert.AreEqual(expected, echoed);
+    }
 }

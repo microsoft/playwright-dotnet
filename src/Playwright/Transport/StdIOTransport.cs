@@ -34,7 +34,9 @@ namespace Microsoft.Playwright.Transport;
 
 internal class StdIOTransport : IDisposable
 {
-    private const int DefaultBufferSize = 1024;  // Byte buffer size
+    // One read takes what the pipe holds, up to this size. A pipe holds 64 KB on Linux and macOS,
+    // so a message of 10 MB arrives in about 160 reads.
+    private const int DefaultBufferSize = 64 * 1024;
     private readonly Process _process;
     private readonly CancellationTokenSource _readerCancellationSource = new();
     private readonly Task _getResponseTask;
