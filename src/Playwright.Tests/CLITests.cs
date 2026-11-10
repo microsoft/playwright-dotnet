@@ -23,6 +23,7 @@
  */
 
 using System.Diagnostics;
+using System.Reflection;
 
 namespace Microsoft.Playwright.Tests;
 
@@ -50,6 +51,43 @@ public class CLITests : PlaywrightTest
         Assert.AreEqual(1, exitCode);
         StringAssert.Contains("this-command-is-not-found", stderr);
         StringAssert.Contains("unknown command", stderr);
+    }
+
+    // See https://github.com/microsoft/playwright-dotnet/issues/3430
+    [PlaywrightTest]
+    [TestCase("", "\"\"")]
+    [TestCase("say \"hi\"", "\"say \\\"hi\\\"\"")]
+    [TestCase(@"C:\My Dir\", "\"C:\\My Dir\\\\\"")]
+    [TestCase("plain", "\"plain\"")]
+    [NonParallelizable]
+    public void ShouldPreserveCLIArguments(string argument, string expected)
+    {
+        var previousNode = Environment.GetEnvironmentVariable("PLAYWRIGHT_NODEJS_PATH");
+        var previousSearch = Environment.GetEnvironmentVariable("PLAYWRIGHT_DRIVER_SEARCH_PATH");
+        try
+        {
+            Environment.SetEnvironmentVariable("PLAYWRIGHT_NODEJS_PATH", Environment.ProcessPath);
+            Environment.SetEnvironmentVariable("PLAYWRIGHT_DRIVER_SEARCH_PATH", Path.GetTempPath());
+            var method = typeof(Program).GetMethod("CreateDriverProcess", BindingFlags.NonPublic | BindingFlags.Static);
+            using var process = (Process)method.Invoke(null, new object[] { new[] { argument }, true });
+            var entrypoint = Path.Combine(Path.GetTempPath(), ".playwright", "package", "cli.js");
+            Assert.That(process.StartInfo.Arguments, Is.EqualTo($"\"{entrypoint}\" {expected}"));
+        }
+        finally
+        {
+            Environment.SetEnvironmentVariable("PLAYWRIGHT_NODEJS_PATH", previousNode);
+            Environment.SetEnvironmentVariable("PLAYWRIGHT_DRIVER_SEARCH_PATH", previousSearch);
+        }
+    }
+
+    // See https://github.com/microsoft/playwright-dotnet/issues/3430
+    [PlaywrightTest]
+    public void ShouldQuoteEntrypointWithoutArguments()
+    {
+        var method = typeof(Microsoft.Playwright.Helpers.Driver).GetMethod("GetPath", BindingFlags.NonPublic | BindingFlags.Static);
+        var path = Path.Combine(Path.GetTempPath(), "John Smith");
+        var result = ((string ExecutablePath, Func<string, string> GetArgs))method.Invoke(null, new object[] { path });
+        Assert.That(result.GetArgs(null), Is.EqualTo($"\"{Path.Combine(path, ".playwright", "package", "cli.js")}\""));
     }
 
     // Out of process execution of playwright.ps1

@@ -95,7 +95,7 @@ public class Program
     private static Process CreateDriverProcess(string[] args, bool captureOutput)
     {
         var (executablePath, getArgs) = Driver.GetExecutablePath();
-        var startInfo = new ProcessStartInfo(executablePath, getArgs(args.Length > 0 ? "\"" + string.Join("\" \"", args) + "\"" : null))
+        var startInfo = new ProcessStartInfo(executablePath, getArgs(string.Join(" ", Array.ConvertAll(args, Driver.QuoteArgument))))
         {
             UseShellExecute = false,
             // This works after net8.0-preview-4

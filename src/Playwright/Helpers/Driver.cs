@@ -28,6 +28,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
 using System.Runtime.InteropServices;
+using System.Text;
 
 namespace Microsoft.Playwright.Helpers;
 
@@ -96,6 +97,30 @@ internal static class Driver
         throw new PlaywrightException($"Driver not found: {executableFile}");
     }
 
+    internal static string QuoteArgument(string argument)
+    {
+        var result = new StringBuilder("\"");
+        var backslashes = 0;
+        foreach (var character in argument)
+        {
+            if (character == '\\')
+            {
+                backslashes++;
+                continue;
+            }
+
+            // Backslashes before a quote must be doubled, then the quote escaped.
+            result.Append('\\', character == '"' ? (backslashes * 2) + 1 : backslashes);
+            result.Append(character);
+            backslashes = 0;
+        }
+
+        // Escape trailing backslashes so they cannot consume the closing quote.
+        result.Append('\\', backslashes * 2);
+        result.Append('"');
+        return result.ToString();
+    }
+
     private static bool TryGetCodeBase(Assembly assembly, out Uri? codeBase)
     {
         try
@@ -139,7 +164,7 @@ internal static class Driver
         var cliEntrypoint = Path.Combine(driversPath, ".playwright", "package", "cli.js");
         string getArgs(string? args)
         {
-            return !string.IsNullOrEmpty(args) ? $"\"{cliEntrypoint}\" {args}" : cliEntrypoint;
+            return !string.IsNullOrEmpty(args) ? $"{QuoteArgument(cliEntrypoint)} {args}" : QuoteArgument(cliEntrypoint);
         }
         return (
             Environment.GetEnvironmentVariable("PLAYWRIGHT_NODEJS_PATH") ?? Path.GetFullPath(Path.Combine(driversPath, ".playwright", "node", platformId, nodeExecutable)),
