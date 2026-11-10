@@ -1,45 +1,32 @@
 ---
 name: playwright-triage
-description: Triage and fix one microsoft/playwright-dotnet issue, or do a maintainer's task, unattended inside the Issue triage GitHub Actions workflow (.github/workflows/triage.yml), which a needs-triage, needs-triage-mac or needs-triage-win label starts, or a maintainer starts by hand with an issue, a task or both. Reproduces the issue on the runner, then leaves a verified fix proposal for the workflow to open as a draft PR, an investigation note for it to post on the issue, or an upstream bug report for a maintainer to file in microsoft/playwright. Only for that workflow.
+description: Triage and fix an issue in microsoft/playwright-dotnet. Where the JavaScript client and the driver are upstream, how to run a published version, how to tell a bug of the port from an upstream one, the generated code, the upstream bug report, and what not to run from a PR of a third party.
 ---
 
 # Playwright .NET Issue Triage
 
-You run unattended in the [Issue triage](../../../.github/workflows/triage.yml) workflow of
-`microsoft/playwright-dotnet`. First read the shared guide, `$AGENT_GUIDES_DIR/triage.md`, a copy of
-[microsoft/playwright/.github/actions/run-agent/guides/triage.md](https://github.com/microsoft/playwright/blob/main/.github/actions/run-agent/guides/triage.md),
-and then [CLAUDE.md](../../../CLAUDE.md), both in full. The guide says how to triage an issue in any
-Playwright repo. CLAUDE.md says how to build, test and format this one, and where a regression test
-goes. This file covers what neither has: the checkouts, how to run a published version, and the
-outcome that this repo adds, an upstream bug report.
+## Upstream
 
-## The checkouts
+The .NET client is a port of the JavaScript client of `microsoft/playwright`, in
+`packages/playwright-core/src/client/`. The API docs are in `docs/src/api/`, the API generator is
+`utils/doclint/generateDotnetApi.js`, and the upstream tests are in `tests/page/` and
+`tests/library/`.
 
-`$REPO_DIR` is the checkout of `microsoft/playwright-dotnet` that the guide describes. The driver is
-built (`./build.sh --build-driver`), the solution is built (`dotnet build ./src`), and
-Chromium, Firefox and WebKit are installed
-(`pwsh src/Playwright/bin/Debug/netstandard2.0/playwright.ps1 install --with-deps`). It is the
-working directory, and the checkout that the guides refer to. The clone is shallow: run
-`git fetch --unshallow --tags origin` in it before you bisect or use `git tag --contains`. .NET SDK
-8 and 10 are installed, as in CI. Tests run with `-f net8.0`.
+`.upstream/` is the clone of `microsoft/playwright` at the commit of the driver, which
+`<DriverVersion>` in `src/Common/Version.props` names, as [CLAUDE.md](../../../CLAUDE.md) says.
+Read the code of the driver there, and use its history and tags. Do not commit, branch or edit in
+it.
 
-`$PLAYWRIGHT_DIR` is a shallow clone of `microsoft/playwright` at `main`. The .NET client is a port
-of the JavaScript client in `packages/playwright-core/src/client/`. The API docs are in
-`docs/src/api/`, the API generator is `utils/doclint/generateDotnetApi.js`, and the upstream tests
-are in `tests/page/` and `tests/library/`. The clone is not at the commit of the driver, but `main`
-is close to it. The clone is not built. Before you run an upstream test in it, run `npm ci`,
-`npm run build` and `npx playwright install` there. Then `npm run ctest <spec>`,
-`npm run ftest <spec>` and `npm run wtest <spec>` run one spec file on Chromium, Firefox and WebKit.
-
-`$REPO_DIR/.upstream` is a full clone of `microsoft/playwright` at the commit of the driver, which
-`<DriverVersion>` in `src/Common/Version.props` names. The driver is built from it, and the API is
-generated from it. Read the code of the driver there, and use its history and tags. Do not commit,
-branch or edit in it: write and run upstream tests in `$PLAYWRIGHT_DIR`.
+Write and run upstream tests in a checkout of `microsoft/playwright` at `main`, next to this repo,
+in `../playwright`. `main` is close to the commit of the driver. Before you run an upstream test
+there, run `npm ci`, `npm run build` and `npx playwright install` in it. Then
+`npm run ctest <spec>`, `npm run ftest <spec>` and `npm run wtest <spec>` run one spec file on
+Chromium, Firefox and WebKit.
 
 ## Published versions
 
-To run a published version, for example to bisect, create
-`$SCRATCH_DIR/playwright-dotnet-<n>/<version>/` and make a console project there:
+To run a published version, for example to bisect, create an empty directory outside the repo for
+each version, and make a console project there:
 
 ```bash
 dotnet new console -n repro -f net8.0 -o . && dotnet add package Microsoft.Playwright --version <version>
@@ -49,17 +36,17 @@ dotnet run
 
 Put the repro in `Program.cs` as top-level statements, as `src/Playwright.Examples/Program.cs`
 does. `playwright.ps1 install` fetches the browsers of that version. Match the change to commits in
-`$REPO_DIR` with `git log v<good>..v<bad> -- src/Playwright/`, and to the JavaScript client in
-`$REPO_DIR/.upstream` with the same tags.
+this repo with `git log v<good>..v<bad> -- src/Playwright/`, and to the JavaScript client in
+`.upstream/` with the same tags.
 
 ## Upstream bugs
 
 The .NET client talks to the Node driver that `microsoft/playwright` publishes, and many bugs that
 are reported here are in the driver. That fix lands in `microsoft/playwright`. The family is one
 team, so this is routing, not a request to the reporter. Find the owner with the same calls in both
-clients: write the repro as a .NET test in `$REPO_DIR` first, then write the same calls as an
-upstream test in `$PLAYWRIGHT_DIR` and run it there. When the Node test fails the same way, the root
-cause is upstream. When only the .NET test fails, the bug is in the port: compare the method in
+clients: write the repro as a .NET test here first, then write the same calls as an upstream test
+in `../playwright` and run it there. When the Node test fails the same way, the root cause is
+upstream. When only the .NET test fails, the bug is in the port: compare the method in
 `src/Playwright/Core/` with the same method in the JavaScript client, and fix it here.
 
 The interfaces in `src/Playwright/API/Generated/` and the types in
@@ -71,12 +58,8 @@ annotations decide what .NET gets) or in the generator. .NET-only overloads are 
 
 For an upstream root cause, write a report for a maintainer to file in `microsoft/playwright`, for
 an engineer who did not read this issue: what fails, expected versus actual, the driver version and
-the browsers, and the condensed Node test from `$PLAYWRIGHT_DIR` as the repro. Say that .NET shows
-the same. The title has at most 256 characters.
-
-The bot never files it: this run allows no `issue` call (the calls are in
-`$AGENT_GUIDES_DIR/calls.d.ts`). Put the report at the end of your comment, for a maintainer to
-file, in this form:
+the browsers, and the condensed Node test from `../playwright` as the repro. Say that .NET shows
+the same. The title has at most 256 characters. Give it in this form:
 
 `````markdown
 Upstream bug report, for a maintainer to file in microsoft/playwright:
@@ -93,7 +76,7 @@ Upstream bug report, for a maintainer to file in microsoft/playwright:
 </details>
 `````
 
-Write the rest of the comment as the note: the verdict, the evidence, and that the bug is upstream.
+With it, give the verdict, the evidence, and that the bug is upstream.
 
 ## PRs from third parties
 
