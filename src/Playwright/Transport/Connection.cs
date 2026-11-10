@@ -48,6 +48,9 @@ internal class Connection : IDisposable
     internal const string ErrorDetailsDataKey = "playwright.errorDetails";
     internal const string LogDataKey = "playwright.log";
 
+    // The value of the DEBUG environment variable when the last connection was created.
+    private static volatile string? _debugLogLevels;
+
     private readonly ConcurrentDictionary<string, ConnectionCallback> _callbacks = new();
     private readonly Root _rootObject;
     private readonly TaskQueue _queue = new();
@@ -59,6 +62,8 @@ internal class Connection : IDisposable
 
     public Connection(LocalUtils? localUtils = null)
     {
+        // Read here and not for every message. The driver also reads DEBUG once, when it starts.
+        _debugLogLevels = Environment.GetEnvironmentVariable("DEBUG");
         _rootObject = new(null, this, string.Empty);
         LocalUtils = localUtils;
 
@@ -513,12 +518,12 @@ internal class Connection : IDisposable
 
     internal static void TraceMessage(string logLevel, byte[] rawMessage)
     {
-        string actualLogLevel = Environment.GetEnvironmentVariable("DEBUG");
+        string? actualLogLevel = _debugLogLevels;
         if (string.IsNullOrEmpty(actualLogLevel))
         {
             return;
         }
-        if (!actualLogLevel.Contains(logLevel))
+        if (!actualLogLevel!.Contains(logLevel))
         {
             return;
         }
