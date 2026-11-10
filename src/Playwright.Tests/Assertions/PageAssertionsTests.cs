@@ -35,14 +35,14 @@ public class PageAssertionsTests : PageTestEx
         await Expect(Page).ToHaveTitleAsync("Hello  world");
 
         await Page.SetContentAsync("<title>Bye</title>");
-        var exception = await PlaywrightAssert.ThrowsAsync<PlaywrightException>(() => Expect(Page).ToHaveTitleAsync("Hello", new() { Timeout = 100 }));
+        var exception = await PlaywrightAssert.ThrowsAsync<PlaywrightAssertionException>(() => Expect(Page).ToHaveTitleAsync("Hello", new() { Timeout = 100 }));
         StringAssert.Contains("Page title expected to be 'Hello'", exception.Message);
         StringAssert.Contains("But was: 'Bye'", exception.Message);
         StringAssert.Contains("Expect \"ToHaveTitleAsync\" with timeout 100ms", exception.Message);
 
         await Page.SetContentAsync("<title>Foo Bar Kek</title>");
         await Expect(Page).ToHaveTitleAsync(new Regex("^Foo .* Kek$"));
-        await PlaywrightAssert.ThrowsAsync<PlaywrightException>(() => Expect(Page).ToHaveTitleAsync(new Regex("nooo"), new() { Timeout = 100 }));
+        await PlaywrightAssert.ThrowsAsync<PlaywrightAssertionException>(() => Expect(Page).ToHaveTitleAsync(new Regex("nooo"), new() { Timeout = 100 }));
 
         await Page.SetContentAsync("<title>Bye</title>");
         await Expect(Page).Not.ToHaveTitleAsync("Hello");
@@ -57,7 +57,7 @@ public class PageAssertionsTests : PageTestEx
 
         // Fail
         await Page.GotoAsync("data:text/html,<div>B</div>");
-        var exception = await PlaywrightAssert.ThrowsAsync<PlaywrightException>(() => Expect(Page).ToHaveURLAsync("wrong", new() { Timeout = 1000 }));
+        var exception = await PlaywrightAssert.ThrowsAsync<PlaywrightAssertionException>(() => Expect(Page).ToHaveURLAsync("wrong", new() { Timeout = 1000 }));
         StringAssert.Contains("Page URL expected to be 'wrong'", exception.Message);
         StringAssert.Contains("But was: 'data:text/html,<div>B</div>'", exception.Message);
         StringAssert.Contains("Expect \"ToHaveURLAsync\" with timeout 1000ms", exception.Message);
@@ -65,7 +65,7 @@ public class PageAssertionsTests : PageTestEx
         // Fail with Regex
         await Page.GotoAsync(Server.EmptyPage);
         await Expect(Page).ToHaveURLAsync(new Regex(".*empty.html"));
-        await PlaywrightAssert.ThrowsAsync<PlaywrightException>(() => Expect(Page).ToHaveURLAsync(new Regex("nooo"), new() { Timeout = 1000 }));
+        await PlaywrightAssert.ThrowsAsync<PlaywrightAssertionException>(() => Expect(Page).ToHaveURLAsync(new Regex("nooo"), new() { Timeout = 1000 }));
 
         // Pass with Regex
         await Page.GotoAsync(Server.EmptyPage);
@@ -100,7 +100,7 @@ public class PageAssertionsTests : PageTestEx
             - button ""click me""
         ");
 
-        var exception = await PlaywrightAssert.ThrowsAsync<PlaywrightException>(() => Expect(Page).ToMatchAriaSnapshotAsync(@"
+        var exception = await PlaywrightAssert.ThrowsAsync<PlaywrightAssertionException>(() => Expect(Page).ToMatchAriaSnapshotAsync(@"
             - heading ""missing""
         ", new() { Timeout = 100 }));
         StringAssert.Contains("Page expected to match Aria snapshot", exception.Message);
@@ -110,7 +110,7 @@ public class PageAssertionsTests : PageTestEx
     public async Task ShouldIncludeAriaSnapshotInFailureMessage()
     {
         await Page.SetContentAsync("<h1>actual title</h1>");
-        var exception = await PlaywrightAssert.ThrowsAsync<PlaywrightException>(() => Expect(Page.Locator("h1")).ToHaveTextAsync("wrong", new() { Timeout = 100 }));
+        var exception = await PlaywrightAssert.ThrowsAsync<PlaywrightAssertionException>(() => Expect(Page.Locator("h1")).ToHaveTextAsync("wrong", new() { Timeout = 100 }));
         StringAssert.Contains("Aria snapshot", exception.Message);
         StringAssert.Contains("heading", exception.Message);
     }

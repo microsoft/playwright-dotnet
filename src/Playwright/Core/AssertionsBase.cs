@@ -92,9 +92,9 @@ internal abstract class AssertionsBase
             var prefix = CustomMessage != null ? CustomMessage + "\n\n" : string.Empty;
             if (expected == null)
             {
-                throw new PlaywrightException($"{prefix}{message} {log}{ariaSnapshotSuffix}");
+                throw new PlaywrightAssertionException($"{prefix}{message} {log}{ariaSnapshotSuffix}");
             }
-            throw new PlaywrightException($"{prefix}{message} '{FormatValue(expected)}'\nBut was: '{FormatValue(actual)}' {log}{ariaSnapshotSuffix}");
+            throw new PlaywrightAssertionException($"{prefix}{message} '{FormatValue(expected)}'\nBut was: '{FormatValue(actual)}' {log}{ariaSnapshotSuffix}");
         }
     }
 

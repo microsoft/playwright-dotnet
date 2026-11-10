@@ -63,6 +63,14 @@ public class APIResponseAssertionsTests : PageTestEx
         await Expect(response).Not.ToBeOKAsync();
     }
 
+    [PlaywrightTest]
+    public async Task NotToBeOKShouldFail()
+    {
+        var response = await Page.APIRequest.GetAsync(Server.EmptyPage);
+        var exception = await PlaywrightAssert.ThrowsAsync<PlaywrightAssertionException>(() => Expect(response).Not.ToBeOKAsync());
+        StringAssert.Contains("Response status expected not to be within [200..299] range, was 200", exception.Message);
+    }
+
     [PlaywrightTest("tests/page/expect-boolean.spec.ts", "toBeOK fail with invalid argument")]
     public async Task ToBeFailWithInvalidArgument()
     {
@@ -74,7 +82,8 @@ public class APIResponseAssertionsTests : PageTestEx
     public async Task ToBeOKShouldPrintResponseWithTextContentTypeWhenFailsWithTextContentType()
     {
         var response = await Page.APIRequest.GetAsync($"{Server.Prefix}/text-content-type");
-        var exception = await PlaywrightAssert.ThrowsAsync<PlaywrightException>(() => Expect(response).ToBeOKAsync());
+        var exception = await PlaywrightAssert.ThrowsAsync<PlaywrightAssertionException>(() => Expect(response).ToBeOKAsync());
+        StringAssert.Contains("Response status expected to be within [200..299] range, was 404", exception.Message);
         StringAssert.Contains($"→ GET {Server.Prefix}/text-content-type", exception.Message);
         StringAssert.Contains("← 404 Not Found", exception.Message);
         StringAssert.Contains("Text error", exception.Message);
@@ -84,7 +93,7 @@ public class APIResponseAssertionsTests : PageTestEx
     public async Task ToBeOKShouldPrintResponseWithTextContentTypeWhenFailsWithNoContentType()
     {
         var response = await Page.APIRequest.GetAsync($"{Server.Prefix}/no-content-type");
-        var exception = await PlaywrightAssert.ThrowsAsync<PlaywrightException>(() => Expect(response).ToBeOKAsync());
+        var exception = await PlaywrightAssert.ThrowsAsync<PlaywrightAssertionException>(() => Expect(response).ToBeOKAsync());
         StringAssert.Contains($"→ GET {Server.Prefix}/no-content-type", exception.Message);
         StringAssert.Contains("← 404 Not Found", exception.Message);
         StringAssert.DoesNotContain("No content type error", exception.Message);
@@ -94,7 +103,7 @@ public class APIResponseAssertionsTests : PageTestEx
     public async Task ToBeOKShouldPrintResponseWithTextContentTypeWhenFailsWithImageContentType()
     {
         var response = await Page.APIRequest.GetAsync($"{Server.Prefix}/image-content-type");
-        var exception = await PlaywrightAssert.ThrowsAsync<PlaywrightException>(() => Expect(response).ToBeOKAsync());
+        var exception = await PlaywrightAssert.ThrowsAsync<PlaywrightAssertionException>(() => Expect(response).ToBeOKAsync());
         StringAssert.Contains($"→ GET {Server.Prefix}/image-content-type", exception.Message);
         StringAssert.Contains("← 404 Not Found", exception.Message);
         StringAssert.DoesNotContain("Image content type error", exception.Message);

@@ -164,7 +164,7 @@ public class LocatorAnyFrameTests : PageTestEx
         await RoutePage("b.html", "<span>two</span>");
         await Page.GotoAsync(Server.EmptyPage);
         await WaitForAllFrames(3, "span");
-        var error = await PlaywrightAssert.ThrowsAsync<PlaywrightException>(() => Expect(Page.FrameLocator().Locator("span")).ToHaveCountAsync(2, new() { Timeout = 3000 }));
+        var error = await PlaywrightAssert.ThrowsAsync<PlaywrightAssertionException>(() => Expect(Page.FrameLocator().Locator("span")).ToHaveCountAsync(2, new() { Timeout = 3000 }));
         StringAssert.Contains("frameLocator() matched elements in multiple frames", error.Message);
     }
 
@@ -194,7 +194,7 @@ public class LocatorAnyFrameTests : PageTestEx
         await RoutePage("b.html", "<div>two</div>");
         await Page.GotoAsync(Server.EmptyPage);
         await WaitForAllFrames(3, "div");
-        var error = await PlaywrightAssert.ThrowsAsync<PlaywrightException>(() => Expect(Page.FrameLocator().Locator("div")).ToHaveTextAsync("one", new() { Timeout = 3000 }));
+        var error = await PlaywrightAssert.ThrowsAsync<PlaywrightAssertionException>(() => Expect(Page.FrameLocator().Locator("div")).ToHaveTextAsync("one", new() { Timeout = 3000 }));
         StringAssert.Contains("frameLocator() matched elements in multiple frames", error.Message);
     }
 
