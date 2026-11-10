@@ -22,6 +22,7 @@ export const test = base.extend<{
   testMode: 'nunit' | 'mstest' | 'mstest.v4' | 'xunit' | 'xunit.v3';
   runTest: (files: Record<string, string>, command: string, env?: NodeJS.ProcessEnv) => Promise<RunResult>;
   launchServer: (options: { port: number }) => Promise<void>;
+  runServer: (options: { port: number }) => Promise<void>;
   server: SimpleServer;
 }>({
   proxyServer: async ({}, use) => {
@@ -48,6 +49,26 @@ export const test = base.extend<{
     });
     for (const server of servers)
       await server.close();
+  },
+  runServer: async ({}, use) => {
+    // Unlike launchServer, which serves one browser that it has launched, `run-server` launches
+    // a browser for each client, with the launch options that the client sends in a header.
+    // --unsafe lets the client pass browser args.
+    const cli = path.join(__dirname, '..', '..', 'Playwright', '.drivers', 'package', 'cli.js');
+    const servers: childProcess.ChildProcess[] = [];
+    await use(async ({port}: {port: number}) => {
+      const server = childProcess.spawn(process.execPath, [cli, 'run-server', '--host', '127.0.0.1', '--port', String(port), '--unsafe'], { stdio: ['ignore', 'pipe', 'inherit'] });
+      servers.push(server);
+      await new Promise<void>((resolve, reject) => {
+        server.stdout!.on('data', data => {
+          if (data.toString().includes('Listening on'))
+            resolve();
+        });
+        server.on('exit', code => reject(new Error(`run-server exited with code ${code}`)));
+      });
+    });
+    for (const server of servers)
+      server.kill();
   },
   runTest: async ({ testMode }, use, testInfo) => {
     const testResults: RunResult[] = [];

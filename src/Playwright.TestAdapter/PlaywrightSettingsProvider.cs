@@ -116,15 +116,17 @@ public class PlaywrightSettingsProvider : ISettingsProvider
     {
         get
         {
-            var launchOptions = _settings?.LaunchOptions ?? new BrowserTypeLaunchOptions();
+            var launchOptions = new BrowserTypeLaunchOptions(_settings?.LaunchOptions ?? new());
             if (Environment.GetEnvironmentVariable("HEADED") == "1")
             {
                 launchOptions.Headless = false;
             }
+#pragma warning disable CS0618 // Type or member is obsolete
             else if (_settings != null && _settings.Headless.HasValue)
             {
                 launchOptions.Headless = _settings.Headless.Value;
             }
+#pragma warning restore CS0618 // Type or member is obsolete
             return launchOptions;
         }
     }

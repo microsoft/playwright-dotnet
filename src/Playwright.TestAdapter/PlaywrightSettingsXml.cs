@@ -41,8 +41,9 @@ public class PlaywrightSettingsXml
 
     public PlaywrightSettingsXml(XmlReader reader)
     {
-        // Skip Playwright root Element
-        reader.Read();
+        // Go to the Playwright root element, past any whitespace or declaration before it.
+        // The loop below then reads its children.
+        reader.MoveToContent();
         while (reader.Read())
         {
             if (reader.NodeType != XmlNodeType.Element)
@@ -79,7 +80,26 @@ public class PlaywrightSettingsXml
                     break;
                 default:
                     Console.WriteLine($"Playwright RunSettings Parsing Error: Playwright>{reader.Name} is not implemented");
+                    SkipElement(reader);
                     break;
+            }
+        }
+    }
+
+    // Moves to the end tag of the element that the reader is on, past everything inside it, so
+    // that the children of an element that is not supported are not read as settings.
+    private static void SkipElement(XmlReader reader)
+    {
+        if (reader.IsEmptyElement)
+        {
+            return;
+        }
+        var depth = reader.Depth;
+        while (reader.Read())
+        {
+            if (reader.NodeType == XmlNodeType.EndElement && reader.Depth == depth)
+            {
+                break;
             }
         }
     }
@@ -101,6 +121,7 @@ public class PlaywrightSettingsXml
                 if (property == null)
                 {
                     Console.WriteLine($"Playwright RunSettings Parsing Error: Playwright>{endTag}>{key} is not supported");
+                    SkipElement(reader);
                     continue;
                 }
                 var type = Nullable.GetUnderlyingType(property.PropertyType) ?? property.PropertyType;
@@ -145,11 +166,12 @@ public class PlaywrightSettingsXml
                 break;
             case Type t when t?.IsEnum == true:
                 {
+                    // The value as the docs spell it ("no-preference"), or the C# name in any case ("NoPreference").
                     var enumValue = Enum.GetNames(t).Where(name =>
                     {
                         var field = t.GetField(name);
                         return field.GetCustomAttribute<EnumMemberAttribute>()?.Value == value;
-                    }).FirstOrDefault();
+                    }).FirstOrDefault() ?? Enum.GetNames(t).FirstOrDefault(name => string.Equals(name, value, StringComparison.OrdinalIgnoreCase));
                     if (enumValue == null)
                     {
                         throw new ArgumentException($"Invalid value '{value}' for enum {t.Name}");
@@ -175,17 +197,28 @@ public class PlaywrightSettingsXml
 
     private static object ParseAsJson(string value, Type type)
     {
-        return JsonSerializer.Deserialize(value.Replace('\'', '"'), type)!;
+        // JSON as it is keeps the apostrophes in its strings. The shorthand with single quotes,
+        // ['--a'], is not JSON: its quotes are swapped, as before.
+        try
+        {
+            return JsonSerializer.Deserialize(value, type)!;
+        }
+        catch (JsonException)
+        {
+            return JsonSerializer.Deserialize(value.Replace('\'', '"'), type)!;
+        }
     }
 
     public BrowserTypeLaunchOptions? LaunchOptions { get; set; }
     public BrowserNewContextOptions? ContextOptions { get; set; }
     public string? BrowserName { get; set; }
+
+    [Obsolete("Not read from the run settings. Use LaunchOptions.Headless instead.")]
     public bool? Headless { get; set; }
+
     public float? ExpectTimeout { get; set; }
     public float? ActionTimeout { get; set; }
     public float? NavigationTimeout { get; set; }
     public string? TestIdAttribute { get; set; }
-    public int? Retries { get; set; }
 }
 

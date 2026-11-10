@@ -304,6 +304,49 @@ test('should be able to parse LaunchOptions.Args from runsettings', async ({ run
   expect(result.stdout).toContain("User-Agent: hello")
 });
 
+// See https://github.com/microsoft/playwright-dotnet/issues/3425
+test('should hand out a copy of the launch options from runsettings', async ({ runTest }) => {
+  const result = await runTest({
+    'ExampleTests.cs': `
+      using System;
+      using System.Linq;
+      using NUnit.Framework;
+      using Microsoft.Playwright.NUnit;
+      using Microsoft.Playwright.TestAdapter;
+
+      namespace Playwright.TestingHarnessTest.NUnit;
+
+      public class <class-name> : PageTest
+      {
+          [Test]
+          public void Test()
+          {
+              var first = PlaywrightSettingsProvider.LaunchOptions;
+              first.Args = first.Args.Append("--added-by-a-test");
+              first.Channel = "changed-by-a-test";
+              var second = PlaywrightSettingsProvider.LaunchOptions;
+              Console.WriteLine("Args: " + string.Join(" ", second.Args) + ";");
+              Console.WriteLine("Channel: " + (second.Channel ?? "not set") + ";");
+          }
+      }`,
+      '.runsettings': `
+        <?xml version="1.0" encoding="utf-8"?>
+        <RunSettings>
+            <Playwright>
+              <LaunchOptions>
+                <Args>['--user-agent=hello']</Args>
+              </LaunchOptions>
+            </Playwright>
+        </RunSettings>
+      `,
+  }, 'dotnet test --settings=.runsettings');
+  expect(result.passed).toBe(1);
+  expect(result.failed).toBe(0);
+  expect(result.total).toBe(1);
+  expect(result.stdout).toContain("Args: --user-agent=hello;")
+  expect(result.stdout).toContain("Channel: not set;")
+});
+
 test('should be able to override context options', async ({ runTest, server }) => {
   const result = await runTest({
     'ExampleTests.cs': `
@@ -707,6 +750,89 @@ test.describe('ConnectOptions', () => {
     expect(result.failed).toBe(0);
     expect(result.total).toBe(1);
     expect(fs.existsSync(testInfo.outputPath('browser-closed.txt'))).toBe(true);
+  });
+
+  // See https://github.com/microsoft/playwright-dotnet/issues/3424
+  test('should send the launch options of the test class to the server', async ({ runTest, runServer }) => {
+    await runServer({ port: 1234 });
+    const result = await runTest({
+      'ExampleTests.cs': `
+      using System;
+      using System.Threading.Tasks;
+      using Microsoft.Playwright;
+      using Microsoft.Playwright.NUnit;
+      using NUnit.Framework;
+
+      namespace Playwright.TestingHarnessTest.NUnit;
+
+      public class <class-name> : PageTest
+      {
+          [Test]
+          public async Task Test()
+          {
+              await Page.GotoAsync("about:blank");
+              Console.WriteLine("User-Agent: " + await Page.EvaluateAsync<string>("() => navigator.userAgent"));
+          }
+
+          public override async Task<(string, BrowserTypeConnectOptions)?> ConnectOptionsAsync()
+          {
+              return ("ws://127.0.0.1:1234", null);
+          }
+
+          public override Task<BrowserTypeLaunchOptions?> LaunchOptionsAsync()
+          {
+              return Task.FromResult<BrowserTypeLaunchOptions?>(new BrowserTypeLaunchOptions
+              {
+                  Args = new[] { "--user-agent=hello" },
+              });
+          }
+      }`,
+    }, 'dotnet test');
+    expect(result.passed).toBe(1);
+    expect(result.failed).toBe(0);
+    expect(result.total).toBe(1);
+    expect(result.stdout).toContain("User-Agent: hello");
+  });
+
+  // See https://github.com/microsoft/playwright-dotnet/issues/3424
+  test('should keep the launch options header that the test class sets itself', async ({ runTest, runServer }) => {
+    await runServer({ port: 1234 });
+    const result = await runTest({
+      'ExampleTests.cs': `
+      using System;
+      using System.Collections.Generic;
+      using System.Threading.Tasks;
+      using Microsoft.Playwright;
+      using Microsoft.Playwright.NUnit;
+      using NUnit.Framework;
+
+      namespace Playwright.TestingHarnessTest.NUnit;
+
+      public class <class-name> : PageTest
+      {
+          [Test]
+          public async Task Test()
+          {
+              await Page.GotoAsync("about:blank");
+              Console.WriteLine("User-Agent: " + await Page.EvaluateAsync<string>("() => navigator.userAgent"));
+          }
+
+          public override async Task<(string, BrowserTypeConnectOptions)?> ConnectOptionsAsync()
+          {
+              return ("ws://127.0.0.1:1234", new BrowserTypeConnectOptions
+              {
+                  Headers = new Dictionary<string, string>
+                  {
+                      ["x-playwright-launch-options"] = "{\\"args\\":[\\"--user-agent=from-the-header\\"]}",
+                  },
+              });
+          }
+      }`,
+    }, 'dotnet test');
+    expect(result.passed).toBe(1);
+    expect(result.failed).toBe(0);
+    expect(result.total).toBe(1);
+    expect(result.stdout).toContain("User-Agent: from-the-header");
   });
 });
 
