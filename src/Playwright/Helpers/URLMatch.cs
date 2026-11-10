@@ -188,14 +188,15 @@ public class URLMatch
         {
             return baseURL;
         }
-        // Allow http(s) baseURL to match ws(s) urls.
+        // Allow http(s) baseURL to match ws(s) urls. Only the scheme changes: the rest of the
+        // URL may contain another URL, in its path or in its query.
         if (baseURL.StartsWith("http://"))
         {
-            return baseURL.Replace("http://", "ws://");
+            return "ws://" + baseURL.Substring("http://".Length);
         }
         if (baseURL.StartsWith("https://"))
         {
-            return baseURL.Replace("https://", "wss://");
+            return "wss://" + baseURL.Substring("https://".Length);
         }
         return baseURL;
     }

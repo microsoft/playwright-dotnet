@@ -141,8 +141,9 @@ internal static class Driver
         {
             return !string.IsNullOrEmpty(args) ? $"\"{cliEntrypoint}\" {args}" : cliEntrypoint;
         }
+        var nodePath = Environment.GetEnvironmentVariable("PLAYWRIGHT_NODEJS_PATH");
         return (
-            Environment.GetEnvironmentVariable("PLAYWRIGHT_NODEJS_PATH") ?? Path.GetFullPath(Path.Combine(driversPath, ".playwright", "node", platformId, nodeExecutable)),
+            !string.IsNullOrEmpty(nodePath) ? nodePath : Path.GetFullPath(Path.Combine(driversPath, ".playwright", "node", platformId, nodeExecutable)),
             getArgs);
     }
 }

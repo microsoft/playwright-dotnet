@@ -134,6 +134,18 @@ public class InterceptionTests : PageTestEx
         Assert.True(URLMatches("http://playwright.dev/", "file://path/to/file", "file://**"));
     }
 
+    // See https://github.com/microsoft/playwright-dotnet/issues/3433
+    [PlaywrightTest]
+    public void ShouldReplaceOnlyTheSchemeOfAWebSocketBaseURL()
+    {
+        Assert.AreEqual("ws://app/proxy?to=http://api", URLMatch.ToWebSocketBaseURL("http://app/proxy?to=http://api"));
+        Assert.AreEqual("wss://app/proxy?to=https://api", URLMatch.ToWebSocketBaseURL("https://app/proxy?to=https://api"));
+
+        // A base URL that has another URL in its path still matches a relative glob.
+        var matcher = new URLMatch() { baseURL = "http://app/proxy/http://api/", glob = "./socket", isWebSocketUrl = true };
+        Assert.True(matcher.Match("ws://app/proxy/http://api/socket"));
+    }
+
     [PlaywrightTest("interception.spec.ts", "should intercept by glob")]
     public async Task ShouldInterceptByGlob()
     {
