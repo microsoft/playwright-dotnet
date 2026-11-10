@@ -50,6 +50,19 @@
         <PlaywrightFolder>package\</PlaywrightFolder>
       </_PlaywrightCopyItems>
     </ItemGroup>
+    <!-- PreserveNewest does not overwrite the driver files that a newer version of the package left
+         in the output directory. Remove the driver of another version, so that it is copied again. -->
+    <PropertyGroup>
+      <_PlaywrightPackageJson>$(MSBuildThisFileDirectory)..\.playwright\package\package.json</_PlaywrightPackageJson>
+      <_PlaywrightOutDir>$([MSBuild]::NormalizeDirectory('$(MSBuildProjectDirectory)', '$(OutDir)'))</_PlaywrightOutDir>
+      <_PlaywrightOutPackageJson>$(_PlaywrightOutDir).playwright\package\package.json</_PlaywrightOutPackageJson>
+    </PropertyGroup>
+    <PropertyGroup Condition="'$(PlaywrightPlatform)' != 'none' AND Exists('$(_PlaywrightPackageJson)') AND Exists('$(_PlaywrightOutPackageJson)')">
+      <_PlaywrightPackageJsonText>$([System.IO.File]::ReadAllText('$(_PlaywrightPackageJson)'))</_PlaywrightPackageJsonText>
+      <_PlaywrightOutPackageJsonText>$([System.IO.File]::ReadAllText('$(_PlaywrightOutPackageJson)'))</_PlaywrightOutPackageJsonText>
+    </PropertyGroup>
+    <RemoveDir Directories="$(_PlaywrightOutDir).playwright" Condition="'$(_PlaywrightPackageJsonText)' != '$(_PlaywrightOutPackageJsonText)'" />
+    <Delete Files="$(_PlaywrightOutDir)playwright.ps1" Condition="'$(_PlaywrightPackageJsonText)' != '$(_PlaywrightOutPackageJsonText)'" />
     <ItemGroup>
       <Content Include="@(_PlaywrightCopyItems)">
         <NuGetPackageId>Microsoft.Playwright</NuGetPackageId>

@@ -74,3 +74,14 @@ jobs:
       - name: Run Tests
         run: dotnet test
         working-directory: ./src/Playwright.LocalNugetTest/
+      # See https://github.com/microsoft/playwright-dotnet/issues/2959
+      - name: Rebuild over a driver left by another version
+        shell: bash
+        run: |
+          driver="bin/Debug/net8.0/.playwright/package"
+          echo '{ "version": "0.0.0" }' > "$driver/package.json"
+          echo 'throw new Error("stale driver");' > "$driver/cli.js"
+          dotnet build
+          grep -q '"name": "playwright-core"' "$driver/package.json"
+          if grep -q "stale driver" "$driver/cli.js"; then exit 1; fi
+        working-directory: ./src/Playwright.LocalNugetTest/
