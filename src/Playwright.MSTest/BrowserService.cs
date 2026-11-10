@@ -53,12 +53,15 @@ internal class BrowserService : IWorkerService
         {
             var options = new BrowserTypeConnectOptions(connectOptions?.Options ?? new());
             var headers = options.Headers?.ToDictionary(kvp => kvp.Key, kvp => kvp.Value) ?? [];
-            headers.Add("x-playwright-launch-options", JsonSerializer.Serialize(PlaywrightSettingsProvider.LaunchOptions, new JsonSerializerOptions() { DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull }));
+            if (!headers.Keys.Any(name => string.Equals(name, "x-playwright-launch-options", StringComparison.OrdinalIgnoreCase)))
+            {
+                headers["x-playwright-launch-options"] = JsonSerializer.Serialize(launchOptions ?? PlaywrightSettingsProvider.LaunchOptions, new JsonSerializerOptions() { DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull });
+            }
             options.Headers = headers;
             return await browserType.ConnectAsync(connectOptions!.Value.WSEndpoint, options).ConfigureAwait(false);
         }
 
-        var legacyBrowser = await ConnectBasedOnEnv(browserType);
+        var legacyBrowser = await ConnectBasedOnEnv(browserType, launchOptions);
         if (legacyBrowser != null)
         {
             return legacyBrowser;
@@ -67,7 +70,7 @@ internal class BrowserService : IWorkerService
     }
 
     // TODO: Remove at some point
-    private static async Task<IBrowser?> ConnectBasedOnEnv(IBrowserType browserType)
+    private static async Task<IBrowser?> ConnectBasedOnEnv(IBrowserType browserType, BrowserTypeLaunchOptions? launchOptions)
     {
         var accessToken = Environment.GetEnvironmentVariable("PLAYWRIGHT_SERVICE_ACCESS_TOKEN");
         var serviceUrl = Environment.GetEnvironmentVariable("PLAYWRIGHT_SERVICE_URL");
@@ -90,7 +93,7 @@ internal class BrowserService : IWorkerService
             Headers = new Dictionary<string, string>
             {
                 ["Authorization"] = $"Bearer {accessToken}",
-                ["x-playwright-launch-options"] = JsonSerializer.Serialize(PlaywrightSettingsProvider.LaunchOptions, new JsonSerializerOptions() { DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull })
+                ["x-playwright-launch-options"] = JsonSerializer.Serialize(launchOptions ?? PlaywrightSettingsProvider.LaunchOptions, new JsonSerializerOptions() { DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull })
             }
         }).ConfigureAwait(false);
     }
