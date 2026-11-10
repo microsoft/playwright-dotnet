@@ -132,6 +132,7 @@ extends:
               src/Playwright.Xunit/Playwright.Xunit.csproj;
               src/Playwright.Xunit.v3/Playwright.Xunit.v3.csproj;
               src/Playwright.TestAdapter/Playwright.TestAdapter.csproj;
+              src/Playwright.Testing.Platform/Playwright.Testing.Platform.csproj;
             packDirectory: '$(Build.ArtifactStagingDirectory)/nuget'
             versioningScheme: 'off'
         # Stage the packages to release. Microsoft.Playwright.CLI is only released
@@ -141,7 +142,7 @@ extends:
             $nuget = "$(Build.ArtifactStagingDirectory)/nuget"
             $out = "$(Build.ArtifactStagingDirectory)/esrp-build"
             New-Item -ItemType Directory -Force -Path $out | Out-Null
-            $names = @('Microsoft.Playwright', 'Microsoft.Playwright.NUnit', 'Microsoft.Playwright.MSTest', 'Microsoft.Playwright.MSTest.v4', 'Microsoft.Playwright.Xunit', 'Microsoft.Playwright.Xunit.v3', 'Microsoft.Playwright.TestAdapter')
+            $names = @('Microsoft.Playwright', 'Microsoft.Playwright.NUnit', 'Microsoft.Playwright.MSTest', 'Microsoft.Playwright.MSTest.v4', 'Microsoft.Playwright.Xunit', 'Microsoft.Playwright.Xunit.v3', 'Microsoft.Playwright.TestAdapter', 'Microsoft.Playwright.Testing.Platform')
             if ('${{ parameters.doReleaseCLI }}' -eq 'True') {
               $names += 'Microsoft.Playwright.CLI'
             }

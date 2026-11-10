@@ -91,6 +91,7 @@ public class WorkerAwareTest
     [SetUp]
     public void WorkerSetup()
     {
+        PlaywrightSettingsProvider.LoadViaEnvIfNeeded();
         if (!_allWorkers.TryPop(out _currentWorker!))
         {
             _currentWorker = new();

@@ -1,0 +1,13 @@
+{
+  "playwright": {
+    "browserName": "firefox",
+    "expectTimeout": 1234,
+    "testIdAttribute": "data-package-id",
+    "launchOptions": { "headless": true },
+    "contextOptions": {
+      "locale": "fr-FR",
+      "timezoneId": "Europe/Madrid",
+      "viewportSize": { "width": 960, "height": 540 }
+    }
+  }
+}

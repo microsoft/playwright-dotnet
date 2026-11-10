@@ -34,21 +34,43 @@ namespace Microsoft.Playwright.TestAdapter;
 [SettingsName("Playwright")]
 public class PlaywrightSettingsProvider : ISettingsProvider
 {
+    private const string SettingsEnvironmentVariable = "PW_INTERNAL_ADAPTER_SETTINGS";
     private static PlaywrightSettingsXml? _settings = null!;
+    private static string? _settingsFromEnvironment;
+
+    internal static void SetSettings(PlaywrightSettingsXml settings)
+    {
+        _settings = settings;
+    }
+
+    internal static string? ForwardSettings()
+    {
+        var serialized = JsonSerializer.Serialize(_settings ??
+            throw new InvalidOperationException("Playwright settings have not been initialized."));
+        var previous = Environment.GetEnvironmentVariable(SettingsEnvironmentVariable);
+        Environment.SetEnvironmentVariable(SettingsEnvironmentVariable, serialized);
+        _settingsFromEnvironment = serialized;
+        return previous;
+    }
+
+    internal static void RestoreForwardedSettings(string? previous)
+        => Environment.SetEnvironmentVariable(SettingsEnvironmentVariable, previous);
 
     public static void LoadViaEnvIfNeeded()
     {
-        if (_settings == null)
+        var settings = Environment.GetEnvironmentVariable(SettingsEnvironmentVariable);
+        if (_settings == null || !string.Equals(_settingsFromEnvironment, settings, StringComparison.Ordinal))
         {
-            var settings = Environment.GetEnvironmentVariable("PW_INTERNAL_ADAPTER_SETTINGS");
             if (!string.IsNullOrEmpty(settings))
             {
-                _settings = JsonSerializer.Deserialize<PlaywrightSettingsXml>(settings);
+                _settings = JsonSerializer.Deserialize<PlaywrightSettingsXml>(settings) ??
+                    throw new ArgumentException("The forwarded Playwright settings must be an object.");
             }
             else
             {
                 _settings = new PlaywrightSettingsXml();
             }
+            _settingsFromEnvironment = settings;
         }
     }
 
@@ -66,7 +88,7 @@ public class PlaywrightSettingsProvider : ISettingsProvider
             if (_settings != null && !string.IsNullOrEmpty(_settings.BrowserName))
             {
                 var browser = _settings.BrowserName!.ToLowerInvariant();
-                ValidateBrowserName(browser, "run settings", string.Empty);
+                ValidateBrowserName(browser, "Playwright settings", string.Empty);
                 return browser;
             }
             return BrowserType.Chromium;
@@ -105,7 +127,7 @@ public class PlaywrightSettingsProvider : ISettingsProvider
     {
         get
         {
-            var launchOptions = _settings?.LaunchOptions ?? new BrowserTypeLaunchOptions();
+            var launchOptions = new BrowserTypeLaunchOptions(_settings?.LaunchOptions ?? new());
             if (Environment.GetEnvironmentVariable("HEADED") == "1")
             {
                 launchOptions.Headless = false;
@@ -146,8 +168,7 @@ public class PlaywrightSettingsProvider : ISettingsProvider
     public void Load(XmlReader reader)
     {
         // NOTE: ISettingsProvider::Load is not called when there are no runsettings (either file or passed via command line).
-        _settings = new PlaywrightSettingsXml(reader);
-        Environment.SetEnvironmentVariable("PW_INTERNAL_ADAPTER_SETTINGS", JsonSerializer.Serialize(_settings));
+        SetSettings(new PlaywrightSettingsXml(reader));
+        ForwardSettings();
     }
 }
-
