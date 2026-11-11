@@ -3,9 +3,10 @@
     <AssemblyVersion>1.65.0</AssemblyVersion>
     <PackageVersion>$(AssemblyVersion)</PackageVersion>
     <DriverVersion>5ccfbd85521679ebf5ab4d836852bf1c544aa748</DriverVersion>
-    <!-- The Node.js version bundled with the driver. Set by the roll script to the latest
-         Node.js LTS, matching upstream's utils/build/update-playwright-node.mjs. -->
-    <DriverNodeVersion>26.13.0</DriverNodeVersion>
+    <!-- The Node.js major version bundled with the driver. Each driver build bundles the
+         latest release of it. Set by the roll script to the latest Node.js LTS, matching
+         upstream's utils/build/update-playwright-node.mjs. -->
+    <DriverNodeMajorVersion>26</DriverNodeMajorVersion>
     <ReleaseVersion>$(AssemblyVersion)</ReleaseVersion>
     <FileVersion>$(AssemblyVersion)</FileVersion>
     <NoDefaultExcludes>true</NoDefaultExcludes>

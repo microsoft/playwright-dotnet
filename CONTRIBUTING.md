@@ -87,7 +87,7 @@ Before building the solution, build the driver:
 ./build.sh --build-driver
 ```
 
-The driver comes from [microsoft/playwright](https://github.com/microsoft/playwright), at the commit in `DriverVersion` of `src/Common/Version.props`. The script clones that repository into `.upstream/` (gitignored), checks out the commit and builds the driver from it into `src/Playwright/.drivers`. Run it again when `DriverVersion` changes, for example after a pull. Do not commit, branch or edit in `.upstream/`.
+The driver comes from [microsoft/playwright](https://github.com/microsoft/playwright), at the commit in `DriverVersion` of `src/Common/Version.props`. The script clones that repository into `.upstream/` (gitignored), checks out the commit and builds the driver from it into `src/Playwright/.drivers`, together with the latest Node.js release of `DriverNodeMajorVersion`. Run it again when `DriverVersion` changes, for example after a pull. Do not commit, branch or edit in `.upstream/`.
 
 #### Dotnet Format
 
