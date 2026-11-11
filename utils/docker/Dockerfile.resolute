@@ -13,6 +13,8 @@ ENV LC_ALL=C.UTF-8
 RUN find /etc/apt -type f \( -name '*.list' -o -name '*.sources' \) \
       -exec sed -i "s|http://archive.ubuntu.com|http://${UBUNTU_MIRROR_PREFIX}archive.ubuntu.com|g; s|http://ports.ubuntu.com|http://${UBUNTU_MIRROR_PREFIX}ports.ubuntu.com|g" {} + && \
     apt-get update && \
+    # Pick up security fixes that the base image does not have yet.
+    apt-get upgrade -y -o Acquire::Retries=0 && \
     # Feature-parity with node.js base images.
     apt-get install -y --no-install-recommends git openssh-client curl gpg && \
     # The Node.js binary of the driver links against libatomic (since Node.js 25).
