@@ -1,7 +1,7 @@
 <Project>
   <PropertyGroup>
     <AssemblyVersion>1.65.0</AssemblyVersion>
-    <PackageVersion>$(AssemblyVersion)-beta1</PackageVersion>
+    <PackageVersion>$(AssemblyVersion)</PackageVersion>
     <DriverVersion>5ccfbd85521679ebf5ab4d836852bf1c544aa748</DriverVersion>
     <!-- The Node.js version bundled with the driver. Set by the roll script to the latest
          Node.js LTS, matching upstream's utils/build/update-playwright-node.mjs. -->
