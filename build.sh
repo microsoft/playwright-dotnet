@@ -112,17 +112,18 @@ function roll() {
   local old_driver_version=$(read_driver_version < "${version_props_path}")
   local new_driver_version
   new_driver_version=$(resolve_ref "$1")
-  local new_node_version=$(curl -fsSL "https://nodejs.org/dist/index.json" \
-    | node -e "let s='';process.stdin.on('data',d=>s+=d).on('end',()=>console.log(JSON.parse(s).find(r=>r.lts).version.slice(1)))")
-  if [[ -z "${new_node_version}" ]]; then
-    echo "Failed to determine the Node.js version for the driver"
+  # The driver build bundles the latest release of this major version.
+  local new_node_major_version=$(curl -fsSL "https://nodejs.org/dist/index.json" \
+    | node -e "let s='';process.stdin.on('data',d=>s+=d).on('end',()=>console.log(JSON.parse(s).find(r=>r.lts).version.slice(1).split('.')[0]))")
+  if [[ -z "${new_node_major_version}" ]]; then
+    echo "Failed to determine the Node.js major version for the driver"
     exit 1
   fi
-  echo "Rolling from microsoft/playwright ${old_driver_version} to ${new_driver_version} (Node.js ${new_node_version})..."
+  echo "Rolling from microsoft/playwright ${old_driver_version} to ${new_driver_version} (Node.js ${new_node_major_version})..."
 
   local xml_file_contents=$(cat "${version_props_path}")
   xml_file_contents=$(echo "${xml_file_contents}" | sed "s|<DriverVersion>.*</DriverVersion>|<DriverVersion>${new_driver_version}</DriverVersion>|")
-  xml_file_contents=$(echo "${xml_file_contents}" | sed "s|<DriverNodeVersion>.*</DriverNodeVersion>|<DriverNodeVersion>${new_node_version}</DriverNodeVersion>|")
+  xml_file_contents=$(echo "${xml_file_contents}" | sed "s|<DriverNodeMajorVersion>.*</DriverNodeMajorVersion>|<DriverNodeMajorVersion>${new_node_major_version}</DriverNodeMajorVersion>|")
   echo "${xml_file_contents}" > "${version_props_path}"
 
   # The channels generator needs the dependencies that the driver build installs.

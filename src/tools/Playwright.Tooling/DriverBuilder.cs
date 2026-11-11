@@ -26,10 +26,12 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Formats.Tar;
+using System.Globalization;
 using System.IO;
 using System.IO.Compression;
 using System.Linq;
 using System.Net.Http;
+using System.Text.Json;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Xml;
@@ -40,8 +42,8 @@ namespace Playwright.Tooling;
 /// <summary>
 /// Builds the Playwright driver into src/Playwright/.drivers. The driver is the
 /// playwright-core package of microsoft/playwright at the commit in DriverVersion
-/// (src/Common/Version.props), plus the official Node.js binaries of
-/// DriverNodeVersion. This:
+/// (src/Common/Version.props), plus the official Node.js binaries of the latest
+/// release of DriverNodeMajorVersion. This:
 ///   1. clones microsoft/playwright into .upstream/ (gitignored) the first time,
 ///      and checks out the commit;
 ///   2. builds it with `npm ci` and `npm run build` (once per commit);
@@ -52,25 +54,30 @@ namespace Playwright.Tooling;
 ///   .drivers/package/**                  - playwright-core npm package contents
 ///   .drivers/node/LICENSE                - Node.js license
 ///   .drivers/node/&lt;platform&gt;/node[.exe]  - per-platform Node.js binary.
-/// A driver that is built is not built again until DriverVersion or
-/// DriverNodeVersion changes. Do not commit, branch or edit in .upstream/: the
-/// driver is built only from a checkout with no local changes.
+/// A driver that is built is not built again until DriverVersion changes or
+/// Node.js DriverNodeMajorVersion gets a new release. Do not commit, branch or
+/// edit in .upstream/: the driver is built only from a checkout with no local changes.
 /// </summary>
 internal class DriverBuilder
 {
     private const string UpstreamUrl = "https://github.com/microsoft/playwright.git";
 
+    private const string NodeIndexUrl = "https://nodejs.org/dist/index.json";
+
     private static readonly Regex _commitRegex = new("^[0-9a-f]{40}$", RegexOptions.Compiled);
 
+    private static readonly Regex _nodeReleaseRegex = new(@"^v([0-9]+\.[0-9]+\.[0-9]+)$", RegexOptions.Compiled);
+
     // Directory names under .drivers/node/ are the platform ids that Driver.cs
-    // resolves at runtime; the suffixes name the Node.js download for that platform.
-    private static readonly (string PlatformId, string NodeSuffix)[] _platforms = new[]
+    // resolves at runtime; the suffixes name the Node.js download for that platform,
+    // and the index files name it in the "files" of a release in the Node.js index.
+    private static readonly (string PlatformId, string NodeSuffix, string NodeIndexFile)[] _platforms = new[]
     {
-            ("darwin-x64", "darwin-x64"),
-            ("darwin-arm64", "darwin-arm64"),
-            ("linux-x64", "linux-x64"),
-            ("linux-arm64", "linux-arm64"),
-            ("win32_x64", "win-x64"),
+            ("darwin-x64", "darwin-x64", "osx-x64-tar"),
+            ("darwin-arm64", "darwin-arm64", "osx-arm64-tar"),
+            ("linux-x64", "linux-x64", "linux-x64"),
+            ("linux-arm64", "linux-arm64", "linux-arm64"),
+            ("win32_x64", "win-x64", "win-x64-zip"),
     };
 
     public string BasePath { get; set; }
@@ -78,7 +85,10 @@ internal class DriverBuilder
     /// <summary>The microsoft/playwright commit that the driver is built from.</summary>
     public string DriverVersion { get; set; }
 
-    public string NodeVersion { get; set; }
+    /// <summary>The Node.js major version that the driver bundles the latest release of.</summary>
+    public int NodeMajorVersion { get; set; }
+
+    private string NodeVersion { get; set; }
 
     private string UpstreamPath => Path.Combine(BasePath, ".upstream");
 
@@ -88,17 +98,21 @@ internal class DriverBuilder
         var props = new XmlDocument();
         props.Load(propsPath);
         string driverVersion = props.DocumentElement.SelectSingleNode("/Project/PropertyGroup/DriverVersion").FirstChild.Value.Trim();
-        string nodeVersion = props.DocumentElement.SelectSingleNode("/Project/PropertyGroup/DriverNodeVersion").FirstChild.Value.Trim();
+        string nodeMajorVersion = props.DocumentElement.SelectSingleNode("/Project/PropertyGroup/DriverNodeMajorVersion").FirstChild.Value.Trim();
         if (!_commitRegex.IsMatch(driverVersion))
         {
             throw new Exception($"DriverVersion in {propsPath} must be a microsoft/playwright commit (40 hex digits), got \"{driverVersion}\"");
+        }
+        if (!int.TryParse(nodeMajorVersion, NumberStyles.None, CultureInfo.InvariantCulture, out int nodeMajor))
+        {
+            throw new Exception($"DriverNodeMajorVersion in {propsPath} must be a Node.js major version such as 26, got \"{nodeMajorVersion}\"");
         }
 
         return new DriverBuilder()
         {
             BasePath = Path.GetFullPath(o.BasePath),
             DriverVersion = driverVersion,
-            NodeVersion = nodeVersion,
+            NodeMajorVersion = nodeMajor,
         }.ExecuteAsync();
     }
 
@@ -259,6 +273,12 @@ internal class DriverBuilder
     {
         await CheckoutUpstreamAsync().ConfigureAwait(false);
 
+        using var client = new HttpClient();
+        client.Timeout = TimeSpan.FromMinutes(5);
+        client.DefaultRequestHeaders.Add("User-Agent", "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/105.0.0.0 Safari/537.36");
+
+        NodeVersion = await ResolveNodeVersionAsync(client).ConfigureAwait(false);
+
         var driversDirectory = new DirectoryInfo(Path.Combine(BasePath, "src", "Playwright", ".drivers"));
         string stamp = $"driver {DriverVersion} node {NodeVersion}";
         string stampFile = Path.Combine(driversDirectory.FullName, ".stamp");
@@ -276,15 +296,11 @@ internal class DriverBuilder
 
             driversDirectory.Create();
 
-            using var client = new HttpClient();
-            client.Timeout = TimeSpan.FromMinutes(5);
-            client.DefaultRequestHeaders.Add("User-Agent", "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/105.0.0.0 Safari/537.36");
-
             var tasks = new List<Task>
             {
                 BuildPlaywrightPackageAsync(driversDirectory.FullName),
             };
-            foreach (var (platformId, nodeSuffix) in _platforms)
+            foreach (var (platformId, nodeSuffix, _) in _platforms)
             {
                 tasks.Add(DownloadNodeAsync(client, driversDirectory.FullName, platformId, nodeSuffix));
             }
@@ -401,6 +417,32 @@ internal class DriverBuilder
             File.Copy(Path.Combine(UpstreamPath, name), Path.Combine(driversDirectory, "package", name), overwrite: true);
         }
         Console.WriteLine($"Built playwright-core at {DriverVersion}");
+    }
+
+    /// <summary>
+    /// Finds the latest release of Node.js NodeMajorVersion that has the binaries of all platforms.
+    /// </summary>
+    private async Task<string> ResolveNodeVersionAsync(HttpClient client)
+    {
+        Version latest = null;
+        await WithRetriesAsync(NodeIndexUrl, async () =>
+        {
+            using var stream = await GetStreamAsync(client, NodeIndexUrl).ConfigureAwait(false);
+            using var index = await JsonDocument.ParseAsync(stream).ConfigureAwait(false);
+            latest = index.RootElement.EnumerateArray()
+                .Where(release => _platforms.All(platform => release.GetProperty("files").EnumerateArray().Any(file => file.GetString() == platform.NodeIndexFile)))
+                .Select(release => _nodeReleaseRegex.Match(release.GetProperty("version").GetString()))
+                .Where(match => match.Success)
+                .Select(match => Version.Parse(match.Groups[1].Value))
+                .Where(version => version.Major == NodeMajorVersion)
+                .Max();
+        }).ConfigureAwait(false);
+        if (latest == null)
+        {
+            throw new Exception($"{NodeIndexUrl} has no Node.js {NodeMajorVersion} release with the binaries of all platforms");
+        }
+        Console.WriteLine($"The latest Node.js {NodeMajorVersion} release is {latest}");
+        return latest.ToString();
     }
 
     private async Task DownloadNodeAsync(HttpClient client, string driversDirectory, string platformId, string nodeSuffix)

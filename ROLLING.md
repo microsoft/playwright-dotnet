@@ -15,7 +15,7 @@
    ./build.sh --roll <ref>
    ```
 
-   This writes the commit and the latest Node.js LTS version to `src/Common/Version.props`, checks the commit out in `.upstream/`, builds the driver from it, generates the API and the transport channels again, and updates the browser versions in the README. The driver reports the version of `packages/playwright-core/package.json` at that commit: `1.66.0` on a release tag, `1.67.0-next` on `main`.
+   This writes the commit and the major version of the latest Node.js LTS to `src/Common/Version.props`, checks the commit out in `.upstream/`, builds the driver from it, generates the API and the transport channels again, and updates the browser versions in the README. Every driver build, also the ones for a release and for the Docker images, bundles the latest Node.js release of that major version. The driver reports the version of `packages/playwright-core/package.json` at that commit: `1.66.0` on a release tag, `1.67.0-next` on `main`.
 
 2. **Port** what changed upstream into `src/Playwright/` and `src/Playwright.Tests/`.
 
