@@ -151,6 +151,7 @@ function changes() {
   git -C "${upstream_repo_path}" --no-pager log --oneline --reverse "${old_driver_version}..${new_driver_version}" -- "${client_paths[@]}"
 }
 
+
 CMD="$1"
 if [[ ("$CMD" == "--roll") ]]; then
   roll "$2"
