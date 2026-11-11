@@ -100,6 +100,9 @@ extends:
         - bash: ./build.sh --build-driver
           displayName: "Build the driver"
 
+        - bash: echo "Node.js version of the driver: $(sed 's/.* node //' src/Playwright/.drivers/.stamp)"
+          displayName: "Print the Node.js version of the driver"
+
         - task: AzureCLI@2
           displayName: "Login to ACR via OIDC"
           inputs:
