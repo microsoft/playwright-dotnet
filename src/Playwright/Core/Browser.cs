@@ -39,7 +39,7 @@ internal class Browser : ChannelOwner, IBrowser
 {
     private readonly BrowserInitializer _initializer;
     private readonly TaskCompletionSource<bool> _closedTcs = new();
-    internal readonly List<BrowserContext> _contexts = new();
+    internal List<BrowserContext> _contexts = new();
     internal string? _tracesDir = null;
     internal BrowserType _browserType = null!;
     internal string? _closeReason;
@@ -81,7 +81,7 @@ internal class Browser : ChannelOwner, IBrowser
     }
 
     [MethodImpl(MethodImplOptions.NoInlining)]
-    public async Task CloseAsync(BrowserCloseOptions? options = default)
+    public Task CloseAsync(BrowserCloseOptions? options = default) => WrapApiCallAsync(async () =>
     {
         _closeReason = options?.Reason;
         try
@@ -103,10 +103,10 @@ internal class Browser : ChannelOwner, IBrowser
         {
             // Swallow exception
         }
-    }
+    });
 
     [MethodImpl(MethodImplOptions.NoInlining)]
-    public async Task<IBrowserContext> NewContextAsync(BrowserNewContextOptions? options = default)
+    public Task<IBrowserContext> NewContextAsync(BrowserNewContextOptions? options = default) => WrapApiCallAsync<IBrowserContext>(async () =>
     {
         options ??= new();
 
@@ -174,10 +174,10 @@ internal class Browser : ChannelOwner, IBrowser
         var context = await SendMessageToServerAsync<BrowserContext>("newContext", args).ConfigureAwait(false);
         await context.InitializeHarFromOptionsAsync(options).ConfigureAwait(false);
         return context;
-    }
+    });
 
     [MethodImpl(MethodImplOptions.NoInlining)]
-    public async Task<IPage> NewPageAsync(BrowserNewPageOptions? options = default)
+    public Task<IPage> NewPageAsync(BrowserNewPageOptions? options = default) => WrapApiCallAsync<IPage>(async () =>
     {
         options ??= new();
 
@@ -235,7 +235,7 @@ internal class Browser : ChannelOwner, IBrowser
         },
             false,
             "Create page").ConfigureAwait(false);
-    }
+    });
 
     [MethodImpl(MethodImplOptions.NoInlining)]
     public ValueTask DisposeAsync() => new ValueTask(CloseAsync());
@@ -277,6 +277,7 @@ internal class Browser : ChannelOwner, IBrowser
 
     internal void ConnectToBrowserType(BrowserType browserType, string? tracesDir)
     {
+        _connection.Dispatcher.AssertCurrent();
         // Note: when using connect(), `browserType` is different from `this.parent`.
         // This is why browser type is not wired up in the constructor, and instead this separate method is called later on.
         _browserType = browserType;
@@ -285,21 +286,22 @@ internal class Browser : ChannelOwner, IBrowser
         {
             context._tracing._tracesDir = this._tracesDir;
             context._request._tracing._tracesDir = this._tracesDir;
-            browserType.Playwright._selectors._contextsForSelectors.Add(context);
+            CopyOnWrite.Add(ref browserType.Playwright._selectors._contextsForSelectors, context);
         }
     }
 
     private void DidCreateContext(BrowserContext context)
     {
+        _connection.Dispatcher.AssertCurrent();
         context._browser = this;
-        _contexts.Add(context);
+        CopyOnWrite.Add(ref _contexts, context);
         // Note: when connecting to a browser, initial contexts arrive before `_browserType` is set,
         // and will be configured later in `ConnectToBrowserType`.
         if (_browserType != null)
         {
             context._tracing._tracesDir = _tracesDir;
             context._request._tracing._tracesDir = _tracesDir;
-            _browserType.Playwright._selectors._contextsForSelectors.Add(context);
+            CopyOnWrite.Add(ref _browserType.Playwright._selectors._contextsForSelectors, context);
         }
         Context?.Invoke(this, context);
     }
@@ -313,11 +315,11 @@ internal class Browser : ChannelOwner, IBrowser
         _connection.Close -= _onConnectionClose;
         IsConnected = false;
         Disconnected?.Invoke(this, this);
-        _closedTcs.TrySetResult(true);
+        _connection.Dispatcher.Complete(_closedTcs, true);
     }
 
     [MethodImpl(MethodImplOptions.NoInlining)]
-    public async Task<BrowserBindResult> BindAsync(string title, BrowserBindOptions? options = default)
+    public Task<BrowserBindResult> BindAsync(string title, BrowserBindOptions? options = default) => WrapApiCallAsync<BrowserBindResult>(async () =>
     {
         options ??= new();
         var result = await SendMessageToServerAsync("startServer", new Dictionary<string, object?>
@@ -328,7 +330,7 @@ internal class Browser : ChannelOwner, IBrowser
             ["port"] = options.Port,
         }).ConfigureAwait(false);
         return new BrowserBindResult { Endpoint = result!.Value.GetProperty("endpoint").GetString()! };
-    }
+    });
 
     [MethodImpl(MethodImplOptions.NoInlining)]
     public Task UnbindAsync()

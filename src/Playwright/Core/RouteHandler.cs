@@ -106,8 +106,8 @@ internal class RouteHandler
         }
         finally
         {
-            handlerInvocation.Complete.SetResult(true);
             _activeInvocations.Remove(handlerInvocation);
+            route._connection.Dispatcher.Complete(handlerInvocation.Complete, true);
         }
     }
 
@@ -140,10 +140,18 @@ internal class RouteHandler
     {
         ++HandledCount;
         var handledTask = route.StartHandlingAsync();
-        var maybeTask = Handler.DynamicInvoke(new object[] { route });
-        if (maybeTask is Task task)
+        try
         {
-            await task.ConfigureAwait(false);
+            var maybeTask = Handler.DynamicInvoke(new object[] { route });
+            if (maybeTask is Task task)
+            {
+                await task.ConfigureAwait(false);
+            }
+        }
+        finally
+        {
+            // The handler is user code and may have resumed on any thread.
+            await route._connection.Dispatcher.SwitchTo();
         }
         return await handledTask.ConfigureAwait(false);
     }

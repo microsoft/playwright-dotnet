@@ -50,7 +50,7 @@ internal class Tracing : ChannelOwner, ITracing
     }
 
     [MethodImpl(MethodImplOptions.NoInlining)]
-    public async Task<IAsyncDisposable> StartAsync(TracingStartOptions? options = default)
+    public Task<IAsyncDisposable> StartAsync(TracingStartOptions? options = default) => WrapApiCallAsync<IAsyncDisposable>(async () =>
     {
         _includeSources = options?.Sources == true;
         await SendMessageToServerAsync(
@@ -71,10 +71,10 @@ internal class Tracing : ChannelOwner, ITracing
         }).ConfigureAwait(false))!.Value.GetProperty("traceName").ToString();
         await StartCollectingStacksAsync(traceName).ConfigureAwait(false);
         return new DisposableStub(() => StopAsync());
-    }
+    });
 
     [MethodImpl(MethodImplOptions.NoInlining)]
-    public async Task<IAsyncDisposable> StartChunkAsync(TracingStartChunkOptions? options = default)
+    public Task<IAsyncDisposable> StartChunkAsync(TracingStartChunkOptions? options = default) => WrapApiCallAsync<IAsyncDisposable>(async () =>
     {
         var traceName = (await SendMessageToServerAsync("tracingStartChunk", new Dictionary<string, object?>
         {
@@ -83,7 +83,7 @@ internal class Tracing : ChannelOwner, ITracing
         }).ConfigureAwait(false))!.Value.GetProperty("traceName").ToString();
         await StartCollectingStacksAsync(traceName).ConfigureAwait(false);
         return new DisposableStub(() => StopChunkAsync());
-    }
+    });
 
     private async Task StartCollectingStacksAsync(string traceName)
     {
@@ -102,7 +102,7 @@ internal class Tracing : ChannelOwner, ITracing
     public Task StopChunkAsync(TracingStopChunkOptions? options = default) => DoStopChunkAsync(filePath: options?.Path);
 
     [MethodImpl(MethodImplOptions.NoInlining)]
-    public async Task StopAsync(TracingStopOptions? options = default)
+    public Task StopAsync(TracingStopOptions? options = default) => WrapApiCallAsync(async () =>
     {
         Exception? error = null;
         try
@@ -118,9 +118,9 @@ internal class Tracing : ChannelOwner, ITracing
         {
             ExceptionDispatchInfo.Capture(error).Throw();
         }
-    }
+    });
 
-    private async Task DoStopChunkAsync(string? filePath)
+    private Task DoStopChunkAsync(string? filePath) => WrapApiCallAsync(async () =>
     {
         ResetStackCounter();
 
@@ -146,7 +146,7 @@ internal class Tracing : ChannelOwner, ITracing
             }
             throw;
         }
-    }
+    });
 
     private async Task SaveChunkAsync(string? filePath, string? stacksId)
     {
@@ -244,7 +244,7 @@ internal class Tracing : ChannelOwner, ITracing
         }
     }
 
-    public async Task<IAsyncDisposable> GroupAsync(string name, TracingGroupOptions? options = null)
+    public Task<IAsyncDisposable> GroupAsync(string name, TracingGroupOptions? options = null) => WrapApiCallAsync<IAsyncDisposable>(async () =>
     {
         await SendMessageToServerAsync("tracingGroup", new Dictionary<string, object?>
         {
@@ -255,13 +255,13 @@ internal class Tracing : ChannelOwner, ITracing
         {
             await GroupEndAsync().ConfigureAwait(false);
         });
-    }
+    });
 
     public Task GroupEndAsync()
         => SendMessageToServerAsync("tracingGroupEnd");
 
     [MethodImpl(MethodImplOptions.NoInlining)]
-    public async Task<IAsyncDisposable> StartHarAsync(string path, TracingStartHarOptions? options = default)
+    public Task<IAsyncDisposable> StartHarAsync(string path, TracingStartHarOptions? options = default) => WrapApiCallAsync<IAsyncDisposable>(async () =>
     {
         if (_harId != null)
         {
@@ -277,10 +277,10 @@ internal class Tracing : ChannelOwner, ITracing
             options?.Mode ?? HarMode.Full,
             null).ConfigureAwait(false);
         return new DisposableStub(() => StopHarAsync());
-    }
+    });
 
     [MethodImpl(MethodImplOptions.NoInlining)]
-    public async Task StopHarAsync()
+    public Task StopHarAsync() => WrapApiCallAsync(async () =>
     {
         var harId = _harId;
         if (harId == null)
@@ -289,7 +289,7 @@ internal class Tracing : ChannelOwner, ITracing
         }
         _harId = null;
         await ExportHarAsync(harId).ConfigureAwait(false);
-    }
+    });
 
     internal async Task<string> RecordIntoHarAsync(string har, Page? page, HarContentPolicy? content, string? urlGlob, Regex? urlRegex, HarMode? mode, string? resourcesDir)
     {

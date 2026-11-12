@@ -60,7 +60,7 @@ internal class CDPSession : ChannelOwner, ICDPSession
     public Task DetachAsync() => SendMessageToServerAsync("detach");
 
     [MethodImpl(MethodImplOptions.NoInlining)]
-    public async Task<JsonElement?> SendAsync(string method, Dictionary<string, object>? args = null, CDPSessionSendOptions? options = null)
+    public Task<JsonElement?> SendAsync(string method, Dictionary<string, object>? args = null, CDPSessionSendOptions? options = null) => WrapApiCallAsync<JsonElement?>(async () =>
     {
         var newArgs = new Dictionary<string, object?>() { { "method", method } };
         if (args != null)
@@ -69,7 +69,7 @@ internal class CDPSession : ChannelOwner, ICDPSession
         }
         var result = await SendMessageToServerAsync("send", newArgs, timeout: options?.Timeout ?? 0).ConfigureAwait(false);
         return result?.GetProperty("result");
-    }
+    });
 
     private void OnCDPEvent(string name, JsonElement? @params)
     {

@@ -26,16 +26,25 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Playwright.Helpers;
+using Microsoft.Playwright.Transport;
 
 namespace Microsoft.Playwright.Core;
 
 internal class Selectors : ISelectors
 {
-    internal readonly List<BrowserContext> _contextsForSelectors = new();
+    private readonly ChannelOwner _playwright;
     internal readonly List<Dictionary<string, object?>> _selectorEngines = new();
+
+    // Copy-on-write: SetTestIdAttribute enumerates it on the caller's thread.
+    internal List<BrowserContext> _contextsForSelectors = new();
     internal string? _testIdAttributeName;
 
-    public async Task RegisterAsync(string name, SelectorsRegisterOptions? options = default)
+    internal Selectors(ChannelOwner playwright)
+    {
+        _playwright = playwright;
+    }
+
+    public Task RegisterAsync(string name, SelectorsRegisterOptions? options = default) => _playwright.WrapApiCallAsync(async () =>
     {
         if (_selectorEngines.Where(engine => engine["name"]?.ToString() == name).Any())
         {
@@ -53,7 +62,7 @@ internal class Selectors : ISelectors
         {
             engine["contentScript"] = options.ContentScript;
         }
-        foreach (var context in _contextsForSelectors.ToArray())
+        foreach (var context in _contextsForSelectors)
         {
             await context.SendMessageToServerAsync("registerSelectorEngine", new Dictionary<string, object?>
             {
@@ -61,13 +70,13 @@ internal class Selectors : ISelectors
             }).ConfigureAwait(false);
         }
         _selectorEngines.Add(engine);
-    }
+    });
 
     public void SetTestIdAttribute(string attributeName)
     {
         Locator.SetTestIdAttribute(attributeName);
         _testIdAttributeName = attributeName;
-        foreach (var context in _contextsForSelectors.ToArray())
+        foreach (var context in _contextsForSelectors)
         {
             context.SendMessageToServerAsync(
             "setTestIdAttributeName",

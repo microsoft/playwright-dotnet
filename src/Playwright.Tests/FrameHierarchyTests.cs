@@ -209,4 +209,24 @@ public class FrameHierarchyTests : PageTestEx
         Assert.False(frame2.IsDetached);
         Assert.That(frame1, Is.Not.EqualTo(frame2));
     }
+
+    [PlaywrightTest]
+    public async Task ShouldAllowAttachingFramesWhileEnumeratingChildFrames()
+    {
+        // ChildFrames used to hand out the live list, so a frame attached from inside the loop
+        // made the next MoveNext throw "Collection was modified".
+        await Page.GotoAsync(Server.EmptyPage);
+        await FrameUtils.AttachFrameAsync(Page, "frame1", Server.EmptyPage);
+        foreach (var frame in Page.MainFrame.ChildFrames)
+        {
+            await FrameUtils.AttachFrameAsync(Page, "frame2", Server.EmptyPage);
+        }
+        Assert.AreEqual(2, Page.MainFrame.ChildFrames.Count);
+        int next = 3;
+        foreach (var frame in Page.Frames)
+        {
+            await FrameUtils.AttachFrameAsync(Page, $"frame{next++}", Server.EmptyPage);
+        }
+        Assert.AreEqual(6, Page.Frames.Count);
+    }
 }

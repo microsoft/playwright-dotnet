@@ -51,7 +51,7 @@ internal class Screencast : IScreencast
         }
     }
 
-    public async Task<IAsyncDisposable> StartAsync(ScreencastStartOptions? options = default)
+    public Task<IAsyncDisposable> StartAsync(ScreencastStartOptions? options = default) => _page.WrapApiCallAsync<IAsyncDisposable>(async () =>
     {
         if (_started)
         {
@@ -78,9 +78,9 @@ internal class Screencast : IScreencast
             _savePath = options.Path;
         }
         return new DisposableStub(() => StopAsync());
-    }
+    });
 
-    public async Task StopAsync()
+    public Task StopAsync() => _page.WrapApiCallAsync(async () =>
     {
         await _page.WrapApiCallAsync(async () =>
         {
@@ -94,9 +94,9 @@ internal class Screencast : IScreencast
             _artifact = null;
             _savePath = null;
         }).ConfigureAwait(false);
-    }
+    });
 
-    public async Task<IAsyncDisposable> ShowOverlayAsync(string html, ScreencastShowOverlayOptions? options = default)
+    public Task<IAsyncDisposable> ShowOverlayAsync(string html, ScreencastShowOverlayOptions? options = default) => _page.WrapApiCallAsync<IAsyncDisposable>(async () =>
     {
         var result = await _page.SendMessageToServerAsync("screencastShowOverlay", new Dictionary<string, object?>
         {
@@ -105,7 +105,7 @@ internal class Screencast : IScreencast
         }).ConfigureAwait(false);
         var id = result!.Value.GetProperty("id").GetString();
         return new DisposableStub(() => _page.SendMessageToServerAsync("screencastRemoveOverlay", new Dictionary<string, object?> { ["id"] = id }));
-    }
+    });
 
     public Task ShowChapterAsync(string title, ScreencastShowChapterOptions? options = default)
         => _page.SendMessageToServerAsync("screencastChapter", new Dictionary<string, object?>
@@ -115,7 +115,7 @@ internal class Screencast : IScreencast
             ["duration"] = options?.Duration,
         });
 
-    public async Task<IAsyncDisposable> ShowActionsAsync(ScreencastShowActionsOptions? options = default)
+    public Task<IAsyncDisposable> ShowActionsAsync(ScreencastShowActionsOptions? options = default) => _page.WrapApiCallAsync<IAsyncDisposable>(async () =>
     {
         await _page.SendMessageToServerAsync("screencastShowActions", new Dictionary<string, object?>
         {
@@ -128,7 +128,7 @@ internal class Screencast : IScreencast
             ["style"] = options?.Style,
         }).ConfigureAwait(false);
         return new DisposableStub(() => _page.SendMessageToServerAsync("screencastHideActions"));
-    }
+    });
 
     public Task HideActionsAsync()
         => _page.SendMessageToServerAsync("screencastHideActions");

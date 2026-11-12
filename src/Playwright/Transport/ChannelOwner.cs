@@ -25,6 +25,7 @@ using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Text.Json;
+using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Playwright.Helpers;
 
@@ -35,6 +36,9 @@ internal class ChannelOwner
     internal readonly Connection _connection;
 
     internal bool _wasCollected;
+
+    // The events that the server was told to send. Dispatcher thread only.
+    private readonly HashSet<string> _eventSubscriptions = new();
 
     internal ChannelOwner(ChannelOwner parent, string guid) : this(parent, parent._connection, guid)
     {
@@ -88,40 +92,59 @@ internal class ChannelOwner
 
     public Task WrapApiCallAsync(Func<Task> action, bool isInternal = false, string? title = null) => _connection.WrapApiCallAsync(action, isInternal, title);
 
-    internal EventHandler<T>? UpdateEventHandler<T>(string eventName, EventHandler<T>? handlers, EventHandler<T>? handler, bool add)
+    /// <summary>
+    /// The add and remove accessors of an event that the server sends only while somebody listens.
+    /// <para>
+    /// The change takes effect at once, on the caller's thread, as with any C# event: the list
+    /// of handlers is replaced atomically, so accessors on other threads and the dispatcher
+    /// thread that raises the event never see a half-made update. Once a remove has returned,
+    /// the handler is not called for any event that is raised later; an event that is being
+    /// raised on the dispatcher thread at that moment may still reach it.
+    /// </para>
+    /// <para>
+    /// Telling the server is left to the dispatcher thread. It compares what the server was told
+    /// last with whether there are handlers when it runs, and sends the difference. So the
+    /// messages cannot go out in the wrong order or describe a state that is gone, and a call
+    /// that changes nothing sends nothing.
+    /// </para>
+    /// </summary>
+    internal void UpdateEventHandler<T>(string eventName, ref EventHandler<T>? handlers, EventHandler<T>? handler, bool add, Func<bool> hasHandlers)
     {
-        if (add)
+        EventHandler<T>? seen;
+        var current = Volatile.Read(ref handlers);
+        do
         {
-            if ((handlers?.GetInvocationList().Length ?? 0) == 0)
-            {
-                UpdateEventSubscription(eventName, true);
-            }
-            handlers += handler;
+            seen = current;
+            current = Interlocked.CompareExchange(ref handlers, add ? seen + handler : seen - handler, seen);
         }
-        else
-        {
-            handlers -= handler;
-            if ((handlers?.GetInvocationList().Length ?? 0) == 0)
-            {
-                UpdateEventSubscription(eventName, false);
-            }
-        }
-        // We need to return the new reference since += and -= operators return a new delegate.
-        return handlers;
-    }
+        while (!ReferenceEquals(current, seen));
 
-    private void UpdateEventSubscription(string eventName, bool enabled)
-    {
-        WrapApiCallAsync(
-            () => _connection.SendMessageToServerAsync(
-            this,
-            "updateSubscription",
-            new Dictionary<string, object?>
+        _connection.Dispatcher.RunOrPost(() =>
+        {
+            bool enabled = hasHandlers();
+            if (_connection.IsClosed || _eventSubscriptions.Contains(eventName) == enabled)
             {
-                ["event"] = eventName,
-                ["enabled"] = enabled,
-            }),
-            true).IgnoreException();
+                return;
+            }
+            if (enabled)
+            {
+                _eventSubscriptions.Add(eventName);
+            }
+            else
+            {
+                _eventSubscriptions.Remove(eventName);
+            }
+            WrapApiCallAsync(
+                () => _connection.SendMessageToServerAsync(
+                this,
+                "updateSubscription",
+                new Dictionary<string, object?>
+                {
+                    ["event"] = eventName,
+                    ["enabled"] = enabled,
+                }),
+                true).IgnoreException();
+        });
     }
 
     internal Task<JsonElement?> SendMessageToServerAsync(

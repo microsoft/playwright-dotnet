@@ -50,7 +50,7 @@ internal class PlaywrightImpl : ChannelOwner, IPlaywright
         _initializer.Webkit.Playwright = this;
         APIRequest = new APIRequest(this);
 
-        _selectors = new Selectors();
+        _selectors = new Selectors(this);
     }
 
     ~PlaywrightImpl() => Dispose(false);

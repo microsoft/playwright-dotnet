@@ -58,7 +58,7 @@ internal class Dialog : ChannelOwner, IDialog
             });
 
     [MethodImpl(MethodImplOptions.NoInlining)]
-    public async Task DismissAsync()
+    public Task DismissAsync() => WrapApiCallAsync(async () =>
     {
         try
         {
@@ -67,5 +67,5 @@ internal class Dialog : ChannelOwner, IDialog
         catch (Exception e) when (DriverMessages.IsTargetClosedError(e))
         {
         }
-    }
+    });
 }

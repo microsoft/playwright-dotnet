@@ -40,16 +40,16 @@ namespace Microsoft.Playwright.Core;
 
 internal class Page : ChannelOwner, IPage
 {
-    private readonly List<Frame> _frames = new();
     private readonly PageInitializer _initializer;
 
-    internal readonly List<Worker> _workers = new();
     internal readonly TimeoutSettings _timeoutSettings;
     private readonly List<HarRouter> _harRouters = new();
     private readonly Dictionary<int, LocatorHandler> _locatorHandlers = new();
     private readonly List<WebSocketRouteHandler> _webSocketRoutes = new();
     private readonly Video _video;
     private readonly Screencast _screencast;
+    internal List<Worker> _workers = new();
+    private List<Frame> _frames = new();
     private List<RouteHandler> _routes = new();
     private string? _closeReason;
 
@@ -60,7 +60,7 @@ internal class Page : ChannelOwner, IPage
 
         MainFrame = initializer.MainFrame;
         MainFrame.Page = this;
-        _frames.Add(MainFrame);
+        CopyOnWrite.Add(ref _frames, MainFrame);
         if (initializer.ViewportSize != null)
         {
             ViewportSize = new() { Width = initializer.ViewportSize.Width, Height = initializer.ViewportSize.Height };
@@ -78,8 +78,8 @@ internal class Page : ChannelOwner, IPage
         LocalStorage = new WebStorage(this, "local");
         SessionStorage = new WebStorage(this, "session");
 
-        Close += (_, _) => ClosedOrCrashedTcs.TrySetResult(true);
-        Crash += (_, _) => ClosedOrCrashedTcs.TrySetResult(true);
+        Close += (_, _) => _connection.Dispatcher.Complete(ClosedOrCrashedTcs, true);
+        Crash += (_, _) => _connection.Dispatcher.Complete(ClosedOrCrashedTcs, true);
     }
 
     private event EventHandler<IRequest>? _requestImpl;
@@ -100,48 +100,48 @@ internal class Page : ChannelOwner, IPage
 
     public event EventHandler<IConsoleMessage>? Console
     {
-        add => this._consoleImpl = UpdateEventHandler("console", this._consoleImpl, value, true);
-        remove => this._consoleImpl = UpdateEventHandler("console", this._consoleImpl, value, false);
+        add => UpdateEventHandler("console", ref _consoleImpl, value, true, () => _consoleImpl != null);
+        remove => UpdateEventHandler("console", ref _consoleImpl, value, false, () => _consoleImpl != null);
     }
 
     public event EventHandler<IPage>? Popup;
 
     public event EventHandler<IRequest>? Request
     {
-        add => this._requestImpl = UpdateEventHandler("request", this._requestImpl, value, true);
-        remove => this._requestImpl = UpdateEventHandler("request", this._requestImpl, value, false);
+        add => UpdateEventHandler("request", ref _requestImpl, value, true, () => _requestImpl != null);
+        remove => UpdateEventHandler("request", ref _requestImpl, value, false, () => _requestImpl != null);
     }
 
     public event EventHandler<IWebSocket>? WebSocket;
 
     public event EventHandler<IResponse>? Response
     {
-        add => this._responseImpl = UpdateEventHandler("response", this._responseImpl, value, true);
-        remove => this._responseImpl = UpdateEventHandler("response", this._responseImpl, value, false);
+        add => UpdateEventHandler("response", ref _responseImpl, value, true, () => _responseImpl != null);
+        remove => UpdateEventHandler("response", ref _responseImpl, value, false, () => _responseImpl != null);
     }
 
     public event EventHandler<IRequest>? RequestFinished
     {
-        add => this._requestFinishedImpl = UpdateEventHandler("requestFinished", this._requestFinishedImpl, value, true);
-        remove => this._requestFinishedImpl = UpdateEventHandler("requestFinished", this._requestFinishedImpl, value, false);
+        add => UpdateEventHandler("requestFinished", ref _requestFinishedImpl, value, true, () => _requestFinishedImpl != null);
+        remove => UpdateEventHandler("requestFinished", ref _requestFinishedImpl, value, false, () => _requestFinishedImpl != null);
     }
 
     public event EventHandler<IRequest>? RequestFailed
     {
-        add => this._requestFailedImpl = UpdateEventHandler("requestFailed", this._requestFailedImpl, value, true);
-        remove => this._requestFailedImpl = UpdateEventHandler("requestFailed", this._requestFailedImpl, value, false);
+        add => UpdateEventHandler("requestFailed", ref _requestFailedImpl, value, true, () => _requestFailedImpl != null);
+        remove => UpdateEventHandler("requestFailed", ref _requestFailedImpl, value, false, () => _requestFailedImpl != null);
     }
 
     public event EventHandler<IDialog>? Dialog
     {
-        add => this._dialogImpl = UpdateEventHandler("dialog", this._dialogImpl, value, true);
-        remove => this._dialogImpl = UpdateEventHandler("dialog", this._dialogImpl, value, false);
+        add => UpdateEventHandler("dialog", ref _dialogImpl, value, true, () => _dialogImpl != null);
+        remove => UpdateEventHandler("dialog", ref _dialogImpl, value, false, () => _dialogImpl != null);
     }
 
     public event EventHandler<IDialog>? DialogClosed
     {
-        add => this._dialogClosedImpl = UpdateEventHandler("dialogClosed", this._dialogClosedImpl, value, true);
-        remove => this._dialogClosedImpl = UpdateEventHandler("dialogClosed", this._dialogClosedImpl, value, false);
+        add => UpdateEventHandler("dialogClosed", ref _dialogClosedImpl, value, true, () => _dialogClosedImpl != null);
+        remove => UpdateEventHandler("dialogClosed", ref _dialogClosedImpl, value, false, () => _dialogClosedImpl != null);
     }
 
     public event EventHandler<IFrame>? FrameAttached;
@@ -152,8 +152,8 @@ internal class Page : ChannelOwner, IPage
 
     public event EventHandler<IFileChooser>? FileChooser
     {
-        add => this._fileChooserImpl = UpdateEventHandler("fileChooser", this._fileChooserImpl, value, true);
-        remove => this._fileChooserImpl = UpdateEventHandler("fileChooser", this._fileChooserImpl, value, false);
+        add => UpdateEventHandler("fileChooser", ref _fileChooserImpl, value, true, () => _fileChooserImpl != null);
+        remove => UpdateEventHandler("fileChooser", ref _fileChooserImpl, value, false, () => _fileChooserImpl != null);
     }
 
     public event EventHandler<IPage>? Load;
@@ -195,7 +195,7 @@ internal class Page : ChannelOwner, IPage
 
     public string Url => MainFrame.Url;
 
-    public IReadOnlyList<IFrame> Frames => _frames.ToList().AsReadOnly();
+    public IReadOnlyList<IFrame> Frames => _frames;
 
     public IKeyboard Keyboard { get; }
 
@@ -287,7 +287,7 @@ internal class Page : ChannelOwner, IPage
                 break;
             case "worker":
                 var worker = serverParams.GetProperty("worker").ToObject<Worker>(_connection.DefaultJsonSerializerOptions);
-                _workers.Add(worker);
+                CopyOnWrite.Add(ref _workers, worker);
                 worker.Page = this;
                 Worker?.Invoke(this, worker);
                 break;
@@ -488,7 +488,7 @@ internal class Page : ChannelOwner, IPage
         return new TargetClosedException(_closeReason ?? Context._effectiveCloseReason());
     }
 
-    internal async Task<T> InnerWaitForEventAsync<T>(PlaywrightEvent<T> pageEvent, Func<Task>? action = default, Func<T, bool>? predicate = default, float? timeout = default)
+    internal Task<T> InnerWaitForEventAsync<T>(PlaywrightEvent<T> pageEvent, Func<Task>? action = default, Func<T, bool>? predicate = default, float? timeout = default) => WrapApiCallAsync<T>(async () =>
     {
         if (pageEvent == null)
         {
@@ -516,13 +516,13 @@ internal class Page : ChannelOwner, IPage
         }
 
         return await waitForEventTask.ConfigureAwait(false);
-    }
+    });
 
     [MethodImpl(MethodImplOptions.NoInlining)]
     public ValueTask DisposeAsync() => new(CloseAsync());
 
     [MethodImpl(MethodImplOptions.NoInlining)]
-    public async Task CloseAsync(PageCloseOptions? options = default)
+    public Task CloseAsync(PageCloseOptions? options = default) => WrapApiCallAsync(async () =>
     {
         _closeReason = options?.Reason;
         CloseWasCalled = true;
@@ -550,7 +550,7 @@ internal class Page : ChannelOwner, IPage
         {
             // Swallow exception
         }
-    }
+    });
 
     [MethodImpl(MethodImplOptions.NoInlining)]
     public Task<T> EvaluateAsync<T>(string expression, object? arg) => MainFrame.EvaluateAsync<T>(expression, arg);
@@ -714,7 +714,7 @@ internal class Page : ChannelOwner, IPage
     public Task<JsonElement?> EvaluateAsync(string expression, object? arg) => MainFrame.EvaluateAsync(expression, arg);
 
     [MethodImpl(MethodImplOptions.NoInlining)]
-    public async Task<byte[]> ScreenshotAsync(PageScreenshotOptions? options = default)
+    public Task<byte[]> ScreenshotAsync(PageScreenshotOptions? options = default) => WrapApiCallAsync<byte[]>(async () =>
     {
         options ??= new PageScreenshotOptions();
         if (options.Type == null && !string.IsNullOrEmpty(options.Path) && options.Path != null)
@@ -752,7 +752,7 @@ internal class Page : ChannelOwner, IPage
         }
 
         return result;
-    }
+    });
 
     [MethodImpl(MethodImplOptions.NoInlining)]
     public Task SetContentAsync(string html, PageSetContentOptions? options = default)
@@ -930,7 +930,7 @@ internal class Page : ChannelOwner, IPage
         => ExposeBindingAsync(name, (BindingSource _, T1 t1, T2 t2, T3 t3, T4 t4) => callback(t1, t2, t3, t4));
 
     [MethodImpl(MethodImplOptions.NoInlining)]
-    public async Task<byte[]> PdfAsync(PagePdfOptions? options = default)
+    public Task<byte[]> PdfAsync(PagePdfOptions? options = default) => WrapApiCallAsync<byte[]>(async () =>
     {
         options ??= new();
         byte[] result = (await SendMessageToServerAsync("pdf", new Dictionary<string, object?>
@@ -958,10 +958,10 @@ internal class Page : ChannelOwner, IPage
         }
 
         return result;
-    }
+    });
 
     [MethodImpl(MethodImplOptions.NoInlining)]
-    public async Task<IAsyncDisposable> AddInitScriptAsync(string? script, string? scriptPath)
+    public Task<IAsyncDisposable> AddInitScriptAsync(string? script, string? scriptPath) => WrapApiCallAsync<IAsyncDisposable>(async () =>
     {
         var result = await SendMessageToServerAsync(
             "addInitScript",
@@ -970,7 +970,7 @@ internal class Page : ChannelOwner, IPage
                 ["source"] = ScriptsHelper.EvaluationScript(script, scriptPath, true),
             }).ConfigureAwait(false);
         return result.GetObject<Disposable>("disposable", _connection)!;
-    }
+    });
 
     [MethodImpl(MethodImplOptions.NoInlining)]
     public Task<IAsyncDisposable> RouteAsync(string globMatch, Func<IRoute, Task> handler, PageRouteOptions? options = null)
@@ -997,11 +997,11 @@ internal class Page : ChannelOwner, IPage
         => RouteAsync(null, null, funcMatch, handler, options);
 
     [MethodImpl(MethodImplOptions.NoInlining)]
-    public async Task UnrouteAllAsync(PageUnrouteAllOptions? options = default)
+    public Task UnrouteAllAsync(PageUnrouteAllOptions? options = default) => WrapApiCallAsync(async () =>
     {
         await UnrouteInternalAsync(_routes, [], options?.Behavior).ConfigureAwait(false);
         DisposeHarRouters();
-    }
+    });
 
     [MethodImpl(MethodImplOptions.NoInlining)]
     public Task UnrouteAsync(string globMatch, Action<IRoute>? handler)
@@ -1032,7 +1032,7 @@ internal class Page : ChannelOwner, IPage
         => MainFrame.WaitForLoadStateAsync(state, new() { Timeout = options?.Timeout });
 
     [MethodImpl(MethodImplOptions.NoInlining)]
-    public Task SetViewportSizeAsync(int width, int height)
+    public Task SetViewportSizeAsync(int width, int height) => WrapApiCallAsync(() =>
     {
         ViewportSize = new() { Width = width, Height = height };
         return SendMessageToServerAsync(
@@ -1041,7 +1041,7 @@ internal class Page : ChannelOwner, IPage
             {
                 ["viewportSize"] = ViewportSize,
             });
-    }
+    });
 
     [MethodImpl(MethodImplOptions.NoInlining)]
     public Task SetCheckedAsync(string selector, bool checkedState, PageSetCheckedOptions? options = null)
@@ -1193,7 +1193,7 @@ internal class Page : ChannelOwner, IPage
         });
 
     [MethodImpl(MethodImplOptions.NoInlining)]
-    public async Task PauseAsync()
+    public Task PauseAsync() => WrapApiCallAsync(async () =>
     {
         var defaultNavigationTimeout = Context._timeoutSettings.DefaultNavigationTimeout;
         var defaultTimeout = Context._timeoutSettings.DefaultTimeout;
@@ -1208,7 +1208,7 @@ internal class Page : ChannelOwner, IPage
             Context.SetDefaultNavigationTimeoutImpl(defaultNavigationTimeout);
             Context.SetDefaultTimeoutImpl(defaultTimeout);
         }
-    }
+    });
 
     [MethodImpl(MethodImplOptions.NoInlining)]
     public void SetDefaultNavigationTimeout(float timeout)
@@ -1278,7 +1278,7 @@ internal class Page : ChannelOwner, IPage
 
     internal void FirePageError(string error) => PageError?.Invoke(this, error);
 
-    private async Task<IAsyncDisposable> RouteAsync(string? globMatch, Regex? reMatch, Func<string, bool>? funcMatch, Delegate handler, PageRouteOptions? options)
+    private Task<IAsyncDisposable> RouteAsync(string? globMatch, Regex? reMatch, Func<string, bool>? funcMatch, Delegate handler, PageRouteOptions? options) => WrapApiCallAsync<IAsyncDisposable>(async () =>
     {
         var setting = new RouteHandler()
         {
@@ -1292,15 +1292,16 @@ internal class Page : ChannelOwner, IPage
             Handler = handler,
             Times = options?.Times,
         };
+        _connection.Dispatcher.AssertCurrent();
         _routes.Insert(0, setting);
         await UpdateInterceptionAsync().ConfigureAwait(false);
         return new DisposableStub(async () =>
         {
             await UnrouteAsync(globMatch, reMatch, funcMatch, handler).ConfigureAwait(false);
         });
-    }
+    });
 
-    private async Task UnrouteAsync(string? globMatch, Regex? reMatch, Func<string, bool>? funcMatch, Delegate? handler)
+    private Task UnrouteAsync(string? globMatch, Regex? reMatch, Func<string, bool>? funcMatch, Delegate? handler) => WrapApiCallAsync(async () =>
     {
         var removed = new List<RouteHandler>();
         var remaining = new List<RouteHandler>();
@@ -1316,10 +1317,11 @@ internal class Page : ChannelOwner, IPage
             }
         }
         await UnrouteInternalAsync(removed, remaining, UnrouteBehavior.Default).ConfigureAwait(false);
-    }
+    });
 
     private async Task UnrouteInternalAsync(List<RouteHandler> removed, List<RouteHandler> remaining, UnrouteBehavior? behavior)
     {
+        _connection.Dispatcher.AssertCurrent();
         _routes = remaining;
         if (behavior != null && behavior != UnrouteBehavior.Default)
         {
@@ -1341,8 +1343,9 @@ internal class Page : ChannelOwner, IPage
 
     internal void OnClose()
     {
+        _connection.Dispatcher.AssertCurrent();
         IsClosed = true;
-        Context._pages.Remove(this);
+        CopyOnWrite.Remove(ref Context._pages, this);
         DisposeHarRouters();
         Close?.Invoke(this, this);
         Context?.FirePageClose(this);
@@ -1386,6 +1389,7 @@ internal class Page : ChannelOwner, IPage
                 _routes.Remove(routeHandler);
             }
             var handled = await routeHandler.HandleAsync(route).ConfigureAwait(false);
+            _connection.Dispatcher.AssertCurrent();
             if (_routes.Count == 0)
             {
                 UpdateInterceptionAsync().IgnoreException();
@@ -1414,26 +1418,35 @@ internal class Page : ChannelOwner, IPage
 
     private void Channel_FrameDetached(object sender, IFrame args)
     {
+        _connection.Dispatcher.AssertCurrent();
         var frame = (Frame)args;
-        _frames.Remove(frame);
+        CopyOnWrite.Remove(ref _frames, frame);
         frame.IsDetached = true;
-        frame.ParentFrame?._childFrames?.Remove(frame);
+        if (frame.ParentFrame is Frame parent)
+        {
+            CopyOnWrite.Remove(ref parent._childFrames, frame);
+        }
         FrameDetached?.Invoke(this, args);
         Context?.FireFrameDetached(args);
     }
 
     private void Channel_FrameAttached(object sender, IFrame args)
     {
+        _connection.Dispatcher.AssertCurrent();
         var frame = (Frame)args;
         frame.Page = this;
-        _frames.Add(frame);
-        frame.ParentFrame?._childFrames?.Add(frame);
+        CopyOnWrite.Add(ref _frames, frame);
+        if (frame.ParentFrame is Frame parent)
+        {
+            CopyOnWrite.Add(ref parent._childFrames, frame);
+        }
         FrameAttached?.Invoke(this, args);
         Context?.FireFrameAttached(args);
     }
 
-    private async Task<IAsyncDisposable> InnerExposeBindingAsync(string name, Delegate callback)
+    private Task<IAsyncDisposable> InnerExposeBindingAsync(string name, Delegate callback) => WrapApiCallAsync<IAsyncDisposable>(async () =>
     {
+        _connection.Dispatcher.AssertCurrent();
         if (Bindings.ContainsKey(name))
         {
             throw new PlaywrightException($"Function \"{name}\" has been already registered");
@@ -1448,7 +1461,7 @@ internal class Page : ChannelOwner, IPage
                 ["name"] = name,
             }).ConfigureAwait(false);
         return result.GetObject<Disposable>("disposable", _connection)!;
-    }
+    });
 
 
     private FrameSetInputFilesOptions? Map(PageSetInputFilesOptions? options)
@@ -1466,7 +1479,7 @@ internal class Page : ChannelOwner, IPage
     }
 
     [MethodImpl(MethodImplOptions.NoInlining)]
-    public async Task RouteFromHARAsync(string har, PageRouteFromHAROptions? options = null)
+    public Task RouteFromHARAsync(string har, PageRouteFromHAROptions? options = null) => WrapApiCallAsync(async () =>
     {
         if (options?.Update == true)
         {
@@ -1492,9 +1505,10 @@ internal class Page : ChannelOwner, IPage
             Url = options?.Url,
             UrlString = options?.UrlString,
         }).ConfigureAwait(false);
+        _connection.Dispatcher.AssertCurrent();
         _harRouters.Add(harRouter);
         await harRouter.AddPageRouteAsync(this).ConfigureAwait(false);
-    }
+    });
 
     private void DisposeHarRouters()
     {
@@ -1561,7 +1575,7 @@ internal class Page : ChannelOwner, IPage
         => MainFrame.GetByTitle(text, new() { Exact = options?.Exact });
 
     [MethodImpl(MethodImplOptions.NoInlining)]
-    public async Task<IReadOnlyList<IConsoleMessage>> ConsoleMessagesAsync(PageConsoleMessagesOptions? options = default)
+    public Task<IReadOnlyList<IConsoleMessage>> ConsoleMessagesAsync(PageConsoleMessagesOptions? options = default) => WrapApiCallAsync<IReadOnlyList<IConsoleMessage>>(async () =>
     {
         var response = await SendMessageToServerAsync("consoleMessages", new Dictionary<string, object?>
         {
@@ -1569,7 +1583,7 @@ internal class Page : ChannelOwner, IPage
         }).ConfigureAwait(false);
         var initializers = response!.Value.GetProperty("messages").ToObject<List<ConsoleMessageInitializer>>(_connection.DefaultJsonSerializerOptions);
         return initializers.Select(initializer => new ConsoleMessage(initializer, this, null)).ToList();
-    }
+    });
 
     [MethodImpl(MethodImplOptions.NoInlining)]
     public Task ClearConsoleMessagesAsync()
@@ -1579,21 +1593,21 @@ internal class Page : ChannelOwner, IPage
     public Task ClearPageErrorsAsync()
         => SendMessageToServerAsync("clearPageErrors");
 
-    public async Task<IReadOnlyList<string>> PageErrorsAsync()
+    public Task<IReadOnlyList<string>> PageErrorsAsync() => WrapApiCallAsync<IReadOnlyList<string>>(async () =>
     {
         var response = await SendMessageToServerAsync("pageErrors").ConfigureAwait(false);
         var errors = response!.Value.GetProperty("errors").ToObject<List<SerializedError>>(_connection.DefaultJsonSerializerOptions);
         return errors.Select(error => string.IsNullOrEmpty(error.Error.Stack) ? $"{error.Error.Name}: {error.Error.Message}" : error.Error.Stack).ToList();
-    }
+    });
 
-    public async Task<IReadOnlyList<IRequest>> RequestsAsync()
+    public Task<IReadOnlyList<IRequest>> RequestsAsync() => WrapApiCallAsync<IReadOnlyList<IRequest>>(async () =>
     {
         var response = await SendMessageToServerAsync("requests").ConfigureAwait(false);
         return response!.Value.GetProperty("requests").ToObject<List<Request>>(_connection.DefaultJsonSerializerOptions);
-    }
+    });
 
     [MethodImpl(MethodImplOptions.NoInlining)]
-    public async Task<string> AriaSnapshotAsync(PageAriaSnapshotOptions? options = default)
+    public Task<string> AriaSnapshotAsync(PageAriaSnapshotOptions? options = default) => WrapApiCallAsync<string>(async () =>
     {
         var result = await MainFrame.SendMessageToServerAsync(
             "ariaSnapshot",
@@ -1605,15 +1619,15 @@ internal class Page : ChannelOwner, IPage
             },
             timeout: MainFrame.Timeout(options?.Timeout)).ConfigureAwait(false);
         return result!.Value.GetProperty("snapshot").ToString();
-    }
+    });
 
     [MethodImpl(MethodImplOptions.NoInlining)]
-    public async Task<ILocator> PickLocatorAsync()
+    public Task<ILocator> PickLocatorAsync() => WrapApiCallAsync<ILocator>(async () =>
     {
         var result = await SendMessageToServerAsync("pickLocator").ConfigureAwait(false);
         var selector = result!.Value.GetProperty("selector").ToString();
         return Locator(selector);
-    }
+    });
 
     [MethodImpl(MethodImplOptions.NoInlining)]
     public Task CancelPickLocatorAsync()
@@ -1625,7 +1639,7 @@ internal class Page : ChannelOwner, IPage
     public Task AddLocatorHandlerAsync(ILocator locator, Func<ILocator, Task> handler, PageAddLocatorHandlerOptions? options = null)
         => AddLocatorHandlerImplAsync(locator, handler, options);
 
-    private async Task AddLocatorHandlerImplAsync(ILocator locator, object handler, PageAddLocatorHandlerOptions? options = null)
+    private Task AddLocatorHandlerImplAsync(ILocator locator, object handler, PageAddLocatorHandlerOptions? options = null) => WrapApiCallAsync(async () =>
     {
         if (((Locator)locator)._frame != MainFrame)
         {
@@ -1641,8 +1655,9 @@ internal class Page : ChannelOwner, IPage
             ["noWaitAfter"] = options?.NoWaitAfter,
         }).ConfigureAwait(false);
 
+        _connection.Dispatcher.AssertCurrent();
         _locatorHandlers.Add(response!.Value.GetProperty("uid").GetInt32(), new LocatorHandler((Locator)locator, handler, options?.Times));
-    }
+    });
 
     private async Task Channel_LocatorHandlerTriggeredAsync(int uid)
     {
@@ -1657,7 +1672,15 @@ internal class Page : ChannelOwner, IPage
                     {
                         handler.Times--;
                     }
-                    await handler.HandleAsync().ConfigureAwait(false);
+                    try
+                    {
+                        await handler.HandleAsync().ConfigureAwait(false);
+                    }
+                    finally
+                    {
+                        // The handler is user code and may have resumed on any thread.
+                        await _connection.Dispatcher.SwitchTo();
+                    }
                 }
                 remove = handler.Times == 0;
             }
@@ -1676,7 +1699,7 @@ internal class Page : ChannelOwner, IPage
         }
     }
 
-    public async Task RemoveLocatorHandlerAsync(ILocator locator)
+    public Task RemoveLocatorHandlerAsync(ILocator locator) => WrapApiCallAsync(async () =>
     {
         foreach (KeyValuePair<int, LocatorHandler> entry in _locatorHandlers)
         {
@@ -1697,7 +1720,7 @@ internal class Page : ChannelOwner, IPage
                 }
             }
         }
-    }
+    });
 
     [MethodImpl(MethodImplOptions.NoInlining)]
     public Task RouteWebSocketAsync(string url, Action<IWebSocketRoute> handler)
@@ -1711,8 +1734,9 @@ internal class Page : ChannelOwner, IPage
     public Task RouteWebSocketAsync(Func<string, bool> url, Action<IWebSocketRoute> handler)
         => RouteWebSocketAsync(null, null, url, handler);
 
-    private Task RouteWebSocketAsync(string? globMatch, Regex? urlRegex, Func<string, bool>? urlFunc, Delegate handler)
+    private Task RouteWebSocketAsync(string? globMatch, Regex? urlRegex, Func<string, bool>? urlFunc, Delegate handler) => WrapApiCallAsync(() =>
     {
+        _connection.Dispatcher.AssertCurrent();
         _webSocketRoutes.Insert(0, new WebSocketRouteHandler()
         {
             urlMatcher = new URLMatch()
@@ -1726,7 +1750,7 @@ internal class Page : ChannelOwner, IPage
             Handler = handler,
         });
         return UpdateWebSocketInterceptionAsync();
-    }
+    });
 
     private async Task UpdateWebSocketInterceptionAsync()
     {

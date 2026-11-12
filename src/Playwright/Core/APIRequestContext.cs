@@ -55,7 +55,7 @@ internal class APIRequestContext : ChannelOwner, IAPIRequestContext
         await DisposeAsync(null).ConfigureAwait(false);
     }
 
-    internal async ValueTask DisposeAsync(string? reason)
+    internal ValueTask DisposeAsync(string? reason) => new(WrapApiCallAsync(async () =>
     {
         _closeReason = reason;
         try
@@ -70,7 +70,7 @@ internal class APIRequestContext : ChannelOwner, IAPIRequestContext
             // Swallow exception
         }
         _tracing.ResetStackCounter();
-    }
+    }));
 
     [MethodImpl(MethodImplOptions.NoInlining)]
     public Task<IReadOnlyList<BrowserContextCookiesResult>> CookiesAsync() => CookiesAsync(Array.Empty<string>());
@@ -95,7 +95,7 @@ internal class APIRequestContext : ChannelOwner, IAPIRequestContext
             });
 
     [MethodImpl(MethodImplOptions.NoInlining)]
-    public async Task ClearCookiesAsync(APIRequestContextClearCookiesOptions? options = default)
+    public Task ClearCookiesAsync(APIRequestContextClearCookiesOptions? options = default) => WrapApiCallAsync(async () =>
     {
         var @params = BrowserContext.ToClearCookiesParams(
             options?.Name ?? options?.NameString,
@@ -106,7 +106,7 @@ internal class APIRequestContext : ChannelOwner, IAPIRequestContext
             options?.PathRegex);
 
         await SendMessageToServerAsync("clearCookies", @params).ConfigureAwait(false);
-    }
+    });
 
     [MethodImpl(MethodImplOptions.NoInlining)]
     public Task<IAPIResponse> FetchAsync(IRequest request, APIRequestContextOptions? options = null)
@@ -132,7 +132,7 @@ internal class APIRequestContext : ChannelOwner, IAPIRequestContext
     }
 
     [MethodImpl(MethodImplOptions.NoInlining)]
-    public async Task<IAPIResponse> FetchAsync(string url, APIRequestContextOptions? options = null)
+    public Task<IAPIResponse> FetchAsync(string url, APIRequestContextOptions? options = null) => WrapApiCallAsync<IAPIResponse>(async () =>
     {
         if (!_closeReason.IsNullOrEmpty())
         {
@@ -194,7 +194,7 @@ internal class APIRequestContext : ChannelOwner, IAPIRequestContext
 
         var response = await SendMessageToServerAsync("fetch", message, timeout: _timeoutSettings.Timeout(options?.Timeout)).ConfigureAwait(false);
         return new APIResponse(this, response?.GetProperty("response").ToObject<Transport.Protocol.APIResponse>()!);
-    }
+    });
 
     private bool IsJsonContentType(IDictionary<string, string>? headers)
     {
@@ -249,7 +249,7 @@ internal class APIRequestContext : ChannelOwner, IAPIRequestContext
     }
 
     [MethodImpl(MethodImplOptions.NoInlining)]
-    public async Task<string> StorageStateAsync(APIRequestContextStorageStateOptions? options = null)
+    public Task<string> StorageStateAsync(APIRequestContextStorageStateOptions? options = null) => WrapApiCallAsync<string>(async () =>
     {
         string state = JsonSerializer.Serialize(
             await SendMessageToServerAsync<object>(
@@ -267,7 +267,7 @@ internal class APIRequestContext : ChannelOwner, IAPIRequestContext
         }
 
         return state;
-    }
+    });
 
     IFormData IAPIRequestContext.CreateFormData() => new FormData();
 }

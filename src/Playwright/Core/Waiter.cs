@@ -132,9 +132,11 @@ internal class Waiter : IDisposable
             return;
         }
 
+        // Runs inline when the dispatcher completes the event task, so that the rejection reaches
+        // the wait before the next message is handled, as the awaited event does.
         var (task, dispose) = GetWaitForEventTask(eventSource, e, predicate);
         RejectOn(
-            task.ContinueWith(_ => throw navigationException(), _onDisposeCts.Token, TaskContinuationOptions.RunContinuationsAsynchronously, TaskScheduler.Current),
+            task.ContinueWith(_ => throw navigationException(), _onDisposeCts.Token, TaskContinuationOptions.ExecuteSynchronously, TaskScheduler.Default),
             dispose);
     }
 
@@ -167,6 +169,10 @@ internal class Waiter : IDisposable
     {
         var info = eventSource.GetType().GetEvent(e) ?? eventSource.GetType().BaseType.GetEvent(e);
 
+        // The event is raised on the dispatcher thread while a message is handled. The source is
+        // completed after that message, so the waiting code resumes once the message has been
+        // handled in full: Page.Load has fired when WaitForLoadStateAsync returns.
+        var dispatcher = _channelOwner._connection.Dispatcher;
         var eventTsc = new TaskCompletionSource<T>();
         void EventHandler(object sender, T e)
         {
@@ -174,7 +180,7 @@ internal class Waiter : IDisposable
             {
                 if (predicate == null || predicate(e))
                 {
-                    eventTsc.TrySetResult(e);
+                    dispatcher.Complete(eventTsc, e);
                 }
                 else
                 {
@@ -183,7 +189,7 @@ internal class Waiter : IDisposable
             }
             catch (Exception ex)
             {
-                eventTsc.TrySetException(ex);
+                dispatcher.Fail(eventTsc, ex);
             }
 
             info.RemoveEventHandler(eventSource, (EventHandler<T>)EventHandler);
@@ -203,6 +209,8 @@ internal class Waiter : IDisposable
             }
 
             var firstTask = await Task.WhenAny(Enumerable.Repeat(task, 1).Concat(_failures)).ConfigureAwait(false);
+            // A timeout or a cancelled action completes on another thread.
+            await _channelOwner._connection.Dispatcher.SwitchTo();
             dispose?.Invoke();
 
             if (_manualCts.IsCancellationRequested)
@@ -231,10 +239,22 @@ internal class Waiter : IDisposable
 
     internal async Task CancelWaitOnExceptionAsync(Task waitForEventTask, Func<Task> action)
     {
-        await Task.Yield();
+        // The action is user code: it runs on the thread pool, not on the dispatcher thread, and
+        // outside this call's API zone, so that its own calls hop in and are reported as their own.
+        var connection = _channelOwner._connection;
+        await Dispatcher.ExitToThreadPool();
+        connection.ApiZone.Value = null;
         var actionTask = WrapActionAsync(action, _manualCts);
 
-        await Task.WhenAll(waitForEventTask, actionTask).ConfigureAwait(false);
+        try
+        {
+            await Task.WhenAll(waitForEventTask, actionTask).ConfigureAwait(false);
+        }
+        finally
+        {
+            // The action may have finished last, on any thread, and the caller disposes the waiter.
+            await connection.Dispatcher.SwitchTo();
+        }
     }
 
     private static async Task WrapActionAsync(Func<Task> action, CancellationTokenSource cts)

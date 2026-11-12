@@ -50,7 +50,7 @@ internal class BrowserType : ChannelOwner, IBrowserType
     public string Name => _initializer.Name;
 
     [MethodImpl(MethodImplOptions.NoInlining)]
-    public async Task<IBrowser> LaunchAsync(BrowserTypeLaunchOptions? options = default)
+    public Task<IBrowser> LaunchAsync(BrowserTypeLaunchOptions? options = default) => WrapApiCallAsync<IBrowser>(async () =>
     {
         options ??= new BrowserTypeLaunchOptions();
         Browser browser = await SendMessageToServerAsync<Browser>(
@@ -78,10 +78,10 @@ internal class BrowserType : ChannelOwner, IBrowserType
             timeout: TimeoutSettings.LaunchTimeout(options.Timeout)).ConfigureAwait(false);
         browser.ConnectToBrowserType(this, options.TracesDir);
         return browser;
-    }
+    });
 
     [MethodImpl(MethodImplOptions.NoInlining)]
-    public async Task<IBrowserContext> LaunchPersistentContextAsync(string userDataDir, BrowserTypeLaunchPersistentContextOptions? options = default)
+    public Task<IBrowserContext> LaunchPersistentContextAsync(string userDataDir, BrowserTypeLaunchPersistentContextOptions? options = default) => WrapApiCallAsync<IBrowserContext>(async () =>
     {
         options ??= new BrowserTypeLaunchPersistentContextOptions();
         var channelArgs = new Dictionary<string, object?>
@@ -161,10 +161,10 @@ internal class BrowserType : ChannelOwner, IBrowserType
             RecordHarUrlFilterString = options.RecordHarUrlFilterString,
         }).ConfigureAwait(false);
         return context;
-    }
+    });
 
     [MethodImpl(MethodImplOptions.NoInlining)]
-    public async Task<IBrowser> ConnectAsync(string wsEndpoint, BrowserTypeConnectOptions? options = null)
+    public Task<IBrowser> ConnectAsync(string wsEndpoint, BrowserTypeConnectOptions? options = null) => WrapApiCallAsync<IBrowser>(async () =>
     {
         options ??= new BrowserTypeConnectOptions();
         var headers = new List<KeyValuePair<string, string>>(options.Headers ?? new Dictionary<string, string>())
@@ -178,11 +178,10 @@ internal class BrowserType : ChannelOwner, IBrowserType
         {
             pipe.CloseAsync().IgnoreException();
         }
-        var connection = new Connection(_connection.LocalUtils);
+        var connection = new Connection(_connection.LocalUtils, _connection.Dispatcher);
         connection.MarkAsRemote();
         connection.Close += (_, _) => ClosePipe();
 
-        string? closeError = null;
         Browser? browser = null;
         void OnPipeClosed(string? reason = null)
         {
@@ -196,7 +195,7 @@ internal class BrowserType : ChannelOwner, IBrowserType
                 context.OnClose();
             }
             browser?.DidClose();
-            connection.DoClose(reason ?? closeError);
+            connection.DoClose(reason);
             // TODO: Backport https://github.com/microsoft/playwright/commit/d8d5289e8692c9b1265d23ee66988d1ac5122f33
             // Give a chance to any API call promises to reject upon page/context closure.
             // This happens naturally when we receive page.onClose and browser.onClose from the server
@@ -218,22 +217,13 @@ internal class BrowserType : ChannelOwner, IBrowserType
             }
             catch
             {
+                // The send failed on a thread pool thread; closing touches page and context state.
+                await connection.Dispatcher.SwitchTo();
                 OnPipeClosed();
             }
         };
 
-        pipe.Message += (_, message) =>
-        {
-            try
-            {
-                connection.Dispatch(message);
-            }
-            catch (Exception ex)
-            {
-                closeError = ex.ToString();
-                ClosePipe();
-            }
-        };
+        pipe.Message += (_, message) => connection.Dispatch(message);
 
         async Task<IBrowser> CreateBrowserAsync()
         {
@@ -252,10 +242,10 @@ internal class BrowserType : ChannelOwner, IBrowserType
         }
         var task = CreateBrowserAsync();
         return await task.WithTimeout(timeout, _ => throw new TimeoutException($"BrowserType.ConnectAsync: Timeout {timeout}ms exceeded")).ConfigureAwait(false);
-    }
+    });
 
     [MethodImpl(MethodImplOptions.NoInlining)]
-    public async Task<IBrowser> ConnectOverCDPAsync(string endpointURL, BrowserTypeConnectOverCDPOptions? options = null)
+    public Task<IBrowser> ConnectOverCDPAsync(string endpointURL, BrowserTypeConnectOverCDPOptions? options = null) => WrapApiCallAsync<IBrowser>(async () =>
     {
         if (Name != "chromium")
         {
@@ -277,5 +267,5 @@ internal class BrowserType : ChannelOwner, IBrowserType
         Browser browser = result.GetProperty("browser").ToObject<Browser>(_connection.DefaultJsonSerializerOptions);
         browser.ConnectToBrowserType(this, null);
         return browser;
-    }
+    });
 }

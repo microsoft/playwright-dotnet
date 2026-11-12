@@ -48,10 +48,10 @@ internal class BrowserContext : ChannelOwner, IBrowserContext
     internal readonly Tracing _tracing;
     private readonly Clock _clock;
     internal readonly APIRequestContext _request;
-    internal readonly List<IWorker> _serviceWorkers = new();
+    internal List<IWorker> _serviceWorkers = new();
     private readonly List<WebSocketRouteHandler> _webSocketRoutes = new();
     private List<RouteHandler> _routes = new();
-    internal readonly List<Page> _pages = new();
+    internal List<Page> _pages = new();
     // Browser is null for browser contexts created outside of normal browser, e.g. android or electron.
     internal Browser? _browser;
     private readonly List<HarRouter> _harRouters = new();
@@ -91,20 +91,20 @@ internal class BrowserContext : ChannelOwner, IBrowserContext
 
     public event EventHandler<IConsoleMessage>? Console
     {
-        add => this._consoleImpl = UpdateEventHandler("console", this._consoleImpl, value, true);
-        remove => this._consoleImpl = UpdateEventHandler("console", this._consoleImpl, value, false);
+        add => UpdateEventHandler("console", ref _consoleImpl, value, true, () => _consoleImpl != null);
+        remove => UpdateEventHandler("console", ref _consoleImpl, value, false, () => _consoleImpl != null);
     }
 
     public event EventHandler<IDialog> Dialog
     {
-        add => this._dialogImpl = UpdateEventHandler("dialog", this._dialogImpl, value, true);
-        remove => this._dialogImpl = UpdateEventHandler("dialog", this._dialogImpl, value, false);
+        add => UpdateEventHandler("dialog", ref _dialogImpl, value, true, () => _dialogImpl != null);
+        remove => UpdateEventHandler("dialog", ref _dialogImpl, value, false, () => _dialogImpl != null);
     }
 
     public event EventHandler<IDialog> DialogClosed
     {
-        add => this._dialogClosedImpl = UpdateEventHandler("dialogClosed", this._dialogClosedImpl, value, true);
-        remove => this._dialogClosedImpl = UpdateEventHandler("dialogClosed", this._dialogClosedImpl, value, false);
+        add => UpdateEventHandler("dialogClosed", ref _dialogClosedImpl, value, true, () => _dialogClosedImpl != null);
+        remove => UpdateEventHandler("dialogClosed", ref _dialogClosedImpl, value, false, () => _dialogClosedImpl != null);
     }
 
     public event EventHandler<IPage>? Page;
@@ -127,26 +127,26 @@ internal class BrowserContext : ChannelOwner, IBrowserContext
 
     public event EventHandler<IRequest>? Request
     {
-        add => this._requestImpl = UpdateEventHandler("request", this._requestImpl, value, true);
-        remove => this._requestImpl = UpdateEventHandler("request", this._requestImpl, value, false);
+        add => UpdateEventHandler("request", ref _requestImpl, value, true, () => _requestImpl != null);
+        remove => UpdateEventHandler("request", ref _requestImpl, value, false, () => _requestImpl != null);
     }
 
     public event EventHandler<IResponse> Response
     {
-        add => this._responseImpl = UpdateEventHandler("response", this._responseImpl, value, true);
-        remove => this._responseImpl = UpdateEventHandler("response", this._responseImpl, value, false);
+        add => UpdateEventHandler("response", ref _responseImpl, value, true, () => _responseImpl != null);
+        remove => UpdateEventHandler("response", ref _responseImpl, value, false, () => _responseImpl != null);
     }
 
     public event EventHandler<IRequest> RequestFinished
     {
-        add => this._requestFinishedImpl = UpdateEventHandler("requestFinished", this._requestFinishedImpl, value, true);
-        remove => this._requestFinishedImpl = UpdateEventHandler("requestFinished", this._requestFinishedImpl, value, false);
+        add => UpdateEventHandler("requestFinished", ref _requestFinishedImpl, value, true, () => _requestFinishedImpl != null);
+        remove => UpdateEventHandler("requestFinished", ref _requestFinishedImpl, value, false, () => _requestFinishedImpl != null);
     }
 
     public event EventHandler<IRequest> RequestFailed
     {
-        add => this._requestFailedImpl = UpdateEventHandler("requestFailed", this._requestFailedImpl, value, true);
-        remove => this._requestFailedImpl = UpdateEventHandler("requestFailed", this._requestFailedImpl, value, false);
+        add => UpdateEventHandler("requestFailed", ref _requestFailedImpl, value, true, () => _requestFailedImpl != null);
+        remove => UpdateEventHandler("requestFailed", ref _requestFailedImpl, value, false, () => _requestFailedImpl != null);
     }
 
     public event EventHandler<IWorker>? ServiceWorker;
@@ -245,7 +245,7 @@ internal class BrowserContext : ChannelOwner, IBrowserContext
                 {
                     var serviceWorker = serverParams.GetProperty("worker").ToObject<Worker>(_connection.DefaultJsonSerializerOptions)!;
                     ((Worker)serviceWorker).Context = this;
-                    _serviceWorkers.Add(serviceWorker);
+                    CopyOnWrite.Add(ref _serviceWorkers, serviceWorker);
                     ServiceWorker?.Invoke(this, serviceWorker);
                     break;
                 }
@@ -346,7 +346,7 @@ internal class BrowserContext : ChannelOwner, IBrowserContext
             });
 
     [MethodImpl(MethodImplOptions.NoInlining)]
-    public async Task<IAsyncDisposable> AddInitScriptAsync(string? script = null, string? scriptPath = null)
+    public Task<IAsyncDisposable> AddInitScriptAsync(string? script = null, string? scriptPath = null) => WrapApiCallAsync<IAsyncDisposable>(async () =>
     {
         if (string.IsNullOrEmpty(script))
         {
@@ -360,10 +360,10 @@ internal class BrowserContext : ChannelOwner, IBrowserContext
                 ["source"] = script,
             }).ConfigureAwait(false);
         return result.GetObject<Disposable>("disposable", _connection)!;
-    }
+    });
 
     [MethodImpl(MethodImplOptions.NoInlining)]
-    public async Task ClearCookiesAsync(BrowserContextClearCookiesOptions? options = default)
+    public Task ClearCookiesAsync(BrowserContextClearCookiesOptions? options = default) => WrapApiCallAsync(async () =>
     {
         var @params = ToClearCookiesParams(
             options?.Name ?? options?.NameString,
@@ -374,7 +374,7 @@ internal class BrowserContext : ChannelOwner, IBrowserContext
             options?.PathRegex);
 
         await SendMessageToServerAsync("clearCookies", @params).ConfigureAwait(false);
-    }
+    });
 
     internal static Dictionary<string, object?> ToClearCookiesParams(string? name, Regex? nameRegex, string? domain, Regex? domainRegex, string? path, Regex? pathRegex)
     {
@@ -399,7 +399,7 @@ internal class BrowserContext : ChannelOwner, IBrowserContext
     public Task ClearPermissionsAsync() => SendMessageToServerAsync("clearPermissions");
 
     [MethodImpl(MethodImplOptions.NoInlining)]
-    public async Task CloseAsync(BrowserContextCloseOptions? options = default)
+    public Task CloseAsync(BrowserContextCloseOptions? options = default) => WrapApiCallAsync(async () =>
     {
         if (ClosingOrClosed)
         {
@@ -428,7 +428,7 @@ internal class BrowserContext : ChannelOwner, IBrowserContext
         {
             ExceptionDispatchInfo.Capture(harError).Throw();
         }
-    }
+    });
 
     [MethodImpl(MethodImplOptions.NoInlining)]
     public Task<IReadOnlyList<BrowserContextCookiesResult>> CookiesAsync() => CookiesAsync(Array.Empty<string>());
@@ -531,7 +531,7 @@ internal class BrowserContext : ChannelOwner, IBrowserContext
         }).ConfigureAwait(false);
 
     [MethodImpl(MethodImplOptions.NoInlining)]
-    public async Task<IPage> NewPageAsync()
+    public Task<IPage> NewPageAsync() => WrapApiCallAsync<IPage>(async () =>
     {
         if (OwnerPage != null)
         {
@@ -539,7 +539,7 @@ internal class BrowserContext : ChannelOwner, IBrowserContext
         }
 
         return await SendMessageToServerAsync<Page>("newPage").ConfigureAwait(false);
-    }
+    });
 
     [MethodImpl(MethodImplOptions.NoInlining)]
     public Task<IAsyncDisposable> RouteAsync(string globMatch, Func<IRoute, Task> handler, BrowserContextRouteOptions? options = null)
@@ -591,7 +591,7 @@ internal class BrowserContext : ChannelOwner, IBrowserContext
             });
 
     [MethodImpl(MethodImplOptions.NoInlining)]
-    public async Task<string> StorageStateAsync(BrowserContextStorageStateOptions? options = default)
+    public Task<string> StorageStateAsync(BrowserContextStorageStateOptions? options = default) => WrapApiCallAsync<string>(async () =>
     {
         string state = JsonSerializer.Serialize(
             await SendMessageToServerAsync<object>(
@@ -610,10 +610,10 @@ internal class BrowserContext : ChannelOwner, IBrowserContext
         }
 
         return state;
-    }
+    });
 
     [MethodImpl(MethodImplOptions.NoInlining)]
-    public async Task SetStorageStateAsync(string storageStatePath)
+    public Task SetStorageStateAsync(string storageStatePath) => WrapApiCallAsync(async () =>
     {
         if (!File.Exists(storageStatePath))
         {
@@ -627,14 +627,14 @@ internal class BrowserContext : ChannelOwner, IBrowserContext
             {
                 ["storageState"] = storageState,
             }).ConfigureAwait(false);
-    }
+    });
 
     [MethodImpl(MethodImplOptions.NoInlining)]
-    public async Task UnrouteAllAsync(BrowserContextUnrouteAllOptions? options = default)
+    public Task UnrouteAllAsync(BrowserContextUnrouteAllOptions? options = default) => WrapApiCallAsync(async () =>
     {
         await UnrouteInternalAsync(_routes, new(), options?.Behavior).ConfigureAwait(false);
         DisposeHarRouters();
-    }
+    });
 
     [MethodImpl(MethodImplOptions.NoInlining)]
     public Task UnrouteAsync(string? globMatch, Action<IRoute>? handler)
@@ -665,7 +665,7 @@ internal class BrowserContext : ChannelOwner, IBrowserContext
         return _closeReason ?? _browser?._closeReason;
     }
 
-    internal async Task<T> InnerWaitForEventAsync<T>(PlaywrightEvent<T> playwrightEvent, Func<Task>? action = default, Func<T, bool>? predicate = default, float? timeout = default)
+    internal Task<T> InnerWaitForEventAsync<T>(PlaywrightEvent<T> playwrightEvent, Func<Task>? action = default, Func<T, bool>? predicate = default, float? timeout = default) => WrapApiCallAsync<T>(async () =>
     {
         if (playwrightEvent == null)
         {
@@ -688,7 +688,7 @@ internal class BrowserContext : ChannelOwner, IBrowserContext
         }
 
         return await result.ConfigureAwait(false);
-    }
+    });
 
     [MethodImpl(MethodImplOptions.NoInlining)]
     public Task<IPage> WaitForPageAsync(BrowserContextWaitForPageOptions? options = default)
@@ -750,6 +750,7 @@ internal class BrowserContext : ChannelOwner, IBrowserContext
                 _routes.Remove(routeHandler);
             }
             var handled = await routeHandler.HandleAsync(route).ConfigureAwait(false);
+            _connection.Dispatcher.AssertCurrent();
             if (_routes.Count == 0)
             {
                 UpdateInterceptionAsync().IgnoreException();
@@ -791,7 +792,7 @@ internal class BrowserContext : ChannelOwner, IBrowserContext
             baseURL = BaseURL,
         }.Match(url);
 
-    private async Task<IAsyncDisposable> RouteAsync(string? globMatch, Regex? reMatch, Func<string, bool>? funcMatch, Delegate handler, BrowserContextRouteOptions? options)
+    private Task<IAsyncDisposable> RouteAsync(string? globMatch, Regex? reMatch, Func<string, bool>? funcMatch, Delegate handler, BrowserContextRouteOptions? options) => WrapApiCallAsync<IAsyncDisposable>(async () =>
     {
         var setting = new RouteHandler()
         {
@@ -805,15 +806,16 @@ internal class BrowserContext : ChannelOwner, IBrowserContext
             Handler = handler,
             Times = options?.Times,
         };
+        _connection.Dispatcher.AssertCurrent();
         _routes.Insert(0, setting);
         await UpdateInterceptionAsync().ConfigureAwait(false);
         return new DisposableStub(async () =>
         {
             await UnrouteAsync(globMatch, reMatch, funcMatch, handler).ConfigureAwait(false);
         });
-    }
+    });
 
-    private async Task UnrouteAsync(string? globMatch, Regex? reMatch, Func<string, bool>? funcMatch, Delegate? handler)
+    private Task UnrouteAsync(string? globMatch, Regex? reMatch, Func<string, bool>? funcMatch, Delegate? handler) => WrapApiCallAsync(async () =>
     {
         var removed = new List<RouteHandler>();
         var remaining = new List<RouteHandler>();
@@ -829,10 +831,11 @@ internal class BrowserContext : ChannelOwner, IBrowserContext
             }
         }
         await UnrouteInternalAsync(removed, remaining, UnrouteBehavior.Default).ConfigureAwait(false);
-    }
+    });
 
     private async Task UnrouteInternalAsync(List<RouteHandler> removed, List<RouteHandler> remaining, UnrouteBehavior? behavior)
     {
+        _connection.Dispatcher.AssertCurrent();
         _routes = remaining;
         if (behavior != null && behavior != UnrouteBehavior.Default)
         {
@@ -855,18 +858,19 @@ internal class BrowserContext : ChannelOwner, IBrowserContext
 
     internal void OnClose()
     {
+        _connection.Dispatcher.AssertCurrent();
         ClosingOrClosed = true;
         if (Browser != null)
         {
-            ((Browser)Browser)._contexts.Remove(this);
-            ((Browser)Browser)._browserType.Playwright._selectors._contextsForSelectors.Remove(this);
+            CopyOnWrite.Remove(ref ((Browser)Browser)._contexts, this);
+            CopyOnWrite.Remove(ref ((Browser)Browser)._browserType.Playwright._selectors._contextsForSelectors, this);
         }
 
         DisposeHarRouters();
         _tracing.ResetStackCounter();
         _request._tracing.ResetStackCounter();
         Close?.Invoke(this, this);
-        _closeTcs.TrySetResult(true);
+        _connection.Dispatcher.Complete(_closeTcs, true);
     }
 
     internal void FirePageClose(IPage page) => PageClose?.Invoke(this, page);
@@ -883,8 +887,9 @@ internal class BrowserContext : ChannelOwner, IBrowserContext
 
     private void Channel_OnPage(object sender, Page page)
     {
+        _connection.Dispatcher.AssertCurrent();
         page.Context = this;
-        _pages.Add(page);
+        CopyOnWrite.Add(ref _pages, page);
         Page?.Invoke(this, page);
 
         if (page.Opener?.IsClosed == false)
@@ -903,7 +908,7 @@ internal class BrowserContext : ChannelOwner, IBrowserContext
 
     private void Channel_Route(object sender, Route route) => _ = OnRouteAsync(route).ConfigureAwait(false);
 
-    private async Task<IAsyncDisposable> ExposeBindingAsync(string name, Delegate callback)
+    private Task<IAsyncDisposable> ExposeBindingAsync(string name, Delegate callback) => WrapApiCallAsync<IAsyncDisposable>(async () =>
     {
         foreach (var page in _pages)
         {
@@ -927,7 +932,7 @@ internal class BrowserContext : ChannelOwner, IBrowserContext
                 ["name"] = name,
             }).ConfigureAwait(false);
         return result.GetObject<Disposable>("disposable", _connection)!;
-    }
+    });
 
     private HarContentPolicy? RouteFromHarUpdateContentPolicyToHarContentPolicy(RouteFromHarUpdateContentPolicy? policy)
     {
@@ -946,7 +951,7 @@ internal class BrowserContext : ChannelOwner, IBrowserContext
         => _tracing.RecordIntoHarAsync(har, page, contentPolicy ?? RouteFromHarUpdateContentPolicyToHarContentPolicy(options?.UpdateContent), options?.Url ?? options?.UrlString, options?.UrlRegex, options?.UpdateMode ?? HarMode.Minimal, resourcesDir);
 
     [MethodImpl(MethodImplOptions.NoInlining)]
-    public async Task RouteFromHARAsync(string har, BrowserContextRouteFromHAROptions? options = null)
+    public Task RouteFromHARAsync(string har, BrowserContextRouteFromHAROptions? options = null) => WrapApiCallAsync(async () =>
     {
         if (options?.Update == true)
         {
@@ -959,9 +964,10 @@ internal class BrowserContext : ChannelOwner, IBrowserContext
             UrlRegex = options?.UrlRegex,
             UrlString = options?.UrlString,
         }).ConfigureAwait(false);
+        _connection.Dispatcher.AssertCurrent();
         _harRouters.Add(harRouter);
         await harRouter.AddContextRouteAsync(this).ConfigureAwait(false);
-    }
+    });
 
     private void DisposeHarRouters()
     {
@@ -984,8 +990,9 @@ internal class BrowserContext : ChannelOwner, IBrowserContext
     public Task RouteWebSocketAsync(Func<string, bool> url, Action<IWebSocketRoute> handler)
         => RouteWebSocketAsync(null, null, url, handler);
 
-    private Task RouteWebSocketAsync(string? globMatch, Regex? reMatch, Func<string, bool>? funcMatch, Delegate handler)
+    private Task RouteWebSocketAsync(string? globMatch, Regex? reMatch, Func<string, bool>? funcMatch, Delegate handler) => WrapApiCallAsync(() =>
     {
+        _connection.Dispatcher.AssertCurrent();
         _webSocketRoutes.Insert(0, new WebSocketRouteHandler()
         {
             urlMatcher = new URLMatch()
@@ -999,7 +1006,7 @@ internal class BrowserContext : ChannelOwner, IBrowserContext
             Handler = handler,
         });
         return UpdateWebSocketInterceptionAsync();
-    }
+    });
 
     private async Task UpdateWebSocketInterceptionAsync()
     {

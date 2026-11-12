@@ -62,6 +62,13 @@ The tests are NUnit tests in `src/Playwright.Tests/`, one class per upstream spe
 - New channel object types require: enum entry in `ChannelOwnerType.cs`, case in `Connection.cs`, initializer in `Transport/Protocol/Generated/`, and a `Core/` class.
 - Public APIs should use .NET standard types (e.g. `IAsyncDisposable`) not custom Playwright types. Internal helpers (e.g. `Disposable` class in `Core/`) stay internal.
 
+### Threading model
+The client mirrors the JS event loop: each connection has one dispatcher thread (`Transport/Dispatcher.cs`) that handles driver messages and runs all library code, one item at a time. Read [docs/threading.md](docs/threading.md) before changing code in `Core/` or `Transport/`; it has the model and the rules of thumb. The short version:
+- A public async method is a single `SendMessageToServerAsync` call, or wraps its whole body in `WrapApiCallAsync(async () => ...)`.
+- State is touched only on the dispatcher thread. A `TaskCompletionSource` is completed with `Dispatcher.Complete`/`Fail`, and code that awaited something else (a user callback, a timeout, I/O) calls `await _connection.Dispatcher.SwitchTo()` before it touches state.
+- Lists that getters hand out are copy-on-write (`Helpers/CopyOnWrite.cs`), and nothing blocks on the dispatcher thread.
+- `ThreadingModelTests.cs` and `DispatcherTests.cs` pin the rules.
+
 ## Commit Convention
 
 Before committing, run `dotnet format ./src/ -v:diag` and fix style issues.

@@ -87,7 +87,7 @@ internal class JSHandle : ChannelOwner, IJSHandle
             }).ConfigureAwait(false);
 
     [MethodImpl(MethodImplOptions.NoInlining)]
-    public async Task<Dictionary<string, IJSHandle>> GetPropertiesAsync()
+    public Task<Dictionary<string, IJSHandle>> GetPropertiesAsync() => WrapApiCallAsync<Dictionary<string, IJSHandle>>(async () =>
     {
         var result = new Dictionary<string, IJSHandle>();
         var channelResult = (await SendMessageToServerAsync("getPropertyList").ConfigureAwait(false))!.Value
@@ -99,7 +99,7 @@ internal class JSHandle : ChannelOwner, IJSHandle
         }
 
         return result;
-    }
+    });
 
     [MethodImpl(MethodImplOptions.NoInlining)]
     public async ValueTask DisposeAsync()

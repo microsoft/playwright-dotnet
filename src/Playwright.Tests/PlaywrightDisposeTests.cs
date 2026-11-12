@@ -75,4 +75,23 @@ public class PlaywrightDisposeTests : PlaywrightTestEx
 
     // Many times more than a pipe holds, and it never stops.
     private const string ConsoleFlood = "() => { setInterval(() => { for (let i = 0; i < 200; i++) console.log('x'.repeat(20000)); }, 0); }";
+
+    // See https://github.com/microsoft/playwright-dotnet/issues/3446
+    [PlaywrightTest]
+    public async Task ShouldFailCallsInFlightWhenPlaywrightIsDisposed()
+    {
+        var localPlaywright = await Microsoft.Playwright.Playwright.CreateAsync();
+        var browser = await localPlaywright[BrowserName].LaunchAsync();
+        var page = await browser.NewPageAsync();
+
+        // Calls that never get a reply. They are sent in order, before the call that follows.
+        var calls = Enumerable.Range(0, 20).Select(_ => page.EvaluateAsync("() => new Promise(() => {})")).ToArray();
+        await page.EvaluateAsync("1");
+
+        await Task.Run(() => localPlaywright.Dispose());
+        foreach (var call in calls)
+        {
+            await PlaywrightAssert.ThrowsAsync<TargetClosedException>(() => call.WaitAsync(TimeSpan.FromSeconds(10)));
+        }
+    }
 }
