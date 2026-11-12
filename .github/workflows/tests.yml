@@ -25,9 +25,9 @@ jobs:
         shell: bash
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
-      - uses: microsoft/playwright/.github/actions/ci-env@d1518e3e3fca90352c4390814943cced496fd7e4 # main
+      - uses: microsoft/playwright/.github/actions/ci-env@9a82788d83cf91d8262e65a432b9bf93dc5418a7 # main
       - name: Setup .NET Core
-        uses: actions/setup-dotnet@a98b56852c35b8e3190ac28c8c2271da59106c68 # v6.0.0
+        uses: actions/setup-dotnet@0f4a354dd5547a28c70b7853dbd95d5b67886e73 # v6.1.0
         with:
           dotnet-version: |
             8.0.x
