@@ -27,6 +27,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.Playwright.Transport;
 
 namespace Microsoft.Playwright.Core;
 
@@ -118,5 +119,10 @@ internal class FunctionAssertions : IFunctionAssertions
         return completed;
     }
 
-    private async Task RunCallbackAsync() => await AttemptRunner(_callback).ConfigureAwait(false);
+    private async Task RunCallbackAsync()
+    {
+        // The callback is user code: it runs on the thread pool, also when ToPassAsync is called on the dispatcher thread.
+        await Dispatcher.ExitToThreadPool();
+        await AttemptRunner(_callback).ConfigureAwait(false);
+    }
 }

@@ -162,6 +162,11 @@ public class FunctionAssertionsTests : PageTestEx
         var exception = await PlaywrightAssert.ThrowsAsync<PlaywrightAssertionException>(() => Expect(() => Task.Delay(10000)).ToPassAsync(new() { Timeout = 100 }));
         Assert.AreEqual("Timeout 100ms exceeded while waiting on the predicate", exception.Message);
         Assert.Less(stopwatch.ElapsedMilliseconds, 5000);
+
+        stopwatch.Restart();
+        exception = await PlaywrightAssert.ThrowsAsync<PlaywrightAssertionException>(() => Expect(() => Thread.Sleep(10000)).ToPassAsync(new() { Timeout = 100 }));
+        Assert.AreEqual("Timeout 100ms exceeded while waiting on the predicate", exception.Message);
+        Assert.Less(stopwatch.ElapsedMilliseconds, 5000);
     }
 
     [PlaywrightTest]
