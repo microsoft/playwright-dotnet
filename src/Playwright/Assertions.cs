@@ -41,6 +41,17 @@ public static class Assertions
     /// </remarks>
     public static void SetDefaultExpectTimeout(float timeout) => AssertionsBase.SetDefaultTimeout(timeout);
 
+    /// <summary>
+    /// Sets the default timeout for all future <see cref="IFunctionAssertions.ToPassAsync"/> calls.
+    /// </summary>
+    /// <param name="timeout">The timeout in milliseconds.</param>
+    /// <remarks>
+    /// <para>
+    /// The default timeout is 30 seconds. <see cref="SetDefaultExpectTimeout"/> does not change it.
+    /// </para>
+    /// </remarks>
+    public static void SetDefaultExpectToPassTimeout(float timeout) => FunctionAssertions.SetDefaultTimeout(timeout);
+
     public static ILocatorAssertions Expect(ILocator locator) => new LocatorAssertions(locator, false);
 
     public static IPageAssertions Expect(IPage page) => new PageAssertions(page, false);
@@ -48,6 +59,13 @@ public static class Assertions
     public static IAPIResponseAssertions Expect(IAPIResponse response) => new APIResponseAssertions(response, false);
 
     public static IFunctionAssertions Expect(Func<Task> callback) => new FunctionAssertions(callback);
+
+    /// <summary>
+    /// Creates assertions that retry a synchronous <paramref name="callback"/>.
+    /// </summary>
+    /// <param name="callback">Callback to retry.</param>
+    /// <returns>Assertions for the given callback.</returns>
+    public static IFunctionAssertions Expect(Action callback) => new FunctionAssertions(callback);
 
     /// <summary>
     /// Creates assertions that prefix any failure message with <paramref name="message"/>, providing
@@ -67,4 +85,14 @@ public static class Assertions
     /// <param name="response">The API response to assert against.</param>
     /// <param name="message">Message to prepend to any assertion failure.</param>
     public static IAPIResponseAssertions Expect(IAPIResponse response, string message) => new APIResponseAssertions(response, false, message);
+
+    /// <inheritdoc cref="Expect(ILocator, string)" />
+    /// <param name="callback">Callback to retry.</param>
+    /// <param name="message">Message to prepend to any assertion failure.</param>
+    public static IFunctionAssertions Expect(Func<Task> callback, string message) => new FunctionAssertions(callback, message);
+
+    /// <inheritdoc cref="Expect(ILocator, string)" />
+    /// <param name="callback">Callback to retry.</param>
+    /// <param name="message">Message to prepend to any assertion failure.</param>
+    public static IFunctionAssertions Expect(Action callback, string message) => new FunctionAssertions(callback, message);
 }

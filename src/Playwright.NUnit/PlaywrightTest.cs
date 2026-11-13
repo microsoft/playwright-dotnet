@@ -22,6 +22,7 @@
  * SOFTWARE.
  */
 
+using System;
 using System.Threading.Tasks;
 using Microsoft.Playwright.TestAdapter;
 using NUnit.Framework;
@@ -48,15 +49,25 @@ public class PlaywrightTest : WorkerAwareTest
 
     public static void SetDefaultExpectTimeout(float timeout) => Assertions.SetDefaultExpectTimeout(timeout);
 
+    public static void SetDefaultExpectToPassTimeout(float timeout) => Assertions.SetDefaultExpectToPassTimeout(timeout);
+
     public ILocatorAssertions Expect(ILocator locator) => Assertions.Expect(locator);
 
     public IPageAssertions Expect(IPage page) => Assertions.Expect(page);
 
     public IAPIResponseAssertions Expect(IAPIResponse response) => Assertions.Expect(response);
 
+    public IFunctionAssertions Expect(Func<Task> callback) => Assertions.Expect(callback);
+
+    public IFunctionAssertions Expect(Action callback) => Assertions.Expect(callback);
+
     public ILocatorAssertions Expect(ILocator locator, string message) => Assertions.Expect(locator, message);
 
     public IPageAssertions Expect(IPage page, string message) => Assertions.Expect(page, message);
 
     public IAPIResponseAssertions Expect(IAPIResponse response, string message) => Assertions.Expect(response, message);
+
+    public IFunctionAssertions Expect(Func<Task> callback, string message) => Assertions.Expect(callback, message);
+
+    public IFunctionAssertions Expect(Action callback, string message) => Assertions.Expect(callback, message);
 }
