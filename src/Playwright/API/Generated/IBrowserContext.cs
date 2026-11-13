@@ -1015,12 +1015,19 @@ public partial interface IBrowserContext
 
     /// <param name="offline">
     /// Whether to emulate network being offline for the browser context.
-    /// Offline emulation only affects requests that go through the browser's regular network
-    /// stack, such as page navigations, <c>fetch()</c>, <c>XMLHttpRequest</c> and WebSockets.
-    /// It does not affect WebRTC traffic: established <c>RTCPeerConnection</c>s keep sending
-    /// and receiving media over UDP. To test WebRTC connection loss, interrupt the connection
-    /// outside the browser, for example by stopping the TURN server or using an OS-level
-    /// firewall.
+    /// Offline emulation affects HTTP requests, such as page navigations, <c>fetch()</c>
+    /// and <c>XMLHttpRequest</c>.
+    /// WebSocket behavior depends on the browser and whether the connection is already
+    /// established. Chromium and Firefox fail new WebSocket connections while offline,
+    /// but do not close already-open connections. Chromium can defer incoming messages
+    /// until the context goes back online, rather than lose them; Firefox can continue
+    /// delivering messages while offline. WebKit can allow both new WebSocket connections
+    /// and traffic on established connections while offline. Do not rely on offline emulation
+    /// to test WebSocket message loss or connection closure.
+    /// Offline emulation does not affect WebRTC traffic: established <c>RTCPeerConnection</c>s
+    /// keep sending and receiving media over UDP. To test WebRTC connection loss, interrupt
+    /// the connection outside the browser, for example by stopping the TURN server or using
+    /// an OS-level firewall.
     /// </param>
     Task SetOfflineAsync(bool offline);
 
