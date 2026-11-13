@@ -19,7 +19,7 @@ jobs:
       fail-fast: false
       matrix:
         browser: [chromium, firefox, webkit]
-        os: [windows-latest, ubuntu-latest, macos-latest-xlarge]
+        os: [playwright-x64-server2025-64-core, playwright-x64-ubuntu24-64-core, macos-26-xlarge]
     defaults:
       run:
         shell: bash
