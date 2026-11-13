@@ -22,6 +22,9 @@
  * SOFTWARE.
  */
 
+using System;
+using System.Threading.Tasks;
+
 namespace Microsoft.Playwright;
 
 /// <summary>
@@ -63,6 +66,20 @@ public partial interface IPlaywrightAssertions
     /// </summary>
     /// <param name="response"><see cref="IAPIResponse"/> object to use for assertions.</param>
     IAPIResponseAssertions Expect(IAPIResponse response);
+
+    /// <summary>
+    /// <para>Creates a <see cref="IFunctionAssertions"/> object for the given callback.</para>
+    /// <para>**Usage**</para>
+    /// <code>
+    /// await Expect(async () =&gt;<br/>
+    /// {<br/>
+    ///     var response = await Page.APIRequest.GetAsync("https://api.example.com");<br/>
+    ///     Assert.AreEqual(200, response.Status);<br/>
+    /// }).ToPassAsync();
+    /// </code>
+    /// </summary>
+    /// <param name="callback">Callback to retry. A synchronous <c>Action</c> is accepted as well.</param>
+    IFunctionAssertions Expect(Func<Task> callback);
 
     /// <summary>
     /// <para>Creates a <see cref="ILocatorAssertions"/> object for the given <see cref="ILocator"/>.</para>

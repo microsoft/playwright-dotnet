@@ -1051,6 +1051,10 @@ public partial interface IPage
     /// Allows locating input elements by the text of the associated <c>&lt;label&gt;</c>
     /// or <c>aria-labelledby</c> element, or by the <c>aria-label</c> attribute.
     /// </para>
+    /// <para>
+    /// Associated <c>&lt;label&gt;</c> elements are also supported for form-associated
+    /// custom elements.
+    /// </para>
     /// <para>**Usage**</para>
     /// <para>
     /// For example, this method will find inputs by label "Username" and "Password" in
@@ -1069,6 +1073,10 @@ public partial interface IPage
     /// <para>
     /// Allows locating input elements by the text of the associated <c>&lt;label&gt;</c>
     /// or <c>aria-labelledby</c> element, or by the <c>aria-label</c> attribute.
+    /// </para>
+    /// <para>
+    /// Associated <c>&lt;label&gt;</c> elements are also supported for form-associated
+    /// custom elements.
     /// </para>
     /// <para>**Usage**</para>
     /// <para>

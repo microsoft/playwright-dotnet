@@ -98,6 +98,7 @@ public class SelectorsGetByTests : PageTestEx
         StringAssert.Contains(">Hello</div>", await Page.GetByText("Hello", new() { Exact = true }).EvaluateAsync<string>("e => e.outerHTML"));
     }
 
+    // See https://github.com/microsoft/playwright/issues/43898
     [PlaywrightTest("selector-get-by.spec.ts", "getByLabel should work")]
     public async Task GetByLabelShouldWork()
     {
@@ -106,6 +107,25 @@ public class SelectorsGetByTests : PageTestEx
         Assert.AreEqual(await Page.GetByLabel("Name").EvaluateAsync<string>("e => e.nodeName"), "INPUT");
         Assert.AreEqual(await Page.MainFrame.GetByLabel("Name").EvaluateAsync<string>("e => e.nodeName"), "INPUT");
         Assert.AreEqual(await Page.Locator("div").GetByLabel("Name").EvaluateAsync<string>("e => e.nodeName"), "INPUT");
+
+        await Page.SetContentAsync(@"
+            <label for=""city"">City</label><my-field id=""city"" role=""combobox"">Pick one</my-field>
+            <label>Street <my-field id=""street"" role=""combobox"">Pick one</my-field></label>
+        ");
+        await Page.EvaluateAsync(@"() => {
+            customElements.define('my-field', class extends HTMLElement {
+                static formAssociated = true;
+                constructor() {
+                    super();
+                    this.attachInternals();
+                }
+            });
+        }");
+        Assert.AreEqual(new[] { "city", "street" }, await Page.EvaluateAsync<string[]>("() => [...document.querySelectorAll('label')].map(label => label.control?.id)"));
+        Assert.AreEqual(new[] { "city" }, await Page.GetByLabel("City").EvaluateAllAsync<string[]>("elements => elements.map(e => e.id)"));
+        Assert.AreEqual(new[] { "street" }, await Page.GetByLabel("Street").EvaluateAllAsync<string[]>("elements => elements.map(e => e.id)"));
+        Assert.AreEqual(new[] { "city" }, await Page.GetByRole(AriaRole.Combobox, new() { Name = "City", Exact = true }).EvaluateAllAsync<string[]>("elements => elements.map(e => e.id)"));
+        Assert.AreEqual(new[] { "street" }, await Page.GetByRole(AriaRole.Combobox, new() { Name = "Street", Exact = true }).EvaluateAllAsync<string[]>("elements => elements.map(e => e.id)"));
     }
 
     [PlaywrightTest("selector-get-by.spec.ts", "getByLabel should work with nested elements")]

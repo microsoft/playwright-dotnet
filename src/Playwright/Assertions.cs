@@ -22,6 +22,8 @@
  * SOFTWARE.
  */
 
+using System;
+using System.Threading.Tasks;
 using Microsoft.Playwright.Core;
 
 namespace Microsoft.Playwright;
@@ -44,6 +46,8 @@ public static class Assertions
     public static IPageAssertions Expect(IPage page) => new PageAssertions(page, false);
 
     public static IAPIResponseAssertions Expect(IAPIResponse response) => new APIResponseAssertions(response, false);
+
+    public static IFunctionAssertions Expect(Func<Task> callback) => new FunctionAssertions(callback);
 
     /// <summary>
     /// Creates assertions that prefix any failure message with <paramref name="message"/>, providing
