@@ -39,7 +39,11 @@ tail -5 /tmp/test-results.txt                  # summary
 
 ## Tests
 
-The tests are NUnit tests in `src/Playwright.Tests/`, one class per upstream spec file: `PageRouteTests.cs` ports `tests/page/page-route.spec.ts`. Locator and assertion classes are in `Locator/` and `Assertions/`. A regression test is one added case in the class that owns the feature, also when only the port has the bug.
+There are two sets of tests in `src/Playwright.Tests/`, and they run together.
+
+`Page/` and `Library/` are the line-by-line ports of upstream `tests/page` and `tests/library` at `DriverVersion`, with the harness in `Fixtures/`. The rules of these ports are in [src/Playwright.Tests/AGENTS.md](src/Playwright.Tests/AGENTS.md): read it before you add or change one. Do not write .NET-only tests there.
+
+The rest of this section is about the older tests, in `src/Playwright.Tests/*.cs`, `Locator/` and `Assertions/`: NUnit tests, one class per upstream spec file: `PageRouteTests.cs` ports `tests/page/page-route.spec.ts`. A regression test is one added case in the class that owns the feature, also when only the port has the bug.
 
 - `[PlaywrightTest("page-route.spec.ts", "should intercept")]` names the upstream spec file and test title that the test ports. Upstream titles carry an ID prefix, so grep for the title. `[PlaywrightTest]` without arguments marks a test that only the port has.
 - Tag a regression test with `// See <issue url>` on the line above the attribute.
