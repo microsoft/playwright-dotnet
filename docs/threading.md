@@ -18,6 +18,7 @@ Where user code runs:
 | The same handler after it awaited a Playwright call or anything else | thread pool |
 | Predicate of a wait (`WaitForRequestAsync(r => ...)`, `WaitForURLAsync(url => ...)`) | dispatcher |
 | Action of `RunAndWaitFor*Async` | thread pool |
+| Callback of `Expect(callback).ToPassAsync()`, every attempt | thread pool |
 | Code after `await` of any Playwright call | thread pool, or the caller's `SynchronizationContext` |
 
 ## Rules of thumb

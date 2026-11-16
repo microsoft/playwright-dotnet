@@ -175,6 +175,39 @@ public class ThreadingModelTests : PageTestEx
     }
 
     [PlaywrightTest]
+    public async Task ToPassCallbackRunsOffTheDispatcherThread()
+    {
+        // Every attempt runs on the thread pool, also when a handler starts the retries in its
+        // synchronous part, so the callback may block and a zero interval does not spin there.
+        var result = new TaskCompletionSource<bool>(TaskCreationOptions.RunContinuationsAsynchronously);
+        Page.Console += async (_, _) =>
+        {
+            try
+            {
+                Assert.True(OnDispatcherThread);
+                int attempts = 0;
+                bool onDispatcher = false;
+                await Expect(() =>
+                {
+                    onDispatcher |= OnDispatcherThread;
+                    if (!Page.EvaluateAsync<int>("1 + 1").Wait(5000) || ++attempts < 3)
+                    {
+                        throw new InvalidOperationException("Retry");
+                    }
+                }).ToPassAsync(new() { Intervals = [0] });
+                Assert.False(OnDispatcherThread);
+                result.SetResult(onDispatcher);
+            }
+            catch (Exception ex)
+            {
+                result.SetException(ex);
+            }
+        };
+        await Page.EvaluateAsync("console.log('hi')");
+        Assert.False(await result.Task);
+    }
+
+    [PlaywrightTest]
     public async Task SubscribingRightAfterStartingAWaitKeepsBothHandlers()
     {
         // The wait subscribes on the dispatcher thread after the call has returned, and the

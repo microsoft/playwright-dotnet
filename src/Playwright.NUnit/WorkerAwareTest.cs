@@ -31,6 +31,7 @@ using Microsoft.Playwright.Core;
 using Microsoft.Playwright.TestAdapter;
 using NUnit.Framework;
 using NUnit.Framework.Interfaces;
+using NUnit.Framework.Internal;
 
 namespace Microsoft.Playwright.NUnit;
 
@@ -44,6 +45,15 @@ public class WorkerAwareTest
         // Workers are pooled until the end of the test run, so their services are disposed when the process exits.
         // This closes the browsers. A remote browser is disconnected abruptly otherwise.
         AppDomain.CurrentDomain.ProcessExit += (_, _) => DisposeAllWorkers();
+
+        // NUnit fails the test for a recorded assertion failure, also when the exception is caught.
+        FunctionAssertions.AttemptRunner = async callback =>
+        {
+            using (new TestExecutionContext.IsolatedContext())
+            {
+                await callback().ConfigureAwait(false);
+            }
+        };
     }
 
     private static void DisposeAllWorkers()
