@@ -34,7 +34,7 @@ extends:
   parameters:
     pool:
       # https://aka.ms/MicroBuild
-      name: VSEngSS-MicroBuild2022-1ES
+      name: VSEng-MicroBuildVSStable
       os: windows
     sdl:
       suppression:
